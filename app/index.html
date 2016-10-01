@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<title>Racing+</title>
+
+		<!-- jQuery workaround for Electron -->
+		<script>
+			window.nodeRequire = require;
+			delete window.require;
+			delete window.exports;
+			delete window.module;
+		</script>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.dropotron.min.js"></script>
+		<script src="assets/js/jquery.scrollgress.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+		<!-- Node Scripts -->
+		<script>
+			nodeRequire('./renderer.js')
+		</script>
+	</head>
+
+	<body>
+		<!-- Title screen -->
+		<div id="title" class="center">
+			<section id="banner">
+				<h2>
+					<!--<span style="position: relative; right: 10px; top: 20px;"><img src="images/The_Belt_Icon.png" class="belt"></span>-->
+					<!--Racing+-->
+					<img id="title-image" src="images/title.png" />
+				</h2>
+				<p>A racing mod for The Binding of Isaac: Afterbirth+.</p>
+				<ul class="actions">
+					<li><a href="#" id="title-login-button" class="button">Login &nbsp;<span class="hotkey-indicator">(1)</span></a></li>
+					<li><a href="#" id="title-register-button" class="button">Register &nbsp;<span class="hotkey-indicator">(2)</span></a></li>
+				</ul>
+			</section>
+		</div>
+
+		<!-- Login -->
+		<div id="login" class="center" style="display: none;">
+			<section class="box" id="login-box">
+				<div id="login-title" class="row">
+					<h3>Login</h3>
+					<div id="login-ajax" style="display: none;">
+						<!--<img src="images/ajax.gif" />-->
+						<div class='uil-ring-css'><div></div></div>
+
+					</div>
+				</div>
+				<p id="login-error" style="display: none;"></p>
+				<form id="login-form">
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="login-username" type="text" name="name" value="" placeholder="Username">
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="login-password" type="password" name="password" value="" placeholder="Password">
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="login-remember-checkbox" type="checkbox" name="remember">
+							<label id="login-remember-checkbox-label" for="login-remember-checkbox">Remember me</label>
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<ul class="actions">
+								<li><input type="submit" id="login-submit-button" value="Submit"></li>
+								<li><input id="login-back-button" type="button" value="Back" class="alt"></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+
+		<!-- Register -->
+		<div id="register" class="center" style="display: none;">
+			<section id="register" class="box">
+				<h3>Register</h3>
+				<form method="post" action="#">
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="register-username" type="text" name="name" value="" placeholder="Username">
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="register-password" type="password" name="password" value="" placeholder="Password">
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<p>Do <span style="color: red;">NOT</span> reuse any previous passwords!</p>
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<input id="register-email" type="email" name="email" value="" placeholder="Email">
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<p>
+								An email is required to register, but feel<br />
+								free to use a throwaway.
+							</p>
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="12u">
+							<ul class="actions">
+								<li><input type="submit" value="Submit"></li>
+								<li><input id="register-back-button" type="button" value="Back" class="alt"></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+
+		<!-- Lobby -->
+		<div id="lobby" style="display: none;">
+			<div id="page-wrapper">
+				<!-- Header -->
+				<header id="header">
+					<h1>Racing+</h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="#" class="button disabled">Lobby</a></li>
+							<li><a href="#" class="button">Start a New Race</a></li>
+							<li><a href="#" class="button">Profile</a></li>
+							<li><a href="#" class="button">Settings</a></li>
+							<li><a href="#" class="button">Log Out</a></li>
+						</ul>
+					</nav>
+				</header>
+
+				<!-- Main -->
+				<section id="main" class="container">
+
+					<div class="row">
+						<div class="12u">
+							<section class="box lobby-box">
+								<div class="table-wrapper">
+									<!--<table class="alt">
+										<tr>
+											<td colspan=5 style="text-align: center;">No current races.</td>
+										</tr>
+									</table>-->
+
+									<table id="current-races-table" class="alt">
+										<thead>
+											<th>Title</th>
+											<th>Status</th>
+											<th># of Entrants</th>
+											<th>Ruleset</th>
+											<th>Captain</th>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Race 1 &mdash; battery horse stapler asdf asdf</td>
+												<td><span style="color: orange;">In Progress</span></td>
+												<td>5</td>
+												<td>Seeded</td>
+												<td>Zamiel</td>
+											</tr>
+
+											<!--<tr class="lobby-race-row-open">
+												<td>Race 2 &mdash; battery horse stapler</td>
+												<td><strong><span style="color: green;">Open</span></strong></td>
+												<td>5</td>
+												<td>Seeded</td>
+												<td>Zamiel</td>
+											</tr>
+
+											<tr class="lobby-race-row-open">
+												<td>Race 3 &mdash; battery horse stapler</td>
+												<td><strong><span style="color: green;">Open</span></strong></td>
+												<td>5</td>
+												<td>Seeded</td>
+												<td>Zamiel</td>
+											</tr>-->
+
+										</tbody>
+									</table>
+								</div>
+							</section>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="9u">
+							<section class="box lobby-box">
+								<h3>Lobby</h3>
+								<p id="lobby-chat-box">
+									[13:42] &nbsp; &lt;<span style="color: orange;">Hyphenated</span>&gt; &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
+									[13:42] &nbsp; &lt;<span style="color: blue;">Hyphenated</span>&gt; &nbsp; if you like heat then bring the ruckus<br />
+								</p>
+								<input type="text" name="chat" id="lobby-chat-box-input" value="" placeholder="Chat">
+							</section>
+						</div>
+						<div id="lobby-users-container" class="3u">
+							<section class="box lobby-box">
+								<h3>Online Users</h3>
+								<p id="users-box">
+									<span class="user" style="color: blue;">Zamiel</span><br />
+									antizoubilakaas<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+									Zamiel<br />
+								</p>
+							</section>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+	</body>
+</html>
