@@ -1,12 +1,12 @@
 {
-  "name": "isaac-racing-client",
+  "name": "RacingPlus",
+  "productName": "Racing+",
+  "main": "./main.js",
   "version": "1.0.0",
   "description": "A racing mod for The Binding of Isaac: Afterbirth+.",
-  "main": "./main.js",
-  "author": "Zamiell",
-  "license": "GPL-3.0",
-  "private": true,
+  "author": "Racing+",
   "dependencies": {
+    "fs": "0.0.1-security",
     "keytar": "^3.0.2"
   }
 }
