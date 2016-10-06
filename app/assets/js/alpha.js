@@ -33,11 +33,6 @@
 				);
 			});
 
-		// Dropdowns.
-			$('#nav > ul').dropotron({
-				alignment: 'right'
-			});
-
 	});
 
 })(jQuery);

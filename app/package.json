@@ -6,6 +6,7 @@
   "description": "A racing mod for The Binding of Isaac: Afterbirth+.",
   "author": "Racing+",
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "fs": "0.0.1-security",
     "keytar": "^3.0.2"
   }

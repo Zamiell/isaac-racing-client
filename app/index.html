@@ -8,6 +8,8 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/tooltipster.bundle.min.css" />
+		<link rel="stylesheet" href="assets/css/tooltipster-sideTip-shadow.min.css" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<title>Racing+</title>
 
@@ -21,347 +23,396 @@
 
 		<!-- Scripts -->
 		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.dropotron.min.js"></script>
-		<script src="assets/js/jquery.scrollgress.min.js"></script>
+		<script src="assets/js/jquery-lang.js" charset="utf-8"></script>
+		<script src="assets/js/tooltipster.bundle.min.js"></script>
 		<script src="assets/js/skel.min.js"></script>
 		<script src="assets/js/util.js"></script>
-		<script src="assets/js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
 		<script src="assets/js/alpha.js"></script>
+		<script src="assets/js/golem.js"></script>
 		<script src="assets/js/main.js"></script>
 	</head>
 
 	<body>
-		<!-- Header -->
-		<header class="header drag">
-			<h1>Racing+</h1>
-			<nav id="nav">
-				<ul>
-					<li>
-						<a class="no-drag header-window-buttons header-minimize">
-							<i class="fa fa-minus header-minimize-icon" aria-hidden="true"></i>
-						</a>
-					</li>
-					<li>
-						<a class="no-drag header-window-buttons header-restore">
-							<i class="fa fa-square-o header-restore-icon" aria-hidden="true"></i>
-						</a>
-					</li>
-					<li>
-						<a class="no-drag header-window-buttons header-close">
-							<i class="fa fa-times" aria-hidden="true"></i>
-						</a>
-					</li>
-				</ul>
-			</nav>
-		</header>
+		<div id="page-wrapper" class="vertical-center">
 
-		<!-- Title screen -->
-		<div id="title" class="center">
-			<section id="banner">
-				<h2>
-					<!--<span style="position: relative; right: 10px; top: 20px;"><img src="assets/img/The_Belt_Icon.png" class="belt"></span>-->
-					<!--Racing+-->
-					<img id="title-image" src="assets/img/title.png" />
-				</h2>
-				<p><span lang="en">A racing mod for The Binding of Isaac: Afterbirth+.</span></p>
-				<!--<p style="margin-bottom: 0.5em;">Racing+ is being installed.</p>
-				<p>It will launch once it is done.</p>-->
-				<ul class="actions">
-					<li>
-						<a href="#" id="title-login-button" class="button">
-							<span lang="en">Login</span> &nbsp;<span class="hotkey-indicator">(1)</span>
-						</a>
-					</li>
-					<li>
-						<a href="#" id="title-register-button" class="button">
-							<span lang="en">Register</span> &nbsp;<span class="hotkey-indicator">(2)</span>
-						</a>
-					</li>
-				</ul>
-				<ul id="title-languages" class="actions">
-					<li id="title-language-english" class="selected-language">English</li>
-					<li>|</li>
-					<li id="title-language-french" class="unselected-language"><a>Français</a></li>
-				</ul>
-			</section>
-		</div>
+			<!-- Header -->
+			<header id="header" class="drag">
+				<h1>Racing+</h1>
+				<nav id="nav">
+					<ul>
+						<li>
+							<a id="header-lobby" class="button disabled no-drag" style="display: none;">
+								<span lang="en">Lobby</span>
+							</a>
+						</li>
+						<li>
+							<a id="header-start-race" class="button no-drag" data-tooltip-content="#start-race-tooltip" style="display: none;">
+								<span lang="en">Start a New Race</span>
+							</a>
+						</li>
+						<li>
+							<a id="header-settings" class="button no-drag" style="display: none;">
+								<span lang="en">Settings</span>
+							</a>
+						</li>
+						<li>
+							<a id="header-profile" class="button no-drag" style="display: none;">
+								<span lang="en">Profile</span>
+							</a>
+						</li>
+						<li>
+							<a id="header-log-out" class="button no-drag" style="display: none;">
+								<span lang="en">Log Out</span>
+							</a>
+						</li>
+						<li><a></a></li> <!-- Just for spacing -->
+						<li>
+							<a id="header-minimize" class="no-drag header-window-buttons">
+								<!--<i id="header-minimize-icon" class="fa fa-minus" aria-hidden="true"></i>-->
+								<i id="header-minimize-icon" class="mdi mdi-window-minimize"></i>
+							</a>
+						</li>
+						<li>
+							<a id="header-maximize" class="no-drag header-window-buttons">
+								<i class="mdi mdi-window-maximize"></i>
+							</a>
+						</li>
+						<li>
+							<a id="header-close" class="no-drag header-window-buttons">
+								<i class="mdi mdi-close"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</header>
 
-		<!-- Login -->
-		<div id="login" class="center" style="display: none;">
-			<section id="login-box" class="box">
-				<div id="login-title" class="row">
-					<h3><span lang="en">Login</span></h3>
-					<div id="login-ajax" style="display: none;">
-						<div class='uil-ring-css'><div></div></div>
-					</div>
-				</div>
-				<p id="login-error" style="display: none;"></p>
-				<form id="login-form">
-					<div class="row uniform 50%">
-						<div class="12u">
-							<input id="login-username" type="text" name="name" value="" placeholder="Username" lang="en" />
-						</div>
-					</div>
+			<!-- Everything not in the header is contained in this element -->
+			<div id="gui">
 
-					<div class="row uniform 50%">
-						<div class="12u">
-							<input id="login-password" type="password" name="password" value="" placeholder="Password" lang="en" />
-						</div>
-					</div>
-
-					<div class="row uniform 50%">
-						<div class="12u">
-							<input id="login-remember-checkbox" type="checkbox" name="remember" />
-							<label id="login-remember-checkbox-label" for="login-remember-checkbox"><span lang="en">Remember me</span></label>
-						</div>
-					</div>
-
-					<div class="padding3"></div>
-
-					<div class="row uniform 50%">
-						<div class="12u">
-							<ul class="actions">
-								<li><input id="login-submit-button" type="submit" value="Submit" lang="en" /></li>
-								<li><input id="login-back-button" class="alt" type="button" value="Back" lang="en" /></li>
-							</ul>
-						</div>
-					</div>
-				</form>
-			</section>
-		</div>
-
-		<!-- Register -->
-		<div id="register" class="center" style="display: none;">
-			<section class="box">
-				<div id="register-title" class="row">
-					<h3><span lang="en">Register</span></h3>
-					<div id="register-ajax" style="display: none;">
-						<div class='uil-ring-css'><div></div></div>
-					</div>
-				</div>
-				<p id="register-error" style="display: none;"></p>
-				<form method="post" action="#">
-					<div class="row uniform 50%">
-						<div class="6u 12u">
-							<input id="register-username" type="text" name="name" value="" placeholder="Username" lang="en" />
-						</div>
-						<div class="6u 12u register-note">
-							<p><span lang="en">Don't use any symbols.</span></p>
-						</div>
-					</div>
-
-					<div class="row uniform 50%">
-						<div class="6u 12u">
-							<input id="register-password" type="password" name="password" value="" placeholder="Password" lang="en" />
-						</div>
-						<div class="6u 12u register-note">
-							<p><span lang="en">Don't reuse any previous passwords!</span></p>
-						</div>
-					</div>
-
-					<div class="row uniform 50%">
-						<div class="6u 12u">
-							<input id="register-email" type="email" name="email" value="" placeholder="Email address" lang="en" />
-						</div>
-						<div class="6u 12u">
-							<p>
-								<span lang="en">An email address is required to register, but you can use a fake one if you want.</span>
-							</p>
-						</div>
-					</div>
-
-					<div class="padding2"></div>
-
-					<div class="row uniform 50%">
-						<div class="12u">
-							<ul class="actions">
-								<li><input type="submit" value="Submit" lang="en" /></li>
-								<li><input id="register-back-button" class="alt" type="button" value="Back" lang="en" /></li>
-							</ul>
-						</div>
-					</div>
-				</form>
-			</section>
-		</div>
-
-		<!-- Lobby -->
-		<div id="lobby" style="display: none;">
-			<div id="page-wrapper">
-				<!-- Header -->
-				<header class="header drag">
-					<h1>Racing+</h1>
-					<nav id="nav">
-						<ul>
-							<li><a href="#" class="button disabled no-drag"><span lang="en">Lobby</span></a></li>
-							<li><a href="#" class="button no-drag"><span lang="en">Start a New Race</span></a></li>
-							<li><a href="#" class="button disabled no-drag"><span lang="en">Profile</span></a></li>
-							<li><a href="#" class="button no-drag"><span lang="en">Settings</span></a></li>
-							<li><a href="#" class="button no-drag"><span lang="en">Log Out</span></a></li>
-							<li><a></a></li> <!-- Just for spacing -->
+				<!-- Title screen -->
+				<div id="title">
+					<section id="banner">
+						<h2>
+							<!--<span style="position: relative; right: 10px; top: 20px;"><img src="assets/img/The_Belt_Icon.png" class="belt"></span>-->
+							<!--Racing+-->
+							<img id="title-image" src="assets/img/title.png" />
+						</h2>
+						<p><span lang="en">A racing mod for The Binding of Isaac: Afterbirth+.</span></p>
+						<!--<p style="margin-bottom: 0.5em;">Racing+ is being installed.</p>
+						<p>It will launch once it is done.</p>-->
+						<ul id="title-buttons" class="actions">
 							<li>
-								<a class="no-drag header-window-buttons header-minimize">
-									<i class="fa fa-minus header-minimize-icon" aria-hidden="true"></i>
+								<a href="#" id="title-login-button" class="button">
+									<span lang="en">Login</span> &nbsp;<span class="hotkey-indicator">(1)</span>
 								</a>
 							</li>
 							<li>
-								<a class="no-drag header-window-buttons header-restore">
-									<i class="fa fa-square-o header-restore-icon" aria-hidden="true"></i>
-								</a>
-							</li>
-							<li>
-								<a class="no-drag header-window-buttons header-close">
-									<i class="fa fa-times" aria-hidden="true"></i>
+								<a href="#" id="title-register-button" class="button">
+									<span lang="en">Register</span> &nbsp;<span class="hotkey-indicator">(2)</span>
 								</a>
 							</li>
 						</ul>
-					</nav>
-				</header>
+						<ul id="title-languages" class="actions">
+							<li id="title-language-english" class="selected-language">English</li>
+							<li>|</li>
+							<li id="title-language-french" class="unselected-language"><a>Français</a></li>
+						</ul>
+						<div id="title-ajax">
+							<div class="ajax-ring"></div>
+						</div>
+					</section>
+				</div><!-- title -->
 
-				<!-- Main -->
-				<section id="main" class="container">
-
-					<div class="row">
-						<div class="12u">
-							<section id="lobby-current-races-box" class="box">
-								<div class="table-wrapper">
-									<!--<table class="alt">
-										<tr>
-											<td colspan=5 style="text-align: center;">No current races.</td>
-										</tr>
-									</table>-->
-
-									<table id="current-races-table" class="alt">
-										<thead>
-											<th><span lang="en">Title</span></th>
-											<th><span lang="en">Status</span></th>
-											<th><span lang="en"># of Entrants</span></th>
-											<th><span lang="en">Ruleset</span></th>
-											<th><span lang="en">Captain</span></th>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Race 1 &mdash; battery horse stapler asdf asdf</td>
-												<td><span style="color: orange;">In Progress</span></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 2 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-											<tr class="lobby-race-row-open">
-												<td>Race 3 &mdash; battery horse stapler</td>
-												<td><strong><span style="color: green;">Open</span></strong></td>
-												<td>5</td>
-												<td>Seeded</td>
-												<td>Zamiel</td>
-											</tr>
-
-										</tbody>
-									</table>
+				<!-- Login -->
+				<div id="login">
+					<section class="box">
+						<div id="login-title" class="row">
+							<h3><span lang="en">Login</span></h3>
+							<div id="login-ajax">
+								<div class="ajax-ring"></div>
+							</div>
+						</div>
+						<p id="login-error"></p>
+						<form id="login-form">
+							<div class="row uniform 50%">
+								<div class="12u">
+									<input id="login-username" type="text" placeholder="Username" lang="en" />
 								</div>
-							</section>
-						</div>
-					</div>
+							</div>
 
-					<div class="row">
-						<div class="9u">
-							<section id="lobby-chat-box" class="box">
-								<h3><span lang="en">Lobby</span></h3>
-								<p id="lobby-chat-text">
-									[13:42] &nbsp; &lt;<span style="color: orange;">Hyphenated</span>&gt; &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; <@Hyphenated> &nbsp; if you like heat then bring the ruckus<br />
-									[13:42] &nbsp; &lt;<span style="color: blue;">Hyphenated</span>&gt; &nbsp; if you like heat then bring the ruckus<br />
-								</p>
-								<input type="text" name="chat" id="lobby-chat-box-input" value="" placeholder="Chat" lang="en" />
-							</section>
+							<div class="row uniform 50%">
+								<div class="12u">
+									<input id="login-password" type="password" placeholder="Password" lang="en" />
+								</div>
+							</div>
+
+							<div class="row uniform 50%">
+								<div class="12u">
+									<input id="login-remember-checkbox" type="checkbox" />
+									<label id="login-remember-checkbox-label" for="login-remember-checkbox"><span lang="en">Remember me</span></label>
+								</div>
+							</div>
+
+							<div class="padding3"></div>
+
+							<div class="row uniform 50%">
+								<div class="12u">
+									<ul class="actions">
+										<li><input id="login-submit-button" type="submit" value="Submit" lang="en" /></li>
+										<li><input id="login-forgot-button" class="alt" type="button" value="Forgot Password?" lang="en" /></li>
+										<li><input id="login-back-button" class="alt" type="button" value="Back" lang="en" /></li>
+									</ul>
+								</div>
+							</div>
+						</form>
+					</section>
+				</div><!-- login -->
+
+				<!-- Forgot Password? -->
+				<div id="forgot">
+					<section class="box">
+						<div id="forgot-title" class="row">
+							<h3><span lang="en">Forgot Password?</span></h3>
+							<div id="forgot-ajax">
+								<div class="ajax-ring"></div>
+							</div>
 						</div>
-						<div id="lobby-users-container" class="3u">
-							<section id="lobby-users-box" class="box">
-								<h3><span lang="en">Users (144)</span></h3>
-								<p id="lobby-users-text">
-									<span class="user" style="color: blue;">Zamiel</span><br />
-									antizoubilakaas<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-									Zamiel<br />
-								</p>
-							</section>
+						<p id="forgot-success"></p>
+						<p id="forgot-error"></p>
+						<form id="forgot-form">
+							<div class="row uniform 50%">
+								<div class="12u">
+									<p><span lang="en">Please enter your email address. We will send you an email to reset your password.</span></p>
+								</div>
+							</div>
+							<div class="row uniform 50%">
+								<div class="12u">
+									<input id="forgot-email" type="text" placeholder="Email address" lang="en" />
+								</div>
+							</div>
+
+							<div class="padding3"></div>
+
+							<div class="row uniform 50%">
+								<div class="12u">
+									<ul class="actions">
+										<li><input id="forgot-submit-button" type="submit" value="Send email" lang="en" /></li>
+										<li><input id="forgot-back-button" class="alt" type="button" value="Back" lang="en" /></li>
+									</ul>
+								</div>
+							</div>
+						</form>
+					</section>
+				</div><!-- forgot -->
+
+				<!-- Register -->
+				<div id="register">
+					<section class="box">
+						<div id="register-title" class="row">
+							<h3><span lang="en">Register</span></h3>
+							<div id="register-ajax">
+								<div class="ajax-ring"></div>
+							</div>
+						</div>
+						<p id="register-error"></p>
+						<form id="register-form">
+							<div class="row uniform 50%">
+								<div class="6u 12u">
+									<input id="register-username" type="text" placeholder="Username" lang="en" />
+								</div>
+								<div class="6u 12u register-note">
+									<p><span lang="en">Don't use any symbols.</span></p>
+								</div>
+							</div>
+
+							<div class="row uniform 50%">
+								<div class="6u 12u">
+									<input id="register-password" type="password" placeholder="Password" lang="en" />
+								</div>
+								<div class="6u 12u register-note">
+									<p><span lang="en">Don't reuse any previous passwords!</span></p>
+								</div>
+							</div>
+
+							<div class="row uniform 50%">
+								<div class="6u 12u">
+									<input id="register-email" type="text" placeholder="Email address" lang="en" />
+								</div>
+								<div class="6u 12u">
+									<p>
+										<span lang="en">An email address is required to register, but you can use a fake one if you want.</span>
+									</p>
+								</div>
+							</div>
+
+							<div class="padding2"></div>
+
+							<div class="row uniform 50%">
+								<div class="12u">
+									<ul class="actions">
+										<li><input type="submit" value="Submit" lang="en" /></li>
+										<li><input id="register-back-button" class="alt" type="button" value="Back" lang="en" /></li>
+									</ul>
+								</div>
+							</div>
+						</form>
+					</section>
+				</div><!-- register -->
+
+				<!-- Lobby -->
+				<div id="lobby" class="hidden">
+
+					<!-- Main -->
+					<section id="main" class="container">
+
+						<div class="row">
+							<div class="12u">
+								<section id="lobby-current-races-box" class="box">
+									<div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
+										<h3 id="lobby-current-races-table-no">No current races.</h3>
+										<table id="lobby-current-races-table" class="alt">
+											<thead>
+												<th><span lang="en">Title</span></th>
+												<th><span lang="en">Status</span></th>
+												<th><span lang="en"># of Entrants</span></th>
+												<th><span lang="en">Ruleset</span></th>
+												<th><span lang="en">Captain</span></th>
+											</thead>
+											<tbody id="lobby-current-races-table-body">
+												<!--<tr>
+													<td>Race 1 &mdash; battery horse stapler asdf asdf</td>
+													<td><span style="color: orange;">In Progress</span></td>
+													<td>5</td>
+													<td>Seeded</td>
+													<td>Zamiel</td>
+												</tr>
+
+												<tr class="lobby-race-row-open">
+													<td>Race 2 &mdash; battery horse stapler</td>
+													<td><strong><span style="color: green;">Open</span></strong></td>
+													<td>5</td>
+													<td>Seeded</td>
+													<td>Zamiel</td>
+												</tr>-->
+
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="9u">
+								<section id="lobby-chat-box" class="box">
+									<div id="lobby-chat-text"></div>
+									<form id="lobby-chat-form">
+										<input id="lobby-chat-box-input" type="text" placeholder="Chat" lang="en" />
+									</form>
+								</section>
+							</div>
+							<div id="lobby-users-container" class="3u">
+								<section id="lobby-users-box" class="box">
+									<h4><span lang="en">Online Users</span> (<span id="lobby-users-online">1</span>)</span></h4>
+									<div id="lobby-users-users"></div>
+								</section>
+							</div>
+						</div>
+					</section>
+				</div><!-- lobby -->
+
+		</div><!-- page-wrapper -->
+
+		<!-- Error modal -->
+		<div id="error-modal" class="error">
+			<section class="box">
+				<h3><span lang="en">Error</span></h3>
+				<p id="error-modal-description"></p>
+				<ul class="actions">
+					<li><input id="error-modal-button" type="button" value="Exit and relaunch" lang="en" /></li>
+				</ul>
+			</section>
+		</div><!-- error -->
+
+		<div id="tooltip-templates" class="hidden">
+
+			<div id="start-race-tooltip">
+				<form id="start-race-form">
+					<div class="row uniform 50%">
+						<div class="12u">
+							<ul class="actions">
+								<li>
+									<input id="start-race-name" type="text" placeholder="Race name (optional)" lang="en" />
+								</li>
+								<li>
+									<button id="start-race-randomize" class="button alt small" type="button">
+										<span lang="en">Randomize name</span>
+									</button>
+								</li>
+							</ul>
 						</div>
 					</div>
-				</section>
-			</div>
-		</div>
+					<div class="row uniform 50%">
+						<div class="6u">
+							<div class="select-wrapper">
+								<select id="start-race-ruleset">
+									<option value="unseeded" selected="selected">Unseeded</option>
+									<option value="seeded">Seeded</option>
+									<option value="diversity">Diversity</option>
+								</select>
+							</div>
+						</div>
+						<div class="6u">
+							<div class="select-wrapper">
+								<select id="start-race-character">
+									<option value="Isaac" selected="selected">Isaac</option>
+									<option value="Magdalene">Magdalene</option>
+									<option value="Cain">Cain</option>
+									<option value="Judas" selected="selected">Judas</option>
+									<option value="Blue Baby">Blue Baby</option>
+									<option value="Eve">Eve</option>
+									<option value="Samson">Samson</option>
+									<option value="Azazel">Azazel</option>
+									<option value="Lazarus">Lazarus</option>
+									<option value="Eden">Eden</option>
+									<option value="The Lost">The Lost</option>
+									<option value="Lilith">Lilith</option>
+									<option value="Keeper">Keeper</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row uniform">
+						<div class="6u">
+							<ul class="actions">
+								<li><input id="login-submit-button" type="submit" value="Create" lang="en" /></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div><!-- start-race-tooltip -->
+
+			<div id="user-click-tooltip">
+				<div class="padding0p5"></div>
+				<div class="row">
+					<div class="12u">
+						<button id="start-race-randomize" class="button alt small fit" type="button">
+							<span lang="en">Profile</span>
+						</button>
+					</div>
+				</div>
+				<div class="padding0p5"></div>
+				<div class="row">
+					<div class="12u">
+						<button id="start-race-randomize" class="button alt small fit" type="button">
+							<span lang="en">Message</span>
+						</button>
+					</div>
+				</div>
+				<div class="padding0p5"></div>
+			</div><!-- user-click-tooltip -->
+
+		</div><!-- tooltip-templates -->
 
 	</body>
 </html>

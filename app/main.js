@@ -1,9 +1,7 @@
-// Notes
-//
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"
 
-"use strict";
+'use strict';
 
 /*
 	Imports
@@ -21,6 +19,7 @@ const path         = require('path');
 
 const app = electron.app; // Module to control application life
 const BrowserWindow = electron.BrowserWindow; // Module to create native browser window
+const ipcMain = electron.ipcMain;
 
 const appFolder = path.resolve(process.execPath, '..');
 const rootAtomFolder = path.resolve(appFolder, '..');
@@ -40,71 +39,8 @@ writeLog('App launched.');
 	From: https://github.com/electron/windows-installer#handling-squirrel-events
 */
 
-if (handleSquirrelEvent() === true) {
-	// Squirrel event handled and app will exit in 1000ms, so don't do anything else
+if (require('electron-squirrel-startup')) {
 	return;
-}
-
-function handleSquirrelEvent() {
-	// Don't do anything if the program wasn't called with any arguments or if we are running in a development environment
-	if (process.argv.length === 1 || path.basename(process.argv[0]) === 'electron.exe') {
-		return false;
-	}
-
-	const spawn = function(command, args) {
-		let spawnedProcess, error;
-
-		try {
-			writeLog('Spawning child process: ' + command + ' ' + args);
-			spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-		} catch (error) {
-			writeLog('Spawning child process failed: ' + error);
-		}
-
-		return spawnedProcess;
-	};
-
-	const spawnUpdate = function(args) {
-		return spawn(updateDotExe, args);
-	};
-
-	const squirrelEvent = process.argv[1];
-	writeLog('Handled Squirrel event: ' + squirrelEvent);
-
-	if (squirrelEvent === '--squirrel-install') {
-		// The app was just installed
-
-		// Install desktop and start menu shortcuts
-		spawnUpdate(['--createShortcut', exeName]);
-
-		setTimeout(app.quit, 1000);
-		return true;
-
-	} else if (squirrelEvent === '--squirrel-uninstall') {
-		// Undo anything you did in the --squirrel-install and --squirrel-updated handlers
-
-		// Remove desktop and start menu shortcuts
-		spawnUpdate(['--removeShortcut', exeName]);
-
-		setTimeout(app.quit, 1000);
-		return true;
-
-	} else if (squirrelEvent === '--squirrel-firstrun') {
-		// The app is running for the first time
-		return false;
-
-	} else if (squirrelEvent === '--squirrel-updated') {
-		// The app was just updated
-		setTimeout(app.quit, 1000);
-		return true;
-
-	} else if (squirrelEvent === '--squirrel-obsolete') {
-		// This is called on the outgoing version of your app before
-		// we update to the new version - it's the opposite of
-		// --squirrel-updated
-		app.quit();
-		return true;
-	}
 }
 
 /*
@@ -141,6 +77,7 @@ function createWindow() {
 	});
 }
 
+// Check to see if the application is already open
 const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
 	// A second instance of the program was opened, so just focus the existing window
 	if (mainWindow) {
@@ -148,9 +85,8 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
 		mainWindow.focus();
 	}
 });
-
 if (shouldQuit) {
-	app.quit()
+	app.quit();
 }
 
 // This method will be called when Electron has finished
@@ -172,6 +108,28 @@ app.on('activate', function() {
 	// dock icon is clicked and there are no other windows open.
 	if (mainWindow === null) {
 		createWindow();
+	}
+});
+
+/*
+	IPC handlers
+*/
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+	console.log('Recieved message:', arg);
+	if (arg === 'minimize') {
+		mainWindow.minimize();
+	} else if (arg === 'maximize') {
+		if (mainWindow.isMaximized() === true) {
+			mainWindow.unmaximize();
+		} else {
+			mainWindow.maximize();
+		}
+	} else if (arg === 'close') {
+		app.quit();
+	} else if (arg === 'restart') {
+		app.relaunch();
+		app.quit();
 	}
 });
 

@@ -1,0 +1,14 @@
+{
+    "esversion": 6,
+
+    "browser": true,
+    "devel":   true,
+    "jquery":  true,
+    "node":    true,
+
+    "globals": {
+        "nodeRequire": true,
+        "Lang": true,
+        "golem": true
+    }
+}
