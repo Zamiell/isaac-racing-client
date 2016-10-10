@@ -46,6 +46,14 @@
 		"Seeded": "Seeded",
 		"Diversity": "Diversity",
 		"Chat": "Chat",
-		"Online Users": "Utilisateurs en Ligne"
+		"Online Users": "Utilisateurs en Ligne",
+		"Race name (optional)": "Nom de la race (facultatif)",
+		"Randomize name": "Nom aléatoire",
+		"Random": "",
+		"Create": "Créer",
+		"Users": "Utilisateurs",
+		"Ready": "Prêt",
+		"Error": "Erreur",
+		"Exit and relaunch": "Sortir et redémarrer"
 	}
 }

@@ -4,6 +4,9 @@
 	TODO
 
 	- tab complete for chat
+	- check to see if all beginsWith is right syntax
+	- change lobby-users-user to agnostic
+	- finish looking through usersDraw function to make sure it works for races scren
 */
 
 /*
@@ -47,7 +50,7 @@ var lang;
 	- register
 	- register-ajax
 	- lobby
-	- race
+	- _race_### (corresponding to the current race ID)
 	- settings
 	- error
 	- transition
@@ -479,7 +482,7 @@ $(document).ready(function() {
 
 	$('#header-lobby').click(function() {
 		if ($('#header-lobby').hasClass('disabled') === false) {
-
+			// TODO go back to lobby
 		}
 	});
 
@@ -501,39 +504,6 @@ $(document).ready(function() {
 
 	$('#header-start-race').click(function() {
 		$('#start-race-name').focus();
-	});
-
-	$('#start-race-randomize').click(function() {
-		let randomNumbers = [];
-		for (let i = 0; i < 3; i++) {
-			while (true) {
-				let randomNumber = getRandomNumber(0, wordList.length - 1);
-				if (randomNumbers.indexOf(randomNumber) === -1) {
-					randomNumbers.push(randomNumber);
-					break;
-				}
-			}
-		}
-		let randomlyGeneratedName = '';
-		for (let i = 0; i < 3; i++) {
-			randomlyGeneratedName += wordList[randomNumbers[i]] + ' ';
-		}
-		// Chop off the trailing space
-		randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
-
-		// Set it and focus it
-		$('#start-race-name').val(randomlyGeneratedName);
-		$('#start-race-name').focus();
-	});
-
-	$('#start-race-ruleset').change(function() {
-		if ($(this).val() === 'unseeded') {
-			$('#start-race-character').val('Judas');
-		} else if ($(this).val() === 'seeded') {
-			$('#start-race-character').val('Judas');
-		} else if ($(this).val() === 'diversity') {
-			$('#start-race-character').val('Cain');
-		}
 	});
 
 	$('#header-settings').click(function() {
@@ -571,40 +541,112 @@ $(document).ready(function() {
 		// By default, the form will reload the page, so stop this from happening
 		event.preventDefault();
 
-		// Don't do anything if we are not on the lobby screen
+		// Validate input and send the chat
+		chatSend('lobby');
+	});
+
+	/*
+		Start race tooltip
+	*/
+
+	$('#start-race-randomize').click(function() {
+		let randomNumbers = [];
+		for (let i = 0; i < 3; i++) {
+			while (true) {
+				let randomNumber = getRandomNumber(0, wordList.length - 1);
+				if (randomNumbers.indexOf(randomNumber) === -1) {
+					randomNumbers.push(randomNumber);
+					break;
+				}
+			}
+		}
+		let randomlyGeneratedName = '';
+		for (let i = 0; i < 3; i++) {
+			randomlyGeneratedName += wordList[randomNumbers[i]] + ' ';
+		}
+		// Chop off the trailing space
+		randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
+
+		// Set it and focus it
+		$('#start-race-name').val(randomlyGeneratedName);
+		$('#start-race-name').focus();
+	});
+
+	$('#start-race-ruleset').change(function() {
+		if ($(this).val() === 'unseeded') {
+			$('#start-race-character').val('Judas');
+		} else if ($(this).val() === 'seeded') {
+			$('#start-race-character').val('Judas');
+		} else if ($(this).val() === 'diversity') {
+			$('#start-race-character').val('Cain');
+		}
+	});
+
+	$('#start-race-form').submit(function() {
+		// By default, the form will reload the page, so stop this from happening
+		event.preventDefault();
+
+		// Don't do anything if we are already logging in
 		if (currentScreen !== 'lobby') {
 			return;
 		}
 
 		// Get values from the form
-		let message = document.getElementById('lobby-chat-box-input').value.trim();
+		let name = $('#start-race-name').val().trim();
+		let ruleset = $('#start-race-ruleset').val();
+		let character = $('#start-race-character').val();
 
-		// Do nothing if the input field is empty
-		if (message === '') {
-			return;
+		// Truncate names longer than 71 characters (this is also enforced server-side)
+		let maximumLength = (23 * 3) + 2; // Longest word is 23 characters, 3 word name, 2 spaces
+		if (name.length > maximumLength) {
+			name = name.substring(0, maximumLength);
 		}
 
-		// Truncate messages longer than 150 characters (this is also enforced server-side)
-		if (message.length > 150) {
-			message = message.substring(0, 150);
+		// Get a random character, if necessary
+		if (character === 'Random') {
+			let characterArray = [
+				'Isaac',     // 0
+				'Magdalene', // 1
+				'Cain',      // 2
+				'Judas',     // 3
+				'Blue Baby', // 4
+				'Eve',       // 5
+				'Samson',    // 6
+				'Azazel',    // 7
+				'Lazarus',   // 8
+				'Eden',      // 9
+				'The Lost',  // 10
+				'Lilith',    // 11
+				'Keeper',    // 12
+			];
+			let randomNumber = getRandomNumber(0, 12);
+			character = characterArray[randomNumber];
 		}
 
-		// Erase the contents of the input field
-		$('#lobby-chat-box-input').val('');
+		// Close the tooltip
+		$('#header-start-race').click(); // Close the tooltip
 
-		// Add it to the history so that we can use up arrow later
-		roomList.lobby.typedHistory.unshift(message);
+		// Create the race
+		let rulesetObject = {
+			"type": ruleset,
+			"character": character,
+		};
+		conn.emit('raceCreate', {
+			"name": name,
+			"ruleset": rulesetObject,
+		});
+	});
 
-		// Reset the history index
-		roomList.lobby.historyIndex = -1;
+	/*
+		Race screen
+	*/
 
-		// Check for the presence of commands
-		if (message === '/debug') {
-			debug();
-		} else {
-			// Send the message
-			chatSend(message);
-		}
+	$('#race-chat-form').submit(function(event) {
+		// By default, the form will reload the page, so stop this from happening
+		event.preventDefault();
+
+		// Validate input and send the chat
+		chatSend('race');
 	});
 
 	/*
@@ -870,11 +912,45 @@ function lobbyEnter() {
 	$('#lobby-chat-box-input').focus();
 }
 
-function chatSend(message) {
-	conn.emit('roomMessage', {
-		"room": "lobby",
-		"msg":  message,
-	});
+function chatSend(destination) {
+	// Don't do anything if we are not on the screen corresponding to the chat input form
+	if (destination === 'lobby' && currentScreen !== 'lobby') {
+		return;
+	} else if (destination === 'race' && currentScreen.beginsWith('_race_') === false) {
+		return;
+	}
+
+	// Get values from the form
+	let message = document.getElementById(destination + '-chat-box-input').value.trim();
+
+	// Do nothing if the input field is empty
+	if (message === '') {
+		return;
+	}
+
+	// Truncate messages longer than 150 characters (this is also enforced server-side)
+	if (message.length > 150) {
+		message = message.substring(0, 150);
+	}
+
+	// Erase the contents of the input field
+	$('#' + destination + '-chat-box-input').val('');
+
+	// Add it to the history so that we can use up arrow later
+	roomList[currentScreen].typedHistory.unshift(message);
+
+	// Reset the history index
+	roomList[currentScreen].historyIndex = -1;
+
+	// Check for the presence of commands
+	if (message === '/debug') {
+		debug();
+	} else {
+		conn.emit('roomMessage', {
+			"room": currentScreen,
+			"message":  message,
+		});
+	}
 }
 
 function chatDraw(room, name, message, datetime = null) {
@@ -953,7 +1029,7 @@ function chatEmotes(message) {
 	// Search through the text for each emote
 	for (let i = 0; i < emoteList.length; i++) {
 		if (message.indexOf(emoteList[i]) !== -1) {
-			let emoteTag = '<img class="lobby-chat-emote" src="assets/img/emotes/' + emoteList[i] + '.png" />';
+			let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + emoteList[i] + '.png" />';
 			let re = new RegExp('\\b' + emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
 			message = message.replace(re, emoteTag);
 		}
@@ -979,8 +1055,10 @@ function usersDraw(room) {
 	let destination;
 	if (room === 'lobby') {
 		destination = 'lobby';
-	} else {
+	} else if (room.beginsWith('_race_')) {
 		destination = 'race';
+	} else {
+		errorShow('Unable to parse the room in the "usersDraw" function.')
 	}
 
 	// Update the header that shows shows the amount of people online or in the race
@@ -998,11 +1076,11 @@ function usersDraw(room) {
 	userList.sort();
 
 	// Empty the existing list
-	$('#' + room + '-users-users').html('');
+	$('#' + destination + '-users-users').html('');
 
 	// Add a div for each player
 	for (let i = 0; i < userList.length; i++) {
-		let userDiv = '<div id="' + room + '-users-' + userList[i] + '" class="lobby-users-user" data-tooltip-content="#user-click-tooltip">';
+		let userDiv = '<div id="' + destination + '-users-' + userList[i] + '" class="lobby-users-user" data-tooltip-content="#user-click-tooltip">';
 		userDiv += userList[i];
 		userDiv += '</div>';
 		$('#' + room + '-users-users').append(userDiv);
@@ -1021,6 +1099,12 @@ function usersDraw(room) {
 function racesDrawAll() {
 
 }
+
+/*
+	Race functions
+*/
+
+// TODO
 
 /*
 	Websocket handling
@@ -1104,7 +1188,7 @@ function websocket(username, password, remember) {
 					currentScreen = 'title';
 				});
 			});
-		} else if (currentScreen === 'race') {
+		} else if (currentScreen.beginsWith('_race_')) {
 			// Show the title screen
 			$('#race').fadeOut(fadeTime, function() {
 				$('#page-wrapper').addClass('vertical-center');
@@ -1128,6 +1212,8 @@ function websocket(username, password, remember) {
 					currentScreen = 'title';
 				});
 			});
+		} else {
+			errorShow('Unable to parse the "currentScreen" variable in the WebSocket close function.');
 		}
 	});
 
@@ -1169,12 +1255,20 @@ function websocket(username, password, remember) {
 	});
 
 	conn.on('roomHistory', function(data) {
+		// Figure out what kind of chat room this is
+		let destination;
+		if (data.room === 'lobby') {
+			destination = 'lobby';
+		} else {
+			destination = 'race';
+		}
+
 		// Empty the existing chat room, since there might still be some chat in there from a previous race or session
-		$('#' + data.room + '-chat-text').html('');
+		$('#' + destination + '-chat-text').html('');
 
 		// Add all of the chat
 		for (let i = 0; i < data.history.length; i++) {
-			chatDraw(data.room, data.history[i].name, data.history[i].msg, data.history[i].datetime);
+			chatDraw(data.room, data.history[i].name, data.history[i].message, data.history[i].datetime);
 		}
 	});
 
@@ -1197,7 +1291,7 @@ function websocket(username, password, remember) {
 	});
 
 	conn.on('roomMessage', function(data) {
-		chatDraw(data.room, data.name, data.msg);
+		chatDraw(data.room, data.name, data.message);
 	});
 
 	/*
@@ -1327,7 +1421,7 @@ function websocket(username, password, remember) {
 	*/
 
 	conn.on('error', function(data) {
-		errorShow(data.msg);
+		errorShow(data.message);
 	});
 }
 

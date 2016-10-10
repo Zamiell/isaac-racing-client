@@ -3095,22 +3095,22 @@
 
 /* Main */
 
-	#main {
+	.main {
 		/*padding: 4em 0;*/
 		padding: 0 0 0 0; /* CHANGED from vanilla */
 	}
 
-		#main > header {
+		.main > header {
 			text-align: center;
 			margin: 0 0 3em 0;
 		}
 
-			#main > header h2 {
+			.main > header h2 {
 				font-size: 2.75em;
 				margin: 0;
 			}
 
-			#main > header p {
+			.main > header p {
 				border-top: solid 2px #e5e5e5;
 				color: #777;
 				display: inline-block;
@@ -3119,7 +3119,7 @@
 				padding: 1em 0 1.25em 0;
 			}
 
-	body.landing #main {
+	body.landing .main {
 		margin-top: -14em;
 	}
 
@@ -3429,7 +3429,7 @@
 		justify-content: center;
 	}
 
-	#main {
+	.main {
 		overflow: auto;
 	}
 
@@ -3650,6 +3650,30 @@
 	}
 
 	/*
+		Chat
+	*/
+
+	.chat-box {
+		margin: 0 0 1.5em 1.5em;
+		padding: 1em 1em 1em 1em; /* Default is 3em */
+	}
+
+	.chat-emote {
+		height: 1.6em; /* This is derived from how Twitch does it */
+	}
+
+	.chat-text {
+		overflow-y: auto;
+		overflow-wrap: break-word;
+		height: 13em;
+		border-style: solid !important;
+		border-color: #e5e5e5 !important;
+		border: 1px;
+		margin-bottom: 1em;
+		padding: 0 0.5em 0 0.5em;
+	}
+
+	/*
 		Lobby (races)
 	*/
 
@@ -3682,30 +3706,6 @@
 
 	.lobby-race-row-open:hover {
 		background-color: #dce2ef;
-	}
-
-	/*
-		Lobby (chat)
-	*/
-
-	#lobby-chat-box {
-		margin: 0 0 1.5em 1.5em;
-		padding: 1em 1em 1em 1em; /* Default is 3em */
-	}
-
-	#lobby-chat-text {
-		overflow-y: auto;
-		overflow-wrap: break-word;
-		height: 13em;
-		border-style: solid !important;
-		border-color: #e5e5e5 !important;
-		border: 1px;
-		margin-bottom: 1em;
-		padding: 0 0.5em 0 0.5em;
-	}
-
-	.lobby-chat-emote {
-		height: 1.6em; /* This is derived from how Twitch does it */
 	}
 
 	/*
@@ -3762,6 +3762,21 @@
 	#start-race-name {
 		width: 20em;
 	}
+
+	/*
+		Race (status)
+	*/
+
+	#race-status-box {
+		margin: 1.5em 1.5em 1.5em 1.5em;
+		padding: 1em 1em 1em 1em; /* Default is 3em */
+	}
+
+	/*
+		Race (chat)
+	*/
+
+
 
 	/*
 		Error modal

@@ -263,8 +263,7 @@
 				<div id="lobby" class="hidden">
 
 					<!-- Main -->
-					<section id="main" class="container">
-
+					<section class="main container">
 						<div class="row">
 							<div class="12u">
 								<section id="lobby-current-races-box" class="box">
@@ -304,8 +303,8 @@
 
 						<div class="row">
 							<div class="9u">
-								<section id="lobby-chat-box" class="box">
-									<div id="lobby-chat-text"></div>
+								<section class="box chat-box">
+									<div id="lobby-chat-text" class="chat-text"></div>
 									<form id="lobby-chat-form">
 										<input id="lobby-chat-box-input" type="text" placeholder="Chat" lang="en" />
 									</form>
@@ -318,8 +317,41 @@
 								</section>
 							</div>
 						</div>
-					</section>
+					</section><!-- main -->
 				</div><!-- lobby -->
+
+				<!-- Race -->
+				<div id="race" class="hidden">
+
+					<!-- Main -->
+					<section class="main container">
+						<div class="row">
+							<div class="12u">
+								<section id="races-status-box" class="box">
+									<p>Status</p>
+								</section>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="9u">
+								<section class="box chat-box">
+									<div id="race-chat-text" class="chat-text"></div>
+									<form id="race-chat-form">
+										<input id="race-chat-box-input" type="text" placeholder="Chat" lang="en" />
+									</form>
+								</section>
+							</div>
+							<div id="race-users-container" class="3u">
+								<section id="race-users-box" class="box">
+									<h4><span lang="en">Users</span> (<span id="race-users-online">1</span>)</span></h4>
+									<div id="race-users-users"></div>
+								</section>
+							</div>
+						</div>
+					</section><!-- main -->
+				</div><!-- race -->
+
 
 		</div><!-- page-wrapper -->
 
@@ -356,9 +388,9 @@
 						<div class="6u">
 							<div class="select-wrapper">
 								<select id="start-race-ruleset">
-									<option value="unseeded" selected="selected">Unseeded</option>
-									<option value="seeded">Seeded</option>
-									<option value="diversity">Diversity</option>
+									<option value="unseeded" selected="selected" lang="en">Unseeded</option>
+									<option value="seeded" lang="en">Seeded</option>
+									<option value="diversity" lang="en">Diversity</option>
 								</select>
 							</div>
 						</div>
@@ -378,6 +410,7 @@
 									<option value="The Lost">The Lost</option>
 									<option value="Lilith">Lilith</option>
 									<option value="Keeper">Keeper</option>
+									<option value="Random"><span lang="en">Random</span></option>
 								</select>
 							</div>
 						</div>
