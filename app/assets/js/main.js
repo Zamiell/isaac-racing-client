@@ -4,9 +4,8 @@
 	TODO
 
 	- tab complete for chat
-	- check to see if all beginsWith is right syntax
 	- change lobby-users-user to agnostic
-	- finish looking through usersDraw function to make sure it works for races scren
+	- raceEnter
 */
 
 /*
@@ -50,14 +49,14 @@ var lang;
 	- register
 	- register-ajax
 	- lobby
-	- _race_### (corresponding to the current race ID)
+	- _race_##### (corresponding to the current race ID)
 	- settings
 	- error
 	- transition
 */
 
 /*
-	Debug
+	Debug functions
 */
 
 function debug() {
@@ -65,30 +64,38 @@ function debug() {
 	//errorShow('fuck');
 }
 
-// Importing this adds a right-click menu with 'Inspect Element' option
-let rightClickPosition = null;
-
-const menu = new Menu();
-const menuItem = new MenuItem({
-	label: 'Inspect Element',
-	click: () => {
-		remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
-	},
-});
-menu.append(menuItem);
-
-window.addEventListener('contextmenu', (e) => {
-	e.preventDefault();
-	rightClickPosition = {
-		x: e.x,
-		y: e.y,
-	};
-	menu.popup(remote.getCurrentWindow());
-}, false);
-
 /*
 	Program initialization
 */
+
+// Check to see if we are running in development by checking for the existance of the "assets" directory
+try {
+	fs.accessSync('assets', fs.F_OK);
+} catch (e) {
+	runningInDev = true;
+}
+if (runningInDev === true) {
+	// Importing this adds a right-click menu with 'Inspect Element' option
+	let rightClickPosition = null;
+
+	const menu = new Menu();
+	const menuItem = new MenuItem({
+		label: 'Inspect Element',
+		click: () => {
+			remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
+		},
+	});
+	menu.append(menuItem);
+
+	window.addEventListener('contextmenu', (e) => {
+		e.preventDefault();
+		rightClickPosition = {
+			x: e.x,
+			y: e.y,
+		};
+		menu.popup(remote.getCurrentWindow());
+	}, false);
+}
 
 // Set up localization
 language = localStorage.language;
@@ -101,13 +108,6 @@ lang.dynamic('fr', 'assets/js/langpack/fr.json');
 lang.init({
 	defaultLang: 'en',
 });
-
-// Check to see if we are running in development by checking for the existance of the "assets" directory
-try {
-	fs.accessSync('assets', fs.F_OK);
-} catch (e) {
-	runningInDev = true;
-}
 
 // Read in the word list for later
 let wordListLocation = (runningInDev === true ? 'app/' : '') + 'assets/words/words.txt';
@@ -171,6 +171,8 @@ $(document).ready(function() {
 			} else if (currentScreen === 'register') {
 				event.preventDefault();
 				$('#register-back-button').click();
+			} else if (currentScreen === 'lobby') {
+				closeAllTooltips();
 			}
 		} else if (event.which === 38) { // Up arrow
 			if (currentScreen === 'lobby') {
@@ -564,6 +566,7 @@ $(document).ready(function() {
 		for (let i = 0; i < 3; i++) {
 			randomlyGeneratedName += wordList[randomNumbers[i]] + ' ';
 		}
+
 		// Chop off the trailing space
 		randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
 
@@ -572,7 +575,9 @@ $(document).ready(function() {
 		$('#start-race-name').focus();
 	});
 
-	$('#start-race-ruleset').change(function() {
+	$('#start-race-format').change(function() {
+		$('#select-race-format-icon').css('background-image', 'url("assets/img/formats/' + $(this).val() + '.png")');
+
 		if ($(this).val() === 'unseeded') {
 			$('#start-race-character').val('Judas');
 		} else if ($(this).val() === 'seeded') {
@@ -580,6 +585,32 @@ $(document).ready(function() {
 		} else if ($(this).val() === 'diversity') {
 			$('#start-race-character').val('Cain');
 		}
+
+		if ($(this).val() === 'seeded') {
+			$('#select-race-starting-build-1').fadeIn(fadeTime);
+			$('#select-race-starting-build-2').fadeIn(fadeTime);
+			$('#select-race-starting-build-3').fadeIn(fadeTime);
+		} else {
+			$('#select-race-starting-build-1').fadeOut(fadeTime);
+			$('#select-race-starting-build-2').fadeOut(fadeTime);
+			$('#select-race-starting-build-3').fadeOut(fadeTime);
+		}
+	});
+
+	$('#start-race-character').change(function() {
+		let newCharacter = $(this).val();
+		$('#select-race-character-icon').fadeOut(fadeTime / 2, function() {
+			$('#select-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
+			$('#select-race-character-icon').fadeIn(fadeTime / 2);
+		});
+	});
+
+	$('#start-race-goal').change(function() {
+		$('#select-race-goal-icon').css('background-image', 'url("assets/img/goals/' + $(this).val() + '.png")');
+	});
+
+	$('#start-race-starting-build').change(function() {
+		$('#select-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + $(this).val() + '.png")');
 	});
 
 	$('#start-race-form').submit(function() {
@@ -593,8 +624,15 @@ $(document).ready(function() {
 
 		// Get values from the form
 		let name = $('#start-race-name').val().trim();
-		let ruleset = $('#start-race-ruleset').val();
+		let format = $('#start-race-format').val();
 		let character = $('#start-race-character').val();
+		let goal = $('#start-race-goal').val();
+		let startingBuild;
+		if (format === 'seeded') {
+			startingBuild = $('#start-race-starting-build').val();
+		} else {
+			startingBuild = -1;
+		}
 
 		// Truncate names longer than 71 characters (this is also enforced server-side)
 		let maximumLength = (23 * 3) + 2; // Longest word is 23 characters, 3 word name, 2 spaces
@@ -602,7 +640,7 @@ $(document).ready(function() {
 			name = name.substring(0, maximumLength);
 		}
 
-		// Get a random character, if necessary
+		// If necessary, get a random character
 		if (character === 'Random') {
 			let characterArray = [
 				'Isaac',     // 0
@@ -623,17 +661,24 @@ $(document).ready(function() {
 			character = characterArray[randomNumber];
 		}
 
+		// If necessary, get a random starting build,
+		if (startingBuild === 'Random') {
+			startingBuild = getRandomNumber(1, 31); // There are 31 builds in the Instant Start Mod
+		}
+
 		// Close the tooltip
-		$('#header-start-race').click(); // Close the tooltip
+		$('#header-start-race').tooltipster('close'); // Close the tooltip
 
 		// Create the race
 		let rulesetObject = {
-			"type": ruleset,
-			"character": character,
+			'format': format,
+			'character': character,
+			'goal': goal,
+			'startingBuild': startingBuild,
 		};
 		conn.emit('raceCreate', {
-			"name": name,
-			"ruleset": rulesetObject,
+			'name': name,
+			'ruleset': rulesetObject,
 		});
 	});
 
@@ -889,10 +934,9 @@ function lobbyEnter() {
 	$('#register-error').fadeOut(0);
 
 	// Show the buttons in the header
-	$('#header-lobby').fadeIn(fadeTime);
 	$('#header-start-race').fadeIn(fadeTime);
-	$('#header-profile').fadeIn(fadeTime);
 	$('#header-settings').fadeIn(fadeTime);
+	$('#header-profile').fadeIn(fadeTime);
 	$('#header-log-out').fadeIn(fadeTime);
 
 	// Show the lobby
@@ -912,11 +956,16 @@ function lobbyEnter() {
 	$('#lobby-chat-box-input').focus();
 }
 
+function lobbyRaceDraw(race) {
+	console.log('entered lobbyracedraw:');
+	console.log(race);
+}
+
 function chatSend(destination) {
 	// Don't do anything if we are not on the screen corresponding to the chat input form
 	if (destination === 'lobby' && currentScreen !== 'lobby') {
 		return;
-	} else if (destination === 'race' && currentScreen.beginsWith('_race_') === false) {
+	} else if (destination === 'race' && currentScreen.startsWith('_race_') === false) {
 		return;
 	}
 
@@ -1055,10 +1104,10 @@ function usersDraw(room) {
 	let destination;
 	if (room === 'lobby') {
 		destination = 'lobby';
-	} else if (room.beginsWith('_race_')) {
+	} else if (room.startsWith('_race_')) {
 		destination = 'race';
 	} else {
-		errorShow('Unable to parse the room in the "usersDraw" function.')
+		errorShow('Unable to parse the room in the "usersDraw" function.');
 	}
 
 	// Update the header that shows shows the amount of people online or in the race
@@ -1080,31 +1129,61 @@ function usersDraw(room) {
 
 	// Add a div for each player
 	for (let i = 0; i < userList.length; i++) {
-		let userDiv = '<div id="' + destination + '-users-' + userList[i] + '" class="lobby-users-user" data-tooltip-content="#user-click-tooltip">';
-		userDiv += userList[i];
-		userDiv += '</div>';
-		$('#' + room + '-users-users').append(userDiv);
+		if (userList[i] === myUsername) {
+			let userDiv = '<div>' + userList[i] + '</div>';
+			$('#' + room + '-users-users').append(userDiv);
+		} else {
+			let userDiv = '<div id="' + destination + '-users-' + userList[i] + '" class="lobby-users-user" data-tooltip-content="#user-click-tooltip">';
+			userDiv += userList[i];
+			userDiv += '</div>';
+			$('#' + room + '-users-users').append(userDiv);
 
-		// Add the tooltip
-		$('#' + room + '-users-' + userList[i]).tooltipster({
-			theme: 'tooltipster-shadow',
-			trigger: 'click',
-			interactive: true,
-			side: 'left',
-		});
-
+			// Add the tooltip
+			$('#' + room + '-users-' + userList[i]).tooltipster({
+				theme: 'tooltipster-shadow',
+				trigger: 'click',
+				interactive: true,
+				side: 'left',
+			});
+		}
 	}
-}
-
-function racesDrawAll() {
-
 }
 
 /*
 	Race functions
 */
 
-// TODO
+function raceEnter(raceID) { // TODO FILL THIS OUT
+	// We should be on the lobby screen unless there is severe lag
+	if (currentScreen !== 'lobby') {
+		errorShow('Failed to enter the race screen since currentScreen is equal to "' + currentScreen + '".');
+		return;
+	}
+
+	// Show and hide some buttons in the header
+	$('#header-lobby').fadeIn(fadeTime);
+	$('#header-start-race').fadeOut(fadeTime);
+	$('#header-settings').fadeOut(fadeTime);
+
+	// Close all tooltips
+	closeAllTooltips();
+
+	// Show the lobby
+	$('#page-wrapper').removeClass('vertical-center');
+	$('#lobby').fadeIn(fadeTime, function() {
+		currentScreen = 'lobby';
+	});
+
+	// Fix the indentation on lines that were drawn when the element was hidden
+	chatIndent(raceID);
+
+	// Automatically scroll to the bottom of the chat box
+	let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
+	$('#lobby-chat-text').scrollTop(bottomPixel);
+
+	// Focus the chat input
+	$('#lobby-chat-box-input').focus();
+}
 
 /*
 	Websocket handling
@@ -1160,10 +1239,13 @@ function websocket(username, password, remember) {
 		}
 	});
 
-	conn.on('close', function(event) {
+	conn.on('close', connClose);
+
+	function connClose(event) {
 		// Check to see if this was intended
 		if (initiatedLogout === false) {
 			errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!');
+			return;
 		}
 
 		// Reset some global variables
@@ -1182,23 +1264,17 @@ function websocket(username, password, remember) {
 		// Transition to the title screen, depending on what screen we are currently on
 		if (currentScreen === 'lobby') {
 			// Show the title screen
+			currentScreen = 'transition';
 			$('#lobby').fadeOut(fadeTime, function() {
 				$('#page-wrapper').addClass('vertical-center');
 				$('#title').fadeIn(fadeTime, function() {
 					currentScreen = 'title';
 				});
 			});
-		} else if (currentScreen.beginsWith('_race_')) {
+		} else if (currentScreen.startsWith('_race_')) {
 			// Show the title screen
+			currentScreen = 'transition';
 			$('#race').fadeOut(fadeTime, function() {
-				$('#page-wrapper').addClass('vertical-center');
-				$('#title').fadeIn(fadeTime, function() {
-					currentScreen = 'title';
-				});
-			});
-		} else if (currentScreen === 'profile') {
-			// Show the title screen
-			$('#profile').fadeOut(fadeTime, function() {
 				$('#page-wrapper').addClass('vertical-center');
 				$('#title').fadeIn(fadeTime, function() {
 					currentScreen = 'title';
@@ -1206,16 +1282,22 @@ function websocket(username, password, remember) {
 			});
 		} else if (currentScreen === 'settings') {
 			// Show the title screen
+			currentScreen = 'transition';
 			$('#settings').fadeOut(fadeTime, function() {
 				$('#page-wrapper').addClass('vertical-center');
 				$('#title').fadeIn(fadeTime, function() {
 					currentScreen = 'title';
 				});
 			});
+		} else if (currentScreen === 'transition') {
+			// Come back when the current transition finishes
+			setTimeout(function() {
+				connClose(event);
+			}, fadeTime + 10); // 10 milliseconds of leeway
 		} else {
 			errorShow('Unable to parse the "currentScreen" variable in the WebSocket close function.');
 		}
-	});
+	}
 
 	conn.on('socketError', function(event) {
 		if (currentScreen === 'title-ajax' ||
@@ -1300,30 +1382,20 @@ function websocket(username, password, remember) {
 
 	// On initial connection, we get a list of all of the races that are currently open or ongoing
 	conn.on('raceList', function(data) {
-		// Keep track of what races are currently going
+		// Go through the list of races that were sent
 		for (let i = 0; i < data.length; i++) {
+			// Keep track of what races are currently going
 			raceList[data[i].id] = data[i];
-		}
 
-		// Update the "Current races" area
-		if (data.length > 0) {
-			racesDrawAll();
-		}
+			// Update the "Current races" area
+			lobbyRaceDraw(data[i]);
 
-		// Check to see if we are in any races
-		for (let id in raceList) {
-			if (!raceList.hasOwnProperty(id)) {
-				continue;
+			// Check to see if we are in this races
+			for (let j = 0; j < data[i].players.length; j++) {
+				// TODO
 			}
 
-			for (let i = 0; i < raceList[id].players.length; i++) {
-				if (raceList[id].players[i] === myUsername) {
-					//currentRaceID = id;
-					break;
-				}
-			}
 		}
-
 	});
 
 	conn.on('raceCreated', function(data) {
@@ -1331,14 +1403,11 @@ function websocket(username, password, remember) {
 		raceList[data.id] = data;
 
 		// Update the "Current races" area
-		// TODO
+		lobbyRaceDraw(data);
 
 		// Check to see if we created this race
-		if (data.players[0] === myUsername) { // There will only be one player in this race because it was just created
-			//currentRaceID = data.id;
-
-			// Join the race lobby
-			// TODO
+		if (data.captain === myUsername) {
+			raceEnter(data.id);
 		}
 	});
 
@@ -1488,6 +1557,9 @@ function errorShow(message) {
 	}
 	currentScreen = 'error';
 
+	// Disconnect from the server, if connected
+	conn.close();
+
 	// Hide the buttons in the header
 	$('#header-lobby').fadeOut(fadeTime);
 	$('#header-start-race').fadeOut(fadeTime);
@@ -1495,8 +1567,8 @@ function errorShow(message) {
 	$('#header-settings').fadeOut(fadeTime);
 	$('#header-log-out').fadeOut(fadeTime);
 
-	// Hide tooltips
-	$('#start-race-tooltip').fadeOut(fadeTime);
+	// Close all tooltips
+	closeAllTooltips();
 
 	// Show the error modal
 	$('#gui').fadeTo(fadeTime, 0.1, function() {
@@ -1551,6 +1623,13 @@ function findAjaxError(jqXHR) {
 	}
 
 	return error;
+}
+
+function closeAllTooltips() {
+	let instances = $.tooltipster.instances();
+	$.each(instances, function(i, instance){
+		instance.close();
+	});
 }
 
 // From: https://css-tricks.com/snippets/javascript/htmlentities-for-javascript/

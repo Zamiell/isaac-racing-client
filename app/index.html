@@ -41,7 +41,7 @@
 				<nav id="nav">
 					<ul>
 						<li>
-							<a id="header-lobby" class="button disabled no-drag" style="display: none;">
+							<a id="header-lobby" class="button no-drag" style="display: none;">
 								<span lang="en">Lobby</span>
 							</a>
 						</li>
@@ -68,7 +68,6 @@
 						<li><a></a></li> <!-- Just for spacing -->
 						<li>
 							<a id="header-minimize" class="no-drag header-window-buttons">
-								<!--<i id="header-minimize-icon" class="fa fa-minus" aria-hidden="true"></i>-->
 								<i id="header-minimize-icon" class="mdi mdi-window-minimize"></i>
 							</a>
 						</li>
@@ -116,6 +115,10 @@
 							<li id="title-language-english" class="selected-language">English</li>
 							<li>|</li>
 							<li id="title-language-french" class="unselected-language"><a>Français</a></li>
+							<li>|</li>
+							<li id="title-language-spanish" class="unselected-language"><a>Español</a></li>
+							<li>|</li>
+							<li id="title-language-russian" class="unselected-language"><a>Русский</a></li>
 						</ul>
 						<div id="title-ajax">
 							<div class="ajax-ring"></div>
@@ -384,20 +387,38 @@
 							</ul>
 						</div>
 					</div>
+
+					<div class="padding2p5"></div>
+
 					<div class="row uniform 50%">
+						<div class="2u start-race-note">
+							<p><span lang="en">Format</span>:</p>
+						</div>
+						<div class="2u">
+							<span id="select-race-format-icon"></span>
+						</div>
 						<div class="6u">
 							<div class="select-wrapper">
-								<select id="start-race-ruleset">
+								<select id="start-race-format">
 									<option value="unseeded" selected="selected" lang="en">Unseeded</option>
 									<option value="seeded" lang="en">Seeded</option>
 									<option value="diversity" lang="en">Diversity</option>
 								</select>
 							</div>
 						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div class="2u start-race-note">
+							<p><span lang="en">Character</span>:</p>
+						</div>
+						<div class="2u">
+							<span id="select-race-character-icon"></span>
+						</div>
 						<div class="6u">
 							<div class="select-wrapper">
 								<select id="start-race-character">
-									<option value="Isaac" selected="selected">Isaac</option>
+									<option value="Isaac">Isaac</option>
 									<option value="Magdalene">Magdalene</option>
 									<option value="Cain">Cain</option>
 									<option value="Judas" selected="selected">Judas</option>
@@ -415,6 +436,73 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="row uniform 50%">
+						<div class="2u start-race-note">
+							<p><span lang="en">Goal</span>:</p>
+						</div>
+						<div class="2u">
+							<span id="select-race-goal-icon"></span>
+						</div>
+						<div class="6u">
+							<div class="select-wrapper">
+								<select id="start-race-goal">
+									<option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
+									<option value="The Lamb">The Lamb (Dark Room)</option>
+									<option value="Mega Satan">Mega Satan</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="row uniform 50%">
+						<div id="select-race-starting-build-1" class="2u start-race-note hidden">
+							<p><span lang="en">Build</span>:</p>
+						</div>
+						<div id="select-race-starting-build-2" class="2u hidden">
+							<span id="select-race-starting-build-icon"></span>
+						</div>
+						<div id="select-race-starting-build-3" class="6u hidden">
+							<div class="select-wrapper">
+								<select id="start-race-starting-build">
+									<option value="Random" selected="selected">Random</option>
+									<option value="1">1 &nbsp;-&nbsp; 20/20</option>
+									<option value="2">2 &nbsp;-&nbsp; Chocolate Milk</option>
+									<option value="3">3 &nbsp;-&nbsp; Cricket's Body</option>
+									<option value="4">4 &nbsp;-&nbsp; Cricket's Head</option>
+									<option value="5">5 &nbsp;-&nbsp; Dead Eye</option>
+									<option value="6">6 &nbsp;-&nbsp; Death's Touch</option>
+									<option value="7">7 &nbsp;-&nbsp; Dr. Fetus</option>
+									<option value="8">8 &nbsp;-&nbsp; Epic Fetus</option>
+									<option value="9">9 &nbsp;-&nbsp; Ipecac</option>
+									<option value="10">10 &nbsp;-&nbsp; Judas' Shadow</option>
+									<option value="11">11 &nbsp;-&nbsp; Lil' Brimstone</option>
+									<option value="12">12 &nbsp;-&nbsp; Magic Mushroom</option>
+									<option value="13">13 - Mom's Knife</option>
+									<option value="14">14 - Monstro's Lung</option>
+									<option value="15">15 - Polyphemus</option>
+									<option value="16">16 - Proptosis</option>
+									<option value="17">17 - Sacrificial Dagger</option>
+									<option value="18">18 - Tech.5</option>
+									<option value="19">19 - Tech X</option>
+									<option value="20">20 - Brimstone</option>
+									<option value="21">21 - Incubus</option>
+									<option value="22">22 - Maw of the Void</option>
+									<option value="23">23 - Crown of Light</option>
+									<option value="24">24 - Godhead</option>
+									<option value="25">25 - Sacred Heart</option>
+									<option value="26">26 - Mutant Spider + The Inner Eye</option>
+									<option value="27">27 - Technology + A Lump of Coal</option>
+									<option value="28">28 - The Ludovico Technique + The Parasite</option>
+									<option value="29">29 - Fire Mind + Lucky Foot x13</option>
+									<option value="30">30 - Kamikaze! + Host Hat</option>
+									<option value="31">31 - Mega Blast + Habit + The Battery + AAA Battery</option>
+								</select>
+							</div>
+						</div>
+						<div id="select-race-starting-build-padding" class="1u"></div><!-- Spacing so that the row will show when hidden -->
+					</div>
+
 					<div class="row uniform">
 						<div class="6u">
 							<ul class="actions">

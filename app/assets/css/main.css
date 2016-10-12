@@ -3449,6 +3449,10 @@
 		padding-bottom: 2em;
 	}
 
+	.padding2p5 {
+		padding-bottom: 2.5em;
+	}
+
 	.padding3 {
 		padding-bottom: 3em;
 	}
@@ -3761,6 +3765,67 @@
 
 	#start-race-name {
 		width: 20em;
+	}
+
+	.start-race-note {
+		padding-top: 2em !important;
+	}
+
+	.start-race-icon {
+		width: 38px;
+		height: 52px !important;
+		min-height: 52px !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#select-race-format-icon {
+		background-image: url("../img/formats/unseeded.png");
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		display: inline-block;
+		height: 3em;
+		width: 3em;
+		position: relative;
+		bottom: 13px; /* 3em = 53px, height of dice = 27px, 53px - 27px = 26px, 26px / 2 = 13px */
+	}
+
+	#select-race-character-icon {
+		background-image: url("../img/characters/Judas.png");
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		display: inline-block;
+		height: 3em;
+		width: 3em;
+		position: relative;
+		bottom: 10px; /* 3em = 53px, height of Isaac = 33px, 53px - 33px = 20px, 20px / 2 = 10px */
+	}
+
+	#select-race-goal-icon {
+		background-image: url("../img/goals/Blue Baby.png");
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		display: inline-block;
+		height: 3em;
+		width: 3em;
+		position: relative;
+		bottom: 12px; /* 3em = 53px, height of chest = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
+	}
+
+	#select-race-starting-build-icon {
+		background-image: url("../img/builds/Random.png");
+		background-repeat: no-repeat;
+		background-position: bottom center;
+		display: inline-block;
+		height: 3em;
+		width: 3em;
+		position: relative;
+		bottom: 10px; /* 3em = 53px, height of ? = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
+	}
+
+	#select-race-starting-build-padding {
+		height: 4.2em;
 	}
 
 	/*
