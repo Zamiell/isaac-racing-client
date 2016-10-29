@@ -7,26 +7,26 @@
 	Imports
 */
 
-const electron     = require('electron');
-const fs           = require('fs');
-const os           = require('os');
-const ChildProcess = require('child_process');
-const path         = require('path');
+const electron      = require('electron');
+const app           = electron.app; // Module to control application life
+const BrowserWindow = electron.BrowserWindow; // Module to create native browser window
+const ipcMain       = electron.ipcMain;
+const fs            = require('fs');
+const os            = require('os');
+const ChildProcess  = require('child_process');
+const path          = require('path');
+const isDev         = require('electron-is-dev');
 
 /*
 	Constants
 */
 
-const app = electron.app; // Module to control application life
-const BrowserWindow = electron.BrowserWindow; // Module to create native browser window
-const ipcMain = electron.ipcMain;
-
-const appFolder = path.resolve(process.execPath, '..');
+const appFolder      = path.resolve(process.execPath, '..');
 const rootAtomFolder = path.resolve(appFolder, '..');
-const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-const exeName = path.basename(process.execPath);
-const assetsFolder = path.resolve(appFolder, '..', '..', '..', 'app', 'assets');
-const logFile = path.resolve(rootAtomFolder, 'Racing+.log');
+const updateDotExe   = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+const exeName        = path.basename(process.execPath);
+const assetsFolder   = path.resolve(appFolder, '..', '..', '..', 'app', 'assets');
+const logFile        = path.resolve(rootAtomFolder, 'Racing+.log');
 
 /*
 	Initialization
@@ -39,8 +39,21 @@ writeLog('App launched.');
 	From: https://github.com/electron/windows-installer#handling-squirrel-events
 */
 
+// This package automatically takes care of everything except for a few edge cases
 if (require('electron-squirrel-startup')) {
 	return;
+}
+
+// If there are arguments and we are not running in a development environment
+let firstRun = false;
+if (process.argv.length !== 1 && path.basename(process.argv[0]) !== 'electron.exe') {
+	const squirrelEvent = process.argv[1];
+
+	// We can't check for updates on the very first run or else bad things will happen
+	// (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)
+	if (squirrelEvent === '--squirrel-firstrun') {
+		firstRun = true;
+	}
 }
 
 /*
@@ -53,20 +66,24 @@ let mainWindow;
 
 function createWindow() {
 	// Create the browser window
-	var iconPath = path.resolve(assetsFolder, 'img', 'favicon.png');
+	let width = 1110;
+	let height = 720;
+	if (isDev) {
+		width += 500;
+	}
 	mainWindow = new BrowserWindow({
-		width:  1110,
-		height: 720,
-		icon:   iconPath,
+		width:  width,
+		height: height,
+		icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
 		title:  'Racing+',
 		frame:  false,
 	});
-
-	// and load the index.html of the app.
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-	// Open the DevTools.
-	//mainWindow.webContents.openDevTools();
+	// Dev-only stuff
+	if (isDev === true) {
+		mainWindow.webContents.openDevTools();
+	}
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function() {
@@ -78,15 +95,17 @@ function createWindow() {
 }
 
 // Check to see if the application is already open
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-	// A second instance of the program was opened, so just focus the existing window
-	if (mainWindow) {
-		if (mainWindow.isMinimized()) mainWindow.restore();
-		mainWindow.focus();
+if (isDev === false) {
+	const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+		// A second instance of the program was opened, so just focus the existing window
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) mainWindow.restore();
+			mainWindow.focus();
+		}
+	});
+	if (shouldQuit) {
+		app.quit();
 	}
-});
-if (shouldQuit) {
-	app.quit();
 }
 
 // This method will be called when Electron has finished
@@ -138,7 +157,7 @@ ipcMain.on('asynchronous-message', (event, arg) => {
 */
 
 function writeLog(message) {
-	var datetime = new Date().toUTCString();
+	let datetime = new Date().toUTCString();
 	message = datetime + ' - ' + message + os.EOL;
 	fs.appendFile(logFile, message);
 }

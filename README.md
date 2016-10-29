@@ -24,4 +24,4 @@ Compile / Package
 -----------------
 
 * Install Python 2 (you need to be able to run the `python` command).
-* `npm run dist --python="C:\Python27\python27.exe`
+* `npm run dist --python="C:\Python27\python27.exe"`

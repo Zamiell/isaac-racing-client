@@ -3401,7 +3401,7 @@
 	}
 
 /*
-*  Isaac Racing Client stuff
+*  Isaac Racing Client stuff (Racing+)
 */
 
 	body {
@@ -3457,6 +3457,11 @@
 		padding-bottom: 3em;
 	}
 
+	.button.small {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+
 	/*
 		Header
 	*/
@@ -3467,6 +3472,28 @@
 
 	.no-drag {
 		-webkit-app-region: no-drag;
+	}
+
+	.header-links {
+		-moz-transition: color 0.2s ease-in-out;
+		-webkit-transition: color 0.2s ease-in-out;
+		-ms-transition: color 0.2s ease-in-out;
+		transition: color 0.2s ease-in-out;
+		cursor: pointer;
+	}
+
+	.header-links:hover {
+		color: rgba(255, 255, 255, 0.625) !important;
+	}
+
+	.header-links:active {
+		color: rgba(255, 255, 255, 0.375) !important;
+	}
+
+	.header-button-icons {
+		position: relative;
+		top: 1px;
+		right: 4px;
 	}
 
 	.header-window-buttons {
@@ -3524,6 +3551,15 @@
 		padding-bottom: 8em;
 	}
 
+	.title-button-icons {
+		position: relative;
+		top: 1px;
+	}
+
+	#version {
+		/*font-size: 0.5em;*/
+	}
+
 	/*
 		Login
 	*/
@@ -3560,6 +3596,11 @@
 		border: 1px solid #ff6666;
 		color: black;
 		font-size: 0.75em;
+	}
+
+	#login-remember-checkbox-label {
+		position: relative;
+		top: 0.2em;
 	}
 
 	/*
@@ -3666,6 +3707,10 @@
 		height: 1.6em; /* This is derived from how Twitch does it */
 	}
 
+	.chat-pm {
+		color: red;
+	}
+
 	.chat-text {
 		overflow-y: auto;
 		overflow-wrap: break-word;
@@ -3700,6 +3745,13 @@
 		padding: 0.25em 0.75em;
 	}
 
+	.circle {
+		border-radius: 50%;
+		display: inline-block;
+		width: 0.7em;
+		height: 0.7em;
+	}
+
 	.lobby-race-row-open {
 		-moz-transition: background-color 0.2s ease-in-out;
 		-webkit-transition: background-color 0.2s ease-in-out;
@@ -3710,6 +3762,59 @@
 
 	.lobby-race-row-open:hover {
 		background-color: #dce2ef;
+	}
+
+	.lobby-current-races-open {
+		background: green;
+	}
+
+	.lobby-current-races-starting {
+		background: blue;
+	}
+
+	.lobby-current-races-in-progress {
+		background: orange;
+	}
+
+	.lobby-current-races-format-icon {
+		position: relative;
+		bottom: 0.25em;
+	}
+
+	.lobby-current-races-unseeded {
+		background-image: url("../img/formats/unseeded.png");
+		background-repeat: no-repeat;
+		background-position: center center;
+		display: inline-block;
+		height: 2.1em;
+		width: 2em;
+		position: absolute;
+	}
+
+	.lobby-current-races-seeded {
+		background-image: url("../img/formats/seeded.png");
+		background-repeat: no-repeat;
+		background-position: center center;
+		display: inline-block;
+		height: 2.1em;
+		width: 2em;
+		position: absolute;
+	}
+
+	.lobby-current-races-diversity {
+		background-image: url("../img/formats/diversity.png");
+		background-repeat: no-repeat;
+		background-position: center center;
+		display: inline-block;
+		height: 2.1em;
+		width: 2em;
+		position: absolute;
+		transform: scale(0.75);
+	}
+
+	.lobby-current-races-spacing {
+		display: inline-block;
+		width: 2.5em;
 	}
 
 	/*
@@ -3725,7 +3830,7 @@
 		padding: 1em 1em 1em 1em; /* Default is 3em */
 	}
 
-	#lobby-users-users {
+	.users-users {
 		overflow-y: auto;
 		height: 14.9em;
 		max-width: 10em;
@@ -3735,11 +3840,11 @@
 		padding: 0 0.5em 0 0.5em;
 	}
 
-	.lobby-users-user {
+	.users-user {
 		cursor: pointer;
 	}
 
-	.lobby-users-user:hover {
+	.users-user:hover {
 		font-weight: bolder;
 	}
 
@@ -3752,26 +3857,26 @@
 	}
 
 	/*
-		Start race
+		New race tooltip
 	*/
 
-	#start-race-tooltip {
+	#new-race-tooltip {
 		padding: 2em 2em 2em 2em;
 	}
 
-	#start-race-form {
+	#new-race-form {
 		margin: 0 0 0 0;
 	}
 
-	#start-race-name {
+	#new-race-name {
 		width: 20em;
 	}
 
-	.start-race-note {
+	.new-race-note {
 		padding-top: 2em !important;
 	}
 
-	.start-race-icon {
+	.new-race-icon {
 		width: 38px;
 		height: 52px !important;
 		min-height: 52px !important;
@@ -3780,7 +3885,11 @@
 		justify-content: center;
 	}
 
-	#select-race-format-icon {
+	#new-race-format-icon {
+		-moz-transition: background-image 0.3s ease-in-out;
+		-webkit-transition: background-image 0.3s ease-in-out;
+		-ms-transition: background-image 0.3s ease-in-out;
+		transition: background-image 0.3s ease-in-out;
 		background-image: url("../img/formats/unseeded.png");
 		background-repeat: no-repeat;
 		background-position: bottom center;
@@ -3789,12 +3898,17 @@
 		width: 3em;
 		position: relative;
 		bottom: 13px; /* 3em = 53px, height of dice = 27px, 53px - 27px = 26px, 26px / 2 = 13px */
+		transform: scale(1.25);
 	}
 
-	#select-race-character-icon {
+	#new-race-character-icon {
+		-moz-transition: background-image 0.3s ease-in-out;
+		-webkit-transition: background-image 0.3s ease-in-out;
+		-ms-transition: background-image 0.3s ease-in-out;
+		transition: background-image 0.3s ease-in-out;
 		background-image: url("../img/characters/Judas.png");
 		background-repeat: no-repeat;
-		background-position: bottom center;
+		background-position: bottom center; /* using bottom since the characters have different size hair */
 		display: inline-block;
 		height: 3em;
 		width: 3em;
@@ -3802,7 +3916,11 @@
 		bottom: 10px; /* 3em = 53px, height of Isaac = 33px, 53px - 33px = 20px, 20px / 2 = 10px */
 	}
 
-	#select-race-goal-icon {
+	#new-race-goal-icon {
+		-moz-transition: background-image 0.3s ease-in-out;
+		-webkit-transition: background-image 0.3s ease-in-out;
+		-ms-transition: background-image 0.3s ease-in-out;
+		transition: background-image 0.3s ease-in-out;
 		background-image: url("../img/goals/Blue Baby.png");
 		background-repeat: no-repeat;
 		background-position: bottom center;
@@ -3813,7 +3931,11 @@
 		bottom: 12px; /* 3em = 53px, height of chest = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
 	}
 
-	#select-race-starting-build-icon {
+	#new-race-starting-build-icon {
+		-moz-transition: background-image 0.3s ease-in-out;
+		-webkit-transition: background-image 0.3s ease-in-out;
+		-ms-transition: background-image 0.3s ease-in-out;
+		transition: background-image 0.3s ease-in-out;
 		background-image: url("../img/builds/Random.png");
 		background-repeat: no-repeat;
 		background-position: bottom center;
@@ -3821,34 +3943,113 @@
 		height: 3em;
 		width: 3em;
 		position: relative;
-		bottom: 10px; /* 3em = 53px, height of ? = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
+		bottom: 14px; /* manually found the right value */
+		transform: scale(1.25);
 	}
 
-	#select-race-starting-build-padding {
+	#new-race-starting-build-padding {
 		height: 4.2em;
 	}
 
+	#new-race-submit-button-icon {
+		position: relative;
+		right: 12px;
+	}
+
 	/*
-		Race (status)
+		Race (title)
 	*/
 
-	#race-status-box {
-		margin: 1.5em 1.5em 1.5em 1.5em;
+	#race-title-box {
+		margin: 1.5em 0 1.5em 1.5em;
 		padding: 1em 1em 1em 1em; /* Default is 3em */
+		height: 15em;
+		text-align: center;
+	}
+
+	#race-title-table {
+		margin: 0;
+	}
+
+	#race-title-table th {
+		text-align: center;
+	}
+
+	#race-title-table > tbody > tr > td {
+		padding: 0.25em 0.75em;
+	}
+
+	/*
+		Race (title controls)
+	*/
+
+	#race-title-controls-container {
+		margin-top: 1.5em;
+		font-size: 1.25em;
+	}
+
+	#race-ready-checkbox-label {
+		position: relative;
+		top: 0.2em;
+	}
+
+	#race-countdown {
+		position: relative;
+	}
+
+	/*
+		Race (participants)
+	*/
+
+	#race-participants-box {
+		margin: 1.5em 0 1.5em 1.5em;
+		padding: 1em 1em 1em 1em; /* Default is 3em */
+	}
+
+	#race-participants-table-wrapper {
+		height: 16.5em;
+		overflow-y: auto;
+	}
+
+	#race-participants-table {
+		margin: 0;
+	}
+
+	#race-participants-table > tbody > tr > td {
+		padding: 0.25em 0.75em;
 	}
 
 	/*
 		Race (chat)
 	*/
 
+	#race-chat-container {
+		padding-left: 1em;
+	}
 
+	#race-chat-box {
+		margin: 1.5em 1.5em 1.5em 0.5em;
+		padding: 1em 1em 1em 1em; /* Default is 3em */
+		height: 35em;
+		overflow-y: auto;
+	}
+
+	#race-chat-text {
+		overflow-y: auto;
+		overflow-wrap: break-word;
+		height: 29em;
+		border-style: solid !important;
+		border-color: #e5e5e5 !important;
+		border: 1px;
+		margin-bottom: 1em;
+		padding: 0 0.5em 0 0.5em;
+	}
 
 	/*
 		Error modal
 	*/
 
 	.error {
-		display: none;
 		font-size: 16pt !important;
 		position: absolute;
 		z-index: 1;
@@ -3857,6 +4058,23 @@
 		right: 5em;
 		bottom: 5em;
 		overflow: auto;
+	}
+
+	/*
+		Log file modal
+	*/
+
+	#log-file-modal {
+		top: 2.5em;
+		bottom: 2.5em;
+	}
+
+	#log-file-modal p {
+		margin-bottom: 1em;
+	}
+
+	#log-file-link {
+		cursor: pointer;
 	}
 
 	/*

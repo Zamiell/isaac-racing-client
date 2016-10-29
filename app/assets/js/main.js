@@ -4,38 +4,55 @@
 	TODO
 
 	- tab complete for chat
-	- change lobby-users-user to agnostic
-	- raceEnter
-*/
-
-/*
-	Isaac Racing Client stuff
+	- /r should work
+	- test to see if multiple windows works in production
+	- columns for race:
+	  - seed
+	  - floor
+	  - starting item
+	  - time offset
+	  - automatic finish
+	  - fill in items
 */
 
 // Constants
-const serverURL = 'isaacitemtracker.com';
-const secure = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
-const fadeTime = 300;
+const domain    = 'isaacracing.net';
+const secure    = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
+const fadeTime  = 300;
 
 // Imports
-const {ipcRenderer} = nodeRequire('electron');
-const {remote} = nodeRequire('electron');
-const {Menu, MenuItem} = remote;
-const {shell} = nodeRequire('electron');
-const keytar = nodeRequire('keytar');
-const fs = nodeRequire('fs');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const remote      = nodeRequire('electron').remote;
+const shell       = nodeRequire('electron').shell;
+const clipboard   = nodeRequire('electron').clipboard;
+const autoUpdater = nodeRequire('electron').autoUpdater;
+const isDev       = nodeRequire('electron-is-dev');
+const fs          = nodeRequire('fs');
+const os          = nodeRequire('os');
+const path        = nodeRequire('path');
+const keytar      = nodeRequire('keytar');
+const spawn       = nodeRequire('child_process').spawn;
+const execFile    = nodeRequire('child_process').execFile;
+const execSync    = nodeRequire('child_process').execSync;
+const Tail        = nodeRequire('tail').Tail;
 
 // Global variables
 var currentScreen = 'title';
+var currentRaceID = false; // Equal to false or the ID of the race
 var conn;
+var logMonitoringProgram;
 var roomList = {};
 var raceList = {};
 var myUsername;
+var timeOffset = 0;
 var initiatedLogout = false;
-var runningInDev = false;
 var wordList;
-var language;
 var lang;
+var settings = {
+	'language': null,
+	'volume': null,
+	'logFilePath': null,
+};
 
 /*
 	By default, we start on the title screen.
@@ -49,9 +66,10 @@ var lang;
 	- register
 	- register-ajax
 	- lobby
-	- _race_##### (corresponding to the current race ID)
+	- race
 	- settings
 	- error
+	- warning
 	- transition
 */
 
@@ -60,26 +78,24 @@ var lang;
 */
 
 function debug() {
+	// The "/debug" command
 	console.log('Entering debug function.');
-	//errorShow('fuck');
+
+	//errorShow('debug');
+	//console.log(raceList);
+	//console.log(currentRaceID);
 }
 
 /*
-	Program initialization
+	Development-only stuff
 */
 
-// Check to see if we are running in development by checking for the existance of the "assets" directory
-try {
-	fs.accessSync('assets', fs.F_OK);
-} catch (e) {
-	runningInDev = true;
-}
-if (runningInDev === true) {
+if (isDev) {
 	// Importing this adds a right-click menu with 'Inspect Element' option
 	let rightClickPosition = null;
 
-	const menu = new Menu();
-	const menuItem = new MenuItem({
+	const menu = new remote.Menu();
+	const menuItem = new remote.MenuItem({
 		label: 'Inspect Element',
 		click: () => {
 			remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
@@ -97,21 +113,80 @@ if (runningInDev === true) {
 	}, false);
 }
 
-// Set up localization
-language = localStorage.language;
-if (typeof language === 'undefined') { // If this is the first run, default to English
-	language = 'en';
+/*
+	Initialize settings
+*/
+
+// Language localization
+settings.language = localStorage.language;
+if (typeof language === 'undefined') {
+	// If this is the first run, default to English
+	settings.language = 'en';
 	localStorage.language = 'en';
 }
 lang = new Lang(); // Create a language switcher instance
-lang.dynamic('fr', 'assets/js/langpack/fr.json');
+lang.dynamic('fr', 'assets/languages/fr.json');
 lang.init({
 	defaultLang: 'en',
 });
 
+// Volume
+settings.volume = localStorage.volume;
+if (typeof settings.volume === 'undefined') {
+	// If this is the first run, default to 10%
+	settings.volume = 0.1;
+	localStorage.volume = 0.1;
+}
+
+// Log file path
+settings.logFilePath = localStorage.logFilePath;
+if (typeof settings.logFilePath === 'undefined') {
+	// If this is the first run, set it to the default location (which is in the user's Documents directory)
+	let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
+	let documentsPath = execSync(command, {
+		'encoding': 'utf8',
+	});
+	let defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth', 'log.txt');
+	localStorage.logFilePath = defaultLogFilePath;
+}
+
+/*
+	Initialization (miscellaneous)
+*/
+
 // Read in the word list for later
-let wordListLocation = (runningInDev === true ? 'app/' : '') + 'assets/words/words.txt';
+let wordListLocation = (isDev ? 'app' : 'resources/app.asar') + '/assets/words/words.txt';
 wordList = fs.readFileSync(wordListLocation).toString().split('\n');
+
+/*
+	Automatic updating
+*/
+
+function checkForUpdates() {
+	autoUpdater.on('error', function(err) {
+		console.err(`Update error: ${err.message}`);
+	});
+
+	autoUpdater.on('checking-for-update', function() {
+		console.log('Checking for update.');
+	});
+
+	autoUpdater.on('update-available', function() {
+		console.log('Update available.');
+	});
+
+	autoUpdater.on('update-not-available', function() {
+		console.log('No update available.');
+	});
+
+	autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
+		console.log(`Update downloaded: ${name}: ${url}`);
+	});
+
+	let url = 'http' + (secure ? 's' : '') + '://' + domain + '/update/win32';
+	autoUpdater.setFeedURL(url);
+	autoUpdater.checkForUpdates();
+}
 
 /*
 	UI functionality
@@ -119,9 +194,14 @@ wordList = fs.readFileSync(wordListLocation).toString().split('\n');
 
 $(document).ready(function() {
 	// If the user is using a non-default language, change all the text on the page
-	if (language !== 'en') {
-		localize(language);
+	if (settings.language !== 'en') {
+		localize(settings.language);
 	}
+
+	// Set the version number on the title screen
+	let packageLocation = (isDev ? 'app' : 'resources/app.asar') + '/package.json';
+	let version = JSON.parse(fs.readFileSync(packageLocation)).version;
+	$('#title-version').html('v' + version);
 
 	// Find out if the user has saved credentials
 	let storedUsername = localStorage.username;
@@ -132,6 +212,7 @@ $(document).ready(function() {
 			currentScreen = 'title-ajax';
 			$('#title-buttons').fadeOut(0);
 			$('#title-languages').fadeOut(0);
+			$('#title-version').fadeOut(0);
 			$('#title-ajax').fadeIn(0);
 
 			// Fill in the input fields in the login form in case there is an error later on
@@ -156,11 +237,13 @@ $(document).ready(function() {
 				event.preventDefault();
 				$('#title-login-button').click();
 			}
+
 		} else if (event.which === 50) { // "2"
 			if (currentScreen === 'title') {
 				event.preventDefault();
 				$('#title-register-button').click();
 			}
+
 		} else if (event.which === 27) { // "Esc"
 			if (currentScreen === 'login') {
 				event.preventDefault();
@@ -174,45 +257,88 @@ $(document).ready(function() {
 			} else if (currentScreen === 'lobby') {
 				closeAllTooltips();
 			}
+
 		} else if (event.which === 38) { // Up arrow
-			if (currentScreen === 'lobby') {
-				if ($('#lobby-chat-box-input').is(':focus')) {
+			if (currentScreen === 'lobby' || currentScreen === 'race') {
+				if ($('#' + currentScreen + '-chat-box-input').is(':focus')) {
+					let room;
+					if (currentScreen === 'lobby') {
+						room = 'lobby';
+					} else if (currentScreen === 'race') {
+						room = '_race_' + currentRaceID;
+					}
+
 					event.preventDefault();
-					roomList.lobby.historyIndex++;
+					roomList[room].historyIndex++;
 
 					// Check to see if we have reached the end of the history list
-					if (roomList.lobby.historyIndex > roomList.lobby.typedHistory.length - 1) {
-						roomList.lobby.historyIndex--;
+					if (roomList[room].historyIndex > roomList[room].typedHistory.length - 1) {
+						roomList[room].historyIndex--;
 						return;
 					}
 
 					// Set the chat input box to what we last typed
-					let retrievedHistory = roomList.lobby.typedHistory[roomList.lobby.historyIndex];
-					$('#lobby-chat-box-input').val(retrievedHistory);
+					let retrievedHistory = roomList[room].typedHistory[roomList[room].historyIndex];
+					$('#' + currentScreen + '-chat-box-input').val(retrievedHistory);
 				}
 			}
+
 		} else if (event.which === 40) { // Down arrow
-			if (currentScreen === 'lobby') {
-				if ($('#lobby-chat-box-input').is(':focus')) {
+			if (currentScreen === 'lobby' || currentScreen === 'race') {
+				if ($('#' + currentScreen + '-chat-box-input').is(':focus')) {
+					let room;
+					if (currentScreen === 'lobby') {
+						room = 'lobby';
+					} else if (currentScreen === 'race') {
+						room = '_race_' + currentRaceID;
+					}
+
 					event.preventDefault();
-					roomList.lobby.historyIndex--;
+					roomList[room].historyIndex--;
 
 					// Check to see if we have reached the beginning of the history list
-					if (roomList.lobby.historyIndex <= -2) { // -2 instead of -1 here because we want down arrow to clear the chat
-						roomList.lobby.historyIndex = -1;
+					if (roomList[room].historyIndex <= -2) { // -2 instead of -1 here because we want down arrow to clear the chat
+						roomList[room].historyIndex = -1;
 						return;
 					}
 
 					// Set the chat input box to what we last typed
-					let retrievedHistory = roomList.lobby.typedHistory[roomList.lobby.historyIndex];
-					$('#lobby-chat-box-input').val(retrievedHistory);
+					let retrievedHistory = roomList[room].typedHistory[roomList[room].historyIndex];
+					$('#' + currentScreen + '-chat-box-input').val(retrievedHistory);
 				}
 			}
+
+		} else if (event.altKey && event.which === 78) { // Alt + n
+			if (currentScreen === 'lobby') {
+				$('#header-new-race').click();
+			}
+
+		} else if (event.altKey && event.which === 83) { // Alt + s
+			if (currentScreen === 'lobby') {
+				$('#header-settings').click();
+			}
+
+		} else if (event.altKey && event.which === 76) { // Alt + l
+			if (currentScreen === 'race') {
+				$('#header-lobby').click();
+			}
+
+		} else if (event.altKey && event.which === 82) { // Alt + r
+			if (currentScreen === 'race') {
+				$('#race-ready-checkbox').click();
+			}
+
+		} else if (event.altKey && event.which === 81) { // Alt + q
+			if (currentScreen === 'race') {
+				$('#race-quit-button').click();
+			}
+
+		} else if (event.which === 13) { // Enter
+			if (currentScreen === 'lobby' && $('#new-race-randomize').is(':focus')) {
+				event.preventDefault();
+				$('#new-race-form').submit();
+			}
 		}
-
-		// 37 // Left arrow
-		// 39 // Right arrow
-
 	});
 
 	/*
@@ -479,16 +605,73 @@ $(document).ready(function() {
 	});
 
 	/*
+		Lobby links
+	*/
+
+	$('#header-profile').click(function() {
+		let url = 'http' + (secure ? 's' : '') + '://' + domain + '/profiles/' + myUsername;
+		shell.openExternal(url);
+	});
+
+	$('#header-leaderboards').click(function() {
+		let url = 'http' + (secure ? 's' : '') + '://' + domain + '/leaderboards';
+		shell.openExternal(url);
+	});
+
+	$('#header-help').click(function() {
+		let url = 'http' + (secure ? 's' : '') + '://' + domain + '/info';
+		shell.openExternal(url);
+	});
+
+	/*
 		Lobby header buttons
 	*/
 
 	$('#header-lobby').click(function() {
-		if ($('#header-lobby').hasClass('disabled') === false) {
-			// TODO go back to lobby
+		if (currentScreen !== 'race') {
+			return;
 		}
+
+		// Check to see if we should leave the race
+		if (raceList.hasOwnProperty(currentRaceID)) {
+			if (raceList[currentRaceID].status === 'open') {
+				conn.emit('raceLeave', {
+					'id': currentRaceID,
+				});
+			}
+		} else {
+			lobbyShowFromRace();
+		}
+
 	});
 
-	$('#header-start-race').tooltipster({
+	$('#header-lobby').tooltipster({
+		theme: 'tooltipster-shadow',
+		delay: 0,
+		functionBefore: function() {
+			if (currentScreen === 'race') {
+				if (raceList.hasOwnProperty(currentRaceID)) {
+					if (raceList[currentRaceID].status === 'starting' ||
+						raceList[currentRaceID].status === 'in progress') {
+
+						// The race has already started
+						return true;
+					} else {
+						// The race has not started yet
+						return false;
+					}
+				} else {
+					// The race is finished
+					return false;
+				}
+			} else {
+				// Not on the race screen
+				return false;
+			}
+		},
+	});
+
+	$('#header-new-race').tooltipster({
 		theme: 'tooltipster-shadow',
 		trigger: 'click',
 		interactive: true,
@@ -504,19 +687,31 @@ $(document).ready(function() {
 		$('#gui').fadeTo(fadeTime, 1);
 	});
 
-	$('#header-start-race').click(function() {
-		$('#start-race-name').focus();
+	$('#header-new-race').click(function() {
+		$('#new-race-name').focus();
+	});
+
+	$('#header-settings').tooltipster({
+		theme: 'tooltipster-shadow',
+		trigger: 'click',
+		interactive: true,
+		functionBefore: function() {
+			if (currentScreen === 'lobby') {
+				$('#gui').fadeTo(fadeTime, 0.1);
+				return true;
+			} else {
+				return false;
+			}
+		},
+	}).tooltipster('instance').on('close', function() {
+		$('#gui').fadeTo(fadeTime, 1);
 	});
 
 	$('#header-settings').click(function() {
-		if ($('#header-settings').hasClass('disabled') === false) {
+		// TODO focus something?
+		//$('#senew-race-name').focus();
 
-		}
-	});
-
-	$('#header-profile').click(function() {
-		let url = 'http' + (secure === true ? 's' : '') + '://' + serverURL + '/profiles/' + myUsername;
-		shell.openExternal(url);
+		// CHANGE LANGUAGES
 	});
 
 	$('#header-log-out').click(function() {
@@ -530,7 +725,11 @@ $(document).ready(function() {
 			localStorage.removeItem('username');
 		}
 
-		// Terminate the WebSocket connection
+		// Kill the log monitoring program
+		logMonitoringProgram.stdin.pause();
+		logMonitoringProgram.kill();
+
+		// Terminate the WebSocket connection (which will trigger the transition back to the title screen)
 		initiatedLogout = true;
 		conn.close();
 	});
@@ -551,7 +750,7 @@ $(document).ready(function() {
 		Start race tooltip
 	*/
 
-	$('#start-race-randomize').click(function() {
+	$('#new-race-randomize').click(function() {
 		let randomNumbers = [];
 		for (let i = 0; i < 3; i++) {
 			while (true) {
@@ -570,50 +769,60 @@ $(document).ready(function() {
 		// Chop off the trailing space
 		randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
 
-		// Set it and focus it
-		$('#start-race-name').val(randomlyGeneratedName);
-		$('#start-race-name').focus();
+		// Set it
+		$('#new-race-name').val(randomlyGeneratedName);
 	});
 
-	$('#start-race-format').change(function() {
-		$('#select-race-format-icon').css('background-image', 'url("assets/img/formats/' + $(this).val() + '.png")');
+	$('#new-race-format').change(function() {
+		// Change the displayed icon
+		let newFormat = $(this).val();
+		$('#new-race-format-icon').css('background-image', 'url("assets/img/formats/' + newFormat + '.png")');
 
+		// Change to the default character for this ruleset
+		let newCharacter;
 		if ($(this).val() === 'unseeded') {
-			$('#start-race-character').val('Judas');
+			newCharacter = 'Judas';
 		} else if ($(this).val() === 'seeded') {
-			$('#start-race-character').val('Judas');
+			newCharacter = 'Judas';
 		} else if ($(this).val() === 'diversity') {
-			$('#start-race-character').val('Cain');
+			newCharacter = 'Cain';
+		}
+		if ($('#new-race-character').val() !== newCharacter) {
+			$('#new-race-character').val(newCharacter);
+			$('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
 		}
 
+		// Show or hide the starting build row
 		if ($(this).val() === 'seeded') {
-			$('#select-race-starting-build-1').fadeIn(fadeTime);
-			$('#select-race-starting-build-2').fadeIn(fadeTime);
-			$('#select-race-starting-build-3').fadeIn(fadeTime);
+			$('#new-race-starting-build-1').fadeIn(fadeTime);
+			$('#new-race-starting-build-2').fadeIn(fadeTime);
+			$('#new-race-starting-build-3').fadeIn(fadeTime);
 		} else {
-			$('#select-race-starting-build-1').fadeOut(fadeTime);
-			$('#select-race-starting-build-2').fadeOut(fadeTime);
-			$('#select-race-starting-build-3').fadeOut(fadeTime);
+			$('#new-race-starting-build-1').fadeOut(fadeTime);
+			$('#new-race-starting-build-2').fadeOut(fadeTime);
+			$('#new-race-starting-build-3').fadeOut(fadeTime);
 		}
 	});
 
-	$('#start-race-character').change(function() {
+	$('#new-race-character').change(function() {
+		// Change the displayed icon
 		let newCharacter = $(this).val();
-		$('#select-race-character-icon').fadeOut(fadeTime / 2, function() {
-			$('#select-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
-			$('#select-race-character-icon').fadeIn(fadeTime / 2);
-		});
+		$('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
 	});
 
-	$('#start-race-goal').change(function() {
-		$('#select-race-goal-icon').css('background-image', 'url("assets/img/goals/' + $(this).val() + '.png")');
+	$('#new-race-goal').change(function() {
+		// Change the displayed icon
+		let newGoal = $(this).val();
+		$('#new-race-goal-icon').css('background-image', 'url("assets/img/goals/' + newGoal + '.png")');
 	});
 
-	$('#start-race-starting-build').change(function() {
-		$('#select-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + $(this).val() + '.png")');
+	$('#new-race-starting-build').change(function() {
+		// Change the displayed icon
+		let newBuild = $(this).val();
+		$('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + newBuild + '.png")');
 	});
 
-	$('#start-race-form').submit(function() {
+	$('#new-race-form').submit(function() {
 		// By default, the form will reload the page, so stop this from happening
 		event.preventDefault();
 
@@ -623,13 +832,13 @@ $(document).ready(function() {
 		}
 
 		// Get values from the form
-		let name = $('#start-race-name').val().trim();
-		let format = $('#start-race-format').val();
-		let character = $('#start-race-character').val();
-		let goal = $('#start-race-goal').val();
+		let name = $('#new-race-name').val().trim();
+		let format = $('#new-race-format').val();
+		let character = $('#new-race-character').val();
+		let goal = $('#new-race-goal').val();
 		let startingBuild;
 		if (format === 'seeded') {
-			startingBuild = $('#start-race-starting-build').val();
+			startingBuild = $('#new-race-starting-build').val();
 		} else {
 			startingBuild = -1;
 		}
@@ -663,11 +872,15 @@ $(document).ready(function() {
 
 		// If necessary, get a random starting build,
 		if (startingBuild === 'Random') {
-			startingBuild = getRandomNumber(1, 31); // There are 31 builds in the Instant Start Mod
+			// There are 31 builds in the Instant Start Mod
+			startingBuild = getRandomNumber(1, 31);
+		} else {
+			// The value was read from the form as a string and needs to be sent to the server as an intenger
+			startingBuild = parseInt(startingBuild);
 		}
 
 		// Close the tooltip
-		$('#header-start-race').tooltipster('close'); // Close the tooltip
+		$('#header-new-race').tooltipster('close'); // Close the tooltip
 
 		// Create the race
 		let rulesetObject = {
@@ -685,6 +898,48 @@ $(document).ready(function() {
 	/*
 		Race screen
 	*/
+
+	$('#race-title-seed').tooltipster({
+		theme: 'tooltipster-shadow',
+		delay: 0,
+		functionBefore: function() {
+			if (currentScreen === 'race') {
+				return true;
+			} else {
+				return false;
+			}
+		},
+	});
+
+	$('#race-ready-checkbox').change(function() {
+		if (currentScreen !== 'race') {
+			return;
+		} else if (raceList.hasOwnProperty(currentRaceID) === false) {
+			return;
+		}
+
+		if (this.checked) {
+			conn.emit('raceReady', {
+				'id': currentRaceID,
+			});
+		} else {
+			conn.emit('raceUnready', {
+				'id': currentRaceID,
+			});
+		}
+	});
+
+	$('#race-quit-button').click(function() {
+		if (currentScreen !== 'race') {
+			return;
+		} else if (raceList.hasOwnProperty(currentRaceID) === false) {
+			return;
+		}
+
+		conn.emit('raceQuit', {
+			'id': currentRaceID,
+		});
+	});
 
 	$('#race-chat-form').submit(function(event) {
 		// By default, the form will reload the page, so stop this from happening
@@ -704,6 +959,46 @@ $(document).ready(function() {
 		}
 	});
 
+	/*
+		Log file modal
+	*/
+
+	$('#log-file-link').click(function() {
+		let url = 'https://steamcommunity.com/app/250900/discussions/0/613941122558099449/';
+		shell.openExternal(url);
+	});
+
+	$('#log-file-find').click(function() {
+		let titleText = $('#select-your-log-file').html();
+		let newLogFilePath = remote.dialog.showOpenDialog({
+			title: titleText,
+			filters: [
+				{
+					'name': 'Text',
+					'extensions': ['txt'],
+				}
+			],
+			properties: ['openFile'],
+		});
+		if (newLogFilePath === undefined) {
+			return;
+		} else {
+			localStorage.logFilePath = newLogFilePath;
+			$('#log-file-description-1').fadeOut(fadeTime);
+			$('#log-file-description-2').fadeOut(fadeTime, function() {
+				$('#log-file-description-3').fadeIn(fadeTime);
+			});
+			$('#log-file-find').fadeOut(fadeTime, function() {
+				$('#log-file-exit').fadeIn(fadeTime);
+			});
+		}
+	});
+
+	$('#log-file-exit').click(function() {
+		if (currentScreen === 'error') {
+			ipcRenderer.send('asynchronous-message', 'restart');
+		}
+	});
 });
 
 /*
@@ -733,7 +1028,7 @@ function login1(username, password, remember) {
 
 // Step 2 - Login with the token to get a cookie
 function login2(username, password, remember, data) {
-	let url = 'http' + (secure ? 's' : '') + '://' + serverURL + '/login';
+	let url = 'http' + (secure ? 's' : '') + '://' + domain + '/login';
 	let request = $.ajax({
 		url:  url,
 		type: 'POST',
@@ -756,6 +1051,7 @@ function loginFail(jqXHR) {
 			// Reset the title screen back to normal
 			$('#title-buttons').fadeIn(0);
 			$('#title-languages').fadeIn(0);
+			$('#title-version').fadeIn(0);
 			$('#title-ajax').fadeOut(0);
 
 			// Show the login screen
@@ -922,7 +1218,120 @@ function registerReset() {
 */
 
 // Called from the login screen or the register screen
-function lobbyEnter() {
+function lobbyShow() {
+	// Check to make sure the log file exists
+	if (fs.existsSync(settings.logFilePath) === false) {
+		settings.logFilePath = null;
+	}
+
+	// Check to ensure that we have a valid log file path
+	if (settings.logFilePath === null ) {
+		errorShow('', true); // Show the log file path modal
+		return;
+	}
+
+	// Start the log monitoring program
+	console.log('Starting the log monitoring program...');
+	let command = (isDev ? 'app' : 'resources/app.asar') + '/assets/programs/watchLog/dist/watchLog.exe';
+	logMonitoringProgram = spawn(command, [settings.logFilePath]);
+
+	// Tail the IPC file
+	let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));
+	logWatcher.on('line', function(line) {
+		// Debug
+		//console.log('- ' + line);
+
+		// Don't do anything if we are not in a race
+		if (currentRaceID === false) {
+			return;
+		}
+
+		// Don't do anything if we have not started yet or we have quit
+		for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+			if (raceList[currentRaceID].racerList[i].name === myUsername) {
+				if (raceList[currentRaceID].racerList[i].status !== 'racing') {
+					return;
+				}
+				break;
+			}
+		}
+
+		// Parse the line
+		if (line.startsWith('New seed: ')) {
+			let m = line.match(/New seed: (.... ....)/);
+			if (m) {
+				let seed = m[1];
+				console.log('New seed:', seed);
+				conn.emit('raceSeed', {
+					'id':   currentRaceID,
+					'seed': seed,
+				});
+			} else {
+				errorShow('Failed to parse the new seed.');
+			}
+		} else if (line.startsWith('New floor: ')) {
+			let m = line.match(/New floor: (\d+)-\d+/);
+			if (m) {
+				let floor = m[1];
+				console.log('New floor:', floor);
+				conn.emit('raceFloor', {
+					'id':    currentRaceID,
+					'floor': floor,
+				});
+			} else {
+				errorShow('Failed to parse the new floor.');
+			}
+		} else if (line.startsWith('New room: ')) {
+			let m = line.match(/New room: (\d+)/);
+			if (m) {
+				let room = m[1];
+				console.log('New room:', room);
+				conn.emit('raceFloor', {
+					'id':   currentRaceID,
+					'room': room,
+				});
+			} else {
+				errorShow('Failed to parse the new room.');
+			}
+		} else if (line.startsWith('New item: ')) {
+			let m = line.match(/New item: (\d+)/);
+			if (m) {
+				let itemID = m[1];
+				console.log('New item:', itemID);
+				conn.emit('raceItem', {
+					'id':   currentRaceID,
+					'itemID': itemID,
+				});
+			} else {
+				errorShow('Failed to parse the new item.');
+			}
+		} else if (line === 'Finished run: Blue Baby') {
+			if (raceList[currentRaceID].ruleset.goal === 'Blue Baby') {
+				console.log('Killed Blue Baby!');
+				conn.emit('raceFinish', {
+					'id': currentRaceID,
+				});
+			}
+		} else if (line === 'Finished run: The Lamb') {
+			if (raceList[currentRaceID].ruleset.goal === 'The Lamb') {
+				console.log('Killed The Lamb!');
+				conn.emit('raceFinish', {
+					'id': currentRaceID,
+				});
+			}
+		} else if (line === 'Finished run: Mega Satan') {
+			if (raceList[currentRaceID].ruleset.goal === 'Mega Satan') {
+				console.log('Killed Mega Satan!');
+				conn.emit('raceFinish', {
+					'id': currentRaceID,
+				});
+			}
+		}
+	});
+	logWatcher.on('error', function(error) {
+		errorShow('Something went wrong with the log monitoring program: "' + error);
+	});
+
 	// Make sure that all of the forms are cleared out
 	$('#login-username').val('');
 	$('#login-password').val('');
@@ -933,10 +1342,14 @@ function lobbyEnter() {
 	$('#register-email').val('');
 	$('#register-error').fadeOut(0);
 
-	// Show the buttons in the header
-	$('#header-start-race').fadeIn(fadeTime);
-	$('#header-settings').fadeIn(fadeTime);
+	// Show the links in the header
 	$('#header-profile').fadeIn(fadeTime);
+	$('#header-leaderboards').fadeIn(fadeTime);
+	$('#header-help').fadeIn(fadeTime);
+
+	// Show the buttons in the header
+	$('#header-new-race').fadeIn(fadeTime);
+	$('#header-settings').fadeIn(fadeTime);
 	$('#header-log-out').fadeIn(fadeTime);
 
 	// Show the lobby
@@ -946,7 +1359,7 @@ function lobbyEnter() {
 	});
 
 	// Fix the indentation on lines that were drawn when the element was hidden
-	chatIndent('lobby');
+	lobbyChatIndent('lobby');
 
 	// Automatically scroll to the bottom of the chat box
 	let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
@@ -956,16 +1369,116 @@ function lobbyEnter() {
 	$('#lobby-chat-box-input').focus();
 }
 
+function lobbyShowFromRace() {
+	// We should be on the race screen unless there is severe lag
+	if (currentScreen !== 'race') {
+		errorShow('Failed to return to the lobby since currentScreen is equal to "' + currentScreen + '".');
+		return;
+	}
+	currentScreen = 'transition';
+	currentRaceID = false;
+
+	// Show and hide some buttons in the header
+	$('#header-profile').fadeOut(fadeTime);
+	$('#header-leaderboards').fadeOut(fadeTime);
+	$('#header-help').fadeOut(fadeTime);
+	$('#header-lobby').fadeOut(fadeTime, function() {
+		$('#header-profile').fadeIn(fadeTime);
+		$('#header-leaderboards').fadeIn(fadeTime);
+		$('#header-help').fadeIn(fadeTime);
+		$('#header-new-race').fadeIn(fadeTime);
+		$('#header-settings').fadeIn(fadeTime);
+	});
+
+	// Show the lobby
+	$('#race').fadeOut(fadeTime, function() {
+		$('#lobby').fadeIn(fadeTime, function() {
+			currentScreen = 'lobby';
+		});
+
+		// Fix the indentation on lines that were drawn when the element was hidden
+		lobbyChatIndent('lobby');
+
+		// Automatically scroll to the bottom of the chat box
+		let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
+		$('#lobby-chat-text').scrollTop(bottomPixel);
+
+		// Focus the chat input
+		$('#lobby-chat-box-input').focus();
+	});
+}
+
 function lobbyRaceDraw(race) {
-	console.log('entered lobbyracedraw:');
-	console.log(race);
+	// Create the new row
+	let raceDiv = '<tr id="lobby-current-races-' + race.id + '" class="';
+	if (race.status === 'open') {
+		raceDiv += 'lobby-race-row-open ';
+	}
+	raceDiv += 'hidden"><td>Race ' + race.id;
+	if (race.name !== '-') {
+		raceDiv += ' &mdash; ' + race.name;
+	}
+	raceDiv += '</td><td>';
+	let circleClass;
+	if (race.status === 'open') {
+		circleClass = 'open';
+	} else if (race.status === 'starting') {
+		circleClass = 'starting';
+	} else if (race.status === 'in progress') {
+		circleClass = 'in-progress';
+	}
+	raceDiv += '<span id="lobby-current-races-' + race.id + '-status-circle" class="circle lobby-current-races-' + circleClass + '"></span>';
+	raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status">' + race.status.capitalize() + '</span>';
+	raceDiv += '</td><td id="lobby-current-races-' + race.id + '-racers">' + race.racers.length + '</td>';
+	raceDiv += '<td><span class="lobby-current-races-format-icon">';
+	raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '"></span></span>';
+	raceDiv += '<span class="lobby-current-races-spacing"></span>';
+	raceDiv += '<span lang="en">' + race.ruleset.format.capitalize() + '</span></td>';
+	raceDiv += '<td id="lobby-current-races-' + race.id + '-captain">' + race.captain + '</td></tr>';
+
+	// Fade in the new row
+	$('#lobby-current-races-table-body').append(raceDiv);
+	if ($('#lobby-current-races-table-no').css('display') !== 'none') {
+		$('#lobby-current-races-table-no').fadeOut(fadeTime, function() {
+			$('#lobby-current-races-table').fadeIn(0);
+			$('#lobby-current-races-' + race.id).fadeIn(fadeTime, function() {
+				lobbyRaceRowClickable(race.id);
+			});
+		});
+	} else {
+		$('#lobby-current-races-' + race.id).fadeIn(fadeTime, function() {
+			lobbyRaceRowClickable(race.id);
+		});
+	}
+
+	// Make it clickable
+	function lobbyRaceRowClickable(raceID) {
+		if (raceList[raceID].status === 'open') {
+			$('#lobby-current-races-' + raceID).click(function() {
+				conn.emit('raceJoin', {
+					'id': raceID,
+				});
+			});
+		}
+	}
+}
+
+function lobbyRaceUndraw(raceID) {
+	$('#lobby-current-races-' + raceID).fadeOut(fadeTime, function() {
+		$('#lobby-current-races-' + raceID).remove();
+
+		if (Object.keys(raceList).length === 0) {
+			$('#lobby-current-races-table').fadeOut(0);
+			$('#lobby-current-races-table-no').fadeIn(fadeTime);
+		}
+	});
 }
 
 function chatSend(destination) {
 	// Don't do anything if we are not on the screen corresponding to the chat input form
 	if (destination === 'lobby' && currentScreen !== 'lobby') {
 		return;
-	} else if (destination === 'race' && currentScreen.startsWith('_race_') === false) {
+	} else if (destination === 'race' && currentScreen !== 'race') {
 		return;
 	}
 
@@ -985,24 +1498,57 @@ function chatSend(destination) {
 	// Erase the contents of the input field
 	$('#' + destination + '-chat-box-input').val('');
 
+	// Get the room
+	let room;
+	if (destination === 'lobby') {
+		room = 'lobby';
+	} else if (destination === 'race') {
+		room = '_race_' + currentRaceID;
+	}
+
 	// Add it to the history so that we can use up arrow later
-	roomList[currentScreen].typedHistory.unshift(message);
+	roomList[room].typedHistory.unshift(message);
 
 	// Reset the history index
-	roomList[currentScreen].historyIndex = -1;
+	roomList[room].historyIndex = -1;
 
 	// Check for the presence of commands
 	if (message === '/debug') {
+		// /debug - Debug command
 		debug();
+	} else if (message === '/restart') {
+		ipcRenderer.send('asynchronous-message', 'restart');
+	} else if (message.match(/^\/msg .+? .+/)) {
+		// /msg - Private message
+		let m = message.match(/^\/msg (.+?) (.+)/);
+		let name = m[1];
+		message = m[2];
+		conn.emit('privateMessage', {
+			'name': name,
+			'message': message,
+		});
+
+		// We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
+		chatDraw('PM-to', name, message);
 	} else {
 		conn.emit('roomMessage', {
-			"room": currentScreen,
-			"message":  message,
+			'room': room,
+			'message':  message,
 		});
 	}
 }
 
 function chatDraw(room, name, message, datetime = null) {
+	// Check for the existence of a PM
+	let privateMessage = false;
+	if (room === 'PM-to') {
+		room = currentScreen;
+		privateMessage = 'to';
+	} else if (room === 'PM-from') {
+		room = currentScreen;
+		privateMessage = 'from';
+	}
+
 	// Keep track of how many lines of chat have been spoken in this room
 	roomList[room].chatLine++;
 
@@ -1017,7 +1563,7 @@ function chatDraw(room, name, message, datetime = null) {
 	if (datetime === null) {
 		date = new Date();
 	} else {
-		date = new Date(datetime * 1000); // Add 3 zeros because the server doesn't keep track of the nanoseconds
+		date = new Date(datetime);
 	}
 	let hours = date.getHours();
 	if (hours < 10) {
@@ -1032,7 +1578,11 @@ function chatDraw(room, name, message, datetime = null) {
 	let chatLine = '<div id="' + room + '-chat-text-line-' + roomList[room].chatLine + '" class="hidden">';
 	chatLine += '<span id="' + room + '-chat-text-line-' + roomList[room].chatLine + '-header">';
 	chatLine += '[' + hours + ':' + minutes + '] &nbsp; ';
-	chatLine += '&lt;<strong>' + name + '</strong>&gt; &nbsp; ';
+	if (privateMessage !== false) {
+		chatLine += '<span class="chat-pm">[PM ' + privateMessage + ' <strong class="chat-pm">' + name + '</strong>]</span> &nbsp; ';
+	} else {
+		chatLine += '&lt;<strong>' + name + '</strong>&gt; &nbsp; ';
+	}
 	chatLine += '</span>';
 	chatLine += message;
 	chatLine += '</div>';
@@ -1046,21 +1596,31 @@ function chatDraw(room, name, message, datetime = null) {
 	}
 
 	// Add the new line
+	let destination;
+	if (room === 'lobby') {
+		destination = 'lobby';
+	} else if (room.startsWith('_race_')) {
+		destination = 'race';
+	} else {
+		errorShow('Failed to parse the room in the "chatDraw" function.');
+	}
 	if (datetime === null) {
-		$('#' + room + '-chat-text').append(chatLine);
+		$('#' + destination + '-chat-text').append(chatLine);
 	} else {
 		// We prepend instead of append because the chat history comes in order from most recent to least recent
-		$('#' + room + '-chat-text').prepend(chatLine);
+		$('#' + destination + '-chat-text').prepend(chatLine);
 	}
 	$('#' + room + '-chat-text-line-' + roomList[room].chatLine).fadeIn(fadeTime);
 
 	// Set indentation for long lines
-	let indentPixels = $('#' + room + '-chat-text-line-' + roomList[room].chatLine + '-header').css('width');
-	$('#' + room + '-chat-text-line-' + roomList[room].chatLine).css('padding-left', indentPixels);
-	$('#' + room + '-chat-text-line-' + roomList[room].chatLine).css('text-indent', '-' + indentPixels);
+	if (room === 'lobby') {
+		let indentPixels = $('#' + room + '-chat-text-line-' + roomList[room].chatLine + '-header').css('width');
+		$('#' + room + '-chat-text-line-' + roomList[room].chatLine).css('padding-left', indentPixels);
+		$('#' + room + '-chat-text-line-' + roomList[room].chatLine).css('text-indent', '-' + indentPixels);
+	}
 
 	// Automatically scroll
-	if (autoScroll === true) {
+	if (autoScroll) {
 		bottomPixel = $('#' + room + '-chat-text').prop('scrollHeight') - $('#' + room + '-chat-text').height();
 		$('#' + room + '-chat-text').scrollTop(bottomPixel);
 	}
@@ -1078,7 +1638,7 @@ function chatEmotes(message) {
 	// Search through the text for each emote
 	for (let i = 0; i < emoteList.length; i++) {
 		if (message.indexOf(emoteList[i]) !== -1) {
-			let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + emoteList[i] + '.png" />';
+			let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + emoteList[i] + '.png" alt="' + emoteList[i] + '" />';
 			let re = new RegExp('\\b' + emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
 			message = message.replace(re, emoteTag);
 		}
@@ -1087,7 +1647,7 @@ function chatEmotes(message) {
 	return message;
 }
 
-function chatIndent(room) {
+function lobbyChatIndent(room) {
 	if (typeof roomList[room] === 'undefined') {
 		return;
 	}
@@ -1099,23 +1659,13 @@ function chatIndent(room) {
 	}
 }
 
-function usersDraw(room) {
-	// Figure out what kind of chat room this is
-	let destination;
-	if (room === 'lobby') {
-		destination = 'lobby';
-	} else if (room.startsWith('_race_')) {
-		destination = 'race';
-	} else {
-		errorShow('Unable to parse the room in the "usersDraw" function.');
-	}
-
+function lobbyUsersDraw(room) {
 	// Update the header that shows shows the amount of people online or in the race
-	$('#' + destination + '-users-online').html(roomList[room].numUsers);
+	$('#lobby-users-online').html(roomList[room].numUsers);
 
 	// Make an array with the name of every user and alphabetize it
 	let userList = [];
-	for (var user in roomList[room].users) {
+	for (let user in roomList[room].users) {
 		if (!roomList[room].users.hasOwnProperty(user)) {
 			continue;
 		}
@@ -1125,27 +1675,46 @@ function usersDraw(room) {
 	userList.sort();
 
 	// Empty the existing list
-	$('#' + destination + '-users-users').html('');
+	$('#lobby-users-users').html('');
 
 	// Add a div for each player
 	for (let i = 0; i < userList.length; i++) {
 		if (userList[i] === myUsername) {
 			let userDiv = '<div>' + userList[i] + '</div>';
-			$('#' + room + '-users-users').append(userDiv);
+			$('#lobby-users-users').append(userDiv);
 		} else {
-			let userDiv = '<div id="' + destination + '-users-' + userList[i] + '" class="lobby-users-user" data-tooltip-content="#user-click-tooltip">';
-			userDiv += userList[i];
-			userDiv += '</div>';
-			$('#' + room + '-users-users').append(userDiv);
+			let userDiv = '<div id="lobby-users-' + userList[i] + '" class="users-user" data-tooltip-content="#user-click-tooltip">';
+			userDiv += userList[i] + '</div>';
+			$('#lobby-users-users').append(userDiv);
 
 			// Add the tooltip
-			$('#' + room + '-users-' + userList[i]).tooltipster({
+			$('#lobby-users-' + userList[i]).tooltipster({
 				theme: 'tooltipster-shadow',
 				trigger: 'click',
 				interactive: true,
 				side: 'left',
+				functionBefore: userTooltipChange(userList[i]),
 			});
 		}
+	}
+
+	function userTooltipChange(username) {
+		$('#user-click-profile').click(function() {
+			let url = 'http' + (secure ? 's' : '') + '://' + domain + '/profiles/' + username;
+			shell.openExternal(url);
+		});
+		$('#user-click-private-message').click(function() {
+			if (currentScreen === 'lobby') {
+				$('#lobby-chat-box-input').val('/msg ' + username + ' ');
+				$('#lobby-chat-box-input').focus();
+			} else if (currentScreen === 'race') {
+				$('#race-chat-box-input').val('/msg ' + username + ' ');
+				$('#race-chat-box-input').focus();
+			} else {
+				errorShow('Failed to fill in the chat box since currentScreen is "' + currentScreen + '".');
+			}
+			closeAllTooltips();
+		});
 	}
 }
 
@@ -1153,36 +1722,301 @@ function usersDraw(room) {
 	Race functions
 */
 
-function raceEnter(raceID) { // TODO FILL THIS OUT
+function raceShow(raceID) {
 	// We should be on the lobby screen unless there is severe lag
-	if (currentScreen !== 'lobby') {
+	if (currentScreen === 'transition') {
+		setTimeout(function() {
+			raceShow(raceID);
+		}, fadeTime + 10); // 10 milliseconds of leeway;
+		return;
+	} else if (currentScreen !== 'lobby') {
 		errorShow('Failed to enter the race screen since currentScreen is equal to "' + currentScreen + '".');
 		return;
 	}
+	currentScreen = 'transition';
+	currentRaceID = raceID;
+
+	// Put the seed in the clipboard
+	if (raceList[currentRaceID].seed !== '-') {
+		clipboard.writeText(raceList[currentRaceID].seed);
+	}
 
 	// Show and hide some buttons in the header
-	$('#header-lobby').fadeIn(fadeTime);
-	$('#header-start-race').fadeOut(fadeTime);
-	$('#header-settings').fadeOut(fadeTime);
+	$('#header-profile').fadeOut(fadeTime);
+	$('#header-leaderboards').fadeOut(fadeTime);
+	$('#header-help').fadeOut(fadeTime);
+	$('#header-new-race').fadeOut(fadeTime);
+	$('#header-settings').fadeOut(fadeTime, function() {
+		$('#header-profile').fadeIn(fadeTime);
+		$('#header-leaderboards').fadeIn(fadeTime);
+		$('#header-help').fadeIn(fadeTime);
+		$('#header-lobby').fadeIn(fadeTime);
+	});
 
 	// Close all tooltips
 	closeAllTooltips();
 
-	// Show the lobby
-	$('#page-wrapper').removeClass('vertical-center');
-	$('#lobby').fadeIn(fadeTime, function() {
-		currentScreen = 'lobby';
+	// Show the race screen
+	$('#lobby').fadeOut(fadeTime, function() {
+		$('#race').fadeIn(fadeTime, function() {
+			currentScreen = 'race';
+		});
+
+		// Set the title
+		let raceTitle = 'Race ' + currentRaceID;
+		if (raceList[currentRaceID].name !== '-') {
+			raceTitle += ' &mdash; ' + raceList[currentRaceID].name;
+		}
+		$('#race-title').html(raceTitle);
+
+		// Adjust the font size so that it only takes up one line
+		let emSize = 1.75; // In HTML5UP Alpha, h3's are 1.75
+		while (true) {
+			// Reset the font size (we could be coming from a previous race)
+			$('#race-title').css('font-size', emSize + 'em');
+
+			// One line is 45 pixels high
+			if ($('#race-title').height() > 45) {
+				// Reduce the font size by a little bit
+				emSize -= 0.1;
+			} else {
+				break;
+			}
+		}
+
+		// Set the status and format
+		$('#race-title-status').html(raceList[currentRaceID].status.capitalize());
+		$('#race-title-format').html(raceList[currentRaceID].ruleset.format.capitalize());
+		$('#race-title-character').html(raceList[currentRaceID].ruleset.character);
+		$('#race-title-goal').html(raceList[currentRaceID].ruleset.goal);
+		$('#race-title-goal').html(raceList[currentRaceID].ruleset.goal);
+		if (raceList[currentRaceID].ruleset.format === 'seeded' || raceList[currentRaceID].ruleset.format === 'diveristy') {
+			$('#race-title-table-seed').fadeIn(0);
+			$('#race-title-seed').fadeIn(0);
+			$('#race-title-seed').html(raceList[currentRaceID].seed);
+		} else {
+			$('#race-title-table-seed').fadeOut(0);
+			$('#race-title-seed').fadeOut(0);
+		}
+		if (raceList[currentRaceID].ruleset.format === 'seeded') {
+			$('#race-title-table-build').fadeIn(0);
+			$('#race-title-build').fadeIn(0);
+			$('#race-title-build').html(raceList[currentRaceID].ruleset.startingBuild);
+		} else {
+			$('#race-title-table-build').fadeOut(0);
+			$('#race-title-build').fadeOut(0);
+		}
+
+		// Show the pre-start race controls
+		$('#race-ready-checkbox-container').fadeIn(0);
+		$('#race-ready-checkbox').prop('checked', false);
+		$('#race-countdown').fadeOut(0);
+		$('#race-quit-button').fadeOut(0);
+
+		// Set the race participants table to the pre-game state (with 2 columns)
+		$('#race-participants-table-floor').fadeOut(0);
+		$('#race-participants-table-item').fadeOut(0);
+		$('#race-participants-table-time').fadeOut(0);
+		$('#race-participants-table-offset').fadeOut(0);
+
+		// Automatically scroll to the bottom of the chat box
+		let bottomPixel = $('#race-chat-text').prop('scrollHeight') - $('#race-chat-text').height();
+		$('#race-chat-text').scrollTop(bottomPixel);
+
+		// Focus the chat input
+		$('#race-chat-box-input').focus();
+
+		// If we disconnected in the middle of the race, we need to update the race controls
+		if (raceList[currentRaceID].status === 'starting') {
+			errorShow('You rejoined the race during the countdown, which is not supported. Please relaunch the program.');
+		} else if (raceList[currentRaceID].status === 'in progress') {
+			raceStart();
+		}
+	});
+}
+
+// Add a row to the table with the race participants on the race screen
+function raceParticipantAdd(i) {
+	// Begin building the row
+	let racerDiv = '<tr id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '">';
+
+	// The racer's name
+	racerDiv += '<td>' + raceList[currentRaceID].racerList[i].name + '</td>';
+
+	// The racer's status
+	racerDiv += '<td id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-status">';
+	if (raceList[currentRaceID].racerList[i].status === 'ready') {
+		racerDiv += '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+	} else if (raceList[currentRaceID].racerList[i].status === 'not ready') {
+		racerDiv += '<i class="fa fa-times" aria-hidden="true"></i> &nbsp; ';
+	} else if (raceList[currentRaceID].racerList[i].status === 'racing') {
+		racerDiv += '<i class="mdi mdi-chevron-double-right"></i> &nbsp; ';
+	} else if (raceList[currentRaceID].racerList[i].status === 'quit') {
+		racerDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
+	} else if (raceList[currentRaceID].racerList[i].status === 'finished') {
+		racerDiv += '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+	}
+	racerDiv += '<span lang="en">' + raceList[currentRaceID].racerList[i].status.capitalize() + '</span></td>';
+
+	// The racer's floor
+	racerDiv += '<td id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-floor" class="hidden">';
+	racerDiv += raceList[currentRaceID].racerList[i].floor + '</td>';
+
+	// The racer's starting item
+	racerDiv += '<td id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-item" class="hidden">';
+	if (raceList[currentRaceID].racerList[i].items !== null) {
+		racerDiv += raceList[currentRaceID].racerList[i].items[0];
+	} else {
+		racerDiv += '-';
+	}
+	racerDiv += '</td>';
+
+	// The racer's time
+	racerDiv += '<td id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-time" class="hidden">';
+	racerDiv += '</td>';
+
+	// The racer's time offset
+	racerDiv += '<td id="race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-offset" class="hidden">-</td>';
+
+	// Append the row
+	racerDiv += '</tr>';
+	$('#race-participants-table-body').append(racerDiv);
+	$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-status').attr('colspan', 5);
+}
+
+function raceMarkOnline() {
+
+}
+
+function raceCountdown() {
+	// Change the functionality of the "Lobby" button in the header
+	$('#header-lobby').addClass('disabled');
+
+	// Show the countdown
+	$('#race-ready-checkbox-container').fadeOut(fadeTime, function() {
+		$('#race-countdown').css('font-size', '1.75em');
+		$('#race-countdown').css('bottom', '0.25em');
+		$('#race-countdown').css('color', '#e89980');
+		$('#race-countdown').html('<span lang="en">Race starting in 10 seconds!</span>');
+		$('#race-countdown').fadeIn(fadeTime);
+	});
+}
+
+function raceCountdownTick(i) {
+	if (i > 0) {
+		$('#race-countdown').fadeOut(fadeTime, function() {
+			$('#race-countdown').css('font-size', '2.5em');
+			$('#race-countdown').css('bottom', '0.375em');
+			$('#race-countdown').css('color', 'red');
+			$('#race-countdown').html(i);
+			$('#race-countdown').fadeIn(fadeTime);
+			setTimeout(function() {
+				if (i === 3 || i === 2 || i === 1) {
+					let audio = new Audio('assets/sounds/' + i + '.wav');
+					audio.volume = settings.volume;
+					audio.play();
+				}
+			}, fadeTime / 2);
+		});
+
+		setTimeout(function() {
+			raceCountdownTick(i - 1);
+		}, 1000);
+	}
+}
+
+function raceGo() {
+	$('#race-countdown').html('<span lang="en">Go!</span>');
+	$('#race-title-status').html('<span lang="en">In Progress</span>');
+
+	// Press enter to start the race
+	let command = (isDev ? 'app' : 'resources/app.asar') + '/assets/programs/raceGo.exe';
+	execFile(command);
+
+	// Play the "Go" sound effect
+	let audio = new Audio('assets/sounds/go.wav');
+	audio.volume = settings.volume;
+	audio.play();
+
+	// Wait 5 seconds, then start to change the controls
+	setTimeout(raceStart, 5000);
+
+	// Add default values to the columns to the race participants table
+	for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+		raceList[currentRaceID].racerList[i].status = 'racing';
+		let statusDiv = '<i class="mdi mdi-chevron-double-right"></i> &nbsp; <span lang="en">Racing</span>';
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-status').html(statusDiv);
+
+		raceList[currentRaceID].racerList[i].status = 'racing';
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-item').html('-');
+
+		raceList[currentRaceID].racerList[i].status = 'racing';
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-time').html('-');
+
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-offset').html('-');
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-offset').fadeIn(fadeTime);
+	}
+}
+
+function raceStart() {
+	// In case we coming back after a disconnect, redo all of the stuff that was done in the "raceCountdown" function
+	$('#header-lobby').addClass('disabled');
+	$('#race-ready-checkbox-container').fadeOut(0);
+
+	// Start the race timer
+	setTimeout(raceTimerTick, 0);
+
+	// Change the controls on the race screen
+	$('#race-countdown').fadeOut(fadeTime, function() {
+		// Find out if we have quit this race already
+		let alreadyQuit = false;
+		for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+			if (raceList[currentRaceID].racerList[i].name === myUsername &&
+				raceList[currentRaceID].racerList[i].status === 'quit') {
+
+				alreadyQuit = true;
+			}
+		}
+
+		if (alreadyQuit === false) {
+			$('#race-quit-button').fadeIn(fadeTime);
+		}
 	});
 
-	// Fix the indentation on lines that were drawn when the element was hidden
-	chatIndent(raceID);
+	// Change the table to have 6 columns instead of 2
+	$('#race-participants-table-floor').fadeIn(fadeTime);
+	$('#race-participants-table-item').fadeIn(fadeTime);
+	$('#race-participants-table-time').fadeIn(fadeTime);
+	$('#race-participants-table-offset').fadeIn(fadeTime);
+	for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-status').attr('colspan', 1);
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-floor').fadeIn(fadeTime);
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-item').fadeIn(fadeTime);
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-time').fadeIn(fadeTime);
+		$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-offset').fadeIn(fadeTime);
+	}
+}
 
-	// Automatically scroll to the bottom of the chat box
-	let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
-	$('#lobby-chat-text').scrollTop(bottomPixel);
+function raceTimerTick() {
+	if (raceList.hasOwnProperty(currentRaceID) === false) {
+		return;
+	}
 
-	// Focus the chat input
-	$('#lobby-chat-box-input').focus();
+	// Get the elapsed time in the race
+	let now = new Date().getTime();
+	let raceMilliseconds = now - raceList[currentRaceID].datetimeStarted + timeOffset;
+	let raceSeconds = Math.round(raceMilliseconds / 1000);
+	let timeDiv = pad(parseInt(raceSeconds / 60, 10)) + ':' + pad(raceSeconds % 60);
+
+	// Update all of the timers
+	for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+		if (raceList[currentRaceID].racerList[i].status === 'racing') {
+			$('#race-participants-table-' + raceList[currentRaceID].racerList[i].name + '-time').html(timeDiv);
+		}
+	}
+
+	// Schedule the next tick
+	setTimeout(raceTimerTick, 1000);
 }
 
 /*
@@ -1191,9 +2025,9 @@ function raceEnter(raceID) { // TODO FILL THIS OUT
 
 function websocket(username, password, remember) {
 	// Establish a WebSocket connection
-	let url = 'ws' + (secure ? 's' : '') + '://' + serverURL + '/ws';
-	conn = new golem.Connection(url, true); // It will automatically use the cookie that we recieved earlier
-	// "true" means that debugging is on
+	let url = 'ws' + (secure ? 's' : '') + '://' + domain + '/ws';
+	conn = new golem.Connection(url, isDev); // It will automatically use the cookie that we recieved earlier
+	// If the second argument is true, debugging is turned on
 
 	/*
 		Miscellaneous WebSocket handlers
@@ -1201,9 +2035,8 @@ function websocket(username, password, remember) {
 
 	conn.on('open', function(event) {
 		// Login success; join the lobby chat channel
-		myUsername = username;
 		conn.emit('roomJoin', {
-			"room": "lobby",
+			'room': 'lobby',
 		});
 
 		// Save the credentials
@@ -1221,20 +2054,21 @@ function websocket(username, password, remember) {
 			$('#title').fadeOut(fadeTime, function() {
 				$('#title-buttons').fadeIn(0);
 				$('#title-languages').fadeIn(0);
+				$('#title-version').fadeIn(0);
 				$('#title-ajax').fadeOut(0);
-				lobbyEnter();
+				lobbyShow();
 			});
 		} else if (currentScreen === 'login-ajax') {
 			currentScreen = 'transition';
 			$('#login').fadeOut(fadeTime, function() {
 				loginReset();
-				lobbyEnter();
+				lobbyShow();
 			});
 		} else if (currentScreen === 'register-ajax') {
 			currentScreen = 'transition';
 			$('#register').fadeOut(fadeTime, function() {
 				registerReset();
-				lobbyEnter();
+				lobbyShow();
 			});
 		}
 	});
@@ -1243,7 +2077,9 @@ function websocket(username, password, remember) {
 
 	function connClose(event) {
 		// Check to see if this was intended
-		if (initiatedLogout === false) {
+		if (currentScreen === 'error') {
+			return;
+		} else if (initiatedLogout === false) {
 			errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!');
 			return;
 		}
@@ -1254,10 +2090,14 @@ function websocket(username, password, remember) {
 		myUsername = '';
 		initiatedLogout = false;
 
+		// Hide the links in the header
+		$('#header-profile').fadeOut(fadeTime);
+		$('#header-leaderboards').fadeOut(fadeTime);
+		$('#header-help').fadeOut(fadeTime);
+
 		// Hide the buttons in the header
 		$('#header-lobby').fadeOut(fadeTime);
-		$('#header-start-race').fadeOut(fadeTime);
-		$('#header-profile').fadeOut(fadeTime);
+		$('#header-new-race').fadeOut(fadeTime);
 		$('#header-settings').fadeOut(fadeTime);
 		$('#header-log-out').fadeOut(fadeTime);
 
@@ -1271,7 +2111,7 @@ function websocket(username, password, remember) {
 					currentScreen = 'title';
 				});
 			});
-		} else if (currentScreen.startsWith('_race_')) {
+		} else if (currentScreen === 'race') {
 			// Show the title screen
 			currentScreen = 'transition';
 			$('#race').fadeOut(fadeTime, function() {
@@ -1313,11 +2153,30 @@ function websocket(username, password, remember) {
 	});
 
 	/*
+		Miscellaneous command handlers
+	*/
+
+	// Sent upon a successful connection
+	conn.on('username', function(data) {
+		myUsername = data;
+	});
+
+	// Sent upon a successful connection
+	conn.on('time', function(data) {
+		let now = new Date().getTime();
+		timeOffset = data - now;
+	});
+
+	conn.on('error', function(data) {
+		errorShow(data.message);
+	});
+
+	/*
 		Chat command handlers
 	*/
 
 	conn.on('roomList', function(data) {
-		// Keep track of all of the rooms that we are in
+		// We entered a new room, so keep track of all users in this room
 		roomList[data.room] = {
 			users: {},
 			numUsers: 0,
@@ -1325,15 +2184,23 @@ function websocket(username, password, remember) {
 			typedHistory: [],
 			historyIndex: -1,
 		};
-
-		// Keep track of all of the users in the room
 		for (let i = 0; i < data.users.length; i++) {
 			roomList[data.room].users[data.users[i].name] = data.users[i];
 		}
 		roomList[data.room].numUsers = data.users.length;
 
-		// Redraw the users list
-		usersDraw(data.room);
+		if (data.room === 'lobby') {
+			// Redraw the users list in the lobby
+			lobbyUsersDraw(data.room);
+		} else if (data.room.startsWith('_race_')) {
+			let raceID = data.room.match(/_race_(\d+)/)[1];
+			if (raceID === currentRaceID) {
+				// Update the online/offline markers
+				for (let i = 0; i < data.users.length; i++) {
+					raceMarkOnline(data.users[i]);
+				}
+			}
+		}
 	});
 
 	conn.on('roomHistory', function(data) {
@@ -1359,8 +2226,10 @@ function websocket(username, password, remember) {
 		roomList[data.room].users[data.user.name] = data.user;
 		roomList[data.room].numUsers++;
 
-		// Redraw the users list
-		usersDraw(data.room);
+		// Redraw the users list in the lobby
+		if (data.room === 'lobby') {
+			lobbyUsersDraw(data.room);
+		}
 	});
 
 	conn.on('roomLeft', function(data) {
@@ -1368,12 +2237,18 @@ function websocket(username, password, remember) {
 		delete roomList[data.room].users[data.name];
 		roomList[data.room].numUsers--;
 
-		// Redraw the users list
-		usersDraw(data.room);
+		// Redraw the users list in the lobby
+		if (data.room === 'lobby') {
+			lobbyUsersDraw(data.room);
+		}
 	});
 
 	conn.on('roomMessage', function(data) {
 		chatDraw(data.room, data.name, data.message);
+	});
+
+	conn.on('privateMessage', function(data) {
+		chatDraw('PM-from', data.name, data.message);
 	});
 
 	/*
@@ -1382,19 +2257,47 @@ function websocket(username, password, remember) {
 
 	// On initial connection, we get a list of all of the races that are currently open or ongoing
 	conn.on('raceList', function(data) {
+		// Check for empty races
+		if (data.length === 0) {
+			$('#lobby-current-races-table-body').html('');
+			$('#lobby-current-races-table').fadeOut(0);
+			$('#lobby-current-races-table-no').fadeIn(0);
+		}
+
 		// Go through the list of races that were sent
+		let mostCurrentRaceID = false;
 		for (let i = 0; i < data.length; i++) {
 			// Keep track of what races are currently going
 			raceList[data[i].id] = data[i];
+			raceList[data[i].id].racerList = {};
 
 			// Update the "Current races" area
 			lobbyRaceDraw(data[i]);
 
-			// Check to see if we are in this races
-			for (let j = 0; j < data[i].players.length; j++) {
-				// TODO
+			// Check to see if we are in any races
+			for (let j = 0; j < data[i].racers.length; j++) {
+				if (data[i].racers[j] === myUsername) {
+					mostCurrentRaceID = data[i].id;
+					break;
+				}
 			}
+		}
+		if (mostCurrentRaceID !== false) {
+			currentRaceID = mostCurrentRaceID; // This is normally set at the top of the raceShow function, but we need to set it now since we have to delay
+			setTimeout(function() {
+				raceShow(mostCurrentRaceID);
+			}, fadeTime * 2 + 10); // 10 milliseconds of leeway
+		}
+	});
 
+	// Sent when we reconnect in the middle of a race
+	conn.on('racerList', function(data) {
+		raceList[data.id].racerList = data.racers;
+
+		// Build the table with the race participants on the race screen
+		$('#race-participants-table-body').html('');
+		for (let i = 0; i < raceList[currentRaceID].racerList.length; i++) {
+			raceParticipantAdd(i);
 		}
 	});
 
@@ -1407,53 +2310,79 @@ function websocket(username, password, remember) {
 
 		// Check to see if we created this race
 		if (data.captain === myUsername) {
-			raceEnter(data.id);
+			raceShow(data.id);
 		}
 	});
 
 	conn.on('raceJoined', function(data) {
 		// Keep track of the people in each race
-		raceList[data.id].players.push(data.name);
+		raceList[data.id].racers.push(data.name);
 
-		// Update the "Current races" area
-		// TODO
+		// Update the "# of Entrants" column in the lobby
+		$('#lobby-current-races-' + data.id + '-racers').html(raceList[data.id].racers.length);
 
-		// Check to see if we joined this race
 		if (data.name === myUsername) {
-			//currentRaceID = data.id;
-
-			// Join the race lobby
-			// TODO
+			// If we joined this race
+			raceShow(data.id);
+		} else {
+			// Update the race screen
+			if (data.id === currentRaceID) {
+				// We are in this race
+				let datetime = new Date().getTime();
+				raceList[data.id].racerList.push({
+					'name':   data.name,
+					'status': 'not ready',
+					'datetimeJoined': datetime,
+					'datetimeFinished': 0,
+					'place': 0,
+				});
+				raceParticipantAdd(raceList[data.id].racerList.length - 1);
+			}
 		}
 	});
 
 	conn.on('raceLeft', function(data) {
 		// Delete this person from the race list
-		if (raceList[data.id].players.indexOf(data.name) !== -1) {
-			raceList[data.id].players.splice(raceList[data.id].players.indexOf(data.name), 1);
+		if (raceList[data.id].racers.indexOf(data.name) !== -1) {
+			raceList[data.id].racers.splice(raceList[data.id].racers.indexOf(data.name), 1);
 		} else {
 			errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the entrant list.');
 			return;
 		}
 
-		if (raceList[data.id].players.length === 0) {
-			// Check to see if this was the last person in the race, and if so, delete the race
+		// Update the "Current races" area
+		if (raceList[data.id].racers.length === 0) {
+			// Delete the race since the last person in the race left
 			delete raceList[data.id];
+			lobbyRaceUndraw(data.id);
 		} else {
 			// Check to see if this person was the captain, and if so, make the next person in line the captain
 			if (raceList[data.id].captain === data.name) {
-				raceList[data.id].captain = raceList[data.id].players[0];
+				raceList[data.id].captain = raceList[data.id].racers[0];
+				$('#lobby-current-races-' + data.id + '-captain').html(raceList[data.id].captain);
 			}
+
+			// Update the "# of Entrants" column
+			$('#lobby-current-races-' + data.id + '-racers').html(raceList[data.id].racers.length);
+
 		}
 
-		// Update the "Current races" area
-		// TODO
-
+		// If we left the race
 		if (data.name === myUsername) {
-			//currentRaceID = false;
-
 			// Show the lobby
-			// TODO
+			lobbyShowFromRace();
+			return;
+		}
+
+		// If we are in this race
+		if (data.id === currentRaceID) {
+			// Remove the row for this player
+			$('#race-participants-table-' + data.name).remove();
+
+			if (raceList[currentRaceID].status === 'open') {
+				// Update the captian
+				// Not implemented
+			}
 		}
 	});
 
@@ -1461,36 +2390,120 @@ function websocket(username, password, remember) {
 		// Update the status
 		raceList[data.id].status = data.status;
 
-		// Check to see if we are in this race
-		if (data.id === false) { //if (data.id === currentRaceID) {
-			if (raceList[data.id].status === 'starting') {
-				// Update the race lobby
-				// TODO
-			} else if (raceList[data.id].status === 'in progress') {
-				// Update the race lobby
-				// TODO
-			} else if (raceList[data.id].status === 'finished') {
-				//currentRaceID = false;
+		// Update the "Status" column in the lobby
+		let circleClass;
+		if (data.status === 'open') {
+			circleClass = 'open';
+		} else if (data.status === 'starting') {
+			circleClass = 'starting';
+			$('#lobby-current-races-' + data.id).removeClass('lobby-race-row-open');
+			$('#lobby-current-races-' + data.id).unbind();
+		} else if (data.status === 'in progress') {
+			circleClass = 'in-progress';
+		} else if (data.status === 'finished') {
+			// Delete the race
+			delete raceList[data.id];
+			lobbyRaceUndraw(data.id);
+		} else {
+			errorShow('Unable to parse the race status from the raceSetStatus command.');
+		}
+		$('#lobby-current-races-' + data.id + '-status-circle').removeClass();
+		$('#lobby-current-races-' + data.id + '-status-circle').addClass('circle lobby-current-races-' + circleClass);
+		$('#lobby-current-races-' + data.id + '-status').html(data.status.capitalize());
 
-				// Update the race lobby
-				// TODO
+		// Check to see if we are in this race
+		if (data.id === currentRaceID) {
+			if (data.status === 'starting') {
+				// Update the status column in the race title
+				$('#race-title-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
+
+				// Start the countdown
+				raceCountdown();
+			} else if (data.status === 'in progress') {
+				// Do nothing special; after the countdown is finished, the race controls will fade in
+			} else if (data.status === 'finished') {
+				// Update the status column in the race title
+				$('#race-title-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
+
+				// Remove the race controls
+				$('#header-lobby').removeClass('disabled');
+				$('#race-quit-button').fadeOut(fadeTime, function() {
+					$('#race-countdown').css('font-size', '1.75em');
+					$('#race-countdown').css('bottom', '0.25em');
+					$('#race-countdown').css('color', '#e89980');
+					$('#race-countdown').html('<span lang="en">Race completed</span>!');
+					$('#race-countdown').fadeIn(fadeTime);
+				});
 			} else {
 				errorShow('Failed to parse the status of race #' + data.id + ': ' + raceList[data.id].status);
 			}
 		}
 
 		// Remove the race if it is finished
-		if (raceList[data.id] === 'finished') {
+		if (data.status === 'finished') {
 			delete raceList[data.id];
 		}
 	});
 
-	/*
-		Miscellaneous commands handlers
-	*/
+	conn.on('racerSetStatus', function(data) {
+		if (data.id !== currentRaceID) {
+			return;
+		}
 
-	conn.on('error', function(data) {
-		errorShow(data.message);
+		// Find the player in the racerList
+		for (let i = 0; i < raceList[data.id].racerList.length; i++) {
+			if (data.name === raceList[data.id].racerList[i].name) {
+				// Update their status locally
+				raceList[data.id].racerList[i].status = data.status;
+
+				// Update the race screen
+				if (currentScreen === 'race' && data.id === currentRaceID) {
+					let statusDiv;
+					if (data.status === 'ready') {
+						statusDiv = '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+					} else if (data.status === 'not ready') {
+						statusDiv = '<i class="fa fa-times" aria-hidden="true"></i> &nbsp; ';
+					} else if (data.status === 'racing') {
+						statusDiv = '<i class="mdi mdi-chevron-double-right"></i> &nbsp; ';
+					} else if (data.status === 'quit') {
+						statusDiv = '<i class="mdi mdi-skull"></i> &nbsp; ';
+					} else if (data.status === 'finished') {
+						statusDiv = '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+					}
+					statusDiv += '<span lang="en">' + data.status.capitalize() + '</span>';
+					$('#race-participants-table-' + data.name + '-status').html(statusDiv);
+				}
+
+				break;
+			}
+		}
+
+		// If we quit
+		if (data.name === myUsername && data.status === 'quit') {
+			$('#race-quit-button').fadeOut(fadeTime);
+		}
+	});
+
+	conn.on('raceSetRuleset', function(data) {
+		// Not implemented
+	});
+
+	conn.on('raceStart', function(data) {
+		if (data.id !== currentRaceID) {
+			errorShow('Got a "raceStart" command for a race that is not the current race.');
+		}
+
+		// Keep track of when the race starts
+		raceList[currentRaceID].datetimeStarted = data.time;
+
+		// Schedule the countdown and race (in two separate callbacks for more accuracy)
+		let now = new Date().getTime();
+		let timeToStartCountdown = data.time - now - timeOffset - 5000 - fadeTime;
+		setTimeout(function() {
+			raceCountdownTick(5);
+		}, timeToStartCountdown);
+		let timeToStartRace = data.time - now - timeOffset;
+		setTimeout(raceGo, timeToStartRace);
 	});
 }
 
@@ -1509,10 +2522,10 @@ function localize(new_language) {
 	}
 
 	// Set the new language
-	language = new_language;
-	localStorage.language = language;
+	settings.language = new_language;
+	localStorage.language = settings.language;
 
-	if (language === 'en') {
+	if (settings.language === 'en') {
 		// English
 		$('#title-language-english').html('English');
 		$('#title-language-english').removeClass('unselected-language');
@@ -1527,7 +2540,7 @@ function localize(new_language) {
 
 		lang.change('en');
 
-	} else if (language === 'fr') {
+	} else if (settings.language === 'fr') {
 		// French (Français)
 		$('#title-language-english').html('<a>English</a>');
 		$('#title-language-english').removeClass('selected-language');
@@ -1548,7 +2561,16 @@ function localize(new_language) {
 	Error functions
 */
 
-function errorShow(message) {
+function errorShow(message, alternateScreen = false) {
+	// Come back in a second if we are still in a transition
+	if (currentScreen === 'transition') {
+		setTimeout(function() {
+			errorShow(message, alternateScreen);
+		}, fadeTime + 10); // 10 milliseconds of leeway;
+		return;
+	}
+
+	// Log the message
 	console.error('Error:', message);
 
 	// Don't do anything if we are already showing an error
@@ -1560,20 +2582,54 @@ function errorShow(message) {
 	// Disconnect from the server, if connected
 	conn.close();
 
+	// Hide the links in the header
+	$('#header-profile').fadeOut(fadeTime);
+	$('#header-leaderboards').fadeOut(fadeTime);
+	$('#header-help').fadeOut(fadeTime);
+
 	// Hide the buttons in the header
 	$('#header-lobby').fadeOut(fadeTime);
-	$('#header-start-race').fadeOut(fadeTime);
-	$('#header-profile').fadeOut(fadeTime);
+	$('#header-new-race').fadeOut(fadeTime);
 	$('#header-settings').fadeOut(fadeTime);
 	$('#header-log-out').fadeOut(fadeTime);
 
 	// Close all tooltips
 	closeAllTooltips();
 
-	// Show the error modal
 	$('#gui').fadeTo(fadeTime, 0.1, function() {
-		$('#error-modal').fadeIn(fadeTime);
-		$('#error-modal-description').html(message);
+		if (alternateScreen === true) {
+			// Show the log file selector screen
+			$('#log-file-modal').fadeIn(fadeTime);
+		} else {
+			// Show the error modal
+			$('#error-modal').fadeIn(fadeTime);
+			$('#error-modal-description').html(message);
+		}
+	});
+}
+
+function warningShow(message) {
+	// Come back in a second if we are still in a transition
+	if (currentScreen === 'transition') {
+		setTimeout(function() {
+			warningShow(message);
+		}, fadeTime + 10); // 10 milliseconds of leeway;
+		return;
+	}
+
+	// Log the message
+	console.error('Warning:', message);
+
+	// Don't do anything if we are already showing a warning
+	if (currentScreen === 'warning') {
+		return;
+	}
+	currentScreen = 'warning';
+
+	$('#gui').fadeTo(fadeTime, 0.1, function() {
+		// Show the error modal
+		$('#warning-modal').fadeIn(fadeTime);
+		$('#warning-modal-description').html(message);
 	});
 }
 
@@ -1584,16 +2640,16 @@ function errorShow(message) {
 function findAjaxError(jqXHR) {
 	// Find out what error it was
 	let error;
-	if (jqXHR.hasOwnProperty('readyState') === true) {
+	if (jqXHR.hasOwnProperty('readyState')) {
 		if (jqXHR.readyState === 4) {
 			// HTTP error
 			if (tryParseJSON(jqXHR.responseText) !== false) {
 				error = JSON.parse(jqXHR.responseText); // jqXHR.response doesn't work for some reason
-				if (error.hasOwnProperty('error_description') === true) { // Some errors have the plain text description in the "error_description" field
+				if (error.hasOwnProperty('error_description')) { // Some errors have the plain text description in the "error_description" field
 					error = error.error_description;
-				} else if (error.hasOwnProperty('description') === true) { // Some errors have the plain text description in the "description" field
+				} else if (error.hasOwnProperty('description')) { // Some errors have the plain text description in the "description" field
 					error = error.description;
-				} else if (error.hasOwnProperty('error') === true) { // Some errors have the plain text description in the "error" field
+				} else if (error.hasOwnProperty('error')) { // Some errors have the plain text description in the "error" field
 					error = error.error;
 				} else {
 					error = 'An unknown HTTP error occured.';
@@ -1668,9 +2724,9 @@ function tryParseJSON(jsonString){
 
 		// Handle non-exception-throwing cases:
 		// Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
-		// but... JSON.parse(null) returns null, and typeof null === "object",
+		// but... JSON.parse(null) returns null, and typeof null === 'object',
 		// so we must check for that, too. Thankfully, null is falsey, so this suffices:
-		if (o && typeof o === "object") {
+		if (o && typeof o === 'object') {
 			return o;
 		}
 	}
@@ -1682,4 +2738,16 @@ function tryParseJSON(jsonString){
 function getRandomNumber(minNumber, maxNumber) {
 	// Get a random number between minNumber and maxNumber
 	return Math.floor(Math.random() * (parseInt(maxNumber) - parseInt(minNumber) + 1) + parseInt(minNumber));
+}
+
+// From: https://stackoverflow.com/questions/2332811/capitalize-words-in-string
+String.prototype.capitalize = function() {
+	return this.replace(/(?:^|\s)\S/g, function(a) {
+		return a.toUpperCase();
+	});
+};
+
+// From: https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
+function pad(val) {
+	return val > 9 ? val : '0' + val;
 }
