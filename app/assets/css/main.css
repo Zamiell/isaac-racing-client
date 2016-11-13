@@ -3462,6 +3462,10 @@
 		padding-right: 1em;
 	}
 
+	.underline {
+		border-bottom: 1px solid #e4886a; /* asdf */
+	}
+
 	/*
 		Header
 	*/
@@ -3954,6 +3958,32 @@
 	#new-race-submit-button-icon {
 		position: relative;
 		right: 12px;
+	}
+
+	/*
+		Settings tooltip
+	*/
+
+	#settings-tooltip {
+		padding: 2em 2em 2em 2em;
+	}
+
+	#settings-username-capitalization {
+		width: 10em;
+	}
+
+	#settings-log-file-location {
+		width: 10em;
+		overflow: auto;
+		white-space: nowrap;
+	}
+
+	#settings-volume-slider-value {
+		width: 1em;
+	}
+
+	#settings-form {
+		margin-bottom: 0;
 	}
 
 	/*

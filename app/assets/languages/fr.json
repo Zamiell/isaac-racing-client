@@ -13,7 +13,7 @@
         "Create": "Créer",
         "Diversity": "Diversity",
         "Don't reuse any previous passwords!": "Ne pas réutiliser de mots de passe précédents!",
-        "Don't use any symbols.": "N'utilisez pas de symboles.",
+        "Only use letters and numbers.": "Utilisez seulement des lettres et des chiffres.",
         "Email address": "Adresse e-mail",
         "Error": "Erreur",
         "Exit and relaunch": "Sortir et redémarrer",
@@ -27,12 +27,14 @@
         "Invalid email address.": "Adresse e-mail non valide.",
         "Leaderboards": "Classements",
         "Lobby": "Lobby",
+        "Locate \"log.txt\"": "Localiser \"log.txt\"",
         "Log File": "Fichier log",
         "Log Out": "Se déconnecter",
         "Login": "Se connecter",
         "New Race": "Nouvelle Course",
         "No current races.": "Pas de races en cours",
-        "Offset": "Retard",
+        "Offset": "Ecart",
+        "OK": "OK",
         "Online Users": "Utilisateurs en Ligne",
         "Open": "Ouverte",
         "Password": "Mot de Passe",
@@ -74,9 +76,11 @@
         "Username": "Utilisateur",
         "Username can only contain alphanumeric characters and '_'. Username should have between 2 and 15 characters.": "Le nom d'utilisateur doit se composer de lettres, chiffres et '_' seulement. Le nom d'utilisateur doit contenir entre 2 et 15 caractères.",
         "Users": "Utilisateurs",
+        "Volume": "Volume",
+        "Warning": "Attention",
         "Wrong username or password.": "Nom d'utilisateur ou mot de passe incorrect.",
         "You must finish or quit the current race before returning to the lobby.": "Vous devez finir ou quitter la course avant de revenir dans le lobby.",
         "Your account has been blocked after multiple consecutive login attempts. We’ve sent you an email with instructions on how to unblock it.": "Votre compte a été bloqué suite à de multiple tentatives de connexion consécutives. Un e-mail contenant les instructions pour le débloquer vous a été envoyé.",
-        "💬   Chat": "💬   Chat"
+        "Chat": "Chat"
     }
 }
