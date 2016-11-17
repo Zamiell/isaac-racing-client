@@ -19,9 +19,8 @@ const fs            = require('fs');
 const os            = require('os');
 const ChildProcess  = require('child_process');
 const path          = require('path');
-var isDev           = require('electron-is-dev');
+const isDev         = require('electron-is-dev');
 const globals       = require('./assets/js/globals');
-isDev = true; // For debugging
 
 /*
     Constants
@@ -52,7 +51,7 @@ if (require('electron-squirrel-startup')) {
 // If there are arguments and we are not running in a development environment
 if (process.argv.length !== 1 && isDev === false) {
     let squirrelEvent = process.argv[1];
-    writeLog('Number of args:', process.argv.length);
+    writeLog('args:', process.argv);
     writeLog('Recieved squirrelEvent:', squirrelEvent);
 
     // We can't check for updates on the very first run or else bad things will happen
@@ -73,9 +72,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    if (isDev) {
+    //if (isDev) {
         width += 500;
-    }
+    //}
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -86,9 +85,9 @@ function createWindow() {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Dev-only stuff
-    if (isDev === true) {
+    //if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    }
+    //}
 
     // Emitted when the window is closed
     mainWindow.on('closed', function() {
