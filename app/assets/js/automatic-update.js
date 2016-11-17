@@ -28,6 +28,8 @@ ipcRenderer.on('autoUpdater', function(event, message) {
     } else if (message === 'update-not-available') {
         // Do nothing special
     } else if (message === 'update-downloaded') {
-        // Do nothing special
+        if (globals.currentScreen === 'updating') {
+            ipcRenderer.send('asynchronous-message', 'restart');
+        }
     }
 });

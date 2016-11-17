@@ -36,7 +36,7 @@ const logFile      = path.resolve(process.execPath, '..', '..', 'Racing+.log');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow;
-var firstRun = false;
+var checkForUpdates = true;
 
 /*
     Squirrel stuff
@@ -50,12 +50,17 @@ if (require('electron-squirrel-startup')) {
 
 // If there are arguments and we are not running in a development environment
 if (process.argv.length !== 1 && isDev === false) {
-    const squirrelEvent = process.argv[1];
+    let squirrelEvent = process.argv[1];
+    writeLog('Number of args:', process.argv.length);
+    writeLog('Recieved squirrelEvent:', squirrelEvent);
 
     // We can't check for updates on the very first run or else bad things will happen
     // (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)
     if (squirrelEvent === '--squirrel-firstrun') {
-        firstRun = true;
+        checkForUpdates = false;
+    } else if (squirrelEvent === '--squirrel-updated') {
+        // If we just updated, we probably already have the latest version
+        checkForUpdates = false;
     }
 }
 
@@ -80,9 +85,9 @@ function createWindow() {
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Dev-only stuff
-    //if (isDev === true) {
+    if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    //}
+    }
 
     // Emitted when the window is closed
     mainWindow.on('closed', function() {
@@ -93,8 +98,35 @@ function createWindow() {
     });
 
     // Now that the window is created, check for updates
-    if (firstRun === false && isDev === false) {
-        checkForUpdates();
+    if (checkForUpdates === true && isDev === false) {
+        electron.autoUpdater.on('error', function(err) {
+            writeLog(`Update error: ${err.message}`);
+            mainWindow.webContents.send('autoUpdater', 'error');
+        });
+
+        electron.autoUpdater.on('checking-for-update', function() {
+            writeLog('autoUpdater - checking-for-update');
+            mainWindow.webContents.send('autoUpdater', 'checking-for-update');
+        });
+
+        electron.autoUpdater.on('update-available', function() {
+            writeLog('autoUpdater - update-available');
+            mainWindow.webContents.send('autoUpdater', 'update-available');
+        });
+
+        electron.autoUpdater.on('update-not-available', function() {
+            writeLog('autoUpdater - update-not-available');
+            mainWindow.webContents.send('autoUpdater', 'update-not-available');
+        });
+
+        electron.autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
+            writeLog('autoUpdater - update-downloaded');
+            mainWindow.webContents.send('autoUpdater', 'update-downloaded');
+        });
+
+        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + ':' + globals.squirrelPort + '/update/win32';
+        electron.autoUpdater.setFeedURL(url);
+        electron.autoUpdater.checkForUpdates();
     }
 }
 
@@ -155,41 +187,6 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.quit();
     }
 });
-
-/*
-    Automatic updates
-*/
-
-function checkForUpdates() {
-    electron.autoUpdater.on('error', function(err) {
-        writeLog(`Update error: ${err.message}`);
-        mainWindow.webContents.send('autoUpdater', 'error');
-    });
-
-    electron.autoUpdater.on('checking-for-update', function() {
-        writeLog('autoUpdater - checking-for-update');
-        mainWindow.webContents.send('autoUpdater', 'checking-for-update');
-    });
-
-    electron.autoUpdater.on('update-available', function() {
-        writeLog('autoUpdater - update-available');
-        mainWindow.webContents.send('autoUpdater', 'update-available');
-    });
-
-    electron.autoUpdater.on('update-not-available', function() {
-        writeLog('autoUpdater - update-not-available');
-        mainWindow.webContents.send('autoUpdater', 'update-not-available');
-    });
-
-    electron.autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
-        writeLog('autoUpdater - update-downloaded');
-        mainWindow.webContents.send('autoUpdater', 'update-downloaded');
-    });
-
-    let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + ':' + globals.squirrelPort + '/update/win32';
-    electron.autoUpdater.setFeedURL(url);
-    electron.autoUpdater.checkForUpdates();
-}
 
 /*
     Miscellaneous functions
