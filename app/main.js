@@ -19,8 +19,9 @@ const fs            = require('fs');
 const os            = require('os');
 const ChildProcess  = require('child_process');
 const path          = require('path');
-const isDev         = require('electron-is-dev');
+var isDev           = require('electron-is-dev');
 const globals       = require('./assets/js/globals');
+isDev = true; // For debugging
 
 /*
     Constants

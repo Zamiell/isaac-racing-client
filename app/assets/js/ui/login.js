@@ -120,10 +120,10 @@ const login1 = function(username, password, remember) {
         // Allow them to continue to log on if they got an error since we want the service to be usable when GitHub is down
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
-        globals.screen = 'transition';
+        globals.currentScreen = 'transition';
         $('#login').fadeOut(globals.fadeTime, function() {
             $('#updating').fadeIn(globals.fadeTime, function() {
-                globals.screen = 'updating';
+                globals.currentScreen = 'updating';
             });
         });
         return;
@@ -132,9 +132,10 @@ const login1 = function(username, password, remember) {
     } else if (globals.autoUpdateStatus === 'update-downloaded') {
         // The update was downloaded in the background while the user was idle at the title or login screen
         // Show them the updating screen so they are not confused at the program restarting
+        globals.currentScreen = 'transition';
         $('#login').fadeOut(globals.fadeTime, function() {
             $('#updating').fadeIn(globals.fadeTime, function() {
-                globals.screen = 'updating';
+                globals.currentScreen = 'updating';
 
                 setTimeout(function() {
                     ipcRenderer.send('asynchronous-message', 'restart');
