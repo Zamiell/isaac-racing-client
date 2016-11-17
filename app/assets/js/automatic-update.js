@@ -14,7 +14,7 @@ const misc        = nodeRequire('./assets/js/misc');
     IPC handlers
 */
 
-ipcRenderer.on('autoUpdater', function(event, message) {
+const autoUpdater = function(event, message) {
     console.log('Recieved message:', message);
     globals.autoUpdateStatus = message;
     if (message === 'error') {
@@ -28,8 +28,13 @@ ipcRenderer.on('autoUpdater', function(event, message) {
     } else if (message === 'update-not-available') {
         // Do nothing special
     } else if (message === 'update-downloaded') {
-        if (globals.currentScreen === 'updating') {
+        if (globals.currentScreen === 'transition') {
+            setTimeout(function() {
+                autoUpdater(event, message);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        } else if (globals.currentScreen === 'updating') {
             ipcRenderer.send('asynchronous-message', 'restart');
         }
     }
-});
+};
+ipcRenderer.on('autoUpdater', autoUpdater);

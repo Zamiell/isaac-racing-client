@@ -11,7 +11,7 @@
     "appId": "org.electron.isaacRacingClient",
     "squirrelWindows": {
       "iconUrl": "https://github.com/Zamiell/isaac-racing-client/blob/master/build/icon.ico?raw=true",
-      "remoteReleases": true
+      "remoteReleases": false
     }
   },
   "repository": {

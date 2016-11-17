@@ -5,18 +5,18 @@
 'use strict';
 
 // Imports
-const fs       = nodeRequire('fs');
-const os       = nodeRequire('os');
-const path     = nodeRequire('path');
-const execFile = nodeRequire('child_process').execFile;
-const Tail     = nodeRequire('tail').Tail;
-const globals  = nodeRequire('./assets/js/globals');
-const misc     = nodeRequire('./assets/js/misc');
+const os      = nodeRequire('os');
+const path    = nodeRequire('path');
+const spawn   = nodeRequire('child_process').spawn;
+const fs      = nodeRequire('fs-extra');
+const Tail    = nodeRequire('tail').Tail;
+const isDev   = nodeRequire('electron-is-dev');
+const globals = nodeRequire('./assets/js/globals');
+const misc    = nodeRequire('./assets/js/misc');
 
 exports.start = function() {
     // Check to make sure the log file exists
     if (fs.existsSync(globals.settings.logFilePath) === false) {
-        console.log('not found:', globals.settings.logFilePath);
         globals.settings.logFilePath = null;
     }
 
@@ -27,11 +27,45 @@ exports.start = function() {
         return -1;
     }
 
+    // Get ready to start the log watching program
+    let programPath;
+    if (isDev) {
+        // If we are in dev, we can simply run the watchLog.exe program
+        programPath = path.join(__dirname, '../programs/watchLog/dist/watchLog.exe');
+    } else {
+        // We freeze watchLog.exe with cx_Freeze instead of PyInstaller because the exe will properly exit after the parent dies.
+        // cx_Freeze doesn't support a single file freeze.
+        // Electron does support execFile on a file inside an ASAR archive, but it copies them out to a temporary folder first.
+        // Thus, if we execute it directly, watchLog.exe will be missing its needed DLL files.
+        // Furthermore, we want to use spawn instead of execFile, so that the process will end when the parent dies.
+        // Electron does not support spawn inside an ASAR archive.
+        // So the fix is to copy it to a temporary folder first and use spawn.
+
+        // Delete the temporary folder if it exists
+        let tempFolder = path.resolve(process.execPath, '..', '..', 'RacingPlusWatchLog');
+        if (fs.existsSync(tempFolder)) {
+            try {
+                fs.removeSync(tempFolder);
+            } catch(err) {
+                misc.errorShow('Failed to delete "' + tempFolder + '": ' + err);
+                return -1;
+            }
+        }
+
+        // Copy the cx_Freeze folder
+        let programFolder = path.join(__dirname, '../programs/watchLog/dist');
+        try {
+            fs.copySync(programFolder, tempFolder);
+        } catch(err) {
+            misc.errorShow('Failed to copy "' + programFolder + '" to "' + tempFolder + '": ' + err);
+            return -1;
+        }
+        programPath = path.resolve(tempFolder, 'watchLog.exe');
+    }
+
     // Start the log watching program
     console.log('Starting the log watching program...');
-    let programPath = path.join(__dirname, '../programs/watchLog/dist/watchLog.exe');
-    globals.logMonitoringProgram = execFile(programPath, [globals.settings.logFilePath]);
-    console.log(globals.logMonitoringProgram);
+    globals.logMonitoringProgram = spawn(programPath, [globals.settings.logFilePath]);
 
     // Tail the IPC file
     let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));

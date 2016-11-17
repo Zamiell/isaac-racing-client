@@ -22,7 +22,7 @@ const errorShow = function(message, alternateScreen = false) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             errorShow(message, alternateScreen);
-        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
     }
 
@@ -76,7 +76,7 @@ const warningShow = function(message) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             warningShow(message);
-        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
     }
 

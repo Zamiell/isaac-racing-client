@@ -77,7 +77,7 @@ const show = function(raceID) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             show(raceID);
-        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
     } else if (globals.currentScreen !== 'lobby') {
         misc.errorShow('Failed to enter the race screen since currentScreen is equal to "' + globals.currentScreen + '".');

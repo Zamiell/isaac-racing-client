@@ -124,7 +124,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connClose(event);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else {
             misc.errorShow('Unable to parse the "currentScreen" variable in the WebSocket close function.');
         }
@@ -298,7 +298,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRaceCreated(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -320,7 +320,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRaceJoined(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -358,7 +358,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRaceLeft(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -412,7 +412,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRaceSetStatus(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -481,7 +481,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRacerSetStatus(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -533,7 +533,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRacerSetStatus(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
@@ -560,7 +560,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connRacerSetFloor(data);
-            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
