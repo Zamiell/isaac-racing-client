@@ -329,6 +329,8 @@ $(document).ready(function() {
         Settings tooltip
     */
 
+    $('#settings-version').html('v' + globals.version);
+
     $('#settings-log-file-location-change').click(function() {
         let titleText = $('#select-your-log-file').html();
         let newLogFilePath = remote.dialog.showOpenDialog({

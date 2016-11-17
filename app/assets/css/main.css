@@ -4003,20 +4003,24 @@
 		padding: 2em 2em 2em 2em;
 	}
 
-	#settings-username-capitalization {
-		width: 10em;
+	#settings-form {
+		margin-bottom: 0;
+	}
+
+	#settings-version {
+		font-weight: bolder;
+	}
+
+	#settings-language {
+		width: 9em;
 	}
 
 	#settings-volume-slider-value {
 		width: 3em;
 	}
 
-	#settings-form {
-		margin-bottom: 0;
-	}
-
-	#settings-language {
-		width: 9em;
+	#settings-username-capitalization {
+		width: 10em;
 	}
 
 	/*

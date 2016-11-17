@@ -31,6 +31,7 @@ exports.start = function() {
     console.log('Starting the log watching program...');
     let programPath = path.join(__dirname, '../programs/watchLog/dist/watchLog.exe');
     globals.logMonitoringProgram = execFile(programPath, [globals.settings.logFilePath]);
+    console.log(globals.logMonitoringProgram);
 
     // Tail the IPC file
     let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));

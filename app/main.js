@@ -51,8 +51,7 @@ if (require('electron-squirrel-startup')) {
 // If there are arguments and we are not running in a development environment
 if (process.argv.length !== 1 && isDev === false) {
     let squirrelEvent = process.argv[1];
-    writeLog('args:', process.argv);
-    writeLog('Recieved squirrelEvent:', squirrelEvent);
+    writeLog('Recieved squirrelEvent: ' + squirrelEvent);
 
     // We can't check for updates on the very first run or else bad things will happen
     // (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)

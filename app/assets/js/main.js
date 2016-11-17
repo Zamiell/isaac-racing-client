@@ -116,4 +116,6 @@ globals.version = JSON.parse(fs.readFileSync(packageLocation)).version;
 
 // Read in the word list for later
 let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
-globals.wordList = fs.readFileSync(wordListLocation).toString().split('\n');
+fs.readFile(wordListLocation, function(err, data) {
+    globals.wordList = data.toString().split('\n');
+});
