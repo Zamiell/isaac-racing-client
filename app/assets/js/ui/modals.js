@@ -49,7 +49,9 @@ $(document).ready(function() {
         if (newLogFilePath === undefined) {
             return;
         } else {
-            localStorage.logFilePath = newLogFilePath;
+            globals.settings.logFilePath = newLogFilePath[0];
+            localStorage.logFilePath = newLogFilePath[0];
+
             $('#log-file-description-1').fadeOut(globals.fadeTime);
             $('#log-file-description-2').fadeOut(globals.fadeTime, function() {
                 $('#log-file-description-3').fadeIn(globals.fadeTime);

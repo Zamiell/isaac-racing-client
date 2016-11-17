@@ -7,7 +7,6 @@
 // Imports
 const keytar       = nodeRequire('keytar');
 const globals      = nodeRequire('./assets/js/globals');
-const localization = nodeRequire('./assets/js/localization');
 const loginScreen  = nodeRequire('./assets/js/ui/login');
 
 $(document).ready(function() {
@@ -64,9 +63,5 @@ $(document).ready(function() {
             });
             $('#register-username').focus();
         });
-    });
-
-    $('#title-language-french').click(function() {
-        localization.localize('fr');
     });
 });

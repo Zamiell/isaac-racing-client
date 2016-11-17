@@ -1,111 +1,115 @@
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"
 
+// Update with:
+// ncu --upgradeAll
+
 'use strict';
 
 /*
-	Imports
+    Imports
 */
 
 const electron      = require('electron');
-const app           = electron.app; // Module to control application life
-const BrowserWindow = electron.BrowserWindow; // Module to create native browser window
+const app           = electron.app;
+const BrowserWindow = electron.BrowserWindow;
 const ipcMain       = electron.ipcMain;
+const autoUpdater   = electron.autoUpdater;
 const fs            = require('fs');
 const os            = require('os');
 const ChildProcess  = require('child_process');
 const path          = require('path');
 const isDev         = require('electron-is-dev');
+const globals       = require('./assets/js/globals');
 
 /*
-	Constants
+    Constants
 */
 
-const appFolder      = path.resolve(process.execPath, '..');
-const rootAtomFolder = path.resolve(appFolder, '..');
-const updateDotExe   = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-const exeName        = path.basename(process.execPath);
-const assetsFolder   = path.resolve(appFolder, '..', '..', '..', 'app', 'assets');
-const logFile        = path.resolve(rootAtomFolder, 'Racing+.log');
+const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
+const logFile      = path.resolve(process.execPath, '..', '..', 'Racing+.log');
 
 /*
-	Initialization
-*/
-
-writeLog('App launched.');
-
-/*
-	Squirrel stuff
-	From: https://github.com/electron/windows-installer#handling-squirrel-events
-*/
-
-// This package automatically takes care of everything except for a few edge cases
-if (require('electron-squirrel-startup')) {
-	return;
-}
-
-// If there are arguments and we are not running in a development environment
-let firstRun = false;
-if (process.argv.length !== 1 && path.basename(process.argv[0]) !== 'electron.exe') {
-	const squirrelEvent = process.argv[1];
-
-	// We can't check for updates on the very first run or else bad things will happen
-	// (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)
-	if (squirrelEvent === '--squirrel-firstrun') {
-		firstRun = true;
-	}
-}
-
-/*
-	Electron boilerplate code
+    Global variables
 */
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+var mainWindow;
+var firstRun = false;
+
+/*
+    Squirrel stuff
+    From: https://github.com/electron/windows-installer#handling-squirrel-events
+*/
+
+// This package automatically takes care of everything except for a few edge cases
+if (require('electron-squirrel-startup')) {
+    return;
+}
+
+// If there are arguments and we are not running in a development environment
+if (process.argv.length !== 1 && isDev === false) {
+    const squirrelEvent = process.argv[1];
+
+    // We can't check for updates on the very first run or else bad things will happen
+    // (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)
+    if (squirrelEvent === '--squirrel-firstrun') {
+        firstRun = true;
+    }
+}
+
+/*
+    Electron boilerplate code
+*/
 
 function createWindow() {
-	// Create the browser window
-	let width = 1110;
-	let height = 720;
-	if (isDev) {
-		width += 500;
-	}
-	mainWindow = new BrowserWindow({
-		width:  width,
-		height: height,
-		icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
-		title:  'Racing+',
-		frame:  false,
-	});
-	mainWindow.loadURL(`file://${__dirname}/index.html`);
+    // Create the browser window
+    let width = 1110;
+    let height = 720;
+    if (isDev) {
+        width += 500;
+    }
+    mainWindow = new BrowserWindow({
+        width:  width,
+        height: height,
+        icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
+        title:  'Racing+',
+        frame:  false,
+    });
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-	// Dev-only stuff
-	if (isDev === true) {
-		mainWindow.webContents.openDevTools();
-	}
+    // Dev-only stuff
+    //if (isDev === true) {
+        mainWindow.webContents.openDevTools();
+    //}
 
-	// Emitted when the window is closed.
-	mainWindow.on('closed', function() {
-		// Dereference the window object, usually you would store windows
-		// in an array if your app supports multi windows, this is the time
-		// when you should delete the corresponding element.
-		mainWindow = null;
-	});
+    // Emitted when the window is closed
+    mainWindow.on('closed', function() {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
+
+    // Now that the window is created, check for updates
+    if (firstRun === false && isDev === false) {
+        checkForUpdates();
+    }
 }
 
 // Check to see if the application is already open
 if (isDev === false) {
-	const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-		// A second instance of the program was opened, so just focus the existing window
-		if (mainWindow) {
-			if (mainWindow.isMinimized()) mainWindow.restore();
-			mainWindow.focus();
-		}
-	});
-	if (shouldQuit) {
-		app.quit();
-	}
+    const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+        // A second instance of the program was opened, so just focus the existing window
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+        }
+    });
+    if (shouldQuit) {
+        app.quit();
+    }
 }
 
 // This method will be called when Electron has finished
@@ -115,49 +119,85 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-	// On OS X it is common for applications and their menu bar
-	// to stay active until the user quits explicitly with Cmd + Q
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', function() {
-	// On OS X it's common to re-create a window in the app when the
-	// dock icon is clicked and there are no other windows open.
-	if (mainWindow === null) {
-		createWindow();
-	}
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
 
 /*
-	IPC handlers
+    IPC handlers
 */
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-	console.log('Recieved message:', arg);
-	if (arg === 'minimize') {
-		mainWindow.minimize();
-	} else if (arg === 'maximize') {
-		if (mainWindow.isMaximized() === true) {
-			mainWindow.unmaximize();
-		} else {
-			mainWindow.maximize();
-		}
-	} else if (arg === 'close') {
-		app.quit();
-	} else if (arg === 'restart') {
-		app.relaunch();
-		app.quit();
-	}
+ipcMain.on('asynchronous-message', function(event, arg) {
+    console.log('Recieved message:', arg);
+    if (arg === 'minimize') {
+        mainWindow.minimize();
+    } else if (arg === 'maximize') {
+        if (mainWindow.isMaximized() === true) {
+            mainWindow.unmaximize();
+        } else {
+            mainWindow.maximize();
+        }
+    } else if (arg === 'close') {
+        app.quit();
+    } else if (arg === 'restart') {
+        app.relaunch();
+        app.quit();
+    }
 });
 
 /*
-	Miscellaneous functions
+    Automatic updates
+*/
+
+function checkForUpdates() {
+    electron.autoUpdater.on('error', function(err) {
+        writeLog(`Update error: ${err.message}`);
+        mainWindow.webContents.send('autoUpdater', 'error');
+    });
+
+    electron.autoUpdater.on('checking-for-update', function() {
+        writeLog('autoUpdater - checking-for-update');
+        mainWindow.webContents.send('autoUpdater', 'checking-for-update');
+    });
+
+    electron.autoUpdater.on('update-available', function() {
+        writeLog('autoUpdater - update-available');
+        mainWindow.webContents.send('autoUpdater', 'update-available');
+    });
+
+    electron.autoUpdater.on('update-not-available', function() {
+        writeLog('autoUpdater - update-not-available');
+        mainWindow.webContents.send('autoUpdater', 'update-not-available');
+    });
+
+    electron.autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
+        writeLog('autoUpdater - update-downloaded');
+        mainWindow.webContents.send('autoUpdater', 'update-downloaded');
+    });
+
+    let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + ':' + globals.squirrelPort + '/update/win32';
+    electron.autoUpdater.setFeedURL(url);
+    electron.autoUpdater.checkForUpdates();
+}
+
+/*
+    Miscellaneous functions
 */
 
 function writeLog(message) {
-	let datetime = new Date().toUTCString();
-	message = datetime + ' - ' + message + os.EOL;
-	fs.appendFile(logFile, message);
+    let datetime = new Date().toUTCString();
+    message = datetime + ' - ' + message + os.EOL;
+    fs.appendFile(logFile, message);
+    console.log(message); // Also print the message to the screen for debugging purposes
 }

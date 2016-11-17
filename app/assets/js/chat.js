@@ -29,6 +29,7 @@ exports.send = function(destination) {
     if (message.length > 150) {
         message = message.substring(0, 150);
     }
+    console.log('message length:', message.length);
 
     // Erase the contents of the input field
     $('#' + destination + '-chat-box-input').val('');
@@ -47,11 +48,20 @@ exports.send = function(destination) {
     // Reset the history index
     globals.roomList[room].historyIndex = -1;
 
-    // Check for the presence of commands
+    /*
+        Commands
+    */
+
     if (message === '/debug') {
         // /debug - Debug command
         misc.debug();
+    } else if (message === '/finish') {
+        // /finish - Debug finish
+        globals.conn.emit('raceFinish', {
+            'id': globals.currentRaceID,
+        });
     } else if (message === '/restart') {
+        // /restart - Restart the client
         ipcRenderer.send('asynchronous-message', 'restart');
     } else if (message.match(/^\/msg .+? .+/)) {
         // /msg - Private message

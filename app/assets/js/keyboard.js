@@ -12,13 +12,13 @@ $(document).keydown(function(event) {
     //console.log(event.which); // Find out the number that corresponds to the desired key
 
     if (event.which === 49) { // "1"
-        if (globals.currentScreen === 'title') {
+        if (globals.currentScreen === 'title' && globals.settings.tutorial === 'false') {
             event.preventDefault();
             $('#title-login-button').click();
         }
 
     } else if (event.which === 50) { // "2"
-        if (globals.currentScreen === 'title') {
+        if (globals.currentScreen === 'title' && globals.settings.tutorial === 'false') {
             event.preventDefault();
             $('#title-register-button').click();
         }

@@ -5,6 +5,7 @@
 'use strict';
 
 // Imports
+const ipcRenderer    = nodeRequire('electron').ipcRenderer;
 const globals        = nodeRequire('./assets/js/globals');
 const websocket      = nodeRequire('./assets/js/websocket');
 const misc           = nodeRequire('./assets/js/misc');
@@ -105,6 +106,45 @@ $(document).ready(function() {
 
 // Step 1 - Get a login token from Auth0
 const login1 = function(username, password, remember) {
+    // Don't login yet if we are still checking for updates
+    console.log("autoUpdateStatus:", globals.autoUpdateStatus);
+    if (globals.autoUpdateStatus === null) {
+        // This is the first run, so they should be on the most recent version, so continue to login
+        // (or we are in a development environment)
+    } else if (globals.autoUpdateStatus === 'checking-for-update') {
+        setTimeout(function() {
+            login1(username, password, remember);
+        }, 100);
+        return;
+    } else if (globals.autoUpdateStatus === 'error') {
+        // Allow them to continue to log on if they got an error since we want the service to be usable when GitHub is down
+    } else if (globals.autoUpdateStatus === 'update-available') {
+        // They are beginning to download the update
+        globals.screen = 'transition';
+        $('#login').fadeOut(globals.fadeTime, function() {
+            $('#updating').fadeIn(globals.fadeTime, function() {
+                globals.screen = 'updating';
+            });
+        });
+        return;
+    } else if (globals.autoUpdateStatus === 'update-not-available') {
+        // Do nothing special and continue to login
+    } else if (globals.autoUpdateStatus === 'update-downloaded') {
+        // The update was downloaded in the background while the user was idle at the title or login screen
+        // Show them the updating screen so they are not confused at the program restarting
+        $('#login').fadeOut(globals.fadeTime, function() {
+            $('#updating').fadeIn(globals.fadeTime, function() {
+                globals.screen = 'updating';
+
+                setTimeout(function() {
+                    ipcRenderer.send('asynchronous-message', 'restart');
+                }, 1000);
+            });
+        });
+        return;
+    }
+
+    // Send a request to Auth0
     let data = {
         'grant_type': 'password',
         'username':   username,

@@ -13,21 +13,19 @@
     - test to see if multiple windows works in production
     - columns for race:
       - seed
-      - floor
       - starting item
       - time offset
-      - automatic finish
       - fill in items
 */
 
 'use strict';
 
 // Import NPM packages
-const fs          = nodeRequire('fs');
-const path        = nodeRequire('path');
-const execSync    = nodeRequire('child_process').execSync;
-const remote      = nodeRequire('electron').remote;
-const isDev       = nodeRequire('electron-is-dev');
+const fs       = nodeRequire('fs');
+const path     = nodeRequire('path');
+const execSync = nodeRequire('child_process').execSync;
+const remote   = nodeRequire('electron').remote;
+const isDev    = nodeRequire('electron-is-dev');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
@@ -36,6 +34,7 @@ const localization    = nodeRequire('./assets/js/localization');
 const keyboard        = nodeRequire('./assets/js/keyboard');
 const header          = nodeRequire('./assets/js/ui/header');
 const titleScreen     = nodeRequire('./assets/js/ui/title');
+const tutorialScreen  = nodeRequire('./assets/js/ui/tutorial');
 const loginScreen     = nodeRequire('./assets/js/ui/login');
 const forgotScreen    = nodeRequire('./assets/js/ui/forgot');
 const registerScreen  = nodeRequire('./assets/js/ui/register');
@@ -77,6 +76,14 @@ if (isDev) {
 // Language localization
 // (done in "localization.js")
 
+// Tutorial
+globals.settings.tutorial = localStorage.tutorial;
+if (typeof globals.settings.tutorial === 'undefined') {
+    // If this is the first run, default to true)
+    globals.settings.tutorial = 'true';
+    localStorage.tutorial = 'true'; // Localstorage does not work with boolean values
+}
+
 // Volume
 globals.settings.volume = localStorage.volume;
 if (typeof globals.settings.volume === 'undefined') {
@@ -93,17 +100,19 @@ if (typeof globals.settings.logFilePath === 'undefined') {
     let documentsPath = execSync(command, {
         'encoding': 'utf8',
     });
+    documentsPath = $.trim(documentsPath); // Remove the trailing newline
     let defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth', 'log.txt');
+    globals.settings.logFilePath = defaultLogFilePath;
     localStorage.logFilePath = defaultLogFilePath;
 }
-
-// Version
-let packageLocation = path.join(__dirname, 'package.json');
-globals.version = JSON.parse(fs.readFileSync(packageLocation)).version;
 
 /*
     Initialization (miscellaneous)
 */
+
+// Version
+let packageLocation = path.join(__dirname, 'package.json');
+globals.version = JSON.parse(fs.readFileSync(packageLocation)).version;
 
 // Read in the word list for later
 let wordListLocation = path.join(__dirname, 'assets/words/words.txt');

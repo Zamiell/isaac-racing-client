@@ -5,12 +5,14 @@
 'use strict';
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const shell       = nodeRequire('electron').shell;
-const keytar      = nodeRequire('keytar');
-const globals     = nodeRequire('./assets/js/globals');
-const misc        = nodeRequire('./assets/js/misc');
-const lobbyScreen = nodeRequire('./assets/js/ui/lobby');
+const ipcRenderer  = nodeRequire('electron').ipcRenderer;
+const remote       = nodeRequire('electron').remote;
+const shell        = nodeRequire('electron').shell;
+const keytar       = nodeRequire('keytar');
+const globals      = nodeRequire('./assets/js/globals');
+const misc         = nodeRequire('./assets/js/misc');
+const localization = nodeRequire('./assets/js/localization');
+const lobbyScreen  = nodeRequire('./assets/js/ui/lobby');
 
 $(document).ready(function() {
     /*
@@ -128,10 +130,20 @@ $(document).ready(function() {
             if (globals.currentScreen === 'lobby') {
                 $('#gui').fadeTo(globals.fadeTime, 0.1);
 
-                $('#settings-username-capitalization').val(globals.myUsername);
-                $('#settings-log-file-location').html(globals.settings.logFilePath);
+                let shortenedPath = globals.settings.logFilePath.substring(0, 24);
+                $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+                $('#settings-log-file-location').tooltipster({
+                    theme: 'tooltipster-shadow',
+                    delay: 0,
+                });
+                $('#settings-log-file-location').tooltipster('content', globals.settings.logFilePath);
+
+                $('#settings-language').val(globals.settings.language);
+
                 $('#settings-volume-slider').val(globals.settings.volume * 100);
                 $('#settings-volume-slider-value').html((globals.settings.volume * 100) + '%');
+
+                $('#settings-username-capitalization').val(globals.myUsername);
 
                 return true;
             } else {
@@ -142,13 +154,6 @@ $(document).ready(function() {
         if ($('#header-new-race').tooltipster('status').open === false) {
             $('#gui').fadeTo(globals.fadeTime, 1);
         }
-    });
-
-    $('#header-settings').click(function() {
-        // TODO focus something?
-        //$('#senew-race-name').focus();
-
-        // CHANGE LANGUAGES
     });
 
     $('#header-log-out').click(function() {
@@ -324,8 +329,36 @@ $(document).ready(function() {
         Settings tooltip
     */
 
+    $('#settings-log-file-location-change').click(function() {
+        let titleText = $('#select-your-log-file').html();
+        let newLogFilePath = remote.dialog.showOpenDialog({
+            title: titleText,
+            filters: [
+                {
+                    'name': 'Text',
+                    'extensions': ['txt'],
+                }
+            ],
+            properties: ['openFile'],
+        });
+        if (newLogFilePath === undefined) {
+            return;
+        } else {
+            let shortenedPath = newLogFilePath[0].substring(0, 24);
+            $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+            $('#settings-log-file-location').tooltipster('content', newLogFilePath[0]);
+        }
+    });
+
     $('#settings-volume-slider').change(function() {
         $('#settings-volume-slider-value').html($(this).val() + '%');
+    });
+
+    $('#settings-volume-test').click(function() {
+        // Play the "Go" sound effect
+        let audio = new Audio('assets/sounds/go.mp3');
+        audio.volume = $('#settings-volume-slider').val() / 100;
+        audio.play();
     });
 
     $('#settings-form').submit(function() {
@@ -337,14 +370,45 @@ $(document).ready(function() {
             return;
         }
 
+        // Log file location
+        let newLogFilePath = $('#settings-log-file-location').tooltipster('content');
+        globals.settings.logFilePath = newLogFilePath;
+        localStorage.logFilePath = newLogFilePath;
+
+        // Language
+        localization.localize($('#settings-language').val());
+
         // Volume
         globals.settings.volume = $('#settings-volume-slider').val() / 100;
         localStorage.volume = $('#settings-volume-slider').val() / 100;
 
-        // ?
+        // Username capitalization
+        let newUsername = $('#settings-username-capitalization').val();
+        console.log(newUsername);
+
+        if (newUsername !== globals.myUsername) {
+            // We set a new username
+            console.log('getting here');
+            if (newUsername.toLowerCase() !== globals.myUsername.toLowerCase()) {
+                // We tried to enter a bogus stylization
+                $('#settings-username-capitalization').tooltipster({
+                    theme: 'tooltipster-shadow',
+                    delay: 0,
+                });
+                $('#settings-username-capitalization').tooltipster('open');
+                return;
+            } else {
+                globals.conn.emit('profileSetUsername', {
+                    name: newUsername,
+                });
+                $('#settings-username-capitalization-error').fadeOut(globals.fadeTime);
+            }
+        }
 
         // Close the tooltip
         $('#header-settings').tooltipster('close');
-    });
 
+        // Restart the program
+        ipcRenderer.send('asynchronous-message', 'restart');
+    });
 });

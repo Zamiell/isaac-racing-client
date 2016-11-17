@@ -1811,7 +1811,7 @@
 		-ms-transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
 		transition: color 0.2s ease-in-out, border-bottom-color 0.2s ease-in-out;
 		border-bottom: dotted 1px;
-		color: #ccddff; /* CHANGED from vanilla */
+		color: #80aaff; /* CHANGED from vanilla */
 		text-decoration: none;
 	}
 
@@ -1829,7 +1829,8 @@
 	}
 
 	p {
-		margin: 0 0 2em 0;
+		/*margin: 0 0 2em 0;*/
+		margin: 0 0 1em 0;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -3565,11 +3566,24 @@
 	}
 
 	/*
+		Tutorial
+	*/
+
+	#tutorial1 {
+		font-size: 16pt !important;
+		margin: 0 2.5em 0 2.5em;
+	}
+
+	#tutorial2 {
+		font-size: 16pt !important;
+		margin: 0 2.5em 0 2.5em;
+	}
+
+	/*
 		Login
 	*/
 
 	#login {
-		display: none;
 		font-size: 16pt !important;
 	}
 
@@ -3699,6 +3713,23 @@
 	}
 
 	/*
+		Updating
+	*/
+
+	#updating-title {
+		margin-left: -3.5em;
+	}
+
+	#updating-ajax {
+		position: relative;
+		bottom: 15px;
+		right: 5px;
+		width: 56px;
+		height: 56px;
+		transform: scale(0.3);
+	}
+
+	/*
 		Chat
 	*/
 
@@ -3778,6 +3809,10 @@
 
 	.lobby-current-races-in-progress {
 		background: orange;
+	}
+
+	.lobby-current-races-finished {
+		background: black;
 	}
 
 	.lobby-current-races-format-icon {
@@ -3972,18 +4007,16 @@
 		width: 10em;
 	}
 
-	#settings-log-file-location {
-		width: 10em;
-		overflow: auto;
-		white-space: nowrap;
-	}
-
 	#settings-volume-slider-value {
-		width: 1em;
+		width: 3em;
 	}
 
 	#settings-form {
 		margin-bottom: 0;
+	}
+
+	#settings-language {
+		width: 9em;
 	}
 
 	/*
@@ -4090,17 +4123,17 @@
 		overflow: auto;
 	}
 
+	#error-modal-description {
+		margin-bottom: 3em;
+	}
+
 	/*
 		Log file modal
 	*/
 
 	#log-file-modal {
-		top: 2.5em;
-		bottom: 2.5em;
-	}
-
-	#log-file-modal p {
-		margin-bottom: 1em;
+		font-size: 16pt !important;
+		margin: 0 2.5em 0 2.5em;
 	}
 
 	#log-file-link {

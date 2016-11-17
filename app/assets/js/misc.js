@@ -22,12 +22,16 @@ const errorShow = function(message, alternateScreen = false) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             errorShow(message, alternateScreen);
-        }, globals.fadeTime + 10); // 10 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
         return;
     }
 
     // Log the message
-    console.error('Error:', message);
+    if (message !== '') {
+        console.error('Error:', message);
+    } else {
+        console.error('Generic error.');
+    }
 
     // Don't do anything if we are already showing an error
     if (globals.currentScreen === 'error') {
@@ -36,7 +40,9 @@ const errorShow = function(message, alternateScreen = false) {
     globals.currentScreen = 'error';
 
     // Disconnect from the server, if connected
-    globals.conn.close();
+    if (globals.conn !== null) {
+        globals.conn.close();
+    }
 
     // Hide the links in the header
     $('#header-profile').fadeOut(globals.fadeTime);
@@ -70,7 +76,7 @@ const warningShow = function(message) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             warningShow(message);
-        }, globals.fadeTime + 10); // 10 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
         return;
     }
 

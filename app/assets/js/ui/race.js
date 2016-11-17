@@ -77,7 +77,7 @@ const show = function(raceID) {
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
             show(raceID);
-        }, globals.fadeTime + 10); // 10 milliseconds of leeway;
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway;
         return;
     } else if (globals.currentScreen !== 'lobby') {
         misc.errorShow('Failed to enter the race screen since currentScreen is equal to "' + globals.currentScreen + '".');
@@ -134,8 +134,22 @@ const show = function(raceID) {
             }
         }
 
-        // Set the status and format
-        $('#race-title-status').html(globals.raceList[globals.currentRaceID].status.capitalize());
+        // Set the status
+        let circleClass;
+        if (globals.raceList[globals.currentRaceID].status === 'open') {
+            circleClass = 'open';
+        } else if (globals.raceList[globals.currentRaceID].status === 'starting') {
+            circleClass = 'starting';
+        } else if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+            circleClass = 'in-progress';
+        } else if (globals.raceList[globals.currentRaceID].status === 'finished') {
+            circleClass = 'finished';
+        }
+        let statusText = '<span class="circle lobby-current-races-' + circleClass + '"></span> &nbsp; ';
+        statusText += '<span lang="en">' + globals.raceList[globals.currentRaceID].status.capitalize() + '</span>';
+        $('#race-title-status').html(statusText);
+
+        // Set the format/character/goal
         $('#race-title-format').html(globals.raceList[globals.currentRaceID].ruleset.format.capitalize());
         $('#race-title-character').html(globals.raceList[globals.currentRaceID].ruleset.character);
         $('#race-title-goal').html(globals.raceList[globals.currentRaceID].ruleset.goal);
@@ -166,6 +180,8 @@ const show = function(raceID) {
         $('#race-quit-button').fadeOut(0);
 
         // Set the race participants table to the pre-game state (with 2 columns)
+        $('#race-participants-table-place').fadeOut(0);
+        $('#race-participants-table-status').css('width', '70%');
         $('#race-participants-table-floor').fadeOut(0);
         $('#race-participants-table-item').fadeOut(0);
         $('#race-participants-table-time').fadeOut(0);
@@ -194,27 +210,59 @@ exports.participantAdd = function(i) {
     let racer = globals.raceList[globals.currentRaceID].racerList[i];
     let racerDiv = '<tr id="race-participants-table-' + racer.name + '">';
 
+    // The racer's place
+    racerDiv += '<td id="race-participants-table-' + racer.name + '-place" class="hidden">';
+    if (racer.place === 0) {
+        racerDiv += '-';
+    } else {
+        racerDiv += racer.place;
+    }
+    racerDiv += '</td>';
+
     // The racer's name
-    racerDiv += '<td>' + racer.name + '</td>';
+    racerDiv += '<td id="race-participants-table-' + racer.name + '-name">' + racer.name + '</td>';
 
     // The racer's status
     racerDiv += '<td id="race-participants-table-' + racer.name + '-status">';
     if (racer.status === 'ready') {
-        racerDiv += '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+        racerDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
     } else if (racer.status === 'not ready') {
-        racerDiv += '<i class="fa fa-times" aria-hidden="true"></i> &nbsp; ';
+        racerDiv += '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
     } else if (racer.status === 'racing') {
-        racerDiv += '<i class="mdi mdi-chevron-double-right"></i> &nbsp; ';
+        racerDiv += '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
     } else if (racer.status === 'quit') {
         racerDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
     } else if (racer.status === 'finished') {
-        racerDiv += '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+        racerDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
     }
     racerDiv += '<span lang="en">' + racer.status.capitalize() + '</span></td>';
 
     // The racer's floor
     racerDiv += '<td id="race-participants-table-' + racer.name + '-floor" class="hidden">';
-    racerDiv += racer.floor + '</td>';
+    let floorDiv;
+    if (racer.floor === 1) {
+        floorDiv = 'B1';
+    } else if (racer.floor === 2) {
+        floorDiv = 'B2';
+    } else if (racer.floor === 3) {
+        floorDiv = 'C1';
+    } else if (racer.floor === 4) {
+        floorDiv = 'C2';
+    } else if (racer.floor === 5) {
+        floorDiv = 'D1';
+    } else if (racer.floor === 6) {
+        floorDiv = 'D2';
+    } else if (racer.floor === 7) {
+        floorDiv = 'W1';
+    } else if (racer.floor === 8) {
+        floorDiv = 'W2';
+    } else if (racer.floor === 9) {
+        floorDiv = 'Cath';
+    } else if (racer.floor === 10) {
+        floorDiv = 'Chest';
+    }
+    racerDiv += floorDiv;
+    racerDiv += '</td>';
 
     // The racer's starting item
     racerDiv += '<td id="race-participants-table-' + racer.name + '-item" class="hidden">';
@@ -235,7 +283,9 @@ exports.participantAdd = function(i) {
     // Append the row
     racerDiv += '</tr>';
     $('#race-participants-table-body').append(racerDiv);
-    $('#race-participants-table-' + racer.name + '-status').attr('colspan', 5);
+
+    // To fix a small visual bug where the left border isn't drawn because of the left-most column being hidden
+    $('#race-participants-table-' + racer.name + '-name').css('border-left', 'solid 1px #e5e5e5');
 };
 
 exports.markOnline = function() {
@@ -282,11 +332,11 @@ exports.countdownTick = countdownTick;
 
 exports.go = function() {
     $('#race-countdown').html('<span lang="en">Go!</span>');
-    $('#race-title-status').html('<span lang="en">In Progress</span>');
+    $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
 
-    // Press enter to start the race
-    let command = path.join(__dirname, '/assets/programs/raceGo.exe');
-    execFile(command);
+    // Press enter inside of the game
+    /*let command = path.join(__dirname, '/assets/programs/raceGo.exe');
+    execFile(command);*/
 
     // Play the "Go" sound effect
     let audio = new Audio('assets/sounds/go.mp3');
@@ -301,12 +351,11 @@ exports.go = function() {
         globals.raceList[globals.currentRaceID].racerList[i].status = 'racing';
 
         let racer = globals.raceList[globals.currentRaceID].racerList[i].name;
-        let statusDiv = '<i class="mdi mdi-chevron-double-right"></i> &nbsp; <span lang="en">Racing</span>';
+        let statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
         $('#race-participants-table-' + racer + '-status').html(statusDiv);
         $('#race-participants-table-' + racer + '-item').html('-');
         $('#race-participants-table-' + racer + '-time').html('-');
         $('#race-participants-table-' + racer + '-offset').html('-');
-        $('#race-participants-table-' + racer + '-offset').fadeIn(globals.fadeTime);
     }
 };
 
@@ -336,16 +385,20 @@ const start = function() {
     });
 
     // Change the table to have 6 columns instead of 2
+    $('#race-participants-table-place').fadeIn(globals.fadeTime);
+    $('#race-participants-table-status').css('width', '7.5em');
     $('#race-participants-table-floor').fadeIn(globals.fadeTime);
     $('#race-participants-table-item').fadeIn(globals.fadeTime);
     $('#race-participants-table-time').fadeIn(globals.fadeTime);
     $('#race-participants-table-offset').fadeIn(globals.fadeTime);
     for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        $('#race-participants-table-' + globals.raceList[globals.currentRaceID].racerList[i].name + '-status').attr('colspan', 1);
-        $('#race-participants-table-' + globals.raceList[globals.currentRaceID].racerList[i].name + '-floor').fadeIn(globals.fadeTime);
-        $('#race-participants-table-' + globals.raceList[globals.currentRaceID].racerList[i].name + '-item').fadeIn(globals.fadeTime);
-        $('#race-participants-table-' + globals.raceList[globals.currentRaceID].racerList[i].name + '-time').fadeIn(globals.fadeTime);
-        $('#race-participants-table-' + globals.raceList[globals.currentRaceID].racerList[i].name + '-offset').fadeIn(globals.fadeTime);
+        let racer = globals.raceList[globals.currentRaceID].racerList[i].name;
+        $('#race-participants-table-' + racer + '-place').fadeIn(globals.fadeTime);
+        $('#race-participants-table-' + racer.name + '-name').css('border-left', '0'); // To fix a small visual bug where the left border isn't drawn because of the left-most column being hidden
+        $('#race-participants-table-' + racer + '-floor').fadeIn(globals.fadeTime);
+        $('#race-participants-table-' + racer + '-item').fadeIn(globals.fadeTime);
+        $('#race-participants-table-' + racer + '-time').fadeIn(globals.fadeTime);
+        $('#race-participants-table-' + racer + '-offset').fadeIn(globals.fadeTime);
     }
 };
 exports.start = start;

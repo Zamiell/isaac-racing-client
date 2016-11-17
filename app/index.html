@@ -51,7 +51,6 @@
 
         <!-- The main app -->
         <script src="assets/js/main.js"></script>
-        <!--<script src="assets/js/test.js"></script>-->
     </head>
 
     <body>
@@ -158,6 +157,15 @@
                                 </a>
                             </li>
                         </ul>
+                        <ul id="title-buttons-tutorial" class="actions hidden">
+                            <li>
+                                <a href="#" id="title-tutorial-button" class="button">
+                                    <i class="fa fa-play title-button-icons" aria-hidden="true"></i>
+                                    &nbsp;
+                                    <span lang="en">Get Started</span>
+                                </a>
+                            </li>
+                        </ul>
 
                         <ul id="title-languages" class="actions">
                             <li id="title-language-english" class="selected-language">English</li>
@@ -178,8 +186,53 @@
                     </section>
                 </div><!-- title -->
 
+                <!-- Tutorial1 -->
+                <div id="tutorial1" class="hidden">
+                    <section class="box">
+                        <div id="login-title" class="row">
+                            <h3><span lang="en">Tutorial</span></h3>
+                        </div>
+
+                        <p lang="en">Start each race at the character selection screen, shown below. Stay there until the countdown reaches 0, then go into the game!</p>
+
+                        <img src="assets/img/character-selection-screen.png" class="align-center" />
+                        <br />
+                        <br />
+
+                        <button id="tutorial1-next-button" class="button small alt" type="button">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            &nbsp;
+                            <span lang="en">Got it</span>
+                        </button>
+
+                    </section>
+                </div><!-- tutorial1 -->
+
+                <!-- Tutorial2 -->
+                <div id="tutorial2" class="hidden">
+                    <section class="box">
+                        <div id="login-title" class="row">
+                            <h3><span lang="en">Tutorial</span></h3>
+                        </div>
+
+                        <ul>
+                            <li lang="en">When you finish the race, you don't have to do anything. (The program will know that you finished from Isaac's log file.)</li>
+                            <li lang="en">If you die, you do not have to quit. Keep going if you want.</li>
+                            <li lang="en">If you want to give up for any reason, use the "Quit" button on the left side of the race screen.</li>
+                            <li lang="en">If you take longer than 30 minutes to complete a race, you will be forced to quit.</li>
+                        </ul>
+
+                        <button id="tutorial2-next-button" class="button small alt" type="button">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            &nbsp;
+                            <span lang="en">Got it</span>
+                        </button>
+
+                    </section>
+                </div><!-- tutorial2 -->
+
                 <!-- Login -->
-                <div id="login">
+                <div id="login" class="hidden">
                     <section class="box">
                         <div id="login-title" class="row">
                             <h3><span lang="en">Login</span></h3>
@@ -356,6 +409,20 @@
                     </section>
                 </div><!-- register -->
 
+                <!-- Updating -->
+                <div id="updating" class="hidden">
+                    <section class="box">
+                        <div id="updating-title" class="row">
+                            <h3><span lang="en">Updating</span></h3>
+                            <div id="updating-ajax">
+                                <div class="ajax-ring"></div>
+                            </div>
+                        </div>
+                        <p>A new version of the client is being downloaded. The program will automatically restart once it is complete.</p>
+                        <p>The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</p>
+                    </section>
+                </div><!-- updating -->
+
                 <!-- Lobby -->
                 <div id="lobby" class="hidden">
 
@@ -365,7 +432,7 @@
                             <div class="12u">
                                 <section id="lobby-current-races-box" class="box">
                                     <div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
-                                        <h3 id="lobby-current-races-table-no">No current races.</h3>
+                                        <h3 id="lobby-current-races-table-no" lang="en">No current races.</h3>
                                         <table id="lobby-current-races-table" class="alt">
                                             <thead>
                                                 <th><span lang="en">Title</span></th>
@@ -450,12 +517,13 @@
                                     <div id="race-participants-table-wrapper" class="table-wrapper vertical-center">
                                         <table id="race-participants-table" class="alt">
                                             <thead>
-                                                <th><span lang="en">Racer</span></th>
-                                                <th><span lang="en">Status</span></th>
-                                                <th><span id="race-participants-table-floor" class="hidden" lang="en">Floor</span></th>
-                                                <th><span id="race-participants-table-item" class="hidden" lang="en">Starting Item</span></th>
-                                                <th><span id="race-participants-table-time" class="hidden" lang="en">Time</span></th>
-                                                <th><span id="race-participants-table-offset" class="hidden" lang="en">Offset</span></th>
+                                                <th id="race-participants-table-place" class="hidden" lang="en">Place</th>
+                                                <th id="race-participants-table-racer" lang="en">Racer</th>
+                                                <th id="race-participants-table-status" lang="en">Status</th>
+                                                <th id="race-participants-table-floor" class="hidden" lang="en">Floor</th>
+                                                <th id="race-participants-table-item" class="hidden" lang="en">Starting Item</th>
+                                                <th id="race-participants-table-time" class="hidden" lang="en">Time</th>
+                                                <th id="race-participants-table-offset" class="hidden" lang="en">Offset</th>
                                             </thead>
                                             <tbody id="race-participants-table-body"></tbody>
                                         </table>
@@ -499,11 +567,11 @@
         </div><!-- warning-modal -->
 
         <!-- Log file modal -->
-        <div id="log-file-modal" class="error hidden">
+        <div id="log-file-modal" class="hidden">
             <section class="box">
                 <h3><span lang="en">Log File</span></h3>
                 <p id="log-file-description-1" lang="en">
-                    The Isaac "log.txt" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.
+                    Isaac's "log.txt" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.
                 </p>
                 <p id="log-file-description-2">
                     <span lang="en">This file is typically located in your "save data" directory. For more information, please see</span> <a id="log-file-link"><span lang="en">the "Known Issues" page by Simon from Nicalis</span></a>.
@@ -674,31 +742,65 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li>Change username capitalization:</li>
+                                <li lang="en">Log file location:</li>
+                                <li id="settings-log-file-location" data-tooltip-content="#settings-log-file-location-tooltip"></li>
                                 <li>
-                                    <input id="settings-username-capitalization" type="text" lang="en" />
+                                    <button id="settings-log-file-location-change" class="button alt small" type="button">
+                                        <span lang="en">Change</span>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="row uniform 50%">
-                        <div class="12u">
-                            <ul class="actions">
-                                <li>Log file location:</li>
-                                <li id="settings-log-file-location"></li>
-                            </ul>
-                        </div>
-                    </div>
+                    <br /><br /><br />
 
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li>Volume:</li>
+                                <li lang="en">Language:</li>
+                                <li>
+                                    <div class="select-wrapper">
+                                        <select id="settings-language">
+                                            <option value="en">English</option>
+                                            <option value="fr">Français</option>
+                                            <option value="es">Español</option>
+                                            <option value="ru">Русский</option>
+                                        </select>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <br /><br /><br />
+
+                    <div class="row uniform 50%">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li lang="en">Volume:</li>
                                 <li>
                                     <input id="settings-volume-slider" type="range" min="0" max="100" value="50" />
                                 </li>
                                 <li id="settings-volume-slider-value"></li>
+                                <li>
+                                    <button id="settings-volume-test" class="button alt small" type="button">
+                                        <span lang="en">Test</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <br /><br /><br />
+
+                    <div class="row uniform 50%">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li lang="en">Change username capitalization:</li>
+                                <li>
+                                    <input id="settings-username-capitalization" type="text" data-tooltip-content="#settings-username-capitalization-error" />
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -706,12 +808,14 @@
                     <div class="row uniform">
                         <div class="6u">
                             <ul class="actions">
-                                <li><input id="settings-submit-button" type="submit" value="Save" lang="en" /></li>
+                                <li><input id="settings-save-button" type="submit" value="Save and Restart" lang="en" /></li>
                             </ul>
                         </div>
                     </div>
                 </form>
             </div><!-- settings-tooltip -->
+
+            <div id="settings-username-capitalization-error" lang="en">You can only change the capitalization, not your actual username.</div>
 
             <div id="user-click-tooltip">
                 <div class="padding0p5"></div>

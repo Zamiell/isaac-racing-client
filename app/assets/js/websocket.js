@@ -66,7 +66,6 @@ exports.init = function(username, password, remember) {
     });
 
     globals.conn.on('close', connClose);
-
     function connClose(event) {
         // Check to see if this was intended
         if (globals.currentScreen === 'error') {
@@ -125,7 +124,7 @@ exports.init = function(username, password, remember) {
             // Come back when the current transition finishes
             setTimeout(function() {
                 connClose(event);
-            }, globals.fadeTime + 10); // 10 milliseconds of leeway
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
         } else {
             misc.errorShow('Unable to parse the "currentScreen" variable in the WebSocket close function.');
         }
@@ -278,7 +277,7 @@ exports.init = function(username, password, remember) {
             globals.currentRaceID = mostCurrentRaceID; // This is normally set at the top of the raceScreen.show function, but we need to set it now since we have to delay
             setTimeout(function() {
                 raceScreen.show(mostCurrentRaceID);
-            }, globals.fadeTime * 2 + 10); // 10 milliseconds of leeway
+            }, globals.fadeTime * 2 + 5); // Account for fade out and fade in, then add 5 milliseconds of leeway
         }
     });
 
@@ -293,7 +292,16 @@ exports.init = function(username, password, remember) {
         }
     });
 
-    globals.conn.on('raceCreated', function(data) {
+    globals.conn.on('raceCreated', connRaceCreated);
+    function connRaceCreated(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRaceCreated(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         // Keep track of what races are currently going
         globals.raceList[data.id] = data;
 
@@ -304,9 +312,18 @@ exports.init = function(username, password, remember) {
         if (data.captain === globals.myUsername) {
             raceScreen.show(data.id);
         }
-    });
+    }
 
-    globals.conn.on('raceJoined', function(data) {
+    globals.conn.on('raceJoined', connRaceJoined);
+    function connRaceJoined(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRaceJoined(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         // Keep track of the people in each race
         globals.raceList[data.id].racers.push(data.name);
 
@@ -327,13 +344,24 @@ exports.init = function(username, password, remember) {
                     'datetimeJoined': datetime,
                     'datetimeFinished': 0,
                     'place': 0,
+                    'floor': 1,
+                    'items': [],
                 });
                 raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
             }
         }
-    });
+    }
 
-    globals.conn.on('raceLeft', function(data) {
+    globals.conn.on('raceLeft', connRaceLeft);
+    function connRaceLeft(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRaceLeft(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         // Delete this person from the race list
         if (globals.raceList[data.id].racers.indexOf(data.name) !== -1) {
             globals.raceList[data.id].racers.splice(globals.raceList[data.id].racers.indexOf(data.name), 1);
@@ -376,11 +404,48 @@ exports.init = function(username, password, remember) {
                 // [not implemented]
             }
         }
-    });
+    }
 
-    globals.conn.on('raceSetStatus', function(data) {
+    globals.conn.on('raceSetStatus', connRaceSetStatus);
+    function connRaceSetStatus(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRaceSetStatus(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         // Update the status
         globals.raceList[data.id].status = data.status;
+
+        // Check to see if we are in this race
+        if (data.id === globals.currentRaceID) {
+            if (data.status === 'starting') {
+                // Update the status column in the race title
+                $('#race-title-status').html('<span class="circle lobby-current-races-starting"></span> &nbsp; <span lang="en">Starting</span>');
+
+                // Start the countdown
+                raceScreen.startCountdown();
+            } else if (data.status === 'in progress') {
+                // Do nothing; after the countdown is finished, the race controls will automatically fade in
+            } else if (data.status === 'finished') {
+                // Update the status column in the race title
+                $('#race-title-status').html('<span class="circle lobby-current-races-finished"></span> &nbsp; <span lang="en">Finished</span>');
+
+                // Remove the race controls
+                $('#header-lobby').removeClass('disabled');
+                $('#race-quit-button').fadeOut(globals.fadeTime, function() {
+                    $('#race-countdown').css('font-size', '1.75em');
+                    $('#race-countdown').css('bottom', '0.25em');
+                    $('#race-countdown').css('color', '#e89980');
+                    $('#race-countdown').html('<span lang="en">Race completed</span>!');
+                    $('#race-countdown').fadeIn(globals.fadeTime);
+                });
+            } else {
+                misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
+            }
+        }
 
         // Update the "Status" column in the lobby
         let circleClass;
@@ -404,41 +469,22 @@ exports.init = function(username, password, remember) {
         $('#lobby-current-races-' + data.id + '-status-circle').addClass('circle lobby-current-races-' + circleClass);
         $('#lobby-current-races-' + data.id + '-status').html(data.status.capitalize());
 
-        // Check to see if we are in this race
-        if (data.id === globals.currentRaceID) {
-            if (data.status === 'starting') {
-                // Update the status column in the race title
-                $('#race-title-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
-
-                // Start the countdown
-                raceScreen.startCountdown();
-            } else if (data.status === 'in progress') {
-                // Do nothing; after the countdown is finished, the race controls will automatically fade in
-            } else if (data.status === 'finished') {
-                // Update the status column in the race title
-                $('#race-title-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
-
-                // Remove the race controls
-                $('#header-lobby').removeClass('disabled');
-                $('#race-quit-button').fadeOut(globals.fadeTime, function() {
-                    $('#race-countdown').css('font-size', '1.75em');
-                    $('#race-countdown').css('bottom', '0.25em');
-                    $('#race-countdown').css('color', '#e89980');
-                    $('#race-countdown').html('<span lang="en">Race completed</span>!');
-                    $('#race-countdown').fadeIn(globals.fadeTime);
-                });
-            } else {
-                misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
-            }
-        }
-
         // Remove the race if it is finished
         if (data.status === 'finished') {
             delete globals.raceList[data.id];
         }
-    });
+    }
 
-    globals.conn.on('racerSetStatus', function(data) {
+    globals.conn.on('racerSetStatus', connRacerSetStatus);
+    function connRacerSetStatus(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRacerSetStatus(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         if (data.id !== globals.currentRaceID) {
             return;
         }
@@ -453,15 +499,15 @@ exports.init = function(username, password, remember) {
                 if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
                     let statusDiv;
                     if (data.status === 'ready') {
-                        statusDiv = '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+                        statusDiv = '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
                     } else if (data.status === 'not ready') {
-                        statusDiv = '<i class="fa fa-times" aria-hidden="true"></i> &nbsp; ';
+                        statusDiv = '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
                     } else if (data.status === 'racing') {
-                        statusDiv = '<i class="mdi mdi-chevron-double-right"></i> &nbsp; ';
+                        statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
                     } else if (data.status === 'quit') {
                         statusDiv = '<i class="mdi mdi-skull"></i> &nbsp; ';
                     } else if (data.status === 'finished') {
-                        statusDiv = '<i class="fa fa-check" aria-hidden="true"></i> &nbsp; ';
+                        statusDiv = '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
                     }
                     statusDiv += '<span lang="en">' + data.status.capitalize() + '</span>';
                     $('#race-participants-table-' + data.name + '-status').html(statusDiv);
@@ -475,13 +521,22 @@ exports.init = function(username, password, remember) {
         if (data.name === globals.myUsername && data.status === 'quit') {
             $('#race-quit-button').fadeOut(globals.fadeTime);
         }
-    });
+    }
 
     globals.conn.on('raceSetRuleset', function(data) {
         // Not implemented
     });
 
-    globals.conn.on('raceStart', function(data) {
+    globals.conn.on('raceStart', connRaceStart);
+    function connRaceStart(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRacerSetStatus(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
         if (data.id !== globals.currentRaceID) {
             misc.errorShow('Got a "raceStart" command for a race that is not the current race.');
         }
@@ -497,5 +552,57 @@ exports.init = function(username, password, remember) {
         }, timeToStartCountdown);
         let timeToStartRace = data.time - now - globals.timeOffset;
         setTimeout(raceScreen.go, timeToStartRace);
-    });
+    }
+
+    globals.conn.on('racerSetFloor', connRacerSetFloor);
+    function connRacerSetFloor(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRacerSetFloor(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway;
+            return;
+        }
+
+        if (data.id !== globals.currentRaceID) {
+            return;
+        }
+
+        // Find the player in the racerList
+        for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
+            if (data.name === globals.raceList[data.id].racerList[i].name) {
+                // Update their floor locally
+                globals.raceList[data.id].racerList[i].floor = data.floor;
+
+                // Update the race screen
+                if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
+                    let floorDiv;
+                    if (data.floor === 1) {
+                        floorDiv = 'B1';
+                    } else if (data.floor === 2) {
+                        floorDiv = 'B2';
+                    } else if (data.floor === 3) {
+                        floorDiv = 'C1';
+                    } else if (data.floor === 4) {
+                        floorDiv = 'C2';
+                    } else if (data.floor === 5) {
+                        floorDiv = 'D1';
+                    } else if (data.floor === 6) {
+                        floorDiv = 'D2';
+                    } else if (data.floor === 7) {
+                        floorDiv = 'W1';
+                    } else if (data.floor === 8) {
+                        floorDiv = 'W2';
+                    } else if (data.floor === 9) {
+                        floorDiv = 'Cath';
+                    } else if (data.floor === 10) {
+                        floorDiv = 'Chest';
+                    }
+                    $('#race-participants-table-' + data.name + '-floor').html(floorDiv);
+                }
+
+                break;
+            }
+        }
+    }
 };
