@@ -64,7 +64,6 @@ exports.start = function() {
     }
 
     // Start the log watching program
-    console.log('Starting the log watching program...');
     globals.logMonitoringProgram = spawn(programPath, [globals.settings.logFilePath]);
 
     // Tail the IPC file
