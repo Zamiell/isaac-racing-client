@@ -1,6 +1,7 @@
 #! C:\Python34\python.exe
 
 # Imports
+import argparse
 import sys
 import json
 import subprocess
@@ -17,6 +18,10 @@ repository_name = 'isaac-racing-client'
 def error(message):
     print(message)
     sys.exit(1)
+
+# Get command-line arguments
+parser = argparse.ArgumentParser()
+parser.parse_args()
 
 # Get the version
 with open('app/package.json') as packageJSON:
@@ -46,9 +51,6 @@ with open('.secrets') as f:
     access_token = f.read().strip()
 
 # Make a new release for this version
-print('Making a new release on GitHub.')
-github = github3.login(token=access_token)
-repository = github.repository(repository_owner, repository_name)
 release = repository.create_release(version)
 
 # Ignore "InsecureRequestWarning" when uploading files
