@@ -21,7 +21,8 @@ def error(message):
 
 # Get command-line arguments
 parser = argparse.ArgumentParser()
-parser.parse_args()
+parser.add_argument('-gh', '--github', help="upload to GitHub in addition to building locally", action='store_true')
+args = parser.parse_args()
 
 # Get the version
 with open('app/package.json') as packageJSON:
@@ -46,25 +47,29 @@ return_code = subprocess.call(['git', 'push'])
 if return_code != 0:
     error('Failed to git push.')
 
-# Get the access token
-with open('.secrets') as f:
-    access_token = f.read().strip()
+if args.github:
+    # Get the access token
+    with open('.secrets') as f:
+        access_token = f.read().strip()
 
-# Make a new release for this version
-print('Making a new release on GitHub.')
-github = github3.login(token=access_token)
-repository = github.repository(repository_owner, repository_name)
-release = repository.create_release(version)
+    # Make a new release for this version
+    print('\nMaking a new release on GitHub.')
+    github = github3.login(token=access_token)
+    repository = github.repository(repository_owner, repository_name)
+    release = repository.create_release(version)
 
-# Ignore "InsecureRequestWarning" when uploading files
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    # Ignore "InsecureRequestWarning" when uploading files
+    from requests.packages.urllib3.exceptions import InsecureRequestWarning
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-# Upload assets
-files = [
-    'Racing+ Setup ' + number_version + '.exe',
-    'RacingPlus-' + number_version + '-full.nupkg',
-    'RELEASES',
-]
-for file_name in files:
-    asset = release.upload_asset(content_type='application/binary', name=file_name, asset=open('dist/win/' + file_name, 'rb'))
+    # Upload assets
+    files = [
+        'Racing+ Setup ' + number_version + '.exe',
+        'RacingPlus-' + number_version + '-full.nupkg',
+        'RELEASES',
+    ]
+    for file_name in files:
+        asset = release.upload_asset(content_type='application/binary', name=file_name, asset=open('dist/win/' + file_name, 'rb'))
+
+# Done
+print('Released version', number_version, 'successfully.')

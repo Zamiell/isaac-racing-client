@@ -65,6 +65,8 @@ exports.init = function(username, password, remember) {
                 registerScreen.registerReset();
                 lobbyScreen.show();
             });
+        } else {
+            misc.errorShow('Can\'t transition to the lobby from screen: ' + globals.currentScreen);
         }
     });
 
