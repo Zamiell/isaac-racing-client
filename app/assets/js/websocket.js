@@ -20,12 +20,15 @@ exports.init = function(username, password, remember) {
     let url = 'ws' + (globals.secure ? 's' : '') + '://' + globals.domain + '/ws';
     globals.conn = new golem.Connection(url, isDev); // It will automatically use the cookie that we recieved earlier
                                                      // If the second argument is true, debugging is turned on
+    console.log('Establishing WebSocket connection to:', url);
 
     /*
         Miscellaneous WebSocket handlers
     */
 
     globals.conn.on('open', function(event) {
+        console.log('WebSocket connection opened.');
+
         // Login success; join the lobby chat channel
         globals.conn.emit('roomJoin', {
             'room': 'lobby',
@@ -67,6 +70,8 @@ exports.init = function(username, password, remember) {
 
     globals.conn.on('close', connClose);
     function connClose(event) {
+        console.log('WebSocket connection closed.');
+
         // Check to see if this was intended
         if (globals.currentScreen === 'error') {
             return;

@@ -29,7 +29,6 @@ exports.send = function(destination) {
     if (message.length > 150) {
         message = message.substring(0, 150);
     }
-    console.log('message length:', message.length);
 
     // Erase the contents of the input field
     $('#' + destination + '-chat-box-input').val('');
