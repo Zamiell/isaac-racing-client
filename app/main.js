@@ -20,6 +20,7 @@ const os            = require('os');
 const ChildProcess  = require('child_process');
 const path          = require('path');
 const isDev         = require('electron-is-dev');
+const teeny         = require('teeny-conf');
 const globals       = require('./assets/js/globals');
 
 /*
@@ -27,7 +28,8 @@ const globals       = require('./assets/js/globals');
 */
 
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
-const logFile      = path.resolve(process.execPath, '..', '..', 'Racing+.log');
+const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
 
 /*
     Global variables
@@ -64,6 +66,13 @@ if (process.argv.length !== 1 && isDev === false) {
 }
 
 /*
+    Initialize settings
+*/
+
+let settings = new teeny(settingsFile);
+settings.loadOrCreateSync();
+
+/*
     Electron boilerplate code
 */
 
@@ -87,14 +96,6 @@ function createWindow() {
     //if (isDev === true) {
         mainWindow.webContents.openDevTools();
     //}
-
-    // Emitted when the window is closed
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
 
     // Now that the window is created, check for updates
     if (checkForUpdates === true && isDev === false) {
@@ -127,6 +128,13 @@ function createWindow() {
         electron.autoUpdater.setFeedURL(url);
         electron.autoUpdater.checkForUpdates();
     }
+
+    mainWindow.on('closed', function() {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
 }
 
 // Check to see if the application is already open
@@ -194,6 +202,6 @@ ipcMain.on('asynchronous-message', function(event, arg) {
 function writeLog(message) {
     let datetime = new Date().toUTCString();
     message = datetime + ' - ' + message + os.EOL;
-    fs.appendFile(logFile, message);
+    fs.appendFileSync(logFile, message);
     console.log(message); // Also print the message to the screen for debugging purposes
 }

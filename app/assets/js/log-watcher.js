@@ -5,23 +5,27 @@
 'use strict';
 
 // Imports
-const os      = nodeRequire('os');
-const path    = nodeRequire('path');
-const spawn   = nodeRequire('child_process').spawn;
-const fs      = nodeRequire('fs-extra');
-const Tail    = nodeRequire('tail').Tail;
-const isDev   = nodeRequire('electron-is-dev');
-const globals = nodeRequire('./assets/js/globals');
-const misc    = nodeRequire('./assets/js/misc');
+const os       = nodeRequire('os');
+const path     = nodeRequire('path');
+const spawn    = nodeRequire('child_process').spawn;
+const remote   = nodeRequire('electron').remote;
+const fs       = nodeRequire('fs-extra');
+const Tail     = nodeRequire('tail').Tail;
+const isDev    = nodeRequire('electron-is-dev');
+const globals  = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
+const misc     = nodeRequire('./assets/js/misc');
 
+// globals.currentScreen is equal to "transition" when this is called
 exports.start = function() {
     // Check to make sure the log file exists
-    if (fs.existsSync(globals.settings.logFilePath) === false) {
-        globals.settings.logFilePath = null;
+    if (fs.existsSync(settings.get('logFilePath')) === false) {
+        settings.set('logFilePath', null);
+        settings.saveSync();
     }
 
     // Check to ensure that we have a valid log file path
-    if (globals.settings.logFilePath === null ) {
+    if (settings.get('logFilePath') === null) {
         globals.currentScreen = 'null';
         misc.errorShow('', true); // Show the log file path modal
         return -1;
@@ -47,6 +51,7 @@ exports.start = function() {
             try {
                 fs.removeSync(tempFolder);
             } catch(err) {
+                globals.currentScreen = 'null';
                 misc.errorShow('Failed to delete "' + tempFolder + '": ' + err);
                 return -1;
             }
@@ -57,6 +62,7 @@ exports.start = function() {
         try {
             fs.copySync(programFolder, tempFolder);
         } catch(err) {
+            globals.currentScreen = 'null';
             misc.errorShow('Failed to copy "' + programFolder + '" to "' + tempFolder + '": ' + err);
             return -1;
         }
@@ -64,7 +70,8 @@ exports.start = function() {
     }
 
     // Start the log watching program
-    globals.logMonitoringProgram = spawn(programPath, [globals.settings.logFilePath]);
+    let args = (isDev ? [settings.get('logFilePath'), 'dev'] : [settings.get('logFilePath')]);
+    globals.logMonitoringProgram = spawn(programPath, args);
 
     // Tail the IPC file
     let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));

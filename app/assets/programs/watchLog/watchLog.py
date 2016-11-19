@@ -1,11 +1,12 @@
 #! C:\Python34\python.exe
 
 # Notes:
-# - Default log file location:
-#   'C:/Users/' + os.getenv('username') + '/Documents/My Games/Binding of Isaac Afterbirth/log.txt'
-#   "C:/Users/james/Documents/My Games/Binding of Isaac Afterbirth/log.txt"
+# - Run it:
+#   "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" "C:/Users/james/Documents/My Games/Binding of Isaac Afterbirth/log.txt"
+#   "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\dist\watchLog.exe" "C:/Users/james/Documents/My Games/Binding of Isaac Afterbirth/log.txt"
 # - Build with:
-#   'cxfreeze watchLog.py --target-dir dist'
+#   cxfreeze "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" --target-dir "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\dist"
+#   pyinstaller "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" --onefile
 
 # Imports
 import sys
@@ -28,19 +29,19 @@ def write_file(message):
     try:
         with open(IPC_file, 'a') as f:
             f.write(message + '\n')
-    except Exception:
-        error('Failed to write to the IPC file at "' + log_file_path + '".')
+    except Exception as e:
+        error('Failed to write to the IPC file at "' + log_file_path + '":' + e)
 
 # Just in case, check to see if there is another copy already running
 num_processes = False
 for process in psutil.process_iter():
     if process.name() == 'watchLog.exe':
         num_processes += 1
-if num_processes > 1:
+if num_processes > 2:  # pyInstaller creates a "launcher" process with the same name
     error('watchLog.exe is already running. Exiting.')
 
 # Validate command-line arguments
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     error('Must provide an argument containing the path to Isaac\'s log file.')
 
 # Check to see if the log file exists
@@ -48,28 +49,34 @@ log_file_path = sys.argv[1]
 if not os.path.isfile(log_file_path):
     error('Log file "' + log_file_path + '" does not exist.')
 
+# Check to see if we are running in development mode
+parent_process_name = "Racing+.exe"
+if len(sys.argv) == 3:
+    parent_process_name = "electron.exe"
+
 # Truncate the log file (so that we don't accidentally report to the server anything that we have already reported)
 try:
     with open(log_file_path, 'w') as f:
         pass
-except Exception:
-    error('Failed to truncate the log file at "' + log_file_path + '".')
+except Exception as e:
+    error('Failed to truncate the log file at "' + log_file_path + '":' + e)
 
 # Truncate the IPC file (so that it doesn't grow too large)
 try:
     with open(IPC_file, 'w') as f:
         pass
-except Exception:
-    error('Failed to truncate the IPC file at "' + IPC_file + '".')
+except Exception as e:
+    error('Failed to truncate the IPC file at "' + IPC_file + '":' + e)
 
 # Continuously read the log file
+i = 1
 while True:
     # Read the log into a variable
     try:
         with open(log_file_path, 'r') as f:
             fileContents = f.read()
-    except Exception:
-        error('Could not open the log file at "' + log_file_path + '".')
+    except Exception as e:
+        error('Could not open the log file at "' + log_file_path + '":' + e)
 
     # Convert it to an array
     file_array = fileContents.splitlines()
@@ -124,8 +131,26 @@ while True:
         elif line == 'playing cutscene 19 (Mega Satan).':
             write_file('Finished run: Mega Satan')
 
+        # Check for a kill signal
+        elif line == '---RACING+ CLOSING---':
+            write_file('Detected a kill signal in the Isaac log. Exiting.')
+            sys.exit()
+
     # Set that we have read the log up to this point
     file_array_position = len(file_array)
+
+    # Check to see if the parent died
+    i += 1
+    if (i == 5):
+        i = 1
+        parent_exists = False
+        for process in psutil.process_iter():
+            if process.name() == parent_process_name:
+                parent_exists = True
+                break
+        if parent_exists == False:
+            write_file('Detected that my parent exited (' + parent_process_name + '). Exiting.')
+            sys.exit()
 
     # Sleep for a little while so that we don't overload the CPU too much
     time.sleep(0.1)

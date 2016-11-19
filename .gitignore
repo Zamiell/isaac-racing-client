@@ -38,4 +38,6 @@ jspm_packages
 
 # Isaac Racing Client Stuff
 .secrets
+Racing+.log
+settings.json
 dist

@@ -10,6 +10,7 @@ const remote       = nodeRequire('electron').remote;
 const shell        = nodeRequire('electron').shell;
 const keytar       = nodeRequire('keytar');
 const globals      = nodeRequire('./assets/js/globals');
+const settings     = nodeRequire('./assets/js/settings');
 const misc         = nodeRequire('./assets/js/misc');
 const localization = nodeRequire('./assets/js/localization');
 const lobbyScreen  = nodeRequire('./assets/js/ui/lobby');
@@ -130,18 +131,18 @@ $(document).ready(function() {
             if (globals.currentScreen === 'lobby') {
                 $('#gui').fadeTo(globals.fadeTime, 0.1);
 
-                let shortenedPath = globals.settings.logFilePath.substring(0, 24);
+                let shortenedPath = settings.get('logFilePath').substring(0, 24);
                 $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
                 $('#settings-log-file-location').tooltipster({
                     theme: 'tooltipster-shadow',
                     delay: 0,
                 });
-                $('#settings-log-file-location').tooltipster('content', globals.settings.logFilePath);
+                $('#settings-log-file-location').tooltipster('content', settings.get('logFilePath'));
 
-                $('#settings-language').val(globals.settings.language);
+                $('#settings-language').val(settings.get('language'));
 
-                $('#settings-volume-slider').val(globals.settings.volume * 100);
-                $('#settings-volume-slider-value').html((globals.settings.volume * 100) + '%');
+                $('#settings-volume-slider').val(settings.get('volume') * 100);
+                $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
 
                 $('#settings-username-capitalization').val(globals.myUsername);
 
@@ -158,13 +159,14 @@ $(document).ready(function() {
 
     $('#header-log-out').click(function() {
         // Delete their cached credentials, if any
-        let storedUsername = localStorage.username;
+        let storedUsername = settings.get('username');
         if (typeof storedUsername !== 'undefined') {
             let storedPassword = keytar.getPassword('Racing+', storedUsername);
             if (storedPassword !== null) {
                 keytar.deletePassword('Racing+', storedUsername);
             }
-            localStorage.removeItem('username');
+            settings.set('username', undefined);
+            settings.saveSync();
         }
 
         // Kill the log monitoring program
@@ -374,20 +376,18 @@ $(document).ready(function() {
 
         // Log file location
         let newLogFilePath = $('#settings-log-file-location').tooltipster('content');
-        globals.settings.logFilePath = newLogFilePath;
-        localStorage.logFilePath = newLogFilePath;
+        settings.set('logFilePath', newLogFilePath);
+        settings.saveSync();
 
         // Language
         localization.localize($('#settings-language').val());
 
         // Volume
-        globals.settings.volume = $('#settings-volume-slider').val() / 100;
-        localStorage.volume = $('#settings-volume-slider').val() / 100;
+        settings.set('volume', $('#settings-volume-slider').val() / 100);
+        settings.saveSync();
 
         // Username capitalization
         let newUsername = $('#settings-username-capitalization').val();
-        console.log(newUsername);
-
         if (newUsername !== globals.myUsername) {
             // We set a new username
             console.log('getting here');

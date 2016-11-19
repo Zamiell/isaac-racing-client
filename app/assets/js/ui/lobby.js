@@ -34,7 +34,6 @@ exports.show = function() {
     // Start the log watcher
     console.log('Starting the log watching program.');
     if (logWatcher.start() === -1) {
-        console.error('Starting the log watching program failed.');
         return;
     }
 

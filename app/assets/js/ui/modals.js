@@ -9,6 +9,7 @@ const ipcRenderer = nodeRequire('electron').ipcRenderer;
 const remote      = nodeRequire('electron').remote;
 const shell       = nodeRequire('electron').shell;
 const globals     = nodeRequire('./assets/js/globals');
+const settings    = nodeRequire('./assets/js/settings');
 
 /*
     Event handlers
@@ -49,8 +50,8 @@ $(document).ready(function() {
         if (newLogFilePath === undefined) {
             return;
         } else {
-            globals.settings.logFilePath = newLogFilePath[0];
-            localStorage.logFilePath = newLogFilePath[0];
+            settings.set('logFilePath', newLogFilePath[0]);
+            settings.saveSync();
 
             $('#log-file-description-1').fadeOut(globals.fadeTime);
             $('#log-file-description-2').fadeOut(globals.fadeTime, function() {

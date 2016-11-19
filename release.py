@@ -36,18 +36,18 @@ return_code = subprocess.call(['npm', 'run', 'dist', '--python="C:/Python27/pyth
 if return_code != 0:
     error('Failed to build.')
 
-# Commit to the repository
-return_code = subprocess.call(['git', 'add', '-A'])
-if return_code != 0:
-    error('Failed to git add.')
-return_code = subprocess.call(['git', 'commit', '-m', version])
-if return_code != 0:
-    error('Failed to git commit.')
-return_code = subprocess.call(['git', 'push'])
-if return_code != 0:
-    error('Failed to git push.')
-
 if args.github:
+    # Commit to the repository
+    return_code = subprocess.call(['git', 'add', '-A'])
+    if return_code != 0:
+        error('Failed to git add.')
+    return_code = subprocess.call(['git', 'commit', '-m', version])
+    if return_code != 0:
+        error('Failed to git commit.')
+    return_code = subprocess.call(['git', 'push'])
+    if return_code != 0:
+        error('Failed to git push.')
+
     # Get the access token
     with open('.secrets') as f:
         access_token = f.read().strip()

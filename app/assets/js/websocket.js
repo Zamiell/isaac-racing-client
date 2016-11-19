@@ -8,6 +8,7 @@
 const keytar         = nodeRequire('keytar');
 const isDev          = nodeRequire('electron-is-dev');
 const globals        = nodeRequire('./assets/js/globals');
+const settings       = nodeRequire('./assets/js/settings');
 const chat           = nodeRequire('./assets/js/chat');
 const misc           = nodeRequire('./assets/js/misc');
 const loginScreen    = nodeRequire('./assets/js/ui/login');
@@ -36,8 +37,9 @@ exports.init = function(username, password, remember) {
 
         // Save the credentials
         if (remember === true) {
-            // Store the username (as a cookie)
-            localStorage.username = username;
+            // Store the username (in the settings.json file)
+            settings.set('username', username);
+            settings.saveSync();
 
             // Store the password (in the OS vault)
             keytar.addPassword('Racing+', username, password);

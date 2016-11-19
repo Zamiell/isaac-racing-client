@@ -25,12 +25,6 @@ module.exports = {
     roomList: {},
     raceList: {},
     secure: secure,
-    settings: {
-        'language': null,
-        'tutorial': null,
-        'volume': null,
-        'logFilePath': null,
-    },
     squirrelPort: squirrelPort,
     timeOffset: 0,
     version: null,

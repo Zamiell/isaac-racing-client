@@ -5,10 +5,11 @@
 'use strict';
 
 // Imports
-const globals = nodeRequire('./assets/js/globals');
+const globals  = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
 
 $(document).ready(function() {
-    if (globals.settings.tutorial === 'true') {
+    if (settings.get('tutorial') === 'true') {
         $('#title-buttons').fadeOut(0);
         $('#title-buttons-tutorial').fadeIn(0);
     }
@@ -48,8 +49,8 @@ $(document).ready(function() {
         globals.currentScreen = 'transition';
         $('#tutorial2').fadeOut(globals.fadeTime, function() {
             // Mark that we have completed the tutorial
-            globals.settings.tutorial = 'false';
-            localStorage.tutorial = 'false';
+            settings.set('tutorial', 'false');
+            settings.saveSync();
 
             // Change the title screen to the default
             $('#title-buttons-tutorial').fadeOut(0);

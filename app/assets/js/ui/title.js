@@ -7,6 +7,7 @@
 // Imports
 const keytar       = nodeRequire('keytar');
 const globals      = nodeRequire('./assets/js/globals');
+const settings     = nodeRequire('./assets/js/settings');
 const loginScreen  = nodeRequire('./assets/js/ui/login');
 
 $(document).ready(function() {
@@ -14,8 +15,8 @@ $(document).ready(function() {
     $('#title-version').html('v' + globals.version);
 
     // Find out if the user has saved credentials
-    let storedUsername = localStorage.username;
-    if (typeof storedUsername !== 'undefined') {
+    let storedUsername = settings.get('username');
+    if (typeof storedUsername !== 'undefined' && storedUsername !== '') {
         let storedPassword = keytar.getPassword('Racing+', storedUsername);
         if (storedPassword !== null) {
             // Show an AJAX circle

@@ -9,6 +9,7 @@ const execFile  = nodeRequire('child_process').execFile;
 const path      = nodeRequire('path');
 const clipboard = nodeRequire('electron').clipboard;
 const globals   = nodeRequire('./assets/js/globals');
+const settings  = nodeRequire('./assets/js/settings');
 const misc      = nodeRequire('./assets/js/misc');
 const chat      = nodeRequire('./assets/js/chat');
 
@@ -317,7 +318,7 @@ const countdownTick = function(i) {
             setTimeout(function() {
                 if (i === 3 || i === 2 || i === 1) {
                     let audio = new Audio('assets/sounds/' + i + '.mp3');
-                    audio.volume = globals.settings.volume;
+                    audio.volume = settings.get('volume');
                     audio.play();
                 }
             }, globals.fadeTime / 2);
@@ -340,7 +341,7 @@ exports.go = function() {
 
     // Play the "Go" sound effect
     let audio = new Audio('assets/sounds/go.mp3');
-    audio.volume = globals.settings.volume;
+    audio.volume = settings.get('volume');
     audio.play();
 
     // Wait 5 seconds, then start to change the controls

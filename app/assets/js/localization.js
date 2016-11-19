@@ -5,38 +5,37 @@
 'use strict';
 
 // Imports
-const globals = nodeRequire('./assets/js/globals');
+const globals  = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
+
+// Constants
+const validLanguages = [
+    ['en', 'english', 'English'],
+    ['fr', 'french',  'Français'],
+    ['es', 'spanish', 'Español'],
+    ['ru', 'russian', 'Русский'],
+];
 
 $(document).ready(function() {
     // Initialize the "globals.lang" variable
-    globals.settings.language = localStorage.language;
-    if (typeof globals.settings.language === 'undefined') {
-        // If this is the first run, default to English
-        globals.settings.language = 'en';
-        localStorage.language = 'en';
-    }
     globals.lang = new Lang(); // Create a language switcher instance
-    globals.lang.dynamic('fr', 'assets/languages/fr.json');
-    globals.lang.dynamic('es', 'assets/languages/es.json');
-    globals.lang.dynamic('ru', 'assets/languages/ru.json');
+    for (let languageArray of validLanguages) {
+        if (languageArray[0] === validLanguages[0][0]) {
+            // We don't need to load English
+            continue;
+        }
+        globals.lang.dynamic(languageArray[0], 'assets/languages/' + languageArray[0] + '.json');
+    }
     globals.lang.init({
-        defaultLang: 'en',
+        defaultLang: validLanguages[0][0],
     });
 
     // If the user is using a non-default language, change all the text on the page
-    localize(globals.settings.language); // We still call this if the language is English so that the links get initialized correctly
+    localize(settings.get('language')); // We still call this if the language is English so that the links get initialized correctly
 
 });
 
 const localize = function(newLanguage) {
-    // Define valid languages
-    let validLanguages = [
-        ['en', 'english', 'English'],
-        ['fr', 'french', 'Français'],
-        ['es', 'spanish', 'Español'],
-        ['ru', 'russian', 'Русский'],
-    ];
-
     // Validate function arguments
     let validLanguageCodes = [];
     for (let languageArray of validLanguages) {
@@ -62,9 +61,11 @@ const localize = function(newLanguage) {
         localize(languageArray[0]);
     };
 
-    // Set the new language
-    globals.settings.language = newLanguage;
-    localStorage.language = globals.settings.language;
+    // Update the language setting on disk
+    settings.set('language', newLanguage);
+    settings.saveSync();
+
+    // Set the new language on the page
     globals.lang.change(newLanguage);
     for (let languageArray of validLanguages) {
         if (languageArray[0] === newLanguage) {

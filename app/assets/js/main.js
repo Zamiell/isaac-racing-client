@@ -23,12 +23,12 @@
 // Import NPM packages
 const fs       = nodeRequire('fs');
 const path     = nodeRequire('path');
-const execSync = nodeRequire('child_process').execSync;
 const remote   = nodeRequire('electron').remote;
 const isDev    = nodeRequire('electron-is-dev');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
+const settings        = nodeRequire('./assets/js/settings');
 const automaticUpdate = nodeRequire('./assets/js/automatic-update');
 const localization    = nodeRequire('./assets/js/localization');
 const keyboard        = nodeRequire('./assets/js/keyboard');
@@ -70,51 +70,14 @@ if (isDev) {
 }
 
 /*
-    Initialize settings
-*/
-
-// Language localization
-// (done in "localization.js")
-
-// Tutorial
-globals.settings.tutorial = localStorage.tutorial;
-if (typeof globals.settings.tutorial === 'undefined') {
-    // If this is the first run, default to true)
-    globals.settings.tutorial = 'true';
-    localStorage.tutorial = 'true'; // Localstorage does not work with boolean values
-}
-
-// Volume
-globals.settings.volume = localStorage.volume;
-if (typeof globals.settings.volume === 'undefined') {
-    // If this is the first run, default to 50%
-    globals.settings.volume = 0.5;
-    localStorage.volume = 0.5;
-}
-
-// Log file path
-globals.settings.logFilePath = localStorage.logFilePath;
-if (typeof globals.settings.logFilePath === 'undefined') {
-    // If this is the first run, set it to the default location (which is in the user's Documents directory)
-    let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
-    let documentsPath = execSync(command, {
-        'encoding': 'utf8',
-    });
-    documentsPath = $.trim(documentsPath); // Remove the trailing newline
-    let defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth', 'log.txt');
-    globals.settings.logFilePath = defaultLogFilePath;
-    localStorage.logFilePath = defaultLogFilePath;
-}
-
-/*
-    Initialization (miscellaneous)
+    Initialization
 */
 
 // Version
 let packageLocation = path.join(__dirname, 'package.json');
-globals.version = JSON.parse(fs.readFileSync(packageLocation)).version;
+globals.version = JSON.parse(fs.readFileSync(packageLocation)).version; // This has to be syncronous because we need the variable during "document.ready"
 
-// Read in the word list for later
+// Word list
 let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
 fs.readFile(wordListLocation, function(err, data) {
     globals.wordList = data.toString().split('\n');
