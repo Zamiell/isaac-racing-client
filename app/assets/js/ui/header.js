@@ -169,10 +169,6 @@ $(document).ready(function() {
             settings.saveSync();
         }
 
-        // Kill the log monitoring program
-        globals.logMonitoringProgram.stdin.pause();
-        globals.logMonitoringProgram.kill();
-
         // Terminate the WebSocket connection (which will trigger the transition back to the title screen)
         globals.initiatedLogout = true;
         globals.conn.close();

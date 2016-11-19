@@ -34,11 +34,17 @@ version = 'v' + data['version']
 
 # Build/package
 print('Building:', repository_name, version)
-dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
-return_code = subprocess.call(['npm', 'run', 'dist2', '--python="C:/Python27/python.exe"'], shell=True)
+if args.github:
+    dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+    run_command = 'dist2'
+else:
+    run_command = 'dist'
+return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27/python.exe"'], shell=True)
 if return_code != 0:
     error('Failed to build.')
 
+'''
+# No longer used with the NSIS installer
 if args.github:
     # Commit to the repository
     return_code = subprocess.call(['git', 'add', '-A'])
@@ -73,6 +79,7 @@ if args.github:
     ]
     for file_name in files:
         asset = release.upload_asset(content_type='application/binary', name=file_name, asset=open('dist/win/' + file_name, 'rb'))
+'''
 
 # Done
 print('Released version', number_version, 'successfully.')

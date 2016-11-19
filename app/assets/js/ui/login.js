@@ -107,7 +107,7 @@ $(document).ready(function() {
 // Step 1 - Get a login token from Auth0
 const login1 = function(username, password, remember) {
     // Don't login yet if we are still checking for updates
-    console.log("autoUpdateStatus:", globals.autoUpdateStatus);
+    console.log("Logging in with autoUpdateStatus:", globals.autoUpdateStatus);
     if (globals.autoUpdateStatus === null) {
         // This is the first run, so they should be on the most recent version, so continue to login
         // (or we are in a development environment)

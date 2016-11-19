@@ -7,7 +7,7 @@
 // Imports
 const os       = nodeRequire('os');
 const path     = nodeRequire('path');
-const spawn    = nodeRequire('child_process').spawn;
+const execFile = nodeRequire('child_process').execFile;
 const remote   = nodeRequire('electron').remote;
 const fs       = nodeRequire('fs-extra');
 const Tail     = nodeRequire('tail').Tail;
@@ -32,46 +32,22 @@ exports.start = function() {
     }
 
     // Get ready to start the log watching program
-    let programPath;
-    if (isDev) {
-        // If we are in dev, we can simply run the watchLog.exe program
-        programPath = path.join(__dirname, '../programs/watchLog/dist/watchLog.exe');
-    } else {
-        // We freeze watchLog.exe with cx_Freeze instead of PyInstaller because the exe will properly exit after the parent dies.
-        // cx_Freeze doesn't support a single file freeze.
-        // Electron does support execFile on a file inside an ASAR archive, but it copies them out to a temporary folder first.
-        // Thus, if we execute it directly, watchLog.exe will be missing its needed DLL files.
-        // Furthermore, we want to use spawn instead of execFile, so that the process will end when the parent dies.
-        // Electron does not support spawn inside an ASAR archive.
-        // So the fix is to copy it to a temporary folder first and use spawn.
+    let programPath = path.join(__dirname, '../programs/watchLog/dist/watchLog.exe');
 
-        // Delete the temporary folder if it exists
-        let tempFolder = path.resolve(process.execPath, '..', '..', 'RacingPlusWatchLog');
-        if (fs.existsSync(tempFolder)) {
-            try {
-                fs.removeSync(tempFolder);
-            } catch(err) {
-                globals.currentScreen = 'null';
-                misc.errorShow('Failed to delete "' + tempFolder + '": ' + err);
-                return -1;
-            }
-        }
-
-        // Copy the cx_Freeze folder
-        let programFolder = path.join(__dirname, '../programs/watchLog/dist');
-        try {
-            fs.copySync(programFolder, tempFolder);
-        } catch(err) {
-            globals.currentScreen = 'null';
-            misc.errorShow('Failed to copy "' + programFolder + '" to "' + tempFolder + '": ' + err);
-            return -1;
-        }
-        programPath = path.resolve(tempFolder, 'watchLog.exe');
+    // Check to make sure the log watching program exists
+    if (fs.existsSync(programPath) === false) {
+        console.error('The log watching program does not exist:', programPath);
+        return;
     }
 
     // Start the log watching program
     let args = (isDev ? [settings.get('logFilePath'), 'dev'] : [settings.get('logFilePath')]);
-    globals.logMonitoringProgram = spawn(programPath, args);
+    globals.logMonitoringProgram = execFile(programPath, args, function(error, stdout, stderr) {
+        console.log('The log watching program quit unexpectedly.');
+        console.log('error:', error);
+        console.log('stdout:', stdout);
+        console.log('stderr:', stderr);
+    }); // We have to use execFile since watchLog.exe is inside an ASAR archive
 
     // Tail the IPC file
     let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));

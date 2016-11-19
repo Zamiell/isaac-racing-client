@@ -16,7 +16,7 @@ import psutil
 import tempfile
 
 # Global variables
-IPC_file = os.path.join(tempfile.gettempdir(), 'Racing+_IPC.txt')
+IPC_file_path = os.path.join(tempfile.gettempdir(), 'Racing+_IPC.txt')
 file_array_position = 0
 
 # Subroutines
@@ -26,10 +26,10 @@ def error(message):
 
 def write_file(message):
     try:
-        with open(IPC_file, 'a') as f:
+        with open(IPC_file_path, 'a') as f:
             f.write(message + '\n')
     except Exception as e:
-        error('Failed to write to the IPC file at "' + log_file_path + '":' + e)
+        error('Failed to write to the IPC file at "' + IPC_file_path + '":' + e)
 
 # Just in case, check to see if there is another copy already running
 num_processes = False
@@ -62,10 +62,10 @@ except Exception as e:
 
 # Truncate the IPC file (so that it doesn't grow too large)
 try:
-    with open(IPC_file, 'w') as f:
+    with open(IPC_file_path, 'w') as f:
         pass
 except Exception as e:
-    error('Failed to truncate the IPC file at "' + IPC_file + '":' + e)
+    error('Failed to truncate the IPC file at "' + IPC_file_path + '":' + e)
 
 # Continuously read the log file
 i = 1
