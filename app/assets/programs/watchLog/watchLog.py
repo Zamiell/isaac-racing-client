@@ -5,8 +5,7 @@
 #   "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" "C:/Users/james/Documents/My Games/Binding of Isaac Afterbirth/log.txt"
 #   "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\dist\watchLog.exe" "C:/Users/james/Documents/My Games/Binding of Isaac Afterbirth/log.txt"
 # - Build with:
-#   cxfreeze "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" --target-dir "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\dist"
-#   pyinstaller "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog\watchLog.py" --onefile
+#   cd "D:\Repositories\isaac-racing-client\app\assets\programs\watchLog" && build.py
 
 # Imports
 import sys

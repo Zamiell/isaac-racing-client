@@ -1,5 +1,6 @@
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"
+// npm run dist2 --python="C:\Python27\python.exe"
 
 // Update with:
 // ncu --upgradeAll
@@ -14,7 +15,6 @@ const electron      = require('electron');
 const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const ipcMain       = electron.ipcMain;
-const autoUpdater   = electron.autoUpdater;
 const fs            = require('fs');
 const os            = require('os');
 const ChildProcess  = require('child_process');
@@ -45,6 +45,7 @@ var checkForUpdates = true;
     From: https://github.com/electron/windows-installer#handling-squirrel-events
 */
 
+/*
 // This package automatically takes care of everything except for a few edge cases
 if (require('electron-squirrel-startup')) {
     return;
@@ -64,6 +65,7 @@ if (process.argv.length !== 1 && isDev === false) {
         checkForUpdates = false;
     }
 }
+*/
 
 /*
     Initialize settings
@@ -99,34 +101,36 @@ function createWindow() {
 
     // Now that the window is created, check for updates
     if (checkForUpdates === true && isDev === false) {
-        electron.autoUpdater.on('error', function(err) {
+        // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater (https://github.com/electron-userland/electron-builder/wiki/Auto-Update)
+        // (We don't import this at the top because it will throw errors in a development environment)
+        const autoUpdater = require('electron-auto-updater').autoUpdater;
+
+        autoUpdater.on('error', function(err) {
             writeLog(`Update error: ${err.message}`);
             mainWindow.webContents.send('autoUpdater', 'error');
         });
 
-        electron.autoUpdater.on('checking-for-update', function() {
+        autoUpdater.on('checking-for-update', function() {
             writeLog('autoUpdater - checking-for-update');
             mainWindow.webContents.send('autoUpdater', 'checking-for-update');
         });
 
-        electron.autoUpdater.on('update-available', function() {
+        autoUpdater.on('update-available', function() {
             writeLog('autoUpdater - update-available');
             mainWindow.webContents.send('autoUpdater', 'update-available');
         });
 
-        electron.autoUpdater.on('update-not-available', function() {
+        autoUpdater.on('update-not-available', function() {
             writeLog('autoUpdater - update-not-available');
             mainWindow.webContents.send('autoUpdater', 'update-not-available');
         });
 
-        electron.autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
+        autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
             writeLog('autoUpdater - update-downloaded');
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
-        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + ':' + globals.squirrelPort + '/update/win32';
-        electron.autoUpdater.setFeedURL(url);
-        electron.autoUpdater.checkForUpdates();
+        autoUpdater.checkForUpdates();
     }
 
     mainWindow.on('closed', function() {

@@ -5,15 +5,14 @@
     "start": "electron ./app",
     "postinstall": "install-app-deps",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "dist2": "build --publish always"
   },
   "build": {
     "appId": "org.electron.isaacRacingClient",
-    "win": {
-        "target": "nsis"
-    },
+    "win": {},
     "publish": {
-        "provider": "github"
+      "provider": "github"
     }
   },
   "repository": {

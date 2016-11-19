@@ -9,6 +9,8 @@ import requests
 import github3
 import certifi
 import urllib3
+import os
+import dotenv
 
 # Configuration
 repository_owner = 'Zamiell'
@@ -32,7 +34,8 @@ version = 'v' + data['version']
 
 # Build/package
 print('Building:', repository_name, version)
-return_code = subprocess.call(['npm', 'run', 'dist', '--python="C:/Python27/python.exe"'], shell=True)
+dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+return_code = subprocess.call(['npm', 'run', 'dist2', '--python="C:/Python27/python.exe"'], shell=True)
 if return_code != 0:
     error('Failed to build.')
 
