@@ -8,10 +8,14 @@
 /*
     TODO
 
+    - autoupdate test
+    - blink when new message
+    - highlight link
+    - chat after race is completed
     - tab complete for chat
     - /r should work
-    - test to see if multiple windows works in production
-    - columns for race:
+    - update columns for race:
+      - place
       - seed
       - starting item
       - time offset

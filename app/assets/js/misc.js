@@ -15,6 +15,7 @@ exports.debug = function() {
     //errorShow('debug');
     //console.log(raceList);
     //console.log(currentRaceID);
+    globals.conn.emit('debug');
 };
 
 const errorShow = function(message, alternateScreen = false) {

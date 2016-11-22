@@ -386,7 +386,6 @@ $(document).ready(function() {
         let newUsername = $('#settings-username-capitalization').val();
         if (newUsername !== globals.myUsername) {
             // We set a new username
-            console.log('getting here');
             if (newUsername.toLowerCase() !== globals.myUsername.toLowerCase()) {
                 // We tried to enter a bogus stylization
                 $('#settings-username-capitalization').tooltipster({

@@ -122,7 +122,7 @@ function registerFail(jqXHR) {
 }
 
 // A function to return the register form back to the way it was initially
-function registerReset() {
+const registerReset = function() {
     $('#register-form').fadeTo(globals.fadeTime, 1);
     $('#register-username').prop('disabled', false);
     $('#register-password').prop('disabled', false);
@@ -131,4 +131,5 @@ function registerReset() {
     $('#register-back-button').prop('disabled', false);
     $('#register-ajax').fadeOut(globals.fadeTime);
     $('#register-username').focus();
-}
+};
+exports.registerReset = registerReset;

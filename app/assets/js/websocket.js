@@ -191,7 +191,7 @@ exports.init = function(username, password, remember) {
 
         if (data.room === 'lobby') {
             // Redraw the users list in the lobby
-            lobbyScreen.usersDraw(data.room);
+            lobbyScreen.usersDraw();
         } else if (data.room.startsWith('_race_')) {
             let raceID = data.room.match(/_race_(\d+)/)[1];
             if (raceID === globals.currentRaceID) {
@@ -228,7 +228,7 @@ exports.init = function(username, password, remember) {
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
-            lobbyScreen.usersDraw(data.room);
+            lobbyScreen.usersDraw();
         }
     });
 
@@ -239,12 +239,67 @@ exports.init = function(username, password, remember) {
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
-            lobbyScreen.usersDraw(data.room);
+            lobbyScreen.usersDraw();
         }
     });
 
     globals.conn.on('roomMessage', function(data) {
         chat.draw(data.room, data.name, data.message);
+    });
+
+    globals.conn.on('profileSetName', function(data) {
+        // Look through all the rooms for this user
+        for (let room in globals.roomList) {
+            if (!globals.roomList.hasOwnProperty(room)) {
+                continue;
+            }
+
+            for (let user in globals.roomList[room].users) {
+                if (!globals.roomList[room].users.hasOwnProperty(user)) {
+                    continue;
+                }
+
+                if (user === data.name) {
+                    // Delete them and recreate
+                    let tempObject = globals.roomList[room].users[data.name];
+                    delete globals.roomList[room].users[data.name];
+                    globals.roomList[room].users[data.newName] = tempObject;
+                    break;
+                }
+            }
+        }
+
+        // Redraw the users list in the lobby
+        lobbyScreen.usersDraw();
+
+        // Look through all the races for this user
+        for (let raceID in globals.raceList) {
+            if (!globals.raceList.hasOwnProperty(raceID)) {
+                continue;
+            }
+
+            // If the player exists in the "racers" list, rename them
+            // (this is used for showing the players in the race from the lobby)
+            for (let i = 0; i < globals.raceList[raceID].racers.length; i++) {
+                if (globals.raceList[raceID].racers[i] === data.name) {
+                    globals.raceList[raceID].racers[i] = data.newName;
+                }
+            }
+
+            // If the player exists in the "raceList" list, rename them
+            if (typeof globals.raceList[raceID].racerList !== 'undefined') {
+                for (let i = 0; i < globals.raceList[raceID].racerList.length; i++) {
+                    if (globals.raceList[raceID].racerList[i].name === data.name) {
+                        globals.raceList[raceID].racerList[i].name = data.newName;
+                    }
+                }
+            }
+        }
+
+        // Redraw the user on the race screen, if they exist
+        $('#race-participants-table-' + data.name + '-name').attr('id', '#race-participants-table-' + data.newName + '-name');
+        $('#race-participants-table-' + data.newName + '-name').html(data.newName);
+        // TODO There are other things to update, but the user should not be able to change their name in the middle of the race anyway
     });
 
     globals.conn.on('privateMessage', function(data) {

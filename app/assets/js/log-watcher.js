@@ -10,6 +10,7 @@ const path     = nodeRequire('path');
 const execFile = nodeRequire('child_process').execFile;
 const remote   = nodeRequire('electron').remote;
 const fs       = nodeRequire('fs-extra');
+const touch    = nodeRequire("touch");
 const Tail     = nodeRequire('tail').Tail;
 const isDev    = nodeRequire('electron-is-dev');
 const globals  = nodeRequire('./assets/js/globals');
@@ -40,17 +41,19 @@ exports.start = function() {
         return;
     }
 
+    // Create the IPC file, if it does not exist already
+    const IPCFile = path.join(os.tmpdir(), 'Racing+_IPC.txt');
+    touch(IPCFile);
+
     // Start the log watching program
+    // (it will show up as watchLog.exe in Task Manager when running in deveopment, otherwise it won't)
     let args = (isDev ? [settings.get('logFilePath'), 'dev'] : [settings.get('logFilePath')]);
     globals.logMonitoringProgram = execFile(programPath, args, function(error, stdout, stderr) {
-        console.log('The log watching program quit unexpectedly.');
-        console.log('error:', error);
-        console.log('stdout:', stdout);
-        console.log('stderr:', stderr);
+        console.log(stdout);
     }); // We have to use execFile since watchLog.exe is inside an ASAR archive
 
     // Tail the IPC file
-    let logWatcher = new Tail(path.join(os.tmpdir(), 'Racing+_IPC.txt'));
+    let logWatcher = new Tail(IPCFile);
     logWatcher.on('line', function(line) {
         // Debug
         //console.log('- ' + line);

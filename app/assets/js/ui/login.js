@@ -6,6 +6,7 @@
 
 // Imports
 const ipcRenderer    = nodeRequire('electron').ipcRenderer;
+const isDev          = nodeRequire('electron-is-dev');
 const globals        = nodeRequire('./assets/js/globals');
 const websocket      = nodeRequire('./assets/js/websocket');
 const misc           = nodeRequire('./assets/js/misc');
@@ -109,15 +110,22 @@ const login1 = function(username, password, remember) {
     // Don't login yet if we are still checking for updates
     console.log("Logging in with autoUpdateStatus:", globals.autoUpdateStatus);
     if (globals.autoUpdateStatus === null) {
-        // This is the first run, so they should be on the most recent version, so continue to login
-        // (or we are in a development environment)
+        if (isDev) {
+            // We won't auto-update in development
+        } else {
+            setTimeout(function() {
+                login1(username, password, remember);
+            }, 500);
+            return;
+        }
     } else if (globals.autoUpdateStatus === 'checking-for-update') {
         setTimeout(function() {
             login1(username, password, remember);
-        }, 100);
+        }, 500);
         return;
     } else if (globals.autoUpdateStatus === 'error') {
         // Allow them to continue to log on if they got an error since we want the service to be usable when GitHub is down
+        // (currently this is not actually true because it will show an error modal from the title screen)
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
         globals.currentScreen = 'transition';

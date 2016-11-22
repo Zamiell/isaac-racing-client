@@ -193,14 +193,14 @@ function chatIndent(room) {
     }
 }
 
-exports.usersDraw = function(room) {
+exports.usersDraw = function() {
     // Update the header that shows shows the amount of people online or in the race
-    $('#lobby-users-online').html(globals.roomList[room].numUsers);
+    $('#lobby-users-online').html(globals.roomList.lobby.numUsers);
 
     // Make an array with the name of every user and alphabetize it
     let userList = [];
-    for (let user in globals.roomList[room].users) {
-        if (globals.roomList[room].users.hasOwnProperty(user)) {
+    for (let user in globals.roomList.lobby.users) {
+        if (globals.roomList.lobby.users.hasOwnProperty(user)) {
             userList.push(user);
         }
     }

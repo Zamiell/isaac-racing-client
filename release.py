@@ -32,6 +32,19 @@ with open('app/package.json') as packageJSON:
 number_version = data['version']
 version = 'v' + data['version']
 
+# Commit to the repository
+if args.github:
+    # Commit to the repository
+    return_code = subprocess.call(['git', 'add', '-A'])
+    if return_code != 0:
+        error('Failed to git add.')
+    return_code = subprocess.call(['git', 'commit', '-m', version])
+    if return_code != 0:
+        error('Failed to git commit.')
+    return_code = subprocess.call(['git', 'push'])
+    if return_code != 0:
+        error('Failed to git push.')
+
 # Build/package
 print('Building:', repository_name, version)
 if args.github:
@@ -45,18 +58,6 @@ if return_code != 0:
 
 '''
 # No longer used with the NSIS installer
-if args.github:
-    # Commit to the repository
-    return_code = subprocess.call(['git', 'add', '-A'])
-    if return_code != 0:
-        error('Failed to git add.')
-    return_code = subprocess.call(['git', 'commit', '-m', version])
-    if return_code != 0:
-        error('Failed to git commit.')
-    return_code = subprocess.call(['git', 'push'])
-    if return_code != 0:
-        error('Failed to git push.')
-
     # Get the access token
     with open('.secrets') as f:
         access_token = f.read().strip()

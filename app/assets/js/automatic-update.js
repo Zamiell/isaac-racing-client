@@ -18,9 +18,7 @@ const autoUpdater = function(event, message) {
     console.log('Recieved message:', message);
     globals.autoUpdateStatus = message;
     if (message === 'error') {
-        // Do nothing special
-        // (the error dialog is not able to be shown from the title menu)
-        // misc.errorShow('Failed to check for updates.');
+        misc.errorShow('Failed to check for updates from GitHub. Either your Internet is having problems or GitHub.com is down.');
     } else if (message === 'checking-for-update') {
         // Do nothing special
     } else if (message === 'update-available') {
@@ -34,6 +32,8 @@ const autoUpdater = function(event, message) {
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (globals.currentScreen === 'updating') {
             ipcRenderer.send('asynchronous-message', 'restart');
+        } else {
+            misc.errorShow('An updated finished downloading but we were not on the "updating" screen.');
         }
     }
 };

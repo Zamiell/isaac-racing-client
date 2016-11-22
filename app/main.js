@@ -35,47 +35,13 @@ const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '
     Global variables
 */
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-var mainWindow;
+var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 var checkForUpdates = true;
-
-/*
-    Squirrel stuff
-    From: https://github.com/electron/windows-installer#handling-squirrel-events
-*/
-
-/*
-// This package automatically takes care of everything except for a few edge cases
-if (require('electron-squirrel-startup')) {
-    return;
-}
-
-// If there are arguments and we are not running in a development environment
-if (process.argv.length !== 1 && isDev === false) {
-    let squirrelEvent = process.argv[1];
-    writeLog('Recieved squirrelEvent: ' + squirrelEvent);
-
-    // We can't check for updates on the very first run or else bad things will happen
-    // (https://github.com/electron/electron/blob/master/docs/api/auto-updater.md)
-    if (squirrelEvent === '--squirrel-firstrun') {
-        checkForUpdates = false;
-    } else if (squirrelEvent === '--squirrel-updated') {
-        // If we just updated, we probably already have the latest version
-        checkForUpdates = false;
-    }
-}
-*/
-
-/*
-    Initialize settings
-*/
-
-let settings = new teeny(settingsFile);
+var settings = new teeny(settingsFile);
 settings.loadOrCreateSync();
 
 /*
-    Electron boilerplate code
+    Subroutines
 */
 
 function createWindow() {
@@ -91,14 +57,26 @@ function createWindow() {
         icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
         title:  'Racing+',
         frame:  false,
+        show:   false,
     });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    // Dev-only stuff
-    //if (isDev === true) {
-        mainWindow.webContents.openDevTools();
-    //}
+    // Hide the window until it is finished loading
+    mainWindow.once('ready-to-show', function() {
+        mainWindow.show();
+        //if (isDev === true) {
+            mainWindow.webContents.openDevTools();
+        //}
+        windowReady();
+    });
 
+    // Dereference the window object when it is closed
+    mainWindow.on('closed', function() {
+        mainWindow = null;
+    });
+}
+
+function windowReady() {
     // Now that the window is created, check for updates
     if (checkForUpdates === true && isDev === false) {
         // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater (https://github.com/electron-userland/electron-builder/wiki/Auto-Update)
@@ -132,14 +110,18 @@ function createWindow() {
 
         autoUpdater.checkForUpdates();
     }
-
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
 }
+
+function writeLog(message) {
+    let datetime = new Date().toUTCString();
+    message = datetime + ' - ' + message + os.EOL;
+    fs.appendFileSync(logFile, message);
+    console.log(message); // Also print the message to the screen for debugging purposes
+}
+
+/*
+    Application handlers
+*/
 
 // Check to see if the application is already open
 if (isDev === false) {
@@ -198,14 +180,3 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.quit();
     }
 });
-
-/*
-    Miscellaneous functions
-*/
-
-function writeLog(message) {
-    let datetime = new Date().toUTCString();
-    message = datetime + ' - ' + message + os.EOL;
-    fs.appendFileSync(logFile, message);
-    console.log(message); // Also print the message to the screen for debugging purposes
-}
