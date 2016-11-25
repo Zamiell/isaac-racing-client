@@ -11,9 +11,6 @@ const settings     = nodeRequire('./assets/js/settings');
 const loginScreen  = nodeRequire('./assets/js/ui/login');
 
 $(document).ready(function() {
-    // Set the version number on the title screen
-    $('#title-version').html('v' + globals.version);
-
     // Find out if the user has saved credentials
     let storedUsername = settings.get('username');
     if (typeof storedUsername !== 'undefined' && storedUsername !== '') {

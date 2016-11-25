@@ -10,12 +10,12 @@ const globals = nodeRequire('./assets/js/globals');
 
 exports.debug = function() {
     // The "/debug" command
-    console.log('Entering debug function.');
+    globals.log.info('Entering debug function.');
 
     //errorShow('debug');
     //console.log(raceList);
     //console.log(currentRaceID);
-    globals.conn.emit('debug');
+    globals.conn.send('debug');
 };
 
 const errorShow = function(message, alternateScreen = false) {
@@ -29,9 +29,9 @@ const errorShow = function(message, alternateScreen = false) {
 
     // Log the message
     if (message !== '') {
-        console.error('Error:', message);
+        globals.log.error(message);
     } else {
-        console.error('Generic error.');
+        globals.log.error('Generic error.');
     }
 
     // Don't do anything if we are already showing an error
@@ -82,7 +82,7 @@ const warningShow = function(message) {
     }
 
     // Log the message
-    console.error('Warning:', message);
+    globals.log.warn(message);
 
     // Don't do anything if we are already showing a warning
     if (globals.currentScreen === 'warning') {
@@ -150,15 +150,6 @@ const closeAllTooltips = function() {
 };
 exports.closeAllTooltips = closeAllTooltips;
 
-// From: https://css-tricks.com/snippets/javascript/htmlentities-for-javascript/
-exports.htmlEntities = function(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-};
-
 // From: https://stackoverflow.com/questions/20822273/best-way-to-get-folder-and-file-list-in-javascript
 exports.getAllFilesFromFolder = function(dir) {
     let results = [];
@@ -213,4 +204,30 @@ String.prototype.capitalize = function() {
 // From: https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
 exports.pad = function(val) {
     return val > 9 ? val : '0' + val;
+};
+
+// From: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
+exports.escapeHtml = function(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ };
+
+// From: https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number
+exports.ordinal_suffix_of = function(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
 };

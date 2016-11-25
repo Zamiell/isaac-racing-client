@@ -6,6 +6,7 @@
 
 // Imports
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const linkifyHTML = nodeRequire('linkifyjs/html');
 const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
 
@@ -56,7 +57,7 @@ exports.send = function(destination) {
         misc.debug();
     } else if (message === '/finish') {
         // /finish - Debug finish
-        globals.conn.emit('raceFinish', {
+        globals.conn.send('raceFinish', {
             'id': globals.currentRaceID,
         });
     } else if (message === '/restart') {
@@ -67,7 +68,7 @@ exports.send = function(destination) {
         let m = message.match(/^\/msg (.+?) (.+)/);
         let name = m[1];
         message = m[2];
-        globals.conn.emit('privateMessage', {
+        globals.conn.send('privateMessage', {
             'name': name,
             'message': message,
         });
@@ -75,7 +76,7 @@ exports.send = function(destination) {
         // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
         draw('PM-to', name, message);
     } else {
-        globals.conn.emit('roomMessage', {
+        globals.conn.send('roomMessage', {
             'room': room,
             'message':  message,
         });
@@ -93,11 +94,32 @@ const draw = function(room, name, message, datetime = null) {
         privateMessage = 'from';
     }
 
+    // Don't show messages that are not for the current race
+    if (room.startsWith('_race_')) {
+        let raceID = parseInt(room.match(/_race_(\d+)/)[1]);
+        if (raceID !== globals.currentRaceID) {
+            return;
+        }
+    }
+
     // Keep track of how many lines of chat have been spoken in this room
     globals.roomList[room].chatLine++;
 
     // Sanitize the input
-    message = misc.htmlEntities(message);
+    message = misc.escapeHtml(message);
+
+    // Check for links and insert them if present (using linkifyjs)
+    message = linkifyHTML(message, {
+        attributes: function(href, type) {
+            return {
+                onclick: 'nodeRequire(\'electron\').shell.openExternal(\'' + href + '\');',
+            };
+        },
+        formatHref: function(href, type) {
+            return '#';
+        },
+        target: '_self',
+    });
 
     // Check for emotes and insert them if present
     message = fillEmotes(message);

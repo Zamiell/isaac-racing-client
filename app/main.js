@@ -7,38 +7,46 @@
 
 'use strict';
 
-/*
-    Imports
-*/
+// Imports
+const electron       = require('electron');
+const app            = electron.app;
+const BrowserWindow  = electron.BrowserWindow;
+const ipcMain        = electron.ipcMain;
+const globalShortcut = electron.globalShortcut;
+const execFile       = require('child_process').execFile;
+const fs             = require('fs');
+const os             = require('os');
+const path           = require('path');
+const isDev          = require('electron-is-dev');
+const teeny          = require('teeny-conf');
 
-const electron      = require('electron');
-const app           = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const ipcMain       = electron.ipcMain;
-const fs            = require('fs');
-const os            = require('os');
-const ChildProcess  = require('child_process');
-const path          = require('path');
-const isDev         = require('electron-is-dev');
-const teeny         = require('teeny-conf');
-const globals       = require('./assets/js/globals');
-
-/*
-    Constants
-*/
-
+// Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
 const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
 
-/*
-    Global variables
-*/
-
+// Global variables
 var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 var checkForUpdates = true;
-var settings = new teeny(settingsFile);
-settings.loadOrCreateSync();
+
+/*
+    Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+*/
+
+const log = require('tracer').console({
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\n{{message}}",
+    dateformat: "ddd mmm dd HH:MM:ss Z",
+    transport: function(data) {
+        // #1 - Log to the JavaScript console
+        console.log(data.output);
+
+        // #2 - Log to a file
+        fs.appendFile(logFile, data.output + '\n', function(err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+});
 
 /*
     Subroutines
@@ -70,6 +78,10 @@ function createWindow() {
         windowReady();
     });
 
+    mainWindow.once('focus', function() {
+        mainWindow.flashFrame(false);
+    });
+
     // Dereference the window object when it is closed
     mainWindow.on('closed', function() {
         mainWindow = null;
@@ -84,39 +96,66 @@ function windowReady() {
         const autoUpdater = require('electron-auto-updater').autoUpdater;
 
         autoUpdater.on('error', function(err) {
-            writeLog(`Update error: ${err.message}`);
+            log.error(err.message);
             mainWindow.webContents.send('autoUpdater', 'error');
         });
 
         autoUpdater.on('checking-for-update', function() {
-            writeLog('autoUpdater - checking-for-update');
+            log.info('autoUpdater - checking-for-update');
             mainWindow.webContents.send('autoUpdater', 'checking-for-update');
         });
 
         autoUpdater.on('update-available', function() {
-            writeLog('autoUpdater - update-available');
+            log.info('autoUpdater - update-available');
             mainWindow.webContents.send('autoUpdater', 'update-available');
         });
 
         autoUpdater.on('update-not-available', function() {
-            writeLog('autoUpdater - update-not-available');
+            log.info('autoUpdater - update-not-available');
             mainWindow.webContents.send('autoUpdater', 'update-not-available');
         });
 
         autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
-            writeLog('autoUpdater - update-downloaded');
+            log.info('autoUpdater - update-downloaded');
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
         autoUpdater.checkForUpdates();
     }
-}
 
-function writeLog(message) {
-    let datetime = new Date().toUTCString();
-    message = datetime + ' - ' + message + os.EOL;
-    fs.appendFileSync(logFile, message);
-    console.log(message); // Also print the message to the screen for debugging purposes
+    // Register global hotkeys
+    const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
+        let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
+        execFile(command);
+        log.info('Alt+1 is pressed.');
+    });
+    if (!hotkeyIsaacFocus) {
+        log.warn('Alt+1 hotkey registration failed.');
+    }
+
+    const hotkeyRacingPlusFocus = globalShortcut.register('Alt+2', function() {
+        mainWindow.focus();
+        log.info('Alt+2 is pressed.');
+    });
+    if (!hotkeyRacingPlusFocus) {
+        log.warn('Alt+2 hotkey registration failed.');
+    }
+
+    const hotkeyReady = globalShortcut.register('Alt+R', function() {
+        mainWindow.webContents.send('hotkey', 'ready');
+        log.info('Alt+R is pressed.');
+    });
+    if (!hotkeyReady) {
+        log.warn('Alt+R hotkey registration failed.');
+    }
+
+    const hotkeyQuit = globalShortcut.register('Alt+Q', function() {
+        mainWindow.webContents.send('hotkey', 'quit');
+        log.info('Alt+Q is pressed.');
+    });
+    if (!hotkeyQuit) {
+        log.warn('Alt+Q hotkey registration failed.');
+    }
 }
 
 /*
@@ -159,12 +198,16 @@ app.on('activate', function() {
     }
 });
 
+app.on('will-quit', function() {
+    globalShortcut.unregisterAll();
+});
+
 /*
     IPC handlers
 */
 
 ipcMain.on('asynchronous-message', function(event, arg) {
-    console.log('Recieved message:', arg);
+    log.info('Main process recieved message:', arg);
     if (arg === 'minimize') {
         mainWindow.minimize();
     } else if (arg === 'maximize') {

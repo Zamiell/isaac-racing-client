@@ -18,6 +18,11 @@ const chat      = nodeRequire('./assets/js/chat');
 */
 
 $(document).ready(function() {
+    $('#race-title').tooltipster({
+        theme:   'tooltipster-shadow',
+        delay:   0,
+    });
+
     $('#race-title-seed').tooltipster({
         theme: 'tooltipster-shadow',
         delay: 0,
@@ -38,11 +43,11 @@ $(document).ready(function() {
         }
 
         if (this.checked) {
-            globals.conn.emit('raceReady', {
+            globals.conn.send('raceReady', {
                 'id': globals.currentRaceID,
             });
         } else {
-            globals.conn.emit('raceUnready', {
+            globals.conn.send('raceUnready', {
                 'id': globals.currentRaceID,
             });
         }
@@ -55,7 +60,7 @@ $(document).ready(function() {
             return;
         }
 
-        globals.conn.emit('raceQuit', {
+        globals.conn.send('raceQuit', {
             'id': globals.currentRaceID,
         });
     });
@@ -80,7 +85,9 @@ const show = function(raceID) {
             show(raceID);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
-    } else if (globals.currentScreen !== 'lobby') {
+    } else if (globals.currentScreen !== 'waiting-for-server' && globals.currentScreen !== 'lobby') {
+        // currentScreen should be "waiting-for-server" if they created a race or joined a current race
+        // currentScreen should be "lobby" if they are rejoining a race after a disconnection
         misc.errorShow('Failed to enter the race screen since currentScreen is equal to "' + globals.currentScreen + '".');
         return;
     }
@@ -113,11 +120,24 @@ const show = function(raceID) {
             globals.currentScreen = 'race';
         });
 
-        // Set the title
+        // Build the title
         let raceTitle = 'Race ' + globals.currentRaceID;
         if (globals.raceList[globals.currentRaceID].name !== '-') {
-            raceTitle += ' &mdash; ' + globals.raceList[globals.currentRaceID].name;
+            // Sanitize the race name
+            raceTitle += ' &mdash; ' + misc.escapeHtml(globals.raceList[globals.currentRaceID].name);
         }
+        if (raceTitle.length > 60) {
+            // Truncate the title
+            raceTitle = raceTitle.substring(0, 70) + '...';
+
+            // Enable the tooltip
+            let content = globals.raceList[globals.currentRaceID].name; // This does not need to be escaped because tooltipster displays HTML as plain text
+            $('#race-title').tooltipster('content', content);
+        } else {
+            // Disable the tooltip
+            $('#race-title').tooltipster('content', null);
+        }
+
         $('#race-title').html(raceTitle);
 
         // Adjust the font size so that it only takes up one line
@@ -135,7 +155,7 @@ const show = function(raceID) {
             }
         }
 
-        // Set the status
+        // Column 1 - Status
         let circleClass;
         if (globals.raceList[globals.currentRaceID].status === 'open') {
             circleClass = 'open';
@@ -150,11 +170,21 @@ const show = function(raceID) {
         statusText += '<span lang="en">' + globals.raceList[globals.currentRaceID].status.capitalize() + '</span>';
         $('#race-title-status').html(statusText);
 
-        // Set the format/character/goal
-        $('#race-title-format').html(globals.raceList[globals.currentRaceID].ruleset.format.capitalize());
+        // Column 2 - Format
+        let formatDiv = '<span class="lobby-current-races-format-icon">';
+        formatDiv += '<span class="lobby-current-races-' + globals.raceList[globals.currentRaceID].ruleset.format + '"></span></span>';
+        formatDiv += '<span class="lobby-current-races-spacing"></span>';
+        formatDiv += '<span lang="en">' + globals.raceList[globals.currentRaceID].ruleset.format.capitalize() + '</span>';
+        $('#race-title-format').html(formatDiv);
+
+        // Column 3 - Character
         $('#race-title-character').html(globals.raceList[globals.currentRaceID].ruleset.character);
-        $('#race-title-goal').html(globals.raceList[globals.currentRaceID].ruleset.goal);
-        $('#race-title-goal').html(globals.raceList[globals.currentRaceID].ruleset.goal);
+
+        // Column 4 - Goal
+        //$('#race-title-goal').html(globals.raceList[globals.currentRaceID].ruleset.goal);
+        $('#race-title-goal-icon').css('background-image', 'url("assets/img/goals/' + globals.raceList[globals.currentRaceID].ruleset.goal + '.png")');
+
+        // Adjust the racer table depending on the format
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded' ||
             globals.raceList[globals.currentRaceID].ruleset.format === 'diveristy') {
 
@@ -225,18 +255,8 @@ exports.participantAdd = function(i) {
 
     // The racer's status
     racerDiv += '<td id="race-participants-table-' + racer.name + '-status">';
-    if (racer.status === 'ready') {
-        racerDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-    } else if (racer.status === 'not ready') {
-        racerDiv += '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
-    } else if (racer.status === 'racing') {
-        racerDiv += '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
-    } else if (racer.status === 'quit') {
-        racerDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
-    } else if (racer.status === 'finished') {
-        racerDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-    }
-    racerDiv += '<span lang="en">' + racer.status.capitalize() + '</span></td>';
+    // This will get filled in later in the "participantsSetStatus" function
+    racerDiv += '</td>';
 
     // The racer's floor
     racerDiv += '<td id="race-participants-table-' + racer.name + '-floor" class="hidden">';
@@ -258,8 +278,10 @@ exports.participantAdd = function(i) {
     } else if (racer.floor === 8) {
         floorDiv = 'W2';
     } else if (racer.floor === 9) {
-        floorDiv = 'Cath';
+        floorDiv = 'BW';
     } else if (racer.floor === 10) {
+        floorDiv = 'Cath';
+    } else if (racer.floor === 11) {
         floorDiv = 'Chest';
     }
     racerDiv += floorDiv;
@@ -287,7 +309,50 @@ exports.participantAdd = function(i) {
 
     // To fix a small visual bug where the left border isn't drawn because of the left-most column being hidden
     $('#race-participants-table-' + racer.name + '-name').css('border-left', 'solid 1px #e5e5e5');
+
+    // Update some values in the row
+    participantsSetStatus(racer.name, racer.status);
 };
+
+const participantsSetStatus = function(name, status) {
+    // Update the status column of the row
+    let statusDiv = '';
+    if (status === 'ready') {
+        statusDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
+    } else if (status === 'not ready') {
+        statusDiv += '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
+    } else if (status === 'racing') {
+        statusDiv += '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
+    } else if (status === 'quit') {
+        statusDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
+    } else if (status === 'finished') {
+        statusDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
+    }
+    statusDiv += '<span lang="en">' + status.capitalize() + '</span>';
+    $('#race-participants-table-' + name + '-status').html(statusDiv);
+
+    // Update the place column of the row
+    if (status === 'finished') {
+        if (typeof(globals.raceList[globals.currentRaceID].nextPlace) === 'undefined') {
+            globals.raceList[globals.currentRaceID].nextPlace = 1;
+        }
+
+        // Update their place in the raceList
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            if (name === globals.raceList[globals.currentRaceID].racerList[i].name) {
+                globals.raceList[globals.currentRaceID].racerList[i].place = globals.raceList[globals.currentRaceID].nextPlace;
+            }
+        }
+
+        // Update their row on the race screen
+        let ordinal = misc.ordinal_suffix_of(globals.raceList[globals.currentRaceID].nextPlace);
+        $('#race-participants-table-' + name + '-place').html(ordinal);
+
+        // Increment the nextPlace variable
+        globals.raceList[globals.currentRaceID].nextPlace++;
+    }
+};
+exports.participantsSetStatus = participantsSetStatus;
 
 exports.markOnline = function() {
     // TODO
@@ -296,6 +361,11 @@ exports.markOnline = function() {
 exports.startCountdown = function() {
     // Change the functionality of the "Lobby" button in the header
     $('#header-lobby').addClass('disabled');
+
+    // Play the "Let's Go" sound effect
+    let audio = new Audio('assets/sounds/lets-go.mp3');
+    audio.volume = settings.get('volume');
+    audio.play();
 
     // Show the countdown
     $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
@@ -316,6 +386,13 @@ const countdownTick = function(i) {
             $('#race-countdown').html(i);
             $('#race-countdown').fadeIn(globals.fadeTime);
             setTimeout(function() {
+                // Focus the game with 3 seconds remaining on the countdown
+                if (i === 3) {
+                    let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
+                    execFile(command);
+                }
+
+                // Play the sound effect associated with the final 3 seconds
                 if (i === 3 || i === 2 || i === 1) {
                     let audio = new Audio('assets/sounds/' + i + '.mp3');
                     audio.volume = settings.get('volume');
@@ -336,7 +413,7 @@ exports.go = function() {
     $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
 
     // Press enter inside of the game
-    /*let command = path.join(__dirname, '/assets/programs/raceGo.exe');
+    /*let command = path.join(__dirname, '/assets/programs/raceGo/raceGo.exe');
     execFile(command);*/
 
     // Play the "Go" sound effect

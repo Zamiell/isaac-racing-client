@@ -32,12 +32,12 @@ $(document).ready(function() {
 // Called from the login screen or the register screen
 exports.show = function() {
     // Start the log watcher
-    console.log('Starting the log watching program.');
+    globals.log.info('Starting the log watching program.');
     if (logWatcher.start() === -1) {
         return;
     }
 
-    console.log('Entering the lobby.');
+    globals.log.info('Entering the lobby.');
 
     // Make sure that all of the forms are cleared out
     $('#login-username').val('');
@@ -121,11 +121,18 @@ exports.raceDraw = function(race) {
     if (race.status === 'open') {
         raceDiv += 'lobby-race-row-open ';
     }
-    raceDiv += 'hidden"><td>Race ' + race.id;
+    raceDiv += 'hidden">';
+
+    // Column 1 - Name
+    raceDiv += '<td id="lobby-current-races-' + race.id + '-name" class="lobby-current-races-name">';
+    raceDiv += 'Race ' + race.id;
     if (race.name !== '-') {
-        raceDiv += ' &mdash; ' + race.name;
+        raceDiv += ' &mdash; ' + misc.escapeHtml(race.name);
     }
-    raceDiv += '</td><td>';
+    raceDiv += '</td>';
+
+    // Column 2 - Status
+    raceDiv += '<td class="lobby-current-races-status">';
     let circleClass;
     if (race.status === 'open') {
         circleClass = 'open';
@@ -136,39 +143,117 @@ exports.raceDraw = function(race) {
     }
     raceDiv += '<span id="lobby-current-races-' + race.id + '-status-circle" class="circle lobby-current-races-' + circleClass + '"></span>';
     raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status">' + race.status.capitalize() + '</span>';
-    raceDiv += '</td><td id="lobby-current-races-' + race.id + '-racers">' + race.racers.length + '</td>';
+    raceDiv += '</td>';
+
+    // Column 3 - Format
     raceDiv += '<td><span class="lobby-current-races-format-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     raceDiv += '<span lang="en">' + race.ruleset.format.capitalize() + '</span></td>';
-    raceDiv += '<td id="lobby-current-races-' + race.id + '-captain">' + race.captain + '</td></tr>';
 
-    // Fade in the new row
+    // Column 4 - Size
+    raceDiv += '<td id="lobby-current-races-' + race.id + '-size">';
+    // This will get filled in later by the "raceUpdatePlayers" function
+    raceDiv += '</td>';
+
+    // Column 5 - Entrants
+    raceDiv += '<td id="lobby-current-races-' + race.id + '-racers" class="lobby-current-races-racers">';
+    // This will get filled in later by the "raceUpdatePlayers" function
+    raceDiv += '</td>';
+
+    // Add it and fade it in
     $('#lobby-current-races-table-body').append(raceDiv);
     if ($('#lobby-current-races-table-no').css('display') !== 'none') {
         $('#lobby-current-races-table-no').fadeOut(globals.fadeTime, function() {
             $('#lobby-current-races-table').fadeIn(0);
-            $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, function() {
-                lobbyRaceRowClickable(race.id);
-            });
+            raceDraw2(race);
         });
     } else {
-        $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, function() {
-            lobbyRaceRowClickable(race.id);
-        });
-    }
-
-    // Make it clickable
-    function lobbyRaceRowClickable(raceID) {
-        if (globals.raceList[raceID].status === 'open') {
-            $('#lobby-current-races-' + raceID).click(function() {
-                globals.conn.emit('raceJoin', {
-                    'id': raceID,
-                });
-            });
-        }
+        raceDraw2(race);
     }
 };
+
+function raceDraw2(race) {
+    // Fade in the race row
+    $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, function() {
+        // Make the row clickable
+        if (globals.raceList[race.id].status === 'open') {
+            $('#lobby-current-races-' + race.id).click(function() {
+                if (globals.currentScreen === 'lobby') {
+                    globals.currentScreen = 'waiting-for-server';
+                    globals.conn.send('raceJoin', {
+                        'id': race.id,
+                    });
+                }
+            });
+        }
+    });
+
+    // Now that it has begun to fade in, we can fill it
+    raceDrawCheckForOverflow(race.id, 'name');
+
+    // Update the players
+    raceUpdatePlayers(race.id);
+}
+
+const raceUpdatePlayers = function(raceID) {
+    // Draw the new size
+    $('#lobby-current-races-' + raceID + '-size').html(globals.raceList[raceID].racers.length);
+
+    // Draw the new racer list
+    let racers = '';
+    for (let racer of globals.raceList[raceID].racers) {
+        if (racer === globals.raceList[raceID].captain) {
+            racers += '<strong>' + racer + '</strong>, ';
+        } else {
+            racers += racer + ', ';
+        }
+    }
+    racers = racers.slice(0, -2); // Chop off the trailing comma and space
+    $('#lobby-current-races-' + raceID + '-racers').html(racers);
+
+    // Check for overflow in the racer list
+    raceDrawCheckForOverflow(raceID, 'racers');
+};
+exports.raceUpdatePlayers = raceUpdatePlayers;
+
+// Make tooltips for long names if necessary
+function raceDrawCheckForOverflow(raceID, target) {
+    // Race name column
+    let shortened = false;
+    while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
+        let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1);
+        $('#lobby-current-races-' + raceID + '-' + target).html(shortenedName);
+        shortened = true;
+    }
+    let content = '';
+    if (target === 'name') {
+        content = globals.raceList[raceID].name; // This does not need to be escaped because tooltipster displays HTML as plain text
+    } else if (target === 'racers') {
+        for (let racer of globals.raceList[raceID].racers) {
+            content += racer + ', ';
+        }
+        content = content.slice(0, -2); // Chop off the trailing comma and space
+    }
+    if (shortened) {
+        let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1); // Make it a bit shorter to account for the padding
+        $('#lobby-current-races-' + raceID + '-' + target).html(shortenedName + '...');
+        if ($('#lobby-current-races-' + raceID + '-' + target).hasClass('tooltipstered')) {
+            $('#lobby-current-races-' + raceID + '-' + target).tooltipster('content', content);
+        } else {
+            $('#lobby-current-races-' + raceID + '-' + target).tooltipster({
+                theme:   'tooltipster-shadow',
+                delay:   0,
+                content: content,
+            });
+        }
+    } else {
+        // Delete any existing tooltips, if they exist
+        if ($('#lobby-current-races-' + raceID + '-' + target).hasClass('tooltipstered')) {
+            $('#lobby-current-races-' + raceID + '-' + target).tooltipster('content', null);
+        }
+    }
+}
 
 exports.raceUndraw = function(raceID) {
     $('#lobby-current-races-' + raceID).fadeOut(globals.fadeTime, function() {

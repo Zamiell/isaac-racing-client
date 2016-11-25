@@ -63,7 +63,7 @@ $(document).ready(function() {
         // Check to see if we should leave the race
         if (globals.raceList.hasOwnProperty(globals.currentRaceID)) {
             if (globals.raceList[globals.currentRaceID].status === 'open') {
-                globals.conn.emit('raceLeave', {
+                globals.conn.send('raceLeave', {
                     'id': globals.currentRaceID,
                 });
             }
@@ -271,8 +271,8 @@ $(document).ready(function() {
             startingBuild = -1;
         }
 
-        // Truncate names longer than 71 characters (this is also enforced server-side)
-        let maximumLength = (23 * 3) + 2; // Longest word is 23 characters, 3 word name, 2 spaces
+        // Truncate names longer than 100 characters (this is also enforced server-side)
+        let maximumLength = 100;
         if (name.length > maximumLength) {
             name = name.substring(0, maximumLength);
         }
@@ -317,7 +317,8 @@ $(document).ready(function() {
             'goal': goal,
             'startingBuild': startingBuild,
         };
-        globals.conn.emit('raceCreate', {
+        globals.currentScreen = 'waiting-for-server';
+        globals.conn.send('raceCreate', {
             'name': name,
             'ruleset': rulesetObject,
         });
@@ -326,8 +327,6 @@ $(document).ready(function() {
     /*
         Settings tooltip
     */
-
-    $('#settings-version').html('v' + globals.version);
 
     $('#settings-log-file-location-change').click(function() {
         let titleText = $('#select-your-log-file').html();
@@ -361,6 +360,12 @@ $(document).ready(function() {
         audio.play();
     });
 
+    $('#settings-username-capitalization').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        trigger: 'custom',
+    });
+
     $('#settings-form').submit(function() {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
@@ -388,17 +393,13 @@ $(document).ready(function() {
             // We set a new username
             if (newUsername.toLowerCase() !== globals.myUsername.toLowerCase()) {
                 // We tried to enter a bogus stylization
-                $('#settings-username-capitalization').tooltipster({
-                    theme: 'tooltipster-shadow',
-                    delay: 0,
-                });
                 $('#settings-username-capitalization').tooltipster('open');
                 return;
             } else {
-                globals.conn.emit('profileSetUsername', {
+                $('#settings-username-capitalization').tooltipster('close');
+                globals.conn.send('profileSetUsername', {
                     name: newUsername,
                 });
-                $('#settings-username-capitalization-error').fadeOut(globals.fadeTime);
             }
         }
 

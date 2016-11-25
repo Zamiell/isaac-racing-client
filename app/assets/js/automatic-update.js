@@ -15,7 +15,7 @@ const misc        = nodeRequire('./assets/js/misc');
 */
 
 const autoUpdater = function(event, message) {
-    console.log('Recieved message:', message);
+    globals.log.info('Recieved autoUpdater message:', message);
     globals.autoUpdateStatus = message;
     if (message === 'error') {
         misc.errorShow('Failed to check for updates from GitHub. Either your Internet is having problems or GitHub.com is down.');

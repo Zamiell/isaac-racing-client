@@ -16,19 +16,18 @@ module.exports = {
     domain: domain,
     conn: null,
     currentScreen: 'title', // We always start on the title screen
-    currentRaceID: false, // Equal to false or the ID of the race
+    currentRaceID: false, // Equal to false or the ID of the race (as an integer)
     fadeTime: fadeTime,
     initiatedLogout: false,
+    log: null,
     lang: null,
     logMonitoringProgram: null,
     myUsername: null,
     roomList: {},
     raceList: {},
     secure: secure,
-    squirrelPort: squirrelPort,
     timeOffset: 0,
-    version: null,
-    wordList: null,
+    wordList: null, // Set in main.js
 };
 
 /*
@@ -50,6 +49,7 @@ module.exports = {
     - settings
     - error
     - warning
+    - waiting-for-server
     - transition
     - null (a blank screen)
 */

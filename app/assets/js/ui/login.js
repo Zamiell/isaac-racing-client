@@ -108,7 +108,7 @@ $(document).ready(function() {
 // Step 1 - Get a login token from Auth0
 const login1 = function(username, password, remember) {
     // Don't login yet if we are still checking for updates
-    console.log("Logging in with autoUpdateStatus:", globals.autoUpdateStatus);
+    globals.log.info('Logging in with autoUpdateStatus:', globals.autoUpdateStatus);
     if (globals.autoUpdateStatus === null) {
         if (isDev) {
             // We won't auto-update in development
@@ -154,7 +154,7 @@ const login1 = function(username, password, remember) {
     }
 
     // Send a request to Auth0
-    console.log('Sending a request to Auth0.');
+    globals.log.info('Sending a request to Auth0.');
     let data = {
         'grant_type': 'password',
         'username':   username,
@@ -177,7 +177,7 @@ exports.login1 = login1;
 
 // Step 2 - Login with the token to get a cookie
 function login2(username, password, remember, data) {
-    console.log('Using the Auth0 token to get a cookie.');
+    globals.log.info('Using the Auth0 token to get a cookie.');
     let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/login';
     let request = $.ajax({
         url:  url,
@@ -194,7 +194,7 @@ function login2(username, password, remember, data) {
 
 // When an AJAX call fails
 function loginFail(jqXHR) {
-    console.log('Login failed.');
+    globals.log.info('Login failed.');
 
     // Transition to the login screen if we are not already there
     if (globals.currentScreen === 'title-ajax') {

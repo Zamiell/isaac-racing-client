@@ -42,7 +42,7 @@ const localize = function(newLanguage) {
         validLanguageCodes.push(languageArray[0]);
     }
     if (validLanguageCodes.indexOf(newLanguage) === -1) {
-        console.error('Unsupported language.');
+        globals.log.error('Unsupported language: ' + newLanguage);
         return;
     }
 

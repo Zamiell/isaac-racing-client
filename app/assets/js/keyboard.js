@@ -5,10 +5,12 @@
 'use strict';
 
 // Imports
-const globals  = nodeRequire('./assets/js/globals');
-const settings = nodeRequire('./assets/js/settings');
-const misc     = nodeRequire('./assets/js/misc');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const globals     = nodeRequire('./assets/js/globals');
+const settings    = nodeRequire('./assets/js/settings');
+const misc        = nodeRequire('./assets/js/misc');
 
+// Monitor for keystrokes inside of the browser window
 $(document).keydown(function(event) {
     //console.log(event.which); // Find out the number that corresponds to the desired key
 
@@ -103,16 +105,6 @@ $(document).keydown(function(event) {
             $('#header-lobby').click();
         }
 
-    } else if (event.altKey && event.which === 82) { // Alt + r
-        if (globals.currentScreen === 'race') {
-            $('#race-ready-checkbox').click();
-        }
-
-    } else if (event.altKey && event.which === 81) { // Alt + q
-        if (globals.currentScreen === 'race') {
-            $('#race-quit-button').click();
-        }
-
     } else if (event.which === 13) { // Enter
         if (globals.currentScreen === 'lobby' && $('#new-race-randomize').is(':focus')) {
             event.preventDefault();
@@ -120,3 +112,21 @@ $(document).keydown(function(event) {
         }
     }
 });
+
+// Monitor for global hotkeys (caught by electron.globalShortcut in the main process)
+const hotkey = function(event, message) {
+    globals.log.info('Recieved hotkey message:', message);
+
+    if (message === 'ready') { // Alt + r
+        if (globals.currentScreen === 'race') {
+            $('#race-ready-checkbox').click();
+        }
+
+    } else if (message === 'quit') { // Alt + q
+        if (globals.currentScreen === 'race') {
+            $('#race-quit-button').click();
+        }
+
+    }
+};
+ipcRenderer.on('hotkey', hotkey);

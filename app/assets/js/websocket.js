@@ -21,17 +21,26 @@ exports.init = function(username, password, remember) {
     let url = 'ws' + (globals.secure ? 's' : '') + '://' + globals.domain + '/ws';
     globals.conn = new golem.Connection(url, isDev); // It will automatically use the cookie that we recieved earlier
                                                      // If the second argument is true, debugging is turned on
-    console.log('Establishing WebSocket connection to:', url);
+    globals.log.info('Establishing WebSocket connection to:', url);
+
+    /*
+        Extended connection functions
+    */
+
+    globals.conn.send = function(command, data) {
+        globals.conn.emit(command, data);
+        globals.log.info('Sent: ' + command + ' ' + JSON.stringify(data));
+    };
 
     /*
         Miscellaneous WebSocket handlers
     */
 
     globals.conn.on('open', function(event) {
-        console.log('WebSocket connection opened.');
+        globals.log.info('WebSocket connection opened.');
 
         // Login success; join the lobby chat channel
-        globals.conn.emit('roomJoin', {
+        globals.conn.send('roomJoin', {
             'room': 'lobby',
         });
 
@@ -74,7 +83,7 @@ exports.init = function(username, password, remember) {
 
     globals.conn.on('close', connClose);
     function connClose(event) {
-        console.log('WebSocket connection closed.');
+        globals.log.info('WebSocket connection closed.');
 
         // Check to see if this was intended
         if (globals.currentScreen === 'error') {
@@ -193,7 +202,7 @@ exports.init = function(username, password, remember) {
             // Redraw the users list in the lobby
             lobbyScreen.usersDraw();
         } else if (data.room.startsWith('_race_')) {
-            let raceID = data.room.match(/_race_(\d+)/)[1];
+            let raceID = parseInt(data.room.match(/_race_(\d+)/)[1]);
             if (raceID === globals.currentRaceID) {
                 // Update the online/offline markers
                 for (let i = 0; i < data.users.length; i++) {
@@ -391,8 +400,8 @@ exports.init = function(username, password, remember) {
         // Keep track of the people in each race
         globals.raceList[data.id].racers.push(data.name);
 
-        // Update the "# of Entrants" column in the lobby
-        $('#lobby-current-races-' + data.id + '-racers').html(globals.raceList[data.id].racers.length);
+        // Update the row for this race in the lobby
+        lobbyScreen.raceUpdatePlayers(data.id);
 
         if (data.name === globals.myUsername) {
             // If we joined this race
@@ -443,12 +452,10 @@ exports.init = function(username, password, remember) {
             // Check to see if this person was the captain, and if so, make the next person in line the captain
             if (globals.raceList[data.id].captain === data.name) {
                 globals.raceList[data.id].captain = globals.raceList[data.id].racers[0];
-                $('#lobby-current-races-' + data.id + '-captain').html(globals.raceList[data.id].captain);
             }
 
-            // Update the "# of Entrants" column
-            $('#lobby-current-races-' + data.id + '-racers').html(globals.raceList[data.id].racers.length);
-
+            // Update the row for this race in the lobby
+            lobbyScreen.raceUpdatePlayers(data.id);
         }
 
         // If we left the race
@@ -523,7 +530,6 @@ exports.init = function(username, password, remember) {
             circleClass = 'in-progress';
         } else if (data.status === 'finished') {
             // Delete the race
-            globals.currentRaceID = false;
             delete globals.raceList[data.id];
             lobbyScreen.raceUndraw(data.id);
         } else {
@@ -561,20 +567,7 @@ exports.init = function(username, password, remember) {
 
                 // Update the race screen
                 if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
-                    let statusDiv;
-                    if (data.status === 'ready') {
-                        statusDiv = '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-                    } else if (data.status === 'not ready') {
-                        statusDiv = '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
-                    } else if (data.status === 'racing') {
-                        statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
-                    } else if (data.status === 'quit') {
-                        statusDiv = '<i class="mdi mdi-skull"></i> &nbsp; ';
-                    } else if (data.status === 'finished') {
-                        statusDiv = '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-                    }
-                    statusDiv += '<span lang="en">' + data.status.capitalize() + '</span>';
-                    $('#race-participants-table-' + data.name + '-status').html(statusDiv);
+                    raceScreen.participantsSetStatus(data.name, data.status);
                 }
 
                 break;

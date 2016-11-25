@@ -37,7 +37,7 @@ exports.start = function() {
 
     // Check to make sure the log watching program exists
     if (fs.existsSync(programPath) === false) {
-        console.error('The log watching program does not exist:', programPath);
+        globals.log.error('The log watching program does not exist:', programPath);
         return;
     }
 
@@ -49,14 +49,14 @@ exports.start = function() {
     // (it will show up as watchLog.exe in Task Manager when running in deveopment, otherwise it won't)
     let args = (isDev ? [settings.get('logFilePath'), 'dev'] : [settings.get('logFilePath')]);
     globals.logMonitoringProgram = execFile(programPath, args, function(error, stdout, stderr) {
-        console.log(stdout);
+        globals.log.info('The log monitoring program exited early:', stdout.trim());
     }); // We have to use execFile since watchLog.exe is inside an ASAR archive
 
     // Tail the IPC file
     let logWatcher = new Tail(IPCFile);
     logWatcher.on('line', function(line) {
         // Debug
-        //console.log('- ' + line);
+        //globals.log.info('New IPC line: ' + line);
 
         // Don't do anything if we are not in a race
         if (globals.currentRaceID === false) {
@@ -78,8 +78,7 @@ exports.start = function() {
             let m = line.match(/New seed: (.... ....)/);
             if (m) {
                 let seed = m[1];
-                console.log('New seed:', seed);
-                globals.conn.emit('raceSeed', {
+                globals.conn.send('raceSeed', {
                     'id':   globals.currentRaceID,
                     'seed': seed,
                 });
@@ -90,8 +89,7 @@ exports.start = function() {
             let m = line.match(/New floor: (\d+)-\d+/);
             if (m) {
                 let floor = parseInt(m[1]); // Server expects floor as an integer, not a string
-                console.log('New floor:', floor);
-                globals.conn.emit('raceFloor', {
+                globals.conn.send('raceFloor', {
                     'id':    globals.currentRaceID,
                     'floor': floor,
                 });
@@ -102,8 +100,7 @@ exports.start = function() {
             let m = line.match(/New room: (\d+)/);
             if (m) {
                 let room = m[1];
-                console.log('New room:', room);
-                globals.conn.emit('raceFloor', {
+                globals.conn.send('raceFloor', {
                     'id':   globals.currentRaceID,
                     'room': room,
                 });
@@ -114,8 +111,7 @@ exports.start = function() {
             let m = line.match(/New item: (\d+)/);
             if (m) {
                 let itemID = m[1];
-                console.log('New item:', itemID);
-                globals.conn.emit('raceItem', {
+                globals.conn.send('raceItem', {
                     'id':   globals.currentRaceID,
                     'itemID': itemID,
                 });
@@ -124,22 +120,19 @@ exports.start = function() {
             }
         } else if (line === 'Finished run: Blue Baby') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
-                console.log('Killed Blue Baby!');
-                globals.conn.emit('raceFinish', {
+                globals.conn.send('raceFinish', {
                     'id': globals.currentRaceID,
                 });
             }
         } else if (line === 'Finished run: The Lamb') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'The Lamb') {
-                console.log('Killed The Lamb!');
-                globals.conn.emit('raceFinish', {
+                globals.conn.send('raceFinish', {
                     'id': globals.currentRaceID,
                 });
             }
         } else if (line === 'Finished run: Mega Satan') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Mega Satan') {
-                console.log('Killed Mega Satan!');
-                globals.conn.emit('raceFinish', {
+                globals.conn.send('raceFinish', {
                     'id': globals.currentRaceID,
                 });
             }

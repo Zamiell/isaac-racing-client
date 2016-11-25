@@ -8,27 +8,24 @@
 /*
     TODO
 
-    - autoupdate test
-    - blink when new message
-    - highlight link
-    - chat after race is completed
+    - autoupdate doesn't work on ajax
+    - update columns for race:
+        - place
+        - seed
+        - starting item
+        - time offset
+        - fill in items
     - tab complete for chat
     - /r should work
-    - update columns for race:
-      - place
-      - seed
-      - starting item
-      - time offset
-      - fill in items
 */
 
 'use strict';
 
 // Import NPM packages
-const fs       = nodeRequire('fs');
-const path     = nodeRequire('path');
-const remote   = nodeRequire('electron').remote;
-const isDev    = nodeRequire('electron-is-dev');
+const fs     = nodeRequire('fs');
+const path   = nodeRequire('path');
+const remote = nodeRequire('electron').remote;
+const isDev  = nodeRequire('electron-is-dev');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
@@ -77,9 +74,31 @@ if (isDev) {
     Initialization
 */
 
+// Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+globals.log = nodeRequire('tracer').console({
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\n{{message}}",
+    dateformat: "ddd mmm dd HH:MM:ss Z",
+    transport: function(data) {
+        // #1 - Log to the JavaScript console
+        console.log(data.output);
+
+        // #2 - Log to a file
+        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+        fs.appendFile(logFile, data.output + '\n', function(err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+});
+
 // Version
 let packageLocation = path.join(__dirname, 'package.json');
-globals.version = JSON.parse(fs.readFileSync(packageLocation)).version; // This has to be syncronous because we need the variable during "document.ready"
+fs.readFile(packageLocation, function(err, data) {
+    let version = 'v' + JSON.parse(data).version;
+    $('#title-version').html(version);
+    $('#settings-version').html(version);
+});
 
 // Word list
 let wordListLocation = path.join(__dirname, 'assets/words/words.txt');

@@ -18,6 +18,27 @@
 
 (function(global) {
 
+    // Add logging
+    const fs    = nodeRequire('fs');
+    const path  = nodeRequire('path');
+    const isDev = nodeRequire('electron-is-dev');
+    const log   = nodeRequire('tracer').console({
+        format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\n{{message}}",
+        dateformat: "ddd mmm dd HH:MM:ss Z",
+        transport: function(data) {
+            // #1 - Log to the JavaScript console
+            console.log(data.output);
+
+            // #2 - Log to a file
+            let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+            fs.appendFile(logFile, data.output + '\n', function(err) {
+                if (err) {
+                    throw err;
+                }
+            });
+        }
+    });
+
     function Connection(addr, debug) {
 
         this.ws = new WebSocket(addr);
@@ -58,14 +79,16 @@
             },
             onClose: function(evt) {
                 if (this.debug) {
-                    console.log("golem: Connection closed!");
+                    log.info("golem: Connection closed!");
                 }
-                if (this.callbacks.close) this.callbacks.close(evt);
+                if (this.callbacks.close) {
+                    this.callbacks.close(evt);
+                }
             },
             onMessage: function(evt) {
                 var data = this.protocol.unpack(evt.data);
                 if (this.debug) {
-                    console.log("golem: Received:", data[0], JSON.parse(data[1]));
+                    log.info("golem: Received:", data[0], JSON.parse(data[1]));
                 }
                 if (this.callbacks[data[0]]) {
                     var obj = this.protocol.unmarshal(data[1]);
@@ -74,9 +97,11 @@
             },
             onOpen: function(evt) {
                 if (this.debug) {
-                    console.log("golem: Connection established!");
+                    log.info("golem: Connection established!");
                 }
-                if (this.callbacks.open) this.callbacks.open(evt);
+                if (this.callbacks.open) {
+                    this.callbacks.open(evt);
+                }
             },
             on: function(name, callback) {
                 this.callbacks[name] = callback;
@@ -87,7 +112,9 @@
 
             // Added stuff
             onError: function(evt) {
-                if (this.callbacks.socketError) this.callbacks.socketError(evt);
+                if (this.callbacks.socketError) {
+                    this.callbacks.socketError(evt);
+                }
             },
             close: function() {
                 this.ws.close();
@@ -100,8 +127,6 @@
         };
 
     } else {
-
-        console.warn("golem: WebSockets not supported!");
-
+        log.warn('golem: WebSockets not supported!');
     }
 })(this);
