@@ -91,7 +91,7 @@ while True:
 
         # Check for the start of a run
         if line.startswith('RNG Start Seed: '):
-            match = re.search(r'RNG Start Seed: (.... ....) \(\d+\)', line)
+            match = re.search(r'RNG Start Seed: (.... ....) ', line)
             if match:
                 write_file('New seed: ' + match.group(1))
             else:
@@ -100,7 +100,7 @@ while True:
         # Check for a new floor
         elif line.startswith('Level::Init '):
             # Rebirth uses AltStage and Afterbirth uses StageType
-            match = re.search(r'Level::Init m_Stage (\d+), m_(AltStage|StageType) (\d+) Seed \d+', line)
+            match = re.search(r'Level::Init m_Stage (\d+), m_(AltStage|StageType) (\d+)', line)
             if match:
                 write_file('New floor: ' + match.group(1) + '-' + match.group(3))
             else:

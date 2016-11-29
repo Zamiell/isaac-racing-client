@@ -260,31 +260,7 @@ exports.participantAdd = function(i) {
 
     // The racer's floor
     racerDiv += '<td id="race-participants-table-' + racer.name + '-floor" class="hidden">';
-    let floorDiv;
-    if (racer.floor === 1) {
-        floorDiv = 'B1';
-    } else if (racer.floor === 2) {
-        floorDiv = 'B2';
-    } else if (racer.floor === 3) {
-        floorDiv = 'C1';
-    } else if (racer.floor === 4) {
-        floorDiv = 'C2';
-    } else if (racer.floor === 5) {
-        floorDiv = 'D1';
-    } else if (racer.floor === 6) {
-        floorDiv = 'D2';
-    } else if (racer.floor === 7) {
-        floorDiv = 'W1';
-    } else if (racer.floor === 8) {
-        floorDiv = 'W2';
-    } else if (racer.floor === 9) {
-        floorDiv = 'BW';
-    } else if (racer.floor === 10) {
-        floorDiv = 'Cath';
-    } else if (racer.floor === 11) {
-        floorDiv = 'Chest';
-    }
-    racerDiv += floorDiv;
+    // This will get filled in later in the "participantsSetFloor" function
     racerDiv += '</td>';
 
     // The racer's starting item
@@ -312,6 +288,7 @@ exports.participantAdd = function(i) {
 
     // Update some values in the row
     participantsSetStatus(racer.name, racer.status);
+    participantsSetFloor(racer.name, racer.floor);
 };
 
 const participantsSetStatus = function(name, status) {
@@ -354,11 +331,63 @@ const participantsSetStatus = function(name, status) {
 };
 exports.participantsSetStatus = participantsSetStatus;
 
+const participantsSetFloor = function(name, floor) {
+    // Parse the floor
+    let m = floor.match(/(\d+)-(\d+)/);
+    let floorNum;
+    let stageType;
+    if (m) {
+        floorNum = parseInt(m[1]);
+        stageType = parseInt(m[2]);
+    } else {
+        misc.errorShow('The floor for ' + name + ' is in an invalid format: ' + floor);
+    }
+
+    // Update the floor column of the row
+    let floorDiv;
+    if (floorNum === 1) {
+        floorDiv = 'B1';
+    } else if (floorNum === 2) {
+        floorDiv = 'B2';
+    } else if (floorNum === 3) {
+        floorDiv = 'C1';
+    } else if (floorNum === 4) {
+        floorDiv = 'C2';
+    } else if (floorNum === 5) {
+        floorDiv = 'D1';
+    } else if (floorNum === 6) {
+        floorDiv = 'D2';
+    } else if (floorNum === 7) {
+        floorDiv = 'W1';
+    } else if (floorNum === 8) {
+        floorDiv = 'W2';
+    } else if (floorNum === 9) {
+        floorDiv = 'BW';
+    } else if (floorNum === 10 && stageType === 0) {
+        floorDiv = 'Sheol'; // 10-0 is Sheol
+    } else if (floorNum === 10 && stageType === 1) {
+        floorDiv = 'Cath'; // 10-1 is Cathedral
+    } else if (floorNum === 11 && stageType === 0) {
+        floorDiv = 'DR'; // 11-0 is Dark Room
+    } else if (floorNum === 11 && stageType === 1) {
+        floorDiv = 'Chest';
+    } else {
+        misc.errorShow('The floor for ' + name + ' is unrecognized: ' + floor);
+    }
+    $('#race-participants-table-' + name + '-floor').html(floorDiv);
+};
+exports.participantsSetFloor = participantsSetFloor;
+
 exports.markOnline = function() {
     // TODO
 };
 
 exports.startCountdown = function() {
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     // Change the functionality of the "Lobby" button in the header
     $('#header-lobby').addClass('disabled');
 
@@ -378,6 +407,11 @@ exports.startCountdown = function() {
 };
 
 const countdownTick = function(i) {
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     if (i > 0) {
         $('#race-countdown').fadeOut(globals.fadeTime, function() {
             $('#race-countdown').css('font-size', '2.5em');
@@ -409,6 +443,11 @@ const countdownTick = function(i) {
 exports.countdownTick = countdownTick;
 
 exports.go = function() {
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     $('#race-countdown').html('<span lang="en">Go!</span>');
     $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
 
@@ -438,6 +477,11 @@ exports.go = function() {
 };
 
 const start = function() {
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     // In case we coming back after a disconnect, redo all of the stuff that was done in the "startCountdown" function
     $('#header-lobby').addClass('disabled');
     $('#race-ready-checkbox-container').fadeOut(0);
@@ -482,6 +526,11 @@ const start = function() {
 exports.start = start;
 
 function raceTimerTick() {
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     // Stop the timer if the race is over
     // (the race is over if the entry in the raceList is deleted)
     if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {

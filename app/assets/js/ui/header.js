@@ -179,6 +179,7 @@ $(document).ready(function() {
     */
 
     $('#new-race-randomize').click(function() {
+        // Get some random words
         let randomNumbers = [];
         for (let i = 0; i < 3; i++) {
             while (true) {
@@ -251,9 +252,6 @@ $(document).ready(function() {
     });
 
     $('#new-race-form').submit(function() {
-        // By default, the form will reload the page, so stop this from happening
-        event.preventDefault();
-
         // Don't do anything if we are not on the right screen
         if (globals.currentScreen !== 'lobby') {
             return;
@@ -322,6 +320,9 @@ $(document).ready(function() {
             'name': name,
             'ruleset': rulesetObject,
         });
+
+        // Return false or else the form will submit and reload the page
+        return false;
     });
 
     /*

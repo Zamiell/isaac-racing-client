@@ -417,7 +417,7 @@ exports.init = function(username, password, remember) {
                     'datetimeJoined': datetime,
                     'datetimeFinished': 0,
                     'place': 0,
-                    'floor': 1,
+                    'floor': '1-0',
                     'items': [],
                 });
                 raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
@@ -633,29 +633,7 @@ exports.init = function(username, password, remember) {
 
                 // Update the race screen
                 if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
-                    let floorDiv;
-                    if (data.floor === 1) {
-                        floorDiv = 'B1';
-                    } else if (data.floor === 2) {
-                        floorDiv = 'B2';
-                    } else if (data.floor === 3) {
-                        floorDiv = 'C1';
-                    } else if (data.floor === 4) {
-                        floorDiv = 'C2';
-                    } else if (data.floor === 5) {
-                        floorDiv = 'D1';
-                    } else if (data.floor === 6) {
-                        floorDiv = 'D2';
-                    } else if (data.floor === 7) {
-                        floorDiv = 'W1';
-                    } else if (data.floor === 8) {
-                        floorDiv = 'W2';
-                    } else if (data.floor === 9) {
-                        floorDiv = 'Cath';
-                    } else if (data.floor === 10) {
-                        floorDiv = 'Chest';
-                    }
-                    $('#race-participants-table-' + data.name + '-floor').html(floorDiv);
+                    raceScreen.participantsSetFloor(data.name, data.floor);
                 }
 
                 break;

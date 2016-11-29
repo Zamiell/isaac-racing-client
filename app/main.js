@@ -56,9 +56,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    //if (isDev) {
+    if (isDev) {
         width += 500;
-    //}
+    }
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -72,9 +72,9 @@ function createWindow() {
     // Hide the window until it is finished loading
     mainWindow.once('ready-to-show', function() {
         mainWindow.show();
-        //if (isDev === true) {
+        if (isDev === true) {
             mainWindow.webContents.openDevTools();
-        //}
+        }
         windowReady();
     });
 

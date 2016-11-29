@@ -86,9 +86,9 @@ exports.start = function() {
                 misc.errorShow('Failed to parse the new seed.');
             }
         } else if (line.startsWith('New floor: ')) {
-            let m = line.match(/New floor: (\d+)-\d+/);
+            let m = line.match(/New floor: (\d+-\d+)/);
             if (m) {
-                let floor = parseInt(m[1]); // Server expects floor as an integer, not a string
+                let floor = m[1];
                 globals.conn.send('raceFloor', {
                     'id':    globals.currentRaceID,
                     'floor': floor,
