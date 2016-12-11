@@ -14,8 +14,8 @@ Run
 ---
 
 * Install node/npm. (Using [nvm](https://github.com/creationix/nvm) to do this is recommended.)
-* `git clone https://github.com/Zamiell/isaac-racing-server.git`
-* `cd isaac-racing-server`
+* `git clone https://github.com/Zamiell/isaac-racing-client.git`
+* `cd isaac-racing-client`
 * `npm install`
 * `npm start`
 
