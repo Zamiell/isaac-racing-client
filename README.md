@@ -13,6 +13,7 @@ The client is written with [Electron](http://electron.atom.io/) and uses WebSock
 Run
 ---
 
+* Install node/npm. (Using [nvm](https://github.com/creationix/nvm) to do this is recommended.)
 * `git clone https://github.com/Zamiell/isaac-racing-server.git`
 * `cd isaac-racing-server`
 * `npm install`
