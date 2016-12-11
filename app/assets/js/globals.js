@@ -19,6 +19,7 @@ module.exports = {
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
     fadeTime: fadeTime,
     initiatedLogout: false,
+    lastIPC: null,
     log: null,
     lang: null,
     logMonitoringProgram: null,

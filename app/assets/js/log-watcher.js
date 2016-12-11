@@ -58,6 +58,13 @@ exports.start = function() {
         // Debug
         //globals.log.info('New IPC line: ' + line);
 
+        // The log watcher is buggy and sometimes multiple copies can persist, so keep track of the lines so we don't do duplicate things
+        if (globals.lastIPC === line) {
+            return;
+        } else {
+            globals.lastIPC = line;
+        }
+
         // Don't do anything if we are not in a race
         if (globals.currentRaceID === false) {
             return;
