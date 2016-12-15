@@ -140,33 +140,27 @@ const login1 = function(username, password, remember) {
     } else if (globals.autoUpdateStatus === 'update-downloaded') {
         // The update was downloaded in the background while the user was idle at the title or login screen
         // Show them the updating screen so they are not confused at the program restarting
+        let fadeTarget;
         if (globals.currentScreen === 'login-ajax') {
-            globals.currentScreen = 'transition';
-            $('#login').fadeOut(globals.fadeTime, function() {
-                $('#updating').fadeIn(globals.fadeTime, function() {
-                    globals.currentScreen = 'updating';
-
-                    setTimeout(function() {
-                        ipcRenderer.send('asynchronous-message', 'quitAndInstall');
-                    }, 1000);
-                });
-            });
-            return;
+            fadeTarget = 'login';
         } else if (globals.currentScreen === 'title-ajax') {
-            globals.currentScreen = 'transition';
-            $('#title').fadeOut(globals.fadeTime, function() {
-                $('#updating').fadeIn(globals.fadeTime, function() {
-                    globals.currentScreen = 'updating';
-
-                    setTimeout(function() {
-                        ipcRenderer.send('asynchronous-message', 'quitAndInstall');
-                    }, 1000);
-                });
-            });
-            return;
+            fadeTarget = 'title';
         } else {
             misc.errorShow('An update was downloaded successfully but we were not on the "title-ajax" or the "login-ajax" screen.');
         }
+
+        globals.currentScreen = 'transition';
+        $('#' + fadeTarget).fadeOut(globals.fadeTime, function() {
+            globals.log.info('Faded:', fadeTarget);
+            $('#updating').fadeIn(globals.fadeTime, function() {
+                globals.currentScreen = 'updating';
+
+                setTimeout(function() {
+                    ipcRenderer.send('asynchronous-message', 'quitAndInstall');
+                }, 1000);
+            });
+        });
+        return;
     }
 
     // Send a request to Auth0
