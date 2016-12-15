@@ -8,6 +8,7 @@
 /*
     TODO
 
+    - add stream to chat map
     - autoupdate doesn't work on ajax
     - update columns for race:
         - place

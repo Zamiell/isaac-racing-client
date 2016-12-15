@@ -227,6 +227,8 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.relaunch();
         app.quit();
     } else if (arg === 'quitAndInstall') {
+        log.info('Triggering quitAndInstall.');
         autoUpdater.quitAndInstall();
+        log.info('Triggered quitAndInstall.');
     }
 });

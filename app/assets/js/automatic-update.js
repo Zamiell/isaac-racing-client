@@ -31,7 +31,9 @@ const autoUpdater = function(event, message) {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (globals.currentScreen === 'updating') {
+            globals.log.info('Sending "quitAndInstall" to main process.');
             ipcRenderer.send('asynchronous-message', 'quitAndInstall');
+            globals.log.info('Sent "quitAndInstall" to main process.');
         } else {
             misc.errorShow('An updated finished downloading but we were not on the "updating" screen.');
         }
