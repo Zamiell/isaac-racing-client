@@ -23,6 +23,7 @@ const teeny          = require('teeny-conf');
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
 const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+// This maps to: %APPDATA%\..\Local\Programs\Racing+
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
@@ -33,7 +34,7 @@ var checkForUpdates = true;
 */
 
 const log = require('tracer').console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\n{{message}}",
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
         // #1 - Log to the JavaScript console
@@ -47,6 +48,7 @@ const log = require('tracer').console({
         });
     }
 });
+log.info('Racing+ client started!');
 
 /*
     Subroutines
@@ -65,18 +67,13 @@ function createWindow() {
         icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
         title:  'Racing+',
         frame:  false,
-        show:   false,
     });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    // Hide the window until it is finished loading
-    mainWindow.once('ready-to-show', function() {
-        mainWindow.show();
-        if (isDev === true) {
-            mainWindow.webContents.openDevTools();
-        }
-        windowReady();
-    });
+    // Dev-only stuff
+    if (isDev === true) {
+        mainWindow.webContents.openDevTools();
+    }
 
     mainWindow.once('focus', function() {
         mainWindow.flashFrame(false);
@@ -88,9 +85,10 @@ function createWindow() {
     });
 }
 
-function windowReady() {
+function autoUpdate() {
     // Now that the window is created, check for updates
     if (checkForUpdates === true && isDev === false) {
+        log.info('getting here 3');
         // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater (https://github.com/electron-userland/electron-builder/wiki/Auto-Update)
         // (We don't import this at the top because it will throw errors in a development environment)
         const autoUpdater = require('electron-auto-updater').autoUpdater;
@@ -121,8 +119,11 @@ function windowReady() {
         });
 
         autoUpdater.checkForUpdates();
+        log.Info('Checking for updates.');
     }
+}
 
+function registerKeyboardHotkeys() {
     // Register global hotkeys
     const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
         let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
@@ -179,7 +180,11 @@ if (isDev === false) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', function() {
+    createWindow();
+    autoUpdate();
+    registerKeyboardHotkeys();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {

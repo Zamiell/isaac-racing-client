@@ -23,7 +23,7 @@
     const path  = nodeRequire('path');
     const isDev = nodeRequire('electron-is-dev');
     const log   = nodeRequire('tracer').console({
-        format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\n{{message}}",
+        format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
         dateformat: "ddd mmm dd HH:MM:ss Z",
         transport: function(data) {
             // #1 - Log to the JavaScript console

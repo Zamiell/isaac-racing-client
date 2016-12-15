@@ -87,11 +87,20 @@ const draw = function(room, name, message, datetime = null) {
     // Check for the existence of a PM
     let privateMessage = false;
     if (room === 'PM-to') {
-        room = globals.currentScreen;
         privateMessage = 'to';
     } else if (room === 'PM-from') {
-        room = globals.currentScreen;
         privateMessage = 'from';
+    }
+    if (room === 'PM-to' || room === 'PM-from') {
+        if (globals.currentScreen === 'lobby') {
+            room = 'lobby';
+        } else if (globals.currentScreen === 'race') {
+            room = '_race_' + globals.currentRaceID;
+        } else {
+            setTimeout(function() {
+                draw(room, name, message, datetime);
+            }, globals.fadeTime + 5);
+        }
     }
 
     // Don't show messages that are not for the current race

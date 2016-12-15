@@ -97,6 +97,7 @@ exports.init = function(username, password, remember) {
         globals.roomList = {};
         globals.raceList = {};
         globals.myUsername = '';
+        globals.myStream = '';
         globals.initiatedLogout = false;
 
         // Hide the links in the header
@@ -165,17 +166,26 @@ exports.init = function(username, password, remember) {
         Miscellaneous command handlers
     */
 
-    // Sent upon a successful connection
+    // Sent after a successful connection
     globals.conn.on('username', function(data) {
         globals.myUsername = data;
     });
 
-    // Sent upon a successful connection
+    // Sent after a successful connection
+    globals.conn.on('stream', function(data) {
+        if (data === '-') {
+            data = '';
+        }
+        globals.myStream = data;
+    });
+
+    // Sent after a successful connection
     globals.conn.on('time', function(data) {
         let now = new Date().getTime();
         globals.timeOffset = data - now;
     });
 
+    // Sent if the server rejects a command; we should completely reload the client since something may be out of sync
     globals.conn.on('error', function(data) {
         misc.errorShow(data.message);
     });
@@ -513,6 +523,11 @@ exports.init = function(username, password, remember) {
                     $('#race-countdown').html('<span lang="en">Race completed</span>!');
                     $('#race-countdown').fadeIn(globals.fadeTime);
                 });
+
+                // Play the "race completed!" sound effect
+                let audio = new Audio('assets/sounds/race-completed.mp3');
+                audio.volume = settings.get('volume');
+                audio.play();
             } else {
                 misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
             }
@@ -577,6 +592,17 @@ exports.init = function(username, password, remember) {
         // If we quit
         if (data.name === globals.myUsername && data.status === 'quit') {
             $('#race-quit-button').fadeOut(globals.fadeTime);
+        }
+
+        // Play a sound effect
+        if (data.status === 'finished') {
+            let audio = new Audio('assets/sounds/finished.mp3');
+            audio.volume = settings.get('volume');
+            audio.play();
+        } else if (data.status === 'quit') {
+            let audio = new Audio('assets/sounds/quit.mp3');
+            audio.volume = settings.get('volume');
+            audio.play();
         }
     }
 

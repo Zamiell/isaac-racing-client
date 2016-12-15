@@ -145,6 +145,7 @@ $(document).ready(function() {
                 $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
 
                 $('#settings-username-capitalization').val(globals.myUsername);
+                $('#settings-stream').val(globals.myStream);
 
                 return true;
             } else {
@@ -367,6 +368,12 @@ $(document).ready(function() {
         trigger: 'custom',
     });
 
+    $('#settings-stream').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        trigger: 'custom',
+    });
+
     $('#settings-form').submit(function() {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
@@ -400,6 +407,33 @@ $(document).ready(function() {
                 $('#settings-username-capitalization').tooltipster('close');
                 globals.conn.send('profileSetUsername', {
                     name: newUsername,
+                });
+            }
+        }
+
+        // Stream URL
+        let newStream = $('#settings-stream').val();
+        if (newStream.startsWith('twitch.tv/')) {
+            newStream = 'https://www.' + newStream;
+        } else if (newStream.startsWith('www.twitch.tv/')) {
+            newStream = 'https://' + newStream;
+        } else if (newStream.startsWith('http://')) {
+            newStream = newStream.replace('http://', 'https://');
+        }
+        $('#settings-stream').val(newStream);
+        if (newStream !== globals.myStream) {
+            // We set a new stream
+            if (newStream.startsWith('https://www.twitch.tv/') === false && newStream !== '') {
+                // We tried to enter a non-valid stream URL
+                $('#settings-stream').tooltipster('open');
+                return;
+            } else {
+                $('#settings-stream').tooltipster('close');
+                if (newStream === '') {
+                    newStream = '-'; // Streams cannot be blank on the server-side
+                }
+                globals.conn.send('profileSetStream', {
+                    name: newStream,
                 });
             }
         }

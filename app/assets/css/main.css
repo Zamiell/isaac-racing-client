@@ -4044,6 +4044,10 @@
         width: 10em;
     }
 
+    #settings-stream {
+        width: 20em;
+    }
+
     /*
         Race (title)
     */

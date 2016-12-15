@@ -24,6 +24,7 @@ module.exports = {
     lang: null,
     logMonitoringProgram: null,
     myUsername: null,
+    myStream: null,
     roomList: {},
     raceList: {},
     secure: secure,
