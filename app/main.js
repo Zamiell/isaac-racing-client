@@ -88,7 +88,6 @@ function createWindow() {
 function autoUpdate() {
     // Now that the window is created, check for updates
     if (checkForUpdates === true && isDev === false) {
-        log.info('getting here 3');
         // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater (https://github.com/electron-userland/electron-builder/wiki/Auto-Update)
         // (We don't import this at the top because it will throw errors in a development environment)
         const autoUpdater = require('electron-auto-updater').autoUpdater;
@@ -119,7 +118,7 @@ function autoUpdate() {
         });
 
         autoUpdater.checkForUpdates();
-        log.Info('Checking for updates.');
+        log.info('Checking for updates.');
     }
 }
 
