@@ -1,6 +1,7 @@
 {
     "token": {
         "# of Entrants": "# de Participants",
+        "A new version of the client is being downloaded. The program will automatically restart once it is complete.": "Une nouvelle version du client est en train d'être téléchargée. Le programme va redémarrer automatiquement une fois l'opération terminée.",
         "A racing mod for The Binding of Isaac: Afterbirth+.": "Un mod de race pour The Binding of Isaac: Afterbirth+.",
         "An email address is required to register, but you can use a fake one if you want.": "Une adresse e-mail est requise pour l'inscription, vous pouvez utiliser une fausse si vous le souhaitez.",
         "An unknown HTTP error occured.": "Une erreur HTTP inconnue s'est produite.",
@@ -81,6 +82,7 @@
         "Isaac's \"log.txt\" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.": "Le fichier Isaac \"log.txt\" n'apparaît pas dans la location habituelle. Racing+ nécessite la lecture de ce fichier pour fonctionner correctement.",
         "the \"Known Issues\" page by Simon from Nicalis": "la page \"Known Issues\" par Simon de Nicalis",
         "The password field is required.": "Le mot de passe est requis.",
+        "The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!": "L'équipe travaille continuellement pour corriger les bugs et rajouter de nouvelles fonctionnalité. Desolé du désagrément.",
         "The username field is required.": "Le nom d'utilisateur est requis.",
         "The username provided is in use already.": "Ce nom d'utilisateur est déjà utilisé.",
         "This file is typically located in your \"save data\" directory. For more information, please see": "Ce fichier est normalement situé dans votre répertoire \"save data\". Pour plus d'informations, veuillez voir",

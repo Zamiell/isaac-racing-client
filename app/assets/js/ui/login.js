@@ -128,8 +128,16 @@ const login1 = function(username, password, remember) {
         // (currently this is not actually true because it will show an error modal from the title screen)
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
+        let fadeTarget;
+        if (globals.currentScreen === 'login-ajax') {
+            fadeTarget = 'login';
+        } else if (globals.currentScreen === 'title-ajax') {
+            fadeTarget = 'title';
+        } else {
+            misc.errorShow('An update is available but we were not on the "title-ajax" or the "login-ajax" screen.');
+        }
         globals.currentScreen = 'transition';
-        $('#login').fadeOut(globals.fadeTime, function() {
+        $('#' + fadeTarget).fadeOut(globals.fadeTime, function() {
             $('#updating').fadeIn(globals.fadeTime, function() {
                 globals.currentScreen = 'updating';
             });
@@ -148,7 +156,6 @@ const login1 = function(username, password, remember) {
         } else {
             misc.errorShow('An update was downloaded successfully but we were not on the "title-ajax" or the "login-ajax" screen.');
         }
-
         globals.currentScreen = 'transition';
         $('#' + fadeTarget).fadeOut(globals.fadeTime, function() {
             globals.log.info('Faded:', fadeTarget);
