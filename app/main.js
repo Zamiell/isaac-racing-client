@@ -17,6 +17,7 @@ const execFile       = require('child_process').execFile;
 const fs             = require('fs');
 const os             = require('os');
 const path           = require('path');
+var autoUpdater; // Filled in later because it throws errors in a development environment
 const isDev          = require('electron-is-dev');
 const teeny          = require('teeny-conf');
 
@@ -90,7 +91,7 @@ function autoUpdate() {
     if (checkForUpdates === true && isDev === false) {
         // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater (https://github.com/electron-userland/electron-builder/wiki/Auto-Update)
         // (We don't import this at the top because it will throw errors in a development environment)
-        const autoUpdater = require('electron-auto-updater').autoUpdater;
+        autoUpdater = require('electron-auto-updater').autoUpdater;
 
         autoUpdater.on('error', function(err) {
             log.error(err.message);
@@ -225,5 +226,7 @@ ipcMain.on('asynchronous-message', function(event, arg) {
     } else if (arg === 'restart') {
         app.relaunch();
         app.quit();
+    } else if (arg === 'quitAndInstall') {
+        autoUpdater.quitAndInstall();
     }
 });

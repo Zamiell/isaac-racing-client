@@ -31,7 +31,7 @@ const autoUpdater = function(event, message) {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (globals.currentScreen === 'updating') {
-            ipcRenderer.send('asynchronous-message', 'restart');
+            ipcRenderer.send('asynchronous-message', 'quitAndInstall');
         } else {
             misc.errorShow('An updated finished downloading but we were not on the "updating" screen.');
         }
