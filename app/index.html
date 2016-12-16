@@ -561,7 +561,7 @@
         <div id="error-modal" class="error hidden">
             <section class="box">
                 <h3><span lang="en">Error</span></h3>
-                <p id="error-modal-description"></p>
+                <p id="error-modal-description" lang="en"></p>
                 <ul class="actions">
                     <li><input id="error-modal-button" type="button" value="Exit and relaunch" lang="en" /></li>
                 </ul>
@@ -832,6 +832,26 @@
                         </div>
                     </div>
 
+                    <div class="row uniform 50%" class="hidden">
+                        <div class="12u" class="hidden">
+                            <ul class="actions">
+                                <li id="settings-enable-twitch-bot-checkbox-container">
+                                    <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
+                                    <label for="settings-enable-twitch-bot-checkbox">
+                                        <span id="settings-enable-twitch-bot-checkbox-label" lang="en">
+                                            Enable Twitch chat bot
+                                        </span>
+                                    </label>
+                                </li>
+                                <li>&nbsp; &nbsp; &nbsp; &nbsp;</li>
+                                <li id="settings-twitch-bot-delay-label" class="hidden" lang="en">Delay (in seconds):</li>
+                                <li>
+                                    <input id="settings-twitch-bot-delay" class="hidden" type="text" data-tooltip-content="#settings-twitch-bot-delay-error" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <div class="row uniform">
                         <div class="6u">
                             <ul class="actions">
@@ -844,6 +864,7 @@
 
             <div id="settings-username-capitalization-error" lang="en">You can only change the capitalization, not your actual username.</div>
             <div id="settings-stream-error" lang="en">Your stream URL must begin with "https://www.twitch.tv/".</div>
+            <div id="settings-twitch-bot-delay-error" lang="en">The stream delay must be a whole number.</div>
 
             <div id="user-click-tooltip">
                 <div class="padding0p5"></div>

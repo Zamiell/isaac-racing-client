@@ -4,6 +4,7 @@
 
 // Update with:
 // ncu --upgradeAll
+// (have to do this in both root and app directories)
 
 'use strict';
 

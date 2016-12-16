@@ -32,12 +32,12 @@ $(document).ready(function() {
 // Called from the login screen or the register screen
 exports.show = function() {
     // Start the log watcher
-    globals.log.info('Starting the log watching program.');
+    //globals.log.info('Starting the log watching program.');
     if (logWatcher.start() === -1) {
         return;
     }
 
-    globals.log.info('Entering the lobby.');
+    //globals.log.info('Entering the lobby.');
 
     // Make sure that all of the forms are cleared out
     $('#login-username').val('');

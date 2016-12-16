@@ -29,7 +29,7 @@ exports.init = function(username, password, remember) {
 
     globals.conn.send = function(command, data) {
         globals.conn.emit(command, data);
-        globals.log.info('Sent: ' + command + ' ' + JSON.stringify(data));
+        globals.log.info('golem: Sent: ' + command + ' ' + JSON.stringify(data));
     };
 
     /*
@@ -37,7 +37,7 @@ exports.init = function(username, password, remember) {
     */
 
     globals.conn.on('open', function(event) {
-        globals.log.info('WebSocket connection opened.');
+        //globals.log.info('WebSocket connection opened.');
 
         // Login success; join the lobby chat channel
         globals.conn.send('roomJoin', {
