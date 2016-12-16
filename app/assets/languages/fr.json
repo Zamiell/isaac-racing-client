@@ -1,5 +1,6 @@
 {
     "token": {
+        "#": "#",
         "# of Entrants": "# de Participants",
         "A new version of the client is being downloaded. The program will automatically restart once it is complete.": "Une nouvelle version du client est en train d'être téléchargée. Le programme va redémarrer automatiquement une fois l'opération terminée.",
         "A racing mod for The Binding of Isaac: Afterbirth+.": "Un mod pour participer à des courses sur The Binding of Isaac: Afterbirth+.",
@@ -15,10 +16,12 @@
         "Character": "Personnage",
         "Chat": "Chat",
         "Client version:": "Version client:",
+        "Close Racing+": "Fermer Racing+",
         "Create": "Créer",
         "Diversity": "Diversity",
         "Don't reuse any previous passwords!": "Ne pas réutiliser de mots de passe précédents!",
         "Only use letters and numbers.": "Utilisez seulement des lettres et des chiffres.",
+        "Entrants": "Participants",
         "Email address": "Adresse e-mail",
         "Error": "Erreur",
         "Exit and relaunch": "Sortir et redémarrer",
@@ -37,6 +40,7 @@
         "In Progress": "En Cours",
         "It's already in your clipboard.": "C'est déjà dans votre clipboard.",
         "Invalid email address.": "Adresse e-mail non valide.",
+        "Isaac's \"log.txt\" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.": "Le fichier Isaac \"log.txt\" n'apparaît pas dans la location habituelle. Racing+ nécessite la lecture de ce fichier pour fonctionner correctement.",
         "Language:": "Langue:",
         "Leaderboards": "Classements",
         "Lobby": "Acceuil",
@@ -78,6 +82,7 @@
         "Select your Isaac \"log.txt\" file": "Sélectionnez votre fichier Isaac \"log.txt\".",
         "Send email": "Envoyer e-mail",
         "Settings": "Paramètres",
+        "Size": "Nb",
         "Someone has already registered with that email address.": "Cette adresse e-mail est déjà utlisée.",
         "Start each race at the character selection screen, shown below.": "Commencez chaque course à l'écran de selection du personnage, voir dessous.",
         "Starting": "Départ",
@@ -87,10 +92,10 @@
         "Submit": "Soumettre",
         "Test": "Test",
         "The email field is required.": "L'adresse e-mail est requise.",
-        "Isaac's \"log.txt\" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.": "Le fichier Isaac \"log.txt\" n'apparaît pas dans la location habituelle. Racing+ nécessite la lecture de ce fichier pour fonctionner correctement.",
         "the \"Known Issues\" page by Simon from Nicalis": "la page \"Known Issues\" par Simon de Nicalis",
         "The password field is required.": "Le mot de passe est requis.",
         "The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!": "L'équipe travaille continuellement pour corriger les bugs et rajouter de nouvelles fonctionnalité. Desolé du désagrément.",
+        "The update was successfully downloaded. Please close and restart the Racing+ program.": "La mise à jour est téléchargée. Veuillez fermer et redémarrer Racing+.",
         "The username field is required.": "Le nom d'utilisateur est requis.",
         "The username provided is in use already.": "Ce nom d'utilisateur est déjà utilisé.",
         "This file is typically located in your \"save data\" directory. For more information, please see": "Ce fichier est normalement situé dans votre répertoire \"save data\". Pour plus d'informations, veuillez voir",
@@ -109,7 +114,7 @@
         "You can only change the capitalization, not your actual username.": "Vous pouvez seulement changer les majuscules/minuscules, pas le nom d'utilisateur en lui-même.",
         "You must finish or quit the current race before returning to the lobby.": "Vous devez finir ou quitter la course avant de revenir dans le lobby.",
         "Your account has been blocked after multiple consecutive login attempts. We’ve sent you an email with instructions on how to unblock it.": "Votre compte a été bloqué suite à de multiple tentatives de connexion consécutives. Un e-mail contenant les instructions pour le débloquer vous a été envoyé.",
-        "Chat": "Chat",
+        "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
         "(The program will know that you finished from Isaac's log file.)": "(Le programme va détecter que vous avez terminé la course à partir du fichier log d'Isaac.)"
     }
 }

@@ -158,13 +158,8 @@ const login1 = function(username, password, remember) {
         }
         globals.currentScreen = 'transition';
         $('#' + fadeTarget).fadeOut(globals.fadeTime, function() {
-            globals.log.info('Faded:', fadeTarget);
             $('#updating').fadeIn(globals.fadeTime, function() {
                 globals.currentScreen = 'updating';
-
-                setTimeout(function() {
-                    ipcRenderer.send('asynchronous-message', 'quitAndInstall');
-                }, 1000);
             });
         });
         return;
