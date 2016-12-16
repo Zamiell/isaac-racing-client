@@ -48,7 +48,7 @@ const autoUpdater = function(event, message) {
         $('#updating-1').fadeOut(globals.fadeTime);
         $('#updating-2').fadeOut(globals.fadeTime, function() {
             $('#updating-3').fadeIn(globals.fadeTime);
-            $('#updating-close-button').fadeIn(globals.fadeTime);
+            $('#updating-close-button-container').fadeIn(globals.fadeTime);
         });
     }
 };

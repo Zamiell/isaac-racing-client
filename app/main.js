@@ -23,7 +23,7 @@ const teeny          = require('teeny-conf');
 
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
-const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', 'Racing+.log'));
+const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
 // This maps to: %APPDATA%\..\Local\Programs\RacingPlus\Racing+.log
 
 // Global variables
