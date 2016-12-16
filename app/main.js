@@ -227,8 +227,12 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.relaunch();
         app.quit();
     } else if (arg === 'quitAndInstall') {
-        log.info('Triggering quitAndInstall.');
-        autoUpdater.quitAndInstall();
-        log.info('Triggered quitAndInstall.');
+        try {
+            log.info('Triggering quitAndInstall.');
+            autoUpdater.quitAndInstall();
+            log.info('Triggered quitAndInstall.');
+        } catch(err) {
+            log.info('Failed to trigger quitAndInstall:', err);
+        }
     }
 });
