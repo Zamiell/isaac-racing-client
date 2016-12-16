@@ -116,6 +116,7 @@ function autoUpdate() {
         autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
             log.info('autoUpdater - update-downloaded');
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
+            return true;
         });
 
         autoUpdater.checkForUpdates();
@@ -227,12 +228,7 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.relaunch();
         app.quit();
     } else if (arg === 'quitAndInstall') {
-        try {
-            log.info('Triggering quitAndInstall.');
-            autoUpdater.quitAndInstall();
-            log.info('Triggered quitAndInstall.');
-        } catch(err) {
-            log.info('Failed to trigger quitAndInstall:', err);
-        }
+        autoUpdater.quitAndInstall();
+        return true;
     }
 });
