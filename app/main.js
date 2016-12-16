@@ -115,7 +115,6 @@ function autoUpdate() {
 
         autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
             log.info('autoUpdater - update-downloaded');
-            autoUpdater.quitAndInstall();
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
@@ -228,6 +227,6 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.relaunch();
         app.quit();
     } else if (arg === 'quitAndInstall') {
-        //autoUpdater.quitAndInstall();
+        autoUpdater.quitAndInstall();
     }
 });
