@@ -11,7 +11,7 @@ const isDev    = nodeRequire('electron-is-dev');
 const teeny    = nodeRequire('teeny-conf');
 
 // Constants
-const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
+const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', 'settings.json'));
 
 // Open the file that contains all of the user's settings
 // (We use teeny-conf instead of localStorage because localStorage persists after uninstallation)
