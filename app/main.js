@@ -2,6 +2,9 @@
 // npm run dist --python="C:\Python27\python.exe"
 // npm run dist2 --python="C:\Python27\python.exe"
 
+// Reinstall NPM dependencies:
+// rm -rf node_modules && rm -rf app/node_modules && npm install --python="C:\Python27\python.exe"
+
 // Update with:
 // ncu --upgradeAll
 // (have to do this in both root and app directories)
