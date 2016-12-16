@@ -84,7 +84,7 @@ globals.log = nodeRequire('tracer').console({
         console.log(data.output);
 
         // #2 - Log to a file
-        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', 'Racing+.log'));
         fs.appendFile(logFile, data.output + '\n', function(err) {
             if (err) {
                 throw err;

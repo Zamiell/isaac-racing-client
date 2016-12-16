@@ -23,7 +23,7 @@ const teeny          = require('teeny-conf');
 
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
-const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', 'Racing+.log'));
 // This maps to: %APPDATA%\..\Local\Programs\Racing+
 
 // Global variables
@@ -115,8 +115,8 @@ function autoUpdate() {
 
         autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
             log.info('autoUpdater - update-downloaded');
+            autoUpdater.quitAndInstall();
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
-            return true;
         });
 
         autoUpdater.checkForUpdates();
@@ -228,7 +228,6 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.relaunch();
         app.quit();
     } else if (arg === 'quitAndInstall') {
-        autoUpdater.quitAndInstall();
-        return true;
+        //autoUpdater.quitAndInstall();
     }
 });
