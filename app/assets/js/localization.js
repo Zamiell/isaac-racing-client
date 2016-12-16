@@ -32,7 +32,6 @@ $(document).ready(function() {
 
     // If the user is using a non-default language, change all the text on the page
     localize(settings.get('language')); // We still call this if the language is English so that the links get initialized correctly
-
 });
 
 const localize = function(newLanguage) {
@@ -81,5 +80,4 @@ const localize = function(newLanguage) {
         }
     }
 };
-
 exports.localize = localize;

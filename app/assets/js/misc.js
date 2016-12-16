@@ -5,8 +5,9 @@
 'use strict';
 
 // Imports
-const fs      = nodeRequire('fs');
-const globals = nodeRequire('./assets/js/globals');
+const fs       = nodeRequire('fs');
+const globals  = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
 
 exports.debug = function() {
     // The "/debug" command
@@ -218,16 +219,24 @@ exports.escapeHtml = function(unsafe) {
 
 // From: https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number
 exports.ordinal_suffix_of = function(i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-        return i + "st";
+    if (settings.get('language') === 'fr') {
+        if (i === 1) {
+            return i + 'er';
+        } else {
+            return i + 'ème';
+        }
+    } else { // Default to English
+        let j = i % 10;
+        let k = i % 100;
+        if (j == 1 && k != 11) {
+            return i + 'st';
+        }
+        if (j == 2 && k != 12) {
+            return i + 'nd';
+        }
+        if (j == 3 && k != 13) {
+            return i + 'rd';
+        }
+        return i + 'th';
     }
-    if (j == 2 && k != 12) {
-        return i + "nd";
-    }
-    if (j == 3 && k != 13) {
-        return i + "rd";
-    }
-    return i + "th";
 };

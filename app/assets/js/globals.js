@@ -21,7 +21,7 @@ module.exports = {
     initiatedLogout: false,
     lastIPC: null,
     log: null,
-    lang: null,
+    lang: null, // The language switcher instance
     logMonitoringProgram: null,
     myUsername: null,
     myStream: null,
