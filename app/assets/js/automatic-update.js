@@ -42,16 +42,14 @@ const autoUpdater = function(event, message) {
             setTimeout(function() {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
-        } else if (globals.currentScreen === 'updating') {
-            $('#updating-ajax').fadeOut(globals.fadeTime);
-            $('#updating-1').fadeOut(globals.fadeTime);
-            $('#updating-2').fadeOut(globals.fadeTime, function() {
-                $('#updating-3').fadeIn(globals.fadeTime);
-                $('#updating-close-button').fadeIn(globals.fadeTime);
-            });
-        } else {
-            misc.errorShow('An updated finished downloading but we were not on the "updating" screen.');
         }
+
+        $('#updating-ajax').fadeOut(globals.fadeTime);
+        $('#updating-1').fadeOut(globals.fadeTime);
+        $('#updating-2').fadeOut(globals.fadeTime, function() {
+            $('#updating-3').fadeIn(globals.fadeTime);
+            $('#updating-close-button').fadeIn(globals.fadeTime);
+        });
     }
 };
 ipcRenderer.on('autoUpdater', autoUpdater);
