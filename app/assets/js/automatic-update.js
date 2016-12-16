@@ -14,10 +14,12 @@ const misc        = nodeRequire('./assets/js/misc');
     Event handlers
 */
 
-$('#updating-close-button').click(function() {
-    if (globals.currentScreen === 'updating') {
-        ipcRenderer.send('asynchronous-message', 'quitAndInstall');
-    }
+$(document).ready(function() {
+    $('#updating-close-button').click(function() {
+        if (globals.currentScreen === 'updating') {
+            ipcRenderer.send('asynchronous-message', 'quitAndInstall');
+        }
+    });
 });
 
 /*
@@ -41,6 +43,7 @@ const autoUpdater = function(event, message) {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (globals.currentScreen === 'updating') {
+            $('#updating-ajax').fadeOut(globals.fadeTime);
             $('#updating-1').fadeOut(globals.fadeTime);
             $('#updating-2').fadeOut(globals.fadeTime, function() {
                 $('#updating-3').fadeIn(globals.fadeTime);

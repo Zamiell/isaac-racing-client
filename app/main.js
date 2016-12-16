@@ -24,7 +24,7 @@ const teeny          = require('teeny-conf');
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
 const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', 'Racing+.log'));
-// This maps to: %APPDATA%\..\Local\Programs\Racing+
+// This maps to: %APPDATA%\..\Local\Programs\RacingPlus\Racing+.log
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
