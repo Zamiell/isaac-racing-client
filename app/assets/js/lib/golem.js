@@ -88,7 +88,7 @@
             onMessage: function(evt) {
                 var data = this.protocol.unpack(evt.data);
                 if (this.debug) {
-                    //log.info("golem: Received:", data[0], JSON.parse(data[1]));
+                    log.info("golem: Received:", data[0], JSON.parse(data[1]));
                 }
                 if (this.callbacks[data[0]]) {
                     var obj = this.protocol.unmarshal(data[1]);

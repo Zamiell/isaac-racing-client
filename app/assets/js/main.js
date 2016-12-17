@@ -8,6 +8,7 @@
 /*
     TODO
 
+    - rejoin race from disconnect doesn't work
     - add stream to chat map
     - autoupdate doesn't work on ajax
     - update columns for race:
@@ -55,13 +56,13 @@ if (isDev) {
     const menu = new remote.Menu();
     const menuItem = new remote.MenuItem({
         label: 'Inspect Element',
-        click: () => {
+        click: function() {
             remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
         },
     });
     menu.append(menuItem);
 
-    window.addEventListener('contextmenu', (e) => {
+    window.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         rightClickPosition = {
             x: e.x,

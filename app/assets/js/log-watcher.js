@@ -117,7 +117,7 @@ exports.start = function() {
         } else if (line.startsWith('New item: ')) {
             let m = line.match(/New item: (\d+)/);
             if (m) {
-                let itemID = m[1];
+                let itemID = parseInt(m[1]); // The server expects this to be an integer
                 globals.conn.send('raceItem', {
                     'id':   globals.currentRaceID,
                     'itemID': itemID,

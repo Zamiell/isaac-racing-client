@@ -25,6 +25,8 @@ module.exports = {
     logMonitoringProgram: null,
     myUsername: null,
     myStream: null,
+    myTwitchBotEnabled: null,
+    myTwitchBotDelay: null,
     roomList: {},
     raceList: {},
     secure: secure,

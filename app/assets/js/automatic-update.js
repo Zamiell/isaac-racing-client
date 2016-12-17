@@ -11,18 +11,6 @@ const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
 
 /*
-    Event handlers
-*/
-
-$(document).ready(function() {
-    $('#updating-close-button').click(function() {
-        if (globals.currentScreen === 'updating') {
-            ipcRenderer.send('asynchronous-message', 'quitAndInstall');
-        }
-    });
-});
-
-/*
     IPC handlers
 */
 
@@ -42,14 +30,9 @@ const autoUpdater = function(event, message) {
             setTimeout(function() {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        } else if (globals.currentScreen === 'updating') {
+            ipcRenderer.send('asynchronous-message', 'quitAndInstall');
         }
-
-        $('#updating-ajax').fadeOut(globals.fadeTime);
-        $('#updating-1').fadeOut(globals.fadeTime);
-        $('#updating-2').fadeOut(globals.fadeTime, function() {
-            $('#updating-3').fadeIn(globals.fadeTime);
-            $('#updating-close-button-container').fadeIn(globals.fadeTime);
-        });
     }
 };
 ipcRenderer.on('autoUpdater', autoUpdater);

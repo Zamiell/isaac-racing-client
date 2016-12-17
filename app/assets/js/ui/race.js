@@ -104,6 +104,9 @@ const show = function(raceID) {
     $('#header-leaderboards').fadeOut(globals.fadeTime);
     $('#header-help').fadeOut(globals.fadeTime);
     $('#header-new-race').fadeOut(globals.fadeTime);
+    if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+        $('#header-lobby').addClass('disabled');
+    }
     $('#header-settings').fadeOut(globals.fadeTime, function() {
         $('#header-profile').fadeIn(globals.fadeTime);
         $('#header-leaderboards').fadeIn(globals.fadeTime);
@@ -265,11 +268,7 @@ exports.participantAdd = function(i) {
 
     // The racer's starting item
     racerDiv += '<td id="race-participants-table-' + racer.name + '-item" class="hidden">';
-    if (racer.items !== null) {
-        racerDiv += racer.items[0];
-    } else {
-        racerDiv += '-';
-    }
+    // This will get filled in later in the "participantsSetItem" function
     racerDiv += '</td>';
 
     // The racer's time
@@ -289,6 +288,7 @@ exports.participantAdd = function(i) {
     // Update some values in the row
     participantsSetStatus(racer.name, racer.status);
     participantsSetFloor(racer.name, racer.floor);
+    participantsSetItem(racer.name);
 };
 
 const participantsSetStatus = function(name, status) {
@@ -317,7 +317,17 @@ const participantsSetStatus = function(name, status) {
         // Update their place in the raceList
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
             if (name === globals.raceList[globals.currentRaceID].racerList[i].name) {
-                globals.raceList[globals.currentRaceID].racerList[i].place = globals.raceList[globals.currentRaceID].nextPlace;
+                let place = globals.raceList[globals.currentRaceID].nextPlace;
+                globals.raceList[globals.currentRaceID].racerList[i].place = place;
+
+                // If we finished, play the sound effect that matches our place
+                if (name === globals.myUsername) {
+                    let audio = new Audio('assets/sounds/place/' + place + '.mp3');
+                    audio.volume = settings.get('volume');
+                    audio.play();
+                }
+
+                break;
             }
         }
 
@@ -377,6 +387,37 @@ const participantsSetFloor = function(name, floor) {
     $('#race-participants-table-' + name + '-floor').html(floorDiv);
 };
 exports.participantsSetFloor = participantsSetFloor;
+
+const participantsSetItem = function(name) {
+    // Go through the array and find the starting item
+    let startingItem = false;
+    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        if (name === globals.raceList[globals.currentRaceID].racerList[i].name) {
+            if (globals.raceList[globals.currentRaceID].racerList[i].items === null) {
+                globals.raceList[globals.currentRaceID].racerList[i].items = [];
+                break;
+            }
+            for (let j = 0; j < globals.raceList[globals.currentRaceID].racerList[i].items.length; j++) {
+                if (globals.raceList[globals.currentRaceID].racerList[i].items[j].id === 105) {
+                    // Skip the D6
+                    continue;
+                }
+                startingItem = globals.raceList[globals.currentRaceID].racerList[i].items[j].id;
+                break;
+            }
+            break;
+        }
+    }
+
+    // Update the starting item column of the row
+    if (startingItem !== false) {
+        $('#race-participants-table-' + name + '-item').html(startingItem);
+    } else {
+        $('#race-participants-table-' + name + '-item').html('-');
+    }
+
+};
+exports.participantsSetItem = participantsSetItem;
 
 exports.markOnline = function() {
     // TODO
@@ -477,13 +518,7 @@ exports.go = function() {
 };
 
 const start = function() {
-    // Don't do anything if we are not on the race screen
-    if (globals.currentScreen !== 'race') {
-        return;
-    }
-
     // In case we coming back after a disconnect, redo all of the stuff that was done in the "startCountdown" function
-    $('#header-lobby').addClass('disabled');
     $('#race-ready-checkbox-container').fadeOut(0);
 
     // Start the race timer
@@ -527,7 +562,8 @@ exports.start = start;
 
 function raceTimerTick() {
     // Don't do anything if we are not on the race screen
-    if (globals.currentScreen !== 'race') {
+    // (we can also be on the transition screen if we are reconnecting in the middle of a race)
+    if (globals.currentScreen !== 'race' && globals.currentScreen !== 'transition') {
         return;
     }
 

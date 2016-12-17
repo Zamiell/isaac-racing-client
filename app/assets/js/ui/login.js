@@ -160,6 +160,10 @@ const login1 = function(username, password, remember) {
         $('#' + fadeTarget).fadeOut(globals.fadeTime, function() {
             $('#updating').fadeIn(globals.fadeTime, function() {
                 globals.currentScreen = 'updating';
+
+                setTimeout(function() {
+                    ipcRenderer.send('asynchronous-message', 'quitAndInstall');
+                }, 1500);
             });
         });
         return;

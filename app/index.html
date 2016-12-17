@@ -423,12 +423,8 @@
                                 <div class="ajax-ring"></div>
                             </div>
                         </div>
-                        <p id="updating-1" lang="en">A new version of the client is being downloaded. The program will automatically restart once it is complete.</p>
-                        <p id="updating-2" lang="en">The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</p>
-                        <p id="updating-3" class="hidden" lang="en">The update was successfully downloaded. Please close and restart the Racing+ program.</p>
-                        <div id="updating-close-button-container" class="hidden">
-                            <a href="#" id="updating-close-button" class="button" lang="en">Close Racing+</a>
-                        </div>
+                        <p id="updating" lang="en">A new version of the client is being downloaded. The program will automatically restart once it is complete.</p>
+                        <p id="updating" lang="en">The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</p>
                     </section>
                 </div><!-- updating -->
 
@@ -832,21 +828,19 @@
                         </div>
                     </div>
 
-                    <div class="row uniform 50%" class="hidden">
-                        <div class="12u" class="hidden">
+                    <div class="row uniform 50%">
+                        <div class="12u">
                             <ul class="actions">
-                                <li id="settings-enable-twitch-bot-checkbox-container">
+                                <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
                                     <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
                                     <label for="settings-enable-twitch-bot-checkbox">
-                                        <span id="settings-enable-twitch-bot-checkbox-label" lang="en">
-                                            Enable Twitch chat bot
-                                        </span>
+                                        <span id="settings-enable-twitch-bot-checkbox-label" lang="en">Enable Twitch chat bot</span>
                                     </label>
                                 </li>
                                 <li>&nbsp; &nbsp; &nbsp; &nbsp;</li>
-                                <li id="settings-twitch-bot-delay-label" class="hidden" lang="en">Delay (in seconds):</li>
+                                <li id="settings-twitch-bot-delay-label" lang="en">Delay (in seconds):</li>
                                 <li>
-                                    <input id="settings-twitch-bot-delay" class="hidden" type="text" data-tooltip-content="#settings-twitch-bot-delay-error" />
+                                    <input id="settings-twitch-bot-delay" type="text" data-tooltip-content="#settings-twitch-bot-delay-error" />
                                 </li>
                             </ul>
                         </div>
@@ -864,7 +858,12 @@
 
             <div id="settings-username-capitalization-error" lang="en">You can only change the capitalization, not your actual username.</div>
             <div id="settings-stream-error" lang="en">Your stream URL must begin with "https://www.twitch.tv/".</div>
-            <div id="settings-twitch-bot-delay-error" lang="en">The stream delay must be a whole number.</div>
+            <div id="settings-enable-twitch-bot-checkbox-tooltip">
+                <span lang="en">Make the bot a moderator in your Twitch channel BEFORE you enable this by typing</span>
+                <code>/mod IsaacRacingPlus</code>
+                <span lang="en">in your Twitch chat.</span>
+            </div>
+            <div id="settings-twitch-bot-delay-error" lang="en">The stream delay must be between 0 and 60.</div>
 
             <div id="user-click-tooltip">
                 <div class="padding0p5"></div>

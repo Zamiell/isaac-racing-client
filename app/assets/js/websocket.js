@@ -167,22 +167,25 @@ exports.init = function(username, password, remember) {
     */
 
     // Sent after a successful connection
-    globals.conn.on('username', function(data) {
-        globals.myUsername = data;
-    });
-
-    // Sent after a successful connection
-    globals.conn.on('stream', function(data) {
-        if (data === '-') {
-            data = '';
-        }
-        globals.myStream = data;
-    });
-
-    // Sent after a successful connection
-    globals.conn.on('time', function(data) {
+    globals.conn.on('settings', function(data) {
+        // Time (do this first since it is time sensitive)
         let now = new Date().getTime();
-        globals.timeOffset = data - now;
+        globals.timeOffset = data.time - now;
+
+        // Username
+        globals.myUsername = data.username;
+
+        // Stream
+        if (data.stream === '-') {
+            data.stream = '';
+        }
+        globals.myStream = data.stream;
+
+        // TwitchBotEnabled
+        globals.myTwitchBotEnabled = data.twitchBotEnabled;
+
+        // TwitchBotDelay
+        globals.myTwitchBotDelay = data.twitchBotDelay;
     });
 
     // Sent if the server rejects a command; we should completely reload the client since something may be out of sync
@@ -581,7 +584,7 @@ exports.init = function(username, password, remember) {
                 globals.raceList[data.id].racerList[i].status = data.status;
 
                 // Update the race screen
-                if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
+                if (globals.currentScreen === 'race') {
                     raceScreen.participantsSetStatus(data.name, data.status);
                 }
 
@@ -591,6 +594,7 @@ exports.init = function(username, password, remember) {
 
         // If we quit
         if (data.name === globals.myUsername && data.status === 'quit') {
+            // Hide the button since we can only quit once
             $('#race-quit-button').fadeOut(globals.fadeTime);
         }
 
@@ -657,9 +661,45 @@ exports.init = function(username, password, remember) {
                 // Update their floor locally
                 globals.raceList[data.id].racerList[i].floor = data.floor;
 
+                // If the floor is 1, the player reset, so update their items locally
+                // TODO
+
                 // Update the race screen
-                if (globals.currentScreen === 'race' && data.id === globals.currentRaceID) {
+                if (globals.currentScreen === 'race') {
                     raceScreen.participantsSetFloor(data.name, data.floor);
+                }
+
+                break;
+            }
+        }
+    }
+
+    globals.conn.on('racerAddItem', connRacerAddItem);
+    function connRacerAddItem(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                connRacerAddItem(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+            return;
+        }
+
+        if (data.id !== globals.currentRaceID) {
+            return;
+        }
+
+        // Find the player in the racerList
+        for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
+            if (data.name === globals.raceList[data.id].racerList[i].name) {
+                // Add the item locally
+                if (globals.raceList[data.id].racerList[i].items === null) {
+                    globals.raceList[data.id].racerList[i].items = [];
+                }
+                globals.raceList[data.id].racerList[i].items.push(data.item);
+
+                // Update the race screen
+                if (globals.currentScreen === 'race') {
+                    raceScreen.participantsSetItem(data.name);
                 }
 
                 break;

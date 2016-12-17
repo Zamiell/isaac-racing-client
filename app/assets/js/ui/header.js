@@ -5,15 +5,14 @@
 'use strict';
 
 // Imports
-const ipcRenderer  = nodeRequire('electron').ipcRenderer;
-const remote       = nodeRequire('electron').remote;
-const shell        = nodeRequire('electron').shell;
-const keytar       = nodeRequire('keytar');
-const globals      = nodeRequire('./assets/js/globals');
-const settings     = nodeRequire('./assets/js/settings');
-const misc         = nodeRequire('./assets/js/misc');
-const localization = nodeRequire('./assets/js/localization');
-const lobbyScreen  = nodeRequire('./assets/js/ui/lobby');
+const ipcRenderer     = nodeRequire('electron').ipcRenderer;
+const shell           = nodeRequire('electron').shell;
+const keytar          = nodeRequire('keytar');
+const globals         = nodeRequire('./assets/js/globals');
+const settings        = nodeRequire('./assets/js/settings');
+const misc            = nodeRequire('./assets/js/misc');
+const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
+const settingsTooltip = nodeRequire('./assets/js/ui/settings-tooltip');
 
 $(document).ready(function() {
     /*
@@ -127,31 +126,7 @@ $(document).ready(function() {
         theme: 'tooltipster-shadow',
         trigger: 'click',
         interactive: true,
-        functionBefore: function() {
-            if (globals.currentScreen === 'lobby') {
-                $('#gui').fadeTo(globals.fadeTime, 0.1);
-
-                let shortenedPath = settings.get('logFilePath').substring(0, 24);
-                $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
-                $('#settings-log-file-location').tooltipster({
-                    theme: 'tooltipster-shadow',
-                    delay: 0,
-                });
-                $('#settings-log-file-location').tooltipster('content', settings.get('logFilePath'));
-
-                $('#settings-language').val(settings.get('language'));
-
-                $('#settings-volume-slider').val(settings.get('volume') * 100);
-                $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
-
-                $('#settings-username-capitalization').val(globals.myUsername);
-                $('#settings-stream').val(globals.myStream);
-
-                return true;
-            } else {
-                return false;
-            }
-        },
+        functionBefore: settingsTooltip.beforeClick,
     }).tooltipster('instance').on('close', function() {
         if ($('#header-new-race').tooltipster('status').open === false) {
             $('#gui').fadeTo(globals.fadeTime, 1);
@@ -324,124 +299,5 @@ $(document).ready(function() {
 
         // Return false or else the form will submit and reload the page
         return false;
-    });
-
-    /*
-        Settings tooltip
-    */
-
-    $('#settings-log-file-location-change').click(function() {
-        let titleText = $('#select-your-log-file').html();
-        let newLogFilePath = remote.dialog.showOpenDialog({
-            title: titleText,
-            filters: [
-                {
-                    'name': 'Text',
-                    'extensions': ['txt'],
-                }
-            ],
-            properties: ['openFile'],
-        });
-        if (newLogFilePath === undefined) {
-            return;
-        } else {
-            let shortenedPath = newLogFilePath[0].substring(0, 24);
-            $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
-            $('#settings-log-file-location').tooltipster('content', newLogFilePath[0]);
-        }
-    });
-
-    $('#settings-volume-slider').change(function() {
-        $('#settings-volume-slider-value').html($(this).val() + '%');
-    });
-
-    $('#settings-volume-test').click(function() {
-        // Play the "Go" sound effect
-        let audio = new Audio('assets/sounds/go.mp3');
-        audio.volume = $('#settings-volume-slider').val() / 100;
-        audio.play();
-    });
-
-    $('#settings-username-capitalization').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        trigger: 'custom',
-    });
-
-    $('#settings-stream').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        trigger: 'custom',
-    });
-
-    $('#settings-form').submit(function() {
-        // By default, the form will reload the page, so stop this from happening
-        event.preventDefault();
-
-        // Don't do anything if we are not on the right screen
-        if (globals.currentScreen !== 'lobby') {
-            return;
-        }
-
-        // Log file location
-        let newLogFilePath = $('#settings-log-file-location').tooltipster('content');
-        settings.set('logFilePath', newLogFilePath);
-        settings.saveSync();
-
-        // Language
-        localization.localize($('#settings-language').val());
-
-        // Volume
-        settings.set('volume', $('#settings-volume-slider').val() / 100);
-        settings.saveSync();
-
-        // Username capitalization
-        let newUsername = $('#settings-username-capitalization').val();
-        if (newUsername !== globals.myUsername) {
-            // We set a new username
-            if (newUsername.toLowerCase() !== globals.myUsername.toLowerCase()) {
-                // We tried to enter a bogus stylization
-                $('#settings-username-capitalization').tooltipster('open');
-                return;
-            } else {
-                $('#settings-username-capitalization').tooltipster('close');
-                globals.conn.send('profileSetUsername', {
-                    name: newUsername,
-                });
-            }
-        }
-
-        // Stream URL
-        let newStream = $('#settings-stream').val();
-        if (newStream.startsWith('twitch.tv/')) {
-            newStream = 'https://www.' + newStream;
-        } else if (newStream.startsWith('www.twitch.tv/')) {
-            newStream = 'https://' + newStream;
-        } else if (newStream.startsWith('http://')) {
-            newStream = newStream.replace('http://', 'https://');
-        }
-        $('#settings-stream').val(newStream);
-        if (newStream !== globals.myStream) {
-            // We set a new stream
-            if (newStream.startsWith('https://www.twitch.tv/') === false && newStream !== '') {
-                // We tried to enter a non-valid stream URL
-                $('#settings-stream').tooltipster('open');
-                return;
-            } else {
-                $('#settings-stream').tooltipster('close');
-                if (newStream === '') {
-                    newStream = '-'; // Streams cannot be blank on the server-side
-                }
-                globals.conn.send('profileSetStream', {
-                    name: newStream,
-                });
-            }
-        }
-
-        // Close the tooltip
-        $('#header-settings').tooltipster('close');
-
-        // Restart the program
-        ipcRenderer.send('asynchronous-message', 'restart');
     });
 });

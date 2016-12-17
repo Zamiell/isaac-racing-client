@@ -3,7 +3,9 @@
 // npm run dist2 --python="C:\Python27\python.exe"
 
 // Reinstall NPM dependencies:
-// ncu --upgradeAll && cd app && ncu --upgradeAll && cd .. && rm -rf node_modules && rm -rf app/node_modules && npm install --python="C:\Python27\python.exe"
+// (ncu only properly updates the package.json, so it has to be blown away and reinstalled entirely)
+// (ncu needs to be done in both the root and the app subdirectory)
+// ncu -a && rm -rf node_modules && cd app && ncu -a && rm -rf node_modules && cd .. && npm install --python="C:\Python27\python.exe"
 
 'use strict';
 
@@ -24,7 +26,7 @@ const teeny          = require('teeny-conf');
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
 const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-// This maps to: %APPDATA%\..\Local\Programs\RacingPlus\Racing+.log
+// This maps to: %APPDATA%\..\Local\Programs\Racing+.log
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
@@ -118,8 +120,8 @@ function autoUpdate() {
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
-        autoUpdater.checkForUpdates();
         log.info('Checking for updates.');
+        autoUpdater.checkForUpdates();
     }
 }
 
