@@ -8,6 +8,12 @@
 /*
     TODO
 
+    - change the /mod tooltip to stay longer
+    - says 2nd place at the same time as race completed
+    - investigate sound errors 3 GO
+    - lobster had errors, so log errors from console to file
+    - doesn't remember that im starting diversity races
+    - diveristy races should show the seed
     - rejoin race from disconnect doesn't work
     - add stream to chat map
     - autoupdate doesn't work on ajax
