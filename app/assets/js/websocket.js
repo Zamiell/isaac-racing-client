@@ -174,6 +174,9 @@ exports.init = function(username, password, remember) {
 
         // Username
         globals.myUsername = data.username;
+        Raven.setUserContext({
+            username: data.username,
+        });
 
         // Stream
         if (data.stream === '-') {
@@ -592,8 +595,9 @@ exports.init = function(username, password, remember) {
             }
         }
 
-        // If we quit
-        if (data.name === globals.myUsername && data.status === 'quit') {
+        // If we quit or finished
+        if (data.name === globals.myUsername &&
+            (data.status === 'quit' || data.status === 'finished')) {
             // Hide the button since we can only quit once
             $('#race-quit-button').fadeOut(globals.fadeTime);
         }

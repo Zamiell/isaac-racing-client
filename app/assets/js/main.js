@@ -82,6 +82,18 @@ if (isDev) {
     Initialization
 */
 
+// Get the version
+let packageFileLocation = path.join(__dirname, 'package.json');
+let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
+let version = 'v' + JSON.parse(packageFile).version;
+
+// Raven (error logging)
+Raven.config('https://0d0a2118a3354f07ae98d485571e60be@sentry.io/124813', {
+    autoBreadcrumbs: true,
+    //release: version,
+    environment: (isDev ? 'development' : 'production'),
+}).install();
+
 // Logging (code duplicated between main and renderer because of require/nodeRequire issues)
 globals.log = nodeRequire('tracer').console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
@@ -101,9 +113,7 @@ globals.log = nodeRequire('tracer').console({
 });
 
 // Version
-let packageLocation = path.join(__dirname, 'package.json');
-fs.readFile(packageLocation, function(err, data) {
-    let version = 'v' + JSON.parse(data).version;
+$(document).ready(function() {
     $('#title-version').html(version);
     $('#settings-version').html(version);
 });

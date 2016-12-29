@@ -114,12 +114,12 @@ $(document).ready(function() {
             $('#gui').fadeTo(globals.fadeTime, 1);
         }
     });
-    $('#header-new-race').on('tooltipopen', function(event, ui) {
-        $(this).data('tooltip', true);
-    });
 
     $('#header-new-race').click(function() {
-        $('#new-race-name').focus();
+        if ($('#header-new-race').tooltipster('status').state === 'appearing') {
+            $('#new-race-randomize').click();
+            $('#new-race-name').focus();
+        }
     });
 
     $('#header-settings').tooltipster({
@@ -157,7 +157,7 @@ $(document).ready(function() {
     $('#new-race-randomize').click(function() {
         // Get some random words
         let randomNumbers = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             while (true) {
                 let randomNumber = misc.getRandomNumber(0, globals.wordList.length - 1);
                 if (randomNumbers.indexOf(randomNumber) === -1) {
@@ -167,7 +167,7 @@ $(document).ready(function() {
             }
         }
         let randomlyGeneratedName = '';
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             randomlyGeneratedName += globals.wordList[randomNumbers[i]] + ' ';
         }
 
@@ -176,6 +176,49 @@ $(document).ready(function() {
 
         // Set it
         $('#new-race-name').val(randomlyGeneratedName);
+    });
+
+    $('#new-race-ranked').change(function() {
+        // Change the displayed icon
+        let ranked = $(this).val();
+        $('#new-race-ranked-icon').css('background-image', 'url("assets/img/ranked/' + ranked + '.png")');
+
+        // Change the subsequent options accordingly
+        let format = $('#new-race-format').val();
+        if (ranked === 'ranked') {
+            if (format === 'diversity') {
+                $('#new-race-format').val('unseeded');
+            }
+            $('#new-race-format-diversity').fadeOut(0);
+        } else if (ranked === 'unranked') {
+            $('#new-race-format-diversity').fadeIn(0);
+
+        }
+
+        // Change to the default character for this ruleset
+        /*let newCharacter;
+        if ($(this).val() === 'unseeded') {
+            newCharacter = 'Judas';
+        } else if ($(this).val() === 'seeded') {
+            newCharacter = 'Judas';
+        } else if ($(this).val() === 'diversity') {
+            newCharacter = 'Cain';
+        }
+        if ($('#new-race-character').val() !== newCharacter) {
+            $('#new-race-character').val(newCharacter);
+            $('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
+        }*/
+
+        // Show or hide the starting build row
+        /*if ($(this).val() === 'seeded') {
+            $('#new-race-starting-build-1').fadeIn(globals.fadeTime);
+            $('#new-race-starting-build-2').fadeIn(globals.fadeTime);
+            $('#new-race-starting-build-3').fadeIn(globals.fadeTime);
+        } else {
+            $('#new-race-starting-build-1').fadeOut(globals.fadeTime);
+            $('#new-race-starting-build-2').fadeOut(globals.fadeTime);
+            $('#new-race-starting-build-3').fadeOut(globals.fadeTime);
+        }*/
     });
 
     $('#new-race-format').change(function() {

@@ -31,6 +31,9 @@
         <!-- jQuery is used for everything because React is too hard -->
         <script src="assets/js/lib/jquery.min.js"></script>
 
+        <!-- Sentry is used to automatically report errors -->
+        <script src="https://cdn.ravenjs.com/3.9.1/raven.min.js" crossorigin="anonymous"></script>
+
         <!-- A jQuery plugin for seamless localization -->
         <script src="assets/js/lib/jquery-lang.js" charset="utf-8"></script>
 
@@ -519,6 +522,7 @@
                                             &nbsp;
                                             Quit Race
                                         </button>
+                                        <h3 id="race-num-left" class="">3 left</h3>
                                     </div>
                                 </section>
 
@@ -608,12 +612,13 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
+                                <li><span lang="en">Name</span>:</li>
                                 <li>
                                     <input id="new-race-name" type="text" placeholder="Race name (optional)" lang="en" />
                                 </li>
                                 <li>
                                     <button id="new-race-randomize" class="button alt small" type="button">
-                                        <span lang="en">Randomize name</span>
+                                        <span lang="en">Randomize</span>
                                     </button>
                                 </li>
                             </ul>
@@ -621,6 +626,23 @@
                     </div>
 
                     <div class="padding2p5"></div>
+
+                    <div class="row uniform 50%">
+                        <div class="2u new-race-note">
+                            <p><span lang="en">Status</span>:</p>
+                        </div>
+                        <div class="2u">
+                            <span id="new-race-ranked-icon"></span>
+                        </div>
+                        <div class="6u">
+                            <div class="select-wrapper">
+                                <select id="new-race-ranked">
+                                    <option value="ranked" selected="selected" lang="en">Ranked</option>
+                                    <option value="unranked" lang="en">Unranked</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row uniform 50%">
                         <div class="2u new-race-note">
@@ -634,7 +656,7 @@
                                 <select id="new-race-format">
                                     <option value="unseeded" selected="selected" lang="en">Unseeded</option>
                                     <option value="seeded" lang="en">Seeded</option>
-                                    <option value="diversity" lang="en">Diversity</option>
+                                    <option id="new-race-format-diversity" value="diversity" lang="en" class="hidden">Diversity</option>
                                 </select>
                             </div>
                         </div>
@@ -898,6 +920,90 @@
             </div><!-- header-lobby-tooltip -->
 
         </div><!-- tooltips -->
+
+        <div id="preload" class="hidden">
+            <!-- Images -->
+            <img src="assets/img/builds/1.png" />
+            <img src="assets/img/builds/2.png" />
+            <img src="assets/img/builds/3.png" />
+            <img src="assets/img/builds/4.png" />
+            <img src="assets/img/builds/5.png" />
+            <img src="assets/img/builds/6.png" />
+            <img src="assets/img/builds/7.png" />
+            <img src="assets/img/builds/8.png" />
+            <img src="assets/img/builds/9.png" />
+            <img src="assets/img/builds/10.png" />
+            <img src="assets/img/builds/11.png" />
+            <img src="assets/img/builds/12.png" />
+            <img src="assets/img/builds/13.png" />
+            <img src="assets/img/builds/14.png" />
+            <img src="assets/img/builds/15.png" />
+            <img src="assets/img/builds/16.png" />
+            <img src="assets/img/builds/17.png" />
+            <img src="assets/img/builds/18.png" />
+            <img src="assets/img/builds/19.png" />
+            <img src="assets/img/builds/20.png" />
+            <img src="assets/img/builds/21.png" />
+            <img src="assets/img/builds/22.png" />
+            <img src="assets/img/builds/23.png" />
+            <img src="assets/img/builds/24.png" />
+            <img src="assets/img/builds/25.png" />
+            <img src="assets/img/builds/26.png" />
+            <img src="assets/img/builds/27.png" />
+            <img src="assets/img/builds/28.png" />
+            <img src="assets/img/builds/29.png" />
+            <img src="assets/img/builds/30.png" />
+            <img src="assets/img/builds/31.png" />
+            <img src="assets/img/builds/Random.png" />
+            <img src="assets/img/characters/Azazel.png" />
+            <img src="assets/img/characters/Blue Baby.png" />
+            <img src="assets/img/characters/Cain.png" />
+            <img src="assets/img/characters/Eden.png" />
+            <img src="assets/img/characters/Eve.png" />
+            <img src="assets/img/characters/Isaac.png" />
+            <img src="assets/img/characters/Judas.png" />
+            <img src="assets/img/characters/Keeper.png" />
+            <img src="assets/img/characters/Lazarus.png" />
+            <img src="assets/img/characters/Lilith.png" />
+            <img src="assets/img/characters/Magdalene.png" />
+            <img src="assets/img/characters/Random.png" />
+            <img src="assets/img/characters/Samson.png" />
+            <img src="assets/img/characters/The Lost.png" />
+            <img src="assets/img/formats/diversity.png" />
+            <img src="assets/img/formats/seeded.png" />
+            <img src="assets/img/formats/unseeded.png" />
+            <img src="assets/img/goals/Blue Baby.png" />
+            <img src="assets/img/goals/Mega Satan.png" />
+            <img src="assets/img/goals/The Lamb.png" />
+            <img src="assets/img/ranked/ranked.png" />
+            <img src="assets/img/ranked/unranked.png" />
+
+            <!-- Sounds -->
+            <audio><source src="assets/sounds/1.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/2.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/3.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/finished.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/go.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/lets-go.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/quit.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/race-completed.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/1.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/2.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/3.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/4.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/5.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/6.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/7.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/8.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/9.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/10.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/11.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/12.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/13.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/14.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/15.mp3" type="audio/mpeg" /></audio>
+            <audio><source src="assets/sounds/place/16.mp3" type="audio/mpeg" /></audio>
+        </div>
 
     </body>
 </html>

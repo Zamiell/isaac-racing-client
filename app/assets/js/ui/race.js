@@ -526,17 +526,18 @@ const start = function() {
 
     // Change the controls on the race screen
     $('#race-countdown').fadeOut(globals.fadeTime, function() {
-        // Find out if we have quit this race already
-        let alreadyQuit = false;
+        // Find out if we have quit or finished this race already
+        let alreadyFinished = false;
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-            if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername &&
-                globals.raceList[globals.currentRaceID].racerList[i].status === 'quit') {
+            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+            if (racer.name === globals.myUsername &&
+                (racer.status === 'quit' || racer.status === 'finished')) {
 
-                alreadyQuit = true;
+                alreadyFinished = true;
             }
         }
 
-        if (alreadyQuit === false) {
+        if (alreadyFinished === false) {
             $('#race-quit-button').fadeIn(globals.fadeTime);
         }
     });

@@ -3929,10 +3929,14 @@
     }
 
     #new-race-name {
-        width: 20em;
+        width: 15em;
     }
 
     .new-race-note {
+        padding-top: 2em !important;
+    }
+
+    .new-race-randomize {
         padding-top: 2em !important;
     }
 
@@ -3943,6 +3947,22 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    #new-race-ranked-icon {
+        -moz-transition: background-image 0.3s ease-in-out;
+        -webkit-transition: background-image 0.3s ease-in-out;
+        -ms-transition: background-image 0.3s ease-in-out;
+        transition: background-image 0.3s ease-in-out;
+        background-image: url("../img/ranked/ranked.png");
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        display: inline-block;
+        height: 3em;
+        width: 3em;
+        position: relative;
+        bottom: 14px;
+        transform: scale(1.25);
     }
 
     #new-race-format-icon {
