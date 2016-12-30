@@ -127,7 +127,8 @@ $(document).ready(function() {
         theme: 'tooltipster-shadow',
         trigger: 'click',
         interactive: true,
-        functionBefore: settingsTooltip.beforeClick,
+        functionBefore: settingsTooltip.tooltipFunctionBefore,
+        functionReady: settingsTooltip.tooltipFunctionReady,
     }).tooltipster('instance').on('close', function() {
         if ($('#header-new-race').tooltipster('status').open === false) {
             $('#gui').fadeTo(globals.fadeTime, 1);

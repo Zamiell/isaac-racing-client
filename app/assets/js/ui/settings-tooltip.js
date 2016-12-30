@@ -48,18 +48,6 @@ $(document).ready(function() {
         audio.play();
     });
 
-    $('#settings-username-capitalization').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        trigger: 'custom',
-    });
-
-    $('#settings-stream').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        trigger: 'custom',
-    });
-
     $('#settings-stream').keyup(function() {
         if ($('#settings-stream').val().includes('twitch.tv/')) {
             $('#settings-enable-twitch-bot-checkbox-container').fadeIn(globals.fadeTime);
@@ -76,24 +64,12 @@ $(document).ready(function() {
         }
     });
 
-    $('#settings-enable-twitch-bot-checkbox-container').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 750,
-        trigger: 'custom',
-        triggerClose: {
-            mouseleave: true,
-        },
-        zIndex: 10000000, /* The default is 9999999, so it just has to be bigger than that so that it appears on top of the settings tooltip */
-        interactive: true,
-    });
-
     $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', function() {
-        // Sometimes randomly the tooltip get can uninitilized, I have no reason why this happens, but it causes errors, so check for it
-        if ($('#settings-enable-twitch-bot-checkbox-container').hasClass('tooltipstered')) {
-            // Check if the tooltip is open
-            if ($('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open === false) {
-                $('#settings-enable-twitch-bot-checkbox-container').tooltipster('open');
-            }
+        // Check if the tooltip is open
+        if ($('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open === false &&
+            $('#settings-enable-twitch-bot-checkbox').is(':checked') === false) {
+
+            $('#settings-enable-twitch-bot-checkbox-container').tooltipster('open');
         }
     });
 
@@ -106,12 +82,6 @@ $(document).ready(function() {
             $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
             $('#settings-twitch-bot-delay').fadeOut(globals.fadeTime);
         }
-    });
-
-    $('#settings-twitch-bot-delay').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        trigger: 'custom',
     });
 
     $('#settings-form').submit(function() {
@@ -231,42 +201,85 @@ $(document).ready(function() {
 */
 
 // The "functionBefore" function for Tooltipster
-exports.beforeClick = function() {
-    if (globals.currentScreen === 'lobby') {
-        $('#gui').fadeTo(globals.fadeTime, 0.1);
+exports.tooltipFunctionBefore = function() {
+    if (globals.currentScreen !== 'lobby') {
+        return false;
+    }
 
-        let shortenedPath = settings.get('logFilePath').substring(0, 24);
-        $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+    $('#gui').fadeTo(globals.fadeTime, 0.1);
+
+    let shortenedPath = settings.get('logFilePath').substring(0, 24);
+    $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+
+    $('#settings-language').val(settings.get('language'));
+
+    $('#settings-volume-slider').val(settings.get('volume') * 100);
+    $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
+
+    $('#settings-username-capitalization').val(globals.myUsername);
+    $('#settings-stream').val(globals.myStream);
+    if (globals.myTwitchBotEnabled === true) {
+        $('#settings-enable-twitch-bot-checkbox').prop('checked', true);
+    }
+    $('#settings-twitch-bot-delay').val(globals.myTwitchBotDelay);
+
+    if (globals.myStream.includes('twitch.tv') === false) {
+        $('#settings-enable-twitch-bot-checkbox-container').fadeOut(0);
+        $('#settings-twitch-bot-delay-label').fadeOut(0);
+        $('#settings-twitch-bot-delay').fadeOut(0);
+    }
+    if (globals.myTwitchBotEnabled === false) {
+        $('#settings-twitch-bot-delay-label').fadeOut(0);
+        $('#settings-twitch-bot-delay').fadeOut(0);
+    }
+
+    return true;
+};
+
+// The "functionReady" function for Tooltipster
+exports.tooltipFunctionReady = function() {
+    if ($('#settings-log-file-location').hasClass('tooltipstered') === false) {
         $('#settings-log-file-location').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 0,
+            content: settings.get('logFilePath'),
         });
-        $('#settings-log-file-location').tooltipster('content', settings.get('logFilePath'));
+    }
 
-        $('#settings-language').val(settings.get('language'));
+    if ($('#settings-username-capitalizationr').hasClass('tooltipstered') === false) {
+        $('#settings-username-capitalization').tooltipster({
+            theme: 'tooltipster-shadow',
+            delay: 0,
+            trigger: 'custom',
+        });
+    }
 
-        $('#settings-volume-slider').val(settings.get('volume') * 100);
-        $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
+    if ($('#settings-stream').hasClass('tooltipstered') === false) {
+        $('#settings-stream').tooltipster({
+            theme: 'tooltipster-shadow',
+            delay: 0,
+            trigger: 'custom',
+        });
+    }
 
-        $('#settings-username-capitalization').val(globals.myUsername);
-        $('#settings-stream').val(globals.myStream);
-        if (globals.myTwitchBotEnabled === true) {
-            $('#settings-enable-twitch-bot-checkbox').prop('checked', true);
-        }
-        $('#settings-twitch-bot-delay').val(globals.myTwitchBotDelay);
+    if ($('#settings-enable-twitch-bot-checkbox-container').hasClass('tooltipstered') === false) {
+        $('#settings-enable-twitch-bot-checkbox-container').tooltipster({
+            theme: 'tooltipster-shadow',
+            delay: 750,
+            trigger: 'custom',
+            triggerClose: {
+                mouseleave: true,
+            },
+            zIndex: 10000000, /* The default is 9999999, so it just has to be bigger than that so that it appears on top of the settings tooltip */
+            interactive: true,
+        });
+    }
 
-        if (globals.myStream.includes('twitch.tv') === false) {
-            $('#settings-enable-twitch-bot-checkbox-container').fadeOut(0);
-            $('#settings-twitch-bot-delay-label').fadeOut(0);
-            $('#settings-twitch-bot-delay').fadeOut(0);
-        }
-        if (globals.myTwitchBotEnabled === false) {
-            $('#settings-twitch-bot-delay-label').fadeOut(0);
-            $('#settings-twitch-bot-delay').fadeOut(0);
-        }
-
-        return true;
-    } else {
-        return false;
+    if ($('#settings-twitch-bot-delay').hasClass('tooltipstered') === false) {
+        $('#settings-twitch-bot-delay').tooltipster({
+            theme: 'tooltipster-shadow',
+            delay: 0,
+            trigger: 'custom',
+        });
     }
 };

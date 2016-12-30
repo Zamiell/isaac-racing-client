@@ -113,10 +113,8 @@ const login1 = function(username, password, remember) {
         if (isDev) {
             // We won't auto-update in development
         } else {
-            setTimeout(function() {
-                login1(username, password, remember);
-            }, 500);
-            return;
+            // Sometimes this can be null in production (maybe after an automatic update?)
+            // Allow the user to proceed
         }
     } else if (globals.autoUpdateStatus === 'checking-for-update') {
         setTimeout(function() {
