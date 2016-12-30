@@ -7,7 +7,6 @@
 /*
     TODO
 
-    -
     - message of the day
     - add stream to chat map
     - update columns for race:
