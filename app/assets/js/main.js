@@ -1,14 +1,13 @@
 /*
     Racing+ Client
     for The Binding of Isaac: Afterbirth+
-
-    Built with jQuery
+    (renderer process)
 */
 
 /*
     TODO
 
-    - 
+    -
     - message of the day
     - add stream to chat map
     - update columns for race:

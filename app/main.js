@@ -1,3 +1,12 @@
+/*
+    Racing+ Client
+    for The Binding of Isaac: Afterbirth+
+    (main process)
+*/
+
+// Log file location:
+// %APPDATA%\..\Local\Programs\Racing+.log
+
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"
 // npm run dist2 --python="C:\Python27\python.exe"
@@ -26,7 +35,6 @@ const teeny          = require('teeny-conf');
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'app', 'assets');
 const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-// This maps to: %APPDATA%\..\Local\Programs\Racing+.log
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
@@ -51,7 +59,12 @@ const log = require('tracer').console({
         });
     }
 });
-log.info('Racing+ client started!');
+
+// Get the version
+let packageFileLocation = path.join(__dirname, 'package.json');
+let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
+let version = 'v' + JSON.parse(packageFile).version;
+log.info('Racing+ client', version, 'started!');
 
 /*
     Subroutines

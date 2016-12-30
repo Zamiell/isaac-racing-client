@@ -84,6 +84,7 @@ $(document).ready(function() {
 
 // Register with Auth0
 function register(username, password, email) {
+    globals.log.info('Sending a register request to Auth0.');
     let data = {
         'client_id':  'tqY8tYlobY4hc16ph5B61dpMJ1YzDaAR',
         'connection': 'Isaac-Server-DB-Connection',
