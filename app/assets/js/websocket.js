@@ -93,11 +93,10 @@ exports.init = function(username, password, remember) {
             return;
         }
 
-        // Reset some global variables
+        // Reset some global variables to their defaults
         globals.roomList = {};
         globals.raceList = {};
         globals.myUsername = '';
-        globals.myStream = '';
         globals.initiatedLogout = false;
 
         // Hide the links in the header
@@ -370,7 +369,7 @@ exports.init = function(username, password, remember) {
         }
     });
 
-    // Sent when we reconnect in the middle of a race
+    // Sent when we create a race or reconnect in the middle of a race
     globals.conn.on('racerList', function(data) {
         globals.raceList[data.id].racerList = data.racers;
 
@@ -425,16 +424,16 @@ exports.init = function(username, password, remember) {
         } else {
             // Update the race screen
             if (data.id === globals.currentRaceID) {
-                // We are in this race
+                // We are in this race, so add this racer to the racerList with all default values (defaults)
                 let datetime = new Date().getTime();
                 globals.raceList[data.id].racerList.push({
-                    'name':   data.name,
-                    'status': 'not ready',
-                    'datetimeJoined': datetime,
-                    'datetimeFinished': 0,
-                    'place': 0,
-                    'floor': '1-0',
-                    'items': [],
+                    name:   data.name,
+                    status: 'not ready',
+                    datetimeJoined: datetime,
+                    floorNum: 0,
+                    place: 0,
+                    placeMid: 1,
+                    items: [],
                 });
                 raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
             }
@@ -522,7 +521,9 @@ exports.init = function(username, password, remember) {
 
                 // Remove the race controls
                 $('#header-lobby').removeClass('disabled');
-                $('#race-quit-button').fadeOut(globals.fadeTime, function() {
+                $('#race-quit-button-container').fadeOut(globals.fadeTime);
+                $('#race-controls-padding').fadeOut(globals.fadeTime);
+                $('#race-num-left-container').fadeOut(globals.fadeTime, function() {
                     $('#race-countdown').css('font-size', '1.75em');
                     $('#race-countdown').css('bottom', '0.25em');
                     $('#race-countdown').css('color', '#e89980');
@@ -531,9 +532,16 @@ exports.init = function(username, password, remember) {
                 });
 
                 // Play the "race completed!" sound effect
-                let audio = new Audio('assets/sounds/race-completed.mp3');
-                audio.volume = settings.get('volume');
-                audio.play();
+                if (globals.playingSound === false) {
+                    globals.playingSound = true;
+                    setTimeout(function() {
+                        globals.playingSound = false;
+                    }, 1300);
+
+                    let audio = new Audio('assets/sounds/race-completed.mp3');
+                    audio.volume = settings.get('volume');
+                    audio.play();
+                }
             } else {
                 misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
             }
@@ -583,34 +591,17 @@ exports.init = function(username, password, remember) {
         // Find the player in the racerList
         for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
             if (data.name === globals.raceList[data.id].racerList[i].name) {
-                // Update their status locally
+                // Update their status and place locally
                 globals.raceList[data.id].racerList[i].status = data.status;
+                globals.raceList[data.id].racerList[i].place = data.place;
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
-                    raceScreen.participantsSetStatus(data.name, data.status);
+                    raceScreen.participantsSetStatus(i);
                 }
 
                 break;
             }
-        }
-
-        // If we quit or finished
-        if (data.name === globals.myUsername &&
-            (data.status === 'quit' || data.status === 'finished')) {
-            // Hide the button since we can only quit once
-            $('#race-quit-button').fadeOut(globals.fadeTime);
-        }
-
-        // Play a sound effect
-        if (data.status === 'finished') {
-            let audio = new Audio('assets/sounds/finished.mp3');
-            audio.volume = settings.get('volume');
-            audio.play();
-        } else if (data.status === 'quit') {
-            let audio = new Audio('assets/sounds/quit.mp3');
-            audio.volume = settings.get('volume');
-            audio.play();
         }
     }
 
@@ -642,7 +633,9 @@ exports.init = function(username, password, remember) {
             raceScreen.countdownTick(5);
         }, timeToStartCountdown);
         let timeToStartRace = data.time - now - globals.timeOffset;
-        setTimeout(raceScreen.go, timeToStartRace);
+        setTimeout(function() {
+            raceScreen.go(globals.currentRaceID); // Send it the current race ID in case it changes in the meantime
+        }, timeToStartRace);
     }
 
     globals.conn.on('racerSetFloor', connRacerSetFloor);
@@ -662,15 +655,14 @@ exports.init = function(username, password, remember) {
         // Find the player in the racerList
         for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
             if (data.name === globals.raceList[data.id].racerList[i].name) {
-                // Update their floor locally
-                globals.raceList[data.id].racerList[i].floor = data.floor;
-
-                // If the floor is 1, the player reset, so update their items locally
-                // TODO
+                // Update their place and floor locally
+                globals.raceList[data.id].racerList[i].floorNum = data.floorNum;
+                globals.raceList[data.id].racerList[i].stageType = data.stageType;
+                globals.raceList[data.id].racerList[i].floorArrived = data.floorArrived;
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
-                    raceScreen.participantsSetFloor(data.name, data.floor);
+                    raceScreen.participantsSetFloor(i);
                 }
 
                 break;
@@ -695,15 +687,11 @@ exports.init = function(username, password, remember) {
         // Find the player in the racerList
         for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
             if (data.name === globals.raceList[data.id].racerList[i].name) {
-                // Add the item locally
-                if (globals.raceList[data.id].racerList[i].items === null) {
-                    globals.raceList[data.id].racerList[i].items = [];
-                }
                 globals.raceList[data.id].racerList[i].items.push(data.item);
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
-                    raceScreen.participantsSetItem(data.name);
+                    raceScreen.participantsSetItem(i);
                 }
 
                 break;

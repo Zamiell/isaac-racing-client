@@ -27,6 +27,7 @@ module.exports = {
     myStream: null,
     myTwitchBotEnabled: null,
     myTwitchBotDelay: null,
+    playingSound: false,
     roomList: {},
     raceList: {},
     secure: secure,

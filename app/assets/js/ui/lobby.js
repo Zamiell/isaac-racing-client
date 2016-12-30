@@ -125,9 +125,10 @@ exports.raceDraw = function(race) {
 
     // Column 1 - Name
     raceDiv += '<td id="lobby-current-races-' + race.id + '-name" class="lobby-current-races-name">';
-    raceDiv += 'Race ' + race.id;
-    if (race.name !== '-') {
-        raceDiv += ' &mdash; ' + misc.escapeHtml(race.name);
+    if (race.name === '-') {
+        raceDiv += 'Race ' + race.id;
+    } else {
+        raceDiv += misc.escapeHtml(race.name);
     }
     raceDiv += '</td>';
 
@@ -145,18 +146,24 @@ exports.raceDraw = function(race) {
     raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status" lang="en">' + race.status.capitalize() + '</span>';
     raceDiv += '</td>';
 
-    // Column 3 - Format
+    // Column 3 - Type
+    raceDiv += '<td><span class="lobby-current-races-type-icon">';
+    raceDiv += '<span class="lobby-current-races-' + race.ruleset.type + '" lang="en"></span></span>';
+    raceDiv += '<span class="lobby-current-races-spacing"></span>';
+    raceDiv += '<span lang="en">' + race.ruleset.type.capitalize() + '</span></td>';
+
+    // Column 4 - Format
     raceDiv += '<td><span class="lobby-current-races-format-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     raceDiv += '<span lang="en">' + race.ruleset.format.capitalize() + '</span></td>';
 
-    // Column 4 - Size
+    // Column 5 - Size
     raceDiv += '<td id="lobby-current-races-' + race.id + '-size">';
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 
-    // Column 5 - Entrants
+    // Column 6 - Entrants
     raceDiv += '<td id="lobby-current-races-' + race.id + '-racers" class="lobby-current-races-racers">';
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';

@@ -106,7 +106,7 @@ $(document).keydown(function(event) {
         }
 
     } else if (event.which === 13) { // Enter
-        if (globals.currentScreen === 'lobby' && $('#new-race-randomize').is(':focus')) {
+        if (globals.currentScreen === 'lobby' && $('#header-new-race').tooltipster('status').open === true) {
             event.preventDefault();
             $('#new-race-form').submit();
         }

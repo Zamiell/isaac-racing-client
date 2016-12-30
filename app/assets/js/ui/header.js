@@ -110,6 +110,7 @@ $(document).ready(function() {
             }
         },
     }).tooltipster('instance').on('close', function() {
+        // Check if the tooltip is open
         if ($('#header-settings').tooltipster('status').open === false) {
             $('#gui').fadeTo(globals.fadeTime, 1);
         }
@@ -178,47 +179,52 @@ $(document).ready(function() {
         $('#new-race-name').val(randomlyGeneratedName);
     });
 
-    $('#new-race-ranked').change(function() {
-        // Change the displayed icon
-        let ranked = $(this).val();
-        $('#new-race-ranked-icon').css('background-image', 'url("assets/img/ranked/' + ranked + '.png")');
+    $('#new-race-type').change(function() {
+        let newType = $(this).val();
+
+        // Make the format border flash to signify that there are new options there
+        let oldColor = $('#new-race-format').css('border-color');
+        $('#new-race-format').css('border-color', 'green');
+        setTimeout(function() {
+            $('#new-race-format').css('border-color', oldColor);
+        }, 300);
 
         // Change the subsequent options accordingly
         let format = $('#new-race-format').val();
-        if (ranked === 'ranked') {
-            if (format === 'diversity') {
-                $('#new-race-format').val('unseeded');
+        if (newType === 'ranked') {
+            // Change the format dropdown
+            if (format === 'diversity' || format === 'custom') {
+                $('#new-race-format').val('unseeded').change();
+                $('#new-race-character').val('Judas').change();
+                $('#new-race-goal').val('Blue Baby').change();
             }
             $('#new-race-format-diversity').fadeOut(0);
-        } else if (ranked === 'unranked') {
+            $('#new-race-format-custom').fadeOut(0);
+
+            // Hide the character and goal dropdowns if it is not a seeded race
+            if (format !== 'seeded') {
+                $('#new-race-character-container').fadeOut(globals.fadeTime);
+                $('#new-race-goal-container').fadeOut(globals.fadeTime, function() {
+                    $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+                });
+            }
+        } else if (newType === 'unranked') {
+            // Change the format dropdown
             $('#new-race-format-diversity').fadeIn(0);
+            $('#new-race-format-custom').fadeIn(0);
 
+            // Show the character and goal dropdowns (if it is a seeded race, they should be already shown)
+            if (format !== 'seeded') {
+                setTimeout(function() {
+                    $('#new-race-character-container').fadeIn(globals.fadeTime);
+                    $('#new-race-goal-container').fadeIn(globals.fadeTime);
+                    $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+                }, 300);
+            }
         }
 
-        // Change to the default character for this ruleset
-        /*let newCharacter;
-        if ($(this).val() === 'unseeded') {
-            newCharacter = 'Judas';
-        } else if ($(this).val() === 'seeded') {
-            newCharacter = 'Judas';
-        } else if ($(this).val() === 'diversity') {
-            newCharacter = 'Cain';
-        }
-        if ($('#new-race-character').val() !== newCharacter) {
-            $('#new-race-character').val(newCharacter);
-            $('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
-        }*/
-
-        // Show or hide the starting build row
-        /*if ($(this).val() === 'seeded') {
-            $('#new-race-starting-build-1').fadeIn(globals.fadeTime);
-            $('#new-race-starting-build-2').fadeIn(globals.fadeTime);
-            $('#new-race-starting-build-3').fadeIn(globals.fadeTime);
-        } else {
-            $('#new-race-starting-build-1').fadeOut(globals.fadeTime);
-            $('#new-race-starting-build-2').fadeOut(globals.fadeTime);
-            $('#new-race-starting-build-3').fadeOut(globals.fadeTime);
-        }*/
+        // Change the displayed icon
+        $('#new-race-type-icon').css('background-image', 'url("assets/img/type/' + newType + '.png")');
     });
 
     $('#new-race-format').change(function() {
@@ -228,27 +234,39 @@ $(document).ready(function() {
 
         // Change to the default character for this ruleset
         let newCharacter;
-        if ($(this).val() === 'unseeded') {
+        if (newFormat === 'unseeded') {
             newCharacter = 'Judas';
-        } else if ($(this).val() === 'seeded') {
+        } else if (newFormat === 'seeded') {
             newCharacter = 'Judas';
-        } else if ($(this).val() === 'diversity') {
+        } else if (newFormat === 'diversity') {
             newCharacter = 'Cain';
+        } else if (newFormat === 'custom') {
+            // The custom format has no default character, so don't change anything
+            newCharacter = $('#new-race-character').val();
         }
         if ($('#new-race-character').val() !== newCharacter) {
-            $('#new-race-character').val(newCharacter);
-            $('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
+            $('#new-race-character').val(newCharacter).change();
         }
 
-        // Show or hide the starting build row
-        if ($(this).val() === 'seeded') {
-            $('#new-race-starting-build-1').fadeIn(globals.fadeTime);
-            $('#new-race-starting-build-2').fadeIn(globals.fadeTime);
-            $('#new-race-starting-build-3').fadeIn(globals.fadeTime);
+        // Show or hide the character, goal, and starting build row
+        if (newFormat === 'seeded') {
+            setTimeout(function() {
+                $('#new-race-character-container').fadeIn(globals.fadeTime);
+                $('#new-race-goal-container').fadeIn(globals.fadeTime);
+                $('#new-race-starting-build-container').fadeIn(globals.fadeTime);
+                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+            }, 300);
         } else {
-            $('#new-race-starting-build-1').fadeOut(globals.fadeTime);
-            $('#new-race-starting-build-2').fadeOut(globals.fadeTime);
-            $('#new-race-starting-build-3').fadeOut(globals.fadeTime);
+            let type = $('#new-race-type').val();
+            if (type === 'ranked') {
+                $('#new-race-character-container').fadeOut(globals.fadeTime);
+                $('#new-race-goal-container').fadeOut(globals.fadeTime);
+            }
+            if ($('#new-race-starting-build-container').is(":visible")) {
+                $('#new-race-starting-build-container').fadeOut(globals.fadeTime, function() {
+                    $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+                });
+            }
         }
     });
 
@@ -278,6 +296,7 @@ $(document).ready(function() {
 
         // Get values from the form
         let name = $('#new-race-name').val().trim();
+        let type = $('#new-race-type').val();
         let format = $('#new-race-format').val();
         let character = $('#new-race-character').val();
         let goal = $('#new-race-goal').val();
@@ -329,6 +348,7 @@ $(document).ready(function() {
 
         // Create the race
         let rulesetObject = {
+            'type': type,
             'format': format,
             'character': character,
             'goal': goal,

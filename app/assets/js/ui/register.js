@@ -116,7 +116,6 @@ function registerFail(jqXHR) {
     // Show the error box
     let error = misc.findAjaxError(jqXHR);
     $('#register-error').html('<span lang="en">' + error + '</span>');
-    console.log('getting here');
     $('#register-error').fadeTo(globals.fadeTime, 1, function() {
         globals.currentScreen = 'register';
     });

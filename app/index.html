@@ -65,6 +65,7 @@
                 <nav id="nav">
                     <ul>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-profile" class="header-links no-drag" style="display: none;">
                                 <i class="fa fa-area-chart" aria-hidden="true"></i>
                                 &nbsp;
@@ -72,6 +73,7 @@
                             </a>
                         </li>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-leaderboards" class="header-links no-drag" style="display: none;">
                                 <i class="fa fa-trophy" aria-hidden="true"></i>
                                 &nbsp;
@@ -79,6 +81,7 @@
                             </a>
                         </li>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-help" class="header-links no-drag" style="display: none;">
                                 <i class="fa fa-question" aria-hidden="true"></i>
                                 &nbsp;
@@ -87,24 +90,28 @@
                         </li>
                         <li><a></a></li> <!-- Just for spacing -->
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-lobby" class="button no-drag" data-tooltip-content="#header-lobby-tooltip" style="display: none;">
                                 <i class="fa fa-home header-button-icons" aria-hidden="true"></i>
                                 <span lang="en">Lobby</span>
                             </a>
                         </li>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-new-race" class="button no-drag" data-tooltip-content="#new-race-tooltip" style="display: none;">
                                 <i class="fa fa-plus header-button-icons" aria-hidden="true"></i>
                                 <span lang="en">New Race</span>
                             </a>
                         </li>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-settings" class="button no-drag" data-tooltip-content="#settings-tooltip" style="display: none;">
                                 <i class="fa fa-cog header-button-icons" aria-hidden="true"></i>
                                 <span lang="en">Settings</span>
                             </a>
                         </li>
                         <li>
+                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
                             <a id="header-log-out" class="button no-drag" style="display: none;">
                                 <i class="fa fa-sign-out header-button-icons" aria-hidden="true"></i>
                                 <span lang="en">Log Out</span>
@@ -445,6 +452,7 @@
                                             <thead>
                                                 <th><span lang="en">Title</span></th>
                                                 <th><span lang="en">Status</span></th>
+                                                <th><span lang="en">Type</span></th>
                                                 <th><span lang="en">Format</span></th>
                                                 <th><span lang="en">Size</span></th>
                                                 <th><span lang="en">Entrants</span></th>
@@ -488,6 +496,7 @@
                                         <table id="race-title-table" class="alt">
                                             <thead>
                                                 <th><span lang="en">Status</span></th>
+                                                <th><span lang="en">Type</span></th>
                                                 <th><span lang="en">Format</span></th>
                                                 <th><span lang="en">Character</span></th>
                                                 <th><span lang="en">Goal</span></th>
@@ -497,11 +506,20 @@
                                             <tbody>
                                                 <tr>
                                                     <td id="race-title-status"></td>
-                                                    <td id="race-title-format"></td>
+                                                    <td id="race-title-type">
+                                                        <div class="race-title-icon-container">
+                                                            <span id="race-title-type-icon" class="race-title-icon"></span>
+                                                        </div>
+                                                    </td>
+                                                    <td id="race-title-format">
+                                                        <div class="race-title-icon-container">
+                                                            <span id="race-title-format-icon" class="race-title-icon"></span>
+                                                        </div>
+                                                    </td>
                                                     <td id="race-title-character"></td>
                                                     <td id="race-title-goal">
-                                                        <div id="race-title-goal-icon-container">
-                                                            <span id="race-title-goal-icon"></span>
+                                                        <div class="race-title-icon-container">
+                                                            <span id="race-title-goal-icon" class="race-title-icon"></span>
                                                         </div>
                                                     </td>
                                                     <td id="race-title-seed" data-tooltip-content="#race-title-seed-tooltip"></td>
@@ -517,12 +535,21 @@
                                             <label for="race-ready-checkbox"><span id="race-ready-checkbox-label" lang="en">Ready</span></label>
                                         </span>
                                         <h3 id="race-countdown" class="hidden"></h3>
-                                        <button id="race-quit-button" class="button small hidden" lang="en">
-                                            <i class="mdi mdi-skull"></i>
-                                            &nbsp;
-                                            Quit Race
-                                        </button>
-                                        <h3 id="race-num-left" class="">3 left</h3>
+                                        <ul class="actions">
+                                            <li id="race-quit-button-container" class="hidden">
+                                                <button id="race-quit-button" class="button small">
+                                                    <i class="mdi mdi-skull"></i>
+                                                    &nbsp;
+                                                    <span lang="en">Quit Race</span>
+                                                </button>
+                                            </li>
+                                            <li id="race-controls-padding" class="hidden">
+                                                <div class="hpadding1p5"></div>
+                                            </li>
+                                            <li id="race-num-left-container" class="hidden">
+                                                <h3 id="race-num-left"></h3>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </section>
 
@@ -534,7 +561,7 @@
                                                 <th id="race-participants-table-racer" lang="en">Racer</th>
                                                 <th id="race-participants-table-status" lang="en">Status</th>
                                                 <th id="race-participants-table-floor" class="hidden" lang="en">Floor</th>
-                                                <th id="race-participants-table-item" class="hidden" lang="en">Starting Item</th>
+                                                <th id="race-participants-table-item" class="hidden" lang="en">Items</th>
                                                 <th id="race-participants-table-time" class="hidden" lang="en">Time</th>
                                                 <th id="race-participants-table-offset" class="hidden" lang="en">Offset</th>
                                             </thead>
@@ -625,19 +652,19 @@
                         </div>
                     </div>
 
-                    <div class="padding2p5"></div>
+                    <div class="padding2"></div>
 
                     <div class="row uniform 50%">
                         <div class="2u new-race-note">
-                            <p><span lang="en">Status</span>:</p>
+                            <p><span lang="en">Type</span>:</p>
                         </div>
                         <div class="2u">
-                            <span id="new-race-ranked-icon"></span>
+                            <span id="new-race-type-icon"></span>
                         </div>
                         <div class="6u">
                             <div class="select-wrapper">
-                                <select id="new-race-ranked">
-                                    <option value="ranked" selected="selected" lang="en">Ranked</option>
+                                <select id="new-race-type">
+                                    <option value="ranked" selected="selected" lang="en">Ranked (Season 1)</option>
                                     <option value="unranked" lang="en">Unranked</option>
                                 </select>
                             </div>
@@ -657,12 +684,13 @@
                                     <option value="unseeded" selected="selected" lang="en">Unseeded</option>
                                     <option value="seeded" lang="en">Seeded</option>
                                     <option id="new-race-format-diversity" value="diversity" lang="en" class="hidden">Diversity</option>
+                                    <option id="new-race-format-custom" value="custom" lang="en" class="hidden">Custom</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row uniform 50%">
+                    <div id="new-race-character-container" class="row uniform 50% hidden">
                         <div class="2u new-race-note">
                             <p><span lang="en">Character</span>:</p>
                         </div>
@@ -691,7 +719,7 @@
                         </div>
                     </div>
 
-                    <div class="row uniform 50%">
+                    <div id="new-race-goal-container" class="row uniform 50% hidden">
                         <div class="2u new-race-note">
                             <p><span lang="en">Goal</span>:</p>
                         </div>
@@ -709,14 +737,14 @@
                         </div>
                     </div>
 
-                    <div class="row uniform 50%">
-                        <div id="new-race-starting-build-1" class="2u new-race-note hidden">
+                    <div id="new-race-starting-build-container" class="row uniform 50% hidden">
+                        <div class="2u new-race-note">
                             <p><span lang="en">Build</span>:</p>
                         </div>
-                        <div id="new-race-starting-build-2" class="2u hidden">
+                        <div class="2u">
                             <span id="new-race-starting-build-icon"></span>
                         </div>
-                        <div id="new-race-starting-build-3" class="6u hidden">
+                        <div class="6u">
                             <div class="select-wrapper">
                                 <select id="new-race-starting-build">
                                     <option value="Random" selected="selected">Random</option>
@@ -754,7 +782,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="new-race-starting-build-padding" class="1u"></div><!-- Spacing so that the row will show when hidden -->
                     </div>
 
                     <div class="row uniform">
@@ -773,7 +800,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Client version:</li>
+                                <li><span lang="en">Client version</span>:</li>
                                 <li id="settings-version"></li>
                             </ul>
                         </div>
@@ -782,7 +809,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Log file location:</li>
+                                <li><span lang="en">Log file location</span>:</li>
                                 <li id="settings-log-file-location" data-tooltip-content="#settings-log-file-location-tooltip"></li>
                                 <li>
                                     <button id="settings-log-file-location-change" class="button alt small" type="button">
@@ -796,7 +823,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Language:</li>
+                                <li><span lang="en">Language</span>:</li>
                                 <li>
                                     <div class="select-wrapper">
                                         <select id="settings-language">
@@ -814,7 +841,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Volume:</li>
+                                <li><span lang="en">Volume</span>:</li>
                                 <li>
                                     <input id="settings-volume-slider" type="range" min="0" max="100" value="50" />
                                 </li>
@@ -831,7 +858,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Change username capitalization:</li>
+                                <li><span lang="en">Change username capitalization</span></li>
                                 <li>
                                     <input id="settings-username-capitalization" type="text" data-tooltip-content="#settings-username-capitalization-error" />
                                 </li>
@@ -842,7 +869,7 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li lang="en">Change stream URL:</li>
+                                <li><span lang="en">Change stream URL</span>:</li>
                                 <li>
                                     <input id="settings-stream" type="text" data-tooltip-content="#settings-stream-error" />
                                 </li>
@@ -975,8 +1002,8 @@
             <img src="assets/img/goals/Blue Baby.png" />
             <img src="assets/img/goals/Mega Satan.png" />
             <img src="assets/img/goals/The Lamb.png" />
-            <img src="assets/img/ranked/ranked.png" />
-            <img src="assets/img/ranked/unranked.png" />
+            <img src="assets/img/type/ranked.png" />
+            <img src="assets/img/type/unranked.png" />
 
             <!-- Sounds -->
             <audio><source src="assets/sounds/1.mp3" type="audio/mpeg" /></audio>

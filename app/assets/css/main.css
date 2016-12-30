@@ -3458,6 +3458,10 @@
         padding-bottom: 3em;
     }
 
+    .hpadding1p5 {
+        padding-right: 1.5em;
+    }
+
     .button.small {
         padding-left: 1em;
         padding-right: 1em;
@@ -3815,6 +3819,33 @@
         background: black;
     }
 
+    .lobby-current-races-type-icon {
+        position: relative;
+        bottom: 0.25em;
+    }
+
+    .lobby-current-races-ranked {
+        background-image: url("../img/type/ranked.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2.1em;
+        width: 2em;
+        position: absolute;
+        transform: scale(0.85);
+    }
+
+    .lobby-current-races-unranked {
+        background-image: url("../img/type/unranked.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2.1em;
+        width: 2em;
+        position: absolute;
+        transform: scale(0.75);
+    }
+
     .lobby-current-races-format-icon {
         position: relative;
         bottom: 0.25em;
@@ -3857,13 +3888,14 @@
     }
 
     .lobby-current-races-name {
-        width: 375px;
-        max-width: 375px;
+        width: 275px;
+        max-width: 275px;
         white-space: nowrap;
         overflow: hidden;
     }
 
     .lobby-current-races-status {
+        /*text-align: center;*/ /* If centered, it moves the circle on status change, which is disorientating */
         width: 125px;
         max-width: 125px;
         white-space: nowrap;
@@ -3871,8 +3903,8 @@
     }
 
     .lobby-current-races-racers {
-        width: 250px;
-        max-width: 250px;
+        width: 225px;
+        max-width: 225px;
         white-space: nowrap;
         overflow: hidden;
     }
@@ -3949,12 +3981,12 @@
         justify-content: center;
     }
 
-    #new-race-ranked-icon {
+    #new-race-type-icon {
         -moz-transition: background-image 0.3s ease-in-out;
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/ranked/ranked.png");
+        background-image: url("../img/type/ranked.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
@@ -3963,6 +3995,13 @@
         position: relative;
         bottom: 14px;
         transform: scale(1.25);
+    }
+
+    #new-race-format {
+        -moz-transition: border 0.3s ease-in-out;
+        -webkit-transition: border 0.3s ease-in-out;
+        -ms-transition: border 0.3s ease-in-out;
+        transition: border 0.3s ease-in-out;
     }
 
     #new-race-format-icon {
@@ -4083,7 +4122,7 @@
     }
 
     /*
-        Race (title)
+        Race (title table)
     */
 
     #race-title-box {
@@ -4105,14 +4144,14 @@
         padding: 0.25em 0.75em;
     }
 
-    #race-title-goal-icon-container {
+    .race-title-icon-container {
         position: relative;
         display: inline-block;
         bottom: 1.35em;
         right: 1.4em;
     }
 
-    #race-title-goal-icon {
+    .race-title-icon {
         background-repeat: no-repeat;
         background-position: center center;
         display: inline-block;
@@ -4126,7 +4165,7 @@
     */
 
     #race-title-controls-container {
-        margin-top: 1.5em;
+        margin-top: 1.2em;
         font-size: 1.25em;
     }
 
@@ -4137,6 +4176,10 @@
 
     #race-countdown {
         position: relative;
+    }
+
+    #race-num-left {
+        margin: 0 0 0 0;
     }
 
     /*

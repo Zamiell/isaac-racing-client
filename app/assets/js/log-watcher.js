@@ -66,7 +66,7 @@ exports.start = function() {
         }
 
         // Don't do anything if we are not in a race
-        if (globals.currentRaceID === false) {
+        if (globals.currentScreen !== 'race' || globals.currentRaceID === false) {
             return;
         }
 
@@ -86,19 +86,21 @@ exports.start = function() {
             if (m) {
                 let seed = m[1];
                 globals.conn.send('raceSeed', {
-                    'id':   globals.currentRaceID,
-                    'seed': seed,
+                    id:   globals.currentRaceID,
+                    seed: seed,
                 });
             } else {
                 misc.errorShow('Failed to parse the new seed.');
             }
         } else if (line.startsWith('New floor: ')) {
-            let m = line.match(/New floor: (\d+-\d+)/);
+            let m = line.match(/New floor: (\d+)-(\d+)/);
             if (m) {
-                let floor = m[1];
+                let floorNum = parseInt(m[1]); // The server expects this to be an integer
+                let stageType = parseInt(m[2]); // The server expects this to be an integer
                 globals.conn.send('raceFloor', {
-                    'id':    globals.currentRaceID,
-                    'floor': floor,
+                    id:        globals.currentRaceID,
+                    floorNum:  floorNum,
+                    stageType: stageType,
                 });
             } else {
                 misc.errorShow('Failed to parse the new floor.');
@@ -107,9 +109,9 @@ exports.start = function() {
             let m = line.match(/New room: (\d+)/);
             if (m) {
                 let room = m[1];
-                globals.conn.send('raceFloor', {
-                    'id':   globals.currentRaceID,
-                    'room': room,
+                globals.conn.send('raceRoom', {
+                    id:   globals.currentRaceID,
+                    room: room,
                 });
             } else {
                 misc.errorShow('Failed to parse the new room.');
@@ -119,8 +121,8 @@ exports.start = function() {
             if (m) {
                 let itemID = parseInt(m[1]); // The server expects this to be an integer
                 globals.conn.send('raceItem', {
-                    'id':   globals.currentRaceID,
-                    'itemID': itemID,
+                    id:     globals.currentRaceID,
+                    itemID: itemID,
                 });
             } else {
                 misc.errorShow('Failed to parse the new item.');
@@ -128,19 +130,19 @@ exports.start = function() {
         } else if (line === 'Finished run: Blue Baby') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
                 globals.conn.send('raceFinish', {
-                    'id': globals.currentRaceID,
+                    id: globals.currentRaceID,
                 });
             }
         } else if (line === 'Finished run: The Lamb') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'The Lamb') {
                 globals.conn.send('raceFinish', {
-                    'id': globals.currentRaceID,
+                    id: globals.currentRaceID,
                 });
             }
         } else if (line === 'Finished run: Mega Satan') {
             if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Mega Satan') {
                 globals.conn.send('raceFinish', {
-                    'id': globals.currentRaceID,
+                    id: globals.currentRaceID,
                 });
             }
         }

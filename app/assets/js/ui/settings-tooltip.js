@@ -67,7 +67,7 @@ $(document).ready(function() {
                 $('#settings-twitch-bot-delay-label').fadeIn(globals.fadeTime);
                 $('#settings-twitch-bot-delay').fadeIn(globals.fadeTime);
             }
-            $('#header-settings').tooltipster('reposition');
+            $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
             $('#settings-stream').focus();
         } else {
             $('#settings-enable-twitch-bot-checkbox-container').fadeOut(globals.fadeTime);
@@ -78,14 +78,30 @@ $(document).ready(function() {
 
     $('#settings-enable-twitch-bot-checkbox-container').tooltipster({
         theme: 'tooltipster-shadow',
-        delay: 0,
+        delay: 750,
+        trigger: 'custom',
+        triggerClose: {
+            mouseleave: true,
+        },
+        zIndex: 10000000, /* The default is 9999999, so it just has to be bigger than that so that it appears on top of the settings tooltip */
+        interactive: true,
+    });
+
+    $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', function() {
+        // Sometimes randomly the tooltip get can uninitilized, I have no reason why this happens, but it causes errors, so check for it
+        if ($('#settings-enable-twitch-bot-checkbox-container').hasClass('tooltipstered')) {
+            // Check if the tooltip is open
+            if ($('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open === false) {
+                $('#settings-enable-twitch-bot-checkbox-container').tooltipster('open');
+            }
+        }
     });
 
     $('#settings-enable-twitch-bot-checkbox').change(function(data) {
         if ($('#settings-enable-twitch-bot-checkbox').prop('checked')) {
             $('#settings-twitch-bot-delay-label').fadeIn(globals.fadeTime);
             $('#settings-twitch-bot-delay').fadeIn(globals.fadeTime);
-            $('#header-settings').tooltipster('reposition');
+            $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
         } else {
             $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
             $('#settings-twitch-bot-delay').fadeOut(globals.fadeTime);

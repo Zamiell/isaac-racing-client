@@ -19,8 +19,54 @@ const chat      = nodeRequire('./assets/js/chat');
 
 $(document).ready(function() {
     $('#race-title').tooltipster({
-        theme:   'tooltipster-shadow',
-        delay:   0,
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-title-type-icon').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        contentAsHTML: true,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-title-format-icon').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        contentAsHTML: true,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-title-goal-icon').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        contentAsHTML: true,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
     });
 
     $('#race-title-seed').tooltipster({
@@ -124,10 +170,12 @@ const show = function(raceID) {
         });
 
         // Build the title
-        let raceTitle = 'Race ' + globals.currentRaceID;
-        if (globals.raceList[globals.currentRaceID].name !== '-') {
+        let raceTitle;
+        if (globals.raceList[globals.currentRaceID].name === '-') {
+            raceTitle = 'Race ' + globals.currentRaceID;
+        } else {
             // Sanitize the race name
-            raceTitle += ' &mdash; ' + misc.escapeHtml(globals.raceList[globals.currentRaceID].name);
+            raceTitle = misc.escapeHtml(globals.raceList[globals.currentRaceID].name);
         }
         if (raceTitle.length > 60) {
             // Truncate the title
@@ -140,7 +188,6 @@ const show = function(raceID) {
             // Disable the tooltip
             $('#race-title').tooltipster('content', null);
         }
-
         $('#race-title').html(raceTitle);
 
         // Adjust the font size so that it only takes up one line
@@ -173,23 +220,62 @@ const show = function(raceID) {
         statusText += '<span lang="en">' + globals.raceList[globals.currentRaceID].status.capitalize() + '</span>';
         $('#race-title-status').html(statusText);
 
-        // Column 2 - Format
-        let formatDiv = '<span class="lobby-current-races-format-icon">';
-        formatDiv += '<span class="lobby-current-races-' + globals.raceList[globals.currentRaceID].ruleset.format + '"></span></span>';
-        formatDiv += '<span class="lobby-current-races-spacing"></span>';
-        formatDiv += '<span lang="en">' + globals.raceList[globals.currentRaceID].ruleset.format.capitalize() + '</span>';
-        $('#race-title-format').html(formatDiv);
+        // Column 2 - Type
+        let type = globals.raceList[globals.currentRaceID].ruleset.type;
+        $('#race-title-type-icon').css('background-image', 'url("assets/img/type/' + type + '.png")');
+        let typeTooltipContent = '<span lang="en">';
+        if (type === 'ranked') {
+            typeTooltipContent += '<strong><span lang="en">Ranked</span>:</strong><br />';
+            typeTooltipContent += '<span lang="en">This race will count towards the leaderboards.</span>';
+        } else if (type === 'unranked') {
+            typeTooltipContent += '<strong><span lang="en">Unranked</span>:</strong><br />';
+            typeTooltipContent += '<span lang="en">This race will not count towards the leaderboards.</span>';
+        }
+        typeTooltipContent += '</span>';
+        $('#race-title-type-icon').tooltipster('content', typeTooltipContent);
 
-        // Column 3 - Character
+        // Column 3 - Format
+        let format = globals.raceList[globals.currentRaceID].ruleset.format;
+        $('#race-title-format-icon').css('background-image', 'url("assets/img/formats/' + format + '.png")');
+        let formatTooltipContent = '<span lang="en">';
+        if (format === 'unseeded') {
+            formatTooltipContent += '<strong><span lang="en">Unseeded</span>:</strong><br />';
+            formatTooltipContent += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
+            formatTooltipContent += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span>';
+        } else if (format === 'seeded') {
+            formatTooltipContent += '<strong><span lang="en">Seeded</span>:</strong><br />';
+            formatTooltipContent += '<span lang="en">You play on the same seed as your opponent and start with The Compass.</span>';
+        } else if (format === 'diversity') {
+            formatTooltipContent += '<strong><span lang="en">Diversity</span>:</strong><br />';
+            formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you also start with three random passive items.<br />';
+            formatTooltipContent += '<span lang="en">All players will start with the same three items.</span>';
+        } else if (format === 'custom') {
+            formatTooltipContent += '<strong><span lang="en">Custom</span>:</strong><br />';
+            formatTooltipContent += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
+        }
+        formatTooltipContent += '</span>';
+        $('#race-title-format-icon').tooltipster('content', formatTooltipContent);
+
+        // Column 4 - Character
         $('#race-title-character').html(globals.raceList[globals.currentRaceID].ruleset.character);
 
-        // Column 4 - Goal
-        //$('#race-title-goal').html(globals.raceList[globals.currentRaceID].ruleset.goal);
-        $('#race-title-goal-icon').css('background-image', 'url("assets/img/goals/' + globals.raceList[globals.currentRaceID].ruleset.goal + '.png")');
+        // Column 5 - Goal
+        let goal = globals.raceList[globals.currentRaceID].ruleset.goal;
+        $('#race-title-goal-icon').css('background-image', 'url("assets/img/goals/' + goal + '.png")');
+        let goalTooltipContent = '<span lang="en">';
+        if (goal === 'Blue Baby') {
+            goalTooltipContent += 'Defeat Blue Baby (the boss of The Chest) and jump into the chest that falls down afterward.';
+        } else if (goal === 'The Lamb') {
+            goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.';
+        } else if (goal === 'Mega Satan') {
+            goalTooltipContent += 'Defaut Mega Satan (the boss behind the giant locked door).';
+        }
+        goalTooltipContent += '</span>';
+        $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
         // Adjust the racer table depending on the format
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded' ||
-            globals.raceList[globals.currentRaceID].ruleset.format === 'diveristy') {
+            globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
 
             $('#race-title-table-seed').fadeIn(0);
             $('#race-title-seed').fadeIn(0);
@@ -211,7 +297,9 @@ const show = function(raceID) {
         $('#race-ready-checkbox-container').fadeIn(0);
         $('#race-ready-checkbox').prop('checked', false);
         $('#race-countdown').fadeOut(0);
-        $('#race-quit-button').fadeOut(0);
+        $('#race-quit-button-container').fadeOut(0);
+        $('#race-controls-padding').fadeOut(0);
+        $('#race-num-left-container').fadeOut(0);
 
         // Set the race participants table to the pre-game state (with 2 columns)
         $('#race-participants-table-place').fadeOut(0);
@@ -246,10 +334,15 @@ exports.participantAdd = function(i) {
 
     // The racer's place
     racerDiv += '<td id="race-participants-table-' + racer.name + '-place" class="hidden">';
-    if (racer.place === 0) {
-        racerDiv += '-';
+    if (racer.place === -1 || racer.place === -2) {
+        racerDiv += '-'; // They quit or were disqualified
+    } else if (racer.place === 0) { // If they are still racing
+        racerDiv += misc.ordinal_suffix_of(racer.placeMid); // This is their non-finished place based on their current floor
     } else {
-        racerDiv += racer.place;
+        // They finished, so mark the place as a different color to distinguish it from a mid-game place
+        racerDiv += '<span style="color: green;">';
+        racerDiv += misc.ordinal_suffix_of(racer.place);
+        racerDiv += '</span>';
     }
     racerDiv += '</td>';
 
@@ -286,76 +379,133 @@ exports.participantAdd = function(i) {
     $('#race-participants-table-' + racer.name + '-name').css('border-left', 'solid 1px #e5e5e5');
 
     // Update some values in the row
-    participantsSetStatus(racer.name, racer.status);
-    participantsSetFloor(racer.name, racer.floor);
-    participantsSetItem(racer.name);
+    participantsSetStatus(i, true);
+    participantsSetFloor(i);
+    participantsSetItem(i);
 };
 
-const participantsSetStatus = function(name, status) {
+const participantsSetStatus = function(i, initial = false) {
+    let racer = globals.raceList[globals.currentRaceID].racerList[i];
+
     // Update the status column of the row
     let statusDiv = '';
-    if (status === 'ready') {
+    if (racer.status === 'ready') {
         statusDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-    } else if (status === 'not ready') {
+    } else if (racer.status === 'not ready') {
         statusDiv += '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
-    } else if (status === 'racing') {
+    } else if (racer.status === 'racing') {
         statusDiv += '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
-    } else if (status === 'quit') {
+    } else if (racer.status === 'quit') {
         statusDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
-    } else if (status === 'finished') {
+    } else if (racer.status === 'finished') {
         statusDiv += '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
     }
-    statusDiv += '<span lang="en">' + status.capitalize() + '</span>';
-    $('#race-participants-table-' + name + '-status').html(statusDiv);
+    statusDiv += '<span lang="en">' + racer.status.capitalize() + '</span>';
+    $('#race-participants-table-' + racer.name + '-status').html(statusDiv);
 
-    // Update the place column of the row
-    if (status === 'finished') {
-        if (typeof(globals.raceList[globals.currentRaceID].nextPlace) === 'undefined') {
-            globals.raceList[globals.currentRaceID].nextPlace = 1;
-        }
+    if (racer.status === 'finished') {
+        // Update the place column of the row
+        let ordinal = misc.ordinal_suffix_of(racer.place);
+        let placeDiv = '<span style="color: green;">' + ordinal + '</span>';
+        $('#race-participants-table-' + racer.name + '-place').html(placeDiv);
 
-        // Update their place in the raceList
-        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-            if (name === globals.raceList[globals.currentRaceID].racerList[i].name) {
-                let place = globals.raceList[globals.currentRaceID].nextPlace;
-                globals.raceList[globals.currentRaceID].racerList[i].place = place;
+        // Recalculate everyones mid-race places
+        placeMidRecalculateAll();
+    } else if (racer.status === 'quit') {
+        // Update the place column of the row
+        $('#race-participants-table-' + racer.name + '-place').html('-');
 
-                // If we finished, play the sound effect that matches our place
-                if (name === globals.myUsername) {
-                    let audio = new Audio('assets/sounds/place/' + place + '.mp3');
-                    audio.volume = settings.get('volume');
-                    audio.play();
-                }
-
-                break;
-            }
-        }
-
-        // Update their row on the race screen
-        let ordinal = misc.ordinal_suffix_of(globals.raceList[globals.currentRaceID].nextPlace);
-        $('#race-participants-table-' + name + '-place').html(ordinal);
-
-        // Increment the nextPlace variable
-        globals.raceList[globals.currentRaceID].nextPlace++;
+        // Recalculate everyones mid-race places
+        placeMidRecalculateAll();
     }
+
+    // If we finished, play the sound effect that matches our place
+    if (racer.name === globals.myUsername && racer.status === 'finished' && globals.playingSound === false) {
+        globals.playingSound = true;
+        setTimeout(function() {
+            globals.playingSound = false;
+        }, 1800);
+
+        let audio = new Audio('assets/sounds/place/' + racer.place + '.mp3');
+        audio.volume = settings.get('volume');
+        audio.play();
+    }
+
+    // If we quit or finished
+    if (racer.name === globals.myUsername && (racer.status === 'quit' || racer.status === 'finished')) {
+        // Hide the button since we can only quit once
+        $('#race-controls-padding').fadeOut(globals.fadeTime);
+        $('#race-quit-button-container').fadeOut(globals.fadeTime);
+    }
+
+    // Play a sound effect if someone quit or finished
+    if (initial === false) {
+        if (status === 'finished') {
+            let audio = new Audio('assets/sounds/finished.mp3');
+            audio.volume = settings.get('volume');
+            audio.play();
+        } else if (status === 'quit') {
+            let audio = new Audio('assets/sounds/quit.mp3');
+            audio.volume = settings.get('volume');
+            audio.play();
+        }
+    }
+
+    // Find out the number of people left in the race
+    let numLeft = 0;
+    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        let theirStatus = globals.raceList[globals.currentRaceID].racerList[i].status;
+        if (theirStatus === 'racing') {
+            numLeft++;
+        }
+    }
+    $('#race-num-left').html(numLeft + ' left');
 };
 exports.participantsSetStatus = participantsSetStatus;
 
-const participantsSetFloor = function(name, floor) {
-    // Parse the floor
-    let m = floor.match(/(\d+)-(\d+)/);
-    let floorNum;
-    let stageType;
-    if (m) {
-        floorNum = parseInt(m[1]);
-        stageType = parseInt(m[2]);
-    } else {
-        misc.errorShow('The floor for ' + name + ' is in an invalid format: ' + floor);
+function placeMidRecalculateAll() {
+    // Get the current (final) place (it will be 0 if no-one has finished yet)
+    let currentPlace = 0;
+    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        if (globals.raceList[globals.currentRaceID].racerList[i].place > currentPlace) {
+            currentPlace = globals.raceList[globals.currentRaceID].racerList[i].place;
+        }
     }
+
+    // Recalculate everyones mid-race places
+    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        let racer = globals.raceList[globals.currentRaceID].racerList[i];
+        if (racer.status !== 'racing') {
+            continue;
+        }
+        racer.placeMid = currentPlace + 1;
+        for (let j = 0; j < globals.raceList[globals.currentRaceID].racerList.length; j++) {
+            let racer2 = globals.raceList[globals.currentRaceID].racerList[j];
+            if (racer2.status !== 'racing') {
+                continue;
+            }
+            if (racer2.floorNum > racer.floorNum) {
+                racer.placeMid++;
+            } else if (racer2.floorNum == racer.floorNum && racer2.floorArrived < racer.floorArrived) {
+                racer.placeMid++;
+            }
+        }
+        globals.raceList[globals.currentRaceID].racerList[i].placeMid = racer.placeMid;
+        let ordinal = misc.ordinal_suffix_of(racer.placeMid);
+        $('#race-participants-table-' + racer.name + '-place').html(ordinal);
+    }
+}
+
+const participantsSetFloor = function(i) {
+    let name = globals.raceList[globals.currentRaceID].racerList[i].name;
+    let floorNum = globals.raceList[globals.currentRaceID].racerList[i].floorNum;
+    let stageType = globals.raceList[globals.currentRaceID].racerList[i].stageType;
 
     // Update the floor column of the row
     let floorDiv;
-    if (floorNum === 1) {
+    if (floorNum === 0) {
+        floorDiv = '-';
+    } else if (floorNum === 1) {
         floorDiv = 'B1';
     } else if (floorNum === 2) {
         floorDiv = 'B2';
@@ -382,31 +532,26 @@ const participantsSetFloor = function(name, floor) {
     } else if (floorNum === 11 && stageType === 1) {
         floorDiv = 'Chest';
     } else {
-        misc.errorShow('The floor for ' + name + ' is unrecognized: ' + floor);
+        misc.errorShow('The floor for ' + name + ' is unrecognized: ' + floorNum);
     }
     $('#race-participants-table-' + name + '-floor').html(floorDiv);
+
+    // Recalculate everyones mid-race places
+    placeMidRecalculateAll();
 };
 exports.participantsSetFloor = participantsSetFloor;
 
-const participantsSetItem = function(name) {
+const participantsSetItem = function(i) {
     // Go through the array and find the starting item
+    let items = globals.raceList[globals.currentRaceID].racerList[i].items;
     let startingItem = false;
-    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        if (name === globals.raceList[globals.currentRaceID].racerList[i].name) {
-            if (globals.raceList[globals.currentRaceID].racerList[i].items === null) {
-                globals.raceList[globals.currentRaceID].racerList[i].items = [];
-                break;
-            }
-            for (let j = 0; j < globals.raceList[globals.currentRaceID].racerList[i].items.length; j++) {
-                if (globals.raceList[globals.currentRaceID].racerList[i].items[j].id === 105) {
-                    // Skip the D6
-                    continue;
-                }
-                startingItem = globals.raceList[globals.currentRaceID].racerList[i].items[j].id;
-                break;
-            }
-            break;
+    for (let j = 0; j < items.length; j++) {
+        if (items[j].id === 105) {
+            // Skip the D6
+            continue;
         }
+        startingItem = items[j].id;
+        break;
     }
 
     // Update the starting item column of the row
@@ -420,6 +565,10 @@ const participantsSetItem = function(name) {
 exports.participantsSetItem = participantsSetItem;
 
 exports.markOnline = function() {
+    // TODO
+};
+
+exports.markOffline = function() {
     // TODO
 };
 
@@ -483,9 +632,9 @@ const countdownTick = function(i) {
 };
 exports.countdownTick = countdownTick;
 
-exports.go = function() {
-    // Don't do anything if we are not on the race screen
-    if (globals.currentScreen !== 'race') {
+exports.go = function(raceID) {
+    // Don't do anything if we are not on the race screen or we are in a different race
+    if (globals.currentScreen !== 'race' || globals.currentRaceID !== raceID) {
         return;
     }
 
@@ -501,19 +650,22 @@ exports.go = function() {
     audio.volume = settings.get('volume');
     audio.play();
 
-    // Wait 5 seconds, then start to change the controls
-    setTimeout(start, 5000);
+    // Wait 4 seconds, then start to change the controls
+    setTimeout(start, 4000);
 
-    // Add default values to the columns to the race participants table
+    // Add default values to the columns to the race participants table (defaults)
     for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
         globals.raceList[globals.currentRaceID].racerList[i].status = 'racing';
+        globals.raceList[globals.currentRaceID].racerList[i].place = 0;
+        console.log('set place to 0 for:', globals.raceList[globals.currentRaceID].racerList[i].name);
+        globals.raceList[globals.currentRaceID].racerList[i].placeMid = 1;
 
-        let racer = globals.raceList[globals.currentRaceID].racerList[i].name;
+        let racerName = globals.raceList[globals.currentRaceID].racerList[i].name;
         let statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
-        $('#race-participants-table-' + racer + '-status').html(statusDiv);
-        $('#race-participants-table-' + racer + '-item').html('-');
-        $('#race-participants-table-' + racer + '-time').html('-');
-        $('#race-participants-table-' + racer + '-offset').html('-');
+        $('#race-participants-table-' + racerName + '-status').html(statusDiv);
+        $('#race-participants-table-' + racerName + '-item').html('-');
+        $('#race-participants-table-' + racerName + '-time').html('-');
+        $('#race-participants-table-' + racerName + '-offset').html('-');
     }
 };
 
@@ -526,8 +678,9 @@ const start = function() {
 
     // Change the controls on the race screen
     $('#race-countdown').fadeOut(globals.fadeTime, function() {
-        // Find out if we have quit or finished this race already
+        // Find out if we have quit or finished this race already and count the number of people who are still in the race (which should be everyone, but just in case)
         let alreadyFinished = false;
+        let numLeft = 0;
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
             let racer = globals.raceList[globals.currentRaceID].racerList[i];
             if (racer.name === globals.myUsername &&
@@ -535,11 +688,20 @@ const start = function() {
 
                 alreadyFinished = true;
             }
+            if (racer.status === 'racing') {
+                numLeft++;
+            }
         }
 
+        // Show the quit button
         if (alreadyFinished === false) {
-            $('#race-quit-button').fadeIn(globals.fadeTime);
+            $('#race-quit-button-container').fadeIn(globals.fadeTime);
+            $('#race-controls-padding').fadeIn(globals.fadeTime);
         }
+
+        // Show the number of people left in the race
+        $('#race-num-left').html(numLeft + ' left');
+        $('#race-num-left-container').fadeIn(globals.fadeTime);
     });
 
     // Change the table to have 6 columns instead of 2

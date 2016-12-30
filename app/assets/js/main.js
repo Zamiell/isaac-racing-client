@@ -8,21 +8,16 @@
 /*
     TODO
 
-    - change the /mod tooltip to stay longer
-    - says 2nd place at the same time as race completed
-    - investigate sound errors 3 GO
-    - lobster had errors, so log errors from console to file
-    - doesn't remember that im starting diversity races
-    - diveristy races should show the seed
-    - rejoin race from disconnect doesn't work
+    - message of the day
     - add stream to chat map
-    - autoupdate doesn't work on ajax
     - update columns for race:
         - place
         - seed
         - starting item
         - time offset
         - fill in items
+    - "/msg invadertim" shouldn't work
+    - should not error if trying to msg someone who isn't online
     - tab complete for chat
     - /r should work
 */
@@ -87,7 +82,7 @@ let packageFileLocation = path.join(__dirname, 'package.json');
 let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
 let version = 'v' + JSON.parse(packageFile).version;
 
-// Raven (error logging)
+// Raven (error logging to Sentry)
 Raven.config('https://0d0a2118a3354f07ae98d485571e60be@sentry.io/124813', {
     autoBreadcrumbs: true,
     //release: version,
