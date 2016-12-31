@@ -705,6 +705,11 @@ exports.go = function(raceID) {
 };
 
 const start = function() {
+    // Don't do anything if we are not on the race screen or we are in a different race
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
     // In case we coming back after a disconnect, redo all of the stuff that was done in the "startCountdown" function
     $('#race-ready-checkbox-container').fadeOut(0);
 

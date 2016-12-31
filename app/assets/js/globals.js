@@ -32,6 +32,7 @@ module.exports = {
     raceList: {},
     secure: secure,
     spamTimer: new Date().getTime(),
+    timeLaunched: new Date().getTime(),
     timeOffset: 0,
     wordList: null, // Set in main.js
 };

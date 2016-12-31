@@ -108,22 +108,31 @@ $(document).ready(function() {
 // Step 1 - Get a login token from Auth0
 const login1 = function(username, password, remember) {
     // Don't login yet if we are still checking for updates
-    globals.log.info('Attempting to log on with autoUpdateStatus:', globals.autoUpdateStatus);
     if (globals.autoUpdateStatus === null) {
         if (isDev) {
             // We won't auto-update in development
         } else {
-            // Sometimes this can be null in production (maybe after an automatic update?)
-            // Allow the user to proceed
+            // The client has not yet begun to check for an update, so stall
+            // However, sometimes this can be permanently null in production (maybe after an automatic update?), so allow them to procede after 2 seconds
+            let now = new Date().getTime();
+            if (now - globals.timeLaunched < 2000) {
+                setTimeout(function() {
+                    login1(username, password, remember);
+                }, 250);
+                globals.log.info('Logging in (without having checked for an update yet). Stalling for 0.25 seconds...');
+                return;
+            }
         }
     } else if (globals.autoUpdateStatus === 'checking-for-update') {
         setTimeout(function() {
             login1(username, password, remember);
-        }, 500);
+        }, 250);
+        globals.log.info('Logging in (while checking for an update). Stalling for 0.25 seconds...');
         return;
     } else if (globals.autoUpdateStatus === 'error') {
         // Allow them to continue to log on if they got an error since we want the service to be usable when GitHub is down
         // (currently this is not actually true because it will show an error modal from the title screen)
+        globals.log.info('Logging in (with an automatic update error).');
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
         let fadeTarget;
@@ -140,9 +149,11 @@ const login1 = function(username, password, remember) {
                 globals.currentScreen = 'updating';
             });
         });
+        globals.log.info('Logging in (with an update available). Showing the "updating" screen.');
         return;
     } else if (globals.autoUpdateStatus === 'update-not-available') {
         // Do nothing special and continue to login
+        globals.log.info('Logging in (with no update available).');
     } else if (globals.autoUpdateStatus === 'update-downloaded') {
         // The update was downloaded in the background while the user was idle at the title or login screen
         // Show them the updating screen so they are not confused at the program restarting
@@ -162,6 +173,7 @@ const login1 = function(username, password, remember) {
                 setTimeout(function() {
                     ipcRenderer.send('asynchronous-message', 'quitAndInstall');
                 }, 1500);
+                globals.log.info('Logging in (with an update was downloaded successfully). Showing the "updating" screen and automatically restart in 1.5 seconds."');
             });
         });
         return;
