@@ -118,15 +118,9 @@ const hotkey = function(event, message) {
     globals.log.info('Recieved hotkey message:', message);
 
     if (message === 'ready') { // Alt + r
-        if (globals.currentScreen === 'race') {
-            $('#race-ready-checkbox').click();
-        }
-
+        $('#race-ready-checkbox').click();
     } else if (message === 'quit') { // Alt + q
-        if (globals.currentScreen === 'race') {
-            $('#race-quit-button').click();
-        }
-
+        $('#race-quit-button').click();
     }
 };
 ipcRenderer.on('hotkey', hotkey);

@@ -86,6 +86,8 @@ $(document).ready(function() {
             return;
         } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
             return;
+        } else if (globals.raceList[globals.currentRaceID].status !== 'open') {
+            return;
         }
 
         // Don't allow people to spam this
@@ -118,6 +120,26 @@ $(document).ready(function() {
             return;
         } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
             return;
+        } else if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
+            return;
+        }
+
+        // Find out if we already quit this race
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            if (globals.myUsername === globals.raceList[globals.currentRaceID].racerList[i].name) {
+                if (globals.raceList[globals.currentRaceID].racerList[i].status !== 'racing') {
+                    return;
+                }
+                break;
+            }
+        }
+
+        // Don't allow people to spam this
+        let now = new Date().getTime();
+        if (now - globals.spamTimer < 1000) {
+            return;
+        } else {
+            globals.spamTimer = now;
         }
 
         globals.conn.send('raceQuit', {
