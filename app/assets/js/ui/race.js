@@ -88,6 +88,20 @@ $(document).ready(function() {
             return;
         }
 
+        // Don't allow people to spam this
+        let now = new Date().getTime();
+        if (now - globals.spamTimer < 1000) {
+            // Undo what they did
+            if ($('#race-ready-checkbox').is(':checked')) {
+                $('#race-ready-checkbox').prop('checked', false);
+            } else {
+                $('#race-ready-checkbox').prop('checked', true);
+            }
+            return;
+        } else {
+            globals.spamTimer = now;
+        }
+
         if (this.checked) {
             globals.conn.send('raceReady', {
                 'id': globals.currentRaceID,
@@ -340,7 +354,7 @@ exports.participantAdd = function(i) {
         racerDiv += misc.ordinal_suffix_of(racer.placeMid); // This is their non-finished place based on their current floor
     } else {
         // They finished, so mark the place as a different color to distinguish it from a mid-game place
-        racerDiv += '<span style="color: green;">';
+        racerDiv += '<span style="color: blue;">';
         racerDiv += misc.ordinal_suffix_of(racer.place);
         racerDiv += '</span>';
     }
@@ -406,7 +420,7 @@ const participantsSetStatus = function(i, initial = false) {
     if (racer.status === 'finished') {
         // Update the place column of the row
         let ordinal = misc.ordinal_suffix_of(racer.place);
-        let placeDiv = '<span style="color: green;">' + ordinal + '</span>';
+        let placeDiv = '<span style="color: blue;">' + ordinal + '</span>';
         $('#race-participants-table-' + racer.name + '-place').html(placeDiv);
 
         // Recalculate everyones mid-race places
@@ -657,7 +671,6 @@ exports.go = function(raceID) {
     for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
         globals.raceList[globals.currentRaceID].racerList[i].status = 'racing';
         globals.raceList[globals.currentRaceID].racerList[i].place = 0;
-        console.log('set place to 0 for:', globals.raceList[globals.currentRaceID].racerList[i].name);
         globals.raceList[globals.currentRaceID].racerList[i].placeMid = 1;
 
         let racerName = globals.raceList[globals.currentRaceID].racerList[i].name;

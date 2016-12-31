@@ -6,10 +6,11 @@
 
 // Log file location:
 // %APPDATA%\..\Local\Programs\Racing+.log
+// %APPDATA%\\..\Local\Programs\Racing+.log (for copy pasting into Discord)
 
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"
-// npm run dist2 --python="C:\Python27\python.exe"
+// npm run dist2 --python="C:\Python27\python.exe" (for uploading to GitHub)
 
 // Reinstall NPM dependencies:
 // (ncu only properly updates the package.json, so it has to be blown away and reinstalled entirely)

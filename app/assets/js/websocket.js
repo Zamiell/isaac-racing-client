@@ -129,15 +129,6 @@ exports.init = function(username, password, remember) {
                     globals.currentScreen = 'title';
                 });
             });
-        } else if (globals.currentScreen === 'settings') {
-            // Show the title screen
-            globals.currentScreen = 'transition';
-            $('#settings').fadeOut(globals.fadeTime, function() {
-                $('#page-wrapper').addClass('vertical-center');
-                $('#title').fadeIn(globals.fadeTime, function() {
-                    globals.currentScreen = 'title';
-                });
-            });
         } else if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
             setTimeout(function() {
@@ -566,7 +557,7 @@ exports.init = function(username, password, remember) {
         }
         $('#lobby-current-races-' + data.id + '-status-circle').removeClass();
         $('#lobby-current-races-' + data.id + '-status-circle').addClass('circle lobby-current-races-' + circleClass);
-        $('#lobby-current-races-' + data.id + '-status').html(data.status.capitalize());
+        $('#lobby-current-races-' + data.id + '-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
 
         // Remove the race if it is finished
         if (data.status === 'finished') {

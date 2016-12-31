@@ -3738,7 +3738,7 @@
     */
 
     .chat-box {
-        margin: 0 0 1.5em 1.5em;
+        margin: 0 0 0 1.5em;
         padding: 1em 1em 1em 1em; /* Default is 3em */
     }
 
@@ -3918,7 +3918,7 @@
     }
 
     #lobby-users-box {
-        margin: 0 1.5em 1.5em 0.5em;
+        margin: 0 1.5em 0 0.5em;
         padding: 1em 1em 1em 1em; /* Default is 3em */
     }
 

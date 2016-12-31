@@ -31,6 +31,7 @@ module.exports = {
     roomList: {},
     raceList: {},
     secure: secure,
+    spamTimer: new Date().getTime(),
     timeOffset: 0,
     wordList: null, // Set in main.js
 };
@@ -51,7 +52,6 @@ module.exports = {
     - updating
     - lobby
     - race
-    - settings
     - error
     - warning
     - waiting-for-server

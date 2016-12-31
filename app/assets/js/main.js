@@ -7,6 +7,11 @@
 /*
     TODO
 
+    - turn different color in lobby when in a race
+    - sound effects for win and loss aren't working
+    - racing chat does not scroll properly
+    - "0 left" to "race completed!" in bot
+    - make diversity mod seed uppercase
     - message of the day
     - add stream to chat map
     - update columns for race:
@@ -32,6 +37,7 @@ const isDev  = nodeRequire('electron-is-dev');
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
 const settings        = nodeRequire('./assets/js/settings');
+const misc            = nodeRequire('./assets/js/misc');
 const automaticUpdate = nodeRequire('./assets/js/automatic-update');
 const localization    = nodeRequire('./assets/js/localization');
 const keyboard        = nodeRequire('./assets/js/keyboard');
@@ -84,8 +90,11 @@ let version = 'v' + JSON.parse(packageFile).version;
 // Raven (error logging to Sentry)
 Raven.config('https://0d0a2118a3354f07ae98d485571e60be@sentry.io/124813', {
     autoBreadcrumbs: true,
-    //release: version,
+    release: version,
     environment: (isDev ? 'development' : 'production'),
+    dataCallback: function(data) {
+        misc.errorShow('A unexpected JavaScript error occured. Here\'s what happened:<br /><br />' + JSON.stringify(data.exception.values));
+    },
 }).install();
 
 // Logging (code duplicated between main and renderer because of require/nodeRequire issues)

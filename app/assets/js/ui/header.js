@@ -364,4 +364,24 @@ $(document).ready(function() {
         // Return false or else the form will submit and reload the page
         return false;
     });
+
+    // Automatically hide the lobby links if the window is resized too far horizontally
+    $(window).resize(windowResize);
+    function windowResize() {
+        if ($(window).width() < 1048) {
+            $('#header-profile').fadeOut(0);
+            $('#header-leaderboards').fadeOut(0);
+            $('#header-help').fadeOut(0);
+        } else {
+            if (globals.currentScreen === 'transition') {
+                setTimeout(function() {
+                    windowResize();
+                }, globals.fadeTime + 5); // 5 milliseconds of leeway
+            } else if (globals.currentScreen === 'lobby' || globals.currentScreen === 'race') {
+                $('#header-profile').fadeIn(0);
+                $('#header-leaderboards').fadeIn(0);
+                $('#header-help').fadeIn(0);
+            }
+        }
+    }
 });

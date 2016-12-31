@@ -143,7 +143,7 @@ exports.raceDraw = function(race) {
         circleClass = 'in-progress';
     }
     raceDiv += '<span id="lobby-current-races-' + race.id + '-status-circle" class="circle lobby-current-races-' + circleClass + '"></span>';
-    raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status" lang="en">' + race.status.capitalize() + '</span>';
+    raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status"><span lang="en">' + race.status.capitalize() + '</span></span>';
     raceDiv += '</td>';
 
     // Column 3 - Type
