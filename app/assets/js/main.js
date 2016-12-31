@@ -10,7 +10,6 @@
     - turn different color in lobby when in a race
     - sound effects for win and loss aren't working
     - racing chat does not scroll properly
-    - "0 left" to "race completed!" in bot
     - make diversity mod seed uppercase
     - message of the day
     - add stream to chat map
