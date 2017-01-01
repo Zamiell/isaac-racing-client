@@ -18,7 +18,7 @@ const autoUpdater = function(event, message) {
     globals.log.info('Recieved autoUpdater message:', message);
     globals.autoUpdateStatus = message;
     if (message === 'error') {
-        misc.errorShow('Failed to check for updates from GitHub. Either your Internet is having problems or GitHub.com is down.');
+        // Do nothing special; we want the service to be usable when GitHub is down
     } else if (message === 'checking-for-update') {
         // Do nothing special
     } else if (message === 'update-available') {

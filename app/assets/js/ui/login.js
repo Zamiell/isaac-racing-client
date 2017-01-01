@@ -131,7 +131,6 @@ const login1 = function(username, password, remember) {
         return;
     } else if (globals.autoUpdateStatus === 'error') {
         // Allow them to continue to log on if they got an error since we want the service to be usable when GitHub is down
-        // (currently this is not actually true because it will show an error modal from the title screen)
         globals.log.info('Logging in (with an automatic update error).');
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
