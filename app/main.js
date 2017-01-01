@@ -31,6 +31,7 @@ const os             = require('os');
 const path           = require('path');
 var autoUpdater; // Filled in later because it throws errors in a development environment
 const isDev          = require('electron-is-dev');
+const Raven          = require('raven');
 const teeny          = require('teeny-conf');
 
 // Constants
@@ -66,6 +67,16 @@ let packageFileLocation = path.join(__dirname, 'package.json');
 let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
 let version = 'v' + JSON.parse(packageFile).version;
 log.info('Racing+ client', version, 'started!');
+
+// Raven (error logging to Sentry)
+Raven.config('https://0d0a2118a3354f07ae98d485571e60be@sentry.io/124813', {
+    autoBreadcrumbs: true,
+    release: version,
+    environment: (isDev ? 'development' : 'production'),
+    dataCallback: function(data) {
+        log.error(data.exception.values);
+    },
+}).install();
 
 /*
     Subroutines

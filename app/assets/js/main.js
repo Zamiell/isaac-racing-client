@@ -15,16 +15,8 @@
 
     - get sentry working with line numbers - https://forum.sentry.io/t/sentry-js-submitting-incomplete-stack-trace/703
 
-    - horizontal scroll bar appears when resizing smaller
-
-
-
     Things to verify:
-    - fix dan sound effects out of order (~)
-    - fix lobster sound effects out of order (~)
-    - fix sillypears crash
-
-
+    - get sillypears to verify crash test after sentry line numbers fix
 
     Features to add:
     - achivements
@@ -43,8 +35,19 @@
     - /r should work
     - volume slider update number better
     - wait until raceList before going to lobby so that we can go directly to current race
+
+
+
+    Features to add (low priority):
+    - make UI expand horizontally properly
     - implement <3 emote (can't have < or > in filenames so it requires custom code)
     - add items + date to "Top 10 Unseeded Times" leaderboard
+
+    Bugs to fix (low priority):
+    - "#header-title" overlaps with header links when on french
+    - Personnage (french) is too close to character in new-race tooltip
+    - horizontal scroll bar appears when resizing smaller
+
 */
 
 'use strict';
