@@ -232,19 +232,12 @@ exports.indentAll = function(room) {
 };
 
 function fillEmotes(message) {
-    // Get a list of all of the emotes
-    let emoteList = misc.getAllFilesFromFolder(__dirname + '/../img/emotes');
-
-    // Chop off the .png from the end of each element of the array
-    for (let i = 0; i < emoteList.length; i++) {
-        emoteList[i] = emoteList[i].slice(0, -4); // ".png" is 4 characters long
-    }
 
     // Search through the text for each emote
-    for (let i = 0; i < emoteList.length; i++) {
-        if (message.indexOf(emoteList[i]) !== -1) {
-            let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + emoteList[i] + '.png" alt="' + emoteList[i] + '" />';
-            let re = new RegExp('\\b' + emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
+    for (let i = 0; i < globals.emoteList.length; i++) {
+        if (message.indexOf(globals.emoteList[i]) !== -1) {
+            let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + globals.emoteList[i] + '.png" alt="' + globals.emoteList[i] + '" />';
+            let re = new RegExp('\\b' + globals.emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
             message = message.replace(re, emoteTag);
         }
     }
