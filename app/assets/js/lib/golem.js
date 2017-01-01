@@ -58,7 +58,7 @@
             DefaultJSONProtocol = {
                 unpack: function(data) {
                     var name = data.split(seperator)[0];
-                    return [name, data.substring(name.length+1, data.length)];
+                    return [name, data.substring(name.length + 1, data.length)];
                 },
                 unmarshal: function(data) {
                     return JSON.parse(data);
