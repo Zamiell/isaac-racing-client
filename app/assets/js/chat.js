@@ -10,6 +10,9 @@ const linkifyHTML = nodeRequire('linkifyjs/html');
 const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
 
+// Constants
+const chatIndentPixels = 50;
+
 exports.send = function(destination) {
     // Don't do anything if we are not on the screen corresponding to the chat input form
     if (destination === 'lobby' && globals.currentScreen !== 'lobby') {
@@ -191,9 +194,14 @@ const draw = function(room, name, message, datetime = null) {
 
     // Set indentation for long lines
     if (room === 'lobby') {
+        // Indent the text to past where the username is (no longer used because it wastes too much space)
         /*let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
         $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', indentPixels);
         $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + indentPixels);*/
+
+        // Indent the text a little bit to signify that it is a continuation of the last line
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', chatIndentPixels);
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + chatIndentPixels);
     }
 
     // Automatically scroll
@@ -203,6 +211,25 @@ const draw = function(room, name, message, datetime = null) {
     }
 };
 exports.draw = draw;
+
+exports.indentAll = function(room) {
+    if (typeof globals.roomList[room] === 'undefined') {
+        return;
+    }
+
+    for (let i = 1; i <= globals.roomList[room].chatLine; i++) {
+        // Indent the text to past where the username is (no longer used because it wastes too much space)
+
+        let indentPixels = $('#' + room + '-chat-text-line-' + i + '-header').css('width');
+        $('#' + room + '-chat-text-line-' + i).css('padding-left', indentPixels);
+        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + indentPixels);
+        
+
+        // If this line overflows, indent it a little to signify that it is a continuation of the last line
+        /*$('#' + room + '-chat-text-line-' + i).css('padding-left', chatIndentPixels);
+        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + chatIndentPixels);*/
+    }
+};
 
 function fillEmotes(message) {
     // Get a list of all of the emotes

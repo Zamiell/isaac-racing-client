@@ -282,10 +282,10 @@ const show = function(raceID) {
             formatTooltipContent += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span>';
         } else if (format === 'seeded') {
             formatTooltipContent += '<strong><span lang="en">Seeded</span>:</strong><br />';
-            formatTooltipContent += '<span lang="en">You play on the same seed as your opponent and start with The Compass.</span>';
+            formatTooltipContent += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span>';
         } else if (format === 'diversity') {
             formatTooltipContent += '<strong><span lang="en">Diversity</span>:</strong><br />';
-            formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you also start with three random passive items.<br />';
+            formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with three random passive items.</span><br />';
             formatTooltipContent += '<span lang="en">All players will start with the same three items.</span>';
         } else if (format === 'custom') {
             formatTooltipContent += '<strong><span lang="en">Custom</span>:</strong><br />';

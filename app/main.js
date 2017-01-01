@@ -6,7 +6,13 @@
 
 // Log file location:
 // %APPDATA%\..\Local\Programs\Racing+.log
-// %APPDATA%\\..\Local\Programs\Racing+.log (for copy pasting into Discord)
+// Log file location (for copy pasting into Discord):
+// %APPDATA%\\..\Local\Programs\Racing+.log
+
+// Settings file location:
+// %APPDATA%\..\Local\Programs\settings.json
+// Settings file location (for copy pasting into Discord):
+// %APPDATA%\..\Local\Programs\settings.json
 
 // Build with:
 // npm run dist --python="C:\Python27\python.exe"

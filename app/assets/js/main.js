@@ -6,9 +6,16 @@
 
 /*
     Bugs to fix:
-    - french race tables are messed up
+    - Add [?? Joined] to race chat
+    - log watcher 74 - Uncaught TypeError: Cannot read property 'racerList' of undefined
+    - There are 0 people left in the race. - remove this line (only dont display it during start / resume?)
 
-    - demote error to warning (what OJ got in sentry)
+    - move log out button to settings
+    - double check correct window.change # for hide links
+
+    - look at sed screenshot, racer is cut off at the top
+
+    - look at indentation, its too much
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
@@ -44,7 +51,7 @@
     - add items + date to "Top 10 Unseeded Times" leaderboard
 
     Bugs to fix (low priority):
-    - "#header-title" overlaps with header links when on french
+    - french race tables rows are not confined to 1 line, so they look bad
     - Personnage (french) is too close to character in new-race tooltip
     - horizontal scroll bar appears when resizing smaller
 

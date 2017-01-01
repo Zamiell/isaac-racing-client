@@ -67,7 +67,7 @@ exports.show = function() {
     });
 
     // Fix the indentation on lines that were drawn when the element was hidden
-    chatIndent('lobby');
+    chat.indentAll('lobby');
 
     // Automatically scroll to the bottom of the chat box
     let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
@@ -106,7 +106,7 @@ exports.showFromRace = function() {
         });
 
         // Fix the indentation on lines that were drawn when the element was hidden
-        chatIndent('lobby');
+        chat.indentAll('lobby');
 
         // Automatically scroll to the bottom of the chat box
         let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
@@ -274,18 +274,6 @@ exports.raceUndraw = function(raceID) {
         }
     });
 };
-
-function chatIndent(room) {
-    if (typeof globals.roomList[room] === 'undefined') {
-        return;
-    }
-
-    for (let i = 1; i <= globals.roomList[room].chatLine; i++) {
-        let indentPixels = $('#' + room + '-chat-text-line-' + i + '-header').css('width');
-        $('#' + room + '-chat-text-line-' + i).css('padding-left', indentPixels);
-        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + indentPixels);
-    }
-}
 
 exports.usersDraw = function() {
     // Update the header that shows shows the amount of people online or in the race
