@@ -35,6 +35,10 @@ module.exports = {
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
     wordList: null, // Set in main.js
+	emoteList: null, // Set in main.js
+	tabCompleteCounter: 0,
+	tabCompleteIndex: 0,
+	tabCompleteWordList: null,
 };
 
 /*

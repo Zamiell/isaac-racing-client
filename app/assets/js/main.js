@@ -26,7 +26,7 @@
     - get sillypears to verify crash test after sentry line numbers fix
 
     Features to add:
-    - achivements
+    - achievements
     - discord integration
     - show running time on the lobby of a running race
     - automatically sort race table when people move places
@@ -158,6 +158,14 @@ let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
 fs.readFile(wordListLocation, function(err, data) {
     globals.wordList = data.toString().split('\n');
 });
+
+// Emote list
+globals.emoteList = misc.getAllFilesFromFolder(__dirname + '/assets/img/emotes');
+
+//Remove ".png" from each elemet of emoteList
+for (let i = 0; i < globals.emoteList.length; i++) {
+        globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long
+}
 
 // Preload some sounds by playing all of them
 function myOnLoadedData() {

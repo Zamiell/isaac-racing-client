@@ -25,6 +25,76 @@ $(document).keydown(function(event) {
             event.preventDefault();
             $('#title-register-button').click();
         }
+		
+	}else if (event.which === 9) { // "Tab"
+		if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
+			event.preventDefault();
+
+			//Get the current list of connected users
+			let userList = [];
+			for (let user in globals.roomList.lobby.users) {
+				if (globals.roomList.lobby.users.hasOwnProperty(user)) {
+					userList.push(user);
+				}
+			}
+		
+			let tabList = globals.emoteList.concat(userList);
+			tabList.sort();
+			
+			if (globals.tabCompleteCounter === 0){
+				let message = document.getElementById(globals.currentScreen + '-chat-box-input').value.trim();
+				globals.tabCompleteWordList = message.split(" ");
+				let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
+				for (let i = 0; i < tabList.length; i++){
+					let tabWord = tabList[i];
+					let temp = tabWord.slice(0, messageEnd.length).toLowerCase();
+					if (temp === messageEnd){
+						globals.tabCompleteIndex = i;
+						globals.tabCompleteCounter += 1;
+						let newMessage = '';
+						for(let x = 0; x < globals.tabCompleteWordList.length-1; x++){
+							newMessage += globals.tabCompleteWordList[x];
+							newMessage += ' ';
+						}
+						newMessage += tabWord;
+						document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
+						break;
+					}
+				}
+			}
+			
+			else{
+				let index = globals.tabCompleteCounter + globals.tabCompleteIndex;
+				let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length-1].toLowerCase();
+				if (globals.tabCompleteCounter >= tabList.length){
+					globals.tabCompleteCounter = 0;
+					document.getElementById(globals.currentScreen + '-chat-box-input').value = messageEnd;
+					index = globals.tabCompleteCounter + globals.tabCompleteIndex;
+				}
+				let tempSlice = tabList[index].slice(0, messageEnd.length).toLowerCase();
+				if (tempSlice === messageEnd){
+					globals.tabCompleteCounter += 1;
+					let newMessage = '';
+					for(let x = 0; x < globals.tabCompleteWordList.length-1; x++){
+						newMessage += globals.tabCompleteWordList[x];
+						newMessage += ' ';
+					}
+					newMessage += tabList[index];
+					document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
+				}
+				else{
+					globals.tabCompleteCounter = 0;
+					document.getElementById(globals.currentScreen + '-chat-box-input').value = messageEnd;
+				}
+			}
+		}
+	
+	} else if (event.which === 8 || event.which === 13 || event.which === 32) { // "Backspace" and "Enter"
+		if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
+			globals.tabCompleteCounter = 0;
+			globals.tabCompleteIndex = 0;
+			globals.tabCompleteWordList = null;
+		}
 
     } else if (event.which === 27) { // "Esc"
         if (globals.currentScreen === 'login') {
