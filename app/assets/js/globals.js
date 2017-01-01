@@ -17,6 +17,7 @@ module.exports = {
     conn: null,
     currentScreen: 'title', // We always start on the title screen
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
+    emoteList: null, // Set in main.js
     fadeTime: fadeTime,
     initiatedLogout: false,
     lastIPC: null,
@@ -32,13 +33,12 @@ module.exports = {
     raceList: {},
     secure: secure,
     spamTimer: new Date().getTime(),
+    tabCompleteCounter: 0,
+	tabCompleteIndex: 0,
+	tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
     wordList: null, // Set in main.js
-	emoteList: null, // Set in main.js
-	tabCompleteCounter: 0,
-	tabCompleteIndex: 0,
-	tabCompleteWordList: null,
 };
 
 /*

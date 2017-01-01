@@ -25,35 +25,35 @@ $(document).keydown(function(event) {
             event.preventDefault();
             $('#title-register-button').click();
         }
-		
-	}else if (event.which === 9) { // "Tab"
+
+	} else if (event.which === 9) { // "Tab"
 		if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
 			event.preventDefault();
 
-			//Get the current list of connected users
+			// Get the current list of connected users
 			let userList = [];
 			for (let user in globals.roomList.lobby.users) {
 				if (globals.roomList.lobby.users.hasOwnProperty(user)) {
 					userList.push(user);
 				}
 			}
-		
+
 			let tabList = globals.emoteList.concat(userList);
 			tabList.sort();
-			
+
 			if (globals.tabCompleteCounter === 0){
 				let message = document.getElementById(globals.currentScreen + '-chat-box-input').value.trim();
-				globals.tabCompleteWordList = message.split(" ");
+				globals.tabCompleteWordList = message.split(' ');
 				let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
-				for (let i = 0; i < tabList.length; i++){
+				for (let i = 0; i < tabList.length; i++) {
 					let tabWord = tabList[i];
 					let temp = tabWord.slice(0, messageEnd.length).toLowerCase();
-					if (temp === messageEnd){
+					if (temp === messageEnd) {
 						globals.tabCompleteIndex = i;
 						globals.tabCompleteCounter += 1;
 						let newMessage = '';
-						for(let x = 0; x < globals.tabCompleteWordList.length-1; x++){
-							newMessage += globals.tabCompleteWordList[x];
+						for(let j = 0; j < globals.tabCompleteWordList.length-1; j++) {
+							newMessage += globals.tabCompleteWordList[j];
 							newMessage += ' ';
 						}
 						newMessage += tabWord;
@@ -61,9 +61,7 @@ $(document).keydown(function(event) {
 						break;
 					}
 				}
-			}
-			
-			else{
+			} else {
 				let index = globals.tabCompleteCounter + globals.tabCompleteIndex;
 				let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length-1].toLowerCase();
 				if (globals.tabCompleteCounter >= tabList.length){
@@ -88,8 +86,8 @@ $(document).keydown(function(event) {
 				}
 			}
 		}
-	
-	} else if (event.which === 8 || event.which === 13 || event.which === 32) { // "Backspace" and "Enter"
+
+	} else if (event.which === 8 || event.which === 13 || event.which === 32) { // "Backspace", "Enter", and "Space"
 		if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
 			globals.tabCompleteCounter = 0;
 			globals.tabCompleteIndex = 0;
@@ -108,6 +106,8 @@ $(document).keydown(function(event) {
             $('#register-back-button').click();
         } else if (globals.currentScreen === 'lobby') {
             misc.closeAllTooltips();
+        } else if (globals.currentScreen === 'race') {
+            $('#header-lobby').click();
         }
 
     } else if (event.which === 38) { // Up arrow

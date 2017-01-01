@@ -219,11 +219,9 @@ exports.indentAll = function(room) {
 
     for (let i = 1; i <= globals.roomList[room].chatLine; i++) {
         // Indent the text to past where the username is (no longer used because it wastes too much space)
-
         let indentPixels = $('#' + room + '-chat-text-line-' + i + '-header').css('width');
         $('#' + room + '-chat-text-line-' + i).css('padding-left', indentPixels);
         $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + indentPixels);
-        
 
         // If this line overflows, indent it a little to signify that it is a continuation of the last line
         /*$('#' + room + '-chat-text-line-' + i).css('padding-left', chatIndentPixels);
@@ -232,7 +230,6 @@ exports.indentAll = function(room) {
 };
 
 function fillEmotes(message) {
-
     // Search through the text for each emote
     for (let i = 0; i < globals.emoteList.length; i++) {
         if (message.indexOf(globals.emoteList[i]) !== -1) {

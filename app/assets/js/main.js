@@ -9,6 +9,7 @@
     - Add [?? Joined] to race chat
     - log watcher 74 - Uncaught TypeError: Cannot read property 'racerList' of undefined
     - There are 0 people left in the race. - remove this line (only dont display it during start / resume?)
+    - test if internet drops during race, what happens? safe resume
 
     - move log out button to settings
     - double check correct window.change # for hide links
@@ -159,18 +160,14 @@ fs.readFile(wordListLocation, function(err, data) {
     globals.wordList = data.toString().split('\n');
 });
 
-// Emote list
-globals.emoteList = misc.getAllFilesFromFolder(__dirname + '/assets/img/emotes');
-
-//Remove ".png" from each elemet of emoteList
-for (let i = 0; i < globals.emoteList.length; i++) {
-        globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long
+// We need to have a list of all of the emotes for the purposes of tab completion
+let emotePath = path.join(__dirname + '/assets/img/emotes');
+globals.emoteList = misc.getAllFilesFromFolder(emotePath);
+for (let i = 0; i < globals.emoteList.length; i++) { // Remove ".png" from each elemet of emoteList
+    globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long
 }
 
 // Preload some sounds by playing all of them
-function myOnLoadedData() {
-    console.log("POOP");
-}
 $(document).ready(function() {
     let soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
     for (let file of soundFiles) {
