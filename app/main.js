@@ -85,13 +85,12 @@ function createWindow() {
         title:  'Racing+',
         frame:  false,
     });
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-    // Dev-only stuff
     if (isDev === true) {
         mainWindow.webContents.openDevTools();
     }
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+    // Remove the taskbar flash state (this isn't currently used)
     mainWindow.once('focus', function() {
         mainWindow.flashFrame(false);
     });
@@ -115,22 +114,18 @@ function autoUpdate() {
         });
 
         autoUpdater.on('checking-for-update', function() {
-            log.info('autoUpdater - checking-for-update');
             mainWindow.webContents.send('autoUpdater', 'checking-for-update');
         });
 
         autoUpdater.on('update-available', function() {
-            log.info('autoUpdater - update-available');
             mainWindow.webContents.send('autoUpdater', 'update-available');
         });
 
         autoUpdater.on('update-not-available', function() {
-            log.info('autoUpdater - update-not-available');
             mainWindow.webContents.send('autoUpdater', 'update-not-available');
         });
 
         autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
-            log.info('autoUpdater - update-downloaded');
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
@@ -144,7 +139,6 @@ function registerKeyboardHotkeys() {
     const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
         let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
         execFile(command);
-        log.info('Alt+1 is pressed.');
     });
     if (!hotkeyIsaacFocus) {
         log.warn('Alt+1 hotkey registration failed.');
@@ -152,7 +146,6 @@ function registerKeyboardHotkeys() {
 
     const hotkeyRacingPlusFocus = globalShortcut.register('Alt+2', function() {
         mainWindow.focus();
-        log.info('Alt+2 is pressed.');
     });
     if (!hotkeyRacingPlusFocus) {
         log.warn('Alt+2 hotkey registration failed.');
@@ -160,7 +153,6 @@ function registerKeyboardHotkeys() {
 
     const hotkeyReady = globalShortcut.register('Alt+R', function() {
         mainWindow.webContents.send('hotkey', 'ready');
-        log.info('Alt+R is pressed.');
     });
     if (!hotkeyReady) {
         log.warn('Alt+R hotkey registration failed.');
@@ -168,7 +160,6 @@ function registerKeyboardHotkeys() {
 
     const hotkeyQuit = globalShortcut.register('Alt+Q', function() {
         mainWindow.webContents.send('hotkey', 'quit');
-        log.info('Alt+Q is pressed.');
     });
     if (!hotkeyQuit) {
         log.warn('Alt+Q hotkey registration failed.');

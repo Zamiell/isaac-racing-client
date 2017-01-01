@@ -25,6 +25,7 @@
 
     body {
         line-height: 1;
+        -webkit-user-select: none; /* CHANGED from vanilla */
     }
 
     ol, ul {
@@ -3442,6 +3443,10 @@
         display: none;
     }
 
+    .selectable {
+        -webkit-user-select: auto;
+    }
+
     .padding0p5 {
         padding-bottom: 0.5em;
     }
@@ -3759,6 +3764,7 @@
         border: 1px;
         margin-bottom: 1em;
         padding: 0 0.5em 0 0.5em;
+        -webkit-user-select: auto;
     }
 
     /*
@@ -4221,14 +4227,7 @@
     }
 
     #race-chat-text {
-        overflow-y: auto;
-        overflow-wrap: break-word;
         height: 29em;
-        border-style: solid !important;
-        border-color: #e5e5e5 !important;
-        border: 1px;
-        margin-bottom: 1em;
-        padding: 0 0.5em 0 0.5em;
     }
 
     /*

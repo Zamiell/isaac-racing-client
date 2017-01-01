@@ -28,7 +28,7 @@ exports.start = function() {
     // Check to ensure that we have a valid log file path
     if (settings.get('logFilePath') === null) {
         globals.currentScreen = 'null';
-        misc.errorShow('', true); // Show the log file path modal
+        misc.errorShow('', false, true); // Show the log file path modal
         return -1;
     }
 
@@ -148,6 +148,6 @@ exports.start = function() {
         }
     });
     logWatcher.on('error', function(error) {
-        misc.errorShow('Something went wrong with the log monitoring program: "' + error);
+        misc.errorShow('Something went wrong with the log monitoring program: "' + error, false);
     });
 };

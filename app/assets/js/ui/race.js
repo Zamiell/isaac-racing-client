@@ -9,7 +9,6 @@ const execFile  = nodeRequire('child_process').execFile;
 const path      = nodeRequire('path');
 const clipboard = nodeRequire('electron').clipboard;
 const globals   = nodeRequire('./assets/js/globals');
-const settings  = nodeRequire('./assets/js/settings');
 const misc      = nodeRequire('./assets/js/misc');
 const chat      = nodeRequire('./assets/js/chat');
 
@@ -82,6 +81,9 @@ $(document).ready(function() {
     });
 
     $('#race-ready-checkbox').change(function() {
+        /*if (globals.raceList[6666].status === 'lol') {
+            // debug asdf
+        }*/
         if (globals.currentScreen !== 'race') {
             return;
         } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
@@ -456,15 +458,12 @@ const participantsSetStatus = function(i, initial = false) {
     }
 
     // If we finished, play the sound effect that matches our place
-    if (racer.name === globals.myUsername && racer.status === 'finished' && globals.playingSound === false) {
-        globals.playingSound = true;
-        setTimeout(function() {
-            globals.playingSound = false;
-        }, 1800);
+    // (don't play the "1st place" voice for 1 player races)
+    if (racer.name === globals.myUsername &&
+        racer.status === 'finished' &&
+        globals.raceList[globals.currentRaceID].racerList.length > 1) {
 
-        let audio = new Audio('assets/sounds/place/' + racer.place + '.mp3');
-        audio.volume = settings.get('volume');
-        audio.play();
+        misc.playSound('place/' + racer.place, 1800);
     }
 
     // If we quit or finished
@@ -476,14 +475,10 @@ const participantsSetStatus = function(i, initial = false) {
 
     // Play a sound effect if someone quit or finished
     if (initial === false) {
-        if (status === 'finished') {
-            let audio = new Audio('assets/sounds/finished.mp3');
-            audio.volume = settings.get('volume');
-            audio.play();
-        } else if (status === 'quit') {
-            let audio = new Audio('assets/sounds/quit.mp3');
-            audio.volume = settings.get('volume');
-            audio.play();
+        if (racer.status === 'finished') {
+            misc.playSound('finished');
+        } else if (racer.status === 'quit') {
+            misc.playSound('quit');
         }
     }
 
@@ -496,6 +491,7 @@ const participantsSetStatus = function(i, initial = false) {
         }
     }
     $('#race-num-left').html(numLeft + ' left');
+    globals.log.info('There are', numLeft, 'people left in race:', globals.currentRaceID);
 };
 exports.participantsSetStatus = participantsSetStatus;
 
@@ -608,7 +604,15 @@ exports.markOffline = function() {
     // TODO
 };
 
-exports.startCountdown = function() {
+const startCountdown = function() {
+    if (globals.currentScreen === 'transition') {
+        // Come back when the current transition finishes
+        setTimeout(function() {
+            startCountdown();
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        return;
+    }
+
     // Don't do anything if we are not on the race screen
     if (globals.currentScreen !== 'race') {
         return;
@@ -618,9 +622,7 @@ exports.startCountdown = function() {
     $('#header-lobby').addClass('disabled');
 
     // Play the "Let's Go" sound effect
-    let audio = new Audio('assets/sounds/lets-go.mp3');
-    audio.volume = settings.get('volume');
-    audio.play();
+    misc.playSound('lets-go');
 
     // Show the countdown
     $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
@@ -631,8 +633,17 @@ exports.startCountdown = function() {
         $('#race-countdown').fadeIn(globals.fadeTime);
     });
 };
+exports.startCountdown = startCountdown;
 
 const countdownTick = function(i) {
+    if (globals.currentScreen === 'transition') {
+        // Come back when the current transition finishes
+        setTimeout(function() {
+            countdownTick();
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        return;
+    }
+
     // Don't do anything if we are not on the race screen
     if (globals.currentScreen !== 'race') {
         return;
@@ -654,9 +665,7 @@ const countdownTick = function(i) {
 
                 // Play the sound effect associated with the final 3 seconds
                 if (i === 3 || i === 2 || i === 1) {
-                    let audio = new Audio('assets/sounds/' + i + '.mp3');
-                    audio.volume = settings.get('volume');
-                    audio.play();
+                    misc.playSound(i);
                 }
             }, globals.fadeTime / 2);
         });
@@ -668,7 +677,15 @@ const countdownTick = function(i) {
 };
 exports.countdownTick = countdownTick;
 
-exports.go = function(raceID) {
+const go = function(raceID) {
+    if (globals.currentScreen === 'transition') {
+        // Come back when the current transition finishes
+        setTimeout(function() {
+            go();
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        return;
+    }
+
     // Don't do anything if we are not on the race screen or we are in a different race
     if (globals.currentScreen !== 'race' || globals.currentRaceID !== raceID) {
         return;
@@ -682,9 +699,7 @@ exports.go = function(raceID) {
     execFile(command);*/
 
     // Play the "Go" sound effect
-    let audio = new Audio('assets/sounds/go.mp3');
-    audio.volume = settings.get('volume');
-    audio.play();
+    misc.playSound('go');
 
     // Wait 4 seconds, then start to change the controls
     setTimeout(start, 4000);
@@ -703,10 +718,12 @@ exports.go = function(raceID) {
         $('#race-participants-table-' + racerName + '-offset').html('-');
     }
 };
+exports.go = go;
 
 const start = function() {
-    // Don't do anything if we are not on the race screen or we are in a different race
-    if (globals.currentScreen !== 'race') {
+    // Don't do anything if we are not on the race screen
+    // (it is okay to proceed here if we are on the transition screen since we want the race controls to be drawn before it fades in)
+    if (globals.currentScreen !== 'race' && globals.currentScreen !== 'transition') {
         return;
     }
 
@@ -718,7 +735,8 @@ const start = function() {
 
     // Change the controls on the race screen
     $('#race-countdown').fadeOut(globals.fadeTime, function() {
-        // Find out if we have quit or finished this race already and count the number of people who are still in the race (which should be everyone, but just in case)
+        // Find out if we have quit or finished this race already and count the number of people who are still in the race
+        // (which should be everyone, but just in case)
         let alreadyFinished = false;
         let numLeft = 0;
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {

@@ -162,15 +162,7 @@ const draw = function(room, name, message, datetime = null) {
     chatLine += message;
     chatLine += '</div>';
 
-    // Find out if we should automatically scroll down after adding the new line of chat
-    let autoScroll = false;
-    let bottomPixel = $('#' + room + '-chat-text').prop('scrollHeight') - $('#' + room + '-chat-text').height();
-    if ($('#' + room + '-chat-text').scrollTop() === bottomPixel) {
-        // If we are already scrolled to the bottom, then it is ok to automatically scroll
-        autoScroll = true;
-    }
-
-    // Add the new line
+    // Find out whether this is going to "#race-chat-text" or "#lobby-chat-text"
     let destination;
     if (room === 'lobby') {
         destination = 'lobby';
@@ -179,6 +171,16 @@ const draw = function(room, name, message, datetime = null) {
     } else {
         misc.errorShow('Failed to parse the room in the "chat.draw" function.');
     }
+
+    // Find out if we should automatically scroll down after adding the new line of chat
+    let autoScroll = false;
+    let bottomPixel = $('#' + destination + '-chat-text').prop('scrollHeight') - $('#' + destination + '-chat-text').height();
+    if ($('#' + destination + '-chat-text').scrollTop() === bottomPixel) {
+        // If we are already scrolled to the bottom, then it is ok to automatically scroll
+        autoScroll = true;
+    }
+
+    // Add the new line
     if (datetime === null) {
         $('#' + destination + '-chat-text').append(chatLine);
     } else {
@@ -189,15 +191,15 @@ const draw = function(room, name, message, datetime = null) {
 
     // Set indentation for long lines
     if (room === 'lobby') {
-        let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
+        /*let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
         $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', indentPixels);
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + indentPixels);
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + indentPixels);*/
     }
 
     // Automatically scroll
     if (autoScroll) {
-        bottomPixel = $('#' + room + '-chat-text').prop('scrollHeight') - $('#' + room + '-chat-text').height();
-        $('#' + room + '-chat-text').scrollTop(bottomPixel);
+        bottomPixel = $('#' + destination + '-chat-text').prop('scrollHeight') - $('#' + destination + '-chat-text').height();
+        $('#' + destination + '-chat-text').scrollTop(bottomPixel);
     }
 };
 exports.draw = draw;

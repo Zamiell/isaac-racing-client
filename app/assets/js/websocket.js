@@ -391,6 +391,17 @@ exports.init = function(username, password, remember) {
         if (data.captain === globals.myUsername) {
             raceScreen.show(data.id);
         }
+
+        // Play the "race created" sound effect if applicable
+        let playSound = false;
+        if (globals.currentScreen === 'lobby') {
+            playSound = true;
+        } else if (globals.currentScreen === 'race' && globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+            playSound = true;
+        }
+        if (playSound) {
+            misc.playSound('race-created');
+        }
     }
 
     globals.conn.on('raceJoined', connRaceJoined);
@@ -405,6 +416,7 @@ exports.init = function(username, password, remember) {
 
         // Keep track of the people in each race
         globals.raceList[data.id].racers.push(data.name);
+        globals.log.info('Racer "' + data.name + '" joined race:', data.id);
 
         // Update the row for this race in the lobby
         lobbyScreen.raceUpdatePlayers(data.id);
@@ -441,12 +453,34 @@ exports.init = function(username, password, remember) {
             return;
         }
 
-        // Delete this person from the race list
+        // Find out if we are in this race
+        let inThisRace = false;
+        if (globals.raceList[data.id].racers.indexOf(globals.myUsername) !== -1) {
+            inThisRace = true;
+        }
+
+        // Delete this person from the "racers" array
         if (globals.raceList[data.id].racers.indexOf(data.name) !== -1) {
             globals.raceList[data.id].racers.splice(globals.raceList[data.id].racers.indexOf(data.name), 1);
         } else {
-            misc.errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the entrant list.');
+            misc.errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the "racers" array.');
             return;
+        }
+
+        // If we are in this race, we also need to delete this person them from the "racerList" array
+        if (inThisRace) {
+            let foundRacer = false;
+            for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
+                if (data.name === globals.raceList[globals.currentRaceID].racerList[i].name) {
+                    foundRacer = true;
+                    globals.raceList[data.id].racerList.splice(i, 1);
+                    break;
+                }
+            }
+            if (foundRacer === false) {
+                misc.errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the "racerList" array.');
+                return;
+            }
         }
 
         // Update the "Current races" area
@@ -471,7 +505,7 @@ exports.init = function(username, password, remember) {
             return;
         }
 
-        // If we are in this race
+        // If this is the current race
         if (data.id === globals.currentRaceID) {
             // Remove the row for this player
             $('#race-participants-table-' + data.name).remove();
@@ -523,16 +557,7 @@ exports.init = function(username, password, remember) {
                 });
 
                 // Play the "race completed!" sound effect
-                if (globals.playingSound === false) {
-                    globals.playingSound = true;
-                    setTimeout(function() {
-                        globals.playingSound = false;
-                    }, 1300);
-
-                    let audio = new Audio('assets/sounds/race-completed.mp3');
-                    audio.volume = settings.get('volume');
-                    audio.play();
-                }
+                misc.playSound('race-completed', 1300);
             } else {
                 misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
             }

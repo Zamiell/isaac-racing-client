@@ -19,11 +19,11 @@ exports.debug = function() {
     //globals.conn.send('debug');
 };
 
-const errorShow = function(message, alternateScreen = false) {
+const errorShow = function(message, sendToSentry = true, alternateScreen = false) {
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
-            errorShow(message, alternateScreen);
+            errorShow(message, sendToSentry, alternateScreen);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
     }
@@ -33,6 +33,15 @@ const errorShow = function(message, alternateScreen = false) {
         globals.log.error(message);
     } else {
         globals.log.error('Generic error.');
+    }
+
+    // Also send it to Sentry
+    if (sendToSentry) {
+        try {
+            throw new Error(message);
+        } catch (err) {
+            Raven.captureException(err);
+        }
     }
 
     // Don't do anything if we are already showing an error
@@ -98,6 +107,38 @@ const warningShow = function(message) {
     });
 };
 exports.warningShow = warningShow;
+
+exports.playSound = function(path, exclusive = false) {
+    // First check to see if sound is disabled
+    let volume = settings.get('volume');
+    if (volume === 0) {
+        return;
+    }
+
+    if (exclusive !== false) {
+        // For some sound effects, we only want one of them playing at once to prevent confusion
+        if (globals.playingSound === true) {
+            return; // Do nothing if we are already playing a sound
+        }
+
+        globals.playingSound = true;
+        setTimeout(function() {
+            globals.playingSound = false;
+        }, exclusive); // The 2nd argument to the function should be the length of the sound effect in milliseconds
+    }
+
+    // Sometimes this can give "net::ERR_REQUEST_RANGE_NOT_SATISFIABLE" for some reason
+    // (might be related to having multiple Electron apps trying to play the same sound at the same time)
+    let fullPath = 'assets/sounds/' + path + '.mp3';
+    try {
+        let audio = new Audio(fullPath);
+        audio.volume = volume;
+        audio.play();
+        globals.log.info('Played "' + fullPath + '".');
+    } catch(err) {
+        globals.log.info('Failed to play "' + fullPath + '":', err);
+    }
+};
 
 exports.findAjaxError = function(jqXHR) {
     // Find out what error it was

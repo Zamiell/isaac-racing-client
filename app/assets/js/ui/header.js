@@ -57,6 +57,18 @@ $(document).ready(function() {
     $('#header-lobby').click(function() {
         if (globals.currentScreen !== 'race') {
             return;
+        } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === true) {
+            if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+                return; // The race is still in progress, so we can't return from the race yet
+            }
+        }
+
+        // Don't allow people to spam this
+        let now = new Date().getTime();
+        if (now - globals.spamTimer < 1000) {
+            return;
+        } else {
+            globals.spamTimer = now;
         }
 
         // Check to see if we should leave the race

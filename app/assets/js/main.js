@@ -5,24 +5,46 @@
 */
 
 /*
-    TODO
+    Bugs to fix:
+    - french race tables are messed up
 
+    - demote error to warning (what OJ got in sentry)
+
+    - clicking profile doesn't work
+    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
+
+    - get sentry working with line numbers - https://forum.sentry.io/t/sentry-js-submitting-incomplete-stack-trace/703
+
+    - horizontal scroll bar appears when resizing smaller
+
+
+
+    Things to verify:
+    - fix dan sound effects out of order (~)
+    - fix lobster sound effects out of order (~)
+    - fix sillypears crash
+
+
+
+    Features to add:
+    - achivements
+    - discord integration
+    - show running time on the lobby of a running race
+    - automatically sort race table when people move places
     - turn different color in lobby when in a race
-    - sound effects for win and loss aren't working
-    - racing chat does not scroll properly
-    - make diversity mod seed uppercase
     - message of the day
     - add stream to chat map
     - update columns for race:
-        - place
-        - seed
-        - starting item
         - time offset
-        - fill in items
-    - "/msg invadertim" shouldn't work
-    - should not error if trying to msg someone who isn't online
+        - fill in items (should also show seed on this screen)
+    - "/msg invadertim" shouldn't send to server if he is offline
+    - "/msg invadertim" should be made to be the right case (on the server)
     - tab complete for chat
     - /r should work
+    - volume slider update number better
+    - wait until raceList before going to lobby so that we can go directly to current race
+    - implement <3 emote (can't have < or > in filenames so it requires custom code)
+    - add items + date to "Top 10 Unseeded Times" leaderboard
 */
 
 'use strict';
@@ -92,7 +114,8 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be@sentry.io/124813', {
     release: version,
     environment: (isDev ? 'development' : 'production'),
     dataCallback: function(data) {
-        misc.errorShow('A unexpected JavaScript error occured. Here\'s what happened:<br /><br />' + JSON.stringify(data.exception.values));
+        // Disable this for now since Sentry doesn't show us the line numbers, which is probably a bug with the SDK
+        //misc.errorShow('A unexpected JavaScript error occured. Here\'s what happened:<br /><br />' + JSON.stringify(data.exception.values), false);
     },
 }).install();
 
@@ -124,4 +147,22 @@ $(document).ready(function() {
 let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
 fs.readFile(wordListLocation, function(err, data) {
     globals.wordList = data.toString().split('\n');
+});
+
+// Preload some sounds by playing all of them
+function myOnLoadedData() {
+    console.log("POOP");
+}
+$(document).ready(function() {
+    let soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
+    for (let file of soundFiles) {
+        let audio = new Audio('assets/sounds/' + file + '.mp3');
+        audio.volume = 0;
+        audio.play();
+    }
+    for (let i = 1; i <= 16; i++) {
+        let audio = new Audio('assets/sounds/place/' + i + '.mp3');
+        audio.volume = 0;
+        audio.play();
+    }
 });
