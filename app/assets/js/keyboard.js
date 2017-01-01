@@ -82,7 +82,13 @@ $(document).keydown(function(event) {
 				}
 				else{
 					globals.tabCompleteCounter = 0;
-					document.getElementById(globals.currentScreen + '-chat-box-input').value = messageEnd;
+          let newMessage = '';
+          for (let i = 0; i < globals.tabCompleteWordList.length-1; i++) {
+            newMessage += globals.tabCompleteWordList[i];
+            newMessage += ' ';
+          }
+          newMessage += messageEnd;
+          document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
 				}
 			}
 		}
