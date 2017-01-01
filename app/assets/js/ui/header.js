@@ -14,6 +14,10 @@ const misc            = nodeRequire('./assets/js/misc');
 const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
 const settingsTooltip = nodeRequire('./assets/js/ui/settings-tooltip');
 
+/*
+    Header event handlers
+*/
+
 $(document).ready(function() {
     /*
         Window control buttons
@@ -378,22 +382,24 @@ $(document).ready(function() {
     });
 
     // Automatically hide the lobby links if the window is resized too far horizontally
-    $(window).resize(windowResize);
-    function windowResize() {
-        if ($(window).width() < 1048) {
-            $('#header-profile').fadeOut(0);
-            $('#header-leaderboards').fadeOut(0);
-            $('#header-help').fadeOut(0);
-        } else {
-            if (globals.currentScreen === 'transition') {
-                setTimeout(function() {
-                    windowResize();
-                }, globals.fadeTime + 5); // 5 milliseconds of leeway
-            } else if (globals.currentScreen === 'lobby' || globals.currentScreen === 'race') {
-                $('#header-profile').fadeIn(0);
-                $('#header-leaderboards').fadeIn(0);
-                $('#header-help').fadeIn(0);
-            }
+    $(window).resize(checkHideLinks);
+});
+
+/*
+    Header functions
+*/
+
+const checkHideLinks = function() {
+    if ($(window).width() < 1048) {
+        $('#header-profile').fadeOut(0);
+        $('#header-leaderboards').fadeOut(0);
+        $('#header-help').fadeOut(0);
+    } else {
+        if (globals.currentScreen === 'lobby' || globals.currentScreen === 'race') {
+            $('#header-profile').fadeIn(0);
+            $('#header-leaderboards').fadeIn(0);
+            $('#header-help').fadeIn(0);
         }
     }
-});
+};
+exports.checkHideLinks = checkHideLinks;

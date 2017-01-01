@@ -10,6 +10,7 @@ const globals    = nodeRequire('./assets/js/globals');
 const misc       = nodeRequire('./assets/js/misc');
 const chat       = nodeRequire('./assets/js/chat');
 const logWatcher = nodeRequire('./assets/js/log-watcher');
+const header     = nodeRequire('./assets/js/ui/header');
 
 /*
     Event handlers
@@ -95,6 +96,7 @@ exports.showFromRace = function() {
         $('#header-help').fadeIn(globals.fadeTime);
         $('#header-new-race').fadeIn(globals.fadeTime);
         $('#header-settings').fadeIn(globals.fadeTime);
+        header.checkHideLinks(); // We just faded in the links, but they might be hidden on small windows
     });
 
     // Show the lobby

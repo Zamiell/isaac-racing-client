@@ -121,6 +121,7 @@ function autoUpdate() {
 
         autoUpdater.on('error', function(err) {
             log.error(err.message);
+            Raven.captureException(err);
             mainWindow.webContents.send('autoUpdater', 'error');
         });
 
