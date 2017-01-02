@@ -2,6 +2,10 @@
     Settings
 */
 
+// This is for settings related to the program, stored in a file "settings.json".
+// For the "Settings" part of the UI, see the "ui/settings-tooltip.js" file.
+// "teeny-conf" is used instead of localstorage (cookies) because the main Electron process is not able to natively access cookies, and we might want to do that.
+
 'use strict';
 
 // Imports

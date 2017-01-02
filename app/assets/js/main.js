@@ -7,9 +7,6 @@
 /*
     Bugs to fix:
     - Add [?? Joined] to race chat
-    - log watcher 74 - Uncaught TypeError: Cannot read property 'racerList' of undefined
-    - There are 0 people left in the race. - remove this line (only dont display it during start / resume?)
-    - test if internet drops during race, what happens? safe resume
 
     - move log out button to settings
     - double check correct window.change # for hide links
@@ -27,6 +24,7 @@
     - get sillypears to verify crash test after sentry line numbers fix
 
     Features to add:
+    - test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
     - achievements
     - discord integration
     - show running time on the lobby of a running race
@@ -43,6 +41,7 @@
     - /r should work
     - volume slider update number better
     - wait until raceList before going to lobby so that we can go directly to current race
+    - ask cmondinger if it still gets detected as a virus after log reading is removed
 
 
 

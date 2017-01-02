@@ -23,6 +23,9 @@
 // (ncu needs to be done in both the root and the app subdirectory)
 // ncu -a && rm -rf node_modules && cd app && ncu -a && rm -rf node_modules && cd .. && npm install --python="C:\Python27\python.exe"
 
+// Count lines of code:
+// cloc . --exclude-dir .git,dist,node_modules,css,fonts,words
+
 'use strict';
 
 // Imports

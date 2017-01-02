@@ -81,9 +81,6 @@ $(document).ready(function() {
     });
 
     $('#race-ready-checkbox').change(function() {
-        /*if (globals.raceList[6666].status === 'lol') {
-            // debug asdf
-        }*/
         if (globals.currentScreen !== 'race') {
             return;
         } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
@@ -491,7 +488,11 @@ const participantsSetStatus = function(i, initial = false) {
         }
     }
     $('#race-num-left').html(numLeft + ' left');
-    globals.log.info('There are', numLeft, 'people left in race:', globals.currentRaceID);
+    if (racer.status === 'finished' || racer.status === 'quit' || racer.status === 'disqualified') {
+        if (initial === false) {
+            globals.log.info('There are', numLeft, 'people left in race:', globals.currentRaceID);
+        }
+    }
 };
 exports.participantsSetStatus = participantsSetStatus;
 

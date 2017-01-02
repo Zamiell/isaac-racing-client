@@ -238,6 +238,9 @@ exports.tooltipFunctionBefore = function() {
 
 // The "functionReady" function for Tooltipster
 exports.tooltipFunctionReady = function() {
+    // Tooltips within tooltips seem to be buggy and can sometimes be uninitialized
+    // So, check for this every time the tooltip is opened and reinitialize them if necessary
+
     if ($('#settings-log-file-location').hasClass('tooltipstered') === false) {
         $('#settings-log-file-location').tooltipster({
             theme: 'tooltipster-shadow',

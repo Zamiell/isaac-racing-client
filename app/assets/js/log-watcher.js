@@ -70,6 +70,11 @@ exports.start = function() {
             return;
         }
 
+        // Don't do anything if the race is over
+        if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+            return;
+        }
+
         // Don't do anything if we have not started yet or we have quit
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
             if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername) {
