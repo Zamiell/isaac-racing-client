@@ -50,11 +50,11 @@ $(document).keydown(function(event) {
                 // This is the first time we are pressing tab
                 let message = $('#' + globals.currentScreen + '-chat-box-input').val().trim();
                 globals.tabCompleteWordList = message.split(' ');
-                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
+                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1]
                 for (let i = 0; i < tabList.length; i++) {
                     let tabWord = tabList[i];
                     let temp = tabWord.slice(0, messageEnd.length).toLowerCase();
-                    if (temp === messageEnd) {
+                    if (temp === messageEnd.toLowerCase()) {
                         globals.tabCompleteIndex = i;
                         globals.tabCompleteCounter += 1;
                         let newMessage = '';
@@ -70,14 +70,14 @@ $(document).keydown(function(event) {
             } else {
                 // We have already pressed tab once and we need to cycle through the rest of the autocompletion words
                 let index = globals.tabCompleteCounter + globals.tabCompleteIndex;
-                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
+                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1]
                 if (globals.tabCompleteCounter >= tabList.length) {
                     globals.tabCompleteCounter = 0;
                     $('#' + globals.currentScreen + '-chat-box-input').val(messageEnd);
                     index = globals.tabCompleteCounter + globals.tabCompleteIndex;
                 }
                 let tempSlice = tabList[index].slice(0, messageEnd.length).toLowerCase();
-                if (tempSlice === messageEnd) {
+                if (tempSlice === messageEnd.toLowerCase()) {
                     globals.tabCompleteCounter += 1;
                     let newMessage = '';
                     for (let i = 0; i < globals.tabCompleteWordList.length - 1; i++) {
