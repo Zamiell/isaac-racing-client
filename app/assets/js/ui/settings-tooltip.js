@@ -74,14 +74,14 @@ $(document).ready(function() {
         audio.play();
     });
 
-    $('#settings-stream').keyup(function() {
+    $('#settings-stream-url').keyup(function() {
         // If they have specified a Twitch stream:
         // - Reveal the "Enable Twitch chat bot" and uncheck it
         // - Hide the "Delay (in seconds)"
-        if ($('#settings-stream').val().includes('twitch.tv/')) {
+        if ($('#settings-stream-url').val().includes('twitch.tv/')) {
             $('#settings-enable-twitch-bot-checkbox-container').fadeIn(globals.fadeTime);
             $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
-            $('#settings-stream').focus(); // Needed because the redraw causes the input box to lose focus
+            $('#settings-stream-url').focus(); // Needed because the redraw causes the input box to lose focus
         } else {
             $('#settings-enable-twitch-bot-checkbox-container').fadeOut(globals.fadeTime);
             $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
@@ -154,28 +154,28 @@ $(document).ready(function() {
         }
 
         // Stream URL
-        let newStream = $('#settings-stream').val();
-        if (newStream.startsWith('twitch.tv/')) {
-            newStream = 'https://www.' + newStream;
-        } else if (newStream.startsWith('www.twitch.tv/')) {
-            newStream = 'https://' + newStream;
-        } else if (newStream.startsWith('http://')) {
-            newStream = newStream.replace('http://', 'https://');
+        let newStreamURL = $('#settings-stream-url').val();
+        if (newStreamURL.startsWith('twitch.tv/')) {
+            newStreamURL = 'https://www.' + newStreamURL;
+        } else if (newStreamURL.startsWith('www.twitch.tv/')) {
+            newStreamURL = 'https://' + newStreamURL;
+        } else if (newStreamURL.startsWith('http://')) {
+            newStreamURL = newStreamURL.replace('http://', 'https://');
         }
-        $('#settings-stream').val(newStream);
-        if (newStream !== globals.myStream) {
+        $('#settings-stream-url').val(newStreamURL);
+        if (newStreamURL !== globals.myStreamURL) {
             // We set a new stream
-            if (newStream.startsWith('https://www.twitch.tv/') === false && newStream !== '') {
+            if (newStreamURL.startsWith('https://www.twitch.tv/') === false && newStreamURL !== '') {
                 // We tried to enter a non-valid stream URL
-                $('#settings-stream').tooltipster('open');
+                $('#settings-stream-url').tooltipster('open');
                 return;
             } else {
-                $('#settings-stream').tooltipster('close');
-                if (newStream === '') {
-                    newStream = '-'; // Streams cannot be blank on the server-side
+                $('#settings-stream-url').tooltipster('close');
+                if (newStreamURL === '') {
+                    newStreamURL = '-'; // Streams cannot be blank on the server-side
                 }
-                globals.conn.send('profileSetStream', {
-                    name: newStream,
+                globals.conn.send('profileSetStreamURL', {
+                    name: newStreamURL,
                 });
             }
         }
@@ -265,7 +265,7 @@ exports.tooltipFunctionReady = function() {
     $('#settings-username-capitalization').val(globals.myUsername);
 
     // Change stream URL
-    $('#settings-stream').val(globals.myStream);
+    $('#settings-stream-url').val(globals.myStreamURL);
 
     // Hide all of the optional settings by default
     $('#settings-enable-twitch-bot-checkbox-container').fadeOut(0);
@@ -277,7 +277,7 @@ exports.tooltipFunctionReady = function() {
     $('#settings-twitch-bot-delay').val(globals.myTwitchBotDelay);
 
     // Show the checkbox they have a Twitch stream set
-    if (globals.myStream.includes('twitch.tv')) {
+    if (globals.myStreamURL.includes('twitch.tv')) {
         $('#settings-enable-twitch-bot-checkbox-container').fadeIn(0);
 
         // Enable Twitch chat bot
@@ -309,8 +309,8 @@ exports.tooltipFunctionReady = function() {
         });
     }
 
-    if ($('#settings-stream').hasClass('tooltipstered') === false) {
-        $('#settings-stream').tooltipster({
+    if ($('#settings-stream-url').hasClass('tooltipstered') === false) {
+        $('#settings-stream-url').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 0,
             trigger: 'custom',

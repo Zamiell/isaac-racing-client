@@ -227,6 +227,20 @@ exports.raceUpdatePlayers = raceUpdatePlayers;
 
 // Make tooltips for long names if necessary
 function raceDrawCheckForOverflow(raceID, target) {
+    // Check to make sure that the race hasn't ended in the meantime
+    if (typeof $('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth === 'undefined') {
+        let errorMessage = 'The "raceDrawCheckForOverflow" function was called for a race that does not exist anymore.';
+        globals.log.info(errorMessage);
+
+        try {
+            throw new Error(errorMessage);
+        } catch (err) {
+            Raven.captureException(err);
+        }
+
+        return;
+    }
+
     // Race name column
     let shortened = false;
     while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {

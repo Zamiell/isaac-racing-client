@@ -6,7 +6,16 @@
 
 /*
     Bugs to fix:
+    - SOUND TRY TURNING VOLUME NOT TO 0 AT START
+    - pms are broken
+    - finish coding twitch bot reconnect /mods thing
+    - tab complete doesn't find zamiel2?
+
+    - cyber confused by twitch bot, make it greyed out
+    - add check to see if anyone has already set that twitch stream
+
     - Add [?? Joined] to race chat
+    - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
 
     - error while recieving PM during tab transition
 

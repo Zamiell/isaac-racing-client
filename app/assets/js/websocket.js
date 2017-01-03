@@ -170,11 +170,11 @@ exports.init = function(username, password, remember) {
             username: data.username,
         });
 
-        // Stream
-        if (data.stream === '-') {
-            data.stream = '';
+        // Stream URL
+        if (data.streamURL === '-') {
+            data.streamURL = '';
         }
-        globals.myStream = data.stream;
+        globals.myStreamURL = data.streamURL;
 
         // TwitchBotEnabled
         globals.myTwitchBotEnabled = data.twitchBotEnabled;

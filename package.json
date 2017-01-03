@@ -1,6 +1,6 @@
 {
   "name": "RacingPlus",
-  "description": "A racing mod for The Binding of Isaac: Afterbirth+.",
+  "description": "A racing mod for The Binding of Isaac: Afterbirth+",
   "scripts": {
     "start": "electron ./app",
     "postinstall": "install-app-deps",

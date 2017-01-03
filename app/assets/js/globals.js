@@ -25,7 +25,7 @@ module.exports = {
     lang: null, // The language switcher instance
     logMonitoringProgram: null,
     myUsername: null,
-    myStream: null,
+    myStreamURL: null,
     myTwitchBotEnabled: null,
     myTwitchBotDelay: null,
     playingSound: false,
