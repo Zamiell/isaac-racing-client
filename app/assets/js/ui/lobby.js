@@ -58,7 +58,6 @@ exports.show = function() {
     // Show the buttons in the header
     $('#header-new-race').fadeIn(globals.fadeTime);
     $('#header-settings').fadeIn(globals.fadeTime);
-    $('#header-log-out').fadeIn(globals.fadeTime);
 
     // Show the lobby
     $('#page-wrapper').removeClass('vertical-center');

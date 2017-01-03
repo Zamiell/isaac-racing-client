@@ -27,6 +27,10 @@ $(document).keydown(function(event) {
         }
 
     } else if (event.which === 9) { // "Tab"
+        if (globals.currentScreen !== 'lobby' && globals.currentScreen !== 'race') {
+            return;
+        }
+
         if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
             event.preventDefault();
 
@@ -38,11 +42,13 @@ $(document).keydown(function(event) {
                 }
             }
 
+            // We want to be able to tab complete both users and emotes
             let tabList = globals.emoteList.concat(userList);
             tabList.sort();
 
-            if (globals.tabCompleteCounter === 0){
-                let message = document.getElementById(globals.currentScreen + '-chat-box-input').value.trim();
+            if (globals.tabCompleteCounter === 0) {
+                // This is the first time we are pressing tab
+                let message = $('#' + globals.currentScreen + '-chat-box-input').val().trim();
                 globals.tabCompleteWordList = message.split(' ');
                 let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
                 for (let i = 0; i < tabList.length; i++) {
@@ -52,47 +58,52 @@ $(document).keydown(function(event) {
                         globals.tabCompleteIndex = i;
                         globals.tabCompleteCounter += 1;
                         let newMessage = '';
-                        for(let j = 0; j < globals.tabCompleteWordList.length-1; j++) {
+                        for (let j = 0; j < globals.tabCompleteWordList.length - 1; j++) {
                             newMessage += globals.tabCompleteWordList[j];
                             newMessage += ' ';
                         }
                         newMessage += tabWord;
-                        document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
+                        $('#' + globals.currentScreen + '-chat-box-input').val(newMessage);
                         break;
                     }
                 }
             } else {
+                // We have already pressed tab once and we need to cycle through the rest of the autocompletion words
                 let index = globals.tabCompleteCounter + globals.tabCompleteIndex;
-                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length-1].toLowerCase();
-                if (globals.tabCompleteCounter >= tabList.length){
+                let messageEnd = globals.tabCompleteWordList[globals.tabCompleteWordList.length - 1].toLowerCase();
+                if (globals.tabCompleteCounter >= tabList.length) {
                     globals.tabCompleteCounter = 0;
-                    document.getElementById(globals.currentScreen + '-chat-box-input').value = messageEnd;
+                    $('#' + globals.currentScreen + '-chat-box-input').val(messageEnd);
                     index = globals.tabCompleteCounter + globals.tabCompleteIndex;
                 }
                 let tempSlice = tabList[index].slice(0, messageEnd.length).toLowerCase();
                 if (tempSlice === messageEnd) {
                     globals.tabCompleteCounter += 1;
                     let newMessage = '';
-                    for(let x = 0; x < globals.tabCompleteWordList.length-1; x++){
-                        newMessage += globals.tabCompleteWordList[x];
+                    for (let i = 0; i < globals.tabCompleteWordList.length - 1; i++) {
+                        newMessage += globals.tabCompleteWordList[i];
                         newMessage += ' ';
                     }
                     newMessage += tabList[index];
-                    document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
+                    $('#' + globals.currentScreen + '-chat-box-input').val(newMessage);
                 } else {
                     globals.tabCompleteCounter = 0;
                     let newMessage = '';
-                    for (let i = 0; i < globals.tabCompleteWordList.length-1; i++) {
+                    for (let i = 0; i < globals.tabCompleteWordList.length - 1; i++) {
                         newMessage += globals.tabCompleteWordList[i];
                         newMessage += ' ';
                     }
                     newMessage += messageEnd;
-                    document.getElementById(globals.currentScreen + '-chat-box-input').value = newMessage;
+                    $('#' + globals.currentScreen + '-chat-box-input').val(newMessage);
                 }
             }
         }
 
     } else if (event.which === 8 || event.which === 13 || event.which === 32) { // "Backspace", "Enter", and "Space"
+        if (globals.currentScreen !== 'lobby' && globals.currentScreen !== 'race') {
+            return;
+        }
+
         if ($('#' + globals.currentScreen + '-chat-box-input').is(':focus')) {
             globals.tabCompleteCounter = 0;
             globals.tabCompleteIndex = 0;

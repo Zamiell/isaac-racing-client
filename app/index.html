@@ -110,13 +110,6 @@
                                 <span lang="en">Settings</span>
                             </a>
                         </li>
-                        <li>
-                            <!-- Have to use "display: none;" here instead of the "hidden" class -->
-                            <a id="header-log-out" class="button no-drag" style="display: none;">
-                                <i class="fa fa-sign-out header-button-icons" aria-hidden="true"></i>
-                                <span lang="en">Log Out</span>
-                            </a>
-                        </li>
                         <li><a></a></li> <!-- Just for spacing -->
                         <li>
                             <a id="header-minimize" class="no-drag header-window-buttons">
@@ -181,10 +174,13 @@
                             <li id="title-language-english" class="selected-language">English</li>
                             <li>|</li>
                             <li id="title-language-french" class="unselected-language"><a>Français</a></li>
+                            <!-- Unhide when the translation is complete -->
+                            <!--
                             <li>|</li>
                             <li id="title-language-spanish" class="unselected-language"><a>Español</a></li>
                             <li>|</li>
                             <li id="title-language-russian" class="unselected-language"><a>Русский</a></li>
+                            -->
                         </ul>
 
                         <h6 id="title-version"></h6>
@@ -798,6 +794,21 @@
             <div id="settings-tooltip">
                 <form id="settings-form">
                     <div class="row uniform 50%">
+                        <div class="10u">
+                            <ul class="actions">
+                                <li><span lang="en">Logged in as</span>:</li>
+                                <li id="settings-username"></li>
+                            </ul>
+                        </div>
+                        <div class="2u">
+                            <button id="settings-log-out" class="button alt small" type="button">
+                                <i class="fa fa-sign-out header-button-icons" aria-hidden="true"></i>
+                                <span lang="en">Log Out</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
                                 <li><span lang="en">Client version</span>:</li>
@@ -829,8 +840,8 @@
                                         <select id="settings-language">
                                             <option value="en">English</option>
                                             <option value="fr">Français</option>
-                                            <option value="es">Español</option>
-                                            <option value="ru">Русский</option>
+                                            <option value="es" class="hidden">Español</option><!-- Unhide when the translation is complete -->
+                                            <option value="ru" class="hidden">Русский</option><!-- Unhide when the translation is complete -->
                                         </select>
                                     </div>
                                 </li>
@@ -908,9 +919,10 @@
             <div id="settings-username-capitalization-error" lang="en">You can only change the capitalization, not your actual username.</div>
             <div id="settings-stream-error" lang="en">Your stream URL must begin with "https://www.twitch.tv/".</div>
             <div id="settings-enable-twitch-bot-checkbox-tooltip">
-                <span lang="en">Make the bot a moderator in your Twitch channel BEFORE you enable this by typing</span>
+                <span lang="en">Make the bot a moderator in your Twitch channel by typing</span>
                 <code class="selectable">/mod IsaacRacingPlus</code>
-                <span lang="en">in your Twitch chat.</span>
+                <span lang="en">in your Twitch chat.</span><br />
+                (<span lang="en">It won't work unelss it is a moderator.</span>)
             </div>
             <div id="settings-twitch-bot-delay-error" lang="en">The stream delay must be between 0 and 60.</div>
 

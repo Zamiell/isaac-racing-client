@@ -8,17 +8,21 @@
     Bugs to fix:
     - Add [?? Joined] to race chat
 
-    - move log out button to settings
-    - double check correct window.change # for hide links
+    - error while recieving PM during tab transition
+
+    - make spacing slightly smaller for Type and Format on lobby
+    - integrate golem into main.js as an include
+
+    - /shame - Shame on those who haven't readied up.
 
     - look at sed screenshot, racer is cut off at the top
-
-    - look at indentation, its too much
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
 
     - get sentry working with line numbers - https://forum.sentry.io/t/sentry-js-submitting-incomplete-stack-trace/703
+
+
 
     Things to verify:
     - get sillypears to verify crash test after sentry line numbers fix

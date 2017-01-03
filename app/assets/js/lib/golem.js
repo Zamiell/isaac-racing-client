@@ -126,7 +126,5 @@
             Connection: Connection
         };
 
-    } else {
-        log.warn('golem: WebSockets not supported!');
     }
 })(this);

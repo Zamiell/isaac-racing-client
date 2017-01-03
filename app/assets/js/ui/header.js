@@ -7,9 +7,7 @@
 // Imports
 const ipcRenderer     = nodeRequire('electron').ipcRenderer;
 const shell           = nodeRequire('electron').shell;
-const keytar          = nodeRequire('keytar');
 const globals         = nodeRequire('./assets/js/globals');
-const settings        = nodeRequire('./assets/js/settings');
 const misc            = nodeRequire('./assets/js/misc');
 const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
 const settingsTooltip = nodeRequire('./assets/js/ui/settings-tooltip');
@@ -149,23 +147,6 @@ $(document).ready(function() {
         if ($('#header-new-race').tooltipster('status').open === false) {
             $('#gui').fadeTo(globals.fadeTime, 1);
         }
-    });
-
-    $('#header-log-out').click(function() {
-        // Delete their cached credentials, if any
-        let storedUsername = settings.get('username');
-        if (typeof storedUsername !== 'undefined') {
-            let storedPassword = keytar.getPassword('Racing+', storedUsername);
-            if (storedPassword !== null) {
-                keytar.deletePassword('Racing+', storedUsername);
-            }
-            settings.set('username', undefined);
-            settings.saveSync();
-        }
-
-        // Terminate the WebSocket connection (which will trigger the transition back to the title screen)
-        globals.initiatedLogout = true;
-        globals.conn.close();
     });
 
     /*
@@ -390,7 +371,7 @@ $(document).ready(function() {
 */
 
 const checkHideLinks = function() {
-    if ($(window).width() < 1048) {
+    if ($(window).width() < 980) {
         $('#header-profile').fadeOut(0);
         $('#header-leaderboards').fadeOut(0);
         $('#header-help').fadeOut(0);

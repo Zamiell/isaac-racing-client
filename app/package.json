@@ -2,7 +2,7 @@
   "name": "RacingPlus",
   "productName": "Racing+",
   "main": "./main.js",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "A racing mod for The Binding of Isaac: Afterbirth+.",
   "author": "Racing+",
   "license": "GPL-3.0",

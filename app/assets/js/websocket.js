@@ -99,6 +99,9 @@ exports.init = function(username, password, remember) {
         globals.myUsername = '';
         globals.initiatedLogout = false;
 
+        // Close all tooltips
+        misc.closeAllTooltips();
+
         // Hide the links in the header
         $('#header-profile').fadeOut(globals.fadeTime);
         $('#header-leaderboards').fadeOut(globals.fadeTime);
@@ -108,7 +111,6 @@ exports.init = function(username, password, remember) {
         $('#header-lobby').fadeOut(globals.fadeTime);
         $('#header-new-race').fadeOut(globals.fadeTime);
         $('#header-settings').fadeOut(globals.fadeTime);
-        $('#header-log-out').fadeOut(globals.fadeTime);
 
         // Transition to the title screen, depending on what screen we are currently on
         if (globals.currentScreen === 'lobby') {

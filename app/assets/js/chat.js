@@ -11,7 +11,7 @@ const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
 
 // Constants
-const chatIndentPixels = 50;
+const chatIndentSize = '3.2em';
 
 exports.send = function(destination) {
     // Don't do anything if we are not on the screen corresponding to the chat input form
@@ -29,13 +29,55 @@ exports.send = function(destination) {
         return;
     }
 
-    // Truncate messages longer than 150 characters (this is also enforced server-side)
-    if (message.length > 150) {
-        message = message.substring(0, 150);
+    // If this is a command
+    let isCommand = false;
+    let isPM = false;
+    let PMrecipient;
+    let PMmessage;
+    if (message.startsWith('/')) {
+        isCommand = true;
+
+        // Find out if the user is sending a private message
+        // /p, /pm, /msg, /m, /whisper, /w, /tell, /t
+        if (message.match(/^\/p\b/) ||
+            message.match(/^\/pm\b/) ||
+            message.match(/^\/msg\b/) ||
+            message.match(/^\/m\b/) ||
+            message.match(/^\/whisper\b/) ||
+            message.match(/^\/w\b/) ||
+            message.match(/^\/tell\b/) ||
+            message.match(/^\/t\b/)) {
+
+            isPM = true;
+
+            // Validate that private messages have a recipient
+            let m = message.match(/^\/\w+ (.+?) (.+)/);
+            if (m) {
+                PMrecipient = m[1];
+                PMmessage = m[2];
+            } else {
+                // Open the error tooltip
+                // TODO
+                // <span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>
+                return;
+            }
+
+            // Validate that the receipient is online
+            // TODO
+            /*if () {
+                // Open the error tooltip
+                // <span lang="en">That user is not currently online.</span>
+            }*/
+        }
     }
 
     // Erase the contents of the input field
     $('#' + destination + '-chat-box-input').val('');
+
+    // Truncate messages longer than 150 characters (this is also enforced server-side)
+    if (message.length > 150) {
+        message = message.substring(0, 150);
+    }
 
     // Get the room
     let room;
@@ -51,11 +93,22 @@ exports.send = function(destination) {
     // Reset the history index
     globals.roomList[room].historyIndex = -1;
 
-    /*
-        Commands
-    */
+    if (isCommand === false) {
+        // If this is a normal chat message
+        globals.conn.send('roomMessage', {
+            'room': room,
+            'message':  message,
+        });
+    } else if (isPM) {
+        // If this is a PM (which has many aliases)
+        globals.conn.send('privateMessage', {
+            'name': PMrecipient,
+            'message': PMmessage,
+        });
 
-    if (message === '/debug') {
+        // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
+        draw('PM-to', name, message);
+    } else if (message === '/debug') {
         // /debug - Debug command
         misc.debug();
     } else if (message === '/finish') {
@@ -66,23 +119,6 @@ exports.send = function(destination) {
     } else if (message === '/restart') {
         // /restart - Restart the client
         ipcRenderer.send('asynchronous-message', 'restart');
-    } else if (message.match(/^\/msg .+? .+/)) {
-        // /msg - Private message
-        let m = message.match(/^\/msg (.+?) (.+)/);
-        let name = m[1];
-        message = m[2];
-        globals.conn.send('privateMessage', {
-            'name': name,
-            'message': message,
-        });
-
-        // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
-        draw('PM-to', name, message);
-    } else {
-        globals.conn.send('roomMessage', {
-            'room': room,
-            'message':  message,
-        });
     }
 };
 
@@ -195,13 +231,15 @@ const draw = function(room, name, message, datetime = null) {
     // Set indentation for long lines
     if (room === 'lobby') {
         // Indent the text to past where the username is (no longer used because it wastes too much space)
-        /*let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
+        /*
+        let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
         $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', indentPixels);
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + indentPixels);*/
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + indentPixels);
+        */
 
-        // Indent the text a little bit to signify that it is a continuation of the last line
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', chatIndentPixels);
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + chatIndentPixels);
+        // Indent the text to the "<Username>" to signify that it is a continuation of the last line
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', chatIndentSize);
+        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + chatIndentSize);
     }
 
     // Automatically scroll
@@ -219,13 +257,15 @@ exports.indentAll = function(room) {
 
     for (let i = 1; i <= globals.roomList[room].chatLine; i++) {
         // Indent the text to past where the username is (no longer used because it wastes too much space)
+        /*
         let indentPixels = $('#' + room + '-chat-text-line-' + i + '-header').css('width');
         $('#' + room + '-chat-text-line-' + i).css('padding-left', indentPixels);
         $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + indentPixels);
+        */
 
-        // If this line overflows, indent it a little to signify that it is a continuation of the last line
-        /*$('#' + room + '-chat-text-line-' + i).css('padding-left', chatIndentPixels);
-        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + chatIndentPixels);*/
+        // If this line overflows, indent it to the "<Username>" to signify that it is a continuation of the last line
+        $('#' + room + '-chat-text-line-' + i).css('padding-left', chatIndentSize);
+        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + chatIndentSize);
     }
 };
 

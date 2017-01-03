@@ -64,7 +64,6 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
     $('#header-lobby').fadeOut(globals.fadeTime);
     $('#header-new-race').fadeOut(globals.fadeTime);
     $('#header-settings').fadeOut(globals.fadeTime);
-    $('#header-log-out').fadeOut(globals.fadeTime);
 
     // Close all tooltips
     closeAllTooltips();
@@ -100,8 +99,11 @@ const warningShow = function(message) {
     }
     globals.currentScreen = 'warning';
 
+    // Close all tooltips
+    closeAllTooltips();
+
+    // Show the warning modal
     $('#gui').fadeTo(globals.fadeTime, 0.1, function() {
-        // Show the error modal
         $('#warning-modal').fadeIn(globals.fadeTime);
         $('#warning-modal-description').html(message);
     });

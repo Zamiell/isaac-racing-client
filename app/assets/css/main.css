@@ -3467,6 +3467,10 @@
         padding-right: 1.5em;
     }
 
+    .hpadding5 {
+        padding-right: 5em;
+    }
+
     .button.small {
         padding-left: 1em;
         padding-right: 1em;
@@ -4093,6 +4097,16 @@
         margin-bottom: 0;
     }
 
+    #settings-username {
+        font-weight: bolder;
+    }
+
+    #settings-log-out {
+        position: relative;
+        bottom: 0.5em;
+        right: 0.75em;
+    }
+
     #settings-version {
         font-weight: bolder;
     }
@@ -4121,6 +4135,11 @@
     #settings-enable-twitch-bot-checkbox-label {
         position: relative;
         top: 0.25em;
+    }
+
+    #settings-enable-twitch-bot-checkbox-tooltip {
+        text-align: center;
+        line-height: 1.5;
     }
 
     #settings-twitch-bot-delay {
