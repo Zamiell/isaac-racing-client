@@ -8,8 +8,6 @@
 
     "globals": {
         "nodeRequire": true,
-        "Lang": true,
-        "golem": true,
-        "Raven": true
+        "Lang": true
     }
 }
