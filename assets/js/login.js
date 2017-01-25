@@ -31,7 +31,9 @@ $(document).ready(function() {
     fs.writeFileSync('steam_appid.txt', '113200', 'utf8');
 
     // Initialize Greenworks
-    if (greenworks.init() === false) {
+    // We could use greenworks.init instead of initAPI for more verbose error messages
+    // However, we want to show a user-friendly error message to the user
+    if (greenworks.initAPI() === false) {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
         //misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
 
