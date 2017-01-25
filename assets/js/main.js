@@ -6,6 +6,17 @@
 
 /*
     Bugs to fix:
+    - use Rebirth Steam app ID instead of vanilla, run in separate fork and then kill?
+    - make item/room not write to log, to prevent spam
+    - make msg history not write to log, to prevent spam
+    - fix room parsing, rooms are sent to server wrong
+    - fix sillypears new bug, look in discord for info
+    - implement leave/join messages
+    - implement names turning red when left
+    - look into items sending twice for some reason, is there 2 log parsers?
+
+    - only link valid TLDs so that dr.fetus doesn't work, isaag.ng?
+    - !judas
     - pms are broken
     - tab complete doesn't find zamiel2?
     - !entrants command for twitch bot
@@ -28,8 +39,6 @@
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
-
-    - get sentry working with line numbers - https://forum.sentry.io/t/sentry-js-submitting-incomplete-stack-trace/703
 
 
 
@@ -73,10 +82,11 @@
 'use strict';
 
 // Import NPM packages
-const fs         = nodeRequire('fs');
-const path       = nodeRequire('path');
-const remote     = nodeRequire('electron').remote;
-const isDev      = nodeRequire('electron-is-dev');
+const fs     = nodeRequire('fs');
+const path   = nodeRequire('path');
+const remote = nodeRequire('electron').remote;
+const isDev  = nodeRequire('electron-is-dev');
+const tracer = nodeRequire('tracer');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
@@ -146,7 +156,7 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
 }).install();
 
 // Logging (code duplicated between main and renderer because of require/nodeRequire issues)
-globals.log = nodeRequire('tracer').console({
+globals.log = tracer.console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {

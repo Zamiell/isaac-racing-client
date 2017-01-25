@@ -35,10 +35,7 @@ $(document).ready(function() {
     // However, we want to show a user-friendly error message to the user
     if (greenworks.initAPI() === false) {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
-        //misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
-
-        // Since this is in alpha, we will send this message to Sentry afterall
-        misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.');
+        misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
         return;
     }
 

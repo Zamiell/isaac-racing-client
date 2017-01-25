@@ -34,7 +34,7 @@ exports.start = function() {
 
 // Monitor for notifications from the child process that is doing the log watching
 const logWatcher = function(event, message) {
-    //globals.log.info('Recieved log-watcher notification:', message);
+    globals.log.info('Recieved log-watcher notification:', message);
 
     if (message.startsWith("Error: ")) {
         // First, parse for errors

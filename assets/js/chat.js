@@ -114,6 +114,11 @@ exports.send = function(destination) {
     } else if (message === '/restart') {
         // /restart - Restart the client
         ipcRenderer.send('asynchronous-message', 'restart');
+    } else if (message === '/finish') {
+        // /finish - Debug finish
+        globals.conn.send('raceFinish', {
+            'id': globals.currentRaceID,
+        });
     }
 };
 

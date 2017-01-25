@@ -47,6 +47,7 @@ const fs             = require('fs');
 const os             = require('os');
 const path           = require('path');
 const isDev          = require('electron-is-dev');
+const tracer         = require('tracer');
 const Raven          = require('raven');
 const teeny          = require('teeny-conf');
 
@@ -57,12 +58,13 @@ const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..
 // Global variables
 var mainWindow; // Keep a global reference of the window object
                 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
+var startedLogWatcher = false;
 
 /*
-    Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+    Logging (code duplicated between main, renderer, and log-watcher because of require/nodeRequire issues)
 */
 
-const log = require('tracer').console({
+const log = tracer.console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
@@ -103,9 +105,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    //if (isDev) {
+    if (isDev) {
         width += 500;
-    //}
+    }
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -113,9 +115,9 @@ function createWindow() {
         title:  'Racing+',
         frame:  false,
     });
-    //if (isDev === true) {
+    if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    //}
+    }
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove the taskbar flash state (this isn't currently used)
@@ -261,9 +263,11 @@ ipcMain.on('asynchronous-message', function(event, arg) {
         app.quit();
     } else if (arg === 'quitAndInstall') {
         autoUpdater.quitAndInstall();
-    } else if (arg.startsWith('logWatcher ')) {
+    } else if (arg.startsWith('logWatcher ') && startedLogWatcher === false) {
         // Start the log watcher in a separate process for performance reasons
+        startedLogWatcher = true;
         var child = fork('./log-watcher');
+        log.info('Started the log watcher.');
 
         // Receive notifications from the child process
         child.on('message', function(message) {

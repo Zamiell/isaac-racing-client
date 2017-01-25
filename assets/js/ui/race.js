@@ -121,6 +121,9 @@ $(document).ready(function() {
             return;
         } else if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
             return;
+        } else if ($('#race-quit-button').is(":visible") === false) {
+            // Account for the possibility of an "Alt+Q" keystroke after the race has started but before the controls are visible
+            return;
         }
 
         // Find out if we already quit this race

@@ -5,10 +5,34 @@
 */
 
 // Imports
-const fs    = require('fs');
-const path  = require('path');
-const isDev = require('electron-is-dev');
-const Raven = require('raven');
+const fs     = require('fs');
+const path   = require('path');
+const isDev  = require('electron-is-dev');
+const tracer = require('tracer');
+const Raven  = require('raven');
+
+// Constants
+const logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+
+/*
+    Logging (code duplicated between main, renderer, and log-watcher because of require/nodeRequire issues)
+*/
+
+const log = tracer.console({
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
+    dateformat: "ddd mmm dd HH:MM:ss Z",
+    transport: function(data) {
+        // #1 - Log to the JavaScript console
+        console.log(data.output);
+
+        // #2 - Log to a file
+        fs.appendFile(logFile, data.output + '\r\n', function(err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+});
 
 // Get the version
 let packageFileLocation = path.join(__dirname, 'package.json');
@@ -79,7 +103,9 @@ const parseLine = function(line) {
         return; // We don't care about non-"INFO" lines
     }
 
-    if (line.startsWith('RNG Start Seed: ')) {
+    if (line.startWith('Seed 70 added to SaveState')) {
+        // TODO
+    } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         let match = line.match(/\RNG Start Seed: (.... ....)/);
         if (match) {
