@@ -100,8 +100,10 @@ exports.init = function(username, password, remember) {
 
         // Username
         globals.myUsername = data.username;
-        globals.Raven.setUserContext({
-            username: data.username,
+        globals.Raven.setContext({
+            user: { // All errors reported from now on will contain this user's username
+                username: data.username,
+            },
         });
 
         // Stream URL

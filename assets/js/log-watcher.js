@@ -91,10 +91,10 @@ const logWatcher = function(event, message) {
     } else if (message.startsWith('New room: ')) {
         let m = message.match(/New room: (\d+)/);
         if (m) {
-            let room = m[1];
+            let roomID = m[1];
             globals.conn.send('raceRoom', {
                 id:   globals.currentRaceID,
-                room: room,
+                roomID: roomID,
             });
         } else {
             misc.errorShow('Failed to parse the new room.');

@@ -8,15 +8,12 @@
 const fs       = nodeRequire('fs');
 const globals  = nodeRequire('./assets/js/globals');
 const settings = nodeRequire('./assets/js/settings');
+const debug    = nodeRequire('./assets/js/debug');
 
 exports.debug = function() {
     // The "/debug" command
     globals.log.info('Entering debug function.');
-
-    //errorShow('debug');
-    //console.log(raceList);
-    //console.log(currentRaceID);
-    globals.conn.send('debug');
+    debug();
 };
 
 // Create a custom error type so that the Raven dataCallback knows not to go back to the errorShow function

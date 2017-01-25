@@ -5,10 +5,6 @@ import argparse
 import sys
 import json
 import subprocess
-import requests
-import github3
-import certifi
-import urllib3
 import os
 import dotenv
 
@@ -27,7 +23,7 @@ parser.add_argument('-gh', '--github', help="upload to GitHub in addition to bui
 args = parser.parse_args()
 
 # Get the version
-with open('app/package.json') as packageJSON:
+with open('package.json') as packageJSON:
     data = json.load(packageJSON)
 number_version = data['version']
 version = 'v' + data['version']
@@ -55,32 +51,6 @@ else:
 return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27/python.exe"'], shell=True)
 if return_code != 0:
     error('Failed to build.')
-
-'''
-# No longer used with the NSIS installer
-    # Get the access token
-    with open('.secrets') as f:
-        access_token = f.read().strip()
-
-    # Make a new release for this version
-    print('\nMaking a new release on GitHub.')
-    github = github3.login(token=access_token)
-    repository = github.repository(repository_owner, repository_name)
-    release = repository.create_release(version)
-
-    # Ignore "InsecureRequestWarning" when uploading files
-    from requests.packages.urllib3.exceptions import InsecureRequestWarning
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-    # Upload assets
-    files = [
-        'Racing+ Setup ' + number_version + '.exe',
-        'RacingPlus-' + number_version + '-full.nupkg',
-        'RELEASES',
-    ]
-    for file_name in files:
-        asset = release.upload_asset(content_type='application/binary', name=file_name, asset=open('dist/win/' + file_name, 'rb'))
-'''
 
 # Done
 print('Released version', number_version, 'successfully.')

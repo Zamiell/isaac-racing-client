@@ -6,12 +6,6 @@
 
 /*
     Bugs to fix:
-    - REPLACE LOG READER
-
-    - test raven has context with username since i redid the thing using the node raven
-
-    - include golem using require
-    - SOUND TRY TURNING VOLUME NOT TO 0 AT START
     - pms are broken
     - tab complete doesn't find zamiel2?
     - !entrants command for twitch bot
