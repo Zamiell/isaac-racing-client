@@ -70,7 +70,7 @@ const log = require('tracer').console({
         console.log(data.output);
 
         // #2 - Log to a file
-        fs.appendFile(logFile, data.output + '\n', function(err) {
+        fs.appendFile(logFile, data.output + '\r\n', function(err) {
             if (err) {
                 throw err;
             }
@@ -103,9 +103,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    if (isDev) {
+    //if (isDev) {
         width += 500;
-    }
+    //}
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -113,9 +113,9 @@ function createWindow() {
         title:  'Racing+',
         frame:  false,
     });
-    if (isDev === true) {
+    //if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    }
+    //}
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove the taskbar flash state (this isn't currently used)

@@ -6,6 +6,7 @@
 
 // Imports
 const ipcRenderer    = nodeRequire('electron').ipcRenderer;
+const fs             = nodeRequire('fs');
 const greenworks     = nodeRequire('greenworks'); // This is not an NPM module
 const isDev          = nodeRequire('electron-is-dev');
 const globals        = nodeRequire('./assets/js/globals');
@@ -21,13 +22,22 @@ $(document).ready(function() {
     // See: https://github.com/greenheartgames/greenworks/issues/115
     process.activateUvLoop();
 
+    // Create the "steam_appid.txt" that Greenworks expects to find in:
+    //   C:\Users\james\AppData\Local\Programs\RacingPlus\steam_appid.txt (in production)
+    //   or
+    //   D:\Repositories\isaac-racing-client\steam_appid.txt (in development)
+    // 113200 is the Steam app ID for The Binding of Isaac (original)
+    // We need to use something other than the Rebirth Steam app ID so that it doesn't conflict with opening/closing Rebirth
+    fs.writeFileSync('steam_appid.txt', '113200', 'utf8');
+
     // Initialize Greenworks
-    if (!greenworks.initAPI()) {
+    if (greenworks.init() === false) {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
         //misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
 
         // Since this is in alpha, we will send this message to Sentry afterall
         misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.');
+        return;
     }
 
     // Get this computer's Steam ID and screen name

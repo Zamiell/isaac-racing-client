@@ -71,7 +71,7 @@ const parseLine = function(line) {
     }
 
     // Parse the log for relevant events
-    console.log('log.txt ' + line);
+    //console.log('log.txt ' + line); // Uncomment this if debugging
 
     if (line.startsWith('[INFO] - ')) {
         line = line.substring(9, line.length); // Truncate the "[INFO] - " prefix

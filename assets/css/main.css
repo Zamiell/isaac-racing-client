@@ -3549,6 +3549,10 @@
         font-size: 16pt !important;
     }
 
+    #title-subtitle {
+        margin-bottom: 0.5em !important;
+    }
+
     #title-image {
         max-width: 35%;
         height: auto;
@@ -3570,6 +3574,7 @@
         margin: auto;
         text-align: center;
         padding-bottom: 8em;
+        padding-right: 6.5em;
     }
 
     .title-button-icons {
@@ -3586,6 +3591,11 @@
         border: 1px solid #ff6666;
         color: black;
         font-size: 0.75em;
+    }
+
+    #title-version {
+        float: center;
+        text-align: center;
     }
 
     /*
