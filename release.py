@@ -52,5 +52,7 @@ return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27
 if return_code != 0:
     error('Failed to build.')
 
+# electron-builder mark the new release as a draft
+
 # Done
 print('Released version', number_version, 'successfully.')
