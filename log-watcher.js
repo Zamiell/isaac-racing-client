@@ -31,6 +31,7 @@ const log = tracer.console({
         });
     }
 });
+log.info("Child started: log-watcher");
 
 // Get the version
 let packageFileLocation = path.join(__dirname, 'package.json');
@@ -45,12 +46,25 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 }).install();
 
 // The parent will communicate with us once, telling us the path to the log file
-process.on('message', function(logPath) {
+process.on('message', function(message) {
+    // The child will stay alive even if the parent has closed, so we depend on the parent telling us when to die
+    if (message === 'exit') {
+        process.exit();
+    }
+
+    // If the message is not "exit", we can assume that it is the log path
+    let logPath = message;
+
     // None of the existing tail modules on NPM seem to work correctly with the Isaac log, so we have to code our own
     // The Isaac log file is glitchy; it is written to in such a way that the directory does not recieve updates
     // Thus, fs.watch will not work, because it uses the ReadDirectoryChangesW:
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465%28v=vs.85%29.aspx
     // Instead we need to use fs.watchFile, which is polling based and less efficient
+    log.info("Child log-watcher: Starting log monitoring on file: " + logPath);
+    if (fs.existsSync(logPath) === false) {
+        process.send('Error: The "' + logPath + '" file does not exist.');
+        return;
+    }
     var fd = fs.openSync(logPath, 'r');
     fs.watchFile(logPath, {
         interval: 50, // The default is 5007, so we need to poll much more frequently than that
@@ -93,7 +107,7 @@ const parseLine = function(line) {
     }
 
     // Parse the log for relevant events
-    //console.log('log.txt ' + line); // Uncomment this if debugging
+    //log.info('log.txt ' + line); // Uncomment this if debugging
 
     if (line.startsWith('[INFO] - ')) {
         line = line.substring(9, line.length); // Truncate the "[INFO] - " prefix

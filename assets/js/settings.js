@@ -9,10 +9,10 @@
 'use strict';
 
 // Imports
-const execSync = nodeRequire('child_process').execSync;
 const path     = nodeRequire('path');
 const isDev    = nodeRequire('electron-is-dev');
 const teeny    = nodeRequire('teeny-conf');
+const globals  = nodeRequire('./assets/js/globals');
 
 // Constants
 const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
@@ -49,15 +49,4 @@ if (typeof settings.get('volume') === 'undefined') {
 }
 
 // Log file path
-if (typeof settings.get('logFilePath') === 'undefined') {
-    // If this is the first run, set it to the default location (which is in the user's Documents directory)
-    let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
-    let documentsPath = execSync(command, {
-        'encoding': 'utf8',
-    });
-    documentsPath = $.trim(documentsPath); // Remove the trailing newline
-    let defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
-
-    settings.set('logFilePath', defaultLogFilePath);
-    settings.saveSync();
-}
+// (initialized in main.js since it depends on the return value of a PowerShell command)

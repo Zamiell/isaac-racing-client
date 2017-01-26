@@ -51,6 +51,10 @@ const steam = function(event, message) {
     } else if (message === 'errorTicket') {
         misc.errorShow('Failed to generate a Steam ticket for login. Please restart Steam and relaunch Racing+.');
         return;
+    } else if (typeof(message) === 'string' && message.startsWith('error: ')) {
+        let error = message.match(/error: (.+)/)[1];
+        misc.errorShow('Failed to talk to Steam: ' + error);
+        return;
     }
     globals.steam.id = message.id;
     globals.steam.screenName = message.screenName;

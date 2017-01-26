@@ -442,7 +442,7 @@
         <!-- Error modal -->
         <div id="error-modal" class="error hidden selectable">
             <section class="box">
-                <h3><span lang="en">Error</span></h3>
+                <h3 id="error-modal-title"><span lang="en">Error</span></h3>
                 <p id="error-modal-description" lang="en"></p>
                 <ul class="actions">
                     <li><input id="error-modal-button" type="button" value="Exit and relaunch" lang="en" /></li>
@@ -465,11 +465,16 @@
         <div id="log-file-modal" class="hidden">
             <section class="box">
                 <h3><span lang="en">Log File</span></h3>
-                <p id="log-file-description-1" lang="en">
-                    Isaac's "log.txt" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.
+                <p id="log-file-description-1">
+                    <!-- The langugage has to be in a span element so we can edit it later with jQuery. -->
+                    <span lang="en">Isaac's "log.txt" file does not appear to be at the default location. Racing+ needs to read this file in order to work properly.</span>
                 </p>
                 <p id="log-file-description-2">
-                    <span lang="en">This file is typically located in your "save data" directory. For more information, please see</span> <a id="log-file-link"><span lang="en">the "Known Issues" page by Simon from Nicalis</span></a>.
+                    <span lang="en">By default, this file is located at</span>:<br />
+                    <br />
+                    <code style="font-size: 0.75em;">C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+\log.txt</code><br />
+                    <br />
+                    <span lang="en">For more information, please see</span> <a id="log-file-link"><span lang="en">the "Known Issues" page by Simon from Nicalis</span></a>.
                 </p>
                 <p id="log-file-description-3" class="hidden" lang="en">
                     Please relaunch the program.
@@ -484,9 +489,7 @@
             </section>
         </div><!-- log-file-modal -->
 
-        <div id="select-your-log-file" class="hidden" lang="en">
-            Select your Isaac "log.txt" file
-        </div>
+        <div id="select-your-log-file" class="hidden" lang="en">Select your Isaac "log.txt" file</div>
 
         <div id="tooltips" class="hidden">
             <div id="new-race-tooltip">

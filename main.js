@@ -58,7 +58,7 @@ const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..
 // Global variables
 var mainWindow; // Keep a global reference of the window object
                 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
-var startedLogWatcher = false;
+var childLogWatcher = null;
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
@@ -105,9 +105,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    if (isDev) {
+    //if (isDev) {
         width += 500;
-    }
+    //}
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -115,9 +115,9 @@ function createWindow() {
         title:  'Racing+',
         frame:  false,
     });
-    if (isDev === true) {
+    //if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    }
+    //}
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove the taskbar flash state (this isn't currently used)
@@ -238,7 +238,13 @@ app.on('activate', function() {
 });
 
 app.on('will-quit', function() {
+    // Unregister the global keyboard hotkeys
     globalShortcut.unregisterAll();
+
+    // Tell the child process to exit (in Node, it will live forever even if the parent closes)
+    if (childLogWatcher !== null) {
+        childLogWatcher.send('exit');
+    }
 });
 
 /*
@@ -246,7 +252,9 @@ app.on('will-quit', function() {
 */
 
 ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
-    //log.info('Main process recieved message:', arg1);
+    log.info('Main process recieved message:', arg1);
+    log.info(childLogWatcher);
+    log.info(typeof(childLogWatcher));
 
     if (arg1 === 'minimize') {
         mainWindow.minimize();
@@ -265,7 +273,16 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         autoUpdater.quitAndInstall();
     } else if (arg1 === 'steam') {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
-        var childSteam = fork('./steam');
+        let childSteam;
+        if (isDev) {
+            childSteam = fork('./steam');
+        } else {
+            // There are problems when forking inside of an ASAR archive
+            // See: https://github.com/electron/electron/issues/2708
+            childSteam = fork('./app.asar/steam', {
+                cwd: path.join(__dirname, '..'),
+            });
+        }
         log.info('Started the Steam Greenworks child process.');
 
         // Receive notifications from the child process
@@ -273,10 +290,17 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('steam', message);
         });
-    } else if (arg1 === 'logWatcher' && startedLogWatcher === false) {
+    } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
         // Start the log watcher in a separate process for performance reasons
-        startedLogWatcher = true;
-        var childLogWatcher = fork('./log-watcher');
+        if (isDev) {
+            childLogWatcher = fork('./log-watcher');
+        } else {
+            // There are problems when forking inside of an ASAR archive
+            // See: https://github.com/electron/electron/issues/2708
+            childLogWatcher = fork('./app.asar/log-watcher', {
+                cwd: path.join(__dirname, '..'),
+            });
+        }
         log.info('Started the log watcher child process.');
 
         // Receive notifications from the child process

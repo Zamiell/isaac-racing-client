@@ -27,7 +27,7 @@ function RavenMiscError(message) {
 RavenMiscError.prototype = Object.create(Error.prototype);
 RavenMiscError.prototype.constructor = RavenMiscError;
 
-const errorShow = function(message, sendToSentry = true, alternateScreen = false) {
+const errorShow = function(message, sendToSentry = true, alternateScreen = false, customTitle = null) {
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {
@@ -81,6 +81,12 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
     // Close all tooltips
     closeAllTooltips();
 
+    // Change the title, if necessary
+    if (customTitle !== null) {
+        console.log(customTitle);
+        $('#error-modal-title').html(customTitle);
+    }
+
     $('#gui').fadeTo(globals.fadeTime, 0.1, function() {
         if (alternateScreen === true) {
             // Show the log file selector screen
@@ -105,12 +111,6 @@ const warningShow = function(message) {
 
     // Log the message
     globals.log.warn(message);
-
-    // Don't do anything if we are already showing a warning
-    if (globals.currentScreen === 'warning') {
-        return;
-    }
-    globals.currentScreen = 'warning';
 
     // Close all tooltips
     closeAllTooltips();

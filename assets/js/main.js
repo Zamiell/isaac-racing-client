@@ -71,11 +71,12 @@
 'use strict';
 
 // Import NPM packages
-const fs     = nodeRequire('fs');
-const path   = nodeRequire('path');
-const remote = nodeRequire('electron').remote;
-const isDev  = nodeRequire('electron-is-dev');
-const tracer = nodeRequire('tracer');
+const fs       = nodeRequire('fs');
+const path     = nodeRequire('path');
+const execSync = nodeRequire('child_process').execSync;
+const remote   = nodeRequire('electron').remote;
+const isDev    = nodeRequire('electron-is-dev');
+const tracer   = nodeRequire('tracer');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');
@@ -173,6 +174,25 @@ let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
 fs.readFile(wordListLocation, function(err, data) {
     globals.wordList = data.toString().split('\n');
 });
+
+// Get the default log file location (which is in the user's Documents directory)
+// From: https://steamcommunity.com/app/250900/discussions/0/613941122558099449/
+if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+    let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
+    let documentsPath = execSync(command, {
+        'encoding': 'utf8',
+    });
+    documentsPath = $.trim(documentsPath); // Remove the trailing newline
+    globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
+} else if (process.platform === 'darwin') {
+    globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
+} else {
+    globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+');
+}
+if (typeof settings.get('logFilePath') === 'undefined') {
+    settings.set('logFilePath', globals.defaultLogFilePath);
+    settings.saveSync();
+}
 
 // We need to have a list of all of the emotes for the purposes of tab completion
 let emotePath = path.join(__dirname + '/assets/img/emotes');

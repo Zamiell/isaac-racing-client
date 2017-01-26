@@ -9,6 +9,7 @@ const ipcRenderer  = nodeRequire('electron').ipcRenderer;
 const remote       = nodeRequire('electron').remote;
 const globals      = nodeRequire('./assets/js/globals');
 const settings     = nodeRequire('./assets/js/settings');
+const misc         = nodeRequire('./assets/js/misc');
 const localization = nodeRequire('./assets/js/localization');
 
 /*
@@ -20,6 +21,7 @@ $(document).ready(function() {
         let titleText = $('#select-your-log-file').html();
         let newLogFilePath = remote.dialog.showOpenDialog({
             title: titleText,
+            defaultPath: globals.defaultLogFilePath,
             filters: [
                 {
                     'name': 'Text',
@@ -30,11 +32,19 @@ $(document).ready(function() {
         });
         if (newLogFilePath === undefined) {
             return;
-        } else {
-            let shortenedPath = newLogFilePath[0].substring(0, 24);
-            $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
-            $('#settings-log-file-location').tooltipster('content', newLogFilePath[0]);
+        } else if (newLogFilePath[0].match(/[/\\]Binding of Isaac Rebirth[/\\]/)) { // Match a forward or backslash
+            // Check to make sure they don't have an Rebirth log.txt selected
+            misc.warningShow('<p lang="en">It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</p><p lang="en">Please try again and select your Afterbirth+ log file.</p><br />');
+            return;
+        } else if (newLogFilePath[0].match(/[/\\]Binding of Isaac Afterbirth[/\\]/)) {
+            // Check to make sure they don't have an Afterbirth log.txt selected
+            misc.warningShow('<p lang="en">It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</p><p lang="en">Please try again and select your Afterbirth+ log file.</p><br />');
+            return;
         }
+
+        let shortenedPath = newLogFilePath[0].substring(0, 24);
+        $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+        $('#settings-log-file-location').tooltipster('content', newLogFilePath[0]);
     });
 
     $('#settings-volume-slider').change(function() {
@@ -56,8 +66,6 @@ $(document).ready(function() {
             $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 1);
             $('#settings-enable-twitch-bot-checkbox').prop('disabled', false);
             $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'pointer');
-            $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
-            $('#settings-stream-url').focus(); // Needed because the redraw causes the input box to lose focus
         } else {
             $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 0.25);
             $('#settings-enable-twitch-bot-checkbox').prop('disabled', true);
@@ -91,7 +99,6 @@ $(document).ready(function() {
             $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 1);
             $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 1);
             $('#settings-twitch-bot-delay').prop('disabled', false);
-            $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
         } else {
             $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
             $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
@@ -110,8 +117,12 @@ $(document).ready(function() {
 
         // Log file location
         let newLogFilePath = $('#settings-log-file-location').tooltipster('content');
-        settings.set('logFilePath', newLogFilePath);
-        settings.saveSync();
+        let changedLogFilePath = false;
+        if (settings.get('logFilePath') !== newLogFilePath) {
+            changedLogFilePath = true;
+            settings.set('logFilePath', newLogFilePath);
+            settings.saveSync();
+        }
 
         // Language
         localization.localize($('#settings-language').val());
@@ -181,6 +192,11 @@ $(document).ready(function() {
 
         // Close the tooltip
         $('#header-settings').tooltipster('close');
+
+        // We only need to exit the program and restart if they changed the log file path
+        if (changedLogFilePath) {
+            misc.errorShow('Now that you have changed the location of the log file, please restart Racing+.', false, false, '<span lang="en">Success</span>');
+        }
     });
 });
 

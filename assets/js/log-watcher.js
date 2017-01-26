@@ -28,6 +28,22 @@ exports.start = function() {
         return -1;
     }
 
+    // Check to make sure they don't have a Rebirth log.txt selected
+    if (logPath.match(/[/\\]Binding of Isaac Rebirth[/\\]/)) { // Match a forward or backslash
+        $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
+        globals.currentScreen = 'null';
+        misc.errorShow('', false, true); // Show the log file path modal
+        return -1;
+    }
+
+    // Check to make sure they don't have an Afterbirth log.txt selected
+    if (logPath.match(/[/\\]Binding of Isaac Afterbirth[/\\]/)) {
+        $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
+        globals.currentScreen = 'null';
+        misc.errorShow('', false, true); // Show the log file path modal
+        return -1;
+    }
+
     // Send a message to the main process to start up the log watcher
     ipcRenderer.send('asynchronous-message', 'logWatcher', logPath);
 };

@@ -17,6 +17,7 @@ module.exports = {
     conn: null,
     currentScreen: 'title-ajax', // We always start on the title-ajax screen
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
+    defaultLogFilePath: '',
     emoteList: null, // Set in main.js
     fadeTime: fadeTime,
     log: null,
