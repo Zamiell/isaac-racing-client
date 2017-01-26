@@ -17,7 +17,7 @@
 // We need access to the globals here so that we can use the logger
 const globals = nodeRequire('./assets/js/globals');
 
-var separator = " ";
+var separator = ' ';
 var DefaultJSONProtocol = {
     unpack: function(data) {
         var name = data.split(separator)[0];
@@ -50,27 +50,22 @@ Connection.prototype = {
         this.ws.binaryType = 'arraybuffer';
     },
     onClose: function(evt) {
-        if (this.debug) {
-            globals.log.info("golem: Connection closed!");
-        }
         if (this.callbacks.close) {
             this.callbacks.close(evt);
         }
     },
     onMessage: function(evt) {
         var data = this.protocol.unpack(evt.data);
-        if (this.debug) {
-            globals.log.info("golem: Received:", data[0], JSON.parse(data[1]));
-        }
         if (this.callbacks[data[0]]) {
             var obj = this.protocol.unmarshal(data[1]);
             this.callbacks[data[0]](obj);
+        } else {
+            if (this.debug) {
+                globals.log.error('Recieved WebSocket message with no callback:', data[0], JSON.parse(data[1]));
+            }
         }
     },
     onOpen: function(evt) {
-        if (this.debug) {
-            globals.log.info("golem: Connection established!");
-        }
         if (this.callbacks.open) {
             this.callbacks.open(evt);
         }

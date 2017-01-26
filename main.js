@@ -61,7 +61,7 @@ var mainWindow; // Keep a global reference of the window object
 var startedLogWatcher = false;
 
 /*
-    Logging (code duplicated between main, renderer, and log-watcher because of require/nodeRequire issues)
+    Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
 const log = tracer.console({
@@ -245,38 +245,47 @@ app.on('will-quit', function() {
     IPC handlers
 */
 
-ipcMain.on('asynchronous-message', function(event, arg) {
-    log.info('Main process recieved message:', arg);
+ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
+    //log.info('Main process recieved message:', arg1);
 
-    if (arg === 'minimize') {
+    if (arg1 === 'minimize') {
         mainWindow.minimize();
-    } else if (arg === 'maximize') {
+    } else if (arg1 === 'maximize') {
         if (mainWindow.isMaximized() === true) {
             mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
         }
-    } else if (arg === 'close') {
+    } else if (arg1 === 'close') {
         app.quit();
-    } else if (arg === 'restart') {
+    } else if (arg1 === 'restart') {
         app.relaunch();
         app.quit();
-    } else if (arg === 'quitAndInstall') {
+    } else if (arg1 === 'quitAndInstall') {
         autoUpdater.quitAndInstall();
-    } else if (arg.startsWith('logWatcher ') && startedLogWatcher === false) {
-        // Start the log watcher in a separate process for performance reasons
-        startedLogWatcher = true;
-        var child = fork('./log-watcher');
-        log.info('Started the log watcher.');
+    } else if (arg1 === 'steam') {
+        // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
+        var childSteam = fork('./steam');
+        log.info('Started the Steam Greenworks child process.');
 
         // Receive notifications from the child process
-        child.on('message', function(message) {
+        childSteam.on('message', function(message) {
+            // Pass the message to the renderer (browser) process
+            mainWindow.webContents.send('steam', message);
+        });
+    } else if (arg1 === 'logWatcher' && startedLogWatcher === false) {
+        // Start the log watcher in a separate process for performance reasons
+        startedLogWatcher = true;
+        var childLogWatcher = fork('./log-watcher');
+        log.info('Started the log watcher child process.');
+
+        // Receive notifications from the child process
+        childLogWatcher.on('message', function(message) {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('logWatcher', message);
         });
 
         // Feed the child the path to the Isaac log file
-        var logPath = arg.match(/^logWatcher (.+)/)[1];
-        child.send(logPath);
+        childLogWatcher.send(arg2);
     }
 });

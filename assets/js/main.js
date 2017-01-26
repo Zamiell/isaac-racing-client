@@ -6,32 +6,21 @@
 
 /*
     Bugs to fix:
-    - use Rebirth Steam app ID instead of vanilla, run in separate fork and then kill?
-    - make item/room not write to log, to prevent spam
-    - make msg history not write to log, to prevent spam
-    - fix room parsing, rooms are sent to server wrong
-    - fix sillypears new bug, look in discord for info
-    - implement leave/join messages
-    - implement names turning red when left
-    - look into items sending twice for some reason, is there 2 log parsers?
+    - Sending race finish twice. Currently unknown as to why. Added more logging, now waiting to occur again.
 
-    - only link valid TLDs so that dr.fetus doesn't work, isaag.ng?
+    - implement names turning red when left
+
     - !judas
     - pms are broken
     - tab complete doesn't find zamiel2?
     - !entrants command for twitch bot
     - !left command for twitch bot
 
-    - cyber confused by twitch bot, make it greyed out instead of invisible
-    - add check to see if anyone has already set that twitch stream
-
-    - Add [?? Joined] to race chat
     - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
 
     - error while recieving PM during tab transition
 
     - make spacing slightly smaller for Type and Format on lobby
-    - integrate golem into main.js as an include
 
     - /shame - Shame on those who haven't readied up.
 
@@ -40,10 +29,10 @@
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
 
+    - need to be able to quit if already finished
 
+    - integrate with racing+
 
-    Things to verify:
-    - get sillypears to verify crash test after sentry line numbers fix
 
     Features to add:
     - test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
@@ -95,7 +84,7 @@ const misc            = nodeRequire('./assets/js/misc');
 const automaticUpdate = nodeRequire('./assets/js/automatic-update');
 const localization    = nodeRequire('./assets/js/localization');
 const keyboard        = nodeRequire('./assets/js/keyboard');
-const login           = nodeRequire('./assets/js/login');
+const steam           = nodeRequire('./assets/js/steam'); // This handles automatic login
 const header          = nodeRequire('./assets/js/ui/header');
 const tutorialScreen  = nodeRequire('./assets/js/ui/tutorial');
 const registerScreen  = nodeRequire('./assets/js/ui/register');
@@ -155,7 +144,7 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
     },
 }).install();
 
-// Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+// Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 globals.log = tracer.console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",

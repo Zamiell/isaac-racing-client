@@ -3789,6 +3789,10 @@
         color: red;
     }
 
+    .chat-server {
+        color: blue;
+    }
+
     .chat-text {
         overflow-y: auto;
         overflow-wrap: break-word;
@@ -4162,7 +4166,7 @@
         top: 0.25em;
     }
 
-    #settings-enable-twitch-bot-checkbox-label {
+    #settings-enable-twitch-bot-checkbox-text {
         position: relative;
         top: 0.25em;
     }

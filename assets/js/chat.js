@@ -192,13 +192,19 @@ const draw = function(room, name, message, datetime = null) {
     let chatLine = '<div id="' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '" class="hidden">';
     chatLine += '<span id="' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header">';
     chatLine += '[' + hours + ':' + minutes + '] &nbsp; ';
-    if (privateMessage !== false) {
+    if (privateMessage) {
         chatLine += '<span class="chat-pm">[PM ' + privateMessage + ' <strong class="chat-pm">' + name + '</strong>]</span> &nbsp; ';
+    } else if (name === '!server') {
+        // Do nothing
     } else {
         chatLine += '&lt;<strong>' + name + '</strong>&gt; &nbsp; ';
     }
     chatLine += '</span>';
-    chatLine += message;
+    if (name === '!server') {
+        chatLine += '<span class="chat-server">' + message + '</span>';
+    } else {
+        chatLine += message;
+    }
     chatLine += '</div>';
 
     // Find out whether this is going to "#race-chat-text" or "#lobby-chat-text"
@@ -230,7 +236,8 @@ const draw = function(room, name, message, datetime = null) {
 
     // Set indentation for long lines
     if (room === 'lobby') {
-        // Indent the text to past where the username is (no longer used because it wastes too much space)
+        // Indent the text to past where the username is
+        // (no longer used because it wastes too much space)
         /*
         let indentPixels = $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header').css('width');
         $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', indentPixels);
@@ -256,7 +263,8 @@ exports.indentAll = function(room) {
     }
 
     for (let i = 1; i <= globals.roomList[room].chatLine; i++) {
-        // Indent the text to past where the username is (no longer used because it wastes too much space)
+        // Indent the text to past where the username is
+        // (no longer used because it wastes too much space)
         /*
         let indentPixels = $('#' + room + '-chat-text-line-' + i + '-header').css('width');
         $('#' + room + '-chat-text-line-' + i).css('padding-left', indentPixels);

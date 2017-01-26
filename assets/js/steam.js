@@ -1,68 +1,70 @@
 /*
-    Login
+    Steam functions (and automatic login)
 */
 
 'use strict';
 
 // Imports
 const ipcRenderer    = nodeRequire('electron').ipcRenderer;
-const fs             = nodeRequire('fs');
-const greenworks     = nodeRequire('greenworks'); // This is not an NPM module
 const isDev          = nodeRequire('electron-is-dev');
 const globals        = nodeRequire('./assets/js/globals');
 const misc           = nodeRequire('./assets/js/misc');
 const websocket      = nodeRequire('./assets/js/websocket');
 const registerScreen = nodeRequire('./assets/js/ui/register');
 
-/*
-    Check to see if Steam is running on startup
-*/
+// Check to see if Steam is running on startup
 $(document).ready(function() {
-    // Must do this before initializing Greenworks
-    // See: https://github.com/greenheartgames/greenworks/issues/115
-    process.activateUvLoop();
+    if (isDev) {
+        // Don't automatically log in with our Steam account
+        // We want to choose from a list of login options
+        $('#title-ajax').fadeOut(0);
+        $('#title-choose').fadeIn(0);
 
-    // Create the "steam_appid.txt" that Greenworks expects to find in:
-    //   C:\Users\james\AppData\Local\Programs\RacingPlus\steam_appid.txt (in production)
-    //   or
-    //   D:\Repositories\isaac-racing-client\steam_appid.txt (in development)
-    // 113200 is the Steam app ID for The Binding of Isaac (original)
-    // We need to use something other than the Rebirth Steam app ID so that it doesn't conflict with opening/closing Rebirth
-    fs.writeFileSync('steam_appid.txt', '113200', 'utf8');
+        $('#title-choose-steam').click(function() {
+            loginDebug(null);
+        });
 
-    // Initialize Greenworks
-    // We could use greenworks.init instead of initAPI for more verbose error messages
-    // However, we want to show a user-friendly error message to the user
-    if (greenworks.initAPI() === false) {
+        $('#title-choose-1').click(function() {
+            loginDebug(1);
+        });
+
+        $('#title-choose-2').click(function() {
+            loginDebug(2);
+        });
+
+        $('#title-choose-3').click(function() {
+            loginDebug(3);
+        });
+    } else {
+        // Tell the main process to start the child process that will initialize Greenworks
+        // That process will get our Steam ID, Steam screen name, and authentication ticket
+        ipcRenderer.send('asynchronous-message', 'steam', null);
+    }
+});
+
+// Monitor for notifications from the child process that is getting the data from Greenworks
+const steam = function(event, message) {
+    if (message === 'errorInit') {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
         misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
         return;
+    } else if (message === 'errorTicket') {
+        misc.errorShow('Failed to generate a Steam ticket for login. Please restart Steam and relaunch Racing+.');
+        return;
     }
+    globals.steam.id = message.id;
+    globals.steam.screenName = message.screenName;
+    globals.steam.ticket = message.ticket;
+    login();
+};
+ipcRenderer.on('steam', steam);
 
-    // Get this computer's Steam ID and screen name
-    let steamIDObject = greenworks.getSteamId();
-    globals.steam.id = steamIDObject.steamId;
-    globals.steam.screenName = steamIDObject.screenName;
-
-    // Get a session ticket from Steam and login to the Racing+ server
-    greenworks.getAuthSessionTicket(function(ticket) {
-        ticket = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
-        login(ticket);
-    }, function() {
-        misc.errorShow('Failed to get a Steam session ticket.');
-    });
-});
-
-/*
-    Login functions
-*/
-
-// Get a WebSockets cookie using our Steam ticket
+// Get a WebSockets cookie from the Racing+ server using our Steam ticket generated from Greenworks
 // The authentication flow is described here: https://partner.steamgames.com/documentation/auth#client_to_backend_webapi
 // (you have to be logged in for the link to work)
-// The server will validate our session ticket using the Steam web API and if successful, give us a cookie
+// The server will validate our session ticket using the Steam web API, and if successful, give us a cookie
 // If our steam ID does not already exist in the database, we will be told to register
-function login(ticket) {
+function login() {
     // Don't login yet if we are still checking for updates
     if (globals.autoUpdateStatus === null) {
         if (isDev) {
@@ -73,7 +75,7 @@ function login(ticket) {
             let now = new Date().getTime();
             if (now - globals.timeLaunched < 2000) {
                 setTimeout(function() {
-                    login(ticket);
+                    login();
                 }, 250);
                 globals.log.info('Logging in (without having checked for an update yet). Stalling for 0.25 seconds...');
                 return;
@@ -81,7 +83,7 @@ function login(ticket) {
         }
     } else if (globals.autoUpdateStatus === 'checking-for-update') {
         setTimeout(function() {
-            login(ticket);
+            login();
         }, 250);
         globals.log.info('Logging in (while checking for an update). Stalling for 0.25 seconds...');
         return;
@@ -121,8 +123,8 @@ function login(ticket) {
     // Send a request to the Racing+ server
     globals.log.info('Sending a login request to the Racing+ server.');
     let data = {
-        steamID: globals.steam.id, // Analogous to our username
-        ticket:  ticket,           // Analogous to our password; will be verified on the server via the Steam web API
+        steamID: globals.steam.id,
+        ticket:  globals.steam.ticket, // This will be verified on the server via the Steam web API
     };
     let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/login';
     let request = $.ajax({
@@ -142,9 +144,40 @@ function login(ticket) {
         }
     });
     request.fail(function(jqXHR) {
-        // Show the error screen
+        // Show the error screen (and don't bother reporting this to Sentry)
         globals.log.info('Login failed.');
         let error = misc.findAjaxError(jqXHR);
-        misc.errorShow(error);
+        misc.errorShow(error, false);
     });
+}
+
+// Log in manually
+function loginDebug(account) {
+    if (globals.currentScreen !== 'title-ajax') {
+        return;
+    }
+
+    $('#title-choose').fadeOut(globals.fadeTime, function() {
+        $('#title-ajax').fadeIn(globals.fadeTime);
+    });
+
+    if (account === null) {
+        // Normal login
+        ipcRenderer.send('asynchronous-message', 'steam', account);
+    } else if (account === 1) {
+        globals.steam.id = '101';
+        globals.steam.screenName = 'TestAccount1';
+        globals.steam.ticket = 'debug';
+        login();
+    } else if (account === 2) {
+        globals.steam.id = '102';
+        globals.steam.screenName = 'TestAccount2';
+        globals.steam.ticket = 'debug';
+        login();
+    } else if (account === 3) {
+        globals.steam.id = '103';
+        globals.steam.screenName = 'TestAccount3';
+        globals.steam.ticket = 'debug';
+        login();
+    }
 }

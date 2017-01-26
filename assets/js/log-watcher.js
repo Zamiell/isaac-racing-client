@@ -29,7 +29,7 @@ exports.start = function() {
     }
 
     // Send a message to the main process to start up the log watcher
-    ipcRenderer.send('asynchronous-message', 'logWatcher ' + logPath);
+    ipcRenderer.send('asynchronous-message', 'logWatcher', logPath);
 };
 
 // Monitor for notifications from the child process that is doing the log watching
@@ -89,7 +89,7 @@ const logWatcher = function(event, message) {
             misc.errorShow('Failed to parse the new floor.');
         }
     } else if (message.startsWith('New room: ')) {
-        let m = message.match(/New room: (\d+)/);
+        let m = message.match(/New room: (.+)/);
         if (m) {
             let roomID = m[1];
             globals.conn.send('raceRoom', {

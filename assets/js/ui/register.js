@@ -5,7 +5,6 @@
 'use strict';
 
 // Imports
-const greenworks  = nodeRequire('greenworks'); // This is not an NPM module
 const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
 const websocket   = nodeRequire('./assets/js/websocket');
@@ -45,13 +44,8 @@ $(document).ready(function() {
         $('#register-languages').fadeTo(globals.fadeTime, 0.25);
         $('#register-ajax').fadeIn(globals.fadeTime);
 
-        // Get a session ticket from Steam and register with the Racing+ server
-        greenworks.getAuthSessionTicket(function(ticket) {
-            ticket = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
-            register(ticket, username);
-        }, function() {
-            misc.errorShow('Failed to get a Steam session ticket.');
-        });
+        // Register the username with the Racing+ server
+        register(username);
     });
 });
 
@@ -72,12 +66,12 @@ exports.show = function() {
 
 // Register with the Racing+ server
 // We will resend our Steam ID and ticket, just like we did previously in the login function, but this time we will also include our desired username
-function register(ticket, username) {
+function register(username) {
     globals.log.info('Sending a register request to the Racing+ server.');
     let data = {
-        steamID:  globals.steam.id, // Analogous to our username
-        ticket:   ticket,           // Analogous to our password; will be verified on the server via the Steam web API
-        username: username,         // Our desired screen name that will be visible to other racers
+        steamID:  globals.steam.id,
+        ticket:   globals.steam.ticket, // This will be verified on the server via the Steam web API
+        username: username,             // Our desired screen name that will be visible to other racers
     };
     let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/register';
     let request = $.ajax({

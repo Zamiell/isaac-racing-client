@@ -153,6 +153,23 @@
                             <div class="ajax-ring"></div>
                         </div>
 
+                        <!-- This only appears in a development environment -->
+                        <ul id="title-choose" class="actions hidden">
+                            <br /><br /><br />
+                            <li>
+                                <a href="#" id="title-choose-steam" class="button small">Steam (`)</a>
+                            </li>
+                            <li>
+                                <a href="#" id="title-choose-1" class="button small">Test 1 (1)</a>
+                            </li>
+                            <li>
+                                <a href="#" id="title-choose-2" class="button small">Test 2 (2)</a>
+                            </li>
+                            <li>
+                                <a href="#" id="title-choose-3" class="button small">Test 3 (3)</a>
+                            </li>
+                        </ul>
+
                     </section>
                 </div><!-- title -->
 
@@ -706,17 +723,6 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li><span lang="en">Change username capitalization</span></li>
-                                <li>
-                                    <input id="settings-username-capitalization" type="text" data-tooltip-content="#settings-username-capitalization-error" />
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="row uniform 50%">
-                        <div class="12u">
-                            <ul class="actions">
                                 <li><span lang="en">Change stream URL</span>:</li>
                                 <li>
                                     <input id="settings-stream-url" type="text" data-tooltip-content="#settings-stream-url-error" />
@@ -730,8 +736,8 @@
                             <ul class="actions">
                                 <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
                                     <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
-                                    <label for="settings-enable-twitch-bot-checkbox">
-                                        <span id="settings-enable-twitch-bot-checkbox-label" lang="en">Enable Twitch chat bot</span>
+                                    <label id="settings-enable-twitch-bot-checkbox-label" for="settings-enable-twitch-bot-checkbox">
+                                        <span id="settings-enable-twitch-bot-checkbox-text" lang="en">Enable Twitch chat bot</span>
                                     </label>
                                 </li>
                                 <li>&nbsp; &nbsp; &nbsp; &nbsp;</li>
@@ -746,14 +752,13 @@
                     <div class="row uniform">
                         <div class="6u">
                             <ul class="actions">
-                                <li><input id="settings-save-button" type="submit" value="Save and Restart" lang="en" /></li>
+                                <li><input id="settings-save-button" type="submit" value="Save" lang="en" /></li>
                             </ul>
                         </div>
                     </div>
                 </form>
             </div><!-- settings-tooltip -->
 
-            <div id="settings-username-capitalization-error" lang="en">You can only change the capitalization, not your actual username.</div>
             <div id="settings-stream-url-error" lang="en">Your stream URL must begin with "https://www.twitch.tv/".</div>
             <div id="settings-enable-twitch-bot-checkbox-tooltip">
                 <span lang="en">Make the bot a moderator in your Twitch channel by typing</span>

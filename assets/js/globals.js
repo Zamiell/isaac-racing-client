@@ -35,6 +35,7 @@ module.exports = {
     steam: {
         id: null,
         screenName: null,
+        ticket: null,
     },
     tabCompleteCounter: 0,
 	tabCompleteIndex: 0,
@@ -47,7 +48,6 @@ module.exports = {
 /*
     By default, we start on the title screen.
     currentScreen can be the following:
-    - title
     - title-ajax
     - tutorial1
     - tutorial2

@@ -28,7 +28,15 @@ exports.init = function(username, password, remember) {
 
     globals.conn.send = function(command, data) {
         globals.conn.emit(command, data);
-        globals.log.info('golem: Sent: ' + command + ' ' + JSON.stringify(data));
+
+        // Don't log some commands to reduce spam
+        if (command === 'raceFloor' ||
+            command === 'raceRoom' ||
+            command === 'raceItem') {
+
+            return;
+        }
+        globals.log.info('WebSocket sent: ' + command + ' ' + JSON.stringify(data));
     };
 
     /*
@@ -36,6 +44,8 @@ exports.init = function(username, password, remember) {
     */
 
     globals.conn.on('open', function(event) {
+        globals.log.info('WebSocket connection established.');
+
         // Login success; join the lobby chat channel
         globals.conn.send('roomJoin', {
             'room': 'lobby',
@@ -67,15 +77,16 @@ exports.init = function(username, password, remember) {
             return;
         } else {
             // The WebSocket connection dropped because of a bad network connection or similar issue, so show the error screen
-            misc.errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!');
+            misc.errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!', false);
             return;
         }
     }
 
     globals.conn.on('socketError', function(event) {
+        globals.log.info("WebSocket error:", event);
         if (globals.currentScreen === 'title-ajax') {
             let error = 'Failed to connect to the WebSocket server. The server might be down!';
-            misc.errorShow(error);
+            misc.errorShow(error, false);
         } else if (globals.currentScreen === 'register-ajax') {
             let error = 'Failed to connect to the WebSocket server. The server might be down!';
             let jqXHR = { // Emulate a jQuery error because that is what the "registerFail" function expects
@@ -84,7 +95,7 @@ exports.init = function(username, password, remember) {
             registerScreen.fail(jqXHR);
         } else {
             let error = 'Encountered a WebSocket error. The server might be down!';
-            misc.errorShow(error);
+            misc.errorShow(error, false);
         }
     });
 
@@ -178,11 +189,15 @@ exports.init = function(username, password, remember) {
         // Keep track of the person who just joined
         globals.roomList[data.room].users[data.user.name] = data.user;
         globals.roomList[data.room].numUsers++;
+        globals.log.info('User "' + data.name + '" joined room:', data.room);
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
             lobbyScreen.usersDraw();
         }
+
+        // Send a chat notification for races
+        chat.draw(data.room, '!server', data.user.name + ' has joined.');
     });
 
     globals.conn.on('roomLeft', function(data) {
@@ -194,6 +209,9 @@ exports.init = function(username, password, remember) {
         if (data.room === 'lobby') {
             lobbyScreen.usersDraw();
         }
+
+        // Send a chat notification
+        chat.draw(data.room, '!server', data.name + ' has left.');
     });
 
     globals.conn.on('roomMessage', function(data) {
@@ -421,7 +439,7 @@ exports.init = function(username, password, remember) {
             }
         }
 
-        // Update the "Current races" area
+        // Update the "Current races" area on the lobby
         if (globals.raceList[data.id].racers.length === 0) {
             // Delete the race since the last person in the race left
             delete globals.raceList[data.id];
@@ -651,5 +669,10 @@ exports.init = function(username, password, remember) {
                 break;
             }
         }
+    }
+
+    globals.conn.on('achievement', connAchievement);
+    function connAchievement(data) {
+        globals.log.info("Got achievement #" + data.id + ": " + name);
     }
 };

@@ -43,6 +43,11 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
         globals.log.error('Generic error.');
     }
 
+    // We don't have to send some common errors to Sentry
+    if (message === 'You have logged on from somewhere else, so you have been disconnected here.') {
+        sendToSentry = false;
+    }
+
     // Also send it to Sentry
     if (sendToSentry) {
         try {

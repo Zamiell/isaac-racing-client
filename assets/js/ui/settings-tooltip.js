@@ -53,26 +53,33 @@ $(document).ready(function() {
         // - Reveal the "Enable Twitch chat bot" and uncheck it
         // - Hide the "Delay (in seconds)"
         if ($('#settings-stream-url').val().includes('twitch.tv/')) {
-            $('#settings-enable-twitch-bot-checkbox-container').fadeIn(globals.fadeTime);
+            $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 1);
+            $('#settings-enable-twitch-bot-checkbox').prop('disabled', false);
+            $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'pointer');
             $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
             $('#settings-stream-url').focus(); // Needed because the redraw causes the input box to lose focus
         } else {
-            $('#settings-enable-twitch-bot-checkbox-container').fadeOut(globals.fadeTime);
-            $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
-            $('#settings-twitch-bot-delay').fadeOut(globals.fadeTime);
+            $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-enable-twitch-bot-checkbox').prop('disabled', true);
+            $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'default');
+            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').prop('disabled', true);
         }
 
         // They have changed their stream, so disable the Twitch bot
         if ($('#settings-enable-twitch-bot-checkbox').is(':checked')) {
             $('#settings-enable-twitch-bot-checkbox').prop('checked', false); // Uncheck it
-            $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
-            $('#settings-twitch-bot-delay').fadeOut(globals.fadeTime);
+            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').prop('disabled', true);
         }
     });
 
     $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', function() {
         // Check if the tooltip is open
         if ($('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open === false &&
+            $('#settings-stream-url').val().indexOf('twitch.tv/') !== -1 &&
             $('#settings-enable-twitch-bot-checkbox').is(':checked') === false) {
 
             $('#settings-enable-twitch-bot-checkbox-container').tooltipster('open');
@@ -81,12 +88,14 @@ $(document).ready(function() {
 
     $('#settings-enable-twitch-bot-checkbox').change(function(data) {
         if ($('#settings-enable-twitch-bot-checkbox').prop('checked')) {
-            $('#settings-twitch-bot-delay-label').fadeIn(globals.fadeTime);
-            $('#settings-twitch-bot-delay').fadeIn(globals.fadeTime);
+            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 1);
+            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 1);
+            $('#settings-twitch-bot-delay').prop('disabled', false);
             $('#header-settings').tooltipster('reposition'); // Redraw the tooltip
         } else {
-            $('#settings-twitch-bot-delay-label').fadeOut(globals.fadeTime);
-            $('#settings-twitch-bot-delay').fadeOut(globals.fadeTime);
+            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').prop('disabled', true);
         }
     });
 
@@ -111,22 +120,6 @@ $(document).ready(function() {
         settings.set('volume', $('#settings-volume-slider').val() / 100);
         settings.saveSync();
 
-        // Username capitalization
-        let newUsername = $('#settings-username-capitalization').val();
-        if (newUsername !== globals.myUsername) {
-            // We set a new username
-            if (newUsername.toLowerCase() !== globals.myUsername.toLowerCase()) {
-                // We tried to enter a bogus stylization
-                $('#settings-username-capitalization').tooltipster('open');
-                return;
-            } else {
-                $('#settings-username-capitalization').tooltipster('close');
-                globals.conn.send('profileSetUsername', {
-                    name: newUsername,
-                });
-            }
-        }
-
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
         if (newStreamURL.startsWith('twitch.tv/')) {
@@ -137,65 +130,57 @@ $(document).ready(function() {
             newStreamURL = newStreamURL.replace('http://', 'https://');
         }
         $('#settings-stream-url').val(newStreamURL);
-        if (newStreamURL !== globals.myStreamURL) {
-            // We set a new stream
-            if (newStreamURL.startsWith('https://www.twitch.tv/') === false && newStreamURL !== '') {
-                // We tried to enter a non-valid stream URL
-                $('#settings-stream-url').tooltipster('open');
-                return;
-            } else {
-                $('#settings-stream-url').tooltipster('close');
-                if (newStreamURL === '') {
-                    newStreamURL = '-'; // Streams cannot be blank on the server-side
-                }
-                globals.conn.send('profileSetStreamURL', {
-                    name: newStreamURL,
-                });
+        if (newStreamURL.startsWith('https://www.twitch.tv/') === false && newStreamURL !== '') {
+            // We tried to enter a non-valid stream URL
+            $('#settings-stream-url').tooltipster('open');
+            return;
+        } else {
+            $('#settings-stream-url').tooltipster('close');
+            if (newStreamURL === '') {
+                newStreamURL = '-'; // Streams cannot be blank on the server-side
             }
         }
 
-        // Twitch bot
-        // (if we sent a new stream URL above, the Twitch bot was automatically turned off, so just always send the Twitch bot setting for simplicity)
-        if ($('#settings-enable-twitch-bot-checkbox').prop('checked')) {
-            // Tell the server we want to enable the Twitch bot
-            globals.myTwitchBotEnabled = true;
-            globals.conn.send('profileSetTwitchBotEnabled', {
-                enabled: globals.myTwitchBotEnabled,
-            });
-        } else {
-            // Tell the server we want to disable the Twitch bot
-            globals.myTwitchBotEnabled = false;
-            globals.conn.send('profileSetTwitchBotEnabled', {
-                enabled: globals.myTwitchBotEnabled,
-            });
-        }
+        // Twitch bot enabled
+        let newTwitchBotEnabled = $('#settings-enable-twitch-bot-checkbox').prop('checked');
 
         // Twitch bot delay
-        let newDelay = $('#settings-twitch-bot-delay').val();
-        if (/^\d+$/.test(newDelay) === false) {
+        let newTwitchBotDelay = $('#settings-twitch-bot-delay').val();
+        if (/^\d+$/.test(newTwitchBotDelay) === false) {
             // We tried to enter a non-number Twitch bot delay
             $('#settings-twitch-bot-delay').tooltipster('open');
             return;
         }
-        newDelay = parseInt(newDelay);
-        if (newDelay < 0 || newDelay > 60) {
+        newTwitchBotDelay = parseInt(newTwitchBotDelay);
+        if (newTwitchBotDelay < 0 || newTwitchBotDelay > 60) {
             // We tried to enter a delay out of the valid range
             $('#settings-twitch-bot-delay').tooltipster('open');
             return;
         }
         $('#settings-twitch-bot-delay').tooltipster('close');
-        if (newDelay !== globals.myTwitchBotDelay) {
-            globals.myTwitchBotDelay = newDelay;
-            globals.conn.send('profileSetTwitchBotDelay', {
-                value: globals.myTwitchBotDelay,
+
+        // Send new stream settings if something changed
+        if (newStreamURL !== globals.myStreamURL ||
+            newTwitchBotEnabled !== globals.myTwitchBotEnabled ||
+            newTwitchBotDelay !== globals.myTwitchBotDelay) {
+
+            if (newStreamURL === '-') {
+                globals.myStreamURL = '';
+            } else {
+                globals.myStreamURL = newStreamURL;
+            }
+            globals.myTwitchBotEnabled = newTwitchBotEnabled;
+            globals.myTwitchBotDelay   = newTwitchBotDelay;
+
+            globals.conn.send('profileSetStream', {
+                name:    newStreamURL,
+                enabled: newTwitchBotEnabled,
+                value:   newTwitchBotDelay,
             });
         }
 
         // Close the tooltip
         $('#header-settings').tooltipster('close');
-
-        // Restart the program
-        //ipcRenderer.send('asynchronous-message', 'restart');
     });
 });
 
@@ -235,30 +220,33 @@ exports.tooltipFunctionReady = function() {
     $('#settings-volume-slider').val(settings.get('volume') * 100);
     $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
 
-    // Change username capitalization
-    $('#settings-username-capitalization').val(globals.myUsername);
-
     // Change stream URL
     $('#settings-stream-url').val(globals.myStreamURL);
 
-    // Hide all of the optional settings by default
-    $('#settings-enable-twitch-bot-checkbox-container').fadeOut(0);
-    $('#settings-twitch-bot-delay-label').fadeOut(0);
-    $('#settings-twitch-bot-delay').fadeOut(0);
+    // Partially fade all of the optional settings by default
+    $('#settings-enable-twitch-bot-checkbox-container').fadeTo(0, 0.25);
     $('#settings-enable-twitch-bot-checkbox').prop('checked', false);
+    $('#settings-enable-twitch-bot-checkbox').prop('disabled', true);
+    $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'default');
+    $('#settings-twitch-bot-delay-label').fadeTo(0, 0.25);
+    $('#settings-twitch-bot-delay').fadeTo(0, 0.25);
+    $('#settings-twitch-bot-delay').prop('disabled', true);
 
     // Twitch bot delay
     $('#settings-twitch-bot-delay').val(globals.myTwitchBotDelay);
 
     // Show the checkbox they have a Twitch stream set
-    if (globals.myStreamURL.indexOf('twitch.tv') !== -1) {
-        $('#settings-enable-twitch-bot-checkbox-container').fadeIn(0);
+    if (globals.myStreamURL.indexOf('twitch.tv/') !== -1) {
+        $('#settings-enable-twitch-bot-checkbox-container').fadeTo(0, 1);
+        $('#settings-enable-twitch-bot-checkbox').prop('disabled', false);
+        $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'pointer');
 
         // Enable Twitch chat bot
         if (globals.myTwitchBotEnabled) {
             $('#settings-enable-twitch-bot-checkbox').prop('checked', true);
-            $('#settings-twitch-bot-delay-label').fadeIn(0);
-            $('#settings-twitch-bot-delay').fadeIn(0);
+            $('#settings-twitch-bot-delay-label').fadeTo(0, 1);
+            $('#settings-twitch-bot-delay').fadeTo(0, 1);
+            $('#settings-twitch-bot-delay').prop('disabled', false);
         }
     }
 
@@ -272,14 +260,6 @@ exports.tooltipFunctionReady = function() {
             theme: 'tooltipster-shadow',
             delay: 0,
             content: settings.get('logFilePath'),
-        });
-    }
-
-    if ($('#settings-username-capitalizationr').hasClass('tooltipstered') === false) {
-        $('#settings-username-capitalization').tooltipster({
-            theme: 'tooltipster-shadow',
-            delay: 0,
-            trigger: 'custom',
         });
     }
 

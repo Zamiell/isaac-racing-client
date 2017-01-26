@@ -11,13 +11,11 @@ const isDev  = require('electron-is-dev');
 const tracer = require('tracer');
 const Raven  = require('raven');
 
-// Constants
-const logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-
 /*
-    Logging (code duplicated between main, renderer, and log-watcher because of require/nodeRequire issues)
+    Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
+const logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
 const log = tracer.console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
@@ -103,7 +101,7 @@ const parseLine = function(line) {
         return; // We don't care about non-"INFO" lines
     }
 
-    if (line.startWith('Seed 70 added to SaveState')) {
+    if (line.startsWith('Seed 70 added to SaveState')) {
         // TODO
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
@@ -125,8 +123,8 @@ const parseLine = function(line) {
         // Sometimes there are lines of "Room count #", so filter those out
         let match = line.match(/Room (\d+\.\d+)\(/);
         if (match) {
-            let room = match[1];
-            process.send('New room: ' + room);
+            let roomID = match[1];
+            process.send('New room: ' + roomID);
         }
     } else if (line.startsWith('Adding collectible ')) {
         // A new item was picked up
