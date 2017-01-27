@@ -35,6 +35,11 @@ $(document).ready(function() {
         $('#title-choose-3').click(function() {
             loginDebug(3);
         });
+
+        $('#title-restart').click(function() {
+            // Restart the client
+            ipcRenderer.send('asynchronous-message', 'restart');
+        });
     } else {
         // Tell the main process to start the child process that will initialize Greenworks
         // That process will get our Steam ID, Steam screen name, and authentication ticket
@@ -55,11 +60,13 @@ const steam = function(event, message) {
     } else if (typeof(message) === 'string') {
         // The child process is sending us a message to log
         globals.log.info('Steam child message: ' + message);
+    } else {
+        // The child process is finished and has sent us the Steam-related information that we seek
+        globals.steam.id = message.id;
+        globals.steam.screenName = message.screenName;
+        globals.steam.ticket = message.ticket;
+        login();
     }
-    globals.steam.id = message.id;
-    globals.steam.screenName = message.screenName;
-    globals.steam.ticket = message.ticket;
-    login();
 };
 ipcRenderer.on('steam', steam);
 

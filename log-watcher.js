@@ -12,6 +12,14 @@ const tracer = require('tracer');
 const Raven  = require('raven');
 
 /*
+    Handle errors
+*/
+
+process.on('uncaughtException', function(err) {
+    process.send('error: ' + err);
+});
+
+/*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
@@ -43,14 +51,6 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     release: version,
     environment: (isDev ? 'development' : 'production'),
 }).install();
-
-/*
-    Handle errors
-*/
-
-process.on('uncaughtException', function(err) {
-    process.send('error: ' + err);
-});
 
 /*
     Log watcher stuff

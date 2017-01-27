@@ -13,7 +13,7 @@ const misc        = nodeRequire('./assets/js/misc');
 
 // Monitor for keystrokes inside of the browser window
 $(document).keydown(function(event) {
-    //console.log(event.which); // Find out the number that corresponds to the desired key
+    console.log(event.which); // Find out the number that corresponds to the desired key
 
     if (event.which === 192 && globals.currentScreen === 'title-ajax') { // "`"
         event.preventDefault();
@@ -30,6 +30,10 @@ $(document).keydown(function(event) {
     } else if (event.which === 51 && globals.currentScreen === 'title-ajax') { // "3"
         event.preventDefault();
         $('#title-choose-3').click();
+
+    } else if (event.which === 82 && globals.currentScreen === 'title-ajax') { // "r"
+        event.preventDefault();
+        $('#title-restart').click();
 
     } else if (event.which === 9) { // "Tab"
         if (globals.currentScreen !== 'lobby' && globals.currentScreen !== 'race') {

@@ -59,6 +59,7 @@ const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..
 var mainWindow; // Keep a global reference of the window object
                 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 var childLogWatcher = null;
+var childSteam = null;
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
@@ -105,9 +106,9 @@ function createWindow() {
     // Create the browser window
     let width = 1110;
     let height = 720;
-    //if (isDev) {
+    if (isDev) {
         width += 500;
-    //}
+    }
     mainWindow = new BrowserWindow({
         width:  width,
         height: height,
@@ -115,9 +116,9 @@ function createWindow() {
         title:  'Racing+',
         frame:  false,
     });
-    //if (isDev === true) {
+    if (isDev === true) {
         mainWindow.webContents.openDevTools();
-    //}
+    }
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove the taskbar flash state (this isn't currently used)
@@ -241,7 +242,10 @@ app.on('will-quit', function() {
     // Unregister the global keyboard hotkeys
     globalShortcut.unregisterAll();
 
-    // Tell the child process to exit (in Node, it will live forever even if the parent closes)
+    // Tell the child processes to exit (in Node, they will live forever even if the parent closes)
+    if (childSteam !== null) {
+        childSteam.send('exit');
+    }
     if (childLogWatcher !== null) {
         childLogWatcher.send('exit');
     }
@@ -269,9 +273,9 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         app.quit();
     } else if (arg1 === 'quitAndInstall') {
         autoUpdater.quitAndInstall();
-    } else if (arg1 === 'steam') {
+    } else if (arg1 === 'steam' && childSteam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
-        let childSteam;
+        // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
         if (isDev) {
             childSteam = fork('./steam');
         } else {
@@ -281,13 +285,27 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
                 cwd: path.join(__dirname, '..'),
             });
         }
-        log.info('Started the Steam Greenworks child process.');
+        log.info('Started the Greenworks child process.');
 
         // Receive notifications from the child process
         childSteam.on('message', function(message) {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('steam', message);
         });
+
+        // Track errors
+        childSteam.on('error', function(err) {
+            // Pass the error to the renderer (browser) process
+            mainWindow.webContents.send('steam', 'error: ' + err);
+        });
+
+        // Track when the process exits
+        childSteam.on('exit', function() {
+            mainWindow.webContents.send('steam', 'exited');
+        });
+    } else if (arg1 === 'steamExit') {
+        // The renderer has successfully authenticated and is now establishing a WebSocket connection, so we can kill the Greenworks process
+        childSteam.send('exit');
     } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
         // Start the log watcher in a separate process for performance reasons
         if (isDev) {
@@ -305,6 +323,12 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         childLogWatcher.on('message', function(message) {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('logWatcher', message);
+        });
+
+        // Track errors
+        childLogWatcher.on('error', function(err) {
+            // Pass the error to the renderer (browser) process
+            mainWindow.webContents.send('logWatcher', 'error: ' + err);
         });
 
         // Feed the child the path to the Isaac log file

@@ -13,6 +13,19 @@ const Raven      = require('raven');
 const greenworks = require('greenworks'); // This is not an NPM module
 
 /*
+    Handle errors
+*/
+
+process.on('uncaughtException', function(err) {
+    greenworksGotError(err);
+});
+
+function greenworksGotError(err) {
+    process.send('error: ' + err);
+    process.exit();
+}
+
+/*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
@@ -46,14 +59,6 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 }).install();
 
 /*
-    Handle errors
-*/
-
-process.on('uncaughtException', function(err) {
-    process.send('error: ' + err);
-});
-
-/*
     Greenworks stuff
 */
 
@@ -80,34 +85,25 @@ let steamIDObject = greenworks.getSteamId();
 
 // Get a session ticket from Steam and login to the Racing+ server
 greenworks.getAuthSessionTicket(function(ticket) {
-    greenworksGotTicket(ticket);
-}, function(err) {
-    greenworksGotError(err);
-});
-
-function greenworksGotTicket(ticket) {
-    // There is a bug where the first ticket a Steam account requests doesn't work for some reason
-    // We can tell if we are on the first ticket from the handle number
-    if (ticket.handle === 0) {
-        process.send('First ever Steam ticket detected. Skipping this one.');
-        greenworks.getAuthSessionTicket(function(ticket) {
-            greenworksGotTicket(ticket);
-        }, function(err) {
-            greenworksGotError(err);
-        });
-        return;
-    }
-
     let ticketString = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
     process.send({
         id:         steamIDObject.steamId,
         screenName: steamIDObject.screenName,
         ticket:     ticketString,
     });
-    process.exit();
-}
 
-function greenworksGotError(err) {
-    process.send('error: ' + err);
-    process.exit();
-}
+    // The ticket will become invalid if the process ends
+    // Thus, we need to keep the process alive doing nothing until we get a message that the authentication is over
+}, function(err) {
+    greenworksGotError(err);
+});
+
+// The parent will communicate with us, telling us when to exit
+process.on('message', function(message) {
+    // The child will stay alive even if the parent has closed, so we depend on the parent telling us when to die
+    // We need to stay alive until authentication is over, but killed after that so we it will not interfere with launching Isaac
+    // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
+    if (message === 'exit') {
+        process.exit();
+    }
+});

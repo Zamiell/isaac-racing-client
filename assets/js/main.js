@@ -6,6 +6,11 @@
 
 /*
     Bugs to fix:
+    - check to see if left message happens after race is over
+    - added connection and disconnection messages for all users
+    - add message of the day
+    - redo languages so that it has comments and is not straight JSON
+
     - implement names turning red when left
 
     - !judas
