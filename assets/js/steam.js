@@ -46,15 +46,15 @@ $(document).ready(function() {
 const steam = function(event, message) {
     if (message === 'errorInit') {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
-        misc.errorShow('Failed to initialize the Steam API. Please open Steam and relaunch Racing+.', false);
-        return;
-    } else if (message === 'errorTicket') {
-        misc.errorShow('Failed to generate a Steam ticket for login. Please restart Steam and relaunch Racing+.');
+        misc.errorShow('Failed to talk to Steam. Please open or restart Steam and relaunch Racing+.', false);
         return;
     } else if (typeof(message) === 'string' && message.startsWith('error: ')) {
         let error = message.match(/error: (.+)/)[1];
         misc.errorShow('Failed to talk to Steam: ' + error);
         return;
+    } else if (typeof(message) === 'string') {
+        // The child process is sending us a message to log
+        globals.log.info('Steam child message: ' + message);
     }
     globals.steam.id = message.id;
     globals.steam.screenName = message.screenName;

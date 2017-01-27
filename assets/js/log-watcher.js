@@ -10,6 +10,7 @@ const ipcRenderer = nodeRequire('electron').ipcRenderer;
 const globals     = nodeRequire('./assets/js/globals');
 const settings    = nodeRequire('./assets/js/settings');
 const misc        = nodeRequire('./assets/js/misc');
+const isaac       = nodeRequire('./assets/js/isaac');
 
 // globals.currentScreen is equal to "transition" when this is called
 exports.start = function() {
@@ -52,9 +53,9 @@ exports.start = function() {
 const logWatcher = function(event, message) {
     globals.log.info('Recieved log-watcher notification:', message);
 
-    if (message.startsWith("Error: ")) {
+    if (message.startsWith("error: ")) {
         // First, parse for errors
-        let error = message.match(/^Error: (.+)/)[1];
+        let error = message.match(/^error: (.+)/)[1];
         misc.errorShow('Something went wrong with the log monitoring program: ' + error);
         return;
     }
@@ -80,8 +81,13 @@ const logWatcher = function(event, message) {
     }
 
     // Parse the message
-    if (message === 'Mod installed.') {
-        
+    if (message === 'Mods changed.') {
+        // Another mod was enabled/disabled
+        isaac.start();
+    } else if (message.startsWith('BLCK CNDL on')) {
+        globals.blackCandleEnabled = true;
+    } else if (message.startsWith('BLCK CNDL off')) {
+        globals.blackCandleEnabled = false;
     } else if (message.startsWith('New seed: ')) {
         let m = message.match(/New seed: (.... ....)/);
         if (m) {

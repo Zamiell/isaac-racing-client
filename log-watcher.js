@@ -31,7 +31,6 @@ const log = tracer.console({
         });
     }
 });
-log.info("Child started: log-watcher");
 
 // Get the version
 let packageFileLocation = path.join(__dirname, 'package.json');
@@ -45,7 +44,19 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     environment: (isDev ? 'development' : 'production'),
 }).install();
 
-// The parent will communicate with us once, telling us the path to the log file
+/*
+    Handle errors
+*/
+
+process.on('uncaughtException', function(err) {
+    process.send('error: ' + err);
+});
+
+/*
+    Log watcher stuff
+*/
+
+// The parent will communicate with us, telling us the path to the log file
 process.on('message', function(message) {
     // The child will stay alive even if the parent has closed, so we depend on the parent telling us when to die
     if (message === 'exit') {
@@ -60,9 +71,9 @@ process.on('message', function(message) {
     // Thus, fs.watch will not work, because it uses the ReadDirectoryChangesW:
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465%28v=vs.85%29.aspx
     // Instead we need to use fs.watchFile, which is polling based and less efficient
-    log.info("Child log-watcher: Starting log monitoring on file: " + logPath);
+    process.send("Starting to watch file: " + logPath);
     if (fs.existsSync(logPath) === false) {
-        process.send('Error: The "' + logPath + '" file does not exist.');
+        process.send('error: The "' + logPath + '" file does not exist.');
         return;
     }
     var fd = fs.openSync(logPath, 'r');
@@ -89,7 +100,7 @@ process.on('message', function(message) {
 // Handle the new blob of data
 const logReadCallback = function(err, bytes, buff) {
     if (err) {
-        process.send('Error: ' + err);
+        process.send('error: ' + err);
         return;
     }
 
@@ -115,8 +126,15 @@ const parseLine = function(line) {
         return; // We don't care about non-"INFO" lines
     }
 
-    if (line.startsWith('Seed 70 added to SaveState')) {
-        // TODO
+    if (line.startsWith('Lua is resetting!')) {
+        // Another mod was enabled/disabled
+        process.send('Mod changed.');
+    } else if (line.startsWith('Seed 70 added to SaveState')) {
+        // BLCK CNDL seed was turned on
+        process.send('BLCK CNDL on');
+    } else if (line.startsWith('[INFO] - Menu Title Init')) {
+        // They have entered the menu
+        process.send('BLCK CNDL off');
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         let match = line.match(/\RNG Start Seed: (.... ....)/);

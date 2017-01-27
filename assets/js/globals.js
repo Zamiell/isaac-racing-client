@@ -13,6 +13,7 @@ const fadeTime     = 300; // In milliseconds
 // The object that contains all of the global variables
 module.exports = {
     autoUpdateStatus: null,
+    blackCandleEnabled: false,
     domain: domain,
     conn: null,
     currentScreen: 'title-ajax', // We always start on the title-ajax screen
@@ -32,6 +33,7 @@ module.exports = {
     roomList: {},
     raceList: {},
     secure: secure,
+    settingsLastStreamURL: null,
     spamTimer: new Date().getTime(),
     steam: {
         id: null,

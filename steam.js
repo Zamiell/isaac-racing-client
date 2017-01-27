@@ -32,7 +32,6 @@ const log = tracer.console({
         });
     }
 });
-log.info("Child started: steam");
 
 // Get the version
 let packageFileLocation = path.join(__dirname, 'package.json');
@@ -66,12 +65,14 @@ process.on('uncaughtException', function(err) {
 fs.writeFileSync('steam_appid.txt', '250900', 'utf8');
 
 // Initialize Greenworks
-// We could use greenworks.init instead of initAPI for more verbose error messages
-// However, we want to show a user-friendly error message to the user
-if (greenworks.initAPI() === false) {
-    // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
-    process.send('errorInit');
-    process.exit();
+try {
+    if (greenworks.init() === false) {
+        // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
+        process.send('errorInit');
+        process.exit();
+    }
+} catch(err) {
+    greenworksGotError(err);
 }
 
 // Get the object that contains the computer's Steam ID and screen name
@@ -79,6 +80,24 @@ let steamIDObject = greenworks.getSteamId();
 
 // Get a session ticket from Steam and login to the Racing+ server
 greenworks.getAuthSessionTicket(function(ticket) {
+    greenworksGotTicket(ticket);
+}, function(err) {
+    greenworksGotError(err);
+});
+
+function greenworksGotTicket(ticket) {
+    // There is a bug where the first ticket a Steam account requests doesn't work for some reason
+    // We can tell if we are on the first ticket from the handle number
+    if (ticket.handle === 0) {
+        process.send('First ever Steam ticket detected. Skipping this one.');
+        greenworks.getAuthSessionTicket(function(ticket) {
+            greenworksGotTicket(ticket);
+        }, function(err) {
+            greenworksGotError(err);
+        });
+        return;
+    }
+
     let ticketString = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
     process.send({
         id:         steamIDObject.steamId,
@@ -86,7 +105,9 @@ greenworks.getAuthSessionTicket(function(ticket) {
         ticket:     ticketString,
     });
     process.exit();
-}, function() {
-    process.send('errorTicket');
+}
+
+function greenworksGotError(err) {
+    process.send('error: ' + err);
     process.exit();
-});
+}

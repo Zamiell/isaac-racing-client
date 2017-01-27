@@ -6,8 +6,6 @@
 
 /*
     Bugs to fix:
-    - when typing in stream in settings, doesn't unfade checkbox quick enough
-
     - implement names turning red when left
 
     - !judas

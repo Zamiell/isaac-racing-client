@@ -58,31 +58,48 @@ $(document).ready(function() {
         audio.play();
     });
 
-    $('#settings-stream-url').keyup(function() {
-        // If they have specified a Twitch stream:
-        // - Reveal the "Enable Twitch chat bot" and uncheck it
-        // - Hide the "Delay (in seconds)"
-        if ($('#settings-stream-url').val().includes('twitch.tv/')) {
+    $('#settings-stream-url').keyup(settingsStreamURLKeyup);
+    function settingsStreamURLKeyup() {
+        let oldStreamURL = globals.settingsLastStreamURL;
+        let newStreamURL = $('#settings-stream-url').val();
+
+        if (oldStreamURL.indexOf('twitch.tv/') === -1 && newStreamURL.indexOf('twitch.tv/') !== -1) {
+            // There was no Twitch stream set before, but now there is
+            // So, reveal the "Enable Twitch chat bot" and uncheck it
             $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 1);
             $('#settings-enable-twitch-bot-checkbox').prop('disabled', false);
             $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'pointer');
-        } else {
-            $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 0.25);
-            $('#settings-enable-twitch-bot-checkbox').prop('disabled', true);
-            $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'default');
-            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
-            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
-            $('#settings-twitch-bot-delay').prop('disabled', true);
-        }
-
-        // They have changed their stream, so disable the Twitch bot
-        if ($('#settings-enable-twitch-bot-checkbox').is(':checked')) {
             $('#settings-enable-twitch-bot-checkbox').prop('checked', false); // Uncheck it
             $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
             $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
             $('#settings-twitch-bot-delay').prop('disabled', true);
+
+            // Wait for the fading to finish
+            setTimeout(function() {
+                settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        } else if (oldStreamURL.indexOf('twitch.tv/') !== -1 && newStreamURL.indexOf('twitch.tv/') === -1) {
+            // There was a Twitch stream set before, but now there isn't
+            // So, disable the Twitch bot
+            $('#settings-enable-twitch-bot-checkbox-container').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-enable-twitch-bot-checkbox').prop('disabled', true);
+            $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'default');
+            $('#settings-enable-twitch-bot-checkbox').prop('checked', false); // Uncheck it
+            $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 0.25);
+            $('#settings-twitch-bot-delay').prop('disabled', true);
+
+            // Wait for the fading to finish
+            setTimeout(function() {
+                settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+
         }
-    });
+
+        globals.settingsLastStreamURL = newStreamURL;
+    }
+    function settingsStreamURLCheck() {
+    }
 
     $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', function() {
         // Check if the tooltip is open
@@ -238,6 +255,7 @@ exports.tooltipFunctionReady = function() {
 
     // Change stream URL
     $('#settings-stream-url').val(globals.myStreamURL);
+    globals.settingsLastStreamURL = globals.myStreamURL;
 
     // Partially fade all of the optional settings by default
     $('#settings-enable-twitch-bot-checkbox-container').fadeTo(0, 0.25);
