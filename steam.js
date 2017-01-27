@@ -63,7 +63,7 @@ process.on('uncaughtException', function(err) {
 //   or
 //   D:\Repositories\isaac-racing-client\steam_appid.txt (in development)
 // 570660 is the Steam app ID for The Binding of Isaac: Afterbirth+
-fs.writeFileSync('steam_appid.txt', '570660', 'utf8');
+fs.writeFileSync('steam_appid.txt', '250900', 'utf8');
 
 // Initialize Greenworks
 // We could use greenworks.init instead of initAPI for more verbose error messages
