@@ -68,7 +68,8 @@ fs.writeFileSync('steam_appid.txt', '570660', 'utf8');
 // Initialize Greenworks
 // We could use greenworks.init instead of initAPI for more verbose error messages
 // However, we want to show a user-friendly error message to the user
-if (greenworks.initAPI() === false) {
+//if (greenworks.initAPI() === false) {
+if (greenworks.init() === false) { // This generates a more verbose error
     // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
     process.send('errorInit');
     process.exit();

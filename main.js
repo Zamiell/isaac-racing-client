@@ -253,8 +253,6 @@ app.on('will-quit', function() {
 
 ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
     log.info('Main process recieved message:', arg1);
-    log.info(childLogWatcher);
-    log.info(typeof(childLogWatcher));
 
     if (arg1 === 'minimize') {
         mainWindow.minimize();
