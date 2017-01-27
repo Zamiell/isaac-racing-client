@@ -6,7 +6,7 @@
 
 /*
     Bugs to fix:
-    - Sending race finish twice. Currently unknown as to why. Added more logging, now waiting to occur again.
+    - when typing in stream in settings, doesn't unfade checkbox quick enough
 
     - implement names turning red when left
 

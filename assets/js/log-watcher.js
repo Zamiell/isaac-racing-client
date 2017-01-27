@@ -80,7 +80,9 @@ const logWatcher = function(event, message) {
     }
 
     // Parse the message
-    if (message.startsWith('New seed: ')) {
+    if (message === 'Mod installed.') {
+        
+    } else if (message.startsWith('New seed: ')) {
         let m = message.match(/New seed: (.... ....)/);
         if (m) {
             let seed = m[1];

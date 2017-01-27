@@ -10,6 +10,7 @@ const globals    = nodeRequire('./assets/js/globals');
 const misc       = nodeRequire('./assets/js/misc');
 const chat       = nodeRequire('./assets/js/chat');
 const logWatcher = nodeRequire('./assets/js/log-watcher');
+const isaac      = nodeRequire('./assets/js/isaac');
 const header     = nodeRequire('./assets/js/ui/header');
 
 /*
@@ -33,12 +34,17 @@ $(document).ready(function() {
 // Called from the login screen or the register screen
 exports.show = function() {
     // Start the log watcher
-    //globals.log.info('Starting the log watching program.');
     if (logWatcher.start() === -1) {
         return;
     }
 
-    //globals.log.info('Entering the lobby.');
+    // Make sure all mods are disabled
+    if (isaac.start() === -1) {
+        return;
+    }
+
+    // Start Isaac
+    //isaac.start();
 
     // Make sure that all of the forms are cleared out
     $('#login-username').val('');
