@@ -6,35 +6,34 @@
 
 /*
     Bugs to fix:
-    - check to see if left message happens after race is over
-    - added connection and disconnection messages for all users
-    - add message of the day
-    - redo languages so that it has comments and is not straight JSON
+    - test Jud6s frame window for teratoma flies door opening
+    - finish fixing game type client + server side
+
+    - clicking profile doesn't work
+    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
+
+    - add health column
+    - server should remember build # and offer no repeats for seeded races
+    - don't show "1 left" in solo race
 
     - implement names turning red when left
 
-    - !judas
     - pms are broken
     - tab complete doesn't find zamiel2?
     - !entrants command for twitch bot
     - !left command for twitch bot
 
     - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
+        (probably have to reinit tooltipster every time on enter lobby from race function)
 
     - error while recieving PM during tab transition
 
     - make spacing slightly smaller for Type and Format on lobby
 
-    - /shame - Shame on those who haven't readied up.
 
     - look at sed screenshot, racer is cut off at the top
 
-    - clicking profile doesn't work
-    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
-
-    - need to be able to quit if already finished
-
-    - integrate with racing+
+    - integrate with lua
 
 
     Features to add:
@@ -44,7 +43,7 @@
     - show running time on the lobby of a running race
     - automatically sort race table when people move places
     - turn different color in lobby when in a race
-    - message of the day
+    - /shame - Shame on those who haven't readied up.
     - add stream to chat map
     - update columns for race:
         - time offset

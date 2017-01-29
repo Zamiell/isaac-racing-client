@@ -46,6 +46,8 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
     // We don't have to send some common errors to Sentry
     if (message === 'You have logged on from somewhere else, so you have been disconnected here.') {
         sendToSentry = false;
+    } else if (message === 'Error: Steam initialization failed. Steam is not running.') {
+        sendToSentry = false;
     }
 
     // Also send it to Sentry
@@ -83,7 +85,6 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
 
     // Change the title, if necessary
     if (customTitle !== null) {
-        console.log(customTitle);
         $('#error-modal-title').html(customTitle);
     }
 

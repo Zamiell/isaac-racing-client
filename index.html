@@ -176,56 +176,6 @@
                     </section>
                 </div><!-- title -->
 
-                <!-- Tutorial1 -->
-                <div id="tutorial1" class="hidden">
-                    <section class="box">
-                        <div class="row">
-                            <h3><span lang="en">Tutorial</span> (1/2)</h3>
-                        </div>
-
-                        <p lang="en">Start each race at the character selection screen, shown below.</p>
-
-                        <img src="assets/img/character-selection-screen.png" class="align-center" />
-                        <br />
-                        <br />
-
-                        <p lang="en">Stay there until the countdown reaches 0, then go into the game!</p>
-
-                        <button id="tutorial1-next-button" class="button small alt" type="button">
-                            <i class="fa fa-check" aria-hidden="true"></i>
-                            &nbsp;
-                            <span lang="en">Got it</span>
-                        </button>
-
-                    </section>
-                </div><!-- tutorial1 -->
-
-                <!-- Tutorial2 -->
-                <div id="tutorial2" class="hidden">
-                    <section class="box">
-                        <div class="row">
-                            <h3><span lang="en">Tutorial</span> (2/2)</h3>
-                        </div>
-
-                        <ul>
-                            <li>
-                                <span lang="en">When you finish the race, you don't have to do anything.</span><br />
-                                <span lang="en">(The program will know that you finished from Isaac's log file.)</span>
-                            </li>
-                            <li lang="en">If you die, you do not have to quit. Keep going if you want.</li>
-                            <li lang="en">If you want to give up for any reason, use the "Quit" button on the left side of the race screen.</li>
-                            <li lang="en">If you take longer than 30 minutes to complete a race, you will be forced to quit.</li>
-                        </ul>
-
-                        <button id="tutorial2-next-button" class="button small alt" type="button">
-                            <i class="fa fa-check" aria-hidden="true"></i>
-                            &nbsp;
-                            <span lang="en">Got it</span>
-                        </button>
-
-                    </section>
-                </div><!-- tutorial2 -->
-
                 <!-- Register -->
                 <div id="register">
                     <section class="box">
@@ -281,6 +231,56 @@
                         </center>
                     </section>
                 </div><!-- register -->
+
+                <!-- Tutorial1 -->
+                <div id="tutorial1" class="hidden">
+                    <section class="box">
+                        <div class="row">
+                            <h3><span lang="en">Tutorial</span> (1/2)</h3>
+                        </div>
+
+                        <p lang="en">Start each race at the character selection screen, shown below.</p>
+
+                        <img src="assets/img/character-selection-screen.png" class="align-center" />
+                        <br />
+                        <br />
+
+                        <p lang="en">Stay there until the countdown reaches 0, then go into the game!</p>
+
+                        <button id="tutorial1-next-button" class="button small alt" type="button">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            &nbsp;
+                            <span lang="en">Got it</span>
+                        </button>
+
+                    </section>
+                </div><!-- tutorial1 -->
+
+                <!-- Tutorial2 -->
+                <div id="tutorial2" class="hidden">
+                    <section class="box">
+                        <div class="row">
+                            <h3><span lang="en">Tutorial</span> (2/2)</h3>
+                        </div>
+
+                        <ul>
+                            <li>
+                                <span lang="en">When you finish the race, you don't have to do anything.</span><br />
+                                (<span lang="en">The program will know that you finished from Isaac's log file.</span>)
+                            </li>
+                            <li lang="en">If you die, you do not have to quit. Keep going if you want.</li>
+                            <li lang="en">If you want to give up for any reason, use the "Quit" button on the left side of the race screen.</li>
+                            <li lang="en">If you take longer than 30 minutes to complete a race, you will be forced to quit.</li>
+                        </ul>
+
+                        <button id="tutorial2-next-button" class="button small alt" type="button">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            &nbsp;
+                            <span lang="en">Got it</span>
+                        </button>
+
+                    </section>
+                </div><!-- tutorial2 -->
 
                 <!-- Updating -->
                 <div id="updating" class="hidden">
@@ -479,16 +479,10 @@
                     <br />
                     <span lang="en">For more information, please see</span> <a id="log-file-link"><span lang="en">the "Known Issues" page by Simon from Nicalis</span></a>.
                 </p>
-                <p id="log-file-description-3" class="hidden" lang="en">
-                    Please relaunch the program.
-                </p>
+                <p id="log-file-description-3" class="hidden" lang="en">Please relaunch the program.</p>
                 <br />
-                <button id="log-file-find" class="button small" type="button" lang="en">
-                    Locate "log.txt"
-                </button>
-                <button id="log-file-exit" class="button small hidden" type="button" lang="en">
-                    Exit and relaunch
-                </button>
+                <button id="log-file-find" class="button small" type="button" lang="en">Locate "log.txt"</button>
+                <button id="log-file-exit" class="button small hidden" type="button" lang="en">Exit and relaunch</button>
             </section>
         </div><!-- log-file-modal -->
 
@@ -500,9 +494,9 @@
                     <div class="row uniform 50%">
                         <div class="12u">
                             <ul class="actions">
-                                <li><span lang="en">Name</span>:</li>
+                                <li><span lang="en">Title</span>:</li>
                                 <li>
-                                    <input id="new-race-name" type="text" placeholder="Race name (optional)" lang="en" />
+                                    <input id="new-race-name" type="text" placeholder="Race title (optional)" lang="en" />
                                 </li>
                                 <li>
                                     <button id="new-race-randomize" class="button alt small" type="button">
@@ -522,24 +516,34 @@
                         <div class="2u">
                             <span id="new-race-type-icon"></span>
                         </div>
-                        <div class="6u">
+                        <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-type">
-                                    <option value="ranked" selected="selected"><span lang="en">Ranked</span> (<span lang="en">Season</span> 1)</option>
-                                    <option value="unranked"><span lang="en">Unranked</span> (<span lang="en">Practice</span>)</option>
+                                    <option value="ranked-solo">
+                                        <span lang="en">Solo</span> <span lang="en">Ranked</span> (<span lang="en">Season</span> 1)
+                                    </option>
+                                    <option value="unranked-solo" >
+                                        <span lang="en">Solo</span> <span lang="en">Unranked</span> (<span lang="en">Practice</span>)
+                                    </option>
+                                    <option value="ranked">
+                                        <span lang="en">Multiplayer Ranked</span> (<span lang="en">Season</span> 1)
+                                    </option>
+                                    <option value="unranked" selected="selected">
+                                        <span lang="en">Multiplayer Unranked</span> (<span lang="en">Casual</span>)
+                                    </option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row uniform 50%">
+                    <div id="new-race-format-container" class="row uniform 50%">
                         <div class="2u new-race-note">
                             <p><span lang="en">Format</span>:</p>
                         </div>
                         <div class="2u">
                             <span id="new-race-format-icon"></span>
                         </div>
-                        <div class="6u">
+                        <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-format">
                                     <option value="unseeded" selected="selected" lang="en">Unseeded</option>
@@ -558,7 +562,7 @@
                         <div class="2u">
                             <span id="new-race-character-icon"></span>
                         </div>
-                        <div class="6u">
+                        <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-character">
                                     <option value="Isaac">Isaac</option>
@@ -588,7 +592,7 @@
                         <div class="2u">
                             <span id="new-race-goal-icon"></span>
                         </div>
-                        <div class="6u">
+                        <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-goal">
                                     <option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
@@ -606,41 +610,41 @@
                         <div class="2u">
                             <span id="new-race-starting-build-icon"></span>
                         </div>
-                        <div class="6u">
+                        <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-starting-build">
-                                    <option value="Random" selected="selected">Random</option>
-                                    <option value="1">1 &nbsp;-&nbsp; 20/20</option>
-                                    <option value="2">2 &nbsp;-&nbsp; Chocolate Milk</option>
-                                    <option value="3">3 &nbsp;-&nbsp; Cricket's Body</option>
-                                    <option value="4">4 &nbsp;-&nbsp; Cricket's Head</option>
-                                    <option value="5">5 &nbsp;-&nbsp; Dead Eye</option>
-                                    <option value="6">6 &nbsp;-&nbsp; Death's Touch</option>
-                                    <option value="7">7 &nbsp;-&nbsp; Dr. Fetus</option>
-                                    <option value="8">8 &nbsp;-&nbsp; Epic Fetus</option>
-                                    <option value="9">9 &nbsp;-&nbsp; Ipecac</option>
-                                    <option value="10">10 &nbsp;-&nbsp; Judas' Shadow</option>
-                                    <option value="11">11 &nbsp;-&nbsp; Lil' Brimstone</option>
-                                    <option value="12">12 &nbsp;-&nbsp; Magic Mushroom</option>
-                                    <option value="13">13 &nbsp;-&nbsp; Mom's Knife</option>
-                                    <option value="14">14 &nbsp;-&nbsp; Monstro's Lung</option>
-                                    <option value="15">15 &nbsp;-&nbsp; Polyphemus</option>
-                                    <option value="16">16 &nbsp;-&nbsp; Proptosis</option>
-                                    <option value="17">17 &nbsp;-&nbsp; Sacrificial Dagger</option>
-                                    <option value="18">18 &nbsp;-&nbsp; Tech.5</option>
-                                    <option value="19">19 &nbsp;-&nbsp; Tech X</option>
-                                    <option value="20">20 &nbsp;-&nbsp; Brimstone</option>
-                                    <option value="21">21 &nbsp;-&nbsp; Incubus</option>
-                                    <option value="22">22 &nbsp;-&nbsp; Maw of the Void</option>
-                                    <option value="23">23 &nbsp;-&nbsp; Crown of Light</option>
-                                    <option value="24">24 &nbsp;-&nbsp; Godhead</option>
-                                    <option value="25">25 &nbsp;-&nbsp; Sacred Heart</option>
-                                    <option value="26">26 &nbsp;-&nbsp; Mutant Spider + The Inner Eye</option>
-                                    <option value="27">27 &nbsp;-&nbsp; Technology + A Lump of Coal</option>
-                                    <option value="28">28 &nbsp;-&nbsp; The Ludovico Technique + The Parasite</option>
-                                    <option value="29">29 &nbsp;-&nbsp; Fire Mind + Lucky Foot x13</option>
-                                    <option value="30">30 &nbsp;-&nbsp; Kamikaze! + Host Hat</option>
-                                    <option value="31">31 &nbsp;-&nbsp; Mega Blast + Habit + The Battery + AAA Battery</option>
+                                    <option value="Random" lang="en" selected="selected">Random</option>
+                                    <option value="1">20/20</option>
+                                    <option value="2">Chocolate Milk</option>
+                                    <option value="3">Cricket's Body</option>
+                                    <option value="4">Cricket's Head</option>
+                                    <option value="5">Dead Eye</option>
+                                    <option value="6">Death's Touch</option>
+                                    <option value="7">Dr. Fetus</option>
+                                    <option value="8">Epic Fetus</option>
+                                    <option value="9">Ipecac</option>
+                                    <option value="10">Judas' Shadow</option>
+                                    <option value="11">Lil' Brimstone</option>
+                                    <option value="12">Magic Mushroom</option>
+                                    <option value="13">Mom's Knife</option>
+                                    <option value="14">Monstro's Lung</option>
+                                    <option value="15">Polyphemus</option>
+                                    <option value="16">Proptosis</option>
+                                    <option value="17">Sacrificial Dagger</option>
+                                    <option value="18">Tech.5</option>
+                                    <option value="19">Tech X</option>
+                                    <option value="20">Brimstone</option>
+                                    <option value="21">Incubus</option>
+                                    <option value="22">Maw of the Void</option>
+                                    <option value="23">Crown of Light</option>
+                                    <option value="24">Godhead</option>
+                                    <option value="25">Sacred Heart</option>
+                                    <option value="26">Mutant Spider + The Inner Eye</option>
+                                    <option value="27">Technology + A Lump of Coal</option>
+                                    <option value="28">The Ludovico Technique + The Parasite</option>
+                                    <option value="29">Fire Mind + Lucky Foot x13</option>
+                                    <option value="30">Kamikaze! + Host Hat</option>
+                                    <option value="31">Mega Blast + Habit + The Battery + AAA Battery</option>
                                 </select>
                             </div>
                         </div>
@@ -863,6 +867,8 @@
             <img src="assets/img/goals/Blue Baby.png" />
             <img src="assets/img/goals/Mega Satan.png" />
             <img src="assets/img/goals/The Lamb.png" />
+            <img src="assets/img/type/ranked-solo.png" />
+            <img src="assets/img/type/unranked-solo.png" />
             <img src="assets/img/type/ranked.png" />
             <img src="assets/img/type/unranked.png" />
         </div>

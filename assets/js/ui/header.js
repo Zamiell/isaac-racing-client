@@ -57,12 +57,9 @@ $(document).ready(function() {
     */
 
     $('#header-lobby').click(function() {
+        // Check to make sure we are actually on the race screen
         if (globals.currentScreen !== 'race') {
             return;
-        } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === true) {
-            if (globals.raceList[globals.currentRaceID].status === 'in progress') {
-                return; // The race is still in progress, so we can't return from the race yet
-            }
         }
 
         // Don't allow people to spam this
@@ -73,41 +70,81 @@ $(document).ready(function() {
             globals.spamTimer = now;
         }
 
-        // Check to see if we should leave the race
-        if (globals.raceList.hasOwnProperty(globals.currentRaceID)) {
-            if (globals.raceList[globals.currentRaceID].status === 'open') {
-                globals.conn.send('raceLeave', {
-                    'id': globals.currentRaceID,
-                });
-            }
-        } else {
+        // Check to see if the race is over
+        if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+            // The race is over, so we just need to leave the channel
+            globals.conn.send('roomLeave', {
+                room: '_race_' + globals.currentRaceID,
+            });
             lobbyScreen.showFromRace();
+            return;
         }
+
+       // The race is not over, so check to see if it has started yet
+       if (globals.raceList[globals.currentRaceID].status === 'open') {
+           // The race has not started yet, so leave the race entirely
+           globals.conn.send('raceLeave', {
+               id: globals.currentRaceID,
+           });
+           return;
+       }
+
+       // The race is not over, so check to see if it is in progress
+       if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+           // Check to see if we are still racing
+           for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+               let racer = globals.raceList[globals.currentRaceID].racerList[i];
+               if (racer.name === globals.myUsername) {
+                   // We are racing, so check to see if we are allowed to go back to the lobby
+                   if (racer.status === 'finished' || racer.status === 'quit') {
+                       globals.conn.send('roomLeave', {
+                           room: '_race_' + globals.currentRaceID,
+                       });
+                       lobbyScreen.showFromRace();
+                   }
+                   break;
+               }
+           }
+       }
     });
 
     $('#header-lobby').tooltipster({
         theme: 'tooltipster-shadow',
         delay: 0,
         functionBefore: function() {
-            if (globals.currentScreen === 'race') {
-                if (globals.raceList.hasOwnProperty(globals.currentRaceID)) {
-                    if (globals.raceList[globals.currentRaceID].status === 'starting' ||
-                        globals.raceList[globals.currentRaceID].status === 'in progress') {
-
-                        // The race has already started
-                        return true;
-                    } else {
-                        // The race has not started yet
-                        return false;
-                    }
-                } else {
-                    // The race is finished
-                    return false;
-                }
-            } else {
-                // Not on the race screen
+            // Check to make sure we are actually on the race screen
+            if (globals.currentScreen !== 'race') {
                 return false;
             }
+
+            // Check to see if the race is still going
+            if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+                // The race is over
+                return false;
+            }
+
+            // The race is not over, so check to see if it has started yet
+            if (globals.raceList[globals.currentRaceID].status !== 'starting' &&
+                globals.raceList[globals.currentRaceID].status !== 'in progress') {
+
+                // The race has not started yet
+                return false;
+            }
+
+            // Check to see if we are still racing
+            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+                let racer = globals.raceList[globals.currentRaceID].racerList[i];
+                if (racer.name === globals.myUsername) {
+                    // We are racing, so check to see if we have finished or quit
+                    if (racer.status === 'finished' || racer.status === 'quit') {
+                        return false;
+                    }
+                    break;
+                }
+            }
+
+            // The race is either starting or in progress
+            return true;
         },
     });
 
@@ -185,17 +222,43 @@ $(document).ready(function() {
         $('#new-race-format').css('border-color', 'green');
         setTimeout(function() {
             $('#new-race-format').css('border-color', oldColor);
-        }, 300);
+        }, globals.fadeTime);
 
         // Change the subsequent options accordingly
         let format = $('#new-race-format').val();
-        if (newType === 'ranked') {
+        if (newType === 'ranked-solo') {
+            // Change the format dropdown
+            $('#new-race-format').val('unseeded').change();
+            $('#new-race-character').val('Judas').change();
+            $('#new-race-goal').val('Blue Baby').change();
+
+            // Hide the format, character and goal dropdowns if it is not a seeded race
+            $('#new-race-format-container').fadeOut(globals.fadeTime);
+            $('#new-race-character-container').fadeOut(globals.fadeTime);
+            $('#new-race-goal-container').fadeOut(globals.fadeTime, function() {
+                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+            });
+        } else if (newType === 'unranked-solo') {
+            // Change the format dropdown
+            $('#new-race-format-seeded').fadeIn(0);
+            $('#new-race-format-diversity').fadeIn(0);
+            $('#new-race-format-custom').fadeIn(0);
+
+            // Show the character and goal dropdowns
+            setTimeout(function() {
+                $('#new-race-format-container').fadeIn(globals.fadeTime);
+                $('#new-race-character-container').fadeIn(globals.fadeTime);
+                $('#new-race-goal-container').fadeIn(globals.fadeTime);
+                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+            }, globals.fadeTime);
+        } else if (newType === 'ranked') {
             // Change the format dropdown
             if (format === 'diversity' || format === 'custom') {
                 $('#new-race-format').val('unseeded').change();
                 $('#new-race-character').val('Judas').change();
                 $('#new-race-goal').val('Blue Baby').change();
             }
+            $('#new-race-format-seeded').fadeIn(0);
             $('#new-race-format-diversity').fadeOut(0);
             $('#new-race-format-custom').fadeOut(0);
 
@@ -214,10 +277,11 @@ $(document).ready(function() {
             // Show the character and goal dropdowns (if it is a seeded race, they should be already shown)
             if (format !== 'seeded') {
                 setTimeout(function() {
+                    $('#new-race-format-container').fadeIn(globals.fadeTime);
                     $('#new-race-character-container').fadeIn(globals.fadeTime);
                     $('#new-race-goal-container').fadeIn(globals.fadeTime);
                     $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-                }, 300);
+                }, globals.fadeTime);
             }
         }
 
@@ -253,7 +317,7 @@ $(document).ready(function() {
                 $('#new-race-goal-container').fadeIn(globals.fadeTime);
                 $('#new-race-starting-build-container').fadeIn(globals.fadeTime);
                 $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-            }, 300);
+            }, globals.fadeTime);
         } else {
             let type = $('#new-race-type').val();
             if (type === 'ranked') {
@@ -354,8 +418,8 @@ $(document).ready(function() {
         };
         globals.currentScreen = 'waiting-for-server';
         globals.conn.send('raceCreate', {
-            'name': name,
-            'ruleset': rulesetObject,
+            name: name,
+            ruleset: rulesetObject,
         });
 
         // Return false or else the form will submit and reload the page

@@ -25,20 +25,23 @@ module.exports = {
     lang: null, // The language switcher instance
     logMonitoringProgram: null,
     myUsername: null,
-    myStreamURL: null,
-    myTwitchBotEnabled: null,
-    myTwitchBotDelay: null,
     playingSound: false,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
     raceList: {},
     secure: secure,
-    settingsLastStreamURL: null,
     spamTimer: new Date().getTime(),
     steam: {
         id: null,
         screenName: null,
         ticket: null,
+    },
+    stream: {
+        URL: '',
+        URLBeforeTyping: '',
+        URLBeforeSubmit: '',
+        TwitchBotEnabled: null,
+        TwitchBotDelay: null,
     },
     tabCompleteCounter: 0,
 	tabCompleteIndex: 0,

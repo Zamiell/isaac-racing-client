@@ -25,7 +25,7 @@ exports.start = function() {
     // Go through all the subdirectories of the mod folder
     fs.readdirSync(modsPath).filter(function(file) {
         if (fs.statSync(path.join(modsPath, file)).isDirectory()) {
-            
+            //globals.log.info.log()
         }
     });
 

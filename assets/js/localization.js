@@ -24,7 +24,7 @@ $(document).ready(function() {
             // We don't need to load English
             continue;
         }
-        globals.lang.dynamic(languageArray[0], 'assets/languages/' + languageArray[0] + '.json');
+        nodeRequire('./assets/languages/' + languageArray[0]);
     }
     globals.lang.init({
         defaultLang: validLanguages[0][0],

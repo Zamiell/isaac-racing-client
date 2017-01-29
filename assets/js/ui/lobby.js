@@ -133,7 +133,7 @@ exports.raceDraw = function(race) {
     // Column 1 - Name
     raceDiv += '<td id="lobby-current-races-' + race.id + '-name" class="lobby-current-races-name">';
     if (race.name === '-') {
-        raceDiv += 'Race ' + race.id;
+        raceDiv += '<span lang="en">Race</span> ' + race.id;
     } else {
         raceDiv += misc.escapeHtml(race.name);
     }

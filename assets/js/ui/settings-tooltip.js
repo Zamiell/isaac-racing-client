@@ -60,7 +60,7 @@ $(document).ready(function() {
 
     $('#settings-stream-url').keyup(settingsStreamURLKeyup);
     function settingsStreamURLKeyup() {
-        let oldStreamURL = globals.settingsLastStreamURL;
+        let oldStreamURL = globals.stream.URLBeforeTyping;
         let newStreamURL = $('#settings-stream-url').val();
 
         if (oldStreamURL.indexOf('twitch.tv/') === -1 && newStreamURL.indexOf('twitch.tv/') !== -1) {
@@ -96,7 +96,7 @@ $(document).ready(function() {
 
         }
 
-        globals.settingsLastStreamURL = newStreamURL;
+        globals.stream.URLBeforeTyping = newStreamURL;
     }
     function settingsStreamURLCheck() {
     }
@@ -188,18 +188,23 @@ $(document).ready(function() {
         $('#settings-twitch-bot-delay').tooltipster('close');
 
         // Send new stream settings if something changed
-        if (newStreamURL !== globals.myStreamURL ||
-            newTwitchBotEnabled !== globals.myTwitchBotEnabled ||
-            newTwitchBotDelay !== globals.myTwitchBotDelay) {
+        if (newStreamURL !== globals.stream.URL ||
+            newTwitchBotEnabled !== globals.stream.TwitchBotEnabled ||
+            newTwitchBotDelay !== globals.stream.TwitchBotDelay) {
 
+            // Back up the stream URL in case we get a error/warning back from the server
+            globals.stream.URLBeforeSubmit = globals.stream.URL;
+
+            // Update the global copies of these settings
             if (newStreamURL === '-') {
-                globals.myStreamURL = '';
+                globals.stream.URL = '';
             } else {
-                globals.myStreamURL = newStreamURL;
+                globals.stream.URL = newStreamURL;
             }
-            globals.myTwitchBotEnabled = newTwitchBotEnabled;
-            globals.myTwitchBotDelay   = newTwitchBotDelay;
+            globals.stream.TwitchBotEnabled = newTwitchBotEnabled;
+            globals.stream.TwitchBotDelay   = newTwitchBotDelay;
 
+            // Send them to the server
             globals.conn.send('profileSetStream', {
                 name:    newStreamURL,
                 enabled: newTwitchBotEnabled,
@@ -254,8 +259,8 @@ exports.tooltipFunctionReady = function() {
     $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
 
     // Change stream URL
-    $('#settings-stream-url').val(globals.myStreamURL);
-    globals.settingsLastStreamURL = globals.myStreamURL;
+    $('#settings-stream-url').val(globals.stream.URL);
+    globals.stream.URLBeforeTyping = globals.stream.URL;
 
     // Partially fade all of the optional settings by default
     $('#settings-enable-twitch-bot-checkbox-container').fadeTo(0, 0.25);
@@ -267,16 +272,16 @@ exports.tooltipFunctionReady = function() {
     $('#settings-twitch-bot-delay').prop('disabled', true);
 
     // Twitch bot delay
-    $('#settings-twitch-bot-delay').val(globals.myTwitchBotDelay);
+    $('#settings-twitch-bot-delay').val(globals.stream.TwitchBotDelay);
 
     // Show the checkbox they have a Twitch stream set
-    if (globals.myStreamURL.indexOf('twitch.tv/') !== -1) {
+    if (globals.stream.URL.indexOf('twitch.tv/') !== -1) {
         $('#settings-enable-twitch-bot-checkbox-container').fadeTo(0, 1);
         $('#settings-enable-twitch-bot-checkbox').prop('disabled', false);
         $('#settings-enable-twitch-bot-checkbox-label').css('cursor', 'pointer');
 
         // Enable Twitch chat bot
-        if (globals.myTwitchBotEnabled) {
+        if (globals.stream.TwitchBotEnabled) {
             $('#settings-enable-twitch-bot-checkbox').prop('checked', true);
             $('#settings-twitch-bot-delay-label').fadeTo(0, 1);
             $('#settings-twitch-bot-delay').fadeTo(0, 1);

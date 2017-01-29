@@ -189,7 +189,16 @@ const show = function(raceID) {
     $('#header-help').fadeOut(globals.fadeTime);
     $('#header-new-race').fadeOut(globals.fadeTime);
     if (globals.raceList[globals.currentRaceID].status === 'in progress') {
-        $('#header-lobby').addClass('disabled');
+        // Check to see if we are still racing
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+            if (racer.name === globals.myUsername) {
+                if (racer.status !== 'finished' && racer.status !== 'quit') {
+                    $('#header-lobby').addClass('disabled');
+                }
+                break;
+            }
+        }
     }
     $('#header-settings').fadeOut(globals.fadeTime, function() {
         $('#header-profile').fadeIn(globals.fadeTime);
@@ -471,6 +480,9 @@ const participantsSetStatus = function(i, initial = false) {
         // Hide the button since we can only quit once
         $('#race-controls-padding').fadeOut(globals.fadeTime);
         $('#race-quit-button-container').fadeOut(globals.fadeTime);
+
+        // Activate the "Lobby" button in the header
+        $('#header-lobby').removeClass('disabled');
     }
 
     // Play a sound effect if someone quit or finished
@@ -695,7 +707,7 @@ const go = function(raceID) {
         return;
     }
 
-    $('#race-countdown').html('<span lang="en">Go!</span>');
+    $('#race-countdown').html('<span lang="en">Go</span>!');
     $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
 
     // Press enter inside of the game

@@ -305,7 +305,9 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         });
     } else if (arg1 === 'steamExit') {
         // The renderer has successfully authenticated and is now establishing a WebSocket connection, so we can kill the Greenworks process
-        childSteam.send('exit');
+        if (childSteam !== null) {
+            childSteam.send('exit');
+        }
     } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
         // Start the log watcher in a separate process for performance reasons
         if (isDev) {

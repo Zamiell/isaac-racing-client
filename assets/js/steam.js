@@ -55,7 +55,7 @@ const steam = function(event, message) {
         return;
     } else if (typeof(message) === 'string' && message.startsWith('error: ')) {
         let error = message.match(/error: (.+)/)[1];
-        misc.errorShow('Failed to talk to Steam: ' + error);
+        misc.errorShow(error);
         return;
     } else if (typeof(message) === 'string') {
         // The child process is sending us a message to log
