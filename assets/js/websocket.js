@@ -287,6 +287,9 @@ exports.init = function(username, password, remember) {
 
     // On initial connection, we get a list of all of the races that are currently open or ongoing
     globals.conn.on('raceList', function(data) {
+        // Log the event
+        globals.log.info('Websocket - raceList - ' + JSON.stringify(data));
+
         // Check for empty races
         if (data.length === 0) {
             $('#lobby-current-races-table-body').html('');

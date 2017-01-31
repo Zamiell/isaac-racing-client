@@ -3931,9 +3931,10 @@
         width: 2.5em;
     }
 
+    /* This is column 1 of the lobby races table */
     .lobby-current-races-name {
-        width: 275px;
-        max-width: 275px;
+        width: 225px;
+        max-width: 225px;
         white-space: nowrap;
         overflow: hidden;
     }
@@ -3946,9 +3947,10 @@
         overflow: hidden;
     }
 
+    /* This is column 6 of the lobby races table */
     .lobby-current-races-racers {
-        width: 225px;
-        max-width: 225px;
+        width: 230px;
+        max-width: 230px;
         white-space: nowrap;
         overflow: hidden;
     }

@@ -120,7 +120,7 @@ exports.showFromRace = function() {
 exports.raceDraw = function(race) {
     // Create the new row
     let raceDiv = '<tr id="lobby-current-races-' + race.id + '" class="';
-    if (race.status === 'open') {
+    if (race.status === 'open' && race.ruleset.solo === false) {
         raceDiv += 'lobby-race-row-open ';
     }
     raceDiv += 'hidden">';
