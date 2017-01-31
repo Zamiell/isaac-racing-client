@@ -43,11 +43,11 @@
     - show running time on the lobby of a running race
     - automatically sort race table when people move places
     - turn different color in lobby when in a race
-    - /shame - Shame on those who haven't readied up.
     - add stream to chat map
     - update columns for race:
         - time offset
         - fill in items (should also show seed on this screen)
+    - /shame - Shame on those who haven't readied up.
     - "/msg invadertim" shouldn't send to server if he is offline
     - "/msg invadertim" should be made to be the right case (on the server)
     - tab complete for chat

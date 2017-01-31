@@ -1,0 +1,29 @@
+<players bigportraitroot="gfx/ui/stage/" nameimageroot="gfx/ui/boss/" portraitroot="gfx/ui/boss/" root="gfx/characters/costumes/">
+	<player bigportrait="PlayerPortraitBig_01_Isaac.png" bombs="1" hp="6" id="0" items="105" name="Isaac" nameimage="PlayerName_01_Isaac.png" portrait="PlayerPortrait_01_Isaac.png" skin="Character_001_Isaac.png" skinColor="-1" />
+	<player bigportrait="PlayerPortraitBig_02_Magdalene.png" costume="7" hp="8" id="1" items="105" name="Magdalene" nameimage="PlayerName_02_Magdalene.png" portrait="PlayerPortrait_02_Magdalene.png" skin="Character_002_Magdalene.png" skinColor="-1" />
+	<player bigportrait="PlayerPortraitBig_03_Cain.png" costume="8" hp="4" id="2" items="105,46" keys="1" name="Cain" nameimage="PlayerName_03_Cain.png" portrait="PlayerPortrait_03_Cain.png" skin="Character_003_Cain.png" skinColor="-1" />
+	<player armor="1" bigportrait="PlayerPortraitBig_04_Judas.png" bombs="1" costume="9" hp="2" id="3" items="105" name="Judas" nameimage="PlayerName_04_Judas.png" portrait="PlayerPortrait_04_Judas.png" skin="Character_004_Judas.png" skinColor="-1" />
+	<player armor="7" bigportrait="PlayerPortraitBig_06_Bluebaby.png" hp="0" id="4" items="105" name="???" nameimage="PlayerName_06_BlueBaby.png" portrait="PlayerPortrait_06_BlueBaby.png" skin="Character_006_Bluebaby.png" skinColor="2" />
+	<player bigportrait="PlayerPortraitBig_05_Eve.png" costume="10" hp="4" id="5" items="105,122,117" name="Eve" nameimage="PlayerName_05_Eve.png" portrait="PlayerPortrait_05_Eve.png" skin="Character_005_Eve.png" skinColor="-1" />
+	<player bigportrait="PlayerPortraitBig_07_Samson.png" costume="13" hp="6" id="6" items="105,157" name="Samson" nameimage="PlayerName_07_Samson.png" portrait="PlayerPortrait_07_Samson.png" skin="Character_007_Samson.png" skinColor="-1" />
+	<player armor="1" bigportrait="PlayerPortraitBig_08_Azazel.png" card="1" costume="11" hp="2" id="7" items="105" name="Azazel" nameimage="PlayerName_08_Azazel.png" portrait="PlayerPortrait_08_Azazel.png" skin="Character_008_Azazel.png" skinColor="1" />
+	<player bigportrait="PlayerPortraitBig_09_Lazarus.png" costume="32" hp="6" id="8" items="105" name="Lazarus" nameimage="PlayerName_10_Lazarus.png" pill="1" portrait="PlayerPortrait_09_Lazarus.png" skin="Character_009_Lazarus.png" skinColor="-1" />
+	<player bigportrait="PlayerPortraitBig_09_Eden.png" costume="12" id="9" name="Eden" nameimage="PlayerName_09_Eden.png" portrait="PlayerPortrait_09_Eden.png" skin="Character_009_Eden.png" skinColor="-1">
+		<hair gfx="Character_009_EdenHair1.png" />
+		<hair gfx="Character_009_EdenHair2.png" />
+		<hair gfx="Character_009_EdenHair3.png" />
+		<hair gfx="Character_009_EdenHair4.png" />
+		<hair gfx="Character_009_EdenHair5.png" />
+		<hair gfx="Character_009_EdenHair6.png" />
+		<hair gfx="Character_009_EdenHair7.png" />
+		<hair gfx="Character_009_EdenHair8.png" />
+		<hair gfx="Character_009_EdenHair9.png" />
+		<hair gfx="Character_009_EdenHair10.png" />
+	</player>
+	<player armor="1" bigportrait="PlayerPortraitBig_12_TheLost.png" coins="1" hp="0" id="10" items="105" name="The Lost" nameimage="PlayerName_12_TheLost.png" portrait="PlayerPortrait_12_TheLost.png" skin="Character_012_TheLost.png" skinColor="0" />
+	<player bigportrait="PlayerPortraitBig_10_Lazarus2.png" costume="33" hp="2" id="11" items="214" name="Lazarus II" nameimage="PlayerName_10_Lazarus.png" portrait="PlayerPortrait_10_Lazarus2.png" skin="Character_010_Lazarus2.png" skinColor="-1" />
+	<player bigportrait="PlayerPortraitBig_BlackJudas.png" black="4" id="12" name="Black Judas" nameimage="PlayerName_04_Judas.png" portrait="PlayerPortrait_BlackJudas.png" skin="Character_013_BlackJudas.png" skinColor="1" />
+	<player bigportrait="PlayerPortraitBig_Lilith.png" black="4" canShoot="false" costume="34" hp="2" id="13" items="105,412" name="Lilith" nameimage="PlayerName_13_Lilith.png" portrait="PlayerPortrait_13_Lilith.png" skin="Character_014_Lilith.png" skinColor="1" />
+	<player bigportrait="PlayerPortraitBig_Keeper.png" bombs="1" hp="4" id="14" items="105,501,498" name="Keeper" nameimage="PlayerName_14_TheKeeper.png" portrait="PlayerPortrait_14_Keeper.png" skin="Character_015_Keeper.png" skinColor="5" />
+	<player bigportrait="PlayerPortraitBig_15_Apollyon.png" costume="36" hp="4" id="15" items="105" name="Apollyon" nameimage="PlayerName_15_Apollyon.png" portrait="PlayerPortrait_15_Apollyon.png" skin="Character_016_Apollyon.png" skinColor="5" />
+</players>

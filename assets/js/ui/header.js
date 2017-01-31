@@ -363,6 +363,14 @@ $(document).ready(function() {
         let character = $('#new-race-character').val();
         let goal = $('#new-race-goal').val();
         let startingBuild;
+        let solo = false;
+        if (type === 'ranked-solo') {
+            type = 'ranked';
+            solo = true;
+        } else if (type === 'unranked-solo') {
+            type = 'unranked';
+            solo = true;
+        }
         if (format === 'seeded') {
             startingBuild = $('#new-race-starting-build').val();
         } else {
@@ -410,11 +418,12 @@ $(document).ready(function() {
 
         // Create the race
         let rulesetObject = {
-            'type': type,
-            'format': format,
-            'character': character,
-            'goal': goal,
-            'startingBuild': startingBuild,
+            type: type,
+            solo: solo,
+            format: format,
+            character: character,
+            goal: goal,
+            startingBuild: startingBuild,
         };
         globals.currentScreen = 'waiting-for-server';
         globals.conn.send('raceCreate', {

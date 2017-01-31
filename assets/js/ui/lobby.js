@@ -38,12 +38,7 @@ exports.show = function() {
         return;
     }
 
-    // Make sure all mods are disabled
-    if (isaac.start() === -1) {
-        return;
-    }
-
-    // Start Isaac
+    // Launch Isaac
     //isaac.start();
 
     // Make sure that all of the forms are cleared out
@@ -157,7 +152,11 @@ exports.raceDraw = function(race) {
     raceDiv += '<td><span class="lobby-current-races-type-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.type + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    raceDiv += '<span lang="en">' + race.ruleset.type.capitalize() + '</span></td>';
+    raceDiv += '<span lang="en">' + race.ruleset.type.capitalize() + '</span>';
+    if (race.ruleset.solo) {
+        raceDiv += ' (<span lang="en">Solo</span>)';
+    }
+    raceDiv += '</td>';
 
     // Column 4 - Format
     raceDiv += '<td><span class="lobby-current-races-format-icon">';
@@ -190,8 +189,13 @@ exports.raceDraw = function(race) {
 function raceDraw2(race) {
     // Fade in the race row
     $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, function() {
+        // While we were fading in, the race might have ended
+        if (globals.raceList.hasOwnProperty(race.id) === false) {
+            return;
+        }
+
         // Make the row clickable
-        if (globals.raceList[race.id].status === 'open') {
+        if (globals.raceList[race.id].status === 'open' && globals.raceList[race.id].ruleset.solo === false) {
             $('#lobby-current-races-' + race.id).click(function() {
                 if (globals.currentScreen === 'lobby') {
                     globals.currentScreen = 'waiting-for-server';
