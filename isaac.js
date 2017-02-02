@@ -259,7 +259,13 @@ function deleteOldLuaMod() {
 // Copy over the new Racing+ mod
 function copyLuaMod() {
     log.info('Copying over the Lua mod.');
-    fs.copy(path.join('assets', 'mod', 'Racing+'), path.join(modsPath, 'Racing+'), function (err) {
+    let newModPath;
+    if (isDev) {
+        newModPath = path.join('assets', 'mod', 'Racing+');
+    } else {
+        newModPath = path.join('app.asar', 'assets', 'mod', 'Racing+');
+    }
+    fs.copy(newModPath, path.join(modsPath, 'Racing+'), function (err) {
         if (err) {
             process.send('error: Failed to copy the new Racing+ Lua mod: ' + err, processExit);
         }
