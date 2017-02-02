@@ -4163,6 +4163,10 @@
         width: 20em;
     }
 
+    #settings-stream-url-error {
+        color: red;
+    }
+
     #settings-enable-twitch-bot-checkbox-container {
         position: relative;
         top: 0.25em;

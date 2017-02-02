@@ -57,11 +57,6 @@ const send = function() {
     saveDat += '  datetimeWritten = ' + epoch + '\n';
     saveDat += '}\n';
 
-    // Truncate all whitepsace to make the file size smaller in production
-    if (isDev === false) {
-        saveDat = saveDat.replace(/\s/g, '');
-    }
-
     // Write to it
     fs.writeFile(globals.modLoaderFile, saveDat, function(err) {
         if (err) {

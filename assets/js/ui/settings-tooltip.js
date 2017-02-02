@@ -150,12 +150,17 @@ $(document).ready(function() {
 
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
+        if (newStreamURL.startsWith('http://')) {
+            newStreamURL = newStreamURL.replace('http://', 'https://');
+        }
+        if (newStreamURL.startsWith('https://twitch.tv/')) {
+            newStreamURL = newStreamURL.replace('twitch.tv', 'www.twitch.tv');
+        }
         if (newStreamURL.startsWith('twitch.tv/')) {
             newStreamURL = 'https://www.' + newStreamURL;
-        } else if (newStreamURL.startsWith('www.twitch.tv/')) {
+        }
+        if (newStreamURL.startsWith('www.twitch.tv/')) {
             newStreamURL = 'https://' + newStreamURL;
-        } else if (newStreamURL.startsWith('http://')) {
-            newStreamURL = newStreamURL.replace('http://', 'https://');
         }
         $('#settings-stream-url').val(newStreamURL);
         if (newStreamURL.startsWith('https://www.twitch.tv/') === false && newStreamURL !== '') {

@@ -87,18 +87,18 @@ process.on('message', function(message) {
 
 function checkIsaacOpen() {
     log.info('Checking to see if Isaac is open.');
-    let command;
+    let processName;
     if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-        command = 'isaac-ng';
+        processName = 'isaac-ng';
     } else if (process.platform === 'darwin') { // OS X
-        command = 'The Binding of Isaac Afterbirth+';
+        processName = 'The Binding of Isaac Afterbirth+';
     } else {
         // Linux is not supported
         process.send('Linux is not supported.', processExit);
     }
 
     ps.lookup({
-        command: command,
+        command: processName,
     }, function(err, resultList) {
         if (err) {
             process.send('error: Failed to find the Isaac process: ' + err, processExit);
@@ -106,7 +106,9 @@ function checkIsaacOpen() {
 
         if (resultList.length === 0) {
             // Isaac is not already open
-            if (checkRacingPlusLuaModCurrent() && checkOtherModsEnabled() === false) {
+            let check1 = checkRacingPlusLuaModCurrent();
+            let check2 = checkOtherModsEnabled();
+            if (check1 === true && check2  === false) {
                 startIsaac();
             } else {
                 deleteOldLuaMod();
@@ -115,7 +117,9 @@ function checkIsaacOpen() {
             // There should only be 1 "isaac-ng.exe" process
             resultList.forEach(function(ps) {
                 // Isaac is currently open, so check to see if we need to restart the game
-                if (checkRacingPlusLuaModCurrent() && checkOtherModsEnabled() === false) {
+                let check1 = checkRacingPlusLuaModCurrent();
+                let check2 = checkOtherModsEnabled();
+                if (check1 === true && check2  === false) {
                     // We don't need to restart the game, so we don't have to do anything at all
                     process.send('The Lua mod is current and no other mods are enabled.', processExit);
                 } else {
