@@ -1,11 +1,11 @@
-'use strict';
-
 /*
     Child process that initializes the Steamworks API and generates a login ticket
 */
 
+'use strict';
+
 // Imports
-const fs         = require('fs');
+const fs         = require('fs-extra');
 const path       = require('path');
 const isDev      = require('electron-is-dev');
 const tracer     = require('tracer');
@@ -19,26 +19,27 @@ const greenworks = require('greenworks'); // This is not an NPM module
 process.on('uncaughtException', function(err) {
     greenworksGotError(err);
 });
-
 function greenworksGotError(err) {
-    process.send('error: ' + err);
-    process.exit();
+    process.send('error: ' + err, processExit);
 }
+const processExit = function() {
+    process.exit();
+};
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
-const logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
 const log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
         // #1 - Log to the JavaScript console
         console.log(data.output);
 
         // #2 - Log to a file
-        fs.appendFile(logFile, data.output + '\r\n', function(err) {
+        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
             if (err) {
                 throw err;
             }
@@ -67,14 +68,19 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 //   or
 //   D:\Repositories\isaac-racing-client\steam_appid.txt (in development)
 // 570660 is the Steam app ID for The Binding of Isaac: Afterbirth+
-fs.writeFileSync('steam_appid.txt', '250900', 'utf8');
+try {
+    fs.writeFileSync('steam_appid.txt', '250900', 'utf8');
+} catch(err) {
+    greenworksGotError(err);
+}
 
 // Initialize Greenworks
 try {
     if (greenworks.init() === false) {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
-        process.send('errorInit');
-        process.exit();
+        process.send('errorInit', function() {
+            process.exit();
+        });
     }
 } catch(err) {
     greenworksGotError(err);

@@ -522,6 +522,7 @@
 	<familiar description="Bloody friend" gfx="Collectibles_509_BloodshotEye.png" id="509" name="Bloodshot Eye" />
 	
 	<active achievement="338" description="Unleash the power!" gfx="Collectibles_510_Delirious.png" id="510" maxcharges="12" name="Delirious" />
+	<active description="Debug" gfx="collectibles_324_Undefined.png" id="235" maxcharges="110" name="Debug" />
 	
 	
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />

@@ -13,17 +13,35 @@ const fadeTime     = 300; // In milliseconds
 // The object that contains all of the global variables
 module.exports = {
     autoUpdateStatus: null,
-    blackCandleEnabled: false,
-    domain: domain,
+    builds: null,
     conn: null,
     currentScreen: 'title-ajax', // We always start on the title-ajax screen
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
     defaultLogFilePath: '',
+    domain: domain,
     emoteList: null, // Set in main.js
     fadeTime: fadeTime,
+    gameState: {
+        inGame: false,
+        character: null,
+        hardMode: false,
+    },
     log: null,
     lang: null, // The language switcher instance
-    logMonitoringProgram: null,
+    modLoaderFile: null, // Used to communicate with Isaac
+    modLoader: {
+        status: 'finished',
+        rType: 'unranked',
+        rFormat: 'unseeded',
+        character: 'Judas',
+        goal: 'Blue Baby',
+        seed: '-',
+        startingBuild: -1,
+        blckCndlOn: false, // Detected through reading the log file
+        currentSeed: '-',  // Detected through reading the log file
+        countdown: -1,
+        datetimeWritten: 0,
+    },
     myUsername: null,
     playingSound: false,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files

@@ -1,0 +1,13 @@
+{
+  status          = "none",
+  rType           = "unranked",
+  rFormat         = "unseeded",
+  character       = "Judas",
+  goal            = "Blue Baby",
+  seed            = "-",
+  startingItems   = {},
+  blckCndlOn      = false,
+  currentSeed     = "-",
+  countdown       = -1,
+  datetimeWritten = 0
+}

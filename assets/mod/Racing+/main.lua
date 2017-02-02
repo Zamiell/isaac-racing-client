@@ -1,13 +1,18 @@
 --
--- The Jud6s Mod
+-- The Racing+ Mod
 -- by Zamiel
 --
 
 --[[
 
 TODO:
+- Look at item bans again
+- Automatically close doors for B1 treasure room on seeded races
+- Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/
 - Copy over Afterbirth room changes after the next patch
 - Fix unseeded Boss heart drops from Pin, etc. (and make it so that they drop during door opening)
+- Integrate timer
+- Integrate 1st place, 2nd place, etc.
 - Fix Dead Eye on poop
 - Change Troll Bombs and Mega Troll Bombs fuse timer to Rebirth-style
 - Make Devil / Angel Rooms given in order and independent of floor
@@ -16,29 +21,51 @@ TODO CAN'T FIX:
 - Automatically enable BLCK CNDL seed (not possible with current bindings)
 - Automatically enter in a seed for seeded races (not possible with current bindings)
 - Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
+- Add timer on the screen
 - Make Teleport / Undefined / Cursed Eye / Telepills seeded (the ChangeRoom() function is broken and doesn't actually consistently send you to the room that you specify)
 - Be able to skip specific champions from the fast-clear check (not possible to detect what type of champion it is with the current bindings)
 - Skip the fade in and fade out animation when traveling to the next floor (need console access or StartStageTransition() 2nd argument to be working)
 - Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives (Isaac is placed in the location and you can't move him fast enough)
-- Make Book of Sin play the proper animation (no idea how to play vanilla item animations)
 
 --]]
 
 -- Register the mod (the second argument is the API version)
-local Jud6s = RegisterMod("Jud6s", 1);
+local RacingPlus = RegisterMod("Racing+", 1);
 
 -- Global variables
 local runInitializing = false
 local roomsCleared = 0
+local roomsEntered = 0
+local roomEntering = false
 local currentGameFrame = 0
 local currentFloor = 1
 local currentRoomClearState = true
-local itemBanList = {}
-local trinketBanList = {}
-local inRacingPlusRace = false
-local raceState = 0
-local runGoal = "Blue Baby" -- Other possible values are "The Lamb" and "Mega Satan"
-local runFormat = "Unseeded" -- Other possible values are "Seeded", "Diveristy", and "Custom"
+
+-- Race variables
+local race = { -- The table that gets updated from the "save.dat" file
+  status          = "none",      -- Can be "none", "open", "starting", "in progress"
+  rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
+  rFormat         = "Unseeded",  -- Can be "Unseeded", "Seeded", "Diveristy", "Custom"
+  character       = "Judas",     -- Can be the name of any character
+  goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
+  seed            = "-",         -- Corresponds to the seed that is the race goal
+  startingItems   = {},          -- The starting items for this race
+  blckCndlOn      = false,       -- This is detected through the "log.txt" file
+  currentSeed     = "-",         -- The seed of our current run (detected through the "log.txt" file)
+  countdown       = -1,          -- This corresponds to the graphic to draw on the screen
+  datetimeWritten = os.time(),   -- os.time() gives the epoch timestamp
+}
+local raceVars = {
+  difficulty                    = 0,
+  character                     = "Isaac",
+  itemBanList                   = {},
+  trinketBanList                = {},
+  hourglassUsed                 = false,
+  skipInit                      = false,
+  checkForNewRoomAfterHourglass = false,
+  started                       = false,
+  startedTime                   = 0
+}
 local RNGCounter = {
   InitialSeed,
   BookOfSin,
@@ -53,49 +80,346 @@ local RNGCounter = {
   AcidBaby,
   SackOfSacks
 }
-local host, port = "127.0.0.1", 9999
-local socket = require("socket")
-local tcp = assert(socket.tcp())
-tcp:settimeout(0)
-tcp:connect(host, port)
-tcp:send("i poopd\n")
+local spriteTable = {}
+
+Isaac.DebugString("+----------------------+")
+Isaac.DebugString("| Racing+ initialized. |")
+Isaac.DebugString("+----------------------+")
 
 ---
---- Subroutines
+--- Table subroutines
+--- From: http://lua-users.org/wiki/TableUtils
 ---
 
-local function IncrementRNG(seed)
+function tableval_to_str ( v )
+  if "string" == type( v ) then
+    v = string.gsub( v, "\n", "\\n" )
+    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
+      return "'" .. v .. "'"
+    end
+    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
+  else
+    return "table" == type( v ) and tabletostring( v ) or
+      tostring( v )
+  end
+end
+
+function tablekey_to_str ( k )
+  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
+    return k
+  else
+    return "[" .. tableval_to_str( k ) .. "]"
+  end
+end
+
+function tabletostring( tbl )
+  local result, done = {}, {}
+  for k, v in ipairs( tbl ) do
+    table.insert( result, tableval_to_str( v ) )
+    done[ k ] = true
+  end
+  for k, v in pairs( tbl ) do
+    if not done[ k ] then
+      table.insert( result,
+        tablekey_to_str( k ) .. "=" .. tableval_to_str( v ) )
+    end
+  end
+  return "{" .. table.concat( result, "," ) .. "}"
+end
+
+--
+-- Math subroutines
+--
+
+-- From: http://lua-users.org/wiki/SimpleRound
+function round(num, numDecimalPlaces)
+  local mult = 10 ^ (numDecimalPlaces or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
+
+--
+-- Sprite subroutines
+--
+
+function spriteInit(spriteType, spriteName)
+  -- If this is a new sprite type, initialize it in the sprite table
+  if spriteTable[spriteType] == nil then
+    spriteTable[spriteType] = {}
+  end
+
+  -- Do nothing if this sprite type is already set to this name
+  if spriteTable[spriteType].spriteName == spriteName then
+    return
+  end
+
+  -- Check to see if we are clearing this sprite
+  if spriteName == 0 then
+    spriteTable[spriteType].sprite = nil
+    spriteTable[spriteType].spriteName = 0
+    return
+  end
+
+  -- Otherwise, initialize the sprite
+  spriteTable[spriteType].sprite = Sprite()
+  spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true) -- The second argument is "LoadGraphics"
+  spriteTable[spriteType].spriteName = spriteName
+end
+
+-- Call this every frame in MC_POST_RENDER
+function spriteDisplay()
+  -- Local variables
+  local game = Game();
+  local room = game:GetRoom();
+
+  -- Loop through all the sprites and render them
+  for k, v in pairs(spriteTable) do
+    local vec = Isaac.WorldToRenderPosition(room:GetCenterPos(), false)
+    if k == "top" then
+      vec.Y = vec.Y - 80 -- Move it upwards
+    elseif k == "clock" then
+      vec.X = vec.X - 259 -- Move it below the Angel chance
+      vec.Y = vec.Y + 67
+    end
+    if v.sprite ~= nil then
+      spriteTable[k].sprite:SetFrame("Default", 0)
+      spriteTable[k].sprite:RenderLayer(0, vec)
+    end
+  end
+end
+
+function timerUpdate()
+  if raceVars.startedTime == 0 then
+    return
+  end
+
+  local elapsedTime = os.clock() - raceVars.startedTime
+
+  local minutes = math.floor(elapsedTime / 60)
+  if minutes < 10 then
+    minutes = "0" .. tostring(minutes)
+  else
+    minutes = tostring(minutes)
+  end
+  
+  local seconds = elapsedTime % 60
+  seconds = round(seconds, 1)
+  if seconds < 10 then
+    seconds = "0" .. tostring(seconds)
+  else
+    seconds = tostring(seconds)
+  end
+
+  local timerString = minutes .. ':' .. seconds
+  Isaac.RenderText(timerString, 17, 211, 0.7, 1.8, 0.2, 1.0) -- X, Y, R, G, B, A
+end
+
+---
+--- Misc. subroutines
+---
+
+function incrementRNG(seed)
   -- The initial RNG value recieved from the B1 floor RNG is a 10 digit integer
   -- So let's just continue to work with integers that are roughly in this range
   math.randomseed(seed)
   return math.random(1, 9999999999)
 end
 
-local function connectTCP()
-  
-  tcp:connect(host, port)
+function readServer()
+  -- The server will write data for us to the "save.dat" file in the mod subdirectory
+  -- From: https://www.reddit.com/r/themoddingofisaac/comments/5q3ml0/tutorial_saving_different_moddata_for_each_run/
+
+  oldRace = race
+  race = load("return " .. Isaac.LoadModData(RacingPlus))() -- This loads the "save.dat" file
+  -- If the loading failed (which it seems to do sometimes), try again until it succeeds
+  while race == nil do
+    race = load("return " .. Isaac.LoadModData(RacingPlus))()
+  end
+
+  -- If anything changed, write it to the log
+  --[[
+  if oldRace.status ~= race.status then
+    Isaac.DebugString("ModData status changed: " .. race.status)
+  end
+  if oldRace.rType ~= race.rType then
+    Isaac.DebugString("ModData rType changed: " .. race.rType)
+  end
+  if oldRace.rFormat ~= race.rFormat then
+    Isaac.DebugString("ModData rFormat changed: " .. race.rFormat)
+  end
+  if oldRace.character ~= race.character then
+    Isaac.DebugString("ModData character changed: " .. race.character)
+  end
+  if oldRace.goal ~= race.goal then
+    Isaac.DebugString("ModData goal changed: " .. race.goal)
+  end
+  if oldRace.seed ~= race.seed then
+    Isaac.DebugString("ModData seed changed: " .. race.seed)
+  end
+  if #oldRace.startingItems ~= #race.startingItems then
+    Isaac.DebugString("ModData startingItems amount changed: " .. tostring(#race.startingItems))
+  end
+  if oldRace.blckCndlOn ~= race.blckCndlOn then
+    Isaac.DebugString("ModData blckCndlOn changed: " .. tostring(race.blckCndlOn))
+  end
+  if oldRace.currentSeed ~= race.currentSeed then
+    Isaac.DebugString("ModData currentSeed changed: " .. race.currentSeed)
+  end
+  if oldRace.countdown ~= race.countdown then
+    Isaac.DebugString("ModData countdown changed: " .. tostring(race.countdown))
+  end
+  if oldRace.datetimeWritten ~= race.datetimeWritten then
+    Isaac.DebugString("ModData datetimeWritten changed: " .. tostring(race.datetimeWritten))
+  end
+  --]]
+end
+
+-- This is done when a run is started and after the Glowing Hourglass is used
+function characterInit()
+  -- Local variables
+  local game = Game()
+  local player = Game():GetPlayer(0)
+  local playerType = player:GetPlayerType()
+
+  -- Do character-specific actions
+  if playerType == PlayerType.PLAYER_JUDAS then -- 3
+    -- Decrease his red hearts
+    player:AddHearts(-1)
+
+  elseif playerType == PlayerType.PLAYER_EVE then
+    -- Remove the existing items (they need to be in "players.xml" so that they get removed from item pools)
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_D6))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON) -- 122
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_DEAD_BIRD))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_RAZOR_BLADE) -- 126
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_RAZOR_BLADE))
+
+    -- Add the D6, Whore of Babylon, and Dead Bird
+    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, true) -- 105
+    player:AddCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON, 0, true) -- 122
+    player:AddCollectible(CollectibleType. COLLECTIBLE_DEAD_BIRD, 0, true) -- 117
+
+  elseif playerType == PlayerType.PLAYER_AZAZEL then
+    -- Decrease his red hearts
+    player:AddHearts(-1)
+
+  elseif playerType == PlayerType.PLAYER_EDEN then
+    -- Swap the random active item with the D6
+    local activeItem = player:GetActiveItem()
+    player:RemoveCollectible(activeItem)
+    Isaac.DebugString("Removing collectible " .. tostring(activeItem))
+    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, true) -- 105
+
+    -- It would be nice to remove and re-add the passive item so that it appears in the correct order with the D6 first
+    -- However, if the passive gives pickups (on the ground), then it would give double
+
+  elseif playerType == PlayerType.PLAYER_KEEPER then
+    -- Remove the existing items (they need to be in "players.xml" so that they get removed from item pools)
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_D6))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_GREEDS_GULLET))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_DUALITY))
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_WOODEN_NICKEL) -- 349
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_WOODEN_NICKEL))
+
+    -- Add the D6, Greed's Gullet, and Duality
+    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, true) -- 105
+    player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, true) -- 501
+    player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, true) -- 498
+
+    -- Grant an extra coin/heart container
+    player:AddCoins(24) -- Keeper starts with 1 coin so we only need to give 24
+    player:AddCoins(1) -- This fills in the new heart container
+  end
+end
+
+-- This is done either after using the glowing hourglass or if reset in the middle of the run
+function giveStartingItems()
+  -- Local varaibles
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local inBanList
+
+  -- Give the player their starting items, if any
+  for i = 1, #race.startingItems do
+    -- Send a message to the item tracker to remove this item
+    -- (otherwise, since we are using Glowing Hourglass, it will record two of them)
+    Isaac.DebugString("Removing collectible " .. tostring(race.startingItems[i]))
+
+    -- 12 is the maximum amount of charges that any item can have
+    player:AddCollectible(race.startingItems[i], 12, true)
+
+    -- Giving the player the item does not actually remove it from any of the pools, so we have to expliticly add it to the ban list
+    addItemBanList(race.startingItems[i])
+  end
+
+  -- Add item bans for seeded mode
+  if race.rFormat == "Seeded" then
+    addItemBanList(CollectibleType.COLLECTIBLE_TELEPORT) -- 44
+    addItemBanList(CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
+    addTrinketBanList(TrinketType.TRINKET_CAINS_EYE) -- 59
+  end
+end
+
+function addItemBanList(itemID)
+  local inBanList = false
+  for i = 1, #raceVars.itemBanList do
+    if raceVars.itemBanList[i] == itemID then
+      inBanList = true
+      break
+    end
+  end
+  if inBanList == false then
+    raceVars.itemBanList[#raceVars.itemBanList + 1] = itemID
+  end
+end
+
+function addTrinketBanList(trinketID)
+  local inBanList = false
+  for i = 1, #raceVars.trinketBanList do
+    if raceVars.trinketBanList[i] == trinketID then
+      inBanList = true
+      break
+    end
+  end
+  if inBanList == false then
+    raceVars.trinketBanList[#raceVars.trinketBanList + 1] = trinketID
+  end
 end
 
 --
 -- Main functions
--- 
+--
 
 -- Called when starting a new run
-function Jud6s:RunInit()
+function RacingPlus:RunInit()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local player = game:GetPlayer(0)
   local seed = level:GetDungeonPlacementSeed()
 
+  -- Log the run beginning
+  Isaac.DebugString("A new run has begun.")
+
   -- Reset some global variables that we keep track of per run
   roomsCleared = 0
+  roomsEntered = 0
+  roomEntering = false
   currentGameFrame = 0
   currentFloor = 0
   currentRoomClearState = true
-  itemBanList = {}
-  trinketBanList = {}
-  raceState = 0
+
+  -- Reset some race variables that we keep track of per run
+  raceVars.itemBanList = {}
+  raceVars.trinketBanList = {}
+  raceVars.started = false
+  raceVars.hourglassUsed = false
+  raceVars.checkForNewRoomAfterHourglass = false
 
   -- Reset some RNG counters to the floor RNG of B1 for this seed
   -- (future drops will be based on the RNG from this initial random value)
@@ -110,80 +434,104 @@ function Jud6s:RunInit()
   RNGCounter.AcidBaby = seed
   RNGCounter.SackOfSacks = seed
 
-  -- Add item bans
-  if runFormat == "Seeded" then
-    itemBanList[#itemBanList + 1] = CollectibleType.COLLECTIBLE_COMPASS -- 21
-    itemBanList[#itemBanList + 1] = CollectibleType.COLLECTIBLE_TELEPORT -- 44
-    itemBanList[#itemBanList + 1] = CollectibleType.COLLECTIBLE_UNDEFINED  -- 324
-    trinketBanList[#trinketBanList + 1] = TrinketType.TRINKET_CAINS_EYE -- 59
+  -- Figure out if we are on normal mode or hard mode
+  raceVars.difficulty = game.Difficulty
+  Isaac.DebugString("Difficulty: " .. tostring(game.Difficulty))
+
+  -- Figure out what character we are on
+  local playerType = player:GetPlayerType()
+  if playerType == 0 then
+    raceVars.character = "Isaac"
+  elseif playerType == 1 then
+    raceVars.character = "Magdalene"
+  elseif playerType == 2 then
+    raceVars.character = "Cain"
+  elseif playerType == 3 then
+    raceVars.character = "Judas"
+  elseif playerType == 4 then
+    raceVars.character = "Blue Baby"
+  elseif playerType == 5 then
+    raceVars.character = "Eve"
+  elseif playerType == 6 then
+    raceVars.character = "Samson"
+  elseif playerType == 7 then
+    raceVars.character = "Azazel"
+  elseif playerType == 8 then
+    raceVars.character = "Lazarus"
+  elseif playerType == 9 then
+    raceVars.character = "Eden"
+  elseif playerType == 10 then
+    raceVars.character = "The Lost"
+  elseif playerType == 13 then
+    raceVars.character = "Lilith"
+  elseif playerType == 14 then
+    raceVars.character = "Keeper"
+  elseif playerType == 15 then
+    raceVars.character = "Apollyon"
   end
 
-  -- Do character-specific actions
-  if player:GetPlayerType() == PlayerType.PLAYER_JUDAS then -- 3
-    -- Decrease his red hearts
-    player:AddHearts(-1)
+  -- Give us custom racing items, depending on the character (mostly just the D6)
+  characterInit()
 
-  elseif player:GetPlayerType() == PlayerType.PLAYER_EVE then
-    -- Remove the existing items (they need to be in "players.xml" so that they get removed from item pools)
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_D6))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON) -- 122
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_DEAD_BIRD))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_RAZOR_BLADE) -- 126
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_RAZOR_BLADE))
+  -- Update our race table
+  readServer()
 
-    -- Add the D6, Whore of Babylon, and Dead Bird
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
-    player:AddCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON, 0, false) -- 122
-    player:AddCollectible(CollectibleType. COLLECTIBLE_DEAD_BIRD, 0, false) -- 117
-
-  elseif player:GetPlayerType() == PlayerType.PLAYER_AZAZEL then
-    -- Decrease his red hearts
-    player:AddHearts(-1)
-
-  elseif player:GetPlayerType() == PlayerType.PLAYER_EDEN then
-    -- Swap the random active item with the D6
-    local activeItem = player:GetActiveItem()
-    player:RemoveCollectible(activeItem)
-    Isaac.DebugString("Removing collectible " .. tostring(activeItem))
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
-
-    -- It would be nice to remove and re-add the passive item so that it appears in the correct order with the D6 first
-    -- However, if the passive gives pickups, then it would give double
-
-  elseif player:GetPlayerType() == PlayerType.PLAYER_KEEPER then
-    -- Remove the existing items (they need to be in "players.xml" so that they get removed from item pools)
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_D6))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_GREEDS_GULLET))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_DUALITY))
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_WOODEN_NICKEL) -- 349
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_WOODEN_NICKEL))
-
-    -- Add the D6, Greed's Gullet, and Duality
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
-    player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
-    player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
-
-    -- Grant an extra coin/heart container
-    player:AddCoins(24) -- Keeper starts with 1 coin so we only need to give 24
-    player:AddCoins(1) -- This fills in the new heart container
-  end
-  
-  -- Trap the player in a forcefield
-  if inRacingPlusRace then
-    player:GetEffects():AddCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS, true) -- Second argument is AddCostume
+  -- Do a check to see if more than an hour has passed since that race data was last written
+  if os.time() - 3600 > race.datetimeWritten then
+    return
   end
 
-  --tcp:connect(host, port)
+  -- If we are not in a race, don't do anything special
+  if race.status == "none" then
+    return
+  end
+
+  -- Check to see if we are on the right seed
+  if race.seed ~= "-" and race.seed ~= race.currentSeed then
+    Isaac.DebugString("Race error: On the wrong seed.")
+    return
+  end
+
+  -- Check to see if we are on the BLCK CNDL Easter Egg
+  if race.blckCndlOn == false then
+    Isaac.DebugString("Race error: Not on BLCK CNDL Easter Egg.")
+    return
+  end
+
+  -- If this is a seeded race, give us extra starting items
+  giveStartingItems()
+
+  if race.status == "in progress" then
+    -- The race has already started (we are late, or perhaps died in the middle of the race)
+    RacingPlus:RaceStart()
+  else
+    -- Spawn two Gaping Maws (235.0)
+    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, Vector(280, 360), Vector(0,0), nil, 0, 0)
+    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, Vector(360, 360), Vector(0,0), nil, 0, 0)
+  end
+end
+
+function RacingPlus:RaceStart()
+  -- Only do these actions once per race
+  if raceVars.started == true then
+    return
+  else
+    raceVars.started = true
+    race.status = "in progress"
+  end
+
+  Isaac.DebugString("Starting the race!")
+
+  -- Load the clock sprite for the timer
+  spriteInit("clock", "clock")
+
+  -- Set the start time to the number of CPU seconds that have elapsed since Lua was initialized
+  -- (this is the only way to get millisecond granularity)
+  raceVars.startedTime = os.clock()
 end
 
 -- This emulates what happens when you normally clear a room
-function Jud6s:ManuallyClearCurrentRoom()
+function RacingPlus:ManuallyClearCurrentRoom()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -211,7 +559,7 @@ function Jud6s:ManuallyClearCurrentRoom()
 
     -- Try to spawn the Boss Rush door
     if stage == 6 then
-      room:TrySpawnBossRushDoor(true) -- The argument is "IgnoreTime"
+      room:TrySpawnBossRushDoor(false) -- The argument is "IgnoreTime"
     end
   end
 
@@ -234,7 +582,7 @@ function Jud6s:ManuallyClearCurrentRoom()
             room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
           elseif stage == 8 then
             -- Delete the W2 normal trap door
-            if runGoal == "Blue Baby" then
+            if race.goal == "Blue Baby" then
               room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
             end
           end
@@ -249,7 +597,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       if entities[i].Type == EntityType.ENTITY_PICKUP and
          entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
          entities[i].SubType == CollectibleType.COLLECTIBLE_POLAROID and
-         runGoal == "The Lamb" then
+         race.goal == "The Lamb" then
 
         entities[i]:Remove()
         break
@@ -259,7 +607,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       if entities[i].Type == EntityType.ENTITY_PICKUP and
          entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
          entities[i].SubType == CollectibleType.COLLECTIBLE_NEGATIVE and
-         runGoal == "Blue Baby" then
+         race.goal == "Blue Baby" then
 
         entities[i]:Remove()
         break
@@ -268,7 +616,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       -- Check for Heaven door (1000.39)
       if entities[i].Type == EntityType.ENTITY_EFFECT and
          entities[i].Variant == EffectVariant.HEAVEN_LIGHT_DOOR and
-         runGoal == "The Lamb" then
+         race.goal == "The Lamb" then
 
         entities[i]:Remove()
         break
@@ -312,7 +660,7 @@ function Jud6s:ManuallyClearCurrentRoom()
   -- Sack of Pennies (21)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SACK_OF_PENNIES) then -- 21
     -- This drops a penny/nickel/dime/etc. every 2 rooms cleared (or more with BFFs!)
-    RNGCounter.SackOfPennies = IncrementRNG(RNGCounter.SackOfPennies)
+    RNGCounter.SackOfPennies = incrementRNG(RNGCounter.SackOfPennies)
     math.randomseed(RNGCounter.SackOfPennies)
     local sackBFFChance = math.random(1, 4294967295)
     if newRoomsCleared & 1 == 0 or
@@ -331,8 +679,8 @@ function Jud6s:ManuallyClearCurrentRoom()
       end
 
       -- Random Coin - 5.20.0
-      RNGCounter.SackOfPennies = IncrementRNG(RNGCounter.SackOfPennies)
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, player, 0, RNGCounter.SackOfPennies) 
+      RNGCounter.SackOfPennies = incrementRNG(RNGCounter.SackOfPennies)
+      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, player, 0, RNGCounter.SackOfPennies)
     end
   end
 
@@ -398,7 +746,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       end
 
       -- Random Bomb - 5.40.0
-      RNGCounter.BombBag = IncrementRNG(RNGCounter.BombBag)
+      RNGCounter.BombBag = incrementRNG(RNGCounter.BombBag)
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, player, 0, RNGCounter.BombBag)
     end
   end
@@ -418,7 +766,7 @@ function Jud6s:ManuallyClearCurrentRoom()
     end
 
     -- Spawn either 1 or 2 blue spiders (50% chance of each)
-    RNGCounter.JuicySack = IncrementRNG(RNGCounter.JuicySack)
+    RNGCounter.JuicySack = incrementRNG(RNGCounter.JuicySack)
     math.randomseed(RNGCounter.JuicySack)
     local spiders = math.random(1, 2)
     player:AddBlueSpider(pos)
@@ -450,16 +798,16 @@ function Jud6s:ManuallyClearCurrentRoom()
       end
 
       -- First, decide whether we get a heart, coin, bomb, or key
-      RNGCounter.MysterySack = IncrementRNG(RNGCounter.MysterySack)
+      RNGCounter.MysterySack = incrementRNG(RNGCounter.MysterySack)
       math.randomseed(RNGCounter.MysterySack)
       local sackPickupType = math.random(1, 4)
-      RNGCounter.MysterySack = IncrementRNG(RNGCounter.MysterySack)
+      RNGCounter.MysterySack = incrementRNG(RNGCounter.MysterySack)
 
       -- If heart
       if sackPickupType == 1 then
         -- Random Heart - 5.10.0
         game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 0, RNGCounter.MysterySack)
-        
+
       -- If coin
       elseif sackPickupType == 2 then
         -- Random Coin - 5.20.0
@@ -483,7 +831,7 @@ function Jud6s:ManuallyClearCurrentRoom()
     -- This drops a heart, coin, bomb, or key based on the formula:
     -- 10% chance for a trinket, if no trinket, 25% chance for a random consumable (based on time)
     -- Or, with BFFS!, 12.5% chance for a trinket, if no trinket, 31.25% chance for a random consumable
-    -- We don't want it based on time in the Jud6s mod
+    -- We don't want it based on time in the Racing+ mod
 
     -- Get the position of the familiar
     local entities = Isaac.GetRoomEntities()
@@ -498,7 +846,7 @@ function Jud6s:ManuallyClearCurrentRoom()
     end
 
     -- First, decide whether we get a trinket
-    RNGCounter.LilChest = IncrementRNG(RNGCounter.LilChest)
+    RNGCounter.LilChest = incrementRNG(RNGCounter.LilChest)
     math.randomseed(RNGCounter.LilChest)
     local chestTrinket = math.random(1, 1000)
     if chestTrinket <= 100 or
@@ -508,17 +856,17 @@ function Jud6s:ManuallyClearCurrentRoom()
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, pos, vel, player, 0, RNGCounter.LilChest)
     else
       -- Second, decide whether it spawns a consumable
-      RNGCounter.LilChest = IncrementRNG(RNGCounter.LilChest)
+      RNGCounter.LilChest = incrementRNG(RNGCounter.LilChest)
       math.randomseed(RNGCounter.LilChest)
       local chestConsumable = math.random(1, 10000)
       if chestConsumable <= 2500 or
          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 3125) then
 
         -- Third, decide whether we get a heart, coin, bomb, or key
-        RNGCounter.LilChest = IncrementRNG(RNGCounter.LilChest)
+        RNGCounter.LilChest = incrementRNG(RNGCounter.LilChest)
         math.randomseed(RNGCounter.LilChest)
         local chestPickupType = math.random(1, 4)
-        RNGCounter.LilChest = IncrementRNG(RNGCounter.LilChest)
+        RNGCounter.LilChest = incrementRNG(RNGCounter.LilChest)
 
         -- If heart
         if chestPickupType == 1 then
@@ -564,7 +912,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
       -- So, spawn a random card (5.300.0) over and over until we get a rune
       while true do
-        RNGCounter.RuneBag = IncrementRNG(RNGCounter.RuneBag)
+        RNGCounter.RuneBag = incrementRNG(RNGCounter.RuneBag)
         local entity = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel, player, 0, RNGCounter.RuneBag)
         -- Hagalaz is 32 and Black Rune is 41
         if entity.SubType >= 32 and entity.SubType <= 41 then
@@ -593,7 +941,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       end
 
       -- Random Pill - 5.70.0
-      RNGCounter.AcidBaby = IncrementRNG(RNGCounter.AcidBaby)
+      RNGCounter.AcidBaby = incrementRNG(RNGCounter.AcidBaby)
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel, player, 0, RNGCounter.AcidBaby)
     end
   end
@@ -616,7 +964,7 @@ function Jud6s:ManuallyClearCurrentRoom()
       end
 
       -- Grab Bag - 5.69.0
-      RNGCounter.SackOfSacks = IncrementRNG(RNGCounter.SackOfSacks)
+      RNGCounter.SackOfSacks = incrementRNG(RNGCounter.SackOfSacks)
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, pos, vel, player, 0, RNGCounter.SackOfSacks)
     end
   end
@@ -627,7 +975,7 @@ end
 --
 
 -- We want to look for enemies that are dying so that we can open the doors prematurely
-function Jud6s:NPCUpdate(aNpc)
+function RacingPlus:NPCUpdate(aNpc)
   -- Local variables
   local game = Game()
   local runFrameCount = game:GetFrameCount()
@@ -687,28 +1035,34 @@ function Jud6s:NPCUpdate(aNpc)
   end
   if allDead then
     -- Manually clear the room, emulating all the steps that the game does
-    Jud6s:ManuallyClearCurrentRoom()
+    RacingPlus:ManuallyClearCurrentRoom()
   end
 end
 
 -- Check various things once per frame (this will fire while the floor/room is loading)
-function Jud6s:PostRender()
+function RacingPlus:PostRender()
   -- Local variables
+  local isaacFrameCount = Isaac:GetFrameCount()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
+  local room = game:GetRoom()
+  local roomFrameCount = room:GetFrameCount()
   local stage = level:GetStage()
+  local player = game:GetPlayer(0)
 
   -- Check to see if we are starting a run
   -- (this does not work if we put it in a PostUpdate callback because that only starts on the first frame of movement)
   -- (this does not work if we put it in a PlayerInit callback because Eve/Keeper are given their active items after the callback has fired)
+
   if gameFrameCount == 0 and runInitializing == false then
     runInitializing = true
-    Isaac.DebugString("We are on frame 0, runInitializing is now true.")
-    Jud6s.RunInit()
+    if raceVars.skipInit == false then
+      RacingPlus.RunInit()
+    end
   elseif gameFrameCount > 0 and runInitializing == true then
     runInitializing = false
-    Isaac.DebugString("We are on frame 1, runInitializing is now false.")
+    raceVars.skipInit = false
   end
 
   -- Keep track of when we change floors
@@ -721,15 +1075,134 @@ function Jud6s:PostRender()
     RNGCounter.Undefined = floorSeed
   end
 
+  -- Keep track of when we change rooms
+  if roomFrameCount == 0 and roomEntering == false then
+     roomEntering = true
+     if raceVars.checkForNewRoomAfterHourglass == true then
+      -- We just reloaded the room from using the Glowing Hourglass
+      raceVars.checkForNewRoomAfterHourglass = false
+
+      -- Move them back to the starting position
+      player.Position = Vector(320.0, 380.0)
+
+      -- The hourglass removed all of the items that we got in the run initialization step, so redo this
+      characterInit()
+      giveStartingItems()
+    else
+      roomsEntered = roomsEntered + 1
+    end
+  elseif roomFrameCount > 0 then
+    roomEntering = false
+  end
+
   ---
-  --- Draw some graphics
+  --- Do race stuff / draw graphics
   ---
 
-  -- TODO
+  -- Race will be nil if a run has not started yet
+  -- Also, sometimes mod loading can fail, in which case the race table will become nil
+  if race == nil then
+    return
+  end
+
+  -- If we are not in a run, do nothing
+  if race.status == "none" then
+    raceVars.startedTime = 0
+    return
+  end
+
+  -- If we are waiting for the race to start, check for updates every frame
+  if race.status == "open" or race.status == "starting" then
+    readServer()
+  end
+
+  -- Otherwise, check every half second (file reads are expensive)
+  if race.status == "in progress" and isaacFrameCount % 30 == 0 then
+    readServer()
+  end
+
+  -- Check to see if we are on the BLCK CNDL Easter Egg
+  if race.blckCndlOn == false and raceVars.startedTime == 0 then
+    spriteInit("top", "errorBlckCndl")
+    spriteDisplay()
+    return
+  end
+
+  -- Check to see if we are on hard mode
+  if raceVars.difficulty ~= 0 then
+    spriteInit("top", "errorHardMode")
+    spriteDisplay()
+    return
+  end
+
+  -- Check to see if we are on the right character
+  if race.character ~= raceVars.character then
+    spriteInit("top", "errorCharacter")
+    spriteDisplay()
+    return
+  end
+
+  -- Check to see if we are on the right seed
+  if race.seed ~= "-" and race.seed ~= race.currentSeed then
+    spriteInit("top", "errorSeed")
+    spriteDisplay()
+    return
+  end
+
+  -- Hold the player in place if the race has not started yet
+  if raceVars.started == false then
+    -- The starting position is 320.0, 380.0
+    player.Position = Vector(320.0, 380.0)
+  end
+
+  -- Show the "Wait for the race to begin!" graphic/text
+  if race.status == "open" then
+    spriteInit("top", "wait")
+  end
+
+  -- Show the appropriate countdown graphic/text
+  if race.status == "starting" or race.status == "in progress" then
+    if race.countdown == 10 then
+      spriteInit("top", "10")
+    elseif race.countdown == 5 then
+      spriteInit("top", "5")
+    elseif race.countdown == 4 then
+      spriteInit("top", "4")
+    elseif race.countdown == 3 then
+      spriteInit("top", "3")
+    elseif race.countdown == 2 then
+      spriteInit("top", "2")
+
+      if raceVars.hourglassUsed == false then
+        raceVars.hourglassUsed = true
+        raceVars.skipInit = true -- Set this so that the mod doesn't detect that a new run has started
+        player:UseActiveItem(422, false, false, false, false) -- Glowing Hour Glass (422)
+        raceVars.checkForNewRoomAfterHourglass = true
+      end
+    elseif race.countdown == 1 then
+      spriteInit("top", "1")
+    elseif roomsEntered > 1 then
+      -- Remove the "Go!" graphic as soon as we enter another room
+      -- (the starting room counts as room #1)
+      spriteInit("top", 0)
+    elseif race.countdown == 0 then
+      spriteInit("top", "go")
+      RacingPlus:RaceStart()
+    elseif race.countdown == -1 and raceVars.started == false then
+      -- We somehow missed the window where the countdown was 0, so do it now
+      spriteInit("top", "go")
+      RacingPlus:RaceStart()
+    end
+
+    timerUpdate()
+  end
+
+  -- Display all initialized sprites
+  spriteDisplay()
 end
 
 -- Check various things once per frame (this will not fire while the floor/room is loading)
-function Jud6s:PostUpdate()
+function RacingPlus:PostUpdate()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -744,7 +1217,7 @@ function Jud6s:PostUpdate()
   local clear = room:IsClear()
   if clear ~= currentRoomClearState then
     currentRoomClearState = clear
-    
+
     if clear == true then
       -- If the room just got changed to a cleared state, increment the total rooms cleared
       roomsCleared = roomsCleared + 1
@@ -770,8 +1243,8 @@ function Jud6s:PostUpdate()
 
       -- Check to see if this item is banned
       local bannedItem = false
-      for j = 1, #itemBanList do
-        if entities[i].SubType == itemBanList[j] then
+      for j = 1, #raceVars.itemBanList do
+        if entities[i].SubType == raceVars.itemBanList[j] then
           bannedItem = true
           break
         end
@@ -781,7 +1254,7 @@ function Jud6s:PostUpdate()
       if bannedItem then
         -- Make a new random item pedestal (using the B1 floor seed)
         newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, 0, RNGCounter.InitialSeed)
-        game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Jud6s mod
+        game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
         --Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(RNGCounter.InitialSeed))
       else
         -- Make a new copy of this item using the room seed
@@ -808,8 +1281,8 @@ function Jud6s:PostUpdate()
 
       -- Check to see if this item is banned
       local bannedItem = false
-      for j = 1, #trinketBanList do
-        if entities[i].SubType == trinketBanList[j] then
+      for j = 1, #raceVars.trinketBanList do
+        if entities[i].SubType == raceVars.trinketBanList[j] then
           bannedItem = true
           break
         end
@@ -824,63 +1297,18 @@ function Jud6s:PostUpdate()
       end
     end
   end
-
-  ---
-  --- Do race stuff
-  ---
-
-  --[[
-  if raceState == 0 then
-    -- Keep the "forcefield" going forever
-    player:GetEffects():RemoveCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS)
-    player:GetEffects():AddCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS, true) -- Second argument is AddCostume
-
-    -- The starting position is 320.0, 380.0
-    --player.Position = Vector(320.0, 380.0)
-  elseif raceState == 1 then
-    raceState = 2
-    player:GetEffects():RemoveCollectibleEffect(CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS)
-  end
-
-  if gameFrameCount == 1 then
-    -- Draw "Waiting for the race to start..."
-    
-  elseif gameFrameCount == 2 then
-    -- Draw "Race starting in 10 seconds!"
-
-  elseif gameFrameCount == 600 then
-    -- Draw "5"
-
-  elseif gameFrameCount == 660 then
-    -- Draw "4"
-
-  elseif gameFrameCount == 720 then
-    -- Draw "3"
-
-  elseif gameFrameCount == 780 then
-    -- Draw "2"
-
-  elseif gameFrameCount == 8400 then
-    -- Draw "1"
-
-  elseif gameFrameCount == 900 then
-    -- Draw "Go!"
-    -- TODO
-    raceState = 1
-  end
-  --]]
 end
 
-function Jud6s:BookOfSin()
+function RacingPlus:BookOfSin()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
 
   -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune.
-  RNGCounter.BookOfSin = IncrementRNG(RNGCounter.BookOfSin)
+  RNGCounter.BookOfSin = incrementRNG(RNGCounter.BookOfSin)
   math.randomseed(RNGCounter.BookOfSin)
   local bookPickupType = math.random(1, 7)
-  RNGCounter.BookOfSin = IncrementRNG(RNGCounter.BookOfSin)
+  RNGCounter.BookOfSin = incrementRNG(RNGCounter.BookOfSin)
 
   local pos = player.Position
   local vel = Vector(0, 0)
@@ -889,7 +1317,7 @@ function Jud6s:BookOfSin()
   if bookPickupType == 1 then
     -- Random Heart - 5.10.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 0, RNGCounter.BookOfSin)
-    
+
   -- If coin
   elseif bookPickupType == 2 then
     -- Random Coin - 5.20.0
@@ -925,7 +1353,7 @@ function Jud6s:BookOfSin()
   return true
 end
 
-function Jud6s:Teleport()
+function RacingPlus:Teleport()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -935,9 +1363,49 @@ function Jud6s:Teleport()
   game:ChangeRoom(index2)
 end
 
-Jud6s:AddCallback(ModCallbacks.MC_NPC_UPDATE,  Jud6s.NPCUpdate)
-Jud6s:AddCallback(ModCallbacks.MC_POST_RENDER, Jud6s.PostRender)
-Jud6s:AddCallback(ModCallbacks.MC_POST_UPDATE, Jud6s.PostUpdate)
-Jud6s:AddCallback(ModCallbacks.MC_USE_ITEM,    Jud6s.BookOfSin, 43); -- Replacing Book of Sin (97)
---Jud6s:AddCallback(ModCallbacks.MC_USE_ITEM,    Jud6s.Teleport, 59); -- Replacing Teleport (44) (this is not possible with the current bindings)
---Jud6s:AddCallback(ModCallbacks.MC_USE_ITEM,    Jud6s.Undefined, 61); -- Replacing Undefined (324) (this is not possible with the current bindings)
+function RacingPlus:TestCallback()
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+
+  Isaac.DebugString("-----------------------")
+  Isaac.DebugString("Entering test callback.")
+  Isaac.DebugString("-----------------------")
+
+  Isaac.DebugString("globals:")
+  Isaac.DebugString("    runInitializing:" .. tostring(runInitializing))
+  Isaac.DebugString("    roomsCleared:" .. tostring(roomsCleared))
+  Isaac.DebugString("    roomsEntered:" .. tostring(roomsEntered))
+  Isaac.DebugString("    roomEntering:" .. tostring(roomEntering))
+  Isaac.DebugString("    currentGameFrame:" .. tostring(currentGameFrame))
+  Isaac.DebugString("    currentRoomClearState:" .. tostring(currentRoomClearState))
+
+  Isaac.DebugString("race table:")
+  for k, v in pairs(race) do
+    Isaac.DebugString("    " .. k .. ': ' .. tostring(v))
+  end
+
+  Isaac.DebugString("raceVars:")
+  for k, v in pairs(raceVars) do
+    Isaac.DebugString("    " .. k .. ': ' .. tostring(v))
+  end
+
+  Isaac.DebugString("sprite table:")
+  for k, v in pairs(spriteTable) do
+    for k2, v2 in pairs(v) do
+      Isaac.DebugString("    " .. k .. '.' .. k2 .. ': ' .. tostring(v2))
+    end
+  end
+  
+  Isaac.DebugString("-------------")
+  Isaac.DebugString("End of debug.")
+  Isaac.DebugString("-------------")
+end
+
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,  RacingPlus.NPCUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER, RacingPlus.PostRender)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, RacingPlus.PostUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.BookOfSin, 43); -- Replacing Book of Sin (97)
+--RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Teleport, 59); -- Replacing Teleport (44) (this is not possible with the current bindings)
+--RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Undefined, 61); -- Replacing Undefined (324) (this is not possible with the current bindings)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.TestCallback, 235); -- Debug (custom item)

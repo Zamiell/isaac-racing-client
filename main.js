@@ -53,27 +53,28 @@ const teeny          = require('teeny-conf');
 
 // Constants
 const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'assets');
-const logFile      = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object
                 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 var childLogWatcher = null;
 var childSteam = null;
+var childIsaac = null;
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
 const log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
         // #1 - Log to the JavaScript console
         console.log(data.output);
 
         // #2 - Log to a file
-        fs.appendFile(logFile, data.output + '\r\n', function(err) {
+        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
             if (err) {
                 throw err;
             }
@@ -99,17 +100,48 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 }).install();
 
 /*
+    Settings (on persistent storage)
+*/
+
+// Open the file that contains all of the user's settings
+// (We use teeny-conf instead of localStorage because localStorage persists after uninstallation)
+const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
+let settings = new teeny(settingsFile);
+settings.loadOrCreateSync();
+
+/*
     Subroutines
 */
 
 function createWindow() {
-    // Create the browser window
-    let width = 1110;
-    let height = 720;
-    if (isDev) {
-        width += 500;
+    // Figure out what the window size and position should be
+    if (typeof settings.get('window') === 'undefined') {
+        // If this is the first run, create an empty window object
+        settings.set('window', {});
+        settings.saveSync();
     }
+    let windowSettings = settings.get('window');
+
+    // Width
+    let width;
+    if (windowSettings.hasOwnProperty('width')) {
+        width = windowSettings.width;
+    } else {
+        width = (isDev ? 1610 : 1110);
+    }
+
+    // Height
+    let height;
+    if (windowSettings.hasOwnProperty('height')) {
+        height = windowSettings.height;
+    } else {
+        height = 720;
+    }
+
+    // Create the browser window
     mainWindow = new BrowserWindow({
+        x:      windowSettings.x,
+        y:      windowSettings.y,
         width:  width,
         height: height,
         icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
@@ -121,9 +153,17 @@ function createWindow() {
     }
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    // Remove the taskbar flash state (this isn't currently used)
+    // Remove the taskbar flash state
+    // (this is not currently used)
     mainWindow.once('focus', function() {
         mainWindow.flashFrame(false);
+    });
+
+    // Save the window size and position
+    mainWindow.on('close', function() {
+        let windowBounds = mainWindow.getBounds();
+        settings.set('window', windowBounds);
+        settings.saveSync();
     });
 
     // Dereference the window object when it is closed
@@ -165,8 +205,12 @@ function autoUpdate() {
 function registerKeyboardHotkeys() {
     // Register global hotkeys
     const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
-        let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
-        execFile(command);
+        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+            let pathToFocusIsaac = path.join(__dirname, 'assets', 'programs', 'focusIsaac', 'focusIsaac.exe');
+            execFile(pathToFocusIsaac, function(error, stdout, stderr) {
+                // We have to attach an empty callback to this or it does not work for some reason
+            });
+        }
     });
     if (!hotkeyIsaacFocus) {
         log.warn('Alt+1 hotkey registration failed.');
@@ -191,6 +235,30 @@ function registerKeyboardHotkeys() {
     });
     if (!hotkeyQuit) {
         log.warn('Alt+Q hotkey registration failed.');
+    }
+
+    const hotkeyBlckCndl = globalShortcut.register('Alt+C', function() {
+        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+            let pathToBlckCndl = path.join(__dirname, 'assets', 'programs', 'blckCndl', 'blckCndl.exe');
+            execFile(pathToBlckCndl, function(error, stdout, stderr) {
+                // We have to attach an empty callback to this or it does not work for some reason
+            });
+        }
+    });
+    if (!hotkeyBlckCndl) {
+        log.warn('Alt+C hotkey registration failed.');
+    }
+
+    const hotkeyBlckCndlSeed = globalShortcut.register('Alt+V', function() {
+        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+            let pathToBlckCndlSeed = path.join(__dirname, 'assets', 'programs', 'blckCndlSeed', 'blckCndlSeed.exe');
+            execFile(pathToBlckCndlSeed, function(error, stdout, stderr) {
+                // We have to attach an empty callback to this or it does not work for some reason
+            });
+        }
+    });
+    if (!hotkeyBlckCndlSeed) {
+        log.warn('Alt+V hotkey registration failed.');
     }
 }
 
@@ -249,6 +317,9 @@ app.on('will-quit', function() {
     if (childLogWatcher !== null) {
         childLogWatcher.send('exit');
     }
+    if (childIsaac !== null) {
+        childIsaac.send('exit');
+    }
 });
 
 /*
@@ -260,19 +331,27 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
 
     if (arg1 === 'minimize') {
         mainWindow.minimize();
+
     } else if (arg1 === 'maximize') {
         if (mainWindow.isMaximized() === true) {
             mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
         }
+
     } else if (arg1 === 'close') {
         app.quit();
+
     } else if (arg1 === 'restart') {
         app.relaunch();
         app.quit();
+
     } else if (arg1 === 'quitAndInstall') {
         autoUpdater.quitAndInstall();
+
+    } else if (arg1 === 'devTools') {
+        mainWindow.webContents.openDevTools();
+
     } else if (arg1 === 'steam' && childSteam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
         // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
@@ -303,11 +382,13 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         childSteam.on('exit', function() {
             mainWindow.webContents.send('steam', 'exited');
         });
+
     } else if (arg1 === 'steamExit') {
         // The renderer has successfully authenticated and is now establishing a WebSocket connection, so we can kill the Greenworks process
         if (childSteam !== null) {
             childSteam.send('exit');
         }
+
     } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
         // Start the log watcher in a separate process for performance reasons
         if (isDev) {
@@ -335,5 +416,46 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
 
         // Feed the child the path to the Isaac log file
         childLogWatcher.send(arg2);
+
+    } else if (arg1 === 'isaac') {
+        // Start the Isaac launcher in a separate process for performance reasons
+        if (isDev) {
+            childIsaac = fork('./isaac');
+        } else {
+            // There are problems when forking inside of an ASAR archive
+            // See: https://github.com/electron/electron/issues/2708
+            childIsaac = fork('./app.asar/isaac', {
+                cwd: path.join(__dirname, '..'),
+            });
+        }
+        log.info('Started the Isaac launcher child process.');
+
+        // Receive notifications from the child process
+        childIsaac.on('message', function(message) {
+            // Pass the message to the renderer (browser) process
+            mainWindow.webContents.send('isaac', message);
+        });
+
+        // Track errors
+        childIsaac.on('error', function(err) {
+            // Pass the error to the renderer (browser) process
+            mainWindow.webContents.send('isaac', 'error: ' + err);
+        });
+
+        // Feed the child the path to the Isaac mods directory and the "force" boolean
+        childIsaac.send(arg2);
+
+        // After being launched, Isaac will wrest control, so automatically switch focus back to the Racing+ client when this occurs
+        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+            let pathToFocusRacing = path.join(__dirname, 'assets', 'programs', 'focusRacing+', 'focusRacing+.exe');
+            execFile(pathToFocusRacing, function(error, stdout, stderr) {
+                // We have to attach an empty callback to this or it does not work for some reason
+            });
+        } else if (process.platform === 'darwin') { // OS X
+            // Try using "opn(pathToRacingPlusBinary)"
+            // TODO
+        } else {
+            // Linux is not supported
+        }
     }
 });

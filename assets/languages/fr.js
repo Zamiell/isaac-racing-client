@@ -104,6 +104,14 @@ Lang.prototype.pack.fr = {
         "left": "",
         "Race completed!": "Course terminée!",
 
+        // Race ready error messages
+        "You have to start a run before you can mark yourself as ready.": "",
+        "You must turn on the \"BLCK CNDL\" easter egg before you can mark yourself as ready.": "",
+        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
+        "You must be in a run with the correct character before you can mark yourself as ready.": "",
+        "You must be in a run with the correct seed before you can mark yourself as ready.": "",
+        "You should wait for someone else to join this race before marking yourself as ready.": "",
+
         // Race screen (racer table)
         "Place": "Place",
         "Racer": "Coureur",

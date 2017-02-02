@@ -381,7 +381,11 @@
                                                         </div>
                                                     </td>
                                                     <td id="race-title-seed" class="selectable" data-tooltip-content="#race-title-seed-tooltip"></td>
-                                                    <td id="race-title-build"></td>
+                                                    <td id="race-title-build">
+                                                        <div class="race-title-icon-container">
+                                                            <span id="race-title-build-icon" class="race-title-icon"></span>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -390,7 +394,9 @@
                                     <div id="race-title-controls-container">
                                         <span id="race-ready-checkbox-container">
                                             <input id="race-ready-checkbox" type="checkbox" />
-                                            <label for="race-ready-checkbox"><span id="race-ready-checkbox-label" lang="en">Ready</span></label>
+                                            <label id="race-ready-checkbox-label" for="race-ready-checkbox">
+                                                <span id="race-ready-checkbox-text" lang="en">Ready</span>
+                                            </label>
                                         </span>
                                         <h3 id="race-countdown" class="hidden"></h3>
                                         <ul class="actions">
@@ -522,7 +528,7 @@
                                     <option value="ranked-solo">
                                         <span lang="en">Solo</span> <span lang="en">Ranked</span> (<span lang="en">Season</span> 1)
                                     </option>
-                                    <option value="unranked-solo" >
+                                    <option value="unranked-solo">
                                         <span lang="en">Solo</span> <span lang="en">Unranked</span> (<span lang="en">Practice</span>)
                                     </option>
                                     <option value="ranked">
@@ -555,7 +561,7 @@
                         </div>
                     </div>
 
-                    <div id="new-race-character-container" class="row uniform 50% hidden">
+                    <div id="new-race-character-container" class="row uniform 50%">
                         <div class="2u new-race-note">
                             <p><span lang="en">Character</span>:</p>
                         </div>
@@ -579,13 +585,13 @@
                                     <option value="Lilith">Lilith</option>
                                     <option value="Keeper">Keeper</option>
                                     <option value="Apollyon">Apollyon</option>
-                                    <option value="Random"><span lang="en">Random</span></option>
+                                    <option value="random"><span lang="en">Random</span></option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div id="new-race-goal-container" class="row uniform 50% hidden">
+                    <div id="new-race-goal-container" class="row uniform 50%">
                         <div class="2u new-race-note">
                             <p><span lang="en">Goal</span>:</p>
                         </div>
@@ -613,38 +619,9 @@
                         <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-starting-build">
-                                    <option value="Random" lang="en" selected="selected">Random</option>
-                                    <option value="1">20/20</option>
-                                    <option value="2">Chocolate Milk</option>
-                                    <option value="3">Cricket's Body</option>
-                                    <option value="4">Cricket's Head</option>
-                                    <option value="5">Dead Eye</option>
-                                    <option value="6">Death's Touch</option>
-                                    <option value="7">Dr. Fetus</option>
-                                    <option value="8">Epic Fetus</option>
-                                    <option value="9">Ipecac</option>
-                                    <option value="10">Judas' Shadow</option>
-                                    <option value="11">Lil' Brimstone</option>
-                                    <option value="12">Magic Mushroom</option>
-                                    <option value="13">Mom's Knife</option>
-                                    <option value="14">Monstro's Lung</option>
-                                    <option value="15">Polyphemus</option>
-                                    <option value="16">Proptosis</option>
-                                    <option value="17">Sacrificial Dagger</option>
-                                    <option value="18">Tech.5</option>
-                                    <option value="19">Tech X</option>
-                                    <option value="20">Brimstone</option>
-                                    <option value="21">Incubus</option>
-                                    <option value="22">Maw of the Void</option>
-                                    <option value="23">Crown of Light</option>
-                                    <option value="24">Godhead</option>
-                                    <option value="25">Sacred Heart</option>
-                                    <option value="26">Mutant Spider + The Inner Eye</option>
-                                    <option value="27">Technology + A Lump of Coal</option>
-                                    <option value="28">The Ludovico Technique + The Parasite</option>
-                                    <option value="29">Fire Mind + Lucky Foot x13</option>
-                                    <option value="30">Kamikaze! + Host Hat</option>
-                                    <option value="31">Mega Blast + Habit + The Battery + AAA Battery</option>
+                                    <option value="random" lang="en" selected="selected">Random (all)</option>
+                                    <option value="random-d6" lang="en">Random (D6 builds only)</option>
+                                    <option value="random-treasure" lang="en">Random (Treasure Room only)</option>
                                 </select>
                             </div>
                         </div>

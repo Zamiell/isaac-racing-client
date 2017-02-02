@@ -12,6 +12,7 @@ const globals        = nodeRequire('./assets/js/globals');
 const settings       = nodeRequire('./assets/js/settings');
 const chat           = nodeRequire('./assets/js/chat');
 const misc           = nodeRequire('./assets/js/misc');
+const modLoader      = nodeRequire('./assets/js/mod-loader');
 const registerScreen = nodeRequire('./assets/js/ui/register');
 const lobbyScreen    = nodeRequire('./assets/js/ui/lobby');
 const raceScreen     = nodeRequire('./assets/js/ui/race');
@@ -228,7 +229,6 @@ exports.init = function(username, password, remember) {
         // Keep track of the person who just joined
         globals.roomList[data.room].users[data.user.name] = data.user;
         globals.roomList[data.room].numUsers++;
-        globals.log.info('User "' + data.name + '" joined room:', data.room);
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
@@ -513,6 +513,11 @@ exports.init = function(username, password, remember) {
 
         // Check to see if we are in this race
         if (data.id === globals.currentRaceID) {
+            // Update the status of the race in the Lua mod
+            globals.modLoader.status = data.status;
+            modLoader.send();
+
+            // Do different things depending on the status
             if (data.status === 'starting') {
                 // Update the status column in the race title
                 $('#race-title-status').html('<span class="circle lobby-current-races-starting"></span> &nbsp; <span lang="en">Starting</span>');
@@ -630,12 +635,19 @@ exports.init = function(username, password, remember) {
         // Keep track of when the race starts
         globals.raceList[globals.currentRaceID].datetimeStarted = data.time;
 
-        // Schedule the countdown and race (in two separate callbacks for more accuracy)
+        // Schedule the countdown, which starts at 5
         let now = new Date().getTime();
         let timeToStartCountdown = data.time - now - globals.timeOffset - 5000 - globals.fadeTime;
         setTimeout(function() {
             raceScreen.countdownTick(5);
         }, timeToStartCountdown);
+
+        // Schedule the in-game countdown via the Lua mod (we need to do it a bit sooner because there is no fade in on the numbers)
+        setTimeout(function() {
+            raceScreen.countdownTick2(5);
+        }, timeToStartCountdown + globals.fadeTime);
+
+        // Schedule the "Go!" part (done separately to be more accurate)
         let timeToStartRace = data.time - now - globals.timeOffset;
         setTimeout(function() {
             raceScreen.go(globals.currentRaceID); // Send it the current race ID in case it changes in the meantime

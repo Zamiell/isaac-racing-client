@@ -11,6 +11,7 @@ const globals         = nodeRequire('./assets/js/globals');
 const misc            = nodeRequire('./assets/js/misc');
 const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
 const settingsTooltip = nodeRequire('./assets/js/ui/settings-tooltip');
+const builds          = nodeRequire('./assets/data/builds');
 
 /*
     Header event handlers
@@ -344,6 +345,26 @@ $(document).ready(function() {
         $('#new-race-goal-icon').css('background-image', 'url("assets/img/goals/' + newGoal + '.png")');
     });
 
+    // Add the options to the starting build dropdown
+    for (let i = 0; i < builds.length; i++) {
+        // The 0th element is an empty array
+        if (i === 0) {
+            continue;
+        }
+
+        // Compile the build description string
+        let description = '';
+        for (let item of builds[i]) {
+            description += item.name + ' + ';
+        }
+        description = description.slice(0, -3); // Chop off the trailing " + "
+
+        // Add the option for this build
+        $('#new-race-starting-build').append(
+            $('<option></option>').val(i).html(description)
+        );
+    }
+
     $('#new-race-starting-build').change(function() {
         // Change the displayed icon
         let newBuild = $(this).val();
@@ -384,7 +405,7 @@ $(document).ready(function() {
         }
 
         // If necessary, get a random character
-        if (character === 'Random') {
+        if (character === 'random') {
             let characterArray = [
                 'Isaac',     // 0
                 'Magdalene', // 1
@@ -405,9 +426,12 @@ $(document).ready(function() {
         }
 
         // If necessary, get a random starting build,
-        if (startingBuild === 'Random') {
-            // There are 31 builds in the Instant Start Mod
-            startingBuild = misc.getRandomNumber(1, 31);
+        if (startingBuild === 'random') {
+            startingBuild = misc.getRandomNumber(1, 32); // There are 32 starts
+        } else if (startingBuild === 'random-d6') {
+            startingBuild = misc.getRandomNumber(1, 30); // There are 30 starts that have the D6
+        } else if (startingBuild === 'random-treasure') {
+            startingBuild = misc.getRandomNumber(1, 20); // There are 20 Treasure Room starts
         } else {
             // The value was read from the form as a string and needs to be sent to the server as an intenger
             startingBuild = parseInt(startingBuild);

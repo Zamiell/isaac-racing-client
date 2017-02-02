@@ -1,28 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>Jud6s</name>
-    <directory>jud6s</directory>
-    <id>842735484</id>
-    <description>[h1][b]The Jud6s Mod v4.0.10
-A racing mod for The Binding of Isaac: Afterbirth+[/b][/h1]
-
-This is the Afterbirth+ version of the Jud6s mod - a mod that stays very close to the original game while slightly tweaking it to be more fair for racing. It also fixes a ton of unavoidable damage and bugs that the developers have not bothered to fix in the vanilla game.
-
-The Afterbirth+ version of this mod should be considered [b]alpha[/b]. Many of the room fixes from Afterbirth are not re-implemented yet.
-
-Please read [url=https://github.com/Zamiell/jud6s/blob/master/docs/version_history.md]the version changes on GitHub[/url].
-(Ignore the version number inside the &quot;metadata.xml&quot; file; it will not match the version signified in this description / on GitHub.)
-
-
-
-[h1]Installation notes:[/h1]
-[list]
-[*] Click the &quot;Subscribe&quot; button above. (Once you do that, it should automatically start downloading the mod in the background if Steam is open.)
-[*] Start up the game. You should see &quot;Jud6s&quot; on the bottom-right hand corner of the title screen. You're done!
-[*] Using multiple mods at the same time is bugged in various ways. If you are using Jud6s, make sure all other mods are disabled in the in-game &quot;Mods&quot; menu.
-[*] Note that you need to completely [b]restart the game[/b] after enabling or disabling Jud6s via the in-game &quot;Mods&quot; menu.
-[/list]
-</description>
-    <version>4.1.28</version>
-    <visibility>Public</visibility>
+	<name>Racing+</name>
+	<directory>Racing+</directory>
+	<description/>
+	<version>v0.2.0</version>
+	<visibility/>
 </metadata>

@@ -4032,7 +4032,7 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/type/ranked.png");
+        background-image: url("../img/type/unranked.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
@@ -4230,7 +4230,7 @@
         font-size: 1.25em;
     }
 
-    #race-ready-checkbox-label {
+    #race-ready-checkbox-text {
         position: relative;
         top: 0.2em;
     }

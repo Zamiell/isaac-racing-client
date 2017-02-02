@@ -11,6 +11,7 @@ const misc       = nodeRequire('./assets/js/misc');
 const chat       = nodeRequire('./assets/js/chat');
 const logWatcher = nodeRequire('./assets/js/log-watcher');
 const isaac      = nodeRequire('./assets/js/isaac');
+const modLoader  = nodeRequire('./assets/js/mod-loader');
 const header     = nodeRequire('./assets/js/ui/header');
 
 /*
@@ -39,7 +40,7 @@ exports.show = function() {
     }
 
     // Launch Isaac
-    //isaac.start();
+    isaac.start();
 
     // Make sure that all of the forms are cleared out
     $('#login-username').val('');
@@ -114,6 +115,10 @@ exports.showFromRace = function() {
 
         // Focus the chat input
         $('#lobby-chat-box-input').focus();
+
+        // Update the Racing+ Lua mod
+        globals.modLoader.status = 'none';
+        modLoader.send();
     });
 };
 
@@ -324,14 +329,14 @@ exports.usersDraw = function() {
             userDiv += userList[i] + '</div>';
             $('#lobby-users-users').append(userDiv);
 
-            // Add the tooltip
-            $('#lobby-users-' + userList[i]).tooltipster({
+            // Add the tooltip (commented out since it doesn't work)
+            /*$('#lobby-users-' + userList[i]).tooltipster({
                 theme: 'tooltipster-shadow',
                 trigger: 'click',
                 interactive: true,
                 side: 'left',
                 functionBefore: userTooltipChange(userList[i]),
-            });
+            });*/
         }
     }
 

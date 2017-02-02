@@ -13,27 +13,30 @@ const misc        = nodeRequire('./assets/js/misc');
 
 // Monitor for keystrokes inside of the browser window
 $(document).keydown(function(event) {
-    //console.log(event.which); // Find out the number that corresponds to the desired key
+    //console.log(event.which); // Uncomment this to find out which number corresponds to the desired key
 
-    if (event.which === 192 && globals.currentScreen === 'title-ajax') { // "`"
+    if (event.which === 192 && globals.currentScreen === 'title-ajax' && isDev) { // "`"
         event.preventDefault();
         $('#title-choose-steam').click();
 
-    } else if (event.which === 49 && globals.currentScreen === 'title-ajax') { // "1"
+    } else if (event.which === 49 && globals.currentScreen === 'title-ajax' && isDev) { // "1"
         event.preventDefault();
         $('#title-choose-1').click();
 
-    } else if (event.which === 50 && globals.currentScreen === 'title-ajax') { // "2"
+    } else if (event.which === 50 && globals.currentScreen === 'title-ajax' && isDev) { // "2"
         event.preventDefault();
         $('#title-choose-2').click();
 
-    } else if (event.which === 51 && globals.currentScreen === 'title-ajax') { // "3"
+    } else if (event.which === 51 && globals.currentScreen === 'title-ajax' && isDev) { // "3"
         event.preventDefault();
         $('#title-choose-3').click();
 
-    } else if (event.which === 82 && globals.currentScreen === 'title-ajax') { // "r"
+    } else if (event.which === 82 && globals.currentScreen === 'title-ajax' && isDev) { // "r"
         event.preventDefault();
         $('#title-restart').click();
+
+    } else if (event.which === 123) { // "F12"
+        ipcRenderer.send('asynchronous-message', 'devTools');
 
     } else if (event.which === 9) { // "Tab"
         if (globals.currentScreen !== 'lobby' && globals.currentScreen !== 'race') {

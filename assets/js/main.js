@@ -6,6 +6,13 @@
 
 /*
     Bugs to fix:
+    - check to see if i can trick the ready checkbox by going into a game before entering the race
+    - add tooltip "You should wait for someone else to enter the race before setting yourself to be ready."
+    - dont play race copmleted for solo races
+    - add item icon instead of build # in Race table
+    - add checkbox for boss cutscene removal
+    - check for hard mode in log
+    - check for character in log
     - test Jud6s frame window for teratoma flies door opening
     - finish fixing game type client + server side
 
@@ -149,7 +156,7 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
 
 // Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 globals.log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
         // #1 - Log to the JavaScript console
@@ -157,7 +164,7 @@ globals.log = tracer.console({
 
         // #2 - Log to a file
         let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-        fs.appendFile(logFile, data.output + '\r\n', function(err) {
+        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
             if (err) {
                 throw err;
             }
@@ -172,8 +179,12 @@ $(document).ready(function() {
 });
 
 // Word list
-let wordListLocation = path.join(__dirname, 'assets/words/words.txt');
+let wordListLocation = path.join(__dirname, 'assets', 'words', 'words.txt');
 fs.readFile(wordListLocation, function(err, data) {
+    if (err) {
+        misc.errorShow('Failed to read the "' + wordListLocation + '" file: ' + err);
+        return;
+    }
     globals.wordList = data.toString().split('\n');
 });
 
@@ -186,7 +197,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
     });
     documentsPath = $.trim(documentsPath); // Remove the trailing newline
     globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
-} else if (process.platform === 'darwin') {
+} else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
 } else {
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+');
@@ -197,7 +208,7 @@ if (typeof settings.get('logFilePath') === 'undefined') {
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion
-let emotePath = path.join(__dirname + '/assets/img/emotes');
+let emotePath = path.join(__dirname, 'assets', 'img', 'emotes');
 globals.emoteList = misc.getAllFilesFromFolder(emotePath);
 for (let i = 0; i < globals.emoteList.length; i++) { // Remove ".png" from each elemet of emoteList
     globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long

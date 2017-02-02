@@ -11,6 +11,8 @@ const globals     = nodeRequire('./assets/js/globals');
 const settings    = nodeRequire('./assets/js/settings');
 const misc        = nodeRequire('./assets/js/misc');
 const isaac       = nodeRequire('./assets/js/isaac');
+const modLoader   = nodeRequire('./assets/js/mod-loader');
+const raceScreen  = nodeRequire('./assets/js/ui/race');
 
 // globals.currentScreen is equal to "transition" when this is called
 exports.start = function() {
@@ -51,7 +53,13 @@ exports.start = function() {
 
 // Monitor for notifications from the child process that is doing the log watching
 const logWatcher = function(event, message) {
-    globals.log.info('Recieved log-watcher notification:', message);
+    // Don't log everything to reduce spam
+    if (message.startsWith('New floor: ') === false &&
+        message.startsWith('New room: ') === false &&
+        message.startsWith('New item: ') === false) {
+
+        globals.log.info('Recieved log-watcher notification: ' + message);
+    }
 
     if (message.startsWith("error: ")) {
         // First, parse for errors
@@ -59,6 +67,87 @@ const logWatcher = function(event, message) {
         misc.errorShow('Something went wrong with the log monitoring program: ' + error);
         return;
     }
+
+    // Do some things regardless of whether we are in a race or not
+    // (all relating to the Racing+ Lua mod)
+    if (message === 'Title menu initialized.') {
+        globals.modLoader.blckCndlOn = false;
+        modLoader.send();
+        globals.gameState.inGame = false;
+        globals.gameState.hardMode = false;
+        raceScreen.checkReadyValid();
+
+    } else if (message === 'BLCK CNDL on.') {
+        globals.modLoader.blckCndlOn = true;
+        modLoader.send();
+        raceScreen.checkReadyValid();
+
+    } else if (message === 'Hard mode on.') {
+        globals.gameState.hardMode = true;
+        raceScreen.checkReadyValid();
+
+    } else if (message.startsWith('New character: ')) {
+        let m = message.match(/New character: (.+)/);
+        if (m) {
+            let character = m[1];
+
+            // Convert the character from a number to a string
+            if (character === '0')  {
+                character = 'Isaac';
+            } else if (character === '1') {
+                character = 'Magdalene';
+            } else if (character === '2') {
+                character = 'Cain';
+            } else if (character === '3') {
+                character = 'Judas';
+            } else if (character === '4') {
+                character = 'Blue Baby';
+            } else if (character === '5') {
+                character = 'Eve';
+            } else if (character === '6') {
+                character = 'Samson';
+            } else if (character === '7') {
+                character = 'Azazel';
+            } else if (character === '8') {
+                character = 'Lazarus';
+            } else if (character === '9') {
+                character = 'Eden';
+            } else if (character === '10') {
+                character = 'The Lost';
+            } else if (character === '13') {
+                character = 'Lilith';
+            } else if (character === '14') {
+                character = 'Keeper';
+            } else if (character === '15') {
+                character = 'Apollyon';
+            } else {
+                misc.errorShow('Failed to parse the character from the log file: ' + character);
+            }
+
+            globals.gameState.character = character;
+
+            // We will get this message every time they enter the game from the menu
+            globals.gameState.inGame = true;
+            raceScreen.checkReadyValid();
+        } else {
+            misc.errorShow('Failed to parse the new character.');
+        }
+
+    } else if (message.startsWith('New seed: ')) {
+        let m = message.match(/New seed: (.... ....)/);
+        if (m) {
+            let seed = m[1];
+            globals.modLoader.currentSeed = seed;
+            modLoader.send();
+            raceScreen.checkReadyValid();
+        } else {
+            misc.errorShow('Failed to parse the new seed.');
+        }
+    }
+
+    /*
+        The rest of the log actions involve sending a message to the server
+    */
 
     // Don't do anything if we are not in a race
     if (globals.currentScreen !== 'race' || globals.currentRaceID === false) {
@@ -81,14 +170,7 @@ const logWatcher = function(event, message) {
     }
 
     // Parse the message
-    if (message === 'Mods changed.') {
-        // Another mod was enabled/disabled
-        isaac.start();
-    } else if (message.startsWith('BLCK CNDL on')) {
-        globals.blackCandleEnabled = true;
-    } else if (message.startsWith('BLCK CNDL off')) {
-        globals.blackCandleEnabled = false;
-    } else if (message.startsWith('New seed: ')) {
+    if (message.startsWith('New seed: ')) {
         let m = message.match(/New seed: (.... ....)/);
         if (m) {
             let seed = m[1];

@@ -11,6 +11,8 @@ const clipboard = nodeRequire('electron').clipboard;
 const globals   = nodeRequire('./assets/js/globals');
 const misc      = nodeRequire('./assets/js/misc');
 const chat      = nodeRequire('./assets/js/chat');
+const modLoader = nodeRequire('./assets/js/mod-loader');
+const builds    = nodeRequire('./assets/data/builds');
 
 /*
     Event handlers
@@ -73,6 +75,31 @@ $(document).ready(function() {
         delay: 0,
         functionBefore: function() {
             if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-title-build').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-ready-checkbox-container').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        contentAsHTML: true,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race' && $('#race-ready-checkbox').prop('disabled')) {
                 return true;
             } else {
                 return false;
@@ -182,6 +209,17 @@ const show = function(raceID) {
     if (globals.raceList[globals.currentRaceID].seed !== '-') {
         clipboard.writeText(globals.raceList[globals.currentRaceID].seed);
     }
+
+    // Tell the Lua mod that we are in a new race
+    globals.modLoader.status         = globals.raceList[globals.currentRaceID].status;
+    globals.modLoader.rType          = globals.raceList[globals.currentRaceID].ruleset.type;
+    globals.modLoader.rFormat        = globals.raceList[globals.currentRaceID].ruleset.format;
+    globals.modLoader.character      = globals.raceList[globals.currentRaceID].ruleset.character;
+    globals.modLoader.goal           = globals.raceList[globals.currentRaceID].ruleset.goal;
+    globals.modLoader.seed           = globals.raceList[globals.currentRaceID].seed;
+    globals.modLoader.startingBuild  = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
+    globals.modLoader.countdown      = -1;
+    modLoader.send();
 
     // Show and hide some buttons in the header
     $('#header-profile').fadeOut(globals.fadeTime);
@@ -320,10 +358,8 @@ const show = function(raceID) {
         goalTooltipContent += '</span>';
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
-        // Adjust the racer table depending on the format
-        if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded' ||
-            globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
-
+        // Column 6 - Seed (only available for seeded races)
+        if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded') {
             $('#race-title-table-seed').fadeIn(0);
             $('#race-title-seed').fadeIn(0);
             $('#race-title-seed').html(globals.raceList[globals.currentRaceID].seed);
@@ -331,10 +367,19 @@ const show = function(raceID) {
             $('#race-title-table-seed').fadeOut(0);
             $('#race-title-seed').fadeOut(0);
         }
+
+        // Column 7 - Build (only available for seeded races)
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded') {
             $('#race-title-table-build').fadeIn(0);
             $('#race-title-build').fadeIn(0);
-            $('#race-title-build').html(globals.raceList[globals.currentRaceID].ruleset.startingBuild);
+            let build = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
+            $('#race-title-build-icon').css('background-image', 'url("assets/img/builds/' + build + '.png")');
+            let buildTooltipContent = '';
+            for (let item of builds[build]) {
+                buildTooltipContent += item.name + ' + ';
+            }
+            buildTooltipContent = buildTooltipContent.slice(0, -3); // Chop off the trailing " + "
+            $('#race-title-build').tooltipster('content', buildTooltipContent);
         } else {
             $('#race-title-table-build').fadeOut(0);
             $('#race-title-build').fadeOut(0);
@@ -343,6 +388,11 @@ const show = function(raceID) {
         // Show the pre-start race controls
         $('#race-ready-checkbox-container').fadeIn(0);
         $('#race-ready-checkbox').prop('checked', false);
+        $('#race-ready-checkbox').prop('disabled', true);
+        $('#race-ready-checkbox-label').css('cursor', 'default');
+        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.5);
+        globals.gameState.inGame = false; // Make them reset at least one time before being able to become ready
+        checkReadyValid(); // This will update the tooltip on what the player needs to do in order to become ready
         $('#race-countdown').fadeOut(0);
         $('#race-quit-button-container').fadeOut(0);
         $('#race-controls-padding').fadeOut(0);
@@ -483,6 +533,10 @@ const participantsSetStatus = function(i, initial = false) {
 
         // Activate the "Lobby" button in the header
         $('#header-lobby').removeClass('disabled');
+
+        // Tell the Lua mod that we are finished with the race
+        globals.modLoader.status = 'none';
+        modLoader.send();
     }
 
     // Play a sound effect if someone quit or finished
@@ -634,11 +688,15 @@ const startCountdown = function() {
         return;
     }
 
-    // Change the functionality of the "Lobby" button in the header
-    $('#header-lobby').addClass('disabled');
-
     // Play the "Let's Go" sound effect
     misc.playSound('lets-go');
+
+    // Tell the Lua mod that we are starting a race
+    globals.modLoader.countdown = 10;
+    modLoader.send();
+
+    // Change the functionality of the "Lobby" button in the header
+    $('#header-lobby').addClass('disabled');
 
     // Show the countdown
     $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
@@ -666,6 +724,7 @@ const countdownTick = function(i) {
     }
 
     if (i > 0) {
+        // Change the number on the race controls area
         $('#race-countdown').fadeOut(globals.fadeTime, function() {
             $('#race-countdown').css('font-size', '2.5em');
             $('#race-countdown').css('bottom', '0.375em');
@@ -674,8 +733,8 @@ const countdownTick = function(i) {
             $('#race-countdown').fadeIn(globals.fadeTime);
             setTimeout(function() {
                 // Focus the game with 3 seconds remaining on the countdown
-                if (i === 3) {
-                    let command = path.join(__dirname, '/assets/programs/isaacFocus/isaacFocus.exe');
+                if (i === 3 && process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+                    let command = path.join(__dirname, '/assets/programs/focusIsaac/focusIsaac.exe');
                     execFile(command);
                 }
 
@@ -693,6 +752,33 @@ const countdownTick = function(i) {
 };
 exports.countdownTick = countdownTick;
 
+// This is only updating the Lua mod; it is on a slight offset to account for lag
+const countdownTick2 = function(i) {
+    if (globals.currentScreen === 'transition') {
+        // Come back when the current transition finishes
+        setTimeout(function() {
+            countdownTick();
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        return;
+    }
+
+    // Don't do anything if we are not on the race screen
+    if (globals.currentScreen !== 'race') {
+        return;
+    }
+
+    if (i > 0) {
+        // Update the Lua mod with how many seconds are left until the race starts
+        globals.modLoader.countdown = i;
+        modLoader.send();
+
+        setTimeout(function() {
+            countdownTick2(i - 1);
+        }, 1000);
+    }
+};
+exports.countdownTick2 = countdownTick2;
+
 const go = function(raceID) {
     if (globals.currentScreen === 'transition') {
         // Come back when the current transition finishes
@@ -707,12 +793,19 @@ const go = function(raceID) {
         return;
     }
 
+    // Update the Lua mod with how many seconds are left until the race starts
+    globals.modLoader.countdown = 0;
+    modLoader.send();
+
+    // Update the Lua mod 1 second from now to get rid of the "Go!" text
+    setTimeout(function() {
+        globals.modLoader.countdown = -1;
+        modLoader.send();
+    }, 1000);
+
+    // Update the text on the race controls area
     $('#race-countdown').html('<span lang="en">Go</span>!');
     $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
-
-    // Press enter inside of the game
-    /*let command = path.join(__dirname, '/assets/programs/raceGo/raceGo.exe');
-    execFile(command);*/
 
     // Play the "Go" sound effect
     misc.playSound('go');
@@ -826,3 +919,70 @@ function raceTimerTick() {
     // Schedule the next tick
     setTimeout(raceTimerTick, 1000);
 }
+
+const checkReadyValid = function() {
+    if (globals.currentScreen === 'transition') {
+        // Come back when the current transition finishes
+        setTimeout(function() {
+            checkReadyValid();
+        }, globals.fadeTime + 5); // 5 milliseconds of leeway
+        return;
+    }
+
+    // Don't do anything if we are not in a race
+    if (globals.currentScreen !== 'race' || globals.currentRaceID === false) {
+        return;
+    }
+
+    // Don't do anything if the race is over
+    if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+        return;
+    }
+
+    // Don't do anything if the race status is not set to ready
+    if (globals.raceList[globals.currentRaceID].status !== 'open') {
+        return;
+    }
+
+    // Check for a bunch of things before we allow the user to mark themselves off as ready
+    let valid = true;
+    let tooltipContent;
+
+    if (globals.gameState.inGame === false) {
+        valid = false;
+        tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
+    } else if (globals.modLoader.blckCndlOn === false) {
+        valid = false;
+        tooltipContent = '<span lang="en">You must turn on the "BLCK CNDL" easter egg before you can mark yourself as ready.</span>';
+    } else if (globals.gameState.hardMode === true) {
+        valid = false;
+        tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
+    } else if (globals.gameState.character !== globals.raceList[globals.currentRaceID].ruleset.character) {
+        valid = false;
+        tooltipContent = '<span lang="en">You must be in a run with the correct character before you can mark yourself as ready.</span>';
+    } else if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded' &&
+               globals.modLoader.currentSeed !== globals.raceList[globals.currentRaceID].seed) {
+
+       valid = false;
+       tooltipContent = '<span lang="en">You must be in a run with the correct seed before you can mark yourself as ready.</span>';
+   } else if (globals.raceList[globals.currentRaceID].ruleset.solo === false &&
+              globals.raceList[globals.currentRaceID].racerList.length === 1) {
+
+      valid = false;
+      tooltipContent = '<span lang="en">You should wait for someone else to join this race before marking yourself as ready.</span>';
+    }
+
+    if (valid === false) {
+        $('#race-ready-checkbox').prop('disabled', true);
+        $('#race-ready-checkbox-label').css('cursor', 'default');
+        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.5);
+        $('#race-ready-checkbox-container').tooltipster('content', tooltipContent);
+        return;
+    }
+
+    // We passed all the tests, so make sure that the checkbox is enabled
+    $('#race-ready-checkbox').prop('disabled', false);
+    $('#race-ready-checkbox-label').css('cursor', 'pointer');
+    $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 1);
+};
+exports.checkReadyValid = checkReadyValid;

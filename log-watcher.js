@@ -1,11 +1,11 @@
-'use strict';
-
 /*
     Child process that monitors the log file
 */
 
+'use strict';
+
 // Imports
-const fs     = require('fs');
+const fs     = require('fs-extra');
 const path   = require('path');
 const isDev  = require('electron-is-dev');
 const tracer = require('tracer');
@@ -16,23 +16,26 @@ const Raven  = require('raven');
 */
 
 process.on('uncaughtException', function(err) {
-    process.send('error: ' + err);
+    process.send('error: ' + err, processExit);
 });
+const processExit = function() {
+    process.exit();
+};
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 */
 
-const logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
 const log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}}\r\n{{message}}",
+    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
     transport: function(data) {
         // #1 - Log to the JavaScript console
         console.log(data.output);
 
         // #2 - Log to a file
-        fs.appendFile(logFile, data.output + '\r\n', function(err) {
+        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
+        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
             if (err) {
                 throw err;
             }
@@ -73,8 +76,7 @@ process.on('message', function(message) {
     // Instead we need to use fs.watchFile, which is polling based and less efficient
     process.send("Starting to watch file: " + logPath);
     if (fs.existsSync(logPath) === false) {
-        process.send('error: The "' + logPath + '" file does not exist.');
-        return;
+        process.send('error: The "' + logPath + '" file does not exist.', processExit);
     }
     var fd = fs.openSync(logPath, 'r');
     fs.watchFile(logPath, {
@@ -100,8 +102,7 @@ process.on('message', function(message) {
 // Handle the new blob of data
 const logReadCallback = function(err, bytes, buff) {
     if (err) {
-        process.send('error: ' + err);
-        return;
+        process.send('error: ' + err, processExit);
     }
 
     let lines = buff.toString('utf8').split('\n');
@@ -121,35 +122,56 @@ const parseLine = function(line) {
     //log.info('log.txt ' + line); // Uncomment this if debugging
 
     if (line.startsWith('[INFO] - ')) {
-        line = line.substring(9, line.length); // Truncate the "[INFO] - " prefix
+        // Truncate the "[INFO] - " prefix
+        line = line.substring(9, line.length);
     } else {
-        return; // We don't care about non-"INFO" lines
+        // We don't care about non-"INFO" lines
+        return;
     }
 
-    if (line.startsWith('Lua is resetting!')) {
-        // Another mod was enabled/disabled
-        process.send('Mod changed.');
-    } else if (line.startsWith('Seed 70 added to SaveState')) {
-        // BLCK CNDL seed was turned on
-        process.send('BLCK CNDL on');
-    } else if (line.startsWith('[INFO] - Menu Title Init')) {
+    if (line.startsWith('Menu Title Init')) {
         // They have entered the menu
-        process.send('BLCK CNDL off');
+        process.send('Title menu initialized.');
+
+    } else if (line === 'Seed 70 added to SaveState') {
+        // BLCK CNDL seed was turned on
+        process.send('BLCK CNDL on.');
+
+    } else if (line.startsWith('Lua Debug: Difficulty: ')) {
+        // A new run has begun
+        let match = line.match(/Lua Debug: Difficulty: (\d+)/);
+        if (match) {
+            let difficulty = match[1];
+            if (difficulty !== '0') {
+                process.send('Hard mode on.');
+            }
+        }
+
+    } else if (line.startsWith('Initialized player with Variant 0 and Subtype ')) {
+        // A new run has begun
+        let match = line.match(/Initialized player with Variant 0 and Subtype (\d+)/);
+        if (match) {
+            let character = match[1];
+            process.send('New character: ' + character);
+        }
+
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
-        let match = line.match(/\RNG Start Seed: (.... ....)/);
+        let match = line.match(/RNG Start Seed: (.... ....)/);
         if (match) {
             let seed = match[1];
             process.send('New seed: ' + seed);
         }
+
     } else if (line.startsWith('Level::Init ')) {
         // A new floor was entered
-        let match = line.match(/\Level::Init m_Stage (\d+), m_StageType (\d+)/);
+        let match = line.match(/Level::Init m_Stage (\d+), m_StageType (\d+)/);
         if (match) {
             let stage = match[1];
             let type = match[2];
             process.send('New floor: ' + stage + '-' + type);
         }
+
     } else if (line.startsWith('Room ')) {
         // A new room was entered
         // Sometimes there are lines of "Room count #", so filter those out
@@ -158,6 +180,7 @@ const parseLine = function(line) {
             let roomID = match[1];
             process.send('New room: ' + roomID);
         }
+
     } else if (line.startsWith('Adding collectible ')) {
         // A new item was picked up
         let match = line.match(/Adding collectible (\d+) /);
@@ -165,10 +188,13 @@ const parseLine = function(line) {
             let item = match[1];
             process.send('New item: ' + item);
         }
+
     } else if (line === 'playing cutscene 17 (Chest).') {
         process.send('Finished run: Blue Baby');
+
     } else if (line === 'playing cutscene 18 (Dark Room).') {
         process.send('Finished run: The Lamb');
+
     } else if (line === 'playing cutscene 19 (Mega Satan).') {
         process.send('Finished run: Mega Satan');
     }
