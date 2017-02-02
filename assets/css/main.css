@@ -4186,6 +4186,10 @@
         width: 5em;
     }
 
+    #settings-twitch-bot-delay-error {
+        color: red;
+    }
+
     /*
         Race (title table)
     */
