@@ -1414,3 +1414,4 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.BookOfSin, 43); -
 --RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Teleport, 59); -- Replacing Teleport (44) (this is not possible with the current bindings)
 --RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Undefined, 61); -- Replacing Undefined (324) (this is not possible with the current bindings)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.TestCallback, 235); -- Debug (custom item)
+-- 263
