@@ -53,7 +53,7 @@ local race = { -- The table that gets updated from the "save.dat" file
   blckCndlOn      = false,       -- This is detected through the "log.txt" file
   currentSeed     = "-",         -- The seed of our current run (detected through the "log.txt" file)
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
-  datetimeWritten = os.time(),   -- os.time() gives the epoch timestamp
+  datetimeWritten = 0
 }
 local raceVars = {
   difficulty                    = 0,
@@ -188,6 +188,7 @@ function spriteDisplay()
 end
 
 function timerUpdate()
+  --[[
   if raceVars.startedTime == 0 then
     return
   end
@@ -211,6 +212,7 @@ function timerUpdate()
 
   local timerString = minutes .. ':' .. seconds
   Isaac.RenderText(timerString, 17, 211, 0.7, 1.8, 0.2, 1.0) -- X, Y, R, G, B, A
+  --]]
 end
 
 ---
@@ -477,9 +479,11 @@ function RacingPlus:RunInit()
   readServer()
 
   -- Do a check to see if more than an hour has passed since that race data was last written
+  --[[
   if os.time() - 3600 > race.datetimeWritten then
     return
   end
+  --]]
 
   -- If we are not in a race, don't do anything special
   if race.status == "none" then
@@ -523,11 +527,11 @@ function RacingPlus:RaceStart()
   Isaac.DebugString("Starting the race!")
 
   -- Load the clock sprite for the timer
-  spriteInit("clock", "clock")
+  --spriteInit("clock", "clock")
 
   -- Set the start time to the number of CPU seconds that have elapsed since Lua was initialized
   -- (this is the only way to get millisecond granularity)
-  raceVars.startedTime = os.clock()
+  --raceVars.startedTime = os.clock()
 end
 
 -- This emulates what happens when you normally clear a room
@@ -1194,7 +1198,7 @@ function RacingPlus:PostRender()
       RacingPlus:RaceStart()
     end
 
-    timerUpdate()
+    --timerUpdate()
   end
 
   -- Display all initialized sprites
