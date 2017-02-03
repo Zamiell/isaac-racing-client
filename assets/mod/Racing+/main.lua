@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- remove void portal pngs
 - Look at item bans again
 - Automatically close doors for B1 treasure room on seeded races
 - Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/

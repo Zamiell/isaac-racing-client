@@ -78,7 +78,7 @@ process.on('message', function(message) {
 
     // Check to see if the mods directory exists
     if (fs.existsSync(modsPath) === false) {
-        process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file in the Racing+ directory.', processExit);
+        process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file. By default, it is located at:<br /><br /><code>C:\\Users\\[YourUsername]\\AppData\\Local\\Programs\\settings.json</code>', processExit);
         return;
     }
 

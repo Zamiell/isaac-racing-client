@@ -162,6 +162,10 @@ function createWindow() {
     // Save the window size and position
     mainWindow.on('close', function() {
         let windowBounds = mainWindow.getBounds();
+
+        // We have to re-get the settings, since the renderer process may have changed them
+        // If so, our local copy of all of the settings is no longer current
+        settings.loadOrCreateSync();
         settings.set('window', windowBounds);
         settings.saveSync();
     });

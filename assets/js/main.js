@@ -6,6 +6,8 @@
 
 /*
     Bugs to fix:
+    - make separate icons for solo races
+    - check to see if it writes anyting to the log when putting on black candle from teh easter egg menu
     - check to see if i can trick the ready checkbox by going into a game before entering the race
     - add tooltip "You should wait for someone else to enter the race before setting yourself to be ready."
     - dont play race copmleted for solo races
@@ -205,6 +207,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
 if (typeof settings.get('logFilePath') === 'undefined') {
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
+    globals.log.info('XXX RESET PATH XXX');
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion
