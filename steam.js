@@ -78,9 +78,8 @@ try {
 try {
     if (greenworks.init() === false) {
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
-        process.send('errorInit', function() {
-            process.exit();
-        });
+        process.send('errorInit', processExit);
+        return;
     }
 } catch(err) {
     greenworksGotError(err);

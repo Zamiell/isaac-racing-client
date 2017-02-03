@@ -77,6 +77,7 @@ process.on('message', function(message) {
     process.send("Starting to watch file: " + logPath);
     if (fs.existsSync(logPath) === false) {
         process.send('error: The "' + logPath + '" file does not exist.', processExit);
+        return;
     }
     var fd = fs.openSync(logPath, 'r');
     fs.watchFile(logPath, {
@@ -103,6 +104,7 @@ process.on('message', function(message) {
 const logReadCallback = function(err, bytes, buff) {
     if (err) {
         process.send('error: ' + err, processExit);
+        return;
     }
 
     let lines = buff.toString('utf8').split('\n');

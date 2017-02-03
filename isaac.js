@@ -79,6 +79,7 @@ process.on('message', function(message) {
     // Check to see if the mods directory exists
     if (fs.existsSync(modsPath) === false) {
         process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file in the Racing+ directory.', processExit);
+        return;
     }
 
     // Begin the process of opening Isaac
@@ -95,6 +96,7 @@ function checkIsaacOpen() {
     } else {
         // Linux is not supported
         process.send('Linux is not supported.', processExit);
+        return;
     }
 
     ps.lookup({
@@ -102,12 +104,14 @@ function checkIsaacOpen() {
     }, function(err, resultList) {
         if (err) {
             process.send('error: Failed to find the Isaac process: ' + err, processExit);
+            return;
         }
 
         if (resultList.length === 0) {
             // Isaac is not already open
             let check1 = checkRacingPlusLuaModCurrent();
             let check2 = checkOtherModsEnabled();
+            checkOptionsINIForModsEnabled(); // This will automatically enable mods (if they are not already enabled)
             if (check1 === true && check2  === false) {
                 startIsaac();
             } else {
@@ -119,9 +123,11 @@ function checkIsaacOpen() {
                 // Isaac is currently open, so check to see if we need to restart the game
                 let check1 = checkRacingPlusLuaModCurrent();
                 let check2 = checkOtherModsEnabled();
-                if (check1 === true && check2  === false) {
+                let check3 = checkOptionsINIForModsEnabled();
+                if (check1 === true && check2  === false && check3 === true) {
                     // We don't need to restart the game, so we don't have to do anything at all
                     process.send('The Lua mod is current and no other mods are enabled.', processExit);
+                    return;
                 } else {
                     closeIsaac(ps.pid);
                 }
@@ -135,6 +141,7 @@ function closeIsaac(pid) {
     ps.kill(pid, function(err) { // This expects the first argument to be in a string for some reason
         if (err) {
             process.send('error: Failed to close Isaac: ' + err, processExit);
+            return;
         } else {
             deleteOldLuaMod();
         }
@@ -156,6 +163,7 @@ function checkRacingPlusLuaModCurrent() {
         oldVersion = oldMatch[1];
     } else {
         process.send('error: Failed to parse the "' + oldXMLPath + '" file.', processExit);
+        return;
     }
 
     // Check the new version
@@ -172,6 +180,7 @@ function checkRacingPlusLuaModCurrent() {
         newVersion = newMatch[1];
     } else {
         process.send('error: Failed to parse the "' + newXMLPath + '" file.', processExit);
+        return;
     }
 
     // Compare
@@ -193,6 +202,33 @@ function checkRacingPlusLuaModCurrent() {
     }
     let newHash = md5(newLua);
     return oldHash === newHash;
+}
+
+function checkOptionsINIForModsEnabled() {
+    // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
+    log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
+    let optionsPath = path.join(modsPath, '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+    if (fs.existsSync(optionsPath) === false) {
+        process.send('error: The "options.ini" file does not exist.', processExit);
+        return;
+    }
+
+    // Check for "EnableMods=1" in the "options.ini" file
+    let optionsFile = fs.readFileSync(optionsPath, 'utf8');
+    let match = optionsFile.match(/EnableMods=0/);
+    if (match) {
+        // Change it to 1 and rewrite the file
+        optionsFile = optionsFile.replace('EnableMods=0', 'EnableMods=1');
+        try {
+            fs.writeFileSync(optionsPath, optionsFile, 'utf8');
+        } catch(err) {
+            process.send('error: Failed to write to the "options.ini" file: ' + err, processExit);
+            return;
+        }
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function checkOtherModsEnabled() {
@@ -224,6 +260,7 @@ function checkOtherModsEnabled() {
                     fs.removeSync(path.join(modsPath, file, 'disable.it'));
                 } catch(err) {
                     process.send('error: Failed to remove the "disable.it" file for the Racing+ Lua mod: ' + err, processExit);
+                    return;
                 }
             }
         } else {
@@ -237,6 +274,7 @@ function checkOtherModsEnabled() {
                     fs.writeFileSync(path.join(modsPath, file, 'disable.it'), '', 'utf8');
                 } catch(err) {
                     process.send('error: Failed to disable one of the existing mods: ' + err, processExit);
+                    return;
                 }
             }
         }
@@ -252,6 +290,7 @@ function deleteOldLuaMod() {
         fs.remove(path.join(modsPath, 'Racing+'), function(err) {
             if (err) {
                 process.send('error: Failed to delete the old Racing+ Lua mod: ' + err, processExit);
+                return;
             }
             copyLuaMod();
         });
@@ -272,6 +311,7 @@ function copyLuaMod() {
     fs.copy(newModPath, path.join(modsPath, 'Racing+'), function (err) {
         if (err) {
             process.send('error: Failed to copy the new Racing+ Lua mod: ' + err, processExit);
+            return;
         }
         startIsaac();
     });
