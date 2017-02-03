@@ -479,6 +479,9 @@ exports.participantAdd = function(i) {
     participantsSetStatus(i, true);
     participantsSetFloor(i);
     participantsSetItem(i);
+
+    // Now that someone is joined, we want to recheck to see if the ready checkbox should be disabled
+    checkReadyValid();
 };
 
 const participantsSetStatus = function(i, initial = false) {
