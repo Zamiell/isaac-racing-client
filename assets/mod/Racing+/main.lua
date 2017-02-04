@@ -6,9 +6,8 @@
 --[[
 
 TODO:
-- try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
+- clock bug in narrow rooms
 - put on Steam
-- fix master of Potato softlock with Poly + Epic Fetus (Globin)
 - forget me now after killing boss, go back to B1
 - recode greed's gullet
 - fix shop rolling bug - https://clips.twitch.tv/dea1h/WonderfulHornetRaccAttack
@@ -16,6 +15,7 @@ TODO:
 - add more doors to more boss rooms where appropriate to make duality better
 - remove void portal pngs
 - Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/
+- fix master of Potato softlock with Poly + Epic Fetus (Globin)
 - Fix unseeded Boss heart drops from Pin, etc. (and make it so that they drop during door opening)
 - Integrate 1st place, 2nd place, etc.
 - Fix Dead Eye on poop
@@ -208,12 +208,14 @@ function spriteDisplay()
 
   -- Loop through all the sprites and render them
   for k, v in pairs(spriteTable) do
-    local vec = Isaac.WorldToRenderPosition(room:GetCenterPos(), false)
+    local vec = Vector(0, 0)
     if k == "top" then
-      vec.Y = vec.Y - 80 -- Move it upwards
+      -- Make it be a little bit higher than the center of the screen
+      vec = Isaac.WorldToRenderPosition(room:GetCenterPos(), false) -- The second argument is "ToRound"
+      vec.Y = vec.Y - 80 -- Move it upwards from the center
     elseif k == "clock" then
-      vec.X = vec.X - 259 -- Move it below the Angel chance
-      vec.Y = vec.Y + 67
+      vec.X = 7.5 -- Move it below the Angel chance
+      vec.Y = 217.0
     end
     if v.sprite ~= nil then
       spriteTable[k].sprite:SetFrame("Default", 0)
