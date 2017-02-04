@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- clock bug in narrow rooms
 - put on Steam
 - forget me now after killing boss, go back to B1
 - recode greed's gullet
@@ -1287,7 +1286,8 @@ function RacingPlus:PostRender()
   -- If we are not in a run, do nothing
   if race.status == "none" then
     raceVars.started = false -- This needs to be manually reset at the end of every race
-    raceVars.startedTime = 0 -- Remove the timer after we finish or quit a race
+    raceVars.startedTime = 0 -- Remove the timer after we finish or quit a race (1/2)
+    spriteInit("clock", 0) -- Remove the timer after we finish or quit a race (2/2)
     return
   end
 
