@@ -11,12 +11,9 @@ TODO:
 - try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
 - add more doors to more boss rooms where appropriate to make duality better
 - remove void portal pngs
-- Look at item bans again
-- Automatically close doors for B1 treasure room on seeded races
 - Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/
 - Copy over Afterbirth room changes after the next patch
 - Fix unseeded Boss heart drops from Pin, etc. (and make it so that they drop during door opening)
-- Integrate timer
 - Integrate 1st place, 2nd place, etc.
 - Fix Dead Eye on poop
 - Change Troll Bombs and Mega Troll Bombs fuse timer to Rebirth-style
@@ -195,12 +192,11 @@ function spriteDisplay()
 end
 
 function timerUpdate()
-  --[[
   if raceVars.startedTime == 0 then
     return
   end
 
-  local elapsedTime = os.clock() - raceVars.startedTime
+  local elapsedTime = Isaac:GetFrameCount() - raceVars.startedTime
 
   local minutes = math.floor(elapsedTime / 60)
   if minutes < 10 then
@@ -219,7 +215,6 @@ function timerUpdate()
 
   local timerString = minutes .. ':' .. seconds
   Isaac.RenderText(timerString, 17, 211, 0.7, 1.8, 0.2, 1.0) -- X, Y, R, G, B, A
-  --]]
 end
 
 ---
@@ -535,11 +530,11 @@ function RacingPlus:RaceStart()
   Isaac.DebugString("Starting the race!")
 
   -- Load the clock sprite for the timer
-  --spriteInit("clock", "clock")
+  spriteInit("clock", "clock")
 
-  -- Set the start time to the number of CPU seconds that have elapsed since Lua was initialized
-  -- (this is the only way to get millisecond granularity)
-  --raceVars.startedTime = os.clock()
+  -- Set the start time to the number of frames that have elapsed since the game is open
+  -- (this won't account for lag, but we are unable to call things like "os.clock()" without forcing the using to enable the "--luadebug" flag on the game)
+  raceVars.startedTime = Isaac:GetFrameCount()
 end
 
 -- This emulates what happens when you normally clear a room
@@ -1169,7 +1164,8 @@ function RacingPlus:PostRender()
         else
           -- Make a new copy of this item using the room seed
           newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, entities[i].SubType, roomSeed)
-          game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+          -- We don't need to make a fart noise because the swap will be completely transparent to the user
+          -- (the sprites of the two items will obviously be identical)
           --Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) .. " pedestal using seed: " .. tostring(roomSeed))
         end
 
@@ -1331,7 +1327,7 @@ function RacingPlus:PostRender()
       RacingPlus:RaceStart()
     end
 
-    --timerUpdate()
+    timerUpdate()
   end
 
   -- Display all initialized sprites

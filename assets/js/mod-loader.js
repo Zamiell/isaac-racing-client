@@ -14,6 +14,12 @@ const builds      = nodeRequire('./assets/data/builds');
 // We can communicate with the Racing+ Lua mod via file I/O
 // Specifically, we use the "save.dat" located in the mod subdirectory
 const send = function() {
+    // Do nothing if the mod loader file is set to null
+    // (this can happen if the user is closing the projeect, for example)
+    if (globals.modLoaderFile === null) {
+        return;
+    }
+
     // We don't care if the race is finished
     if (globals.modLoader.status === 'finished') {
         globals.modLoader.status = 'none';
