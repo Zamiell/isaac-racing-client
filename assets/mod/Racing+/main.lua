@@ -6,13 +6,17 @@
 --[[
 
 TODO:
-- megasatan
+- put on Steam
+- fix master of Potato softlock with Poly + Epic Fetus (Globin)
+- forget me now after killing boss, go back to B1
+- recode greed's gullet
 - fix shop rolling bug - https://clips.twitch.tv/dea1h/WonderfulHornetRaccAttack
 - try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
+- megasatan
+- Copy over Afterbirth room changes after the next patch
 - add more doors to more boss rooms where appropriate to make duality better
 - remove void portal pngs
 - Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/
-- Copy over Afterbirth room changes after the next patch
 - Fix unseeded Boss heart drops from Pin, etc. (and make it so that they drop during door opening)
 - Integrate 1st place, 2nd place, etc.
 - Fix Dead Eye on poop
@@ -196,7 +200,8 @@ function timerUpdate()
     return
   end
 
-  local elapsedTime = Isaac:GetFrameCount() - raceVars.startedTime
+  local elapsedFrames = Isaac:GetFrameCount() - raceVars.startedTime
+  local elapsedTime = elapsedFrames * 0.017
 
   local minutes = math.floor(elapsedTime / 60)
   if minutes < 10 then
@@ -422,7 +427,6 @@ function RacingPlus:RunInit()
   -- Reset some race variables that we keep track of per run
   raceVars.itemBanList = {}
   raceVars.trinketBanList = {}
-  raceVars.started = false
   raceVars.hourglassUsed = false
   raceVars.checkForNewRoomAfterHourglass = false
 
@@ -480,13 +484,6 @@ function RacingPlus:RunInit()
 
   -- Update our race table
   readServer()
-
-  -- Do a check to see if more than an hour has passed since that race data was last written
-  --[[
-  if os.time() - 3600 > race.datetimeWritten then -- This requires the "--luadebug" flag
-    return
-  end
-  --]]
 
   -- If we are not in a race, don't do anything special
   if race.status == "none" then
