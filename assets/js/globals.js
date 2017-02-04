@@ -23,8 +23,9 @@ module.exports = {
     fadeTime: fadeTime,
     gameState: {
         inGame: false,
+        blckCndlOn: true, // The log will tell us if a run is started without BLCK CNDL on
+        hardMode: false, // The log will tell us if a run is started on a non-normal difficulty
         character: null,
-        hardMode: false,
     },
     log: null,
     lang: null, // The language switcher instance
@@ -37,10 +38,8 @@ module.exports = {
         goal: 'Blue Baby',
         seed: '-',
         startingBuild: -1,
-        blckCndlOn: false, // Detected through reading the log file
         currentSeed: '-',  // Detected through reading the log file
         countdown: -1,
-        datetimeWritten: 0,
     },
     myUsername: null,
     playingSound: false,

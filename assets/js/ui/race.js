@@ -390,7 +390,7 @@ const show = function(raceID) {
         $('#race-ready-checkbox').prop('checked', false);
         $('#race-ready-checkbox').prop('disabled', true);
         $('#race-ready-checkbox-label').css('cursor', 'default');
-        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.5);
+        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.38);
         globals.gameState.inGame = false; // Make them reset at least one time before being able to become ready
         checkReadyValid(); // This will update the tooltip on what the player needs to do in order to become ready
         $('#race-countdown').fadeOut(0);
@@ -954,7 +954,7 @@ const checkReadyValid = function() {
     if (globals.gameState.inGame === false) {
         valid = false;
         tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
-    } else if (globals.modLoader.blckCndlOn === false) {
+    } else if (globals.gameState.blckCndlOn === false) {
         valid = false;
         tooltipContent = '<span lang="en">You must turn on the "BLCK CNDL" easter egg before you can mark yourself as ready.</span>';
     } else if (globals.gameState.hardMode === true) {
@@ -978,7 +978,7 @@ const checkReadyValid = function() {
     if (valid === false) {
         $('#race-ready-checkbox').prop('disabled', true);
         $('#race-ready-checkbox-label').css('cursor', 'default');
-        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.5);
+        $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.38);
         $('#race-ready-checkbox-container').tooltipster('content', tooltipContent);
         return;
     }

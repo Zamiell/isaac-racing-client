@@ -41,27 +41,24 @@ const send = function() {
 
     // Build the Lua table manually
     let saveDat = '{\n';
-    saveDat += '  status        = "' + globals.modLoader.status + '",\n';
-    saveDat += '  rType         = "' + globals.modLoader.rType + '",\n';
-    saveDat += '  rFormat       = "' + globals.modLoader.rFormat + '",\n';
-    saveDat += '  character     = "' + globals.modLoader.character + '",\n';
-    saveDat += '  goal          = "' + globals.modLoader.goal + '",\n';
-    saveDat += '  seed          = "' + globals.modLoader.seed + '",\n';
-    saveDat += '  startingItems = {';
+    saveDat += 'status="' + globals.modLoader.status + '",\n';
+    saveDat += 'rType="' + globals.modLoader.rType + '",\n';
+    saveDat += 'rFormat="' + globals.modLoader.rFormat + '",\n';
+    saveDat += 'character="' + globals.modLoader.character + '",\n';
+    saveDat += 'goal="' + globals.modLoader.goal + '",\n';
+    saveDat += 'seed="' + globals.modLoader.seed + '",\n';
+    saveDat += 'startingItems = {';
     if (startingItems.length !== 0) {
         for (let itemID of startingItems) {
-            saveDat += '    ' + itemID + ',\n';
+            saveDat += itemID + ',\n';
         }
         saveDat = saveDat.slice(0, -2); // Chop off the trailing comma and newline
-        saveDat += '\n  ';
+        saveDat += '\n';
     }
     saveDat += '},\n';
-    saveDat += '  blckCndlOn      = ' + globals.modLoader.blckCndlOn + ',\n';
-    saveDat += '  currentSeed     = "' + globals.modLoader.currentSeed + '",\n';
-    saveDat += '  countdown       = ' + globals.modLoader.countdown + ',\n';
-    let epoch = Math.floor(new Date().getTime() / 1000);
-    saveDat += '  datetimeWritten = ' + epoch + '\n';
-    saveDat += '}\n';
+    saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
+    saveDat += 'countdown=' + globals.modLoader.countdown + '\n';
+    saveDat += '}';
 
     // Write to it
     fs.writeFile(globals.modLoaderFile, saveDat, function(err) {

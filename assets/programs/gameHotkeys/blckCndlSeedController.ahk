@@ -1,3 +1,4 @@
+#NoTrayIcon
 SetKeyDelay, 0
 
 ; Configuration

@@ -35,7 +35,7 @@ $(document).ready(function() {
         randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
 
         // Set it
-        $('#new-race-name').val(randomlyGeneratedName);
+        $('#new-race-title').val(randomlyGeneratedName);
     });
 
     $('#new-race-type').change(function() {
@@ -316,7 +316,7 @@ exports.tooltipFunctionBefore = function() {
 // The "functionReady" function for Tooltipster
 exports.tooltipFunctionReady = function() {
     $('#new-race-randomize').click();
-    $('#new-race-name').focus();
+    $('#new-race-title').focus();
 
     /*
         Tooltips within tooltips seem to be buggy and can sometimes be uninitialized

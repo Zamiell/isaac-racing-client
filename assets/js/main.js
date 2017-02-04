@@ -6,11 +6,11 @@
 
 /*
     Bugs to fix:
-    - stop auto booting
+    - re-add changing color on taskbar when new message
+    - detect 1million%
+    - check if subed to steam for racing+ mod in workshop
     - make separate icons for solo races
     - check to see if it writes anyting to the log when putting on black candle from teh easter egg menu
-    - check to see if i can trick the ready checkbox by going into a game before entering the race
-    - add tooltip "You should wait for someone else to enter the race before setting yourself to be ready."
     - dont play race copmleted for solo races
 
     - clicking profile doesn't work
@@ -37,7 +37,6 @@
 
     - look at sed screenshot, racer is cut off at the top
 
-    - integrate with lua
 
 
     Features to add:

@@ -1,19 +1,18 @@
 --
--- The Racing+ Mod
+-- The Racing+ Lua Mod
 -- by Zamiel
 --
 
 --[[
 
 TODO:
+- try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
 - put on Steam
 - fix master of Potato softlock with Poly + Epic Fetus (Globin)
 - forget me now after killing boss, go back to B1
 - recode greed's gullet
 - fix shop rolling bug - https://clips.twitch.tv/dea1h/WonderfulHornetRaccAttack
-- try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
 - megasatan
-- Copy over Afterbirth room changes after the next patch
 - add more doors to more boss rooms where appropriate to make duality better
 - remove void portal pngs
 - Add trophy for finish, add fireworks for first place: https://www.reddit.com/r/bindingofisaac/comments/5r4vmb/spawn_1000104/
@@ -23,14 +22,43 @@ TODO:
 - Change Troll Bombs and Mega Troll Bombs fuse timer to Rebirth-style
 - Make Devil / Angel Rooms given in order and independent of floor
 
+ROOMS TODO:
+- Womb/Utero #825 - https://gyazo.com/86396e78c14372ef5470e33b619a0976
+  - Remove entire bottom row of Nerve Endings
+- Caves/Catacombs room #914 - 
+  - 1 Row of pits at the bottom, + 3 squares of pits on 2nd row from bottom
+- Fatty room with like 30 fatties????
+- Depths/Necropolis #863 - 
+  - Fix fires to always be non-red fires
+  - Make space for Mr. Mega
+- Sheol #255
+  - Delete?
+  - 251.10.0
+- Sheol Greed Move #31, #32, #58
+  - 251.10.0
+- Move TNT barrels in Treasure Room still
+- Move TNT barrels in Haunt Boss Room
+- Fix door in room #208 Caves
+- Slightly move Hive upward in room #519 Caves
+- Test Ragman room on Basement in narrow room
+- Catacombs #854 - 12 Pale Fatties (and close to entrance, explode unavoidable?)
+- Catacombs #843 - 11 Pale Fatties
+- rerun XML script finder to find all out of bounds entities
+- run XML script finder to find all rooms with all doors disabled
+- Copy over Afterbirth room changes after the next patch
+
 TODO CAN'T FIX:
 - Automatically enable BLCK CNDL seed (not possible with current bindings)
 - Automatically enter in a seed for seeded races (not possible with current bindings)
+- Make timer on the screen use real time
 - Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
-- Add timer on the screen
+  - When spawning an item via the console (like "spawn 5.100.12"), it removes it from item pools.
+  - When spawning a specific item with Lua (like "game:Spawn(5, 100, Vector(300, 300), Vector(0, 0), nil, 12, 0)"), it does not remove it from any pools.
+  - When spawning a random item with Lua (like "game:Spawn(5, 100, Vector(300, 300), Vector(0, 0), nil, 0, 0)"), it removes it from item pools.
+  - When giving the player an item with Lua (like "player:AddCollectible(race.startingItems[i], 12, true)"), it does not remove it from any pools.
 - Make Teleport / Undefined / Cursed Eye / Telepills seeded (the ChangeRoom() function is broken and doesn't actually consistently send you to the room that you specify)
 - Be able to skip specific champions from the fast-clear check (not possible to detect what type of champion it is with the current bindings)
-- Skip the fade in and fade out animation when traveling to the next floor (need console access or StartStageTransition() 2nd argument to be working)
+- Skip the fade in and fade out animation when traveling to the next floor (need console access or the "StartStageTransition()" second argument to be working)
 - Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives (Isaac is placed in the location and you can't move him fast enough)
 
 --]]
@@ -57,12 +85,11 @@ local race = { -- The table that gets updated from the "save.dat" file
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
-  blckCndlOn      = false,       -- This is detected through the "log.txt" file
   currentSeed     = "-",         -- The seed of our current run (detected through the "log.txt" file)
-  countdown       = -1,          -- This corresponds to the graphic to draw on the screen
-  datetimeWritten = 0
+  countdown       = -1           -- This corresponds to the graphic to draw on the screen
 }
 local raceVars = { -- Things that pertain to the race but are not read from the "save.dat" file
+  blckCndlOn                    = false,
   difficulty                    = 0,
   character                     = "Isaac",
   itemBanList                   = {},
@@ -267,17 +294,11 @@ function readServer()
   if #oldRace.startingItems ~= #race.startingItems then
     Isaac.DebugString("ModData startingItems amount changed: " .. tostring(#race.startingItems))
   end
-  if oldRace.blckCndlOn ~= race.blckCndlOn then
-    Isaac.DebugString("ModData blckCndlOn changed: " .. tostring(race.blckCndlOn))
-  end
   if oldRace.currentSeed ~= race.currentSeed then
     Isaac.DebugString("ModData currentSeed changed: " .. race.currentSeed)
   end
   if oldRace.countdown ~= race.countdown then
     Isaac.DebugString("ModData countdown changed: " .. tostring(race.countdown))
-  end
-  if oldRace.datetimeWritten ~= race.datetimeWritten then
-    Isaac.DebugString("ModData datetimeWritten changed: " .. tostring(race.datetimeWritten))
   end
   --]]
 end
@@ -360,7 +381,7 @@ function giveStartingItems()
     Isaac.DebugString("Removing collectible " .. tostring(race.startingItems[i]))
 
     -- 12 is the maximum amount of charges that any item can have
-    player:AddCollectible(race.startingItems[i], 12, true)
+    player:AddCollectible(race.startingItems[i], 12, true) -- The second argument is "AddConsumables"
 
     -- Giving the player the item does not actually remove it from any of the pools, so we have to expliticly add it to the ban list
     addItemBanList(race.startingItems[i])
@@ -412,9 +433,6 @@ function RacingPlus:RunInit()
   local player = game:GetPlayer(0)
   local seed = level:GetDungeonPlacementSeed()
 
-  -- Log the run beginning
-  Isaac.DebugString("A new run has begun.")
-
   -- Reset some global variables that we keep track of per run
   run.roomsCleared = 0
   run.roomsEntered = 0
@@ -443,11 +461,24 @@ function RacingPlus:RunInit()
   RNGCounter.AcidBaby = seed
   RNGCounter.SackOfSacks = seed
 
-  -- Figure out if we are on normal mode or hard mode
+  -- Check to see if we are on the BLCK CNDL Easter Egg
+  level:AddCurse(LevelCurse.CURSE_OF_THE_CURSED, false) -- The second argument is "ShowName"
+  local curses = level:GetCurses()
+  if curses == 0 then
+    raceVars.blckCndlOn = true
+  else
+    raceVars.blckCndlOn = false
+
+    -- The client assumes that it is on by default, so it only needs to be alerted for the negative case
+    Isaac.DebugString("BLCK CNDL off.")
+  end
+  level:RemoveCurse(LevelCurse.CURSE_OF_THE_CURSED)
+
+  -- Check to see if we are on normal mode or hard mode
   raceVars.difficulty = game.Difficulty
   Isaac.DebugString("Difficulty: " .. tostring(game.Difficulty))
 
-  -- Figure out what character we are on
+  -- Check what character we are on
   local playerType = player:GetPlayerType()
   if playerType == 0 then
     raceVars.character = "Isaac"
@@ -482,6 +513,9 @@ function RacingPlus:RunInit()
   -- Give us custom racing items, depending on the character (mostly just the D6)
   characterInit()
 
+  -- Log the run beginning
+  Isaac.DebugString("A new run has begun.")
+
   -- Update our race table
   readServer()
 
@@ -490,15 +524,28 @@ function RacingPlus:RunInit()
     return
   end
 
-  -- Check to see if we are on the right seed
-  if race.seed ~= "-" and race.seed ~= race.currentSeed then
-    Isaac.DebugString("Race error: On the wrong seed.")
+  -- Validate BLCK CNDL for races
+  if raceVars.blckCndlOn == false then
+    Isaac.DebugString("Race error: BLCK CNDL not enabled.")
     return
   end
 
-  -- Check to see if we are on the BLCK CNDL Easter Egg
-  if race.blckCndlOn == false then
-    Isaac.DebugString("Race error: Not on BLCK CNDL Easter Egg.")
+  -- Validate difficulty (hard mode) for races
+  if raceVars.difficulty ~= 0 then
+    Isaac.DebugString("Race error: On the wrong difficulty (hard mode or Greed mode).")
+    return
+  end
+
+  -- Validate character for races
+  if raceVars.character ~= race.character then
+    Isaac.DebugString("Race error: On the wrong character.")
+    return
+  end
+  
+  -- Validate that we are on the right seed for the race
+  -- (if this is an unseeded race, the seed with be "-")
+  if race.seed ~= "-" and race.seed ~= race.currentSeed then
+    Isaac.DebugString("Race error: On the wrong seed.")
     return
   end
 
@@ -528,10 +575,6 @@ function RacingPlus:RaceStart()
 
   -- Load the clock sprite for the timer
   spriteInit("clock", "clock")
-
-  -- Set the start time to the number of frames that have elapsed since the game is open
-  -- (this won't account for lag, but we are unable to call things like "os.clock()" without forcing the using to enable the "--luadebug" flag on the game)
-  raceVars.startedTime = Isaac:GetFrameCount()
 end
 
 -- This emulates what happens when you normally clear a room
@@ -1131,12 +1174,14 @@ function RacingPlus:PostRender()
 
         -- Check to see if this is a B1 item room on a seeded race
         local offLimits = false
+        --[[
         if race.rFormat == "seeded" and
            stage == 1 and
            room:GetType() == RoomType.ROOM_TREASURE and
            entities[i].SubType ~= 263 then
           offLimits = true
         end
+        --]]
 
         -- Check to see if this item is banned
         local bannedItem = false
@@ -1155,6 +1200,7 @@ function RacingPlus:PostRender()
           --Isaac.DebugString("Made a new random pedestal (Off Limits).")
         elseif bannedItem then
           -- Make a new random item pedestal (using the B1 floor seed)
+          -- (the new random item generated will automatically be decremented from item pools properly on sight)
           newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, 0, RNGCounter.InitialSeed)
           game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
           --Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(RNGCounter.InitialSeed))
@@ -1163,6 +1209,7 @@ function RacingPlus:PostRender()
           newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, entities[i].SubType, roomSeed)
           -- We don't need to make a fart noise because the swap will be completely transparent to the user
           -- (the sprites of the two items will obviously be identical)
+          -- We don't need to add this item to the ban list because since it already existed, it was properly decremented from the pools on sight
           --Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) .. " pedestal using seed: " .. tostring(roomSeed))
         end
 
@@ -1230,14 +1277,15 @@ function RacingPlus:PostRender()
   ---
 
   -- Race will be nil if a run has not started yet
-  -- Also, sometimes mod loading can fail, in which case the race table will become nil
+  -- Also, sometimes mod loading (reading the "save.dat" file) can fail, in which case the race table will become nil
   if race == nil then
     return
   end
 
   -- If we are not in a run, do nothing
   if race.status == "none" then
-    raceVars.startedTime = 0
+    raceVars.started = false -- This needs to be manually reset at the end of every race
+    raceVars.startedTime = 0 -- Remove the timer after we finish or quit a race
     return
   end
 
@@ -1252,34 +1300,34 @@ function RacingPlus:PostRender()
   end
 
   -- Check to see if we are on the BLCK CNDL Easter Egg
-  if race.blckCndlOn == false and raceVars.startedTime == 0 then
+  if raceVars.blckCndlOn == false and raceVars.startedTime == 0 then
     spriteInit("top", "errorBlckCndl")
     spriteDisplay()
     return
   end
 
   -- Check to see if we are on hard mode
-  if raceVars.difficulty ~= 0 then
+  if raceVars.difficulty ~= 0 and raceVars.startedTime == 0 then
     spriteInit("top", "errorHardMode")
     spriteDisplay()
     return
   end
 
   -- Check to see if we are on the right character
-  if race.character ~= raceVars.character then
+  if race.character ~= raceVars.character and raceVars.startedTime == 0 then
     spriteInit("top", "errorCharacter")
     spriteDisplay()
     return
   end
 
   -- Check to see if we are on the right seed
-  if race.seed ~= "-" and race.seed ~= race.currentSeed then
+  if race.seed ~= "-" and race.seed ~= race.currentSeed and raceVars.startedTime == 0 then
     spriteInit("top", "errorSeed")
     spriteDisplay()
     return
   end
 
-  -- Hold the player in place if the race has not started yet
+  -- Hold the player in place if the race has not started yet (forcefield)
   if raceVars.started == false then
     -- The starting position is 320.0, 380.0
     player.Position = Vector(320.0, 380.0)
@@ -1315,13 +1363,16 @@ function RacingPlus:PostRender()
       -- Remove the "Go!" graphic as soon as we enter another room
       -- (the starting room counts as room #1)
       spriteInit("top", 0)
-    elseif race.countdown == 0 then
+    elseif race.countdown == 0 or -- The countdown has reached 0
+           (race.countdown == -1 and raceVars.started == false) then -- We somehow missed the window where the countdown was 0, so start the race now
+
       spriteInit("top", "go")
       RacingPlus:RaceStart()
-    elseif race.countdown == -1 and raceVars.started == false then
-      -- We somehow missed the window where the countdown was 0, so do it now
-      spriteInit("top", "go")
-      RacingPlus:RaceStart()
+
+      -- Set the start time to the number of frames that have elapsed since the game is open
+      -- (this won't account for lag, but we are unable to call things like "os.clock()" without forcing the using to enable the "--luadebug" flag on the game)
+      -- (we have to do this here so that the clock doesn't get reset if the player dies or resets)
+      raceVars.startedTime = Isaac:GetFrameCount()
     end
 
     timerUpdate()
@@ -1335,9 +1386,7 @@ end
 function RacingPlus:PostUpdate()
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
-  local player = game:GetPlayer(0)
 
   --
   -- Keep track of the total amount of rooms cleared on this run thus far
@@ -1434,19 +1483,17 @@ function RacingPlus:TestCallback()
   Isaac.DebugString("Entering test callback.")
   Isaac.DebugString("-----------------------")
 
-  Isaac.DebugString("run:")
-  Isaac.DebugString("    initializing:" .. tostring(run.initializing))
-  Isaac.DebugString("    roomsCleared:" .. tostring(run.roomsCleared))
-  Isaac.DebugString("    roomsEntered:" .. tostring(run.roomsEntered))
-  Isaac.DebugString("    roomEntering:" .. tostring(run.roomEntering))
-  Isaac.DebugString("    currentRoomClearState:" .. tostring(run.currentRoomClearState))
+  Isaac.DebugString("run table:")
+  for k, v in pairs(run) do
+    Isaac.DebugString("    " .. k .. ': ' .. tostring(v))
+  end
 
   Isaac.DebugString("race table:")
   for k, v in pairs(race) do
     Isaac.DebugString("    " .. k .. ': ' .. tostring(v))
   end
 
-  Isaac.DebugString("raceVars:")
+  Isaac.DebugString("raceVars table:")
   for k, v in pairs(raceVars) do
     Isaac.DebugString("    " .. k .. ': ' .. tostring(v))
   end
@@ -1457,10 +1504,10 @@ function RacingPlus:TestCallback()
       Isaac.DebugString("    " .. k .. '.' .. k2 .. ': ' .. tostring(v2))
     end
   end
-  
-  Isaac.DebugString("-------------")
-  Isaac.DebugString("End of debug.")
-  Isaac.DebugString("-------------")
+
+  Isaac.DebugString("---------------------")
+  Isaac.DebugString("Ending test callback.")
+  Isaac.DebugString("---------------------")
 end
 
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,  RacingPlus.NPCUpdate)

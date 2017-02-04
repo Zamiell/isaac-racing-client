@@ -135,9 +135,13 @@ const parseLine = function(line) {
         // They have entered the menu
         process.send('Title menu initialized.');
 
-    } else if (line === 'Seed 70 added to SaveState') {
-        // BLCK CNDL seed was turned on
-        process.send('BLCK CNDL on.');
+    } else if (line === 'Lua Debug: A new run has begun.') {
+        process.send('A new run has begun.');
+
+    } else if (line === 'Lua Debug: BLCK CNDL off.') {
+        // A run was started without the BLCK CNDL easter egg turned on
+        // (we assume that it is on by default, so there is no need to parse for it being turned on)
+        process.send('BLCK CNDL off.');
 
     } else if (line.startsWith('Lua Debug: Difficulty: ')) {
         // A new run has begun

@@ -1,3 +1,5 @@
+#NoTrayIcon
+
 ; Wait for Isaac to boot for at least seconds
 WinWaitActive, ahk_exe isaac-ng.exe
 , , 30

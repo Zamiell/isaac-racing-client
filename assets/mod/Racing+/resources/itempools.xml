@@ -885,6 +885,7 @@
 		<Item DecreaseBy="1" Id="456" RemoveOn="0.1" Weight="1" />
 		
 		<Item DecreaseBy="1" Id="458" RemoveOn="0.1" Weight="1" />
+		<!-- end of Treasure Room pool -->
 	</Pool>
 	<Pool Name="devil">
 		
