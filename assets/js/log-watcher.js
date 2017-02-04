@@ -121,7 +121,9 @@ const logWatcher = function(event, message) {
             } else if (character === '15') {
                 character = 'Apollyon';
             } else {
-                misc.errorShow('Failed to parse the character from the log file: ' + character);
+                // If they are on a mod with a custom character, it can be 16 and beyond
+                // We could throw an error on this (since they are supposed to be playing with all other mods disabled), but leave it be for now
+                character = 'Unknown';
             }
 
             globals.gameState.character = character;

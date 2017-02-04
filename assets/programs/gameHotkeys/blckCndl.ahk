@@ -53,7 +53,6 @@ Sleep %Delay1%
 Send {Enter up}
 Sleep, %Delay2%
 
-
 ; Enter the game
 Sleep, %Delay1%
 Send {Enter down}

@@ -50,3 +50,17 @@ if (typeof settings.get('volume') === 'undefined') {
 
 // Log file path
 // (initialized in main.js since it depends on the return value of a PowerShell command)
+
+// "Don't enter game with Alt+C and Alt+v hotkeys"
+if (typeof settings.get('controller') === 'undefined') {
+    // If this is the first run, default to false
+    settings.set('controller', false);
+    settings.saveSync();
+}
+
+// "Don't disable boss cutscenes"
+if (typeof settings.get('bossCutscenes') === 'undefined') {
+    // If this is the first run, default to false
+    settings.set('bossCutscenes', false);
+    settings.saveSync();
+}

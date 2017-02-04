@@ -523,8 +523,8 @@
 	
 	<active achievement="338" description="Unleash the power!" gfx="Collectibles_510_Delirious.png" id="510" maxcharges="12" name="Delirious" />
 
-	<active description="Debug" gfx="collectibles_324_Undefined.png" id="235" maxcharges="110" name="Debug" />
-	<passive description="You are not supposed to take items from the Basement 1 Treasure Room in seeded races." gfx="error.png" id="263" name="Extra Item" />
+	<active description="Debug" gfx="collectibles_324_Undefined.png" id="235" maxcharges="1" name="Debug" />
+	<passive description="B1 Treasure Room items are off limits in seeded races." gfx="error.png" id="263" name="Off Limits" />
 
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />

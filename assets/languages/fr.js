@@ -150,13 +150,16 @@ Lang.prototype.pack.fr = {
 
         // New race tooltip
         "Race title (optional)": "Nom de la course (facultatif)",
+        "There is already a race with that title.": "",
         "Randomize": "Aléatoire",
         "Solo": "",
         "Multiplayer": "",
         "Practice": "Entraînement",
         "Casual": "",
         "Season": "",
-        "Random": "Aléatoire",
+        "Random (all, 1-32)": "Aléatoire",
+        "Random (D6 builds only, 1-30)": "",
+        "Random (Treasure Room only, 1-20)": "",
         "Create": "Créer",
 
         // Settings tooltip

@@ -4006,8 +4006,12 @@
         margin: 0 0 0 0;
     }
 
-    #new-race-name {
+    #new-race-title {
         width: 15em;
+    }
+
+    #new-race-title-error {
+        color: red;
     }
 
     .new-race-note {
@@ -4125,6 +4129,11 @@
         Settings tooltip
     */
 
+    .checkbox-text {
+        position: relative;
+        top: 0.25em;
+    }
+
     #settings-tooltip {
         padding: 2em 2em 2em 2em;
     }
@@ -4167,12 +4176,8 @@
         color: red;
     }
 
+    /* Necessary so that the checkbox is in line with the delay text box */
     #settings-enable-twitch-bot-checkbox-container {
-        position: relative;
-        top: 0.25em;
-    }
-
-    #settings-enable-twitch-bot-checkbox-text {
         position: relative;
         top: 0.25em;
     }

@@ -7,6 +7,8 @@
 // Imports
 const ipcRenderer  = nodeRequire('electron').ipcRenderer;
 const remote       = nodeRequire('electron').remote;
+const fs           = nodeRequire('fs-extra');
+const path         = nodeRequire('path');
 const globals      = nodeRequire('./assets/js/globals');
 const settings     = nodeRequire('./assets/js/settings');
 const misc         = nodeRequire('./assets/js/misc');
@@ -148,6 +150,41 @@ $(document).ready(function() {
         settings.set('volume', $('#settings-volume-slider').val() / 100);
         settings.saveSync();
 
+        // "Don't enter game with Alt+C and Alt+V" checkbox
+        settings.set('controller', $('#settings-controller-checkbox').prop('checked'));
+        settings.saveSync();
+
+        // "Don't disable boss cutscenes" checkbox
+        let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
+        settings.set('bossCutscenes', bossCutscenes);
+        settings.saveSync();
+        if (changedLogFilePath === false) {
+            let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+            let bossAnimationPath = path.join(modsPath, 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+            if (bossCutscenes) {
+                // Make sure the file is deleted
+                if (fs.existsSync(bossAnimationPath)) {
+                    try {
+                        fs.removeSync(bossAnimationPath);
+                    } catch(err) {
+                        misc.errorShow('Failed to delete over the "versusscreen.anm2" file while enabling boss cutscenes.');
+                        return;
+                    }
+                }
+            } else {
+                // Make sure the file is there
+                if (fs.existsSync(bossAnimationPath) === false) {
+                    try {
+                        let newBossAnimationPath = path.join('assets', 'mod', 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                        fs.copySync(newBossAnimationPath, bossAnimationPath);
+                    } catch(err) {
+                        misc.errorShow('Failed to copy over the "versusscreen.anm2" file while disabling boss cutscenes.');
+                        return;
+                    }
+                }
+            }
+        }
+
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
         if (newStreamURL.startsWith('http://')) {
@@ -217,13 +254,16 @@ $(document).ready(function() {
             });
         }
 
-        // Close the tooltip
-        $('#header-settings').tooltipster('close');
+        // Close the tooltip (and all error tooltips, if present)
+        misc.closeAllTooltips();
 
         // We only need to exit the program and restart if they changed the log file path
         if (changedLogFilePath) {
             misc.errorShow('Now that you have changed the location of the log file, please restart Racing+.', false, false, '<span lang="en">Success</span>');
         }
+
+        // Return false or else the form will submit and reload the page
+        return false;
     });
 });
 
@@ -238,7 +278,6 @@ exports.tooltipFunctionBefore = function() {
     }
 
     $('#gui').fadeTo(globals.fadeTime, 0.1);
-
     return true;
 };
 
@@ -262,6 +301,14 @@ exports.tooltipFunctionReady = function() {
     // Volume
     $('#settings-volume-slider').val(settings.get('volume') * 100);
     $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
+
+    // "Don't enter game with Alt+C and Alt+V hotkeys" checkbox
+    let controller = settings.get('controller');
+    $('#settings-controller-checkbox').prop('disabled', controller);
+
+    // "Don't disable boss cutscenes" checkbox
+    let bossCutscenes = settings.get('bossCutscenes');
+    $('#settings-cutscene-checkbox').prop('disabled', bossCutscenes);
 
     // Change stream URL
     $('#settings-stream-url').val(globals.stream.URL);

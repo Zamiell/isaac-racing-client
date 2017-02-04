@@ -1,5 +1,5 @@
 /*
-    Child process that starts Isaac
+    Child process that validating everything is right in the file system and then launches the game
 */
 
 'use strict';
@@ -14,6 +14,7 @@ const ps       = require('ps-node');
 const opn      = require('opn');
 const md5      = require('md5');
 const execFile = require('child_process').execFile;
+const teeny    = require('teeny-conf');
 
 /*
     Handle errors
@@ -58,6 +59,16 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     release: version,
     environment: (isDev ? 'development' : 'production'),
 }).install();
+
+/*
+    Settings (on persistent storage)
+*/
+
+// Open the file that contains all of the user's settings
+// (We use teeny-conf instead of localStorage because localStorage persists after uninstallation)
+const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
+let settings = new teeny(settingsFile);
+settings.loadOrCreateSync();
 
 /*
     Isaac stuff
@@ -313,8 +324,31 @@ function copyLuaMod() {
             process.send('error: Failed to copy the new Racing+ Lua mod: ' + err, processExit);
             return;
         }
-        startIsaac();
+        enableBossCutscenes();
     });
+}
+
+// We can revert boss cutscenes to vanilla by deleting a single file, for users that are used to vanilla
+function enableBossCutscenes() {
+    // Default to deleting boss cutscenes
+    let bossCutscenes = false;
+    if (typeof settings.get('bossCutscenes') !== 'undefined') {
+        if (settings.get('bossCutscenes') === true) {
+            bossCutscenes = true;
+        }
+    }
+
+    if (bossCutscenes) {
+        log.info('Re-enabling boss cutscenes.');
+        try {
+            fs.removeSync(path.join(modsPath, 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2'));
+        } catch(err) {
+            process.send('error: Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ' + err, processExit);
+            return;
+        }
+    }
+
+    startIsaac();
 }
 
 // Start Isaac

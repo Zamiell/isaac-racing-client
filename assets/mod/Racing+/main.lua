@@ -6,6 +6,10 @@
 --[[
 
 TODO:
+- megasatan
+- fix shop rolling bug - https://clips.twitch.tv/dea1h/WonderfulHornetRaccAttack
+- try resetting at 3 seconds left to enable warping like krakenos said as means to bypass countdown
+- add more doors to more boss rooms where appropriate to make duality better
 - remove void portal pngs
 - Look at item bans again
 - Automatically close doors for B1 treasure room on seeded races
@@ -34,15 +38,16 @@ TODO CAN'T FIX:
 local RacingPlus = RegisterMod("Racing+", 1);
 
 -- Global variables
-local runInitializing = false
-local roomsCleared = 0
-local roomsEntered = 0
-local roomEntering = false
-local currentGameFrame = 0
-local currentFloor = 1
-local currentRoomClearState = true
-
--- Race variables
+local run = {
+  initializing          = false,
+  roomsCleared          = 0,
+  roomsEntered          = 0,
+  roomEntering          = false,
+  currentFloor          = 1,
+  currentRoomClearState = true,
+  replacedItems         = {},
+  replacedTrinkets      = {}
+}
 local race = { -- The table that gets updated from the "save.dat" file
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
@@ -56,7 +61,7 @@ local race = { -- The table that gets updated from the "save.dat" file
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
   datetimeWritten = 0
 }
-local raceVars = {
+local raceVars = { -- Things that pertain to the race but are not read from the "save.dat" file
   difficulty                    = 0,
   character                     = "Isaac",
   itemBanList                   = {},
@@ -83,6 +88,7 @@ local RNGCounter = {
 }
 local spriteTable = {}
 
+-- Welcome banner
 Isaac.DebugString("+----------------------+")
 Isaac.DebugString("| Racing+ initialized. |")
 Isaac.DebugString("+----------------------+")
@@ -410,12 +416,13 @@ function RacingPlus:RunInit()
   Isaac.DebugString("A new run has begun.")
 
   -- Reset some global variables that we keep track of per run
-  roomsCleared = 0
-  roomsEntered = 0
-  roomEntering = false
-  currentGameFrame = 0
-  currentFloor = 0
-  currentRoomClearState = true
+  run.roomsCleared = 0
+  run.roomsEntered = 0
+  run.roomEntering = false
+  run.currentFloor = 0
+  run.currentRoomClearState = true
+  run.replacedItems = {}
+  run.replacedTrinkets = {}
 
   -- Reset some race variables that we keep track of per run
   raceVars.itemBanList = {}
@@ -481,7 +488,7 @@ function RacingPlus:RunInit()
 
   -- Do a check to see if more than an hour has passed since that race data was last written
   --[[
-  if os.time() - 3600 > race.datetimeWritten then
+  if os.time() - 3600 > race.datetimeWritten then -- This requires the "--luadebug" flag
     return
   end
   --]]
@@ -652,7 +659,7 @@ function RacingPlus:ManuallyClearCurrentRoom()
   entity:Remove()
 
   -- Emulate various familiars dropping things
-  local newRoomsCleared = roomsCleared + 1
+  local newRoomsCleared = run.roomsCleared + 1
   local pos
   local vel = Vector(0, 0)
   local constant1 = 1.1 -- For Little C.H.A.D., Bomb Bag, Acid Baby, Sack of Sacks
@@ -1060,19 +1067,19 @@ function RacingPlus:PostRender()
   -- (this does not work if we put it in a PostUpdate callback because that only starts on the first frame of movement)
   -- (this does not work if we put it in a PlayerInit callback because Eve/Keeper are given their active items after the callback has fired)
 
-  if gameFrameCount == 0 and runInitializing == false then
-    runInitializing = true
+  if gameFrameCount == 0 and run.initializing == false then
+    run.initializing = true
     if raceVars.skipInit == false then
       RacingPlus.RunInit()
     end
-  elseif gameFrameCount > 0 and runInitializing == true then
-    runInitializing = false
+  elseif gameFrameCount > 0 and run.initializing == true then
+    run.initializing = false
     raceVars.skipInit = false
   end
 
   -- Keep track of when we change floors
-  if stage ~= currentFloor then
-    currentFloor = stage
+  if stage ~= run.currentFloor then
+    run.currentFloor = stage
 
     -- Reset the RNG of some items that should be seeded per floor
     local floorSeed = level:GetDungeonPlacementSeed()
@@ -1081,8 +1088,8 @@ function RacingPlus:PostRender()
   end
 
   -- Keep track of when we change rooms
-  if roomFrameCount == 0 and roomEntering == false then
-     roomEntering = true
+  if roomFrameCount == 0 and run.roomEntering == false then
+     run.roomEntering = true
      if raceVars.checkForNewRoomAfterHourglass == true then
       -- We just reloaded the room from using the Glowing Hourglass
       raceVars.checkForNewRoomAfterHourglass = false
@@ -1094,10 +1101,132 @@ function RacingPlus:PostRender()
       characterInit()
       giveStartingItems()
     else
-      roomsEntered = roomsEntered + 1
+      run.roomsEntered = run.roomsEntered + 1
     end
   elseif roomFrameCount > 0 then
-    roomEntering = false
+    run.roomEntering = false
+  end
+
+  --
+  -- Fix seed incrementation from touching active pedestal items
+  -- (this also fixes Angel key pieces and Pandora's Box items being unseeded)
+  --
+
+  -- Get a reproducible seed based on the room
+  local roomSeed = room:GetSpawnSeed() -- Will return something like "2496979501"
+
+  -- Find "unseeded" pedestal items/trinkets and do item/trinket bans
+  local entities = Isaac.GetRoomEntities()
+  for i = 1, #entities do
+    -- Item pedestals
+    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
+       entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
+       entities[i].InitSeed ~= roomSeed then
+
+      -- Check to see if we already replaced it with a seeded pedestal
+      local itemIdentifier = tostring(roomSeed) .. "-" .. tostring(entities[i].InitSeed)
+      local alreadyReplaced = false
+      for j = 1, #run.replacedItems do
+        if itemIdentifier == run.replacedItems[j] then
+          alreadyReplaced = true
+          break
+        end
+      end
+
+      if alreadyReplaced == false then
+        -- Add it to the list of items that have been replaced
+        run.replacedItems[#run.replacedItems + 1] = itemIdentifier
+
+        -- Check to see if this is a B1 item room on a seeded race
+        local offLimits = false
+        if stage == 1 and room:GetType() == RoomType.ROOM_TREASURE and entities[i].SubType ~= 263 then
+          offLimits = true
+        end
+
+        -- Check to see if this item is banned
+        local bannedItem = false
+        for j = 1, #raceVars.itemBanList do
+          if entities[i].SubType == raceVars.itemBanList[j] then
+            bannedItem = true
+            break
+          end
+        end
+
+        local newPedestal
+        if offLimits then
+          -- Change the item to Off Limits (263)
+          newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, 263, RNGCounter.InitialSeed)
+          game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+          --Isaac.DebugString("Made a new random pedestal (Off Limits).")
+        elseif bannedItem then
+          -- Make a new random item pedestal (using the B1 floor seed)
+          newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, 0, RNGCounter.InitialSeed)
+          game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+          --Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(RNGCounter.InitialSeed))
+        else
+          -- Make a new copy of this item using the room seed
+          newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, entities[i].SubType, roomSeed)
+          game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+          --Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) .. " pedestal using seed: " .. tostring(roomSeed))
+        end
+
+        -- If we don't do this, the item will be fully recharged every time the player swaps it out
+        newPedestal:ToPickup().Charge = entities[i]:ToPickup().Charge
+
+        -- If we don't do this, shop items will become automatically bought
+        newPedestal:ToPickup().Price = entities[i]:ToPickup().Price
+
+        -- If we don't do this, you can take both of the pedestals in a double Treasure Room
+        newPedestal:ToPickup().TheresOptionsPickup = entities[i]:ToPickup().TheresOptionsPickup
+
+        -- Now that we have created a new pedestal, we can delete the old one
+        entities[i]:Remove()
+      end
+    end
+
+    -- Trinkets
+    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a trinket (5.350)
+       entities[i].Variant == PickupVariant.PICKUP_TRINKET and
+       entities[i].InitSeed ~= roomSeed then
+
+      -- Check to see if we already replaced it with a seeded trinket
+      local trinketIdentifier = tostring(roomSeed) .. "-" .. tostring(entities[i].InitSeed)
+      local alreadyReplaced = false
+      for j = 1, #run.replacedTrinkets do
+        if trinketIdentifier == run.replacedTrinkets[j] then
+          alreadyReplaced = true
+          break
+        end
+      end
+
+      if alreadyReplaced == false then
+        -- Add it to the list of trinkets that have been replaced
+        run.replacedTrinkets[#run.replacedTrinkets + 1] = trinketIdentifier
+
+        -- Check to see if this trinket is banned
+        local bannedTrinket = false
+        for j = 1, #raceVars.trinketBanList do
+          if entities[i].SubType == raceVars.trinketBanList[j] then
+            bannedTrinket = true
+            break
+          end
+        end
+
+        local newTrinket
+        if bannedItem then
+          -- Spawn a new random trinket (using the B1 floor seed)
+          newTrinket = game:Spawn(5, 350, entities[i].Position, entities[i].Velocity, entities[i].Parent, 0, roomSeed)
+          --Isaac.DebugString("Made a new random trinket using seed: " .. tostring(roomSeed))
+        else
+          -- Make a new copy of this trinket using the room seed
+          newTrinket = game:Spawn(5, 350, entities[i].Position, entities[i].Velocity, entities[i].Parent, entities[i].SubType, roomSeed)
+          --Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) .. " trinket using seed: " .. tostring(roomSeed))
+        end
+
+        -- Now that we have created a new trinket, we can delete the old one
+        entities[i]:Remove()
+      end
+    end
   end
 
   ---
@@ -1186,7 +1315,7 @@ function RacingPlus:PostRender()
       end
     elseif race.countdown == 1 then
       spriteInit("top", "1")
-    elseif roomsEntered > 1 then
+    elseif run.roomsEntered > 1 then
       -- Remove the "Go!" graphic as soon as we enter another room
       -- (the starting room counts as room #1)
       spriteInit("top", 0)
@@ -1220,86 +1349,13 @@ function RacingPlus:PostUpdate()
 
   -- Check the clear status of the room and compare it to what it was a frame ago
   local clear = room:IsClear()
-  if clear ~= currentRoomClearState then
-    currentRoomClearState = clear
+  if clear ~= run.currentRoomClearState then
+    run.currentRoomClearState = clear
 
     if clear == true then
       -- If the room just got changed to a cleared state, increment the total rooms cleared
-      roomsCleared = roomsCleared + 1
-      Isaac.DebugString("Rooms cleared: " .. tostring(roomsCleared))
-    end
-  end
-
-  --
-  -- Fix seed incrementation from touching active pedestal items
-  -- (this also fixes Angel key pieces and Pandora's Box items being unseeded)
-  --
-
-  -- Get a reproducible seed based on the room
-  local roomSeed = room:GetSpawnSeed() -- Will return something like "2496979501"
-
-  -- Find "unseeded" pedestal items and do item bans
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
-       entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
-       entities[i].FrameCount == 1 and -- If this is freshly spawned
-       entities[i].InitSeed ~= roomSeed then -- If it was spawned naturally instead of by us
-
-      -- Check to see if this item is banned
-      local bannedItem = false
-      for j = 1, #raceVars.itemBanList do
-        if entities[i].SubType == raceVars.itemBanList[j] then
-          bannedItem = true
-          break
-        end
-      end
-
-      local newPedestal
-      if bannedItem then
-        -- Make a new random item pedestal (using the B1 floor seed)
-        newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, 0, RNGCounter.InitialSeed)
-        game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0) -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-        --Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(RNGCounter.InitialSeed))
-      else
-        -- Make a new copy of this item using the room seed
-        newPedestal = game:Spawn(5, 100, entities[i].Position, entities[i].Velocity, entities[i].Parent, entities[i].SubType, roomSeed)
-        --Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) .. " pedestal using seed: " .. tostring(roomSeed))
-      end
-
-      -- If we don't do this, the item will be fully recharged every time the player swaps it out
-      newPedestal:ToPickup().Charge = entities[i]:ToPickup().Charge
-
-      -- If we don't do this, shop items will become automatically bought
-      newPedestal:ToPickup().Price = entities[i]:ToPickup().Price
-
-      -- If we don't do this, you can take both of the pedestals in a double Treasure Room
-      newPedestal:ToPickup().TheresOptionsPickup = entities[i]:ToPickup().TheresOptionsPickup
-
-      -- Now that we have created a new pedestal, we can delete the old one
-      entities[i]:Remove()
-    end
-
-    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a trinket item (5.350)
-       entities[i].Variant == PickupVariant.PICKUP_TRINKET and
-       entities[i].FrameCount == 1 then -- If this is freshly spawned
-
-      -- Check to see if this item is banned
-      local bannedItem = false
-      for j = 1, #raceVars.trinketBanList do
-        if entities[i].SubType == raceVars.trinketBanList[j] then
-          bannedItem = true
-          break
-        end
-      end
-
-      if bannedItem then
-        -- Spawn a new random trinket in its place
-        game:Spawn(5, 350, entities[i].Position, entities[i].Velocity, nil, 0, roomSeed)
-
-        -- Now that we have created a new trinket, we can delete the old one
-        entities[i]:Remove()
-      end
+      run.roomsCleared = run.roomsCleared + 1
+      Isaac.DebugString("Rooms cleared: " .. tostring(run.roomsCleared))
     end
   end
 end
@@ -1372,18 +1428,22 @@ function RacingPlus:TestCallback()
   local game = Game()
   local level = game:GetLevel()
   local room = game:GetRoom()
+  local player = game:GetPlayer(0)
 
+  -- Recharge the item so we can use it forever
+  player:SetActiveCharge(1)
+
+  -- Print out various debug information to Isaac's log.txt
   Isaac.DebugString("-----------------------")
   Isaac.DebugString("Entering test callback.")
   Isaac.DebugString("-----------------------")
 
-  Isaac.DebugString("globals:")
-  Isaac.DebugString("    runInitializing:" .. tostring(runInitializing))
-  Isaac.DebugString("    roomsCleared:" .. tostring(roomsCleared))
-  Isaac.DebugString("    roomsEntered:" .. tostring(roomsEntered))
-  Isaac.DebugString("    roomEntering:" .. tostring(roomEntering))
-  Isaac.DebugString("    currentGameFrame:" .. tostring(currentGameFrame))
-  Isaac.DebugString("    currentRoomClearState:" .. tostring(currentRoomClearState))
+  Isaac.DebugString("run:")
+  Isaac.DebugString("    initializing:" .. tostring(run.initializing))
+  Isaac.DebugString("    roomsCleared:" .. tostring(run.roomsCleared))
+  Isaac.DebugString("    roomsEntered:" .. tostring(run.roomsEntered))
+  Isaac.DebugString("    roomEntering:" .. tostring(run.roomEntering))
+  Isaac.DebugString("    currentRoomClearState:" .. tostring(run.currentRoomClearState))
 
   Isaac.DebugString("race table:")
   for k, v in pairs(race) do
@@ -1414,4 +1474,3 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.BookOfSin, 43); -
 --RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Teleport, 59); -- Replacing Teleport (44) (this is not possible with the current bindings)
 --RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.Undefined, 61); -- Replacing Undefined (324) (this is not possible with the current bindings)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,    RacingPlus.TestCallback, 235); -- Debug (custom item)
--- 263

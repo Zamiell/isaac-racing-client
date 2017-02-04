@@ -150,13 +150,16 @@ Lang.prototype.pack.zz = {
 
         // New race tooltip
         "Race title (optional)": "",
+        "There is already a race with that title.": "",
         "Randomize": "",
         "Solo": "",
         "Multiplayer": "",
         "Practice": "",
         "Casual": "",
         "Season": "",
-        "Random": "",
+        "Random (all, 1-32)": "Aléatoire",
+        "Random (D6 builds only, 1-30)": "",
+        "Random (Treasure Room only, 1-20)": "",
         "Create": "",
 
         // Settings tooltip

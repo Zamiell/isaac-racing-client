@@ -11,12 +11,6 @@
     - check to see if i can trick the ready checkbox by going into a game before entering the race
     - add tooltip "You should wait for someone else to enter the race before setting yourself to be ready."
     - dont play race copmleted for solo races
-    - add item icon instead of build # in Race table
-    - add checkbox for boss cutscene removal
-    - check for hard mode in log
-    - check for character in log
-    - test Jud6s frame window for teratoma flies door opening
-    - finish fixing game type client + server side
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip

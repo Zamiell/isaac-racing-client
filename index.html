@@ -502,7 +502,7 @@
                             <ul class="actions">
                                 <li><span lang="en">Title</span>:</li>
                                 <li>
-                                    <input id="new-race-name" type="text" placeholder="Race title (optional)" lang="en" />
+                                    <input id="new-race-title" type="text" placeholder="Race title (optional)" lang="en" data-tooltip-content="#new-race-title-error" />
                                 </li>
                                 <li>
                                     <button id="new-race-randomize" class="button alt small" type="button">
@@ -619,9 +619,9 @@
                         <div class="8u">
                             <div class="select-wrapper">
                                 <select id="new-race-starting-build">
-                                    <option value="random" lang="en" selected="selected">Random (all)</option>
-                                    <option value="random-d6" lang="en">Random (D6 builds only)</option>
-                                    <option value="random-treasure" lang="en">Random (Treasure Room only)</option>
+                                    <option value="random" lang="en" selected="selected">Random (all, 1-32)</option>
+                                    <option value="random-d6" lang="en">Random (D6 builds only, 1-30)</option>
+                                    <option value="random-treasure" lang="en">Random (Treasure Room only, 1-20)</option>
                                 </select>
                             </div>
                         </div>
@@ -637,6 +637,8 @@
                     </div>
                 </form>
             </div><!-- new-race-tooltip -->
+
+            <div id="new-race-title-error" lang="en">There is already a race with that title.</div>
 
             <div id="settings-tooltip">
                 <form id="settings-form">
@@ -709,6 +711,28 @@
 
                     <div class="row uniform 50%">
                         <div class="12u">
+                            <input id="settings-controller-checkbox" type="checkbox" />
+                            <label id="settings-controller-checkbox-label" for="settings-controller-checkbox">
+                                <span class="checkbox-text" lang="en">Don't enter game with Alt+C and Alt+V hotkeys (for controller users)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="padding1p5"></div>
+
+                    <div class="row uniform 50%">
+                        <div class="12u">
+                            <input id="settings-cutscene-checkbox" type="checkbox" />
+                            <label id="settings-cutscene-checkbox-label" for="settings-cutscene-checkbox">
+                                <span class="checkbox-text" lang="en">Don't disable boss cutscenes (for people used to vanilla; requires game restart)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="padding2"></div>
+
+                    <div class="row uniform 50%">
+                        <div class="12u">
                             <ul class="actions">
                                 <li><span lang="en">Change stream URL</span>:</li>
                                 <li>
@@ -724,7 +748,7 @@
                                 <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
                                     <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
                                     <label id="settings-enable-twitch-bot-checkbox-label" for="settings-enable-twitch-bot-checkbox">
-                                        <span id="settings-enable-twitch-bot-checkbox-text" lang="en">Enable Twitch chat bot</span>
+                                        <span class="checkbox-text" lang="en">Enable Twitch chat bot</span>
                                     </label>
                                 </li>
                                 <li>&nbsp; &nbsp; &nbsp; &nbsp;</li>

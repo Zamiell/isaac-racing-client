@@ -46,11 +46,12 @@ module.exports = [
      { "id": 132, "name": "A Lump of Coal" }],
 
     [{ "id": 329, "name": "The Ludovico Technique" }, // 29
-     { "id": 104, "name": "The Parasite" }],          
+     { "id": 104, "name": "The Parasite" }],
 
     [{ "id": 257, "name": "Fire Mind" },              // 30
      { "id": 0,   "name": "13 luck" }],
 
+    // Custom starts (without the D6)
     [{ "id": 40,  "name": "Kamikaze!" },              // 31
      { "id": 375, "name": "Host Hat" }],
 
