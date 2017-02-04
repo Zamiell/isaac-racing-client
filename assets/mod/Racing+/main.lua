@@ -51,7 +51,7 @@ local run = {
 local race = { -- The table that gets updated from the "save.dat" file
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
-  rFormat         = "Unseeded",  -- Can be "Unseeded", "Seeded", "Diveristy", "Custom"
+  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "custom"
   character       = "Judas",     -- Can be the name of any character
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
@@ -367,7 +367,7 @@ function giveStartingItems()
   end
 
   -- Add item bans for seeded mode
-  if race.rFormat == "Seeded" then
+  if race.rFormat == "seeded" then
     addItemBanList(CollectibleType.COLLECTIBLE_TELEPORT) -- 44
     addItemBanList(CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
     addTrinketBanList(TrinketType.TRINKET_CAINS_EYE) -- 59
@@ -1139,7 +1139,10 @@ function RacingPlus:PostRender()
 
         -- Check to see if this is a B1 item room on a seeded race
         local offLimits = false
-        if stage == 1 and room:GetType() == RoomType.ROOM_TREASURE and entities[i].SubType ~= 263 then
+        if race.rFormat == "seeded" and
+           stage == 1 and
+           room:GetType() == RoomType.ROOM_TREASURE and
+           entities[i].SubType ~= 263 then
           offLimits = true
         end
 

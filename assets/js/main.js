@@ -6,6 +6,7 @@
 
 /*
     Bugs to fix:
+    - stop auto booting
     - make separate icons for solo races
     - check to see if it writes anyting to the log when putting on black candle from teh easter egg menu
     - check to see if i can trick the ready checkbox by going into a game before entering the race

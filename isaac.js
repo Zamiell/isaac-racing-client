@@ -76,6 +76,7 @@ settings.loadOrCreateSync();
 
 // Global variables
 var modsPath;
+var launchIsaac = false; // Whether to actually launch Isaac after all of the file verification
 
 // The parent will communicate with us, telling us the path to the log file
 process.on('message', function(message) {
@@ -119,7 +120,8 @@ function checkIsaacOpen() {
         }
 
         if (resultList.length === 0) {
-            // Isaac is not already open
+            // Isaac is not already open, so just do file checking and don't actually launch the game
+            // (launchIsaac is set to false by default)
             let check1 = checkRacingPlusLuaModCurrent();
             let check2 = checkOtherModsEnabled();
             checkOptionsINIForModsEnabled(); // This will automatically enable mods (if they are not already enabled)
@@ -140,6 +142,7 @@ function checkIsaacOpen() {
                     process.send('The Lua mod is current and no other mods are enabled.', processExit);
                     return;
                 } else {
+                    launchIsaac = true;
                     closeIsaac(ps.pid);
                 }
             });
@@ -354,8 +357,10 @@ function enableBossCutscenes() {
 // Start Isaac
 function startIsaac() {
     // Use Steam to launch it so that we don't have to bother with finding out where the binary is
-    log.info('Launching Isaac.');
-    opn('steam://rungameid/250900');
+    if (launchIsaac) {
+        log.info('Launching Isaac.');
+        opn('steam://rungameid/250900');
+    }
 
     // The child will stay alive even if the parent has closed
     setTimeout(function() {
