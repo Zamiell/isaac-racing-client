@@ -15,7 +15,7 @@ const builds      = nodeRequire('./assets/data/builds');
 // Specifically, we use the "save.dat" located in the mod subdirectory
 const send = function() {
     // Do nothing if the mod loader file is set to null
-    // (this can happen if the user is closing the projeect, for example)
+    // (this can happen if the user is closing the program, for example)
     if (globals.modLoaderFile === null) {
         return;
     }
@@ -57,7 +57,7 @@ const send = function() {
     }
     saveDat += '},\n';
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
-    saveDat += 'countdown=' + globals.modLoader.countdown + '\n';
+    saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
     saveDat += '}';
 
     // Write to it

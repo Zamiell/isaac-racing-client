@@ -11,6 +11,7 @@ const isDev    = require('electron-is-dev');
 const tracer   = require('tracer');
 const Raven    = require('raven');
 const ps       = require('ps-node');
+const tasklist = require('tasklist');
 const opn      = require('opn');
 const md5      = require('md5');
 const execFile = require('child_process').execFile;
@@ -75,8 +76,12 @@ settings.loadOrCreateSync();
 */
 
 // Global variables
+const racingPlusLuaModDir = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 var modsPath;
-var launchIsaac = false; // Whether to actually launch Isaac after all of the file verification
+var IsaacOpen = false;
+var IsaacPID;
+var fileSystemValid = true; // By default, we assume the user has everything set up correctly
+var secondTime = false; // We might have to do everything twice
 
 // The parent will communicate with us, telling us the path to the log file
 process.on('message', function(message) {
@@ -88,134 +93,71 @@ process.on('message', function(message) {
     // If the message is not "exit", we can assume that it is the mods path
     modsPath = message;
 
+    // The logic in this file is only written to support Windows and OS X
+    if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
+        process.platform !== 'darwin') { // OS X
+
+        process.send('Linux is not supported for the file system integrity checks.', processExit);
+        return;
+    }
+
     // Check to see if the mods directory exists
     if (fs.existsSync(modsPath) === false) {
         process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file. By default, it is located at:<br /><br /><code>C:\\Users\\[YourUsername]\\AppData\\Local\\Programs\\settings.json</code>', processExit);
         return;
     }
 
-    // Begin the process of opening Isaac
+    // Begin the work
     checkIsaacOpen();
 });
 
+// If we make changes to files and Isaac is closed, it will overwrite all of our changes
+// So first, we need to find out if it is open
 function checkIsaacOpen() {
     log.info('Checking to see if Isaac is open.');
-    let processName;
     if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-        processName = 'isaac-ng';
-    } else if (process.platform === 'darwin') { // OS X
-        processName = 'The Binding of Isaac Afterbirth+';
-    } else {
-        // Linux is not supported
-        process.send('Linux is not supported.', processExit);
-        return;
-    }
-
-    ps.lookup({
-        command: processName,
-    }, function(err, resultList) {
-        if (err) {
-            process.send('error: Failed to find the Isaac process: ' + err, processExit);
-            return;
-        }
-
-        if (resultList.length === 0) {
-            // Isaac is not already open, so just do file checking and don't actually launch the game
-            // (launchIsaac is set to false by default)
-            let check1 = checkRacingPlusLuaModCurrent();
-            let check2 = checkOtherModsEnabled();
-            checkOptionsINIForModsEnabled(); // This will automatically enable mods (if they are not already enabled)
-            if (check1 === true && check2  === false) {
-                startIsaac();
+        // On Windows, we use the taskkill module (the ps-node module is very slow)
+        let processName = 'isaac-ng.exe';
+        tasklist({
+            filter: ['Imagename eq ' + processName], // https://technet.microsoft.com/en-us/library/bb491010.aspx
+        }).then(function(data) {
+            if (data.length === 1) {
+                IsaacOpen = true;
+                IsaacPID = data[0].pid;
+                checkOptionsINIForModsEnabled();
             } else {
-                deleteOldLuaMod();
+                process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
+                return;
             }
-        } else {
-            // There should only be 1 "isaac-ng.exe" process
-            resultList.forEach(function(ps) {
-                // Isaac is currently open, so check to see if we need to restart the game
-                let check1 = checkRacingPlusLuaModCurrent();
-                let check2 = checkOtherModsEnabled();
-                let check3 = checkOptionsINIForModsEnabled();
-                if (check1 === true && check2  === false && check3 === true) {
-                    // We don't need to restart the game, so we don't have to do anything at all
-                    process.send('The Lua mod is current and no other mods are enabled.', processExit);
-                    return;
-                } else {
-                    launchIsaac = true;
-                    closeIsaac(ps.pid);
-                }
-            });
-        }
-    });
-}
+        }, function(err) {
+            // Isaac is closed
+            checkOptionsINIForModsEnabled();
+        });
+    } else if (process.platform === 'darwin') { // OS X
+        // On OS X, we use the ps-node module
+        let processName = 'The Binding of Isaac Afterbirth+';
+        ps.lookup({
+            command: processName,
+        }, function(err, resultList) {
+            if (err) {
+                process.send('error: Failed to find the Isaac process: ' + err, processExit);
+                return;
+            }
 
-function closeIsaac(pid) {
-    log.info('Closing Isaac.');
-    ps.kill(pid, function(err) { // This expects the first argument to be in a string for some reason
-        if (err) {
-            process.send('error: Failed to close Isaac: ' + err, processExit);
-            return;
-        } else {
-            deleteOldLuaMod();
-        }
-    });
-}
-
-function checkRacingPlusLuaModCurrent() {
-    log.info('Checking to see if the Lua mod is current.');
-
-    // Check the old version
-    let oldXMLPath = path.join(modsPath, 'Racing+', 'metadata.xml');
-    if (fs.existsSync(oldXMLPath) === false) {
-        return false;
+            if (resultList.length === 0) {
+                // Isaac is closed
+                checkOptionsINIForModsEnabled();
+            } else {
+                // Isaac is already open
+                // There should only be 1 "isaac-ng.exe" process
+                resultList.forEach(function(ps) {
+                    IsaacOpen = true;
+                    IsaacPID = ps.pid;
+                    checkOptionsINIForModsEnabled();
+                });
+            }
+        });
     }
-    let oldXML = fs.readFileSync(path.join(modsPath, 'Racing+', 'metadata.xml')).toString();
-    let oldMatch = oldXML.match(/<version>(.+)<\/version>/);
-    let oldVersion;
-    if (oldMatch) {
-        oldVersion = oldMatch[1];
-    } else {
-        process.send('error: Failed to parse the "' + oldXMLPath + '" file.', processExit);
-        return;
-    }
-
-    // Check the new version
-    let newXMLPath;
-    if (isDev) {
-        newXMLPath = path.join('assets', 'mod', 'Racing+', 'metadata.xml');
-    } else {
-        newXMLPath = path.join('app.asar', 'assets',  'mod', 'Racing+', 'metadata.xml');
-    }
-    let newXML = fs.readFileSync(newXMLPath).toString();
-    let newMatch = newXML.match(/<version>(.+)<\/version>/);
-    let newVersion;
-    if (newMatch) {
-        newVersion = newMatch[1];
-    } else {
-        process.send('error: Failed to parse the "' + newXMLPath + '" file.', processExit);
-        return;
-    }
-
-    // Compare
-    if (oldVersion !== newVersion) {
-        return false;
-    }
-
-    // As a secondary check, compare the MD5 hashes of the "main.lua" files
-    if (fs.existsSync(path.join(modsPath, 'Racing+', 'main.lua')) === false) {
-        return false;
-    }
-    let oldLua = fs.readFileSync(path.join(modsPath, 'Racing+', 'main.lua'));
-    let oldHash = md5(oldLua);
-    let newLua;
-    if (isDev) {
-        newLua = fs.readFileSync(path.join('assets', 'mod', 'Racing+', 'main.lua'));
-    } else {
-        newLua = fs.readFileSync(path.join('app.asar', 'assets', 'mod', 'Racing+', 'main.lua'));
-    }
-    let newHash = md5(newLua);
-    return oldHash === newHash;
 }
 
 function checkOptionsINIForModsEnabled() {
@@ -232,6 +174,7 @@ function checkOptionsINIForModsEnabled() {
     let match = optionsFile.match(/EnableMods=0/);
     if (match) {
         // Change it to 1 and rewrite the file
+        fileSystemValid = false;
         optionsFile = optionsFile.replace('EnableMods=0', 'EnableMods=1');
         try {
             fs.writeFileSync(optionsPath, optionsFile, 'utf8');
@@ -239,17 +182,15 @@ function checkOptionsINIForModsEnabled() {
             process.send('error: Failed to write to the "options.ini" file: ' + err, processExit);
             return;
         }
-        return false;
-    } else {
-        return true;
     }
+    checkOtherModsEnabled();
 }
 
 function checkOtherModsEnabled() {
     log.info('Checking to see if any other mods are enabled.');
 
     /*
-        Note that it is possible for a mod to have a "disable.it" in the directory but still be enabled in game.
+        Note that it is possible for a mod to have a "disable.it" in a mod's directory but still be enabled in game.
         (This can happen if the "disable.it" file was created after the game was already launched, and perhaps other ways.)
         To counteract this, we could always force Isaac to restart upon Racing+ launching.
         However, this would mean that if a user's internet drops during the race, they would get booted out of the game.
@@ -259,15 +200,20 @@ function checkOtherModsEnabled() {
     // Go through all the subdirectories of the mod folder
     let files = fs.readdirSync(modsPath);
     let otherModsEnabled = false;
+    let foundRacingPlusMod = false;
     for (let file of files) {
         if (fs.statSync(path.join(modsPath, file)).isDirectory() === false) {
             continue;
         }
 
-        if (file === 'Racing+') {
+        if (file === 'Racing+') { // This was the directory name of the Lua mod pre-Steam integration
+            fs.removeSync(path.join(modsPath, file)); // The user no longer needs this folder
+
+        } else if (file === racingPlusLuaModDir) {
+            foundRacingPlusMod = true;
             if (fs.existsSync(path.join(modsPath, file, 'disable.it'))) {
                 // The Racing+ mod is not enabled
-                otherModsEnabled = true;
+                fileSystemValid = false;
 
                 // Enable it by removing the "disable.it" file
                 try {
@@ -281,7 +227,7 @@ function checkOtherModsEnabled() {
             if (fs.existsSync(path.join(modsPath, file, 'disable.it')) === false) {
                 log.info('Making a "disable.it" for: ' + file);
                 // Some other mod is enabled
-                otherModsEnabled = true;
+                fileSystemValid = false;
 
                 // Disable it by writing a 0 byte "disable.it" file
                 try {
@@ -294,41 +240,12 @@ function checkOtherModsEnabled() {
         }
     }
 
-    return otherModsEnabled;
-}
-
-function deleteOldLuaMod() {
-    log.info('Deleting the old Lua mod.');
-    if (fs.existsSync(path.join(modsPath, 'Racing+'))) {
-        // Delete the old Racing+ mod
-        fs.remove(path.join(modsPath, 'Racing+'), function(err) {
-            if (err) {
-                process.send('error: Failed to delete the old Racing+ Lua mod: ' + err, processExit);
-                return;
-            }
-            copyLuaMod();
-        });
-    } else {
-        copyLuaMod();
+    if (foundRacingPlusMod === false) {
+        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop? For more information, see the download instructions at: https://isaacracing.net/download', processExit);
+        return;
     }
-}
 
-// Copy over the new Racing+ mod
-function copyLuaMod() {
-    log.info('Copying over the Lua mod.');
-    let newModPath;
-    if (isDev) {
-        newModPath = path.join('assets', 'mod', 'Racing+');
-    } else {
-        newModPath = path.join('app.asar', 'assets', 'mod', 'Racing+');
-    }
-    fs.copy(newModPath, path.join(modsPath, 'Racing+'), function (err) {
-        if (err) {
-            process.send('error: Failed to copy the new Racing+ Lua mod: ' + err, processExit);
-            return;
-        }
-        enableBossCutscenes();
-    });
+    enableBossCutscenes();
 }
 
 // We can revert boss cutscenes to vanilla by deleting a single file, for users that are used to vanilla
@@ -342,25 +259,81 @@ function enableBossCutscenes() {
     }
 
     if (bossCutscenes) {
-        log.info('Re-enabling boss cutscenes.');
-        try {
-            fs.removeSync(path.join(modsPath, 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2'));
-        } catch(err) {
-            process.send('error: Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ' + err, processExit);
-            return;
+        let bossCutsceneFile = path.join(modsPath, racingPlusLuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        if (fs.existsSync(bossCutsceneFile)) {
+            log.info('Re-enabling boss cutscenes.');
+            try {
+                fs.removeSync(bossCutsceneFile);
+            } catch(err) {
+                process.send('error: Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ' + err, processExit);
+                return;
+            }
+        }
+    } else {
+        let bossCutsceneFile = path.join(modsPath, racingPlusLuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        if (fs.existsSync(bossCutsceneFile) === false) {
+            log.info('Disabling boss cutscenes.');
+            let newBossCutsceneFile;
+            if (isDev) {
+                newBossCutsceneFile = path.join('assets', 'mod', 'versusscreen.anm2');
+            } else {
+                newBossCutsceneFile = path.join('app.asar', 'assets', 'mod', 'versusscreen.anm2');
+            }
+            try {
+                fs.copySync(newBossCutsceneFile, bossCutsceneFile);
+            } catch(err) {
+                process.send('error: Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ' + err, processExit);
+                return;
+            }
         }
     }
 
-    startIsaac();
+    closeIsaac();
+}
+
+function closeIsaac() {
+    // If we are doing this the second time around, just jump to the end
+    if (secondTime === true) {
+        startIsaac();
+        return;
+    }
+
+    if (IsaacOpen === false) {
+        // Isaac wasn't open, we are done
+        // Don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually
+        log.info('File system validation passed. (Isaac was not open.)');
+        setTimeout(function() {
+            processExit();
+        }, 5000);
+        return;
+    }
+
+    if (fileSystemValid === true) {
+        // Isaac was open, but all of the file system checks passed, so we don't have to reboot Isaac
+        log.info('File system validation passed. (Isaac was open.)');
+        setTimeout(function() {
+            processExit();
+        }, 5000);
+        return;
+    }
+
+    log.info('File system checks failed, so we need to restart Isaac.');
+    ps.kill(IsaacPID.toString(), function(err) { // This expects the first argument to be in a string for some reason
+        if (err) {
+            process.send('error: Failed to close Isaac: ' + err, processExit);
+            return;
+        } else {
+            // We have to redo all of the steps from before, since when Isaac closes it overwrites files
+            secondTime = true;
+            checkOptionsINIForModsEnabled();
+        }
+    });
 }
 
 // Start Isaac
 function startIsaac() {
     // Use Steam to launch it so that we don't have to bother with finding out where the binary is
-    if (launchIsaac) {
-        log.info('Launching Isaac.');
-        opn('steam://rungameid/250900');
-    }
+    opn('steam://rungameid/250900');
 
     // The child will stay alive even if the parent has closed
     setTimeout(function() {

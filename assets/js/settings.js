@@ -52,9 +52,9 @@ if (typeof settings.get('volume') === 'undefined') {
 // (initialized in main.js since it depends on the return value of a PowerShell command)
 
 // "Don't enter game with Alt+C and Alt+v hotkeys"
-if (typeof settings.get('controller') === 'undefined') {
+if (typeof settings.get('keyboard') === 'undefined') {
     // If this is the first run, default to false
-    settings.set('controller', false);
+    settings.set('keyboard', false);
     settings.saveSync();
 }
 

@@ -150,17 +150,17 @@ $(document).ready(function() {
         settings.set('volume', $('#settings-volume-slider').val() / 100);
         settings.saveSync();
 
-        // "Don't enter game with Alt+C and Alt+V" checkbox
-        settings.set('controller', $('#settings-controller-checkbox').prop('checked'));
+        // "Automatically enter the game with Alt+C and Alt+V" checkbox
+        settings.set('keyboard', $('#settings-keyboard-checkbox').prop('checked'));
         settings.saveSync();
 
         // "Don't disable boss cutscenes" checkbox
-        let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
+        /*let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
         if (changedLogFilePath === false) {
             let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-            let bossAnimationPath = path.join(modsPath, 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+            let bossAnimationPath = path.join(modsPath, globals.LuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
                 if (fs.existsSync(bossAnimationPath)) {
@@ -175,7 +175,7 @@ $(document).ready(function() {
                 // Make sure the file is there
                 if (fs.existsSync(bossAnimationPath) === false) {
                     try {
-                        let newBossAnimationPath = path.join('assets', 'mod', 'Racing+', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                        let newBossAnimationPath = path.join('assets', 'mod', 'versusscreen.anm2');
                         fs.copySync(newBossAnimationPath, bossAnimationPath);
                     } catch(err) {
                         misc.errorShow('Failed to copy over the "versusscreen.anm2" file while disabling boss cutscenes.');
@@ -183,7 +183,7 @@ $(document).ready(function() {
                     }
                 }
             }
-        }
+        }*/
 
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
@@ -302,13 +302,13 @@ exports.tooltipFunctionReady = function() {
     $('#settings-volume-slider').val(settings.get('volume') * 100);
     $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
 
-    // "Don't enter game with Alt+C and Alt+V hotkeys" checkbox
-    let controller = settings.get('controller');
-    $('#settings-controller-checkbox').prop('disabled', controller);
+    // "Automatically enter the game with Alt+C and Alt+V" checkbox
+    let keyboard = settings.get('keyboard');
+    $('#settings-keyboard-checkbox').prop('checked', keyboard);
 
     // "Don't disable boss cutscenes" checkbox
     let bossCutscenes = settings.get('bossCutscenes');
-    $('#settings-cutscene-checkbox').prop('disabled', bossCutscenes);
+    $('#settings-cutscene-checkbox').prop('checked', bossCutscenes);
 
     // Change stream URL
     $('#settings-stream-url').val(globals.stream.URL);

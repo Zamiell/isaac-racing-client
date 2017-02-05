@@ -11,9 +11,11 @@ Please visit [the website for Racing+](https://isaacracing.net/).
 Description
 -----------
 
-This is the client software for Racing+, a Binding of Isaac: Afterbirth+ racing mod. Normally a single player game, the mod and server allow players to be able to race each other in real time.
+This is the client software for Racing+, a Binding of Isaac: Afterbirth+ racing platform. Normally a single player game, the Lua mod, client, and server allow players to be able to race each other in real time.
 
 The client is written with [Electron](http://electron.atom.io/) and uses WebSockets to communicate with the server. The pretty elements are courtesy of [HTML5 UP](https://html5up.net/).
+
+You may also be interested in [the Lua mod repository](https://github.com/Zamiell/isaac-racing-mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
 
 
 
@@ -30,6 +32,8 @@ Run
 * `npm install`
 * `node_modules/.bin/electron-rebuild`
 * `npm start`
+
+
 
 Compile / Package
 -----------------

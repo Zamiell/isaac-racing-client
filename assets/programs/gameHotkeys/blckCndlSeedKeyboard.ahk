@@ -53,3 +53,23 @@ Send {Enter down}
 Sleep %Delay1%
 Send {Enter up}
 Sleep, %Delay2%
+
+; Paste in the seed
+Send {Tab down}
+Sleep %Delay1%
+Send {Tab up}
+Sleep %Delay2%
+Send {Ctrl down}{v down}
+Sleep %Delay1%
+Send {v up}{Ctrl up}
+Sleep %Delay2%
+Send {Enter down}
+Sleep %Delay1%
+Send {Enter up}
+Sleep, %Delay2%
+
+; Enter the game
+Sleep, %Delay1%
+Send {Enter down}
+Sleep %Delay1%
+Send {Enter up}

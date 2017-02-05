@@ -9,6 +9,7 @@ const domain       = 'isaacracing.net';
 const secure       = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
 const squirrelPort = 8443; // The port that the squirrel-updates-server runs on
 const fadeTime     = 300; // In milliseconds
+const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 
 // The object that contains all of the global variables
 module.exports = {
@@ -29,6 +30,7 @@ module.exports = {
     },
     log: null,
     lang: null, // The language switcher instance
+    LuaModDir: LuaModDir,
     modLoaderFile: null, // Used to communicate with Isaac
     modLoader: {
         status: 'finished',

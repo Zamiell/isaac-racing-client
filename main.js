@@ -243,19 +243,19 @@ function registerKeyboardHotkeys() {
 
     const hotkeyBlckCndl = globalShortcut.register('Alt+C', function() {
         // Default to keyboard
-        let controller = false;
+        let keyboard = false;
 
         // We have to re-get the settings, since the renderer process may have changed them
         // If so, our local copy of all of the settings is no longer current
         settings.loadOrCreateSync();
-        if (typeof settings.get('controller') !== 'undefined') {
-            if (settings.get('controller') === true) {
-                controller = true;
+        if (typeof settings.get('keyboard') !== 'undefined') {
+            if (settings.get('keyboard') === true) {
+                keyboard = true;
             }
         }
 
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToBlckCndl = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndl' + (controller ? 'Controller' : '') + '.exe');
+            let pathToBlckCndl = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndl' + (keyboard ? 'Keyboard' : '') + '.exe');
             execFile(pathToBlckCndl, function(error, stdout, stderr) {
                 // We have to attach an empty callback to this or it does not work for some reason
             });
@@ -267,19 +267,19 @@ function registerKeyboardHotkeys() {
 
     const hotkeyBlckCndlSeed = globalShortcut.register('Alt+V', function() {
         // Default to keyboard
-        let controller = false;
+        let keyboard = false;
 
         // We have to re-get the settings, since the renderer process may have changed them
         // If so, our local copy of all of the settings is no longer current
         settings.loadOrCreateSync();
-        if (typeof settings.get('controller') !== 'undefined') {
-            if (settings.get('controller') === true) {
-                controller = true;
+        if (typeof settings.get('keyboard') !== 'undefined') {
+            if (settings.get('keyboard') === true) {
+                keyboard = true;
             }
         }
 
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToBlckCndlSeed = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndlSeed' + (controller ? 'Controller' : '') + '.exe');
+            let pathToBlckCndlSeed = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndlSeed' + (keyboard ? 'Keyboard' : '') + '.exe');
             execFile(pathToBlckCndlSeed, function(error, stdout, stderr) {
                 // We have to attach an empty callback to this or it does not work for some reason
             });

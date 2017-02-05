@@ -6,11 +6,10 @@
 
 /*
     Bugs to fix:
+    - add ranked/unranked solo to type on race screen (tooltip)
     - re-add changing color on taskbar when new message
     - detect 1million%
-    - check if subed to steam for racing+ mod in workshop
     - make separate icons for solo races
-    - check to see if it writes anyting to the log when putting on black candle from teh easter egg menu
     - dont play race copmleted for solo races
 
     - clicking profile doesn't work
@@ -33,7 +32,6 @@
     - error while recieving PM during tab transition
 
     - make spacing slightly smaller for Type and Format on lobby
-
 
     - look at sed screenshot, racer is cut off at the top
 

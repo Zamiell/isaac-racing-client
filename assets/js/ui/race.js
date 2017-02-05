@@ -636,6 +636,8 @@ const participantsSetFloor = function(i) {
         floorDiv = 'DR'; // 11-0 is Dark Room
     } else if (floorNum === 11 && stageType === 1) {
         floorDiv = 'Chest';
+    } else if (floorNum === 12) {
+        floorDiv = 'Void';
     } else {
         misc.errorShow('The floor for ' + name + ' is unrecognized: ' + floorNum);
     }

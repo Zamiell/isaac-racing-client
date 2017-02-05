@@ -14,7 +14,7 @@ const settings    = nodeRequire('./assets/js/settings');
 // This tells the main process to start launching Isaac
 exports.start = function() {
     let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-    globals.modLoaderFile = path.join(modsPath, 'Racing+', 'save.dat');
+    globals.modLoaderFile = path.join(modsPath, globals.LuaModDir, 'save.dat');
     ipcRenderer.send('asynchronous-message', 'isaac', modsPath);
 };
 

@@ -52,7 +52,7 @@ $(document).ready(function() {
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
 const steam = function(event, message) {
-    if (message === 'errorInit') {
+    if (message === 'errorInit' || message === 'error: channel closed') { // "channel closed" seems to be a common error
         // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
         misc.errorShow('Failed to talk to Steam. Please open or restart Steam and relaunch Racing+.', false);
         return;
