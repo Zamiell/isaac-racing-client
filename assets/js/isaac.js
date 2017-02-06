@@ -25,7 +25,12 @@ ipcRenderer.on('isaac', function(event, message) {
         globals.currentScreen = 'null';
 
         let error = message.match(/error: (.+)/)[1];
-        misc.errorShow(error);
+        if (error === 'Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop? For more information, see the download instructions at: https://isaacracing.net/download') {
+            misc.errorShow(error);
+        } else {
+            // This is an ordinary error, so don't report it to Sentry
+            misc.errorShow(error, false);
+        }
         return;
     }
 

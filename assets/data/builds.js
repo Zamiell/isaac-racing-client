@@ -18,19 +18,19 @@ module.exports = [
     [{ "id": 149, "name": "Ipecac" }],                // 9
     [{ "id": 494, "name": "Jacob's Ladder" }],        // 10
     [{ "id": 311, "name": "Judas' Shadow" }],         // 11
-    [{ "id": 275, "name": "Lil' Brimstone" }],        // 12
+    [{ "id": 275, "name": "Lil' Brimstone" }],        // 12 (familiar)
     [{ "id": 12,  "name": "Magic Mushroom" }],        // 13
     [{ "id": 114, "name": "Mom's Knife" }],           // 14
     [{ "id": 229, "name": "Monstro's Lung" }],        // 15
     [{ "id": 169, "name": "Polyphemus" }],            // 16
     [{ "id": 261, "name": "Proptosis" }],             // 17
-    [{ "id": 172, "name": "Sacrificial Dagger" }],    // 18
+    [{ "id": 172, "name": "Sacrificial Dagger" }],    // 18 (familiar)
     [{ "id": 244, "name": "Tech.5" }],                // 19
     [{ "id": 395, "name": "Tech X" }],                // 20
 
     // Devil Room starts
     [{ "id": 118, "name": "Brimstone" }],             // 21
-    [{ "id": 360, "name": "Incubus" }],               // 22
+    [{ "id": 360, "name": "Incubus" }],               // 22 (familiar)
     [{ "id": 399, "name": "Maw of the Void" }],       // 23
 
     // Angel Room starts

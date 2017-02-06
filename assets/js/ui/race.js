@@ -307,7 +307,7 @@ const show = function(raceID) {
 
         // Column 2 - Type
         let type = globals.raceList[globals.currentRaceID].ruleset.type;
-        $('#race-title-type-icon').css('background-image', 'url("assets/img/type/' + type + '.png")');
+        $('#race-title-type-icon').css('background-image', 'url("assets/img/types/' + type + '.png")');
         let typeTooltipContent = '<span lang="en">';
         if (type === 'ranked') {
             typeTooltipContent += '<strong><span lang="en">Ranked</span>:</strong><br />';

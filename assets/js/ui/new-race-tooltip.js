@@ -110,7 +110,7 @@ $(document).ready(function() {
         }
 
         // Change the displayed icon
-        $('#new-race-type-icon').css('background-image', 'url("assets/img/type/' + newType + '.png")');
+        $('#new-race-type-icon').css('background-image', 'url("assets/img/types/' + newType + '.png")');
     });
 
     $('#new-race-format').change(function() {

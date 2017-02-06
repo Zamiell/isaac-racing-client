@@ -6,6 +6,7 @@
 
 /*
     Bugs to fix:
+    - add alb+b hotkey
     - add ranked/unranked solo to type on race screen (tooltip)
     - re-add changing color on taskbar when new message
     - detect 1million%

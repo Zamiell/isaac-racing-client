@@ -3869,7 +3869,7 @@
     }
 
     .lobby-current-races-ranked {
-        background-image: url("../img/type/ranked.png");
+        background-image: url("../img/types/ranked.png");
         background-repeat: no-repeat;
         background-position: center center;
         display: inline-block;
@@ -3880,7 +3880,7 @@
     }
 
     .lobby-current-races-unranked {
-        background-image: url("../img/type/unranked.png");
+        background-image: url("../img/types/unranked.png");
         background-repeat: no-repeat;
         background-position: center center;
         display: inline-block;
@@ -4036,7 +4036,7 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/type/unranked.png");
+        background-image: url("../img/types/unranked.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;

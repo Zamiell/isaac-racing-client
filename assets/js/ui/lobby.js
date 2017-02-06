@@ -243,7 +243,7 @@ exports.raceUpdatePlayers = raceUpdatePlayers;
 // Make tooltips for long names if necessary
 function raceDrawCheckForOverflow(raceID, target) {
     // Check to make sure that the race hasn't ended in the meantime
-    if (typeof $('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth === 'undefined') {
+    if (typeof $('#lobby-current-races-' + raceID + '-' + target) === 'undefined') {
         let errorMessage = 'The "raceDrawCheckForOverflow" function was called for a race that does not exist anymore.';
         globals.log.info(errorMessage);
 

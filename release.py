@@ -46,6 +46,10 @@ title_img.save(os.path.join(title_screen_path, 'titlemenu.png'))
 if args.logo:
     sys.exit()
 
+# Open the mod updater tool from Nicalis
+path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
+subprocess.Popen([path_to_uploader]) # Popen will run it in the background
+
 # Commit to the repository
 if args.github:
     # Commit to the repository
