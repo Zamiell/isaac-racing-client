@@ -6,6 +6,9 @@
 
 /*
     Bugs to fix:
+    - add custom type icon
+        Krakenos: Zam, for custom races, do manual ready, and manual finish
+        Krakenos: and don't check for blck cndl
     - get more racing sounds from MotoRacer2 besides voice
     - add alb+b hotkey
     - add ranked/unranked solo to type on race screen (tooltip)
