@@ -10,6 +10,10 @@ const secure       = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
 const squirrelPort = 8443; // The port that the squirrel-updates-server runs on
 const fadeTime     = 300; // In milliseconds
 const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+const LuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+
+// Imports
+const isDev = nodeRequire('electron-is-dev');
 
 // The object that contains all of the global variables
 module.exports = {
@@ -30,7 +34,7 @@ module.exports = {
     },
     log: null,
     lang: null, // The language switcher instance
-    LuaModDir: LuaModDir,
+    LuaModDir: (isDev ? LuaModDirDev : LuaModDir),
     modLoaderFile: null, // Used to communicate with Isaac
     modLoader: {
         status: 'finished',

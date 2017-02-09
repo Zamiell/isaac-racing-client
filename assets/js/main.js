@@ -6,6 +6,7 @@
 
 /*
     Bugs to fix:
+    - get more racing sounds from MotoRacer2 besides voice
     - add alb+b hotkey
     - add ranked/unranked solo to type on race screen (tooltip)
     - re-add changing color on taskbar when new message

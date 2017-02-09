@@ -6,6 +6,7 @@
 
 // Imports
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const isDev       = nodeRequire('electron-is-dev');
 const linkifyHTML = nodeRequire('linkifyjs/html');
 const globals     = nodeRequire('./assets/js/globals');
 const misc        = nodeRequire('./assets/js/misc');
@@ -110,15 +111,25 @@ exports.send = function(destination) {
         draw('PM-to', name, message);
     } else if (message === '/debug') {
         // /debug - Debug command
-        misc.debug();
+        if (isDev) {
+            misc.debug();
+        }
     } else if (message === '/restart') {
         // /restart - Restart the client
         ipcRenderer.send('asynchronous-message', 'restart');
     } else if (message === '/finish') {
         // /finish - Debug finish
-        globals.conn.send('raceFinish', {
-            'id': globals.currentRaceID,
-        });
+        if (isDev) {
+            globals.conn.send('raceFinish', {
+                'id': globals.currentRaceID,
+            });
+        }
+    } else if (message === '/ready') {
+        if (isDev) {
+            globals.conn.send('raceReady', {
+                'id': globals.currentRaceID,
+            });
+        }
     }
 };
 

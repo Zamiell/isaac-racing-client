@@ -52,8 +52,11 @@ $(document).ready(function() {
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
 const steam = function(event, message) {
-    if (message === 'errorInit' || message === 'Error: channel closed') { // "channel closed" seems to be a common error
-        // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
+    if (message === 'errorInit' ||
+        message === 'Error: channel closed' || // "channel closed" seems to be a common error
+        message.startsWith('Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')) {
+
+        // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
         misc.errorShow('Failed to talk to Steam. Please open or restart Steam and relaunch Racing+.', false);
         return;
     } else if (typeof(message) === 'string' && message.startsWith('error: ')) {

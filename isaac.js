@@ -76,7 +76,8 @@ settings.loadOrCreateSync();
 */
 
 // Global variables
-const racingPlusLuaModDir = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+var racingPlusLuaModDir = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+var racingPlusLuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 var modsPath;
 var IsaacOpen = false;
 var IsaacPID;
@@ -105,6 +106,11 @@ process.on('message', function(message) {
     if (fs.existsSync(modsPath) === false) {
         process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file. By default, it is located at:<br /><br /><code>C:\\Users\\[YourUsername]\\AppData\\Local\\Programs\\settings.json</code>', processExit);
         return;
+    }
+
+    // Check to see if we are in development
+    if (fs.existsSync(path.join(modsPath, racingPlusLuaModDirDev))) {
+        racingPlusLuaModDir = racingPlusLuaModDirDev;
     }
 
     // Begin the work
@@ -241,7 +247,7 @@ function checkOtherModsEnabled() {
     }
 
     if (foundRacingPlusMod === false) {
-        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop? For more information, see the download instructions at: https://isaacracing.net/download', processExit);
+        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop? If you did, double check your mods directory to make sure that Steam actually downloaded it. For more information, see the download instructions at: https://isaacracing.net/download', processExit);
         return;
     }
 
