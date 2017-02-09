@@ -802,12 +802,6 @@ const go = function(raceID) {
     globals.modLoader.countdown = 0;
     modLoader.send();
 
-    // Update the Lua mod 1 second from now to get rid of the "Go!" text
-    setTimeout(function() {
-        globals.modLoader.countdown = -1;
-        modLoader.send();
-    }, 1000);
-
     // Update the text on the race controls area
     $('#race-countdown').html('<span lang="en">Go</span>!');
     $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');

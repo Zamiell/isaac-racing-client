@@ -47,13 +47,12 @@ const send = function() {
     saveDat += 'character="' + globals.modLoader.character + '",\n';
     saveDat += 'goal="' + globals.modLoader.goal + '",\n';
     saveDat += 'seed="' + globals.modLoader.seed + '",\n';
-    saveDat += 'startingItems = {';
+    saveDat += 'startingItems={';
     if (startingItems.length !== 0) {
         for (let itemID of startingItems) {
-            saveDat += itemID + ',\n';
+            saveDat += itemID + ',';
         }
-        saveDat = saveDat.slice(0, -2); // Chop off the trailing comma and newline
-        saveDat += '\n';
+        saveDat = saveDat.slice(0, -1); // Chop off the trailing comma
     }
     saveDat += '},\n';
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
