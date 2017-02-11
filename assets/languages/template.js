@@ -80,6 +80,7 @@ Lang.prototype.pack.zz = {
         // Tooltips for race "Type"
         "This race will not count towards the leaderboards.": "",
         "This race will count towards the leaderboards.": "",
+        "No-one else can join this race.": "",
 
         // Tooltips for race "Format"
         "Reset over and over until you find something good from a Treasure Room.": "",

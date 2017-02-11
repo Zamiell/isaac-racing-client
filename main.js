@@ -43,7 +43,7 @@ const autoUpdater    = require('electron-auto-updater').autoUpdater; // Import e
                                                                      // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
 const execFile       = require('child_process').execFile;
 const fork           = require('child_process').fork;
-const fs             = require('fs');
+const fs             = require('fs-extra');
 const os             = require('os');
 const path           = require('path');
 const isDev          = require('electron-is-dev');
@@ -52,7 +52,8 @@ const Raven          = require('raven');
 const teeny          = require('teeny-conf');
 
 // Constants
-const assetsFolder = path.resolve(process.execPath, '..', '..', '..', '..', 'assets');
+const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+const LuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object
@@ -144,7 +145,7 @@ function createWindow() {
         y:      windowSettings.y,
         width:  width,
         height: height,
-        icon:   path.resolve(assetsFolder, 'img', 'favicon.png'),
+        icon:   path.resolve(__dirname, 'assets', 'img', 'favicon.png'),
         title:  'Racing+',
         frame:  false,
     });
@@ -334,6 +335,16 @@ app.on('activate', function() {
     }
 });
 
+app.on('before-quit', function() {
+    // Write all default values to the "save.dat" file
+    /*
+    let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+    let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
+    let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
+    fs.copySync(saveDatDefaults, saveDat);
+    */
+});
+
 app.on('will-quit', function() {
     // Unregister the global keyboard hotkeys
     globalShortcut.unregisterAll();
@@ -348,6 +359,12 @@ app.on('will-quit', function() {
     if (childIsaac !== null) {
         childIsaac.send('exit');
     }
+
+    // Write all default values to the "save.dat" file
+    let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+    let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
+    let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
+    fs.copySync(saveDatDefaults, saveDat);
 });
 
 /*

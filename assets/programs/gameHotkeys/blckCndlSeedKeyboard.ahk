@@ -40,6 +40,7 @@ Sleep, %Delay2%
 clipboard = %old_clipboard%
 
 ; Paste in the seed
+Sleep %Delay1%
 Send {Tab down}
 Sleep %Delay1%
 Send {Tab up}
@@ -58,3 +59,4 @@ Sleep, %Delay1%
 Send {Enter down}
 Sleep %Delay1%
 Send {Enter up}
+Sleep, %Delay2%

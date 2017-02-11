@@ -5,7 +5,7 @@
 'use strict';
 
 // Imports
-const fs       = nodeRequire('fs');
+const fs       = nodeRequire('fs-extra');
 const globals  = nodeRequire('./assets/js/globals');
 const settings = nodeRequire('./assets/js/settings');
 const debug    = nodeRequire('./assets/js/debug');
@@ -47,6 +47,7 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
     if (message === 'You have logged on from somewhere else, so you have been disconnected here.') {
         sendToSentry = false;
     } else if (message === 'Error: Steam initialization failed. Steam is not running.') {
+        message = 'Steam initialization failed. It appears that Steam is not running. (It is actually is running, please try restarting your computer and trying again.)';
         sendToSentry = false;
     }
 

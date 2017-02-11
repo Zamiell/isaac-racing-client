@@ -58,7 +58,7 @@ const steam = function(event, message) {
          message.startsWith('Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.'))) {
 
         // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
-        misc.errorShow('Failed to talk to Steam. Please open or restart Steam and relaunch Racing+.', false);
+        misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
         return;
     } else if (typeof(message) === 'string' && message.startsWith('error: ')) {
         let error = message.match(/error: (.+)/)[1];

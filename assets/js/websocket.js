@@ -68,6 +68,9 @@ exports.init = function(username, password, remember) {
                 registerScreen.reset();
                 lobbyScreen.show();
             });
+        } else if (globals.currentScreen === 'error') {
+            // If we are showing an error screen already, then don't bother going to the lobby
+            return;
         } else {
             misc.errorShow('Can\'t transition to the lobby from screen: ' + globals.currentScreen);
         }
@@ -517,6 +520,7 @@ exports.init = function(username, password, remember) {
             if (data.status !== 'in progress') { // Make an exception for races going from "starting" to "in progress", as the mod will deal with that manually
                 globals.modLoader.status = data.status;
                 modLoader.send();
+                globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
             }
 
             // Do different things depending on the status

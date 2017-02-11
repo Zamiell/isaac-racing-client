@@ -220,6 +220,7 @@ const show = function(raceID) {
     globals.modLoader.startingBuild  = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
     globals.modLoader.countdown      = -1;
     modLoader.send();
+    globals.log.info('modLoader - Sent all new race variables.');
 
     // Show and hide some buttons in the header
     $('#header-profile').fadeOut(globals.fadeTime);
@@ -307,16 +308,22 @@ const show = function(raceID) {
 
         // Column 2 - Type
         let type = globals.raceList[globals.currentRaceID].ruleset.type;
-        $('#race-title-type-icon').css('background-image', 'url("assets/img/types/' + type + '.png")');
-        let typeTooltipContent = '<span lang="en">';
+        let solo = globals.raceList[globals.currentRaceID].ruleset.solo;
+        $('#race-title-type-icon').css('background-image', 'url("assets/img/types/' + type + (solo ? '-solo' : '') + '.png")');
+        let typeTooltipContent = '<strong>';
+        if (solo) {
+            typeTooltipContent += '<span lang="en">Solo</span> ';
+        }
         if (type === 'ranked') {
-            typeTooltipContent += '<strong><span lang="en">Ranked</span>:</strong><br />';
+            typeTooltipContent += '<span lang="en">Ranked</span>:</strong><br />';
             typeTooltipContent += '<span lang="en">This race will count towards the leaderboards.</span>';
         } else if (type === 'unranked') {
-            typeTooltipContent += '<strong><span lang="en">Unranked</span>:</strong><br />';
+            typeTooltipContent += '<span lang="en">Unranked</span>:</strong><br />';
             typeTooltipContent += '<span lang="en">This race will not count towards the leaderboards.</span>';
         }
-        typeTooltipContent += '</span>';
+        if (solo) {
+            typeTooltipContent += '<br /><span lang="en">No-one else can join this race.</span>';
+        }
         $('#race-title-type-icon').tooltipster('content', typeTooltipContent);
 
         // Column 3 - Format
@@ -521,15 +528,12 @@ const participantsSetStatus = function(i, initial = false) {
 
     // If we finished, play the sound effect that matches our place
     // (don't play the "1st place" voice for 1 player races)
-    if (racer.name === globals.myUsername &&
-        racer.status === 'finished' &&
-        globals.raceList[globals.currentRaceID].racerList.length > 1) {
-
+    if (globals.raceList[globals.currentRaceID].ruleset.solo === false) {
         misc.playSound('place/' + racer.place, 1800);
     }
 
-    // If we quit or finished
-    if (racer.name === globals.myUsername && (racer.status === 'quit' || racer.status === 'finished')) {
+    // If we finished or quit
+    if (racer.name === globals.myUsername && (racer.status === 'finished' || racer.status === 'quit')) {
         // Hide the button since we can only quit once
         $('#race-controls-padding').fadeOut(globals.fadeTime);
         $('#race-quit-button-container').fadeOut(globals.fadeTime);
@@ -540,6 +544,7 @@ const participantsSetStatus = function(i, initial = false) {
         // Tell the Lua mod that we are finished with the race
         globals.modLoader.status = 'none';
         modLoader.send();
+        globals.log.info('modLoader - Sent a race status of "none", since we finished or quit.');
     }
 
     // Play a sound effect if someone quit or finished
@@ -699,6 +704,7 @@ const startCountdown = function() {
     // Tell the Lua mod that we are starting a race
     globals.modLoader.countdown = 10;
     modLoader.send();
+    globals.log.info('modLoader - Sent a countdown of 10.');
 
     // Change the functionality of the "Lobby" button in the header
     $('#header-lobby').addClass('disabled');
@@ -776,6 +782,7 @@ const countdownTick2 = function(i) {
         // Update the Lua mod with how many seconds are left until the race starts
         globals.modLoader.countdown = i;
         modLoader.send();
+        globals.log.info('modLoader - Sent a countdown of ' + i + '.');
 
         setTimeout(function() {
             countdownTick2(i - 1);
@@ -801,6 +808,7 @@ const go = function(raceID) {
     // Update the Lua mod with how many seconds are left until the race starts
     globals.modLoader.countdown = 0;
     modLoader.send();
+    globals.log.info('modLoader - Sent a countdown of 0.');
 
     // Update the text on the race controls area
     $('#race-countdown').html('<span lang="en">Go</span>!');

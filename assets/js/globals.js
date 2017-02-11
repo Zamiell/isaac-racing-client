@@ -24,7 +24,7 @@ module.exports = {
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
     defaultLogFilePath: '',
     domain: domain,
-    emoteList: null, // Set in main.js
+    emoteList: [], // Filled in main.js
     fadeTime: fadeTime,
     gameState: {
         inGame: false,

@@ -247,7 +247,7 @@ function checkOtherModsEnabled() {
     }
 
     if (foundRacingPlusMod === false) {
-        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop? If you did, double check your mods directory to make sure that Steam actually downloaded it. For more information, see the download instructions at: https://isaacracing.net/download', processExit);
+        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it. (By default, the mods directory is located at <code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code>.) For more information, see the download instructions at: https://isaacracing.net/download', processExit);
         return;
     }
 

@@ -80,6 +80,7 @@ Lang.prototype.pack.fr = {
         // Tooltips for race "Type"
         "This race will not count towards the leaderboards.": "Cette course ne comptera pas pour le classement.",
         "This race will count towards the leaderboards.": "Cette course comptera pour le classement.",
+        "No-one else can join this race.": "",
 
         // Tooltips for race "Format"
         "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",

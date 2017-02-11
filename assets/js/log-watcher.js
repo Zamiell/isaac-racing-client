@@ -146,6 +146,7 @@ const logWatcher = function(event, message) {
             let seed = m[1];
             globals.modLoader.currentSeed = seed;
             modLoader.send();
+            globals.log.info('modLoader - Sent seed.');
             raceScreen.checkReadyValid();
         } else {
             misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');

@@ -64,10 +64,10 @@ const send = function() {
         if (err) {
             globals.log.info('Error while filling up the "save.dat" file: ' + err);
 
-            // Try again in a few milliseconds
+            // Try again in 1/20 of a second
             setTimeout(function() {
                 send();
-            }, 5);
+            }, 50);
         }
     });
 };

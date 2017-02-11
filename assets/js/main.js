@@ -9,9 +9,8 @@
     - add custom type icon
         Krakenos: Zam, for custom races, do manual ready, and manual finish
         Krakenos: and don't check for blck cndl
-    - get more racing sounds from MotoRacer2 besides voice
+    - get countdown sounds from mario kart
     - add alb+b hotkey
-    - add ranked/unranked solo to type on race screen (tooltip)
     - re-add changing color on taskbar when new message
     - detect 1million%
     - make separate icons for solo races
@@ -79,11 +78,11 @@
 'use strict';
 
 // Import NPM packages
-const fs       = nodeRequire('fs');
 const path     = nodeRequire('path');
 const execSync = nodeRequire('child_process').execSync;
 const remote   = nodeRequire('electron').remote;
 const isDev    = nodeRequire('electron-is-dev');
+const fs       = nodeRequire('fs-extra');
 const tracer   = nodeRequire('tracer');
 
 // Import local modules
@@ -190,12 +189,31 @@ fs.readFile(wordListLocation, function(err, data) {
 // Get the default log file location (which is in the user's Documents directory)
 // From: https://steamcommunity.com/app/250900/discussions/0/613941122558099449/
 if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-    let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
-    let documentsPath = execSync(command, {
-        'encoding': 'utf8',
-    });
-    documentsPath = $.trim(documentsPath); // Remove the trailing newline
-    globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
+    try {
+        let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
+        let documentsPath = execSync(command, {
+            'encoding': 'utf8',
+        });
+        documentsPath = $.trim(documentsPath); // Remove the trailing newline
+        globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
+    } catch(err) {
+        // Executing "powershell.exe" can fail on some computers, so let's try using the "USERPROFILE" environment variable
+        let documentsDirNames = ['Documents', 'My Documents'];
+        let found = false;
+        for (let name of documentsDirNames) {
+            let documentsPath = path.join(process.env.USERPROFILE, name);
+            if (fs.existsSync(documentsPath)) {
+                found = true;
+                globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
+                break;
+            }
+        }
+        if (found === false) {
+            $(document).ready(function() { // We have to wait for the page to be loaded or else it won't show the error
+                misc.errorShow('Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.');
+            });
+        }
+    }
 } else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
 } else {
@@ -204,7 +222,6 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
 if (typeof settings.get('logFilePath') === 'undefined') {
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
-    globals.log.info('XXX RESET PATH XXX');
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion

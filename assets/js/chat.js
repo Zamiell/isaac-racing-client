@@ -161,6 +161,11 @@ const draw = function(room, name, message, datetime = null) {
         }
     }
 
+    // Make sure that the room still exists in the roomList
+    if (globals.roomList.hasOwnProperty(room) === false) {
+        return;
+    }
+
     // Keep track of how many lines of chat have been spoken in this room
     globals.roomList[room].chatLine++;
 
