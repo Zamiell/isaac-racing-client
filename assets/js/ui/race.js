@@ -526,9 +526,12 @@ const participantsSetStatus = function(i, initial = false) {
         placeMidRecalculateAll();
     }
 
-    // If we finished, play the sound effect that matches our place
+    // If someone finished, play the sound effect that matches their place
     // (don't play the "1st place" voice for 1 player races)
-    if (globals.raceList[globals.currentRaceID].ruleset.solo === false) {
+    if (racer.name === globals.myUsername &&
+        racer.status === 'finished' &&
+        globals.raceList[globals.currentRaceID].ruleset.solo === false) {
+
         misc.playSound('place/' + racer.place, 1800);
     }
 

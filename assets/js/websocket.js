@@ -517,8 +517,8 @@ exports.init = function(username, password, remember) {
         // Check to see if we are in this race
         if (data.id === globals.currentRaceID) {
             // Update the status of the race in the Lua mod
-            if (data.status !== 'in progress') { // Make an exception for races going from "starting" to "in progress", as the mod will deal with that manually
-                globals.modLoader.status = data.status;
+            globals.modLoader.status = data.status;
+            if (data.status !== 'in progress') { // The mod deals with going from "starting" to "in progress" itself manually
                 modLoader.send();
                 globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
             }
