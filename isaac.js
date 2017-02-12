@@ -82,6 +82,7 @@ var modsPath;
 var IsaacOpen = false;
 var IsaacPID;
 var fileSystemValid = true; // By default, we assume the user has everything set up correctly
+var steamCloud; // This will get filled in during the "checkOptionsINIForModsEnabled" function
 var secondTime = false; // We might have to do everything twice
 
 // The parent will communicate with us, telling us the path to the log file
@@ -177,18 +178,42 @@ function checkOptionsINIForModsEnabled() {
 
     // Check for "EnableMods=1" in the "options.ini" file
     let optionsFile = fs.readFileSync(optionsPath, 'utf8');
-    let match = optionsFile.match(/EnableMods=0/);
-    if (match) {
-        // Change it to 1 and rewrite the file
-        fileSystemValid = false;
-        optionsFile = optionsFile.replace('EnableMods=0', 'EnableMods=1');
-        try {
-            fs.writeFileSync(optionsPath, optionsFile, 'utf8');
-        } catch(err) {
-            process.send('error: Failed to write to the "options.ini" file: ' + err, processExit);
+    let match1 = optionsFile.match(/\bEnableMods=(\d+)\b/);
+    if (match1) {
+        let value = match1[1];
+        if (value !== '1') {
+            // Change it to 1 and rewrite the file
+            fileSystemValid = false;
+            optionsFile = optionsFile.replace('EnableMods=' + value, 'EnableMods=1');
+            try {
+                fs.writeFileSync(optionsPath, optionsFile, 'utf8');
+            } catch(err) {
+                process.send('error: Failed to write to the "options.ini" file: ' + err, processExit);
+                return;
+            }
+        }
+    } else {
+        process.send('error: Failed to parse the "options.ini" file for the "EnableMods" field.', processExit);
+        return;
+    }
+
+    // Check for "SteamCloud=1" in the "options.ini" file
+    let match2 = optionsFile.match(/\bSteamCloud=(\d+)\b/);
+    if (match2) {
+        let value = match1[1];
+        if (value === '0') {
+            steamCloud = true;
+        } else if (value === '1') {
+            steamCloud = false;
+        } else {
+            process.send('error: The "SteamCloud" field in "options.ini" is not set to either 0 or 1.', processExit);
             return;
         }
+    } else {
+        process.send('error: Failed to parse the "options.ini" file for the "SteamCloud" field.', processExit);
+        return;
     }
+
     checkOtherModsEnabled();
 }
 
@@ -292,6 +317,19 @@ function enableBossCutscenes() {
                 return;
             }
         }
+    }
+
+    checkOneMillionPercent();
+}
+
+function checkOneMillionPercent() {
+    if (steamCloud === true) {
+        // TODO
+    } else if (steamCloud === false) {
+        // TODO
+    } else {
+        process.send('error: Could not detect whether "SteamCloud" was enabled or disabled.', processExit);
+        return;
     }
 
     closeIsaac();

@@ -49,7 +49,7 @@ module.exports = [
      { "id": 104, "name": "The Parasite" }],
 
     [{ "id": 257, "name": "Fire Mind" },              // 30
-     { "id": 0,   "name": "13 luck" }],
+     { "id": 600, "name": "13 luck" }],
 
     // Custom starts (without the D6)
     [{ "id": 40,  "name": "Kamikaze!" },              // 31
