@@ -5,14 +5,6 @@
 */
 
 /*
-    Patch notes:
-    - Added global Alt+B hotkey to launch the game
-    - "Race completed" sound effect won't play for solo races
-    - Added "Custom" as a format option, where you can ready up and finish all on your own, so now you can race the vanilla game OR any mods you want on Racing+
-    - Added Alt+F hotkey for finishing (only for the "Custom" format)
-    - More countdown sounds have been added (from Mario Kart: Double Dash)
-    - You can now hover over emotes to see what they are
-
     Bugs to fix:
     - get countdown sounds from mario kart
     - re-add changing color on taskbar when new message
