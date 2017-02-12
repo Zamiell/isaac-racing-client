@@ -5,16 +5,19 @@
 */
 
 /*
+    Patch notes:
+    - Added global Alt+B hotkey to launch the game
+    - "Race completed" sound effect won't play for solo races
+    - Added "Custom" as a format option, where you can ready up and finish all on your own, so now you can race the vanilla game OR any mods you want on Racing+
+    - Added Alt+F hotkey for finishing (only for the "Custom" format)
+    - More countdown sounds have been added (from Mario Kart: Double Dash)
+    - You can now hover over emotes to see what they are
+
     Bugs to fix:
-    - add custom type icon
-        Krakenos: Zam, for custom races, do manual ready, and manual finish
-        Krakenos: and don't check for blck cndl
     - get countdown sounds from mario kart
-    - add alb+b hotkey
     - re-add changing color on taskbar when new message
     - detect 1million%
-    - make separate icons for solo races
-    - dont play race copmleted for solo races
+    - dont play race completed for solo races
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip

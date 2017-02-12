@@ -220,6 +220,8 @@ const hotkey = function(event, message) {
 
     if (message === 'ready') { // Alt + r
         $('#race-ready-checkbox').click();
+    } else if (message === 'finish') { // Alt + f
+        $('#race-finish-button').click();
     } else if (message === 'quit') { // Alt + q
         $('#race-quit-button').click();
     }

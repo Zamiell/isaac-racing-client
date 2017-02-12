@@ -297,7 +297,7 @@ function fillEmotes(message) {
     // Search through the text for each emote
     for (let i = 0; i < globals.emoteList.length; i++) {
         if (message.indexOf(globals.emoteList[i]) !== -1) {
-            let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + globals.emoteList[i] + '.png" alt="' + globals.emoteList[i] + '" />';
+            let emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + globals.emoteList[i] + '.png" title="' + globals.emoteList[i] + '" />';
             let re = new RegExp('\\b' + globals.emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
             message = message.replace(re, emoteTag);
         }

@@ -153,7 +153,7 @@ $(document).ready(function() {
             return;
         }
 
-        // Find out if we already quit this race
+        // Find out if we already finished or quit this race
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
             if (globals.myUsername === globals.raceList[globals.currentRaceID].racerList[i].name) {
                 if (globals.raceList[globals.currentRaceID].racerList[i].status !== 'racing') {
@@ -172,6 +172,44 @@ $(document).ready(function() {
         }
 
         globals.conn.send('raceQuit', {
+            'id': globals.currentRaceID,
+        });
+    });
+
+    $('#race-finish-button').click(function() {
+        if (globals.currentScreen !== 'race') {
+            return;
+        } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+            return;
+        } else if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
+            return;
+        } else if ($('#race-finish-button').is(":visible") === false) {
+            // Account for the possibility of an "Alt+F" keystroke after the race has started but before the controls are visible
+            return;
+        } else if (globals.raceList[globals.currentRaceID].ruleset.format !== 'custom') {
+            // The finish button is only for "Custom" formats (the Racing+ mod normally takes care of this automatically)
+            return;
+        }
+
+        // Find out if we already finished or quit this race
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            if (globals.myUsername === globals.raceList[globals.currentRaceID].racerList[i].name) {
+                if (globals.raceList[globals.currentRaceID].racerList[i].status !== 'racing') {
+                    return;
+                }
+                break;
+            }
+        }
+
+        // Don't allow people to spam this
+        let now = new Date().getTime();
+        if (now - globals.spamTimer < 1000) {
+            return;
+        } else {
+            globals.spamTimer = now;
+        }
+
+        globals.conn.send('raceFinish', {
             'id': globals.currentRaceID,
         });
     });
@@ -402,6 +440,7 @@ const show = function(raceID) {
         checkReadyValid(); // This will update the tooltip on what the player needs to do in order to become ready
         $('#race-countdown').fadeOut(0);
         $('#race-quit-button-container').fadeOut(0);
+        $('#race-finish-button-container').fadeOut(0);
         $('#race-controls-padding').fadeOut(0);
         $('#race-num-left-container').fadeOut(0);
 
@@ -537,9 +576,10 @@ const participantsSetStatus = function(i, initial = false) {
 
     // If we finished or quit
     if (racer.name === globals.myUsername && (racer.status === 'finished' || racer.status === 'quit')) {
-        // Hide the button since we can only quit once
+        // Hide the button since we can only finish or quit once
         $('#race-controls-padding').fadeOut(globals.fadeTime);
         $('#race-quit-button-container').fadeOut(globals.fadeTime);
+        $('#race-finish-button-container').fadeOut(globals.fadeTime);
 
         // Activate the "Lobby" button in the header
         $('#header-lobby').removeClass('disabled');
@@ -873,6 +913,9 @@ const start = function() {
         // Show the quit button
         if (alreadyFinished === false) {
             $('#race-quit-button-container').fadeIn(globals.fadeTime);
+            if (globals.raceList[globals.currentRaceID].ruleset.format === 'custom') {
+                $('#race-finish-button-container').fadeIn(globals.fadeTime);
+            }
             $('#race-controls-padding').fadeIn(globals.fadeTime);
         }
 
@@ -958,7 +1001,15 @@ const checkReadyValid = function() {
     let valid = true;
     let tooltipContent;
 
-    if (globals.gameState.inGame === false) {
+    if (globals.raceList[globals.currentRaceID].ruleset.solo === false &&
+        globals.raceList[globals.currentRaceID].racerList.length === 1) {
+
+       valid = false;
+       tooltipContent = '<span lang="en">You should wait for someone else to join this race before marking yourself as ready.</span>';
+    } else if (globals.raceList[globals.currentRaceID].ruleset.format === 'custom') {
+        // Do nothing
+        // (we want to do no validation for custom rulesets; it's all up to the players to decide when they are ready)
+    } else if (globals.gameState.inGame === false) {
         valid = false;
         tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
     } else if (globals.gameState.blckCndlOn === false) {
@@ -975,11 +1026,6 @@ const checkReadyValid = function() {
 
        valid = false;
        tooltipContent = '<span lang="en">You must be in a run with the correct seed before you can mark yourself as ready.</span>';
-   } else if (globals.raceList[globals.currentRaceID].ruleset.solo === false &&
-              globals.raceList[globals.currentRaceID].racerList.length === 1) {
-
-      valid = false;
-      tooltipContent = '<span lang="en">You should wait for someone else to join this race before marking yourself as ready.</span>';
     }
 
     if (valid === false) {

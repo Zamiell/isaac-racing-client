@@ -547,8 +547,10 @@ exports.init = function(username, password, remember) {
                     $('#race-countdown').fadeIn(globals.fadeTime);
                 });
 
-                // Play the "race completed!" sound effect
-                misc.playSound('race-completed', 1300);
+                // Play the "race completed!" sound effect (for non-solo races)
+                if (globals.raceList[globals.currentRaceID].ruleset.solo === false) {
+                    misc.playSound('race-completed', 1300);
+                }
             } else {
                 misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
             }

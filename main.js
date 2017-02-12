@@ -50,6 +50,7 @@ const isDev          = require('electron-is-dev');
 const tracer         = require('tracer');
 const Raven          = require('raven');
 const teeny          = require('teeny-conf');
+const opn            = require('opn');
 
 // Constants
 const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
@@ -209,6 +210,13 @@ function autoUpdate() {
 
 function registerKeyboardHotkeys() {
     // Register global hotkeys
+    const hotkeyIsaacLaunch = globalShortcut.register('Alt+B', function() {
+        opn('steam://rungameid/250900');
+    });
+    if (!hotkeyIsaacLaunch) {
+        log.warn('Alt+B hotkey registration failed.');
+    }
+
     const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
             let pathToFocusIsaac = path.join(__dirname, 'assets', 'programs', 'focusIsaac', 'focusIsaac.exe');
@@ -233,6 +241,13 @@ function registerKeyboardHotkeys() {
     });
     if (!hotkeyReady) {
         log.warn('Alt+R hotkey registration failed.');
+    }
+
+    const hotkeyFinish = globalShortcut.register('Alt+F', function() {
+        mainWindow.webContents.send('hotkey', 'finish');
+    });
+    if (!hotkeyFinish) {
+        log.warn('Alt+F hotkey registration failed.');
     }
 
     const hotkeyQuit = globalShortcut.register('Alt+Q', function() {

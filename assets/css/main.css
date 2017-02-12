@@ -3860,7 +3860,8 @@
     }
 
     .lobby-current-races-finished {
-        background: black;
+        background: white;
+        border: solid 1px black;
     }
 
     .lobby-current-races-type-icon {
