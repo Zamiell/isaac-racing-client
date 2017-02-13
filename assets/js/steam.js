@@ -52,27 +52,28 @@ $(document).ready(function() {
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
 const steam = function(event, message) {
-    if (typeof(message) === 'string' &&
-        (message === 'errorInit' ||
-         message.startsWith('Error: channel closed') || // "channel closed" seems to be a common error
-         message.startsWith('Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.'))) {
-
-        // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
-        misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
-        return;
-    } else if (typeof(message) === 'string' && message.startsWith('error: ')) {
-        let error = message.match(/error: (.+)/)[1];
-        misc.errorShow(error);
-        return;
-    } else if (typeof(message) === 'string') {
-        // The child process is sending us a message to log
-        globals.log.info('Steam child message: ' + message);
-    } else {
+    if (typeof(message) !== 'string') {
         // The child process is finished and has sent us the Steam-related information that we seek
         globals.steam.id = message.id;
         globals.steam.screenName = message.screenName;
         globals.steam.ticket = message.ticket;
         login();
+
+    } else if (message === 'errorInit' ||
+        message.startsWith('error: Error: channel closed') ||
+        message.startsWith('error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')) {
+
+        // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
+        misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
+
+    } else if (message.startsWith('error: ')) {
+        // This is some other uncommon error
+        let error = message.match(/error: (.+)/)[1];
+        misc.errorShow(error);
+
+    } else {
+        // The child process is sending us a message to log
+        globals.log.info('Steam child message: ' + message);
     }
 };
 ipcRenderer.on('steam', steam);
