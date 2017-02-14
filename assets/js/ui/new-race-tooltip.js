@@ -208,7 +208,11 @@ $(document).ready(function() {
     $('#new-race-starting-build').change(function() {
         // Change the displayed icon
         let newBuild = $(this).val();
-        $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + newBuild + '.png")');
+        if (newBuild.startsWith('random')) {
+            $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/random.png")');
+        } else {
+            $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + newBuild + '.png")');
+        }
     });
 
     $('#new-race-form').submit(function() {

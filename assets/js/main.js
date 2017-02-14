@@ -6,11 +6,9 @@
 
 /*
     Bugs to fix:
-    - add time to lobby for current races
-    - get countdown sounds from mario kart
-    - re-add changing color on taskbar when new message
     - detect 1million%
-    - dont play race completed for solo races
+    - add time to lobby for current races
+    - re-add changing color on taskbar when new message
 
     - clicking profile doesn't work
     - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
