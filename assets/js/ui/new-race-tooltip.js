@@ -46,7 +46,7 @@ $(document).ready(function() {
         $('#new-race-format').css('border-color', 'green');
         setTimeout(function() {
             $('#new-race-format').css('border-color', oldColor);
-        }, globals.fadeTime);
+        }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
 
         // Change the subsequent options accordingly
         let format = $('#new-race-format').val();
@@ -132,6 +132,23 @@ $(document).ready(function() {
         }
         if ($('#new-race-character').val() !== newCharacter) {
             $('#new-race-character').val(newCharacter).change();
+        }
+
+        // Show or hide the "Custom" goal
+        if (newFormat === 'custom') {
+            $('#new-race-goal-custom').fadeIn(0);
+
+            // Make the goal border flash to signify that there are new options there
+            let oldColor = $('#new-race-goal').css('border-color');
+            $('#new-race-goal').css('border-color', 'green');
+            setTimeout(function() {
+                $('#new-race-goal').css('border-color', oldColor);
+            }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
+        } else {
+            $('#new-race-goal-custom').fadeOut(0);
+            if ($('#new-race-goal').val() === 'custom') {
+                $('#new-race-goal').val('Blue Baby').change();
+            }
         }
 
         // Show or hide the character, goal, and starting build row

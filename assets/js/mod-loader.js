@@ -29,6 +29,11 @@ const send = function() {
     let startingItems = [];
     if (globals.modLoader.rFormat === 'seeded') {
         startingItems.push(21); // The Compass
+    } else if (globals.modLoader.rFormat === 'diversity') {
+        let items = globals.modLoader.seed.split(',');
+        for (let item of items) {
+            startingItems.push(parseInt(item)); // The Lua mod expects this to be a number
+        }
     }
 
     // Parse the starting build
@@ -46,7 +51,7 @@ const send = function() {
     saveDat += 'rFormat="' + globals.modLoader.rFormat + '",\n';
     saveDat += 'character="' + globals.modLoader.character + '",\n';
     saveDat += 'goal="' + globals.modLoader.goal + '",\n';
-    saveDat += 'seed="' + globals.modLoader.seed + '",\n';
+    saveDat += 'seed="' + (globals.modLoader.rFormat === 'diversity' ? '-' : globals.modLoader.seed) + '",\n';
     saveDat += 'startingItems={';
     if (startingItems.length !== 0) {
         for (let itemID of startingItems) {

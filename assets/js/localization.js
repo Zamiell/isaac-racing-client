@@ -12,9 +12,9 @@ const settings = nodeRequire('./assets/js/settings');
 const validLanguages = [
     ['en', 'english', 'English'],
     ['fr', 'french',  'Français'],
-    ['es', 'spanish', 'Español'],
-    ['ru', 'russian', 'Русский'],
-    ['it', 'italian', 'Italiano']
+    //['es', 'spanish', 'Español'],
+    //['ru', 'russian', 'Русский'],
+    //['it', 'italian', 'Italiano']
 ];
 exports.validLanguages = validLanguages;
 

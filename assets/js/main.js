@@ -6,9 +6,6 @@
 
 /*
     Bugs to fix:
-    - Fixed the Mega Blast seeded / instant start build.
-    - Added Italian translation thanks to henry_92.
-
     - add time to lobby for current races
     - get countdown sounds from mario kart
     - re-add changing color on taskbar when new message
@@ -222,6 +219,16 @@ if (typeof settings.get('logFilePath') === 'undefined') {
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
 }
+
+// Item list
+let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
+fs.readFile(itemListLocation, 'utf8', function(err, data) {
+    if (err) {
+        misc.errorShow('Failed to read the "' + itemListLocation + '" file: ' + err);
+        return;
+    }
+    globals.itemList = JSON.parse(data);
+});
 
 // We need to have a list of all of the emotes for the purposes of tab completion
 let emotePath = path.join(__dirname, 'assets', 'img', 'emotes');

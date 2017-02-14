@@ -6,6 +6,7 @@
 
 // Imports
 const execFile  = nodeRequire('child_process').execFile;
+const fs        = nodeRequire('fs-extra');
 const path      = nodeRequire('path');
 const clipboard = nodeRequire('electron').clipboard;
 const globals   = nodeRequire('./assets/js/globals');
@@ -17,6 +18,8 @@ const builds    = nodeRequire('./assets/data/builds');
 /*
     Event handlers
 */
+
+var items = {};
 
 $(document).ready(function() {
     $('#race-title').tooltipster({
@@ -83,6 +86,18 @@ $(document).ready(function() {
     });
 
     $('#race-title-build').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    });
+
+    $('#race-title-items').tooltipster({
         theme: 'tooltipster-shadow',
         delay: 0,
         functionBefore: function() {
@@ -399,6 +414,8 @@ const show = function(raceID) {
             goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.';
         } else if (goal === 'Mega Satan') {
             goalTooltipContent += 'Defeat Mega Satan (the boss behind the giant locked door).';
+        } else if (goal === 'custom') {
+            goalTooltipContent += 'You make the rules! Make sure that everyone in the race knows what to do before you start.';
         }
         goalTooltipContent += '</span>';
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
@@ -428,6 +445,39 @@ const show = function(raceID) {
         } else {
             $('#race-title-table-build').fadeOut(0);
             $('#race-title-build').fadeOut(0);
+        }
+
+        // Column 7 - Items (only available for diversity races)
+        if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
+            $('#race-title-table-items').fadeIn(0);
+            $('#race-title-items').fadeIn(0);
+
+            // The server represents the items for the diversity race through the "seed" value
+            let items = globals.raceList[globals.currentRaceID].seed.split(',');
+
+            // Show the graphic corresponding to this item on the race title table
+            $('#race-title-items-icon1').css('background-image', 'url("assets/img/items/' + items[0] + '.png")');
+            $('#race-title-items-icon2').css('background-image', 'url("assets/img/items/' + items[1] + '.png")');
+            $('#race-title-items-icon3').css('background-image', 'url("assets/img/items/' + items[2] + '.png")');
+
+            // Build the tooltip
+            let buildTooltipContent = '';
+            for (let item of items) {
+                // Pad the item ID with 0's if necessary
+                let itemIndex = item;
+                if (item <= 999) {
+                    itemIndex = ('00' + item).slice(-3);
+                }
+
+                buildTooltipContent += globals.itemList[itemIndex].name + ' + ';
+            }
+            buildTooltipContent = buildTooltipContent.slice(0, -3); // Chop off the trailing " + "
+
+            // Add the tooltip
+            $('#race-title-items').tooltipster('content', buildTooltipContent);
+        } else {
+            $('#race-title-table-items').fadeOut(0);
+            $('#race-title-items').fadeOut(0);
         }
 
         // Show the pre-start race controls

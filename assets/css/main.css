@@ -4086,6 +4086,13 @@
         bottom: 10px; /* 3em = 53px, height of Isaac = 33px, 53px - 33px = 20px, 20px / 2 = 10px */
     }
 
+    #new-race-goal {
+        -moz-transition: border 0.3s ease-in-out;
+        -webkit-transition: border 0.3s ease-in-out;
+        -ms-transition: border 0.3s ease-in-out;
+        transition: border 0.3s ease-in-out;
+    }
+
     #new-race-goal-icon {
         -moz-transition: background-image 0.3s ease-in-out;
         -webkit-transition: background-image 0.3s ease-in-out;
@@ -4233,6 +4240,35 @@
         height: 2em;
         width: 3em;
         position: absolute;
+    }
+
+    #race-title-items {
+        width: 6em;
+    }
+
+    /*
+        The next 3 are used for diversity items
+    */
+
+    .race-title-icon-container1 {
+        position: relative;
+        display: inline-block;
+        bottom: 1.35em;
+        right: 2.9em;
+    }
+
+    .race-title-icon-container2 {
+        position: relative;
+        display: inline-block;
+        bottom: 1.35em;
+        right: 1.4em;
+    }
+
+    .race-title-icon-container3 {
+        position: relative;
+        display: inline-block;
+        bottom: 1.35em;
+        right: -0.1em;
     }
 
     /*

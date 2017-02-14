@@ -32,6 +32,7 @@ module.exports = {
         hardMode: false, // The log will tell us if a run is started on a non-normal difficulty
         character: null,
     },
+    itemList: {}, // Filled in main.js
     log: null,
     lang: null, // The language switcher instance
     LuaModDir: (isDev ? LuaModDirDev : LuaModDir),
@@ -71,7 +72,7 @@ module.exports = {
 	tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
-    wordList: null, // Set in main.js
+    wordList: null, // Filled in main.js
 };
 
 /*
