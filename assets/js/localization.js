@@ -14,7 +14,9 @@ const validLanguages = [
     ['fr', 'french',  'Français'],
     ['es', 'spanish', 'Español'],
     ['ru', 'russian', 'Русский'],
+    ['it', 'italian', 'Italiano']
 ];
+exports.validLanguages = validLanguages;
 
 $(document).ready(function() {
     // Initialize the "globals.lang" variable

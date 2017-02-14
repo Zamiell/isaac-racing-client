@@ -58,5 +58,5 @@ module.exports = [
     [{ "id": 441, "name": "Mega Blast" },             // 32
      { "id": 63,  "name": "The Battery" },
      { "id": 156, "name": "Habit" },
-     { "id": 44,  "name": "Sharp Plug" }]
+     { "id": 205, "name": "Sharp Plug" }]
 ];

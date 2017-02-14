@@ -398,7 +398,7 @@ const show = function(raceID) {
         } else if (goal === 'The Lamb') {
             goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.';
         } else if (goal === 'Mega Satan') {
-            goalTooltipContent += 'Defaut Mega Satan (the boss behind the giant locked door).';
+            goalTooltipContent += 'Defeat Mega Satan (the boss behind the giant locked door).';
         }
         goalTooltipContent += '</span>';
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);

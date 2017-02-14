@@ -6,6 +6,10 @@
 
 /*
     Bugs to fix:
+    - Fixed the Mega Blast seeded / instant start build.
+    - Added Italian translation thanks to henry_92.
+
+    - add time to lobby for current races
     - get countdown sounds from mario kart
     - re-add changing color on taskbar when new message
     - detect 1million%

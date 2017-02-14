@@ -92,7 +92,7 @@ Lang.prototype.pack.zz = {
         // Tooltips for race "Goal"
         "Defeat Blue Baby (the boss of The Chest) and jump into the chest that falls down afterward.": "",
         "Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.": "",
-        "Defaut Mega Satan (the boss behind the giant locked door).": "",
+        "Defeat Mega Satan (the boss behind the giant locked door).": "",
 
         // Tooltips for race "Seed"
         "It was automatically put in your clipboard when you joined the race.": "",
@@ -171,6 +171,8 @@ Lang.prototype.pack.zz = {
         "Language": "",
         "Volume": "",
         "Test": "",
+        "Automatically enter the game with Alt+C and Alt+V (for keyboard users)": "",
+        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "",
         "Change stream URL": "",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "",
         "Enable Twitch chat bot": "",

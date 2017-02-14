@@ -5,3 +5,4 @@ Notes:
 - "finished.wav" is ripped from Final Fantasy 7.
 - "quit.wav" is ripped from Final Fantasy 8.
 - "race-created.wav" is ripped from Final Fantasy 8 (cursor move).
+- Countdown tones are from Mario Kart Wii.

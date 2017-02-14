@@ -171,6 +171,8 @@ Lang.prototype.pack.fr = {
         "Language": "Langue",
         "Volume": "Volume",
         "Test": "Test",
+        "Automatically enter the game with Alt+C and Alt+V (for keyboard users)": "",
+        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
         "Enable Twitch chat bot": "Activé le bot dans le chat Twitch",
