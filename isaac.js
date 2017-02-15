@@ -109,10 +109,12 @@ process.on('message', function(message) {
         return;
     }
 
-    // Check to see if we are in development
+    // Check to see if the mod exists
+    // (if the dev mod directory is there, just use that, even if we are in production)
     if (fs.existsSync(path.join(modsPath, racingPlusLuaModDirDev))) {
         racingPlusLuaModDir = racingPlusLuaModDirDev;
     }
+    // We check to see if the mod directory actually exists later on
 
     // Begin the work
     checkIsaacOpen();

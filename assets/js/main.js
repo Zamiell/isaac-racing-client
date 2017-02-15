@@ -6,6 +6,7 @@
 
 /*
     Bugs to fix:
+    - fix custom icon in the lobby
     - detect 1million%
     - add time to lobby for current races
     - re-add changing color on taskbar when new message

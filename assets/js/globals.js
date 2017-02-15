@@ -36,7 +36,8 @@ module.exports = {
     log: null,
     lang: null, // The language switcher instance
     LuaModDir: (isDev ? LuaModDirDev : LuaModDir),
-    modLoaderFile: null, // Used to communicate with Isaac
+    LuaModDirDev: LuaModDirDev,
+    modLoaderFile: null, // Used to communicate with Isaac, set in isaac.js
     modLoader: {
         status: 'finished',
         rType: 'unranked',

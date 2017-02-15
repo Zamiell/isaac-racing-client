@@ -201,8 +201,11 @@ $(document).ready(function() {
         } else if ($('#race-finish-button').is(":visible") === false) {
             // Account for the possibility of an "Alt+F" keystroke after the race has started but before the controls are visible
             return;
-        } else if (globals.raceList[globals.currentRaceID].ruleset.format !== 'custom') {
-            // The finish button is only for "Custom" formats (the Racing+ mod normally takes care of this automatically)
+        } else if (globals.raceList[globals.currentRaceID].ruleset.format !== 'custom' ||
+                   globals.raceList[globals.currentRaceID].ruleset.goal !== 'custom') {
+
+            // The finish button is only for "Custom" formats with "Custom" goals
+            // (the Racing+ mod normally takes care of finishing the race automatically)
             return;
         }
 
@@ -963,15 +966,19 @@ const start = function() {
         // Show the quit button
         if (alreadyFinished === false) {
             $('#race-quit-button-container').fadeIn(globals.fadeTime);
-            if (globals.raceList[globals.currentRaceID].ruleset.format === 'custom') {
+            if (globals.raceList[globals.currentRaceID].ruleset.format === 'custom' &&
+                globals.raceList[globals.currentRaceID].ruleset.goal === 'custom') {
+
                 $('#race-finish-button-container').fadeIn(globals.fadeTime);
             }
-            $('#race-controls-padding').fadeIn(globals.fadeTime);
         }
 
         // Show the number of people left in the race
         $('#race-num-left').html(numLeft + ' left');
-        $('#race-num-left-container').fadeIn(globals.fadeTime);
+        if (globals.raceList[globals.currentRaceID].ruleset.solo === false) { // In solo races, there will always be 1 person left, so showing this is redundant
+            $('#race-controls-padding').fadeIn(globals.fadeTime);
+            $('#race-num-left-container').fadeIn(globals.fadeTime);
+        }
     });
 
     // Change the table to have 6 columns instead of 2

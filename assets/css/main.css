@@ -3927,6 +3927,17 @@
         transform: scale(0.75);
     }
 
+    .lobby-current-races-custom {
+        background-image: url("../img/formats/custom.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2.1em;
+        width: 2em;
+        position: absolute;
+        transform: scale(0.75);
+    }
+
     .lobby-current-races-spacing {
         display: inline-block;
         width: 2.5em;
@@ -4287,6 +4298,10 @@
 
     #race-countdown {
         position: relative;
+    }
+
+    #race-quit-button-container {
+        padding: 0 0 0 0;
     }
 
     #race-num-left {
