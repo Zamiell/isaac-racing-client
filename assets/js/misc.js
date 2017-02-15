@@ -47,7 +47,7 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
     if (message === 'You have logged on from somewhere else, so you have been disconnected here.') {
         sendToSentry = false;
     } else if (message === 'Error: Steam initialization failed. Steam is not running.') {
-        message = 'Steam initialization failed. It appears that Steam is not running. (It is actually is running, please try restarting your computer and trying again.)';
+        message = 'Steam initialization failed. It appears that Steam is not running. (If it is running, please restart your computer and try again.)';
         sendToSentry = false;
     }
 
