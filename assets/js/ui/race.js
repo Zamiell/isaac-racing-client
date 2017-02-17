@@ -97,6 +97,20 @@ $(document).ready(function() {
         },
     });
 
+    $('#race-title-items-blind').tooltipster({
+        theme: 'tooltipster-shadow',
+        delay: 0,
+        functionBefore: function() {
+            if (globals.currentScreen === 'race') {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        contentAsHTML: true,
+        content: '<span lang="en">The three random items are not revealed until the race begins!</span>',
+    });
+
     $('#race-title-items').tooltipster({
         theme: 'tooltipster-shadow',
         delay: 0,
@@ -454,6 +468,7 @@ const show = function(raceID) {
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
             $('#race-title-table-items').fadeIn(0);
             $('#race-title-items').fadeIn(0);
+            $('#race-title-items-blind').fadeOut(0);
 
             // The server represents the items for the diversity race through the "seed" value
             let items = globals.raceList[globals.currentRaceID].seed.split(',');
@@ -478,6 +493,13 @@ const show = function(raceID) {
 
             // Add the tooltip
             $('#race-title-items').tooltipster('content', buildTooltipContent);
+
+            // Show 3 question marks as the items if the race has not begun yet
+            globals.log.info(globals.raceList[globals.currentRaceID].status);
+            if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
+                $('#race-title-items').fadeOut(0);
+                $('#race-title-items-blind').fadeIn(0);
+            }
         } else {
             $('#race-title-table-items').fadeOut(0);
             $('#race-title-items').fadeOut(0);
@@ -915,6 +937,13 @@ const go = function(raceID) {
 
     // Wait 4 seconds, then start to change the controls
     setTimeout(start, 4000);
+
+    // If this is a diversity race, show the three diversity items
+    if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
+        $('#race-title-items-blind').fadeOut(globals.fadeTime, function() {
+            $('#race-title-items').fadeIn(globals.fadeTime);
+        });
+    }
 
     // Add default values to the columns to the race participants table (defaults)
     for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {

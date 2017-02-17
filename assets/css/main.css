@@ -3935,7 +3935,6 @@
         height: 2.1em;
         width: 2em;
         position: absolute;
-        transform: scale(0.75);
     }
 
     .lobby-current-races-spacing {
@@ -4255,6 +4254,10 @@
 
     #race-title-items {
         width: 6em;
+    }
+
+    .race-title-items-icon-blind {
+        background-image: url("../img/items/questionmark.png");
     }
 
     /*

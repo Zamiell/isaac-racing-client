@@ -125,7 +125,7 @@ $(document).ready(function() {
         } else if (newFormat === 'seeded') {
             newCharacter = 'Judas';
         } else if (newFormat === 'diversity') {
-            newCharacter = 'Cain';
+            newCharacter = 'Judas';
         } else if (newFormat === 'custom') {
             // The custom format has no default character, so don't change anything
             newCharacter = $('#new-race-character').val();
@@ -280,6 +280,7 @@ $(document).ready(function() {
                 'The Lost',  // 10
                 'Lilith',    // 11
                 'Keeper',    // 12
+                'Apollyon',  // 13
             ];
             let randomNumber = misc.getRandomNumber(0, 12);
             character = characterArray[randomNumber];

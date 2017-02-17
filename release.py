@@ -46,11 +46,16 @@ if args.skipmod == False:
 
     # Draw the version number on the title menu graphic
     print('Drawing the version on the title screen...')
-    large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'magical-mystery-tour.outline-shadow.ttf'), 13)
+    large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
+    small_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 6)
     title_img = Image.open(os.path.join(title_screen_path, 'titlemenu-orig.png'))
     title_draw = ImageDraw.Draw(title_img)
     w, h = title_draw.textsize(version, font=large_font)
-    title_draw.text((68 - w / 2, 195), version, (0, 0, 0), font=large_font)
+    # Blue of Racing+ cross is (67, 93, 145)
+    # Black of title screen text is (54, 47, 45)
+    color = (67, 93, 145)
+    title_draw.text((420 - w / 2, 246), 'V', color, font=small_font)
+    title_draw.text((430 - w / 2, 240), number_version, color, font=large_font)
     title_img.save(os.path.join(title_screen_path, 'titlemenu.png'))
 
     # We are done if all we need to do is update the title screen
