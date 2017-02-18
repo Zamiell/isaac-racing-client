@@ -5,10 +5,6 @@
 */
 
 /*
-    Patch notes:
-    - Added Diversity bans, including D Infinity
-    - Added the "<3" and ":thinking:" emoticons
-
     Bugs to fix:
     - unranked solo doesn't show right icon on lobby
     - if second place by 1-2 seconds, then NO DUDE play
