@@ -5,7 +5,16 @@
 */
 
 /*
+    Patch notes:
+    - Keeper starts with the D6 and 4 coin containers (along with Greed's Gullet and Duality). (I forgot to mention this last patch. Now all the characters start with the D6, which is a nice symmetry.)
+    - Fixed the bug where the D6 doesn't get removed from the pools on Keeper.
+    - The client window is now resiable from the top (thanks @Toddlife)
+    - Fixed the bug where "1" would stay on the screen for the whole race
+
     Bugs to fix:
+    - solo races should start in 3 seconds instead of 10
+    - make it so that go and countdown are combined
+    - make it remember new race settings
     - unranked solo doesn't show right icon on lobby
     - if second place by 1-2 seconds, then NO DUDE play
     - fix cursed eye teleport at the beginning
