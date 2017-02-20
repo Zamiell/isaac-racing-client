@@ -5,10 +5,6 @@
 */
 
 /*
-    Patch notes:
-    - Keeper starts with the D6 and 4 coin containers (along with Greed's Gullet and Duality). (I forgot to mention this last patch. Now all the characters start with the D6, which is a nice symmetry.)
-    - Fixed the bug where the D6 doesn't get removed from the pools on Keeper.
-    - The client window is now resiable from the top (thanks @Toddlife)
     - Fixed the bug where "1" would stay on the screen for the whole race
 
     Bugs to fix:
@@ -68,7 +64,6 @@
     - /r should work
     - volume slider update number better
     - wait until raceList before going to lobby so that we can go directly to current race
-    - ask cmondinger if it still gets detected as a virus after log reading is removed
 
 
 
