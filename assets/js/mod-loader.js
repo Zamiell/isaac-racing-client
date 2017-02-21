@@ -60,6 +60,7 @@ const send = function() {
         saveDat = saveDat.slice(0, -1); // Chop off the trailing comma
     }
     saveDat += '},\n';
+    saveDat += 'schoolBag=' + (globals.modLoader.rFormat === 'seeded' ? 'true' : 'false') + ',\n';
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
     saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
     saveDat += '}';
@@ -77,3 +78,20 @@ const send = function() {
     });
 };
 exports.send = send;
+
+const reset = function() {
+    globals.log.info('modLoader - Reset all variables.');
+    globals.modLoader = {
+        status: 'none',
+        rType: 'unranked',
+        rFormat: 'unseeded',
+        character: 'Judas',
+        goal: 'Blue Baby',
+        seed: '-',
+        startingBuild: -1,
+        currentSeed: globals.modLoader.currentSeed, // We don't have to delete this
+        countdown: -1,
+    };
+    send();
+};
+exports.reset = reset;

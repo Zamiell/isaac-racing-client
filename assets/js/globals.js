@@ -39,14 +39,14 @@ module.exports = {
     LuaModDirDev: LuaModDirDev,
     modLoaderFile: null, // Used to communicate with Isaac, set in isaac.js
     modLoader: {
-        status: 'finished',
+        status: 'none',
         rType: 'unranked',
         rFormat: 'unseeded',
         character: 'Judas',
         goal: 'Blue Baby',
         seed: '-',
         startingBuild: -1,
-        currentSeed: '-',  // Detected through reading the log file
+        currentSeed: '-', // Detected through reading the log file
         countdown: -1,
     },
     myUsername: null,

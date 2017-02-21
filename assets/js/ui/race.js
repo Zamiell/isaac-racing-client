@@ -660,9 +660,7 @@ const participantsSetStatus = function(i, initial = false) {
         $('#header-lobby').removeClass('disabled');
 
         // Tell the Lua mod that we are finished with the race
-        globals.modLoader.status = 'none';
-        modLoader.send();
-        globals.log.info('modLoader - Sent a race status of "none", since we finished or quit.');
+        modLoader.reset();
     }
 
     // Play a sound effect if someone quit or finished

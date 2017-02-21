@@ -305,17 +305,14 @@ function fillEmotes(message) {
 
     // Special emotes that don't match the filenames
     if (message.indexOf('&lt;3') !== -1) {
-        globals.log.info('getting here 2');
         let emoteTag = '<img class="chat-emote" src="assets/img/emotes2/3.png" title="&lt;3" />';
         let re = new RegExp('&lt;3', 'g'); // "\b" is a word boundary in regex
         message = message.replace(re, emoteTag);
-        globals.log.info(message);
     }
     if (message.indexOf(':thinking:') !== -1) {
         let emoteTag = '<img class="chat-emote" src="assets/img/emotes2/thinking.svg" title=":thinking:" />';
         let re = new RegExp(':thinking:', 'g'); // "\b" is a word boundary in regex
         message = message.replace(re, emoteTag);
-        globals.log.info(message);
     }
 
     return message;

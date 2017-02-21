@@ -117,9 +117,7 @@ exports.showFromRace = function() {
         $('#lobby-chat-box-input').focus();
 
         // Update the Racing+ Lua mod
-        globals.modLoader.status = 'none';
-        modLoader.send();
-        globals.log.info('modLoader - Sent a race status of "none", since we returned to the lobby.');
+        modLoader.reset();
     });
 };
 

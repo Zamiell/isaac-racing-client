@@ -5,7 +5,16 @@
 */
 
 /*
+    Patch notes:
     - Fixed the bug where "1" would stay on the screen for the whole race
+    - School Bag will now only be enabled in seeded races. (Having School Bag at all is still experimental and not final.)
+    - Fixed the bug with School Bag where the D6 would sometimes not be fully charged when the race started
+    - Added a check so that it won't swap if you are in the "item pickup" animation; this fixes the bug where it would delete your D6 (get rekt Dea1h)
+      - If you swap at the exact time that you pickup a new active item, the game will crash, so ummm don't do that because I don't know how to fix that
+    - Finishing/quitting a race will now automatically reset your save.dat file to defaults, this will help in cleaning up post-race related artifacts
+    - Added a new file for diversity documentation
+    - Fixed the icons for A Dollar, A Quarter, and Money Equals Power in diversity races
+    - It is no longer possible to start with Dad's Lost Coin or Moldy Bread in diversity races
 
     Bugs to fix:
     - solo races should start in 3 seconds instead of 10
@@ -13,9 +22,6 @@
     - make it remember new race settings
     - unranked solo doesn't show right icon on lobby
     - if second place by 1-2 seconds, then NO DUDE play
-    - fix cursed eye teleport at the beginning
-    - quarter icon is fucked up
-    - take out moldy bread
     - fix custom icon in the lobby
     - detect 1million%
     - add time to lobby for current races
