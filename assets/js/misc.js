@@ -147,14 +147,12 @@ exports.playSound = function(path, exclusive = false) {
     // Sometimes this can give "net::ERR_REQUEST_RANGE_NOT_SATISFIABLE" for some reason
     // (might be related to having multiple Electron apps trying to play the same sound at the same time)
     let fullPath = 'assets/sounds/' + path + '.mp3';
-    try {
-        let audio = new Audio(fullPath);
-        audio.volume = volume;
-        audio.play();
-        globals.log.info('Played "' + fullPath + '".');
-    } catch(err) {
+    let audio = new Audio(fullPath);
+    audio.volume = volume;
+    audio.play().catch(function (err) {
         globals.log.info('Failed to play "' + fullPath + '":', err);
-    }
+    });
+    globals.log.info('Played "' + fullPath + '".');
 };
 
 exports.findAjaxError = function(jqXHR) {

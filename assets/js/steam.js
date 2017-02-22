@@ -42,7 +42,7 @@ $(document).ready(function() {
         });
 
         // Automatically log in with account #1
-        $('#title-choose-1').click();
+        //$('#title-choose-1').click();
     } else {
         // Tell the main process to start the child process that will initialize Greenworks
         // That process will get our Steam ID, Steam screen name, and authentication ticket

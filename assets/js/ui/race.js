@@ -502,6 +502,7 @@ const show = function(raceID) {
             }
         } else {
             $('#race-title-table-items').fadeOut(0);
+            $('#race-title-items-blind').fadeOut(0);
             $('#race-title-items').fadeOut(0);
         }
 

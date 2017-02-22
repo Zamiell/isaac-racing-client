@@ -5,74 +5,69 @@
 */
 
 /*
-    Patch notes:
-    - Completely rewrote the co-op baby detection, thanks to Inschato
-        - Now when you spawn a baby, it will:
-            1) play AnimateSad
-            2) automatically kill the baby
-            3) and delete all item pedestals in the room
-        - This fixes the bug where it would crash sometimes when co-op babies spawned
-        - This also fixes the bug where trying to skip cutscenes would damage you and/or kill you (get rekt Barry)
-    - Solo races now start in 3 seconds instead of 10 (if this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game)
-    - Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers
-    - Fixed a bug where race stuff would stay on the screen after you quit the Racing+ client
 
-    Bugs to fix:
-    - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
-    - solo races should start in 3 seconds instead of 10
-    - make it so that go and countdown are combined
-    - make it remember new race settings
-    - unranked solo doesn't show right icon on lobby
-    - fix custom icon in the lobby
-    - detect 1million%
-    - add time to lobby for current races
-    - make spacing slightly smaller for Type and Format on lobby
-    - look at sed screenshot, racer is cut off at the top
+Patch notes:
+- Pressing the reset button on Eden now instantly kills her. (It is not possible to fix the resetting bug in a proper way.)
+- There will no longer be sound notifications for people starting solo races.
+- There will no longer be text notifications for people starting solo races.
+- There will no longer be text notifications for test accounts connecting or disconnecting.
+- Fixed the bug where the Diversity question marks would stay on the screen in future races. (Thanks Birdie0)
 
-    - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
-        (probably have to reinit tooltipster every time on enter lobby from race function)
-    - error while recieving PM during tab transition
-    - clicking profile doesn't work
-    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
-    - if second place by 1-2 seconds, then NO DUDE play
-    - re-add changing color on taskbar when new message
-    - add health column
-    - server should remember build # and offer no repeats for seeded races
-    - implement names turning red when left
-    - pms are broken
-    - !entrants command for twitch bot
-    - !left command for twitch bot
+Bugs to fix:
+- add tooltips to new race tooltip for all the things
+- "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
+- make it remember new race settings
+- unranked solo doesn't show right icon on lobby
+- fix custom icon in the lobby
+- detect 1million%
+- add time to lobby for current races
+- make spacing slightly smaller for Type and Format on lobby
+- look at sed screenshot, racer is cut off at the top
 
-    Features to add:
-    - test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
-    - achievements
-    - discord integration
-    - show running time on the lobby of a running race
-    - automatically sort race table when people move places
-    - turn different color in lobby when in a race
-    - add stream to chat map
-    - update columns for race:
-        - time offset
-        - fill in items (should also show seed on this screen)
-    - /shame - Shame on those who haven't readied up.
-    - "/msg invadertim" shouldn't send to server if he is offline
-    - "/msg invadertim" should be made to be the right case (on the server)
-    - tab complete for chat
-    - /r should work
-    - volume slider update number better
-    - wait until raceList before going to lobby so that we can go directly to current race
+- tooltip for "Entrants" row of lobby gets deleted when coming back from that race
+    (probably have to reinit tooltipster every time on enter lobby from race function)
+- error while recieving PM during tab transition
+- clicking profile doesn't work
+- clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
+- if second place by 1-2 seconds, then NO DUDE play
+- re-add changing color on taskbar when new message
+- add health column
+- server should remember build # and offer no repeats for seeded races
+- implement names turning red when left
+- pms are broken
+- !entrants command for twitch bot
+- !left command for twitch bot
+
+Features to add:
+- test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
+- achievements
+- discord integration
+- show running time on the lobby of a running race
+- automatically sort race table when people move places
+- turn different color in lobby when in a race
+- add stream to chat map
+- update columns for race:
+    - time offset
+    - fill in items (should also show seed on this screen)
+- /shame - Shame on those who haven't readied up.
+- "/msg invadertim" shouldn't send to server if he is offline
+- "/msg invadertim" should be made to be the right case (on the server)
+- tab complete for chat
+- /r should work
+- volume slider update number better
+- wait until raceList before going to lobby so that we can go directly to current race
 
 
 
-    Features to add (low priority):
-    - make UI expand horizontally properly
-    - implement <3 emote (can't have < or > in filenames so it requires custom code)
-    - add items + date to "Top 10 Unseeded Times" leaderboard
+Features to add (low priority):
+- make UI expand horizontally properly
+- implement <3 emote (can't have < or > in filenames so it requires custom code)
+- add items + date to "Top 10 Unseeded Times" leaderboard
 
-    Bugs to fix (low priority):
-    - french race tables rows are not confined to 1 line, so they look bad
-    - Personnage (french) is too close to character in new-race tooltip
-    - horizontal scroll bar appears when resizing smaller
+Bugs to fix (low priority):
+- french race tables rows are not confined to 1 line, so they look bad
+- Personnage (french) is too close to character in new-race tooltip
+- horizontal scroll bar appears when resizing smaller
 
 */
 

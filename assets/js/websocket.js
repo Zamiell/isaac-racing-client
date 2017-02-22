@@ -240,6 +240,10 @@ exports.init = function(username, password, remember) {
 
         // Send a chat notification
         if (data.room === 'lobby') {
+            if (data.user.name.startsWith('TestAccount')) {
+                return; // Don't send notifications for test accounts connecting
+            }
+
             let message = data.user.name + ' has connected.';
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
@@ -265,6 +269,10 @@ exports.init = function(username, password, remember) {
 
         // Send a chat notification
         if (data.room === 'lobby') {
+            if (data.user.name.startsWith('TestAccount')) {
+                return; // Don't send notifications for test accounts disconnecting
+            }
+
             let message = data.name + ' has disconnected.';
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
@@ -359,7 +367,7 @@ exports.init = function(username, password, remember) {
         // Check to see if we created this race
         if (data.captain === globals.myUsername) {
             raceScreen.show(data.id);
-        } else {
+        } else if (data.ruleset.solo === false) { // Don't send notifications for solo races
             // Send a chat notification if we did not create this race
             let message = data.captain + ' has started a new race.';
             chat.draw('lobby', '!server', message);
@@ -375,7 +383,7 @@ exports.init = function(username, password, remember) {
         } else if (globals.currentScreen === 'race' && globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
             playSound = true;
         }
-        if (playSound) {
+        if (playSound && data.ruleset.solo === false) { // Don't play sounds for solo races
             misc.playSound('race-created');
         }
     }
