@@ -269,7 +269,7 @@ exports.init = function(username, password, remember) {
 
         // Send a chat notification
         if (data.room === 'lobby') {
-            if (data.user.name.startsWith('TestAccount')) {
+            if (data.name.startsWith('TestAccount')) {
                 return; // Don't send notifications for test accounts disconnecting
             }
 
