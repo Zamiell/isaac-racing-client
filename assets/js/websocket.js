@@ -539,7 +539,9 @@ exports.init = function(username, password, remember) {
                 // Remove the race controls
                 $('#race-quit-button-container').fadeOut(globals.fadeTime);
                 $('#race-controls-padding').fadeOut(globals.fadeTime);
+                globals.log.info('getting here 1');
                 $('#race-num-left-container').fadeOut(globals.fadeTime, function() {
+                    globals.log.info('getting here 2');
                     $('#race-countdown').css('font-size', '1.75em');
                     $('#race-countdown').css('bottom', '0.25em');
                     $('#race-countdown').css('color', '#e89980');
@@ -547,7 +549,7 @@ exports.init = function(username, password, remember) {
                     $('#race-countdown').fadeIn(globals.fadeTime);
                 });
 
-                // Play the "race completed!" sound effect (for non-solo races)
+                // Play the "race completed!" sound effect (for multiplayer races)
                 if (globals.raceList[globals.currentRaceID].ruleset.solo === false) {
                     misc.playSound('race-completed', 1300);
                 }
@@ -643,23 +645,21 @@ exports.init = function(username, password, remember) {
         // Keep track of when the race starts
         globals.raceList[globals.currentRaceID].datetimeStarted = data.time;
 
-        // Schedule the countdown, which starts at 5
+        // Schedule the countdown, which will start roughly 5 seconds from now
+        // (on solo races, the countdown starts immediately)
         let now = new Date().getTime();
-        let timeToStartCountdown = data.time - now - globals.timeOffset - 5000 - globals.fadeTime;
-        setTimeout(function() {
-            raceScreen.countdownTick(5);
-        }, timeToStartCountdown);
-
-        // Schedule the in-game countdown via the Lua mod (we need to do it a bit sooner because there is no fade in on the numbers)
-        setTimeout(function() {
-            raceScreen.countdownTick2(5);
-        }, timeToStartCountdown + globals.fadeTime);
-
-        // Schedule the "Go!" part (done separately to be more accurate)
-        let timeToStartRace = data.time - now - globals.timeOffset;
-        setTimeout(function() {
-            raceScreen.go(globals.currentRaceID); // Send it the current race ID in case it changes in the meantime
-        }, timeToStartRace);
+        let timeToStartCountdown = data.time - now - globals.timeOffset - globals.fadeTime;
+        if (globals.raceList[globals.currentRaceID].ruleset.solo) {
+            timeToStartCountdown -= 3000;
+            setTimeout(function() {
+                raceScreen.countdownTick(3);
+            }, timeToStartCountdown);
+        } else {
+            timeToStartCountdown -= 5000;
+            setTimeout(function() {
+                raceScreen.countdownTick(5);
+            }, timeToStartCountdown);
+        }
     }
 
     globals.conn.on('racerSetFloor', connRacerSetFloor);

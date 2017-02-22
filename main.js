@@ -4,15 +4,21 @@
     (main process)
 */
 
-// Log file location:
-// %APPDATA%\..\Local\Programs\Racing+.log
-// Log file location (for copy pasting into Discord):
-// %APPDATA%\\..\Local\Programs\Racing+.log
+/*
+
+Send me your Isaac log.txt file, which is located here:
+```
+C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+\log.txt
+```
+And send me your Racing+ log file, which is located here:
+```
+C:\Users\james\AppData\Local\Programs\Racing+.log
+```
+
+*/
 
 // Settings file location:
-// %APPDATA%\..\Local\Programs\settings.json
-// Settings file location (for copy pasting into Discord):
-// %APPDATA%\..\Local\Programs\settings.json
+// C:\Users\james\AppData\Local\Programs\settings.json
 
 // Build:
 // npm run dist --python="C:\Python27\python.exe"

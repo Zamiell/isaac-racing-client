@@ -640,6 +640,21 @@ const participantsSetStatus = function(i, initial = false) {
         placeMidRecalculateAll();
     }
 
+    // Find out the number of people left in the race
+    let numLeft = 0;
+    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        let theirStatus = globals.raceList[globals.currentRaceID].racerList[i].status;
+        if (theirStatus === 'racing') {
+            numLeft++;
+        }
+    }
+    $('#race-num-left').html(numLeft + ' left');
+    if (racer.status === 'finished' || racer.status === 'quit' || racer.status === 'disqualified') {
+        if (initial === false) {
+            globals.log.info('There are', numLeft, 'people left in race:', globals.currentRaceID);
+        }
+    }
+
     // If someone finished, play the sound effect that matches their place
     // (don't play the "1st place" voice for 1 player races)
     if (racer.name === globals.myUsername &&
@@ -652,9 +667,15 @@ const participantsSetStatus = function(i, initial = false) {
     // If we finished or quit
     if (racer.name === globals.myUsername && (racer.status === 'finished' || racer.status === 'quit')) {
         // Hide the button since we can only finish or quit once
-        $('#race-controls-padding').fadeOut(globals.fadeTime);
-        $('#race-quit-button-container').fadeOut(globals.fadeTime);
-        $('#race-finish-button-container').fadeOut(globals.fadeTime);
+        if (numLeft === 0) {
+            $('#race-controls-padding').fadeOut(0); // If we don't fade out instantly, there will be a graphical glitch with the "Race completed!" fade in
+            $('#race-quit-button-container').fadeOut(0);
+            $('#race-finish-button-container').fadeOut(0);
+        } else {
+            $('#race-controls-padding').fadeOut(globals.fadeTime);
+            $('#race-quit-button-container').fadeOut(globals.fadeTime);
+            $('#race-finish-button-container').fadeOut(globals.fadeTime);
+        }
 
         // Activate the "Lobby" button in the header
         $('#header-lobby').removeClass('disabled');
@@ -669,21 +690,6 @@ const participantsSetStatus = function(i, initial = false) {
             misc.playSound('finished');
         } else if (racer.status === 'quit') {
             misc.playSound('quit');
-        }
-    }
-
-    // Find out the number of people left in the race
-    let numLeft = 0;
-    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        let theirStatus = globals.raceList[globals.currentRaceID].racerList[i].status;
-        if (theirStatus === 'racing') {
-            numLeft++;
-        }
-    }
-    $('#race-num-left').html(numLeft + ' left');
-    if (racer.status === 'finished' || racer.status === 'quit' || racer.status === 'disqualified') {
-        if (initial === false) {
-            globals.log.info('There are', numLeft, 'people left in race:', globals.currentRaceID);
         }
     }
 };
@@ -814,25 +820,32 @@ const startCountdown = function() {
         return;
     }
 
-    // Play the "Let's Go" sound effect
-    misc.playSound('lets-go');
-
-    // Tell the Lua mod that we are starting a race
-    globals.modLoader.countdown = 10;
-    modLoader.send();
-    globals.log.info('modLoader - Sent a countdown of 10.');
-
     // Change the functionality of the "Lobby" button in the header
     $('#header-lobby').addClass('disabled');
 
-    // Show the countdown
-    $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
-        $('#race-countdown').css('font-size', '1.75em');
-        $('#race-countdown').css('bottom', '0.25em');
-        $('#race-countdown').css('color', '#e89980');
-        $('#race-countdown').html('<span lang="en">Race starting in 10 seconds!</span>');
-        $('#race-countdown').fadeIn(globals.fadeTime);
-    });
+    if (globals.raceList[globals.currentRaceID].ruleset.solo) {
+        // Show the countdown instantly without any fade
+        $('#race-ready-checkbox-container').fadeOut(0);
+        $('#race-countdown').html('');
+        $('#race-countdown').fadeIn(0);
+    } else {
+        // Play the "Let's Go" sound effect
+        misc.playSound('lets-go');
+
+        // Tell the Lua mod that we are starting a race
+        globals.modLoader.countdown = 10;
+        modLoader.send();
+        globals.log.info('modLoader - Sent a countdown of 10.');
+
+        // Show the countdown
+        $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
+            $('#race-countdown').css('font-size', '1.75em');
+            $('#race-countdown').css('bottom', '0.25em');
+            $('#race-countdown').css('color', '#e89980');
+            $('#race-countdown').html('<span lang="en">Race starting in 10 seconds!</span>');
+            $('#race-countdown').fadeIn(globals.fadeTime);
+        });
+    }
 };
 exports.startCountdown = startCountdown;
 
@@ -850,114 +863,78 @@ const countdownTick = function(i) {
         return;
     }
 
+    // Schedule the next tick
+    if (i >= 0) {
+        setTimeout(function() {
+            countdownTick(i - 1);
+        }, 1000);
+    } else {
+        return;
+    }
+
+    // Update the Lua mod with how many seconds are left until the race starts
+    setTimeout(function() {
+        globals.modLoader.countdown = i;
+        modLoader.send();
+        globals.log.info('modLoader - Sent a countdown of ' + i + '.');
+    }, globals.fadeTime);
+
     if (i > 0) {
-        // Change the number on the race controls area
+        // Change the number on the race controls area (5, 4, 3, 2, 1)
         $('#race-countdown').fadeOut(globals.fadeTime, function() {
             $('#race-countdown').css('font-size', '2.5em');
             $('#race-countdown').css('bottom', '0.375em');
             $('#race-countdown').css('color', 'red');
             $('#race-countdown').html(i);
             $('#race-countdown').fadeIn(globals.fadeTime);
-            setTimeout(function() {
-                // Focus the game with 3 seconds remaining on the countdown
-                if (i === 3 && process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-                    let command = path.join(__dirname, '/assets/programs/focusIsaac/focusIsaac.exe');
-                    execFile(command);
-                }
 
-                // Play the sound effect associated with the final 3 seconds
-                if (i === 3 || i === 2 || i === 1) {
-                    misc.playSound(i);
-                }
-            }, globals.fadeTime / 2);
+            // Focus the game with 3 seconds remaining on the countdown
+            if (i === 3 && process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+                let command = path.join(__dirname, '/assets/programs/focusIsaac/focusIsaac.exe');
+                execFile(command);
+            }
+
+            // Play the sound effect associated with the final 3 seconds
+            if (i === 3 || i === 2 || i === 1) {
+                misc.playSound(i);
+            }
         });
-
+    } else if (i === 0) {
         setTimeout(function() {
-            countdownTick(i - 1);
-        }, 1000);
+            // Update the text to "Go!" on the race controls area
+            $('#race-countdown').html('<span lang="en">Go</span>!');
+            $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
+
+            // Play the "Go" sound effect
+            misc.playSound('go');
+
+            // Wait 4 seconds, then start to change the controls
+            setTimeout(start, 4000);
+
+            // If this is a diversity race, show the three diversity items
+            if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
+                $('#race-title-items-blind').fadeOut(globals.fadeTime, function() {
+                    $('#race-title-items').fadeIn(globals.fadeTime);
+                });
+            }
+
+            // Add default values to the columns to the race participants table (defaults)
+            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+                globals.raceList[globals.currentRaceID].racerList[i].status = 'racing';
+                globals.raceList[globals.currentRaceID].racerList[i].place = 0;
+                globals.raceList[globals.currentRaceID].racerList[i].placeMid = 1;
+
+                let racerName = globals.raceList[globals.currentRaceID].racerList[i].name;
+                let statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
+                $('#race-participants-table-' + racerName + '-status').html(statusDiv);
+                $('#race-participants-table-' + racerName + '-item').html('-');
+                $('#race-participants-table-' + racerName + '-time').html('-');
+                $('#race-participants-table-' + racerName + '-offset').html('-');
+            }
+        }, globals.fadeTime);
     }
 };
 exports.countdownTick = countdownTick;
-
-// This is only updating the Lua mod; it is on a slight offset to account for lag
-const countdownTick2 = function(i) {
-    if (globals.currentScreen === 'transition') {
-        // Come back when the current transition finishes
-        setTimeout(function() {
-            countdownTick();
-        }, globals.fadeTime + 5); // 5 milliseconds of leeway
-        return;
-    }
-
-    // Don't do anything if we are not on the race screen
-    if (globals.currentScreen !== 'race') {
-        return;
-    }
-
-    if (i > 0) {
-        // Update the Lua mod with how many seconds are left until the race starts
-        globals.modLoader.countdown = i;
-        modLoader.send();
-        globals.log.info('modLoader - Sent a countdown of ' + i + '.');
-
-        setTimeout(function() {
-            countdownTick2(i - 1);
-        }, 1000);
-    }
-};
-exports.countdownTick2 = countdownTick2;
-
-const go = function(raceID) {
-    if (globals.currentScreen === 'transition') {
-        // Come back when the current transition finishes
-        setTimeout(function() {
-            go();
-        }, globals.fadeTime + 5); // 5 milliseconds of leeway
-        return;
-    }
-
-    // Don't do anything if we are not on the race screen or we are in a different race
-    if (globals.currentScreen !== 'race' || globals.currentRaceID !== raceID) {
-        return;
-    }
-
-    // Update the Lua mod with how many seconds are left until the race starts
-    globals.modLoader.countdown = 0;
-    modLoader.send();
-    globals.log.info('modLoader - Sent a countdown of 0.');
-
-    // Update the text on the race controls area
-    $('#race-countdown').html('<span lang="en">Go</span>!');
-    $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
-
-    // Play the "Go" sound effect
-    misc.playSound('go');
-
-    // Wait 4 seconds, then start to change the controls
-    setTimeout(start, 4000);
-
-    // If this is a diversity race, show the three diversity items
-    if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
-        $('#race-title-items-blind').fadeOut(globals.fadeTime, function() {
-            $('#race-title-items').fadeIn(globals.fadeTime);
-        });
-    }
-
-    // Add default values to the columns to the race participants table (defaults)
-    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        globals.raceList[globals.currentRaceID].racerList[i].status = 'racing';
-        globals.raceList[globals.currentRaceID].racerList[i].place = 0;
-        globals.raceList[globals.currentRaceID].racerList[i].placeMid = 1;
-
-        let racerName = globals.raceList[globals.currentRaceID].racerList[i].name;
-        let statusDiv = '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
-        $('#race-participants-table-' + racerName + '-status').html(statusDiv);
-        $('#race-participants-table-' + racerName + '-item').html('-');
-        $('#race-participants-table-' + racerName + '-time').html('-');
-        $('#race-participants-table-' + racerName + '-offset').html('-');
-    }
-};
-exports.go = go;
 
 const start = function() {
     // Don't do anything if we are not on the race screen

@@ -6,51 +6,42 @@
 
 /*
     Patch notes:
-    - Fixed the bug where "1" would stay on the screen for the whole race
-    - School Bag will now only be enabled in seeded races. (Having School Bag at all is still experimental and not final.)
-    - Fixed the bug with School Bag where the D6 would sometimes not be fully charged when the race started
-    - Added a check so that it won't swap if you are in the "item pickup" animation; this fixes the bug where it would delete your D6 (get rekt Dea1h)
-      - If you swap at the exact time that you pickup a new active item, the game will crash, so ummm don't do that because I don't know how to fix that
-    - Finishing/quitting a race will now automatically reset your save.dat file to defaults, this will help in cleaning up post-race related artifacts
-    - Added a new file for diversity documentation
-    - Fixed the icons for A Dollar, A Quarter, and Money Equals Power in diversity races
-    - It is no longer possible to start with Dad's Lost Coin or Moldy Bread in diversity races
+    - Completely rewrote the co-op baby detection, thanks to Inschato
+        - Now when you spawn a baby, it will:
+            1) play AnimateSad
+            2) automatically kill the baby
+            3) and delete all item pedestals in the room
+        - This fixes the bug where it would crash sometimes when co-op babies spawned
+        - This also fixes the bug where trying to skip cutscenes would damage you and/or kill you (get rekt Barry)
+    - Solo races now start in 3 seconds instead of 10 (if this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game)
+    - Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers
+    - Fixed a bug where race stuff would stay on the screen after you quit the Racing+ client
 
     Bugs to fix:
+    - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
     - solo races should start in 3 seconds instead of 10
     - make it so that go and countdown are combined
     - make it remember new race settings
     - unranked solo doesn't show right icon on lobby
-    - if second place by 1-2 seconds, then NO DUDE play
     - fix custom icon in the lobby
     - detect 1million%
     - add time to lobby for current races
-    - re-add changing color on taskbar when new message
-
-    - clicking profile doesn't work
-    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
-
-    - add health column
-    - server should remember build # and offer no repeats for seeded races
-    - don't show "1 left" in solo race
-
-    - implement names turning red when left
-
-    - pms are broken
-    - tab complete doesn't find zamiel2?
-    - !entrants command for twitch bot
-    - !left command for twitch bot
+    - make spacing slightly smaller for Type and Format on lobby
+    - look at sed screenshot, racer is cut off at the top
 
     - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
         (probably have to reinit tooltipster every time on enter lobby from race function)
-
     - error while recieving PM during tab transition
-
-    - make spacing slightly smaller for Type and Format on lobby
-
-    - look at sed screenshot, racer is cut off at the top
-
-
+    - clicking profile doesn't work
+    - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
+    - if second place by 1-2 seconds, then NO DUDE play
+    - re-add changing color on taskbar when new message
+    - add health column
+    - server should remember build # and offer no repeats for seeded races
+    - implement names turning red when left
+    - pms are broken
+    - !entrants command for twitch bot
+    - !left command for twitch bot
 
     Features to add:
     - test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
