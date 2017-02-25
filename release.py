@@ -10,6 +10,7 @@ import dotenv
 import fileinput
 import re
 import shutil
+import psutil
 from PIL import Image, ImageFont, ImageDraw
 
 # Configuration
@@ -85,6 +86,12 @@ if args.skipmod == False:
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([path_to_uploader]) # Popen will run it in the background
+
+# Close the program if it is running
+# (having it open can cause corrupted ASAR archives)
+for process in psutil.process_iter():
+    if process.name() == 'electron.exe':
+        process.kill()
 
 if args.github:
     # Commit to the client repository

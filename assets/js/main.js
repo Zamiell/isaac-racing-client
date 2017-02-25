@@ -6,12 +6,8 @@
 
 /*
 
-Patch notes:
-- Pressing the reset button on Eden now instantly kills her. (It is not possible to fix the resetting bug in a proper way.)
-- There will no longer be sound notifications for people starting solo races.
-- There will no longer be text notifications for people starting solo races.
-- There will no longer be text notifications for test accounts connecting or disconnecting.
-- Fixed the bug where the Diversity question marks would stay on the screen in future races. (Thanks Birdie0)
+Patch notes for v?:
+
 
 Bugs to fix:
 - add tooltips to new race tooltip for all the things
