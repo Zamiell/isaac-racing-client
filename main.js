@@ -45,8 +45,8 @@ const app            = electron.app;
 const BrowserWindow  = electron.BrowserWindow;
 const ipcMain        = electron.ipcMain;
 const globalShortcut = electron.globalShortcut;
-const autoUpdater    = require('electron-auto-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
-                                                                     // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
+const autoUpdater    = require('electron-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
+                                                                // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
 const execFile       = require('child_process').execFile;
 const fork           = require('child_process').fork;
 const fs             = require('fs-extra');

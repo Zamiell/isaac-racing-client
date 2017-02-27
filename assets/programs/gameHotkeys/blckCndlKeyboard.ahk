@@ -34,14 +34,15 @@ Sleep %Delay2%
 Send {Enter down}
 Sleep %Delay1%
 Send {Enter up}
-Sleep, %Delay2%
+Sleep %Delay2%
 
 ; Restore the clipboard
 clipboard = %old_clipboard%
 
 ; Enter the game
-Sleep, %Delay1%
+Sleep %Delay1%
+Sleep %Delay1%
 Send {Enter down}
-Sleep, %Delay1%
+Sleep %Delay1%
 Send {Enter up}
-Sleep, %Delay2%
+Sleep %Delay2%
