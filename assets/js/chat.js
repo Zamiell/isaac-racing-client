@@ -133,7 +133,7 @@ exports.send = function(destination) {
     }
 };
 
-const draw = function(room, name, message, datetime = null) {
+const draw = function(room, name, message, datetime = null, discord = false) {
     // Check for the existence of a PM
     let privateMessage = false;
     if (room === 'PM-to') {
@@ -208,6 +208,9 @@ const draw = function(room, name, message, datetime = null) {
     let chatLine = '<div id="' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '" class="hidden">';
     chatLine += '<span id="' + room + '-chat-text-line-' + globals.roomList[room].chatLine + '-header">';
     chatLine += '[' + hours + ':' + minutes + '] &nbsp; ';
+    if (discord) {
+        chatLine += '<span class="chat-discord">[Discord]</span> ';
+    }
     if (privateMessage) {
         chatLine += '<span class="chat-pm">[PM ' + privateMessage + ' <strong class="chat-pm">' + name + '</strong>]</span> &nbsp; ';
     } else if (name === '!server') {

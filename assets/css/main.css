@@ -3806,6 +3806,10 @@
         color: blue;
     }
 
+    .chat-discord {
+        color: blue;
+    }
+
     .chat-text {
         overflow-y: auto;
         overflow-wrap: break-word;

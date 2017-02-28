@@ -6,16 +6,13 @@
 
 /*
 
-Patch notes for v0.2.50:
-- The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the School Bag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.) PogCena
-- Holding R on Eden no longer kills her (since they fixed it in the vanilla game).
-- Fixed the crash that occured with School Bag when you swapped at the same time as picking up a new item.
-- You will no longer recieve the Polaroid and get teleported to Womb 1 if you arrive at the Void floor (since they fixed the instant Void teleport).
-- Removed the use animation from Telepills, because it is pointless.
-- Fixed a Basement/Cellar room that had a chance to spawn empty because of stacked entities.
-- Fixed the Strength card on Keeper, due to some new Lua goodies delivered in the last patch. Note that it will only permanently give you a coin container if you are at 0 or less base coin containers.
-- Added two new graphics for save files (fully unlocked and not fully unlocked).
-- The Alt+C and Alt+V hotkeys should work more consistently now.
+Patch notes for v0.2.54:
+- Fast-clear now works with puzzle rooms. PogCena
+- The timer that appears during races will now use real time instead of in-game frames, so it will be a lot more accurate. (This is now possible due to a change in the last patch.)
+- Fixed a Larry Jr. room that should not have an entrance from the top. (Thanks BMZ_Loop)
+- Added better save file graphics, thanks to Gromfalloon.
+- Updated the FAQ at: https://isaacracing.net/info
+
 
 
 Bugs to fix:

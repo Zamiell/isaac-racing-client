@@ -292,6 +292,21 @@ exports.init = function(username, password, remember) {
         chat.draw('PM-from', data.name, data.message);
     });
 
+    // Used when someone types in the Discord server
+    globals.conn.on('discordMessage', discordMessage);
+    function discordMessage(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(function() {
+                adminMessage(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+            return;
+        }
+
+        // Send it to the lobby
+        chat.draw('lobby', data.name, data.message, null, true);
+    }
+
     /*
         Race command handlers
     */
