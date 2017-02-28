@@ -6,6 +6,8 @@ Download & Additional Information
 
 Please visit [the website for Racing+](https://isaacracing.net/).
 
+<br />
+
 
 
 Description
@@ -17,12 +19,16 @@ The client is written with [Electron](http://electron.atom.io/) and uses WebSock
 
 You may also be interested in [the Lua mod repository](https://github.com/Zamiell/isaac-racing-mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
 
+<br />
+
 
 
 Run
 ---
 
-* Install node/npm. (Using [nvm](https://github.com/creationix/nvm) to do this is recommended.)
+* Install [node](https://nodejs.org/en/download/).
+* If you are on Windows, install [Git](https://git-scm.com/download/win).
+* If you are on Windows, `npm install --global windows-build-tools`
 * `git clone https://github.com/Zamiell/isaac-racing-client.git`
 * `cd isaac-racing-client`
 * `npm install --ignore-scripts git+https://github.com/greenheartgames/greenworks.git` (We don't want to build this yet because we have to copy over the Steam SDK.)
@@ -33,6 +39,8 @@ Run
 * `node_modules/.bin/electron-rebuild`
 * `npm start`
 
+<br />
+
 
 
 Compile / Package
@@ -40,3 +48,5 @@ Compile / Package
 
 * Install Python 2 (you need to be able to run the `python` command).
 * `npm run dist --python="C:\Python27\python27.exe"`
+
+<br />

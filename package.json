@@ -42,7 +42,7 @@
     "tracer": "^0.8.7"
   },
   "devDependencies": {
-    "electron": "^1.4.15",
+    "electron": "^1.6.1",
     "electron-builder": "^13.11.1",
     "electron-rebuild": "^1.5.7"
   }

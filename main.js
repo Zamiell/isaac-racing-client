@@ -29,11 +29,6 @@ C:\Users\james\AppData\Local\Programs\Racing+.log
 // (ncu updates the package.json, so blow away everything and reinstall)
 // ncu -a && rm -rf node_modules && npm install --python="C:\Python27\python.exe"
 
-// To build Greenworks:
-// (from: https://github.com/greenheartgames/greenworks)
-// cd D:\Repositories\isaac-racing-client\node_modules\greenworks
-// set HOME=C:\Users\james\.electron-gyp && node-gyp rebuild --target=1.4.14 --arch=x64 --dist-url=https://atom.io/download/atom-shell
-
 // Count lines of code:
 // cloc . --exclude-dir .git,dist,node_modules,css,fonts,words
 
