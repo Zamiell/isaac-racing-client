@@ -6,12 +6,8 @@
 
 /*
 
-Patch notes for v0.2.54:
-- Fast-clear now works with puzzle rooms. PogCena
-- The timer that appears during races will now use real time instead of in-game frames, so it will be a lot more accurate. (This is now possible due to a change in the last patch.)
-- Fixed a Larry Jr. room that should not have an entrance from the top. (Thanks BMZ_Loop)
-- Added better save file graphics, thanks to Gromfalloon.
-- Updated the FAQ at: https://isaacracing.net/info
+Patch notes for v0.2.55:
+-
 
 
 
