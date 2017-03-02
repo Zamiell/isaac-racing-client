@@ -7,8 +7,19 @@
 /*
 
 Patch notes for v0.2.55:
--
-
+- Fixed a client crash when you quit and continued as Lazarus II or Black Judas.
+- The countdown should lag a bit less on potato computers.
+- Greatly sped up the attack patterns of Wizoobs and Red Ghosts. PogCena
+- Removed invulernability frames from Lil' Haunts. PogCena
+- Cursed Eye is now seeded. (I'm finally able to do this due to some added callback functionality they added in the last patch.)
+- Broken Remote is now seeded. (I'm finally able to do this due to some added callback functionality they added in the last patch.)
+- Broken Remote is no longer removed from seeded races. (Everything in the game is now seeded!!!!!)
+- Fixed the bug with School Bag where items would have more charges than they were supposed to at the beginning of a race.
+* Fixed the bug where The Book of Sin did not show up in the School Bag. (Thanks Krakenos)
+* Fixed the bug where the Mega Blast placeholder did not show up in the School Bag.
+- Fixed the bug where The Book of Sin would not count towards the Book Worm transformation. (Thanks Krakenos)
+- Fixed the bug where The Polaroid / The Negative would not be removed sometimes.
+- Fixed the bug where if you consumed a D6 with a Void and then tried to consume another pedestal, it would sometimes duplicate that pedestal. (Thanks Henry)
 
 
 Bugs to fix:

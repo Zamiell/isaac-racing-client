@@ -121,6 +121,10 @@ const logWatcher = function(event, message) {
                 character = 'Eden';
             } else if (character === '10') {
                 character = 'The Lost';
+            } else if (character === '11') {
+                character = 'Lazarus II';
+            } else if (character === '12') {
+                character = 'Black Judas';
             } else if (character === '13') {
                 character = 'Lilith';
             } else if (character === '14') {

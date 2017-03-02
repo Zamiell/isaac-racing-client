@@ -70,6 +70,14 @@ if args.skipmod == False:
     if args.logo:
         sys.exit()
 
+    # Check to see if we had the Basement/Cellar STBs in testing mode
+    basementBackupSTB = os.path.join(mod_dir, 'resources', 'rooms', '01.basement2.stb')
+    if os.path.isfile(basementBackupSTB):
+        os.rename(basementBackupSTB, os.path.join(mod_dir, 'resources', 'rooms', '01.basement.stb'))
+    cellarBackupSTB = os.path.join(mod_dir, 'resources', 'rooms', '02.cellar2.stb')
+    if os.path.isfile(cellarBackupSTB):
+        os.rename(cellarBackupSTB, os.path.join(mod_dir, 'resources', 'rooms', '02.cellar.stb'))
+
     # Commit to the mod epository
     os.chdir(mod_dir)
     return_code = subprocess.call(['git', 'add', '-A'])
