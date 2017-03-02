@@ -6,21 +6,13 @@
 
 /*
 
-Patch notes for v0.2.55:
-- Fixed a client crash when you quit and continued as Lazarus II or Black Judas.
-- The countdown should lag a bit less on potato computers.
-- Greatly sped up the attack patterns of Wizoobs and Red Ghosts. PogCena
-- Removed invulernability frames from Lil' Haunts. PogCena
-- Cursed Eye is now seeded. (I'm finally able to do this due to some added callback functionality they added in the last patch.)
-- Broken Remote is now seeded. (I'm finally able to do this due to some added callback functionality they added in the last patch.)
-- Broken Remote is no longer removed from seeded races. (Everything in the game is now seeded!!!!!)
-- Fixed the bug with School Bag where items would have more charges than they were supposed to at the beginning of a race.
-* Fixed the bug where The Book of Sin did not show up in the School Bag. (Thanks Krakenos)
-* Fixed the bug where the Mega Blast placeholder did not show up in the School Bag.
-- Fixed the bug where The Book of Sin would not count towards the Book Worm transformation. (Thanks Krakenos)
-- Fixed the bug where The Polaroid / The Negative would not be removed sometimes.
-- Fixed the bug where if you consumed a D6 with a Void and then tried to consume another pedestal, it would sometimes duplicate that pedestal. (Thanks Henry)
-
+Patch notes for v0.2.57:
+- Made crawlspaces use normal room transition animations instead of the long fade. PogCena
+- Removed the Blank Card animation when you use it with teleportation cards.
+- Centered the Mega Maw in the single Mega Maw room on the Chest (#269). (Thanks REXmoreOP)
+- Added a door to the double Mega Maw room on the Chest (#39).
+- Fixed the (vanilla) bug where the door opening sound effect would play in crawlspaces.
+- Fixed the bug where the Mega Blast placeholder was showing up in item pools instead of The Book of Sin. (Thanks Krakenos)
 
 Bugs to fix:
 
@@ -37,6 +29,8 @@ long play of reproducing: https://youtu.be/OSyJ5zbtBx4
 - add time to lobby for current races
 - make spacing slightly smaller for Type and Format on lobby
 - look at sed screenshot, racer is cut off at the top
+- split up racing+ logs based on day
+- add "Upload log" button
 
 - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
     (probably have to reinit tooltipster every time on enter lobby from race function)
