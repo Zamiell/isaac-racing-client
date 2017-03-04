@@ -66,6 +66,11 @@ $(document).keydown(function(event) {
         let nootLikeThisIndex = tabList.indexOf('NootLikeThis');
         tabList[notLikeThisIndex] = 'NootLikeThis';
         tabList[nootLikeThisIndex] = 'NotLikeThis';
+        // Prioritize the more commonly used Kappa over Kadda
+        let kappaIndex = tabList.indexOf('Kappa');
+        let kaddaIndex = tabList.indexOf('Kadda');
+        tabList[kaddaIndex] = 'Kappa';
+        tabList[kappaIndex] = 'Kadda';
         // Prioritize the more commonly used FrankerZ over all other Franker emotes
         let frankerZIndex = tabList.indexOf('FrankerZ');
         let frankerBIndex = tabList.indexOf('FrankerB');
