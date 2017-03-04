@@ -14,7 +14,6 @@ module.exports = {
     "<:residentsleeper:230150803166461952>": "ResidentSleeper",
     "<:racingplus:231560649400909824>": "RacingPlus",
     "<:presidentsleeper:230557390141915136>": "PresidentSleeper",
-    "<:pogzam:231085353522561024>": "PogZam",
     "<:pogzam:265983011764305920>": "PogZam",
     "<:pogchamp:230150803153747968>": "PogChamp",
     "<:pjsalt:230150802734317569>": "PJSalt",
