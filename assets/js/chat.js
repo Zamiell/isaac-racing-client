@@ -108,7 +108,7 @@ exports.send = function(destination) {
         });
 
         // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
-        draw('PM-to', name, message);
+        draw('PM-to', PMrecipient, PMmessage);
     } else if (message === '/debug') {
         // /debug - Debug command
         if (isDev) {
