@@ -59,7 +59,29 @@ $(document).keydown(function(event) {
 
         // We want to be able to tab complete both users and emotes
         let tabList = globals.emoteList.concat(userList);
+        tabList.push(':thinking:');
         tabList.sort();
+        // Prioritize the more commonly used NotLikeThis over NootLikeThis
+        let notLikeThisIndex = tabList.indexOf('NotLikeThis');
+        let nootLikeThisIndex = tabList.indexOf('NootLikeThis');
+        tabList[notLikeThisIndex] = 'NootLikeThis';
+        tabList[nootLikeThisIndex] = 'NotLikeThis';
+        // Prioritize the more commonly used Kappa over Kadda
+        let kappaIndex = tabList.indexOf('Kappa');
+        let kaddaIndex = tabList.indexOf('Kadda');
+        tabList[kaddaIndex] = 'Kappa';
+        tabList[kappaIndex] = 'Kadda';
+        // Prioritize the more commonly used FrankerZ over all other Franker emotes
+        let frankerZIndex = tabList.indexOf('FrankerZ');
+        let frankerBIndex = tabList.indexOf('FrankerB');
+        let tempEmote1 = tabList[frankerBIndex];
+        tabList[frankerBIndex] = 'FrankerZ';
+        for (let i = frankerBIndex; i < frankerZIndex; i++) {
+            let tempEmote2 = tabList[i+1];
+            tabList[i + 1] = tempEmote1;
+            tempEmote1 = tempEmote2;
+            
+        }
 
         if (globals.tabCompleteCounter === 0) {
             // This is the first time we are pressing tab
