@@ -16,7 +16,7 @@ const modLoader      = nodeRequire('./assets/js/mod-loader');
 const registerScreen = nodeRequire('./assets/js/ui/register');
 const lobbyScreen    = nodeRequire('./assets/js/ui/lobby');
 const raceScreen     = nodeRequire('./assets/js/ui/race');
-const emotes         = nodeRequire('./assets/data/emotes');
+const discordEmotes  = nodeRequire('./assets/data/discord-emotes');
 
 exports.init = function(username, password, remember) {
     // We have successfully authenticated with the server, so we no longer need the Greenworks process open
@@ -303,11 +303,12 @@ exports.init = function(username, password, remember) {
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
-        
+
+        // Convert discord style emotes to Racing+ style emotes
         let messageArray = data.message.split(' ');
         for (let i = 0; i < messageArray.length; i++) {
-            if (messageArray[i] in emotes) {
-                messageArray[i] = emotes[messageArray[i]];
+            if (messageArray[i] in discordEmotes) {
+                messageArray[i] = discordEmotes[messageArray[i]];
             }
         }
         let newMessage = messageArray.join(' ');

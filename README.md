@@ -36,7 +36,7 @@ Run
 * Extract the contents of the zip file. The extracted contents will contain one subdirectory, `sdk`. Rename this to `steamworks_sdk`.
 * Copy this directory to `node_modules/greenworks/deps`.
 * `npm install`
-* `node_modules/.bin/electron-rebuild`
+* `node_modules\.bin\electron-rebuild`
 * `npm start`
 
 <br />

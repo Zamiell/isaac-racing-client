@@ -6,13 +6,19 @@
 
 /*
 
-Patch notes for v0.2.57:
-- Made crawlspaces use normal room transition animations instead of the long fade. PogCena
-- Removed the Blank Card animation when you use it with teleportation cards.
-- Centered the Mega Maw in the single Mega Maw room on the Chest (#269). (Thanks REXmoreOP)
-- Added a door to the double Mega Maw room on the Chest (#39).
-- Fixed the (vanilla) bug where the door opening sound effect would play in crawlspaces.
-- Fixed the bug where the Mega Blast placeholder was showing up in item pools instead of The Book of Sin. (Thanks Krakenos)
+Patch notes for v0.2.59:
+- Fixed the bug with the School Bag where the charge sound would play every time you swapped in a fully charged item. (Thanks Cyber_1)
+- Fixed the (vanilla) bug with Eden's Soul where it would not start off at 0 charges. (Thanks Krakenos)
+- Crystal Ball is now seeded. (We apparently never noticed this before. Now everything in the game should be seeded for real!) (Thanks Krakenos for reporting and Will/blcd for figuring out the drop chances)
+- Portals are now seeded. (As a side effect of this, Portals will always spawn 5 enemies now instead of 1-5 enemies. This means that focusing them down is more important now.)
+- Mom's Hand and Mom's Dead hand will now immediately attack you if there is only one of them in the room.
+- Removed Mom's Hand from Devil Room #13.
+- Emote changes:
+    - Kappa will now take tab priority over Kadda. (InvaderTim fixed this, so thanks to him.)
+    - NotLikeThis will take tab priority over NootLikeThis. (InvaderTim fixed this, so thanks to him.)
+    - FrankerZ will take tab priority over the other Franker colors. (InvaderTim fixed this, so thanks to him.)
+    - Added sillyPoo and sillyPooBlack.
+
 
 Bugs to fix:
 
@@ -20,6 +26,9 @@ Bugs to fix:
 2. create diversity run and start it.
 long play of reproducing: https://youtu.be/OSyJ5zbtBx4
 
+- closing program doesn't overwrite save.dat file anymore
+- write seed to file so that it works with ctrl+c and ctrl+v
+- remake users table with new twitch default value
 - add tooltips to new race tooltip for all the things
 - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
 - make it remember new race settings
@@ -31,6 +40,7 @@ long play of reproducing: https://youtu.be/OSyJ5zbtBx4
 - look at sed screenshot, racer is cut off at the top
 - split up racing+ logs based on day
 - add "Upload log" button
+- add # of people to race in prerace
 
 - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
     (probably have to reinit tooltipster every time on enter lobby from race function)
@@ -49,7 +59,6 @@ long play of reproducing: https://youtu.be/OSyJ5zbtBx4
 Features to add:
 - test if internet drops during race, what happens? safe resume, https://github.com/joewalnes/reconnecting-websocket
 - achievements
-- discord integration
 - show running time on the lobby of a running race
 - automatically sort race table when people move places
 - turn different color in lobby when in a race
@@ -59,8 +68,7 @@ Features to add:
     - fill in items (should also show seed on this screen)
 - /shame - Shame on those who haven't readied up.
 - "/msg invadertim" shouldn't send to server if he is offline
-- "/msg invadertim" should be made to be the right case (on the server)
-- tab complete for chat
+- "/msg invadertim" should be made to be the right case
 - /r should work
 - volume slider update number better
 - wait until raceList before going to lobby so that we can go directly to current race

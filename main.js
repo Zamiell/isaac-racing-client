@@ -6,13 +6,17 @@
 
 /*
 
-Send me your Isaac log.txt file, which is located here:
+Send me your Isaac `log.txt file`, which is located here:
 ```
 C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+\log.txt
 ```
 And send me your Racing+ log file, which is located here:
 ```
 C:\Users\james\AppData\Local\Programs\Racing+.log
+```
+And if you are still in the race, send me your `save.dat` file, which is located here:
+```
+C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_857628390\save.dat
 ```
 
 */

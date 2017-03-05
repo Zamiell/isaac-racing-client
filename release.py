@@ -31,6 +31,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-gh', '--github', help="upload to GitHub in addition to building locally", action='store_true')
 parser.add_argument('-l', '--logo', help="only udate the logo", action='store_true')
 parser.add_argument('-s', '--skipmod', help="skip all mod related stuff", action='store_true')
+parser.add_argument('-m', '--mod', help="only do mod related stuff", action='store_true')
 args = parser.parse_args()
 
 # Get the version
@@ -94,6 +95,9 @@ if args.skipmod == False:
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([path_to_uploader]) # Popen will run it in the background
+
+if args.mod:
+    sys.exit()
 
 # Close the program if it is running
 # (having it open can cause corrupted ASAR archives)
