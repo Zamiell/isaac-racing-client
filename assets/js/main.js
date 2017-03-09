@@ -6,18 +6,9 @@
 
 /*
 
-Patch notes for v0.2.59:
-- Fixed the bug with the School Bag where the charge sound would play every time you swapped in a fully charged item. (Thanks Cyber_1)
-- Fixed the (vanilla) bug with Eden's Soul where it would not start off at 0 charges. (Thanks Krakenos)
-- Crystal Ball is now seeded. (We apparently never noticed this before. Now everything in the game should be seeded for real!) (Thanks Krakenos for reporting and Will/blcd for figuring out the drop chances)
-- Portals are now seeded. (As a side effect of this, Portals will always spawn 5 enemies now instead of 1-5 enemies. This means that focusing them down is more important now.)
-- Mom's Hand and Mom's Dead hand will now immediately attack you if there is only one of them in the room.
-- Removed Mom's Hand from Devil Room #13.
-- Emote changes:
-    - Kappa will now take tab priority over Kadda. (InvaderTim fixed this, so thanks to him.)
-    - NotLikeThis will take tab priority over NootLikeThis. (InvaderTim fixed this, so thanks to him.)
-    - FrankerZ will take tab priority over the other Franker colors. (InvaderTim fixed this, so thanks to him.)
-    - Added sillyPoo and sillyPooBlack.
+Patch notes for v0.2.62:
+-
+
 
 
 Bugs to fix:
@@ -35,6 +26,8 @@ long play of reproducing: https://youtu.be/OSyJ5zbtBx4
 - unranked solo doesn't show right icon on lobby
 - fix custom icon in the lobby
 - detect 1million%
+- make it so that diversity doesn't give repeat items
+- make title column and entrants column in lobby selectable
 - add time to lobby for current races
 - make spacing slightly smaller for Type and Format on lobby
 - look at sed screenshot, racer is cut off at the top

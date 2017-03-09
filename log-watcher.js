@@ -203,5 +203,8 @@ const parseLine = function(line) {
 
     } else if (line === 'playing cutscene 19 (Mega Satan).') {
         process.send('Finished run: Mega Satan');
+
+    } else if (line === 'Lua Debug: Finished run.') {
+        process.send('Finished run: Trophy');
     }
 };

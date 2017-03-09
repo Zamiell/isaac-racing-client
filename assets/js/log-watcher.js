@@ -193,6 +193,7 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
         }
+
     } else if (message.startsWith('New floor: ')) {
         let m = message.match(/New floor: (\d+)-(\d+)/);
         if (m) {
@@ -206,6 +207,7 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process.');
         }
+
     } else if (message.startsWith('New room: ')) {
         let m = message.match(/New room: (.+)/);
         if (m) {
@@ -217,6 +219,7 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new room from the message sent by the log watcher process.');
         }
+
     } else if (message.startsWith('New item: ')) {
         let m = message.match(/New item: (\d+)/);
         if (m) {
@@ -228,24 +231,32 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new item from the message sent by the log watcher process.');
         }
+
     } else if (message === 'Finished run: Blue Baby') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
+
     } else if (message === 'Finished run: The Lamb') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'The Lamb') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
+
     } else if (message === 'Finished run: Mega Satan') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Mega Satan') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
+
+    } else if (message === 'Finished run: Trophy') {
+        globals.conn.send('raceFinish', {
+            id: globals.currentRaceID,
+        });
     }
 };
 ipcRenderer.on('logWatcher', logWatcher);
