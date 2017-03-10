@@ -60,7 +60,11 @@ const send = function() {
         saveDat = saveDat.slice(0, -1); // Chop off the trailing comma
     }
     saveDat += '},\n';
-    saveDat += 'schoolBag=' + (globals.modLoader.rFormat === 'seeded' ? 'true' : 'false') + ',\n';
+    if (globals.modLoader.rFormat === 'seeded' || globals.modLoader.rFormat === 'diversity') {
+        saveDat += 'schoolBag=true,\n';
+    } else {
+        saveDat += 'schoolBag=false,\n';
+    }
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
     saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
     saveDat += '}';
