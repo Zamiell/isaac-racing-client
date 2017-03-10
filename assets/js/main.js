@@ -6,16 +6,8 @@
 
 /*
 
-Patch notes for v0.2.62:
-- Fixed the crash when you teleported to an L room. (Thanks to SlashSP for reporting and Will/blcd for the code fix)
-- Betrayal no longer pauses the game and plays an animation before charming enemies.
-- Fixed some miscellaneous stuff with the end of race trophy.
-- Added D4 to the Lost's School Bag for seeded races. (I missed this initially; thanks Krakenos)
-- The School Bag is a lot more responsive now - you can switch items much faster. Additionally, if you hold the switch button down, it will only switch the items once. (Thanks Cyber_1)
-- Fixed the bug where stat caches were not properly updated after switching an item into a School Bag. (Thanks Cyber_1)
-- Fixed the bug where costumes were not properly updated after switching an item into a School Bag. (Thanks Cyber_1)
-- Blood Bag is no longer excluded from diversity starting passive items.
-- Lucky Foot is now excluded from diversity starting passive items.
+Patch notes for v0.2.63:
+- 
 
 
 
