@@ -7,11 +7,33 @@
 /*
 
 Patch notes for v0.2.63:
-- 
+- Isaac now starts with The Battery. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if a lot of people don't like it.)
+- Maggy now starts with the Soul Jar, a new passive item. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
+- The Soul Jar has the following effects:
+  - You no longer gain health from soul/black hearts.
+  - You gain an empty red heart container for every 4 soul/black hearts picked up.
+  - You always have a 100% Devil Room chance if no damage is taken.
+  - (The 9% Devil Room chance thing in the old Soul Jar is removed.)
+ - Eden now starts with the School Bag. She will start with her random active item inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
+ - Lilith now starts with the School Bag. She will start with Box of Friends inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
+ - Apollyon now starts with the School Bag. He will start with Void inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
+- Fixed the bug where in certain specific situations red chest teleports could kill you.
+- Fixed the bug where Eden would incorrectly retain the stats from her starting active item. (Thanks SlashSP)
+- Fixed the bug where the Joker card would not work if you had the Cursed Eye. (Thanks thereisnofuture)
+- Fixed the bug where the current trinket for the diversity race would not display in the tooltip.
+- Replaced the Glowing Hour Glass rewind process of starting a race with a better method. This should help people with potato computers.
+- Moved a lot of code to the game physics callback; the game should run much faster now on potato computers.
+- Fixed the bug where Cain and Samson's trinkets would incorrectly get smeltered in diversity races.
+- Fixed the bug where the active item in a diveristy race would get fart-rolled if you swapped it for something else. Unfortunately, this means your random active item in diversity will not be removed from any pools.
+- Fixed the bug with School Bag where the item inside the School Bag did not appear on the item tracker in certain situations.
 
 
 
 Bugs to fix:
+- fix mega blast with D6 build
+- don't remove book of belial on seeded races with item tracker
+- hix autohotkeys on main versino to match
+- mouseover format and see ruleset in lobby
 
 1. play seeded run. quit or finish, doesn't matter.
 2. create diversity run and start it.
@@ -237,6 +259,16 @@ fs.readFile(itemListLocation, 'utf8', function(err, data) {
         return;
     }
     globals.itemList = JSON.parse(data);
+});
+
+// Trinket list
+let trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.json');
+fs.readFile(trinketListLocation, 'utf8', function(err, data) {
+    if (err) {
+        misc.errorShow('Failed to read the "' + trinketListLocation + '" file: ' + err);
+        return;
+    }
+    globals.trinketList = JSON.parse(data);
 });
 
 // We need to have a list of all of the emotes for the purposes of tab completion

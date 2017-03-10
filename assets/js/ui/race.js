@@ -480,16 +480,19 @@ const show = function(raceID) {
 
             // Build the tooltip
             let buildTooltipContent = '';
-            for (let item of items) {
+            for (let i = 0; i < items.length; i++) {
                 // Pad the item ID with 0's if necessary
-                let itemIndex = item;
-                if (item <= 999) {
-                    itemIndex = ('00' + item).slice(-3);
-                }
+                let itemIndex = items[i];
+                itemIndex = ('00' + items[i]).slice(-3);
 
-                buildTooltipContent += globals.itemList[itemIndex].name + ' + ';
+                if (i === 4) {
+                    // Item 5 is a trinket
+                    buildTooltipContent += globals.trinketList[itemIndex].name;
+                } else {
+                    // Items 1-4 are passive and active items
+                    buildTooltipContent += globals.itemList[itemIndex].name + ' + ';
+                }
             }
-            buildTooltipContent = buildTooltipContent.slice(0, -3); // Chop off the trailing " + "
 
             // Add the tooltip
             $('#race-title-items').tooltipster('content', buildTooltipContent);
@@ -1073,7 +1076,7 @@ const checkReadyValid = function() {
         // (we want to do no validation for custom rulesets; it's all up to the players to decide when they are ready)
     } else if (globals.gameState.inGame === false) {
         valid = false;
-        tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
+        tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.</span>';
     } else if (globals.gameState.blckCndlOn === false) {
         valid = false;
         tooltipContent = '<span lang="en">You must turn on the "BLCK CNDL" easter egg before you can mark yourself as ready.</span>';

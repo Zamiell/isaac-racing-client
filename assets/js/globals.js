@@ -73,6 +73,7 @@ module.exports = {
 	tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
+    trinketList: {}, // Filled in main.js
     wordList: null, // Filled in main.js
 };
 

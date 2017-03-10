@@ -1,0 +1,474 @@
+{
+   "001": {
+      "name": "Swallowed Penny",
+      "introduced_in": "Rebirth"
+   },
+   "002": {
+      "name": "Petrified Poop",
+      "introduced_in": "Rebirth"
+   },
+   "003": {
+      "name": "AAA Battery",
+      "introduced_in": "Rebirth"
+   },
+   "004": {
+      "name": "Broken Remote",
+      "introduced_in": "Rebirth"
+   },
+   "005": {
+      "name": "Purple Heart",
+      "introduced_in": "Rebirth"
+   },
+   "006": {
+      "name": "Broken Magnet",
+      "introduced_in": "Rebirth"
+   },
+   "007": {
+      "name": "Rosary Bead",
+      "introduced_in": "Rebirth"
+   },
+   "008": {
+      "name": "Cartridge",
+      "introduced_in": "Rebirth"
+   },
+   "009": {
+      "name": "Pulse Worm",
+      "introduced_in": "Rebirth"
+   },
+   "010": {
+      "name": "Wiggle Worm",
+      "introduced_in": "Rebirth"
+   },
+   "011": {
+      "name": "Ring Worm",
+      "introduced_in": "Rebirth"
+   },
+   "012": {
+      "name": "Flat Worm",
+      "introduced_in": "Rebirth"
+   },
+   "013": {
+      "name": "Store Credit",
+      "introduced_in": "Rebirth"
+   },
+   "014": {
+      "name": "Callus",
+      "introduced_in": "Rebirth"
+   },
+   "015": {
+      "name": "Lucky Rock",
+      "introduced_in": "Rebirth"
+   },
+   "016": {
+      "name": "Mom's Toenail",
+      "introduced_in": "Rebirth"
+   },
+   "017": {
+      "name": "Black Lipstick",
+      "introduced_in": "Rebirth"
+   },
+   "018": {
+      "name": "Bible Tract",
+      "introduced_in": "Rebirth"
+   },
+   "019": {
+      "name": "Paper Clip",
+      "introduced_in": "Rebirth"
+   },
+   "020": {
+      "name": "Monkey Paw",
+      "introduced_in": "Rebirth"
+   },
+   "021": {
+      "name": "Mysterious Paper",
+      "introduced_in": "Rebirth"
+   },
+   "022": {
+      "name": "Daemon's Tail",
+      "introduced_in": "Rebirth"
+   },
+   "023": {
+      "name": "Missing Poster",
+      "introduced_in": "Rebirth"
+   },
+   "024": {
+      "name": "Butt Penny",
+      "introduced_in": "Rebirth"
+   },
+   "025": {
+      "name": "Mysterious Candy",
+      "introduced_in": "Rebirth"
+   },
+   "026": {
+      "name": "Hook Worm",
+      "introduced_in": "Rebirth"
+   },
+   "027": {
+      "name": "Whip Worm",
+      "introduced_in": "Rebirth"
+   },
+   "028": {
+      "name": "Broken Ankh",
+      "introduced_in": "Rebirth"
+   },
+   "029": {
+      "name": "Fish Head",
+      "introduced_in": "Rebirth"
+   },
+   "030": {
+      "name": "Pinky Eye",
+      "introduced_in": "Rebirth"
+   },
+   "031": {
+      "name": "Push Pin",
+      "introduced_in": "Rebirth"
+   },
+   "032": {
+      "name": "Liberty Cap",
+      "introduced_in": "Rebirth"
+   },
+   "033": {
+      "name": "Umbilical Cord",
+      "introduced_in": "Rebirth"
+   },
+   "034": {
+      "name": "Child's Heart",
+      "introduced_in": "Rebirth"
+   },
+   "035": {
+      "name": "Curved Horn",
+      "introduced_in": "Rebirth"
+   },
+   "036": {
+      "name": "Rusted Key",
+      "introduced_in": "Rebirth"
+   },
+   "037": {
+      "name": "Goat Hoof",
+      "introduced_in": "Rebirth"
+   },
+   "038": {
+      "name": "Mom's Pearl",
+      "introduced_in": "Rebirth"
+   },
+   "039": {
+      "name": "Cancer (Trinket)",
+      "introduced_in": "Rebirth"
+   },
+   "040": {
+      "name": "Red Patch",
+      "introduced_in": "Rebirth"
+   },
+   "041": {
+      "name": "Match Stick",
+      "introduced_in": "Rebirth"
+   },
+   "042": {
+      "name": "Lucky Toe",
+      "introduced_in": "Rebirth"
+   },
+   "043": {
+      "name": "Cursed Skull",
+      "introduced_in": "Rebirth"
+   },
+   "044": {
+      "name": "Safety Cap",
+      "introduced_in": "Rebirth"
+   },
+   "045": {
+      "name": "Ace of Spades",
+      "introduced_in": "Rebirth"
+   },
+   "046": {
+      "name": "Isaac's Fork",
+      "introduced_in": "Rebirth"
+   },
+   "048": {
+      "name": "A Missing Page",
+      "introduced_in": "Rebirth"
+   },
+   "049": {
+      "name": "Bloody Penny",
+      "introduced_in": "Rebirth"
+   },
+   "050": {
+      "name": "Burnt Penny",
+      "introduced_in": "Rebirth"
+   },
+   "051": {
+      "name": "Flat Penny",
+      "introduced_in": "Rebirth"
+   },
+   "052": {
+      "name": "Counterfeit Penny",
+      "introduced_in": "Rebirth"
+   },
+   "053": {
+      "name": "Tick",
+      "introduced_in": "Rebirth"
+   },
+   "054": {
+      "name": "Isaac's Head",
+      "introduced_in": "Rebirth"
+   },
+   "055": {
+      "name": "Maggy's Faith",
+      "introduced_in": "Rebirth"
+   },
+   "056": {
+      "name": "Judas' Tongue",
+      "introduced_in": "Rebirth"
+   },
+   "057": {
+      "name": "???'s Soul",
+      "introduced_in": "Rebirth"
+   },
+   "058": {
+      "name": "Samson's Lock",
+      "introduced_in": "Rebirth"
+   },
+   "059": {
+      "name": "Cain's Eye",
+      "introduced_in": "Rebirth"
+   },
+   "060": {
+      "name": "Eve's Bird Foot",
+      "introduced_in": "Rebirth"
+   },
+   "061": {
+      "name": "The Left Hand",
+      "introduced_in": "Rebirth"
+   },
+   "062": {
+      "name": "Shiny Rock",
+      "introduced_in": "Afterbirth"
+   },
+   "063": {
+      "name": "Safety Scissors",
+      "introduced_in": "Afterbirth"
+   },
+   "064": {
+      "name": "Rainbow Worm",
+      "introduced_in": "Afterbirth"
+   },
+   "065": {
+      "name": "Tape Worm",
+      "introduced_in": "Afterbirth"
+   },
+   "066": {
+      "name": "Lazy Worm",
+      "introduced_in": "Afterbirth"
+   },
+   "067": {
+      "name": "Cracked Dice",
+      "introduced_in": "Afterbirth"
+   },
+   "068": {
+      "name": "Super Magnet",
+      "introduced_in": "Afterbirth"
+   },
+   "069": {
+      "name": "Faded Polaroid",
+      "introduced_in": "Afterbirth"
+   },
+   "070": {
+      "name": "Louse",
+      "introduced_in": "Afterbirth"
+   },
+   "071": {
+      "name": "Bob's Bladder",
+      "introduced_in": "Afterbirth"
+   },
+   "072": {
+      "name": "Watch Battery",
+      "introduced_in": "Afterbirth"
+   },
+   "073": {
+      "name": "Blasting Cap",
+      "introduced_in": "Afterbirth"
+   },
+   "074": {
+      "name": "Stud Finder",
+      "introduced_in": "Afterbirth"
+   },
+   "075": {
+      "name": "Error",
+      "introduced_in": "Afterbirth"
+   },
+   "076": {
+      "name": "Poker Chip",
+      "introduced_in": "Afterbirth"
+   },
+   "077": {
+      "name": "Blister",
+      "introduced_in": "Afterbirth"
+   },
+   "078": {
+      "name": "Second Hand",
+      "introduced_in": "Afterbirth"
+   },
+   "079": {
+      "name": "Endless Nameless",
+      "introduced_in": "Afterbirth"
+   },
+   "080": {
+      "name": "Black Feather",
+      "introduced_in": "Afterbirth"
+   },
+   "081": {
+      "name": "Blind Rage",
+      "introduced_in": "Afterbirth"
+   },
+   "082": {
+      "name": "Golden Horse Shoe",
+      "introduced_in": "Afterbirth"
+   },
+   "083": {
+      "name": "Store Key",
+      "introduced_in": "Afterbirth"
+   },
+   "084": {
+      "name": "Rib of Greed",
+      "introduced_in": "Afterbirth"
+   },
+   "085": {
+      "name": "Karma",
+      "introduced_in": "Afterbirth"
+   },
+   "086": {
+      "name": "Lil Larva",
+      "introduced_in": "Afterbirth"
+   },
+   "087": {
+      "name": "Mom's Locket",
+      "introduced_in": "Afterbirth"
+   },
+   "088": {
+      "name": "NO!",
+      "introduced_in": "Afterbirth"
+   },
+   "089": {
+      "name": "Child Leash",
+      "introduced_in": "Afterbirth"
+   },
+   "090": {
+      "name": "Brown Cap",
+      "introduced_in": "Afterbirth"
+   },
+   "091": {
+      "name": "Meconium",
+      "introduced_in": "Afterbirth+"
+   },
+   "092": {
+      "name": "Cracked Crown",
+      "introduced_in": "Afterbirth+"
+   },
+   "093": {
+      "name": "Used Diaper",
+      "introduced_in": "Afterbirth+"
+   },
+   "094": {
+      "name": "Fish Tail",
+      "introduced_in": "Afterbirth+"
+   },
+   "095": {
+      "name": "Black Tooth",
+      "introduced_in": "Afterbirth+"
+   },
+   "096": {
+      "name": "Ouroboros Worm",
+      "introduced_in": "Afterbirth+"
+   },
+   "097": {
+      "name": "Tonsil",
+      "introduced_in": "Afterbirth+"
+   },
+   "098": {
+      "name": "Nose Goblin",
+      "introduced_in": "Afterbirth+"
+   },
+   "099": {
+      "name": "Super Ball",
+      "introduced_in": "Afterbirth+"
+   },
+   "100": {
+      "name": "Vibrant Bulb",
+      "introduced_in": "Afterbirth+"
+   },
+   "101": {
+      "name": "Dim Bulb",
+      "introduced_in": "Afterbirth+"
+   },
+   "102": {
+      "name": "Fragmented Card",
+      "introduced_in": "Afterbirth+"
+   },
+   "103": {
+      "name": "Equality!",
+      "introduced_in": "Afterbirth+"
+   },
+   "104": {
+      "name": "Wish Bone",
+      "introduced_in": "Afterbirth+"
+   },
+   "105": {
+      "name": "Bag Lunch",
+      "introduced_in": "Afterbirth+"
+   },
+   "106": {
+      "name": "Lost Cork",
+      "introduced_in": "Afterbirth+"
+   },
+   "107": {
+      "name": "Crow Heart",
+      "introduced_in": "Afterbirth+"
+   },
+   "108": {
+      "name": "Walnut",
+      "introduced_in": "Afterbirth+"
+   },
+   "109": {
+      "name": "Duct Tape",
+      "introduced_in": "Afterbirth+"
+   },
+   "110": {
+      "name": "Silver Dollar",
+      "introduced_in": "Afterbirth+"
+   },
+   "111": {
+      "name": "Bloody Crown",
+      "introduced_in": "Afterbirth+"
+   },
+   "112": {
+      "name": "Pay To Win",
+      "introduced_in": "Afterbirth+"
+   },
+   "113": {
+      "name": "Locust of Wrath",
+      "introduced_in": "Afterbirth+"
+   },
+   "114": {
+      "name": "Locust of Pestilence",
+      "introduced_in": "Afterbirth+"
+   },
+   "115": {
+      "name": "Locust of Famine",
+      "introduced_in": "Afterbirth+"
+   },
+   "116": {
+      "name": "Locust of Death",
+      "introduced_in": "Afterbirth+"
+   },
+   "117": {
+      "name": "Locust of Conquest",
+      "introduced_in": "Afterbirth+"
+   },
+   "118": {
+      "name": "Bat Wing",
+      "introduced_in": "Afterbirth+"
+   },
+   "119": {
+      "name": "Stem Cell",
+      "introduced_in": "Afterbirth+"
+   }
+}
