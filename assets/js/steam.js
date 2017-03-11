@@ -24,17 +24,11 @@ $(document).ready(function() {
             loginDebug(null);
         });
 
-        $('#title-choose-1').click(function() {
-            loginDebug(1);
-        });
-
-        $('#title-choose-2').click(function() {
-            loginDebug(2);
-        });
-
-        $('#title-choose-3').click(function() {
-            loginDebug(3);
-        });
+        for (let i = 1; i <= 10; i++) {
+            $('#title-choose-' + i).click(function() {
+                loginDebug(i);
+            });
+        }
 
         $('#title-restart').click(function() {
             // Restart the client
@@ -183,19 +177,9 @@ function loginDebug(account) {
     if (account === null) {
         // Normal login
         ipcRenderer.send('asynchronous-message', 'steam', account);
-    } else if (account === 1) {
-        globals.steam.id = '101';
-        globals.steam.screenName = 'TestAccount1';
-        globals.steam.ticket = 'debug';
-        login();
-    } else if (account === 2) {
-        globals.steam.id = '102';
-        globals.steam.screenName = 'TestAccount2';
-        globals.steam.ticket = 'debug';
-        login();
-    } else if (account === 3) {
-        globals.steam.id = '103';
-        globals.steam.screenName = 'TestAccount3';
+    } else {
+        globals.steam.id = (account + 100).toString();
+        globals.steam.screenName = 'TestAccount' + account;
         globals.steam.ticket = 'debug';
         login();
     }

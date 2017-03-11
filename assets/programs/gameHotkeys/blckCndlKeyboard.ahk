@@ -27,9 +27,13 @@ Send {Tab down}
 Sleep %Delay1%
 Send {Tab up}
 Sleep %Delay2%
-Send {Ctrl down}{v down}
+Send {Ctrl down}
+Sleep %Delay2%
+Send {v down}
 Sleep %Delay1%
-Send {v up}{Ctrl up}
+Send {v up}
+Sleep %Delay2%
+Send {Ctrl up}
 Sleep %Delay2%
 Send {Enter down}
 Sleep %Delay1%
@@ -40,7 +44,6 @@ Sleep %Delay2%
 clipboard = %old_clipboard%
 
 ; Enter the game
-Sleep %Delay1%
 Sleep %Delay1%
 Send {Enter down}
 Sleep %Delay1%

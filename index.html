@@ -158,21 +158,21 @@
                         <!-- This only appears in a development environment -->
                         <ul id="title-choose" class="actions hidden">
                             <br /><br /><br />
-                            <li>
-                                <a href="#" id="title-choose-steam" class="button small">Steam (`)</a>
-                            </li>
-                            <li>
-                                <a href="#" id="title-choose-1" class="button small">Test 1 (1)</a>
-                            </li>
-                            <li>
-                                <a href="#" id="title-choose-2" class="button small">Test 2 (2)</a>
-                            </li>
-                            <li>
-                                <a href="#" id="title-choose-3" class="button small">Test 3 (3)</a>
-                            </li>
-                            <li>
-                                <a href="#" id="title-restart" class="button small">Restart (R)</a>
-                            </li>
+                            <li><a href="#" id="title-choose-steam" class="button small">Steam (`)</a></li>
+                            <li><a href="#" id="title-restart" class="button small">Restart (R)</a></li>
+                            <br /><br />
+                            <li><a href="#" id="title-choose-1" class="button small">Test 1 (1)</a></li>
+                            <li><a href="#" id="title-choose-2" class="button small">Test 2 (2)</a></li>
+                            <li><a href="#" id="title-choose-3" class="button small">Test 3 (3)</a></li>
+                            <li><a href="#" id="title-choose-4" class="button small">Test 4</a></li>
+                            <br /><br />
+                            <li><a href="#" id="title-choose-5" class="button small">Test 5</a></li>
+                            <li><a href="#" id="title-choose-6" class="button small">Test 6</a></li>
+                            <li><a href="#" id="title-choose-7" class="button small">Test 7</a></li>
+                            <li><a href="#" id="title-choose-8" class="button small">Test 8</a></li>
+                            <br /><br />
+                            <li><a href="#" id="title-choose-9" class="button small">Test 9</a></li>
+                            <li><a href="#" id="title-choose-10" class="button small">Test 10</a></li>
                         </ul>
 
                     </section>
@@ -222,14 +222,14 @@
                                 <li id="register-language-english" class="selected-language">English</li>
                                 <li>|</li>
                                 <li id="register-language-french" class="unselected-language"><a>Français</a></li>
-                                <li>|</li>
-                                <li id="register-language-italian" class="unselected-language"><a>Italiano</a></li>
                                 <!-- Unhide when the translation is complete -->
                                 <!--
                                 <li>|</li>
                                 <li id="register-language-spanish" class="unselected-language"><a>Español</a></li>
                                 <li>|</li>
                                 <li id="register-language-russian" class="unselected-language"><a>Русский</a></li>
+                                <li>|</li>
+                                <li id="register-language-italian" class="unselected-language"><a>Italiano</a></li>
                                 -->
                             </ul>
                         </center>
@@ -312,15 +312,16 @@
                                         <h3 id="lobby-current-races-table-no" lang="en">No current races.</h3>
                                         <table id="lobby-current-races-table" class="alt">
                                             <thead>
-                                                <th><span lang="en">Title</span></th>
-                                                <th><span lang="en">Status</span></th>
-                                                <th><span lang="en">Type</span></th>
-                                                <th><span lang="en">Format</span></th>
-                                                <th><span lang="en">Size</span></th>
-                                                <th><span lang="en">Entrants</span></th>
+                                                <th class="lobby-current-races-title"><span lang="en">Title</span></th>
+                                                <th class="lobby-current-races-status"><span lang="en">Status</span></th>
+                                                <th class="lobby-current-races-type"><span lang="en">Type</span></th>
+                                                <th class="lobby-current-races-format"><span lang="en">Format</span></th>
+                                                <th><span lang="en">Size</span></th><!-- Don't put the class on this element because it makes it look weird -->
+                                                <th class="lobby-current-races-racers"><span lang="en">Entrants</span></th>
                                             </thead>
                                             <tbody id="lobby-current-races-table-body"></tbody>
                                         </table>
+                                        <div style="padding-bottom: 0.1em;"></div><!-- Otherwise the bottom border of the table gets cut off -->
                                     </div>
                                 </section>
                             </div>
@@ -718,7 +719,7 @@
                                         <select id="settings-language">
                                             <option value="en">English</option>
                                             <option value="fr">Français</option>
-                                            <option value="it">Italiano</option>
+                                            <option value="it" class="hidden">Italiano</option><!-- Unhide when the translation is complete -->
                                             <option value="es" class="hidden">Español</option><!-- Unhide when the translation is complete -->
                                             <option value="ru" class="hidden">Русский</option><!-- Unhide when the translation is complete -->
                                         </select>

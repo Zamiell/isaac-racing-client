@@ -6,33 +6,21 @@
 
 /*
 
-Patch notes for v0.2.63:
-- Isaac now starts with The Battery. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if a lot of people don't like it.)
-- Maggy now starts with the Soul Jar, a new passive item. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
-- The Soul Jar has the following effects:
-  - You no longer gain health from soul/black hearts.
-  - You gain an empty red heart container for every 4 soul/black hearts picked up.
-  - You always have a 100% Devil Room chance if no damage is taken.
-  - (The 9% Devil Room chance thing in the old Soul Jar is removed.)
- - Eden now starts with the School Bag. She will start with her random active item inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
- - Lilith now starts with the School Bag. She will start with Box of Friends inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla people don't like it.)
- - Apollyon now starts with the School Bag. He will start with Void inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
-- Fixed the bug where in certain specific situations red chest teleports could kill you.
-- Fixed the bug where Eden would incorrectly retain the stats from her starting active item. (Thanks SlashSP)
-- Fixed the bug where the Joker card would not work if you had the Cursed Eye. (Thanks thereisnofuture)
-- Fixed the bug where the current trinket for the diversity race would not display in the tooltip.
-- Replaced the Glowing Hour Glass rewind process of starting a race with a better method. This should help people with potato computers.
-- Moved a lot of code to the game physics callback; the game should run much faster now on potato computers.
-- Fixed the bug where Cain and Samson's trinkets would incorrectly get smeltered in diversity races.
-- Fixed the bug where the active item in a diveristy race would get fart-rolled if you swapped it for something else. Unfortunately, this means your random active item in diversity will not be removed from any pools.
-- Fixed the bug with School Bag where the item inside the School Bag did not appear on the item tracker in certain situations.
-
+Patch notes for v0.2.65:
+- tODDlife has officially joined the staff, charged with Community Relations.
+- Updated the FAQ with various things at: https://isaacracing.net/info
+- Fixed the bug where the trophy would drop instead of a chest when you were not in a race. (Thanks Krakenos/Dea1h/CrafterLynx/thisguyisbarry/Victor23799)
+- Warning messages (like "Error: Turn on the "BLCK CNDL" Easter Egg.") will no longer show in big rooms. (Thanks dion)
+- Changed the Alt+C and Alt+V hotkeys to work more reliably.
+- Resetting is now disabled when the countdown is between 2 and 0 seconds in order to prevent bugs on potato computers. (Thanks Krakenos)
+- Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
+- Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi & stoogebag)
+- Fixed the bug where if too many races were open, the lobby would mess up and overflow.
+- The Kamikaze! and Mega Blast builds will now correctly use the School Bag to keep the D6.
 
 
 Bugs to fix:
 - fix mega blast with D6 build
-- don't remove book of belial on seeded races with item tracker
-- hix autohotkeys on main versino to match
 - mouseover format and see ruleset in lobby
 
 1. play seeded run. quit or finish, doesn't matter.

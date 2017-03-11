@@ -153,7 +153,8 @@ exports.raceDraw = function(race) {
     raceDiv += '</td>';
 
     // Column 3 - Type
-    raceDiv += '<td><span class="lobby-current-races-type-icon">';
+    raceDiv += '<td class="lobby-current-races-type">';
+    raceDiv += '<span class="lobby-current-races-type-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.type + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     raceDiv += '<span lang="en">' + race.ruleset.type.capitalize() + '</span>';
@@ -163,13 +164,14 @@ exports.raceDraw = function(race) {
     raceDiv += '</td>';
 
     // Column 4 - Format
-    raceDiv += '<td><span class="lobby-current-races-format-icon">';
+    raceDiv += '<td class="lobby-current-races-format">';
+    raceDiv += '<span class="lobby-current-races-format-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     raceDiv += '<span lang="en">' + race.ruleset.format.capitalize() + '</span></td>';
 
     // Column 5 - Size
-    raceDiv += '<td id="lobby-current-races-' + race.id + '-size">';
+    raceDiv += '<td id="lobby-current-races-' + race.id + '-size" class="lobby-current-races-size">';
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 
@@ -177,6 +179,13 @@ exports.raceDraw = function(race) {
     raceDiv += '<td id="lobby-current-races-' + race.id + '-racers" class="lobby-current-races-racers">';
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
+
+    // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
+    if (Object.keys(globals.raceList).length > 4) { // More than 4 races causes the overflow
+        $('#lobby-current-races-table-wrapper').removeClass('vertical-center');
+    } else {
+        $('#lobby-current-races-table-wrapper').addClass('vertical-center');
+    }
 
     // Add it and fade it in
     $('#lobby-current-races-table-body').append(raceDiv);
@@ -256,6 +265,7 @@ function raceDrawCheckForOverflow(raceID, target) {
     }
 
     // Race name column
+    globals.log.info("POOP:", raceID, target);
     let shortened = false;
     while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
         let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1);
@@ -300,6 +310,13 @@ exports.raceUndraw = function(raceID) {
             $('#lobby-current-races-table-no').fadeIn(globals.fadeTime);
         }
     });
+
+    // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
+    if (Object.keys(globals.raceList).length > 4) { // More than 4 races causes the overflow
+        $('#lobby-current-races-table-wrapper').removeClass('vertical-center');
+    } else {
+        $('#lobby-current-races-table-wrapper').addClass('vertical-center');
+    }
 };
 
 exports.usersDraw = function() {

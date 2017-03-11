@@ -3864,6 +3864,23 @@
         background-color: #dce2ef;
     }
 
+    /* This is column 1 of the lobby races table */
+    .lobby-current-races-name {
+        width: 12em;
+        max-width: 12em;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    /* This is column 2 of the lobby races table */
+    .lobby-current-races-status {
+        /*text-align: center;*/ /* If centered, it moves the circle on status change, which is disorientating */
+        width: 7em;
+        max-width: 7em;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
     .lobby-current-races-open {
         background: green;
     }
@@ -3881,9 +3898,19 @@
         border: solid 1px black;
     }
 
+    /* This is column 3 of the lobby races table */
+    .lobby-current-races-type {
+        width: 9.9em;
+        max-width: 9.9em;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
     .lobby-current-races-type-icon {
+        display: inline-block;
         position: relative;
-        bottom: 0.25em;
+        bottom: 1.4em;
+        right: 0.35em;
     }
 
     .lobby-current-races-ranked {
@@ -3908,9 +3935,19 @@
         transform: scale(0.75);
     }
 
+    /* This is column 4 of the lobby races table */
+    .lobby-current-races-format {
+        width: 7.75em;
+        max-width: 7.75em;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
     .lobby-current-races-format-icon {
+        display: inline-block;
         position: relative;
-        bottom: 0.25em;
+        bottom: 1.4em;
+        right: 0.35em;
     }
 
     .lobby-current-races-unseeded {
@@ -3954,33 +3991,26 @@
         position: absolute;
     }
 
-    .lobby-current-races-spacing {
-        display: inline-block;
-        width: 2.5em;
-    }
-
-    /* This is column 1 of the lobby races table */
-    .lobby-current-races-name {
-        width: 225px;
-        max-width: 225px;
+    /* This is column 5 of the lobby races table */
+    .lobby-current-races-size {
+        width: 2.25em;
+        max-width: 2.25em;
         white-space: nowrap;
         overflow: hidden;
-    }
-
-    .lobby-current-races-status {
-        /*text-align: center;*/ /* If centered, it moves the circle on status change, which is disorientating */
-        width: 125px;
-        max-width: 125px;
-        white-space: nowrap;
-        overflow: hidden;
+        text-align: center;
     }
 
     /* This is column 6 of the lobby races table */
     .lobby-current-races-racers {
-        width: 230px;
-        max-width: 230px;
+        width: 15.5em; /* Make it fill up all of the remaining space in the table */
+        max-width: 15.5em; /* 16 is too high and causes overflows when there are 5 races or more */
         white-space: nowrap;
         overflow: hidden;
+    }
+
+    .lobby-current-races-spacing {
+        display: inline-block;
+        width: 2em;
     }
 
     /*

@@ -605,6 +605,13 @@ exports.participantAdd = function(i) {
     participantsSetFloor(i);
     participantsSetItem(i);
 
+    // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
+    if (globals.raceList[globals.currentRaceID].racerList.length > 6) { // More than 6 races causes the overflow
+        $('#race-participants-table-wrapper').removeClass('vertical-center');
+    } else {
+        $('#race-participants-table-wrapper').addClass('vertical-center');
+    }
+
     // Now that someone is joined, we want to recheck to see if the ready checkbox should be disabled
     checkReadyValid();
 };

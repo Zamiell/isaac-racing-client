@@ -524,6 +524,13 @@ exports.init = function(username, password, remember) {
             // Remove the row for this player
             $('#race-participants-table-' + data.name).remove();
 
+            // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
+            if (globals.raceList[globals.currentRaceID].racerList.length > 6) { // More than 6 races causes the overflow
+                $('#race-participants-table-wrapper').removeClass('vertical-center');
+            } else {
+                $('#race-participants-table-wrapper').addClass('vertical-center');
+            }
+
             if (globals.raceList[globals.currentRaceID].status === 'open') {
                 // Update the captian
                 // [not implemented]
