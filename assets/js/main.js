@@ -6,21 +6,26 @@
 
 /*
 
-Patch notes for v0.2.65:
-- tODDlife has officially joined the staff, charged with Community Relations.
-- Updated the FAQ with various things at: https://isaacracing.net/info
-- Fixed the bug where the trophy would drop instead of a chest when you were not in a race. (Thanks Krakenos/Dea1h/CrafterLynx/thisguyisbarry/Victor23799)
-- Warning messages (like "Error: Turn on the "BLCK CNDL" Easter Egg.") will no longer show in big rooms. (Thanks dion)
-- Changed the Alt+C and Alt+V hotkeys to work more reliably.
-- Resetting is now disabled when the countdown is between 2 and 0 seconds in order to prevent bugs on potato computers. (Thanks Krakenos)
-- Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
-- Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi & stoogebag)
-- Fixed the bug where if too many races were open, the lobby would mess up and overflow.
-- The Kamikaze! and Mega Blast builds will now correctly use the School Bag to keep the D6.
+Patch notes for v0.2.66:
+- Refactored all of the code for the Lua mod. It is now split up across multiple files instead of in one giant file. If there are any new in-game bugs, it's probably due to this.
+- Fixed the bug where the game would softlock if you entered a crawlspace from a Bossh Rush. (Thanks Dea1h)
+- Fixed the bug where the AAA Battery would not do anything. (I'm suprised nobody noticed this.)
+- Fixed the (vanilla) bug where the AAA Battery would not synergize with The Battery.
+- Fixed the (vanilla) bug where the 9 Volt would not synergize with The Battery.
+- Fixed the bug with diversity races where starting with active items that granted consumables would not grant those consumables. (Thanks PassionDrama)
+- Fixed the bug where the Gaping Maws would sometimes appear after a race had already started. (Thanks Lobsterosity)
+- Changed the build option "Random (D6 builds only, 1-30)" to "Random (single items only, 1-26)", since all the builds include the D6 now.
+- Made the lobby race table more compact and neat.
+- Added the BibleD emote (requested by Birdie).
+- Added the FutureMan emote (requested by Lobsterosity).
+
+
+
+
+- 1200x900 start is bugged
 
 
 Bugs to fix:
-- fix mega blast with D6 build
 - mouseover format and see ruleset in lobby
 
 1. play seeded run. quit or finish, doesn't matter.

@@ -289,8 +289,8 @@ $(document).ready(function() {
         // If necessary, get a random starting build,
         if (startingBuild === 'random') {
             startingBuild = misc.getRandomNumber(1, 32); // There are 32 starts
-        } else if (startingBuild === 'random-d6') {
-            startingBuild = misc.getRandomNumber(1, 30); // There are 30 starts that have the D6
+        } else if (startingBuild === 'random-single') {
+            startingBuild = misc.getRandomNumber(1, 26); // There are 26 starts that have single items
         } else if (startingBuild === 'random-treasure') {
             startingBuild = misc.getRandomNumber(1, 20); // There are 20 Treasure Room starts
         } else {

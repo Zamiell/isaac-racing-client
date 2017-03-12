@@ -38,7 +38,7 @@ module.exports = [
     [{ id: 331, name: "Godhead" }],               // 25
     [{ id: 182, name: "Sacred Heart" }],          // 26
 
-    // Custom starts (with the D6)
+    // Custom starts
     [{ id: 153, name: "Mutant Spider" },          // 27
      { id: 2,   name: "The Inner Eye" }],
 
@@ -51,12 +51,12 @@ module.exports = [
     [{ id: 257, name: "Fire Mind" },              // 30
      { id: 600, name: "13 luck" }],
 
-    // Custom starts (without the D6)
+    // Custom starts (with an active item)
     [{ id: 40,  name: "Kamikaze!" },              // 31
      { id: 375, name: "Host Hat" }],
 
     [{ id: 441, name: "Mega Blast" },             // 32
      { id: 63,  name: "The Battery" },
      { id: 156, name: "Habit" },
-     { id: 205, name: "Sharp Plug" }]
+     { id: 205, name: "Sharp Plug" }],
 ];

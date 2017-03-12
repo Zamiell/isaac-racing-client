@@ -558,7 +558,14 @@ exports.init = function(username, password, remember) {
         if (data.id === globals.currentRaceID) {
             // Update the status of the race in the Lua mod
             globals.modLoader.status = data.status;
-            if (data.status !== 'in progress') { // The mod deals with going from "starting" to "in progress" itself manually
+            if (data.status === 'in progress') {
+                // The mod deals with going from "starting" to "in progress" itself manually
+                // Delay 5 seconds and then update the file so that it does not interfere with the countdown
+                setTimeout(function() {
+                    modLoader.send();
+                    globals.log.info('modLoader - Sent a (delayed) race status of "' + data.status + '".');
+                }, 5000);
+            } else {
                 modLoader.send();
                 globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
             }

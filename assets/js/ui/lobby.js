@@ -265,7 +265,6 @@ function raceDrawCheckForOverflow(raceID, target) {
     }
 
     // Race name column
-    globals.log.info("POOP:", raceID, target);
     let shortened = false;
     while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
         let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1);
