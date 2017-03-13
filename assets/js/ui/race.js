@@ -474,23 +474,21 @@ const show = function(raceID) {
             let items = globals.raceList[globals.currentRaceID].seed.split(',');
 
             // Show the graphic corresponding to this item on the race title table
-            $('#race-title-items-icon1').css('background-image', 'url("assets/img/items/' + items[0] + '.png")');
-            $('#race-title-items-icon2').css('background-image', 'url("assets/img/items/' + items[1] + '.png")');
-            $('#race-title-items-icon3').css('background-image', 'url("assets/img/items/' + items[2] + '.png")');
+            // TODO item 1 (the active)
+            $('#race-title-items-icon1').css('background-image', 'url("assets/img/items/' + items[1] + '.png")');
+            $('#race-title-items-icon2').css('background-image', 'url("assets/img/items/' + items[2] + '.png")');
+            $('#race-title-items-icon3').css('background-image', 'url("assets/img/items/' + items[3] + '.png")');
+            // TODO item 5 (the trinket)
 
             // Build the tooltip
             let buildTooltipContent = '';
             for (let i = 0; i < items.length; i++) {
-                // Pad the item ID with 0's if necessary
-                let itemIndex = items[i];
-                itemIndex = ('00' + items[i]).slice(-3);
-
                 if (i === 4) {
                     // Item 5 is a trinket
-                    buildTooltipContent += globals.trinketList[itemIndex].name;
+                    buildTooltipContent += globals.trinketList[items[i]].name;
                 } else {
                     // Items 1-4 are passive and active items
-                    buildTooltipContent += globals.itemList[itemIndex].name + ' + ';
+                    buildTooltipContent += globals.itemList[items[i]].name + ' + ';
                 }
             }
 
@@ -886,6 +884,9 @@ const countdownTick = function(i) {
     // Update the Lua mod with how many seconds are left until the race starts
     setTimeout(function() {
         globals.modLoader.countdown = i;
+        if (i === 0) { // This is to avoid bugs where things happen out of order
+            globals.modLoader.status = "in progress";
+        }
         modLoader.send();
         globals.log.info('modLoader - Sent a countdown of ' + i + '.');
     }, globals.fadeTime);

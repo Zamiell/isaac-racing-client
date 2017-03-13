@@ -6,27 +6,26 @@
 
 /*
 
-Patch notes for v0.2.66:
-- Refactored all of the code for the Lua mod. It is now split up across multiple files instead of in one giant file. If there are any new in-game bugs, it's probably due to this.
-- Fixed the bug where the game would softlock if you entered a crawlspace from a Bossh Rush. (Thanks Dea1h)
-- Fixed the bug where the AAA Battery would not do anything. (I'm suprised nobody noticed this.)
-- Fixed the (vanilla) bug where the AAA Battery would not synergize with The Battery.
-- Fixed the (vanilla) bug where the 9 Volt would not synergize with The Battery.
-- Fixed the bug with diversity races where starting with active items that granted consumables would not grant those consumables. (Thanks PassionDrama)
-- Fixed the bug where the Gaping Maws would sometimes appear after a race had already started. (Thanks Lobsterosity)
-- Changed the build option "Random (D6 builds only, 1-30)" to "Random (single items only, 1-26)", since all the builds include the D6 now.
-- Made the lobby race table more compact and neat.
-- Added the BibleD emote (requested by Birdie).
-- Added the FutureMan emote (requested by Lobsterosity).
-
-
-
-
-- 1200x900 start is bugged
+Patch notes for v0.2.67:
+- Removed the annoying vanilla delay where you are not able to take a pedestal item immediately after it spawns. PogCena
+- Fixed the (vanilla) bug where double coins and nickels would not heal Keeper for their proper amount. (Thanks Victor23799)
+- Fixed the client crash that occured whenever The Book of Sin, Crystal Ball, or Betrayal were given in a diversity race.
+- Fixed the bug where if the game was paused when the race started, there would be a lot of lag. (Thanks Birdie)
+- Fixed the bug where if you were dead when the race started, there would be a lot of lag. (Thanks Dea1h)
+- Fixed the bug where the wrong race settings were loaded when entered the game from the menu. (Thanks Lobsterosity)
+- Fixed the bug where in-game error messages would not display in big rooms.
+- Fixed the bug where in-game error messages wouldn't work properly when saving, quitting, and continuing.
+- Fixed the bug where closing the game in the middle of a race and coming back would mess some things up.
+- All shop items are now seeded.
+- On seeded races, The Compass will now be fart-rolled in the shop.
+- Added a new in-game error message: "Error: Start a new run by holding "R"."
+- Reorganized the way School Bag items work, which will fix the bug where Judas only needs 2 touches for the Bookworm transformation.
+- Added the Catgasm emote to the client. (Requested by masterofpotato)
 
 
 Bugs to fix:
 - mouseover format and see ruleset in lobby
+- enforce version checking upon creating/joining race
 
 1. play seeded run. quit or finish, doesn't matter.
 2. create diversity run and start it.

@@ -132,7 +132,7 @@ exports.init = function(username, password, remember) {
         // Log the event
         globals.log.info('Websocket - settings - ' + JSON.stringify(data));
 
-        // Time (do this first since it is time sensitive)
+        // Time
         let now = new Date().getTime();
         globals.timeOffset = data.time - now;
 
@@ -557,15 +557,9 @@ exports.init = function(username, password, remember) {
         // Check to see if we are in this race
         if (data.id === globals.currentRaceID) {
             // Update the status of the race in the Lua mod
-            globals.modLoader.status = data.status;
-            if (data.status === 'in progress') {
-                // The mod deals with going from "starting" to "in progress" itself manually
-                // Delay 5 seconds and then update the file so that it does not interfere with the countdown
-                setTimeout(function() {
-                    modLoader.send();
-                    globals.log.info('modLoader - Sent a (delayed) race status of "' + data.status + '".');
-                }, 5000);
-            } else {
+            // (we will update the status to "in progress" manually when the countdown reaches 0)
+            if (data.status !== 'in progress') {
+                globals.modLoader.status = data.status;
                 modLoader.send();
                 globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
             }
