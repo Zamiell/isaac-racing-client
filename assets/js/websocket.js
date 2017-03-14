@@ -423,6 +423,11 @@ exports.init = function(username, password, remember) {
             return;
         }
 
+        // Due to lag, the race might have been deleted already, so check for that
+        if (globals.raceList.hasOwnProperty(data.id) === false) {
+            return;
+        }
+
         // Log the event
         globals.log.info('Websocket - raceJoined - ' + JSON.stringify(data));
 

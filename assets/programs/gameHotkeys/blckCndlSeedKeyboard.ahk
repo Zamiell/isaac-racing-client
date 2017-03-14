@@ -2,8 +2,8 @@
 SetKeyDelay, 0
 
 ; Configuration
-Delay1 = 75
-Delay2 = 10
+Delay1 = 50
+Delay2 = 5
 
 ; Don't do anything if Isaac is not open
 IfWinNotExist, ahk_exe isaac-ng.exe

@@ -357,12 +357,10 @@ app.on('activate', function() {
 
 app.on('before-quit', function() {
     // Write all default values to the "save.dat" file
-    /*
     let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
     let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
     let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
     fs.copySync(saveDatDefaults, saveDat);
-    */
 });
 
 app.on('will-quit', function() {

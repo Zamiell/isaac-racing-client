@@ -409,8 +409,8 @@ const show = function(raceID) {
             formatTooltipContent += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span>';
         } else if (format === 'diversity') {
             formatTooltipContent += '<strong><span lang="en">Diversity</span>:</strong><br />';
-            formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with three random passive items.</span><br />';
-            formatTooltipContent += '<span lang="en">All players will start with the same three items.</span>';
+            formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
+            formatTooltipContent += '<span lang="en">All players will start with the same five items.</span>';
         } else if (format === 'custom') {
             formatTooltipContent += '<strong><span lang="en">Custom</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
@@ -426,11 +426,11 @@ const show = function(raceID) {
         $('#race-title-goal-icon').css('background-image', 'url("assets/img/goals/' + goal + '.png")');
         let goalTooltipContent = '<span lang="en">';
         if (goal === 'Blue Baby') {
-            goalTooltipContent += 'Defeat Blue Baby (the boss of The Chest) and jump into the chest that falls down afterward.';
+            goalTooltipContent += 'Defeat Blue Baby (the boss of The Chest) and touch the trophy that falls down afterward.';
         } else if (goal === 'The Lamb') {
-            goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.';
+            goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and touch the trophy that falls down afterward.';
         } else if (goal === 'Mega Satan') {
-            goalTooltipContent += 'Defeat Mega Satan (the boss behind the giant locked door).';
+            goalTooltipContent += 'Defeat Mega Satan (the boss behind the giant locked door) and touch the trophy that falls down afterward.';
         } else if (goal === 'custom') {
             goalTooltipContent += 'You make the rules! Make sure that everyone in the race knows what to do before you start.';
         }
@@ -1067,6 +1067,11 @@ const checkReadyValid = function() {
 
     // Don't do anything if the race status is not set to ready
     if (globals.raceList[globals.currentRaceID].status !== 'open') {
+        return;
+    }
+
+    // Due to lag, we might get here before the racerList is defined, so check for that
+    if (globals.raceList[globals.currentRaceID].hasOwnProperty('racerList') === false) {
         return;
     }
 

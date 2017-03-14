@@ -6,32 +6,25 @@
 
 /*
 
-Patch notes for v0.2.67:
-- Removed the annoying vanilla delay where you are not able to take a pedestal item immediately after it spawns. PogCena
-- Fixed the (vanilla) bug where double coins and nickels would not heal Keeper for their proper amount. (Thanks Victor23799)
-- Fixed the client crash that occured whenever The Book of Sin, Crystal Ball, or Betrayal were given in a diversity race.
-- Fixed the bug where if the game was paused when the race started, there would be a lot of lag. (Thanks Birdie)
-- Fixed the bug where if you were dead when the race started, there would be a lot of lag. (Thanks Dea1h)
-- Fixed the bug where the wrong race settings were loaded when entered the game from the menu. (Thanks Lobsterosity)
-- Fixed the bug where in-game error messages would not display in big rooms.
-- Fixed the bug where in-game error messages wouldn't work properly when saving, quitting, and continuing.
-- Fixed the bug where closing the game in the middle of a race and coming back would mess some things up.
-- All shop items are now seeded.
-- On seeded races, The Compass will now be fart-rolled in the shop.
-- Added a new in-game error message: "Error: Start a new run by holding "R"."
-- Reorganized the way School Bag items work, which will fix the bug where Judas only needs 2 touches for the Bookworm transformation.
-- Added the Catgasm emote to the client. (Requested by masterofpotato)
+Patch notes for v0.2.68:
+- The Book of Sin, Crystal Ball, Betrayal, Schoolbag, Soul Jar, Off Limits, and Debug now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
+- The Soul Jar effects are now based on whether you hold the item (instead of being tied to the Magdalene character specifically).
+- The Schoolbag now works the same way as it does in Antibirth when you only have one active item.
+- Fixed the bug where the School Bag item would sometimes not appear when first starting a run. (Thanks Cyber_1)
+- The Racing+ mod will now work on Linux. (Thanks mithrandi)
+- Fixed the bug where the AAA Battery did not work with the Schoolbag.
+- Fixed the bug where the race timer would not appear. (Thanks Krakenos)
+- Fixed the bug where the format & goal tooltips in the client were wrong. (Thanks vertopolkaLF)
+- Fixed the bug where the question mark icon for the random character would not show. (Thanks Birdie)
+
 
 
 Bugs to fix:
+- set twitch bot to disable after no mod found
+- https://github.com/electron-userland/electron-builder/issues/1095
+- make it so that you can see the random thing before you submit the race
 - mouseover format and see ruleset in lobby
 - enforce version checking upon creating/joining race
-
-1. play seeded run. quit or finish, doesn't matter.
-2. create diversity run and start it.
-long play of reproducing: https://youtu.be/OSyJ5zbtBx4
-
-- closing program doesn't overwrite save.dat file anymore
 - write seed to file so that it works with ctrl+c and ctrl+v
 - remake users table with new twitch default value
 - add tooltips to new race tooltip for all the things
