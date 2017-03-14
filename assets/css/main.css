@@ -4002,8 +4002,9 @@
 
     /* This is column 6 of the lobby races table */
     .lobby-current-races-racers {
-        width: 15.5em; /* Make it fill up all of the remaining space in the table */
-        max-width: 15.5em; /* 16 is too high and causes overflows when there are 5 races or more */
+        width: 15em; /* Make it fill up all of the remaining space in the table */
+        /* 15.5em is too high and causes a bug where the table overflows and wont display properly on some resolutions */
+        max-width: 15em; /* 16 is too high and causes overflows when there are 5 races or more */
         white-space: nowrap;
         overflow: hidden;
     }

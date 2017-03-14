@@ -6,20 +6,21 @@
 
 /*
 
-Patch notes for v0.2.68:
+Patch notes for v0.2.69:
 - The Book of Sin, Crystal Ball, Betrayal, Schoolbag, Soul Jar, Off Limits, and Debug now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
-- The Soul Jar effects are now based on whether you hold the item (instead of being tied to the Magdalene character specifically).
-- The Schoolbag now works the same way as it does in Antibirth when you only have one active item.
-- Fixed the bug where the School Bag item would sometimes not appear when first starting a run. (Thanks Cyber_1)
-- The Racing+ mod will now work on Linux. (Thanks mithrandi)
-- Fixed the bug where the AAA Battery did not work with the Schoolbag.
-- Fixed the bug where the race timer would not appear. (Thanks Krakenos)
-- Fixed the bug where the format & goal tooltips in the client were wrong. (Thanks vertopolkaLF)
-- Fixed the bug where the question mark icon for the random character would not show. (Thanks Birdie)
+- It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
+- Changed the pickup delay on pedestal items to 3 instead of 0.
+- Fixed the bug where some items would not render properly in the Schoolbag. (Thanks Krakenos)
+- Fixed the path to the mods folder on Linux. (Thanks Birdie)
+- Added the OhMyDog emote.
+- Added the DatSheffy emote.
+
+
 
 
 
 Bugs to fix:
+- fix sounds so that last place and race copmleted come as a callback so that both play
 - set twitch bot to disable after no mod found
 - https://github.com/electron-userland/electron-builder/issues/1095
 - make it so that you can see the random thing before you submit the race
