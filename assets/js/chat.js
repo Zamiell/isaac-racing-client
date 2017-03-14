@@ -62,6 +62,7 @@ exports.send = function(destination) {
                 // <span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>
                 return;
             }
+
             // Get the current list of connected users
             let userList = [];
             for (let user in globals.roomList.lobby.users) {
@@ -69,24 +70,19 @@ exports.send = function(destination) {
                     userList.push(user);
                 }
             }
-            let IsConnected = false;
+
+            // Validate that the receipient is online
+            let isConnected = false;
             for (let i = 0; i < userList.length; i++) {
                 if (PMrecipient.toLowerCase() === userList[i].toLowerCase()) {
-                    IsConnected = true;
+                    isConnected = true;
                     PMrecipient = userList[i];
                 }
             }
-            if (!IsConnected) {
-                misc.warningShow("That user is not online.");
+            if (isConnected === false) {
+                misc.warningShow("That user is not currently online.");
                 return;
             }
-
-            // Validate that the receipient is online
-            // TODO
-            /*if () {
-                // Open the error tooltip
-                // <span lang="en">That user is not currently online.</span>
-            }*/
         }
     }
 
