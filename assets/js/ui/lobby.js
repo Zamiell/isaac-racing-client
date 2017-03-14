@@ -266,7 +266,14 @@ function raceDrawCheckForOverflow(raceID, target) {
 
     // Race name column
     let shortened = false;
+    let counter = 0; // It is possible to get stuck in the bottom while loop
     while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
+        counter++;
+        if (counter >= 1000) {
+            // Something is weird and the page is not rendering properly
+            misc.errorShow('Something went wrong with displaying the lobby. Try resizing your window to the standard size.');
+            return;
+        }
         let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1);
         $('#lobby-current-races-' + raceID + '-' + target).html(shortenedName);
         shortened = true;
