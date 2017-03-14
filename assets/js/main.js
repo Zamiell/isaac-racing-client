@@ -9,6 +9,8 @@
 Patch notes for v0.2.70:
 - Increased the pickup delay on pedestal items from 0 to 10. (On vanilla, it is 20.)
 - The Book of Sin, Crystal Ball, Betrayal, Schoolbag, Soul Jar, Off Limits, and Debug now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
+- Smelter will now make consumed trinkets appear on the item tracker. (This will only happen if you use the Racing+ mod.)
+- The item tracker will now show the random trinket in diversity races.
 - It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
 
 
