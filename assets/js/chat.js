@@ -84,6 +84,26 @@ exports.send = function(destination) {
                 return;
             }
         }
+        
+        //Check if the user is replying to a message
+        if(message.match(/^\/r\b/)) {
+            isPM = true;
+            //Validate a PM has been received already
+            if (globals.lastPM) {
+                let m = message.match(/^\/r (.+)/);
+                //window.alert(m[1]);
+                if (m) {
+                    PMrecipient = globals.lastPM;
+                    PMmessage = m[1];
+                } else {
+                    misc.warningShow("The format of a reply is <code>/r [message]</code>")
+                    return;
+                }
+            } else {
+                misc.warningShow("No PMs have been received yet.");
+                return;
+            }
+        }
     }
 
     // Erase the contents of the input field
@@ -154,6 +174,7 @@ const draw = function(room, name, message, datetime = null, discord = false) {
         privateMessage = 'to';
     } else if (room === 'PM-from') {
         privateMessage = 'from';
+        globals.lastPM = name;
     }
     if (room === 'PM-to' || room === 'PM-from') {
         if (globals.currentScreen === 'lobby') {

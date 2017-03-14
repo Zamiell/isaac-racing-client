@@ -32,6 +32,7 @@ module.exports = {
         character: null,
     },
     itemList: {}, // Filled in main.js
+    lastPM: null,
     log: null,
     lang: null, // The language switcher instance
     LuaModDir: (isDev ? LuaModDirDev : LuaModDir),
