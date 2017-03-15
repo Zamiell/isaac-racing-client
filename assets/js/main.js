@@ -8,10 +8,21 @@
 
 Patch notes for v0.2.70:
 - Increased the pickup delay on pedestal items from 0 to 10. (On vanilla, it is 20.)
-- The Book of Sin, Crystal Ball, Betrayal, Schoolbag, Soul Jar, Off Limits, and Debug now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
+- All boss heart drops are now seeded. This was a nightmare to do.
+- Mom's Hands and Mom's Dead Hands will now fall faster even if there is more than 1 in the room.
+- It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
+- Fixed a crash that occured in the client on diversity races that gave Betrayal.
+- Cursed Eye no longer overrides Cursed Skull. (Thanks Cyber_1)
+- Cursed Eye no longer overrides Devil Room teleports from Red Chests. (Thanks Dea1h & Lex)
+- The Schoolbag will now work properly with the Glowing Hour Glass. (Thanks TheMoonSage)
+- PMs will no longer give an error message when the recipient is online. (Thanks to InvaderTim for coding this.)
+- You can now use the "/r" command to reply to PMs. (Thanks to InvaderTim for coding this.)
+
+
+- The Racing+ versions of The Book of Sin, Crystal Ball, and Betrayal now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this.
+- The Schoolbag, Soul Jar, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
 - Smelter will now make consumed trinkets appear on the item tracker. (This will only happen if you use the Racing+ mod.)
 - The item tracker will now show the random trinket in diversity races.
-- It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
 
 
 
@@ -25,7 +36,6 @@ Bugs to fix:
 - mouseover format and see ruleset in lobby
 - enforce version checking upon creating/joining race
 - write seed to file so that it works with ctrl+c and ctrl+v
-- remake users table with new twitch default value
 - add tooltips to new race tooltip for all the things
 - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
 - make it remember new race settings
@@ -36,14 +46,13 @@ Bugs to fix:
 - make title column and entrants column in lobby selectable
 - add time to lobby for current races
 - make spacing slightly smaller for Type and Format on lobby
-- look at sed screenshot, racer is cut off at the top
 - split up racing+ logs based on day
 - add "Upload log" button
 - add # of people to race in prerace
 
 - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
     (probably have to reinit tooltipster every time on enter lobby from race function)
-- error while recieving PM during tab transition
+- error while recieving PM during a transition
 - clicking profile doesn't work
 - clicking from 1 player to the next on the lobby doesn't work, tooltips just need to be rewritten entirely to only have 1 tooltip
 - if second place by 1-2 seconds, then NO DUDE play
@@ -51,7 +60,6 @@ Bugs to fix:
 - add health column
 - server should remember build # and offer no repeats for seeded races
 - implement names turning red when left
-- pms are broken
 - !entrants command for twitch bot
 - !left command for twitch bot
 
@@ -66,9 +74,6 @@ Features to add:
     - time offset
     - fill in items (should also show seed on this screen)
 - /shame - Shame on those who haven't readied up.
-- "/msg invadertim" shouldn't send to server if he is offline
-- "/msg invadertim" should be made to be the right case
-- /r should work
 - volume slider update number better
 - wait until raceList before going to lobby so that we can go directly to current race
 

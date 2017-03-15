@@ -84,23 +84,21 @@ exports.send = function(destination) {
                 return;
             }
         }
-        
-        //Check if the user is replying to a message
-        if(message.match(/^\/r\b/)) {
-            isPM = true;
-            //Validate a PM has been received already
-            if (globals.lastPM) {
-                let m = message.match(/^\/r (.+)/);
-                //window.alert(m[1]);
-                if (m) {
-                    PMrecipient = globals.lastPM;
-                    PMmessage = m[1];
-                } else {
-                    misc.warningShow("The format of a reply is <code>/r [message]</code>")
-                    return;
-                }
-            } else {
+
+        // Check if the user is replying to a message
+        if (message.match(/^\/r\b/)) {
+            // Validate that a PM has been received already
+            if (globals.lastPM === null) {
                 misc.warningShow("No PMs have been received yet.");
+                return;
+            }
+
+            let m = message.match(/^\/r (.+)/);
+            if (m) {
+                PMrecipient = globals.lastPM;
+                PMmessage = m[1];
+            } else {
+                misc.warningShow("The format of a reply is: <code>/r [message]</code>");
                 return;
             }
         }
