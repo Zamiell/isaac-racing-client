@@ -6,18 +6,12 @@
 
 /*
 
-Patch notes for v0.2.70:
-- Increased the pickup delay on pedestal items from 0 to 10. (On vanilla, it is 20.)
-- All boss heart drops are now seeded. This was a nightmare to do.
-- Mom's Hands and Mom's Dead Hands will now fall faster even if there is more than 1 in the room.
-- It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
-- Fixed a crash that occured in the client on diversity races that gave Betrayal.
-- Cursed Eye no longer overrides Cursed Skull. (Thanks Cyber_1)
-- Cursed Eye no longer overrides Devil Room teleports from Red Chests. (Thanks Dea1h & Lex)
-- The Schoolbag will now work properly with the Glowing Hour Glass. (Thanks TheMoonSage)
-- PMs will no longer give an error message when the recipient is online. (Thanks to InvaderTim for coding this.)
-- You can now use the "/r" command to reply to PMs. (Thanks to InvaderTim for coding this.)
-
+Patch notes for v0.2.71:
+- Previously, pickup delay on pedestals was only reduced for freshly spawned pedestals. Pedestal delay is also set to 18 upon entering a new room, so this kind of delay is reduced to 10 as well.
+- Fixed the bug where Keeper would get stuck on 24, 49, or 74 cents. (Thanks Crafterlynx)
+- Fixed the bug with Schoolbag where if you took damage at the same time as picking up a second active item, it would delete it. (Thanks Ou_J)
+- Fixed the bug with Mom's Hands and Mom's Dead Hands where they would stack on top of each other when falling at the exact same time. Instead of falling with a 30 frame timer, they will now fall with a random 25 to 35 frame timer. (Thanks ceehe)
+- Fixed the bug where the Lil' Haunts on The Haunt fight would be messed up. (Thanks Thoday)
 
 - The Racing+ versions of The Book of Sin, Crystal Ball, and Betrayal now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this.
 - The Schoolbag, Soul Jar, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
