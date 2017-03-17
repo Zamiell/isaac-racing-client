@@ -27,6 +27,8 @@ Send {Tab down}
 Sleep %Delay1%
 Send {Tab up}
 Sleep %Delay2%
+Send {Ctrl up}{Alt up}{Shift up}
+Sleep %Delay2%
 Send {Ctrl down}
 Sleep %Delay2%
 Send {v down}
@@ -48,6 +50,8 @@ Sleep %Delay1%
 Send {Tab down}
 Sleep %Delay1%
 Send {Tab up}
+Sleep %Delay2%
+Send {Ctrl up}{Alt up}{Shift up}
 Sleep %Delay2%
 Send {Ctrl down}
 Sleep %Delay2%

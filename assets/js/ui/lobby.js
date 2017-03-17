@@ -269,7 +269,7 @@ function raceDrawCheckForOverflow(raceID, target) {
     let counter = 0; // It is possible to get stuck in the bottom while loop
     while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
         counter++;
-        if (counter >= 10000) {
+        if (counter >= 100000) {
             // Something is weird and the page is not rendering properly
             misc.errorShow('Something went wrong with displaying the lobby. Try resizing your window to the standard size.');
             return;
@@ -336,7 +336,7 @@ exports.usersDraw = function() {
             userList.push(user);
         }
     }
-    
+
     // Case insensitive sort of the connected users
     userList.sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
 

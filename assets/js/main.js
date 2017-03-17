@@ -6,12 +6,21 @@
 
 /*
 
-Patch notes for v0.2.71:
-- Previously, pickup delay on pedestals was only reduced for freshly spawned pedestals. Pedestal delay is also set to 18 upon entering a new room, so this kind of delay is reduced to 10 as well.
-- Fixed the bug where Keeper would get stuck on 24, 49, or 74 cents. (Thanks Crafterlynx)
-- Fixed the bug with Schoolbag where if you took damage at the same time as picking up a second active item, it would delete it. (Thanks Ou_J)
-- Fixed the bug with Mom's Hands and Mom's Dead Hands where they would stack on top of each other when falling at the exact same time. Instead of falling with a 30 frame timer, they will now fall with a random 25 to 35 frame timer. (Thanks ceehe)
-- Fixed the bug where the Lil' Haunts on The Haunt fight would be messed up. (Thanks Thoday)
+Patch notes for v0.2.72:
+- Fixed a client crash when diversity races started with certain items. (No-one actually reported this out of the 11 people that it happened to. WutFace)
+- Fixed the (vanilla) unavoidable damage when a Mimic spawns on top of you. (Thanks henry_92)
+- All Spike Chests will now spawn as Mimics instead, since there isn't really a point in having both of them. (Thanks thisguyisbarry)
+- Mimics are rediculously trivial to spot, so their graphics have been experimentally reverted back to the pre-nerf graphics. You can tell them apart from normal chests by just looking for the beginnings of the spikes protruding from them. It's fairly easy to see if you just pay attention and look for it. It can be very rewarding when you are paying attention and it pays off: https://clips.twitch.tv/AssiduousSillyLardTwitchRPG
+- Fixed the unavoidable damage that occurs when Spiked Chests and Mimics spawn in very specific rooms that only have a narrow path surrounded by walls or pits (Caves #12, Caves #244, Caves/Catacombs #518, Caves #519, Womb/Utero #489). In these rooms, all Spiked Chests / Mimics will be converted to normal chests. If you find more rooms with narrow paths like these ones, let me know.
+- Fixed the (vanilla) bug where having Gimpy causes the Krampus item to be different than it otherwise would have been. (Thanks Dea1h)
+- Fixed the seeded boss heart drops to be more accurate to how the vanilla game does it. (Thanks blcd)
+- Added the FeelsAmazingMan emote. (Requested by MasterofPotato)
+- Added the DICKS emote. (Requested by MasterofPotato)
+- Added the YesLikeThis emote. (Requested by MasterofPotato)
+- Fixed a bug with the "/r" command on the client.
+- Your "save.dat" file will no longer be overwritten if the client encounters an error and you restart the program. This fixes the error message that tells you to restart in the middle of your run. (Thanks henry_92)
+
+
 
 - The Racing+ versions of The Book of Sin, Crystal Ball, and Betrayal now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this.
 - The Schoolbag, Soul Jar, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.

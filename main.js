@@ -67,6 +67,7 @@ var mainWindow; // Keep a global reference of the window object
 var childLogWatcher = null;
 var childSteam = null;
 var childIsaac = null;
+var errorHappened = false;
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
@@ -356,11 +357,13 @@ app.on('activate', function() {
 });
 
 app.on('before-quit', function() {
-    // Write all default values to the "save.dat" file
-    let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-    let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
-    let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
-    fs.copySync(saveDatDefaults, saveDat);
+    if (errorHappened === false) {
+        // Write all default values to the "save.dat" file
+        let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+        let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
+        let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
+        fs.copySync(saveDatDefaults, saveDat);
+    }
 });
 
 app.on('will-quit', function() {
@@ -414,6 +417,9 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
 
     } else if (arg1 === 'devTools') {
         mainWindow.webContents.openDevTools();
+
+    } else if (arg1 === 'error') {
+        errorHappened = true;
 
     } else if (arg1 === 'steam' && childSteam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open

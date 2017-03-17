@@ -5,10 +5,11 @@
 'use strict';
 
 // Imports
-const fs       = nodeRequire('fs-extra');
-const globals  = nodeRequire('./assets/js/globals');
-const settings = nodeRequire('./assets/js/settings');
-const debug    = nodeRequire('./assets/js/debug');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const fs          = nodeRequire('fs-extra');
+const globals     = nodeRequire('./assets/js/globals');
+const settings    = nodeRequire('./assets/js/settings');
+const debug       = nodeRequire('./assets/js/debug');
 
 exports.debug = function() {
     // The "/debug" command
@@ -28,6 +29,9 @@ RavenMiscError.prototype = Object.create(Error.prototype);
 RavenMiscError.prototype.constructor = RavenMiscError;
 
 const errorShow = function(message, sendToSentry = true, alternateScreen = false, customTitle = null) {
+    // Let the main process know to not overwrite the "save.dat" file in case we are in the middle of a race
+    ipcRenderer.send('asynchronous-message', 'error');
+
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
         setTimeout(function() {

@@ -4113,7 +4113,7 @@
       "introduced_in": "Antibirth"
    },
 
-   "43": {
+   "511": {
       "name": "The Book of Sin",
       "shown": true,
       "bookworm": true,
@@ -4121,16 +4121,23 @@
       "space": true,
       "introduced_in": "Racing+"
    },
-   "59": {
+   "512": {
       "name": "Crystal Ball",
       "shown": true,
       "text": "reveals the floor and spawns a card, rune, or soul heart",
       "space": true,
       "introduced_in": "Rebirth"
    },
-   "520": {
+   "513": {
       "name": "Betrayal",
       "text": "Full-screen charm effect when hit",
+      "shown": true,
+      "introduced_in": "Racing+"
+   },
+   "514": {
+      "name": "Smelter",
+      "text": "Consumes trinket to make its effect permanent",
+      "space": true,
       "shown": true,
       "introduced_in": "Racing+"
    }
