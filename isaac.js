@@ -95,11 +95,12 @@ process.on('message', function(message) {
     // If the message is not "exit", we can assume that it is the mods path
     modsPath = message;
 
-    // The logic in this file is only written to support Windows and OS X
+    // The logic in this file is only written to support Windows, macOS, and Linux
     if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
-        process.platform !== 'darwin') { // OS X
+        process.platform !== 'darwin' &&
+        process.platform !== 'linux') {
 
-        process.send('Linux is not supported for the file system integrity checks.', processExit);
+        process.send('This platform is not supported for the file system integrity checks.', processExit);
         return;
     }
 
