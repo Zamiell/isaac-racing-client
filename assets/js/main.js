@@ -6,24 +6,10 @@
 
 /*
 
-Patch notes for v0.2.72:
-- Boomerang, Butter Bean, The Candle, Red Candle, Glass Cannon, Brown Nugger, and Sharp Straw all appear properly now in the Schoolbag.
-- The bug where the aformentioned items would not start fully charged is also fixed.
-- Fixed a client crash when diversity races started with certain items. (No-one actually reported this out of the 11 people that it happened to. WutFace)
-- Fixed the (vanilla) unavoidable damage when a Mimic spawns on top of you. (Thanks henry_92)
-- All Spike Chests will now spawn as Mimics instead, since there isn't really a point in having both of them. (Thanks thisguyisbarry)
-- Mimics are rediculously trivial to spot, so their graphics have been experimentally reverted back to the pre-nerf graphics. You can tell them apart from normal chests by just looking for the beginnings of the spikes protruding from them. It's fairly easy to see if you just pay attention and look for it. It can be very rewarding when you are paying attention and it pays off: https://clips.twitch.tv/AssiduousSillyLardTwitchRPG
-- Fixed the unavoidable damage that occurs when Spiked Chests and Mimics spawn in very specific rooms that only have a narrow path surrounded by walls or pits (Caves #12, Caves #244, Caves/Catacombs #518, Caves #519, Womb/Utero #489). In these rooms, all Spiked Chests / Mimics will be converted to normal chests. If you find more rooms with narrow paths like these ones, let me know.
-- Hosts and Mobile Hosts are now immune to fear.
-- Fixed the (vanilla) bug where having Gimpy causes the Krampus item to be different than it otherwise would have been. (Thanks Dea1h)
-- Fixed the seeded boss heart drops to be more accurate to how the vanilla game does it. (Thanks blcd)
-- Added the FeelsAmazingMan emote. (Requested by MasterofPotato)
-- Added the DICKS emote. (Requested by MasterofPotato)
-- Added the YesLikeThis emote. (Requested by MasterofPotato)
-- Fixed a bug with the "/r" command on the client. (Thanks to InvaderTim for coding this.)
-- The lobby users list is now properly alphabetized. (Thanks to InvaderTim for coding this.)
-- Your "save.dat" file will no longer be overwritten if the client encounters an error and you restart the program. This fixes the error message that tells you to restart in the middle of your run. (Thanks henry_92)
-- Fixed the bug where the in-game timer would disappear from the screen once you finished the race.
+Patch notes for v0.2.73:
+- Godhead is removed from the special diversity Basement 1 rerolls.
+- If the goal of a race is Mega Satan, the chests will now be deleted after Blue Baby and The Lamb as a reminder. (Thanks Krakenos)
+- The Forget Me Now that spawns after a race now works like a passive item, so you don't have to give up your active items anymore.
 
 
 

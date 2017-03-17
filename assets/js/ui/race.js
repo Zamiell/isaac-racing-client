@@ -955,6 +955,11 @@ const start = function() {
         return;
     }
 
+    // Don't do anything if the race has already ended
+    if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+        return;
+    }
+
     // In case we coming back after a disconnect, redo all of the stuff that was done in the "startCountdown" function
     $('#race-ready-checkbox-container').fadeOut(0);
 
