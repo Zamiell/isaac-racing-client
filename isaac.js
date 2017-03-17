@@ -95,11 +95,12 @@ process.on('message', function(message) {
     // If the message is not "exit", we can assume that it is the mods path
     modsPath = message;
 
-    // The logic in this file is only written to support Windows and OS X
+    // The logic in this file is only written to support Windows, macOS, and Linux
     if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
-        process.platform !== 'darwin') { // OS X
+        process.platform !== 'darwin' &&
+        process.platform !== 'linux') {
 
-        process.send('Linux is not supported for the file system integrity checks.', processExit);
+        process.send('This platform is not supported for the file system integrity checks.', processExit);
         return;
     }
 
@@ -142,9 +143,9 @@ function checkIsaacOpen() {
             // Isaac is closed
             checkOptionsINIForModsEnabled();
         });
-    } else if (process.platform === 'darwin') { // OS X
-        // On OS X, we use the ps-node module
-        let processName = 'The Binding of Isaac Afterbirth+';
+    } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
+        // On macOS and Linux, we use the ps-node module
+        let processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';
         ps.lookup({
             command: processName,
         }, function(err, resultList) {
@@ -172,7 +173,7 @@ function checkIsaacOpen() {
 function checkOptionsINIForModsEnabled() {
     // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
     log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
-    let optionsPath = path.join(modsPath, '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+    let optionsPath = path.join(modsPath, '..', 'binding of isaac afterbirth+', 'options.ini');
     if (fs.existsSync(optionsPath) === false) {
         process.send('error: The "options.ini" file does not exist.', processExit);
         return;

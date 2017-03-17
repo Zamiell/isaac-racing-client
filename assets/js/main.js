@@ -239,8 +239,8 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
     }
 } else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
-} else {
-    globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+');
+} else { // Linux
+    globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
 }
 if (typeof settings.get('logFilePath') === 'undefined') {
     settings.set('logFilePath', globals.defaultLogFilePath);
