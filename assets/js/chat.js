@@ -128,7 +128,6 @@ exports.send = function(destination) {
     // Reset the history index
     globals.roomList[room].historyIndex = -1;
 
-    console.log("POOP1");
     if (isCommand === false) {
         // If this is a normal chat message
         globals.conn.send('roomMessage', {
@@ -141,7 +140,6 @@ exports.send = function(destination) {
             'name': PMrecipient,
             'message': PMmessage,
         });
-        console.log("POOP2");
 
         // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
         draw('PM-to', PMrecipient, PMmessage);

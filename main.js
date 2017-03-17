@@ -363,6 +363,9 @@ app.on('before-quit', function() {
         let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
         let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
         fs.copySync(saveDatDefaults, saveDat);
+        log.info('Copying over a default "save.dat" file.');
+    } else {
+        log.info('Not copying over a default "save.dat" file since we got an error.');
     }
 });
 
@@ -380,12 +383,6 @@ app.on('will-quit', function() {
     if (childIsaac !== null) {
         childIsaac.send('exit');
     }
-
-    // Write all default values to the "save.dat" file
-    let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-    let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
-    let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
-    fs.copySync(saveDatDefaults, saveDat);
 });
 
 /*
