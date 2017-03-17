@@ -7,16 +7,21 @@
 /*
 
 Patch notes for v0.2.73:
+- The Racing+ versions of The Book of Sin, Crystal Ball, Smelter, and Betrayal now work with the item tracker. If you haven't already, make sure that you download the latest version of the tracker. (The item tracker will now also auto-update if you have a v2.0 or higher.) Thanks goes to Hyphen-ated for this.
+- The Racing+ custom items Schoolbag, Soul Jar, Victory Lap, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfalloon for the artwork on the Soul Jar icon.
+- Smelter will now make consumed trinkets appear on the item tracker. (This will only happen if you use the Racing+ mod.)
+- The item tracker will now show the smelted random trinket in diversity races.
 - Godhead is removed from the special diversity Basement 1 rerolls.
 - If the goal of a race is Mega Satan, the chests will now be deleted after Blue Baby and The Lamb as a reminder. (Thanks Krakenos)
-- The Forget Me Now that spawns after a race now works like a passive item, so you don't have to give up your active items anymore.
+- Fixed the spawning of the key pieces on the Mega Satan ruleset. Additionally, a Get out of Jail Free Card will now spawn instead of two key pieces.
+- A Get out of Jail Free Card will now spawn next to the Mega Satan door if you visit the starting room after finishing a race.
+- The Forget Me Now that spawns after a race has been replaced with a custom item called Victory Lap. Victory Lap is a passive item, so you don't have to give up your active items anymore to reset the floor.
+- Added a feature where Blue Baby will be replaced on a Victory Lap with 2+ random bosses. The number of bosses will continue to increase with the amount of total victory laps that you have done.
+- Fixed the bug where Keeper would lose a coin container under certain conditions. (Thanks Cyber_1)
+- Fixed the bug where Krampus' head would turn into A Lump of Coal under certain conditions. (Thanks Cyber_1)
+- Fixed some bugs with the client affecting Linux users. (Thanks mithrandi)
 
 
-
-- The Racing+ versions of The Book of Sin, Crystal Ball, and Betrayal now work with the item tracker. Make sure that you download the latest version of the tracker. (The item tracker will now also auto-update.) Thanks goes to Hyphen-ated for this.
-- The Schoolbag, Soul Jar, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfaloon for the artwork on the Soul Jar icon.
-- Smelter will now make consumed trinkets appear on the item tracker. (This will only happen if you use the Racing+ mod.)
-- The item tracker will now show the random trinket in diversity races.
 
 
 
@@ -74,7 +79,6 @@ Features to add:
 
 Features to add (low priority):
 - make UI expand horizontally properly
-- implement <3 emote (can't have < or > in filenames so it requires custom code)
 - add items + date to "Top 10 Unseeded Times" leaderboard
 
 Bugs to fix (low priority):

@@ -155,11 +155,16 @@ $(document).ready(function() {
         settings.saveSync();
 
         // "Don't disable boss cutscenes" checkbox
-        /*let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
+        let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
         if (changedLogFilePath === false) {
-            let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+            let modsPath;
+            if (process.platform === 'linux') {
+                modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+            } else {
+                modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+            }
             let bossAnimationPath = path.join(modsPath, globals.LuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
@@ -183,7 +188,7 @@ $(document).ready(function() {
                     }
                 }
             }
-        }*/
+        }
 
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();

@@ -95,12 +95,12 @@ process.on('message', function(message) {
     // If the message is not "exit", we can assume that it is the mods path
     modsPath = message;
 
-    // The logic in this file is only written to support Windows, macOS, and Linux
+    // The logic in this file is only written to support Windows, OS X, and Linux
     if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
         process.platform !== 'darwin' &&
         process.platform !== 'linux') {
 
-        process.send('This platform is not supported for the file system integrity checks.', processExit);
+        process.send('The "' + process.platform + '" platform is not supported for the file system integrity checks.', processExit);
         return;
     }
 
@@ -173,7 +173,12 @@ function checkIsaacOpen() {
 function checkOptionsINIForModsEnabled() {
     // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
     log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
-    let optionsPath = path.join(modsPath, '..', 'binding of isaac afterbirth+', 'options.ini');
+    let optionsPath;
+    if (process.platform === 'linux') {
+        optionsPath = path.join(modsPath, '..', 'binding of isaac afterbirth+', 'options.ini');
+    } else {
+        optionsPath = path.join(modsPath, '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+    }
     if (fs.existsSync(optionsPath) === false) {
         process.send('error: The "options.ini" file does not exist.', processExit);
         return;

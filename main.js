@@ -359,7 +359,12 @@ app.on('activate', function() {
 app.on('before-quit', function() {
     if (errorHappened === false) {
         // Write all default values to the "save.dat" file
-        let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+        let modsPath;
+        if (process.platform === 'linux') {
+            modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+        } else {
+            modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+        }
         let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
         let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
         fs.copySync(saveDatDefaults, saveDat);

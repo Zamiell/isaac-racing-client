@@ -14,7 +14,12 @@ const settings    = nodeRequire('./assets/js/settings');
 
 // This tells the main process to start launching Isaac
 exports.start = function() {
-    let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+    let modsPath;
+    if (process.platform === 'linux') {
+        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+    } else {
+        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+    }
     ipcRenderer.send('asynchronous-message', 'isaac', modsPath);
 
     // Set the path to the "save.dat" file used for interprocess communication

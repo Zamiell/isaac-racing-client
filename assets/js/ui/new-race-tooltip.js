@@ -209,7 +209,7 @@ $(document).ready(function() {
         // Change the displayed icon
         let newBuild = $(this).val();
         if (newBuild.startsWith('random')) {
-            $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/Random.png")');
+            $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/random.png")');
         } else {
             $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + newBuild + '.png")');
         }
