@@ -173,7 +173,7 @@ function checkIsaacOpen() {
 function checkOptionsINIForModsEnabled() {
     // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
     log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
-    let optionsPath = path.join(modsPath, '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+    let optionsPath = path.join(modsPath, '..', 'binding of isaac afterbirth+', 'options.ini');
     if (fs.existsSync(optionsPath) === false) {
         process.send('error: The "options.ini" file does not exist.', processExit);
         return;

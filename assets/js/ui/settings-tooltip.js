@@ -159,7 +159,7 @@ $(document).ready(function() {
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
         if (changedLogFilePath === false) {
-            let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+            let modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
             let bossAnimationPath = path.join(modsPath, globals.LuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
