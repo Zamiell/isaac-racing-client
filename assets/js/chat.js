@@ -87,6 +87,7 @@ exports.send = function(destination) {
 
         // Check if the user is replying to a message
         if (message.match(/^\/r\b/)) {
+            isPM = true;
             // Validate that a PM has been received already
             if (globals.lastPM === null) {
                 misc.warningShow("No PMs have been received yet.");
