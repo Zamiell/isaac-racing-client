@@ -143,9 +143,9 @@ function checkIsaacOpen() {
             // Isaac is closed
             checkOptionsINIForModsEnabled();
         });
-    } else if (process.platform === 'darwin') { // OS X
-        // On OS X, we use the ps-node module
-        let processName = 'The Binding of Isaac Afterbirth+';
+    } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
+        // On macOS and Linux, we use the ps-node module
+        let processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';
         ps.lookup({
             command: processName,
         }, function(err, resultList) {
