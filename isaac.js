@@ -92,6 +92,7 @@ process.on('message', function(message) {
 
     // If the message is not "exit", we can assume that it is the mods path
     modPath = message;
+    log.info('Starting Isaac checks with mod path: ' + modPath);
 
     // The logic in this file is only written to support Windows, OS X, and Linux
     if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
@@ -104,7 +105,7 @@ process.on('message', function(message) {
 
     // Check to see if the mods directory exists
     if (fs.existsSync(modPath) === false) {
-        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it. (By default, the mods directory is located at <code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code>.) For more information, see the download instructions at: https://isaacracing.net/download', processExit);
+        process.send('error: Failed to find the Racing+ mod in your mods directory ("' + modPath + '"). Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it. (By default, the mods directory is located at <code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code>.) For more information, see the download instructions at: https://isaacracing.net/download', processExit);
         return;
     }
 

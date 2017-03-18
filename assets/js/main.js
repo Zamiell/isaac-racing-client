@@ -6,17 +6,8 @@
 
 /*
 
-Patch notes for v0.2.74:
-- Upon finishing a race, a flag will now spawn in addition to the Victory Lap. You can touch the Victory Lap to take you back to the menu. (Thanks Birdie)
-- The Pageant Boy ruleset now has item bans for the starting items.
-- The Pageant Boy ruleset now starts with +7 luck.
-- Before a race, you will now see the race type and the race format next to the Gaping Maws.
-- Seeded races now show the starting item / starting build in a manner similar to diversity races.
-- Items shown on the starting room in seeded & diversity races now have a glow so that it is easier to see them. (The glow images were taken from the item tracker.)
-- Fixed the bug where you could see the diversity items early under certain conditions. (Thanks Lobsterosity, Ou_J, and Cyber_1)
-- Fixed the bug where enemies spawned after touching the trophy under certain conditions. (Thanks MasterofPotato, Ou_J, and Cyber_1)
-- Fixed the bug where on seeded races, the door to the Treasure Room that was inside a Secret Room would behave weirdly on Basement 1.
-- Fixed the bug where the depths STB wasn't getting loaded. (Thanks Lobsterosity)
+Patch notes for v0.2.75:
+-
 
 
 Bugs to fix:

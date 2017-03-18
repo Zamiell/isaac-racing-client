@@ -5,11 +5,11 @@
 'use strict';
 
 // Imports
-const fs          = nodeRequire('fs-extra');
-const isDev       = nodeRequire('electron-is-dev');
-const globals     = nodeRequire('./assets/js/globals');
-const misc        = nodeRequire('./assets/js/misc');
-const builds      = nodeRequire('./assets/data/builds');
+const fs      = nodeRequire('fs-extra');
+const isDev   = nodeRequire('electron-is-dev');
+const globals = nodeRequire('./assets/js/globals');
+const misc    = nodeRequire('./assets/js/misc');
+const builds  = nodeRequire('./assets/data/builds');
 
 // We can communicate with the Racing+ Lua mod via file I/O
 // Specifically, we use the "save.dat" located in the mod subdirectory
