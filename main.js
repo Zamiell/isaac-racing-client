@@ -58,8 +58,8 @@ const teeny          = require('teeny-conf');
 const opn            = require('opn');
 
 // Constants
-const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
-const LuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object
@@ -365,7 +365,10 @@ app.on('before-quit', function() {
         } else {
             modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
         }
-        let saveDat = path.join(modsPath, (isDev ? LuaModDirDev : LuaModDir), 'save.dat');
+        let saveDat = path.join(modsPath, modNameDev, 'save.dat');
+        if (fs.existsSync(saveDat) === false) {
+            saveDat = path.join(modsPath, modName, 'save.dat');
+        }
         let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
         fs.copySync(saveDatDefaults, saveDat);
         log.info('Copying over a default "save.dat" file.');

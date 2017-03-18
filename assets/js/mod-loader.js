@@ -20,11 +20,6 @@ const send = function() {
         return;
     }
 
-    // We don't care if the race is finished
-    if (globals.modLoader.status === 'finished') {
-        globals.modLoader.status = 'none';
-    }
-
     // Start to compile the list of starting items
     let startingItems = [];
     if (globals.modLoader.rFormat === 'seeded') {
@@ -47,6 +42,7 @@ const send = function() {
     // Build the Lua table manually
     let saveDat = '{\n';
     saveDat += 'status="' + globals.modLoader.status + '",\n';
+    saveDat += 'myStatus="' + globals.modLoader.myStatus + '",\n';
     saveDat += 'rType="' + globals.modLoader.rType + '",\n';
     saveDat += 'rFormat="' + globals.modLoader.rFormat + '",\n';
     saveDat += 'character="' + globals.modLoader.character + '",\n';
@@ -62,6 +58,7 @@ const send = function() {
     saveDat += '},\n';
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
     saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
+    saveDat += 'place=' + globals.modLoader.place + ',\n';
     saveDat += '}';
 
     // Write to it
@@ -82,6 +79,7 @@ const reset = function() {
     globals.log.info('modLoader - Reset all variables.');
     globals.modLoader = {
         status: 'none',
+        myStatus: 'not ready',
         rType: 'unranked',
         rFormat: 'unseeded',
         character: 'Judas',

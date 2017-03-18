@@ -563,7 +563,8 @@ exports.init = function(username, password, remember) {
         if (data.id === globals.currentRaceID) {
             // Update the status of the race in the Lua mod
             // (we will update the status to "in progress" manually when the countdown reaches 0)
-            if (data.status !== 'in progress') {
+            // (and we don't care if the race finishes because we set the "save.dat" file to defaults once we personally finish or quit the race)
+            if (data.status !== 'in progress' && data.status !== 'finished') {
                 globals.modLoader.status = data.status;
                 modLoader.send();
                 globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
@@ -659,6 +660,13 @@ exports.init = function(username, password, remember) {
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
                     raceScreen.participantsSetStatus(i);
+                }
+
+                // Update the mod
+                if (data.name === globals.myUsername && (data.status === 'not ready' || data.status === 'ready')) {
+                    globals.modLoader.myStatus = data.status;
+                    modLoader.send();
+                    globals.log.info('modLoader - Sent my status of "' + data.status + '".');
                 }
 
                 break;

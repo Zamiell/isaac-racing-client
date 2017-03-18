@@ -14,21 +14,15 @@ const settings    = nodeRequire('./assets/js/settings');
 
 // This tells the main process to start launching Isaac
 exports.start = function() {
-    let modsPath;
-    if (process.platform === 'linux') {
-        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
-    } else {
-        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-    }
-    ipcRenderer.send('asynchronous-message', 'isaac', modsPath);
+    ipcRenderer.send('asynchronous-message', 'isaac', globals.modPath);
 
     // Set the path to the "save.dat" file used for interprocess communication
     // (if the dev mod directory is there, just use that, even if we are in production)
-    let devPath = path.join(modsPath, globals.LuaModDirDev, 'save.dat');
-    if (fs.existsSync(devPath)) {
-        globals.modLoaderFile = devPath;
+    let modLoaderFile = path.join(globals.modPathDev, 'save.dat');
+    if (fs.existsSync(modLoaderFile)) {
+        globals.modLoaderFile = modLoaderFile;
     } else {
-        globals.modLoaderFile = path.join(modsPath, globals.LuaModDir, 'save.dat');
+        globals.modLoaderFile = path.join(globals.modPath, 'save.dat');
     }
 };
 

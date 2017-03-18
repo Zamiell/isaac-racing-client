@@ -159,13 +159,7 @@ $(document).ready(function() {
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
         if (changedLogFilePath === false) {
-            let modsPath;
-            if (process.platform === 'linux') {
-                modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
-            } else {
-                modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-            }
-            let bossAnimationPath = path.join(modsPath, globals.LuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+            let bossAnimationPath = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
                 if (fs.existsSync(bossAnimationPath)) {

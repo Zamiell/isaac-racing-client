@@ -5,11 +5,11 @@
 'use strict';
 
 // Configuration
-const domain       = 'isaacracing.net';
-const secure       = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
-const fadeTime     = 300; // In milliseconds
-const LuaModDir    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
-const LuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+const domain     = 'isaacracing.net';
+const secure     = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
+const fadeTime   = 300; // In milliseconds
+const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 
 // Imports
 const isDev = nodeRequire('electron-is-dev');
@@ -35,11 +35,10 @@ module.exports = {
     lastPM: null,
     log: null,
     lang: null, // The language switcher instance
-    LuaModDir: (isDev ? LuaModDirDev : LuaModDir),
-    LuaModDirDev: LuaModDirDev,
     modLoaderFile: null, // Used to communicate with Isaac, set in isaac.js
     modLoader: {
         status: 'none',
+        myStatus: 'not ready',
         rType: 'unranked',
         rFormat: 'unseeded',
         character: 'Judas',
@@ -48,7 +47,12 @@ module.exports = {
         startingBuild: -1,
         currentSeed: '-', // Detected through reading the log file
         countdown: -1,
+        place: '0/1',
     },
+    modName: modName,
+    modNameDev: modNameDev,
+    modPath: null, // Set in main.js
+    modPathDev: null, // Set in main.js
     myUsername: null,
     playingSound: false,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files

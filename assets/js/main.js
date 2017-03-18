@@ -6,25 +6,17 @@
 
 /*
 
-Patch notes for v0.2.73:
-- The Racing+ versions of The Book of Sin, Crystal Ball, Smelter, and Betrayal now work with the item tracker. If you haven't already, make sure that you download the latest version of the tracker. (The item tracker will now also auto-update if you have a v2.0 or higher.) Thanks goes to Hyphen-ated for this.
-- The Racing+ custom items Schoolbag, Soul Jar, Victory Lap, Off Limits, and Debug will now work with the item tracker. Thanks also goes to Gromfalloon for the artwork on the Soul Jar icon.
-- Smelter will now make consumed trinkets appear on the item tracker. (This will only happen if you use the Racing+ mod.)
-- The item tracker will now show the smelted random trinket in diversity races.
-- Godhead is removed from the special diversity Basement 1 rerolls.
-- If the goal of a race is Mega Satan, the chests will now be deleted after Blue Baby and The Lamb as a reminder. (Thanks Krakenos)
-- Fixed the spawning of the key pieces on the Mega Satan ruleset. Additionally, a Get out of Jail Free Card will now spawn instead of two key pieces.
-- A Get out of Jail Free Card will now spawn next to the Mega Satan door if you visit the starting room after finishing a race.
-- The Forget Me Now that spawns after a race has been replaced with a custom item called Victory Lap. Victory Lap is a passive item, so you don't have to give up your active items anymore to reset the floor.
-- Added a feature where Blue Baby will be replaced on a Victory Lap with 2+ random bosses. The number of bosses will continue to increase with the amount of total victory laps that you have done.
-- Fixed the bug where Keeper would lose a coin container under certain conditions. (Thanks Cyber_1)
-- Fixed the bug where Krampus' head would turn into A Lump of Coal under certain conditions. (Thanks Cyber_1)
-- Fixed some bugs with the client affecting Linux users. (Thanks mithrandi)
-
-
-
-
-
+Patch notes for v0.2.74:
+- Upon finishing a race, a flag will now spawn in addition to the Victory Lap. You can touch the Victory Lap to take you back to the menu. (Thanks Birdie)
+- The Pageant Boy ruleset now has item bans for the starting items.
+- The Pageant Boy ruleset now starts with +7 luck.
+- Before a race, you will now see the race type and the race format next to the Gaping Maws.
+- Seeded races now show the starting item / starting build in a manner similar to diversity races.
+- Items shown on the starting room in seeded & diversity races now have a glow so that it is easier to see them. (The glow images were taken from the item tracker.)
+- Fixed the bug where you could see the diversity items early under certain conditions. (Thanks Lobsterosity, Ou_J, and Cyber_1)
+- Fixed the bug where enemies spawned after touching the trophy under certain conditions. (Thanks MasterofPotato, Ou_J, and Cyber_1)
+- Fixed the bug where on seeded races, the door to the Treasure Room that was inside a Secret Room would behave weirdly on Basement 1.
+- Fixed the bug where the depths STB wasn't getting loaded. (Thanks Lobsterosity)
 
 
 Bugs to fix:
@@ -229,13 +221,31 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
     }
 } else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
-} else { // Linux
+} else if (process.platform === 'linux') { // Linux
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
+} else {
+    misc.errorShow('The platform of "' + process.platform + '" is not supported."');
 }
 if (typeof settings.get('logFilePath') === 'undefined') {
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
 }
+
+// Get the default mod directory
+let modPath;
+if (process.platform === 'win32' || process.platform === 'darwin') {
+    modPath = path.join(path.dirname(globals.defaultLogFilePath), '..', 'Binding of Isaac Afterbirth+ Mods');
+} else if (process.platform === 'linux') {
+    // This is lowercase on Linux for some reason
+    modPath = path.join(path.dirname(globals.defaultLogFilePath), '..', 'binding of isaac afterbirth+ mods');
+}
+if (isDev) {
+    globals.modPath = path.join(modPath, globals.modNameDev);
+} else {
+    globals.modPath = path.join(modPath, globals.modName);
+}
+globals.modPathDev = path.join(modPath, globals.modNameDev);
+// modPathDev is needed because we prefer to use development directories if they are present, even in production
 
 // Item list
 let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');

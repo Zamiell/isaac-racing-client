@@ -76,9 +76,7 @@ settings.loadOrCreateSync();
 */
 
 // Global variables
-var racingPlusLuaModDir = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
-var racingPlusLuaModDirDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
-var modsPath;
+var modPath;
 var IsaacOpen = false;
 var IsaacPID;
 var fileSystemValid = true; // By default, we assume the user has everything set up correctly
@@ -93,7 +91,7 @@ process.on('message', function(message) {
     }
 
     // If the message is not "exit", we can assume that it is the mods path
-    modsPath = message;
+    modPath = message;
 
     // The logic in this file is only written to support Windows, OS X, and Linux
     if (process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
@@ -105,17 +103,10 @@ process.on('message', function(message) {
     }
 
     // Check to see if the mods directory exists
-    if (fs.existsSync(modsPath) === false) {
-        process.send('error: Unable to find your mods folder. Are you sure you chose the correct log file? Try to fix it in the "settings.json" file. By default, it is located at:<br /><br /><code>C:\\Users\\[YourUsername]\\AppData\\Local\\Programs\\settings.json</code>', processExit);
+    if (fs.existsSync(modPath) === false) {
+        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it. (By default, the mods directory is located at <code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code>.) For more information, see the download instructions at: https://isaacracing.net/download', processExit);
         return;
     }
-
-    // Check to see if the mod exists
-    // (if the dev mod directory is there, just use that, even if we are in production)
-    if (fs.existsSync(path.join(modsPath, racingPlusLuaModDirDev))) {
-        racingPlusLuaModDir = racingPlusLuaModDirDev;
-    }
-    // We check to see if the mod directory actually exists later on
 
     // Begin the work
     checkIsaacOpen();
@@ -175,9 +166,9 @@ function checkOptionsINIForModsEnabled() {
     log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
     let optionsPath;
     if (process.platform === 'linux') {
-        optionsPath = path.join(modsPath, '..', 'binding of isaac afterbirth+', 'options.ini');
+        optionsPath = path.join(modPath, '..', '..', 'binding of isaac afterbirth+', 'options.ini');
     } else {
-        optionsPath = path.join(modsPath, '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+        optionsPath = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+', 'options.ini');
     }
     if (fs.existsSync(optionsPath) === false) {
         process.send('error: The "options.ini" file does not exist.', processExit);
@@ -236,52 +227,44 @@ function checkOtherModsEnabled() {
         So let's leave open this loophole for now.
     */
 
-    // Go through all the subdirectories of the mod folder
-    let files = fs.readdirSync(modsPath);
+    // Go through all the subdirectories of the "Binding of Isaac Afterbirth+ Mods" folder
+    let files = fs.readdirSync(path.join(modPath, '..'));
     let otherModsEnabled = false;
-    let foundRacingPlusMod = false;
     for (let file of files) {
-        if (fs.statSync(path.join(modsPath, file)).isDirectory() === false) {
+        // Ignore normal files in this directory (there shouldn't be any)
+        if (fs.statSync(path.join(modPath, '..', file)).isDirectory() === false) {
             continue;
         }
 
-        if (file === 'Racing+') { // This was the directory name of the Lua mod pre-Steam integration
-            fs.removeSync(path.join(modsPath, file)); // The user no longer needs this folder
-
-        } else if (file === racingPlusLuaModDir) {
-            foundRacingPlusMod = true;
-            if (fs.existsSync(path.join(modsPath, file, 'disable.it'))) {
+        if (file === path.basename(modPath)) {
+            // This is the Racing+ mod subdirectory
+            if (fs.existsSync(path.join(modPath, 'disable.it'))) {
                 // The Racing+ mod is not enabled
                 fileSystemValid = false;
 
                 // Enable it by removing the "disable.it" file
                 try {
-                    fs.removeSync(path.join(modsPath, file, 'disable.it'));
+                    fs.removeSync(path.join(modPath, 'disable.it'));
                 } catch(err) {
                     process.send('error: Failed to remove the "disable.it" file for the Racing+ Lua mod: ' + err, processExit);
                     return;
                 }
             }
         } else {
-            if (fs.existsSync(path.join(modsPath, file, 'disable.it')) === false) {
+            if (fs.existsSync(path.join(modPath, '..', file, 'disable.it')) === false) {
                 log.info('Making a "disable.it" for: ' + file);
                 // Some other mod is enabled
                 fileSystemValid = false;
 
                 // Disable it by writing a 0 byte "disable.it" file
                 try {
-                    fs.writeFileSync(path.join(modsPath, file, 'disable.it'), '', 'utf8');
+                    fs.writeFileSync(path.join(modPath, '..', file, 'disable.it'), '', 'utf8');
                 } catch(err) {
                     process.send('error: Failed to disable one of the existing mods: ' + err, processExit);
                     return;
                 }
             }
         }
-    }
-
-    if (foundRacingPlusMod === false) {
-        process.send('error: Failed to find the Racing+ mod in your mods directory. Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it. (By default, the mods directory is located at <code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code>.) For more information, see the download instructions at: https://isaacracing.net/download', processExit);
-        return;
     }
 
     enableBossCutscenes();
@@ -298,7 +281,7 @@ function enableBossCutscenes() {
     }
 
     if (bossCutscenes) {
-        let bossCutsceneFile = path.join(modsPath, racingPlusLuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        let bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
         if (fs.existsSync(bossCutsceneFile)) {
             log.info('Re-enabling boss cutscenes.');
             try {
@@ -309,7 +292,7 @@ function enableBossCutscenes() {
             }
         }
     } else {
-        let bossCutsceneFile = path.join(modsPath, racingPlusLuaModDir, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        let bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
         if (fs.existsSync(bossCutsceneFile) === false) {
             log.info('Disabling boss cutscenes.');
             let newBossCutsceneFile;

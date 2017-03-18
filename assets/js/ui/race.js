@@ -108,7 +108,7 @@ $(document).ready(function() {
             }
         },
         contentAsHTML: true,
-        content: '<span lang="en">The three random items are not revealed until the race begins!</span>',
+        content: '<span lang="en">The random items are not revealed until the race begins!</span>',
     });
 
     $('#race-title-items').tooltipster({
@@ -485,9 +485,17 @@ const show = function(raceID) {
             for (let i = 0; i < items.length; i++) {
                 if (i === 4) {
                     // Item 5 is a trinket
+                    if (globals.trinketList.hasOwnProperty(items[i]) === false) {
+                        misc.errorShow('Trinket ' + items[i] + ' was not found in the items list.');
+                        return;
+                    }
                     buildTooltipContent += globals.trinketList[items[i]].name;
                 } else {
                     // Items 1-4 are passive and active items
+                    if (globals.itemList.hasOwnProperty(items[i]) === false) {
+                        misc.errorShow('Item ' + items[i] + ' was not found in the items list.');
+                        return;
+                    }
                     buildTooltipContent += globals.itemList[items[i]].name + ' + ';
                 }
             }
