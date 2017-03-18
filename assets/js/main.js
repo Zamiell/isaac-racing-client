@@ -225,10 +225,10 @@ if (typeof settings.get('logFilePath') === 'undefined') {
 // Get the default mod directory
 let modPath;
 if (process.platform === 'win32' || process.platform === 'darwin') {
-    modPath = path.join(path.dirname(globals.defaultLogFilePath), '..', 'Binding of Isaac Afterbirth+ Mods');
+    modPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
 } else if (process.platform === 'linux') {
     // This is lowercase on Linux for some reason
-    modPath = path.join(path.dirname(globals.defaultLogFilePath), '..', 'binding of isaac afterbirth+ mods');
+    modPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
 }
 if (isDev) {
     globals.modPath = path.join(modPath, globals.modNameDev);
