@@ -6,8 +6,18 @@
 
 /*
 
-Patch notes for v0.2.75:
--
+Patch notes for v0.2.77:
+- Fixed the bug where in certain circumstances, the client was not able to find the Racing+ mod directory.
+- Trinkets consumed with the Gulp! pill will now show up on the item tracker. (This only works if you are using the Racing+ mod.)
+- Fixed the bug where some glowing item & trinket images were not showing up properly on the starting room. (Thanks Krakenos)
+- Fixed the bug where starting the Boss Rush would not grant a charge to the Schoolbag item. Note that actually clearing the Boss Rush still won't give any charges, due to limiations with the Afterbirth+ API. (Thanks Dea1h, who saw it on tyrannasauruslex's stream)
+- Fixed the bug where fart-reroll items would start at 0 charges. (Thanks Munch, who saw it on tyrannasauruslex's stream)
+- The Polaroid and The Negative are no longer automatically removed in the Pageant Boy ruleset.
+- The beam of light and the trapdoor are no longer automatically removed after It Lives! in the Pageant Boy ruleset.
+- The big chests after Blue Baby, The Lamb, and Mega Satan will now be automatically removed in the Pageant Boy ruleset.
+- Fixed the Schoolbag sprite bug when starting a new run in the Pageant Boy ruleset.
+
+
 
 
 Bugs to fix:
@@ -185,6 +195,8 @@ fs.readFile(wordListLocation, function(err, data) {
 // Get the default log file location (which is in the user's Documents directory)
 // From: https://steamcommunity.com/app/250900/discussions/0/613941122558099449/
 if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+    // First, try to find their "Documents" folder using PowerShell
+    let powershellFailed = false;
     try {
         let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
         let documentsPath = execSync(command, {
@@ -192,8 +204,15 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
         });
         documentsPath = $.trim(documentsPath); // Remove the trailing newline
         globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
+        if (fs.existsSync(globals.defaultLogFilePath) === false) {
+            powershellFailed = true;
+        }
     } catch(err) {
-        // Executing "powershell.exe" can fail on some computers, so let's try using the "USERPROFILE" environment variable
+        powershellFailed = true;
+    }
+
+    // Executing "powershell.exe" can fail on some computers, so let's try using the "USERPROFILE" environment variable
+    if (powershellFailed) {
         let documentsDirNames = ['Documents', 'My Documents'];
         let found = false;
         for (let name of documentsDirNames) {
@@ -210,10 +229,13 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
             });
         }
     }
+
 } else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
+
 } else if (process.platform === 'linux') { // Linux
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
+
 } else {
     misc.errorShow('The platform of "' + process.platform + '" is not supported."');
 }

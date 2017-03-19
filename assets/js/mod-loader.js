@@ -58,6 +58,7 @@ const send = function() {
     saveDat += '},\n';
     saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
     saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
+    saveDat += 'placeMid=' + globals.modLoader.placeMid + ',\n';
     saveDat += 'place=' + globals.modLoader.place + ',\n';
     saveDat += '}';
 
@@ -88,6 +89,8 @@ const reset = function() {
         startingBuild: -1,
         currentSeed: globals.modLoader.currentSeed, // We don't have to delete this
         countdown: -1,
+        placeMid: 1,
+        place: 1,
     };
     send();
 };

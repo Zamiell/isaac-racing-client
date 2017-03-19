@@ -47,7 +47,8 @@ module.exports = {
         startingBuild: -1,
         currentSeed: '-', // Detected through reading the log file
         countdown: -1,
-        place: '0/1',
+        placeMid: 1,
+        place: 1,
     },
     modName: modName,
     modNameDev: modNameDev,
