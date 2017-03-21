@@ -160,30 +160,32 @@ $(document).ready(function() {
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
         if (changedLogFilePath === false) {
-            let bossAnimationPath = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+            let bossCutsceneFile = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
-                if (fs.existsSync(bossAnimationPath)) {
+                if (fs.existsSync(bossCutsceneFile)) {
+                    globals.log.info('Re-enabling boss cutscenes.');
                     try {
-                        fs.removeSync(bossAnimationPath);
+                        fs.removeSync(bossCutsceneFile);
                     } catch(err) {
-                        misc.errorShow('Failed to delete over the "versusscreen.anm2" file while enabling boss cutscenes.');
+                        misc.errorShow('Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ' + err);
                         return;
                     }
                 }
             } else {
                 // Make sure the file is there
-                if (fs.existsSync(bossAnimationPath) === false) {
+                if (fs.existsSync(bossCutsceneFile) === false) {
                     let newBossCutsceneFile;
                     if (isDev) {
                         newBossCutsceneFile = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                     } else {
                         newBossCutsceneFile = path.join('app.asar', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                     }
+                    globals.log.info(newBossCutsceneFile);
                     try {
-                        fs.copySync(newBossCutsceneFile, bossAnimationPath);
+                        fs.copySync(newBossCutsceneFile, bossCutsceneFile);
                     } catch(err) {
-                        misc.errorShow('Failed to copy over the "versusscreen.anm2" file while disabling boss cutscenes.');
+                        misc.errorShow('Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ' + err);
                         return;
                     }
                 }

@@ -299,8 +299,9 @@ function enableBossCutscenes() {
         }
     }
 
+    let bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
     if (bossCutscenes) {
-        let bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        // Make sure the file is deleted
         if (fs.existsSync(bossCutsceneFile)) {
             log.info('Re-enabling boss cutscenes.');
             try {
@@ -311,7 +312,7 @@ function enableBossCutscenes() {
             }
         }
     } else {
-        let bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        // Make sure the file is there
         if (fs.existsSync(bossCutsceneFile) === false) {
             log.info('Disabling boss cutscenes.');
             let newBossCutsceneFile;
