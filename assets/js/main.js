@@ -6,19 +6,9 @@
 
 /*
 
-Patch notes for v0.2.86:
-- It seems to be pretty common for Steam's download system to break people's mods whenever I push an update. Now, whenever you log in with the client, if you have a damaged mod, it will automatically be healed.
-- Fixed the bug where you could recharge your active item by swapping for another active item. (Thanks dion)
-- Fixed the bug where items that were not fully decremented on sight rolled into themselves. This involved rewriting both the item ban system and the RNG that the mod uses. The ban system now seeds items one by one starting with the room seed. The RNG is now based on the game's internal RNG. (Thanks Rex and Krakenos, and thanks blcd for ShiftIdx recommendation)
-- Fixed the bug where rerolled items would be swapped if one item was purchased beforehand and the other one wasn't.
-- Fixed the bug where Schoolbag items were not added to the ban list on seeded races. (Thanks Cyber_1)
-- Fixed the bug where the charge bar for Wait What? would not show up in the Schoolbag. (Thanks Cyber_1)
-- Special items are no longer special. This means that you will no longer be screwed by seeing a D100 or The Ludovico Technique, for example.
-- Fixed the bug with the Schoolbag where the game would play a sound when you switched to an item that was not fully charged.
-- Fixed the bug where teleporting would cause you to lose your Schoolbag item under certain circumstances. (Thanks Dea1h)
-- Fixed the bug where the pre-race graphics would stay on the screen for the entire race under certain circumstances. (Thanks Dea1h)
-- Touched up the save file graphics.
-
+Patch notes for v0.2.90:
+- The size of the mod has been reduced by around 12 MB. (Thanks ArseneLapin)
+- The mod will now check for the existence of a 1,000,000% save file. If none are found, it will ask you if you want to automatically install one.
 
 
 Bugs to fix:

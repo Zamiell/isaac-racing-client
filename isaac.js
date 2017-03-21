@@ -169,8 +169,9 @@ function checkOptionsINIForModsEnabled() {
 }
 
 function checkModIntegrity() {
-    if (isDev) {
-        // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
+    // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
+    // (even if we are in production, don't mess with the mod if it is marked as a development folder)
+    if (isDev || modPath.includes('dev')) {
         checkOtherModsEnabled();
         return;
     }

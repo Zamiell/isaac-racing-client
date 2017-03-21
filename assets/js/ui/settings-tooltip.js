@@ -174,7 +174,7 @@ $(document).ready(function() {
                 // Make sure the file is there
                 if (fs.existsSync(bossAnimationPath) === false) {
                     try {
-                        let newBossAnimationPath = path.join('assets', 'mod', 'versusscreen.anm2');
+                        let newBossAnimationPath = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                         fs.copySync(newBossAnimationPath, bossAnimationPath);
                     } catch(err) {
                         misc.errorShow('Failed to copy over the "versusscreen.anm2" file while disabling boss cutscenes.');

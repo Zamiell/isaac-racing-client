@@ -81,10 +81,6 @@ if args.skipmod == False:
             new_file_name = match.group(1) + '.stb'
             os.rename(os.path.join(rooms_dir, file_name), os.path.join(rooms_dir, new_file_name))
 
-    # Open the mod updater tool from Nicalis
-    path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
-    subprocess.Popen([path_to_uploader]) # Popen will run it in the background
-
     # Copy the mod
     mod_dir2 = 'mod'
     if os.path.exists(mod_dir2):
@@ -98,6 +94,10 @@ if args.skipmod == False:
     except Exception as e:
         error('Failed to copy the "' + mod_dir + '" directory:', e)
     print('Copied the mod.')
+
+    # Open the mod updater tool from Nicalis
+    path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
+    subprocess.Popen([path_to_uploader]) # Popen will run it in the background
 
 if args.github:
     # Commit to the client repository
