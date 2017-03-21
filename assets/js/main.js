@@ -245,11 +245,10 @@ if (typeof logFilePath === 'undefined' || logFilePath === null) {
     logFilePath = globals.defaultLogFilePath;
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
-    globals.log.info('logFilePath was undefined, set it to: ' + globals.defaultLogFilePath);
+    globals.log.info('logFilePath was undefined or null on boot, set it was set to: ' + globals.defaultLogFilePath);
 }
 
 // Get the default mod directory
-globals.log.info('XXX Log file path is: ' + logFilePath);
 let modPath;
 if (process.platform === 'win32' || process.platform === 'darwin') {
     modPath = path.join(path.dirname(logFilePath), '..', 'Binding of Isaac Afterbirth+ Mods');

@@ -193,6 +193,7 @@ function checkModIntegrity() {
         return;
     }
     for (let fileObject of files) {
+        log.info(path.posix.basename(fileObject.path));
         if (fileObject.stats.isFile() === false) {
             continue;
         } else if (path.posix.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
