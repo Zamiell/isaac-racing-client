@@ -22,8 +22,11 @@ repository_dir = os.path.join('D:\\Repositories\\', repository_name)
 os.chdir(repository_dir)
 
 # Subroutines
-def error(message):
-    print(message)
+def error(message, exception = None):
+    if exception == None:
+        print(message)
+    else:
+        print(message, exception)
     sys.exit(1)
 
 # Get command-line arguments
@@ -119,9 +122,12 @@ mod_dir2 = os.path.join('assets', 'mod')
 if os.path.exists(mod_dir2):
     try:
         shutil.rmtree(mod_dir2)
+    except Exception as e:
+        error('Failed to remove the "' + mod_dir2 + '" directory:', e)
+    try:
         os.makedirs(mod_dir2)
     except Exception as e:
-        error('Failed to remove/recreate the "' + mod_dir2 + '" directory:', e)
+        error('Failed to recreate the "' + mod_dir2 + '" directory:', e)
 for file_name in os.listdir(mod_dir):
     if file_name == '.git' or file_name == 'metadata.xml' or file_name == 'save.dat':
         continue
