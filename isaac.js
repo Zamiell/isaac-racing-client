@@ -229,7 +229,12 @@ function checkModIntegrity() {
     // After an update, Steam can partially download some of the files, which seems to happen pretty commonly
     // (not sure exactly what causes it, perhaps opening the game in the middle of the download)
     var files;
-    var backupModPath = path.join('assets', 'mod');
+    var backupModPath;
+    if (isDev) {
+        backupModPath = path.join('assets', 'mod');
+    } else {
+        backupModPath = path.join('app.asar', 'assets', 'mod');
+    }
     try {
         files = klawSync(backupModPath);
     } catch (err) {

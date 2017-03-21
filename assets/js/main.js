@@ -7,12 +7,12 @@
 /*
 
 Patch notes for v0.2.78:
+- It seems to be pretty common for Steam's download system to break people's mods whenever I push an update. Now, whenever you log in with the client, if you have a damaged mod, it will automatically be healed.
 - Fixed the bug where you could recharge your active item by swapping for another active item. (Thanks dion)
 - Fixed the bug where items that were not fully decremented on sight rolled into themselves. This involved rewriting both the item ban system and the RNG that the mod uses. The ban system now seeds items one by one starting with the room seed. The RNG is now based on the game's internal RNG. (Thanks Rex and Krakenos, and thanks blcd for ShiftIdx recommendation)
 - Fixed the bug where rerolled items would be swapped if one item was purchased beforehand and the other one wasn't.
 - Fixed the bug where Schoolbag items were not added to the ban list on seeded races. (Thanks Cyber_1)
 - Fixed the bug where the charge bar for Wait What? would not show up in the Schoolbag. (Thanks Cyber_1)
-- It seems to be pretty common for Steam's download system to break people's mods whenever I push an update. Now, whenever you log in with the client, it will now automatically heal a damaged mod.
 - Special items are no longer special. This means that you will no longer be screwed by seeing a D100 or The Ludovico Technique, for example.
 - Fixed the bug with the Schoolbag where the game would play a sound when you switched to an item that was not fully charged.
 - Fixed the bug where teleporting would cause you to lose your Schoolbag item under certain circumstances. (Thanks Dea1h)
@@ -253,13 +253,15 @@ if (process.platform === 'win32' || process.platform === 'darwin') {
     // This is lowercase on Linux for some reason
     modPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
 }
-if (isDev) {
-    globals.modPath = path.join(modPath, globals.modNameDev);
+let modPathDev = path.join(modPath, globals.modNameDev);
+if (isDev || fs.existsSync(modPathDev) ) {
+    globals.modPath = modPathDev; // We prefer to use development directories if they are present, even in production
 } else {
     globals.modPath = path.join(modPath, globals.modName);
 }
-globals.modPathDev = path.join(modPath, globals.modNameDev);
-// modPathDev is needed because we prefer to use development directories if they are present, even in production
+
+// Set the path to the "save.dat" file used for interprocess communication
+globals.modLoaderFile = path.join(globals.modPath, 'save.dat');
 
 // Item list
 let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');

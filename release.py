@@ -11,6 +11,7 @@ import fileinput
 import re
 import shutil
 import psutil
+import time
 from PIL import Image, ImageFont, ImageDraw
 
 # Configuration
@@ -122,12 +123,13 @@ mod_dir2 = os.path.join('assets', 'mod')
 if os.path.exists(mod_dir2):
     try:
         shutil.rmtree(mod_dir2)
+        time.sleep(1) # This is necessary or else we get "ACCESS DENIED" errors for some reason
     except Exception as e:
         error('Failed to remove the "' + mod_dir2 + '" directory:', e)
-    try:
-        os.makedirs(mod_dir2)
-    except Exception as e:
-        error('Failed to recreate the "' + mod_dir2 + '" directory:', e)
+try:
+    os.makedirs(mod_dir2)
+except Exception as e:
+    error('Failed to recreate the "' + mod_dir2 + '" directory:', e)
 for file_name in os.listdir(mod_dir):
     if file_name == '.git' or file_name == 'metadata.xml' or file_name == 'save.dat':
         continue
@@ -144,6 +146,7 @@ for file_name in os.listdir(mod_dir):
             shutil.copytree(path1, path2)
         except Exception as e:
             error('Failed to copy the "' + path1 + '" directory:', e)
+print('Copied the mod.')
 
 # Build/package
 print('Building:', repository_name, version)

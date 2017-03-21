@@ -53,7 +53,6 @@ module.exports = {
     modName: modName,
     modNameDev: modNameDev,
     modPath: null, // Set in main.js
-    modPathDev: null, // Set in main.js
     myUsername: null,
     playingSound: false,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
