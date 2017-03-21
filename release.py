@@ -117,11 +117,27 @@ for process in psutil.process_iter():
 # Copy the mod
 mod_dir2 = os.path.join('assets', 'mod')
 if os.path.exists(mod_dir2):
-    shutil.rmtree(mod_dir2)
-shutil.copytree(mod_dir, mod_dir2)
-shutil.rmtree(os.path.join(mod_dir2, '.git'))
-os.remove(os.path.join(mod_dir2, 'metadata.xml'))
-os.remove(os.path.join(mod_dir2, 'save.dat'))
+    try:
+        shutil.rmtree(mod_dir2)
+        os.makedirs(mod_dir2)
+    except Exception as e:
+        error('Failed to remove/recreate the "' + mod_dir2 + '" directory:', e)
+for file_name in os.listdir(mod_dir):
+    if file_name == '.git' or file_name == 'metadata.xml' or file_name == 'save.dat':
+        continue
+
+    path1 = os.path.join(mod_dir, file_name)
+    path2 = os.path.join(mod_dir2, file_name)
+    if os.path.isfile(path1):
+        try:
+            shutil.copyfile(path1, path2)
+        except Exception as e:
+            error('Failed to copy the "' + path1 + '" file:', e)
+    elif os.path.isdir(path1):
+        try:
+            shutil.copytree(path1, path2)
+        except Exception as e:
+            error('Failed to copy the "' + path1 + '" directory:', e)
 
 # Build/package
 print('Building:', repository_name, version)
