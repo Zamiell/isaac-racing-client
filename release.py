@@ -115,11 +115,13 @@ for process in psutil.process_iter():
         process.kill()
 
 # Copy the mod
-shutil.rmtree(os.path.join('assets', 'mod'))
-shutil.copytree(mod_dir, os.path.join('assets', 'mod'))
-shutil.rmtree(os.path.join('assets', 'mod', '.git'))
-os.remove(os.path.join('assets', 'mod', 'metadata.xml'))
-os.remove(os.path.join('assets', 'mod', 'save.dat'))
+mod_dir2 = os.path.join('assets', 'mod')
+if os.path.exists(mod_dir2):
+    shutil.rmtree(mod_dir2)
+shutil.copytree(mod_dir, mod_dir2)
+shutil.rmtree(os.path.join(mod_dir2, '.git'))
+os.remove(os.path.join(mod_dir2, 'metadata.xml'))
+os.remove(os.path.join(mod_dir2, 'save.dat'))
 
 # Build/package
 print('Building:', repository_name, version)
