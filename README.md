@@ -17,7 +17,7 @@ This is the client software for Racing+, a Binding of Isaac: Afterbirth+ racing 
 
 The client is written with [Electron](http://electron.atom.io/) and uses WebSockets to communicate with the server. The pretty elements are courtesy of [HTML5 UP](https://html5up.net/).
 
-You may also be interested in [the Lua mod repository](https://github.com/Zamiell/isaac-racing-mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
+You may also be interested in [the Lua mod repository](https://github.com/Zamiell/isaac-racing-client/mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
 
 <br />
 

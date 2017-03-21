@@ -51,15 +51,12 @@ if args.skipmod == False:
     shutil.copyfile(save_dat_defaults, save_dat)
 
     # Draw the version number on the title menu graphic
-    print('Drawing the version on the title screen...')
     large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
     small_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 6)
     URL_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Vera.ttf'), 11)
     title_img = Image.open(os.path.join(title_screen_path, 'titlemenu-orig.png'))
     title_draw = ImageDraw.Draw(title_img)
     w, h = title_draw.textsize(version, font=large_font)
-    # Blue of Racing+ cross is (67, 93, 145)
-    # Black of title screen text is (54, 47, 45)
     color = (67, 93, 145)
     title_draw.text((420 - w / 2, 236), 'V', color, font=small_font)
     title_draw.text((430 - w / 2, 230), number_version, color, font=large_font)
@@ -70,35 +67,37 @@ if args.skipmod == False:
     title_draw.text((420 - w / 2, 250), URL, color, font=URL_font)
 
     title_img.save(os.path.join(title_screen_path, 'titlemenu.png'))
+    print('Title screen image updated.')
 
     # We are done if all we need to do is update the title screen
     if args.logo:
         sys.exit()
 
     # Check to see if we had the Basement/Cellar STBs in testing mode
-    basementBackupSTB = os.path.join(mod_dir, 'resources', 'rooms', '01.basement2.stb')
-    if os.path.isfile(basementBackupSTB):
-        os.rename(basementBackupSTB, os.path.join(mod_dir, 'resources', 'rooms', '01.basement.stb'))
-    cellarBackupSTB = os.path.join(mod_dir, 'resources', 'rooms', '02.cellar2.stb')
-    if os.path.isfile(cellarBackupSTB):
-        os.rename(cellarBackupSTB, os.path.join(mod_dir, 'resources', 'rooms', '02.cellar.stb'))
-
-    # Commit to the mod epository
-    os.chdir(mod_dir)
-    return_code = subprocess.call(['git', 'add', '-A'])
-    if return_code != 0:
-        error('Failed to git add.')
-    return_code = subprocess.call(['git', 'commit', '-m', version])
-    if return_code != 0:
-        error('Failed to git commit.')
-    return_code = subprocess.call(['git', 'push'])
-    if return_code != 0:
-        error('Failed to git push.')
-    os.chdir(repository_dir)
+    rooms_dir = os.path.join(mod_dir, 'resources', 'rooms')
+    for file_name in os.listdir(rooms_dir):
+        if file_name.endswith('2.stb'):
+            match = re.search(r'(.+)2\.stb$', file_name)
+            new_file_name = match.group(1) + '.stb'
+            os.rename(os.path.join(rooms_dir, file_name), os.path.join(rooms_dir, new_file_name))
 
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([path_to_uploader]) # Popen will run it in the background
+
+    # Copy the mod
+    mod_dir2 = 'mod'
+    if os.path.exists(mod_dir2):
+        try:
+            shutil.rmtree(mod_dir2)
+            time.sleep(1) # This is necessary or else we get "ACCESS DENIED" errors for some reason
+        except Exception as e:
+            error('Failed to remove the "' + mod_dir2 + '" directory:', e)
+    try:
+        shutil.copytree(mod_dir, mod_dir2)
+    except Exception as e:
+        error('Failed to copy the "' + mod_dir + '" directory:', e)
+    print('Copied the mod.')
 
 if args.github:
     # Commit to the client repository
@@ -117,36 +116,6 @@ if args.github:
 for process in psutil.process_iter():
     if process.name() == 'electron.exe':
         process.kill()
-
-# Copy the mod
-mod_dir2 = os.path.join('assets', 'mod')
-if os.path.exists(mod_dir2):
-    try:
-        shutil.rmtree(mod_dir2)
-        time.sleep(1) # This is necessary or else we get "ACCESS DENIED" errors for some reason
-    except Exception as e:
-        error('Failed to remove the "' + mod_dir2 + '" directory:', e)
-try:
-    os.makedirs(mod_dir2)
-except Exception as e:
-    error('Failed to recreate the "' + mod_dir2 + '" directory:', e)
-for file_name in os.listdir(mod_dir):
-    if file_name == '.git' or file_name == 'metadata.xml' or file_name == 'save.dat':
-        continue
-
-    path1 = os.path.join(mod_dir, file_name)
-    path2 = os.path.join(mod_dir2, file_name)
-    if os.path.isfile(path1):
-        try:
-            shutil.copyfile(path1, path2)
-        except Exception as e:
-            error('Failed to copy the "' + path1 + '" file:', e)
-    elif os.path.isdir(path1):
-        try:
-            shutil.copytree(path1, path2)
-        except Exception as e:
-            error('Failed to copy the "' + path1 + '" directory:', e)
-print('Copied the mod.')
 
 # Build/package
 print('Building:', repository_name, version)

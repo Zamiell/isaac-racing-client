@@ -6,7 +6,7 @@
 
 /*
 
-Patch notes for v0.2.78:
+Patch notes for v0.2.86:
 - It seems to be pretty common for Steam's download system to break people's mods whenever I push an update. Now, whenever you log in with the client, if you have a damaged mod, it will automatically be healed.
 - Fixed the bug where you could recharge your active item by swapping for another active item. (Thanks dion)
 - Fixed the bug where items that were not fully decremented on sight rolled into themselves. This involved rewriting both the item ban system and the RNG that the mod uses. The ban system now seeds items one by one starting with the room seed. The RNG is now based on the game's internal RNG. (Thanks Rex and Krakenos, and thanks blcd for ShiftIdx recommendation)
@@ -240,18 +240,22 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
 } else {
     misc.errorShow('The platform of "' + process.platform + '" is not supported."');
 }
-if (typeof settings.get('logFilePath') === 'undefined') {
+let logFilePath = settings.get('logFilePath');
+if (typeof logFilePath === 'undefined' || logFilePath === null) {
+    logFilePath = globals.defaultLogFilePath;
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
+    globals.log.info('logFilePath was undefined, set it to: ' + globals.defaultLogFilePath);
 }
 
 // Get the default mod directory
+globals.log.info('XXX Log file path is: ' + logFilePath);
 let modPath;
 if (process.platform === 'win32' || process.platform === 'darwin') {
-    modPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+    modPath = path.join(path.dirname(logFilePath), '..', 'Binding of Isaac Afterbirth+ Mods');
 } else if (process.platform === 'linux') {
     // This is lowercase on Linux for some reason
-    modPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
+    modPath = path.join(path.dirname(logFilePath), '..', 'binding of isaac afterbirth+ mods');
 }
 let modPathDev = path.join(modPath, globals.modNameDev);
 if (isDev || fs.existsSync(modPathDev) ) {

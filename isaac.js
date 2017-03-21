@@ -110,57 +110,8 @@ process.on('message', function(message) {
     }
 
     // Begin the work
-    checkIsaacOpen();
+    checkOptionsINIForModsEnabled();
 });
-
-// If we make changes to files and Isaac is closed, it will overwrite all of our changes
-// So first, we need to find out if it is open
-function checkIsaacOpen() {
-    log.info('Checking to see if Isaac is open.');
-    if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-        // On Windows, we use the taskkill module (the ps-node module is very slow)
-        let processName = 'isaac-ng.exe';
-        tasklist({
-            filter: ['Imagename eq ' + processName], // https://technet.microsoft.com/en-us/library/bb491010.aspx
-        }).then(function(data) {
-            if (data.length === 1) {
-                IsaacOpen = true;
-                IsaacPID = data[0].pid;
-                checkOptionsINIForModsEnabled();
-            } else {
-                process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
-                return;
-            }
-        }, function(err) {
-            // Isaac is closed
-            checkOptionsINIForModsEnabled();
-        });
-    } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
-        // On macOS and Linux, we use the ps-node module
-        let processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';
-        ps.lookup({
-            command: processName,
-        }, function(err, resultList) {
-            if (err) {
-                process.send('error: Failed to find the Isaac process: ' + err, processExit);
-                return;
-            }
-
-            if (resultList.length === 0) {
-                // Isaac is closed
-                checkOptionsINIForModsEnabled();
-            } else {
-                // Isaac is already open
-                // There should only be 1 "isaac-ng.exe" process
-                resultList.forEach(function(ps) {
-                    IsaacOpen = true;
-                    IsaacPID = ps.pid;
-                    checkOptionsINIForModsEnabled();
-                });
-            }
-        });
-    }
-}
 
 function checkOptionsINIForModsEnabled() {
     // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
@@ -231,9 +182,9 @@ function checkModIntegrity() {
     var files;
     var backupModPath;
     if (isDev) {
-        backupModPath = path.join('assets', 'mod');
+        backupModPath = 'mod';
     } else {
-        backupModPath = path.join('app.asar', 'assets', 'mod');
+        backupModPath = path.join('app.asar', 'mod');
     }
     try {
         files = klawSync(backupModPath);
@@ -243,6 +194,10 @@ function checkModIntegrity() {
     }
     for (let fileObject of files) {
         if (fileObject.stats.isFile() === false) {
+            continue;
+        } else if (path.posix.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
+                   path.posix.basename(fileObject.path) === 'save.dat') { // This is the IPC file, so it doesn't matter if it is different
+
             continue;
         }
 
@@ -360,9 +315,9 @@ function enableBossCutscenes() {
             log.info('Disabling boss cutscenes.');
             let newBossCutsceneFile;
             if (isDev) {
-                newBossCutsceneFile = path.join('assets', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                newBossCutsceneFile = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             } else {
-                newBossCutsceneFile = path.join('app.asar', 'assets', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                newBossCutsceneFile = path.join('app.asar', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             }
             try {
                 fs.copySync(newBossCutsceneFile, bossCutsceneFile);
@@ -389,13 +344,62 @@ function checkOneMillionPercent() {
     closeIsaac();
 }
 
-function closeIsaac() {
+// If we make changes to files and Isaac is closed, it will overwrite all of our changes
+// So first, we need to find out if it is open
+function checkIsaacOpen() {
     // If we are doing this the second time around, just jump to the end
     if (secondTime === true) {
         startIsaac();
         return;
     }
 
+    log.info('Checking to see if Isaac is open.');
+    if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+        // On Windows, we use the taskkill module (the ps-node module is very slow)
+        let processName = 'isaac-ng.exe';
+        tasklist({
+            filter: ['Imagename eq ' + processName], // https://technet.microsoft.com/en-us/library/bb491010.aspx
+        }).then(function(data) {
+            if (data.length === 1) {
+                IsaacOpen = true;
+                IsaacPID = data[0].pid;
+                closeIsaac();
+            } else {
+                process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
+                return;
+            }
+        }, function(err) {
+            // Isaac is closed
+            closeIsaac();
+        });
+    } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
+        // On macOS and Linux, we use the ps-node module
+        let processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';
+        ps.lookup({
+            command: processName,
+        }, function(err, resultList) {
+            if (err) {
+                process.send('error: Failed to find the Isaac process: ' + err, processExit);
+                return;
+            }
+
+            if (resultList.length === 0) {
+                // Isaac is closed
+                closeIsaac();
+            } else {
+                // Isaac is already open
+                // There should only be 1 "isaac-ng.exe" process
+                resultList.forEach(function(ps) {
+                    IsaacOpen = true;
+                    IsaacPID = ps.pid;
+                    closeIsaac();
+                });
+            }
+        });
+    }
+}
+
+function closeIsaac() {
     if (IsaacOpen === false) {
         // Isaac wasn't open, we are done
         // Don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually
@@ -423,7 +427,9 @@ function closeIsaac() {
         } else {
             // We have to redo all of the steps from before, since when Isaac closes it overwrites files
             secondTime = true;
-            checkOptionsINIForModsEnabled();
+            setTimeout(function() {
+                checkOptionsINIForModsEnabled();
+            }, 1000); // Pause an extra second to let all file writes occur
         }
     });
 }
