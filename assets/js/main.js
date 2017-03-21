@@ -10,7 +10,6 @@ Patch notes for v0.2.90:
 - The size of the mod has been reduced by around 12 MB. (Thanks ArseneLapin)
 - The mod will now check for the existence of a 1,000,000% save file. If none are found, it will ask you if you want to automatically install one.
 
-
 Bugs to fix:
 - fix sounds so that last place and race copmleted come as a callback so that both play
 - set twitch bot to disable after no mod found

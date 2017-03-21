@@ -9,6 +9,7 @@ const ipcRenderer  = nodeRequire('electron').ipcRenderer;
 const remote       = nodeRequire('electron').remote;
 const fs           = nodeRequire('fs-extra');
 const path         = nodeRequire('path');
+const isDev        = nodeRequire('electron-is-dev');
 const globals      = nodeRequire('./assets/js/globals');
 const settings     = nodeRequire('./assets/js/settings');
 const misc         = nodeRequire('./assets/js/misc');
@@ -173,9 +174,14 @@ $(document).ready(function() {
             } else {
                 // Make sure the file is there
                 if (fs.existsSync(bossAnimationPath) === false) {
+                    let newBossCutsceneFile;
+                    if (isDev) {
+                        newBossCutsceneFile = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                    } else {
+                        newBossCutsceneFile = path.join('app.asar', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                    }
                     try {
-                        let newBossAnimationPath = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-                        fs.copySync(newBossAnimationPath, bossAnimationPath);
+                        fs.copySync(newBossCutsceneFile, bossAnimationPath);
                     } catch(err) {
                         misc.errorShow('Failed to copy over the "versusscreen.anm2" file while disabling boss cutscenes.');
                         return;
