@@ -6,17 +6,18 @@
 
 /*
 
-Patch notes for v0.2.77:
-- Fixed the bug where in certain circumstances, the client was not able to find the Racing+ mod directory.
-- Trinkets consumed with the Gulp! pill will now show up on the item tracker. (This only works if you are using the Racing+ mod.)
-- Fixed the bug where some glowing item & trinket images were not showing up properly on the starting room. (Thanks Krakenos)
-- Fixed the bug where starting the Boss Rush would not grant a charge to the Schoolbag item. Note that actually clearing the Boss Rush still won't give any charges, due to limiations with the Afterbirth+ API. (Thanks Dea1h, who saw it on tyrannasauruslex's stream)
-- Fixed the bug where fart-reroll items would start at 0 charges. (Thanks Munch, who saw it on tyrannasauruslex's stream)
-- The Polaroid and The Negative are no longer automatically removed in the Pageant Boy ruleset.
-- The beam of light and the trapdoor are no longer automatically removed after It Lives! in the Pageant Boy ruleset.
-- The big chests after Blue Baby, The Lamb, and Mega Satan will now be automatically removed in the Pageant Boy ruleset.
-- Fixed the Schoolbag sprite bug when starting a new run in the Pageant Boy ruleset.
-
+Patch notes for v0.2.78:
+- Fixed the bug where you could recharge your active item by swapping for another active item. (Thanks dion)
+- Fixed the bug where items that were not fully decremented on sight rolled into themselves. This involved rewriting both the item ban system and the RNG that the mod uses. The ban system now seeds items one by one starting with the room seed. The RNG is now based on the game's internal RNG. (Thanks Rex and Krakenos, and thanks blcd for ShiftIdx recommendation)
+- Fixed the bug where rerolled items would be swapped if one item was purchased beforehand and the other one wasn't.
+- Fixed the bug where Schoolbag items were not added to the ban list on seeded races. (Thanks Cyber_1)
+- Fixed the bug where the charge bar for Wait What? would not show up in the Schoolbag. (Thanks Cyber_1)
+- It seems to be pretty common for Steam's download system to break people's mods whenever I push an update. Now, whenever you log in with the client, it will now automatically heal a damaged mod.
+- Special items are no longer special. This means that you will no longer be screwed by seeing a D100 or The Ludovico Technique, for example.
+- Fixed the bug with the Schoolbag where the game would play a sound when you switched to an item that was not fully charged.
+- Fixed the bug where teleporting would cause you to lose your Schoolbag item under certain circumstances. (Thanks Dea1h)
+- Fixed the bug where the pre-race graphics would stay on the screen for the entire race under certain circumstances. (Thanks Dea1h)
+- Touched up the save file graphics.
 
 
 

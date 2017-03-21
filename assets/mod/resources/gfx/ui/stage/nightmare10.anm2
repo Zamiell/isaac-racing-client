@@ -1,0 +1,39 @@
+<AnimatedActor>
+	<Info CreatedBy="Unknown" CreatedOn="23/10/2015 12:33:00 PM" Version="32" Fps="30"/>
+	<Content>
+		<Spritesheets>
+			<Spritesheet Path="bgblack.png" Id="0"/>
+			<Spritesheet Path="nightmares_bg.png" Id="1"/>
+			<Spritesheet Path="PlayerPortraitBig_01_Isaac.png" Id="2"/>
+			<Spritesheet Path="nightmare_bubbles.png" Id="3"/>
+			<Spritesheet Path="nightmare_10.png" Id="4"/>
+		</Spritesheets>
+		<Layers>
+			<Layer Name="Background" Id="0" SpritesheetId="0"/>
+			<Layer Name="background" Id="1" SpritesheetId="1"/>
+			<Layer Name="Player" Id="2" SpritesheetId="2"/>
+			<Layer Name="bubble1" Id="3" SpritesheetId="3"/>
+			<Layer Name="bubble2" Id="4" SpritesheetId="3"/>
+			<Layer Name="bubble3" Id="5" SpritesheetId="3"/>
+			<Layer Name="nightmare1" Id="6" SpritesheetId="4"/>
+			<Layer Name="nightmare2" Id="7" SpritesheetId="4"/>
+			<Layer Name="nightmare3" Id="8" SpritesheetId="4"/>
+			<Layer Name="nightmare4" Id="9" SpritesheetId="4"/>
+		</Layers>
+		<Nulls>
+			<Null Name="FadeGuide" Id="0"/>
+		</Nulls>
+		<Events/>
+	</Content>
+	<Animations DefaultAnimation="Scene">
+		<Animation Name="Scene" FrameNum="0" Loop="false">
+			<RootAnimation>
+			</RootAnimation>
+			<LayerAnimations>
+			</LayerAnimations>
+			<NullAnimations>
+			</NullAnimations>
+			<Triggers/>
+		</Animation>
+	</Animations>
+</AnimatedActor>

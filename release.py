@@ -96,15 +96,6 @@ if args.skipmod == False:
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([path_to_uploader]) # Popen will run it in the background
 
-if args.mod:
-    sys.exit()
-
-# Close the program if it is running
-# (having it open can cause corrupted ASAR archives)
-for process in psutil.process_iter():
-    if process.name() == 'electron.exe':
-        process.kill()
-
 if args.github:
     # Commit to the client repository
     return_code = subprocess.call(['git', 'add', '-A'])
@@ -116,6 +107,19 @@ if args.github:
     return_code = subprocess.call(['git', 'push'])
     if return_code != 0:
         error('Failed to git push.')
+
+# Close the program if it is running
+# (having it open can cause corrupted ASAR archives)
+for process in psutil.process_iter():
+    if process.name() == 'electron.exe':
+        process.kill()
+
+# Copy the mod
+shutil.rmtree(os.path.join('assets', 'mod'))
+shutil.copytree(mod_dir, os.path.join('assets', 'mod'))
+shutil.rmtree(os.path.join('assets', 'mod', '.git'))
+os.remove(os.path.join('assets', 'mod', 'metadata.xml'))
+os.remove(os.path.join('assets', 'mod', 'save.dat'))
 
 # Build/package
 print('Building:', repository_name, version)

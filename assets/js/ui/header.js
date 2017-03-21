@@ -39,7 +39,7 @@ $(document).ready(function() {
     */
 
     $('#header-profile').click(function() {
-        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profiles/' + globals.myUsername;
+        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profile/' + globals.myUsername;
         shell.openExternal(url);
     });
 

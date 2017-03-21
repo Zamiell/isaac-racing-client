@@ -365,7 +365,7 @@ exports.usersDraw = function() {
 
     function userTooltipChange(username) {
         $('#user-click-profile').click(function() {
-            let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profiles/' + username;
+            let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profile/' + username;
             shell.openExternal(url);
         });
         $('#user-click-private-message').click(function() {

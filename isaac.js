@@ -5,17 +5,17 @@
 'use strict';
 
 // Imports
-const fs       = require('fs-extra');
-const path     = require('path');
-const isDev    = require('electron-is-dev');
-const tracer   = require('tracer');
-const Raven    = require('raven');
-const ps       = require('ps-node');
-const tasklist = require('tasklist');
-const opn      = require('opn');
-const md5      = require('md5');
-const execFile = require('child_process').execFile;
-const teeny    = require('teeny-conf');
+const fs        = require('fs-extra');
+const klawSync  = require('klaw-sync');
+const path      = require('path');
+const isDev     = require('electron-is-dev');
+const tracer    = require('tracer');
+const Raven     = require('raven');
+const ps        = require('ps-node');
+const tasklist  = require('tasklist');
+const opn       = require('opn');
+const hashFiles = require('hash-files');
+const teeny     = require('teeny-conf');
 
 /*
     Handle errors
@@ -214,6 +214,63 @@ function checkOptionsINIForModsEnabled() {
         return;
     }
 
+    checkModIntegrity();
+}
+
+function checkModIntegrity() {
+    if (isDev) {
+        // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
+        checkOtherModsEnabled();
+        return;
+    }
+
+    log.info('Checking to see if the Racing+ mod is corrupted.');
+
+    // After an update, Steam can partially download some of the files, which seems to happen pretty commonly
+    // (not sure exactly what causes it, perhaps opening the game in the middle of the download)
+    var files;
+    var backupModPath = path.join('assets', 'mod');
+    try {
+        files = klawSync(backupModPath);
+    } catch (err) {
+        process.send('error: Failed to enumerate the files in the "' + backupModPath + '" directory: ' + err, processExit);
+        return;
+    }
+    for (let fileObject of files) {
+        if (fileObject.stats.isFile() === false) {
+            continue;
+        }
+
+        let path1 = fileObject.path;
+        let hash1 = hashFiles.sync({ // This defaults to SHA1
+            files: path1,
+        });
+
+        // Get the path of the matching file in the real mod directory
+        let backupModPathDoubleSlashes = backupModPath.replace(/\\/g, '\\\\');
+        var re = new RegExp('.+' + backupModPathDoubleSlashes + '(.+)');
+        let suffix = path1.match(re)[1];
+        let path2 = path.join(modPath, suffix);
+
+        let copyFile = false;
+        if (fs.existsSync(path2)) {
+            let hash2 = hashFiles.sync({ // This defaults to SHA1
+                files: path2,
+            });
+            if (hash1 !== hash2) {
+                copyFile = true;
+                fs.removeSync(path2);
+            }
+        } else {
+            copyFile = true;
+        }
+        if (copyFile) {
+            log.error('File is corrupt or missing: ' + path2);
+            fileSystemValid = false;
+            fs.copySync(path1, path2);
+        }
+    }
+
     checkOtherModsEnabled();
 }
 
@@ -298,9 +355,9 @@ function enableBossCutscenes() {
             log.info('Disabling boss cutscenes.');
             let newBossCutsceneFile;
             if (isDev) {
-                newBossCutsceneFile = path.join('assets', 'mod', 'versusscreen.anm2');
+                newBossCutsceneFile = path.join('assets', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             } else {
-                newBossCutsceneFile = path.join('app.asar', 'assets', 'mod', 'versusscreen.anm2');
+                newBossCutsceneFile = path.join('app.asar', 'assets', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             }
             try {
                 fs.copySync(newBossCutsceneFile, bossCutsceneFile);
