@@ -175,13 +175,8 @@ $(document).ready(function() {
             } else {
                 // Make sure the file is there
                 if (fs.existsSync(bossCutsceneFile) === false) {
-                    let newBossCutsceneFile;
-                    if (isDev) {
-                        newBossCutsceneFile = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-                    } else {
-                        newBossCutsceneFile = path.join('app.asar', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-                    }
-                    globals.log.info(newBossCutsceneFile);
+                    // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\assets\js\ui
+                    let newBossCutsceneFile = path.join('..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                     try {
                         fs.copySync(newBossCutsceneFile, bossCutsceneFile);
                     } catch(err) {
