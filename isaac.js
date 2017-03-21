@@ -193,11 +193,11 @@ function checkModIntegrity() {
         return;
     }
     for (let fileObject of files) {
-        log.info(path.posix.basename(fileObject.path));
+        log.info(path.basename(fileObject.path));
         if (fileObject.stats.isFile() === false) {
             continue;
-        } else if (path.posix.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
-                   path.posix.basename(fileObject.path) === 'save.dat') { // This is the IPC file, so it doesn't matter if it is different
+        } else if (path.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
+                   path.basename(fileObject.path) === 'save.dat') { // This is the IPC file, so it doesn't matter if it is different
 
             continue;
         }
