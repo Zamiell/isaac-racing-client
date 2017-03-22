@@ -95,11 +95,11 @@ if args.skipmod == False:
         error('Failed to copy the "' + mod_dir + '" directory:', e)
     print('Copied the mod.')
 
+if args.github:
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([path_to_uploader]) # Popen will run it in the background
 
-if args.github:
     # Commit to the client repository
     return_code = subprocess.call(['git', 'add', '-A'])
     if return_code != 0:

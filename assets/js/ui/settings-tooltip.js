@@ -9,7 +9,6 @@ const ipcRenderer  = nodeRequire('electron').ipcRenderer;
 const remote       = nodeRequire('electron').remote;
 const fs           = nodeRequire('fs-extra');
 const path         = nodeRequire('path');
-const isDev        = nodeRequire('electron-is-dev');
 const globals      = nodeRequire('./assets/js/globals');
 const settings     = nodeRequire('./assets/js/settings');
 const misc         = nodeRequire('./assets/js/misc');
@@ -176,7 +175,7 @@ $(document).ready(function() {
                 // Make sure the file is there
                 if (fs.existsSync(bossCutsceneFile) === false) {
                     // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\assets\js\ui
-                    let newBossCutsceneFile = path.join('..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                    let newBossCutsceneFile = path.join(__dirname, '..', '..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                     try {
                         fs.copySync(newBossCutsceneFile, bossCutsceneFile);
                     } catch(err) {
