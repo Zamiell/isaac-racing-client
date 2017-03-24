@@ -35,7 +35,6 @@ module.exports = {
     lastPM: null,
     log: null,
     lang: null, // The language switcher instance
-    modLoaderFile: null, // Used to communicate with Isaac, set in isaac.js
     modLoader: {
         status: 'none',
         myStatus: 'not ready',

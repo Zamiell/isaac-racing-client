@@ -5,6 +5,7 @@
 'use strict';
 
 // Imports
+const path    = nodeRequire('path');
 const fs      = nodeRequire('fs-extra');
 const isDev   = nodeRequire('electron-is-dev');
 const globals = nodeRequire('./assets/js/globals');
@@ -16,7 +17,7 @@ const builds  = nodeRequire('./assets/data/builds');
 const send = function() {
     // Do nothing if the mod loader file is set to null
     // (this can happen if the user is closing the program, for example)
-    if (globals.modLoaderFile === null) {
+    if (globals.modPath === null) {
         return;
     }
 
@@ -63,18 +64,23 @@ const send = function() {
     saveDat += '}';
 
     // Write to it
-    fs.writeFile(globals.modLoaderFile, saveDat, function(err) {
-        if (err) {
-            globals.log.info('Error while filling up the "save.dat" file: ' + err);
-
-            // Try again in 1/20 of a second
-            setTimeout(function() {
-                send();
-            }, 50);
-        }
-    });
+    for (let i = 1; i <= 3; i++) {
+        let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+        fs.writeFile(modLoaderFile, saveDat, writeModError);
+    }
 };
 exports.send = send;
+
+function writeModError(err) {
+    if (err) {
+        globals.log.info('Error while filling up the "save.dat" file: ' + err);
+
+        // Try again in 1/20 of a second
+        setTimeout(function() {
+            send();
+        }, 50);
+    }
+}
 
 const reset = function() {
     globals.log.info('modLoader - Reset all variables.');

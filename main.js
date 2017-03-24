@@ -358,20 +358,22 @@ app.on('activate', function() {
 
 app.on('before-quit', function() {
     if (errorHappened === false) {
-        // Write all default values to the "save.dat" file
+        // Write all default values to the "save1.dat", "save2.dat", and "save3.dat" files
         let modsPath;
         if (process.platform === 'linux') {
             modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
         } else {
             modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
         }
-        let saveDat = path.join(modsPath, modNameDev, 'save.dat');
-        if (fs.existsSync(saveDat) === false) {
-            saveDat = path.join(modsPath, modName, 'save.dat');
+        for (let i = 1; i <= 3; i++) {
+            let saveDat = path.join(modsPath, modNameDev, 'save' + i + '.dat');
+            if (fs.existsSync(saveDat) === false) {
+                saveDat = path.join(modsPath, modName, 'save' + i + '.dat');
+            }
+            let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
+            fs.copySync(saveDatDefaults, saveDat);
         }
-        let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
-        fs.copySync(saveDatDefaults, saveDat);
-        log.info('Copying over a default "save.dat" file.');
+        log.info('Copied over default "save1.dat", "save2.dat", and "save3.dat" files.');
     } else {
         log.info('Not copying over a default "save.dat" file since we got an error.');
     }

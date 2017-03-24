@@ -6,9 +6,12 @@
 
 /*
 
-Patch notes for v0.3.1:
+Patch notes for v0.3.2:
+- Made the mod work with the new patch.
 - Increased the pedestal pickup delay from 10 to 15.
 - Fixed the bug where the Schoolbag item would be overwritten under certain conditions.
+- Fixed the (vanilla) bug where stuff on the bottom left hand corner of the title screen was cut off.
+
 
 Bugs to fix:
 - fix sounds so that last place and race copmleted come as a callback so that both play
@@ -251,9 +254,6 @@ if (isDev || fs.existsSync(modPathDev) ) {
 } else {
     globals.modPath = path.join(modPath, globals.modName);
 }
-
-// Set the path to the "save.dat" file used for interprocess communication
-globals.modLoaderFile = path.join(globals.modPath, 'save.dat');
 
 // Item list
 let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');

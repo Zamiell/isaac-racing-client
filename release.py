@@ -46,9 +46,10 @@ version = 'v' + data['version']
 
 if args.skipmod == False:
     # Fill the "save.dat" file with all default values
-    save_dat = os.path.join(mod_dir, 'save.dat')
     save_dat_defaults = os.path.join(mod_dir, 'save-defaults.dat')
-    shutil.copyfile(save_dat_defaults, save_dat)
+    for i in range(1, 4): # This will go from 1 to 3
+        save_dat = os.path.join(mod_dir, 'save ' + str(i) + '.dat')
+        shutil.copyfile(save_dat_defaults, save_dat)
 
     # Draw the version number on the title menu graphic
     large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
