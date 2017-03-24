@@ -178,7 +178,7 @@ function loginDebug(account) {
         // Normal login
         ipcRenderer.send('asynchronous-message', 'steam', account);
     } else {
-        globals.steam.id = (account + 100).toString();
+        globals.steam.id = "-" + account;
         globals.steam.screenName = 'TestAccount' + account;
         globals.steam.ticket = 'debug';
         login();

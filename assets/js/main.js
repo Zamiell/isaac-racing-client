@@ -6,9 +6,9 @@
 
 /*
 
-Patch notes for v0.2.90:
-- The size of the mod has been reduced by around 12 MB. (Thanks ArseneLapin)
-- The mod will now check for the existence of a 1,000,000% save file. If none are found, it will ask you if you want to automatically install one.
+Patch notes for v0.3.1:
+- Increased the pedestal pickup delay from 10 to 15.
+- Fixed the bug where the Schoolbag item would be overwritten under certain conditions.
 
 Bugs to fix:
 - fix sounds so that last place and race copmleted come as a callback so that both play

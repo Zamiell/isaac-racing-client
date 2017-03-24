@@ -274,9 +274,9 @@
 	<familiar description="Big Beautiful Fly" gfx="collectibles_272_bff.png" id="272" name="BBF" />
 	<familiar description="Explosive thoughts" gfx="collectibles_273_bobsbrain.png" id="273" name="Bob's Brain" />
 	<familiar description="Sworn protector" gfx="collectibles_274_bestbud.png" id="274" name="Best Bud" />
-	<familiar description="Evil friend" gfx="collectibles_275_lilbrimstone.png" devilprice="2" id="275" name="Lil' Brimstone" />
+	<familiar description="Evil friend" gfx="collectibles_275_lilbrimstone.png" devilprice="2" id="275" name="Lil Brimstone" />
 	<familiar achievement="129" description="Protect it" gfx="collectibles_276_isaacsheart.png" id="276" name="Isaac's Heart" />
-	<familiar description="Fear him" gfx="collectibles_277_lilhaunt.png" id="277" name="Lil' Haunt" />
+	<familiar description="Fear him" gfx="collectibles_277_lilhaunt.png" id="277" name="Lil Haunt" />
 	<familiar description="He wants to take your life" gfx="collectibles_278_darkbum.png" id="278" name="Dark Bum" />
 	<familiar description="Fat protector" gfx="collectibles_279_bigfan.png" id="279" name="Big Fan" />
 	<familiar description="She loves you" gfx="collectibles_280_sissylonglegs.png" id="280" name="Sissy Longlegs" />
@@ -520,6 +520,17 @@
 
 	<active achievement="338" description="Unleash the power!" gfx="Collectibles_510_Delirious.png" id="510" name="Delirious" maxcharges="12" />
 
+	<!-- Booster Pack #1 -->
+	<familiar description="He's violent" gfx="Collectibles_511_AngryFly.png" id="511" name="Angry Fly" />
+	<active description="Nothing can escape" gfx="Collectibles_512_BlackHole.png" id="512" maxcharges="4" name="Black Hole" />
+	<passive cache="damage" name="Bozo" description="Party time!" soulhearts="2" id="513" gfx="Collectibles_513_Bozo.png" />
+	<passive name="Broken Modem" description="LAG!" id="514" gfx="Collectibles_514_BrokenModem.png" />
+	<active description="Wrapped up nice for you!" id="515" gfx="Collectibles_515_MysteryGift.png" name="Mystery Gift" />
+	<active cache="familiars" name="Sprinkler" gfx="Collectibles_516_Sprinkler.png" description="Sprinkles." id="516" maxcharges="4" />
+	<passive name="Fast Bombs" gfx="Collectibles_517_FastBombs.png" description="Faster Bomb Drops!" id="517" bombs="7" />
+	<familiar description="What could it be?!" gfx="Collectibles_518_BuddyBox.png" id="518" name="Buddy in a box" />
+	<familiar description="He's Delirious" gfx="Collectibles_519_LilDelirium.png" id="519" name="Lil Delirium" />
+
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />
 	<trinket description="Trickle charge" gfx="trinket_003_aaabattery.png" id="3" name="AAA Battery" />
@@ -643,4 +654,9 @@
 	<trinket achievement="314" description="I Bring Conquest" gfx="trinket_117_LocustOfConquest.png" id="117" name="Locust of Conquest" />
 	<trinket achievement="304" description="They Are Growing..." gfx="trinket_118_BatWing.png" id="118" name="Bat Wing" cache="flying" />
 	<trinket achievement="301" description="Regen!" gfx="trinket_119_StemCell.png" id="119" name="Stem Cell" />
+
+	<!-- Booster Pack #1 -->
+	<trinket description="Poke that power outlet! Bosses charge you" gfx="trinket_120_Hairpin.png" id="120" name="Hairpin" />
+	<trinket description="My faith protects me" gfx="trinket_121_WoodenCross.png" id="121" name="Wooden Cross" />
+	<trinket description="Can't hold it!" gfx="trinket_122_Butter.png" id="122" name="Butter!" />
 </items>

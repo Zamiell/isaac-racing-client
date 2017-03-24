@@ -141,14 +141,11 @@ function RPSchoolbag:CheckEmptyActive()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local playerSprite = player:GetSprite()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
      RPGlobals.run.schoolbag.item == 0 or
      player:GetActiveItem() ~= 0 or
-     player:IsHoldingItem() or
-     playerSprite:IsPlaying("Hit") or
-     playerSprite:IsPlaying("TeleportUp") then
+     player:IsItemQueueEmpty() == false then
 
     return
   end

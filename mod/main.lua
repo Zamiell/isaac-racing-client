@@ -6,6 +6,8 @@
 --[[
 
 TODO:
+- remove double negative on boss cutscenes
+- unlock every easter egg for racing+ save file
 - Integrate 1st place, 2nd place, etc. on screen
 - Implement time offsets, show on starting screen
 - Seed Maw of the Void and Athame black heart drops

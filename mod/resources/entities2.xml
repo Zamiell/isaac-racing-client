@@ -419,7 +419,7 @@
 	<entity anm2path="003.114_SackOfSacks.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="13" friction="1" id="3" name="Sack of Sacks" numGridCollisionPoints="12" shadowSize="11" stageHP="0" variant="114">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
-	<entity anm2path="014.000_Pooter.anm2" reroll="true" baseHP="0" boss="0" champion="1" collisionDamage="0" collisionMass="4" collisionRadius="17" friction="1" id="3" name="Brown Nugget" numGridCollisionPoints="0" shadowSize="11" stageHP="0" variant="115" gridCollision="walls">
+	<entity anm2path="014.000_Pooter.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="4" collisionRadius="17" friction="1" id="3" name="Brown Nugget" numGridCollisionPoints="0" shadowSize="11" stageHP="0" variant="115" gridCollision="walls">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 				<preload-snd id="178" /> <!-- bloodshoot -->
     </entity>
@@ -427,6 +427,15 @@
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 	<entity anm2path="003.117_MomsRazor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="7" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Mom's Razor" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="117">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="003.118_AngryFly.anm2" baseHP="0" boss="0" champion="0" collisionDamage="2" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Angry Fly" numGridCollisionPoints="12" shadowSize="20" stageHP="0" variant="118">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="003.119_Box Buddy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="2" collisionRadius="13" friction="1" id="3" name="Box Buddy" numGridCollisionPoints="12" shadowSize="15" stageHP="0" variant="119">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="003.120_Sprinkler.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="4" collisionRadius="17" friction="1" id="3" name="Sprinkler" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="120">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
     <entity anm2path="004.000_Bomb.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="6" collisionRadius="16" friction="1" id="4" name="Bomb" numGridCollisionPoints="12" shadowSize="13" stageHP="0" variant="0">
@@ -2590,6 +2599,12 @@ bestiaryOverlay="Attack">
     </entity>
 	<entity anm2path="1000.106_FartRing.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" id="1000" name="Fart Ring" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="106">
       <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="1000.107_BlackHole.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="1" collisionRadius="1" friction="1" id="1000" name="BlackHole" numGridCollisionPoints="0" shadowSize="25" stageHP="0" variant="107" subtype="0">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="1000.107_BlackHoleRayParticle.anm2" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="1" id="1000" name="BlackHoleRay" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="107" subtype="1">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
     <entity anm2path="" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="1" id="9001" name="Spidermod Text" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="1">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />

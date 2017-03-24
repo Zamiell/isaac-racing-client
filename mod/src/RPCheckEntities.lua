@@ -419,10 +419,10 @@ function RPCheckEntities:ReplacePedestal(entity)
        RPGlobals.run.replacedPedestals[i].seed == entity.InitSeed then
 
       -- We have already replaced it, so check to see if we need to delete the delay
-      if entity:ToPickup().Wait > 10 then
+      if entity:ToPickup().Wait > 15 then
         -- When we enter a new room, the "wait" variable on all pedestals is set to 18
         -- This is too long, so shorten it
-        entity:ToPickup().Wait = 10
+        entity:ToPickup().Wait = 15
       end
       return
     end
@@ -464,19 +464,6 @@ function RPCheckEntities:ReplacePedestal(entity)
       end
     end
   end
-
-  -- Now that we have determined the seed for the pedestal, add it to the tracking table
-  RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
-    room = roomIndex,
-    X    = entity.Position.X,
-    Y    = entity.Position.Y,
-    seed = newSeed,
-  }
-  Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
-                    tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..
-                    tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].X) .. "," ..
-                    tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].Y) .. "," ..
-                    tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
 
   -- Check to see if this is a B1 item room on a seeded race
   local offLimits = false
@@ -550,6 +537,7 @@ function RPCheckEntities:ReplacePedestal(entity)
 
   else
     -- Replace the pedestal
+    local randomItem = false
     local newPedestal
     if offLimits then
       -- Change the item to Off Limits (5.100.235)
@@ -576,6 +564,7 @@ function RPCheckEntities:ReplacePedestal(entity)
       game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
       Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(newSeed))
+      randomItem = true -- Set that this is a random item so that we don't add it to the tracking index
 
     else
       -- Make a new copy of this item
@@ -610,7 +599,26 @@ function RPCheckEntities:ReplacePedestal(entity)
     newPedestal:ToPickup().TheresOptionsPickup = entity:ToPickup().TheresOptionsPickup
 
     -- Also remove the vanilla delay that is imposed upon newly spawned collectible items
-    newPedestal:ToPickup().Wait = 10 -- On vanilla, all pedestals get a 20 frame delay
+    newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
+
+    -- Add it to the tracking table so that we don't replace it again
+    -- (don't add random items to the index in case a banned item rolls into another banned item)
+    if randomItem == false then
+      RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
+        room = roomIndex,
+        X    = entity.Position.X,
+        Y    = entity.Position.Y,
+        seed = newSeed,
+      }
+      --[[
+      Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
+                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..
+                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].X) .. "," ..
+                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].Y) .. "," ..
+                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
+      --]]
+    end
+
 
     -- Now that we have created a new pedestal, we can delete the old one
     entity:Remove()

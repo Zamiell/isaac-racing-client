@@ -52,6 +52,11 @@
 	<card description="Help from above" hud="35_EmergencyContact" id="50" name="Emergency Contact" />
 	<card achievement="293" description="You feel protected" hud="40_HolyCard" id="51" name="Holy Card" />
 
+	<!-- Booster Pack #1 -->
+	<card description="Become immense!" hud="52_HugeGrowth" name="Huge Growth" id="52" />
+	<card description="Draw 3 cards" hud="53_AncientRecall" name="Ancient Recall" id="53" />
+	<card description="Savor the moment" hud="54_EraWalk" name="Era Walk" id="54" />
+
 	<pilleffect id="0" name="Bad Gas" />
 	<pilleffect id="1" name="Bad Trip" />
 	<pilleffect id="2" name="Balls of Steel" />

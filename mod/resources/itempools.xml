@@ -638,146 +638,162 @@
 		<Item Id="509" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Sharp Straw-->
 		<Item Id="507" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Sprinkler-->
+		<Item Id="516" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Black Hole-->
+		<Item Id="512" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Angry Fly-->
+		<Item Id="511" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Bozo-->
+		<Item Id="513" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Fast Bombs-->
+		<Item Id="517" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop"><!-- DecreaseBy="0.5" -->
-	    <!--The Compass-->
-	    <Item Id="21" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--The Bible-->
-	    <Item Id="33" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Treasure Map-->
-	    <Item Id="54" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--The Ladder-->
-	    <Item Id="60" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--The Battery-->
-	    <Item Id="63" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Steam Sale-->
-	    <Item Id="64" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--PHD-->
-	    <Item Id="75" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Deck of Cards-->
-	    <Item Id="85" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Mom's Bottle of Pills-->
-	    <Item Id="102" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--9 Volt-->
-	    <Item Id="116" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Remote Detonator-->
-	    <Item Id="137" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Moms Purse-->
-	    <Item Id="139" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Habit-->
-	    <Item Id="156" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Portable Slot!-->
-	    <Item Id="177" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Moms coin purse-->
-	    <Item Id="195" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Humbleing Bundle-->
-	    <Item Id="203" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Fanny Pack-->
-	    <Item Id="204" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Sharp Plug-->
-	    <Item Id="205" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Champion Belt-->
-	    <Item Id="208" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Piggy Bank-->
-	    <Item Id="227" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Stop Watch-->
-	    <Item Id="232" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Blue Map-->
-	    <Item Id="246" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--There's Options-->
-	    <Item Id="249" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--BOGO Bombs-->
-	    <Item Id="250" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Starter deck-->
-	    <Item Id="251" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Little Baggy-->
-	    <Item Id="252" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--BFFS!-->
-	    <Item Id="247" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Hive Mind-->
-	    <Item Id="248" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Blank Card-->
-	    <Item Id="286" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--The Jar-->
-	    <Item Id="290" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Red Candle-->
-	    <Item Id="289" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--The Candle-->
-	    <Item Id="164" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Magic Fingers-->
-	    <Item Id="295" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Converter-->
-	    <Item Id="296" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Blue Box-->
-	    <Item Id="297" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Boomerang-->
-	    <Item Id="338" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Broken Watch-->
-	    <Item Id="337" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Black Candle-->
-	    <Item Id="260" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Mom's Key-->
-	    <Item Id="199" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--More Options-->
-	    <Item Id="414" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Spider Mod-->
-	    <Item Id="403" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Chaos-->
-	    <Item Id="402" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Ventricle Razor-->
-	    <Item Id="396" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Tear Detonator-->
-	    <Item Id="383" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Pay To Play-->
-	    <Item Id="380" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Restock-->
-	    <Item Id="376" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Charged Baby-->
-	    <Item Id="372" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Car Battery-->
-	    <Item Id="356" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Wooden Nickel-->
-	    <Item Id="349" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Diplopia-->
-	    <Item Id="347" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Placebo-->
-	    <Item Id="348" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Box of Friends-->
-	    <Item Id="357" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Mom's Box-->
-	    <Item Id="439" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Jar of Flies-->
-	    <Item Id="434" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Night Light-->
-	    <Item Id="425" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Sack Head-->
-	    <Item Id="424" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Glowing Hour Glass-->
-	    <Item Id="422" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Deep Pockets-->
-	    <Item Id="416" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Sack of Sacks-->
-	    <Item Id="500" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Potato Peeler-->
-	    <Item Id="487" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Dull Razor-->
-	    <Item Id="486" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Crooked Penny-->
-	    <Item Id="485" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Compost-->
-	    <Item Id="480" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Smelter-->
-	    <!--<Item Id="479" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>-->
-	    <!--Plan C-->
-	    <Item Id="475" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--King Baby-->
-	    <Item Id="472" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Tarot Cloth-->
-	    <Item Id="451" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--MaMa Mega!-->
-	    <Item Id="483" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-	    <!--Poke Go-->
-	    <Item Id="505" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Compass-->
+		<Item Id="21" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Bible-->
+		<Item Id="33" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Treasure Map-->
+		<Item Id="54" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Ladder-->
+		<Item Id="60" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Battery-->
+		<Item Id="63" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Steam Sale-->
+		<Item Id="64" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--PHD-->
+		<Item Id="75" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Deck of Cards-->
+		<Item Id="85" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Mom's Bottle of Pills-->
+		<Item Id="102" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--9 Volt-->
+		<Item Id="116" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Remote Detonator-->
+		<Item Id="137" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Moms Purse-->
+		<Item Id="139" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Habit-->
+		<Item Id="156" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Portable Slot!-->
+		<Item Id="177" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Moms coin purse-->
+		<Item Id="195" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Humbleing Bundle-->
+		<Item Id="203" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Fanny Pack-->
+		<Item Id="204" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Sharp Plug-->
+		<Item Id="205" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Champion Belt-->
+		<Item Id="208" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Piggy Bank-->
+		<Item Id="227" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Stop Watch-->
+		<Item Id="232" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Blue Map-->
+		<Item Id="246" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--There's Options-->
+		<Item Id="249" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--BOGO Bombs-->
+		<Item Id="250" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Starter deck-->
+		<Item Id="251" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Little Baggy-->
+		<Item Id="252" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--BFFS!-->
+		<Item Id="247" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Hive Mind-->
+		<Item Id="248" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Blank Card-->
+		<Item Id="286" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Jar-->
+		<Item Id="290" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Red Candle-->
+		<Item Id="289" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--The Candle-->
+		<Item Id="164" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Magic Fingers-->
+		<Item Id="295" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Converter-->
+		<Item Id="296" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Blue Box-->
+		<Item Id="297" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Boomerang-->
+		<Item Id="338" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Broken Watch-->
+		<Item Id="337" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Black Candle-->
+		<Item Id="260" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Mom's Key-->
+		<Item Id="199" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--More Options-->
+		<Item Id="414" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Spider Mod-->
+		<Item Id="403" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Chaos-->
+		<Item Id="402" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Ventricle Razor-->
+		<Item Id="396" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Tear Detonator-->
+		<Item Id="383" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Pay To Play-->
+		<Item Id="380" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Restock-->
+		<Item Id="376" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Charged Baby-->
+		<Item Id="372" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Car Battery-->
+		<Item Id="356" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Wooden Nickel-->
+		<Item Id="349" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Diplopia-->
+		<Item Id="347" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Placebo-->
+		<Item Id="348" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Box of Friends-->
+		<Item Id="357" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Mom's Box-->
+		<Item Id="439" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Jar of Flies-->
+		<Item Id="434" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Night Light-->
+		<Item Id="425" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Sack Head-->
+		<Item Id="424" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Glowing Hour Glass-->
+		<Item Id="422" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Deep Pockets-->
+		<Item Id="416" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Sack of Sacks-->
+		<Item Id="500" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Potato Peeler-->
+		<Item Id="487" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Dull Razor-->
+		<Item Id="486" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Crooked Penny-->
+		<Item Id="485" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Compost-->
+		<Item Id="480" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Smelter-->
+		<!--<Item Id="479" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>-->
+		<!--Plan C-->
+		<Item Id="475" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--King Baby-->
+		<Item Id="472" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Tarot Cloth-->
+		<Item Id="451" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--MaMa Mega!-->
+		<Item Id="483" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Poke Go-->
+		<Item Id="505" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Buddy in a box-->
+		<Item Id="518" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Broken Modem-->
+		<Item Id="514" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Mystery Gift-->
+		<Item Id="515" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="boss">
 		<!--Magic Mushroom-->
@@ -1000,6 +1016,8 @@
 		<Item Id="442" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Shade-->
 		<Item Id="468" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Lil Delirium-->
+		<Item Id="519" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="angel">
 		<!--The Bible-->
@@ -1078,6 +1096,8 @@
 		<Item Id="477" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Delirious-->
 		<Item Id="510" Weight="0.4" DecreaseBy="0.4" RemoveOn="0.1"/>
+		<!--Lil Delirium-->
+		<Item Id="519" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="secret">
 		<!--Samson's Chains-->
