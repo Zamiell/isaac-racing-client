@@ -10,17 +10,19 @@ If you want to learn more about Racing+, you can visit [the official website](ht
 
 In terms of what to change about the game, the mod has several goals, and attempts to strike a balance between them. However, certain things are prioritized. The goals are listed below in order of importance:
 
-* to reward skillful play
-* to make the game more fun to play
-* to fix bugs and imperfections
-* to make every character have at least one significantly unique thing about them
-* to keep the game as "vanilla" as possible
+1) to reward skillful play (in the context of speedrunning and racing)
+2) to make the game more fun to play
+3) to fix bugs and imperfections
+4) to make every character have at least one significantly unique thing about them
+5) to keep the game as "vanilla" as possible
 
 <br />
 
 ## List of Main Changes
 
 ### 1) Character Changes
+
+(Most races are done with Judas. The changes to the other characters are mostly done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) and R+14 speedrun categories.)
 
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
@@ -38,26 +40,30 @@ In terms of what to change about the game, the mod has several goals, and attemp
 * Keeper starts with Greed's Gullet, Duality, and 50 cents.
 * Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 
-### 2) Devil Room & Angel Room Changes
+### 2) No Curses
+
+All curses are automatically disabled.
+
+### 3) Devil Room & Angel Room Changes
 
 Devil Rooms and Angel Rooms without item pedestals in them have been removed.
 
-### 3) Wrath of the Lamb Style Room Clear
+### 4) Wrath of the Lamb Style Room Clear
 
 Room clear was incorrectly ported from Wrath of Lamb to Rebirth; doors are intended to open at the beginning of an enemy's death animation, not at the end. The Racing+ mod fixes this to be the way it was originally intended.
 
-### 4) Room Fixes
+### 5) Room Fixes
 
-Many rooms with unavoidable damage or bugs have been fixed or deleted.
+Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 
 <br />
 
 ## Other Minor Bug Fixes & Quality of Life Changes
 
 * Some items with no effect at all are removed:
-  * the Karma trinket (all Donation Machines are removed on the BLCK CNDL seed)
-  * the Amnesia pill (all curses are removed on the BLCK CNDL seed)
-  * the ??? pill (all curses are removed on the BLCK CNDL seed)
+  * the Karma trinket (all Donation Machines are removed when mods are enabled)
+  * the Amnesia pill (this has no effect with curses disabled)
+  * the ??? pill (this has no effect with curses disabled)
 * Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for racers with cutscene skip muscle memory.)
 * Some useless animations are removed:
   * cowering in the fetal position at the beginning of every floor
@@ -65,11 +71,11 @@ Many rooms with unavoidable damage or bugs have been fixed or deleted.
   * going up the beam of light to the Cathedral
   * entering a chest when going to The Chest or beating the game (which also prevents [this bug](http://gfycat.com/ImmaculateHeartfeltBoutu)
   * teleporting upwards
+  * the fade when entering a trapdoor
   * the fade when entering or exiting crawlspaces
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
 * Some things that are unseeded are now seeded:
-  * Key Piece #1 and Key Piece #2 rerolls
   * Pandora's Box boss item rerolls
   * rerolls on items after being touched
   * rerolls on items after being purchased
@@ -88,21 +94,23 @@ Many rooms with unavoidable damage or bugs have been fixed or deleted.
 * The Book of Sin and Mystery Sack will now generate actual random pickups.
 * Greed's Gullet will now properly work on Keeper.
 * Double coins and nickels now heal Keeper for their proper amount.
-* Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
-* Teleporting to the Dark Room via a Sacrifice Room will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
 * Eden's Soul will now always properly start at 0 charges.
 * AAA Battery will now synergize with The Battery.
 * 9 Volt will now synergize with The Battery.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
-* Reduced the pickup delay on all pedestal items from 0.67 seconds to 0.33 seconds.
+* Reduced the pickup delay on all pedestal items from 0.67 seconds to 0.5 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * All Spike Chests will now spawn as Mimics instead.
 * Mimics are no longer rediculously trivial to spot.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
 * Hosts and Mobile Hosts are now immune to fear.
-* Fixed the spelling of Humbling Bundle.
+* The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
+* Fixed the spelling of Humbling Bundle.
+* Fixed the bug where the main menu would not show the bottom left hand corner of the title screen.
+* Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
+* Teleporting to the Dark Room via a Sacrifice Room will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
 
@@ -134,7 +142,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Mega Satan
 
-* Pedestals for Key Piece 1 and Key Piece 2 are placed next to the Mega Satan door on both The Chest and the Dark Room.
+* A Get out of Jail Free Card will now spawn next to the Mega Satan door on both The Chest and the Dark Room.
 
 <br />
 

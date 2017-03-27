@@ -5,13 +5,10 @@ local RPGlobals = {}
 --
 
 -- These are per run
-RPGlobals.run = {
-  -- This is the only two variable not reset upon a run starting
-  -- It can be either 0, 1, or 2
-  initializing = 0,
-}
+-- (defaults are set below in the "RPGlobals:InitRun()" function)
+RPGlobals.run = {}
 
--- The table that gets updated from the "save.dat" file
+-- This is the table that gets updated from the "save.dat" file
 RPGlobals.race = {
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
@@ -20,28 +17,23 @@ RPGlobals.race = {
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
-  currentSeed     = "-",         -- The seed of our current run (detected through the "log.txt" file)
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
 }
 
--- This is used to show what was updated in the race table
-RPGlobals.oldRace = {}
-
--- Things that pertain to the race but are not read from the "save.dat" file
+-- These are things that pertain to the race but are not read from the "save.dat" file
 RPGlobals.raceVars = {
   loadOnNextFrame    = false,
-  blckCndlOn         = false,
   difficulty         = 0,
+  challenge          = 0,
   character          = "Isaac",
-  freshRun           = false,
   itemBanList        = {},
   trinketBanList     = {},
   resetEnabled       = true,
   started            = false,
   startedTime        = 0,
-  startedWarp        = false,
   finished           = false,
   finishedTime       = 0,
+  showPlaceGraphic   = true,
   fireworks          = 0,
   removedMoreOptions = false,
   placedJailCard     = false,
@@ -73,23 +65,40 @@ RPGlobals.spriteTable = {}
 
 -- Collectibles
 -- (unused normal item IDs: 43, 59, 61, 235, 263)
-CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 511, active
-CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 512, active
-CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM     = Isaac.GetItemIdByName("Betrayal")        -- 513, passive
-CollectibleType.COLLECTIBLE_SMELTER_LOGGER      = Isaac.GetItemIdByName("Smelter")         -- 514, passive
-CollectibleType.COLLECTIBLE_SCHOOLBAG           = Isaac.GetItemIdByName("Schoolbag")       -- 515, passive
-CollectibleType.COLLECTIBLE_SOUL_JAR            = Isaac.GetItemIdByName("Soul Jar")        -- 516, passive
-CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy")          -- 517, passive
-CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 518, passive
-CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 519, passive
-CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 520, passive
-CollectibleType.COLLECTIBLE_DEBUG               = Isaac.GetItemIdByName("Debug")           -- 521, active
+CollectibleType.COLLECTIBLE_ANGRY_FLY      = 511
+CollectibleType.COLLECTIBLE_BLACK_HOLE     = 512
+CollectibleType.COLLECTIBLE_BOZO           = 513
+CollectibleType.COLLECTIBLE_BROKEN_MODEM   = 514
+CollectibleType.COLLECTIBLE_MYSTERY_GIFT   = 515
+CollectibleType.COLLECTIBLE_SPRINKLER      = 516
+CollectibleType.COLLECTIBLE_FAST_BOMBS     = 517
+CollectibleType.COLLECTIBLE_BUDDY_IN_A_BOX = 518
+CollectibleType.COLLECTIBLE_LIL_DELIRIUM   = 519
+CollectibleType.NUM_COLLECTIBLES           = 520
+
+CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 520, active (repl. 97)
+CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 521, active (repl. 158)
+CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM     = Isaac.GetItemIdByName("Betrayal")        -- 522, passive (repl. 391)
+CollectibleType.COLLECTIBLE_SMELTER_LOGGER      = Isaac.GetItemIdByName("Smelter")         -- 523, passive (repl. 479)
+CollectibleType.COLLECTIBLE_DEBUG               = Isaac.GetItemIdByName("Debug")           -- 524, active
+CollectibleType.COLLECTIBLE_SCHOOLBAG           = Isaac.GetItemIdByName("Schoolbag")       -- 525, passive
+CollectibleType.COLLECTIBLE_SOUL_JAR            = Isaac.GetItemIdByName("Soul Jar")        -- 526, passive
+CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy")          -- 527, passive
+CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 528, passive
+CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 529, passive
+CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 530, passive
+CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("Off Limits") + 1
 
 -- Pills
-PillEffect.PILLEFFECT_GULP_LOG = Isaac.GetPillEffectByName("Gulp!") -- 47
+PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
+PillEffect.NUM_PILL_EFFECTS       = Isaac.GetPillEffectByName("Gulp!") + 1
 
 -- Pickups
 PickupVariant.PICKUP_MIMIC = 54
+
+-- Sounds
+SoundEffect.SOUND_LAUGH       = Isaac.GetSoundIdByName("Laugh")
+SoundEffect.NUM_SOUND_EFFECTS = Isaac.GetSoundIdByName("Laugh") + 1
 
 -- Spaded by ilise rose (@yatboim)
 RPGlobals.RoomTransition = {
@@ -108,16 +117,6 @@ RPGlobals.RoomTransition = {
   TRANSITION_MISSING_POSTER    = 14
 }
 
--- Spaded by me
-RPGlobals.LevelGridIndex = {
-  GRIDINDEX_I_AM_ERROR       = -2,
-  GRIDINDEX_CRAWLSPACE       = -4,
-  GRIDINDEX_BOSS_RUSH        = -5,
-  GRIDINDEX_BLACK_MARKET     = -6,
-  GRIDINDEX_MEGA_SATAN       = -7,
-  GRIDINDEX_BLUE_WOMB_PORTAL = -8,
-}
-
 --
 -- Misc. subroutines
 --
@@ -126,27 +125,30 @@ function RPGlobals:InitRun()
   -- Tracking per run
   RPGlobals.run.roomsCleared     = 0
   RPGlobals.run.roomsEntered     = 0
-  RPGlobals.run.roomEntering     = false
   RPGlobals.run.touchedBookOfSin = false
 
   -- Tracking per floor
-  RPGlobals.run.currentFloor       = 0
+  RPGlobals.run.currentFloor       = 1
   RPGlobals.run.levelDamaged       = false
   RPGlobals.run.replacedPedestals  = {}
 
   -- Tracking per room
+  RPGlobals.run.roomEnterting         = false
   RPGlobals.run.currentRoomClearState = true
   RPGlobals.run.currentGlobins        = {}
   RPGlobals.run.currentKnights        = {}
   RPGlobals.run.currentLilHaunts      = {}
 
   -- Temporary tracking
+  RPGlobals.run.restartFrame          = 0
+  RPGlobals.run.enteringRaceRoom     = false
   RPGlobals.run.itemReplacementDelay = 0
   RPGlobals.run.naturalTeleport      = false
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false
   RPGlobals.run.blackRingTime        = 0
   RPGlobals.run.blackRingDropChance  = 0
+  RPGlobals.run.consoleWindowOpen    = false
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -161,13 +163,22 @@ function RPGlobals:InitRun()
   RPGlobals.run.edensSoulSet     = false
   RPGlobals.run.edensSoulCharges = 0
 
+  -- Trapdoor tracking
+  RPGlobals.run.trapdoor = {
+    state   = 0,
+    upwards = false,
+    floor   = 0,
+    frame   = 0,
+    scale   = Vector(1, 1),
+  }
+
   -- Crawlspace tracking
   RPGlobals.run.crawlspace = {
     entering = false,
     exiting  = false,
     room     = 0,
     position = 0,
-    scale    = 1,
+    scale    = Vector(1, 1),
   }
 
   -- Keeper + Greed's Gullet tracking
@@ -182,10 +193,10 @@ function RPGlobals:InitRun()
   RPGlobals.run.schoolbag = {
     item            = 0,
     charges         = 0,
-    pressed         = false,
-    lastCharge      = 0, -- Used to keep track of the charges when we pick up a second active item
-    lastRoomItem    = 0, -- Used to prevent bugs with GLowing Hour Glass
-    lastRoomCharges = 0, -- Used to prevent bugs with GLowing Hour Glass
+    pressed         = false, -- Used for keeping track of whether the "Switch" button is held down or not
+    lastCharge      = 0,     -- Used to keep track of the charges when we pick up a second active item
+    lastRoomItem    = 0,     -- Used to prevent bugs with GLowing Hour Glass
+    lastRoomCharges = 0,     -- Used to prevent bugs with GLowing Hour Glass
     nextRoomCharge  = false, -- Used to prevent bugs with GLowing Hour Glass
     bossRushActive  = false, -- Used for giving a charge when the Boss Rush starts
   }
@@ -272,7 +283,8 @@ function RPGlobals:GetActiveCollectibleMaxCharges(itemID)
      itemID == CollectibleType.COLLECTIBLE_CONVERTER or -- 296
      itemID == CollectibleType.COLLECTIBLE_BLUE_BOX or -- 297
      itemID == CollectibleType.COLLECTIBLE_DIPLOPIA or -- 347
-     itemID == CollectibleType.COLLECTIBLE_JAR_OF_FLIES then -- 434
+     itemID == CollectibleType.COLLECTIBLE_JAR_OF_FLIES or -- 434
+     itemID == CollectibleType.COLLECTIBLE_MYSTERY_GIFT then -- 515
 
     charges = 0
 
@@ -343,7 +355,9 @@ function RPGlobals:GetActiveCollectibleMaxCharges(itemID)
          itemID == CollectibleType.COLLECTIBLE_MOMS_BOX or -- 439
          itemID == CollectibleType.COLLECTIBLE_D1 or -- 476
          itemID == CollectibleType.COLLECTIBLE_DATAMINER or -- 481
-         itemID == CollectibleType.COLLECTIBLE_CROOKED_PENNY then -- 485
+         itemID == CollectibleType.COLLECTIBLE_CROOKED_PENNY or -- 485
+         itemID == CollectibleType.COLLECTIBLE_BLACK_HOLE or -- 512
+         itemID == CollectibleType.COLLECTIBLE_SPRINKLER then -- 516
 
     charges = 4
 
@@ -407,6 +421,76 @@ function RPGlobals:GetActiveCollectibleMaxCharges(itemID)
   end
 
   return charges
+end
+
+-- This is not named GetStageType to differentiate it from "level:GetStageType"
+function RPGlobals:DetermineStageType(stage)
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+  local stageSeed = seeds:GetStageSeed(stage)
+
+  -- Based on the game's internal code (from Spider)
+  --[[
+    u32 Seed = g_Game->GetSeeds().GetStageSeed(NextStage);
+    if (!g_Game->IsGreedMode()) {
+      StageType = ((Seed % 2) == 0 && (
+        ((NextStage == STAGE1_1 || NextStage == STAGE1_2) && gd.Unlocked(ACHIEVEMENT_CELLAR)) ||
+        ((NextStage == STAGE2_1 || NextStage == STAGE2_2) && gd.Unlocked(ACHIEVEMENT_CATACOMBS)) ||
+        ((NextStage == STAGE3_1 || NextStage == STAGE3_2) && gd.Unlocked(ACHIEVEMENT_NECROPOLIS)) ||
+        ((NextStage == STAGE4_1 || NextStage == STAGE4_2)))
+      ) ? STAGETYPE_WOTL : STAGETYPE_ORIGINAL;
+    if (Seed % 3 == 0 && NextStage < STAGE5)
+      StageType = STAGETYPE_AFTERBIRTH;
+  --]]
+  local stageType = StageType.STAGETYPE_ORIGINAL -- 0
+  if stageSeed & 1 == 0 then -- This is the same as "stageSeed % 2 == 0", but faster
+    stageType = StageType.STAGETYPE_WOTL -- 1
+  end
+  if stageSeed % 3 == 0 then
+    stageType = StageType.STAGETYPE_AFTERBIRTH -- 2
+  end
+
+  return stageType
+end
+
+-- Remove the long fade out / fade in when entering trapdoors (3/4)
+function RPGlobals:GotoNextFloor(upwards)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stageType = level:GetStageType()
+
+  local stage = RPGlobals.run.currentFloor
+  -- We use this instead of "level:GetStage()" so that we can divert the player from going to the Dark Room
+
+  -- Build the command
+  local stageCommand
+  if stage == 8 then -- Account for Womb 2
+    if upwards then
+      stageCommand = "stage 10a" -- Cathedral
+    else
+      stageCommand = "stage 10" -- Sheol
+    end
+
+  elseif stage == 10 and stageType == 0 then
+    stageCommand = "stage 11" -- Dark Room
+
+  elseif stage == 10 and stageType == 1 then
+    stageCommand = "stage 11a" -- The Chest
+
+  else
+    local nextStage = stage + 1
+    stageCommand = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
+    local newStageType = RPGlobals:DetermineStageType(nextStage)
+    if newStageType == 1 then
+      stageCommand = stageCommand .. "a"
+    elseif newStageType == 2 then
+      stageCommand = stageCommand .. "b"
+    end
+  end
+
+  Isaac.ExecuteCommand(stageCommand)
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

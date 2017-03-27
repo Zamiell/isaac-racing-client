@@ -416,6 +416,7 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         app.quit();
 
     } else if (arg1 === 'restart') {
+        errorHappened = true; // Don't reset our save.dat file if we did a /restart
         app.relaunch();
         app.quit();
 

@@ -77,7 +77,7 @@
 	<player id="14" name="Keeper" skin="Character_015_Keeper.png" hp="4" bombs="1" items="105,501,498"
           nameimage="PlayerName_14_TheKeeper.png"
           portrait="PlayerPortrait_14_Keeper.png"
-          bigportrait="PlayerPortraitBig_Keeper.png" skinColor="5" /><!-- Keeper also gets the Wooden Penny (349) -->
+          bigportrait="PlayerPortraitBig_Keeper.png" skinColor="5" /><!-- Keeper also gets the Wooden Nickel (349) -->
 	<player id="15" name="Apollyon" skin="Character_016_Apollyon.png" costume="36" hp="4" items="477,105"
           nameimage="PlayerName_15_Apollyon.png"
           portrait="PlayerPortrait_15_Apollyon.png"

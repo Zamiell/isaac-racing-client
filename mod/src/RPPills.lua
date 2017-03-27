@@ -41,10 +41,10 @@ function RPPills:Telepills()
     roomIndexes[#roomIndexes + 1] = gridIndex
   end
   if insertErrorRoom then
-    roomIndexes[#roomIndexes + 1] = RPGlobals.LevelGridIndex.GRIDINDEX_I_AM_ERROR -- -2
+    roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_ERROR_IDX -- -2
   end
   if insertBlackMarket then
-    roomIndexes[#roomIndexes + 1] = RPGlobals.LevelGridIndex.GRIDINDEX_BLACK_MARKET -- -6
+    roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_BLACK_MARKET_IDX -- -6
   end
 
   -- Get a random index

@@ -37,7 +37,7 @@ end
 --
 
 function RPItems:Teleport()
-  -- This callback is naturally used by Broken Remote
+  -- This callback is used naturally by Broken Remote
   -- This callback is manually called for Cursed Eye
 
   -- Local variables
@@ -113,10 +113,10 @@ function RPItems:Undefined()
     end
   end
   if insertErrorRoom then
-    roomIndexes[#roomIndexes + 1] = RPGlobals.LevelGridIndex.GRIDINDEX_I_AM_ERROR -- -2
+    roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_ERROR_IDX -- -2
   end
   if insertBlackMarket then
-    roomIndexes[#roomIndexes + 1] = RPGlobals.LevelGridIndex.GRIDINDEX_BLACK_MARKET -- -6
+    roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_BLACK_MARKET_IDX -- -6
   end
 
   -- Get a random index
@@ -280,55 +280,6 @@ function RPItems:Smelter()
 
   -- Do the real Smelter effect
   player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false)
-
-  -- Display the "use" animation
-  return true
-end
-
---local debugVar = 0
-function RPItems:Debug()
-  -- Print out various debug information to Isaac's log.txt
-  Isaac.DebugString("+-------------------------+")
-  Isaac.DebugString("| Entering test callback. |")
-  Isaac.DebugString("+-------------------------+")
-
-  local globalsToPrint = {
-    "run",
-    "race",
-    "raceVars",
-    "spriteTable",
-  }
-
-  for i = 1, #globalsToPrint do
-    Isaac.DebugString(globalsToPrint[i] .. ":")
-    for k, v in pairs(RPGlobals[globalsToPrint[i]]) do
-      if type(v) == "table" then
-        Isaac.DebugString("  " .. k .. ': ')
-        for k2, v2 in pairs(v) do
-          if type(v2) == "table" then
-            Isaac.DebugString("  " .. k2 .. ': ')
-            for k3, v3 in pairs(v2) do
-              Isaac.DebugString("      " .. k3 .. ': ' .. tostring(v3))
-            end
-          else
-            Isaac.DebugString("    " .. k2 .. ': ' .. tostring(v2))
-          end
-        end
-      else
-        Isaac.DebugString("  " .. k .. ': ' .. tostring(v))
-      end
-    end
-  end
-
-  -- Test stuff
-  --local room = Game():GetRoom()
-  --RPGlobals.raceVars.finished = true
-  --debugVar = debugVar + 1
-  --RPSprites:Init("diversity-item5", tostring(debugVar))
-
-  Isaac.DebugString("+------------------------+")
-  Isaac.DebugString("| Exiting test callback. |")
-  Isaac.DebugString("+------------------------+")
 
   -- Display the "use" animation
   return true

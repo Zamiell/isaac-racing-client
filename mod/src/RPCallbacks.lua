@@ -53,6 +53,11 @@ end
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function RPCallbacks:EvaluateCache(player, cacheFlag)
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
   local character = player:GetPlayerType()
   local maxHearts = player:GetMaxHearts()
   local coins = player:GetNumCoins()
@@ -187,13 +192,10 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
   end
 
   --
-  -- Handle custom race stats
+  -- Race stuff
   --
 
-  if RPGlobals.race == nil then
-    return -- If "save.dat" reading fails, then there is no fallback mechanism for this, so hopefully it does not fail
-  end
-
+  -- Look for the custom start item that gives 13 luck
   for i = 1, #RPGlobals.race.startingItems do
     if RPGlobals.race.startingItems[i] == 600 and -- 13 luck
        cacheFlag == CacheFlag.CACHE_LUCK then -- 1024
@@ -208,108 +210,81 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
 
     player.Luck = player.Luck + 7
   end
+
+  -- In diversity races, Crown of Light should heal for a half heart
+  -- (don't explicitly check for race format in case loading failed)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
+     stage == 1 and
+     roomType == RoomType.ROOM_TREASURE and -- 4
+     -- (this will still work even if you exit the room with the item held overhead)
+     (character == PlayerType.PLAYER_JUDAS or -- 3
+      character == PlayerType.PLAYER_AZAZEL) then -- 7
+
+    player:AddHearts(1)
+  end
 end
 
 -- ModCallbacks.MC_POST_PLAYER_INIT (9)
--- (this will get called before the "RPInit:Run()" function)
+-- (this will get called before the "PostGameStarted" callback)
 function RPCallbacks:PostPlayerInit(player)
+  -- Check for co-op babies
+  if player.Variant ~= 1 then
+    return
+  end
+
   -- Local variables
   local game = Game()
-  local level = game:GetLevel()
   local mainPlayer = game:GetPlayer(0)
-  local character = mainPlayer:GetPlayerType()
 
-  if player.Variant == 0 then
-    -- Check to see if we are on the BLCK CNDL Easter Egg
-    level:AddCurse(LevelCurse.CURSE_OF_THE_CURSED, false) -- The second argument is "ShowName"
-    local curses = level:GetCurses()
-    if curses == 0 then
-      RPGlobals.raceVars.blckCndlOn = true
-    else
-      RPGlobals.raceVars.blckCndlOn = false
+  mainPlayer:AnimateSad() -- Play a sound effect to communicate that the player made a mistake
+  player:Kill() -- This kills the co-op baby, but the main character will still get their health back for some reason
 
-      -- The client assumes that it is on by default, so it only needs to be alerted for the negative case
-      Isaac.DebugString("BLCK CNDL off.")
-    end
-    level:RemoveCurse(LevelCurse.CURSE_OF_THE_CURSED)
+  -- Since the player gets their health back, it is still possible to steal devil deals, so remove all unpurchased
+  -- Devil Room items in the room (which will have prices of either -1 or -2)
+  local entities = Isaac.GetRoomEntities()
+  for i = 1, #entities do
+    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
+       entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
+       entities[i]:ToPickup().Price < 0 then
 
-    -- Check to see if we are on normal mode or hard mode
-    RPGlobals.raceVars.difficulty = game.Difficulty
-    Isaac.DebugString("Difficulty: " .. tostring(game.Difficulty))
-
-    -- Check what character we are on
-    if character == PlayerType.PLAYER_ISAAC then -- 0
-      RPGlobals.raceVars.character = "Isaac"
-    elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
-      RPGlobals.raceVars.character = "Magdalene"
-    elseif character == PlayerType.PLAYER_CAIN then -- 2
-      RPGlobals.raceVars.character = "Cain"
-    elseif character == PlayerType.PLAYER_JUDAS then -- 3
-      RPGlobals.raceVars.character = "Judas"
-    elseif character == PlayerType.PLAYER_XXX then -- 4
-      RPGlobals.raceVars.character = "Blue Baby"
-    elseif character == PlayerType.PLAYER_EVE then -- 5
-      RPGlobals.raceVars.character = "Eve"
-    elseif character == PlayerType.PLAYER_SAMSON then -- 6
-      RPGlobals.raceVars.character = "Samson"
-    elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-      RPGlobals.raceVars.character = "Azazel"
-    elseif character == PlayerType.PLAYER_LAZARUS then -- 8
-      RPGlobals.raceVars.character = "Lazarus"
-    elseif character == PlayerType.PLAYER_EDEN then  -- 9
-      RPGlobals.raceVars.character = "Eden"
-    elseif character == PlayerType.PLAYER_THELOST then -- 10
-      RPGlobals.raceVars.character = "The Lost"
-    elseif character == PlayerType.PLAYER_LILITH then -- 13
-      RPGlobals.raceVars.character = "Lilith"
-    elseif character == PlayerType.PLAYER_KEEPER then -- 14
-      RPGlobals.raceVars.character = "Keeper"
-    elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-      RPGlobals.raceVars.character = "Apollyon"
-    end
-
-  elseif player.Variant == 1 then
-    -- Check for co-op babies
-    mainPlayer:AnimateSad() -- Play a sound effect to communicate that the player made a mistake
-    player:Kill() -- This kills the co-op baby, but the character will still get their health back for some reason
-
-    -- Since the player gets their health back, it is still possible to steal devil deals, so remove all unpurchased
-    -- Devil Room items in the room (which will have prices of either -1 or -2)
-    local entities = Isaac.GetRoomEntities()
-    for i = 1, #entities do
-      if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
-         entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
-         entities[i]:ToPickup().Price < 0 then
-
-        entities[i]:Remove()
-      end
+      entities[i]:Remove()
     end
   end
 end
 
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
 function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
+  -- local variables
   local player = tookDamage:ToPlayer()
+  local sfx = SFXManager()
+
+  -- Check to see if it was the player that took damage
   if player ~= nil then
-    --
-    -- Magdalene damage tracking
-    --
+    -- Make us invincibile while interacting with a trapdoor
+    if RPGlobals.run.trapdoor.state > 0 then
+      return false
+    end
 
     local selfDamage = false
-    for i = 0, 18 do -- We only need to iterate to 18
+    for i = 0, 21 do -- There are 21 damage flags
       local bit = (damageFlag & (1 << i)) >> i
+
+      -- Soul Jar damage tracking
       if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
         selfDamage = true
+      end
+
+      -- Mimic damage tracking
+      if i == 20 and bit == 1 then
+        sfx:Play(SoundEffect.SOUND_LAUGH, 1, 0, false, 1)
       end
     end
     if selfDamage == false then
       RPGlobals.run.levelDamaged = true
     end
 
-    --
     -- Betrayal (custom)
-    --
-
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM) then
       local entities = Isaac.GetRoomEntities()
       for i = 1, #entities do
@@ -321,10 +296,7 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
     end
   end
 
-  --
   -- Globins softlock prevention
-  --
-
   local npc = tookDamage:ToNPC()
   if npc ~= nil then
     if (npc.Type == EntityType.ENTITY_GLOBIN or
@@ -345,6 +317,188 @@ function RPCallbacks:InputAction(entity, inputHook, buttonAction)
   -- Disable resetting if the countdown is at 1
   if buttonAction == ButtonAction.ACTION_RESTART and RPGlobals.raceVars.resetEnabled == false then
     return false
+  end
+end
+
+-- ModCallbacks.MC_POST_NEW_LEVEL (18)
+-- (this will get called on a new run before the PostGameStarted callback)
+function RPCallbacks:PostNewLevel()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  -- Find out if we performed a Sacrifice Room teleport
+  if stage == 11 and stageType == 0 and RPGlobals.run.currentFloor ~= 10 then -- 11.0 is Dark Room
+    -- We arrivated at the Dark Room without going through Sheol
+    Isaac.DebugString("Sacrifice Room teleport detected.")
+    RPGlobals:GotoNextFloor(false) -- The argument is "upwards"
+    return
+  end
+
+  -- Set the new floor
+  RPGlobals.run.currentFloor = stage
+  Isaac.DebugString("New floor: " .. tostring(RPGlobals.run.currentFloor))
+
+  -- Reset some per level flags
+  RPGlobals.run.levelDamaged = false
+  RPGlobals.run.replacedPedestals = {}
+
+  -- Reset the RNG of some items that should be seeded per floor
+  local floorSeed = level:GetDungeonPlacementSeed()
+  RPGlobals.RNGCounter.Teleport = floorSeed
+  RPGlobals.RNGCounter.Undefined = floorSeed
+  RPGlobals.RNGCounter.Telepills = floorSeed
+  for i = 1, 100 do -- Increment the RNG 100 times so that players cannot use knowledge of Teleport! teleports
+                    -- to determine where the Telepills destination will be
+    RPGlobals.RNGCounter.Telepills = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Telepills)
+  end
+
+  -- Start showing the place graphic if we get to Basement 2
+  if stage >= 2 then
+    RPGlobals.raceVars.showPlaceGraphic = true
+  end
+end
+
+-- ModCallbacks.MC_POST_NEW_ROOM (19)
+-- (this gets called on a new run before the PostNewLevel and PostGameStarted callbacks)
+function RPCallbacks:PostNewRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local roomClear = room:IsClear()
+  local player = game:GetPlayer(0)
+  local activeCharge = player:GetActiveCharge()
+  local maxHearts = player:GetMaxHearts()
+  local soulHearts = player:GetSoulHearts()
+  local sfx = SFXManager()
+
+  RPGlobals.run.roomsEntered = RPGlobals.run.roomsEntered + 1
+  RPGlobals.run.currentRoomClearState = roomClear
+  -- This is needed so that we don't get credit for clearing a room when
+  -- bombing from a room with enemies into an empty room
+
+  -- Reset the lists we use to keep track of certain enemies
+  RPGlobals.run.currentGlobins = {} -- Used for softlock prevention
+  RPGlobals.run.currentKnights = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentLilHaunts = {} -- Used to delete invulnerability frames
+
+  -- Clear some room-based flags
+  RPGlobals.run.naturalTeleport = false
+  RPGlobals.run.crawlspace.entering = false
+  RPGlobals.run.bossHearts = { -- Copied from RPGlobals
+    spawn       = false,
+    extra       = false,
+    extraIsSoul = false,
+    position    = {},
+    velocity    = {},
+  }
+  RPGlobals.run.schoolbag.bossRushActive = false
+
+  -- Manually handle coming back from a crawlspace
+  if RPGlobals.run.crawlspace.exiting then
+    RPGlobals.run.crawlspace.exiting = false
+    player.Position = RPGlobals.run.crawlspace.position
+    player.SpriteScale = RPGlobals.run.crawlspace.scale
+  end
+
+  -- Check to see if we need to remove the heart container from a Strength card on Keeper
+  if RPGlobals.run.keeper.usedStrength and RPGlobals.run.keeper.baseHearts == 4 then
+    RPGlobals.run.keeper.baseHearts = 2
+    RPGlobals.run.keeper.usedStrength = false
+    player:AddMaxHearts(-2, true) -- Take away a heart container
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
+  end
+
+  -- Check to see if we need to remove More Options in a diversity race
+  if roomType == RoomType.ROOM_TREASURE and -- 4
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
+     RPGlobals.race.rFormat == "diversity" and
+     RPGlobals.raceVars.removedMoreOptions == false then
+
+    RPGlobals.raceVars.removedMoreOptions = true
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  end
+
+  -- Check health (to fix the bug where we don't die at 0 hearts)
+  -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
+  if maxHearts == 0 and soulHearts == 0 then
+    player:Kill()
+  end
+
+  -- Make the Schoolbag work properly with the Glowing Hour Glass
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then
+    -- Recharge our active item if we used the Glowing Hour Glass
+    if RPGlobals.run.schoolbag.nextRoomCharge then
+      RPGlobals.run.schoolbag.nextRoomCharge = false
+      player:SetActiveCharge(RPGlobals.run.schoolbag.lastRoomSlot1Charges)
+    end
+
+    -- Keep track of our last Schoolbag item
+    RPGlobals.run.schoolbag.lastRoomItem = RPGlobals.run.schoolbag.item
+    RPGlobals.run.schoolbag.lastRoomSlot1Charges = activeCharge
+    RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
+  end
+
+  -- Extend the Maw of the Void / Athame ring into the next room
+  if RPGlobals.run.blackRingTime > 1 then
+    player:SpawnMawOfVoid(RPGlobals.run.blackRingTime) -- The argument is "Timeout"
+
+    -- The "player:SpawnMawOfVoid()" will spawn a Maw of the Void ring, but we might be extending an Athame ring,
+    -- so we have to reset the Black HP drop chance
+    local entities = Isaac.GetRoomEntities()
+    for i = 1, #entities do
+      if entities[i].Type == EntityType.ENTITY_LASER and -- 7
+         entities[i].Variant == 1 and -- A Brimstone laser
+         entities[i].SubType == 3 then -- A Maw of the Void or Athame ring
+
+        entities[i]:ToLaser():SetBlackHpDropChance(RPGlobals.run.blackRingDropChance)
+      end
+    end
+
+    -- "player:SpawnMawOfVoid()" will cause a new Maw sound effect to play, so mute it
+    sfx:Stop(SoundEffect.SOUND_MAW_OF_VOID) -- 426
+  end
+
+  -- Spawn a Get out of Jail Free Card if we have arrived on The Chest / Dark Room
+  -- (this can't be in the "CheckChangeFloor()" function because the items won't show up)
+  if (RPGlobals.race.goal == "Mega Satan" or
+      RPGlobals.raceVars.finished) and
+     stage == 11 and -- If this is The Chest or Dark Room
+     level:GetCurrentRoomIndex() == level:GetStartingRoomIndex() then
+
+    --[[
+    RPGlobals.raceVars.placedJailCard = true
+
+    -- Get out of Jail Free Card (5.300.47)
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, RPGlobals:GridToPos(6, 0), Vector(0, 0),
+               nil, Card.CARD_GET_OUT_OF_JAIL, roomSeed)
+    Isaac.DebugString("Placed the Get out of Jail Free Card.")
+    --]]
+    local door = room:GetDoor(1)
+    door.State = 2
+    Isaac.DebugString("Opened the Mega Satan door.")
+  end
+
+  -- Set up the "Race Room"
+  if RPGlobals.run.enteringRaceRoom then
+    RPGlobals.run.enteringRaceRoom = false
+
+    -- Stop the boss room sound effect
+    sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+
+    -- We want to trap the player in the room,
+    -- but we can't make a room with no doors because then the "goto" command would crash the game,
+    -- so we have one door at the bottom
+    room:RemoveDoor(3) -- The bottom door is always 3
+
+    -- Spawn two Gaping Maws (235.0)
+    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
+    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
   end
 end
 

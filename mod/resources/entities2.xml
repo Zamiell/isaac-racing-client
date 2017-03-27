@@ -2098,7 +2098,7 @@ bestiaryTransform="0,0,1" bestiaryAnim="Fly">
 	<entity anm2path="283.000_BoneKnight.anm2" reroll="true" baseHP="20" boss="0" champion="1" collisionDamage="1" collisionMass="10" collisionRadius="13" friction="1" id="283" name="Bone Knight" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" portrait="129" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Down">
         <gibs amount="6" blood="0" bone="1" eye="0" gut="1" large="0" worm="1" />
     </entity>
-	<entity anm2path="284.000_Cyclopia.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="284" name="Cyclopia" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" portrait="130" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkVert" 
+	<entity anm2path="284.000_Cyclopia.anm2" reroll="true" baseHP="10" boss="0" champion="1" collisionDamage="1" collisionMass="5" collisionRadius="13" friction="1" id="284" name="Cyclopia" numGridCollisionPoints="12" shadowSize="14" stageHP="0" variant="0" portrait="130" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="WalkVert"
 bestiaryOverlay="Attack">
         <gibs amount="6" blood="1" bone="1" eye="1" gut="1" large="0" />
     </entity>
@@ -2377,6 +2377,9 @@ bestiaryOverlay="Attack">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
     <entity anm2path="1000.039_Heaven Door.anm2" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="1000" name="Heaven Door" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="39">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+    <entity anm2path="1000.040_Heaven Door.anm2" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="1000" name="Heaven Door (Fast-Travel)" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="40">
         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
     <entity anm2path="1000.041_Water Droplet.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="1" id="1000" name="Water Droplet" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="41">

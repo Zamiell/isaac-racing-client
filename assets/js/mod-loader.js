@@ -21,6 +21,11 @@ const send = function() {
         return;
     }
 
+    // Do nothing if we are on a test account > 1
+    if (globals.myUsername.startsWith('TestAccount') && globals.myUsername !== 'TestAccount1') {
+        return;
+    }
+
     // Start to compile the list of starting items
     let startingItems = [];
     if (globals.modLoader.rFormat === 'seeded') {
@@ -45,6 +50,7 @@ const send = function() {
     saveDat += 'status="' + globals.modLoader.status + '",\n';
     saveDat += 'myStatus="' + globals.modLoader.myStatus + '",\n';
     saveDat += 'rType="' + globals.modLoader.rType + '",\n';
+    saveDat += 'solo=' + globals.modLoader.solo + ',\n';
     saveDat += 'rFormat="' + globals.modLoader.rFormat + '",\n';
     saveDat += 'character="' + globals.modLoader.character + '",\n';
     saveDat += 'goal="' + globals.modLoader.goal + '",\n';
@@ -57,7 +63,6 @@ const send = function() {
         saveDat = saveDat.slice(0, -1); // Chop off the trailing comma
     }
     saveDat += '},\n';
-    saveDat += 'currentSeed="' + globals.modLoader.currentSeed + '",\n';
     saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
     saveDat += 'placeMid=' + globals.modLoader.placeMid + ',\n';
     saveDat += 'place=' + globals.modLoader.place + ',\n';
@@ -93,7 +98,6 @@ const reset = function() {
         goal: 'Blue Baby',
         seed: '-',
         startingBuild: -1,
-        currentSeed: globals.modLoader.currentSeed, // We don't have to delete this
         countdown: -1,
         placeMid: 1,
         place: 1,

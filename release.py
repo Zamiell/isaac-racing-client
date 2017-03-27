@@ -48,7 +48,7 @@ if args.skipmod == False:
     # Fill the "save.dat" file with all default values
     save_dat_defaults = os.path.join(mod_dir, 'save-defaults.dat')
     for i in range(1, 4): # This will go from 1 to 3
-        save_dat = os.path.join(mod_dir, 'save ' + str(i) + '.dat')
+        save_dat = os.path.join(mod_dir, 'save' + str(i) + '.dat')
         shutil.copyfile(save_dat_defaults, save_dat)
 
     # Draw the version number on the title menu graphic

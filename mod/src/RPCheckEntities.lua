@@ -4,8 +4,9 @@ local RPCheckEntities = {}
 -- Includes
 --
 
-local RPGlobals   = require("src/rpglobals")
-local RPSchoolbag = require("src/rpschoolbag")
+local RPGlobals    = require("src/rpglobals")
+local RPSchoolbag  = require("src/rpschoolbag")
+local RPFastTravel = require("src/rpfasttravel")
 
 --
 -- Check entities functions
@@ -17,8 +18,6 @@ function RPCheckEntities:Grid()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local room = game:GetRoom()
-  local roomIndex = level:GetCurrentRoomIndex()
-  local player = game:GetPlayer(0)
 
   local num = room:GetGridSize()
   for i = 1, num do
@@ -30,34 +29,21 @@ function RPCheckEntities:Grid()
         -- Delete all Void Portals
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
-      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR and -- 17
-            stage == 8 and
-            room:GetType() == RoomType.ROOM_BOSS and -- 5
-            RPGlobals.race ~= nil and RPGlobals.race.goal == "Blue Baby" and
-            RPGlobals.race.rFormat ~= "pageant" then
+      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR then -- 17
+        if stage == 8 and
+           room:GetType() == RoomType.ROOM_BOSS and -- 5
+           RPGlobals.race.goal == "Blue Baby" and
+           RPGlobals.race.rFormat ~= "pageant" then
 
-        -- Delete the Womb 2 trapdoor if we are going to Blue Baby
-        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+          -- Delete the Womb 2 trapdoor if we are going to Blue Baby
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+
+        else
+          RPFastTravel:CheckTrapdoorEnter(gridEntity, false) -- The second argument is "upwards"
+        end
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_STAIRS then -- 18
-        -- Remove the animation when entering crawlspaces
-        -- Check to see if the player is in a square around the stairs that will trigger the animation
-        -- ("room:GetGridIndex(player.Position) == gridEntity:GetGridIndex()" is too small of a square
-        -- to trigger reliably)
-        local squareSize = 26 -- 25 is too small
-        if gridEntity.State == 1 and -- The trapdoor is open
-           RPGlobals.run.crawlspace.entering == false and
-           player.Position.X >= gridEntity.Position.X - squareSize and
-           player.Position.X <= gridEntity.Position.X + squareSize and
-           player.Position.Y >= gridEntity.Position.Y - squareSize and
-           player.Position.Y <= gridEntity.Position.Y + squareSize then
-
-          RPGlobals.run.crawlspace.entering = true
-          RPGlobals.run.crawlspace.room = roomIndex
-          RPGlobals.run.crawlspace.position = gridEntity.Position
-          game:StartRoomTransition(RPGlobals.LevelGridIndex.GRIDINDEX_CRAWLSPACE, Direction.DOWN,
-                                   RPGlobals.RoomTransition.TRANSITION_NONE)
-        end
+        RPFastTravel:CheckCrawlspaceEnter(gridEntity)
       end
     end
   end
@@ -124,10 +110,12 @@ function RPCheckEntities:NonGrid()
         if rooms:Get(j).SafeGridIndex == roomIndex then
           local data = rooms:Get(j).Data
           if (data.StageID == 4 and data.Variant == 12) or -- Caves
+             (data.StageID == 4 and data.Variant == 19) or
              (data.StageID == 4 and data.Variant == 244) or
              (data.StageID == 4 and data.Variant == 518) or
              (data.StageID == 4 and data.Variant == 519) or
-             (data.StageID == 5 and data.Variant == 518) or -- Catacombs
+             (data.StageID == 5 and data.Variant == 19) or -- Catacombs
+             (data.StageID == 5 and data.Variant == 518) or
              (data.StageID == 10 and data.Variant == 489) or -- Womb
              (data.StageID == 11 and data.Variant == 489) then -- Utero
 
@@ -174,7 +162,7 @@ function RPCheckEntities:NonGrid()
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
            entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
            entities[i].SubType == CollectibleType.COLLECTIBLE_POLAROID and -- 327
-           RPGlobals.race ~= nil and RPGlobals.race.goal == "The Lamb" and
+           RPGlobals.race.goal == "The Lamb" and
            RPGlobals.race.rFormat ~= "pageant" then
 
       entities[i]:Remove()
@@ -182,14 +170,7 @@ function RPCheckEntities:NonGrid()
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
        entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
        entities[i].SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 328
-       RPGlobals.race ~= nil and RPGlobals.race.goal == "Blue Baby" and
-       RPGlobals.race.rFormat ~= "pageant" then
-
-      entities[i]:Remove()
-
-    elseif entities[i].Type == EntityType.ENTITY_EFFECT and -- 1000
-       entities[i].Variant == EffectVariant.HEAVEN_LIGHT_DOOR and -- 39
-       RPGlobals.race ~= nil and RPGlobals.race.goal == "The Lamb" and
+       RPGlobals.race.goal == "Blue Baby" and
        RPGlobals.race.rFormat ~= "pageant" then
 
       entities[i]:Remove()
@@ -210,7 +191,7 @@ function RPCheckEntities:NonGrid()
 
       -- Delete Pageant Boy starting trinkets
       if RPGlobals.run.roomsEntered == 1 and
-         RPGlobals.race ~= nil and RPGlobals.race.rFormat == "pageant" then
+         RPGlobals.race.rFormat == "pageant" then
 
         entities[i]:Remove()
         break
@@ -237,8 +218,29 @@ function RPCheckEntities:NonGrid()
 
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
            entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
+           stage == 10 and stageType == 0 and -- Sheol
+           player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+      -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
+      entities[i]:Remove()
+      room:SpawnGridEntity(67, GridEntityType.GRID_TRAPDOOR, 0, roomSeed, 0) -- 17.0.0
+      -- (67 is the center of the room)
+
+    elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
+           entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
+           stage == 10 and stageType == 1 and -- Cathedral
+           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+      -- Delete the chest and replace it with the custom beam of light so that we can fast-travel normally
+      entities[i]:Remove()
+
+      -- Heaven Door (Fast-Travel) (1000.40)
+      game:Spawn(EntityType.ENTITY_EFFECT, 40, entities[i].Position, entities[i].Velocity,
+                 entities[i].Parent, 0, roomSeed)
+
+    elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
+           entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
            stage == 11 and
-           RPGlobals.race ~= nil and
            RPGlobals.race.rFormat == "pageant" then
 
       -- Delete all big chests on the Pageant Boy ruleset so that
@@ -249,13 +251,12 @@ function RPCheckEntities:NonGrid()
            entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
            stage == 11 and
            RPGlobals.raceVars.finished == false and
-           RPGlobals.race ~= nil and
            ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
-             roomIndex ~= RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN) or -- -7
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
-             roomIndex ~= RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN) or -- -7
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "Mega Satan" and
-             roomIndex == RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN)) then -- -7
+             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
 
       -- Check for the chest so that we can swap it for a trophy
       if RPGlobals.race.status == "in progress" then
@@ -270,9 +271,8 @@ function RPCheckEntities:NonGrid()
            entities[i].Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
            stage == 11 and
            RPGlobals.raceVars.finished == false and
-           RPGlobals.race ~= nil and
            (RPGlobals.race.goal == "Mega Satan" and
-            roomIndex ~= RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN) then -- -7
+            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
 
       -- Get rid of the chest as a reminder that the race goal is Mega Satan
       entities[i]:Remove()
@@ -306,7 +306,7 @@ function RPCheckEntities:NonGrid()
 
       -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
       local victoryLapPosition = RPGlobals:GridToPos(11, 1)
-      if roomIndex == RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN then
+      if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
         victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
       end
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
@@ -314,7 +314,7 @@ function RPCheckEntities:NonGrid()
 
       -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
       local finishedPosition = RPGlobals:GridToPos(1, 1)
-      if roomIndex == RPGlobals.LevelGridIndex.GRIDINDEX_MEGA_SATAN then
+      if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
         finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
       end
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
@@ -332,6 +332,27 @@ function RPCheckEntities:NonGrid()
 
       -- Also keep track of whether this is a Maw of the Void or Athame ring
       RPGlobals.run.blackRingDropChance = entities[i]:ToLaser().BlackHpDropChance
+
+    elseif entities[i].Type == EntityType.ENTITY_EFFECT and -- 1000
+           entities[i].Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
+
+      -- Remove all beams of light and replace them with fast-travel custom versions
+      entities[i]:Remove()
+
+      -- Only make a new one if the race type allows going to the Cathedral
+      if RPGlobals.race.goal == "Blue Baby" or
+         RPGlobals.race.goal == "Mega Satan" or
+         RPGlobals.race.rFormat == "pageant" then
+
+        -- Heaven Door (Fast-Travel) (1000.40)
+        game:Spawn(EntityType.ENTITY_EFFECT, 40, entities[i].Position, entities[i].Velocity,
+                   entities[i].Parent, 0, roomSeed)
+      end
+
+    elseif entities[i].Type == EntityType.ENTITY_EFFECT and -- 1000
+           entities[i].Variant == 40 then -- This is a a custom entity, "Heaven Door (Fast-Travel)"
+
+      RPFastTravel:CheckTrapdoorEnter(entities[i]:ToEffect(), true) -- The second argument is "upwards"
 
     elseif entities[i].Type == EntityType.ENTITY_EFFECT and -- 1000
            entities[i].Variant == EffectVariant.FIREWORKS then -- 104
@@ -458,16 +479,14 @@ function RPCheckEntities:ReplacePedestal(entity)
     -- it causes items that are not fully decremented on sight to roll into themselves)
     for i = 1, #RPGlobals.run.replacedPedestals do
       if RPGlobals.run.replacedPedestals[i].room == roomIndex then
-        Isaac.DebugString("Before increment: " .. tostring(newSeed))
         newSeed = RPGlobals:IncrementRNG(newSeed)
-        Isaac.DebugString("After increment: " .. tostring(newSeed))
       end
     end
   end
 
   -- Check to see if this is a B1 item room on a seeded race
   local offLimits = false
-  if RPGlobals.race ~= nil and RPGlobals.race.rFormat == "seeded" and
+  if RPGlobals.race.rFormat == "seeded" and
      stage == 1 and
      room:GetType() == RoomType.ROOM_TREASURE and -- 4
      entity.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235
@@ -492,7 +511,7 @@ function RPCheckEntities:ReplacePedestal(entity)
   if bannedItem and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
-     RPGlobals.race ~= nil and RPGlobals.race.rFormat == "diversity" then
+     RPGlobals.race.rFormat == "diversity" then
 
     if entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE then -- 114
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
@@ -545,7 +564,7 @@ function RPCheckEntities:ReplacePedestal(entity)
                                entity.Velocity, entity.Parent, CollectibleType.COLLECTIBLE_OFF_LIMITS, newSeed)
       game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      Isaac.DebugString("Made a new random pedestal (Off Limits) using seed: " .. tostring(newSeed))
+      Isaac.DebugString("Made an Off Limits pedestal using seed: " .. tostring(newSeed))
 
     elseif specialReroll ~= 0 then
       -- Change the item to the special reroll
@@ -560,10 +579,10 @@ function RPCheckEntities:ReplacePedestal(entity)
       -- Make a new random item pedestal
       -- (the new random item generated will automatically be decremented from item pools properly on sight)
       newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
-                               entity.Velocity, entity.Parent, 0, newSeed)
+                               entity.Velocity, entity.Parent, 0, entity.InitSeed)
       game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      Isaac.DebugString("Made a new random pedestal using seed: " .. tostring(newSeed))
+      Isaac.DebugString("Made a new random pedestal using vanilla seed: " .. tostring(entity.InitSeed))
       randomItem = true -- Set that this is a random item so that we don't add it to the tracking index
 
     else
@@ -695,7 +714,7 @@ function RPCheckEntities:NPC(entity)
   elseif npc.Type == EntityType.ENTITY_PIN and npc.Variant == 1 and -- 62.1 (Scolex)
          roomType == RoomType.ROOM_BOSS and -- 5
          npc.InitSeed ~= roomSeed and
-         RPGlobals.race ~= nil and RPGlobals.race.rFormat == "seeded" then
+         RPGlobals.race.rFormat == "seeded" then
 
      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
      -- There are 10 Scolex entities, so we know we are on the last one if there is no child

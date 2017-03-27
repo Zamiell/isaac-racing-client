@@ -1,8 +1,11 @@
 unused_args = false
+
+-- These are from the "enums.lua" file in the "scripts" subdirectory
 globals = {
     "ButtonAction",
     "CacheFlag",
     "Card",
+    "Challenge",
     "CollectibleType",
     "Direction",
     "EffectVariant",
@@ -11,8 +14,10 @@ globals = {
     "FamiliarVariant",
     "Game",
     "GridEntityType",
+    "GridRooms",
     "Input",
     "Isaac",
+    "Keyboard",
     "LevelCurse",
     "ModCallbacks",
     "PickupVariant",
@@ -22,9 +27,11 @@ globals = {
     "RegisterMod",
     "RNG",
     "RoomType",
+    "SeedEffect",
     "SFXManager",
     "SoundEffect",
     "Sprite",
+    "StageType",
     "TrinketType",
     "Vector",
 }

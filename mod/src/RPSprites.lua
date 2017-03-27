@@ -29,8 +29,10 @@ function RPSprites:Init(spriteType, spriteName)
     return
   end
 
-  -- Otherwise, initialize the sprite
+  -- Check to see if we are above 16th place
   RPGlobals.spriteTable[spriteType].sprite = Sprite()
+
+  -- Otherwise, initialize the sprite
   if spriteType == "seeded-item1" or
      spriteType == "seeded-item2" or
      spriteType == "seeded-item3" or
@@ -46,8 +48,19 @@ function RPSprites:Init(spriteType, spriteName)
   elseif spriteType == "diversity-item5" then
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/items3/trinkets/" .. spriteName .. ".anm2", true)
 
+  elseif spriteType == "ready" or spriteType == "readyTotal" then
+    if tonumber(spriteName) > 50 then
+      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/ready/unknown.anm2", true)
+    else
+      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/ready/" .. spriteName .. ".anm2", true)
+    end
+
   elseif spriteType == "place" then
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
+    if tonumber(spriteName) <= 16 then
+      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
+    else
+      Isaac.DebugString("Places beyond 16 are not supported.")
+    end
 
   else
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
@@ -67,16 +80,39 @@ function RPSprites:Display()
     -- Position it
     local vec = RPSprites:GetScreenCenterPosition() -- Start the vector off in the center of the screen by default
     local animationName = "Default"
+    local typeFormatX = 110
+    local typeFormatY = 10
+
     if k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
       vec.Y = vec.Y - 40
     elseif k == "raceType" then
-      vec.X = vec.X - 110
-      vec.Y = vec.Y + 45
+      vec.X = vec.X - typeFormatX
+      vec.Y = vec.Y + typeFormatY
+    elseif k == "raceTypeIcon" then
+      vec.X = vec.X - typeFormatX
+      vec.Y = vec.Y + typeFormatY + 23
     elseif k == "raceFormat" then
-      vec.X = vec.X + 110
-      vec.Y = vec.Y + 45
+      vec.X = vec.X + typeFormatX
+      vec.Y = vec.Y + typeFormatY
+    elseif k == "raceFormatIcon" then
+      vec.X = vec.X + typeFormatX
+      vec.Y = vec.Y + typeFormatY + 23
+    elseif k == "ready" then
+      vec.X = vec.X - 20
+      vec.Y = vec.Y - 15
+    elseif k == "slash" then
+      vec.Y = vec.Y - 15
+    elseif k == "readyTotal" then
+      vec.X = vec.X + 20
+      vec.Y = vec.Y - 15
+    elseif k == "goal" then
+      vec.X = vec.X - 25
+      vec.Y = vec.Y + 95
+    elseif k == "raceGoal" then
+      vec.X = vec.X + 25
+      vec.Y = vec.Y + 95
     elseif k == "seeded-starting-item" then
       vec.Y = vec.Y - 40
     elseif k == "seeded-starting-build" then
@@ -118,8 +154,13 @@ function RPSprites:Display()
       vec.X = vec.X + 80
       vec.Y = vec.Y - 10
     elseif k == "clock" then
-      vec.X = 7.5 -- Move it below the Angel chance
+      -- Move it below the Angel chance
+      vec.X = 7.5
       vec.Y = 217
+    elseif k == "place" then
+      -- Move it next to the "R+" icon
+      vec.X = 24
+      vec.Y = 79
     end
 
     -- Draw it
@@ -131,8 +172,16 @@ function RPSprites:Display()
 end
 
 function RPSprites:TimerUpdate()
-  if RPGlobals.raceVars.startedTime == 0 then
+  -- Don't show the timer if the race has not started yet,
+  -- or they quit in the middle of the race,
+  -- or if they closed the game in the middle of the run and came back
+  if RPGlobals.raceVars.startedTime == 0 or
+     (RPGlobals.race.status == "none" and RPGlobals.raceVars.finished == false) then
+
+    RPSprites:Init("clock", 0)
     return
+  else
+    RPSprites:Init("clock", "clock")
   end
 
   -- Find out how much time has passed since the race started
@@ -141,8 +190,8 @@ function RPSprites:TimerUpdate()
   if RPGlobals.raceVars.finished then
     elapsedTime = RPGlobals.raceVars.finishedTime - RPGlobals.raceVars.startedTime
   else
-    elapsedTime = Isaac:GetTime() - RPGlobals.raceVars.startedTime
-    -- "Isaac:GetTime()" is analogous to Lua's "os.clock()"
+    elapsedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
+    -- "Isaac.GetTime()" is analogous to Lua's "os.clock()"
   end
   elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
 

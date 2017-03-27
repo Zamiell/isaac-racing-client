@@ -169,7 +169,7 @@ function RPSchoolbag:CheckBossRush()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
      RPGlobals.run.schoolbag.item == 0 or
-     roomIndex ~= RPGlobals.LevelGridIndex.GRIDINDEX_BOSS_RUSH or -- -5
+     roomIndex ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
      room:IsAmbushActive() == false or
      RPGlobals.run.schoolbag.bossRushActive then
 
@@ -181,7 +181,7 @@ function RPSchoolbag:CheckBossRush()
   RPSchoolbag:AddCharge()
 end
 
--- Check for input for a Schoolbag switch
+-- Check for Schoolbag switch inputs
 function RPSchoolbag:CheckInput()
   -- Local variables
   local game = Game()
@@ -197,6 +197,8 @@ function RPSchoolbag:CheckInput()
 
   local switchPressed = false
   for i = 0, 3 do -- There are 4 possible players from 0 to 3
+    -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
+    -- the latter is not very responsive with fast sequences of inputs
     if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
       switchPressed = true
       break
@@ -204,6 +206,8 @@ function RPSchoolbag:CheckInput()
   end
   if switchPressed and RPGlobals.run.schoolbag.pressed == false then
     RPGlobals.run.schoolbag.pressed = true
+
+    -- Put the item from the Schoolbag in the active slot
     RPSchoolbag:Switch()
 
     -- Put the old item in the Schoolbag
@@ -231,12 +235,12 @@ function RPSchoolbag:Switch()
   if player:GetActiveCharge() == maxCharges and
      sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then -- 170
 
-    sfx:AdjustVolume(SoundEffect.SOUND_BATTERYCHARGE, 0)
+    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
   end
   if player:GetActiveCharge() ~= 0 and
      sfx:IsPlaying(SoundEffect.SOUND_BEEP) then -- 171
 
-    sfx:AdjustVolume(SoundEffect.SOUND_BEEP, 0) -- 171
+    sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
   end
 
   -- Update the cache (in case the old / the new item granted stats, like A Pony)

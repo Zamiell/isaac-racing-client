@@ -26,10 +26,10 @@ module.exports = {
     emoteList: [], // Filled in main.js
     fadeTime: fadeTime,
     gameState: {
-        inGame: false,
-        blckCndlOn: true, // The log will tell us if a run is started without BLCK CNDL on
-        hardMode: false, // The log will tell us if a run is started on a non-normal difficulty
-        character: null,
+        inGame: false, // The log will tell us if we are in the menu or in a run
+        hardMode: false, // The log will tell us if a run is started on hard mode or Greed mode
+        challenge: false, // The log will tell us if a run is started on a challenge
+        wrongCharacter: false, // The log will tell us if we are on the wrong character
     },
     itemList: {}, // Filled in main.js
     lastPM: null,
@@ -39,14 +39,14 @@ module.exports = {
         status: 'none',
         myStatus: 'not ready',
         rType: 'unranked',
+        solo: false,
         rFormat: 'unseeded',
         character: 'Judas',
         goal: 'Blue Baby',
         seed: '-',
         startingBuild: -1,
-        currentSeed: '-', // Detected through reading the log file
         countdown: -1,
-        placeMid: 1,
+        placeMid: 0,
         place: 1,
     },
     modName: modName,

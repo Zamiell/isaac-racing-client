@@ -2,8 +2,8 @@
 use strict;
 use warnings;
 
-#my $subdirectory = "collectibles";
-my $subdirectory = "trinkets";
+my $subdirectory = "collectibles";
+#my $subdirectory = "trinkets";
 
 for (`ls $subdirectory`) {
 	if (/(\d+).png/) {

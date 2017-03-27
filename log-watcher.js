@@ -135,23 +135,11 @@ const parseLine = function(line) {
         // They have entered the menu
         process.send('Title menu initialized.');
 
-    } else if (line === 'Lua Debug: A new run has begun.') {
-        process.send('A new run has begun.');
+    } else if (line.startsWith('Race error: Wrong mode.')) {
+        process.send('Race error: Wrong mode.');
 
-    } else if (line === 'Lua Debug: BLCK CNDL off.') {
-        // A run was started without the BLCK CNDL easter egg turned on
-        // (we assume that it is on by default, so there is no need to parse for it being turned on)
-        process.send('BLCK CNDL off.');
-
-    } else if (line.startsWith('Lua Debug: Difficulty: ')) {
-        // A new run has begun
-        let match = line.match(/Lua Debug: Difficulty: (\d+)/);
-        if (match) {
-            let difficulty = match[1];
-            if (difficulty !== '0') {
-                process.send('Hard mode on.');
-            }
-        }
+    } else if (line.startsWith('Race error: On a challenge.')) {
+        process.send('Race error: On a challenge.');
 
     } else if (line.startsWith('Initialized player with Variant 0 and Subtype ')) {
         // A new run has begun
@@ -163,6 +151,10 @@ const parseLine = function(line) {
 
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
+        // (send this separately from the seed because race validation messages are checked before parsing the seed)
+        process.send('A new run has begun.');
+
+        // Send the seed
         let match = line.match(/RNG Start Seed: (.... ....)/);
         if (match) {
             let seed = match[1];
@@ -181,7 +173,7 @@ const parseLine = function(line) {
     } else if (line.startsWith('Room ')) {
         // A new room was entered
         // Sometimes there are lines of "Room count #", so filter those out
-        let match = line.match(/Room (\d+\.\d+)\(/);
+        let match = line.match(/Room (.+?)\(/);
         if (match) {
             let roomID = match[1];
             process.send('New room: ' + roomID);

@@ -15,6 +15,12 @@ const builds  = nodeRequire('./assets/data/builds');
 
 $(document).ready(function() {
     $('#new-race-randomize').click(function() {
+        // Don't randomize the race name if we are on a test account
+        if (globals.myUsername.match(/TestAccount\d+/)) {
+            $('#new-race-title').val('{ test race }');
+            return;
+        }
+
         // Get some random words
         let randomNumbers = [];
         for (let i = 0; i < 2; i++) {
@@ -76,6 +82,12 @@ $(document).ready(function() {
                 $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
             }, globals.fadeTime);
         } else if (newType === 'ranked') {
+            // Show the format dropdown
+            setTimeout(function() {
+                $('#new-race-format-container').fadeIn(globals.fadeTime);
+                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+            }, globals.fadeTime);
+
             // Change the format dropdown
             if (format === 'diversity' || format === 'custom') {
                 $('#new-race-format').val('unseeded').change();

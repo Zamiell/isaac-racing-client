@@ -80,7 +80,7 @@ Lang.prototype.pack.fr = {
         // Tooltips for race "Type"
         "This race will not count towards the leaderboards.": "Cette course ne comptera pas pour le classement.",
         "This race will count towards the leaderboards.": "Cette course comptera pour le classement.",
-        "No-one else can join this race.": "",
+        "No-one else can join this race.": "Plus personne ne peut se joindre à cette course.",
 
         // Tooltips for race "Format"
         "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",
@@ -102,16 +102,16 @@ Lang.prototype.pack.fr = {
         "Race starting in 10 seconds!": "La course commence dans 10 secondes!",
         "Go": "Partez",
         "Quit Race": "Quitter la Course",
-        "left": "",
+        "left": "restant(s)",
         "Race completed!": "Course terminée!",
 
         // Race ready error messages
-        "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "",
+        "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\". Si vous êtes déjà dans une partie, maintenez R pour en recommencer une.",
         "You must turn on the \"BLCK CNDL\" easter egg before you can mark yourself as ready.": "",
-        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
-        "You must be in a run with the correct character before you can mark yourself as ready.": "",
-        "You must be in a run with the correct seed before you can mark yourself as ready.": "",
-        "You should wait for someone else to join this race before marking yourself as ready.": "",
+        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
+        "You must be in a run with the correct character before you can mark yourself as ready.": "Vous devez sélectionner le personnage indiqué pour pouvoir cocher la case \"prêt\".",
+        "You must be in a run with the correct seed before you can mark yourself as ready.": "Vous devez commencer une partie avez la seed indiquée pour pouvoir cocher la case \"prêt\".",
+        "You should wait for someone else to join this race before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
 
         // Race screen (racer table)
         "Place": "Place",
@@ -151,16 +151,16 @@ Lang.prototype.pack.fr = {
 
         // New race tooltip
         "Race title (optional)": "Nom de la course (facultatif)",
-        "There is already a race with that title.": "",
+        "There is already a race with that title.": "Il existe déjà une course avec ce nom.",
         "Randomize": "Aléatoire",
-        "Solo": "",
-        "Multiplayer": "",
+        "Solo": "Solo",
+        "Multiplayer": "Multijoueur",
         "Practice": "Entraînement",
-        "Casual": "",
-        "Season": "",
-        "Random (all, 1-32)": "Aléatoire",
-        "Random (D6 builds only, 1-30)": "",
-        "Random (Treasure Room only, 1-20)": "",
+        "Casual": "Amical",
+        "Season": "Saison",
+        "Random (all, 1-32)": "Aléatoire (tous, 1-32)",
+        "Random (D6 builds only, 1-30)": "Aléatoire (D6 seulement, 1-30)",
+        "Random (Treasure Room only, 1-20)": "Aléatoire (Treasure Room seulement, 1-20)",
         "Create": "Créer",
 
         // Settings tooltip
@@ -172,7 +172,7 @@ Lang.prototype.pack.fr = {
         "Volume": "Volume",
         "Test": "Test",
         "Automatically enter the game with Alt+C and Alt+V (for keyboard users)": "",
-        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "",
+        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "Ne pas désactiver les cinématiques de boss (pour les personnes habituées au vanilla, vous devez redémarrer le jeu)",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
         "Enable Twitch chat bot": "Activé le bot dans le chat Twitch",
@@ -187,10 +187,10 @@ Lang.prototype.pack.fr = {
         "An unknown error occured.": "Une erreur inconnue s'est produite.",
         "Failed to talk to Steam. Please open or restart Steam and relaunch Racing+.": "Echec d'initialisation de l'API Steam. Veuillez ouvrir Steam et redémarrer Racing+.",
         "Failed to connect to the WebSocket server. The server might be down!": "Echec de connexion avec le serveur. Le serveur peut être hors service!",
-        "Encountered a WebSocket error. The server might be down!": "",
+        "Encountered a WebSocket error. The server might be down!": "Rencontré une erreur WebSocket. Le serveur est peut-être hors-service!",
         "Disconnected from the server. Either your Internet is having problems or the server went down!": "Vous avez été déconnecté du serveur. Votre connection internet a des problèmes ou le serveur est actuellement hors-service!",
 
         // Error messages (from the server)
-        "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.": "",
+        "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.": "Cette URL de stream est déjà utilisée par quelqu'un d'autre. Si vous êtes le véritable propriétaire de ce stream, veuillez contacter un administrateur.",
     },
 };

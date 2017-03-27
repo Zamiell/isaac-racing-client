@@ -172,8 +172,7 @@ function RPFastClear:Main()
     door = room:GetDoor(i)
     if door ~= nil then
       local openDoor = true
-      if RPGlobals.race ~= nil and
-         RPGlobals.race.rFormat == "seeded" and
+      if RPGlobals.race.rFormat == "seeded" and
          door:IsRoomType(RoomType.ROOM_TREASURE) and -- 4
          roomType ~= RoomType.ROOM_TREASURE then -- 4
 

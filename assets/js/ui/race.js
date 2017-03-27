@@ -73,18 +73,6 @@ $(document).ready(function() {
         },
     });
 
-    $('#race-title-seed').tooltipster({
-        theme: 'tooltipster-shadow',
-        delay: 0,
-        functionBefore: function() {
-            if (globals.currentScreen === 'race') {
-                return true;
-            } else {
-                return false;
-            }
-        },
-    });
-
     $('#race-title-build').tooltipster({
         theme: 'tooltipster-shadow',
         delay: 0,
@@ -275,14 +263,10 @@ const show = function(raceID) {
     globals.currentScreen = 'transition';
     globals.currentRaceID = raceID;
 
-    // Put the seed in the clipboard
-    if (globals.raceList[globals.currentRaceID].seed !== '-') {
-        clipboard.writeText(globals.raceList[globals.currentRaceID].seed);
-    }
-
     // Tell the Lua mod that we are in a new race
     globals.modLoader.status         = globals.raceList[globals.currentRaceID].status;
     globals.modLoader.rType          = globals.raceList[globals.currentRaceID].ruleset.type;
+    globals.modLoader.solo           = globals.raceList[globals.currentRaceID].ruleset.solo;
     globals.modLoader.rFormat        = globals.raceList[globals.currentRaceID].ruleset.format;
     globals.modLoader.character      = globals.raceList[globals.currentRaceID].ruleset.character;
     globals.modLoader.goal           = globals.raceList[globals.currentRaceID].ruleset.goal;
@@ -291,6 +275,7 @@ const show = function(raceID) {
     globals.modLoader.countdown      = -1;
     modLoader.send();
     globals.log.info('modLoader - Sent all new race variables.');
+    // We will send "place" and "placeMid" later (in a few milliseconds) once we recieve the "racerList" command from the server
 
     // Show and hide some buttons in the header
     $('#header-profile').fadeOut(globals.fadeTime);
@@ -437,17 +422,7 @@ const show = function(raceID) {
         goalTooltipContent += '</span>';
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
-        // Column 6 - Seed (only available for seeded races)
-        if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded') {
-            $('#race-title-table-seed').fadeIn(0);
-            $('#race-title-seed').fadeIn(0);
-            $('#race-title-seed').html(globals.raceList[globals.currentRaceID].seed);
-        } else {
-            $('#race-title-table-seed').fadeOut(0);
-            $('#race-title-seed').fadeOut(0);
-        }
-
-        // Column 7 - Build (only available for seeded races)
+        // Column 6 - Build (only available for seeded races)
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded') {
             $('#race-title-table-build').fadeIn(0);
             $('#race-title-build').fadeIn(0);
@@ -464,7 +439,7 @@ const show = function(raceID) {
             $('#race-title-build').fadeOut(0);
         }
 
-        // Column 7 - Items (only available for diversity races)
+        // Column 6 - Items (only available for diversity races)
         if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
             $('#race-title-table-items').fadeIn(0);
             $('#race-title-items').fadeIn(0);
@@ -742,6 +717,13 @@ function placeMidRecalculateAll() {
         globals.raceList[globals.currentRaceID].racerList[i].placeMid = racer.placeMid;
         let ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $('#race-participants-table-' + racer.name + '-place').html(ordinal);
+
+        // Also update the mod with our place
+        if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername) {
+            globals.modLoader.placeMid = racer.placeMid;
+            modLoader.send();
+            globals.log.info('modLoader - Sent a race placeMid of ' + racer.placeMid + '.');
+        }
     }
 }
 
@@ -894,6 +876,7 @@ const countdownTick = function(i) {
         globals.modLoader.countdown = i;
         if (i === 0) { // This is to avoid bugs where things happen out of order
             globals.modLoader.status = "in progress";
+            globals.modLoader.place = 0;
         }
         modLoader.send();
         globals.log.info('modLoader - Sent a countdown of ' + i + '.');
@@ -1102,21 +1085,16 @@ const checkReadyValid = function() {
         // (we want to do no validation for custom rulesets; it's all up to the players to decide when they are ready)
     } else if (globals.gameState.inGame === false) {
         valid = false;
-        tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.</span>';
-    } else if (globals.gameState.blckCndlOn === false) {
-        valid = false;
-        tooltipContent = '<span lang="en">You must turn on the "BLCK CNDL" easter egg before you can mark yourself as ready.</span>';
+        tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
     } else if (globals.gameState.hardMode === true) {
         valid = false;
         tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
+    } else if (globals.gameState.challenge === true) {
+        valid = false;
+        tooltipContent = '<span lang="en">You must not be in a challenge before you can mark yourself as ready.</span>';
     } else if (globals.gameState.character !== globals.raceList[globals.currentRaceID].ruleset.character) {
         valid = false;
         tooltipContent = '<span lang="en">You must be in a run with the correct character before you can mark yourself as ready.</span>';
-    } else if (globals.raceList[globals.currentRaceID].ruleset.format === 'seeded' &&
-               globals.modLoader.currentSeed !== globals.raceList[globals.currentRaceID].seed) {
-
-       valid = false;
-       tooltipContent = '<span lang="en">You must be in a run with the correct seed before you can mark yourself as ready.</span>';
     }
 
     if (valid === false) {

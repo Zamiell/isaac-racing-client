@@ -361,6 +361,10 @@ exports.init = function(username, password, remember) {
 
     // Sent when we create a race or reconnect in the middle of a race
     globals.conn.on('racerList', function(data) {
+        // Log the event
+        globals.log.info('Websocket - racerList - ' + JSON.stringify(data));
+
+        // Store the racer list
         globals.raceList[data.id].racerList = data.racers;
 
         // Build the table with the race participants on the race screen
@@ -368,6 +372,42 @@ exports.init = function(username, password, remember) {
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
             raceScreen.participantAdd(i);
         }
+
+        // Find out the correct values of "placeMid" and "place" to send to the mod
+        if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+            // Find our values of "placeMid" and "place"
+            let numLeft = 0;
+            let amRacing = false;
+            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+                if (globals.raceList[globals.currentRaceID].racerList[i].status === 'racing') {
+                    numLeft++;
+                }
+
+                if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername) {
+                    globals.modLoader.placeMid = globals.raceList[globals.currentRaceID].racerList[i].placeMid;
+                    globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList[i].place;
+                    if (globals.raceList[globals.currentRaceID].racerList[i].name === 'racing') {
+                        amRacing = true;
+                    }
+                }
+            }
+            if (numLeft === 1 && amRacing && globals.raceList[globals.currentRaceID].racerList.length > 2) {
+                globals.modLoader.placeMid = -1; // This will show "last person left"
+            }
+        } else {
+            // Count how many people are ready
+            let numReady = 0;
+            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+                if (globals.raceList[globals.currentRaceID].racerList[i].status === 'ready') {
+                    numReady++;
+                }
+            }
+            globals.modLoader.placeMid = numReady;
+            globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList.length;
+        }
+
+        modLoader.send();
+        globals.log.info('modLoader - Sent a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
     });
 
     globals.conn.on('raceCreated', connRaceCreated);
@@ -441,7 +481,6 @@ exports.init = function(username, password, remember) {
             // If we joined this race
             raceScreen.show(data.id);
         } else {
-            // Update the race screen
             if (data.id === globals.currentRaceID) {
                 // We are in this race, so add this racer to the racerList with all default values (defaults)
                 let datetime = new Date().getTime();
@@ -454,7 +493,14 @@ exports.init = function(username, password, remember) {
                     placeMid: 1,
                     items: [],
                 });
+
+                // Update the race screen
                 raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
+
+                // Update the mod
+                globals.modLoader.place = globals.raceList[data.id].racerList.length;
+                modLoader.send();
+                globals.log.info('modLoader - Sent a race place of "' + globals.modLoader.place + '" (the number of people in the race).');
             }
         }
     }
@@ -540,6 +586,11 @@ exports.init = function(username, password, remember) {
                 // Update the captian
                 // [not implemented]
             }
+
+            // Update the mod
+            globals.modLoader.place = globals.raceList[data.id].racerList.length;
+            modLoader.send();
+            globals.log.info('modLoader - Sent a race place of "' + globals.modLoader.place + '" (the number of people in the race).');
         }
     }
 
@@ -651,6 +702,7 @@ exports.init = function(username, password, remember) {
         }
 
         // Find the player in the racerList
+        let numReady = 0;
         for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
             if (data.name === globals.raceList[data.id].racerList[i].name) {
                 // Update their status and place locally
@@ -662,15 +714,35 @@ exports.init = function(username, password, remember) {
                     raceScreen.participantsSetStatus(i);
                 }
 
-                // Update the mod
-                if (data.name === globals.myUsername && (data.status === 'not ready' || data.status === 'ready')) {
-                    globals.modLoader.myStatus = data.status;
-                    modLoader.send();
-                    globals.log.info('modLoader - Sent my status of "' + data.status + '".');
-                }
-
                 break;
             }
+        }
+
+        // Update the mod
+        if (data.status === 'not ready' || data.status === 'ready') {
+            // Send our status
+            if (data.name === globals.myUsername) {
+                globals.modLoader.myStatus = data.status;
+                globals.log.info('modLoader - Sent my status of "' + data.status + '".');
+            }
+
+            // Count how many people are ready
+            let numReady = 0;
+            for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
+                if (globals.raceList[data.id].racerList[i].status === 'ready') {
+                    numReady++;
+                }
+            }
+
+            // Send the progress of how many players have readied up
+            globals.modLoader.placeMid = numReady; // Use "placeMid" to represent the number of people who are ready
+            modLoader.send();
+            globals.log.info('modLoader - Sent a race placeMid of ' + globals.modLoader.place + ' (the number of people ready).');
+        } else if (data.status === 'finished' && data.name === globals.myUsername) {
+            // Send our final place to the mod
+            globals.modLoader.place = data.place;
+            modLoader.send();
+            globals.log.info('modLoader - Sent a race place of "' + data.place + '".');
         }
     }
 

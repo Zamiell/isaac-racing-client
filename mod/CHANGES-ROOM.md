@@ -498,9 +498,9 @@ The changed room is as follows:
 On several I AM ERROR rooms, objects overlap with the doors, which can cause unavoidable damage in certain situations.
 
 The changed rooms are as follows:
-* 
+*
 * #14 (deleted poops)
-* #15 (added doors) 
+* #15 (added doors)
 * #26 (moved pickups)
 
 <br />
@@ -537,7 +537,7 @@ Props were removed from the starting room for better visibility.
 
 ### Donation Machine Room Removal
 
-One room in the Necropolis has a donation machine in it. Since using a mod (or the BLCK CNDL seed) removes donation machines from the game, this room is largely useless.
+One room in the Necropolis has a donation machine in it. Since using a mod removes donation machines from the game, this room is largely useless.
 
 The removed room is as follows:
 * Necropolis: #469

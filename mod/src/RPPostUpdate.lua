@@ -4,12 +4,12 @@ local RPPostUpdate = {}
 -- Includes
 --
 
-local RPGlobals       = require("src/rpglobals")
-local RPInit          = require("src/rpinit")
-local RPCheckEntities = require("src/rpcheckentities")
-local RPFastClear     = require("src/rpfastclear")
-local RPSchoolbag     = require("src/rpschoolbag")
-local RPSoulJar       = require("src/rpsouljar")
+local RPGlobals         = require("src/rpglobals")
+local RPCheckEntities   = require("src/rpcheckentities")
+local RPFastClear       = require("src/rpfastclear")
+local RPSchoolbag       = require("src/rpschoolbag")
+local RPSoulJar         = require("src/rpsouljar")
+local RPFastTravel      = require("src/rpfasttravel")
 
 --
 -- PostUpdate functions
@@ -21,54 +21,10 @@ local RPSoulJar       = require("src/rpsouljar")
 function RPPostUpdate:Main()
   -- Local variables
   local game = Game()
-  local level = game:GetLevel()
-  local room = game:GetRoom()
-  local roomFrameCount = room:GetFrameCount()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
   local batteryCharge = player:GetBatteryCharge()
-  local playerGridIndex = room:GetGridIndex(player.Position)
-
-  -- Start the race
-  -- (we set the "startedTime" variable in the PostRender callback after we read
-  -- a countdown value of "0" in the "save.dat" file)
-  if RPGlobals.raceVars.started and
-     RPGlobals.raceVars.startedWarp == false then
-
-    if roomFrameCount == 1 then
-      -- We have arrived in the room from the "game:ChangeRoom()" function
-      RPGlobals.raceVars.startedWarp = true
-      Isaac.DebugString("Warping to the start - finished.")
-
-      if RPGlobals.race.rFormat == "seeded" then
-        -- Initialize the sprites for the starting room
-        -- (the player is only shown the starting build once the race starts to reduce clutter)
-        RPInit:SeededSprites()
-
-      elseif RPGlobals.race.rFormat == "diversity" then
-        -- If this is a diversity race, give the player the extra starting items
-        -- (this is not in the "RPInit:RaceStart()" function because we wait the pickup animations
-        -- to play for items like Latch Key)
-        RPInit:Diversity()
-      end
-    else
-      -- Delete the Gaping Maws
-      -- (we can't do this warp in the PostRender function because it causes a bug
-      -- if the game is paused when the race starts)
-      level.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-      RPGlobals.run.roomsEntered = RPGlobals.run.roomsEntered - 1
-      -- This warp should not count towards the number of rooms entered for the run
-      game:ChangeRoom(level:GetStartingRoomIndex())
-      Isaac.DebugString("Warping to the start - started.")
-
-      -- Reset them to the starting position
-      player.Position = Vector(320.0, 380.0)
-
-      -- Since we are teleporting, we don't need to do any of the other checks in this callback
-      return
-    end
-  end
 
   -- Keep track of the total amount of rooms cleared on this run thus far
   RPPostUpdate:CheckRoomCleared()
@@ -134,39 +90,9 @@ function RPPostUpdate:Main()
   -- Check the player's health for the Soul Jar mechanic
   RPSoulJar:CheckHealth()
 
-  -- Remove the animation when leaving crawlspaces
-  if room:GetType() == RoomType.ROOM_DUNGEON and -- 16
-     playerGridIndex == 2 and -- If the player is standing on top of the ladder
-     RPGlobals.run.crawlspace.exiting == false then
-
-    -- Make the player invisible to avoid a bug where they pop out of the wrong spot
-    RPGlobals.run.crawlspace.scale = player.SpriteScale
-    player.SpriteScale = Vector(0, 0)
-
-    -- Do a manual room transition
-    RPGlobals.run.crawlspace.exiting = true
-    level.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-    game:StartRoomTransition(RPGlobals.run.crawlspace.room, Direction.UP, RPGlobals.RoomTransition.TRANSITION_NONE)
-  end
-
-  -- Fix the softlock with Boss Rushes and crawlspaces
-  if room:GetType() == RoomType.ROOM_BOSSRUSH and -- 17
-     level:GetPreviousRoomIndex() == RPGlobals.LevelGridIndex.GRIDINDEX_CRAWLSPACE then -- -4
-
-    if playerGridIndex == 7 then -- Top left door
-      game:StartRoomTransition(RPPostUpdate:GetBossRoomIndex(), Direction.UP,
-                               RPGlobals.RoomTransition.TRANSITION_NONE)
-    elseif playerGridIndex == 139 then -- Right top door
-      game:StartRoomTransition(RPPostUpdate:GetBossRoomIndex(), Direction.RIGHT,
-                               RPGlobals.RoomTransition.TRANSITION_NONE)
-    elseif playerGridIndex == 427 then -- Bottom left door
-      game:StartRoomTransition(RPPostUpdate:GetBossRoomIndex(), Direction.DOWN,
-                               RPGlobals.RoomTransition.TRANSITION_NONE)
-    elseif playerGridIndex == 112 then -- Left top door
-      game:StartRoomTransition(RPPostUpdate:GetBossRoomIndex(), Direction.LEFT,
-                               RPGlobals.RoomTransition.TRANSITION_NONE)
-    end
-  end
+  -- Check to see if we are leaving a crawlspace (and if we are softlocked in a Boss Rush)
+  RPFastTravel:CheckCrawlspaceExit()
+  RPFastTravel:CheckCrawlspaceSoftlock()
 
   -- Check all the grid entities in the room
   RPCheckEntities:Grid()
@@ -174,10 +100,10 @@ function RPPostUpdate:Main()
   -- Check all the non-grid entities in the room
   RPCheckEntities:NonGrid()
 
-  -- Check for input for a fast item drop
+  -- Check for item drop inputs
   RPPostUpdate:CheckDropInput()
 
-  -- Check for input for a Schoolbag switch
+  -- Check for Schoolbag switch inputs
   -- (and other miscellaneous Schoolbag activities)
   RPSchoolbag:CheckActiveCharges()
   RPSchoolbag:CheckEmptyActive()
@@ -186,24 +112,6 @@ function RPPostUpdate:Main()
 
   -- Do race related checks
   RPPostUpdate:RaceChecks()
-end
-
-function RPPostUpdate:GetBossRoomIndex()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local rooms = level:GetRooms()
-
-  for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local roomType = rooms:Get(i).Data.Type
-    if roomType == RoomType.ROOM_BOSS then -- 5
-      return rooms:Get(i).SafeGridIndex
-    end
-  end
-
-  -- We should never get here
-  Isaac.DebugString("Error: Was not able to find the boss room index.")
-  return level:GetStartingRoomIndex()
 end
 
 -- Keep track of the total amount of rooms cleared on this run thus far
@@ -291,7 +199,7 @@ function RPPostUpdate:CheckKeeperHearts()
   end
 end
 
--- Check for input for a fast item drop
+-- Check for item drop inputs
 function RPPostUpdate:CheckDropInput()
   -- Local variables
   local game = Game()
@@ -312,6 +220,8 @@ function RPPostUpdate:CheckDropInput()
   -- Check for the input
   local dropPressed = false
   for i = 0, 3 do -- There are 4 possible players from 0 to 3
+    -- Use "IsActionPressed()" instead of "IsActionTriggered()" because
+    -- new players might not know about the fast-drop feature and will just keep the button pressed down
     if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
       dropPressed = true
     end
@@ -420,7 +330,7 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
 
   if stage == 1 and
      roomType ~= RoomType.ROOM_SECRET and -- 7
-     RPGlobals.race ~= nil and RPGlobals.race.rFormat == "seeded" then
+     RPGlobals.race.rFormat == "seeded" then
 
     local door
     for i = 0, 7 do
