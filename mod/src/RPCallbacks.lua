@@ -368,6 +368,7 @@ function RPCallbacks:PostNewRoom()
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
@@ -502,11 +503,26 @@ function RPCallbacks:PostNewRoom()
   end
 
   -- Spawn a new beam of light if necessary
-  if stage == 8 and roomType == RoomType.ROOM_BOSS then -- 5
+  if (stage == 8 or (stage == 10 and stageType == 1)) and
+     roomType == RoomType.ROOM_BOSS and -- 5
+     roomClear then
+
+    -- The location will be different depending on the floor
+    local pos
+    if stage == 8 then
+      -- (360, 280) is the location of where it appears after killing It Lives!
+      pos = Vector(360, 280)
+    elseif stage == 10 then
+      -- Spawn the beam in the center of the room
+      pos = RPGlobals:GridToPos(6, 3)
+    end
+
     -- Heaven Door (Fast-Travel) (1000.40)
-    game:Spawn(EntityType.ENTITY_EFFECT, 40, Vector(360, 280), Vector(0, 0), nil, 0, 0)
-    -- (360, 280) is the location of where it appears after killing It Lives!
+    game:Spawn(EntityType.ENTITY_EFFECT, 40, pos, Vector(0, 0), nil, 0, 0)
+
   end
+
+
 end
 
 return RPCallbacks
