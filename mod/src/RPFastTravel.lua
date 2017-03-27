@@ -135,7 +135,7 @@ function RPFastTravel:CheckTrapdoor()
   elseif RPGlobals.run.trapdoor.state == 6 and
          frameCount >= RPGlobals.run.trapdoor.frame then
 
-    -- State 7 is activated when the the player has emerged from the hole
+    -- We are finished when the the player has emerged from the hole
     RPGlobals.run.trapdoor.state = 0
     player.ControlsEnabled = true
 

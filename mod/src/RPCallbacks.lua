@@ -500,6 +500,13 @@ function RPCallbacks:PostNewRoom()
     game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
     game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
   end
+
+  -- Spawn a new beam of light if necessary
+  if stage == 8 and roomType == RoomType.ROOM_BOSS then -- 5
+    -- Heaven Door (Fast-Travel) (1000.40)
+    game:Spawn(EntityType.ENTITY_EFFECT, 40, Vector(360, 280), Vector(0, 0), nil, 0, 0)
+    -- (360, 280) is the location of where it appears after killing It Lives!
+  end
 end
 
 return RPCallbacks

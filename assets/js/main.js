@@ -6,27 +6,13 @@
 
 /*
 
-News:
-- Now that the Mom's Hand change has been played for a while, I've asked around for feedback. Almost everyone likes the change, so it will remain in the game permanently.
-
-Patch notes for v0.4.0:
-- When starting a new run, Racing+ will now automatically put on the "Total Curse Immunity" Easter Egg for you (the "BLCK CNDL" seed). If Basement 1 happened to have a curse on it, the run will be automatically restarted. Rejoice, and be merry. https://www.youtube.com/watch?v=tHvnxbtHqsE
-- The racing system was rewritten such that you should never have to go back to the menu in between races anymore (unless you need to change your character). You will now start the race in an isolated room, and all races will start by resetting the game.
-- Seeded races will automatically start you on the correct seed; you do not have to type it in anymore.
-- Pressing the reset key will now instantly reset the game. (This change is experimental.)
-- Racing+ now validates that you are not on a challenge before letting you ready up.
-- Racing+ now has some new pre-race graphics, including showing you the goal.
-- The long and annoying fade out / fade in animation between floors has been replaced with something better.
-- The Schoolbag will now work properly with the new Booster Pack items. (Thanks meepmeep)
-- Diversity races that start with the new Booster Pack items will now work properly. (Thanks BMZ_Loop)
-- Fixed the unavoidable damage when Spiked Chests or Mimics spawn in Caves/Catacombs room #19. (Thanks PassionDrama)
-- In diversity races, when you pick up Crown of Light from a Basement 1 Treasure Room, it will now heal you for half a heart if you are not already at full red hearts. (Thanks Dea1h)
-- Fixed the bug where banned items would roll into other banned items under certain conditions. (Thanks Lobsterosity)
-- If Eden starts with Book of Sin, Crystal Ball, Betrayal, or Smelter, she will now start with the Racing+ custom version of the item.
-
+Patch notes for v0.4.1:
+-
 
 
 Bugs to fix:
+- finish times are different between clients so add a thing that sends the finish time to everyone on race finish
+- make autoscroll less restrictive
 - remove double negative on boss cutscenes option
 - unlock every easter egg for racing+ save file
 - fix sounds so that last place and race copmleted come as a callback so that both play
