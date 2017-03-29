@@ -360,6 +360,15 @@ The changed rooms are as follows:
 
 <br />
 
+### Close Entity Fix
+
+One room has an enemy close to an entrance. If the player has an allied Charger, it will cause the enemy to spawn inside of the player.
+
+The changed room is as follows:
+* Caves: #167 (Attack Fly)
+
+<br />
+
 ### Narrow Red Poop Room Fix
 
 On Dr. Fetus builds, the narrow red poop room in The Chest is unavoidable damage. This bug has been fixed by deleting some of the poops to allow for a walkable path.
@@ -484,15 +493,6 @@ The changed room is as follows:
 
 <br />
 
-### Double Trouble Softlock Fix
-
-On this room, it is impossible to get to the next floor if the player is out of bombs. Some rocks have been removed to fix this.
-
-The changed room is as follows:
-* Double Trouble: #3732
-
-<br />
-
 ### I AM ERROR Door/Entrance Fixes
 
 On several I AM ERROR rooms, objects overlap with the doors, which can cause unavoidable damage in certain situations.
@@ -526,6 +526,10 @@ The changed room is as follows:
 * Caves: #267
 
 <br />
+
+
+
+
 
 ## Room Changes - Miscellaneous
 

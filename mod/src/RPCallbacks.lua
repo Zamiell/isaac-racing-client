@@ -197,25 +197,23 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
   --
 
   -- Look for the custom start item that gives 13 luck
-  for i = 1, #RPGlobals.race.startingItems do
-    if RPGlobals.race.startingItems[i] == 600 and -- 13 luck
-       cacheFlag == CacheFlag.CACHE_LUCK then -- 1024
+  if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
+     player:HasCollectible(CollectibleType.COLLECTIBLE_13_LUCK) then
 
-      player.Luck = player.Luck + 13
-    end
+    player.Luck = player.Luck + 13
   end
 
   -- The Pageant Boy ruleset starts with 7 luck
-  if RPGlobals.race.rFormat == "pageant" and
-     cacheFlag == CacheFlag.CACHE_LUCK then -- 1024
+  if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
+     RPGlobals.race.rFormat == "pageant" then
 
     player.Luck = player.Luck + 7
   end
 
   -- In diversity races, Crown of Light should heal for a half heart
   -- (don't explicitly check for race format in case loading failed)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
+  if cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      -- (this will still work even if you exit the room with the item held overhead)
@@ -315,8 +313,10 @@ end
 
 -- ModCallbacks.MC_INPUT_ACTION (13)
 function RPCallbacks:InputAction(entity, inputHook, buttonAction)
-  -- Disable resetting if the countdown is at 1
-  if buttonAction == ButtonAction.ACTION_RESTART and RPGlobals.raceVars.resetEnabled == false then
+  -- Disable resetting if the countdown is close to hitting 0
+  if RPGlobals.raceVars.resetEnabled == false and
+     buttonAction == ButtonAction.ACTION_RESTART then -- 16
+
     return false
   end
 end
@@ -394,9 +394,13 @@ function RPCallbacks:PostNewRoom()
   local level = game:GetLevel()
   local stage = level:GetStage()
 
+  Isaac.DebugString("MC_POST_NEW_ROOM")
+
+  -- Make an exception for the race room
+  RPCallbacks:PostNewRoomRace()
+
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
-  Isaac.DebugString("MC_POST_NEW_ROOM")
   if gameFrameCount == 0 or RPGlobals.run.currentFloor ~= stage then
     return
   end
@@ -512,23 +516,26 @@ function RPCallbacks:PostNewRoom2()
      stage == 11 and -- If this is The Chest or Dark Room
      level:GetCurrentRoomIndex() == level:GetStartingRoomIndex() then
 
-    --[[
-    RPGlobals.raceVars.placedJailCard = true
-
-    -- Get out of Jail Free Card (5.300.47)
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, RPGlobals:GridToPos(6, 0), Vector(0, 0),
-               nil, Card.CARD_GET_OUT_OF_JAIL, roomSeed)
-    Isaac.DebugString("Placed the Get out of Jail Free Card.")
-    --]]
-    local door = room:GetDoor(1)
-    door.State = 2
+    local door = room:GetDoor(1) -- The top door is always 1
+    door:TryUnlock(true)
+    sfx:Stop(SoundEffect.SOUND_UNLOCK00) -- 156
+    -- door:IsOpen() is always equal to false here for some reason,
+    -- so just open it every time we enter the room and silence the sound effect
     Isaac.DebugString("Opened the Mega Satan door.")
   end
+end
+
+function RPCallbacks:PostNewRoomRace()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+  local room = game:GetRoom()
+  local sfx = SFXManager()
 
   -- Set up the "Race Room"
-  if RPGlobals.run.enteringRaceRoom then
-    RPGlobals.run.enteringRaceRoom = false
-
+  if gameFrameCount == 0 and roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
     -- Stop the boss room sound effect
     sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
 

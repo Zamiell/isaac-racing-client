@@ -6,16 +6,14 @@
 --[[
 
 TODO:
+- remove delay on the credits item
 - custom animation when you spawn close to mimic (make it red?)
-- fix mega satan room door opening automatically
 - add konami code item
 - account for eternal heart animation playing for fast-travel
 - make mushrooms only spawn on caves
 - make hosts only spawn on depths
 - make mushrooms not deal contact damage on the first X frames on them being spawned
 - when finish race, replace PlaceMid with place on place sprite
-- fix mega satan door
-- USE DungeonReturnRoomIndex and DungeonReturnPosition for crawlspace
 - check for bug where continuing from main menu before race starts
 - get rid of Lamb Popup through fastclear manipulation
 - Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives

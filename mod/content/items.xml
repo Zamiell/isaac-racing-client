@@ -35,4 +35,7 @@
 
 	<!-- 530 -->
 	<passive description="B1 Treasure Room items are off limits in seeded races." gfx="Off_Limits.png" name="Off Limits" />
+
+	<!-- 531 -->
+	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
 </items>

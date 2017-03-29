@@ -118,7 +118,7 @@ function RPPostGameStarted:Main(saveState)
   RPPostGameStarted:Race()
 
   -- Call PostNewLevel manually (they get naturally called out of order)
-  --RPCallbacks:PostNewLevel2()
+  RPCallbacks:PostNewLevel2()
 end
 
 -- This is done when a run is started
@@ -368,7 +368,6 @@ function RPPostGameStarted:Race()
 
   -- Go to the custom "Race Start" room
   if RPGlobals.race.status == "open" then
-    RPGlobals.run.enteringRaceRoom = true
     Isaac.ExecuteCommand("goto s.boss.9999")
     -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
     Isaac.DebugString("Going to the race room.")
@@ -385,9 +384,14 @@ function RPPostGameStarted:Seeded()
   -- Give the player extra starting items (for seeded races)
   local replacedD6 = false
   for i = 1, #RPGlobals.race.startingItems do
+    -- The 13 luck is a special case
+    local itemID = RPGlobals.race.startingItems[i]
+    if itemID == 600 then
+      itemID = CollectibleType.COLLECTIBLE_13_LUCK
+    end
+
     -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
-    player:AddCollectible(RPGlobals.race.startingItems[i],
-                          RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.race.startingItems[i]), true)
+    player:AddCollectible(itemID, RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.race.startingItems[i]), true)
 
     -- Giving the player the item does not actually remove it from any of the pools,
     -- so we have to expliticly add it to the ban list
@@ -442,8 +446,14 @@ function RPPostGameStarted:Seeded()
     if newSchoolBagItem ~= 0 then
       Isaac.DebugString("Adding collectible " .. newSchoolBagItem) -- Make it show up on the item tracker
       for i = 1, #RPGlobals.race.startingItems do
+        if RPGlobals.race.startingItems[i] == 600 then
+          local itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
+          Isaac.DebugString("Removing collectible " .. itemID .. " (13 Luck)")
+          Isaac.DebugString("Adding collectible " .. itemID .. " (13 Luck)")
+        else
           Isaac.DebugString("Removing collectible " .. RPGlobals.race.startingItems[i])
           Isaac.DebugString("Adding collectible " .. RPGlobals.race.startingItems[i])
+        end
       end
     end
   end
@@ -592,7 +602,7 @@ function RPPostGameStarted:Pageant()
   player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 246
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   player:AddCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON, 0, false) -- 458
-  -- The +14 luck is handled in the EvaluateCache callback
+  -- The extra luck is handled in the EvaluateCache callback
 
   -- Giving the player these items does not actually remove them from any pools,
   -- so we have to expliticly add them to the ban list

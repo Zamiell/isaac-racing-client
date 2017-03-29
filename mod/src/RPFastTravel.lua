@@ -27,6 +27,11 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
+  -- Don't replace crawlspaces to the Blue Womb
+  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+    return
+  end
+
   -- Spawn a custom entity to emulate the original
   local trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                               Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
@@ -236,6 +241,11 @@ function RPFastTravel:CheckTrapdoor()
         break
       end
     end
+  end
+
+  -- Fix the bug where Dr. Fetus bombs can be shot while jumping
+  if RPGlobals.run.trapdoor.state > 0 then
+    player.FireDelay = 1
   end
 end
 

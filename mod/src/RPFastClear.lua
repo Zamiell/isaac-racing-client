@@ -167,9 +167,8 @@ function RPFastClear:Main()
   room:SetClear(true)
 
   -- Open the doors
-  local door
   for i = 0, 7 do
-    door = room:GetDoor(i)
+    local door = room:GetDoor(i)
     if door ~= nil then
       local openDoor = true
       if RPGlobals.race.rFormat == "seeded" and

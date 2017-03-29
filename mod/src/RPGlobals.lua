@@ -87,7 +87,8 @@ CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy"
 CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 528, passive
 CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 529, passive
 CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 530, passive
-CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("Off Limits") + 1
+CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 531, passive
+CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("13 Luck") + 1
 
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
@@ -156,7 +157,6 @@ function RPGlobals:InitRun()
 
   -- Temporary tracking
   RPGlobals.run.restartFrame          = 0
-  RPGlobals.run.enteringRaceRoom     = false
   RPGlobals.run.itemReplacementDelay = 0
   RPGlobals.run.naturalTeleport      = false
   RPGlobals.run.usedTelepills        = false
@@ -467,13 +467,16 @@ function RPGlobals:GotoNextFloor(upwards)
   local game = Game()
   local level = game:GetLevel()
   local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomIndex()
 
   local stage = RPGlobals.run.currentFloor
   -- We use this instead of "level:GetStage()" so that we can divert the player from going to the Dark Room
 
   -- Build the command
   local stageCommand
-  if stage == 8 then -- Account for Womb 2
+  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+    stageCommand = "stage 9" -- Blue Womb
+  elseif stage == 8 then -- Account for Womb 2
     if upwards then
       stageCommand = "stage 10a" -- Cathedral
     else
