@@ -84,6 +84,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
 * Troll Bombs and Mega Troll Bombs now always have a fuse timer of exactly 2 seconds.
 * Special items are no longer special.
+* Charge bars are no longer obnoxiously big.
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts will now have faster attack patterns.
@@ -104,6 +105,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
+* The Broken Modem sprite is replaced with a better version from freeze, the original creator.
 * Fixed the spelling of Humbling Bundle.
 * Fixed the bug where the main menu would not show the bottom left hand corner of the title screen.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)

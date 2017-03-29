@@ -163,13 +163,13 @@ function RPSchoolbag:CheckBossRush()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
-  local roomIndex = level:GetCurrentRoomIndex()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
      RPGlobals.run.schoolbag.item == 0 or
-     roomIndex ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
+     roomIndexUnsafe ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
      room:IsAmbushActive() == false or
      RPGlobals.run.schoolbag.bossRushActive then
 
@@ -191,7 +191,10 @@ function RPSchoolbag:CheckInput()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
      RPGlobals.run.schoolbag.item == 0 or
-     player:IsHoldingItem() == true then
+     --player:IsHoldingItem() then
+     player:IsItemQueueEmpty() == false then
+     -- Experimental; this will allow switches while the use animation is occuring
+
     return
   end
 

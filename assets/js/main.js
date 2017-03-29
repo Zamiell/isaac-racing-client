@@ -7,9 +7,16 @@
 /*
 
 Patch notes for v0.4.6:
+- You can now do a Schoolbag switch during the "use item" animation. PogCena
+- Chargebars are now minimialistic and actually good.
+- Changed the Broken Modem sprite to one that isn't complete garbage. (I got it from freeze.)
+- Trapdoors will now be shut if you enter a room and are standing near to them. (This is also how it works in vanilla. Thanks Cyber_1)
+- Fixed the bug where trapdoors would disappear in certain circumstances.
+- Fixed the bug where a rock could occupy the same square as a trapdoor or crawlspace under certain conditions. (Thanks CrafterLynx)
 - Fixed the bug where the starting items for seeded and diversity races would not show up. (Thanks PassionDrama)
 - Fixed the client bug where the question mark icon would not show up next to the build on the new race tooltip.
-- Fixed the client bug where the build column would not show in seeded races.
+- Fixed the client bug where the build column would not show in seeded races. (Thanks vertopolkaLF)
+
 
 Bugs to fix:
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish

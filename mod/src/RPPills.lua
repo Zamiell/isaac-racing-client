@@ -47,7 +47,7 @@ function RPPills:Telepills()
     roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_BLACK_MARKET_IDX -- -6
   end
 
-  -- Get a random index
+  -- Get a random room index
   RPGlobals.RNGCounter.Telepills = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Telepills)
   math.randomseed(RPGlobals.RNGCounter.Telepills)
   local gridIndex = roomIndexes[math.random(1, #roomIndexes)]

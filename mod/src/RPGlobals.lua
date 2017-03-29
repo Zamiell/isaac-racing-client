@@ -467,14 +467,14 @@ function RPGlobals:GotoNextFloor(upwards)
   local game = Game()
   local level = game:GetLevel()
   local stageType = level:GetStageType()
-  local roomIndex = level:GetCurrentRoomIndex()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
 
   local stage = RPGlobals.run.currentFloor
   -- We use this instead of "level:GetStage()" so that we can divert the player from going to the Dark Room
 
   -- Build the command
   local stageCommand
-  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+  if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     stageCommand = "stage 9" -- Blue Womb
   elseif stage == 8 then -- Account for Womb 2
     if upwards then

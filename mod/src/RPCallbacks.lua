@@ -413,6 +413,7 @@ function RPCallbacks:PostNewRoom2()
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
@@ -514,7 +515,7 @@ function RPCallbacks:PostNewRoom2()
   if (RPGlobals.race.goal == "Mega Satan" or
       RPGlobals.raceVars.finished) and
      stage == 11 and -- If this is The Chest or Dark Room
-     level:GetCurrentRoomIndex() == level:GetStartingRoomIndex() then
+     roomIndex == level:GetStartingRoomIndex() then
 
     local door = room:GetDoor(1) -- The top door is always 1
     door:TryUnlock(true)
@@ -530,12 +531,12 @@ function RPCallbacks:PostNewRoomRace()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
-  local roomIndex = level:GetCurrentRoomIndex()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
   local room = game:GetRoom()
   local sfx = SFXManager()
 
   -- Set up the "Race Room"
-  if gameFrameCount == 0 and roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
+  if gameFrameCount == 0 and roomIndexUnsafe == GridRooms.ROOM_DEBUG_IDX then -- -3
     -- Stop the boss room sound effect
     sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
 

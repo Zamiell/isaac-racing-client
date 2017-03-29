@@ -57,10 +57,10 @@ function RPCheckEntities:NonGrid()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local rooms = level:GetRooms()
   local room = game:GetRoom()
   local roomType = room:GetType()
-  local roomIndex = level:GetCurrentRoomIndex()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local roomData = level:GetCurrentRoomDesc().Data
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
@@ -105,27 +105,18 @@ function RPCheckEntities:NonGrid()
       entities[i].Variant = 50
 
       -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
-      local unavoidableDamageRoom = false
-      for j = 0, rooms.Size - 1 do -- This is 0 indexed
-        if rooms:Get(j).SafeGridIndex == roomIndex then
-          local data = rooms:Get(j).Data
-          if (data.StageID == 4 and data.Variant == 12) or -- Caves
-             (data.StageID == 4 and data.Variant == 19) or
-             (data.StageID == 4 and data.Variant == 244) or
-             (data.StageID == 4 and data.Variant == 518) or
-             (data.StageID == 4 and data.Variant == 519) or
-             (data.StageID == 5 and data.Variant == 19) or -- Catacombs
-             (data.StageID == 5 and data.Variant == 518) or
-             (data.StageID == 10 and data.Variant == 489) or -- Womb
-             (data.StageID == 11 and data.Variant == 489) then -- Utero
+      if (roomData.StageID == 4 and roomData.Variant == 12) or -- Caves
+         (roomData.StageID == 4 and roomData.Variant == 19) or
+         (roomData.StageID == 4 and roomData.Variant == 244) or
+         (roomData.StageID == 4 and roomData.Variant == 518) or
+         (roomData.StageID == 4 and roomData.Variant == 519) or
+         (roomData.StageID == 5 and roomData.Variant == 19) or -- Catacombs
+         (roomData.StageID == 5 and roomData.Variant == 518) or
+         (roomData.StageID == 10 and roomData.Variant == 489) or -- Womb
+         (roomData.StageID == 11 and roomData.Variant == 489) then -- Utero
 
-            unavoidableDamageRoom = true
-          end
-        end
-      end
 
-      -- Only change normal chests back to Mimics if this is not an unavoidable damage room
-      if unavoidableDamageRoom then
+        -- Leave it as a normal chest
         -- Changing the variant doesn't actually change the sprite
         entities[i]:GetSprite():Load("gfx/005.050_chest.anm2", true)
 
@@ -184,7 +175,7 @@ function RPCheckEntities:NonGrid()
 
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
            entities[i].Variant == PickupVariant.PICKUP_TRINKET and -- 350
-           RPGlobals.run.roomsEntered == 0 and
+           RPGlobals.run.roomsEntered <= 1 and
            RPGlobals.race.rFormat == "pageant" then
 
       -- Delete Pageant Boy starting trinkets
@@ -245,11 +236,11 @@ function RPCheckEntities:NonGrid()
            RPGlobals.raceVars.finished == false and
            RPGlobals.race.status == "in progress" and
            ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+             roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+             roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "Mega Satan" and
-             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
+             roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
 
       -- Spawn the "Race Trophy" custom entity
       game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
@@ -265,7 +256,7 @@ function RPCheckEntities:NonGrid()
            RPGlobals.raceVars.finished == false and
            RPGlobals.race.status == "in progress" and
            (RPGlobals.race.goal == "Mega Satan" and
-            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
+            roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
 
       -- Get rid of the chest as a reminder that the race goal is Mega Satan
       entities[i]:Remove()
@@ -330,7 +321,7 @@ function RPCheckEntities:NonGrid()
 
       -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
       local victoryLapPosition = RPGlobals:GridToPos(11, 1)
-      if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+      if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
         victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
       end
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
@@ -338,7 +329,7 @@ function RPCheckEntities:NonGrid()
 
       -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
       local finishedPosition = RPGlobals:GridToPos(1, 1)
-      if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+      if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
         finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
       end
       game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
@@ -430,7 +421,7 @@ function RPCheckEntities:ReplacePedestal(entity)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local roomIndex = level:GetCurrentRoomIndex()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
@@ -640,7 +631,6 @@ function RPCheckEntities:ReplacePedestal(entity)
                         tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
       --]]
     end
-
 
     -- Now that we have created a new pedestal, we can delete the old one
     entity:Remove()

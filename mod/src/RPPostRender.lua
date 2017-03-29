@@ -68,10 +68,6 @@ function RPPostRender:Main()
   -- Check for trapdoor related things
   RPFastTravel:CheckTrapdoor()
 
-  if RPGlobals.debug then
-    player.Position = Vector(588, 446) -- Center of the boss rush
-  end
-
   -- Check for reset inputs
   RPPostRender:CheckResetInput()
 
@@ -409,7 +405,7 @@ function RPPostRender:Race()
 
   -- Remove graphics as soon as we enter another room (the starting room does not count as a room)
   -- (this is done separately from the above if block in case the client and mod become desynchronized)
-  if RPGlobals.raceVars.started == true and RPGlobals.run.roomsEntered > 0 then
+  if RPGlobals.raceVars.started == true and RPGlobals.run.roomsEntered > 1 then
     RPSprites:ClearStartingRoomGraphics()
   end
 

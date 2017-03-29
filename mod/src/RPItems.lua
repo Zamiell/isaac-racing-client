@@ -6,7 +6,6 @@ local RPItems = {}
 
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
---local RPSprites   = require("src/rpsprites")
 
 --
 -- Collectible item functions
@@ -45,11 +44,11 @@ function RPItems:Teleport()
   local level = game:GetLevel()
   local rooms = level:GetRooms()
 
-  -- Get a random index
+  -- Get a random room index
   RPGlobals.RNGCounter.Teleport = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Teleport)
   math.randomseed(RPGlobals.RNGCounter.Teleport)
-  local roomIndex = math.random(0, rooms.Size - 1)
-  local gridIndex = rooms:Get(roomIndex).SafeGridIndex
+  local roomNum = math.random(0, rooms.Size - 1)
+  local gridIndex = rooms:Get(roomNum).SafeGridIndex
   -- We need to use SafeGridIndex instead of GridIndex because we will crash when teleporting to L rooms otherwise
 
   -- Teleport
