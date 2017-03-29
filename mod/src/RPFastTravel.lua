@@ -142,12 +142,7 @@ function RPFastTravel:CheckTrapdoor()
   local stage = level:GetStage()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
-  local playerSprite = player:GetSprite()
   local frameCount = Isaac.GetFrameCount()
-
-  if playerSprite:IsPlaying("Trapdoor") then
-    game:Fadein(0.05)
-  end
 
   if RPGlobals.run.trapdoor.state == 1 and
      frameCount >= RPGlobals.run.trapdoor.frame then

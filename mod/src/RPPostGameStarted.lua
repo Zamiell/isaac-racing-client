@@ -118,7 +118,7 @@ function RPPostGameStarted:Main(saveState)
   RPPostGameStarted:Race()
 
   -- Call PostNewLevel manually (they get naturally called out of order)
-  RPCallbacks:PostNewLevel2()
+  --RPCallbacks:PostNewLevel2()
 end
 
 -- This is done when a run is started
