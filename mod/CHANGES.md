@@ -66,10 +66,6 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * the ??? pill (this has no effect with curses disabled)
 * Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for racers with cutscene skip muscle memory.)
 * Some useless animations are removed:
-  * cowering in the fetal position at the beginning of every floor
-  * jumping in a hole to the next floor
-  * going up the beam of light to the Cathedral
-  * entering a chest when going to The Chest or beating the game (which also prevents [this bug](http://gfycat.com/ImmaculateHeartfeltBoutu)
   * teleporting upwards
   * the fade when entering a trapdoor
   * the fade when entering or exiting crawlspaces

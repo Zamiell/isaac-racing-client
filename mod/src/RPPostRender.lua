@@ -225,11 +225,10 @@ function RPPostRender:CheckResetInput()
   end
 
   -- Don't fast-reset if any modifiers are pressed
-  if Input.IsButtonPressed(Keyboard.KEY_LEFT_SHIFT, 0) or -- 340
-     Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
+  -- (with the exception of shift, since MasterofPotato uses shift)
+  if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
      Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) or -- 342
      Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) or -- 343
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SHIFT, 0) or -- 344
      Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) or -- 345
      Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) or -- 346
      Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) then -- 347
