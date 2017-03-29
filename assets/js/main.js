@@ -6,17 +6,10 @@
 
 /*
 
-Patch notes for v0.4.4:
-
-- For races to Mega Satan and races that are already completed, the Mega Satan door will be automatically opened. (This is simpler than placing a Get Ouf of Jail Free Card next to the door.)
-- Fast-travel no longer applies to the portal to the Blue Womb. This fixes the bug where the Blue Womb trapdoor would take you to Sheol instead of the Blue Womb. (Thanks Dea1h)
-- Fixed the bug where Dr. Fetus bombs can be shot while jumping through the new trapdoors. (Thanks PassionDrama & tyrannasauruslex)
-- The 13 luck for the Fire Mind build is now a custom item called "13 Luck". It should now function properly with other items. (Thanks thisguyisbarry)
-- Reduced the delay for the beam of light in the Cathedral to 10 frames. (Thanks Dea1h)
-- Made the fast-reset feature work for people who have reset bound to shift. (Thanks MasterofPotato)
-- Fixed an unavoidable damage room in the Caves (#167). (Thanks Dea1h)
-
-
+Patch notes for v0.4.6:
+- Fixed the bug where the starting items for seeded and diversity races would not show up. (Thanks PassionDrama)
+- Fixed the client bug where the question mark icon would not show up next to the build on the new race tooltip.
+- Fixed the client bug where the build column would not show in seeded races.
 
 Bugs to fix:
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish

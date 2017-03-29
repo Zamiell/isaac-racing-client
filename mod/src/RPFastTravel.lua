@@ -27,7 +27,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  -- Don't replace crawlspaces to the Blue Womb
+  -- Don't replace trapdoors to the Blue Womb
   if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     return
   end
@@ -106,9 +106,10 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   local squareSize = RPFastTravel.trapdoorTouchDistance
   if RPGlobals.run.trapdoor.state == 0 and
      ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
-      (upwards and stage == 8 and entity.FrameCount >= 60) or -- The beam of light is not freshly spawned
-      -- We need to delay more for Womb 2 so that the player is forced to dodge the final wave of tears
-      (upwards and stage == 10 and entity.FrameCount >= 10)) and -- The beam of light is not freshly spawned
+      (upwards and stage == 8 and entity.FrameCount >= 60) or
+      -- We want the player to be forced to dodge the final wave of tears, so we have to delay
+      (upwards and stage == 10 and entity.FrameCount >= 16)) and
+      -- The beam of light opening animation is 16 frames long
      player.Position.X >= entity.Position.X - squareSize and
      player.Position.X <= entity.Position.X + squareSize and
      player.Position.Y >= entity.Position.Y - squareSize and
@@ -489,11 +490,23 @@ function RPFastTravel:CheckRoomRespawn()
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomIndex()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   -- Respawn trapdoors, if necessary
   for i = 1, #RPGlobals.run.replacedTrapdoors do
     if RPGlobals.run.replacedTrapdoors[i].room == roomIndex then
+      -- Remove any grid entities that will overlap with the custom entity
+      -- (this is needed because rocks may respawn in the room after we remove the trapdoor)
+      local gridIndex = room:GetGridIndex(RPGlobals.run.replacedTrapdoors[i].pos)
+      local gridEntity = room:GetGridEntity(gridIndex)
+      if gridEntity ~= nil then
+        room:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() does not work
+        Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
+                          " that would interfere with the trapdoor.")
+      end
+
+      -- Spawn the new custom entity
       local trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                                   Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
                                   RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
@@ -506,6 +519,17 @@ function RPFastTravel:CheckRoomRespawn()
   -- Respawn crawlspaces, if necessary
   for i = 1, #RPGlobals.run.replacedCrawlspaces do
     if RPGlobals.run.replacedCrawlspaces[i].room == roomIndex then
+      -- Remove any grid entities that will overlap with the custom entity
+      -- (this is needed because rocks may respawn in the room after we remove the trapdoor)
+      local gridIndex = room:GetGridIndex(RPGlobals.run.replacedCrawlspaces[i].pos)
+      local gridEntity = room:GetGridEntity(gridIndex)
+      if gridEntity ~= nil then
+        room:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() does not work
+        Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
+                          " that would interfere with the crawlspace.")
+      end
+
+      -- Spawn the new custom entity
       local crawlspace = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
                                   Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
                                   RPGlobals.run.replacedCrawlspaces[i].pos, Vector(0,0), nil, 0, 0)
@@ -533,6 +557,7 @@ function RPFastTravel:CheckRoomRespawn()
   -- Respawn beams of light, if necessary
   for i = 1, #RPGlobals.run.replacedHeavenDoors do
     if RPGlobals.run.replacedHeavenDoors[i].room == roomIndex then
+      -- Spawn the new custom entity
       local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                                   Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
                                   RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)

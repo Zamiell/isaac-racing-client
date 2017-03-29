@@ -238,6 +238,8 @@ function RPPostRender:CheckResetInput()
 
   -- Check for the "R" input
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    -- (we check all inputs instead of "player.ControllerIndex" because
+    -- a controller player might be using the keyboard to reset)
     if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
       Isaac.ExecuteCommand("restart")
       return

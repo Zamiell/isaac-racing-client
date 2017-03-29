@@ -37,7 +37,7 @@
 	<player id="8" name="Lazarus" skin="Character_009_Lazarus.png" hp="6" pill="1" items="105"
           nameimage="PlayerName_10_Lazarus.png"
           portrait="PlayerPortrait_09_Lazarus.png"
-          bigportrait="PlayerPortraitBig_09_Lazarus.png" costume="32" skinColor="-1" /><!-- Lazarus also gets the Anemic (214) -->
+          bigportrait="PlayerPortraitBig_09_Lazarus.png" costume="32" skinColor="-1" /><!-- Lazarus also gets Anemic (214) -->
 	<player id="9" name="Eden" skin="Character_009_Eden.png" costume="12" items="105"
           nameimage="PlayerName_09_Eden.png"
           portrait="PlayerPortrait_09_Eden.png"

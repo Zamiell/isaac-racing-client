@@ -195,14 +195,11 @@ function RPSchoolbag:CheckInput()
     return
   end
 
+  -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
+  -- the latter is not very responsive with fast sequences of inputs
   local switchPressed = false
-  for i = 0, 3 do -- There are 4 possible players from 0 to 3
-    -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
-    -- the latter is not very responsive with fast sequences of inputs
-    if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
-      switchPressed = true
-      break
-    end
+  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) then -- 11
+    switchPressed = true
   end
   if switchPressed and RPGlobals.run.schoolbag.pressed == false then
     RPGlobals.run.schoolbag.pressed = true

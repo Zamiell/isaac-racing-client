@@ -218,15 +218,9 @@ function RPPostUpdate:CheckDropInput()
   end
 
   -- Check for the input
-  local dropPressed = false
-  for i = 0, 3 do -- There are 4 possible players from 0 to 3
-    -- Use "IsActionPressed()" instead of "IsActionTriggered()" because
-    -- new players might not know about the fast-drop feature and will just keep the button pressed down
-    if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
-      dropPressed = true
-    end
-  end
-  if dropPressed == false then
+  -- (use "IsActionPressed()" instead of "IsActionTriggered()" because
+  -- new players might not know about the fast-drop feature and will just keep the button pressed down)
+  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
     return
   end
 

@@ -6,10 +6,12 @@
 --[[
 
 TODO:
-- remove delay on the credits item
+- add floor to starting screen
 - custom animation when you spawn close to mimic (make it red?)
+- remove character check from mod since we can restart X
+
+- remove delay on the credits item
 - add konami code item
-- account for eternal heart animation playing for fast-travel
 - make mushrooms only spawn on caves
 - make hosts only spawn on depths
 - make mushrooms not deal contact damage on the first X frames on them being spawned

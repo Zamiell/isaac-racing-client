@@ -409,17 +409,23 @@ const show = function(raceID) {
         // Column 5 - Goal
         let goal = globals.raceList[globals.currentRaceID].ruleset.goal;
         $('#race-title-goal-icon').css('background-image', 'url("assets/img/goals/' + goal + '.png")');
-        let goalTooltipContent = '<span lang="en">';
+        let goalTooltipContent = '';
         if (goal === 'Blue Baby') {
-            goalTooltipContent += 'Defeat Blue Baby (the boss of The Chest) and touch the trophy that falls down afterward.';
+            goalTooltipContent += '<strong><span lang="en">Blue Baby</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Defeat Blue Baby (the boss of The Chest)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
         } else if (goal === 'The Lamb') {
-            goalTooltipContent += 'Defeat The Lamb (the boss of The Dark Room) and touch the trophy that falls down afterward.';
+            goalTooltipContent += '<strong><span lang="en">The Lamb</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Defeat The Lamb (the boss of The Dark Room)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
         } else if (goal === 'Mega Satan') {
-            goalTooltipContent += 'Defeat Mega Satan (the boss behind the giant locked door) and touch the trophy that falls down afterward.';
+            goalTooltipContent += '<strong><span lang="en">Mega Satan</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Defeat Mega Satan (the boss behind the giant locked door)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
         } else if (goal === 'custom') {
-            goalTooltipContent += 'You make the rules! Make sure that everyone in the race knows what to do before you start.';
+            goalTooltipContent += '<strong><span lang="en">Custom</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
         }
-        goalTooltipContent += '</span>';
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
         // Column 6 - Build (only available for seeded races)

@@ -4094,7 +4094,6 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/types/unranked.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
@@ -4117,7 +4116,6 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/formats/unseeded.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
@@ -4133,7 +4131,6 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/characters/Judas.png");
         background-repeat: no-repeat;
         background-position: bottom center; /* using bottom since the characters have different size hair */
         display: inline-block;
@@ -4155,7 +4152,6 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/goals/Blue Baby.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
@@ -4170,7 +4166,6 @@
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
         transition: background-image 0.3s ease-in-out;
-        background-image: url("../img/builds/Random.png");
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;

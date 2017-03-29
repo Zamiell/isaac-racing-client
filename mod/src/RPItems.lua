@@ -279,7 +279,7 @@ function RPItems:Smelter()
   end
 
   -- Do the real Smelter effect
-  player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false)
+  player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false) -- 479
 
   -- Display the "use" animation
   return true
