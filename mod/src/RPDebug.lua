@@ -62,6 +62,7 @@ function RPDebug:Main()
   --RPGlobals.raceVars.finished = true
   --debugVar = debugVar + 1
   --RPSprites:Init("diversity-item5", tostring(debugVar))
+  RPGlobals.debug = true
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

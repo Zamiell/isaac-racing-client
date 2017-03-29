@@ -7,31 +7,112 @@ local RPFastTravel = {}
 local RPGlobals = require("src/rpglobals")
 
 --
--- FastTravel functions
+-- Constants
 --
 
--- Remove the long fade out / fade in when entering trapdoors / beams of light (1/2)
--- (called from the "RPCheckEntities:Grid()" function)
-function RPFastTravel:CheckTrapdoorEnter(gridOrEffectEntity, upwards)
+RPFastTravel.trapdoorOpenDistance = 65 -- This feels about right
+RPFastTravel.trapdoorTouchDistance = 15 -- This feels about right (it is slightly smaller than vanilla)
+
+--
+-- Trapdoor / heaven door functions
+--
+
+-- "Replace" functions for trapdoor / heaven door
+-- (called from the "RPCheckEntities:Grid()" and "RPCheckEntities:NonGrid()" functions)
+function RPFastTravel:ReplaceTrapdoor(entity, i)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  -- Spawn a custom entity to emulate the original
+  local trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
+                              Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
+                              entity.Position, Vector(0,0), nil, 0, 0)
+  trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+
+  -- The custom entity will not respawn if we leave the room,
+  -- so we need to keep track of it for the remainder of the floor
+  RPGlobals.run.replacedTrapdoors[#RPGlobals.run.replacedTrapdoors + 1] = {
+    room = roomIndex,
+    pos  = entity.Position,
+  }
+
+  -- Figure out if it should spawn open or closed, depending on how close we are
+  local squareSize = RPFastTravel.trapdoorOpenDistance
+  if player.Position.X >= entity.Position.X - squareSize and
+     player.Position.X <= entity.Position.X + squareSize and
+     player.Position.Y >= entity.Position.Y - squareSize and
+     player.Position.Y <= entity.Position.Y + squareSize then
+
+    trapdoor:ToEffect().State = 1
+    trapdoor:GetSprite():Play("Closed", true)
+    Isaac.DebugString("Spawned trapdoor (closed, state 1).")
+  else
+    trapdoor:GetSprite():Play("Open Animation", true)
+    Isaac.DebugString("Spawned trapdoor (opened, state 0).")
+  end
+
+  -- Remove the original entity
+  if i == -1 then
+    -- We are replacing a Big Chest
+    entity:Remove()
+  else
+    -- We are replacing a trapdoor grid entity
+    room:RemoveGridEntity(i, 0, false) -- entity:Destroy() does not work
+  end
+end
+
+function RPFastTravel:ReplaceHeavenDoor(entity)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+
+  -- Spawn a custom entity to emulate the original
+  local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
+             Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
+             entity.Position, Vector(0,0), nil, 0, 0)
+  heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
+
+  -- The custom entity will not respawn if we leave the room,
+  -- so we need to keep track of it for the remainder of the floor
+  RPGlobals.run.replacedHeavenDoors[#RPGlobals.run.replacedHeavenDoors + 1] = {
+    room = roomIndex,
+    pos  = entity.Position,
+  }
+
+  -- Remove the original entity
+  entity:Remove()
+  Isaac.DebugString("Spawned heaven door.")
+end
+
+-- Called from the "RPCheckEntities:NonGrid()" function
+function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local level = game:GetLevel()
+  local stage = level:GetStage()
 
-  -- Check to see if the player is in a square around the trapdoor that will trigger the animation
-  -- ("room:GetGridIndex(player.Position) == gridEntity:GetGridIndex()" is too small of a square
-  -- to trigger reliably)
-  local squareSize = 25.5 -- 25 is too small
+  -- Check to see if the player is touching the trapdoor
+  local squareSize = RPFastTravel.trapdoorTouchDistance
   if RPGlobals.run.trapdoor.state == 0 and
-     ((upwards == false and gridOrEffectEntity.State == 1) or -- The trapdoor is open
-      (upwards and gridOrEffectEntity.FrameCount >= 60)) and -- The beam of light is not freshly spawned
-     player.Position.X >= gridOrEffectEntity.Position.X - squareSize and
-     player.Position.X <= gridOrEffectEntity.Position.X + squareSize and
-     player.Position.Y >= gridOrEffectEntity.Position.Y - squareSize and
-     player.Position.Y <= gridOrEffectEntity.Position.Y + squareSize and
+     ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
+      (upwards and stage == 8 and entity.FrameCount >= 60) or -- The beam of light is not freshly spawned
+      -- We need to delay more for Womb 2 so that the player is forced to dodge the final wave of tears
+      (upwards and stage == 10 and entity.FrameCount >= 10)) and -- The beam of light is not freshly spawned
+     player.Position.X >= entity.Position.X - squareSize and
+     player.Position.X <= entity.Position.X + squareSize and
+     player.Position.Y >= entity.Position.Y - squareSize and
+     player.Position.Y <= entity.Position.Y + squareSize and
      player:IsHoldingItem() == false then
 
     -- State 1 is activated the moment we touch the trapdoor
     RPGlobals.run.trapdoor.state = 1
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.upwards = upwards
     RPGlobals.run.trapdoor.frame = Isaac.GetFrameCount() + 40
     -- The "Trapdoor" animation is 16 frames long and the "LightTravel" animation is 28 frames long,
@@ -41,7 +122,9 @@ function RPFastTravel:CheckTrapdoorEnter(gridOrEffectEntity, upwards)
     -- (we have increased the "FrameNum" for the "LightTravel" animations to 40)
 
     player.ControlsEnabled = false
-    player.Position = gridOrEffectEntity.Position -- Teleport the player on top of the trapdoor
+    player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+    -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+    player.Position = entity.Position -- Teleport the player on top of the trapdoor
     player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
     if upwards then
       player:PlayExtraAnimation("LightTravel")
@@ -51,8 +134,7 @@ function RPFastTravel:CheckTrapdoorEnter(gridOrEffectEntity, upwards)
   end
 end
 
--- Remove the long fade out / fade in when entering trapdoors (2/2)
--- (called from the PostRender callback)
+-- Called from the PostRender callback
 function RPFastTravel:CheckTrapdoor()
   -- Local varaibles
   local game = Game()
@@ -60,20 +142,26 @@ function RPFastTravel:CheckTrapdoor()
   local stage = level:GetStage()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
+  local playerSprite = player:GetSprite()
   local frameCount = Isaac.GetFrameCount()
+
+  if playerSprite:IsPlaying("Trapdoor") then
+    game:Fadein(0.05)
+  end
 
   if RPGlobals.run.trapdoor.state == 1 and
      frameCount >= RPGlobals.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
     -- Make Isaac invisible
-    RPGlobals.run.crawlspace.scale = player.SpriteScale
+    RPGlobals.run.trapdoor.scale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
     game:StartRoomTransition(level:GetStartingRoomIndex(), Direction.NO_DIRECTION, -- -1
                              RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
 
     -- Mark to change floors after the screen is black
     RPGlobals.run.trapdoor.state = 2
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.frame = frameCount + 8
     -- 9 is too many (you can start to see the same room again)
 
@@ -82,6 +170,7 @@ function RPFastTravel:CheckTrapdoor()
 
     -- Stage 3 is actiated when the screen is black
     RPGlobals.run.trapdoor.state = 3
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.floor = stage
     RPGlobals:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
@@ -90,12 +179,9 @@ function RPFastTravel:CheckTrapdoor()
 
     -- State 4 is activated when we get to the new floor
     RPGlobals.run.trapdoor.state = 4
-
-    -- Spawn a Pitfall (291.0)
-    local pitfall = game:Spawn(EntityType.ENTITY_PITFALL, 0, room:GetCenterPos(), Vector(0,0), nil, 0, 0)
-
-    -- Make it so that it doesn't actually suck in the player
-    pitfall:ToNPC().State = 4 -- (I found this through trial and error)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
+               room:GetCenterPos(), Vector(0,0), nil, 0, 0)
 
     -- Move Isaac to the center of the room
     player.Position = room:GetCenterPos()
@@ -106,7 +192,8 @@ function RPFastTravel:CheckTrapdoor()
      -- State 5 is activated when the player controls are enabled
      -- (this happens automatically by the game)
      RPGlobals.run.trapdoor.state = 5
-     RPGlobals.run.trapdoor.frame = frameCount + 10 -- Wait a while
+     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+     RPGlobals.run.trapdoor.frame = frameCount + 10 -- Wait a while longer
      player.ControlsEnabled = false
 
   elseif RPGlobals.run.trapdoor.state == 5 and
@@ -114,11 +201,15 @@ function RPFastTravel:CheckTrapdoor()
 
      -- State 6 is activated when the the hole is spawned and ready
      RPGlobals.run.trapdoor.state = 6
+     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
      RPGlobals.run.trapdoor.frame = frameCount + 25
      -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
 
      -- Make Isaac visable again
      player.SpriteScale = RPGlobals.run.trapdoor.scale
+
+     -- Re-give Isaac the collision that we removed earlier
+     player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
      -- Play the jumping out of the hole animation
      player:PlayExtraAnimation("Jump")
@@ -126,8 +217,10 @@ function RPFastTravel:CheckTrapdoor()
      -- Make the hole do the dissapear animation
      local entities = Isaac.GetRoomEntities()
      for i = 1, #entities do
-       if entities[i].Type == EntityType.ENTITY_PITFALL then -- 291
-         entities[i]:ToNPC().State = 5 -- State 5 causes it to disappear
+       if entities[i].Type == Isaac.GetEntityTypeByName("Pitfall (Custom)") and
+          entities[i].Variant == Isaac.GetEntityVariantByName("Pitfall (Custom)") then
+
+         entities[i]:GetSprite():Play("Disappear", true)
          break
        end
      end
@@ -137,12 +230,13 @@ function RPFastTravel:CheckTrapdoor()
 
     -- We are finished when the the player has emerged from the hole
     RPGlobals.run.trapdoor.state = 0
+    Isaac.DebugString("Trapdoor state finished.")
     player.ControlsEnabled = true
 
     -- Kill the hole
     local entities = Isaac.GetRoomEntities()
     for i = 1, #entities do
-      if entities[i].Type == EntityType.ENTITY_PITFALL then -- 291
+      if entities[i].Type == 1001 then
         entities[i]:Remove()
         break
       end
@@ -150,36 +244,81 @@ function RPFastTravel:CheckTrapdoor()
   end
 end
 
--- Remove the animation when entering crawlspaces
--- (called from the "RPCheckEntities:Grid()" function)
-function RPFastTravel:CheckCrawlspaceEnter(gridEntity)
+--
+-- Crawlspace functions
+--
+
+-- Called from the "RPCheckEntities:Grid()" function
+function RPFastTravel:ReplaceCrawlspace(entity, i)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  -- Spawn a custom entity to emulate the original
+  local crawlspace = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
+                                Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
+                                entity.Position, Vector(0,0), nil, 0, 0)
+  crawlspace.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+
+  -- The custom entity will not respawn if we leave the room,
+  -- so we need to keep track of it for the remainder of the floor
+  RPGlobals.run.replacedCrawlspaces[#RPGlobals.run.replacedCrawlspaces + 1] = {
+    room = roomIndex,
+    pos  = entity.Position,
+  }
+
+  -- Figure out if it should spawn open or closed, depending on how close we are
+  local squareSize = RPFastTravel.trapdoorOpenDistance
+  if player.Position.X >= entity.Position.X - squareSize and
+     player.Position.X <= entity.Position.X + squareSize and
+     player.Position.Y >= entity.Position.Y - squareSize and
+     player.Position.Y <= entity.Position.Y + squareSize then
+
+    crawlspace:ToEffect().State = 1
+    crawlspace:GetSprite():Play("Closed", true)
+    Isaac.DebugString("Spawned crawlspace (closed, state 1).")
+  else
+    crawlspace:GetSprite():Play("Open Animation", true)
+    Isaac.DebugString("Spawned crawlspace (opened, state 0).")
+  end
+
+  -- Remove the original entity
+  room:RemoveGridEntity(i, 0, false) -- entity:Destroy() does not work
+end
+
+-- Called from the "RPCheckEntities:NonGrid()" function
+function RPFastTravel:CheckCrawlspaceEnter(entity)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomIndex()
   local player = game:GetPlayer(0)
 
-  -- Check to see if the player is in a square around the stairs that will trigger the animation
-  -- ("room:GetGridIndex(player.Position) == gridEntity:GetGridIndex()" is too small of a square
-  -- to trigger reliably)
-  local squareSize = 25.5 -- 25 is too small
-  if gridEntity.State == 1 and -- The trapdoor is open
-     RPGlobals.run.crawlspace.entering == false and
-     player.Position.X >= gridEntity.Position.X - squareSize and
-     player.Position.X <= gridEntity.Position.X + squareSize and
-     player.Position.Y >= gridEntity.Position.Y - squareSize and
-     player.Position.Y <= gridEntity.Position.Y + squareSize then
+  -- Check to see if the player is touching the crawlspace
+  local squareSize = RPFastTravel.trapdoorTouchDistance
+  if entity:ToEffect().State == 0 and -- The crawlspace is open
+     player.Position.X >= entity.Position.X - squareSize and
+     player.Position.X <= entity.Position.X + squareSize and
+     player.Position.Y >= entity.Position.Y - squareSize and
+     player.Position.Y <= entity.Position.Y + squareSize then
 
-    RPGlobals.run.crawlspace.entering = true
-    RPGlobals.run.crawlspace.room = roomIndex
-    RPGlobals.run.crawlspace.position = gridEntity.Position
+    -- If we don't set this, we will return to the center of the room by default
+    level.DungeonReturnPosition = entity.Position
+
+    -- We need to keep track of which room we came from
+    -- (this is needed in case we are in a Boss Rush or other room with a negative room index)
+    level.DungeonReturnRoomIndex = roomIndex
+
+    -- Go to the crawlspace
     game:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
                              RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
   end
 end
 
--- Remove the animation when leaving crawlspaces
--- (called from the PostUpdate callback)
+-- Called from the PostUpdate callback
 function RPFastTravel:CheckCrawlspaceExit()
   -- Local variables
   local game = Game()
@@ -189,17 +328,11 @@ function RPFastTravel:CheckCrawlspaceExit()
   local playerGridIndex = room:GetGridIndex(player.Position)
 
   if room:GetType() == RoomType.ROOM_DUNGEON and -- 16
-     playerGridIndex == 2 and -- If the player is standing on top of the ladder
-     RPGlobals.run.crawlspace.exiting == false then
-
-    -- Make the player invisible to avoid a bug where they pop out of the wrong spot
-    RPGlobals.run.crawlspace.scale = player.SpriteScale
-    player.SpriteScale = Vector(0, 0)
+     playerGridIndex == 2 then -- If the player is standing on top of the ladder
 
     -- Do a manual room transition
-    RPGlobals.run.crawlspace.exiting = true
     level.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-    game:StartRoomTransition(RPGlobals.run.crawlspace.room, Direction.UP, -- 1
+    game:StartRoomTransition(level.DungeonReturnRoomIndex, Direction.UP, -- 1
                              RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
   end
 end
@@ -209,8 +342,8 @@ end
 function RPFastTravel:CheckCrawlspaceSoftlock()
   -- Local variables
   local game = Game()
-  local room = game:GetRoom()
   local level = game:GetLevel()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local playerGridIndex = room:GetGridIndex(player.Position)
 
@@ -218,18 +351,81 @@ function RPFastTravel:CheckCrawlspaceSoftlock()
      level:GetPreviousRoomIndex() == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
     if playerGridIndex == 7 then -- Top left door
+      RPGlobals.run.bossRushReturn = Direction.UP -- 1
       game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.UP, -- 1
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (up).")
     elseif playerGridIndex == 139 then -- Right top door
+      RPGlobals.run.bossRushReturn = Direction.RIGHT -- 2
       game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.RIGHT, -- 2
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (right).")
     elseif playerGridIndex == 427 then -- Bottom left door
+      RPGlobals.run.bossRushReturn = Direction.DOWN -- 3
       game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.DOWN, -- 3
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (down).")
     elseif playerGridIndex == 112 then -- Left top door
+      RPGlobals.run.bossRushReturn = Direction.LEFT -- 0
       game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.LEFT, -- 0
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (left).")
     end
+  end
+end
+
+-- Called in the PostNewRoom callback
+function RPFastTravel:CheckCrawlspaceMiscBugs()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+  local prevRoomIndex = level:GetPreviousRoomIndex()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  -- For some reason, we won't go back to location of the crawlspace if we entered from the Boss Rush,
+  -- so move there manually
+  -- (this will look glitchy because the game wants to spawn us next to the Boss Rush door,
+  -- but there is no way around this; even if we change player.Position on every frame in the PostRender callback,
+  -- the glitchy warp will still occur)
+  if roomIndex == GridRooms.ROOM_BOSSRUSH_IDX and -- --5
+     prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
+
+    player.Position = level.DungeonReturnPosition
+    Isaac.DebugString("Exited crawlspace in Boss Rush, teleport complete.")
+  end
+
+  -- For some reason, if we exit and re-enter a crawlspace in a Boss Rush, we won't spawn on the ladder,
+  -- so move there manually (this causes no visual hiccups like the above code does)
+  if roomIndex == GridRooms.ROOM_DUNGEON_IDX and -- -4
+     level.DungeonReturnRoomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -4
+
+    player.Position = Vector(120, 160) -- This is the standard starting location at the top of the ladder
+    Isaac.DebugString("Entered crawlspace from Boss Rush, teleport complete.")
+  end
+
+  -- When returning to the boss room from a Boss Rush with a crawlspace in it,
+  -- we might not end up in a spot where the player expects, so move to the most logical position manually
+  if RPGlobals.run.bossRushReturn ~= -1 then
+    if RPGlobals.run.bossRushReturn == Direction.LEFT then -- 0
+      -- Returning from the right door
+      player.Position = room:GetGridPosition(73)
+      Isaac.DebugString("Entered boss room from Boss Rush (going left), teleport complete.")
+    elseif RPGlobals.run.bossRushReturn == Direction.UP then -- 1
+      -- Returning from the bottom door
+      player.Position = RPGlobals.GridToPos(112)
+      Isaac.DebugString("Entered boss room from Boss Rush (going up), teleport complete.")
+    elseif RPGlobals.run.bossRushReturn == Direction.RIGHT then -- 2
+      -- Returning from the left door
+      player.Position = RPGlobals.GridToPos(61)
+      Isaac.DebugString("Entered boss room from Boss Rush (going left), teleport complete.")
+    elseif RPGlobals.run.bossRushReturn == Direction.DOWN then -- 3
+      -- Returning from the top door
+      player.Position = RPGlobals.GridToPos(22)
+      Isaac.DebugString("Entered boss room from Boss Rush (going down), teleport complete.")
+    end
+    RPGlobals.run.bossRushReturn = -1
   end
 end
 
@@ -249,6 +445,96 @@ function RPFastTravel:GetBossRoomIndex()
   -- We should never get here
   Isaac.DebugString("Error: Was not able to find the boss room index.")
   return level:GetStartingRoomIndex()
+end
+
+--
+-- Shared functions
+--
+
+-- Called from the "RPCheckEntities:NonGrid()" function
+function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- Don't do anything if the trapdoor / crawlspace is already open
+  if entity:ToEffect().State == 0 then
+    return
+  end
+
+  -- Don't do anything if the player is standing too close to the trapdoor / crawlspace
+  local squareSize = RPFastTravel.trapdoorOpenDistance
+  if player.Position.X >= entity.Position.X - squareSize and
+     player.Position.X <= entity.Position.X + squareSize and
+     player.Position.Y >= entity.Position.Y - squareSize and
+     player.Position.Y <= entity.Position.Y + squareSize then
+
+    return
+  end
+
+  -- Open it
+  entity:ToEffect().State = 0
+  entity:GetSprite():Play("Open Animation", true)
+  Isaac.DebugString("Opened trap door (player moved away).")
+end
+
+-- Called from the PostNewRoom callback
+function RPFastTravel:CheckRoomRespawn()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomIndex()
+  local player = game:GetPlayer(0)
+
+  -- Respawn trapdoors, if necessary
+  for i = 1, #RPGlobals.run.replacedTrapdoors do
+    if RPGlobals.run.replacedTrapdoors[i].room == roomIndex then
+      local trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
+                                  Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
+                                  RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+      trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+      -- The default animation is "Opened", which is what we want
+      Isaac.DebugString("Spawned trapdoor (opened, state 0, respawning).")
+    end
+  end
+
+  -- Respawn crawlspaces, if necessary
+  for i = 1, #RPGlobals.run.replacedCrawlspaces do
+    if RPGlobals.run.replacedCrawlspaces[i].room == roomIndex then
+      local crawlspace = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
+                                  Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
+                                  RPGlobals.run.replacedCrawlspaces[i].pos, Vector(0,0), nil, 0, 0)
+      crawlspace.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+
+      -- Figure out if it should spawn open or closed, depending on how close we are
+      local squareSize = RPFastTravel.trapdoorOpenDistance
+      if (player.Position.X >= crawlspace.Position.X - squareSize and
+          player.Position.X <= crawlspace.Position.X + squareSize and
+          player.Position.Y >= crawlspace.Position.Y - squareSize and
+          player.Position.Y <= crawlspace.Position.Y + squareSize) or
+         roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
+         -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
+
+        crawlspace:ToEffect().State = 1
+        crawlspace:GetSprite():Play("Closed", true)
+        Isaac.DebugString("Spawned crawlspace (closed, state 1, respawning).")
+      else
+        -- The default animation is "Opened", which is what we want
+        Isaac.DebugString("Spawned crawlspace (opened, state 0, respawning).")
+      end
+    end
+  end
+
+  -- Respawn beams of light, if necessary
+  for i = 1, #RPGlobals.run.replacedHeavenDoors do
+    if RPGlobals.run.replacedHeavenDoors[i].room == roomIndex then
+      local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
+                                  Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
+                                  RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
+      heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
+      Isaac.DebugString("Spawned heaven door (respawning).")
+    end
+  end
 end
 
 return RPFastTravel

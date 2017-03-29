@@ -117,6 +117,17 @@ RPGlobals.RoomTransition = {
   TRANSITION_MISSING_POSTER    = 14
 }
 
+-- Spaded by me
+RPGlobals.FadeoutTarget = {
+  -- -1 and lower result in a black screen
+  FADEOUT_FILE_SELECT     = 0,
+  FADEOUT_MAIN_MENU       = 1,
+  FADEOUT_TITLE_SCREEN    = 2,
+  FADEOUT_RESTART_RUN     = 3,
+  FADEOUT_RESTART_RUN_LAP = 4,
+  -- 5 and higher result in a black screen
+}
+
 --
 -- Misc. subroutines
 --
@@ -128,9 +139,13 @@ function RPGlobals:InitRun()
   RPGlobals.run.touchedBookOfSin = false
 
   -- Tracking per floor
-  RPGlobals.run.currentFloor       = 1
-  RPGlobals.run.levelDamaged       = false
-  RPGlobals.run.replacedPedestals  = {}
+  RPGlobals.run.currentFloor        = 0
+  -- (start at 0 so that we can trigger the PostNewRoom callback after the PostNewLevel callback)
+  RPGlobals.run.levelDamaged        = false
+  RPGlobals.run.replacedPedestals   = {}
+  RPGlobals.run.replacedTrapdoors   = {}
+  RPGlobals.run.replacedCrawlspaces = {}
+  RPGlobals.run.replacedHeavenDoors = {}
 
   -- Tracking per room
   RPGlobals.run.roomEnterting         = false
@@ -149,6 +164,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.blackRingTime        = 0
   RPGlobals.run.blackRingDropChance  = 0
   RPGlobals.run.consoleWindowOpen    = false
+  RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -169,16 +185,7 @@ function RPGlobals:InitRun()
     upwards = false,
     floor   = 0,
     frame   = 0,
-    scale   = Vector(1, 1),
-  }
-
-  -- Crawlspace tracking
-  RPGlobals.run.crawlspace = {
-    entering = false,
-    exiting  = false,
-    room     = 0,
-    position = 0,
-    scale    = Vector(1, 1),
+    scale   = Vector(0, 0),
   }
 
   -- Keeper + Greed's Gullet tracking

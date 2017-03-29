@@ -68,6 +68,10 @@ function RPPostRender:Main()
   -- Check for trapdoor related things
   RPFastTravel:CheckTrapdoor()
 
+  if RPGlobals.debug then
+    player.Position = Vector(588, 446) -- Center of the boss rush
+  end
+
   -- Check for reset inputs
   RPPostRender:CheckResetInput()
 
@@ -130,6 +134,11 @@ function RPPostRender:LoadSaveDat()
     end
     if oldRace.rFormat ~= RPGlobals.race.rFormat then
       Isaac.DebugString("ModData rFormat changed: " .. RPGlobals.race.rFormat)
+      if RPGlobals.race.rFormat == "pageant" then
+        -- For Pageant Boy, fix the bug where it is not loaded on the first run
+        -- Doing a "restart" won't work since we are just starting a run, so mark to reset on the next frame
+        RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+      end
     end
     if oldRace.character ~= RPGlobals.race.character then
       Isaac.DebugString("ModData character changed: " .. RPGlobals.race.character)
@@ -210,30 +219,26 @@ function RPPostRender:CheckResetInput()
   end
 
   -- Check to see if we are opening the console window
-  for i = 0, 3 do -- There are 4 possible players from 0 to 3
-    if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, i) then -- 96
-      RPGlobals.run.consoleWindowOpen = true
-      return
-    end
+  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) then -- 96
+    RPGlobals.run.consoleWindowOpen = true
+    return
   end
 
   -- Don't fast-reset if any modifiers are pressed
-  for i = 0, 3 do -- There are 4 possible players from 0 to 3
-    if Input.IsButtonPressed(Keyboard.KEY_LEFT_SHIFT, i) or -- 340
-       Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, i) or -- 341
-       Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, i) or -- 342
-       Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, i) or -- 343
-       Input.IsButtonPressed(Keyboard.KEY_RIGHT_SHIFT, i) or -- 344
-       Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, i) or -- 345
-       Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, i) or -- 346
-       Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, i) then -- 347
+  if Input.IsButtonPressed(Keyboard.KEY_LEFT_SHIFT, 0) or -- 340
+     Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
+     Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) or -- 342
+     Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) or -- 343
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SHIFT, 0) or -- 344
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) or -- 345
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) or -- 346
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) then -- 347
 
-      return
-    end
+    return
   end
 
   -- Check for the "R" input
-  for i = 0, 3 do -- There are 4 possible players from 0 to 3
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
       Isaac.ExecuteCommand("restart")
       return

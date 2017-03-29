@@ -5,6 +5,7 @@ local RPPostGameStarted = {}
 --
 
 local RPGlobals   = require("src/rpglobals")
+local RPCallbacks = require("src/rpcallbacks")
 local RPSprites   = require("src/rpsprites")
 local RPSchoolbag = require("src/rpschoolbag")
 
@@ -26,6 +27,8 @@ function RPPostGameStarted:Main(saveState)
   local curses = level:GetCurses()
   local seeds = game:GetSeeds()
   local sfx = SFXManager()
+
+  Isaac.DebugString("MC_POST_GAME_STARTED")
 
   -- Stop the sound effect from playing at the beginning of a run for characters with a fully charged active item
   if sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then -- 170
@@ -113,6 +116,9 @@ function RPPostGameStarted:Main(saveState)
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()
+
+  -- Call PostNewLevel manually (they get naturally called out of order)
+  RPCallbacks:PostNewLevel2()
 end
 
 -- This is done when a run is started

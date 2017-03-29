@@ -105,6 +105,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
 * Hosts and Mobile Hosts are now immune to fear.
+* Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
 * Fixed the spelling of Humbling Bundle.

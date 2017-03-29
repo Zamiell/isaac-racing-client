@@ -262,54 +262,6 @@ function registerKeyboardHotkeys() {
     if (!hotkeyQuit) {
         log.warn('Alt+Q hotkey registration failed.');
     }
-
-    const hotkeyBlckCndl = globalShortcut.register('Alt+C', function() {
-        // Default to keyboard
-        let keyboard = false;
-
-        // We have to re-get the settings, since the renderer process may have changed them
-        // If so, our local copy of all of the settings is no longer current
-        settings.loadOrCreateSync();
-        if (typeof settings.get('keyboard') !== 'undefined') {
-            if (settings.get('keyboard') === true) {
-                keyboard = true;
-            }
-        }
-
-        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToBlckCndl = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndl' + (keyboard ? 'Keyboard' : '') + '.exe');
-            execFile(pathToBlckCndl, function(error, stdout, stderr) {
-                // We have to attach an empty callback to this or it does not work for some reason
-            });
-        }
-    });
-    if (!hotkeyBlckCndl) {
-        log.warn('Alt+C hotkey registration failed.');
-    }
-
-    const hotkeyBlckCndlSeed = globalShortcut.register('Alt+V', function() {
-        // Default to keyboard
-        let keyboard = false;
-
-        // We have to re-get the settings, since the renderer process may have changed them
-        // If so, our local copy of all of the settings is no longer current
-        settings.loadOrCreateSync();
-        if (typeof settings.get('keyboard') !== 'undefined') {
-            if (settings.get('keyboard') === true) {
-                keyboard = true;
-            }
-        }
-
-        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToBlckCndlSeed = path.join(__dirname, 'assets', 'programs', 'gameHotkeys', 'blckCndlSeed' + (keyboard ? 'Keyboard' : '') + '.exe');
-            execFile(pathToBlckCndlSeed, function(error, stdout, stderr) {
-                // We have to attach an empty callback to this or it does not work for some reason
-            });
-        }
-    });
-    if (!hotkeyBlckCndlSeed) {
-        log.warn('Alt+V hotkey registration failed.');
-    }
 }
 
 /*

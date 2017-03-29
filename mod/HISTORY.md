@@ -2,6 +2,14 @@
 
 Note that the Racing+ Mod version will almost always match the client version. This means that the version number of the mod may increase, but have no actual new in-game changes. All gameplay related changes will be listed below.
 
+* *0.3.3* - Unreleased
+  * ?
+* *0.3.2* - March 27th
+  * Pressing the reset key will now instantly reset the game.
+  * The long and annoying fade out / fade in animation between floors has been replaced with something better.
+  * The Schoolbag will now work properly with the new Booster Pack items.
+  * Fixed the unavoidable damage when Spiked Chests or Mimics spawn in Caves/Catacombs room #19.
+  * If Eden starts with Book of Sin, Crystal Ball, Betrayal, or Smelter, she will now start with the Racing+ custom version of the item.
 * *0.2.78* - March 19th
   * Special items are no longer special. This means you won't be negatively affected anymore by seeing a D100 or The Ludovico Technique.
   * Fixed the bug where items that are not fully decremented on sight will no longer mostly reroll into themselves.

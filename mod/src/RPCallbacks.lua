@@ -4,8 +4,9 @@ local RPCallbacks = {}
 -- Includes
 --
 
-local RPGlobals   = require("src/rpglobals")
-local RPFastClear = require("src/rpfastclear")
+local RPGlobals    = require("src/rpglobals")
+local RPFastClear  = require("src/rpfastclear")
+local RPFastTravel = require("src/rpfasttravel")
 
 --
 -- Miscellaneous game callbacks
@@ -321,13 +322,30 @@ function RPCallbacks:InputAction(entity, inputHook, buttonAction)
 end
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
--- (this will get called on a new run before the PostGameStarted callback)
 function RPCallbacks:PostNewLevel()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  Isaac.DebugString("MC_POST_NEW_LEVEL")
+
+  -- Make sure the callbacks run in the right order
+  -- (naturally, PostNewLevel gets called before the PostGameStarted callbacks)
+  if gameFrameCount == 0 then
+    return
+  end
+
+  RPCallbacks:PostNewLevel2()
+end
+
+function RPCallbacks:PostNewLevel2()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
+
+  Isaac.DebugString("MC_POST_NEW_LEVEL2")
 
   -- Find out if we performed a Sacrifice Room teleport
   if stage == 11 and stageType == 0 and RPGlobals.run.currentFloor ~= 10 then -- 11.0 is Dark Room
@@ -344,14 +362,18 @@ function RPCallbacks:PostNewLevel()
   -- Reset some per level flags
   RPGlobals.run.levelDamaged = false
   RPGlobals.run.replacedPedestals = {}
+  RPGlobals.run.replacedTrapdoors = {}
+  RPGlobals.run.replacedCrawlspaces = {}
+  RPGlobals.run.replacedHeavenDoors = {}
 
   -- Reset the RNG of some items that should be seeded per floor
   local floorSeed = level:GetDungeonPlacementSeed()
   RPGlobals.RNGCounter.Teleport = floorSeed
   RPGlobals.RNGCounter.Undefined = floorSeed
   RPGlobals.RNGCounter.Telepills = floorSeed
-  for i = 1, 100 do -- Increment the RNG 100 times so that players cannot use knowledge of Teleport! teleports
-                    -- to determine where the Telepills destination will be
+  for i = 1, 100 do
+    -- Increment the RNG 100 times so that players cannot use knowledge of Teleport! teleports
+    -- to determine where the Telepills destination will be
     RPGlobals.RNGCounter.Telepills = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Telepills)
   end
 
@@ -359,16 +381,34 @@ function RPCallbacks:PostNewLevel()
   if stage >= 2 then
     RPGlobals.raceVars.showPlaceGraphic = true
   end
+
+  -- Call PostNewRoom manually (they get naturally called out of order)
+  RPCallbacks:PostNewRoom2()
 end
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
--- (this gets called on a new run before the PostNewLevel and PostGameStarted callbacks)
 function RPCallbacks:PostNewRoom()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+
+  -- Make sure the callbacks run in the right order
+  -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
+  Isaac.DebugString("MC_POST_NEW_ROOM")
+  if gameFrameCount == 0 or RPGlobals.run.currentFloor ~= stage then
+    return
+  end
+
+  RPCallbacks:PostNewRoom2()
+end
+
+function RPCallbacks:PostNewRoom2()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
@@ -377,6 +417,8 @@ function RPCallbacks:PostNewRoom()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
   local sfx = SFXManager()
+
+  Isaac.DebugString("MC_POST_NEW_ROOM2")
 
   RPGlobals.run.roomsEntered = RPGlobals.run.roomsEntered + 1
   RPGlobals.run.currentRoomClearState = roomClear
@@ -390,7 +432,6 @@ function RPCallbacks:PostNewRoom()
 
   -- Clear some room-based flags
   RPGlobals.run.naturalTeleport = false
-  RPGlobals.run.crawlspace.entering = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
     extra       = false,
@@ -400,12 +441,11 @@ function RPCallbacks:PostNewRoom()
   }
   RPGlobals.run.schoolbag.bossRushActive = false
 
-  -- Manually handle coming back from a crawlspace
-  if RPGlobals.run.crawlspace.exiting then
-    RPGlobals.run.crawlspace.exiting = false
-    player.Position = RPGlobals.run.crawlspace.position
-    player.SpriteScale = RPGlobals.run.crawlspace.scale
-  end
+  -- We might need to respawn trapdoors / crawlspaces / beams of light
+  RPFastTravel:CheckRoomRespawn()
+
+  -- Check for miscellaneous crawlspace bugs
+  RPFastTravel:CheckCrawlspaceMiscBugs()
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
   if RPGlobals.run.keeper.usedStrength and RPGlobals.run.keeper.baseHearts == 4 then
@@ -501,28 +541,6 @@ function RPCallbacks:PostNewRoom()
     game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
     game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
   end
-
-  -- Spawn a new beam of light if necessary
-  if (stage == 8 or (stage == 10 and stageType == 1)) and
-     roomType == RoomType.ROOM_BOSS and -- 5
-     roomClear then
-
-    -- The location will be different depending on the floor
-    local pos
-    if stage == 8 then
-      -- (360, 280) is the location of where it appears after killing It Lives!
-      pos = Vector(360, 280)
-    elseif stage == 10 then
-      -- Spawn the beam in the center of the room
-      pos = RPGlobals:GridToPos(6, 3)
-    end
-
-    -- Heaven Door (Fast-Travel) (1000.40)
-    game:Spawn(EntityType.ENTITY_EFFECT, 40, pos, Vector(0, 0), nil, 0, 0)
-
-  end
-
-
 end
 
 return RPCallbacks

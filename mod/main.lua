@@ -6,6 +6,10 @@
 --[[
 
 TODO:
+- custom animation when you spawn close to mimic (make it red?)
+- fix mega satan room door opening automatically
+- add konami code item
+- account for eternal heart animation playing for fast-travel
 - make mushrooms only spawn on caves
 - make hosts only spawn on depths
 - make mushrooms not deal contact damage on the first X frames on them being spawned
@@ -13,13 +17,11 @@ TODO:
 - fix mega satan door
 - USE DungeonReturnRoomIndex and DungeonReturnPosition for crawlspace
 - check for bug where continuing from main menu before race starts
-- custom animation when you spawn close to mimic (make it red?)
 - get rid of Lamb Popup through fastclear manipulation
 - Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives
+- Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
 
-- Integrate 1st place, 2nd place, etc. on screen
 - Implement time offsets, show on starting screen
-- Fix Keeper getting narrow boss rooms on floors 2-7 (the "level:GetRooms()" function returns only one room before
   the floor transition animation starts)
 - Seed Maw of the Void and Athame black heart drops
 

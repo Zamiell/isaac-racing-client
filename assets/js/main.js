@@ -7,7 +7,11 @@
 /*
 
 Patch notes for v0.4.1:
--
+- Fixed the bug where people with controllers would not be able to use the fast-reset feature in some circumstances. (Thanks Krakenos)
+- The hitbox on trapdoors and crawlspaces was slightly larger than it was on vanilla due to some poor emulation. Racing+ now uses custom entities for these, which fixes the bug where you would sometimes accidently walk into a trapdoor while entering a Devil Room, for example.
+- Fixed the bug where your character would move to the center of the room upon coming back from a crawlspace.
+- Fixed the bug with the Pageant Boy ruleset where the trinket was not getting deleted.
+- Fixed the bug with the Pageant Boy ruleset where it was not detecting the ruleset on the first run after opening the game.
 
 
 Bugs to fix:
