@@ -6,9 +6,7 @@
 --[[
 
 TODO:
-- check to see if i can get safegridindex for devil room, boss rush
 - minimize w2 beam of light delay through testing
-- replace all current index and prev room index code
 - make timer smaller
 - add floor to starting screen
 - custom animation when you spawn close to mimic (make it red?)

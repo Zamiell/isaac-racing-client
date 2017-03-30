@@ -536,19 +536,8 @@ function RPCheckEntities:ReplacePedestal(entity)
   end
 
   -- Check to see if this item should go into a Schoolbag
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
-     RPGlobals.run.schoolbag.item == 0 and
-     entity:ToPickup().Touched then
-
-    -- Put the item in our Schoolbag and delete the pedestal
-    RPGlobals.run.schoolbag.item = entity.SubType
-    RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastCharge
-    RPSchoolbag.sprites.item = nil
-    entity:Remove()
-    Isaac.DebugString("Put pedestal " .. tostring(entity.SubType) .. " into the Schoolbag with " ..
-                      tostring(RPGlobals.run.schoolbag.lastCharge) .. " charges.")
-
-  else
+  local putInSchoolbag = RPSchoolbag:CheckSecondItem(entity)
+  if putInSchoolbag == false then
     -- Replace the pedestal
     local randomItem = false
     local newPedestal

@@ -67,9 +67,9 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local debugString = "Spawned trapdoor in room" .. tostring(roomIndex) .. " at (" ..
                       tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. "), "
   if open then
-    debugString = debugString + "open (state 0)."
+    debugString = debugString .. "open (state 0)."
   else
-    debugString = debugString + "closed (state 1)"
+    debugString = debugString .. "closed (state 1)"
   end
   Isaac.DebugString(debugString)
 

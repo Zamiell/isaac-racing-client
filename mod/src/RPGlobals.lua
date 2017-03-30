@@ -74,7 +74,6 @@ CollectibleType.COLLECTIBLE_SPRINKLER      = 516
 CollectibleType.COLLECTIBLE_FAST_BOMBS     = 517
 CollectibleType.COLLECTIBLE_BUDDY_IN_A_BOX = 518
 CollectibleType.COLLECTIBLE_LIL_DELIRIUM   = 519
-CollectibleType.NUM_COLLECTIBLES           = 520
 
 CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 520, active (repl. 97)
 CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 521, active (repl. 158)
@@ -89,6 +88,12 @@ CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finishe
 CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 530, passive
 CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 531, passive
 CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("13 Luck") + 1
+
+-- Trinkets
+TrinketType.TRINKET_HAIRPIN      = 120
+TrinketType.TRINKET_WOODEN_CROSS = 121
+TrinketType.TRINKET_BUTTER       = 122
+TrinketType.NUM_TRINKETS         = 123
 
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47

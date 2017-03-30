@@ -136,6 +136,31 @@ function RPSchoolbag:CheckActiveCharges()
   Isaac.DebugString("Active item charges changed: " .. tostring(charges))
 end
 
+function RPSchoolbag:CheckSecondItem(entity)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
+     RPGlobals.run.schoolbag.item == 0 and
+     entity:ToPickup().Touched and
+     player:HasTrinket(TrinketType.TRINKET_BUTTER) == false then
+     -- The Butter! trinket causes this to bug out
+     -- (activeItem is always equal to 0 here, so checking for that doesn't help)
+
+    -- Put the item in our Schoolbag and delete the pedestal
+    RPGlobals.run.schoolbag.item = entity.SubType
+    RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastCharge
+    RPSchoolbag.sprites.item = nil
+    entity:Remove()
+    Isaac.DebugString("Put pedestal " .. tostring(entity.SubType) .. " into the Schoolbag with " ..
+                       tostring(RPGlobals.run.schoolbag.lastCharge) .. " charges.")
+    return true
+  else
+    return false
+  end
+end
+
 -- Check to see if the Schoolbag item needs to be swapped back in
 function RPSchoolbag:CheckEmptyActive()
   -- Local variables
