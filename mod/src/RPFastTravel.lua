@@ -24,12 +24,14 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   -- Don't replace trapdoors to the Blue Womb
-  if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     return
   end
 
@@ -88,6 +90,9 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
 
   -- Spawn a custom entity to emulate the original
   local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
@@ -121,7 +126,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   local squareSize = RPFastTravel.trapdoorTouchDistance
   if RPGlobals.run.trapdoor.state == 0 and
      ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
-      (upwards and stage == 8 and entity.FrameCount >= 60) or
+      (upwards and stage == 8 and entity.FrameCount >= 40) or
       -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
       (upwards and stage == 10 and entity.FrameCount >= 16)) and
       -- The beam of light opening animation is 16 frames long
@@ -275,6 +280,9 @@ function RPFastTravel:ReplaceCrawlspace(entity, i)
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
@@ -318,7 +326,7 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex doesn't seem to work properly for non-connected rooms
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
   local player = game:GetPlayer(0)
@@ -406,7 +414,10 @@ function RPFastTravel:CheckCrawlspaceMiscBugs()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local prevRoomIndex = level:GetPreviousRoomIndex() -- We need the unsafe version here
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
@@ -416,7 +427,7 @@ function RPFastTravel:CheckCrawlspaceMiscBugs()
   -- (this will look glitchy because the game wants to spawn us next to the Boss Rush door,
   -- but there is no way around this; even if we change player.Position on every frame in the PostRender callback,
   -- the glitchy warp will still occur)
-  if roomIndexUnsafe == GridRooms.ROOM_BOSSRUSH_IDX and -- --5
+  if roomIndex == GridRooms.ROOM_BOSSRUSH_IDX and -- --5
      prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
     player.Position = level.DungeonReturnPosition
@@ -425,7 +436,7 @@ function RPFastTravel:CheckCrawlspaceMiscBugs()
 
   -- For some reason, if we exit and re-enter a crawlspace in a Boss Rush, we won't spawn on the ladder,
   -- so move there manually (this causes no visual hiccups like the above code does)
-  if roomIndexUnsafe == GridRooms.ROOM_DUNGEON_IDX and -- -4
+  if roomIndex == GridRooms.ROOM_DUNGEON_IDX and -- -4
      level.DungeonReturnRoomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -4
 
     player.Position = Vector(120, 160) -- This is the standard starting location at the top of the ladder
@@ -511,7 +522,9 @@ function RPFastTravel:CheckRoomRespawn()
   local game = Game()
   local level = game:GetLevel()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
@@ -540,7 +553,7 @@ function RPFastTravel:CheckRoomRespawn()
           player.Position.X <= entity.Position.X + squareSize and
           player.Position.Y >= entity.Position.Y - squareSize and
           player.Position.Y <= entity.Position.Y + squareSize) or
-         roomIndexUnsafe == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
+         roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
          -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
 
         entity:ToEffect().State = 1
@@ -582,7 +595,7 @@ function RPFastTravel:CheckRoomRespawn()
           player.Position.X <= entity.Position.X + squareSize and
           player.Position.Y >= entity.Position.Y - squareSize and
           player.Position.Y <= entity.Position.Y + squareSize) or
-         roomIndexUnsafe == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
+         roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
          -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
 
         entity:ToEffect().State = 1

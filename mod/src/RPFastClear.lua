@@ -94,44 +94,45 @@ function RPFastClear:CheckAlive()
     local npc = entities[i]:ToNPC()
     if npc ~= nil then
       -- We don't fast-clear to apply to splitting enemies, so make an exception for those
-      -- (we want to look for these even if they are in a dying state)
-      if npc.Type == EntityType.ENTITY_GAPER or -- 10
-         npc.Type == EntityType.ENTITY_MULLIGAN or -- 16
-         npc.Type == EntityType.ENTITY_HIVE or -- 22
-         npc.Type == EntityType.ENTITY_GLOBIN or -- 24
-         (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25 (for Drowned Boom Flies)
-         npc.Type == EntityType.ENTITY_ENVY or -- 51
-         npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57 (Mama Guts also counts as Membrain)
-         npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (Teratoma also counts as Fistula)
-         npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (Teratoma also counts as Fistula)
-         npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (Teratoma also counts as Fistula)
+      if (npc:IsDead() == false and npc.CanShutDoors == true) or -- This is an alive enemy
+         (npc:IsBoss() == false and npc:IsChampion()) or -- This is a champion
+         npc.Type == EntityType.ENTITY_GAPER or -- 10 (all 3 variants split)
+         (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16 (Mulligoon and Muliboon do not split)
+         npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
+         npc.Type == EntityType.ENTITY_GLOBIN or -- 24 (all 3 variants split)
+         (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25 (Drowned Boom Flies split)
+         npc.Type == EntityType.ENTITY_ENVY or -- 51 (both variants split)
+         npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57 (both variants split; Mama Guts also counts as Membrain)
+         npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (both variants split; Teratoma also counts as Fistula)
+         npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (both variants split; Teratoma also counts as Fistula)
+         npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (both variants split; Teratoma also counts as Fistula)
          npc.Type == EntityType.ENTITY_BLASTOCYST_BIG or -- 74
          npc.Type == EntityType.ENTITY_BLASTOCYST_MEDIUM or -- 75
          npc.Type == EntityType.ENTITY_BLASTOCYST_SMALL or -- 76
          npc.Type == EntityType.ENTITY_MOTER or -- 80
-         (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or
-         -- 81 (fast-clear should apply to Krampus and split Fallens)
+         (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or -- 81
+         -- (fast-clear should apply to Krampus and split Fallens)
          npc.Type == EntityType.ENTITY_GURGLE or -- 87
          npc.Type == EntityType.ENTITY_HANGER or -- 90
          npc.Type == EntityType.ENTITY_SWARMER or -- 91
          npc.Type == EntityType.ENTITY_BIGSPIDER or -- 94
-         npc.Type == EntityType.ENTITY_NEST or -- 205
-         (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208 (for Pale Fatties)
+         npc.Type == EntityType.ENTITY_NEST or -- 205 (looks like a Mulligan)
+         (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208 (Pale Fatties split)
          npc.Type == EntityType.ENTITY_FAT_SACK or -- 209
          npc.Type == EntityType.ENTITY_BLUBBER or -- 210
-         npc.Type == EntityType.ENTITY_SWINGER or -- 216
-         npc.Type == EntityType.ENTITY_SQUIRT or -- 220
-         (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226 (for Rotties)
+         npc.Type == EntityType.ENTITY_SWINGER or -- 216 (both variants split)
+         npc.Type == EntityType.ENTITY_SQUIRT or -- 220 (both variants split)
+         (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226 (Rotties split)
          npc.Type == EntityType.ENTITY_DINGA or -- 223
          npc.Type == EntityType.ENTITY_GRUB or -- 239
+         (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257
+         -- (Blue Conjoined Fatties do not split)
          npc.Type == EntityType.ENTITY_BLACK_GLOBIN or -- 278
          npc.Type == EntityType.ENTITY_MEGA_CLOTTY or -- 282
          npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
          npc.Type == EntityType.ENTITY_MEATBALL or -- 290
          npc.Type == EntityType.ENTITY_BLISTER or -- 303
-         npc.Type == EntityType.ENTITY_BROWNIE or -- 402
-         (npc:IsBoss() == false and npc:IsChampion()) or -- This is a champion
-         (npc:IsDead() == false and npc.CanShutDoors == true) then -- This is an alive enemy
+         npc.Type == EntityType.ENTITY_BROWNIE then -- 402
 
         -- The following champions split:
         -- 1) Pulsing Green champion, spawns 2 versions of itself

@@ -414,6 +414,9 @@ function RPCallbacks:PostNewRoom2()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()

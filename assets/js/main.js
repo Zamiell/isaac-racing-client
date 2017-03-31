@@ -8,9 +8,17 @@
 
 ```
 Patch notes for v0.4.9:
+- It is pretty unfair when a Mimic chest spawns behind you and your body is blocking the two spike tells. (Or, alternatively, if the Mimic is behind a dying enemy.) To rectify this problem, Mimic chests now have a custom "Appear" animation if they spawn within a certain distance of the player. If you want to see this in action, use the "spawn mimic" console command. (Thanks Dea1h and tyrannasauruslex)
 - Fixed the bug where the Butter! trinket wouldn't work properly with the Schoolbag. (Thanks MrNeedForSpeed96)
--
+- Fixed the bug where trapdoors would be duplicated in rooms that weren't connected to the level grid under certain circumstances. (Thanks thereisnofuture)
+- Reduced the delay on the Womb 2 beam of light from 60 frames to 40. This is just short enough that you will be hit by the wave of tears before going up. (Thanks Krakenos)
+- Fixed the bug where Conjoined Fatties would make the doors open early in certain circumstances. (Thanks PassionDrama)
+- Fixed the bug where the unavoidable damage prevention code for Mimics was not firing properly.
+- Fixed the unavoidable damage room in the Caves/Catacombs with 5 Crazy Long Legs by removing 1 Crazy Long Legs to make it a bit easier (#862). (Thanks Cyber_1)
+- The on-screen timer now uses custom sprites and looks a lot better.
+- Replaced all of the Rules card text snippets with educational history.
 ```
+
 
 Bugs to fix:
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish

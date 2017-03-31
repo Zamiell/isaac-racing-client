@@ -97,7 +97,9 @@ function RPCheckEntities:NonGrid()
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
            (entities[i].Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
             entities[i].Variant == PickupVariant.PICKUP_MIMIC) and -- 54
-           entities[i]:GetSprite():IsPlaying("Appear") then
+            entities[i]:ToPickup().TheresOptionsPickup == false then -- This is used as a replacement counter
+           -- We can't check for the "Appear" animation because this is not fast enough
+           -- to intercept the unavoidable damage when a Mimic spawns on top of the player
 
       -- Change all Mimics and Spiked Chests to normal chests until the appearing animation is complete
       -- (this also fixes the unavoidable damage when a Mimic spawns where you happen to be standing)
@@ -115,9 +117,7 @@ function RPCheckEntities:NonGrid()
          (roomData.StageID == 10 and roomData.Variant == 489) or -- Womb
          (roomData.StageID == 11 and roomData.Variant == 489) then -- Utero
 
-
-        -- Leave it as a normal chest
-        -- Changing the variant doesn't actually change the sprite
+        -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
         entities[i]:GetSprite():Load("gfx/005.050_chest.anm2", true)
 
         -- We have to play an animation for the new sprite to actually appear
@@ -125,16 +125,29 @@ function RPCheckEntities:NonGrid()
         Isaac.DebugString("Replaced a Spiked Chest / Mimic (for an unavoidable damage room).")
 
       else
-        -- Changing the variant doesn't actually change the sprite
-        -- Furthermore, we make it look like a Mimic
-        entities[i]:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
+        local squareSize = 100 -- This is fairly large, about 1/4 of a room width
+        if player.Position.X >= entities[i].Position.X - squareSize and
+           player.Position.X <= entities[i].Position.X + squareSize and
+           player.Position.Y >= entities[i].Position.Y - squareSize and
+           player.Position.Y <= entities[i].Position.Y + squareSize then
+
+          -- The chest is spawning close to us, so our bodies might be blocking it,
+          -- so use a custom mimic sprite to compensate
+          entities[i]:GetSprite():Load("gfx/005.054_mimic chest2.anm2", true)
+          Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2) (with custom animation).")
+
+        else
+          -- Changing the variant doesn't actually change the sprite
+          -- Furthermore, we make it look like a Mimic
+          entities[i]:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
+          Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
+        end
 
         -- We have to play an animation for the new sprite to actually appear
         entities[i]:GetSprite():Play("Appear", false)
 
         -- Use the normally unused "TheresOptionsPickup" varaible to store that this is not a normal chest
         entities[i]:ToPickup().TheresOptionsPickup = true
-        Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
       end
 
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
@@ -147,7 +160,6 @@ function RPCheckEntities:NonGrid()
       -- (we can't just check for "IsPlaying("Appear") == false" because if the player is touching it,
       -- they will get the contents of a normal chest before the swap back occurs)
       entities[i].Variant = 54
-      entities[i]:ToPickup().TheresOptionsPickup = false
       Isaac.DebugString("Replaced a Spiked Chest / Mimic (2/2).")
 
     elseif entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
@@ -374,7 +386,7 @@ function RPCheckEntities:NonGrid()
       local position = RPGlobals.run.bossHearts.position[i]
       if position == nil then
         position = room:GetCenterPos() -- This should never happen
-        Isaac.DebugString("Error: Not enough entires for position in the bossHearts table. " ..
+        Isaac.DebugString("Error: Not enough entries for position in the bossHearts table. " ..
                           "(i is " .. tostring(i) .. ")")
       end
 
@@ -382,7 +394,7 @@ function RPCheckEntities:NonGrid()
       local velocity = RPGlobals.run.bossHearts.velocity[i]
       if velocity == nil then
         velocity = Vector(0, 0)
-        Isaac.DebugString("Error: Not enough entires for velocity in the bossHearts table. " ..
+        Isaac.DebugString("Error: Not enough entries for velocity in the bossHearts table. " ..
                           "(i is " .. tostring(i) .. ")")
       end
 
@@ -422,10 +434,12 @@ function RPCheckEntities:ReplacePedestal(entity)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
-  local player = game:GetPlayer(0)
 
   -- Check to see if this is a pedestal that was already replaced
   local squareSize = 15

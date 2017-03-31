@@ -251,6 +251,14 @@ function RPPostRender:Race()
 
   -- If we are not in a race, do nothing
   if RPGlobals.race.status == "none" then
+    -- Remove graphics as soon as the race is over
+    RPSprites:Init("top", 0)
+    RPSprites:ClearStartingRoomGraphicsTop()
+    RPSprites:ClearStartingRoomGraphicsBottom()
+    RPSprites:ClearPostRaceStartGraphics()
+    if RPGlobals.raceVars.finished == false then
+      RPSprites:Init("place", 0) -- Keep the place there at the end of a race
+    end
     return
   end
 
@@ -306,10 +314,7 @@ function RPPostRender:Race()
       -- There can be other things on the "top" sprite location and we don't want to have to reload it on every frame
       RPSprites:Init("top", 0)
     end
-    RPSprites:Init("myStatus", 0)
-    RPSprites:Init("ready", 0)
-    RPSprites:Init("slash", 0)
-    RPSprites:Init("readyTotal", 0)
+    RPSprites:ClearStartingRoomGraphicsTop()
   end
 
   -- Show the graphics for the "Race Start" room (the bottom half)
@@ -321,12 +326,7 @@ function RPPostRender:Race()
     RPSprites:Init("goal", "goal")
     RPSprites:Init("raceGoal", RPGlobals.race.goal)
   else
-    RPSprites:Init("raceType", 0)
-    RPSprites:Init("raceTypeIcon", 0)
-    RPSprites:Init("raceFormat", 0)
-    RPSprites:Init("raceFormatIcon", 0)
-    RPSprites:Init("goal", 0)
-    RPSprites:Init("raceGoal", 0)
+    RPSprites:ClearStartingRoomGraphicsBottom()
   end
 
   --
@@ -394,19 +394,12 @@ function RPPostRender:Race()
     else
       RPSprites:Init("place", 0)
     end
-
-  else
-    -- Remove graphics as soon as the race is over
-    if RPGlobals.raceVars.finished == false then
-      RPSprites:Init("place", 0)
-    end
-    RPSprites:ClearStartingRoomGraphics()
   end
 
-  -- Remove graphics as soon as we enter another room (the starting room does not count as a room)
+  -- Remove graphics as soon as we enter another room
   -- (this is done separately from the above if block in case the client and mod become desynchronized)
   if RPGlobals.raceVars.started == true and RPGlobals.run.roomsEntered > 1 then
-    RPSprites:ClearStartingRoomGraphics()
+    RPSprites:ClearPostRaceStartGraphics()
   end
 
   -- Hold the player in place if the race has not started yet (to emulate the Gaping Maws effect)

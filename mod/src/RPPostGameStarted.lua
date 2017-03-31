@@ -55,7 +55,11 @@ function RPPostGameStarted:Main(saveState)
   -- Make sure that all other Easter Eggs are disabled
   local validEasterEggs = true
   for i = 0, SeedEffect.NUM_SEEDS do
-    if seeds:HasSeedEffect(i) and i ~= SeedEffect.SEED_PREVENT_ALL_CURSES then -- 70
+    if seeds:HasSeedEffect(i) and
+       i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70
+       i ~= SeedEffect.SEED_ALL_CHAMPIONS then -- 13
+       -- (make an exception for seeds that have no beneficial effect and are used for testing purposes)
+
       validEasterEggs = false
       break
     end

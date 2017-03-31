@@ -62,6 +62,20 @@ function RPSprites:Init(spriteType, spriteName)
       Isaac.DebugString("Places beyond 16 are not supported.")
     end
 
+  elseif spriteType == "timerClock" or
+         spriteType == "timer1" or
+         spriteType == "timer2" or
+         spriteType == "timerColon" or
+         spriteType == "timer3" or
+         spriteType == "timer4" or
+         spriteType == "timer6" or
+         spriteType == "timerColon2" then
+
+    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/" .. spriteName .. ".anm2", true)
+
+  elseif spriteType == "timer5" then
+    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/mini/" .. spriteName .. ".anm2", true)
+
   else
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
@@ -71,18 +85,29 @@ end
 
 -- Call this every frame in MC_POST_RENDER
 function RPSprites:Display()
-  if RPGlobals.race.status == "none" and RPGlobals.raceVars.finished == false then
-    return
-  end
-
   -- Loop through all the sprites and render them
   for k, v in pairs(RPGlobals.spriteTable) do
     -- Position it
     local vec = RPSprites:GetScreenCenterPosition() -- Start the vector off in the center of the screen by default
     local animationName = "Default"
+
+    -- Type stuff
     local typeFormatX = 110
     local typeFormatY = 10
 
+    -- Timer stuff
+    local timerSpace = 7.25
+    local timerHourAdjust = 2
+    local timerHourAdjust2 = 0
+    local hoursShowing = 0
+    local timerX = 19
+    if RPGlobals.spriteTable.timer6 ~= nil and RPGlobals.spriteTable.timer6.spriteName ~= 0 then
+      timerHourAdjust2 = 2
+      timerX = timerX + timerSpace + timerHourAdjust
+    end
+    local timerY = 217
+
+    -- Position all the sprites
     if k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
@@ -157,6 +182,34 @@ function RPSprites:Display()
       -- Move it below the Angel chance
       vec.X = 7.5
       vec.Y = 217
+    elseif k == "timerClock" then
+      -- Move it below the Angel chance
+      vec.X = 53 -- 8
+      vec.Y = 262
+    elseif k == "timer1" then
+      vec.X = timerX
+      vec.Y = timerY
+    elseif k == "timer2" then
+      vec.X = timerX + timerSpace
+      vec.Y = timerY
+    elseif k == "timerColon" then -- This is on a different scale (100%)
+      vec.X = timerX + timerSpace + 10 -- (11 is 6 pixels)
+      vec.Y = timerY + 19
+    elseif k == "timer3" then
+      vec.X = timerX + timerSpace + 11
+      vec.Y = timerY
+    elseif k == "timer4" then
+      vec.X = timerX + timerSpace + 11 + timerSpace + 1 - timerHourAdjust2
+      vec.Y = timerY
+    elseif k == "timer5" then
+      vec.X = timerX + timerSpace + 11 + timerSpace + timerSpace + 1 - timerHourAdjust2
+      vec.Y = timerY + 1
+    elseif k == "timer6" then
+      vec.X = timerX - timerSpace - timerHourAdjust
+      vec.Y = timerY
+    elseif k == "timerColon2" then
+      vec.X = timerX - timerSpace + 7
+      vec.Y = timerY + 19
     elseif k == "place" then
       -- Move it next to the "R+" icon
       vec.X = 24
@@ -178,10 +231,21 @@ function RPSprites:TimerUpdate()
   if RPGlobals.raceVars.startedTime == 0 or
      (RPGlobals.race.status == "none" and RPGlobals.raceVars.finished == false) then
 
-    RPSprites:Init("clock", 0)
+    --RPSprites:Init("clock", 0)
+    RPSprites:Init("timerClock", 0)
+    RPSprites:Init("timer1", 0)
+    RPSprites:Init("timer2", 0)
+    RPSprites:Init("timerColon", 0)
+    RPSprites:Init("timer3", 0)
+    RPSprites:Init("timer4", 0)
+    RPSprites:Init("timer5", 0)
+    RPSprites:Init("timer6", 0)
+    RPSprites:Init("timerColon2", 0)
     return
+
   else
-    RPSprites:Init("clock", "clock")
+    --RPSprites:Init("clock", "clock") -- The old clock sprite
+    RPSprites:Init("timerClock", "clock")
   end
 
   -- Find out how much time has passed since the race started
@@ -195,23 +259,50 @@ function RPSprites:TimerUpdate()
   end
   elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
 
+  -- Show the hours
   local minutes = math.floor(elapsedTime / 60)
+  if minutes >= 60 then
+    local hours = math.floor(elapsedTime / 3600)
+    RPSprites:Init("timer6", tostring(hours))
+    RPSprites:Init("timerColon2", "colon")
+    minutes = minutes - hours * 60
+  end
+
+  -- Show the minutes
   if minutes < 10 then
     minutes = "0" .. tostring(minutes)
   else
     minutes = tostring(minutes)
   end
+  local minute1 = string.sub(minutes, 1, 1) -- The first character
+  local minute2 = string.sub(minutes, 2, 2) -- The second character
+  RPSprites:Init("timer1", tostring(minute1))
+  RPSprites:Init("timer2", tostring(minute2))
 
-  local seconds = elapsedTime % 60
-  seconds = RPGlobals:Round(seconds, 1)
+  -- Show the colon
+  RPSprites:Init("timerColon", "colon")
+
+  -- Show the seconds
+  local rawSeconds = elapsedTime % 60
+  local seconds = math.floor(rawSeconds)
   if seconds < 10 then
     seconds = "0" .. tostring(seconds)
   else
     seconds = tostring(seconds)
   end
+  local second1 = string.sub(seconds, 1, 1) -- The first character
+  local second2 = string.sub(seconds, 2, 2) -- The second character
+  RPSprites:Init("timer3", tostring(second1))
+  RPSprites:Init("timer4", tostring(second2))
 
-  local timerString = minutes .. ':' .. seconds
-  Isaac.RenderText(timerString, 17, 211, 0.7, 1, 0.2, 1.0) -- X, Y, R, G, B, A
+  -- Show the tenths
+  local tenths = RPGlobals:Round(rawSeconds, 1) - math.floor(rawSeconds) -- This will be betwen 0.0 and 0.9
+  tenths = string.sub(tostring(tenths), 3, 3)
+  RPSprites:Init("timer5", tostring(tenths))
+
+  -- The old timer (using RenderText)
+  --local timerString = minute1 .. minute2 .. ":" .. second1 .. second2 .. "." .. tenths
+  --Isaac.RenderText(timerString, 17, 211, 0.7, 1, 0.2, 1.0) -- X, Y, R, G, B, A
 end
 
 -- Taken from Alphabirth: https://steamcommunity.com/sharedfiles/filedetails/?id=848056541
@@ -232,8 +323,25 @@ function RPSprites:GetScreenCenterPosition()
   return Isaac.WorldToRenderPosition(pos, false)
 end
 
--- This should only clear the graphics that appear after the race has started
-function RPSprites:ClearStartingRoomGraphics()
+-- This clears the graphics that should only appear in the starting room
+function RPSprites:ClearStartingRoomGraphicsTop()
+  RPSprites:Init("myStatus", 0)
+  RPSprites:Init("ready", 0)
+  RPSprites:Init("slash", 0)
+  RPSprites:Init("readyTotal", 0)
+end
+
+function RPSprites:ClearStartingRoomGraphicsBottom()
+  RPSprites:Init("raceType", 0)
+  RPSprites:Init("raceTypeIcon", 0)
+  RPSprites:Init("raceFormat", 0)
+  RPSprites:Init("raceFormatIcon", 0)
+  RPSprites:Init("goal", 0)
+  RPSprites:Init("raceGoal", 0)
+end
+
+-- This clears the graphics that appear in the starting room after the race has started
+function RPSprites:ClearPostRaceStartGraphics()
   RPSprites:Init("seeded-starting-item", 0)
   RPSprites:Init("seeded-starting-build", 0)
   RPSprites:Init("seeded-item1", 0)
@@ -249,6 +357,7 @@ function RPSprites:ClearStartingRoomGraphics()
   RPSprites:Init("diversity-item3", 0)
   RPSprites:Init("diversity-item4", 0)
   RPSprites:Init("diversity-item5", 0)
+  Isaac.DebugString("Clearing starting room graphics.")
 end
 
 return RPSprites

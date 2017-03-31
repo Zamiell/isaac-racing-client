@@ -2,9 +2,27 @@
 
 Note that the Racing+ Mod version will almost always match the client version. This means that the version number of the mod may increase, but have no actual new in-game changes. All gameplay related changes will be listed below.
 
-* *0.3.3* - Unreleased
-  * ?
-* *0.3.2* - March 27th
+* *0.4.7* - March 29th
+  * You can now do a Schoolbag switch during the "use item" animation.
+  * Chargebars are now minimialistic and actually good.
+  * Changed the Broken Modem sprite to a better one from freeze, the original author of the item.
+  * Trapdoors will now be shut if you enter a room and are standing near to them.
+  * Fixed the bug where trapdoors would disappear in certain circumstances.
+  * Fixed the bug where a rock could occupy the same square as a trapdoor or crawlspace under certain conditions.
+* *0.4.5* - March 28th
+  * Fast-travel no longer applies to the portal to the Blue Womb. This fixes the bug where the Blue Womb trapdoor would take you to Sheol instead of the Blue Womb.
+  * Fixed the bug where Dr. Fetus bombs could be shot while jumping through the new trapdoors.
+  * Reduced the delay for the beam of light in the Cathedral to 16 frames.
+  * Made the fast-reset feature work for people who have reset bound to shift.
+  * Fixed an unavoidable damage room in the Caves (#167).
+* *0.4.3* - March 28th
+  * The hitbox on trapdoors and crawlspaces was slightly larger than it was on vanilla due to having to override the vanilla entities. Racing+ now uses custom entities for these, which fixes the bug where you would sometimes accidently walk into a trapdoor while entering a Devil Room, for example. This also fixes the bug where you would sometimes skip a floor when going in a trapdoor.
+  * Fixed the bug where your blue flies / spiders would kill themselves on the custom floor transition hole.
+  * Fixed the bug where your character would move to the center of the room upon coming back from a crawlspace.
+  * Fixed the bug where you would be in a weird spot after returning to the Boss Room after coming back from a Boss Rush with a crawlspace in it.
+  * Fixed the bug where people with controllers would not be able to use the fast-reset feature in some circumstances.
+* *0.4.0* - March 27th
+  *  When starting a new run, Racing+ will now automatically put on the "Total Curse Immunity" Easter Egg for you (the "BLCK CNDL" seed). If Basement 1 happened to have a curse on it, the run will be automatically restarted.
   * Pressing the reset key will now instantly reset the game.
   * The long and annoying fade out / fade in animation between floors has been replaced with something better.
   * The Schoolbag will now work properly with the new Booster Pack items.

@@ -6,10 +6,7 @@
 --[[
 
 TODO:
-- minimize w2 beam of light delay through testing
-- make timer smaller
 - add floor to starting screen
-- custom animation when you spawn close to mimic (make it red?)
 - remove character check from mod since we can restart X
 
 - remove delay on the credits item
