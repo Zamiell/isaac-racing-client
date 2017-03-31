@@ -357,7 +357,6 @@ function RPSprites:ClearPostRaceStartGraphics()
   RPSprites:Init("diversity-item3", 0)
   RPSprites:Init("diversity-item4", 0)
   RPSprites:Init("diversity-item5", 0)
-  Isaac.DebugString("Clearing starting room graphics.")
 end
 
 return RPSprites
