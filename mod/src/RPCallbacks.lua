@@ -421,6 +421,7 @@ function RPCallbacks:PostNewRoom2()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
   local activeCharge = player:GetActiveCharge()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
@@ -447,7 +448,6 @@ function RPCallbacks:PostNewRoom2()
     position    = {},
     velocity    = {},
   }
-  RPGlobals.run.schoolbag.bossRushActive = false
 
   -- We might need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()
@@ -456,11 +456,31 @@ function RPCallbacks:PostNewRoom2()
   RPFastTravel:CheckCrawlspaceMiscBugs()
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
-  if RPGlobals.run.keeper.usedStrength and RPGlobals.run.keeper.baseHearts == 4 then
+  if character == PlayerType.PLAYER_KEEPER and -- 14
+     RPGlobals.run.keeper.baseHearts == 4 and
+     RPGlobals.run.usedStrength then
+
     RPGlobals.run.keeper.baseHearts = 2
-    RPGlobals.run.keeper.usedStrength = false
     player:AddMaxHearts(-2, true) -- Take away a heart container
     Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
+  end
+
+  -- Check to see if we used a Strength card or Huge Growth card before going into a custom trapdoor
+  if RPGlobals.run.usedStrength then
+    RPGlobals.run.usedStrength = false
+
+    if RPGlobals.run.trapdoor.state > 0 then
+      -- Strength adds (0.25, 0.25) (which is the same as Magic Mushroom)
+      player.SpriteScale = Vector(player.SpriteScale.X - 0.25, player.SpriteScale.Y - 0.25)
+    end
+  end
+  if RPGlobals.run.usedHugeGrowth then
+    RPGlobals.run.usedHugeGrowth = false
+
+    if RPGlobals.run.trapdoor.state > 0 then
+      -- Huge Growth adds (0.6, 0.6)
+      player.SpriteScale = Vector(player.SpriteScale.X - 0.6, player.SpriteScale.Y - 0.6)
+    end
   end
 
   -- Check to see if we need to remove More Options in a diversity race

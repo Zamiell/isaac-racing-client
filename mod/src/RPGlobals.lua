@@ -95,6 +95,12 @@ TrinketType.TRINKET_WOODEN_CROSS = 121
 TrinketType.TRINKET_BUTTER       = 122
 TrinketType.NUM_TRINKETS         = 123
 
+-- Cards
+Card.CARD_HUGE_GROWTH = 52
+Card.CARD_ANCIENT_RECALL = 53
+Card.CARD_ERA_WALK = 54
+Card.NUM_CARDS = 55
+
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
 PillEffect.NUM_PILL_EFFECTS       = Isaac.GetPillEffectByName("Gulp!") + 1
@@ -159,6 +165,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.currentGlobins        = {}
   RPGlobals.run.currentKnights        = {}
   RPGlobals.run.currentLilHaunts      = {}
+  RPGlobals.run.usedStrength          = false
+  RPGlobals.run.usedHugeGrowth        = false
 
   -- Temporary tracking
   RPGlobals.run.restartFrame          = 0
@@ -197,7 +205,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.keeper = {
     baseHearts   = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
     healthItems  = {},
-    usedStrength = false,
     coins        = 50,
   }
 

@@ -19,6 +19,7 @@ globals = {
     "Isaac",
     "Keyboard",
     "LevelCurse",
+    "LevelStage",
     "ModCallbacks",
     "PickupVariant",
     "PillEffect",

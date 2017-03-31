@@ -349,8 +349,10 @@ function RPCheckEntities:NonGrid()
 
       Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
 
-    elseif entities[i].Type == Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)") and
-           entities[i].Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") then
+    elseif (entities[i].Type == Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)") and
+            entities[i].Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")) or
+           (entities[i].Type == Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)") and
+            entities[i].Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")) then
 
       RPFastTravel:CheckTrapdoorCrawlspaceOpen(entities[i])
       RPFastTravel:CheckTrapdoorEnter(entities[i], false) -- The second argument is "upwards"

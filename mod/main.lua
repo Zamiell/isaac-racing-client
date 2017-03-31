@@ -125,15 +125,16 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main,        Collectibl
 -- Debug (custom item, 263)
 
 -- Define card/pill callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_FOOL) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_EMPEROR) -- 5
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_HERMIT) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Strength,  Card.CARD_STRENGTH) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_STARS) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_MOON) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,  Card.CARD_JOKER) -- 31
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills, PillEffect.PILLEFFECT_TELEPILLS) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.PILLEFFECT_GULP_LOGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_FOOL) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_EMPEROR) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_HERMIT) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Strength,   Card.CARD_STRENGTH) -- 12
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_STARS) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_MOON) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_JOKER) -- 31
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.HugeGrowth, Card.CARD_HUGE_GROWTH) -- 52
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,  PillEffect.PILLEFFECT_TELEPILLS) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because
 -- by the time the callback is reached, the trinkets are already consumed
 

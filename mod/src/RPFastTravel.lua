@@ -23,6 +23,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -36,9 +37,20 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   end
 
   -- Spawn a custom entity to emulate the original
-  local trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
-                              Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                              entity.Position, Vector(0,0), nil, 0, 0)
+  local trapdoor
+  local womb = false
+  if stage == LevelStage.STAGE3_2 or -- 6
+     stage == LevelStage.STAGE4_1 then -- 7
+
+    womb = true
+    trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
+                          Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
+                          entity.Position, Vector(0,0), nil, 0, 0)
+  else
+    trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
+                          Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
+                          entity.Position, Vector(0,0), nil, 0, 0)
+  end
   trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
   -- The custom entity will not respawn if we leave the room,
@@ -47,8 +59,6 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     room = roomIndex,
     pos  = entity.Position,
   }
-  Isaac.DebugString("Replaced trapdoor: " .. tostring(roomIndex) .. " - (" ..
-                    tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
 
   -- Figure out if it should spawn open or closed, depending on how close we are
   local squareSize = RPFastTravel.trapdoorOpenDistance
@@ -66,8 +76,12 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   end
 
   -- Log it
-  local debugString = "Spawned trapdoor in room" .. tostring(roomIndex) .. " at (" ..
-                      tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. "), "
+  local debugString = "Spawned "
+  if womb then
+    debugString = debugString .. "womb "
+  end
+  debugString = debugString .. "trapdoor in room " .. tostring(roomIndex) .. " at "
+  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. "), "
   if open then
     debugString = debugString .. "open (state 0)."
   else
@@ -521,6 +535,7 @@ function RPFastTravel:CheckRoomRespawn()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -542,9 +557,18 @@ function RPFastTravel:CheckRoomRespawn()
       end
 
       -- Spawn the new custom entity
-      local entity = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
-                                  Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                                  RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+      local entity
+      if stage == LevelStage.STAGE3_2 or -- 6
+         stage == LevelStage.STAGE4_1 then -- 7
+
+        entity = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
+                            Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
+                            RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+      else
+        entity = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
+                            Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
+                            RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+      end
       entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
       -- Figure out if it should spawn open or closed, depending on how close we are
