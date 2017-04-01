@@ -78,6 +78,13 @@ end
 -- Read the "save.dat" file for updates from the Racing+ client
 function RPPostRender:LoadSaveDat()
   -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local isaacFrameCount = Isaac.GetFrameCount()
 
   if RPGlobals.raceVars.loadOnNextFrame or -- We need to check on the first frame of the run
@@ -108,17 +115,23 @@ function RPPostRender:LoadSaveDat()
     -- If anything changed, write it to the log
     if oldRace.status ~= RPGlobals.race.status then
       Isaac.DebugString("ModData status changed: " .. RPGlobals.race.status)
-      if RPGlobals.race.status == "open" then
-        RPGlobals.raceVars.started = false
-        RPGlobals.raceVars.startedTime = 0
-      end
-      if RPGlobals.race.status == "open" or
-         RPGlobals.race.status == "in progress" or
-         (RPGlobals.race.status == "none" and
-          Game():GetLevel():GetCurrentRoomIndex() == GridRooms.ROOM_DEBUG_IDX) then -- -3
-          -- Check if we are in the "Race Start" room
 
-        -- Doing a "restart" here might not work if we are just starting a run, so mark to reset on the next frame
+      if RPGlobals.race.status == "open" then
+        if stage == 1 and roomIndex == level:GetStartingRoomIndex() then
+          -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
+          RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+        else
+          -- We are in the middle of a run, so don't go to the Race Room until a reset occurs
+          RPGlobals.raceVars.started = false
+          RPGlobals.raceVars.startedTime = 0
+          RPSprites:Init("place", "pre")
+          RPGlobals.showPlaceGraphic = true
+        end
+      elseif RPGlobals.race.status == "in progress" or
+             (RPGlobals.race.status == "none" and
+              roomIndex == GridRooms.ROOM_DEBUG_IDX) then -- -3
+
+        -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
         RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
       end
     end
@@ -183,16 +196,15 @@ function RPPostRender:CheckCursedEye()
       Isaac.DebugString("Cursed Skull teleport detected.")
     else
       -- Account for Devil Room teleports from Red Chests
-      local entities = Isaac.GetRoomEntities()
       local touchingRedChest = false
-      for i = 1, #entities do
-        if entities[i].Type == EntityType.ENTITY_PICKUP and -- 5
-           entities[i].Variant == PickupVariant.PICKUP_REDCHEST and -- 360
-           entities[i].SubType == 0 and -- A subtype of 0 indicates that it is opened, a 1 indicates that it is unopened
-           player.Position.X >= entities[i].Position.X - 24 and -- 25 is a touch too big
-           player.Position.X <= entities[i].Position.X + 24 and
-           player.Position.Y >= entities[i].Position.Y - 24 and
-           player.Position.Y <= entities[i].Position.Y + 24 then
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_REDCHEST and -- 360
+           entity.SubType == 0 and -- A subtype of 0 indicates that it is opened, a 1 indicates that it is unopened
+           player.Position.X >= entity.Position.X - 24 and -- 25 is a touch too big
+           player.Position.X <= entity.Position.X + 24 and
+           player.Position.Y >= entity.Position.Y - 24 and
+           player.Position.Y <= entity.Position.Y + 24 then
 
           touchingRedChest = true
         end
@@ -247,6 +259,11 @@ end
 function RPPostRender:Race()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local player = game:GetPlayer(0)
 
   -- If we are not in a race, do nothing
@@ -301,7 +318,9 @@ function RPPostRender:Race()
   --
 
   -- Show the graphics for the "Race Start" room (the top half)
-  if RPGlobals.race.status == "open" then
+  if RPGlobals.race.status == "open" and
+     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
+
     RPSprites:Init("top", "wait") -- "Wait for the race to begin!"
     RPSprites:Init("myStatus", RPGlobals.race.myStatus)
     RPSprites:Init("ready", tostring(RPGlobals.race.placeMid))
@@ -318,7 +337,9 @@ function RPPostRender:Race()
   end
 
   -- Show the graphics for the "Race Start" room (the bottom half)
-  if RPGlobals.race.status == "open"  or RPGlobals.race.status == "starting" then
+  if (RPGlobals.race.status == "open" or RPGlobals.race.status == "starting") and
+     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
+
     RPSprites:Init("raceType", RPGlobals.race.rType)
     RPSprites:Init("raceTypeIcon", RPGlobals.race.rType .. "Icon")
     RPSprites:Init("raceFormat", RPGlobals.race.rFormat)
@@ -402,9 +423,10 @@ function RPPostRender:Race()
     RPSprites:ClearPostRaceStartGraphics()
   end
 
-  -- Hold the player in place if the race has not started yet (to emulate the Gaping Maws effect)
+  -- Hold the player in place when in the Race Room (to emulate the Gaping Maws effect)
   -- (this looks glitchy and jittery if is done in the PostUpdate callback, so do it here instead)
-  if RPGlobals.raceVars.started == false then
+  if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
+     RPGlobals.raceVars.started == false then
     -- The starting position is 320, 380
     player.Position = Vector(320, 380)
   end

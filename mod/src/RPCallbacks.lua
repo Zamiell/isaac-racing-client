@@ -241,13 +241,12 @@ function RPCallbacks:PostPlayerInit(player)
 
   -- Since the player gets their health back, it is still possible to steal devil deals, so remove all unpurchased
   -- Devil Room items in the room (which will have prices of either -1 or -2)
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-    if entities[i].Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
-       entities[i].Variant == PickupVariant.PICKUP_COLLECTIBLE and
-       entities[i]:ToPickup().Price < 0 then
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_PICKUP and -- If this is a pedestal item (5.100)
+       entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and
+       entity:ToPickup().Price < 0 then
 
-      entities[i]:Remove()
+      entity:Remove()
     end
   end
 end
@@ -285,11 +284,10 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
 
     -- Betrayal (custom)
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM) then
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
-        local npc = entities[i]:ToNPC()
-        if npc ~= nil and entities[i]:IsVulnerableEnemy() then
-          entities[i]:AddCharmed(150) -- 5 seconds
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
+        local npc = entity:ToNPC()
+        if npc ~= nil and npc:IsVulnerableEnemy() then
+          npc:AddCharmed(150) -- 5 seconds
         end
       end
     end
@@ -318,6 +316,13 @@ function RPCallbacks:InputAction(entity, inputHook, buttonAction)
      buttonAction == ButtonAction.ACTION_RESTART then -- 16
 
     return false
+  end
+
+  -- Disable using cards if we are in the trapdoor animation
+  if RPGlobals.run.trapdoor.state > 0 and
+     buttonAction == ButtonAction.ACTION_PILLCARD then -- 10
+
+    return
   end
 end
 
@@ -434,12 +439,24 @@ function RPCallbacks:PostNewRoom2()
   -- This is needed so that we don't get credit for clearing a room when
   -- bombing from a room with enemies into an empty room
 
+  -- Check to see if we need to remove the heart container from a Strength card on Keeper
+  if character == PlayerType.PLAYER_KEEPER and -- 14
+     RPGlobals.run.keeper.baseHearts == 4 and
+     RPGlobals.run.usedStrength then
+
+    RPGlobals.run.keeper.baseHearts = 2
+    player:AddMaxHearts(-2, true) -- Take away a heart container
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
+  end
+
   -- Reset the lists we use to keep track of certain enemies
   RPGlobals.run.currentGlobins = {} -- Used for softlock prevention
   RPGlobals.run.currentKnights = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentLilHaunts = {} -- Used to delete invulnerability frames
 
   -- Clear some room-based flags
+  RPGlobals.run.usedStrength = false
+  RPGlobals.run.usedHugeGrowth = false
   RPGlobals.run.naturalTeleport = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
@@ -455,42 +472,9 @@ function RPCallbacks:PostNewRoom2()
   -- Check for miscellaneous crawlspace bugs
   RPFastTravel:CheckCrawlspaceMiscBugs()
 
-  -- Check to see if we need to remove the heart container from a Strength card on Keeper
-  if character == PlayerType.PLAYER_KEEPER and -- 14
-     RPGlobals.run.keeper.baseHearts == 4 and
-     RPGlobals.run.usedStrength then
-
-    RPGlobals.run.keeper.baseHearts = 2
-    player:AddMaxHearts(-2, true) -- Take away a heart container
-    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
-  end
-
-  -- Check to see if we used a Strength card or Huge Growth card before going into a custom trapdoor
-  if RPGlobals.run.usedStrength then
-    RPGlobals.run.usedStrength = false
-
-    if RPGlobals.run.trapdoor.state > 0 then
-      -- Strength adds (0.25, 0.25) (which is the same as Magic Mushroom)
-      player.SpriteScale = Vector(player.SpriteScale.X - 0.25, player.SpriteScale.Y - 0.25)
-    end
-  end
-  if RPGlobals.run.usedHugeGrowth then
-    RPGlobals.run.usedHugeGrowth = false
-
-    if RPGlobals.run.trapdoor.state > 0 then
-      -- Huge Growth adds (0.6, 0.6)
-      player.SpriteScale = Vector(player.SpriteScale.X - 0.6, player.SpriteScale.Y - 0.6)
-    end
-  end
-
-  -- Check to see if we need to remove More Options in a diversity race
-  if roomType == RoomType.ROOM_TREASURE and -- 4
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
-     RPGlobals.race.rFormat == "diversity" and
-     RPGlobals.raceVars.removedMoreOptions == false then
-
-    RPGlobals.raceVars.removedMoreOptions = true
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  if RPGlobals.run.showingStage then
+    RPGlobals.run.showingStage = false
+    RPGlobals.spriteTable.stage.sprite:Play("TextOut", true)
   end
 
   -- Check health (to fix the bug where we don't die at 0 hearts)
@@ -519,13 +503,12 @@ function RPCallbacks:PostNewRoom2()
 
     -- The "player:SpawnMawOfVoid()" will spawn a Maw of the Void ring, but we might be extending an Athame ring,
     -- so we have to reset the Black HP drop chance
-    local entities = Isaac.GetRoomEntities()
-    for i = 1, #entities do
-      if entities[i].Type == EntityType.ENTITY_LASER and -- 7
-         entities[i].Variant == 1 and -- A Brimstone laser
-         entities[i].SubType == 3 then -- A Maw of the Void or Athame ring
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_LASER and -- 7
+         entity.Variant == 1 and -- A Brimstone laser
+         entity.SubType == 3 then -- A Maw of the Void or Athame ring
 
-        entities[i]:ToLaser():SetBlackHpDropChance(RPGlobals.run.blackRingDropChance)
+        entity:ToLaser():SetBlackHpDropChance(RPGlobals.run.blackRingDropChance)
       end
     end
 
@@ -533,8 +516,21 @@ function RPCallbacks:PostNewRoom2()
     sfx:Stop(SoundEffect.SOUND_MAW_OF_VOID) -- 426
   end
 
-  -- Spawn a Get out of Jail Free Card if we have arrived on The Chest / Dark Room
-  -- (this can't be in the "CheckChangeFloor()" function because the items won't show up)
+  --
+  -- Race stuff
+  --
+
+  -- Check to see if we need to remove More Options in a diversity race
+  if roomType == RoomType.ROOM_TREASURE and -- 4
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
+     RPGlobals.race.rFormat == "diversity" and
+     RPGlobals.raceVars.removedMoreOptions == false then
+
+    RPGlobals.raceVars.removedMoreOptions = true
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  end
+
+  -- Check to see if we need to open the Mega Satan Door
   if (RPGlobals.race.goal == "Mega Satan" or
       RPGlobals.raceVars.finished) and
      stage == 11 and -- If this is The Chest or Dark Room

@@ -5,6 +5,7 @@ local RPFastTravel = {}
 --
 
 local RPGlobals = require("src/rpglobals")
+local RPSprites = require("src/rpsprites")
 
 --
 -- Constants
@@ -110,8 +111,8 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
 
   -- Spawn a custom entity to emulate the original
   local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
-             Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-             entity.Position, Vector(0,0), nil, 0, 0)
+                            Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
+                            entity.Position, Vector(0,0), nil, 0, 0)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
@@ -180,6 +181,7 @@ function RPFastTravel:CheckTrapdoor()
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local frameCount = Isaac.GetFrameCount()
@@ -188,9 +190,19 @@ function RPFastTravel:CheckTrapdoor()
      frameCount >= RPGlobals.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
-    -- Make Isaac invisible
+    -- Make Isaac invisible by setting his scale to 0
     RPGlobals.run.trapdoor.scale = player.SpriteScale
+    if RPGlobals.run.usedStrength then -- Fix the bug with the Strength card
+      RPGlobals.run.trapdoor.scale.X = RPGlobals.run.trapdoor.scale.X - 0.25
+      RPGlobals.run.trapdoor.scale.Y = RPGlobals.run.trapdoor.scale.Y - 0.25
+    end
+    if RPGlobals.run.usedHugeGrowth then -- Fix the bug with the Huge Growth card
+      RPGlobals.run.trapdoor.scale.X = RPGlobals.run.trapdoor.scale.X - 0.6
+      RPGlobals.run.trapdoor.scale.Y = RPGlobals.run.trapdoor.scale.Y - 0.6
+    end
     player.SpriteScale = Vector(0, 0)
+
+    -- Make the screen fade to black (we can go to any room for this, so we just use the starting room)
     game:StartRoomTransition(level:GetStartingRoomIndex(), Direction.NO_DIRECTION, -- -1
                              RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
 
@@ -221,6 +233,10 @@ function RPFastTravel:CheckTrapdoor()
     -- Move Isaac to the center of the room
     player.Position = room:GetCenterPos()
 
+    -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
+    RPSprites:Init("stage", tostring(stage) .. "-" .. tostring(stageType))
+    RPGlobals.run.showingStage = true
+
   elseif RPGlobals.run.trapdoor.state == 4 and
          player.ControlsEnabled then
 
@@ -250,12 +266,11 @@ function RPFastTravel:CheckTrapdoor()
      player:PlayExtraAnimation("Jump")
 
      -- Make the hole do the dissapear animation
-     local entities = Isaac.GetRoomEntities()
-     for i = 1, #entities do
-       if entities[i].Type == Isaac.GetEntityTypeByName("Pitfall (Custom)") and
-          entities[i].Variant == Isaac.GetEntityVariantByName("Pitfall (Custom)") then
+     for i, entity in pairs(Isaac.GetRoomEntities()) do
+       if entity.Type == Isaac.GetEntityTypeByName("Pitfall (Custom)") and
+          entity.Variant == Isaac.GetEntityVariantByName("Pitfall (Custom)") then
 
-         entities[i]:GetSprite():Play("Disappear", true)
+         entity:GetSprite():Play("Disappear", true)
          break
        end
      end
@@ -269,10 +284,9 @@ function RPFastTravel:CheckTrapdoor()
     player.ControlsEnabled = true
 
     -- Kill the hole
-    local entities = Isaac.GetRoomEntities()
-    for i = 1, #entities do
-      if entities[i].Type == 1001 then
-        entities[i]:Remove()
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == 1001 then
+        entity:Remove()
         break
       end
     end

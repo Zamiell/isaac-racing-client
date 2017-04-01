@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- add floor to starting screen
 - remove character check from mod since we can restart X
 
 - remove delay on the credits item

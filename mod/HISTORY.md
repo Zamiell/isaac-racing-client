@@ -2,6 +2,21 @@
 
 Note that the Racing+ Mod version will almost always match the client version. This means that the version number of the mod may increase, but have no actual new in-game changes. All gameplay related changes will be listed below.
 
+* *0.4.10* - March 31st
+  * Added custom floor notification graphics for every floor in the game.
+  * Trapdoors will now properly show as Womb Holes on floors 6 and 7.
+  * Fixed the bug where using a Strength or Huge Growth card before entering a trapdoor would make you keep the increased size forever.
+  * Fixed the bug where pickups would sometimes pickups would spawn inside Stone Grimaces and the like.
+  * Fixed the bug where you could use a card or a pill before jumping out of the hole when coming from another floor.
+* *0.4.9* - March 31st
+  * It is pretty unfair when a Mimic chest spawns behind you and your body is blocking the two spike tells. (Or, alternatively, if the Mimic is behind a dying enemy.) To rectify this problem, Mimic chests now have a custom "Appear" animation if they spawn within a certain distance of the player.
+  * Fixed the bug where the Butter! trinket wouldn't work properly with the Schoolbag.
+  * Fixed the bug where trapdoors would be duplicated in rooms that weren't connected to the level grid under certain circumstances.
+  * Reduced the delay on the Womb 2 beam of light from 60 frames to 40.
+  * Fixed the bug where Conjoined Fatties would make the doors open early in certain circumstances.
+  * The unavoidable damage prevention code for Mimics should now function again.
+  * Fixed the unavoidable damage room in the Caves/Catacombs with 5 Crazy Long Legs by removing 1 Crazy Long Legs to make it a bit easier (#862).
+  * Replaced all of the Rules card text snippets with educational history.
 * *0.4.7* - March 29th
   * You can now do a Schoolbag switch during the "use item" animation.
   * Chargebars are now minimialistic and actually good.

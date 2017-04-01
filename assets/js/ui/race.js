@@ -502,7 +502,6 @@ const show = function(raceID) {
         $('#race-ready-checkbox').prop('disabled', true);
         $('#race-ready-checkbox-label').css('cursor', 'default');
         $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.38);
-        globals.gameState.inGame = false; // Make them reset at least one time before being able to become ready
         checkReadyValid(); // This will update the tooltip on what the player needs to do in order to become ready
         $('#race-countdown').fadeOut(0);
         $('#race-quit-button-container').fadeOut(0);

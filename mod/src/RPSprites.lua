@@ -29,19 +29,22 @@ function RPSprites:Init(spriteType, spriteName)
     return
   end
 
-  -- Check to see if we are above 16th place
+  -- Otherwise, initialize the sprite
+  RPGlobals.spriteTable[spriteType].spriteName = spriteName
   RPGlobals.spriteTable[spriteType].sprite = Sprite()
 
-  -- Otherwise, initialize the sprite
-  if spriteType == "seeded-item1" or
-     spriteType == "seeded-item2" or
-     spriteType == "seeded-item3" or
-     spriteType == "seeded-item4" or
-     spriteType == "seeded-item5" or
-     spriteType == "diversity-item1" or
-     spriteType == "diversity-item2" or
-     spriteType == "diversity-item3" or
-     spriteType == "diversity-item4" then
+  if spriteType == "stage" then
+    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/stage/" .. spriteName .. ".anm2", true)
+
+  elseif spriteType == "seeded-item1" or
+         spriteType == "seeded-item2" or
+         spriteType == "seeded-item3" or
+         spriteType == "seeded-item4" or
+         spriteType == "seeded-item5" or
+         spriteType == "diversity-item1" or
+         spriteType == "diversity-item2" or
+         spriteType == "diversity-item3" or
+         spriteType == "diversity-item4" then
 
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/items3/collectibles/" .. spriteName .. ".anm2", true)
 
@@ -56,7 +59,7 @@ function RPSprites:Init(spriteType, spriteName)
     end
 
   elseif spriteType == "place" then
-    if tonumber(spriteName) <= 16 then
+    if spriteName == "pre" or tonumber(spriteName) <= 16 then
       RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
     else
       Isaac.DebugString("Places beyond 16 are not supported.")
@@ -80,7 +83,13 @@ function RPSprites:Init(spriteType, spriteName)
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
 
-  RPGlobals.spriteTable[spriteType].spriteName = spriteName
+  -- For some sprites, we want to queue an animation
+  if spriteType == "stage" then
+    RPGlobals.spriteTable[spriteType].sprite:Play("TextIn", true)
+  else
+    -- For non-animations, we just want to set frame 0
+    RPGlobals.spriteTable[spriteType].sprite:SetFrame("Default", 0)
+  end
 end
 
 -- Call this every frame in MC_POST_RENDER
@@ -89,7 +98,6 @@ function RPSprites:Display()
   for k, v in pairs(RPGlobals.spriteTable) do
     -- Position it
     local vec = RPSprites:GetScreenCenterPosition() -- Start the vector off in the center of the screen by default
-    local animationName = "Default"
 
     -- Type stuff
     local typeFormatX = 110
@@ -99,7 +107,6 @@ function RPSprites:Display()
     local timerSpace = 7.25
     local timerHourAdjust = 2
     local timerHourAdjust2 = 0
-    local hoursShowing = 0
     local timerX = 19
     if RPGlobals.spriteTable.timer6 ~= nil and RPGlobals.spriteTable.timer6.spriteName ~= 0 then
       timerHourAdjust2 = 2
@@ -108,7 +115,9 @@ function RPSprites:Display()
     local timerY = 217
 
     -- Position all the sprites
-    if k == "top" then -- Pre-race messages and the countdown
+    if k == "stage" then -- The name of the floor when we get to a new floor
+      vec.Y = vec.Y - 85
+    elseif k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
       vec.Y = vec.Y - 40
@@ -218,8 +227,14 @@ function RPSprites:Display()
 
     -- Draw it
     if v.sprite ~= nil then
-      RPGlobals.spriteTable[k].sprite:SetFrame(animationName, 0)
-      RPGlobals.spriteTable[k].sprite:RenderLayer(0, vec)
+      if k == "stage" then
+        -- For animations, we have to both "Render()" and "Update()"
+        RPGlobals.spriteTable[k].sprite:Render(vec, Vector(0, 0), Vector(0, 0))
+        RPGlobals.spriteTable[k].sprite:Update()
+      else
+        -- For non-animations, we want to just render frame 0
+        RPGlobals.spriteTable[k].sprite:RenderLayer(0, vec)
+      end
     end
   end
 end

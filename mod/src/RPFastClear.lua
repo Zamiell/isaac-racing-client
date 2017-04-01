@@ -89,9 +89,8 @@ end
 function RPFastClear:CheckAlive()
   -- Check all the (non-grid) entities in the room to see if anything is alive
   local allDead = true
-  local entities = Isaac.GetRoomEntities()
-  for i = 1, #entities do
-    local npc = entities[i]:ToNPC()
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
     if npc ~= nil then
       -- We don't fast-clear to apply to splitting enemies, so make an exception for those
       if (npc:IsDead() == false and npc.CanShutDoors == true) or -- This is an alive enemy
@@ -258,13 +257,12 @@ function RPFastClear:Main()
        (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and sackBFFChance % 3 == 0) then
 
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Sack of Pennies - 3.21
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.SACK_OF_PENNIES then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.SACK_OF_PENNIES then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -282,13 +280,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
     if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Little C.H.A.D. - 3.22
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.LITTLE_CHAD then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.LITTLE_CHAD then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -304,13 +301,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.11) & 3 == 2
     if math.floor(newRoomsCleared / constant2) & 3 == 2 then
       -- Get the position of familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- The Relic - 3.23
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.RELIC then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.RELIC then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -326,13 +322,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
     if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Bomb Bag - 3.20
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.BOMB_BAG then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.BOMB_BAG then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -346,13 +341,12 @@ function RPFastClear:Main()
   -- Juicy Sack (266)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_JUICY_SACK) then -- 266
     -- Get the position of the familiar
-    local entities = Isaac.GetRoomEntities()
-    for i = 1, #entities do
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
       -- Juicy Sack - 3.52
-      if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-         entities[i].Variant == FamiliarVariant.JUICY_SACK then
+      if entity.Type == EntityType.ENTITY_FAMILIAR and
+         entity.Variant == FamiliarVariant.JUICY_SACK then
 
-        pos = entities[i].Position
+        pos = entity.Position
         break
       end
     end
@@ -378,13 +372,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.11) & 3 == 2
     if math.floor(newRoomsCleared / constant2) & 3 == 2 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Mystery Sack - 3.57
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.MYSTERY_SACK then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.MYSTERY_SACK then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -430,13 +423,12 @@ function RPFastClear:Main()
     -- We don't want it based on time in the Racing+ mod
 
     -- Get the position of the familiar
-    local entities = Isaac.GetRoomEntities()
-    for i = 1, #entities do
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
       -- Lil Chest - 3.82
-      if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-         entities[i].Variant == FamiliarVariant.LIL_CHEST then
+      if entity.Type == EntityType.ENTITY_FAMILIAR and
+         entity.Variant == FamiliarVariant.LIL_CHEST then
 
-        pos = entities[i].Position
+        pos = entity.Position
         break
       end
     end
@@ -499,13 +491,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.11) & 3 == 2
     if math.floor(newRoomsCleared / constant2) & 3 == 2 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Rune Bag - 3.91
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.RUNE_BAG then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.RUNE_BAG then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -531,13 +522,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
     if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Acid Baby - 3.112
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.ACID_BABY then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.ACID_BABY then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end
@@ -555,13 +545,12 @@ function RPFastClear:Main()
     -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
     if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
       -- Get the position of the familiar
-      local entities = Isaac.GetRoomEntities()
-      for i = 1, #entities do
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
         -- Sack of Sacks - 3.114
-        if entities[i].Type == EntityType.ENTITY_FAMILIAR and
-           entities[i].Variant == FamiliarVariant.SACK_OF_SACKS then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and
+           entity.Variant == FamiliarVariant.SACK_OF_SACKS then
 
-          pos = entities[i].Position
+          pos = entity.Position
           break
         end
       end

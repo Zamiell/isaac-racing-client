@@ -33,7 +33,7 @@ RPGlobals.raceVars = {
   startedTime        = 0,
   finished           = false,
   finishedTime       = 0,
-  showPlaceGraphic   = true,
+  showPlaceGraphic   = false,
   fireworks          = 0,
   removedMoreOptions = false,
   placedJailCard     = false,
@@ -160,7 +160,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.replacedHeavenDoors = {}
 
   -- Tracking per room
-  RPGlobals.run.roomEnterting         = false
   RPGlobals.run.currentRoomClearState = true
   RPGlobals.run.currentGlobins        = {}
   RPGlobals.run.currentKnights        = {}
@@ -169,7 +168,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.usedHugeGrowth        = false
 
   -- Temporary tracking
-  RPGlobals.run.restartFrame          = 0
+  RPGlobals.run.showingStage         = false
+  RPGlobals.run.restartFrame         = 0
   RPGlobals.run.itemReplacementDelay = 0
   RPGlobals.run.naturalTeleport      = false
   RPGlobals.run.usedTelepills        = false
