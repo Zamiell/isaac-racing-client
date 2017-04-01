@@ -8,12 +8,7 @@
 
 ```
 Patch notes for v0.4.12:
-- Added custom floor notification graphics for every floor in the game. (Fast-travel doesn't trigger the vanilla notifications.)
-- You are no longer automatically sent to the "Race Room" if you join a race. (You will only be sent there if you start a new run.) Going to the "Race Room" in between races is entirely optional, since all races start with a reset. (Thanks tyrannasauruslex)
-- Trapdoors will now properly show as Womb Holes on floors 6 and 7. (Thanks tyrannasauruslex)
-- Fixed the bug where using a Strength or Huge Growth card before entering a trapdoor would make you keep the increased size forever. (Thanks blcd and tyrannasauruslex)
-- Fixed the bug where pickups would sometimes pickups would spawn inside Stone Grimaces and the like. (Thanks CrafterLynx)
-- Fixed the bug where you could use a card or a pill before jumping out of the hole when coming from another floor.
+- 
 ```
 
 
