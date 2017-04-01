@@ -6,7 +6,7 @@ Note that the Racing+ Mod version will almost always match the client version. T
   * Added custom floor notification graphics for every floor in the game.
   * Trapdoors will now properly show as Womb Holes on floors 6 and 7.
   * Fixed the bug where using a Strength or Huge Growth card before entering a trapdoor would make you keep the increased size forever.
-  * Fixed the bug where pickups would sometimes pickups would spawn inside Stone Grimaces and the like.
+  * Fixed the bug where pickups would sometimes spawn inside Stone Grimaces and the like.
   * Fixed the bug where you could use a card or a pill before jumping out of the hole when coming from another floor.
 * *0.4.9* - March 31st
   * It is pretty unfair when a Mimic chest spawns behind you and your body is blocking the two spike tells. (Or, alternatively, if the Mimic is behind a dying enemy.) To rectify this problem, Mimic chests now have a custom "Appear" animation if they spawn within a certain distance of the player.
