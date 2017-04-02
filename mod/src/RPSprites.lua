@@ -36,6 +36,12 @@ function RPSprites:Init(spriteType, spriteName)
   if spriteType == "stage" then
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/stage/" .. spriteName .. ".anm2", true)
 
+  elseif spriteType == "speedrun-char1" or
+         spriteType == "speedrun-slash" or
+         spriteType == "speedrun-char2" then
+
+    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/" .. spriteName .. ".anm2", true)
+
   elseif spriteType == "seeded-item1" or
          spriteType == "seeded-item2" or
          spriteType == "seeded-item3" or
@@ -114,9 +120,26 @@ function RPSprites:Display()
     end
     local timerY = 217
 
+    -- Speedrun stuff
+    local speedrunX = 23
+    local speedrunY = 79
+    local speedrunAdjust = 0
+    if RPGlobals.speedrun.charNum > 9 then
+      speedrunAdjust = timerSpace
+    end
+
     -- Position all the sprites
     if k == "stage" then -- The name of the floor when we get to a new floor
       vec.Y = vec.Y - 85
+    elseif k == "speedrun9-1" then -- "1 / 9"
+      vec.X = speedrunX
+      vec.Y = speedrunX
+    elseif k == "speedrun9-slash" then -- "1 / 9"
+      vec.X = 23
+      vec.Y = 79
+    elseif k == "speedrun-char2" then -- "1 / 9"
+      vec.X = 23
+      vec.Y = 79
     elseif k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then

@@ -18,6 +18,8 @@ function RPCheckEntities:Grid()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local room = game:GetRoom()
+  local roomType = room:GetType()
+  local player = game:GetPlayer(0)
 
   local num = room:GetGridSize()
   for i = 1, num do
@@ -30,12 +32,11 @@ function RPCheckEntities:Grid()
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR then -- 17
-        if stage == 8 and
-           room:GetType() == RoomType.ROOM_BOSS and -- 5
-           RPGlobals.race.goal == "Blue Baby" and
-           RPGlobals.race.rFormat ~= "pageant" then
+        if (stage == LevelStage.STAGE4_2 or stage == LevelStage.STAGE4_3) and -- 8/9
+           roomType == RoomType.ROOM_BOSS and -- 5
+           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
 
-          -- Delete the Womb 2 trapdoor if we are going to Blue Baby
+          -- Delete the Womb 2 trapdoor if we have the Polaroid
           room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
         else
@@ -168,6 +169,21 @@ function RPCheckEntities:NonGrid()
            RPGlobals.race.rFormat ~= "pageant" then
 
       entity:Remove()
+      Isaac.DebugString("Removed The Polaroid.")
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_POLAROID and -- 327
+           entity.Position.X >= 270 and entity.Position.X <= 290 and
+           RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.rFormat ~= "pageant" then
+
+      -- Reposition it to the center
+      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
+                 entity.Parent, entity.SubType, entity.InitSeed)
+      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
+      entity:Remove()
+      Isaac.DebugString("Moved The Polaroid.")
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
        entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
@@ -176,13 +192,29 @@ function RPCheckEntities:NonGrid()
        RPGlobals.race.rFormat ~= "pageant" then
 
       entity:Remove()
+      Isaac.DebugString("Removed The Negative.")
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 327
+           entity.Position.X >= 350 and entity.Position.X <= 370 and
+           RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.rFormat ~= "pageant" then
+
+      -- Reposition it to the center
+      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
+                 entity.Parent, entity.SubType, entity.InitSeed)
+      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
+      entity:Remove()
+      Isaac.DebugString("Moved The Negative.")
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
            gameFrameCount >= RPGlobals.run.itemReplacementDelay then
            -- We need to delay after using a Void (in case the player has consumed a D6)
 
-         RPCheckEntities:ReplacePedestal(entity)
+      RPCheckEntities:ReplacePedestal(entity)
+
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
@@ -300,9 +332,10 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
            entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
 
-      -- Delete the Womb 2 beam of light if we are going to The Lamb
-      if RPGlobals.race.goal == "The Lamb" and
-         RPGlobals.race.rFormat ~= "pageant" then
+      -- Delete the beam of light if we have The Negative
+      if (stage == LevelStage.STAGE4_2 or stage == LevelStage.STAGE4_3) and -- 8/9
+         roomType == RoomType.ROOM_BOSS and -- 5
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
         entity:Remove()
       else

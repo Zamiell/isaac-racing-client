@@ -39,8 +39,16 @@ function RPPostRender:Main()
   -- the "restart" command will fail when the game is first loading)
   if RPGlobals.run.restartFrame ~= 0 and RPGlobals.run.restartFrame <= Isaac.GetFrameCount() then
     RPGlobals.run.restartFrame = 0
-    Isaac.ExecuteCommand("restart")
-    Isaac.DebugString("Issued a \"restart\" command.")
+    local command
+    if RPGlobals.race.rFormat == "seeded" and
+       RPGlobals.race.status == "in progress" then
+
+      command = "seed " .. RPGlobals.race.seed
+    else
+      command = "restart"
+    end
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Issued a \"" .. command .. "\" command.")
     return
   end
 

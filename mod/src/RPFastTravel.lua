@@ -30,11 +30,34 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local player = game:GetPlayer(0)
 
   -- Don't replace trapdoors to the Blue Womb
   if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     return
+  end
+
+  -- Find out whether we should move the trapdoor from where it spawned
+  local position = entity.Position
+  if ((stage == LevelStage.STAGE4_2 and -- 8
+       entity.Position.X == 280 and -- If it spawned in the vanilla location on Womb 2
+       entity.Position.Y == 280) or
+      (stage == LevelStage.STAGE4_3 and -- 9
+       entity.Position.X == 560 and -- Or if it spawned in the vanilla location on Blue Womb
+       entity.Position.Y == 280)) and
+     roomType == RoomType.ROOM_BOSS and -- 5
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) then -- 328
+
+    -- Since we deleted the beam of light, the trapdoor will look off-center on Womb 2 / Blue Womb,
+    -- so move the trapdoor to the center of the room
+    -- (we can't modify entity.Position for some reason, so we have to make a new position variable)
+    position = room:GetCenterPos()
+    if stage == LevelStage.STAGE4_3 then -- 9
+      -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
+      position.Y = entity.Position.Y
+    end
   end
 
   -- Spawn a custom entity to emulate the original
@@ -46,11 +69,11 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     womb = true
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
-                          entity.Position, Vector(0,0), nil, 0, 0)
+                          position, Vector(0, 0), nil, 0, 0)
   else
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                          entity.Position, Vector(0,0), nil, 0, 0)
+                          position, Vector(0, 0), nil, 0, 0)
   end
   trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
@@ -58,7 +81,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   -- so we need to keep track of it for the remainder of the floor
   RPGlobals.run.replacedTrapdoors[#RPGlobals.run.replacedTrapdoors + 1] = {
     room = roomIndex,
-    pos  = entity.Position,
+    pos  = position,
   }
 
   -- Figure out if it should spawn open or closed, depending on how close we are
@@ -77,7 +100,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   end
 
   -- Log it
-  local debugString = "Spawned "
+  local debugString = "Replaced "
   if womb then
     debugString = debugString .. "womb "
   end
@@ -104,29 +127,45 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
+  end
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  -- Since we deleted the trapdoor, it will look off-center on Womb 2, so spawn it at the center of the room
+  local position = room:GetCenterPos()
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
+     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false then -- 328
+
+    -- Don't move it to the center if both the trapdoor and the beam of light will be spawning
+    position = entity.Position
+  elseif stage == 9 then
+    -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
+    position.Y = entity.Position.Y
   end
 
   -- Spawn a custom entity to emulate the original
   local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                            entity.Position, Vector(0,0), nil, 0, 0)
+                            position, Vector(0,0), nil, 0, 0)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
   RPGlobals.run.replacedHeavenDoors[#RPGlobals.run.replacedHeavenDoors + 1] = {
     room = roomIndex,
-    pos  = entity.Position,
+    pos  = position,
   }
-  Isaac.DebugString("Replaced beam of light: " .. tostring(roomIndex) .. " - (" ..
+
+  -- Log it
+  Isaac.DebugString("Replaced beam of light in room " .. tostring(roomIndex) .. " at (" ..
                     tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
 
   -- Remove the original entity
   entity:Remove()
-  Isaac.DebugString("Spawned heaven door.")
 end
 
 -- Called from the "RPCheckEntities:NonGrid()" function
@@ -143,7 +182,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
      ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
       (upwards and stage == 8 and entity.FrameCount >= 40) or
       -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
-      (upwards and stage == 10 and entity.FrameCount >= 16)) and
+      (upwards and stage ~= 8 and entity.FrameCount >= 16)) and
       -- The beam of light opening animation is 16 frames long
      player.Position.X >= entity.Position.X - squareSize and
      player.Position.X <= entity.Position.X + squareSize and
@@ -235,7 +274,6 @@ function RPFastTravel:CheckTrapdoor()
 
     -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
     RPSprites:Init("stage", tostring(stage) .. "-" .. tostring(stageType))
-    RPGlobals.run.showingStage = true
 
   elseif RPGlobals.run.trapdoor.state == 4 and
          player.ControlsEnabled then
@@ -290,6 +328,9 @@ function RPFastTravel:CheckTrapdoor()
         break
       end
     end
+
+    -- Hide the stage text
+    RPGlobals.spriteTable.stage.sprite:Play("TextOut", true)
   end
 
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
@@ -326,7 +367,9 @@ function RPFastTravel:ReplaceCrawlspace(entity, i)
     room = roomIndex,
     pos  = entity.Position,
   }
-  Isaac.DebugString("Replaced crawlspace: " .. tostring(roomIndex) .. " - (" ..
+
+  -- Log it
+  Isaac.DebugString("Replaced crawlspace in room " .. tostring(roomIndex) .. " at (" ..
                     tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
 
   -- Figure out if it should spawn open or closed, depending on how close we are
@@ -596,15 +639,11 @@ function RPFastTravel:CheckRoomRespawn()
 
         entity:ToEffect().State = 1
         entity:GetSprite():Play("Closed", true)
-        Isaac.DebugString("Spawned trapdoor (closed, state 1, respawning).")
+        Isaac.DebugString("Respawned trapdoor (closed, state 1).")
       else
         -- The default animation is "Opened", which is what we want
-        Isaac.DebugString("Spawned trapdoor (opened, state 0, respawning).")
+        Isaac.DebugString("Respawned trapdoor (opened, state 0).")
       end
-
-
-      -- The default animation is "Opened", which is what we want
-      Isaac.DebugString("Spawned trapdoor (opened, state 0, respawning).")
     end
   end
 
@@ -638,10 +677,10 @@ function RPFastTravel:CheckRoomRespawn()
 
         entity:ToEffect().State = 1
         entity:GetSprite():Play("Closed", true)
-        Isaac.DebugString("Spawned crawlspace (closed, state 1, respawning).")
+        Isaac.DebugString("Respawned crawlspace (closed, state 1).")
       else
         -- The default animation is "Opened", which is what we want
-        Isaac.DebugString("Spawned crawlspace (opened, state 0, respawning).")
+        Isaac.DebugString("Respawned crawlspace (opened, state 0).")
       end
     end
   end
@@ -654,7 +693,7 @@ function RPFastTravel:CheckRoomRespawn()
                                   Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
                                   RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
-      Isaac.DebugString("Spawned heaven door (respawning).")
+      Isaac.DebugString("Respawned heaven door.")
     end
   end
 end

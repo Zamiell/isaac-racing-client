@@ -323,21 +323,10 @@ function RPPostGameStarted:Race()
 
     -- Validate that we are on the intended seed
     if seeds:GetStartSeedString() ~= RPGlobals.race.seed then
-      -- Change the seed
-      seeds:SetStartSeed(RPGlobals.race.seed)
-
-      -- Let the Racing+ client (and the item tracker) know about the new seed
-      Isaac.DebugString("RNG Start Seed: " .. RPGlobals.race.seed .. " ")
-
-      -- We have to reload the first floor for the new seed to take effect
-      local stageCommand = "stage 1"
-      local newStageType = RPGlobals:DetermineStageType(1)
-      if newStageType == 1 then
-        stageCommand = stageCommand .. "a"
-      elseif newStageType == 2 then
-        stageCommand = stageCommand .. "b"
-      end
-      Isaac.ExecuteCommand(stageCommand)
+      -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
+      RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+      Isaac.DebugString("Restarting because we were not on the right seed.")
+      return
     end
 
   else

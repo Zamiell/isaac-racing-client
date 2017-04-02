@@ -11,13 +11,33 @@ RPGlobals.run = {}
 -- This is the table that gets updated from the "save.dat" file
 RPGlobals.race = {
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
+  myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
+  solo            = false,       -- Can be either false or true
   rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "custom"
   character       = "Judas",     -- Can be the name of any character
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
+  placeMid        = 1,           -- This is either the number of people ready, or the non-fnished place
+  place           = 1,           -- This is either the total number of people int he race, or the final place
+  order           = {            -- This is the R+9/14 character order
+    PlayerType.PLAYER_KEEPER, -- 14
+    PlayerType.PLAYER_THELOST, -- 10
+    PlayerType.PLAYER_XXX, -- 4
+    PlayerType.PLAYER_SAMSON, -- 6
+    PlayerType.PLAYER_LAZARUS2, -- 11
+    PlayerType.PLAYER_EVE, -- 5
+    PlayerType.PLAYER_CAIN, -- 2
+    PlayerType.PLAYER_JUDAS, -- 3
+    PlayerType.PLAYER_AZAZEL, -- 7
+    PlayerType.PLAYER_MAGDALENA, -- 1
+    PlayerType.PLAYER_ISAAC, -- 0
+    PlayerType.PLAYER_LILITH, -- 13
+    PlayerType.PLAYER_APOLLYON, -- 15
+    PlayerType.PLAYER_EDEN, -- 9
+  }
 }
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
@@ -38,6 +58,10 @@ RPGlobals.raceVars = {
   removedMoreOptions = false,
   placedJailCard     = false,
   victoryLaps        = 0,
+}
+
+RPGlobals.speedrun = {
+  charNum = 1
 }
 
 RPGlobals.RNGCounter = {
@@ -488,7 +512,7 @@ function RPGlobals:GotoNextFloor(upwards)
   local stageCommand
   if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     stageCommand = "stage 9" -- Blue Womb
-  elseif stage == 8 then -- Account for Womb 2
+  elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
     if upwards then
       stageCommand = "stage 10a" -- Cathedral
     else

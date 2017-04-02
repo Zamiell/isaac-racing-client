@@ -6,7 +6,12 @@
 --[[
 
 TODO:
+- only show entrance depending on what photo you have
+- show checkbox or X next to pre-race
+- test last person left graphic
+- timer doesn't reset after a race finishes
 - remove character check from mod since we can restart X
+- make mega satan animation faster on death
 
 - remove delay on the credits item
 - add konami code item

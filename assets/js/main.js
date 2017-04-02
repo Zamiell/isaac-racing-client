@@ -8,7 +8,13 @@
 
 ```
 Patch notes for v0.4.12:
-- 
+- Fixed the bug where the beam of light would not work after Hush.
+- Fixed the bug that caused unseeded weirdness on seeded races. (Thanks blcd for discovering why this happened)
+- The Polaroid (and The Negative) will no longer spawn in an off-center position.
+- The beam of light (and trapdoor) after It Lives! and Hush will no longer spawn in an off-center position.
+- The beam of light and trapdoor will now despawn based on whether you have The Polaroid or The Negative instead of your race goal.
+- Made the custom stage text disappear quicker. (Thanks LogBasePotato)
+- Changed "???" to "Blue Baby" on the character select screen. (Thanks to nicoluwu for the artwork.)
 ```
 
 

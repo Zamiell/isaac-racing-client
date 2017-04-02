@@ -472,11 +472,6 @@ function RPCallbacks:PostNewRoom2()
   -- Check for miscellaneous crawlspace bugs
   RPFastTravel:CheckCrawlspaceMiscBugs()
 
-  if RPGlobals.run.showingStage then
-    RPGlobals.run.showingStage = false
-    RPGlobals.spriteTable.stage.sprite:Play("TextOut", true)
-  end
-
   -- Check health (to fix the bug where we don't die at 0 hearts)
   -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
   if maxHearts == 0 and soulHearts == 0 then
