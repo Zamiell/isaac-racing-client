@@ -433,13 +433,15 @@ Patch notes for v0.2.44:
 * *0.2.36* - February 14th
   * Diversity races have been added to the Racing+ platform as the third race format.
 
-*0.2.33* - February 13th
-  * Fixed the Mega Blast build for seeded races. If you try to use Mega Blast before The Hourglass, you will get an "error" sound, and it won't work. This is by design, because the game is bugged such that using Glowing Hour Glass while a Mega Blast is underway doesn't actually delete the beam.
+#### *0.2.33* - February 13th
 
-*0.2.29* - February 12th
-  * Added a global Alt+B hotkey to launch the game.
-  * The "Race completed" sound effect won't play for solo races.
-  * Added "Custom" as a new race format. In this format, you can ready up and finish all on your own. This means you can now you can race the vanilla game (or custom mods) on the Racing+ platform.
-  * Added an Alt+F hotkey for finishing. This only works in the new "Custom" format.
-  * More countdown sounds have been added (from Mario Kart: Double Dash).
-  * In the client, you can now hover over emotes to see what they are.
+* Fixed the Mega Blast build for seeded races. If you try to use Mega Blast before The Hourglass, you will get an "error" sound, and it won't work. This is by design, because the game is bugged such that using Glowing Hour Glass while a Mega Blast is underway doesn't actually delete the beam.
+
+#### *0.2.29* - February 12th
+
+* Added a global Alt+B hotkey to launch the game.
+* The "Race completed" sound effect won't play for solo races.
+* Added "Custom" as a new race format. In this format, you can ready up and finish all on your own. This means you can now you can race the vanilla game (or custom mods) on the Racing+ platform.
+* Added an Alt+F hotkey for finishing. This only works in the new "Custom" format.
+* More countdown sounds have been added (from Mario Kart: Double Dash).
+* In the client, you can now hover over emotes to see what they are.
