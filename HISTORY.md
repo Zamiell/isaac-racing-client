@@ -378,21 +378,22 @@ Patch notes for v0.2.49:
 * Fixed an asymmetric Scarred Guts on a Womb/Utero L room (#757).
 * Fixed a Little Horn room (#1095) where there was only a narrow entrance to the top and bottom doors.
 
-Patch notes for v0.2.48:
-* Pressing the reset button on Eden now instantly kills her. (It is not possible to fix the resetting bug in a proper way.)
+### *v0.2.48* - February 22nd, 2017
+
+* Pressing the reset button on Eden now instantly kills her. (It is not currently possible to fix the resetting bug in a proper way.)
 * There will no longer be sound notifications for people starting solo races.
 * There will no longer be text notifications for people starting solo races.
 * There will no longer be text notifications for test accounts connecting or disconnecting.
 * Fixed the bug where the Diversity question marks would stay on the screen in future races. (Thanks Birdie0)
 
-### *v0.2.45* - 
+### *v0.2.45* - February 21st, 2017
 
 * Co-op baby detection has been rewritten (thanks to Inschato). Now when you spawn a baby, it will:
-  1) play AnimateSad
-  2) automatically kill the baby
-  3) delete all item pedestals in the room
-  * This fixes the bug where co-op babies would make the game crash under certain conditions.
-  * This also fixes the bug where trying to skip cutscenes would damage you and/or kill you.
+  1. play AnimateSad
+  2. automatically kill the baby
+  3. delete all item pedestals in the room
+* The new co-op detection also fixes the bug where co-op babies would make the game crash under certain conditions.
+* The new co-op detection also fixes the bug where trying to skip cutscenes would damage you and/or kill you.
 * Solo races now start in 3 seconds instead of 10. If this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game.
 * Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers.
 * Fixed a bug where race graphics would stay on the screen after you quit the Racing+ client.
