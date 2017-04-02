@@ -192,7 +192,7 @@ Patch notes for v0.2.69:
 Patch notes for v0.2.68:
 * The Soul Jar effects are now based on whether you hold the item (instead of being tied to the Magdalene character specifically). (Thanks Cyber_1)
 * The Schoolbag now works the same way as it does in Antibirth when you only have one active item. (Thanks Cyber_1)
-* Fixed the bug where the School Bag item would sometimes not appear when first starting a run. (Thanks Cyber_1)
+* Fixed the bug where the Schoolbag item would sometimes not appear when first starting a run. (Thanks Cyber_1)
 * The Racing+ mod will now work on Linux. (Thanks mithrandi)
 * Fixed the bug where the AAA Battery did not work with the Schoolbag. (Thanks Dea1h)
 * Fixed the bug where the race timer would not appear. (Thanks Krakenos)
@@ -213,7 +213,7 @@ Patch notes for v0.2.67:
 * On seeded races, The Compass will now be fart-rolled in the shop.
 * On seeded and diversity races, active items that you start with will now be properly fart-rolled. (Thanks dion and BMZ_Loop)
 * Added a new in-game error message: "Error: Start a new run by holding "R"."
-* Reorganized the way School Bag items work, which will fix the bug where Judas only needs 2 touches for the Bookworm transformation. (Thanks Cyber_1 and Dea1h)
+* Reorganized the way Schoolbag items work, which will fix the bug where Judas only needs 2 touches for the Bookworm transformation. (Thanks Cyber_1 and Dea1h)
 * Added the Catgasm emote to the client. (Requested by masterofpotato)
 
 Patch notes for v0.2.66:
@@ -239,7 +239,7 @@ Patch notes for v0.2.65:
 * Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
 * Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi & stoogebag)
 * Fixed the bug where if too many races were open, the lobby would mess up and overflow.
-* The Kamikaze! and Mega Blast builds will now correctly use the School Bag to keep the D6. (Thanks Anti)
+* The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks Anti)
 
 Patch notes for v0.2.64:
 * Isaac now starts with The Battery. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
@@ -250,9 +250,9 @@ Patch notes for v0.2.64:
   * You always have a 100% Devil Room chance if no damage is taken.
   * (The 9% Devil Room chance thing in the old Soul Jar is removed.)
   * (Thanks to Gromfalloon for the custom Soul Jar graphics.)
- * Eden now starts with the School Bag. She will start with her random active item inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
- * Lilith now starts with the School Bag. She will start with Box of Friends inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
- * Apollyon now starts with the School Bag. He will start with Void inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
+ * Eden now starts with the Schoolbag. She will start with her random active item inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
+ * Lilith now starts with the Schoolbag. She will start with Box of Friends inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
+ * Apollyon now starts with the Schoolbag. He will start with Void inside the bag. (This is to make the R+14 speedrun category more interesting, but is experimental, and can be changed back to vanilla if people don't like it.)
 * Fixed the bug where in certain specific situations red chest teleports could kill you.
 * Fixed the bug where Eden would incorrectly retain the stats from her starting active item. (Thanks SlashSP)
 * Fixed the bug where the Joker card would not work if you had Cursed Eye. (Thanks thereisnofuture)
@@ -261,20 +261,20 @@ Patch notes for v0.2.64:
 * Moved a lot of code to the game physics callback; the game should run much faster now on potato computers.
 * Fixed the bug where Cain and Samson's trinkets would incorrectly get smeltered in diversity races.
 * Fixed the bug where the active item in a diveristy race would get fart-rolled if you swapped it for something else. Unfortunately, this means your random active item in diversity will not be removed from any pools. (Thanks Thoday)
-* Fixed the bug with School Bag where the item inside the School Bag did not appear on the item tracker in certain situations.
+* Fixed the bug with Schoolbag where the item inside the Schoolbag did not appear on the item tracker in certain situations.
 * Fixed the bug where trophies would appear for non-race goals. (Thanks PassionDrama)
 
 Patch notes for v0.2.62:
 * Fixed the crash when you teleported to an L room. (Thanks to SlashSP for reporting and Will/blcd for the code fix)
 * Betrayal no longer pauses the game and plays an animation before charming enemies. (Thanks InvaderTim)
 * Fixed some miscellaneous stuff with the end of race trophy. (Thanks Lex)
-* Added D4 to the Lost's School Bag for seeded races. (I missed this initially; thanks Krakenos)
-* The School Bag is a lot more responsive now * you can switch items much faster. Additionally, if you hold the switch button down, it will only switch the items once. (Thanks Cyber_1)
-* Fixed the bug where stat caches were not properly updated after switching an item into a School Bag. (Thanks Cyber_1)
-* Fixed the bug where costumes were not properly updated after switching an item into a School Bag. (Thanks Cyber_1)
+* Added D4 to the Lost's Schoolbag for seeded races. (I missed this initially; thanks Krakenos)
+* The Schoolbag is a lot more responsive now * you can switch items much faster. Additionally, if you hold the switch button down, it will only switch the items once. (Thanks Cyber_1)
+* Fixed the bug where stat caches were not properly updated after switching an item into a Schoolbag. (Thanks Cyber_1)
+* Fixed the bug where costumes were not properly updated after switching an item into a Schoolbag. (Thanks Cyber_1)
 * Blood Bag is no longer excluded from diversity starting passive items.
 * Lucky Foot is now excluded from diversity starting passive items.
-* Diversity races now start with the School Bag, a random active item, and a random trinket that is smelted. (This is henry's idea.)
+* Diversity races now start with the Schoolbag, a random active item, and a random trinket that is smelted. (This is henry's idea.)
 * Diversity races now show the 5 starting items on the starting screen so that you can easily see what the build is at the start of a run.
 
 Patch notes for v0.2.61:
@@ -283,7 +283,7 @@ Patch notes for v0.2.61:
 * Fixed the bug where under certain specific circumstances, players could obtain banned trinkets.
 * Fixed the bug where you would die too early after taking a devil deal that killed you. (Thanks ceehe)
 * Fixed the bug on the new Maggy where she would stay alive while at 0 red hearts and 0 soul hearts. (The new Maggy is still disabled by default.)
-* Fixed the bug with School Bag and Crystal Ball / Mega Blast Placeholder. (Thanks Cyber_1)
+* Fixed the bug with Schoolbag and Crystal Ball / Mega Blast Placeholder. (Thanks Cyber_1)
 * Fast-clear now applies to Fallens who have already split.
 * Trinkets will now only be deleted from the starting room on the Pageant Boy ruleset. (Thanks Dea1h)
 * The following items have been added to the Treasure Room item pool in diversity races, but ONLY on basement 1:
@@ -299,7 +299,7 @@ Patch notes for v0.2.60:
 * We Need to Go Deeper! is no longer banned in races to The Lamb.
 
 Patch notes for v0.2.59:
-* Fixed the bug with the School Bag where the charge sound would play every time you swapped in a fully charged item. (Thanks Cyber_1)
+* Fixed the bug with the Schoolbag where the charge sound would play every time you swapped in a fully charged item. (Thanks Cyber_1)
 * Fixed the (vanilla) bug with Eden's Soul where it would not start off at 0 charges. (Thanks Krakenos)
 * Crystal Ball is now seeded. (We apparently never noticed this before. Now everything in the game should be seeded for real!) (Thanks Krakenos for reporting and Will/blcd for figuring out the drop chances)
 * Portals are now seeded. (As a side effect of this, Portals will always spawn 5 enemies instead of 1-5 enemies. This means that focusing them down is more important now.)
@@ -336,9 +336,9 @@ Patch notes for v0.2.55:
 * Cursed Eye is now seeded. (I'm finally able to do this due to some added callback functionality that they added in the last patch.)
 * Broken Remote is now seeded. (I'm finally able to do this due to some added callback functionality that they added in the last patch.)
 * Broken Remote is no longer removed from seeded races. (Everything in the game is now seeded!!!!!)
-* Fixed the bug with School Bag where items would have more charges than they were supposed to at the beginning of a race.
-* Fixed the bug where The Book of Sin did not show up in the School Bag. (Thanks Krakenos)
-* Fixed the bug where the Mega Blast placeholder did not show up in the School Bag.
+* Fixed the bug with Schoolbag where items would have more charges than they were supposed to at the beginning of a race.
+* Fixed the bug where The Book of Sin did not show up in the Schoolbag. (Thanks Krakenos)
+* Fixed the bug where the Mega Blast placeholder did not show up in the Schoolbag.
 * Fixed the bug where The Book of Sin would not count towards the Book Worm transformation. (Thanks Krakenos)
 * Fixed the bug where The Polaroid / The Negative would not be removed sometimes.
 * Fixed the bug where if you consumed a D6 with a Void and then tried to consume another pedestal, it would sometimes duplicate that pedestal. (Thanks Henry)
@@ -352,9 +352,9 @@ Patch notes for v0.2.54:
 * Lobby chat is now transfered to the Discord #racing-plus-lobby channel, and vice versa.
 
 Patch notes for v0.2.53:
-* The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the School Bag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.) PogCena
+* The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.) PogCena
 * Holding R on Eden no longer kills her (since they fixed it in the vanilla game).
-* Fixed the crash that occured with School Bag when you swapped at the same time as picking up a new item.
+* Fixed the crash that occured with Schoolbag when you swapped at the same time as picking up a new item.
 * You will no longer recieve the Polaroid and get teleported to Womb 1 if you arrive at the Void floor (since they fixed the instant Void teleport).
 * Removed the use animation from Telepills, because it is pointless.
 * Fixed a Basement/Cellar room that had a chance to spawn empty because of stacked entities.
@@ -385,42 +385,48 @@ Patch notes for v0.2.48:
 * There will no longer be text notifications for test accounts connecting or disconnecting.
 * Fixed the bug where the Diversity question marks would stay on the screen in future races. (Thanks Birdie0)
 
-Patch notes: for v0.2.45:
-    * Completely rewrote the co-op baby detection, thanks to Inschato
-        * Now when you spawn a baby, it will:
-            1) play AnimateSad
-            2) automatically kill the baby
-            3) delete all item pedestals in the room
-        * This fixes the bug where it would crash sometimes when co-op babies spawned
-        * This also fixes the bug where trying to skip cutscenes would damage you and/or kill you (get rekt Barry)
-    * Solo races now start in 3 seconds instead of 10 (if this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game)
-    * Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers
-    * Fixed a bug where race stuff would stay on the screen after you quit the Racing+ client
+### *v0.2.45* - 
 
-Patch notes for v0.2.44:
-  * Fixed the bug where "1" would stay on the screen for the whole race
-  * School Bag will now only be enabled in seeded races. (Having School Bag at all is still experimental and not final.)
-  * Fixed the bug with School Bag where the D6 would sometimes not be fully charged when the race started
-  * Added a check so that it won't swap if you are in the "item pickup" animation; this fixes the bug where it would delete your D6 (get rekt Dea1h)
-    * If you swap at the exact time that you pickup a new active item, the game will crash, so ummm don't do that because I don't know how to fix that
-  * Finishing/quitting a race will now automatically reset your save.dat file to defaults, this will help in cleaning up post-race related artifacts in-game
-  * Added a new file for diversity documentation
-  * Fixed the icons for A Dollar, A Quarter, and Money Equals Power in diversity races
-  * It is no longer possible to start with Dad's Lost Coin or Moldy Bread in diversity races
-* *0.2.43* * February 19th
-  * All characters now start with the School Bag from Antibirth. This is experimental.
-* *0.2.42* * February 19th
-  * Keeper now starts with the D6 and 4 coin containers (along with Greed's Gullet and Duality). Now all the characters start with the D6, which is a nice symmetry.
-  * Fixed the bug where the D6 doesn't get removed from the pools on Keeper (thanks @HauntedQuest).
-  * The client window is now resiable from the top (thanks @tODDlife)
-  * Fixed the bug where the doors would open prematurely under certain conditions.
-* *0.2.41* * February 17th
-  * The title screen is now better.
-  * Fixed the bug with seeded races where it would show question marks for the build.
-  * Fixed the bug with Keeper and Greed's Gullet.
-  * If you spawn a co-op baby, the mod will automatically kill you.
+* Co-op baby detection has been rewritten (thanks to Inschato). Now when you spawn a baby, it will:
+  1) play AnimateSad
+  2) automatically kill the baby
+  3) delete all item pedestals in the room
+  * This fixes the bug where co-op babies would make the game crash under certain conditions.
+  * This also fixes the bug where trying to skip cutscenes would damage you and/or kill you.
+* Solo races now start in 3 seconds instead of 10. If this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game.
+* Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers.
+* Fixed a bug where race graphics would stay on the screen after you quit the Racing+ client.
 
-#### *0.2.40* * February 16th
+### *v0.2.44* - February 21st, 2017
+
+* Fixed the bug where the "1" graphic would stay on the screen for the whole race under certain conditions.
+* The Schoolbag will now only be enabled in seeded races. (Having Schoolbag at all is still experimental.)
+* Fixed the bug with Schoolbag where the D6 would not be fully charged when the race started under certain conditions.
+* The Schoolbag will no longer allow a swap if you are in the "item pickup" animation. This fixes the bug where it would delete your D6.
+  * If you swap at the exact time that you pickup a new active item, the game will crash. Don't do this.
+* Finishing or quitting a race will now automatically reset your "save.dat" file to defaults. This will help in cleaning up post-race related artifacts in-game.
+* Added [a new file](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md) for diversity documentation.
+* Fixed the icons for A Dollar, A Quarter, and Money Equals Power in diversity races.
+* It is no longer possible to start with Dad's Lost Coin or Moldy Bread in diversity races.
+
+### *v0.2.43* - February 19th, 2017
+
+* All characters now start with the Schoolbag from Antibirth. This is experimental.
+
+### *v0.2.42* - February 19th, 2017
+* Keeper now starts with the D6 and 4 coin containers (along with Greed's Gullet and Duality).
+* Fixed the bug where the D6 doesn't get removed from the pools on Keeper. (thanks @HauntedQuest)
+* The client window is now resiable from the top. (thanks @tODDlife)
+* Fixed the bug where the doors would open prematurely under certain conditions.
+
+### *v0.2.41* - February 17th, 2017
+
+* The title screen is now better.
+* Fixed the bug with seeded races where it would show question marks for the build.
+* Fixed the bug with Keeper and Greed's Gullet.
+* If you spawn a co-op baby, the mod will automatically kill you.
+
+### *v0.2.40* - February 16th, 2017
 
 * Added the old Afterbirth item bans to diversity races. (The item synergy bans from Afterbirth are not included.)
 * Added D Infinity as a new diversity item ban.
@@ -428,19 +434,20 @@ Patch notes for v0.2.44:
 * Added the "<3" and ":thinking:" emoticons.
 * Fast room-clear now applies to Krampus.
 
-#### *0.2.38* - February 15th
+### *v0.2.38* - February 15th, 2017
 
 * If you try to use the Sacrifice Room to teleport to the Dark Room, it will now send you to the next floor instead.
 * Fixed the bug where the countdown graphic would stay on the screen for longer than it should.
 
-#### *0.2.36* - February 14th
-  * Diversity races have been added to the Racing+ platform as the third race format.
+### *v0.2.36* - February 14th, 2017
 
-### *0.2.33* - February 13th
+* Diversity races have been added to the Racing+ platform as the third race format.
+
+### *v0.2.33* - February 13th, 2017
 
 * Fixed the Mega Blast build for seeded races. If you try to use Mega Blast before The Hourglass, you will get an "error" sound, and it won't work. This is by design, because the game is bugged such that using Glowing Hour Glass while a Mega Blast is underway doesn't actually delete the beam.
 
-### *0.2.29* - February 12th
+### *v0.2.29* - February 12th, 2017
 
 * Added a global Alt+B hotkey to launch the game.
 * The "Race completed" sound effect won't play for solo races.
