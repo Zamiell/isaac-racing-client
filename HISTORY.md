@@ -419,25 +419,28 @@ Patch notes for v0.2.44:
   * Fixed the bug with seeded races where it would show question marks for the build.
   * Fixed the bug with Keeper and Greed's Gullet.
   * If you spawn a co-op baby, the mod will automatically kill you.
-* *0.2.40* * February 16th
-  * Added the old Afterbirth item bans to diversity races. (The item synergy bans from Afterbirth are not included.)
-  * Added D Infinity as a new diversity item ban.
-  * Diversity items are now hidden until the race starts.
-  * Added the "<3" and ":thinking:" emoticons.
-  * Fast room-clear now applies to Krampus.
 
-* *0.2.38* - February 15th
-  * If you try to use the Sacrifice Room to teleport to the Dark Room, it will now send you to the next floor instead.
-  * Fixed the bug where the countdown graphic would stay on the screen for longer than it should.
+#### *0.2.40* * February 16th
 
-* *0.2.36* - February 14th
+* Added the old Afterbirth item bans to diversity races. (The item synergy bans from Afterbirth are not included.)
+* Added D Infinity as a new diversity item ban.
+* Diversity items are now hidden until the race starts.
+* Added the "<3" and ":thinking:" emoticons.
+* Fast room-clear now applies to Krampus.
+
+#### *0.2.38* - February 15th
+
+* If you try to use the Sacrifice Room to teleport to the Dark Room, it will now send you to the next floor instead.
+* Fixed the bug where the countdown graphic would stay on the screen for longer than it should.
+
+#### *0.2.36* - February 14th
   * Diversity races have been added to the Racing+ platform as the third race format.
 
-#### *0.2.33* - February 13th
+### *0.2.33* - February 13th
 
 * Fixed the Mega Blast build for seeded races. If you try to use Mega Blast before The Hourglass, you will get an "error" sound, and it won't work. This is by design, because the game is bugged such that using Glowing Hour Glass while a Mega Blast is underway doesn't actually delete the beam.
 
-#### *0.2.29* - February 12th
+### *0.2.29* - February 12th
 
 * Added a global Alt+B hotkey to launch the game.
 * The "Race completed" sound effect won't play for solo races.
