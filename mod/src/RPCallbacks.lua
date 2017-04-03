@@ -475,8 +475,11 @@ function RPCallbacks:PostNewRoom2()
   if stage == 11 and
      roomType == RoomType.ROOM_BOSS and -- 5
      roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
+     -- The Mega Satan room counts as a boss room, and we don't want to respawn any trophies there
      roomClear and
-     RPGlobals.raceVars.finished == false then
+     RPGlobals.raceVars.finished == false and
+     RPGlobals.race.goal ~= "Mega Satan" then
+     -- We don't want to respawn any trophies if the player is supposed to kill Mega Satan
 
     game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)

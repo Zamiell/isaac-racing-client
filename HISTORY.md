@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.4.17* - April 4th, 2017
+
+* 
+
 ### *v0.4.16* - April 3rd, 2017
 
 * Removed the April Fool's joke where [Big Horn and Little Horn had clown suits](http://steamcommunity.com/sharedfiles/filedetails/?id=850578581), which is a mod from [Mr. Metal Alex](http://steamcommunity.com/id/MetalAlex/myworkshopfiles/?appid=250900).

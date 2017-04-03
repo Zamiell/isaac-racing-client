@@ -69,15 +69,13 @@ const send = function() {
     saveDat += '}';
 
     // Write to it
-    for (let i = 1; i <= 3; i++) {
-        let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
-        fs.writeFile(modLoaderFile, saveDat, writeModError);
-    }
-};
-exports.send = send;
-
-function writeModError(err) {
-    if (err) {
+    try {
+        for (let i = 1; i <= 3; i++) {
+            let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+            fs.writeFileSync(modLoaderFile, saveDat, 'utf8');
+            // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
+        }
+    } catch(err) {
         globals.log.info('Error while filling up the "save#.dat" file: ' + err);
 
         // Try again in 1/20 of a second
@@ -85,7 +83,8 @@ function writeModError(err) {
             send();
         }, 50);
     }
-}
+};
+exports.send = send;
 
 const reset = function() {
     globals.log.info('modLoader - Reset all variables.');

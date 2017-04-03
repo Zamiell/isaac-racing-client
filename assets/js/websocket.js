@@ -120,8 +120,6 @@ exports.init = function(username, password, remember) {
     // Sent if the server rejects a command, but in a normal way that does not indicate that anything is out of sync
     globals.conn.on('warning', function(data) {
         if (data.message === 'Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.') {
-            console.log('getting here 1:', globals.stream.URL);
-            console.log('getting here 2:', globals.stream.URLBeforeSubmit);
             globals.stream.URL = globals.stream.URLBeforeSubmit;
         }
         misc.warningShow(data.message);
@@ -604,9 +602,7 @@ exports.init = function(username, password, remember) {
                 // Remove the race controls
                 $('#race-quit-button-container').fadeOut(globals.fadeTime);
                 $('#race-controls-padding').fadeOut(globals.fadeTime);
-                globals.log.info('getting here 1');
                 $('#race-num-left-container').fadeOut(globals.fadeTime, function() {
-                    globals.log.info('getting here 2');
                     $('#race-countdown').css('font-size', '1.75em');
                     $('#race-countdown').css('bottom', '0.25em');
                     $('#race-countdown').css('color', '#e89980');
