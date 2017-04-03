@@ -7,7 +7,7 @@ local RPSchoolbag = {}
 local RPGlobals = require("src/rpglobals")
 
 --
--- Schoolbag variables
+-- Variables
 --
 
 RPSchoolbag.sprites = {}
@@ -76,8 +76,8 @@ function RPSchoolbag:SpriteDisplay()
     return
   end
 
+  -- Load the sprites
   if RPSchoolbag.sprites.item == nil then
-    -- Load the sprites
     RPSchoolbag.sprites.item = Sprite()
     RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. RPGlobals.run.schoolbag.item .. ".anm2", true)
     RPSchoolbag.sprites.item:Play("Default", true)

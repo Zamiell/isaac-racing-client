@@ -7,6 +7,7 @@ local RPCheckEntities = {}
 local RPGlobals    = require("src/rpglobals")
 local RPSchoolbag  = require("src/rpschoolbag")
 local RPFastTravel = require("src/rpfasttravel")
+local RPSpeedrun   = require("src/rpspeedrun")
 
 --
 -- Check entities functions
@@ -15,11 +16,7 @@ local RPFastTravel = require("src/rpfasttravel")
 -- Check all the grid entities in the room
 function RPCheckEntities:Grid()
   local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
   local room = game:GetRoom()
-  local roomType = room:GetType()
-  local player = game:GetPlayer(0)
 
   local num = room:GetGridSize()
   for i = 1, num do
@@ -32,19 +29,13 @@ function RPCheckEntities:Grid()
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR then -- 17
-        if (stage == LevelStage.STAGE4_2 or stage == LevelStage.STAGE4_3) and -- 8/9
-           roomType == RoomType.ROOM_BOSS and -- 5
-           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-          -- Delete the Womb 2 trapdoor if we have the Polaroid
-          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-
-        else
-          RPFastTravel:ReplaceTrapdoor(gridEntity, i)
-        end
+        RPFastTravel:ReplaceTrapdoor(gridEntity, i)
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_STAIRS then -- 18
         RPFastTravel:ReplaceCrawlspace(gridEntity, i)
+
+      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
+        RPSpeedrun:CheckButtonPressed(gridEntity, i)
       end
     end
   end
@@ -287,7 +278,7 @@ function RPCheckEntities:NonGrid()
 
       -- Spawn the "Race Trophy" custom entity
       game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                 entity.Position, entity.Velocity, nil, 0, roomSeed)
+                 entity.Position, entity.Velocity, nil, 0, 0)
       Isaac.DebugString("Spawned the end of race trophy.")
 
       -- Get rid of the chest
@@ -332,15 +323,7 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
            entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
 
-      -- Delete the beam of light if we have The Negative
-      if (stage == LevelStage.STAGE4_2 or stage == LevelStage.STAGE4_3) and -- 8/9
-         roomType == RoomType.ROOM_BOSS and -- 5
-         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-        entity:Remove()
-      else
-        RPFastTravel:ReplaceHeavenDoor(entity)
-      end
+      RPFastTravel:ReplaceHeavenDoor(entity)
 
     elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
            entity.Variant == EffectVariant.FIREWORKS then -- 104
@@ -384,7 +367,9 @@ function RPCheckEntities:NonGrid()
     elseif (entity.Type == Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)") and
             entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")) or
            (entity.Type == Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)") and
-            entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")) then
+            entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")) or
+           (entity.Type == Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)") and
+            entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")) then
 
       RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
       RPFastTravel:CheckTrapdoorEnter(entity, false) -- The second argument is "upwards"

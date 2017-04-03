@@ -8,7 +8,7 @@ local RPGlobals = require("src/rpglobals")
 local RPSprites = require("src/rpsprites")
 
 --
--- Debug variables
+-- Variables
 --
 
 --local debugVar = 118
@@ -63,7 +63,8 @@ function RPDebug:Main()
   --RPGlobals.raceVars.finished = true
   --debugVar = debugVar + 1
   --RPSprites:Init("diversity-item5", tostring(debugVar))
-  RPSprites:Init("speedrun-char1", "0")
+  --RPSprites:Init("speedrun-char1", "0")
+  RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

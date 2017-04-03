@@ -7,6 +7,7 @@ local RPCallbacks = {}
 local RPGlobals    = require("src/rpglobals")
 local RPFastClear  = require("src/rpfastclear")
 local RPFastTravel = require("src/rpfasttravel")
+local RPSpeedrun   = require("src/rpspeedrun")
 
 --
 -- Miscellaneous game callbacks
@@ -401,8 +402,9 @@ function RPCallbacks:PostNewRoom()
 
   Isaac.DebugString("MC_POST_NEW_ROOM")
 
-  -- Make an exception for the race room
+  -- Make an exception for the race room and the "Change Char Order" room
   RPCallbacks:PostNewRoomRace()
+  RPSpeedrun:PostNewRoomChangeOrder()
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
@@ -468,6 +470,18 @@ function RPCallbacks:PostNewRoom2()
 
   -- We might need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()
+
+  -- We might need to respawn a trophy
+  if stage == 11 and
+     roomType == RoomType.ROOM_BOSS and -- 5
+     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
+     roomClear and
+     RPGlobals.raceVars.finished == false then
+
+    game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+               room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("Respawned the end of race trophy.")
+  end
 
   -- Check for miscellaneous crawlspace bugs
   RPFastTravel:CheckCrawlspaceMiscBugs()
@@ -550,19 +564,24 @@ function RPCallbacks:PostNewRoomRace()
   local sfx = SFXManager()
 
   -- Set up the "Race Room"
-  if gameFrameCount == 0 and roomIndexUnsafe == GridRooms.ROOM_DEBUG_IDX then -- -3
-    -- Stop the boss room sound effect
-    sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+  if gameFrameCount ~= 0 or
+     roomIndexUnsafe ~= GridRooms.ROOM_DEBUG_IDX or -- -3
+     RPGlobals.race.status ~= "open" then
 
-    -- We want to trap the player in the room,
-    -- but we can't make a room with no doors because then the "goto" command would crash the game,
-    -- so we have one door at the bottom
-    room:RemoveDoor(3) -- The bottom door is always 3
-
-    -- Spawn two Gaping Maws (235.0)
-    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
-    game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
+    return
   end
+
+  -- Stop the boss room sound effect
+  sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+
+  -- We want to trap the player in the room,
+  -- but we can't make a room with no doors because then the "goto" command would crash the game,
+  -- so we have one door at the bottom
+  room:RemoveDoor(3) -- The bottom door is always 3
+
+  -- Spawn two Gaping Maws (235.0)
+  game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
+  game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
 end
 
 return RPCallbacks

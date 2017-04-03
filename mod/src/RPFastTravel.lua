@@ -12,7 +12,13 @@ local RPSprites = require("src/rpsprites")
 --
 
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
-RPFastTravel.trapdoorTouchDistance = 15 -- This feels about right (it is slightly smaller than vanilla)
+RPFastTravel.trapdoorTouchDistance = 16 -- This feels about right (it is slightly smaller than vanilla)
+
+--
+-- Variables
+--
+
+RPFastTravel.sprites = {}
 
 --
 -- Trapdoor / heaven door functions
@@ -33,8 +39,16 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local roomType = room:GetType()
   local player = game:GetPlayer(0)
 
-  -- Don't replace trapdoors to the Blue Womb
-  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+  -- Delete the Womb 2 trapdoor and don't replace it if we have the Polaroid
+  -- (also check for The Negative, since we might have both under certain conditions)
+  if (stage == LevelStage.STAGE4_2 or -- 8
+      stage == LevelStage.STAGE4_3) and -- 9
+     roomType == RoomType.ROOM_BOSS and -- 5
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false then -- 328
+
+    -- Delete the Womb 2 trapdoor if we have the Polaroid
+    room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
     return
   end
 
@@ -48,7 +62,9 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
        entity.Position.Y == 280)) and
      roomType == RoomType.ROOM_BOSS and -- 5
      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) then -- 328
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) then -- 328
 
     -- Since we deleted the beam of light, the trapdoor will look off-center on Womb 2 / Blue Womb,
     -- so move the trapdoor to the center of the room
@@ -62,11 +78,17 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
 
   -- Spawn a custom entity to emulate the original
   local trapdoor
-  local womb = false
-  if stage == LevelStage.STAGE3_2 or -- 6
+  local type = 0
+  if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+    type = 2
+    trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
+                          Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
+                          position, Vector(0, 0), nil, 0, 0)
+
+  elseif stage == LevelStage.STAGE3_2 or -- 6
      stage == LevelStage.STAGE4_1 then -- 7
 
-    womb = true
+    type = 1
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
                           position, Vector(0, 0), nil, 0, 0)
@@ -101,7 +123,9 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
 
   -- Log it
   local debugString = "Replaced "
-  if womb then
+  if type == 2 then
+    debugString = debugString .. "blue womb "
+  elseif type == 1 then
     debugString = debugString .. "womb "
   end
   debugString = debugString .. "trapdoor in room " .. tostring(roomIndex) .. " at "
@@ -133,12 +157,27 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local player = game:GetPlayer(0)
+
+  -- Delete the beam of light and don't replace it if we have The Negative
+  -- (also check for The Polaroid, since we might have both under certain conditions)
+  if (stage == LevelStage.STAGE4_2 or -- 8
+      stage == LevelStage.STAGE4_3) and -- 9
+     roomType == RoomType.ROOM_BOSS and -- 5
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
+     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    entity:Remove()
+    return
+  end
 
   -- Since we deleted the trapdoor, it will look off-center on Womb 2, so spawn it at the center of the room
   local position = room:GetCenterPos()
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false then -- 328
+  if (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) or -- 328
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) then -- 328
 
     -- Don't move it to the center if both the trapdoor and the beam of light will be spawning
     position = entity.Position
@@ -273,7 +312,10 @@ function RPFastTravel:CheckTrapdoor()
     player.Position = room:GetCenterPos()
 
     -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
-    RPSprites:Init("stage", tostring(stage) .. "-" .. tostring(stageType))
+    local spriteName = tostring(stage) .. "-" .. tostring(stageType)
+    RPFastTravel.sprites.stage = Sprite()
+    RPFastTravel.sprites.stage:Load("gfx/stage/" .. spriteName .. ".anm2", true)
+    RPFastTravel.sprites.stage:Play("TextIn", true)
 
   elseif RPGlobals.run.trapdoor.state == 4 and
          player.ControlsEnabled then
@@ -330,7 +372,7 @@ function RPFastTravel:CheckTrapdoor()
     end
 
     -- Hide the stage text
-    RPGlobals.spriteTable.stage.sprite:Play("TextOut", true)
+    RPFastTravel.sprites.stage:Play("TextOut", true)
   end
 
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
@@ -615,7 +657,11 @@ function RPFastTravel:CheckRoomRespawn()
 
       -- Spawn the new custom entity
       local entity
-      if stage == LevelStage.STAGE3_2 or -- 6
+      if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+        entity = game:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
+                            Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
+                            RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+      elseif stage == LevelStage.STAGE3_2 or -- 6
          stage == LevelStage.STAGE4_1 then -- 7
 
         entity = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
@@ -696,6 +742,17 @@ function RPFastTravel:CheckRoomRespawn()
       Isaac.DebugString("Respawned heaven door.")
     end
   end
+end
+
+function RPFastTravel:SpriteDisplay()
+  if RPFastTravel.sprites.stage == nil then
+    return
+  end
+
+  local pos = RPSprites:GetScreenCenterPosition()
+  pos.Y = pos.Y - 85 -- Move it below the top door
+  RPFastTravel.sprites.stage:Render(pos, Vector(0, 0), Vector(0, 0))
+  RPFastTravel.sprites.stage:Update()
 end
 
 return RPFastTravel

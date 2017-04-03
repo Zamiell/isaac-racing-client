@@ -4,13 +4,15 @@ local RPPostRender = {}
 -- Includes
 --
 
-local RPGlobals         = require("src/rpglobals")
-local RPSprites         = require("src/rpsprites")
-local RPSchoolbag       = require("src/rpschoolbag")
-local RPSoulJar         = require("src/rpsouljar")
-local RPPostUpdate      = require("src/rppostupdate")
-local RPItems           = require("src/rpitems")
-local RPFastTravel      = require("src/rpfasttravel")
+local RPGlobals    = require("src/rpglobals")
+local RPSprites    = require("src/rpsprites")
+local RPSchoolbag  = require("src/rpschoolbag")
+local RPSoulJar    = require("src/rpsouljar")
+local RPPostUpdate = require("src/rppostupdate")
+local RPItems      = require("src/rpitems")
+local RPFastTravel = require("src/rpfasttravel")
+local RPTimer      = require("src/rptimer")
+local RPSpeedrun   = require("src/rpspeedrun")
 
 --
 -- PostRender functions
@@ -54,11 +56,11 @@ function RPPostRender:Main()
 
   -- Draw graphics
   RPSprites:Display()
+  RPFastTravel:SpriteDisplay()
   RPSchoolbag:SpriteDisplay()
   RPSoulJar:SpriteDisplay()
-
-  -- Update the timer that shows on the bottom-left hand corner of the screen when the player is in a race
-  RPSprites:TimerUpdate()
+  RPTimer:Display()
+  RPSpeedrun:DisplayCharProgress()
 
   -- Ban Basement 1 Treasure Rooms
   RPPostUpdate:CheckBanB1TreasureRoom()

@@ -60,10 +60,6 @@ RPGlobals.raceVars = {
   victoryLaps        = 0,
 }
 
-RPGlobals.speedrun = {
-  charNum = 1
-}
-
 RPGlobals.RNGCounter = {
   InitialSeed   = 0,
   BookOfSin     = 0,

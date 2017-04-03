@@ -13,7 +13,7 @@ const misc    = nodeRequire('./assets/js/misc');
 const builds  = nodeRequire('./assets/data/builds');
 
 // We can communicate with the Racing+ Lua mod via file I/O
-// Specifically, we use the "save.dat" located in the mod subdirectory
+// Specifically, we use the 3 "save.dat" files located in the mod subdirectory
 const send = function() {
     // Do nothing if the mod loader file is set to null
     // (this can happen if the user is closing the program, for example)
@@ -78,7 +78,7 @@ exports.send = send;
 
 function writeModError(err) {
     if (err) {
-        globals.log.info('Error while filling up the "save.dat" file: ' + err);
+        globals.log.info('Error while filling up the "save#.dat" file: ' + err);
 
         // Try again in 1/20 of a second
         setTimeout(function() {
@@ -99,9 +99,50 @@ const reset = function() {
         seed: '-',
         startingBuild: -1,
         countdown: -1,
-        placeMid: 1,
-        place: 1,
+        placeMid: globals.modLoader.placeMid, // Don't reset placeMid or place, since we want to show that at the end of the race
+        place: globals.modLoader.place,
     };
     send();
 };
 exports.reset = reset;
+
+// This sends an up-to-date placeMid and place to the mod
+const sendPlace = function() {
+    if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+        // Find our value of "placeMid"
+        let numLeft = 0;
+        let amRacing = false;
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+
+            if (racer.status === 'racing') {
+                numLeft++;
+            }
+
+            if (racer.name === globals.myUsername) {
+                globals.modLoader.placeMid = racer.placeMid;
+                globals.modLoader.place = racer.place;
+                if (racer.status === 'racing') {
+                    amRacing = true;
+                }
+            }
+        }
+        if (numLeft === 1 && amRacing && globals.raceList[globals.currentRaceID].racerList.length > 2) {
+            globals.modLoader.placeMid = -1; // This will show "last person left"
+        }
+    } else {
+        // Count how many people are ready
+        let numReady = 0;
+        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+            if (globals.raceList[globals.currentRaceID].racerList[i].status === 'ready') {
+                numReady++;
+            }
+        }
+        globals.modLoader.placeMid = numReady;
+        globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList.length;
+    }
+
+    send();
+    globals.log.info('modLoader - Sent a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
+};
+exports.sendPlace = sendPlace;

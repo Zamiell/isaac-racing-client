@@ -373,41 +373,8 @@ exports.init = function(username, password, remember) {
             raceScreen.participantAdd(i);
         }
 
-        // Find out the correct values of "placeMid" and "place" to send to the mod
-        if (globals.raceList[globals.currentRaceID].status === 'in progress') {
-            // Find our values of "placeMid" and "place"
-            let numLeft = 0;
-            let amRacing = false;
-            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-                if (globals.raceList[globals.currentRaceID].racerList[i].status === 'racing') {
-                    numLeft++;
-                }
-
-                if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername) {
-                    globals.modLoader.placeMid = globals.raceList[globals.currentRaceID].racerList[i].placeMid;
-                    globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList[i].place;
-                    if (globals.raceList[globals.currentRaceID].racerList[i].name === 'racing') {
-                        amRacing = true;
-                    }
-                }
-            }
-            if (numLeft === 1 && amRacing && globals.raceList[globals.currentRaceID].racerList.length > 2) {
-                globals.modLoader.placeMid = -1; // This will show "last person left"
-            }
-        } else {
-            // Count how many people are ready
-            let numReady = 0;
-            for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-                if (globals.raceList[globals.currentRaceID].racerList[i].status === 'ready') {
-                    numReady++;
-                }
-            }
-            globals.modLoader.placeMid = numReady;
-            globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList.length;
-        }
-
-        modLoader.send();
-        globals.log.info('modLoader - Sent a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
+        // Also, update the mod with our placeMid and place
+        modLoader.sendPlace();
     });
 
     globals.conn.on('raceCreated', connRaceCreated);
@@ -614,7 +581,7 @@ exports.init = function(username, password, remember) {
         if (data.id === globals.currentRaceID) {
             // Update the status of the race in the Lua mod
             // (we will update the status to "in progress" manually when the countdown reaches 0)
-            // (and we don't care if the race finishes because we set the "save.dat" file to defaults once we personally finish or quit the race)
+            // (and we don't care if the race finishes because we will set the "save#.dat" file to defaults once we personally finish or quit the race)
             if (data.status !== 'in progress' && data.status !== 'finished') {
                 globals.modLoader.status = data.status;
                 modLoader.send();
@@ -717,33 +684,7 @@ exports.init = function(username, password, remember) {
                 break;
             }
         }
-
-        // Update the mod
-        if (data.status === 'not ready' || data.status === 'ready') {
-            // Send our status
-            if (data.name === globals.myUsername) {
-                globals.modLoader.myStatus = data.status;
-                globals.log.info('modLoader - Sent my status of "' + data.status + '".');
-            }
-
-            // Count how many people are ready
-            let numReady = 0;
-            for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
-                if (globals.raceList[data.id].racerList[i].status === 'ready') {
-                    numReady++;
-                }
-            }
-
-            // Send the progress of how many players have readied up
-            globals.modLoader.placeMid = numReady; // Use "placeMid" to represent the number of people who are ready
-            modLoader.send();
-            globals.log.info('modLoader - Sent a race placeMid of ' + globals.modLoader.place + ' (the number of people ready).');
-        } else if (data.status === 'finished' && data.name === globals.myUsername) {
-            // Send our final place to the mod
-            globals.modLoader.place = data.place;
-            modLoader.send();
-            globals.log.info('modLoader - Sent a race place of "' + data.place + '".');
-        }
+        // (the mod will be notified as part of the "placeMidRecalculateAll()" function, which is called in the "participantsSetStatus()" function above)
     }
 
     globals.conn.on('raceSetRuleset', function(data) {

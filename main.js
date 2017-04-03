@@ -14,9 +14,9 @@ And send me your Racing+ log file, which is located here:
 ```
 C:\Users\james\AppData\Local\Programs\Racing+.log
 ```
-And if you are still in the race, send me your `save.dat` file, which is located here:
+And if you are still in the race, send me your `save1.dat` file (for save slot #1), which is located here:
 ```
-C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_857628390\save.dat
+C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_857628390\save1.dat
 ```
 
 */
@@ -327,7 +327,7 @@ app.on('before-quit', function() {
         }
         log.info('Copied over default "save1.dat", "save2.dat", and "save3.dat" files.');
     } else {
-        log.info('Not copying over a default "save.dat" file since we got an error.');
+        log.info('Not copying over the 3 default "save.dat" files since we got an error.');
     }
 });
 
@@ -368,7 +368,7 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
         app.quit();
 
     } else if (arg1 === 'restart') {
-        errorHappened = true; // Don't reset our save.dat file if we did a /restart
+        errorHappened = true; // Don't reset our 3 "save.dat" files if we did a /restart
         app.relaunch();
         app.quit();
 

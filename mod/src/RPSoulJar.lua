@@ -7,7 +7,7 @@ local RPSoulJar = {}
 local RPGlobals = require("src/rpglobals")
 
 --
--- Soul Jar variables
+-- Variables
 --
 
 RPSoulJar.sprites = {}
@@ -60,14 +60,16 @@ function RPSoulJar:SpriteDisplay()
     return
   end
 
+  -- Load the sprites
   if RPSoulJar.sprites.barBack == nil then
-    -- Load the sprites
     RPSoulJar.sprites.barBack = Sprite()
     RPSoulJar.sprites.barBack:Load("gfx/ui/ui_chargebar2.anm2", true)
     RPSoulJar.sprites.barBack:Play("BarEmpty", true)
+
     RPSoulJar.sprites.barMeter = Sprite()
     RPSoulJar.sprites.barMeter:Load("gfx/ui/ui_chargebar2.anm2", true)
     RPSoulJar.sprites.barMeter:Play("BarFull", true)
+
     RPSoulJar.sprites.barLines = Sprite()
     RPSoulJar.sprites.barLines:Load("gfx/ui/ui_chargebar2.anm2", true)
     RPSoulJar.sprites.barLines:Play("BarOverlay12", true) -- This is custom replaced with an 8 charge bar
@@ -95,18 +97,18 @@ function RPSoulJar:SpriteDisplay()
   local barVector = Vector(barX, barY)
 
   -- Draw the charge bar 1/3 (the background)
-  RPSoulJar.sprites.barBack:Update()
   RPSoulJar.sprites.barBack:Render(barVector, Vector(0, 0), Vector(0, 0))
+  RPSoulJar.sprites.barBack:Update()
 
   -- Draw the charge bar 2/3 (the bar itself, clipped appropriately)
-  RPSoulJar.sprites.barMeter:Update()
   local meterMultiplier = 3 -- 3 for a 8 charge item
   local meterClip = 26 - (RPGlobals.run.soulJarSouls * meterMultiplier)
   RPSoulJar.sprites.barMeter:Render(barVector, Vector(0, meterClip), Vector(0, 0))
+  RPSoulJar.sprites.barMeter:Update()
 
   -- Draw the charge bar 3/3 (the segment lines on top)
-  RPSoulJar.sprites.barLines:Update()
   RPSoulJar.sprites.barLines:Render(barVector, Vector(0, 0), Vector(0, 0))
+  RPSoulJar.sprites.barLines:Update()
 end
 
 return RPSoulJar

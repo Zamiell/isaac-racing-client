@@ -29,7 +29,7 @@ RavenMiscError.prototype = Object.create(Error.prototype);
 RavenMiscError.prototype.constructor = RavenMiscError;
 
 const errorShow = function(message, sendToSentry = true, alternateScreen = false, customTitle = null) {
-    // Let the main process know to not overwrite the "save.dat" file in case we are in the middle of a race
+    // Let the main process know to not overwrite the 3 "save.dat" files in case we are in the middle of a race
     ipcRenderer.send('asynchronous-message', 'error');
 
     // Come back in a second if we are still in a transition

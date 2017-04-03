@@ -6,19 +6,12 @@
 
 /*
 
-```
-Patch notes for v0.4.16:
-- Added the fast-travel feature to the Blue Womb.
-- Slightly increased the hitbox on trapdoors and crawlspaces.
-```
-
-
 Bugs to fix:
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive
 - remove double negative on boss cutscenes option
 - unlock every easter egg for racing+ save file
-- fix sounds so that last place and race copmleted come as a callback so that both play
+- fix sounds so that last place and race completed come as a callback so that both play
 - set twitch bot to disable after no mod found
 - https://github.com/electron-userland/electron-builder/issues/1095
 - make it so that you can see the random thing before you submit the race

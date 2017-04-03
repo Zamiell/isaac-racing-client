@@ -17,7 +17,7 @@ This is the Lua mod for Racing+, a Binding of Isaac: Afterbirth+ racing platform
 
 [The list of mod changes](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES.md) are on a separate page.
 
-[The version history](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/HISTORY.md) is also on a separate page.
+[The version history](https://github.com/Zamiell/isaac-racing-client/blob/master/HISTORY.md) is also on a separate page.
 
 [The list of known bugs](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/BUGS.md) is also on a separate page.
 

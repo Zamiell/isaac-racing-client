@@ -722,14 +722,10 @@ function placeMidRecalculateAll() {
         globals.raceList[globals.currentRaceID].racerList[i].placeMid = racer.placeMid;
         let ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $('#race-participants-table-' + racer.name + '-place').html(ordinal);
-
-        // Also update the mod with our place
-        if (globals.raceList[globals.currentRaceID].racerList[i].name === globals.myUsername) {
-            globals.modLoader.placeMid = racer.placeMid;
-            modLoader.send();
-            globals.log.info('modLoader - Sent a race placeMid of ' + racer.placeMid + '.');
-        }
     }
+
+    // Also, update the mod with our placeMid and place
+    modLoader.sendPlace();
 }
 
 const participantsSetFloor = function(i) {

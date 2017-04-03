@@ -1,6 +1,8 @@
 <entities anm2root="gfx/" version="5">
-	<!-- We set fast-travel entities as effects because we don't want the smoke to appear when it is spawned -->
-	<!-- We take variants past 200 -->
+	<!-- Custom effects take variants past 200 -->
+
+	<!-- Fast-travel entities -->
+	<!-- (we want them as effects because we don't want the smoke to appear when they are spawned) -->
 	<entity name="Trapdoor (Fast-Travel)" id="1000" variant="201" anm2path="grid/door_11_trapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
@@ -10,15 +12,18 @@
 	<entity name="Womb Trapdoor (Fast-Travel)" id="1000" variant="203" anm2path="grid/door_11_wombhole.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
-	<entity name="Heaven Door (Fast-Travel)" id="1000" variant="204" anm2path="custom/heaven_door_fast_travel.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Blue Womb Trapdoor (Fast-Travel)" id="1000" variant="204" anm2path="grid/door_11_wombhole_blue.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
-	<entity name="Pitfall (Custom)" id="1000" variant="205" anm2path="291.000_Pitfall.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Heaven Door (Fast-Travel)" id="1000" variant="205" anm2path="custom/heaven_door_fast_travel.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity name="Pitfall (Custom)" id="1000" variant="206" anm2path="291.000_Pitfall.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
 	<!-- Other entities take ids past 1000 -->
-	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" stageHP="0">
+	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 </entities>

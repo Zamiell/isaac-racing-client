@@ -27,6 +27,7 @@ function RPPostGameStarted:Main(saveState)
   local curses = level:GetCurses()
   local seeds = game:GetSeeds()
   local sfx = SFXManager()
+  local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
 
@@ -117,6 +118,15 @@ function RPPostGameStarted:Main(saveState)
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()
+
+  -- Check for custom challenges
+  if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
+    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
+    Isaac.ExecuteCommand("goto s.boss.9999")
+    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
+    Isaac.DebugString("Going to the \"Change Char Order\" room.")
+    -- We do more things in the "PostNewRoom" callback
+  end
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()

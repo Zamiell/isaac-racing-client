@@ -1,5 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.4.16* - April 3rd, 2017
+
+* Removed the April Fool's joke where [Big Horn and Little Horn had clown suits](http://steamcommunity.com/sharedfiles/filedetails/?id=850578581), which is a mod from [Mr. Metal Alex](http://steamcommunity.com/id/MetalAlex/myworkshopfiles/?appid=250900).
+* Added a "last person left" graphic when you are the last person left.
+* Added the fast-travel feature to the Blue Womb.
+* Fixed the bug where if you left a room with a trophy, it would disappear forver. (Thanks Cyber_1)
+* Fixed the bug where the run would be reset if your internet hiccuped during a race. (Thanks thisguyisbarry)
+* Fixed the bug where the beam of light would not spawn if you had both The Polaroid and The Negative. (Thanks nicoluwu and tyrannasauruslex)
+* Fixed the bug where the timer would show before a race started.
+* Slightly increased the hitbox on trapdoors and crawlspaces.
+* The "News" link on the website will now go to [this page](https://github.com/Zamiell/isaac-racing-client/blob/master/HISTORY.md).
+* There is now an alpha version of both [profiles](https://isaacracing.net/profiles) and [races](https://isaacracing.net/races) on the website. This was coded by sillypears, so thanks to him for that.
+* The separate "mod-only" change-log will no longer be maintained.
+
 ### *v0.4.15* - April 2nd, 2017
 
 * Fixed the bug where the beam of light would not work after Hush. (Thanks StoneAgeMarcus)
@@ -66,13 +80,13 @@
 
 ### *v0.4.0* - March 27th, 2017
 
-* When starting a new run, Racing+ will now automatically put on the "Total Curse Immunity" Easter Egg for you (the "BLCK CNDL" seed). If Basement 1 happened to have a curse on it, the run will be automatically restarted. Rejoice, and be merry. https://www.youtube.com/watch?v=tHvnxbtHqsE
+* When starting a new run, Racing+ will now automatically put on the "Total Curse Immunity" Easter Egg for you (the "BLCK CNDL" seed). If Basement 1 happened to have a curse on it, the run will be automatically restarted. [Rejoice, and be merry](https://www.youtube.com/watch?v=tHvnxbtHqsE).
 * The racing system was rewritten such that you should never have to go back to the menu in between races anymore (unless you need to change your character). You will now start the race in an isolated room, and all races will start by resetting the game.
 * Seeded races will automatically start you on the correct seed; you do not have to type it in anymore.
 * Pressing the reset key will now instantly reset the game. (This change is experimental.)
 * Racing+ now validates that you are not on a challenge before letting you ready up.
 * Racing+ now has some new pre-race graphics, including showing you the goal. (Thanks stoogebag)
-* The long and annoying fade out / fade in animation between floors has been replaced with something better. (Thanks PassionDrama for helping test)
+* The long and annoying fade out / fade in animation between floors has been replaced with something better. (Thanks PassionDrama for helping to test.)
 * The Schoolbag will now work properly with the new Booster Pack items. (Thanks meepmeep)
 * Diversity races that start with the new Booster Pack items will now work properly. (Thanks BMZ_Loop)
 * Fixed the unavoidable damage when Spiked Chests or Mimics spawn in Caves/Catacombs room #19. (Thanks PassionDrama)

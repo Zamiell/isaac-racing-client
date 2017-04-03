@@ -197,7 +197,9 @@ function checkModIntegrity() {
         if (fileObject.stats.isFile() === false) {
             continue;
         } else if (path.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
-                   path.basename(fileObject.path) === 'save.dat') { // This is the IPC file, so it doesn't matter if it is different
+                   path.basename(fileObject.path) === 'save1.dat' || // These are the IPC files, so it doesn't matter if they are different
+                   path.basename(fileObject.path) === 'save2.dat' ||
+                   path.basename(fileObject.path) === 'save3.dat') {
 
             continue;
         }
@@ -214,6 +216,7 @@ function checkModIntegrity() {
         let path2 = path.join(modPath, suffix);
 
         let copyFile = false;
+
         if (fs.existsSync(path2)) {
             let hash2 = hashFiles.sync({ // This defaults to SHA1
                 files: path2,

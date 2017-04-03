@@ -33,24 +33,15 @@ function RPSprites:Init(spriteType, spriteName)
   RPGlobals.spriteTable[spriteType].spriteName = spriteName
   RPGlobals.spriteTable[spriteType].sprite = Sprite()
 
-  if spriteType == "stage" then
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/stage/" .. spriteName .. ".anm2", true)
-
-  elseif spriteType == "speedrun-char1" or
-         spriteType == "speedrun-slash" or
-         spriteType == "speedrun-char2" then
-
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/" .. spriteName .. ".anm2", true)
-
-  elseif spriteType == "seeded-item1" or
-         spriteType == "seeded-item2" or
-         spriteType == "seeded-item3" or
-         spriteType == "seeded-item4" or
-         spriteType == "seeded-item5" or
-         spriteType == "diversity-item1" or
-         spriteType == "diversity-item2" or
-         spriteType == "diversity-item3" or
-         spriteType == "diversity-item4" then
+  if spriteType == "seeded-item1" or
+     spriteType == "seeded-item2" or
+     spriteType == "seeded-item3" or
+     spriteType == "seeded-item4" or
+     spriteType == "seeded-item5" or
+     spriteType == "diversity-item1" or
+     spriteType == "diversity-item2" or
+     spriteType == "diversity-item3" or
+     spriteType == "diversity-item4" then
 
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/items3/collectibles/" .. spriteName .. ".anm2", true)
 
@@ -71,31 +62,12 @@ function RPSprites:Init(spriteType, spriteName)
       Isaac.DebugString("Places beyond 16 are not supported.")
     end
 
-  elseif spriteType == "timerClock" or
-         spriteType == "timer1" or
-         spriteType == "timer2" or
-         spriteType == "timerColon" or
-         spriteType == "timer3" or
-         spriteType == "timer4" or
-         spriteType == "timer6" or
-         spriteType == "timerColon2" then
-
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/" .. spriteName .. ".anm2", true)
-
-  elseif spriteType == "timer5" then
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/timer/mini/" .. spriteName .. ".anm2", true)
-
   else
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
 
-  -- For some sprites, we want to queue an animation
-  if spriteType == "stage" then
-    RPGlobals.spriteTable[spriteType].sprite:Play("TextIn", true)
-  else
-    -- For non-animations, we just want to set frame 0
-    RPGlobals.spriteTable[spriteType].sprite:SetFrame("Default", 0)
-  end
+  -- Everything is a non-animation, so we just want to set frame 0
+  RPGlobals.spriteTable[spriteType].sprite:SetFrame("Default", 0)
 end
 
 -- Call this every frame in MC_POST_RENDER
@@ -109,37 +81,9 @@ function RPSprites:Display()
     local typeFormatX = 110
     local typeFormatY = 10
 
-    -- Timer stuff
-    local timerSpace = 7.25
-    local timerHourAdjust = 2
-    local timerHourAdjust2 = 0
-    local timerX = 19
-    if RPGlobals.spriteTable.timer6 ~= nil and RPGlobals.spriteTable.timer6.spriteName ~= 0 then
-      timerHourAdjust2 = 2
-      timerX = timerX + timerSpace + timerHourAdjust
-    end
-    local timerY = 217
-
-    -- Speedrun stuff
-    local speedrunX = 23
-    local speedrunY = 79
-    local speedrunAdjust = 0
-    if RPGlobals.speedrun.charNum > 9 then
-      speedrunAdjust = timerSpace
-    end
-
     -- Position all the sprites
     if k == "stage" then -- The name of the floor when we get to a new floor
       vec.Y = vec.Y - 85
-    elseif k == "speedrun9-1" then -- "1 / 9"
-      vec.X = speedrunX
-      vec.Y = speedrunX
-    elseif k == "speedrun9-slash" then -- "1 / 9"
-      vec.X = 23
-      vec.Y = 79
-    elseif k == "speedrun-char2" then -- "1 / 9"
-      vec.X = 23
-      vec.Y = 79
     elseif k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
@@ -210,41 +154,8 @@ function RPSprites:Display()
     elseif k == "diversity-item5" then -- The trinket
       vec.X = vec.X + 80
       vec.Y = vec.Y - 10
-    elseif k == "clock" then
-      -- Move it below the Angel chance
-      vec.X = 7.5
-      vec.Y = 217
-    elseif k == "timerClock" then
-      -- Move it below the Angel chance
-      vec.X = 53 -- 8
-      vec.Y = 262
-    elseif k == "timer1" then
-      vec.X = timerX
-      vec.Y = timerY
-    elseif k == "timer2" then
-      vec.X = timerX + timerSpace
-      vec.Y = timerY
-    elseif k == "timerColon" then -- This is on a different scale (100%)
-      vec.X = timerX + timerSpace + 10 -- (11 is 6 pixels)
-      vec.Y = timerY + 19
-    elseif k == "timer3" then
-      vec.X = timerX + timerSpace + 11
-      vec.Y = timerY
-    elseif k == "timer4" then
-      vec.X = timerX + timerSpace + 11 + timerSpace + 1 - timerHourAdjust2
-      vec.Y = timerY
-    elseif k == "timer5" then
-      vec.X = timerX + timerSpace + 11 + timerSpace + timerSpace + 1 - timerHourAdjust2
-      vec.Y = timerY + 1
-    elseif k == "timer6" then
-      vec.X = timerX - timerSpace - timerHourAdjust
-      vec.Y = timerY
-    elseif k == "timerColon2" then
-      vec.X = timerX - timerSpace + 7
-      vec.Y = timerY + 19
-    elseif k == "place" then
-      -- Move it next to the "R+" icon
-      vec.X = 24
+    elseif k == "place" then -- "1st", "2nd", etc.
+      vec.X = 24 -- Move it next to the "R+" icon
       vec.Y = 79
     end
 
@@ -260,87 +171,6 @@ function RPSprites:Display()
       end
     end
   end
-end
-
-function RPSprites:TimerUpdate()
-  -- Don't show the timer if the race has not started yet,
-  -- or they quit in the middle of the race,
-  -- or if they closed the game in the middle of the run and came back
-  if RPGlobals.raceVars.startedTime == 0 or
-     (RPGlobals.race.status == "none" and RPGlobals.raceVars.finished == false) then
-
-    --RPSprites:Init("clock", 0)
-    RPSprites:Init("timerClock", 0)
-    RPSprites:Init("timer1", 0)
-    RPSprites:Init("timer2", 0)
-    RPSprites:Init("timerColon", 0)
-    RPSprites:Init("timer3", 0)
-    RPSprites:Init("timer4", 0)
-    RPSprites:Init("timer5", 0)
-    RPSprites:Init("timer6", 0)
-    RPSprites:Init("timerColon2", 0)
-    return
-
-  else
-    --RPSprites:Init("clock", "clock") -- The old clock sprite
-    RPSprites:Init("timerClock", "clock")
-  end
-
-  -- Find out how much time has passed since the race started
-  -- (or what the race finish time was)
-  local elapsedTime
-  if RPGlobals.raceVars.finished then
-    elapsedTime = RPGlobals.raceVars.finishedTime - RPGlobals.raceVars.startedTime
-  else
-    elapsedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
-    -- "Isaac.GetTime()" is analogous to Lua's "os.clock()"
-  end
-  elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
-
-  -- Show the hours
-  local minutes = math.floor(elapsedTime / 60)
-  if minutes >= 60 then
-    local hours = math.floor(elapsedTime / 3600)
-    RPSprites:Init("timer6", tostring(hours))
-    RPSprites:Init("timerColon2", "colon")
-    minutes = minutes - hours * 60
-  end
-
-  -- Show the minutes
-  if minutes < 10 then
-    minutes = "0" .. tostring(minutes)
-  else
-    minutes = tostring(minutes)
-  end
-  local minute1 = string.sub(minutes, 1, 1) -- The first character
-  local minute2 = string.sub(minutes, 2, 2) -- The second character
-  RPSprites:Init("timer1", tostring(minute1))
-  RPSprites:Init("timer2", tostring(minute2))
-
-  -- Show the colon
-  RPSprites:Init("timerColon", "colon")
-
-  -- Show the seconds
-  local rawSeconds = elapsedTime % 60
-  local seconds = math.floor(rawSeconds)
-  if seconds < 10 then
-    seconds = "0" .. tostring(seconds)
-  else
-    seconds = tostring(seconds)
-  end
-  local second1 = string.sub(seconds, 1, 1) -- The first character
-  local second2 = string.sub(seconds, 2, 2) -- The second character
-  RPSprites:Init("timer3", tostring(second1))
-  RPSprites:Init("timer4", tostring(second2))
-
-  -- Show the tenths
-  local tenths = RPGlobals:Round(rawSeconds, 1) - math.floor(rawSeconds) -- This will be betwen 0.0 and 0.9
-  tenths = string.sub(tostring(tenths), 3, 3)
-  RPSprites:Init("timer5", tostring(tenths))
-
-  -- The old timer (using RenderText)
-  --local timerString = minute1 .. minute2 .. ":" .. second1 .. second2 .. "." .. tenths
-  --Isaac.RenderText(timerString, 17, 211, 0.7, 1, 0.2, 1.0) -- X, Y, R, G, B, A
 end
 
 -- Taken from Alphabirth: https://steamcommunity.com/sharedfiles/filedetails/?id=848056541

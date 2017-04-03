@@ -7,6 +7,7 @@ globals = {
     "Card",
     "Challenge",
     "CollectibleType",
+    "Color",
     "Direction",
     "EffectVariant",
     "EntityCollisionClass",
