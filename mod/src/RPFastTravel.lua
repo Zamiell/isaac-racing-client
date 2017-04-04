@@ -106,20 +106,9 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     pos  = position,
   }
 
-  -- Figure out if it should spawn open or closed, depending on how close we are
-  local squareSize = RPFastTravel.trapdoorOpenDistance
-  local open = true
-  if player.Position.X >= entity.Position.X - squareSize and
-     player.Position.X <= entity.Position.X + squareSize and
-     player.Position.Y >= entity.Position.Y - squareSize and
-     player.Position.Y <= entity.Position.Y + squareSize then
-
-    open = false
-    trapdoor:ToEffect().State = 1
-    trapdoor:GetSprite():Play("Closed", true)
-  else
-    trapdoor:GetSprite():Play("Open Animation", true)
-  end
+  -- Always spawn the trapdoor closed
+  trapdoor:ToEffect().State = 1
+  trapdoor:GetSprite():Play("Closed", true)
 
   -- Log it
   local debugString = "Replaced "
@@ -129,12 +118,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     debugString = debugString .. "womb "
   end
   debugString = debugString .. "trapdoor in room " .. tostring(roomIndex) .. " at "
-  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. "), "
-  if open then
-    debugString = debugString .. "open (state 0)."
-  else
-    debugString = debugString .. "closed (state 1)"
-  end
+  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. ")"
   Isaac.DebugString(debugString)
 
   -- Remove the original entity
@@ -268,17 +252,7 @@ function RPFastTravel:CheckTrapdoor()
      frameCount >= RPGlobals.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
-    -- Make Isaac invisible by setting his scale to 0
-    RPGlobals.run.trapdoor.scale = player.SpriteScale
-    if RPGlobals.run.usedStrength then -- Fix the bug with the Strength card
-      RPGlobals.run.trapdoor.scale.X = RPGlobals.run.trapdoor.scale.X - 0.25
-      RPGlobals.run.trapdoor.scale.Y = RPGlobals.run.trapdoor.scale.Y - 0.25
-    end
-    if RPGlobals.run.usedHugeGrowth then -- Fix the bug with the Huge Growth card
-      RPGlobals.run.trapdoor.scale.X = RPGlobals.run.trapdoor.scale.X - 0.6
-      RPGlobals.run.trapdoor.scale.Y = RPGlobals.run.trapdoor.scale.Y - 0.6
-    end
-    player.SpriteScale = Vector(0, 0)
+    player.Visible = false
 
     -- Make the screen fade to black (we can go to any room for this, so we just use the starting room)
     game:StartRoomTransition(level:GetStartingRoomIndex(), Direction.NO_DIRECTION, -- -1
@@ -299,11 +273,12 @@ function RPFastTravel:CheckTrapdoor()
     RPGlobals.run.trapdoor.floor = stage
     RPGlobals:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
-  elseif RPGlobals.run.trapdoor.state == 3 and
+  elseif RPGlobals.run.trapdoor.state == 5 and
          RPGlobals.run.trapdoor.floor ~= stage then
 
-    -- State 4 is activated when we get to the new floor
-    RPGlobals.run.trapdoor.state = 4
+    -- State 6 is activated when we get to the new floor
+    -- (stages 4 and 5 are in the PostNewRoom callback)
+    RPGlobals.run.trapdoor.state = 6
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
                room:GetCenterPos(), Vector(0,0), nil, 0, 0)
@@ -317,27 +292,30 @@ function RPFastTravel:CheckTrapdoor()
     RPFastTravel.sprites.stage:Load("gfx/stage/" .. spriteName .. ".anm2", true)
     RPFastTravel.sprites.stage:Play("TextIn", true)
 
-  elseif RPGlobals.run.trapdoor.state == 4 and
+  elseif RPGlobals.run.trapdoor.state == 6 and
          player.ControlsEnabled then
 
-     -- State 5 is activated when the player controls are enabled
+     -- State 7 is activated when the player controls are enabled
      -- (this happens automatically by the game)
-     RPGlobals.run.trapdoor.state = 5
+     RPGlobals.run.trapdoor.state = 7
      Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
      RPGlobals.run.trapdoor.frame = frameCount + 10 -- Wait a while longer
      player.ControlsEnabled = false
 
-  elseif RPGlobals.run.trapdoor.state == 5 and
+  elseif RPGlobals.run.trapdoor.state == 7 and
          frameCount >= RPGlobals.run.trapdoor.frame then
 
-     -- State 6 is activated when the the hole is spawned and ready
-     RPGlobals.run.trapdoor.state = 6
+     -- State 8 is activated when the the hole is spawned and ready
+     RPGlobals.run.trapdoor.state = 8
      Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
      RPGlobals.run.trapdoor.frame = frameCount + 25
      -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
 
      -- Make Isaac visable again
      player.SpriteScale = RPGlobals.run.trapdoor.scale
+     Isaac.DebugString("Made Isaac visible: (" ..
+                       tostring(RPGlobals.run.trapdoor.scale.X) .. ", " ..
+                       tostring(RPGlobals.run.trapdoor.scale.Y) .. ")")
 
      -- Re-give Isaac the collision that we removed earlier
      player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
@@ -355,12 +333,12 @@ function RPFastTravel:CheckTrapdoor()
        end
      end
 
-  elseif RPGlobals.run.trapdoor.state == 6 and
+  elseif RPGlobals.run.trapdoor.state == 8 and
          frameCount >= RPGlobals.run.trapdoor.frame then
 
     -- We are finished when the the player has emerged from the hole
     RPGlobals.run.trapdoor.state = 0
-    Isaac.DebugString("Trapdoor state finished.")
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (finished)")
     player.ControlsEnabled = true
 
     -- Kill the hole
@@ -378,6 +356,28 @@ function RPFastTravel:CheckTrapdoor()
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
   if RPGlobals.run.trapdoor.state > 0 then
     player.FireDelay = 1
+  end
+end
+
+function RPFastTravel:CheckTrapdoor2()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
+  if RPGlobals.run.trapdoor.state == 3 then
+    RPGlobals.run.trapdoor.state = 4
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+
+  elseif RPGlobals.run.trapdoor.state == 4 then
+    RPGlobals.run.trapdoor.state = 5
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+
+    -- Make the player invisible so that we can jump out of the hole later
+    -- (this has to be in the PostNewRoom callback so that we don't get bugs with the Glowing Hour Glass)
+    -- (we can't use "player.Visible = false" because it won't do anything here)
+    RPGlobals.run.trapdoor.scale = player.SpriteScale
+    player.SpriteScale = Vector(0, 0)
   end
 end
 
@@ -606,10 +606,24 @@ end
 function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
   local player = game:GetPlayer(0)
 
   -- Don't do anything if the trapdoor / crawlspace is already open
   if entity:ToEffect().State == 0 then
+    return
+  end
+
+  -- Don't do anything if it is freshly spawned in a boss room and the player is relatively close
+  local squareSizeBig = RPFastTravel.trapdoorOpenDistance * 2.5
+  if roomType == RoomType.ROOM_BOSS and -- 5
+     entity.FrameCount <= 30 and
+     player.Position.X >= entity.Position.X - squareSizeBig and
+     player.Position.X <= entity.Position.X + squareSizeBig and
+     player.Position.Y >= entity.Position.Y - squareSizeBig and
+     player.Position.Y <= entity.Position.Y + squareSizeBig then
+
     return
   end
 

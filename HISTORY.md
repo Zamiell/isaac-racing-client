@@ -1,13 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.4.17* - April 4th, 2017
+### *v0.4.18* - April 4th, 2017
 
-* 
+* Trapdoors should be behave more similarly to vanilla now in that they won't open right away if the player is standing relatively close. If you continue to accidently fall into trapdoors for any reason, please let me know.
+* Fixed the bug where using a Glowing Hour Glass on the first room of a floor would make your character permanently invisible. (Thanks Fyon and CrafterLynx)
 
 ### *v0.4.16* - April 3rd, 2017
 
 * Removed the April Fool's joke where [Big Horn and Little Horn had clown suits](http://steamcommunity.com/sharedfiles/filedetails/?id=850578581), which is a mod from [Mr. Metal Alex](http://steamcommunity.com/id/MetalAlex/myworkshopfiles/?appid=250900).
-* Added a "last person left" graphic when you are the last person left.
+* Added a "last person left" graphic when you are the last person left. (It will only show in races with 3 people or more.)
 * Added the fast-travel feature to the Blue Womb.
 * Fixed the bug where if you left a room with a trophy, it would disappear forver. (Thanks Cyber_1)
 * Fixed the bug where the run would be reset if your internet hiccuped during a race. (Thanks thisguyisbarry)

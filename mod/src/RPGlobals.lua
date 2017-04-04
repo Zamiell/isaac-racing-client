@@ -508,6 +508,7 @@ function RPGlobals:GotoNextFloor(upwards)
   local stageCommand
   if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     stageCommand = "stage 9" -- Blue Womb
+
   elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
     if upwards then
       stageCommand = "stage 10a" -- Cathedral

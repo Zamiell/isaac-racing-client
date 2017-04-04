@@ -6,9 +6,11 @@
 --[[
 
 TODO:
+- https://clips.twitch.tv/WrongGenerousMonkeyStrawBeary
 - show checkbox or X next to pre-race
 - remove character check from mod since we can restart X
 - make mega satan animation faster on death
+- keybinding UI for custom schoolbag switch
 
 - remove delay on the credits item
 - make mushrooms only spawn on caves
@@ -21,7 +23,6 @@ TODO:
 - Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
 
 - Implement time offsets, show on starting screen
-  the floor transition animation starts)
 - Seed Maw of the Void and Athame black heart drops
 
 TODO DIFFICULT:

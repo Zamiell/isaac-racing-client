@@ -276,7 +276,7 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
 
       -- Mimic damage tracking
       if i == 20 and bit == 1 then
-        sfx:Play(SoundEffect.SOUND_LAUGH, 1, 0, false, 1)
+        sfx:Play(SoundEffect.SOUND_LAUGH, 0.75, 0, false, 1)
       end
     end
     if selfDamage == false then
@@ -485,6 +485,9 @@ function RPCallbacks:PostNewRoom2()
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
     Isaac.DebugString("Respawned the end of race trophy.")
   end
+
+  -- Check if we are just arriving on a new floor
+  RPFastTravel:CheckTrapdoor2()
 
   -- Check for miscellaneous crawlspace bugs
   RPFastTravel:CheckCrawlspaceMiscBugs()

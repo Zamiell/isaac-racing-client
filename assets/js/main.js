@@ -31,6 +31,7 @@ Bugs to fix:
 - add "Upload log" button
 - add # of people to race in prerace
 
+- "Isaac is not open" when it really is - implement hyphen's suggestion
 - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
     (probably have to reinit tooltipster every time on enter lobby from race function)
 - error while recieving PM during a transition
