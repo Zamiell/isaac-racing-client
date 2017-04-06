@@ -273,9 +273,8 @@ const show = function(raceID) {
     globals.modLoader.seed           = globals.raceList[globals.currentRaceID].seed;
     globals.modLoader.startingBuild  = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
     globals.modLoader.countdown      = -1;
-    modLoader.send();
-    globals.log.info('modLoader - Sent all new race variables.');
-    // We will send "place" and "placeMid" later (in a few milliseconds) once we recieve the "racerList" command from the server
+    globals.log.info('modLoader - Set all new race variables (but didn\'t send).');
+    // We will send all of this stuff along "place" and "placeMid" later (in a few milliseconds) once we recieve the "racerList" command from the server
 
     // Show and hide some buttons in the header
     $('#header-profile').fadeOut(globals.fadeTime);

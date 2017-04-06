@@ -757,6 +757,9 @@ exports.init = function(username, password, remember) {
                 break;
             }
         }
+
+        // Update the mod with "myStatus", "placeMid" and "place"
+        modLoader.sendPlace();
     }
 
     globals.conn.on('racerAddItem', connRacerAddItem);

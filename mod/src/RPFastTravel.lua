@@ -619,6 +619,7 @@ function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
   local squareSizeBig = RPFastTravel.trapdoorOpenDistance * 2.5
   if roomType == RoomType.ROOM_BOSS and -- 5
      entity.FrameCount <= 30 and
+     entity.DepthOffset ~= -101 and -- We use -101 to signify that it is a respawned trapdoor
      player.Position.X >= entity.Position.X - squareSizeBig and
      player.Position.X <= entity.Position.X + squareSizeBig and
      player.Position.Y >= entity.Position.Y - squareSizeBig and
@@ -686,7 +687,8 @@ function RPFastTravel:CheckRoomRespawn()
                             Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
                             RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
       end
-      entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+      entity.DepthOffset = -101 -- This is needed so that the entity will not appear on top of the player
+      -- We use -101 instead of -100 to signify that it is a respawned trapdoor
 
       -- Figure out if it should spawn open or closed, depending on how close we are
       local squareSize = RPFastTravel.trapdoorOpenDistance

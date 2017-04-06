@@ -6,6 +6,9 @@
 --[[
 
 TODO:
+- place thing doesn't update
+- b1 off limits doesn't work
+- mega satan door doesn't open after backtracking
 - https://clips.twitch.tv/WrongGenerousMonkeyStrawBeary
 - show checkbox or X next to pre-race
 - remove character check from mod since we can restart X

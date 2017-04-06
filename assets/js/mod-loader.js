@@ -26,14 +26,19 @@ const send = function() {
         return;
     }
 
+    // We want to send the "modLoader" object to the Lua mod, but with some modifications
+    // So, start by making a copy (just making it equal won't make a copy)
+    // From: https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
+    let json = Object.assign({}, globals.modLoader);
+
     // Start to compile the list of starting items
-    let startingItems = [];
+    json.startingItems = [];
     if (globals.modLoader.rFormat === 'seeded') {
-        startingItems.push(21); // The Compass
+        json.startingItems.push(21); // The Compass
     } else if (globals.modLoader.rFormat === 'diversity') {
         let items = globals.modLoader.seed.split(',');
         for (let item of items) {
-            startingItems.push(parseInt(item)); // The Lua mod expects this to be a number
+            json.startingItems.push(parseInt(item)); // The Lua mod expects this to be a number
         }
     }
 
@@ -41,39 +46,34 @@ const send = function() {
     if (globals.modLoader.startingBuild !== -1) {
         for (let item of builds[globals.modLoader.startingBuild]) {
             // The Lua mod just needs the item ID, not the name
-            startingItems.push(item.id);
+            json.startingItems.push(item.id);
         }
+    }
+    delete json.startingBuild; // The client only needs "startingItems"
+
+    // This is necessary because the 5 diversity items are communicated through the seed
+    if (json.rFormat === 'diversity') {
+        json.seed = '-';
     }
 
-    // Build the Lua table manually
-    let saveDat = '{\n';
-    saveDat += 'status="' + globals.modLoader.status + '",\n';
-    saveDat += 'myStatus="' + globals.modLoader.myStatus + '",\n';
-    saveDat += 'rType="' + globals.modLoader.rType + '",\n';
-    saveDat += 'solo=' + globals.modLoader.solo + ',\n';
-    saveDat += 'rFormat="' + globals.modLoader.rFormat + '",\n';
-    saveDat += 'character="' + globals.modLoader.character + '",\n';
-    saveDat += 'goal="' + globals.modLoader.goal + '",\n';
-    saveDat += 'seed="' + (globals.modLoader.rFormat === 'diversity' ? '-' : globals.modLoader.seed) + '",\n';
-    saveDat += 'startingItems={';
-    if (startingItems.length !== 0) {
-        for (let itemID of startingItems) {
-            saveDat += itemID + ',';
-        }
-        saveDat = saveDat.slice(0, -1); // Chop off the trailing comma
-    }
-    saveDat += '},\n';
-    saveDat += 'countdown=' + globals.modLoader.countdown + ',\n';
-    saveDat += 'placeMid=' + globals.modLoader.placeMid + ',\n';
-    saveDat += 'place=' + globals.modLoader.place + ',\n';
-    saveDat += '}';
+    // Delete the speedrun orders (we will add them later)
+    delete json['order9-1'];
+    delete json['order14-1'];
+    delete json['order9-2'];
+    delete json['order14-2'];
+    delete json['order9-3'];
+    delete json['order14-3'];
 
     // Write to it
     try {
         for (let i = 1; i <= 3; i++) {
-            let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
-            fs.writeFileSync(modLoaderFile, saveDat, 'utf8');
+            // Add the speedrun orders
+            json.order9 = globals.modLoader['order9-' + i];
+            json.order14 = globals.modLoader['order14-' + i];
+
             // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
+            let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+            fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
         }
     } catch(err) {
         globals.log.info('Error while filling up the "save#.dat" file: ' + err);

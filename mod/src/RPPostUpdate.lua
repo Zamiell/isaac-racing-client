@@ -4,12 +4,13 @@ local RPPostUpdate = {}
 -- Includes
 --
 
-local RPGlobals         = require("src/rpglobals")
-local RPCheckEntities   = require("src/rpcheckentities")
-local RPFastClear       = require("src/rpfastclear")
-local RPSchoolbag       = require("src/rpschoolbag")
-local RPSoulJar         = require("src/rpsouljar")
-local RPFastTravel      = require("src/rpfasttravel")
+local RPGlobals       = require("src/rpglobals")
+local RPCheckEntities = require("src/rpcheckentities")
+local RPFastClear     = require("src/rpfastclear")
+local RPSchoolbag     = require("src/rpschoolbag")
+local RPSoulJar       = require("src/rpsouljar")
+local RPFastTravel    = require("src/rpfasttravel")
+local RPSpeedrun      = require("src/rpspeedrun")
 
 --
 -- PostUpdate functions

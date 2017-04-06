@@ -167,17 +167,40 @@ globals.log = tracer.console({
     }
 });
 
-// Version
 $(document).ready(function() {
+    // Version
     $('#title-version').html(version);
     $('#settings-version').html(version);
+
+    // Preload some sounds by playing all of them
+    let soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
+    for (let file of soundFiles) {
+        let audio = new Audio('assets/sounds/' + file + '.mp3');
+        audio.volume = 0;
+        audio.play();
+    }
+    for (let i = 1; i <= 16; i++) {
+        let audio = new Audio('assets/sounds/place/' + i + '.mp3');
+        audio.volume = 0;
+        audio.play();
+    }
+
+    // Check to see if we got an error during page initialization
+    if (globals.initError !== null) {
+        misc.errorShow(globals.initError);
+    }
 });
+
+/*
+    We can't use the "misc.errorShow()" function yet for the following initialization-related stuff because the document is not ready
+    So, just store the error in the "globals.initError" variable
+*/
 
 // Word list
 let wordListLocation = path.join(__dirname, 'assets', 'words', 'words.txt');
 fs.readFile(wordListLocation, function(err, data) {
     if (err) {
-        misc.errorShow('Failed to read the "' + wordListLocation + '" file: ' + err);
+        globals.initError = 'Failed to read the "' + wordListLocation + '" file: ' + err;
         return;
     }
     globals.wordList = data.toString().split('\n');
@@ -215,9 +238,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
             }
         }
         if (found === false) {
-            $(document).ready(function() { // We have to wait for the page to be loaded or else it won't show the error
-                misc.errorShow('Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.');
-            });
+            globals.initError = 'Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.';
         }
     }
 
@@ -228,14 +249,14 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
 
 } else {
-    misc.errorShow('The platform of "' + process.platform + '" is not supported."');
+    globals.initError = 'The platform of "' + process.platform + '" is not supported."';
 }
 let logFilePath = settings.get('logFilePath');
 if (typeof logFilePath === 'undefined' || logFilePath === null) {
     logFilePath = globals.defaultLogFilePath;
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
-    globals.log.info('logFilePath was undefined or null on boot, set it was set to: ' + globals.defaultLogFilePath);
+    globals.log.info('logFilePath was undefined or null on boot, it was set to: ' + globals.defaultLogFilePath);
 }
 
 // Get the default mod directory
@@ -253,25 +274,41 @@ if (isDev || fs.existsSync(modPathDev) ) {
     globals.modPath = path.join(modPath, globals.modName);
 }
 
+// Store what their R+9/14 character order is
+try {
+    for (let i = 1; i <= 3; i++) {
+        let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+        let json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
+        if (typeof json.order9 === 'undefined') {
+            globals.modLoader['order9-' + i] = globals.order9;
+        } else {
+            globals.modLoader['order9-' + i] = json.order9;
+        }
+        if (typeof json.order9 === 'undefined') {
+            globals.modLoader['order14-' + i] = globals.order14;
+        } else {
+            globals.modLoader['order14-' + i] = json.order14;
+        }
+    }
+} catch(err) {
+    globals.initError = 'Error while reading the "save#.dat" file: ' + err;
+}
+
 // Item list
 let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
-fs.readFile(itemListLocation, 'utf8', function(err, data) {
-    if (err) {
-        misc.errorShow('Failed to read the "' + itemListLocation + '" file: ' + err);
-        return;
-    }
-    globals.itemList = JSON.parse(data);
-});
+try {
+    globals.itemList = JSON.parse(fs.readFileSync(itemListLocation, 'utf8'));
+} catch(err) {
+    globals.initError = 'Failed to read the "' + itemListLocation + '" file: ' + err;
+}
 
 // Trinket list
 let trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.json');
-fs.readFile(trinketListLocation, 'utf8', function(err, data) {
-    if (err) {
-        misc.errorShow('Failed to read the "' + trinketListLocation + '" file: ' + err);
-        return;
-    }
-    globals.trinketList = JSON.parse(data);
-});
+try {
+    globals.trinketList = JSON.parse(fs.readFileSync(trinketListLocation, 'utf8'));
+} catch(err) {
+    globals.initError = 'Failed to read the "' + trinketListLocation + '" file: ' + err;
+}
 
 // We need to have a list of all of the emotes for the purposes of tab completion
 let emotePath = path.join(__dirname, 'assets', 'img', 'emotes');
@@ -279,18 +316,3 @@ globals.emoteList = misc.getAllFilesFromFolder(emotePath);
 for (let i = 0; i < globals.emoteList.length; i++) { // Remove ".png" from each elemet of emoteList
     globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long
 }
-
-// Preload some sounds by playing all of them
-$(document).ready(function() {
-    let soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
-    for (let file of soundFiles) {
-        let audio = new Audio('assets/sounds/' + file + '.mp3');
-        audio.volume = 0;
-        audio.play();
-    }
-    for (let i = 1; i <= 16; i++) {
-        let audio = new Audio('assets/sounds/place/' + i + '.mp3');
-        audio.volume = 0;
-        audio.play();
-    }
-});

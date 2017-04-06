@@ -5,6 +5,7 @@ local RPSpeedrun = {}
 --
 
 local RPGlobals = require("src/rpglobals")
+local RPSaveDat = require("src/rpsavedat")
 
 --
 -- Variables
@@ -12,10 +13,38 @@ local RPGlobals = require("src/rpglobals")
 
 RPSpeedrun.charNum = 1
 RPSpeedrun.sprites = {}
-RPSpeedrun.startTime = 0
+RPSpeedrun.startedTime = 0
 RPSpeedrun.finished = false
-RPSpeedrun.finishTime = 0
+RPSpeedrun.finishedTime = 0
+RPSpeedrun.choosetype = 0
 RPSpeedrun.chooseOrder = {}
+RPSpeedrun.charPosition9 = { -- The format is character number, X, Y
+  {2, 2, 1}, -- Cain
+  {3, 4, 1}, -- Judas
+  {4, 6, 1}, -- Blue Baby
+  {5, 8, 1}, -- Eve
+  {6, 10, 1}, -- Samson
+  {7, 2, 3}, -- Azazel
+  {8, 4, 3}, -- Lazarus
+  {10, 8, 3}, -- The Lost
+  {14, 10, 3}, -- Keeper
+}
+RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
+  {0, 1, 1}, -- Isaac
+  {1, 3, 1}, -- Magdalene
+  {2, 5, 1}, -- Cain
+  {3, 7, 1}, -- Judas
+  {4, 9, 1}, -- Blue Baby
+  {5, 11, 1}, -- Eve
+  {6, 1, 3}, -- Samson
+  {7, 3, 3}, -- Azazel
+  {8, 5, 3}, -- Lazarus
+  {9, 7, 3}, -- Eden
+  {10, 9, 3}, -- The Lost
+  {13, 11, 3}, -- Lilith
+  {14, 1, 5}, -- Keeper
+  {15, 11, 5}, -- Apollyon
+}
 
 --
 -- Speedrun functions
@@ -45,10 +74,12 @@ function RPSpeedrun:PostNewRoomChangeOrder()
   -- so we have one door at the bottom
   room:RemoveDoor(3) -- The bottom door is always 3
 
-  -- Reset the order
+  -- Reset the graphics and the order
+  RPSpeedrun.chooseType = 0
   RPSpeedrun.chooseOrder = {}
+  RPSpeedrun.sprites = {}
 
-  -- Spawn two buttons
+  -- Spawn two buttons for the R+9 and R+14 selection
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, RPGlobals:GridToPos(4, 5), true) -- 20
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, RPGlobals:GridToPos(8, 5), true) -- 20
 
@@ -57,7 +88,7 @@ function RPSpeedrun:PostNewRoomChangeOrder()
 end
 
 -- Called from the PostUpdate callback
-function RPSpeedrun:CheckButtonPressed(gridEntity, i)
+function RPSpeedrun:CheckButtonPressed(gridEntity)
   local challenge = Isaac.GetChallenge()
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
     return
@@ -71,61 +102,121 @@ function RPSpeedrun:CheckButtonPressed(gridEntity, i)
      gridEntity.Position.X == RPGlobals:GridToPos(4, 5).X and
      gridEntity.Position.Y == RPGlobals:GridToPos(4, 5).Y then
 
-    -- The "R+9" button was pressed, so remove both of the buttons
+    RPSpeedrun.chooseType = 9
+    Isaac.DebugString("The R+9 button was pressed.")
+
+    -- Remove both of the buttons
     local num = room:GetGridSize()
-    for j = 1, num do
-      local gridEntity2 = room:GetGridEntity(j)
-      if gridEntity2 ~= nil and gridEntity:ToPressurePlate() ~= nil then
-        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+    for i = 1, num do
+      local gridEntity2 = room:GetGridEntity(i)
+      if gridEntity2 ~= nil then
+        local test = gridEntity2:ToPressurePlate()
+        if test ~= nil then
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+        end
       end
     end
 
-    -- Spawn the character selection graphics next to the buttons
-    RPSpeedrun.sprites.character = {}
-    for playerType = 0, 13 do
-      if playerType ~= PlayerType.PLAYER_ISAAC and -- 0
-         playerType ~= PlayerType.PLAYER_MAGDALENA and -- 1
-         playerType ~= PlayerType.PLAYER_EDEN and -- 9
-         playerType ~= PlayerType.PLAYER_LAZARUS2 and -- 11
-         playerType ~= PlayerType.PLAYER_BLACKJUDAS and -- 12
-         playerType ~= PlayerType.PLAYER_LILITH and -- 13
-         playerType ~= PlayerType.PLAYER_APOLLYON then -- 15
+    RPSpeedrun.sprites.characters = {}
+    for i = 1, #RPSpeedrun.charPosition9 do
+      -- Spawn 9 buttons for the 9 characters
+      Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition9[i][2], RPSpeedrun.charPosition9[i][3]), true)
 
-        RPSpeedrun.sprites.character[i] = Sprite()
-        RPSpeedrun.sprites.character[i]:Load("gfx/custom/characters/" .. tostring(i) .. ".anm2", true)
-        RPSpeedrun.sprites.character[i]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-        RPSpeedrun.sprites.character[i].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
-        -- Fade the character so it looks like a ghost
-      end
+      -- Spawn the character selection graphics next to the buttons
+      local newIndex = #RPSpeedrun.sprites.characters + 1
+      RPSpeedrun.sprites.characters[newIndex] = Sprite()
+      local charNum = RPSpeedrun.charPosition9[i][1]
+      RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+      RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+      -- Fade the character so it looks like a ghost
     end
 
   elseif gridEntity:GetSaveState().State == 3 and
          gridEntity.Position.X == RPGlobals:GridToPos(8, 5).X and
          gridEntity.Position.Y == RPGlobals:GridToPos(8, 5).Y then
 
-    -- The "R+14" button was pressed, so remove both of the buttons
+    RPSpeedrun.chooseType = 14
+    Isaac.DebugString("The R+14 button was pressed.")
+
+    -- Remove both of the buttons
     local num = room:GetGridSize()
-    for j = 1, num do
-      local gridEntity2 = room:GetGridEntity(j)
-      if gridEntity2 ~= nil and gridEntity:ToPressurePlate() ~= nil then
-        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+    for i = 1, num do
+      local gridEntity2 = room:GetGridEntity(i)
+      if gridEntity2 ~= nil then
+        local test = gridEntity2:ToPressurePlate()
+        if test ~= nil then
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+        end
       end
     end
 
-    -- Spawn the character selection graphics next to the buttons
-    RPSpeedrun.sprites.character = {}
-    for playerType = 0, 13 do
-      if playerType ~= PlayerType.PLAYER_LAZARUS2 and -- 11
-         playerType ~= PlayerType.PLAYER_BLACKJUDAS then -- 12
+    RPSpeedrun.sprites.characters = {}
+    for i = 1, #RPSpeedrun.charPosition14 do
+      -- Spawn 14 buttons for the 14 characters
+      Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3]), true)
 
-        RPSpeedrun.sprites.character[i] = Sprite()
-        RPSpeedrun.sprites.character[i]:Load("gfx/custom/characters/" .. tostring(i) .. ".anm2", true)
-        RPSpeedrun.sprites.character[i]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-        RPSpeedrun.sprites.character[i].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
-        -- Fade the character so it looks like a ghost
+      -- Spawn the character selection graphics next to the buttons
+      local newIndex = #RPSpeedrun.sprites.characters + 1
+      RPSpeedrun.sprites.characters[newIndex] = Sprite()
+      local charNum = RPSpeedrun.charPosition14[i][1]
+      RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+      RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+      -- Fade the character so it looks like a ghost
+    end
+  end
+
+  if RPSpeedrun.chooseType == 9 then
+    for i = 1, #RPSpeedrun.charPosition9 do
+      local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition9[i][2], RPSpeedrun.charPosition9[i][3])
+      if gridEntity:GetSaveState().State == 3 and
+         gridEntity.VarData == 0 and
+         gridEntity.Position.X == posButton.X and
+         gridEntity.Position.Y == posButton.Y then
+
+        -- We have pressed one of the buttons corresponding to the characters
+        gridEntity.VarData = 1 -- Mark that we have pressed this button already
+        RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition9[i][1]
+        if #RPSpeedrun.chooseOrder == 9 then
+          -- We have finished choosing our 9 characters
+          RPGlobals.race.order9 = RPSpeedrun.chooseOrder
+          RPSaveDat:Save()
+          game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+        end
+
+        -- Change the graphic to that of a number
+        RPSpeedrun.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
+        RPSpeedrun.sprites.characters[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
+        RPSpeedrun.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
       end
     end
+  elseif RPSpeedrun.chooseType == 14 then
+    for i = 1, #RPSpeedrun.charPosition14 do
+      local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3])
+      if gridEntity:GetSaveState().State == 3 and
+         gridEntity.VarData == 0 and
+         gridEntity.Position.X == posButton.X and
+         gridEntity.Position.Y == posButton.Y then
 
+        -- We have pressed one of the buttons corresponding to the characters
+        gridEntity.VarData = 1 -- Mark that we have pressed this button already
+        RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition14[i][1]
+        if #RPSpeedrun.chooseOrder == 14 then
+          -- We have finished choosing our 14 characters
+          RPGlobals.race.order14 = RPSpeedrun.chooseOrder
+          RPSaveDat:Save()
+          game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+        end
+
+        -- Change the graphic to that of a number
+        RPSpeedrun.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
+        RPSpeedrun.sprites.characters[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
+        RPSpeedrun.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
+      end
+    end
   end
 end
 
@@ -200,6 +291,60 @@ function RPSpeedrun:DisplayCharProgress()
     local posDigit4 = Vector(startingX + digitLength + adjustment2 + 3 + digitLength, startingY)
     RPSpeedrun.sprites.digit[3]:SetFrame("Default", digit4)
     RPSpeedrun.sprites.digit[3]:RenderLayer(0, posDigit4)
+  end
+end
+
+function RPSpeedrun:DisplayCharSelectRoom()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+
+  if RPSpeedrun.sprites.button1 ~= nil then
+    local posButton1 = RPGlobals:GridToPos(4, 4)
+    RPSpeedrun.sprites.button1:RenderLayer(0, posButton1)
+  end
+  if RPSpeedrun.sprites.button2 ~= nil then
+    local posButton2 = RPGlobals:GridToPos(8, 4)
+    RPSpeedrun.sprites.button2:RenderLayer(0, posButton2)
+  end
+  if RPSpeedrun.sprites.characters ~= nil then
+    local posNull = Vector(0, 0)
+    if #RPSpeedrun.sprites.characters == 9 then
+      for i = 1, #RPSpeedrun.sprites.characters do
+        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition9[i][2], RPSpeedrun.charPosition9[i][3] - 1)
+        local posRender = Isaac.WorldToRenderPosition(posGame, false)
+        posRender.Y = posRender.Y + 10
+        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
+      end
+    elseif #RPSpeedrun.sprites.characters == 14 then
+      for i = 1, #RPSpeedrun.sprites.characters do
+        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3] - 1)
+        local posRender = Isaac.WorldToRenderPosition(posGame, false)
+        posRender.Y = posRender.Y + 10
+        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
+      end
+    end
+  end
+end
+
+-- Called from the PostRender callback
+function RPSpeedrun:CheckChallenge()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
+
+  -- Disable the controls or else the player will be able to move around while the screen is still black
+  if gameFrameCount < 1 then
+    player.ControlsEnabled = false
+  else
+    player.ControlsEnabled = true
   end
 end
 

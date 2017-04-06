@@ -35,7 +35,7 @@ function RPCheckEntities:Grid()
         RPFastTravel:ReplaceCrawlspace(gridEntity, i)
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
-        RPSpeedrun:CheckButtonPressed(gridEntity, i)
+        RPSpeedrun:CheckButtonPressed(gridEntity)
       end
     end
   end

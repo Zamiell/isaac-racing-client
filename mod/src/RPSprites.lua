@@ -56,11 +56,7 @@ function RPSprites:Init(spriteType, spriteName)
     end
 
   elseif spriteType == "place" then
-    if spriteName == "pre" or tonumber(spriteName) <= 16 then
-      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
-    else
-      Isaac.DebugString("Places beyond 16 are not supported.")
-    end
+    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
 
   else
     RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)

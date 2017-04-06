@@ -60,6 +60,8 @@ const opn            = require('opn');
 // Constants
 const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+const order9     = [14, 10, 4, 6, 11, 5, 2, 3, 7]; // For the R+9 speedrun category; numbers correspond to the Lua character enums
+const order14    = [14, 10, 4, 6, 11, 5, 2, 3, 7, 1, 0, 13, 15, 9]; // For the R+14 speedrun category; numbers correspond to the Lua character enums
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object
@@ -318,12 +320,37 @@ app.on('before-quit', function() {
             modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
         }
         for (let i = 1; i <= 3; i++) {
+            // Find the location of the file
             let saveDat = path.join(modsPath, modNameDev, 'save' + i + '.dat');
             if (fs.existsSync(saveDat) === false) {
                 saveDat = path.join(modsPath, modName, 'save' + i + '.dat');
             }
-            let saveDatDefaults = path.join(path.dirname(saveDat), 'save-defaults.dat');
-            fs.copySync(saveDatDefaults, saveDat);
+
+            // Read it and set all non-speedrun order variables to defaults
+            let json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
+            json.status = 'none';
+            json.myStatus = 'not ready';
+            json.rType = 'unranked';
+            json.solo = false;
+            json.rFormat = 'unseeded';
+            json.character = 'Judas';
+            json.goal = 'Blue Baby';
+            json.seed = '-';
+            json.startingItems = [];
+            json.countdown = -1;
+            json.placeMid = 0;
+            json.place = 1;
+            if (typeof json.order9 === 'undefined') {
+                json.order9 = order9;
+            }
+            if (typeof json.order14 === 'undefined') {
+                json.order14 = order14;
+            }
+            try {
+                fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');
+            } catch(err) {
+                log.error('Error while writing the "save#.dat" file: ' + err);
+            }
         }
         log.info('Copied over default "save1.dat", "save2.dat", and "save3.dat" files.');
     } else {
