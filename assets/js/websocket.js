@@ -371,7 +371,7 @@ exports.init = function(username, password, remember) {
             raceScreen.participantAdd(i);
         }
 
-        // Also, update the mod with our placeMid and place
+        // Update the mod with "myStatus", "placeMid" and "place"
         modLoader.sendPlace();
     });
 
@@ -680,7 +680,9 @@ exports.init = function(username, password, remember) {
                 break;
             }
         }
-        // (the mod will be notified as part of the "placeMidRecalculateAll()" function, which is called in the "participantsSetStatus()" function above)
+
+        // Update the mod with "myStatus", "placeMid" and "place"
+        modLoader.sendPlace();
     }
 
     globals.conn.on('raceSetRuleset', function(data) {

@@ -119,6 +119,7 @@ const sendPlace = function() {
             }
 
             if (racer.name === globals.myUsername) {
+                globals.modLoader.myStatus = racer.status;
                 globals.modLoader.placeMid = racer.placeMid;
                 globals.modLoader.place = racer.place;
                 if (racer.status === 'racing') {
@@ -133,8 +134,14 @@ const sendPlace = function() {
         // Count how many people are ready
         let numReady = 0;
         for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-            if (globals.raceList[globals.currentRaceID].racerList[i].status === 'ready') {
+            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+
+            if (racer.status === 'ready') {
                 numReady++;
+            }
+
+            if (racer.name === globals.myUsername) {
+                globals.modLoader.myStatus = racer.status;
             }
         }
         globals.modLoader.placeMid = numReady;
@@ -142,6 +149,6 @@ const sendPlace = function() {
     }
 
     send();
-    globals.log.info('modLoader - Sent a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
+    globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
 };
 exports.sendPlace = sendPlace;

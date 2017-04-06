@@ -1,8 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.4.19* - April 5th, 2017
+
+* There will now be an x or a checkmark next to the "pre-race" graphic to indicate whether you are ready or not.
+* Replaced the "Unranked" and "Mega Satan" in-game icons with better ones. (Thanks to SnugBoat for drawing the cake.)
+* Added the deIlluminati emote.
+
 ### *v0.4.18* - April 4th, 2017
 
-* Trapdoors should be behave more similarly to vanilla now in that they won't open right away if the player is standing relatively close. If you continue to accidently fall into trapdoors for any reason, please let me know.
+* Trapdoors should be behave more similarly to vanilla now in that they won't open right away if the player is standing relatively close. If you continue to accidently fall into trapdoors, please let me know.
 * Fixed the bug where using a Glowing Hour Glass on the first room of a floor would make your character permanently invisible. (Thanks Fyon and CrafterLynx)
 
 ### *v0.4.16* - April 3rd, 2017

@@ -621,21 +621,17 @@ const participantsSetStatus = function(i, initial = false) {
     statusDiv += '<span lang="en">' + racer.status.capitalize() + '</span>';
     $('#race-participants-table-' + racer.name + '-status').html(statusDiv);
 
+    // Update the place column of the row
     if (racer.status === 'finished') {
-        // Update the place column of the row
         let ordinal = misc.ordinal_suffix_of(racer.place);
         let placeDiv = '<span style="color: blue;">' + ordinal + '</span>';
         $('#race-participants-table-' + racer.name + '-place').html(placeDiv);
-
-        // Recalculate everyones mid-race places
-        placeMidRecalculateAll();
     } else if (racer.status === 'quit') {
-        // Update the place column of the row
         $('#race-participants-table-' + racer.name + '-place').html('-');
-
-        // Recalculate everyones mid-race places
-        placeMidRecalculateAll();
     }
+
+    // Recalculate everyones mid-race places (and let the mod know)
+    placeMidRecalculateAll();
 
     // Find out the number of people left in the race
     let numLeft = 0;
@@ -723,9 +719,6 @@ function placeMidRecalculateAll() {
         let ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $('#race-participants-table-' + racer.name + '-place').html(ordinal);
     }
-
-    // Also, update the mod with our placeMid and place
-    modLoader.sendPlace();
 }
 
 const participantsSetFloor = function(i) {
