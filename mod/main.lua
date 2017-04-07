@@ -6,6 +6,9 @@
 --[[
 
 TODO:
+- look at timer in 4:30 of VOD of today
+- Set the racer's character at the start of a race for them (not possible to modify item pools via current bindings)
+- fix bug with red x not showing if you are the last person to ready up
 - place thing doesn't update
 - b1 off limits doesn't work
 - mega satan door doesn't open after backtracking
@@ -38,7 +41,6 @@ TODO DIFFICULT:
 - Make Devil / Angel Rooms given in order and independent of floor
 
 TODO CAN'T FIX:
-- Set the racer's character at the start of a race for them (not possible to modify item pools via current bindings)
 - Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
   - When spawning an item via the console (like "spawn 5.100.12"), it does NOT remove it from item pools.
   - When spawning a specific item with Lua (like "game:Spawn(5, 100, Vector(300, 300), Vector(0, 0), nil, 12, 0)"),

@@ -38,10 +38,12 @@ function RPSaveDat:Load()
     local oldRace = RPGlobals.race
 
     -- The server will write JSON data for us to the "save#.dat" file in the mod subdirectory
-    RPGlobals.race = json.decode(Isaac.LoadModData(RPGlobals.RacingPlus))
-
-    -- Sometimes loading can fail, I'm not sure why; give up for now and try again on the next frame
-    if RPGlobals.race == nil then
+    local function loadJSON()
+      RPGlobals.race = json.decode(Isaac.LoadModData(RPGlobals.RacingPlus))
+    end
+    if pcall(loadJSON) == false then
+      -- Sometimes loading can fail if the file is currently being being written to,
+      -- so give up for now and try again on the next frame
       RPGlobals.raceVars.loadOnNextFrame = true
       RPGlobals.race = oldRace -- Restore the backup
       Isaac.DebugString("Loading the \"save.dat\" file failed. Trying again on the next frame...")
@@ -77,13 +79,15 @@ function RPSaveDat:Load()
     end
     if oldRace.myStatus ~= RPGlobals.race.myStatus then
       Isaac.DebugString("ModData myStatus changed: " .. RPGlobals.race.myStatus)
-      if RPGlobals.race.status == "open" and
+      if (RPGlobals.race.status == "open" or
+          RPGlobals.race.status == "starting") and
          RPGlobals.race.myStatus == "not ready" and
          roomIndex ~= GridRooms.ROOM_DEBUG_IDX then -- -3
 
         RPSprites:Init("place", "pre1")
 
-      elseif RPGlobals.race.status == "open" and
+      elseif (RPGlobals.race.status == "open" or
+              RPGlobals.race.status == "starting") and
              RPGlobals.race.myStatus == "ready" and
              roomIndex ~= GridRooms.ROOM_DEBUG_IDX then -- -3
 
@@ -122,7 +126,9 @@ function RPSaveDat:Load()
     if oldRace.place ~= RPGlobals.race.place then
       Isaac.DebugString("ModData place changed: " .. tostring(RPGlobals.race.place))
     end
-    if oldRace.order9 ~= nil and #oldRace.order9 >= 1 then
+    if oldRace.order9 ~= nil and RPGlobals.race.order9 ~= nil and
+       #oldRace.order9 >= 1 and #RPGlobals.race.order9 >= 1 then
+
       for i = 1, #oldRace.order9 do
         if oldRace.order9[i] ~= RPGlobals.race.order9[i] then
           Isaac.DebugString("ModData order9 changed.")
@@ -130,7 +136,9 @@ function RPSaveDat:Load()
         end
       end
     end
-    if oldRace.order14 ~= nil and #oldRace.order14 >= 1 then
+    if oldRace.order14 ~= nil and #oldRace.order14 >= 1 and
+       #oldRace.order14 >= 1 and #RPGlobals.race.order14 >= 1 then
+
       for i = 1, #oldRace.order14 do
         if oldRace.order14[i] ~= RPGlobals.race.order14[i] then
           Isaac.DebugString("ModData order14 changed.")

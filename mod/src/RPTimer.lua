@@ -59,14 +59,14 @@ function RPTimer:Display()
   local elapsedTime
   if challenge ~= 0 then
     if RPSpeedrun.finished then
-      elapsedTime = RPSpeedrun.finishedTime - RPSpeedrun.startedTime
+      elapsedTime = RPSpeedrun.finishedTime
     else
       elapsedTime = Isaac.GetTime() - RPSpeedrun.startedTime
       -- "Isaac.GetTime()" is analogous to Lua's "os.clock()"
     end
   else
     if RPGlobals.raceVars.finished then
-      elapsedTime = RPGlobals.raceVars.finishedTime - RPGlobals.raceVars.startedTime
+      elapsedTime = RPGlobals.raceVars.finishedTime
     else
       elapsedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
       -- "Isaac.GetTime()" is analogous to Lua's "os.clock()"

@@ -131,7 +131,9 @@ function RPFastClear:CheckAlive()
          npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
          npc.Type == EntityType.ENTITY_MEATBALL or -- 290
          npc.Type == EntityType.ENTITY_BLISTER or -- 303
-         npc.Type == EntityType.ENTITY_BROWNIE then -- 402
+         npc.Type == EntityType.ENTITY_BROWNIE or -- 402
+         npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
+         npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
 
         -- The following champions split:
         -- 1) Pulsing Green champion, spawns 2 versions of itself

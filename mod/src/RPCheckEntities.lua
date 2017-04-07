@@ -341,7 +341,7 @@ function RPCheckEntities:NonGrid()
 
       -- Check to see if we are touching the trophy
       RPGlobals.raceVars.finished = true
-      RPGlobals.raceVars.finishedTime = Isaac.GetTime()
+      RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
       entity:Remove()
       player:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")
       Isaac.DebugString("Finished run.") -- The client looks for this line to know when the goal was achieved
@@ -633,8 +633,9 @@ function RPCheckEntities:ReplacePedestal(entity)
     -- If we don't do this, you can take both of the pedestals in a double Treasure Room
     newPedestal:ToPickup().TheresOptionsPickup = entity:ToPickup().TheresOptionsPickup
 
-    -- Also remove the vanilla delay that is imposed upon newly spawned collectible items
-    newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
+    -- Also reduce the vanilla delay that is imposed upon newly spawned collectible items
+    -- (this is commented out because people were accidentally taking items)
+    --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
 
     -- Add it to the tracking table so that we don't replace it again
     -- (don't add random items to the index in case a banned item rolls into another banned item)
@@ -859,7 +860,9 @@ function RPCheckEntities:NPC(entity)
 
   -- Do extra monitoring for blue variant bosses that drop extra soul hearts
   -- (should only be Larry Jr., Mom, Famine, and Gemini)
-  if npc:IsBoss() and npc.SubType ~= 0 then -- From blcd
+  -- (this algorithm is from blcd, reverse engineered from the game binary)
+  -- (Big Horn's hands are not SubType 0, so we have to explicitly filter those out)
+  if npc:IsBoss() and npc.SubType ~= 0 and npc.Type ~= EntityType.ENTITY_BIG_HORN then -- 411
     RPGlobals.run.bossHearts.extra = true
   end
 
