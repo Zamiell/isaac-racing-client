@@ -6,6 +6,8 @@
 * Fixed the bug where Big Horn would drop an extra heart under certain conditions.
 * Fixed the bug where the Mega Satan fight could end early under certain conditions. (Thanks PassionDrama and ReidMercury__)
 * Fixed the bug where the timer would get messed up under certain conditions. (Thanks PassionDrama)
+* Fixed the bug where the trapdoor would troll you after coming out of a Devil Room.
+* Fixed the bug where it would not show the correct "pre-race" graphic under certain conditions. (Thanks blcd)
 * Added the SexyDaddy emote.
 
 ### *v0.4.19* - April 5th, 2017
