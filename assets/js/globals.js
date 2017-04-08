@@ -10,8 +10,8 @@ const secure     = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
 const fadeTime   = 300; // In milliseconds
 const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
-const order9     = [14, 10, 4, 6, 11, 5, 2, 3, 7]; // For the R+9 speedrun category; numbers correspond to the Lua character enums
-const order14    = [14, 10, 4, 6, 11, 5, 2, 3, 7, 1, 0, 13, 15, 9]; // For the R+14 speedrun category; numbers correspond to the Lua character enums
+const order9     = [14, 10, 4, 6, 8, 5, 2, 3, 7]; // For the R+9 speedrun category; numbers correspond to the Lua character enums
+const order14    = [14, 10, 4, 6, 8, 5, 2, 3, 7, 1, 0, 13, 15, 9]; // For the R+14 speedrun category; numbers correspond to the Lua character enums
 
 // Imports
 const isDev = nodeRequire('electron-is-dev');
@@ -51,7 +51,13 @@ module.exports = {
         countdown: -1,
         placeMid: 0,
         place: 1,
-        // order9-1, order14-1, order9-2, order14-2, order9-3, and order14-3 will be filled in in main.js
+        numEntrants: 1,
+        'order9-1': null, // The rest are filled in main.js
+        'order14-1': null,
+        'order9-2': null,
+        'order14-2': null,
+        'order9-3': null,
+        'order14-3': null,
     },
     modName: modName,
     modNameDev: modNameDev,

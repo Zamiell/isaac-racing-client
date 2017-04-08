@@ -60,8 +60,8 @@ const opn            = require('opn');
 // Constants
 const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
-const order9     = [14, 10, 4, 6, 11, 5, 2, 3, 7]; // For the R+9 speedrun category; numbers correspond to the Lua character enums
-const order14    = [14, 10, 4, 6, 11, 5, 2, 3, 7, 1, 0, 13, 15, 9]; // For the R+14 speedrun category; numbers correspond to the Lua character enums
+const order9     = [14, 10, 4, 6, 8, 5, 2, 3, 7]; // For the R+9 speedrun category; numbers correspond to the Lua character enums
+const order14    = [14, 10, 4, 6, 8, 5, 2, 3, 7, 1, 0, 13, 15, 9]; // For the R+14 speedrun category; numbers correspond to the Lua character enums
 
 // Global variables
 var mainWindow; // Keep a global reference of the window object

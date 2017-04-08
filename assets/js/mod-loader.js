@@ -87,25 +87,23 @@ const send = function() {
 exports.send = send;
 
 const reset = function() {
-    globals.log.info('modLoader - Reset all variables.');
-    globals.modLoader = {
-        status: 'none',
-        myStatus: 'not ready',
-        rType: 'unranked',
-        rFormat: 'unseeded',
-        character: 'Judas',
-        goal: 'Blue Baby',
-        seed: '-',
-        startingBuild: -1,
-        countdown: -1,
-        placeMid: globals.modLoader.placeMid, // Don't reset placeMid or place, since we want to show that at the end of the race
-        place: globals.modLoader.place,
-    };
+    globals.modLoader.myStatus = 'not ready';
+    globals.modLoader.status = 'none';
+    globals.modLoader.rType = 'unranked';
+    globals.modLoader.solo = false;
+    globals.modLoader.rFormat = 'unseeded';
+    globals.modLoader.character = 'Judas';
+    globals.modLoader.goal = 'Blue Baby';
+    globals.modLoader.seed = '-';
+    globals.modLoader.startingBuild = -1;
+    globals.modLoader.countdown = -1;
+    globals.modLoader.numEntrants = 1;
     send();
+    globals.log.info('modLoader - Reset all variables.');
 };
 exports.reset = reset;
 
-// This sends an up-to-date placeMid and place to the mod
+// This sends an up-to-date myStatus, numEntrants, placeMid and place to the mod
 const sendPlace = function() {
     if (globals.raceList[globals.currentRaceID].status === 'in progress') {
         // Find our value of "placeMid"
@@ -145,10 +143,10 @@ const sendPlace = function() {
             }
         }
         globals.modLoader.placeMid = numReady;
-        globals.modLoader.place = globals.raceList[globals.currentRaceID].racerList.length;
     }
+    globals.modLoader.numEntrants = globals.raceList[globals.currentRaceID].racerList.length;
 
     send();
-    globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
+    globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a numEntrants of "' + globals.modLoader.numEntrants + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
 };
 exports.sendPlace = sendPlace;

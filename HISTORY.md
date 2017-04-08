@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.5.0* - April 8th, 2017
+
+* Introducing a brand new custom challenge for R+9 and R+14 speedruns!
+  * This mode will automatically take you from character to character upon run completion. No more menuing!
+  * This run will show a timer on screen, similar to how races work.
+  * If you are in the middle of a run and you want to start over, you can hold R to go back to the first character without having to go back to the menu at all.
+  * You can set your character order by using the custom "Change Char Order" challenge.
+* Isaac, Magdalene, Lilith, and Apollyon are set back to their vanilla starting items. They will still get their old additional starting items in the R+9/14 custom challenge.
+* Added sparklies and fireworks if you complete a race with 3 or more people or finish a R+9/14 speedrun. (Thanks to Chronometrics for helping to code this.)
+* Fixed the bug where Eden's Soul would always be fully charged if you had the Schoolbag. (Thanks Lobsterosity)
+* Fixed the bug where the recharge sound would play during a reset on potato computers.
+* Added the VapeNation emote. (Requested by LogBasePotato)
+
 ### *v0.4.20* - April 7th, 2017
 
 * Increased the pedestal pickup delay on freshly spawned items from 15 to 20. (It is 20 in vanilla.) (Thanks Lobsterosity)

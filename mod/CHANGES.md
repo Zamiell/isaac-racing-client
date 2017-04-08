@@ -13,8 +13,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
 1) to reward skillful play (in the context of speedrunning and racing)
 2) to make the game more fun to play
 3) to fix bugs and imperfections
-4) to make every character have at least one significantly unique thing about them
-5) to keep the game as "vanilla" as possible
+4) to keep the game as "vanilla" as possible
 
 <br />
 
@@ -29,16 +28,9 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Judas starts with half a red heart and half a soul heart.
   * Blue Baby starts with three and a half soul hearts.
   * Azazel starts with half a red heart and half a soul heart.
-* Isaac starts with The Battery.
-* Maggy starts with the Soul Jar, a new passive item with the following effects:
-  * You no longer gain health from soul/black hearts.
-  * You gain a red heart container after picking up 4 soul/black hearts.
-  * You always have a 100% devil deal chance if no damage is taken.
 * Judas starts with a bomb instead of 3 coins.
 * Eden starts with the Schoolbag. She will start with her random active item inside the bag.
-* Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
 * Keeper starts with Greed's Gullet, Duality, and 50 cents.
-* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 
 ### 2) No Curses
 
@@ -50,7 +42,7 @@ Devil Rooms and Angel Rooms without item pedestals in them have been removed.
 
 ### 4) Wrath of the Lamb Style Room Clear
 
-Room clear was incorrectly ported from Wrath of Lamb to Rebirth; doors are intended to open at the beginning of an enemy's death animation, not at the end. The Racing+ mod fixes this to be the way it was originally intended.
+Room clear was incorrectly ported from Wrath of Lamb to Rebirth; doors are supposed to open at the beginning of an enemy's death animation, not at the end. The Racing+ mod fixes this to be the way it was originally intended.
 
 ### 5) Room Fixes
 
@@ -142,6 +134,16 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 ### Mega Satan
 
 * A Get out of Jail Free Card will now spawn next to the Mega Satan door on both The Chest and the Dark Room.
+
+### R+14 Character Speedruns
+
+* Isaac starts with The Battery.
+* Maggy starts with the Soul Jar, a new passive item with the following effects:
+  * You no longer gain health from soul/black hearts.
+  * You gain a red heart container after picking up 4 soul/black hearts.
+  * You always have a 100% devil deal chance if no damage is taken.
+* Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
+* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 
 <br />
 

@@ -463,9 +463,9 @@ exports.init = function(username, password, remember) {
                 raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
 
                 // Update the mod
-                globals.modLoader.place = globals.raceList[data.id].racerList.length;
+                globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
                 modLoader.send();
-                globals.log.info('modLoader - Sent a race place of "' + globals.modLoader.place + '" (the number of people in the race).');
+                globals.log.info('modLoader - Sent a numEntrants of "' + globals.modLoader.numEntrants + '".');
             }
         }
     }
@@ -553,9 +553,9 @@ exports.init = function(username, password, remember) {
             }
 
             // Update the mod
-            globals.modLoader.place = globals.raceList[data.id].racerList.length;
+            globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
             modLoader.send();
-            globals.log.info('modLoader - Sent a race place of "' + globals.modLoader.place + '" (the number of people in the race).');
+            globals.log.info('modLoader - Sent a race numEntrants of "' + globals.modLoader.numEntrants + '".');
         }
     }
 

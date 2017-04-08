@@ -45,12 +45,6 @@ number_version = data['version']
 version = 'v' + data['version']
 
 if args.skipmod == False:
-    # Fill the "save.dat" file with all default values
-    save_dat_defaults = os.path.join(mod_dir, 'save-defaults.dat')
-    for i in range(1, 4): # This will go from 1 to 3
-        save_dat = os.path.join(mod_dir, 'save' + str(i) + '.dat')
-        shutil.copyfile(save_dat_defaults, save_dat)
-
     # Draw the version number on the title menu graphic
     large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
     small_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 6)
@@ -74,7 +68,13 @@ if args.skipmod == False:
     if args.logo:
         sys.exit()
 
-    # Check to see if we had the Basement/Cellar STBs in testing mode
+    # Fill the "save.dat" file with all default values
+    save_dat_defaults = os.path.join(mod_dir, 'save-defaults.dat')
+    for i in range(1, 4): # This will go from 1 to 3
+        save_dat = os.path.join(mod_dir, 'save' + str(i) + '.dat')
+        shutil.copyfile(save_dat_defaults, save_dat)
+
+    # Check to see if we had any floor STBs in testing mode
     rooms_dir = os.path.join(mod_dir, 'resources', 'rooms')
     for file_name in os.listdir(rooms_dir):
         if file_name.endswith('2.stb'):
@@ -95,6 +95,15 @@ if args.skipmod == False:
     except Exception as e:
         error('Failed to copy the "' + mod_dir + '" directory:', e)
     print('Copied the mod.')
+
+    # Delete the "save.dat" files so that we don't overwrite user's speedrun orders
+    for i in range(1, 4): # This will go from 1 to 3
+        save_dat = os.path.join(mod_dir, 'save' + str(i) + '.dat')
+        try:
+            os.remove(save_dat)
+        except Exception as e:
+            error('Failed to delete the "' + save_dat + '" file:', e)
+    print('Deleted the "save.dat" files.')
 
 if args.github:
     # Open the mod updater tool from Nicalis
