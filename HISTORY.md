@@ -7,8 +7,8 @@
   * This mode will show a timer on screen, similar to how races work.
   * If you are in the middle of a run and you want to start over, you can hold R to go back to the first character.
   * You can set your character order by using the custom "Change Char Order" challenge.
-  * In order for it to work with the LiveSplit auto-splitter, you have to check the box that says "Racing+ speedrun".
-* Isaac, Magdalene, Lilith, and Apollyon are set back to their vanilla starting items. They will still get their old additional starting items in the R+9/14 custom challenge.
+  * In order for it to work with the LiveSplit auto-splitter, you have to check the box that says "Racing+ speedrun" in the auto-splitter options.
+* Isaac, Magdalene, Lilith, and Apollyon are set back to their vanilla starting items. (They just get the D6 now and nothing else special. They will still get their old additional starting items in the R+9/14 custom challenge.)
 * Added sparklies and fireworks if you complete a race with 3 or more people or finish a R+9/14 speedrun. (Thanks to Chronometrics for helping to code this.)
 * Mimics and Spiked Chests will now always spawn as normal chests instead. (The final tally on the vote was 19 to 18.)
 * The beam of light on Womb 2 will no longer have the extra delay if the room is already cleared.
