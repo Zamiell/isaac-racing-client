@@ -52,9 +52,12 @@ function RPSchoolbag:AddCharge()
   -- (in the future, the Racing+ mod might completely recode The Battery to address this)
 
   -- Also keep track of Eden's Soul
-  RPGlobals.run.edensSoulCharges = RPGlobals.run.edensSoulCharges + chargesToAdd
-  if RPGlobals.run.edensSoulCharges > 12 then
-    RPGlobals.run.edensSoulCharges = 12
+  -- (charges on this specific item are tracked in order to fix vanilla bugs with the item)
+  if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
+    RPGlobals.run.edensSoulCharges = RPGlobals.run.edensSoulCharges + chargesToAdd
+    if RPGlobals.run.edensSoulCharges > 12 then
+      RPGlobals.run.edensSoulCharges = 12
+    end
   end
 end
 
@@ -136,6 +139,7 @@ function RPSchoolbag:CheckActiveCharges()
   Isaac.DebugString("Active item charges changed: " .. tostring(charges))
 end
 
+-- Called from the PostUpdate callback (the "RPCheckEntities:ReplacePedestal()" function)
 function RPSchoolbag:CheckSecondItem(entity)
   -- Local variables
   local game = Game()
@@ -143,10 +147,17 @@ function RPSchoolbag:CheckSecondItem(entity)
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
      RPGlobals.run.schoolbag.item == 0 and
-     entity:ToPickup().Touched and
-     player:HasTrinket(TrinketType.TRINKET_BUTTER) == false then
-     -- The Butter! trinket causes this to bug out
-     -- (activeItem is always equal to 0 here, so checking for that doesn't help)
+     entity:ToPickup().Touched then
+
+    -- We don't want to put the item in the Schoolbag if we dropped it from a Butter! trinket
+    -- (activeItem is always equal to 0 here, so checking for that doesn't help)
+    if player:HasTrinket(TrinketType.TRINKET_BUTTER) and
+       RPGlobals.run.usedButter == true then
+
+      RPGlobals.run.usedButter = false
+      entity:ToPickup().Touched = false
+      return
+    end
 
     -- Put the item in our Schoolbag and delete the pedestal
     RPGlobals.run.schoolbag.item = entity.SubType

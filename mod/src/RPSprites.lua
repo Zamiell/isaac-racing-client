@@ -1,10 +1,10 @@
 local RPSprites = {}
 
 --
--- Includes
+-- Variables
 --
 
-local RPGlobals = require("src/rpglobals")
+RPSprites.sprites = {}
 
 --
 -- Sprite functions
@@ -13,25 +13,25 @@ local RPGlobals = require("src/rpglobals")
 -- Call this once to load the PNG from the anm2 file
 function RPSprites:Init(spriteType, spriteName)
   -- If this is a new sprite type, initialize it in the sprite table
-  if RPGlobals.spriteTable[spriteType] == nil then
-    RPGlobals.spriteTable[spriteType] = {}
+  if RPSprites.sprites[spriteType] == nil then
+    RPSprites.sprites[spriteType] = {}
   end
 
   -- Do nothing if this sprite type is already set to this name
-  if RPGlobals.spriteTable[spriteType].spriteName == spriteName then
+  if RPSprites.sprites[spriteType].spriteName == spriteName then
     return
   end
 
   -- Check to see if we are clearing this sprite
   if spriteName == 0 then
-    RPGlobals.spriteTable[spriteType].sprite = nil
-    RPGlobals.spriteTable[spriteType].spriteName = 0
+    RPSprites.sprites[spriteType].sprite = nil
+    RPSprites.sprites[spriteType].spriteName = 0
     return
   end
 
   -- Otherwise, initialize the sprite
-  RPGlobals.spriteTable[spriteType].spriteName = spriteName
-  RPGlobals.spriteTable[spriteType].sprite = Sprite()
+  RPSprites.sprites[spriteType].spriteName = spriteName
+  RPSprites.sprites[spriteType].sprite = Sprite()
 
   if spriteType == "seeded-item1" or
      spriteType == "seeded-item2" or
@@ -43,33 +43,33 @@ function RPSprites:Init(spriteType, spriteName)
      spriteType == "diversity-item3" or
      spriteType == "diversity-item4" then
 
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/items3/collectibles/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/items3/collectibles/" .. spriteName .. ".anm2", true)
 
   elseif spriteType == "diversity-item5" then
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/items3/trinkets/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/items3/trinkets/" .. spriteName .. ".anm2", true)
 
   elseif spriteType == "ready" or spriteType == "readyTotal" then
     if tonumber(spriteName) > 50 then
-      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/ready/unknown.anm2", true)
+      RPSprites.sprites[spriteType].sprite:Load("gfx/race/ready/unknown.anm2", true)
     else
-      RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/ready/" .. spriteName .. ".anm2", true)
+      RPSprites.sprites[spriteType].sprite:Load("gfx/race/ready/" .. spriteName .. ".anm2", true)
     end
 
   elseif spriteType == "place" then
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
 
   else
-    RPGlobals.spriteTable[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
 
   -- Everything is a non-animation, so we just want to set frame 0
-  RPGlobals.spriteTable[spriteType].sprite:SetFrame("Default", 0)
+  RPSprites.sprites[spriteType].sprite:SetFrame("Default", 0)
 end
 
 -- Call this every frame in MC_POST_RENDER
 function RPSprites:Display()
   -- Loop through all the sprites and render them
-  for k, v in pairs(RPGlobals.spriteTable) do
+  for k, v in pairs(RPSprites.sprites) do
     -- Position it
     local vec = RPSprites:GetScreenCenterPosition() -- Start the vector off in the center of the screen by default
 
@@ -159,11 +159,11 @@ function RPSprites:Display()
     if v.sprite ~= nil then
       if k == "stage" then
         -- For animations, we have to both "Render()" and "Update()"
-        RPGlobals.spriteTable[k].sprite:Render(vec, Vector(0, 0), Vector(0, 0))
-        RPGlobals.spriteTable[k].sprite:Update()
+        RPSprites.sprites[k].sprite:Render(vec, Vector(0, 0), Vector(0, 0))
+        RPSprites.sprites[k].sprite:Update()
       else
         -- For non-animations, we want to just render frame 0
-        RPGlobals.spriteTable[k].sprite:RenderLayer(0, vec)
+        RPSprites.sprites[k].sprite:RenderLayer(0, vec)
       end
     end
   end

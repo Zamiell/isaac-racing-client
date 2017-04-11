@@ -48,6 +48,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false then -- 328
 
     -- Delete the Womb 2 trapdoor if we have the Polaroid
+    entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
     return
   end
@@ -127,6 +128,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     entity:Remove()
   else
     -- We are replacing a trapdoor grid entity
+    entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- entity:Destroy() does not work
   end
 end
@@ -142,6 +144,7 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   end
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
 
   -- Delete the beam of light and don't replace it if we have The Negative
@@ -156,24 +159,34 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
     return
   end
 
-  -- Since we deleted the trapdoor, it will look off-center on Womb 2, so spawn it at the center of the room
-  local position = room:GetCenterPos()
-  if (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) or -- 328
-     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) then -- 328
+  -- Find out whether we should move the trapdoor from where it spawned
+  local position = entity.Position
+  if ((stage == LevelStage.STAGE4_2 and -- 8
+       entity.Position.X == 360 and -- If it spawned in the vanilla location on Womb 2
+       entity.Position.Y == 280) or
+      (stage == LevelStage.STAGE4_3 and -- 9
+       entity.Position.X == 640 and -- Or if it spawned in the vanilla location on Blue Womb
+       entity.Position.Y == 280)) and
+     roomType == RoomType.ROOM_BOSS and -- 5
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) then -- 328
 
-    -- Don't move it to the center if both the trapdoor and the beam of light will be spawning
-    position = entity.Position
-  elseif stage == 9 then
-    -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
-    position.Y = entity.Position.Y
+    -- Since we deleted the trapdoor, the beam of light will look off-center on Womb 2 / Blue Womb,
+    -- so move the beam of light to the center of the room
+    -- (we can't modify entity.Position for some reason, so we have to make a new position variable)
+    position = room:GetCenterPos()
+    if stage == LevelStage.STAGE4_3 then -- 9
+      -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
+      position.Y = entity.Position.Y
+    end
   end
 
   -- Spawn a custom entity to emulate the original
   local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                            position, Vector(0,0), nil, 0, 0)
+                            position, Vector(0,0), nil, 0, roomSeed)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
@@ -192,6 +205,63 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
 end
 
 -- Called from the "RPCheckEntities:NonGrid()" function
+function RPFastTravel:CheckPickupOverHole(entity)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local room = game:GetRoom()
+
+  -- Check to see if it is overlapping with a trapdoor / beam of light / crawlspace
+  local movePickup = false
+  local squareSize = RPFastTravel.trapdoorTouchDistance + 2
+  for i = 1, #RPGlobals.run.replacedTrapdoors do
+    if roomIndex == RPGlobals.run.replacedTrapdoors[i].room and
+       entity.Position.X >= RPGlobals.run.replacedTrapdoors[i].pos.X - squareSize and
+       entity.Position.X <= RPGlobals.run.replacedTrapdoors[i].pos.X + squareSize and
+       entity.Position.Y >= RPGlobals.run.replacedTrapdoors[i].pos.Y - squareSize and
+       entity.Position.Y <= RPGlobals.run.replacedTrapdoors[i].pos.Y + squareSize then
+
+      movePickup = true
+    end
+  end
+  for i = 1, #RPGlobals.run.replacedHeavenDoors do
+    if roomIndex == RPGlobals.run.replacedHeavenDoors[i].room and
+       entity.Position.X >= RPGlobals.run.replacedHeavenDoors[i].pos.X - squareSize and
+       entity.Position.X <= RPGlobals.run.replacedHeavenDoors[i].pos.X + squareSize and
+       entity.Position.Y >= RPGlobals.run.replacedHeavenDoors[i].pos.Y - squareSize and
+       entity.Position.Y <= RPGlobals.run.replacedHeavenDoors[i].pos.Y + squareSize then
+
+      movePickup = true
+    end
+  end
+  for i = 1, #RPGlobals.run.replacedCrawlspaces do
+    if roomIndex == RPGlobals.run.replacedCrawlspaces[i].room and
+       entity.Position.X >= RPGlobals.run.replacedCrawlspaces[i].pos.X - squareSize and
+       entity.Position.X <= RPGlobals.run.replacedCrawlspaces[i].pos.X + squareSize and
+       entity.Position.Y >= RPGlobals.run.replacedCrawlspaces[i].pos.Y - squareSize and
+       entity.Position.Y <= RPGlobals.run.replacedCrawlspaces[i].pos.Y + squareSize then
+
+      movePickup = true
+    end
+  end
+
+  if movePickup then
+    -- Spawn it in a new position
+    -- (this might still overlap with the hole, but if it does,
+    -- it will just get respawned again on each frame until it finds a good position)
+    local newPos = room:FindFreePickupSpawnPosition(entity.Position, 0, true)
+    game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity, entity.Parent, entity.SubType, entity.InitSeed)
+    entity:Remove()
+    Isaac.DebugString("Moved a pickup that was overlapping with a hole: " ..
+                      tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType))
+  end
+end
+
+-- Called from the "RPCheckEntities:NonGrid()" function
 function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   -- Local variables
   local game = Game()
@@ -203,8 +273,12 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   local squareSize = RPFastTravel.trapdoorTouchDistance
   if RPGlobals.run.trapdoor.state == 0 and
      ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
-      (upwards and stage == 8 and entity.FrameCount >= 40) or
+      (upwards and stage == 8 and entity.FrameCount >= 40 and entity.InitSeed ~= 0) or
       -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
+      -- (we initially spawn it with an InitSeed equal to the room seed)
+      (upwards and stage == 8 and entity.FrameCount >= 16 and entity.InitSeed == 0) or
+      -- The extra delay should not apply if they are re-entering the room
+      -- (we respawn beams of light with an InitSeed of 0)
       (upwards and stage ~= 8 and entity.FrameCount >= 16)) and
       -- The beam of light opening animation is 16 frames long
      player.Position.X >= entity.Position.X - squareSize and
@@ -430,6 +504,7 @@ function RPFastTravel:ReplaceCrawlspace(entity, i)
   end
 
   -- Remove the original entity
+  entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
   room:RemoveGridEntity(i, 0, false) -- entity:Destroy() does not work
 end
 
@@ -752,8 +827,9 @@ function RPFastTravel:CheckRoomRespawn()
     if RPGlobals.run.replacedHeavenDoors[i].room == roomIndex then
       -- Spawn the new custom entity
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
-                                  Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                                  RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
+                                Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
+                                RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
+      -- Use an InitSeed of 0 to signify that it is respawned
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")
     end

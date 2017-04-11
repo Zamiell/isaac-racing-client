@@ -228,15 +228,25 @@ end
 -- ModCallbacks.MC_POST_PLAYER_INIT (9)
 -- (this will get called before the "PostGameStarted" callback)
 function RPCallbacks:PostPlayerInit(player)
-  -- Check for co-op babies
-  if player.Variant ~= 1 then
-    return
-  end
-
   -- Local variables
   local game = Game()
   local mainPlayer = game:GetPlayer(0)
+  local sfx = SFXManager()
 
+  Isaac.DebugString("MC_POST_PLAYER_INIT")
+
+  -- Check for co-op babies
+  if player.Variant == 0 then
+    -- Stop the sound effect from playing at the beginning of a run for characters with a fully charged active item
+    -- (at this point we don't have the D6 yet, but once we already have a fully charged D6,
+    -- it won't play the charge sound effect)
+    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
+    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+    return
+    -- TODO ADD STUFF FROM POSTNEWLEVEL
+  end
+
+  -- A co-op baby spawned
   mainPlayer:AnimateSad() -- Play a sound effect to communicate that the player made a mistake
   player:Kill() -- This kills the co-op baby, but the main character will still get their health back for some reason
 
@@ -256,7 +266,6 @@ end
 function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   -- local variables
   local player = tookDamage:ToPlayer()
-  local sfx = SFXManager()
 
   -- Check to see if it was the player that took damage
   if player ~= nil then
@@ -272,11 +281,6 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
       -- Soul Jar damage tracking
       if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
         selfDamage = true
-      end
-
-      -- Mimic damage tracking
-      if i == 20 and bit == 1 then
-        sfx:Play(SoundEffect.SOUND_LAUGH, 0.75, 0, false, 1)
       end
     end
     if selfDamage == false then
@@ -404,7 +408,7 @@ function RPCallbacks:PostNewRoom()
 
   -- Make an exception for the race room and the "Change Char Order" room
   RPCallbacks:PostNewRoomRace()
-  RPSpeedrun:PostNewRoomChangeOrder()
+  RPSpeedrun:PostNewRoomChangeCharOrder()
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
@@ -432,6 +436,7 @@ function RPCallbacks:PostNewRoom2()
   local activeCharge = player:GetActiveCharge()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
+  local challenge = Isaac.GetChallenge()
   local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
@@ -478,8 +483,12 @@ function RPCallbacks:PostNewRoom2()
      -- The Mega Satan room counts as a boss room, and we don't want to respawn any trophies there
      roomClear and
      RPGlobals.raceVars.finished == false and
-     RPGlobals.race.goal ~= "Mega Satan" then
+     (RPGlobals.race.status == "in progress" or
+      challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+      challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)")) and
+     RPGlobals.race.goal ~= "Mega Satan" and
      -- We don't want to respawn any trophies if the player is supposed to kill Mega Satan
+     RPSpeedrun.finished == false then
 
     game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)

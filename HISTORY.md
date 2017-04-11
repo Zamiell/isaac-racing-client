@@ -1,16 +1,29 @@
 # Racing+ Version History and News
 
-### *v0.5.0* - April 8th, 2017
+### *v0.5.0* - April 10th, 2017
 
 * Introducing a brand new custom challenge for R+9 and R+14 speedruns!
-  * This mode will automatically take you from character to character upon run completion. No more menuing!
-  * This run will show a timer on screen, similar to how races work.
-  * If you are in the middle of a run and you want to start over, you can hold R to go back to the first character without having to go back to the menu at all.
+  * This mode will automatically take you from character to character upon run completion. No more going back to the menu!
+  * This mode will show a timer on screen, similar to how races work.
+  * If you are in the middle of a run and you want to start over, you can hold R to go back to the first character.
   * You can set your character order by using the custom "Change Char Order" challenge.
+  * In order for it to work with the LiveSplit auto-splitter, you have to check the box that says "Racing+ speedrun".
 * Isaac, Magdalene, Lilith, and Apollyon are set back to their vanilla starting items. They will still get their old additional starting items in the R+9/14 custom challenge.
 * Added sparklies and fireworks if you complete a race with 3 or more people or finish a R+9/14 speedrun. (Thanks to Chronometrics for helping to code this.)
+* Mimics and Spiked Chests will now always spawn as normal chests instead. (The final tally on the vote was 19 to 18.)
+* The beam of light on Womb 2 will no longer have the extra delay if the room is already cleared.
+* The colors of some Purity auras have been changed to make them easier to see; speed is now green (think "Roid Rage") and range is now yellow. (Thanks to Inschato for helping with this and Ou_J for the idea.)
+* Fixed the bug where the beam of light would be incorrectly placed in Black Markets and I AM ERROR rooms. (Thanks blcd & Lobsterosity)
 * Fixed the bug where Eden's Soul would always be fully charged if you had the Schoolbag. (Thanks Lobsterosity)
 * Fixed the bug where the recharge sound would play during a reset on potato computers.
+* Fixed the bug where trapdoors would appear for a frame before being removed.
+* Fixed the bug where Krampus' Head could start with 0 charges under certain conditions. (Thanks Cyber_1)
+* Fixed the bug where the Butter! trinket would make the Schoolbag stop working. (Thanks SlashSP)
+* Fixed the bug where a trophy would spawn if you were not in a race and reloaded the room with the big chest in it. (Thanks Nariom)
+* Fixed the bug where the stage graphic would stay on the screen forever if you reset under certain conditions.
+* Fixed the bug where the trapdoor would not respawn in a run where you resumed a save after completely quitting the game.
+* Made Cathedral room #11 and #12 symmetrical.
+* Fixed the bug with the client where it would give an error if there were no "save.dat" files in your mod folder.
 * Added the VapeNation emote. (Requested by LogBasePotato)
 
 ### *v0.4.20* - April 7th, 2017

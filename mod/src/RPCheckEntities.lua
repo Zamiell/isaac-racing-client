@@ -14,6 +14,7 @@ local RPSpeedrun   = require("src/rpspeedrun")
 --
 
 -- Check all the grid entities in the room
+-- (called from the PostUpdate callback)
 function RPCheckEntities:Grid()
   local game = Game()
   local room = game:GetRoom()
@@ -26,6 +27,7 @@ function RPCheckEntities:Grid()
          gridEntity:GetSaveState().VarData == 1 then -- Void Portals have a VarData of 1
 
         -- Delete all Void Portals
+        gridEntity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
       elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR then -- 17
@@ -42,6 +44,7 @@ function RPCheckEntities:Grid()
 end
 
 -- Check all the non-grid entities in the room
+-- (called from the PostUpdate callback)
 function RPCheckEntities:NonGrid()
   -- Local variables
   local game = Game()
@@ -56,6 +59,7 @@ function RPCheckEntities:NonGrid()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
+  local challenge = Isaac.GetChallenge()
 
   -- Go through all the entities
   local fireworkActive = false
@@ -88,13 +92,14 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            (entity.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
             entity.Variant == PickupVariant.PICKUP_MIMIC) and -- 54
-            entity:ToPickup().TheresOptionsPickup == false then -- This is used as a replacement counter
+           entity:ToPickup().TheresOptionsPickup == false then -- This is used as a replacement counter
            -- We can't check for the "Appear" animation because this is not fast enough
            -- to intercept the unavoidable damage when a Mimic spawns on top of the player
 
       -- Change all Mimics and Spiked Chests to normal chests until the appearing animation is complete
       -- (this also fixes the unavoidable damage when a Mimic spawns where you happen to be standing)
       -- (Spiked Chests do not have this problem)
+      -- (the unavoidable damage still happens if you spawn the Mimic using the console, but is fixed from room drops)
       entity.Variant = 50
 
       -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
@@ -113,32 +118,19 @@ function RPCheckEntities:NonGrid()
 
         -- We have to play an animation for the new sprite to actually appear
         entity:GetSprite():Play("Appear", false)
-        Isaac.DebugString("Replaced a Spiked Chest / Mimic (for an unavoidable damage room).")
-
+        Isaac.DebugString("Replaced a Spiked Chest / Mimic with a normal chest (for an unavoidable damage room).")
       else
-        local squareSize = 100 -- This is fairly large, about 1/4 of a room width
-        if player.Position.X >= entity.Position.X - squareSize and
-           player.Position.X <= entity.Position.X + squareSize and
-           player.Position.Y >= entity.Position.Y - squareSize and
-           player.Position.Y <= entity.Position.Y + squareSize then
-
-          -- The chest is spawning close to us, so our bodies might be blocking it,
-          -- so use a custom mimic sprite to compensate
-          entity:GetSprite():Load("gfx/005.054_mimic chest2.anm2", true)
-          Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2) (with custom animation).")
-
-        else
-          -- Changing the variant doesn't actually change the sprite
-          -- Furthermore, we make it look like a Mimic
-          entity:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
-          Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
-        end
+        -- Changing the variant doesn't actually change the sprite
+        -- Furthermore, we make it look like a Mimic
+        entity:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
 
         -- We have to play an animation for the new sprite to actually appear
         entity:GetSprite():Play("Appear", false)
 
         -- Use the normally unused "TheresOptionsPickup" varaible to store that this is not a normal chest
         entity:ToPickup().TheresOptionsPickup = true
+
+        Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
       end
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
@@ -152,6 +144,13 @@ function RPCheckEntities:NonGrid()
       -- they will get the contents of a normal chest before the swap back occurs)
       entity.Variant = 54
       Isaac.DebugString("Replaced a Spiked Chest / Mimic (2/2).")
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_NULL and -- 0
+           RPSpeedrun.spawnedCheckpoint then
+
+      RPSpeedrun:CheckpointTouched()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
@@ -206,7 +205,6 @@ function RPCheckEntities:NonGrid()
 
       RPCheckEntities:ReplacePedestal(entity)
 
-
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
            RPGlobals.run.roomsEntered <= 1 and
@@ -254,6 +252,35 @@ function RPCheckEntities:NonGrid()
 
       -- Delete the chest and replace it with the custom beam of light so that we can fast-travel normally
       RPFastTravel:ReplaceHeavenDoor(entity)
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_TROPHY and -- 370
+           stage == 11 and stageType == 1 and -- The Chest
+           (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+            challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)")) then
+
+      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
+      -- depending on if we are on the last character or not
+      if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+          RPSpeedrun.charNum == 9) or
+         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+          RPSpeedrun.charNum == 14) then
+
+        -- Spawn the "Race Trophy" custom entity
+        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                   entity.Position, entity.Velocity, nil, 0, 0)
+        Isaac.DebugString("Spawned the end of speedrun trophy.")
+
+      else
+        -- Spawn a Checkpoint (a custom item) in the center of the room
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+        RPSpeedrun.spawnedCheckpoint = true
+        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+      end
+
+      -- Get rid of the vanilla challenge trophy
+      entity:Remove()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
@@ -309,6 +336,10 @@ function RPCheckEntities:NonGrid()
       -- Get rid of the chest
       entity:Remove()
 
+    elseif entity.Type == EntityType.ENTITY_PICKUP then -- 5
+      -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
+      RPFastTravel:CheckPickupOverHole(entity)
+
     elseif entity.Type == EntityType.ENTITY_LASER and -- 7
            entity.Variant == 1 and -- A Brimstone laser
            entity.SubType == 3 then -- A Maw of the Void or Athame ring
@@ -340,29 +371,35 @@ function RPCheckEntities:NonGrid()
            player.Position.Y <= entity.Position.Y + 24 then
 
       -- Check to see if we are touching the trophy
-      RPGlobals.raceVars.finished = true
-      RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
       entity:Remove()
       player:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")
-      Isaac.DebugString("Finished run.") -- The client looks for this line to know when the goal was achieved
 
-      -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
-      local victoryLapPosition = RPGlobals:GridToPos(11, 1)
-      if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
-        victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+      if challenge == Challenge.CHALLENGE_NULL then -- 0
+        -- Finish the race
+        Isaac.DebugString("Finished run.") -- The client looks for this line to know when the goal was achieved
+        RPGlobals.raceVars.finished = true
+        RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
+
+        -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
+        local victoryLapPosition = RPGlobals:GridToPos(11, 1)
+        if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
+          victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+        end
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
+
+        -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
+        local finishedPosition = RPGlobals:GridToPos(1, 1)
+        if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
+          finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+        end
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_FINISHED, roomSeed)
+
+        Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
+      else
+        RPSpeedrun:Finish()
       end
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
-                 nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-
-      -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
-      local finishedPosition = RPGlobals:GridToPos(1, 1)
-      if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
-        finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
-      end
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
-                 nil, CollectibleType.COLLECTIBLE_FINISHED, roomSeed)
-
-      Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
 
     elseif (entity.Type == Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)") and
             entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")) or
@@ -515,8 +552,9 @@ function RPCheckEntities:ReplacePedestal(entity)
   local offLimits = false
   if RPGlobals.race.rFormat == "seeded" and
      stage == 1 and
-     room:GetType() == RoomType.ROOM_TREASURE and -- 4
+     roomType == RoomType.ROOM_TREASURE and -- 4
      entity.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235
+
     offLimits = true
   end
 
@@ -563,6 +601,7 @@ function RPCheckEntities:ReplacePedestal(entity)
     local krampusItem = math.random(1, 2)
     if krampusItem == 1 then
       entity.SubType = 293
+      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
     else
       entity.SubType = 132
     end

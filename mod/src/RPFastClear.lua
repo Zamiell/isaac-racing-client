@@ -201,6 +201,7 @@ function RPFastClear:Main()
   end
 
   -- Spawns the award for clearing the room (the pickup, chest, etc.)
+  -- (this also makes the trapdoor appear if we are in a boss room)
   room:SpawnClearAward() -- This takes into account their luck and so forth
 
   -- Give a charge to the player's active item

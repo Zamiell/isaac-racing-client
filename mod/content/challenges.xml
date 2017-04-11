@@ -1,7 +1,7 @@
 <challenges version="1">
 	<!-- We can't make the names too long or it will overflow off of the end of the note -->
-	<challenge name="R+9 Speedrun (S1)" startingitems="105" endstage="11" altpath="true" cursefilter="127" />
-	<challenge name="R+9/14 Speedrun (S1)" startingitems="105" endstage="11" altpath="true" cursefilter="127" />
+	<challenge name="R+9 Speedrun (S1)" endstage="11" altpath="true" cursefilter="127" />
+	<challenge name="R+9/14 Speedrun (S1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" />
 	<!-- 127 disables all curses: https://pastebin.com/SM0vSvcU -->
 </challenges>

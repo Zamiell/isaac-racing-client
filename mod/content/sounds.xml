@@ -1,5 +1,5 @@
 <sounds root="sfx/">
-	<sound name="Laugh">
-		<sample weight="1" path="laugh.wav" />
+	<sound name="Speedrun Finish">
+		<sample weight="1" path="speedrun_finish.wav" />
 	</sound>
 </sounds>

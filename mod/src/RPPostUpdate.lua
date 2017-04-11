@@ -72,11 +72,13 @@ function RPPostUpdate:Main()
 
   -- Check for Eden's Soul (to fix the charge bug)
   if activeItem == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
-    if RPGlobals.run.edensSoulSet then
+    if RPGlobals.run.edensSoulSet and RPGlobals.run.edensSoulCharges ~= activeCharge then
       RPGlobals.run.edensSoulCharges = activeCharge
-    else
+      Isaac.DebugString("Eden's Soul gained a charge, now at: " .. tostring(activeCharge))
+    elseif RPGlobals.run.edensSoulSet == false then
       RPGlobals.run.edensSoulSet = true
       player:SetActiveCharge(RPGlobals.run.edensSoulCharges)
+      Isaac.DebugString("Picked up Eden's Soul, setting charges to: " .. tostring(RPGlobals.run.edensSoulCharges))
     end
   else
     RPGlobals.run.edensSoulSet = false
@@ -252,6 +254,7 @@ function RPPostUpdate:RaceChecks()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local gameFrameCount = game:GetFrameCount()
   local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
   local trinket2 = player:GetTrinket(1) -- This will be 0 if there is no trinket
 
@@ -270,18 +273,24 @@ function RPPostUpdate:RaceChecks()
   -- Ban Basement 1 Treasure Rooms (2/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
 
+  -- Check to see if we need to start the speedrun timer
+  RPSpeedrun:StartTimer()
+
   -- Make race winners get sparklies and fireworks
-  --[[
-  if raceVars.finished == true then
+  if (RPGlobals.raceVars.finished == true and
+      RPGlobals.race.place == 1 and
+      RPGlobals.race.numEntrants >= 3) or
+     RPSpeedrun.finished then
+
     -- Give Isaac sparkly feet (1000.103.0)
     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ULTRA_GREED_BLING, 0,
                 player.Position + RandomVector():__mul(10), Vector(0, 0), nil)
 
     -- Spawn 30 fireworks (1000.104.0)
     -- (some can be duds randomly and not spawn any fireworks after the 20 frame countdown)
-    if raceVars.fireworks < 40 and gameFrameCount % 20 == 0 then
+    if RPGlobals.raceVars.fireworks < 40 and gameFrameCount % 20 == 0 then
       for i = 1, 5 do
-        raceVars.fireworks = raceVars.fireworks + 1
+        RPGlobals.raceVars.fireworks = RPGlobals.raceVars.fireworks + 1
         local firework = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.FIREWORKS, 0,
                                      RPGlobals:GridToPos(math.random(1, 11), math.random(2, 8)),
                                      Vector(0, 0), nil) -- 0,12  0,8
@@ -290,7 +299,6 @@ function RPPostUpdate:RaceChecks()
       end
     end
   end
-  --]]
 
   if RPGlobals.raceVars.finished and player:IsHoldingItem() == false then
     if player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then

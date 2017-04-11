@@ -38,4 +38,7 @@
 
 	<!-- 531 -->
 	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
+
+	<!-- 532 -->
+	<passive description="On to the next character!" gfx="Finished.png" name="Checkpoint" />
 </items>

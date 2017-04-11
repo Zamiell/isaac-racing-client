@@ -9,6 +9,12 @@ local RPGlobals = require("src/rpglobals")
 local RPSprites = require("src/rpsprites")
 
 --
+-- Variables
+--
+
+RPSaveDat.failedCounter = 0
+
+--
 -- Functions
 --
 
@@ -46,9 +52,18 @@ function RPSaveDat:Load()
       -- so give up for now and try again on the next frame
       RPGlobals.raceVars.loadOnNextFrame = true
       RPGlobals.race = oldRace -- Restore the backup
-      Isaac.DebugString("Loading the \"save.dat\" file failed. Trying again on the next frame...")
+      RPSaveDat.failedCounter = RPSaveDat.failedCounter + 1
+      if RPSaveDat.failedCounter >= 100 then
+        Isaac.DebugString("Loading the \"save.dat\" file failed 100 times in a row. Writing defaults.")
+        RPSaveDat:Save()
+      else
+        Isaac.DebugString("Loading the \"save.dat\" file failed. Trying again on the next frame...")
+      end
       return
     end
+
+    -- Loading succeeded
+    RPSaveDat.failedCounter = 0
 
     -- If anything changed, write it to the log
     if oldRace.status ~= RPGlobals.race.status then
@@ -151,6 +166,7 @@ end
 
 function RPSaveDat:Save()
   Isaac.SaveModData(RPGlobals.RacingPlus, json.encode(RPGlobals.race))
+  Isaac.DebugString("Wrote to the \"save.dat\" file. (SaveModData)")
 end
 
 return RPSaveDat

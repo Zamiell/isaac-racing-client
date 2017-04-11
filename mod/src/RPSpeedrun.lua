@@ -4,8 +4,9 @@ local RPSpeedrun = {}
 -- Includes
 --
 
-local RPGlobals = require("src/rpglobals")
-local RPSaveDat = require("src/rpsavedat")
+local RPGlobals   = require("src/rpglobals")
+local RPSaveDat   = require("src/rpsavedat")
+local RPSchoolbag = require("src/rpschoolbag")
 
 --
 -- Variables
@@ -16,7 +17,7 @@ RPSpeedrun.sprites = {}
 RPSpeedrun.startedTime = 0
 RPSpeedrun.finished = false
 RPSpeedrun.finishedTime = 0
-RPSpeedrun.choosetype = 0
+RPSpeedrun.chooseType = 0
 RPSpeedrun.chooseOrder = {}
 RPSpeedrun.charPosition9 = { -- The format is character number, X, Y
   {2, 2, 1}, -- Cain
@@ -45,13 +46,230 @@ RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
   {14, 1, 5}, -- Keeper
   {15, 11, 5}, -- Apollyon
 }
+RPSpeedrun.fastReset = false
+RPSpeedrun.spawnedCheckpoint = false
+RPSpeedrun.resetFrame = 0
+RPSpeedrun.finishedChar = false
 
 --
 -- Speedrun functions
 --
 
+-- Called from the PostGameStarted callback
+function RPSpeedrun:Init()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
+    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
+    Isaac.ExecuteCommand("goto s.boss.9999")
+    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
+    Isaac.DebugString("Going to the \"Change Char Order\" room.")
+    -- We do more things in the "PostNewRoom" callback
+    return
+  end
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+
+    return
+  end
+
+  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
+    Isaac.DebugString("In R+9 challenge.")
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+    Isaac.DebugString("In R+14 challenge.")
+
+    -- Give extra items to characters for the R+14 speedrun category
+    if character == PlayerType.PLAYER_ISAAC then -- 0
+      -- Add the Battery
+      player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
+
+      -- Giving the player the item does not actually remove it from any of the pools,
+      -- so we have to expliticly add it to the ban list
+      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+
+    elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
+      -- Add the Soul Jar
+      player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false)
+
+      -- (the Soul Jar does not appear in any pools so we don't have to add it to the ban list)
+
+    elseif character == PlayerType.PLAYER_LILITH then -- 13
+      -- Lilith starts with the Schoolbag by default
+      player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
+      Isaac.DebugString("Adding collectible 357") -- Box of Friends
+
+      -- Giving the player the item does not actually remove it from any of the pools,
+      -- so we have to expliticly add it to the ban list
+      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
+
+      -- Reorganize the items on the item tracker
+      Isaac.DebugString("Removing collectible 412") -- Cambion Conception
+      Isaac.DebugString("Adding collectible 412") -- Cambion Conception
+
+    elseif character == PlayerType.PLAYER_APOLLYON then -- 15
+      -- Apollyon starts with the Schoolbag by default
+      player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
+      Isaac.DebugString("Adding collectible 477") -- Void
+
+      -- Giving the player the item does not actually remove it from any of the pools,
+      -- so we have to expliticly add it to the ban list
+      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_VOID) -- 477
+    end
+
+    if RPGlobals.run.schoolbag.item ~= 0 then
+      -- Make sure that the Schoolbag item is fully charged
+      RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+      RPSchoolbag.sprites.item = nil
+    end
+  end
+
+  -- Move to the next character if we grabbed the checkpoint
+  if RPSpeedrun.finishedChar then
+    RPSpeedrun.finishedChar = false
+    RPSpeedrun.fastReset = true -- Set this so that we don't go back to the beginning again
+    RPSpeedrun.charNum = RPSpeedrun.charNum + 1
+    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    Isaac.DebugString("Restarting to switch to the new character.")
+    return
+  end
+
+  -- Move to the first character if we finished
+  if RPSpeedrun.finished then
+    RPSpeedrun.finished = false
+    RPSpeedrun.finishedTime = 0
+    RPSpeedrun.charNum = 1
+    RPSpeedrun.fastReset = false
+    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
+    return
+  end
+
+  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+     character ~= RPGlobals.race.order9[RPSpeedrun.charNum] then
+
+    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+9 speedrun.")
+    return
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+         character ~= RPGlobals.race.order14[RPSpeedrun.charNum] then
+
+    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+14 speedrun.")
+    return
+  end
+
+  if RPSpeedrun.fastReset then
+    RPSpeedrun.fastReset = false
+
+  elseif RPSpeedrun.fastReset == false and
+         ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+           character ~= RPGlobals.race.order9[1]) or
+          (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+           character ~= RPGlobals.race.order14[1])) then
+
+    -- They held R, and they are not on the first character, so they want to restart from the first character
+    RPSpeedrun.charNum = 1
+    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    Isaac.DebugString("Restarting because we want to start from the first character again.")
+    return
+  end
+
+  if RPSpeedrun.charNum == 1 then
+    RPSpeedrun.startedTime = 0
+  end
+end
+
+-- Called from the the PostUpdate callback
+function RPSpeedrun:StartTimer()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+
+    return
+  end
+
+  if RPSpeedrun.startedTime == 0 then
+    RPSpeedrun.startedTime = Isaac.GetTime()
+  end
+end
+
+-- Called from the PostUpdate callback (RPCheckEntities:NonGrid)
+function RPSpeedrun:CheckpointTouched()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local frameCount = Isaac.GetFrameCount()
+
+  RPSpeedrun.spawnedCheckpoint = false
+
+  -- Give them the Checkpoint custom item
+  -- (this is used by the AutoSplitter to know when to split)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
+
+  -- Freeze the player
+  player.ControlsEnabled = false
+
+  -- Mark to restart the run after the "Checkpoint" text has displayed on the screen for a little bit
+  RPSpeedrun.resetFrame = frameCount + 30
+end
+
+-- Called from the PostRender callback
+function RPSpeedrun:CheckRestart()
+  -- Local variables
+  local game = Game()
+  local frameCount = Isaac.GetFrameCount()
+  local player = game:GetPlayer(0)
+  local playerSprite = player:GetSprite()
+
+  -- Don't move to the first character of the speedrun if we die
+  if playerSprite:IsPlaying("Death") and player:GetExtraLives() == 0 then
+    RPSpeedrun.fastReset = true
+  end
+
+  -- We grabbed the checkpoint, so move us to the next character for the speedrun
+  if RPSpeedrun.resetFrame ~= 0 and frameCount >= RPSpeedrun.resetFrame then
+    RPSpeedrun.resetFrame = 0
+    RPSpeedrun.finishedChar = true
+    game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_RESTART_RUN) -- 3
+  end
+end
+
+-- Called from the PostUpdate callback (RPCheckEntities:NonGrid)
+function RPSpeedrun:Finish()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local sfx = SFXManager()
+
+  -- Give them the Checkpoint custom item
+  -- (this is used by the AutoSplitter to know when to split)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
+
+  -- Finish the speedrun
+  RPSpeedrun.finished = true
+  RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
+
+  -- Play a sound effect
+  sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1)
+
+  -- Fireworks will play on the next frame (from the PostUpdate callback)
+end
+
+--
+-- Functions for the "Change Char Order" custom challenge
+--
+
 -- Called from the PostNewRoom callback
-function RPSpeedrun:PostNewRoomChangeOrder()
+function RPSpeedrun:PostNewRoomChangeCharOrder()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -85,6 +303,26 @@ function RPSpeedrun:PostNewRoomChangeOrder()
 
   -- Spawn the graphics over the buttons
   -- TODO
+end
+
+-- Called from the PostRender callback
+function RPSpeedrun:CheckChangeCharOrder()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
+
+  -- Disable the controls or else the player will be able to move around while the screen is still black
+  if gameFrameCount < 1 then
+    player.ControlsEnabled = false
+  else
+    player.ControlsEnabled = true
+  end
 end
 
 -- Called from the PostUpdate callback
@@ -220,6 +458,45 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
   end
 end
 
+--
+-- Display functions
+--
+
+-- Called from the PostRender callback
+function RPSpeedrun:DisplayCharSelectRoom()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+
+  if RPSpeedrun.sprites.button1 ~= nil then
+    local posButton1 = RPGlobals:GridToPos(4, 4)
+    RPSpeedrun.sprites.button1:RenderLayer(0, posButton1)
+  end
+  if RPSpeedrun.sprites.button2 ~= nil then
+    local posButton2 = RPGlobals:GridToPos(8, 4)
+    RPSpeedrun.sprites.button2:RenderLayer(0, posButton2)
+  end
+  if RPSpeedrun.sprites.characters ~= nil then
+    local posNull = Vector(0, 0)
+    if #RPSpeedrun.sprites.characters == 9 then
+      for i = 1, #RPSpeedrun.sprites.characters do
+        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition9[i][2], RPSpeedrun.charPosition9[i][3] - 1)
+        local posRender = Isaac.WorldToRenderPosition(posGame, false)
+        posRender.Y = posRender.Y + 10
+        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
+      end
+    elseif #RPSpeedrun.sprites.characters == 14 then
+      for i = 1, #RPSpeedrun.sprites.characters do
+        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3] - 1)
+        local posRender = Isaac.WorldToRenderPosition(posGame, false)
+        posRender.Y = posRender.Y + 10
+        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
+      end
+    end
+  end
+end
+
 -- Called from the PostRender callback
 function RPSpeedrun:DisplayCharProgress()
   -- Don't show the progress if we are not in the custom challenge
@@ -291,60 +568,6 @@ function RPSpeedrun:DisplayCharProgress()
     local posDigit4 = Vector(startingX + digitLength + adjustment2 + 3 + digitLength, startingY)
     RPSpeedrun.sprites.digit[3]:SetFrame("Default", digit4)
     RPSpeedrun.sprites.digit[3]:RenderLayer(0, posDigit4)
-  end
-end
-
-function RPSpeedrun:DisplayCharSelectRoom()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
-    return
-  end
-
-  if RPSpeedrun.sprites.button1 ~= nil then
-    local posButton1 = RPGlobals:GridToPos(4, 4)
-    RPSpeedrun.sprites.button1:RenderLayer(0, posButton1)
-  end
-  if RPSpeedrun.sprites.button2 ~= nil then
-    local posButton2 = RPGlobals:GridToPos(8, 4)
-    RPSpeedrun.sprites.button2:RenderLayer(0, posButton2)
-  end
-  if RPSpeedrun.sprites.characters ~= nil then
-    local posNull = Vector(0, 0)
-    if #RPSpeedrun.sprites.characters == 9 then
-      for i = 1, #RPSpeedrun.sprites.characters do
-        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition9[i][2], RPSpeedrun.charPosition9[i][3] - 1)
-        local posRender = Isaac.WorldToRenderPosition(posGame, false)
-        posRender.Y = posRender.Y + 10
-        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
-      end
-    elseif #RPSpeedrun.sprites.characters == 14 then
-      for i = 1, #RPSpeedrun.sprites.characters do
-        local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3] - 1)
-        local posRender = Isaac.WorldToRenderPosition(posGame, false)
-        posRender.Y = posRender.Y + 10
-        RPSpeedrun.sprites.characters[i]:Render(posRender, posNull, posNull)
-      end
-    end
-  end
-end
-
--- Called from the PostRender callback
-function RPSpeedrun:CheckChallenge()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
-    return
-  end
-
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-  local player = game:GetPlayer(0)
-
-  -- Disable the controls or else the player will be able to move around while the screen is still black
-  if gameFrameCount < 1 then
-    player.ControlsEnabled = false
-  else
-    player.ControlsEnabled = true
   end
 end
 

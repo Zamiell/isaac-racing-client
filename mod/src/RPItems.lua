@@ -29,6 +29,12 @@ function RPItems:Main()
 
     RPGlobals.run.giveExtraCharge = true
   end
+
+  -- Fix the Schoolbag + Butter! bug
+  if player:HasTrinket(TrinketType.TRINKET_BUTTER) then
+    RPGlobals.run.usedButter = true
+    -- We will check this variable later in the PostUpdate callback (the "RPSchoolbag:CheckSecondItem()" function)
+  end
 end
 
 --

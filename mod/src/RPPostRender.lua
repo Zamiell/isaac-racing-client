@@ -26,6 +26,7 @@ function RPPostRender:Main()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
 
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   RPSaveDat:Load()
@@ -47,6 +48,13 @@ function RPPostRender:Main()
        RPGlobals.race.status == "in progress" then
 
       command = "seed " .. RPGlobals.race.seed
+
+    elseif challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
+      command = "restart " .. RPGlobals.race.order9[RPSpeedrun.charNum]
+
+    elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+      command = "restart " .. RPGlobals.race.order14[RPSpeedrun.charNum]
+
     else
       command = "restart"
     end
@@ -87,7 +95,8 @@ function RPPostRender:Main()
   RPPostRender:Race()
 
   -- Do speedrun related checks
-  RPSpeedrun:CheckChallenge()
+  RPSpeedrun:CheckRestart()
+  RPSpeedrun:CheckChangeCharOrder()
 end
 
 -- Make Cursed Eye seeded
@@ -144,7 +153,11 @@ function RPPostRender:CheckResetInput()
   end
 
   -- Check to see if we are opening the console window
-  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) then -- 96
+  -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
+  local challenge = Isaac.GetChallenge()
+  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) and -- 96
+     challenge == Challenge.CHALLENGE_NULL then -- 0
+
     RPGlobals.run.consoleWindowOpen = true
     return
   end
@@ -166,6 +179,8 @@ function RPPostRender:CheckResetInput()
     -- (we check all inputs instead of "player.ControllerIndex" because
     -- a controller player might be using the keyboard to reset)
     if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
+      RPSpeedrun.fastReset = true
+      -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
       Isaac.ExecuteCommand("restart")
       return
     end
@@ -222,10 +237,10 @@ function RPPostRender:Race()
     RPSprites:Init("top", "error-character") -- Error: You are on the wrong character.
     return
 
-  elseif RPGlobals.spriteTable.top ~= nil and
-         (RPGlobals.spriteTable.top.spriteName == "error-hard-mode" or
-          RPGlobals.spriteTable.top.spriteName == "error-challenge" or
-          RPGlobals.spriteTable.top.spriteName == "error-character") then
+  elseif RPSprites.sprites.top ~= nil and
+         (RPSprites.sprites.top.spriteName == "error-hard-mode" or
+          RPSprites.sprites.top.spriteName == "error-challenge" or
+          RPSprites.sprites.top.spriteName == "error-character") then
 
     RPSprites:Init("top", 0)
   end
@@ -243,10 +258,9 @@ function RPPostRender:Race()
     RPSprites:Init("ready", tostring(RPGlobals.race.placeMid))
     -- We use "placeMid" to hold this variable, since it isn't used before a race starts
     RPSprites:Init("slash", "slash")
-    RPSprites:Init("readyTotal", tostring(RPGlobals.race.place))
-    -- We use "place" to hold this variable, since it isn't used before a race starts
+    RPSprites:Init("readyTotal", tostring(RPGlobals.race.numEntrants))
   else
-    if RPGlobals.spriteTable.top ~= nil and RPGlobals.spriteTable.top.spriteName == "wait" then
+    if RPSprites.sprites.top ~= nil and RPSprites.sprites.top.spriteName == "wait" then
       -- There can be other things on the "top" sprite location and we don't want to have to reload it on every frame
       RPSprites:Init("top", 0)
     end

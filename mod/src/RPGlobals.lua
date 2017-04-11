@@ -21,13 +21,14 @@ RPGlobals.race = {
   startingItems   = {},          -- The starting items for this race
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
   placeMid        = 1,           -- This is either the number of people ready, or the non-fnished place
-  place           = 1,           -- This is either the total number of people int he race, or the final place
+  place           = 1,           -- This is the final place
+  numEntrants     = 1,           -- The number of people in the race
   order9          = {            -- This is the R+9/14 character order
     PlayerType.PLAYER_KEEPER, -- 14
     PlayerType.PLAYER_THELOST, -- 10
     PlayerType.PLAYER_XXX, -- 4
     PlayerType.PLAYER_SAMSON, -- 6
-    PlayerType.PLAYER_LAZARUS2, -- 11
+    PlayerType.PLAYER_LAZARUS, -- 8
     PlayerType.PLAYER_EVE, -- 5
     PlayerType.PLAYER_CAIN, -- 2
     PlayerType.PLAYER_JUDAS, -- 3
@@ -38,7 +39,7 @@ RPGlobals.race = {
     PlayerType.PLAYER_THELOST, -- 10
     PlayerType.PLAYER_XXX, -- 4
     PlayerType.PLAYER_SAMSON, -- 6
-    PlayerType.PLAYER_LAZARUS2, -- 11
+    PlayerType.PLAYER_LAZARUS, -- 8
     PlayerType.PLAYER_EVE, -- 5
     PlayerType.PLAYER_CAIN, -- 2
     PlayerType.PLAYER_JUDAS, -- 3
@@ -88,8 +89,6 @@ RPGlobals.RNGCounter = {
   SackOfSacks   = 0,
 }
 
-RPGlobals.spriteTable = {}
-
 --
 -- Extra enumerations
 --
@@ -118,7 +117,8 @@ CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory
 CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 529, passive
 CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 530, passive
 CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 531, passive
-CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("13 Luck") + 1
+CollectibleType.COLLECTIBLE_CHECKPOINT          = Isaac.GetItemIdByName("Checkpoint")      -- 532, passive
+CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("Checkpoint") + 1
 
 -- Trinkets
 TrinketType.TRINKET_HAIRPIN      = 120
@@ -140,8 +140,8 @@ PillEffect.NUM_PILL_EFFECTS       = Isaac.GetPillEffectByName("Gulp!") + 1
 PickupVariant.PICKUP_MIMIC = 54
 
 -- Sounds
-SoundEffect.SOUND_LAUGH       = Isaac.GetSoundIdByName("Laugh")
-SoundEffect.NUM_SOUND_EFFECTS = Isaac.GetSoundIdByName("Laugh") + 1
+SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
+SoundEffect.NUM_SOUND_EFFECTS     = Isaac.GetSoundIdByName("Speedrun Finish") + 1
 
 -- Spaded by ilise rose (@yatboim)
 RPGlobals.RoomTransition = {
@@ -209,6 +209,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.blackRingDropChance  = 0
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
+  RPGlobals.run.usedButter           = false
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

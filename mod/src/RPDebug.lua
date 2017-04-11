@@ -4,8 +4,9 @@ local RPDebug = {}
 -- Includes
 --
 
-local RPGlobals = require("src/rpglobals")
-local RPSprites = require("src/rpsprites")
+local RPGlobals  = require("src/rpglobals")
+local RPSprites  = require("src/rpsprites")
+local RPSpeedrun = require("src/rpspeedrun")
 
 --
 -- Variables
@@ -22,6 +23,10 @@ function RPDebug:Main()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
@@ -35,7 +40,6 @@ function RPDebug:Main()
     "run",
     "race",
     "raceVars",
-    "spriteTable",
   }
 
   for i = 1, #globalsToPrint do
@@ -45,7 +49,7 @@ function RPDebug:Main()
         Isaac.DebugString("  " .. k .. ': ')
         for k2, v2 in pairs(v) do
           if type(v2) == "table" then
-            Isaac.DebugString("  " .. k2 .. ': ')
+            Isaac.DebugString("    " .. k2 .. ': ')
             for k3, v3 in pairs(v2) do
               Isaac.DebugString("      " .. k3 .. ': ' .. tostring(v3))
             end
@@ -58,13 +62,25 @@ function RPDebug:Main()
       end
     end
   end
+  Isaac.DebugString("speedrun: ")
+  for k, v in pairs(RPSpeedrun) do
+    if type(v) == "string" or
+       type(v) == "number" or
+       type(v) == "boolean" then
+
+      Isaac.DebugString("  " .. k .. ": " .. tostring(v))
+    end
+  end
+  Isaac.DebugString("room index: " .. tostring(roomIndex))
 
   -- Test stuff
   --RPGlobals.raceVars.finished = true
   --debugVar = debugVar + 1
   --RPSprites:Init("diversity-item5", tostring(debugVar))
   --RPSprites:Init("speedrun-char1", "0")
-  RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
+  --RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
+  --RPSpeedrun.charNum = 13
+  --RPSpeedrun.finishedChar = true
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

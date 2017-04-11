@@ -4,10 +4,14 @@ local RPPostGameStarted = {}
 -- Includes
 --
 
-local RPGlobals   = require("src/rpglobals")
-local RPCallbacks = require("src/rpcallbacks")
-local RPSprites   = require("src/rpsprites")
-local RPSchoolbag = require("src/rpschoolbag")
+local RPGlobals    = require("src/rpglobals")
+local RPCallbacks  = require("src/rpcallbacks")
+local RPSprites    = require("src/rpsprites")
+local RPSchoolbag  = require("src/rpschoolbag")
+local RPSoulJar    = require("src/rpsouljar")
+local RPFastTravel = require("src/rpfasttravel")
+local RPSpeedrun   = require("src/rpspeedrun")
+local RPTimer      = require("src/rptimer")
 
 --
 -- Initialization functions
@@ -15,25 +19,23 @@ local RPSchoolbag = require("src/rpschoolbag")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function RPPostGameStarted:Main(saveState)
-  -- We don't need to do anything extra if they quit and continued in the middle of a run
-  if saveState then
-    return
-  end
-
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local seed = level:GetDungeonPlacementSeed()
   local curses = level:GetCurses()
   local seeds = game:GetSeeds()
-  local sfx = SFXManager()
-  local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
 
-  -- Stop the sound effect from playing at the beginning of a run for characters with a fully charged active item
-  if sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then -- 170
-    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+  if saveState then
+    -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
+    RPGlobals.run.currentFloor = stage
+    Isaac.DebugString("New floor: " .. tostring(RPGlobals.run.currentFloor) .. " (from S+Q)")
+
+    -- We don't need to do the long series of checks if they quit and continued in the middle of a run
+    return
   end
 
   -- Make sure that the "Total Curse Immunity" easter egg is on (the "BLCK CNDL" seed)
@@ -111,22 +113,22 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.RNGCounter.AcidBaby = seed
   RPGlobals.RNGCounter.SackOfSacks = seed
 
-  -- Reset the sprite table
+  -- Reset all graphics
   -- (this is needed to prevent a bug where the "Race Start" room graphics
   -- will flash on the screen before the room is actually entered)
-  RPGlobals.spriteTable = {}
+  -- (it also prevents the bug where if you reset during the stage animation, it will permanently stay on the screen)
+  RPSprites.sprites = {}
+  RPFastTravel.sprites = {}
+  RPSchoolbag.sprites = {}
+  RPSoulJar.sprites = {}
+  RPSpeedrun.sprites = {}
+  RPTimer.sprites = {}
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()
 
-  -- Check for custom challenges
-  if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
-    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
-    Isaac.ExecuteCommand("goto s.boss.9999")
-    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
-    Isaac.DebugString("Going to the \"Change Char Order\" room.")
-    -- We do more things in the "PostNewRoom" callback
-  end
+  -- Do more run initialization things specifically pertaining to speedruns
+  RPSpeedrun:Init()
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()
@@ -174,11 +176,7 @@ function RPPostGameStarted:Character()
   end
 
   -- Do character-specific actions
-  if character == PlayerType.PLAYER_MAGDALENA then -- 1
-    -- Add the Soul Jar
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false) -- 61
-
-  elseif character == PlayerType.PLAYER_JUDAS then -- 3
+  if character == PlayerType.PLAYER_JUDAS then -- 3
     -- Judas needs to be at half of a red heart
     player:AddHearts(-1)
 
@@ -211,12 +209,6 @@ function RPPostGameStarted:Character()
       end
     end
 
-    -- Make the D6 come first on the item tracker
-    Isaac.DebugString("Removing collectible " .. activeItem)
-    Isaac.DebugString("Removing collectible " .. passiveItem)
-    Isaac.DebugString("Adding collectible " .. activeItem)
-    Isaac.DebugString("Adding collectible " .. passiveItem)
-
     -- Update the cache (in case we had an active item that granted stats, like A Pony)
     player:AddCacheFlags(CacheFlag.CACHE_ALL)
     player:EvaluateItems()
@@ -233,6 +225,7 @@ function RPPostGameStarted:Character()
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
       player:AddCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM)
+      passiveItem = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
     end
 
     -- Manually fix any custom active items
@@ -244,16 +237,11 @@ function RPPostGameStarted:Character()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
     end
 
-  elseif character == PlayerType.PLAYER_LILITH then -- 13
-    -- Lilith starts with the Schoolbag by default
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
-
     -- Reorganize the items on the item tracker
-    Isaac.DebugString("Removing collectible 357") -- Box of Friends
-    Isaac.DebugString("Removing collectible 412") -- Cambion Conception
-    Isaac.DebugString("Adding collectible 357") -- Box of Friends
-    Isaac.DebugString("Adding collectible 412") -- Cambion Conception
+    Isaac.DebugString("Removing collectible " .. activeItem)
+    Isaac.DebugString("Removing collectible " .. passiveItem)
+    Isaac.DebugString("Adding collectible " .. activeItem)
+    Isaac.DebugString("Adding collectible " .. passiveItem)
 
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Remove the Wooden Nickel from the item tracker
@@ -268,15 +256,6 @@ function RPPostGameStarted:Character()
     player:AddCoins(1) -- This fills in the new heart container
     player:AddCoins(25) -- Add a 2nd container
     player:AddCoins(1) -- This fills in the new heart container
-
-  elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-    -- Apollyon starts with the Schoolbag by default
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
-
-    -- Reorganize the items on the item tracker
-    Isaac.DebugString("Removing collectible 477") -- Void
-    Isaac.DebugString("Adding collectible 477") -- Void
   end
 
   if RPGlobals.run.schoolbag.item ~= 0 then

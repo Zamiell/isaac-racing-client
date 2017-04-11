@@ -6,17 +6,14 @@
 --[[
 
 TODO:
-- look at timer in 4:30 of VOD of today
-- Set the racer's character at the start of a race for them (not possible to modify item pools via current bindings)
-- fix bug with red x not showing if you are the last person to ready up
-- place thing doesn't update
-- b1 off limits doesn't work
+- add postnewlevel stuff to postplayer callback
+- add thing to reset stage sprite on reset??
+- why doesn't trapdoor appear after S+Q on floor 1
+- test seeded boss heart drops with all double trouble rooms
+
+- Set the racer's character at the start of a race for them
 - mega satan door doesn't open after backtracking
-- https://clips.twitch.tv/WrongGenerousMonkeyStrawBeary
-- show checkbox or X next to pre-race
-- remove character check from mod since we can restart X
 - make mega satan animation faster on death
-- keybinding UI for custom schoolbag switch
 
 - remove delay on the credits item
 - make mushrooms only spawn on caves
@@ -28,6 +25,7 @@ TODO:
 - Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives
 - Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
 
+- keybinding UI for custom schoolbag switch
 - Implement time offsets, show on starting screen
 - Seed Maw of the Void and Athame black heart drops
 
