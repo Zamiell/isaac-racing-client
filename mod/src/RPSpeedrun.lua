@@ -396,6 +396,8 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         end
       end
     end
+    RPSpeedrun.sprites.button1 = nil
+    RPSpeedrun.sprites.button2 = nil
 
     RPSpeedrun.sprites.characters = {}
     for i = 1, #RPSpeedrun.charPosition14 do
