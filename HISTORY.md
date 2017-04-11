@@ -12,7 +12,7 @@
 * Added sparklies and fireworks if you complete a race with 3 or more people or finish a R+9/14 speedrun. (Thanks to Chronometrics for helping to code this.)
 * Mimics now have vanilla graphics instead of the special Racing+ graphic. (The final tally on the vote was 19 to 18.)
 * The beam of light on Womb 2 will no longer have the extra delay if the room is already cleared.
-* The colors of some Purity auras have been changed to make them easier to see; speed is now green (think "Roid Rage") and range is now yellow. (Thanks to Inschato for helping with this and Ou_J for the idea.)
+* The colors of some Purity auras have been changed to make them easier to see; speed is now green (think "Roid Rage") and range is now yellow. (Thanks to Inschato for helping with this and BMZ_Loop for the graphics and Ou_J for the idea.)
 * Fixed the bug where the beam of light would be incorrectly placed in Black Markets and I AM ERROR rooms. (Thanks blcd & Lobsterosity)
 * Fixed the bug where Eden's Soul would always be fully charged if you had the Schoolbag. (Thanks Lobsterosity)
 * Fixed the bug where the recharge sound would play during a reset on potato computers.
