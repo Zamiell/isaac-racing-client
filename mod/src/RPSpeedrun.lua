@@ -302,7 +302,12 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, RPGlobals:GridToPos(8, 5), true) -- 20
 
   -- Spawn the graphics over the buttons
-  -- TODO
+  RPSpeedrun.sprites.button1 = Sprite()
+  RPSpeedrun.sprites.button1:Load("gfx/speedrun/button1.anm2", true)
+  RPSpeedrun.sprites.button1:SetFrame("Default", 0)
+  RPSpeedrun.sprites.button2 = Sprite()
+  RPSpeedrun.sprites.button2:Load("gfx/speedrun/button2.anm2", true)
+  RPSpeedrun.sprites.button2:SetFrame("Default", 0)
 end
 
 -- Called from the PostRender callback
@@ -354,6 +359,8 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         end
       end
     end
+    RPSpeedrun.sprites.button1 = nil
+    RPSpeedrun.sprites.button2 = nil
 
     RPSpeedrun.sprites.characters = {}
     for i = 1, #RPSpeedrun.charPosition9 do
@@ -471,11 +478,13 @@ function RPSpeedrun:DisplayCharSelectRoom()
 
   if RPSpeedrun.sprites.button1 ~= nil then
     local posButton1 = RPGlobals:GridToPos(4, 4)
-    RPSpeedrun.sprites.button1:RenderLayer(0, posButton1)
+    local posRender = Isaac.WorldToRenderPosition(posButton1, false)
+    RPSpeedrun.sprites.button1:RenderLayer(0, posRender)
   end
   if RPSpeedrun.sprites.button2 ~= nil then
     local posButton2 = RPGlobals:GridToPos(8, 4)
-    RPSpeedrun.sprites.button2:RenderLayer(0, posButton2)
+    local posRender = Isaac.WorldToRenderPosition(posButton2, false)
+    RPSpeedrun.sprites.button2:RenderLayer(0, posRender)
   end
   if RPSpeedrun.sprites.characters ~= nil then
     local posNull = Vector(0, 0)

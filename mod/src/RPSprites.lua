@@ -78,9 +78,7 @@ function RPSprites:Display()
     local typeFormatY = 10
 
     -- Position all the sprites
-    if k == "stage" then -- The name of the floor when we get to a new floor
-      vec.Y = vec.Y - 85
-    elseif k == "top" then -- Pre-race messages and the countdown
+    if k == "top" then -- Pre-race messages and the countdown
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
       vec.Y = vec.Y - 40
@@ -157,14 +155,8 @@ function RPSprites:Display()
 
     -- Draw it
     if v.sprite ~= nil then
-      if k == "stage" then
-        -- For animations, we have to both "Render()" and "Update()"
-        RPSprites.sprites[k].sprite:Render(vec, Vector(0, 0), Vector(0, 0))
-        RPSprites.sprites[k].sprite:Update()
-      else
-        -- For non-animations, we want to just render frame 0
-        RPSprites.sprites[k].sprite:RenderLayer(0, vec)
-      end
+      -- For non-animations, we want to just render frame 0
+      RPSprites.sprites[k].sprite:RenderLayer(0, vec)
     end
   end
 end
