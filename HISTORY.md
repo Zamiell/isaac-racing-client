@@ -2,6 +2,8 @@
 
 ### *v0.5.3* - April 12th, 2017
 
+* After each patch, your R+9 and R+14 character orders will be deleted. Backup your "save#.dat" file and copy it back after a patch if you want to quickly reset your character order without having to go through the custom challenge again.
+* Added a new warning message if you attempt to perform a R+9 or R+14 speedrun without having set your character order.
 * Fixed the bug where the "R+9" and "R+14" labels weren't showing on the "Change Char Order" custom challenge.
 * Fixed the bug where the game would ocassionally crash if you restarted the game while playing as Lilith. (Thanks Cyber_1)
 * Fixed the bug where Keeper would not heal properly in certain specific conditions. (Thanks Cyber_1)
