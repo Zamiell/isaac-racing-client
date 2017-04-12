@@ -375,7 +375,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
       local charNum = RPSpeedrun.charPosition9[i][1]
       RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
       RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
       -- Fade the character so it looks like a ghost
     end
 
@@ -412,7 +412,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
       local charNum = RPSpeedrun.charPosition14[i][1]
       RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
       RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
       -- Fade the character so it looks like a ghost
     end
   end
