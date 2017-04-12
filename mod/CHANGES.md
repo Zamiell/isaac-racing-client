@@ -90,7 +90,6 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Reduced the pickup delay on all pedestal items from 0.67 seconds to 0.5 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * All Spike Chests will now spawn as Mimics instead.
-* Mimics are no longer rediculously trivial to spot.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
 * Hosts and Mobile Hosts are now immune to fear.

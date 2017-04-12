@@ -6,9 +6,6 @@
 --[[
 
 TODO:
-- add postnewlevel stuff to postplayer callback
-- add thing to reset stage sprite on reset??
-- why doesn't trapdoor appear after S+Q on floor 1
 - test seeded boss heart drops with all double trouble rooms
 
 - Set the racer's character at the start of a race for them

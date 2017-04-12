@@ -26,6 +26,9 @@ function RPPostGameStarted:Main(saveState)
   local seed = level:GetDungeonPlacementSeed()
   local curses = level:GetCurses()
   local seeds = game:GetSeeds()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
 
@@ -135,6 +138,14 @@ function RPPostGameStarted:Main(saveState)
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPCallbacks:PostNewLevel2()
+
+  -- Silence the recharge noise for Lilith
+  -- (this is normally done in the PostPlayerInit callback, but we need to handle it here for Lilith to avoid a crash)
+  if character == PlayerType.PLAYER_LILITH and -- 13
+     sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then
+
+    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+  end
 end
 
 -- This is done when a run is started

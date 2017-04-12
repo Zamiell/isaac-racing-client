@@ -6,6 +6,7 @@ local RPSpeedrun = {}
 
 local RPGlobals   = require("src/rpglobals")
 local RPSaveDat   = require("src/rpsavedat")
+local RPSprites   = require("src/rpsprites")
 local RPSchoolbag = require("src/rpschoolbag")
 
 --
@@ -515,6 +516,34 @@ function RPSpeedrun:DisplayCharProgress()
   if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
      challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
 
+    return
+  end
+
+  -- Check to see if they have a set order
+  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and #RPGlobals.race.order9 == 1) or
+     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and #RPGlobals.race.order14 == 1) then
+
+    -- Load the sprites
+    if RPSpeedrun.sprites.needToSet1 == nil then
+      RPSpeedrun.sprites.needToSet1 = Sprite()
+      RPSpeedrun.sprites.needToSet1:Load("gfx/speedrun/need-to-set1.anm2", true)
+      RPSpeedrun.sprites.needToSet1:SetFrame("Default", 0)
+      RPSpeedrun.sprites.needToSet2 = Sprite()
+      RPSpeedrun.sprites.needToSet2:Load("gfx/speedrun/need-to-set2.anm2", true)
+      RPSpeedrun.sprites.needToSet2:SetFrame("Default", 0)
+      RPSpeedrun.sprites.needToSet3 = Sprite()
+      RPSpeedrun.sprites.needToSet3:Load("gfx/speedrun/need-to-set3.anm2", true)
+      RPSpeedrun.sprites.needToSet3:SetFrame("Default", 0)
+    end
+
+    -- Display the sprites
+    local pos = RPSprites:GetScreenCenterPosition()
+    pos.Y = pos.Y - 80
+    RPSpeedrun.sprites.needToSet1:RenderLayer(0, pos)
+    pos.Y = pos.Y + 30
+    RPSpeedrun.sprites.needToSet2:RenderLayer(0, pos)
+    pos.Y = pos.Y + 40
+    RPSpeedrun.sprites.needToSet3:RenderLayer(0, pos)
     return
   end
 

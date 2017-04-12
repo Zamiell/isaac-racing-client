@@ -205,7 +205,7 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
 end
 
 -- Called from the "RPCheckEntities:NonGrid()" function
-function RPFastTravel:CheckPickupOverHole(entity)
+function RPFastTravel:CheckPickupOverHole(pickup)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -213,51 +213,77 @@ function RPFastTravel:CheckPickupOverHole(entity)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local room = game:GetRoom()
 
   -- Check to see if it is overlapping with a trapdoor / beam of light / crawlspace
-  local movePickup = false
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
   for i = 1, #RPGlobals.run.replacedTrapdoors do
     if roomIndex == RPGlobals.run.replacedTrapdoors[i].room and
-       entity.Position.X >= RPGlobals.run.replacedTrapdoors[i].pos.X - squareSize and
-       entity.Position.X <= RPGlobals.run.replacedTrapdoors[i].pos.X + squareSize and
-       entity.Position.Y >= RPGlobals.run.replacedTrapdoors[i].pos.Y - squareSize and
-       entity.Position.Y <= RPGlobals.run.replacedTrapdoors[i].pos.Y + squareSize then
+       pickup.Position.X >= RPGlobals.run.replacedTrapdoors[i].pos.X - squareSize and
+       pickup.Position.X <= RPGlobals.run.replacedTrapdoors[i].pos.X + squareSize and
+       pickup.Position.Y >= RPGlobals.run.replacedTrapdoors[i].pos.Y - squareSize and
+       pickup.Position.Y <= RPGlobals.run.replacedTrapdoors[i].pos.Y + squareSize then
 
-      movePickup = true
+      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedTrapdoors[i].pos)
+      return
     end
   end
   for i = 1, #RPGlobals.run.replacedHeavenDoors do
     if roomIndex == RPGlobals.run.replacedHeavenDoors[i].room and
-       entity.Position.X >= RPGlobals.run.replacedHeavenDoors[i].pos.X - squareSize and
-       entity.Position.X <= RPGlobals.run.replacedHeavenDoors[i].pos.X + squareSize and
-       entity.Position.Y >= RPGlobals.run.replacedHeavenDoors[i].pos.Y - squareSize and
-       entity.Position.Y <= RPGlobals.run.replacedHeavenDoors[i].pos.Y + squareSize then
+       pickup.Position.X >= RPGlobals.run.replacedHeavenDoors[i].pos.X - squareSize and
+       pickup.Position.X <= RPGlobals.run.replacedHeavenDoors[i].pos.X + squareSize and
+       pickup.Position.Y >= RPGlobals.run.replacedHeavenDoors[i].pos.Y - squareSize and
+       pickup.Position.Y <= RPGlobals.run.replacedHeavenDoors[i].pos.Y + squareSize then
 
-      movePickup = true
+      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedHeavenDoors[i].pos)
+      return
     end
   end
   for i = 1, #RPGlobals.run.replacedCrawlspaces do
     if roomIndex == RPGlobals.run.replacedCrawlspaces[i].room and
-       entity.Position.X >= RPGlobals.run.replacedCrawlspaces[i].pos.X - squareSize and
-       entity.Position.X <= RPGlobals.run.replacedCrawlspaces[i].pos.X + squareSize and
-       entity.Position.Y >= RPGlobals.run.replacedCrawlspaces[i].pos.Y - squareSize and
-       entity.Position.Y <= RPGlobals.run.replacedCrawlspaces[i].pos.Y + squareSize then
+       pickup.Position.X >= RPGlobals.run.replacedCrawlspaces[i].pos.X - squareSize and
+       pickup.Position.X <= RPGlobals.run.replacedCrawlspaces[i].pos.X + squareSize and
+       pickup.Position.Y >= RPGlobals.run.replacedCrawlspaces[i].pos.Y - squareSize and
+       pickup.Position.Y <= RPGlobals.run.replacedCrawlspaces[i].pos.Y + squareSize then
 
-      movePickup = true
+      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedCrawlspaces[i].pos)
+      return
     end
   end
+end
 
-  if movePickup then
-    -- Spawn it in a new position
-    -- (this might still overlap with the hole, but if it does,
-    -- it will just get respawned again on each frame until it finds a good position)
-    local newPos = room:FindFreePickupSpawnPosition(entity.Position, 0, true)
-    game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity, entity.Parent, entity.SubType, entity.InitSeed)
-    entity:Remove()
+function RPFastTravel:MovePickupOverHole(pickup, posHole)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local squareSize = RPFastTravel.trapdoorTouchDistance + 2
+
+  -- Generate new spawn positions until we find one that doesn't overlap with the hole
+  local newPos
+  local overlapping = false
+  for i = 0, 100 do
+    newPos = room:FindFreePickupSpawnPosition(pickup.Position, i, true)
+    if newPos.X >= posHole.X - squareSize and
+       newPos.X <= posHole.X + squareSize and
+       newPos.Y >= posHole.Y - squareSize and
+       newPos.Y <= posHole.Y + squareSize then
+
+      overlapping = true
+    end
+    if overlapping == false then
+      break
+    end
+  end
+  if overlapping then
+    -- We were not able to find a free location after 100 attempts, so give up and just delete the pickup
+    pickup:Remove()
+    Isaac.DebugString("Error: Failed to find a free location after 100 attempts for pickup: " ..
+                      tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+  else
+    -- Move it
+    game:Spawn(pickup.Type, pickup.Variant, newPos, pickup.Velocity, pickup.Parent, pickup.SubType, pickup.InitSeed)
+    pickup:Remove()
     Isaac.DebugString("Moved a pickup that was overlapping with a hole: " ..
-                      tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType))
+                      tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
   end
 end
 
@@ -387,9 +413,6 @@ function RPFastTravel:CheckTrapdoor()
 
      -- Make Isaac visable again
      player.SpriteScale = RPGlobals.run.trapdoor.scale
-     Isaac.DebugString("Made Isaac visible: (" ..
-                       tostring(RPGlobals.run.trapdoor.scale.X) .. ", " ..
-                       tostring(RPGlobals.run.trapdoor.scale.Y) .. ")")
 
      -- Re-give Isaac the collision that we removed earlier
      player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4

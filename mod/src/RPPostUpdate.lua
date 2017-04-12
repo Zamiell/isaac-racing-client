@@ -182,7 +182,7 @@ function RPPostUpdate:CheckKeeperHearts()
   -- Check Keeper coin count
   if coins ~= RPGlobals.run.keeper.coins then
     local coinDifference = coins - RPGlobals.run.keeper.coins
-    if coinDifference >= 2 then
+    if coinDifference > 0 then
       for i = 1, coinDifference do
         local newCoins = player:GetNumCoins()
         if player:GetHearts() < player:GetMaxHearts() and

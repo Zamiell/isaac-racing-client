@@ -274,50 +274,29 @@ if (isDev || fs.existsSync(modPathDev) ) {
     globals.modPath = path.join(modPath, globals.modName);
 }
 
-// Get the default R+9/14 character order
-let defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
-if (fs.existsSync(defaultSaveDatFile)) {
-    let json = JSON.parse(fs.readFileSync(defaultSaveDatFile, 'utf8'));
-    if (typeof json.order9 === 'undefined') {
-        globals.initError = 'The "' + defaultSaveDatFile + '" file does not have a property for "order9".';
-        globals.order9 = [];
-    } else {
-        globals.order9 = json.order9;
-    }
-    if (typeof json.order14 === 'undefined') {
-        globals.initError = 'The "' + defaultSaveDatFile + '" file does not have a property for "order14".';
-        globals.order14 = [];
-    } else {
-        globals.order14 = json.order14;
-    }
-} else {
-    globals.initError = 'The "' + defaultSaveDatFile + '" file does not exist.';
-    defaultSaveDatFile = null;
-    globals.order9 = [];
-    globals.order14 = [];
-}
-
 // Store what their R+9/14 character order is
+let defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
 for (let i = 1; i <= 3; i++) {
     let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
     if (fs.existsSync(modLoaderFile)) {
         try {
             let json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
             if (typeof json.order9 === 'undefined') {
-                globals.modLoader['order9-' + i] = globals.order9;
+                globals.modLoader['order9-' + i] = [0];
             } else {
                 globals.modLoader['order9-' + i] = json.order9;
             }
             if (typeof json.order9 === 'undefined') {
-                globals.modLoader['order14-' + i] = globals.order14;
+                globals.modLoader['order14-' + i] = [0];
             } else {
                 globals.modLoader['order14-' + i] = json.order14;
             }
         } catch(err) {
             globals.initError = 'Error while reading the "save' + i + '.dat" file: ' + err;
         }
-    } else if (defaultSaveDatFile !== null) {
-        // Copy over the default (this might happen after a fresh installation)
+    } else if (fs.existsSync(defaultSaveDatFile)) {
+        // Copy over the default file
+        // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
         try {
             fs.copySync(defaultSaveDatFile, modLoaderFile);
         } catch(err) {

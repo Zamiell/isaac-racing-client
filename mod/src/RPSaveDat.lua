@@ -29,6 +29,7 @@ function RPSaveDat:Load()
     roomIndex = level:GetCurrentRoomIndex()
   end
   local isaacFrameCount = Isaac.GetFrameCount()
+  local challenge = Isaac.GetChallenge()
 
   if RPGlobals.raceVars.loadOnNextFrame or -- We need to check on the first frame of the run
      (RPGlobals.race.status == "starting" and isaacFrameCount & 1 == 0) or
@@ -147,6 +148,12 @@ function RPSaveDat:Load()
       for i = 1, #oldRace.order9 do
         if oldRace.order9[i] ~= RPGlobals.race.order9[i] then
           Isaac.DebugString("ModData order9 changed.")
+
+          if challenge ~= Challenge.CHALLENGE_NULL then -- 0
+            -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
+            RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+          end
+
           break
         end
       end
@@ -157,6 +164,12 @@ function RPSaveDat:Load()
       for i = 1, #oldRace.order14 do
         if oldRace.order14[i] ~= RPGlobals.race.order14[i] then
           Isaac.DebugString("ModData order14 changed.")
+
+          if challenge ~= Challenge.CHALLENGE_NULL then -- 0
+            -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
+            RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+          end
+
           break
         end
       end

@@ -20,36 +20,11 @@ RPGlobals.race = {
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
-  placeMid        = 1,           -- This is either the number of people ready, or the non-fnished place
+  placeMid        = 0,           -- This is either the number of people ready, or the non-fnished place
   place           = 1,           -- This is the final place
   numEntrants     = 1,           -- The number of people in the race
-  order9          = {            -- This is the R+9/14 character order
-    PlayerType.PLAYER_KEEPER, -- 14
-    PlayerType.PLAYER_THELOST, -- 10
-    PlayerType.PLAYER_XXX, -- 4
-    PlayerType.PLAYER_SAMSON, -- 6
-    PlayerType.PLAYER_LAZARUS, -- 8
-    PlayerType.PLAYER_EVE, -- 5
-    PlayerType.PLAYER_CAIN, -- 2
-    PlayerType.PLAYER_JUDAS, -- 3
-    PlayerType.PLAYER_AZAZEL, -- 7
-  },
-  order14         = {
-    PlayerType.PLAYER_KEEPER, -- 14
-    PlayerType.PLAYER_THELOST, -- 10
-    PlayerType.PLAYER_XXX, -- 4
-    PlayerType.PLAYER_SAMSON, -- 6
-    PlayerType.PLAYER_LAZARUS, -- 8
-    PlayerType.PLAYER_EVE, -- 5
-    PlayerType.PLAYER_CAIN, -- 2
-    PlayerType.PLAYER_JUDAS, -- 3
-    PlayerType.PLAYER_AZAZEL, -- 7
-    PlayerType.PLAYER_MAGDALENA, -- 1
-    PlayerType.PLAYER_ISAAC, -- 0
-    PlayerType.PLAYER_LILITH, -- 13
-    PlayerType.PLAYER_APOLLYON, -- 15
-    PlayerType.PLAYER_EDEN, -- 9
-  },
+  order9          = {0},
+  order14         = {0},
 }
 
 -- These are things that pertain to the race but are not read from the "save.dat" file

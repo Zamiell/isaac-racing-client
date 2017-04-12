@@ -231,19 +231,25 @@ function RPCallbacks:PostPlayerInit(player)
   -- Local variables
   local game = Game()
   local mainPlayer = game:GetPlayer(0)
+  local character = mainPlayer:GetPlayerType()
   local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_PLAYER_INIT")
 
   -- Check for co-op babies
   if player.Variant == 0 then
-    -- Stop the sound effect from playing at the beginning of a run for characters with a fully charged active item
+    -- The "charge" sound effect plays at the beginning of a run if you start with the D6,
+    -- and this is annoying with fast-resets, so stop it from playing
     -- (at this point we don't have the D6 yet, but once we already have a fully charged D6,
     -- it won't play the charge sound effect)
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
-    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+    if character ~= PlayerType.PLAYER_LILITH then -- 13
+      -- Giving the D6 to Lilith here causes the game to crash because the "AddCollectible()" function
+      -- causes a "CheckFamiliar()" call, which uses the current room, which happens to be null because this occurs
+      -- before floor initiailization, so we will handle Lilith later in the PostGameStarted callback
+      player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
+      sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+    end
     return
-    -- TODO ADD STUFF FROM POSTNEWLEVEL
   end
 
   -- A co-op baby spawned

@@ -96,15 +96,6 @@ if args.skipmod == False:
         error('Failed to copy the "' + mod_dir + '" directory:', e)
     print('Copied the mod.')
 
-    # Delete the "save.dat" files so that we don't overwrite user's speedrun orders
-    for i in range(1, 4): # This will go from 1 to 3
-        save_dat = os.path.join(mod_dir, 'save' + str(i) + '.dat')
-        try:
-            os.remove(save_dat)
-        except Exception as e:
-            error('Failed to delete the "' + save_dat + '" file:', e)
-    print('Deleted the "save.dat" files.')
-
 if args.github:
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'

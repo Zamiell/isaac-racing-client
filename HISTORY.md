@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.5.3* - April 12th, 2017
+
+* Fixed the bug where the "R+9" and "R+14" labels weren't showing on the "Change Char Order" custom challenge.
+* Fixed the bug where the game would ocassionally crash if you restarted the game while playing as Lilith. (Thanks Cyber_1)
+* Fixed the bug where Keeper would not heal properly in certain specific conditions. (Thanks Cyber_1)
+* Fixed the bug where pickups could ocassionally glitch out over trapdoors. (Thanks PassionDrama)
+
 ### *v0.5.0* - April 10th, 2017
 
 * Introducing a brand new custom challenge for R+9 and R+14 speedruns!
