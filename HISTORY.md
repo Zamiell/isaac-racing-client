@@ -4,6 +4,7 @@
 
 * Eden now has better hair in the "Change Char Order" custom challenge.
 * All of the character graphics are less faded in the "Change Char Order" custom challenge.
+* Fixed the bug in the speedrun custom challenges where the "checkpoint spawned" variable was not properly being reset at the beginning of a run. (Thanks ceehe)
 
 ### *v0.5.3* - April 12th, 2017
 
@@ -22,6 +23,7 @@
   * If you are in the middle of a run and you want to start over, you can hold R to go back to the first character.
   * You can set your character order by using the custom "Change Char Order" challenge.
   * In order for it to work with the LiveSplit auto-splitter, you have to check the box that says "Racing+ speedrun" in the auto-splitter options.
+  * The "S1" stands for season 1. In the future, we can easily make new speedrun categories.
 * Isaac, Magdalene, Lilith, and Apollyon are set back to their old starting items. (They just get the D6 now and nothing else special. They will still get their additional starting items in the R+9/14 custom challenge.)
 * Added sparklies and fireworks if you complete a race with 3 or more people or finish a R+9/14 speedrun. (Thanks to Chronometrics for helping to code this.)
 * Mimics now have vanilla graphics instead of the special Racing+ graphic. (The final tally on the vote was 19 to 18.)
