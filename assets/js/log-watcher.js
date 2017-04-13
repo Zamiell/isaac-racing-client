@@ -92,58 +92,6 @@ const logWatcher = function(event, message) {
     } else if (message === 'Race error: On a challenge.') {
         globals.gameState.challenge = true;
         raceScreen.checkReadyValid();
-
-    } else if (message.startsWith('New character: ')) {
-        // Parse the message to see what character it is
-        let m = message.match(/New character: (.+)/);
-        if (m) {
-            let character = m[1];
-
-            // Convert the character from a number to a string
-            if (character === '0')  {
-                character = 'Isaac';
-            } else if (character === '1') {
-                character = 'Magdalene';
-            } else if (character === '2') {
-                character = 'Cain';
-            } else if (character === '3') {
-                character = 'Judas';
-            } else if (character === '4') {
-                character = 'Blue Baby';
-            } else if (character === '5') {
-                character = 'Eve';
-            } else if (character === '6') {
-                character = 'Samson';
-            } else if (character === '7') {
-                character = 'Azazel';
-            } else if (character === '8') {
-                character = 'Lazarus';
-            } else if (character === '9') {
-                character = 'Eden';
-            } else if (character === '10') {
-                character = 'The Lost';
-            } else if (character === '11') {
-                character = 'Lazarus II';
-            } else if (character === '12') {
-                character = 'Black Judas';
-            } else if (character === '13') {
-                character = 'Lilith';
-            } else if (character === '14') {
-                character = 'Keeper';
-            } else if (character === '15') {
-                character = 'Apollyon';
-            } else {
-                // If they are on a mod with a custom character, it can be 16 and beyond
-                // Don't throw an error since we want Racing+ to be able to work with custom mods
-                character = 'Unknown';
-            }
-
-            globals.gameState.character = character;
-            raceScreen.checkReadyValid();
-
-        } else {
-            misc.errorShow('Failed to parse the new character from the message sent by the log watcher process.');
-        }
     }
 
     /*

@@ -455,22 +455,19 @@ function RPCallbacks:PostNewRoom2()
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
   if character == PlayerType.PLAYER_KEEPER and -- 14
      RPGlobals.run.keeper.baseHearts == 4 and
-     RPGlobals.run.usedStrength then
+     RPGlobals.run.keeper.usedStrength then
 
     RPGlobals.run.keeper.baseHearts = 2
     player:AddMaxHearts(-2, true) -- Take away a heart container
     Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
   end
 
-  -- Reset the lists we use to keep track of certain enemies
+  -- Clear variables that track things per room
   RPGlobals.run.currentGlobins = {} -- Used for softlock prevention
   RPGlobals.run.currentKnights = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentLilHaunts = {} -- Used to delete invulnerability frames
-
-  -- Clear some room-based flags
-  RPGlobals.run.usedStrength = false
-  RPGlobals.run.usedHugeGrowth = false
   RPGlobals.run.naturalTeleport = false
+  RPGlobals.run.megaSatanDead = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
     extra       = false,
@@ -478,6 +475,7 @@ function RPCallbacks:PostNewRoom2()
     position    = {},
     velocity    = {},
   }
+  RPGlobals.run.keeper.usedStrength = false
 
   -- We might need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()

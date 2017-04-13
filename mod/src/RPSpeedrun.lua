@@ -10,16 +10,9 @@ local RPSprites   = require("src/rpsprites")
 local RPSchoolbag = require("src/rpschoolbag")
 
 --
--- Variables
+-- Constants
 --
 
-RPSpeedrun.charNum = 1
-RPSpeedrun.sprites = {}
-RPSpeedrun.startedTime = 0
-RPSpeedrun.finished = false
-RPSpeedrun.finishedTime = 0
-RPSpeedrun.chooseType = 0
-RPSpeedrun.chooseOrder = {}
 RPSpeedrun.charPosition9 = { -- The format is character number, X, Y
   {2, 2, 1}, -- Cain
   {3, 4, 1}, -- Judas
@@ -47,10 +40,22 @@ RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
   {14, 1, 5}, -- Keeper
   {15, 11, 5}, -- Apollyon
 }
-RPSpeedrun.fastReset = false
-RPSpeedrun.spawnedCheckpoint = false
-RPSpeedrun.resetFrame = 0
-RPSpeedrun.finishedChar = false
+
+--
+-- Variables
+--
+
+RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset
+RPSpeedrun.sprites = {} -- Reset in the PostGameStarted callback
+RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
+RPSpeedrun.finished = false -- Reset expliticly if we reset when already finished
+RPSpeedrun.finishedTime = 0 -- Reset expliticly if we reset when already finished
+RPSpeedrun.chooseType = 0 -- Reset when we enter the "Choose Char Order" room
+RPSpeedrun.chooseOrder = {} -- Reset when we enter the "Choose Char Order" room
+RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
+RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
+RPSpeedrun.resetFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
+RPSpeedrun.finishedChar = false -- Reset at the beginning of a run
 
 --
 -- Speedrun functions
@@ -79,6 +84,11 @@ function RPSpeedrun:Init()
     return
   end
 
+  -- Reset some per-run variables
+  RPSpeedrun.spawnedCheckpoint = false
+  RPSpeedrun.resetFrame = 0
+
+  -- Do actions based on the specific challenge
   if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
     Isaac.DebugString("In R+9 challenge.")
 
@@ -232,7 +242,11 @@ function RPSpeedrun:CheckRestart()
   local playerSprite = player:GetSprite()
 
   -- Don't move to the first character of the speedrun if we die
-  if playerSprite:IsPlaying("Death") and player:GetExtraLives() == 0 then
+  if (playerSprite:IsPlaying("Death") or
+      playerSprite:IsPlaying("LostDeath")) and
+      -- The Lost has a different death animation than all of the other characters
+     player:GetExtraLives() == 0 then
+
     RPSpeedrun.fastReset = true
   end
 

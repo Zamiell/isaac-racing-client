@@ -5,15 +5,16 @@
 'use strict';
 
 // Imports
-const execFile  = nodeRequire('child_process').execFile;
-const fs        = nodeRequire('fs-extra');
-const path      = nodeRequire('path');
-const clipboard = nodeRequire('electron').clipboard;
-const globals   = nodeRequire('./assets/js/globals');
-const misc      = nodeRequire('./assets/js/misc');
-const chat      = nodeRequire('./assets/js/chat');
-const modLoader = nodeRequire('./assets/js/mod-loader');
-const builds    = nodeRequire('./assets/data/builds');
+const execFile   = nodeRequire('child_process').execFile;
+const fs         = nodeRequire('fs-extra');
+const path       = nodeRequire('path');
+const clipboard  = nodeRequire('electron').clipboard;
+const globals    = nodeRequire('./assets/js/globals');
+const misc       = nodeRequire('./assets/js/misc');
+const chat       = nodeRequire('./assets/js/chat');
+const modLoader  = nodeRequire('./assets/js/mod-loader');
+const characters = nodeRequire('./assets/data/characters');
+const builds     = nodeRequire('./assets/data/builds');
 
 /*
     Event handlers
@@ -263,12 +264,18 @@ const show = function(raceID) {
     globals.currentScreen = 'transition';
     globals.currentRaceID = raceID;
 
+    // Change the character name to the character number that the Lua mod expects
+    let character = characters[globals.raceList[globals.currentRaceID].ruleset.character];
+    if (typeof character === 'undefined') {
+        misc.errorShow('The character of "' + globals.raceList[globals.currentRaceID].ruleset.character + '" is unsupported.');
+    }
+
     // Tell the Lua mod that we are in a new race
     globals.modLoader.status         = globals.raceList[globals.currentRaceID].status;
     globals.modLoader.rType          = globals.raceList[globals.currentRaceID].ruleset.type;
     globals.modLoader.solo           = globals.raceList[globals.currentRaceID].ruleset.solo;
     globals.modLoader.rFormat        = globals.raceList[globals.currentRaceID].ruleset.format;
-    globals.modLoader.character      = globals.raceList[globals.currentRaceID].ruleset.character;
+    globals.modLoader.character      = character;
     globals.modLoader.goal           = globals.raceList[globals.currentRaceID].ruleset.goal;
     globals.modLoader.seed           = globals.raceList[globals.currentRaceID].seed;
     globals.modLoader.startingBuild  = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
@@ -1085,9 +1092,6 @@ const checkReadyValid = function() {
     } else if (globals.gameState.challenge === true) {
         valid = false;
         tooltipContent = '<span lang="en">You must not be in a challenge before you can mark yourself as ready.</span>';
-    } else if (globals.gameState.character !== globals.raceList[globals.currentRaceID].ruleset.character) {
-        valid = false;
-        tooltipContent = '<span lang="en">You must be in a run with the correct character before you can mark yourself as ready.</span>';
     }
 
     if (valid === false) {

@@ -155,37 +155,6 @@ function RPPostGameStarted:Character()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
 
-  -- Mark what character we are on for later
-  if character == PlayerType.PLAYER_ISAAC then -- 0
-    RPGlobals.raceVars.character = "Isaac"
-  elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
-    RPGlobals.raceVars.character = "Magdalene"
-  elseif character == PlayerType.PLAYER_CAIN then -- 2
-    RPGlobals.raceVars.character = "Cain"
-  elseif character == PlayerType.PLAYER_JUDAS then -- 3
-    RPGlobals.raceVars.character = "Judas"
-  elseif character == PlayerType.PLAYER_XXX then -- 4
-    RPGlobals.raceVars.character = "Blue Baby"
-  elseif character == PlayerType.PLAYER_EVE then -- 5
-    RPGlobals.raceVars.character = "Eve"
-  elseif character == PlayerType.PLAYER_SAMSON then -- 6
-    RPGlobals.raceVars.character = "Samson"
-  elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-    RPGlobals.raceVars.character = "Azazel"
-  elseif character == PlayerType.PLAYER_LAZARUS then -- 8
-    RPGlobals.raceVars.character = "Lazarus"
-  elseif character == PlayerType.PLAYER_EDEN then  -- 9
-    RPGlobals.raceVars.character = "Eden"
-  elseif character == PlayerType.PLAYER_THELOST then -- 10
-    RPGlobals.raceVars.character = "The Lost"
-  elseif character == PlayerType.PLAYER_LILITH then -- 13
-    RPGlobals.raceVars.character = "Lilith"
-  elseif character == PlayerType.PLAYER_KEEPER then -- 14
-    RPGlobals.raceVars.character = "Keeper"
-  elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-    RPGlobals.raceVars.character = "Apollyon"
-  end
-
   -- Do character-specific actions
   if character == PlayerType.PLAYER_JUDAS then -- 3
     -- Judas needs to be at half of a red heart
@@ -309,12 +278,6 @@ function RPPostGameStarted:Race()
   RPGlobals.raceVars.challenge = Isaac.GetChallenge()
   if RPGlobals.raceVars.challenge ~= 0 then
     Isaac.DebugString("Race error: On a challenge.")
-    return
-  end
-
-  -- Validate the character for races
-  if RPGlobals.raceVars.character ~= RPGlobals.race.character then
-    Isaac.DebugString("Race error: Wrong character.")
     return
   end
 

@@ -257,6 +257,11 @@ function RPFastTravel:MovePickupOverHole(pickup, posHole)
   local room = game:GetRoom()
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
 
+  -- Don't attempt to move any pickups with velocity
+  if pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0 then
+    return
+  end
+
   -- Generate new spawn positions until we find one that doesn't overlap with the hole
   local newPos
   local overlapping = false

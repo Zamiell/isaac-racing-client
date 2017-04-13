@@ -141,14 +141,6 @@ const parseLine = function(line) {
     } else if (line.startsWith('Race error: On a challenge.')) {
         process.send('Race error: On a challenge.');
 
-    } else if (line.startsWith('Initialized player with Variant 0 and Subtype ')) {
-        // A new run has begun
-        let match = line.match(/Initialized player with Variant 0 and Subtype (\d+)/);
-        if (match) {
-            let character = match[1];
-            process.send('New character: ' + character);
-        }
-
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         // (send this separately from the seed because race validation messages are checked before parsing the seed)

@@ -6,11 +6,8 @@
 --[[
 
 TODO:
-- test seeded boss heart drops with all double trouble rooms
-
-- Set the racer's character at the start of a race for them
-- mega satan door doesn't open after backtracking
-- make mega satan animation faster on death
+- NEW ITEM BANS
+- cube of meat / ball of bandages not added to ban list
 
 - remove delay on the credits item
 - make mushrooms only spawn on caves
@@ -133,7 +130,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Strength,   Card.CARD_S
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_STARS) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_MOON) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport,   Card.CARD_JOKER) -- 31
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.HugeGrowth, Card.CARD_HUGE_GROWTH) -- 52
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,  PillEffect.PILLEFFECT_TELEPILLS) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because

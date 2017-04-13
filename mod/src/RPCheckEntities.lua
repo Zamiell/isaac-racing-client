@@ -891,6 +891,21 @@ function RPCheckEntities:NPC(entity)
     npc:Kill() -- This plays the blood and guts animation, but does not actually remove the entity
     npc:Remove()
 
+  elseif npc.Type == EntityType.ENTITY_MEGA_SATAN_2 and -- 275
+         entity:GetSprite():IsPlaying("Death") and
+         RPGlobals.run.megaSatanDead == false then
+
+    -- Stop the room from being cleared, which has a chance to take us back to the menu
+    RPGlobals.run.megaSatanDead = true
+    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
+               Isaac.GetEntityVariantByName("Room Clear Delay"),
+               RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity.")
+
+    -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+               room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+
   elseif npc.Type == EntityType.ENTITY_PORTAL then -- 306
     if npc.I2 ~= 5 then -- Portals can spawn 1-5 enemies, and this is stored in I2
       npc.I2 = 5 -- Make all portals spawn 5 enemies since this is unseeded
@@ -912,6 +927,7 @@ function RPCheckEntities:NPC(entity)
   end
 end
 
+-- We can't use "entity:IsBoss()" for certain things, like if the parent of a pickup is dead
 function RPCheckEntities:IsBossType(entityType)
   if entityType == EntityType.ENTITY_LARRYJR or -- 19
      entityType == EntityType.ENTITY_MONSTRO or -- 20

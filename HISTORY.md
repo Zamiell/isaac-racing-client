@@ -2,9 +2,15 @@
 
 ### *v0.5.4* - April ?th, 2017
 
-* Eden now has better hair in the "Change Char Order" custom challenge.
+* You no longer have to switch characters before a race. When the race starts, you character will automatically change to the correct one.
+* Removed all of the useless animations in the Mega Satan fight. The fight is incredibly smooth now.
+* Finishing the Mega Satan fight no longer has a random chance to send you back to the menu.
+* Eden now has better hair in the "Change Char Order" custom challenge. (Thanks Krakenos)
 * All of the character graphics are less faded in the "Change Char Order" custom challenge.
 * Fixed the bug in the speedrun custom challenges where the "checkpoint spawned" variable was not properly being reset at the beginning of a run. (Thanks ceehe)
+* Fixed the bug where some of the save file graphics had the wrong text color.
+* Fixed the bug where hearts could disappear if they travelled over trapdoors under certain conditions.
+* Fixed the bug in custom challenge speedruns where restarting as The Lost after a death would go back to the first character under certain conditions. (Thanks Dea1h)
 
 ### *v0.5.3* - April 12th, 2017
 

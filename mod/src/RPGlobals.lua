@@ -1,4 +1,4 @@
-local RPGlobals = {}
+local RPGlobals  = {}
 
 --
 -- Global variables
@@ -32,7 +32,6 @@ RPGlobals.raceVars = {
   loadOnNextFrame    = false,
   difficulty         = 0,
   challenge          = 0,
-  character          = "Isaac",
   itemBanList        = {},
   trinketBanList     = {},
   resetEnabled       = true,
@@ -170,14 +169,13 @@ function RPGlobals:InitRun()
   RPGlobals.run.currentGlobins        = {}
   RPGlobals.run.currentKnights        = {}
   RPGlobals.run.currentLilHaunts      = {}
-  RPGlobals.run.usedStrength          = false
-  RPGlobals.run.usedHugeGrowth        = false
+  RPGlobals.run.naturalTeleport       = false
+  RPGlobals.run.megaSatanDead         = false
 
   -- Temporary tracking
   RPGlobals.run.showingStage         = false
   RPGlobals.run.restartFrame         = 0
   RPGlobals.run.itemReplacementDelay = 0
-  RPGlobals.run.naturalTeleport      = false
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false
   RPGlobals.run.blackRingTime        = 0
@@ -213,6 +211,7 @@ function RPGlobals:InitRun()
     baseHearts   = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
     healthItems  = {},
     coins        = 50,
+    usedStrength = false,
   }
 
   -- Schoolbag tracking

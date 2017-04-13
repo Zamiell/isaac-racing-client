@@ -18,6 +18,7 @@ const isDev = nodeRequire('electron-is-dev');
 module.exports = {
     autoUpdateStatus: null,
     builds: null,
+    characters: null, // Filled in main.js
     conn: null,
     currentScreen: 'title-ajax', // We always start on the title-ajax screen
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)
@@ -29,7 +30,6 @@ module.exports = {
         inGame: false, // The log will tell us if we are in the menu or in a run
         hardMode: false, // The log will tell us if a run is started on hard mode or Greed mode
         challenge: false, // The log will tell us if a run is started on a challenge
-        wrongCharacter: false, // The log will tell us if we are on the wrong character
     },
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js
@@ -42,7 +42,7 @@ module.exports = {
         rType: 'unranked',
         solo: false,
         rFormat: 'unseeded',
-        character: 'Judas',
+        character: 3, // Judas
         goal: 'Blue Baby',
         seed: '-',
         startingBuild: -1,

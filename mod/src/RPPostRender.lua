@@ -25,8 +25,10 @@ local RPSpeedrun   = require("src/rpspeedrun")
 function RPPostRender:Main()
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
+  local runSeed = seeds:GetStartSeedString()
 
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   RPSaveDat:Load()
@@ -41,22 +43,29 @@ function RPPostRender:Main()
   -- Restart the game if Easter Egg (or race) validation failed
   -- (we can't do this in the "PostGameStarted" callback because
   -- the "restart" command will fail when the game is first loading)
-  if RPGlobals.run.restartFrame ~= 0 and RPGlobals.run.restartFrame <= Isaac.GetFrameCount() then
+  if RPGlobals.run.restartFrame ~= 0 and Isaac.GetFrameCount() >= RPGlobals.run.restartFrame then
     RPGlobals.run.restartFrame = 0
-    local command
-    if RPGlobals.race.rFormat == "seeded" and
+
+    -- Change the seed of the run if need be
+    if runSeed ~= RPGlobals.race.seed and
+       RPGlobals.race.rFormat == "seeded" and
        RPGlobals.race.status == "in progress" then
 
-      command = "seed " .. RPGlobals.race.seed
+      -- Change the seed of the run and restart the game
+      local command = "seed " .. RPGlobals.race.seed
+      Isaac.ExecuteCommand(command)
+      Isaac.DebugString("Issued a \"" .. command .. "\" command.")
+      -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
+    end
 
-    elseif challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
-      command = "restart " .. RPGlobals.race.order9[RPSpeedrun.charNum]
-
+    -- The "restart" command takes an optional argument to specify the character; we always want to specify this
+    local command = "restart "
+    if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
+      command = command .. RPGlobals.race.order9[RPSpeedrun.charNum]
     elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
-      command = "restart " .. RPGlobals.race.order14[RPSpeedrun.charNum]
-
+      command = command .. RPGlobals.race.order14[RPSpeedrun.charNum]
     else
-      command = "restart"
+      command = command .. RPGlobals.race.character
     end
     Isaac.ExecuteCommand(command)
     Isaac.DebugString("Issued a \"" .. command .. "\" command.")
@@ -230,17 +239,9 @@ function RPPostRender:Race()
     RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
     return
 
-  elseif RPGlobals.race.character ~= RPGlobals.raceVars.character and
-         RPGlobals.raceVars.startedTime == 0 then
-
-    -- Check to see if we are on the right character
-    RPSprites:Init("top", "error-character") -- Error: You are on the wrong character.
-    return
-
   elseif RPSprites.sprites.top ~= nil and
          (RPSprites.sprites.top.spriteName == "error-hard-mode" or
-          RPSprites.sprites.top.spriteName == "error-challenge" or
-          RPSprites.sprites.top.spriteName == "error-character") then
+          RPSprites.sprites.top.spriteName == "error-challenge") then
 
     RPSprites:Init("top", 0)
   end
