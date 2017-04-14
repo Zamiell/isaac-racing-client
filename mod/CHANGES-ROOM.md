@@ -194,6 +194,7 @@ The changed rooms are as follows:
 * Chest: #53, #72, #84 (Fistula)
 * Dark Room: #238, #272 (Kamikaze Leech)
 * Dark Room: #264 (Bone Knight)
+* Chub: #1033 (Charger)
 
 <br />
 

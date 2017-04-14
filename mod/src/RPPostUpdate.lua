@@ -206,7 +206,14 @@ end
 function RPPostUpdate:CheckDropInput()
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
+  local card1 = player:GetCard(0)
+  local card2 = player:GetCard(1)
+  local pill1 = player:GetPill(0)
+  local pill2 = player:GetPill(1)
+  local trinket1 = player:GetTrinket(0)
+  local trinket2 = player:GetTrinket(1)
 
   -- We don't want to drop items if the player is intending to do a Schoolbag switch
   -- Furthermore, adding a null card/pill won't work if there are 2 slots,
@@ -227,24 +234,71 @@ function RPPostUpdate:CheckDropInput()
     return
   end
 
-  -- Cards and pills
-  local card1 = player:GetCard(0)
-  local card2 = player:GetCard(1)
-  local pill1 = player:GetPill(0)
-  local pill2 = player:GetPill(1)
+  local droppedCardPill = false
   if card1 ~= 0 and card2 == 0 and pill2 == 0 then
     -- Drop the card
+    droppedCardPill = true
     player:AddCard(0)
     Isaac.DebugString("Dropped card " .. tostring(card1) .. ".")
   elseif pill1 ~= 0 and card2 == 0 and pill2 == 0 then
     -- Drop the pill
+    droppedCardPill = true
     player:AddPill(0)
     Isaac.DebugString("Dropped pill " .. tostring(card1) .. ".")
   end
 
   -- Trinkets
-  -- (if the player has 2 trinkets, this will drop both of them)
-  player:DropTrinket(player.Position, false) -- The second argument is ReplaceTick
+  if trinket1 ~= 0 then
+    -- Drop the first trinket
+    player:DropTrinket(player.Position, false) -- The second argument is ReplaceTick
+
+    -- If it is overlapping with a card or pill, we should find a new square to drop it on
+    if droppedCardPill then
+      -- Search for the dropped trinket
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
+           entity.SubType == trinket1 and
+           entity.Position.X == player.Position.X and
+           entity.Position.Y == player.Position.Y then
+
+          -- We found the dropped trinket
+          entity:Remove()
+
+          -- Find a free location for the first trinket
+          local newPos = room:FindFreePickupSpawnPosition(player.Position, 0, true)
+
+          -- Respawn it
+          game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity,
+                     entity.Parent, entity.SubType, entity.InitSeed)
+        end
+      end
+    end
+  end
+  if trinket2 ~= 0 then
+    -- Drop the second trinket
+    player:DropTrinket(player.Position, false) -- The second argument is ReplaceTick
+
+    -- Search for the dropped trinket
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_PICKUP and -- 5
+         entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
+         entity.SubType == trinket2 and
+         entity.Position.X == player.Position.X and
+         entity.Position.Y == player.Position.Y then
+
+        -- We found the dropped trinket
+        entity:Remove()
+
+        -- Find a free location for the first trinket
+        local newPos = room:FindFreePickupSpawnPosition(player.Position, 0, true)
+
+        -- Respawn it
+        game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity,
+                   entity.Parent, entity.SubType, entity.InitSeed)
+      end
+    end
+  end
 end
 
 -- Do race related checks
@@ -297,25 +351,6 @@ function RPPostUpdate:RaceChecks()
         local fireworkEffect = firework:ToEffect()
         fireworkEffect:SetTimeout(20)
       end
-    end
-  end
-
-  if RPGlobals.raceVars.finished and player:IsHoldingItem() == false then
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then
-      -- Check to see if we have a Victory Lap (a custom item that emulates Forget Me Now)
-      RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
-      player:RemoveCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP)
-      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_VICTORY_LAP .. " (Victory Lap)")
-      player:UseActiveItem(CollectibleType.COLLECTIBLE_FORGET_ME_NOW, false, false, false, false)
-      Isaac.DebugString("Using a Victory Lap.")
-
-    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_FINISHED) then
-      -- Check to see if we have a Finished (a custom item that sends us to the credits)
-      player:RemoveCollectible(CollectibleType.COLLECTIBLE_FINISHED)
-      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_FINISHED .. " (Finished)")
-      Isaac.DebugString("Going to the credits.")
-      game:End(2) -- 0 does nothing, 1 is the death screen, 2 is the first ending (after killing Mom for the first time)
-      -- All cutscenes are removed in the Racing+ mod, so this will skip the cutscene and go directly to the credits
     end
   end
 end

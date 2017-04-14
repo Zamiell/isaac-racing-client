@@ -5,53 +5,12 @@ local RPCallbacks = {}
 --
 
 local RPGlobals    = require("src/rpglobals")
-local RPFastClear  = require("src/rpfastclear")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
 
 --
 -- Miscellaneous game callbacks
 --
-
--- ModCallbacks.MC_NPC_UPDATE (0)
-function RPCallbacks:NPCUpdate(npc)
-  --
-  -- Lock Knights that are in the "warmup" animation
-  -- (still seems to be buggy)
-  --
-
-  if (npc.Type == EntityType.ENTITY_KNIGHT or -- 41
-      npc.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
-      npc.Type == EntityType.ENTITY_BONE_KNIGHT) and -- 283
-     npc.FrameCount >= 5 and
-     npc.FrameCount <= 30 and
-     RPGlobals.run.currentKnights[npc.Index] ~= nil then
-
-    -- Keep the 5th frame of the spawn animation going
-    npc:GetSprite():SetFrame("Down", 0)
-
-    -- Make sure that it stays in place
-    npc.Position = RPGlobals.run.currentKnights[npc.Index].pos
-    npc.Velocity = Vector(0, 0)
-  end
-
-  --
-  -- Lock Lil' Haunts that are in the "warmup" animation
-  --
-
-  if (npc.Type == EntityType.ENTITY_THE_HAUNT and npc.Variant == 10) and -- 260
-     npc.FrameCount >= 5 and
-     npc.FrameCount <= 16 and
-     RPGlobals.run.currentLilHaunts[npc.Index] ~= nil then
-
-    -- Make sure that it stays in place
-    npc.Position = RPGlobals.run.currentLilHaunts[npc.Index].pos
-    npc.Velocity = Vector(0, 0)
-  end
-
-  -- Look for enemies that are dying so that we can open the doors prematurely
-  RPFastClear:NPCUpdate(npc)
-end
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function RPCallbacks:EvaluateCache(player, cacheFlag)
@@ -271,12 +230,25 @@ end
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
 function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   -- local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local player = tookDamage:ToPlayer()
 
   -- Check to see if it was the player that took damage
   if player ~= nil then
     -- Make us invincibile while interacting with a trapdoor
     if RPGlobals.run.trapdoor.state > 0 then
+      return false
+    end
+
+    -- Prevent unavoidable damage from Mushrooms on Depths/Sheol
+    if damageSource.Type == EntityType.ENTITY_MUSHROOM and -- 300
+       (stage == LevelStage.STAGE3_1 or -- 5
+        stage == LevelStage.STAGE3_2 or -- 6
+        (stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL)) then -- 10.0
+
       return false
     end
 
@@ -364,10 +336,14 @@ function RPCallbacks:PostNewLevel2()
   Isaac.DebugString("MC_POST_NEW_LEVEL2")
 
   -- Find out if we performed a Sacrifice Room teleport
-  if stage == 11 and stageType == 0 and RPGlobals.run.currentFloor ~= 10 then -- 11.0 is Dark Room
+  if stage == 11 and stageType == 0 and -- 11.0 is Dark Room
+     (RPGlobals.run.currentFloor ~= 10 and
+      RPGlobals.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now
+
     -- We arrivated at the Dark Room without going through Sheol
     Isaac.DebugString("Sacrifice Room teleport detected.")
-    RPGlobals:GotoNextFloor(false) -- The argument is "upwards"
+    RPGlobals:GotoNextFloor(false, RPGlobals.run.currentFloor)
+    -- The first argument is "upwards", the second argument is "redirect"
     return
   end
 
@@ -381,6 +357,8 @@ function RPCallbacks:PostNewLevel2()
   RPGlobals.run.replacedTrapdoors = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
+  RPGlobals.run.finishPedestals = {}
+  RPGlobals.run.victoryLapPedestals = {}
 
   -- Reset the RNG of some items that should be seeded per floor
   local floorSeed = level:GetDungeonPlacementSeed()

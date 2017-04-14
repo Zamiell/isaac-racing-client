@@ -54,11 +54,15 @@ function RPCheckEntities:NonGrid()
   local stageType = level:GetStageType()
   local room = game:GetRoom()
   local roomType = room:GetType()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local roomData = level:GetCurrentRoomDesc().Data
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
+  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- Go through all the entities
@@ -78,7 +82,8 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_HEART and -- 10
            RPCheckEntities:IsBossType(entity.SpawnerType) and
-           roomType == RoomType.ROOM_BOSS then -- 5
+           roomType == RoomType.ROOM_BOSS and -- 5
+           stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby or The Lamb or Victory Lap bosses
 
       -- Delete heart drops in boss rooms so that we can properly seed them
       RPGlobals.run.bossHearts.spawn = true
@@ -200,6 +205,51 @@ function RPCheckEntities:NonGrid()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
+
+      -- Check to see if the player just picked up the "Finish" custom item
+      for j = 1, #RPGlobals.run.finishPedestals do
+        if roomIndex == RPGlobals.run.finishPedestals[j].room and
+           entity.Position.X == RPGlobals.run.finishPedestals[j].pos.X and
+           entity.Position.Y == RPGlobals.run.finishPedestals[j].pos.Y then
+
+          player.Visible = false
+          -- No animations will advance once the game is fading out,
+          -- and the first frame of the item pickup animation looks very strange,
+          -- so just make the player invisible to compensate
+          game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
+          break
+        end
+      end
+
+      -- Check to see if the player just picked up the "Victory Lap" custom item
+      for j = 1, #RPGlobals.run.victoryLapPedestals do
+        if roomIndex == RPGlobals.run.victoryLapPedestals[j].room and
+           entity.Position.X == RPGlobals.run.victoryLapPedestals[j].pos.X and
+           entity.Position.Y == RPGlobals.run.victoryLapPedestals[j].pos.Y and
+           RPGlobals.run.trapdoor.state == 0 then
+
+          -- Make them float upwards
+          -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
+          RPGlobals.run.trapdoor.state = 1
+          Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
+          RPGlobals.run.trapdoor.upwards = true
+          RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
+          player.ControlsEnabled = false
+          player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+          -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+          player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+          player:PlayExtraAnimation("LightTravel")
+          RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
+          -- This is needed or else state 5 will not correctly trigger
+          -- (because the PostNewRoom callback will occur 3 times instead of 2)
+          RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+          break
+        end
+      end
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
            gameFrameCount >= RPGlobals.run.itemReplacementDelay then
            -- We need to delay after using a Void (in case the player has consumed a D6)
 
@@ -297,11 +347,11 @@ function RPCheckEntities:NonGrid()
            RPGlobals.raceVars.finished == false and
            RPGlobals.race.status == "in progress" and
            ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
-             roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
-             roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "Mega Satan" and
-             roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
+             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
 
       -- Spawn the "Race Trophy" custom entity
       game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
@@ -317,7 +367,7 @@ function RPCheckEntities:NonGrid()
            RPGlobals.raceVars.finished == false and
            RPGlobals.race.status == "in progress" and
            (RPGlobals.race.goal == "Mega Satan" and
-            roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
+            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
 
       -- Get rid of the chest as a reminder that the race goal is Mega Satan
       entity:Remove()
@@ -329,9 +379,16 @@ function RPCheckEntities:NonGrid()
            RPGlobals.raceVars.finished then
 
       -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+      local victoryLapPosition = room:GetCenterPos()
+      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
                  nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
       Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
+
+      -- Also keep track of the pedestal position so that we can quickly detect when it is touched
+      RPGlobals.run.victoryLapPedestals[#RPGlobals.run.victoryLapPedestals + 1] = {
+        room = roomIndex,
+        pos = victoryLapPosition,
+      }
 
       -- Get rid of the chest
       entity:Remove()
@@ -382,19 +439,31 @@ function RPCheckEntities:NonGrid()
 
         -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
         local victoryLapPosition = RPGlobals:GridToPos(11, 1)
-        if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
+        if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
           victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
         end
         game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
                    nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
 
+        -- Also keep track of the pedestal position so that we can quickly detect when it is touched
+        RPGlobals.run.victoryLapPedestals[#RPGlobals.run.victoryLapPedestals + 1] = {
+          room = roomIndex,
+          pos = victoryLapPosition,
+        }
+
         -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
         local finishedPosition = RPGlobals:GridToPos(1, 1)
-        if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then
+        if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
           finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
         end
         game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
                    nil, CollectibleType.COLLECTIBLE_FINISHED, roomSeed)
+
+        -- Also keep track of the pedestal position so that we can quickly detect when it is touched
+        RPGlobals.run.finishPedestals[#RPGlobals.run.finishPedestals + 1] = {
+          room = roomIndex,
+          pos = finishedPosition,
+        }
 
         Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
       else
@@ -421,10 +490,6 @@ function RPCheckEntities:NonGrid()
            entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)") then
 
       RPFastTravel:CheckTrapdoorEnter(entity, true) -- The second argument is "upwards"
-
-    else
-      -- Also do various checks on NPCs
-      RPCheckEntities:NPC(entity)
     end
   end
 
@@ -696,234 +761,6 @@ function RPCheckEntities:ReplacePedestal(entity)
 
     -- Now that we have created a new pedestal, we can delete the old one
     entity:Remove()
-  end
-end
-
--- Check all the NPCs in the room
-function RPCheckEntities:NPC(entity)
-  local npc = entity:ToNPC()
-  if npc == nil then
-    return
-  end
-
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-  local roomType = room:GetType()
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
-
-  -- Check for specific kinds of NPCs
-  if npc.Type == EntityType.ENTITY_HOST or -- 27
-     npc.Type == EntityType.ENTITY_MOBILE_HOST then -- 204
-
-    -- Hosts and Mobile Hosts
-    -- Find out if they are feared
-    local entityFlags = npc:GetEntityFlags()
-    local feared = false
-    local i = 11
-    local bit = (entityFlags & (1 << i)) >> i
-    if bit == 1 then -- 11 is FLAG_FEAR
-      feared = true
-    end
-    if feared then
-      -- Make them immune to fear
-      npc:RemoveStatusEffects()
-      Isaac.DebugString("Unfeared a Host / Mobile Host.")
-      RPGlobals.run.levelDamaged = true
-    end
-
-  elseif npc.Type == EntityType.ENTITY_KNIGHT or -- 41
-         npc.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
-         npc.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
-
-    -- Knights, Selfless Knights, Floating Knights, and Bone Knights
-    -- Add their position to the table so that we can keep track of it on future frames
-    if RPGlobals.run.currentKnights[npc.Index] == nil then
-      RPGlobals.run.currentKnights[npc.Index] = {
-        pos = npc.Position,
-      }
-    end
-
-    if npc.FrameCount == 4 then
-      -- Changing the NPC's state triggers the invulnerability removal in the next frame
-      npc.State = 4
-
-      -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
-      -- (this is to compensate for having only post update hooks)
-      npc.Visible = true
-    end
-
-  elseif npc.Type == EntityType.ENTITY_STONEHEAD or -- 42 (Stone Grimace and Vomit Grimace)
-         npc.Type == EntityType.ENTITY_CONSTANT_STONE_SHOOTER or -- 202 (left, up, right, and down)
-         npc.Type == EntityType.ENTITY_BRIMSTONE_HEAD or -- 203 (left, up, right, and down)
-         npc.Type == EntityType.ENTITY_GAPING_MAW or -- 235
-         npc.Type == EntityType.ENTITY_BROKEN_GAPING_MAW then -- 236
-
-    -- Fix the bug with fast-clear where the "room:SpawnClearAward()" function will
-    -- spawn a pickup inside a Stone Grimace and the like
-    -- Check to see if there are any pickups/trinkets overlapping with it
-    for i, entity2 in pairs(Isaac.GetRoomEntities()) do
-      local squareSize = 15
-      if (entity2.Type == EntityType.ENTITY_BOMBDROP or -- 4
-          entity2.Type == EntityType.ENTITY_PICKUP) and -- 5
-         entity2.Position.X >= entity.Position.X - squareSize and
-         entity2.Position.X <= entity.Position.X + squareSize and
-         entity2.Position.Y >= entity.Position.Y - squareSize and
-         entity2.Position.Y <= entity.Position.Y + squareSize then
-
-        -- Respawn it in a accessible location
-        local newPosition = room:FindFreePickupSpawnPosition(entity.Position, 0, true)
-        -- The arguments are Pos, InitialStep, and AvoidActiveEntities
-        game:Spawn(entity2.Type, entity2.Variant, newPosition, entity2.Velocity,
-                   entity2.Parent, entity2.SubType, entity2.InitSeed)
-        entity2:Remove()
-      end
-    end
-
-  elseif npc.Type == EntityType.ENTITY_EYE then -- 60
-    -- Eyes and Blootshot Eyes
-    if npc.FrameCount == 4 then
-      npc:GetSprite():SetFrame("Eye Opened", 0)
-      npc.State = 3
-      npc.Visible = true
-    end
-
-    -- Prevent the Eye from shooting for 30 frames
-    if (npc.State == 4 or npc.State == 8) and npc.FrameCount < 31 then
-      npc.StateFrame = 0
-    end
-
-  elseif npc.Type == EntityType.ENTITY_PIN and npc.Variant == 1 and -- 62.1 (Scolex)
-         roomType == RoomType.ROOM_BOSS and -- 5
-         npc.InitSeed ~= roomSeed and
-         RPGlobals.race.rFormat == "seeded" then
-
-     -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
-     -- There are 10 Scolex entities, so we know we are on the last one if there is no child
-     npc:Remove() -- This takes a game frame to actually get removed
-     if npc.Child == nil then
-       -- Spawn two Frails (62.2)
-       for i = 1, 2 do
-         local frail = game:Spawn(EntityType.ENTITY_PIN, 2, room:GetCenterPos(), Vector(0,0), nil, 0, roomSeed)
-         frail.Visible = false -- It will show the head on the first frame after spawning unless we do this
-         -- The game will automatically make the entity visible later on
-       end
-       Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
-     end
-
-  elseif RPGlobals.raceVars.finished and
-         npc:GetSprite():IsPlaying("Appear") and
-         -- This is needed or else it will swap out the boss during the death animation
-         ((npc.Type == EntityType.ENTITY_ISAAC and npc.Variant == 1) or -- Blue Baby (102.1)
-          (npc.Type == EntityType.ENTITY_THE_LAMB)) then -- 273
-
-    -- Replace Blue Baby / The Lamb with some random bosses (based on the number of Victory Laps)
-    npc:Remove()
-    local randomBossSeed = roomSeed
-    for i = 1, RPGlobals.raceVars.victoryLaps + 1 do
-      randomBossSeed = RPGlobals:IncrementRNG(randomBossSeed)
-      math.randomseed(randomBossSeed)
-      local randomBoss = RPGlobals.bossArray[math.random(1, #RPGlobals.bossArray)]
-      if randomBoss[1] == 19 then
-        -- Larry Jr. and The Hollow require multiple segments
-        for j = 1, 6 do
-          game:Spawn(randomBoss[1], randomBoss[2], room:GetCenterPos(), Vector(0,0), nil, randomBoss[3], roomSeed)
-        end
-      else
-        game:Spawn(randomBoss[1], randomBoss[2], room:GetCenterPos(), Vector(0,0), nil, randomBoss[3], roomSeed)
-      end
-    end
-
-  elseif npc.Type == EntityType.ENTITY_MOMS_HAND or-- 213
-         npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND then -- 287
-
-    if npc.State == 4 and npc.StateFrame < 25 then
-      -- Mom's Hands and Mom's Dead Hands
-      -- Speed up their attack patterns
-      -- (StateFrame starts between 0 and a random negative value and ticks upwards)
-      -- (we have to do a small adjustment because if multiple hands fall at the exact same time,
-      -- they can stack on top of each other and cause buggy behavior)
-      local frameAdjustment = math.random(0, 10)
-      -- If we don't seed this with "math.randomseed()", it will just use a random seed
-      npc.StateFrame = 25 + frameAdjustment
-    end
-
-  elseif npc.Type == EntityType.ENTITY_WIZOOB or -- 219
-         npc.Type == EntityType.ENTITY_RED_GHOST then -- 285
-
-    -- Wizoobs and Red Ghosts
-    -- Make it so that tears don't pass through them
-    if npc.FrameCount == 1 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
-      -- The ghost is set to ENTCOLL_NONE until the first reappearance
-      npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-    end
-
-    -- Speed up their attack pattern
-    if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
-      npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead
-    end
-
-  elseif npc.Type == EntityType.ENTITY_THE_HAUNT and npc.Variant == 10 and -- 260.10
-         npc.Parent == nil then
-
-    -- Lil' Haunts
-    -- Find out if The Haunt is in the room
-    if RPGlobals.run.currentLilHaunts[npc.Index] == nil then
-      -- Add their position to the table so that we can keep track of it on future frames
-      RPGlobals.run.currentLilHaunts[npc.Index] = {
-        pos = npc.Position,
-      }
-    end
-
-    -- Get rid of the Lil' Haunt invulnerability frames
-    if npc.FrameCount == 4 then
-      npc.State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
-      npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-      -- Tears will pass through Lil' Haunts when they first spawn, so fix that
-      npc.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
-    end
-
-  elseif npc.Type == EntityType.ENTITY_THE_LAMB and
-         npc.Variant == 10 and -- Lamb Body (267.10)
-         npc:IsInvincible() then -- It only turns invincible once it is dead
-
-    -- Remove the body once it dies so that it does not interfere with taking the trophy
-    npc:Kill() -- This plays the blood and guts animation, but does not actually remove the entity
-    npc:Remove()
-
-  elseif npc.Type == EntityType.ENTITY_MEGA_SATAN_2 and -- 275
-         entity:GetSprite():IsPlaying("Death") and
-         RPGlobals.run.megaSatanDead == false then
-
-    -- Stop the room from being cleared, which has a chance to take us back to the menu
-    RPGlobals.run.megaSatanDead = true
-    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
-               Isaac.GetEntityVariantByName("Room Clear Delay"),
-               RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity.")
-
-    -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-               room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
-
-  elseif npc.Type == EntityType.ENTITY_PORTAL then -- 306
-    if npc.I2 ~= 5 then -- Portals can spawn 1-5 enemies, and this is stored in I2
-      npc.I2 = 5 -- Make all portals spawn 5 enemies since this is unseeded
-    end
-  end
-
-  -- Do extra monitoring for blue variant bosses that drop extra soul hearts
-  -- (should only be Larry Jr., Mom, Famine, and Gemini)
-  -- (this algorithm is from blcd, reverse engineered from the game binary)
-  -- (Big Horn's hands are not SubType 0, so we have to explicitly filter those out)
-  if npc:IsBoss() and npc.SubType ~= 0 and npc.Type ~= EntityType.ENTITY_BIG_HORN then -- 411
-    RPGlobals.run.bossHearts.extra = true
-  end
-
-  if npc:IsBoss() and
-     (npc:GetBossColorIdx() == 3 or npc:GetBossColorIdx() == 6) then -- From blcd
-
-    RPGlobals.run.bossHearts.extraIsSoul = true
   end
 end
 

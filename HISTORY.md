@@ -1,16 +1,32 @@
 # Racing+ Version History and News
 
-### *v0.5.4* - April ?th, 2017
+### *v0.5.6* - April 14th, 2017
+
+* Changed the behavior of the fast-restart feature such that on floor 2 and beyond, you need to double tap R to trigger it. This should prevent accidental resets. (Thanks Hyphen-ated, Nariom, and tyrannasauruslex)
+* Changed the behavior of the fast-drop feature such that if you drop more than one item, they will not be stacked on top of each other.
+* Slightly increased the hitbox on trapdoors and crawlspaces (from 16 to 16.5).
+* Moved all NPC checks to the NPCUpdate callback, which will make the game run faster on potato computers.
+* Fixed an unavoidable damage room with a Charger near the top entrance (#1033). (Thanks starg09 and CrafterLynx)
+* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
+* Fixed the bug where using a Forget Me Now or Victory Lap on the Dark Room would cause the game to lag under certain conditions.
+* The two Frails that replace Scolex in seeded races will no longer spawn on top of each other, which makes it much easier to distinguish between the two of them.
+* Cube of Meat and Ball of Bandages will no longer be fart-rerolled in diversity races. (Thanks PassionDrama)
+* The "Finish" custom item will now take you to the menu immediately. (Before, you had to wait for the entire item pickup animation to complete.)
+* The "Victory Lap" custom item has been recoded to use the fast-travel feature instead of the Forget Me Now effect.
+* Fixed the bug where the place graphic would not show the correct place after you finished the race under certain conditions.
+* Reorganized the way items show up on the item tracker in seeded races.
+
+### *v0.5.4* - April 13th, 2017
 
 * You no longer have to switch characters before a race. When the race starts, you character will automatically change to the correct one.
 * Removed all of the useless animations in the Mega Satan fight. The fight is incredibly smooth now.
 * Finishing the Mega Satan fight no longer has a random chance to send you back to the menu.
 * Eden now has better hair in the "Change Char Order" custom challenge. (Thanks Krakenos)
 * All of the character graphics are less faded in the "Change Char Order" custom challenge.
-* Fixed the bug in the speedrun custom challenges where the "checkpoint spawned" variable was not properly being reset at the beginning of a run. (Thanks ceehe)
+* Fixed the bug in the speedrun custom challenges where you could touch an item pedestal to advance to the next character under certain conditions. (Thanks ceehe)
 * Fixed the bug where some of the save file graphics had the wrong text color.
 * Fixed the bug where hearts could disappear if they travelled over trapdoors under certain conditions.
-* Fixed the bug in custom challenge speedruns where restarting as The Lost after a death would go back to the first character under certain conditions. (Thanks Dea1h)
+* Fixed the bug in custom challenge speedruns where restarting as The Lost after a death would go back to the first character. (Thanks Dea1h)
 
 ### *v0.5.3* - April 12th, 2017
 
@@ -78,7 +94,7 @@
 * Fixed the bug where the run would be reset if your internet hiccuped during a race. (Thanks thisguyisbarry)
 * Fixed the bug where the beam of light would not spawn if you had both The Polaroid and The Negative. (Thanks nicoluwu and tyrannasauruslex)
 * Fixed the bug where the timer would show before a race started.
-* Slightly increased the hitbox on trapdoors and crawlspaces.
+* Slightly increased the hitbox on trapdoors and crawlspaces (from 15.5 to 16).
 * The "News" link on the website will now go to [this page](https://github.com/Zamiell/isaac-racing-client/blob/master/HISTORY.md).
 * There is now an alpha version of both [profiles](https://isaacracing.net/profiles) and [races](https://isaacracing.net/races) on the website. This was coded by sillypears, so thanks to him for that.
 * The separate "mod-only" change-log will no longer be maintained.

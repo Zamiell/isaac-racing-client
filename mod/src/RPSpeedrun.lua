@@ -67,6 +67,7 @@ function RPSpeedrun:Init()
   local game = Game()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
+  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
@@ -147,7 +148,7 @@ function RPSpeedrun:Init()
     RPSpeedrun.finishedChar = false
     RPSpeedrun.fastReset = true -- Set this so that we don't go back to the beginning again
     RPSpeedrun.charNum = RPSpeedrun.charNum + 1
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting to switch to the new character.")
     return
   end
@@ -158,7 +159,7 @@ function RPSpeedrun:Init()
     RPSpeedrun.finishedTime = 0
     RPSpeedrun.charNum = 1
     RPSpeedrun.fastReset = false
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
   end
@@ -166,14 +167,14 @@ function RPSpeedrun:Init()
   if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
      character ~= RPGlobals.race.order9[RPSpeedrun.charNum] then
 
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because we are on the wrong character for a R+9 speedrun.")
     return
 
   elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
          character ~= RPGlobals.race.order14[RPSpeedrun.charNum] then
 
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because we are on the wrong character for a R+14 speedrun.")
     return
   end
@@ -189,7 +190,7 @@ function RPSpeedrun:Init()
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because we want to start from the first character again.")
     return
   end
@@ -218,7 +219,7 @@ function RPSpeedrun:CheckpointTouched()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local frameCount = Isaac.GetFrameCount()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   RPSpeedrun.spawnedCheckpoint = false
 
@@ -230,14 +231,14 @@ function RPSpeedrun:CheckpointTouched()
   player.ControlsEnabled = false
 
   -- Mark to restart the run after the "Checkpoint" text has displayed on the screen for a little bit
-  RPSpeedrun.resetFrame = frameCount + 30
+  RPSpeedrun.resetFrame = isaacFrameCount + 30
 end
 
 -- Called from the PostRender callback
 function RPSpeedrun:CheckRestart()
   -- Local variables
   local game = Game()
-  local frameCount = Isaac.GetFrameCount()
+  local isaacFrameCount = Isaac.GetFrameCount()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
 
@@ -251,7 +252,7 @@ function RPSpeedrun:CheckRestart()
   end
 
   -- We grabbed the checkpoint, so move us to the next character for the speedrun
-  if RPSpeedrun.resetFrame ~= 0 and frameCount >= RPSpeedrun.resetFrame then
+  if RPSpeedrun.resetFrame ~= 0 and isaacFrameCount >= RPSpeedrun.resetFrame then
     RPSpeedrun.resetFrame = 0
     RPSpeedrun.finishedChar = true
     game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_RESTART_RUN) -- 3

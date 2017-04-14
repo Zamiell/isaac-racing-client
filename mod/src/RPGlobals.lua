@@ -15,7 +15,7 @@ RPGlobals.race = {
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
   solo            = false,       -- Can be either false or true
   rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "custom"
-  character       = "Judas",     -- Can be the name of any character
+  character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
@@ -163,6 +163,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.replacedTrapdoors   = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
+  RPGlobals.run.finishPedestals     = {}
+  RPGlobals.run.victoryLapPedestals = {}
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
@@ -183,6 +185,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
   RPGlobals.run.usedButter           = false
+  RPGlobals.run.fastResetFrame       = 0
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -241,6 +244,13 @@ function RPGlobals:IncrementRNG(seed)
 end
 
 function RPGlobals:AddItemBanList(itemID)
+  -- Don't add items to the ban list that you can normally get duplicates of
+  if itemID == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT or -- 73
+     itemID == CollectibleType.COLLECTIBLE_COLLECTIBLE_BALL_OF_BANDAGES then -- 207
+
+    return
+  end
+
   local inBanList = false
   for i = 1, #RPGlobals.raceVars.itemBanList do
     if RPGlobals.raceVars.itemBanList[i] == itemID then
@@ -289,6 +299,21 @@ end
 function RPGlobals:Round(num, numDecimalPlaces)
   local mult = 10 ^ (numDecimalPlaces or 0)
   return math.floor(num * mult + 0.5) / mult
+end
+
+function RPGlobals:TableEqual(table1, table2)
+  -- First, compare their size
+  if #table1 ~= #table2 then
+    return false
+  end
+
+  -- Compare each element
+  for i = 1, #table1 do
+    if table1[i] ~= table2[i] then
+      return false
+    end
+  end
+  return true
 end
 
 -- Find out how many charges this item has
@@ -479,47 +504,64 @@ function RPGlobals:DetermineStageType(stage)
   return stageType
 end
 
--- Remove the long fade out / fade in when entering trapdoors (3/4)
-function RPGlobals:GotoNextFloor(upwards)
+-- Remove the long fade out / fade in when entering trapdoors
+-- (and Sacrifice Room teleports)
+function RPGlobals:GotoNextFloor(upwards, redirect)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local stageType = level:GetStageType()
   local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local stage = level:GetStage()
 
-  local stage = RPGlobals.run.currentFloor
-  -- We use this instead of "level:GetStage()" so that we can divert the player from going to the Dark Room
+  -- First check to see if we need to redirect the player (used for Sacrifice Room teleports)
+  if redirect ~= nil then
+    stage = redirect
+  end
 
-  -- Build the command
-  local stageCommand
+  -- First check to see if we are going to the same floor
+  if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
+     (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
+
+    local command = "reseed" -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Executed command: " .. command)
+    return
+  end
+
+  -- Build the command that will take us to the next floor
+  local command
   if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-    stageCommand = "stage 9" -- Blue Womb
+    command = "stage 9" -- Blue Womb
 
   elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
     if upwards then
-      stageCommand = "stage 10a" -- Cathedral
+      command = "stage 10a" -- Cathedral
     else
-      stageCommand = "stage 10" -- Sheol
+      command = "stage 10" -- Sheol
     end
 
   elseif stage == 10 and stageType == 0 then
-    stageCommand = "stage 11" -- Dark Room
+    -- Sheol goes to the Dark Room
+    command = "stage 11"
 
   elseif stage == 10 and stageType == 1 then
-    stageCommand = "stage 11a" -- The Chest
+    -- Cathedral goes to The Chest
+    command = "stage 11a"
 
   else
     local nextStage = stage + 1
-    stageCommand = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
+    command = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
     local newStageType = RPGlobals:DetermineStageType(nextStage)
     if newStageType == 1 then
-      stageCommand = stageCommand .. "a"
+      command = command .. "a"
     elseif newStageType == 2 then
-      stageCommand = stageCommand .. "b"
+      command = command .. "b"
     end
   end
 
-  Isaac.ExecuteCommand(stageCommand)
+  Isaac.ExecuteCommand(command)
+  Isaac.DebugString("Executed command: " .. command)
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

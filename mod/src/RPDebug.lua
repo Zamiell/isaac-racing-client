@@ -81,6 +81,7 @@ function RPDebug:Main()
   --RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
   --RPSpeedrun.charNum = 13
   --RPSpeedrun.finishedChar = true
+  RPGlobals.run.consoleWindowOpen = false
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

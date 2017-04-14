@@ -6,20 +6,15 @@
 --[[
 
 TODO:
-- NEW ITEM BANS
-- cube of meat / ball of bandages not added to ban list
-
-- remove delay on the credits item
-- make mushrooms only spawn on caves
-- make hosts only spawn on depths
-- make mushrooms not deal contact damage on the first X frames on them being spawned
 - when finish race, replace PlaceMid with place on place sprite
+
+- Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives OR
+  fast travel on a new floor
+
 - check for bug where continuing from main menu before race starts
 - get rid of Lamb Popup through fastclear manipulation
-- Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives
 - Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
 
-- keybinding UI for custom schoolbag switch
 - Implement time offsets, show on starting screen
 - Seed Maw of the Void and Athame black heart drops
 
@@ -34,13 +29,6 @@ TODO DIFFICULT:
 
 TODO CAN'T FIX:
 - Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
-  - When spawning an item via the console (like "spawn 5.100.12"), it does NOT remove it from item pools.
-  - When spawning a specific item with Lua (like "game:Spawn(5, 100, Vector(300, 300), Vector(0, 0), nil, 12, 0)"),
-    it does NOT remove it from any pools.
-  - When spawning a random item with Lua (like "game:Spawn(5, 100, Vector(300, 300), Vector(0, 0), nil, 0, 0)"), it
-    removes it from item pools.
-  - When giving the player an item with Lua (like "player:AddCollectible(race.startingItems[i], 12, true)"), it does
-    NOT remove it from any pools.
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
   function)
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered.
@@ -53,9 +41,10 @@ local RacingPlus = RegisterMod("Racing+", 1)
 
 -- The Lua code is split up into separate files for organizational purposes
 local RPGlobals         -- Global variables
-local RPCallbacks       -- Miscellaneous callbacks
+local RPNPCUpdate       -- The NPCUpdate callback
 local RPPostUpdate      -- The PostUpdate callback
 local RPPostRender      -- The PostRender callback
+local RPCallbacks       -- Miscellaneous callbacks
 local RPPostGameStarted -- The PostGameStarted callback
 local RPItems           -- Collectible item functions
 local RPCards           -- Card functions
@@ -65,9 +54,10 @@ local RPDebug           -- Debug functions
 local function requireFiles()
   -- The filenames have to be lowercase because on Linux, all files are renamed to lowercase by the game for some reason
   RPGlobals         = require("src/rpglobals")
-  RPCallbacks       = require("src/rpcallbacks")
+  RPNPCUpdate       = require("src/rpnpcupdate")
   RPPostUpdate      = require("src/rppostupdate")
   RPPostRender      = require("src/rppostrender")
+  RPCallbacks       = require("src/rpcallbacks")
   RPPostGameStarted = require("src/rppostgamestarted")
   RPItems           = require("src/rpitems")
   RPCards           = require("src/rpcards")
@@ -91,7 +81,7 @@ RPGlobals:InitRun()
 RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" file)
 
 -- Define miscellaneous callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPCallbacks.NPCUpdate) -- 0
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPNPCUpdate.Main) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPPostUpdate.Main) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       RPPostRender.Main) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPCallbacks.EvaluateCache) -- 8

@@ -28,6 +28,7 @@ function RPPostGameStarted:Main(saveState)
   local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
+  local isaacFrameCount = Isaac.GetFrameCount()
   local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
@@ -52,7 +53,7 @@ function RPPostGameStarted:Main(saveState)
     -- We only need to restart the game if there is a curse on B1 already
     if curses ~= 0 then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+      RPGlobals.run.restartFrame = isaacFrameCount + 1
       Isaac.DebugString("Restarting because there was a curse on Basement 1.")
       return
     end
@@ -75,7 +76,7 @@ function RPPostGameStarted:Main(saveState)
     seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
 
     -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because the Easter eggs were invalid.")
     return
   end
@@ -217,6 +218,10 @@ function RPPostGameStarted:Character()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
     end
 
+    -- Make sure that the Schoolbag item is fully charged
+    RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+    RPSchoolbag.sprites.item = nil
+
     -- Reorganize the items on the item tracker
     Isaac.DebugString("Removing collectible " .. activeItem)
     Isaac.DebugString("Removing collectible " .. passiveItem)
@@ -236,12 +241,6 @@ function RPPostGameStarted:Character()
     player:AddCoins(1) -- This fills in the new heart container
     player:AddCoins(25) -- Add a 2nd container
     player:AddCoins(1) -- This fills in the new heart container
-  end
-
-  if RPGlobals.run.schoolbag.item ~= 0 then
-    -- Make sure that the Schoolbag item is fully charged
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
-    RPSchoolbag.sprites.item = nil
   end
 end
 
@@ -266,6 +265,7 @@ function RPPostGameStarted:Race()
   -- Local variables
   local game = Game()
   local seeds = game:GetSeeds()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   RPGlobals.raceVars.difficulty = game.Difficulty
@@ -287,7 +287,7 @@ function RPPostGameStarted:Race()
     -- Validate that we are on the intended seed
     if seeds:GetStartSeedString() ~= RPGlobals.race.seed then
       -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+      RPGlobals.run.restartFrame = isaacFrameCount + 1
       Isaac.DebugString("Restarting because we were not on the right seed.")
       return
     end
@@ -301,7 +301,7 @@ function RPPostGameStarted:Race()
       seeds:Reset()
 
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = Isaac.GetFrameCount() + 1
+      RPGlobals.run.restartFrame = isaacFrameCount + 1
       Isaac.DebugString("Restarting because we were on a set seed.")
       return
     end
@@ -338,6 +338,10 @@ function RPPostGameStarted:Seeded()
   local character = player:GetPlayerType()
 
   -- Give the player extra starting items (for seeded races)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+
+  -- Give the player the "Instant Start" item(s)
   local replacedD6 = false
   for i = 1, #RPGlobals.race.startingItems do
     -- The 13 luck is a special case
@@ -363,66 +367,52 @@ function RPPostGameStarted:Seeded()
       player:AddHearts(1)
       break
     end
+  end
 
-    -- Find out if we replaced the D6
-    local newActiveItem = player:GetActiveItem()
-    if newActiveItem ~= CollectibleType.COLLECTIBLE_D6 then -- 105
-      -- We replaced the D6 with an active item, so put the D6 back and put this item in the Schoolbag
-      replacedD6 = true
-      player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
-      RPGlobals.run.schoolbag.item = newActiveItem
-    end
+  -- Find out if we replaced the D6
+  local newActiveItem = player:GetActiveItem()
+  if newActiveItem ~= CollectibleType.COLLECTIBLE_D6 then -- 105
+    -- We replaced the D6 with an active item, so put the D6 back and put this item in the Schoolbag
+    replacedD6 = true
+    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+    RPGlobals.run.schoolbag.item = newActiveItem
   end
 
   -- Give the player extra Schoolbag items, depending on the character
   if replacedD6 == false then
-    local newSchoolBagItem = 0
     if character == PlayerType.PLAYER_MAGDALENA then -- 1
-      newSchoolBagItem = CollectibleType.COLLECTIBLE_YUM_HEART -- 45
-      RPGlobals.run.schoolbag.item = newSchoolBagItem
-
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_YUM_HEART -- 45
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
-      newSchoolBagItem = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
-      RPGlobals.run.schoolbag.item = newSchoolBagItem
-
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
     elseif character == PlayerType.PLAYER_XXX then -- 4
-      newSchoolBagItem = CollectibleType.COLLECTIBLE_POOP -- 36
-      RPGlobals.run.schoolbag.item = newSchoolBagItem
-
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_POOP -- 36
     elseif character == PlayerType.PLAYER_EVE then -- 5
-      newSchoolBagItem = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
-      RPGlobals.run.schoolbag.item = newSchoolBagItem
-
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
     elseif character == PlayerType.PLAYER_THELOST then -- 10
-      newSchoolBagItem = CollectibleType.COLLECTIBLE_D4 -- 284
-      RPGlobals.run.schoolbag.item = newSchoolBagItem
-    end
-
-    -- Reorganize the items on the item tracker so that the Schoolbag item comes first
-    if newSchoolBagItem ~= 0 then
-      Isaac.DebugString("Adding collectible " .. newSchoolBagItem) -- Make it show up on the item tracker
-      for i = 1, #RPGlobals.race.startingItems do
-        if RPGlobals.race.startingItems[i] == 600 then
-          local itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
-          Isaac.DebugString("Removing collectible " .. itemID .. " (13 Luck)")
-          Isaac.DebugString("Adding collectible " .. itemID .. " (13 Luck)")
-        else
-          Isaac.DebugString("Removing collectible " .. RPGlobals.race.startingItems[i])
-          Isaac.DebugString("Adding collectible " .. RPGlobals.race.startingItems[i])
-        end
-      end
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
     end
   end
 
-  -- Enable the Schoolbag
-  -- (this has to be after setting the Schoolbag item)
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  -- Enable the Schoolbag item
   if RPGlobals.run.schoolbag.item ~= 0 then
+    Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
     RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
     RPSchoolbag.sprites.item = nil
 
     -- Also make sure that the Schoolbag item is removed from all of the pools
     RPGlobals:AddItemBanList(RPGlobals.run.schoolbag.item)
+  end
+
+  -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the Schoolbag item
+  for i = 1, #RPGlobals.race.startingItems do
+    if RPGlobals.race.startingItems[i] == 600 then
+      local itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
+      Isaac.DebugString("Removing collectible " .. itemID .. " (13 Luck)")
+      Isaac.DebugString("Adding collectible " .. itemID .. " (13 Luck)")
+    else
+      Isaac.DebugString("Removing collectible " .. RPGlobals.race.startingItems[i])
+      Isaac.DebugString("Adding collectible " .. RPGlobals.race.startingItems[i])
+    end
   end
 
   -- Add item bans for seeded mode
@@ -458,11 +448,15 @@ function RPPostGameStarted:Diversity()
   local player = game:GetPlayer(0)
   local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
 
-  -- Give the player their five extra starting items
+  -- Give the player extra starting items (for diversity races)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+  Isaac.DebugString("Removing collectible 414") -- We don't need to show this on the item tracker to reduce clutter
+
+  -- Give the player their five random diversity starting items
   for i = 1, #RPGlobals.race.startingItems do
     if i == 1 then
       -- Ttem 1 is the active
-      player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
       RPGlobals.run.schoolbag.item = RPGlobals.race.startingItems[i]
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
         RPGlobals.run.schoolbag.charges = 0 -- Eden's Soul should start on an empty charge
@@ -517,11 +511,6 @@ function RPPostGameStarted:Diversity()
       RPGlobals:AddTrinketBanList(RPGlobals.race.startingItems[i])
     end
   end
-
-  -- Diversity races also start with More Options to reduce resetting
-  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
-  Isaac.DebugString("Removing collectible 414")
-  -- We don't need to show this on the item tracker to reduce clutter
 
   -- Add item bans for diversity races
   RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114

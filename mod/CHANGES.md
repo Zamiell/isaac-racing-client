@@ -29,7 +29,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Blue Baby starts with three and a half soul hearts.
   * Azazel starts with half a red heart and half a soul heart.
 * Judas starts with a bomb instead of 3 coins.
-* Eden starts with the Schoolbag. She will start with her random active item inside the bag.
+* Eden starts with the Schoolbag (from Antibirth). She will start with her random active item inside the bag.
 * Keeper starts with Greed's Gullet, Duality, and 50 cents.
 
 ### 2) No Curses
@@ -58,9 +58,9 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * the ??? pill (this has no effect with curses disabled)
 * Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for racers with cutscene skip muscle memory.)
 * Some useless animations are removed:
-  * teleporting upwards
-  * the fade when entering a trapdoor
+  * the fade when entering a new floor
   * the fade when entering or exiting crawlspaces
+  * teleporting upwards
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
 * Some things that are unseeded are now seeded:
@@ -69,9 +69,10 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * rerolls on items after being purchased
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
   * drops from Lil Chest and Crystal Ball
-  * the number of enemies spawned from Portals (as a side effect of this, Portals will always spawn 5 enemies instead of 1-5 enemies.)
+  * the number of enemies spawned from Portals (as a side effect of this, Portals will always spawn 5 enemies instead of 1-5 enemies)
   * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
+* The restart key now immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
 * Void Portals will automatically be deleted.
 * The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
 * Troll Bombs and Mega Troll Bombs now always have a fuse timer of exactly 2 seconds.
@@ -86,13 +87,16 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Eden's Soul will now always properly start at 0 charges.
 * AAA Battery will now synergize with The Battery.
 * 9 Volt will now synergize with The Battery.
+* The colors of some Purity auras have been changed to make them easier to see; speed is now green and range is now yellow.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
-* Reduced the pickup delay on all pedestal items from 0.67 seconds to 0.5 seconds.
+* The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * All Spike Chests will now spawn as Mimics instead.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
+* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
+* You no longer have a chance to be sent to the menu after defeating Mega Satan.
 * Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
@@ -104,10 +108,11 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
 
-If you want, you can change the run goal manually in your "save.dat" file, located in the Racing+ mod folder. By default, this is located at:
+If you want, you can change the run goal manually in your "save1.dat" file, located in the Racing+ mod folder. By default, this is located at:
 ```
-C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_dev\save.dat
+C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_dev\save1.dat
 ```
+(The "save1.dat" file corresponds to save slot #1. If you play on save slot #2 or #3, edit "save2.dat" or "save3.dat" accordingly.)
 
 <br />
 
@@ -119,11 +124,11 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 * All characters start with The Compass in addition to their other items.
 * The Cain's Eye trinket is removed from the game.
-* All characters start with the Schoolbag (from Antibirth). (This is experimental and is subject to change.)
+* All characters start with the Schoolbag (from Antibirth).
 
 ### Diversity
 
-* Each racer starts with the same five random passive items. (This is in addition to the character's original passive items and resources.)
+* Each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
 * For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-mod/blob/master/README-DIVERSITY.md).
 
 ### Dark Room
@@ -132,17 +137,25 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Mega Satan
 
-* A Get out of Jail Free Card will now spawn next to the Mega Satan door on both The Chest and the Dark Room.
+* The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
+* Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
 
-### R+14 Character Speedruns
+### R+9 and R+14 Character Speedruns
 
-* Isaac starts with The Battery.
-* Maggy starts with the Soul Jar, a new passive item with the following effects:
-  * You no longer gain health from soul/black hearts.
-  * You gain a red heart container after picking up 4 soul/black hearts.
-  * You always have a 100% devil deal chance if no damage is taken.
-* Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
-* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
+* By pressing "Tab" on the challenges screen, you can access custom challenges. The Racing+ mod has a custom challenge for the R+9 and R+14 speedrun categories, in which you must beat the game 9 or 14 times in a row on various characters.
+* These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
+* Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
+* You can restart with the current character by tapping R. You can go back to the first character by holding R.
+* The R+9 category is defined as defeating Blue Baby on the following 9 characters:
+  * Cain, Judas, Blue Baby, Eve, Samson, Azazel, Lazarus, The Lost, and Keeper
+* The R+14 category is defined as defeating Blue Baby on all 14 characters. Some characters have additional changes:
+  * Isaac starts with The Battery.
+  * Maggy starts with the Soul Jar, a new passive item with the following effects:
+    * You no longer gain health from soul/black hearts.
+    * You gain a red heart container after picking up 4 soul/black hearts.
+    * You always have a 100% devil deal chance if no damage is taken.
+  * Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
+  * Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 
 <br />
 

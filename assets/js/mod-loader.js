@@ -33,9 +33,7 @@ const send = function() {
 
     // Start to compile the list of starting items
     json.startingItems = [];
-    if (globals.modLoader.rFormat === 'seeded') {
-        json.startingItems.push(21); // The Compass
-    } else if (globals.modLoader.rFormat === 'diversity') {
+    if (globals.modLoader.rFormat === 'diversity') {
         let items = globals.modLoader.seed.split(',');
         for (let item of items) {
             json.startingItems.push(parseInt(item)); // The Lua mod expects this to be a number

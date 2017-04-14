@@ -12,7 +12,7 @@ local RPSprites = require("src/rpsprites")
 --
 
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
-RPFastTravel.trapdoorTouchDistance = 16 -- This feels about right (it is slightly smaller than vanilla)
+RPFastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
 
 --
 -- Variables
@@ -299,6 +299,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   local player = game:GetPlayer(0)
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Check to see if the player is touching the trapdoor
   local squareSize = RPFastTravel.trapdoorTouchDistance
@@ -322,7 +323,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
     RPGlobals.run.trapdoor.state = 1
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.upwards = upwards
-    RPGlobals.run.trapdoor.frame = Isaac.GetFrameCount() + 40
+    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
     -- The "Trapdoor" animation is 16 frames long and the "LightTravel" animation is 28 frames long,
     -- but we need to delay for longer than that to make it look smooth
     -- (we keep the "Trapdoor" animation at 2 for quick chest animations and
@@ -348,13 +349,11 @@ function RPFastTravel:CheckTrapdoor()
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
-  local room = game:GetRoom()
   local player = game:GetPlayer(0)
-  local frameCount = Isaac.GetFrameCount()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   if RPGlobals.run.trapdoor.state == 1 and
-     frameCount >= RPGlobals.run.trapdoor.frame then
+     isaacFrameCount >= RPGlobals.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
     player.Visible = false
@@ -366,11 +365,11 @@ function RPFastTravel:CheckTrapdoor()
     -- Mark to change floors after the screen is black
     RPGlobals.run.trapdoor.state = 2
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
-    RPGlobals.run.trapdoor.frame = frameCount + 8
+    RPGlobals.run.trapdoor.frame = isaacFrameCount + 8
     -- 9 is too many (you can start to see the same room again)
 
   elseif RPGlobals.run.trapdoor.state == 2 and
-         frameCount >= RPGlobals.run.trapdoor.frame then
+         isaacFrameCount >= RPGlobals.run.trapdoor.frame then
 
     -- Stage 3 is actiated when the screen is black
     RPGlobals.run.trapdoor.state = 3
@@ -379,41 +378,23 @@ function RPFastTravel:CheckTrapdoor()
     RPGlobals:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
   elseif RPGlobals.run.trapdoor.state == 5 and
-         RPGlobals.run.trapdoor.floor ~= stage then
-
-    -- State 6 is activated when we get to the new floor
-    -- (stages 4 and 5 are in the PostNewRoom callback)
-    RPGlobals.run.trapdoor.state = 6
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
-    game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
-               room:GetCenterPos(), Vector(0,0), nil, 0, 0)
-
-    -- Move Isaac to the center of the room
-    player.Position = room:GetCenterPos()
-
-    -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
-    local spriteName = tostring(stage) .. "-" .. tostring(stageType)
-    RPFastTravel.sprites.stage = Sprite()
-    RPFastTravel.sprites.stage:Load("gfx/stage/" .. spriteName .. ".anm2", true)
-    RPFastTravel.sprites.stage:Play("TextIn", true)
-
-  elseif RPGlobals.run.trapdoor.state == 6 and
          player.ControlsEnabled then
 
-     -- State 7 is activated when the player controls are enabled
+     -- State 6 is activated when the player controls are enabled
      -- (this happens automatically by the game)
-     RPGlobals.run.trapdoor.state = 7
+     -- (stages 4 and 5 are in the PostNewRoom callback)
+     RPGlobals.run.trapdoor.state = 6
      Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
-     RPGlobals.run.trapdoor.frame = frameCount + 10 -- Wait a while longer
+     RPGlobals.run.trapdoor.frame = isaacFrameCount + 10 -- Wait a while longer
      player.ControlsEnabled = false
 
-  elseif RPGlobals.run.trapdoor.state == 7 and
-         frameCount >= RPGlobals.run.trapdoor.frame then
+  elseif RPGlobals.run.trapdoor.state == 6 and
+         isaacFrameCount >= RPGlobals.run.trapdoor.frame then
 
-     -- State 8 is activated when the the hole is spawned and ready
-     RPGlobals.run.trapdoor.state = 8
+     -- State 7 is activated when the the hole is spawned and ready
+     RPGlobals.run.trapdoor.state = 7
      Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
-     RPGlobals.run.trapdoor.frame = frameCount + 25
+     RPGlobals.run.trapdoor.frame = isaacFrameCount + 25
      -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
 
      -- Make Isaac visable again
@@ -435,8 +416,8 @@ function RPFastTravel:CheckTrapdoor()
        end
      end
 
-  elseif RPGlobals.run.trapdoor.state == 8 and
-         frameCount >= RPGlobals.run.trapdoor.frame then
+  elseif RPGlobals.run.trapdoor.state == 7 and
+         isaacFrameCount >= RPGlobals.run.trapdoor.frame then
 
     -- We are finished when the the player has emerged from the hole
     RPGlobals.run.trapdoor.state = 0
@@ -452,7 +433,10 @@ function RPFastTravel:CheckTrapdoor()
     end
 
     -- Hide the stage text
-    RPFastTravel.sprites.stage:Play("TextOut", true)
+    -- (it won't be showing if we already finished the race)
+    if RPGlobals.raceVars.finished == false then
+      RPFastTravel.sprites.stage:Play("TextOut", true)
+    end
   end
 
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
@@ -461,12 +445,18 @@ function RPFastTravel:CheckTrapdoor()
   end
 end
 
+-- Called from the PostNewRoom callback
 function RPFastTravel:CheckTrapdoor2()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
+  -- (this is just an artifact of the manually reordering)
   if RPGlobals.run.trapdoor.state == 3 then
     RPGlobals.run.trapdoor.state = 4
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
@@ -475,11 +465,27 @@ function RPFastTravel:CheckTrapdoor2()
     RPGlobals.run.trapdoor.state = 5
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
 
-    -- Make the player invisible so that we can jump out of the hole later
+    -- Make the player invisible so that we can jump out of the hole
     -- (this has to be in the PostNewRoom callback so that we don't get bugs with the Glowing Hour Glass)
     -- (we can't use "player.Visible = false" because it won't do anything here)
     RPGlobals.run.trapdoor.scale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
+
+    -- Spawn a hole
+    game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
+               room:GetCenterPos(), Vector(0,0), nil, 0, 0)
+
+    -- Move Isaac to the center of the room
+    player.Position = room:GetCenterPos()
+
+    -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
+    -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
+    if RPGlobals.raceVars.finished == false then
+      local spriteName = tostring(stage) .. "-" .. tostring(stageType)
+      RPFastTravel.sprites.stage = Sprite()
+      RPFastTravel.sprites.stage:Load("gfx/stage/" .. spriteName .. ".anm2", true)
+      RPFastTravel.sprites.stage:Play("TextIn", true)
+    end
   end
 end
 

@@ -27,8 +27,9 @@ function RPPostRender:Main()
   local game = Game()
   local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
-  local challenge = Isaac.GetChallenge()
   local runSeed = seeds:GetStartSeedString()
+  local challenge = Isaac.GetChallenge()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   RPSaveDat:Load()
@@ -40,10 +41,10 @@ function RPPostRender:Main()
     RPGlobals.raceVars.started = false
   end
 
-  -- Restart the game if Easter Egg (or race) validation failed
+  -- Restart the game if Easter Egg or race or speedrun validation failed
   -- (we can't do this in the "PostGameStarted" callback because
   -- the "restart" command will fail when the game is first loading)
-  if RPGlobals.run.restartFrame ~= 0 and Isaac.GetFrameCount() >= RPGlobals.run.restartFrame then
+  if RPGlobals.run.restartFrame ~= 0 and isaacFrameCount >= RPGlobals.run.restartFrame then
     RPGlobals.run.restartFrame = 0
 
     -- Change the seed of the run if need be
@@ -156,6 +157,13 @@ end
 
 -- Check for reset inputs
 function RPPostRender:CheckResetInput()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local isaacFrameCount = Isaac.GetFrameCount()
+  local challenge = Isaac.GetChallenge()
+
   -- If we have opened the console at least once this run, disable fast-resetting
   if RPGlobals.run.consoleWindowOpen then
     return
@@ -163,7 +171,6 @@ function RPPostRender:CheckResetInput()
 
   -- Check to see if we are opening the console window
   -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
-  local challenge = Isaac.GetChallenge()
   if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) and -- 96
      challenge == Challenge.CHALLENGE_NULL then -- 0
 
@@ -184,15 +191,31 @@ function RPPostRender:CheckResetInput()
   end
 
   -- Check for the "R" input
+  local resetPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     -- (we check all inputs instead of "player.ControllerIndex" because
     -- a controller player might be using the keyboard to reset)
     if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
-      RPSpeedrun.fastReset = true
-      -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
-      Isaac.ExecuteCommand("restart")
-      return
+      resetPressed = true
+      break
     end
+  end
+  if resetPressed == false then
+    return
+  end
+
+  if stage == 1 or
+     isaacFrameCount <= RPGlobals.run.fastResetFrame + 60 then
+
+    RPSpeedrun.fastReset = true
+    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
+    local command = "restart"
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Executed command: " .. command)
+  else
+    -- To fast reset on floors 2 and beyond, we need to double tap R
+    RPGlobals.run.fastResetFrame = isaacFrameCount
+    Isaac.DebugString("Set fast-reset frame to: " .. tostring(RPGlobals.run.fastResetFrame))
   end
 end
 
