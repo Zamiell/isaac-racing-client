@@ -2,12 +2,12 @@
 
 ### *v0.5.6* - April 14th, 2017
 
-* Changed the behavior of the fast-restart feature such that on floor 2 and beyond, you need to double tap R to trigger it. This should prevent accidental resets. (Thanks Hyphen-ated, Nariom, and tyrannasauruslex)
-* Changed the behavior of the fast-drop feature such that if you drop more than one item, they will not be stacked on top of each other.
+* Changed the behavior of the fast-restart feature such that on floors 2 and beyond, you need to double tap R to trigger it. This should prevent accidental restarts. (Thanks Hyphen-ated, Nariom, and tyrannasauruslex)
+* Changed the behavior of the fast-drop feature such that if you drop more than one item, they will no longer be stacked on top of each other.
 * Slightly increased the hitbox on trapdoors and crawlspaces (from 16 to 16.5).
 * Moved all NPC checks to the NPCUpdate callback, which will make the game run faster on potato computers.
 * Fixed an unavoidable damage room with a Charger near the top entrance (#1033). (Thanks starg09 and CrafterLynx)
-* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
+* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs. (Thanks thisguyisbarry)
 * Fixed the bug where using a Forget Me Now or Victory Lap on the Dark Room would cause the game to lag under certain conditions.
 * The two Frails that replace Scolex in seeded races will no longer spawn on top of each other, which makes it much easier to distinguish between the two of them.
 * Cube of Meat and Ball of Bandages will no longer be fart-rerolled in diversity races. (Thanks PassionDrama)
