@@ -17,7 +17,6 @@ function RPNPCUpdate:Main(npc)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
@@ -26,7 +25,33 @@ function RPNPCUpdate:Main(npc)
   --                  tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
 
   -- Check for specific kinds of NPCs
-  if npc.Type == EntityType.ENTITY_HOST or -- 27
+  if npc.Type == EntityType.ENTITY_GLOBIN then -- 24
+    -- Keep track of Globins for softlock prevention
+    if RPGlobals.run.currentGlobins[npc.Index] == nil then
+      RPGlobals.run.currentGlobins[npc.Index] = {
+        npc       = npc,
+        lastState = npc.State,
+        regens    = 0,
+      }
+    end
+
+    -- Fix Globin softlocks
+    if npc.State == 3 and
+       npc.State ~= RPGlobals.run.currentGlobins[npc.Index].lastState then
+
+      -- A globin went down
+      RPGlobals.run.currentGlobins[npc.Index].lastState = npc.State
+      RPGlobals.run.currentGlobins[npc.Index].regens = RPGlobals.run.currentGlobins[npc.Index].regens + 1
+      if RPGlobals.run.currentGlobins[npc.Index].regens >= 5 then
+        npc:Kill()
+        RPGlobals.run.currentGlobins[npc.Index] = nil
+        Isaac.DebugString("Killed Globin #" .. tostring(npc.Index) .. " to prevent a soft-lock.")
+      end
+    else
+      RPGlobals.run.currentGlobins[npc.Index].lastState = npc.State
+    end
+
+  elseif npc.Type == EntityType.ENTITY_HOST or -- 27
      npc.Type == EntityType.ENTITY_MOBILE_HOST then -- 204
 
     -- Hosts and Mobile Hosts
@@ -43,37 +68,6 @@ function RPNPCUpdate:Main(npc)
       npc:RemoveStatusEffects()
       Isaac.DebugString("Unfeared a Host / Mobile Host.")
       RPGlobals.run.levelDamaged = true
-    end
-
-  elseif npc.Type == EntityType.ENTITY_KNIGHT or -- 41
-         npc.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
-         npc.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
-
-    -- Knights, Selfless Knights, Floating Knights, and Bone Knights
-    -- Add their position to the table so that we can keep track of it on future frames
-    if RPGlobals.run.currentKnights[npc.Index] == nil then
-      RPGlobals.run.currentKnights[npc.Index] = {
-        pos = npc.Position,
-      }
-    end
-
-    if npc.FrameCount == 4 then
-      -- Changing the NPC's state triggers the invulnerability removal in the next frame
-      npc.State = 4
-
-      -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
-      -- (this is to compensate for having only post update hooks)
-      npc.Visible = true
-
-    elseif npc.FrameCount >= 5 and
-           npc.FrameCount <= 30 then
-
-      -- Keep the 5th frame of the spawn animation going
-      npc:GetSprite():SetFrame("Down", 0)
-
-      -- Make sure that it stays in place
-      npc.Position = RPGlobals.run.currentKnights[npc.Index].pos
-      npc.Velocity = Vector(0, 0)
     end
 
   elseif npc.Type == EntityType.ENTITY_STONEHEAD or -- 42 (Stone Grimace and Vomit Grimace)
@@ -101,19 +95,6 @@ function RPNPCUpdate:Main(npc)
                    entity.Parent, entity.SubType, entity.InitSeed)
         entity:Remove()
       end
-    end
-
-  elseif npc.Type == EntityType.ENTITY_EYE then -- 60
-    -- Eyes and Blootshot Eyes
-    if npc.FrameCount == 4 then
-      npc:GetSprite():SetFrame("Eye Opened", 0)
-      npc.State = 3
-      npc.Visible = true
-    end
-
-    -- Prevent the Eye from shooting for 30 frames
-    if (npc.State == 4 or npc.State == 8) and npc.FrameCount < 31 then
-      npc.StateFrame = 0
     end
 
   elseif npc.Type == EntityType.ENTITY_PIN and npc.Variant == 1 and -- 62.1 (Scolex)
@@ -186,7 +167,7 @@ function RPNPCUpdate:Main(npc)
 
     -- Wizoobs and Red Ghosts
     -- Make it so that tears don't pass through them
-    if npc.FrameCount == 1 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
+    if npc.FrameCount == 0 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
       -- The ghost is set to ENTCOLL_NONE until the first reappearance
       npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
     end
@@ -194,33 +175,6 @@ function RPNPCUpdate:Main(npc)
     -- Speed up their attack pattern
     if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
       npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead
-    end
-
-  elseif npc.Type == EntityType.ENTITY_THE_HAUNT and npc.Variant == 10 and -- 260.10
-         npc.Parent == nil then
-
-    -- Lil' Haunts
-    -- Find out if The Haunt is in the room
-    if RPGlobals.run.currentLilHaunts[npc.Index] == nil then
-      -- Add their position to the table so that we can keep track of it on future frames
-      RPGlobals.run.currentLilHaunts[npc.Index] = {
-        pos = npc.Position,
-      }
-    end
-
-    if npc.FrameCount == 4 then
-      -- Get rid of the Lil' Haunt invulnerability frames
-      npc.State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
-      npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-      -- Tears will pass through Lil' Haunts when they first spawn, so fix that
-      npc.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
-
-    elseif npc.FrameCount >= 5 and
-           npc.FrameCount <= 16 then
-
-      -- Lock Lil' Haunts that are in the "warmup" animation
-      npc.Position = RPGlobals.run.currentLilHaunts[npc.Index].pos
-      npc.Velocity = Vector(0, 0)
     end
 
   elseif npc.Type == EntityType.ENTITY_THE_LAMB and
@@ -241,7 +195,7 @@ function RPNPCUpdate:Main(npc)
     game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
                Isaac.GetEntityVariantByName("Room Clear Delay"),
                RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity.")
+    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity (for Mega Satan).")
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
@@ -249,14 +203,16 @@ function RPNPCUpdate:Main(npc)
 
   elseif npc.Type == EntityType.ENTITY_MUSHROOM and -- 300
          npc:IsDead() == false and -- This is necessary because the callback will be hit again during the removal
-         (stage == LevelStage.STAGE3_1 or -- 5 (Depths)
-          stage == LevelStage.STAGE3_2 or -- 6
-          (stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL)) then -- 10.0 (Sheol)
+         stage ~= LevelStage.STAGE2_1 and -- 3 (Caves)
+         stage ~= LevelStage.STAGE2_2 then -- 4
 
-    -- Replace Mushrooms with Hosts on Depths to prevent unavoidable damage with Leo / Thunder Thighs
+    -- Replace Mushrooms with Hosts on non-Caves floors
+    -- (Mushrooms are incorrectly coded to be champions of Hosts, so they can appear on all floors)
+    -- (to fix the unavoidable damage with Leo / Thunder Thighs when walking over skulls,
+    -- more code is needed in the EntityTakeDamage callback)
     game:Spawn(EntityType.ENTITY_HOST, 0, npc.Position, npc.Velocity, npc.Parent, 0, 1) -- 27.0
-    -- The InitSeed has to be 1 instead of npc.InitSeed so that it doesn't have a chance to respawn into a Mushroom
-    -- (an InitSeed of 0 results in a Mushroom)
+    -- (presumably the existing InitSeed results in a Mushroom, and an InitSeed of 0 results in a Mushroom,
+    -- so we use an InitSeed of 1)
     npc:Remove()
     Isaac.DebugString("Replaced a Mushroom with a Host.")
 

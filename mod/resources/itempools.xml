@@ -1206,6 +1206,8 @@
 		<Item Id="19" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--MaMa Mega!-->
 		<Item Id="483" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Fast Bombs-->
+		<Item Id="517" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="goldenChest"><!-- DecreaseBy="0.4" -->
 		<!--Max's Head-->
@@ -1500,6 +1502,8 @@
 		<Item Id="353" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Glitter Bombs-->
 		<Item Id="432" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Fast Bombs-->
+		<Item Id="517" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="dungeon"><!-- This pool is unused -->
 		<!--Lunch-->

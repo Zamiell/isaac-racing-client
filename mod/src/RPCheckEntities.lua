@@ -408,6 +408,79 @@ function RPCheckEntities:NonGrid()
       -- Also keep track of whether this is a Maw of the Void or Athame ring
       RPGlobals.run.blackRingDropChance = entity:ToLaser().BlackHpDropChance
 
+    elseif entity.Type == EntityType.ENTITY_KNIGHT or -- 41
+           entity.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
+           entity.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
+
+      -- Knights, Selfless Knights, Floating Knights, and Bone Knights
+      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+      if RPGlobals.run.currentKnights[entity.Index] == nil then
+        -- Add their position to the table so that we can keep track of it on future frames
+        RPGlobals.run.currentKnights[entity.Index] = {
+          pos = entity.Position,
+        }
+      end
+
+      if entity.FrameCount == 4 then
+        -- Changing the NPC's state triggers the invulnerability removal in the next frame
+        entity:ToNPC().State = 4
+
+        -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
+        -- (this is to compensate for having only post update hooks)
+        entity.Visible = true
+
+      elseif entity.FrameCount >= 5 and
+             entity.FrameCount <= 30 then
+
+        -- Keep the 5th frame of the spawn animation going
+        entity:GetSprite():SetFrame("Down", 0)
+
+        -- Make sure that it stays in place
+        entity.Position = RPGlobals.run.currentKnights[entity.Index].pos
+        entity.Velocity = Vector(0, 0)
+      end
+
+    elseif entity.Type == EntityType.ENTITY_EYE then -- 60
+      -- Eyes and Blootshot Eyes
+      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+      if entity.FrameCount == 4 then
+        entity:GetSprite():SetFrame("Eye Opened", 0)
+        entity:ToNPC().State = 3
+        entity.Visible = true
+      end
+
+      -- Prevent the Eye from shooting for 30 frames
+      if (entity:ToNPC().State == 4 or entity:ToNPC().State == 8) and entity.FrameCount < 31 then
+        entity:ToNPC().StateFrame = 0
+      end
+
+    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 10 and -- 260.10
+           entity.Parent == nil then
+
+      -- Lil' Haunts
+      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+      if RPGlobals.run.currentLilHaunts[entity.Index] == nil then
+        -- Add their position to the table so that we can keep track of it on future frames
+        RPGlobals.run.currentLilHaunts[entity.Index] = {
+          pos = entity.Position,
+        }
+      end
+
+      if entity.FrameCount == 4 then
+        -- Get rid of the Lil' Haunt invulnerability frames
+        entity:ToNPC().State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
+        entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+        -- Tears will pass through Lil' Haunts when they first spawn, so fix that
+        entity.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
+
+      elseif entity.FrameCount >= 5 and
+             entity.FrameCount <= 16 then
+
+        -- Lock Lil' Haunts that are in the "warmup" animation
+        entity.Position = RPGlobals.run.currentLilHaunts[entity.Index].pos
+        entity.Velocity = Vector(0, 0)
+      end
+
     elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
            entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
 

@@ -157,6 +157,11 @@ function RPFastClear:Main()
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local roomType = room:GetType()
   local player = game:GetPlayer(0)
@@ -200,9 +205,25 @@ function RPFastClear:Main()
     end
   end
 
-  -- Spawns the award for clearing the room (the pickup, chest, etc.)
-  -- (this also makes the trapdoor appear if we are in a boss room)
-  room:SpawnClearAward() -- This takes into account their luck and so forth
+  -- Subvert the "Would you like to do a Victory Lap!?" popup that happens after defeating The Lamb
+  if stage == 11 and stageType == 0 and -- 11.0 is the Dark Room
+     roomType == RoomType.ROOM_BOSS and -- 5
+     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
+               Isaac.GetEntityVariantByName("Room Clear Delay"),
+               RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity (for The Lamb).")
+
+    -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+               room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+
+  else
+    -- Spawns the award for clearing the room (the pickup, chest, etc.)
+    -- (this also makes the trapdoor appear if we are in a boss room)
+    room:SpawnClearAward() -- This takes into account their luck and so forth
+  end
 
   -- Give a charge to the player's active item
   if player:NeedsCharge() == true then

@@ -144,6 +144,11 @@ const sendPlace = function() {
     }
     globals.modLoader.numEntrants = globals.raceList[globals.currentRaceID].racerList.length;
 
+    if (globals.raceList[globals.currentRaceID].ruleset.solo) {
+        // We don't want to send our final place for solo races to avoid showing the "1st place" graphic at the end of the race
+        globals.modLoader.place = 0;
+    }
+
     send();
     globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a numEntrants of "' + globals.modLoader.numEntrants + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
 };

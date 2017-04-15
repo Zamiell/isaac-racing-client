@@ -30,6 +30,13 @@ function RPSaveDat:Load()
      isaacFrameCount % 30 == 0 then
      -- Otherwise, only check for updates every half second, since file reads are expensive
 
+    -- Check to see if there a "save.dat" file for this save slot
+    if Isaac.HasModData(RPGlobals.RacingPlus) == false then
+      Isaac.DebugString("The \"save.dat\" file does not exist for this save slot. Writing defaults.")
+      RPSaveDat:Save()
+      return
+    end
+
     -- Mark that we have loaded on this frame
     RPGlobals.raceVars.loadOnNextFrame = false
 
@@ -185,7 +192,11 @@ end
 
 function RPSaveDat:ChangedPlace()
   if RPGlobals.raceVars.finished then
-    -- Update the place graphic on the left by the R+ icon with our final place
+    -- Show a big graphic at the top of the screen with our final place
+    -- (the client won't send a new place for solo races)
+    RPSprites:Init("place2", tostring(RPGlobals.race.place))
+
+    -- Also, update the place graphic on the left by the R+ icon with our final place
     RPSprites:Init("place", tostring(RPGlobals.race.place))
   end
 end

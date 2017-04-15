@@ -23,8 +23,12 @@ function RPPostGameStarted:Main(saveState)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local seed = level:GetDungeonPlacementSeed()
+  local levelSeed = level:GetDungeonPlacementSeed()
   local curses = level:GetCurses()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
@@ -37,6 +41,16 @@ function RPPostGameStarted:Main(saveState)
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
     RPGlobals.run.currentFloor = stage
     Isaac.DebugString("New floor: " .. tostring(RPGlobals.run.currentFloor) .. " (from S+Q)")
+
+    -- Fix the bug where the Gaping Maws will not respawn in the "Race Room"
+    if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
+       (RPGlobals.race.status == "open" or RPGlobals.race.status == "starting") then
+
+      -- Spawn two Gaping Maws (235.0)
+      game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
+      game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
+      Isaac.DebugString("Respawned 2 Gaping Maws.")
+    end
 
     -- We don't need to do the long series of checks if they quit and continued in the middle of a run
     return
@@ -104,18 +118,18 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
-  RPGlobals.RNGCounter.InitialSeed = seed
-  RPGlobals.RNGCounter.BookOfSin = seed
-  RPGlobals.RNGCounter.CrystalBall = seed
+  RPGlobals.RNGCounter.InitialSeed = levelSeed
+  RPGlobals.RNGCounter.BookOfSin = levelSeed
+  RPGlobals.RNGCounter.CrystalBall = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
-  RPGlobals.RNGCounter.SackOfPennies = seed
-  RPGlobals.RNGCounter.BombBag = seed
-  RPGlobals.RNGCounter.JuicySack = seed
-  RPGlobals.RNGCounter.MysterySack = seed
-  RPGlobals.RNGCounter.LilChest = seed
-  RPGlobals.RNGCounter.RuneBag = seed
-  RPGlobals.RNGCounter.AcidBaby = seed
-  RPGlobals.RNGCounter.SackOfSacks = seed
+  RPGlobals.RNGCounter.SackOfPennies = levelSeed
+  RPGlobals.RNGCounter.BombBag = levelSeed
+  RPGlobals.RNGCounter.JuicySack = levelSeed
+  RPGlobals.RNGCounter.MysterySack = levelSeed
+  RPGlobals.RNGCounter.LilChest = levelSeed
+  RPGlobals.RNGCounter.RuneBag = levelSeed
+  RPGlobals.RNGCounter.AcidBaby = levelSeed
+  RPGlobals.RNGCounter.SackOfSacks = levelSeed
 
   -- Reset all graphics
   -- (this is needed to prevent a bug where the "Race Start" room graphics

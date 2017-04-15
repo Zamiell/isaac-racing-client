@@ -91,10 +91,11 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
+* The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
 * All Spike Chests will now spawn as Mimics instead.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
-* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
+* Mushrooms can no longer be spawned from Meatballs or breaking skulls. (It spawns a Host instead.) This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
 * Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.
@@ -145,7 +146,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * By pressing "Tab" on the challenges screen, you can access custom challenges. The Racing+ mod has a custom challenge for the R+9 and R+14 speedrun categories, in which you must beat the game 9 or 14 times in a row on various characters.
 * These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
 * Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
-* You can restart with the current character by tapping R. You can go back to the first character by holding R.
+* You can restart with the current character by tapping R. You can go back to the first character by holding R. (On floors 2 and beyond, you have to double-tap R to restart with the current character.)
 * The R+9 category is defined as defeating Blue Baby on the following 9 characters:
   * Cain, Judas, Blue Baby, Eve, Samson, Azazel, Lazarus, The Lost, and Keeper
 * The R+14 category is defined as defeating Blue Baby on all 14 characters. Some characters have additional changes:

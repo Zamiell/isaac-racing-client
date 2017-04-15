@@ -186,6 +186,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
   RPGlobals.run.usedButter           = false
   RPGlobals.run.fastResetFrame       = 0
+  RPGlobals.run.teleportSubverted     = false
+  RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

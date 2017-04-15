@@ -6,17 +6,10 @@
 --[[
 
 TODO:
-- when finish race, replace PlaceMid with place on place sprite
-
-- Stop the player from being teleported upon entering a room with Gurdy, Mom's Heart, or It Lives OR
-  fast travel on a new floor
-
-- check for bug where continuing from main menu before race starts
-- get rid of Lamb Popup through fastclear manipulation
+- fix dea1h bug with reenter end boss room
+- Stop the player from being teleported on fast travel on a new floor (try newroom callback)
 - Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
-
 - Implement time offsets, show on starting screen
-- Seed Maw of the Void and Athame black heart drops
 
 TODO DIFFICULT:
 - Unnerf Krampus
@@ -29,6 +22,7 @@ TODO DIFFICULT:
 
 TODO CAN'T FIX:
 - Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
+- Seed Maw of the Void and Athame black heart drops
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
   function)
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered.

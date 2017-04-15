@@ -227,33 +227,30 @@ function RPSchoolbag:CheckInput()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
      RPGlobals.run.schoolbag.item == 0 or
-     --player:IsHoldingItem() then
      player:IsItemQueueEmpty() == false then
-     -- Experimental; this will allow switches while the use animation is occuring
+     -- This will allow switches while the use animation is occuring but
+     -- prevent bugs where queued items will override things
 
     return
   end
 
   -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
   -- the latter is not very responsive with fast sequences of inputs
-  local switchPressed = false
-  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) then -- 11
-    switchPressed = true
-  end
-  if switchPressed and RPGlobals.run.schoolbag.pressed == false then
-    RPGlobals.run.schoolbag.pressed = true
-
-    -- Put the item from the Schoolbag in the active slot
-    RPSchoolbag:Switch()
-
-    -- Put the old item in the Schoolbag
-    RPGlobals.run.schoolbag.item = activeItem
-    RPGlobals.run.schoolbag.charges = activeCharge
-    RPSchoolbag.sprites.item = nil
-
-  elseif switchPressed == false then
+  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
     RPGlobals.run.schoolbag.pressed = false
+    return
+  elseif RPGlobals.run.schoolbag.pressed then
+    return
   end
+  RPGlobals.run.schoolbag.pressed = true
+
+  -- Put the item from the Schoolbag in the active slot
+  RPSchoolbag:Switch()
+
+  -- Put the old item in the Schoolbag
+  RPGlobals.run.schoolbag.item = activeItem
+  RPGlobals.run.schoolbag.charges = activeCharge
+  RPSchoolbag.sprites.item = nil
 end
 
 function RPSchoolbag:Switch()

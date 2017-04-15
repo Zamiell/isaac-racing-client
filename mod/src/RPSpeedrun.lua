@@ -71,6 +71,14 @@ function RPSpeedrun:Init()
   local challenge = Isaac.GetChallenge()
 
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
+    -- Make sure that some speedrun related variables are reset
+    RPSpeedrun.finished = false
+    RPSpeedrun.finishedTime = 0
+    RPSpeedrun.charNum = 1
+    RPSpeedrun.fastReset = false
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
+
+    -- Go to the "Change Char Order" room
     Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
     Isaac.ExecuteCommand("goto s.boss.9999")
     -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn

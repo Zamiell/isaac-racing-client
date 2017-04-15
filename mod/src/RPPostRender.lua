@@ -25,11 +25,7 @@ local RPSpeedrun   = require("src/rpspeedrun")
 function RPPostRender:Main()
   -- Local variables
   local game = Game()
-  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
-  local runSeed = seeds:GetStartSeedString()
-  local challenge = Isaac.GetChallenge()
-  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   RPSaveDat:Load()
@@ -42,36 +38,7 @@ function RPPostRender:Main()
   end
 
   -- Restart the game if Easter Egg or race or speedrun validation failed
-  -- (we can't do this in the "PostGameStarted" callback because
-  -- the "restart" command will fail when the game is first loading)
-  if RPGlobals.run.restartFrame ~= 0 and isaacFrameCount >= RPGlobals.run.restartFrame then
-    RPGlobals.run.restartFrame = 0
-
-    -- Change the seed of the run if need be
-    if runSeed ~= RPGlobals.race.seed and
-       RPGlobals.race.rFormat == "seeded" and
-       RPGlobals.race.status == "in progress" then
-
-      -- Change the seed of the run and restart the game
-      local command = "seed " .. RPGlobals.race.seed
-      Isaac.ExecuteCommand(command)
-      Isaac.DebugString("Issued a \"" .. command .. "\" command.")
-      -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
-    end
-
-    -- The "restart" command takes an optional argument to specify the character; we always want to specify this
-    local command = "restart "
-    if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
-      command = command .. RPGlobals.race.order9[RPSpeedrun.charNum]
-    elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
-      command = command .. RPGlobals.race.order14[RPSpeedrun.charNum]
-    else
-      command = command .. RPGlobals.race.character
-    end
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Issued a \"" .. command .. "\" command.")
-    return
-  end
+  RPPostRender:CheckRestart()
 
   -- Draw graphics
   RPSprites:Display()
@@ -101,12 +68,56 @@ function RPPostRender:Main()
   -- Check for reset inputs
   RPPostRender:CheckResetInput()
 
+  -- Check to see if we are subverting a teleport from Gurdy, Mom's Heart, or It Lives
+  RPPostRender:CheckSubvertTeleport()
+
   -- Do race specific stuff
   RPPostRender:Race()
 
   -- Do speedrun related checks
   RPSpeedrun:CheckRestart()
   RPSpeedrun:CheckChangeCharOrder()
+end
+
+-- Restart the game if Easter Egg or race or speedrun validation failed
+-- (we can't do this in the "PostGameStarted" callback because
+-- the "restart" command will fail when the game is first loading)
+function RPPostRender:CheckRestart()
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+  local runSeed = seeds:GetStartSeedString()
+  local challenge = Isaac.GetChallenge()
+  local isaacFrameCount = Isaac.GetFrameCount()
+
+  if RPGlobals.run.restartFrame ~= 0 and isaacFrameCount >= RPGlobals.run.restartFrame then
+    RPGlobals.run.restartFrame = 0
+
+    -- Change the seed of the run if need be
+    if runSeed ~= RPGlobals.race.seed and
+       RPGlobals.race.rFormat == "seeded" and
+       RPGlobals.race.status == "in progress" then
+
+      -- Change the seed of the run and restart the game
+      local command = "seed " .. RPGlobals.race.seed
+      Isaac.ExecuteCommand(command)
+      Isaac.DebugString("Issued a \"" .. command .. "\" command.")
+      -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
+    end
+
+    -- The "restart" command takes an optional argument to specify the character; we might want to specify this
+    local command = "restart"
+    if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
+      command = command .. " " .. RPGlobals.race.order9[RPSpeedrun.charNum]
+    elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+      command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
+    elseif RPGlobals.race.status ~= "none" then
+      command = command .. " " .. RPGlobals.race.character
+    end
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Issued a \"" .. command .. "\" command.")
+    return
+  end
 end
 
 -- Make Cursed Eye seeded
@@ -216,6 +227,34 @@ function RPPostRender:CheckResetInput()
     -- To fast reset on floors 2 and beyond, we need to double tap R
     RPGlobals.run.fastResetFrame = isaacFrameCount
     Isaac.DebugString("Set fast-reset frame to: " .. tostring(RPGlobals.run.fastResetFrame))
+  end
+end
+
+-- Check to see if we are subverting a teleport from Gurdy, Mom's Heart, or It Lives
+function RPPostRender:CheckSubvertTeleport()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local player = game:GetPlayer(0)
+
+  if RPGlobals.run.teleportSubverted then
+    RPGlobals.run.teleportSubverted = false
+    player.SpriteScale = RPGlobals.run.teleportSubvertScale
+
+    -- Find the correct position to teleport to, depending on which door we entered from
+    local pos
+    if level.EnterDoor == Direction.LEFT then -- 0
+      pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
+    elseif level.EnterDoor == Direction.UP then -- 1
+      pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+    elseif level.EnterDoor == Direction.RIGHT then -- 2
+      pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
+    elseif level.EnterDoor == Direction.DOWN then -- 3
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+    end
+
+    -- Teleport them
+    player.Position = pos
   end
 end
 

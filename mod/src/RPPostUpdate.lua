@@ -37,22 +37,6 @@ function RPPostUpdate:Main()
   -- Fast-clear for puzzle rooms
   RPFastClear:CheckPuzzleRoom()
 
-  -- Fix Globin softlocks
-  for i, globin in pairs(RPGlobals.run.currentGlobins) do
-    if globin ~= nil then
-      if globin.npc.State ~= globin.lastState and globin.npc.State == 3 then
-        -- A globin went down
-        globin.regens = globin.regens + 1
-        if (globin.regens >= 5) then
-          globin.npc:Kill()
-          RPGlobals.run.currentGlobins[i] = nil
-          Isaac.DebugString("Killed Globin " .. tostring(i) .. " to prevent a soft-lock.")
-        end
-      end
-      globin.lastState = globin.npc.State
-    end
-  end
-
   -- Check for The Book of Sin (for Bookworm)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED) and
      RPGlobals.run.touchedBookOfSin == false then
@@ -332,6 +316,7 @@ function RPPostUpdate:RaceChecks()
 
   -- Make race winners get sparklies and fireworks
   if (RPGlobals.raceVars.finished == true and
+      RPGlobals.race.status == "none" and
       RPGlobals.race.place == 1 and
       RPGlobals.race.numEntrants >= 3) or
      RPSpeedrun.finished then

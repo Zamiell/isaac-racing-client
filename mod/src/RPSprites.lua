@@ -58,6 +58,9 @@ function RPSprites:Init(spriteType, spriteName)
   elseif spriteType == "place" then
     RPSprites.sprites[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
 
+  elseif spriteType == "place2" then
+    RPSprites.sprites[spriteType].sprite:Load("gfx/race/place2/" .. spriteName .. ".anm2", true)
+
   else
     RPSprites.sprites[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
@@ -151,6 +154,8 @@ function RPSprites:Display()
     elseif k == "place" then -- "1st", "2nd", etc.
       vec.X = 24 -- Move it next to the "R+" icon
       vec.Y = 79
+    elseif k == "place2" then -- The final place graphic
+      vec.Y = vec.Y - 80
     end
 
     -- Draw it

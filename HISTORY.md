@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.5.7* - April 15th, 2017
+
+* When you finish a race, there will now be an in-game custom graphic that shows what place you finished in.
+* The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb. (Thanks Cyber_1)
+* The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
+* Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) (Thanks Krakenos)
+* Fixed the bug where quitting and continuing in the "Race Room" would delete the two Gaping Maws.
+* Fixed the bug where the mod would incorrectly spawn you as the wrong character under certain conditions.
+* Fixed the bug where the mod would incorrectly spawn fireworks under certain conditions.
+* Fixed the bug where invulernability frames were not being removed properly.
+* Fixed the bug where fireworks would play in the "Change Char Order" room under certain conditions. (Thanks Cyber_1)
+
 ### *v0.5.6* - April 14th, 2017
 
 * Changed the behavior of the fast-restart feature such that on floors 2 and beyond, you need to double tap R to trigger it. This should prevent accidental restarts. (Thanks Hyphen-ated, Nariom, and tyrannasauruslex)
@@ -7,7 +19,7 @@
 * Slightly increased the hitbox on trapdoors and crawlspaces (from 16 to 16.5).
 * Moved all NPC checks to the NPCUpdate callback, which will make the game run faster on potato computers.
 * Fixed an unavoidable damage room with a Charger near the top entrance (#1033). (Thanks starg09 and CrafterLynx)
-* Mushrooms can no longer be spawned from breaking skulls. This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs. (Thanks thisguyisbarry)
+* Mushrooms can no longer be spawned from breaking skulls. (It spawns a Host instead.) This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs. (Thanks thisguyisbarry)
 * Fixed the bug where using a Forget Me Now or Victory Lap on the Dark Room would cause the game to lag under certain conditions.
 * The two Frails that replace Scolex in seeded races will no longer spawn on top of each other, which makes it much easier to distinguish between the two of them.
 * Cube of Meat and Ball of Bandages will no longer be fart-rerolled in diversity races. (Thanks PassionDrama)

@@ -7,6 +7,7 @@ local RPCallbacks = {}
 local RPGlobals    = require("src/rpglobals")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
+local RPSprites    = require("src/rpsprites")
 
 --
 -- Miscellaneous game callbacks
@@ -228,12 +229,12 @@ function RPCallbacks:PostPlayerInit(player)
 end
 
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
+-- (this must return nil or false)
 function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   -- local variables
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local player = tookDamage:ToPlayer()
 
   -- Check to see if it was the player that took damage
@@ -243,11 +244,10 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
       return false
     end
 
-    -- Prevent unavoidable damage from Mushrooms on Depths/Sheol
+    -- Prevent unavoidable damage from Mushrooms (when walking over skulls with Leo / Thunder Thighs)
     if damageSource.Type == EntityType.ENTITY_MUSHROOM and -- 300
-       (stage == LevelStage.STAGE3_1 or -- 5
-        stage == LevelStage.STAGE3_2 or -- 6
-        (stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL)) then -- 10.0
+       stage ~= LevelStage.STAGE2_1 and -- 3
+       stage ~= LevelStage.STAGE2_2 then -- 4
 
       return false
     end
@@ -273,21 +273,6 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
           npc:AddCharmed(150) -- 5 seconds
         end
       end
-    end
-  end
-
-  -- Globins softlock prevention
-  local npc = tookDamage:ToNPC()
-  if npc ~= nil then
-    if (npc.Type == EntityType.ENTITY_GLOBIN or
-        npc.Type == EntityType.ENTITY_BLACK_GLOBIN) and
-       RPGlobals.run.currentGlobins[npc.Index] == nil then
-
-      RPGlobals.run.currentGlobins[npc.Index] = {
-        npc       = npc,
-        lastState = npc.State,
-        regens    = 0,
-      }
     end
   end
 end
@@ -446,6 +431,7 @@ function RPCallbacks:PostNewRoom2()
   RPGlobals.run.currentLilHaunts = {} -- Used to delete invulnerability frames
   RPGlobals.run.naturalTeleport = false
   RPGlobals.run.megaSatanDead = false
+  RPGlobals.run.teleportSubverted = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
     extra       = false,
@@ -522,6 +508,9 @@ function RPCallbacks:PostNewRoom2()
     sfx:Stop(SoundEffect.SOUND_MAW_OF_VOID) -- 426
   end
 
+  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
+  RPCallbacks:CheckSubvertTeleport()
+
   --
   -- Race stuff
   --
@@ -549,6 +538,51 @@ function RPCallbacks:PostNewRoom2()
     -- so just open it every time we enter the room and silence the sound effect
     Isaac.DebugString("Opened the Mega Satan door.")
   end
+
+  -- Check to see if we need to remove the final place graphic
+  RPSprites:Init("place2", 0)
+end
+
+-- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
+function RPCallbacks:CheckSubvertTeleport()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local player = game:GetPlayer(0)
+
+  if (roomStageID == 0 and roomVariant == 1040) or -- Gurdy
+     (roomStageID == 0 and roomVariant == 1041) or
+     (roomStageID == 0 and roomVariant == 1042) or
+     (roomStageID == 0 and roomVariant == 1043) or
+     (roomStageID == 0 and roomVariant == 1044) or
+     (roomStageID == 0 and roomVariant == 1058) or
+     (roomStageID == 0 and roomVariant == 1059) or
+     (roomStageID == 0 and roomVariant == 1065) or
+     (roomStageID == 0 and roomVariant == 1066) or
+     (roomStageID == 0 and roomVariant == 1130) or
+     (roomStageID == 0 and roomVariant == 1131) or
+     (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
+     (roomStageID == 0 and roomVariant == 1081) or
+     (roomStageID == 0 and roomVariant == 1082) or
+     (roomStageID == 0 and roomVariant == 1083) or
+     (roomStageID == 0 and roomVariant == 1084) or
+     (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
+     (roomStageID == 0 and roomVariant == 1091) or
+     (roomStageID == 0 and roomVariant == 1092) or
+     (roomStageID == 0 and roomVariant == 1093) or
+     (roomStageID == 0 and roomVariant == 1094) or
+     (roomStageID == 17 and roomVariant == 18) then -- Gurdy (The Chest)
+
+    -- Make the player invisible or else it will show them on the teleported position for 1 frame
+    -- (we can't just move the player here because the teleport occurs after this callback finishes)
+    RPGlobals.run.teleportSubverted = true
+    RPGlobals.run.teleportSubvertScale = player.SpriteScale
+    player.SpriteScale = Vector(0, 0)
+    -- (we actually move the player on the next PostRender frame)
+  end
 end
 
 function RPCallbacks:PostNewRoomRace()
@@ -556,13 +590,16 @@ function RPCallbacks:PostNewRoomRace()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
   local room = game:GetRoom()
   local sfx = SFXManager()
 
   -- Set up the "Race Room"
   if gameFrameCount ~= 0 or
-     roomIndexUnsafe ~= GridRooms.ROOM_DEBUG_IDX or -- -3
+     roomIndex ~= GridRooms.ROOM_DEBUG_IDX or -- -3
      RPGlobals.race.status ~= "open" then
 
     return
