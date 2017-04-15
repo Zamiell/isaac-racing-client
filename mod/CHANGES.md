@@ -92,10 +92,11 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
+* The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb.
 * All Spike Chests will now spawn as Mimics instead.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.
 * Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
-* Mushrooms can no longer be spawned from Meatballs or breaking skulls. (It spawns a Host instead.) This fixes the unavoidable damage when you walk over a skull with Leo / Thunder Thighs.
+* Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This fixes the instantaneous damage when you walk over a skull with Leo / Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
 * Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.

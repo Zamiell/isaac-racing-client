@@ -8,9 +8,8 @@
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) (Thanks Krakenos)
 * Fixed the bug where quitting and continuing in the "Race Room" would delete the two Gaping Maws.
 * Fixed the bug where the mod would incorrectly spawn you as the wrong character under certain conditions.
-* Fixed the bug where the mod would incorrectly spawn fireworks under certain conditions.
+* Fixed the bug where the mod would incorrectly spawn fireworks under certain conditions. (Thanks Cyber_1)
 * Fixed the bug where invulernability frames were not being removed properly.
-* Fixed the bug where fireworks would play in the "Change Char Order" room under certain conditions. (Thanks Cyber_1)
 
 ### *v0.5.6* - April 14th, 2017
 

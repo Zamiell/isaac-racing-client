@@ -76,7 +76,6 @@ function RPSpeedrun:Init()
     RPSpeedrun.finishedTime = 0
     RPSpeedrun.charNum = 1
     RPSpeedrun.fastReset = false
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
 
     -- Go to the "Change Char Order" room
     Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
