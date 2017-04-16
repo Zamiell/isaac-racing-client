@@ -456,7 +456,9 @@ function RPCallbacks:PostNewRoom2()
       challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)")) and
      RPGlobals.race.goal ~= "Mega Satan" and
      -- We don't want to respawn any trophies if the player is supposed to kill Mega Satan
-     RPSpeedrun.finished == false then
+     RPSpeedrun.finished == false and -- Don't respawn the trophy if the player just finished a R+9/14 speedrun
+     RPSpeedrun.spawnedCheckpoint == false then
+     -- Don't respawn the trophy if the player is in the middle of a R+9/14 speedrun
 
     game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
@@ -551,30 +553,33 @@ function RPCallbacks:CheckSubvertTeleport()
   local roomDesc = level:GetCurrentRoomDesc()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
   local player = game:GetPlayer(0)
 
-  if (roomStageID == 0 and roomVariant == 1040) or -- Gurdy
-     (roomStageID == 0 and roomVariant == 1041) or
-     (roomStageID == 0 and roomVariant == 1042) or
-     (roomStageID == 0 and roomVariant == 1043) or
-     (roomStageID == 0 and roomVariant == 1044) or
-     (roomStageID == 0 and roomVariant == 1058) or
-     (roomStageID == 0 and roomVariant == 1059) or
-     (roomStageID == 0 and roomVariant == 1065) or
-     (roomStageID == 0 and roomVariant == 1066) or
-     (roomStageID == 0 and roomVariant == 1130) or
-     (roomStageID == 0 and roomVariant == 1131) or
-     (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
-     (roomStageID == 0 and roomVariant == 1081) or
-     (roomStageID == 0 and roomVariant == 1082) or
-     (roomStageID == 0 and roomVariant == 1083) or
-     (roomStageID == 0 and roomVariant == 1084) or
-     (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
-     (roomStageID == 0 and roomVariant == 1091) or
-     (roomStageID == 0 and roomVariant == 1092) or
-     (roomStageID == 0 and roomVariant == 1093) or
-     (roomStageID == 0 and roomVariant == 1094) or
-     (roomStageID == 17 and roomVariant == 18) then -- Gurdy (The Chest)
+  if roomClear == false and
+     ((roomStageID == 0 and roomVariant == 1040) or -- Gurdy
+      (roomStageID == 0 and roomVariant == 1041) or
+      (roomStageID == 0 and roomVariant == 1042) or
+      (roomStageID == 0 and roomVariant == 1043) or
+      (roomStageID == 0 and roomVariant == 1044) or
+      (roomStageID == 0 and roomVariant == 1058) or
+      (roomStageID == 0 and roomVariant == 1059) or
+      (roomStageID == 0 and roomVariant == 1065) or
+      (roomStageID == 0 and roomVariant == 1066) or
+      (roomStageID == 0 and roomVariant == 1130) or
+      (roomStageID == 0 and roomVariant == 1131) or
+      (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
+      (roomStageID == 0 and roomVariant == 1081) or
+      (roomStageID == 0 and roomVariant == 1082) or
+      (roomStageID == 0 and roomVariant == 1083) or
+      (roomStageID == 0 and roomVariant == 1084) or
+      (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
+      (roomStageID == 0 and roomVariant == 1091) or
+      (roomStageID == 0 and roomVariant == 1092) or
+      (roomStageID == 0 and roomVariant == 1093) or
+      (roomStageID == 0 and roomVariant == 1094) or
+      (roomStageID == 17 and roomVariant == 18)) then -- Gurdy (The Chest)
 
     -- Make the player invisible or else it will show them on the teleported position for 1 frame
     -- (we can't just move the player here because the teleport occurs after this callback finishes)

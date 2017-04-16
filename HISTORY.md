@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.5.9* - April 15th, 2017
+
+* Fixed the bug where a race trophy would erroneously appear in a R+9/14 speedrun under certain conditions. (Thanks Dea1h)
+* Fixed the bug where the player could erroneously teleport in a Gurdy, Mom's Heart, or It Lives! room when coming out of a Devil Room.
+
 ### *v0.5.7* - April 15th, 2017
 
 * When you finish a race, there will now be an in-game custom graphic that shows what place you finished in.
@@ -7,7 +12,7 @@
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) (Thanks Krakenos)
 * Fixed the bug where quitting and continuing in the "Race Room" would delete the two Gaping Maws.
-* Fixed the bug where the mod would incorrectly spawn you as the wrong character under certain conditions.
+* Fixed the bug where the mod would incorrectly spawn you as the wrong character under certain conditions. (Thanks PassionDrama)
 * Fixed the bug where the mod would incorrectly spawn fireworks under certain conditions. (Thanks Cyber_1)
 * Fixed the bug where invulernability frames were not being removed properly.
 

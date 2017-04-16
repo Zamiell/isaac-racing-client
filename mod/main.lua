@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- fix dea1h bug with reenter end boss room
 - Stop the player from being teleported on fast travel on a new floor (try newroom callback)
 - Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
 - Implement time offsets, show on starting screen
