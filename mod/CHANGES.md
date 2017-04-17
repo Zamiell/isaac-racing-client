@@ -21,7 +21,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 ### 1) Character Changes
 
-(Most races are done with Judas. The changes to the other characters are mostly done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) and R+14 speedrun categories.)
+(Most races are done with Judas. The changes to the other characters are mostly done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) speedrun category.)
 
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
@@ -92,6 +92,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
+* It is now impossible to get a narrow boss room on floors 2 through 7 when holding Duality.
 * The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb.
 * All Spike Chests will now spawn as Mimics instead.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.

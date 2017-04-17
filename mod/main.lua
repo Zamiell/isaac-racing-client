@@ -6,9 +6,8 @@
 --[[
 
 TODO:
-- Stop the player from being teleported on fast travel on a new floor (try newroom callback)
-- Fix Keeper getting narrow boss rooms on floors 2-7 (use "reseed" console command)
-- Implement time offsets, show on starting screen
+- Implement time offsets, show on the first room of each floor
+- Ghosts
 
 TODO DIFFICULT:
 - Unnerf Krampus

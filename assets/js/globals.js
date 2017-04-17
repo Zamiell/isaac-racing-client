@@ -50,6 +50,7 @@ module.exports = {
         placeMid: 0,
         place: 1,
         numEntrants: 1,
+        timeOffset: 0,
         'order9-1': null, // The rest are filled in main.js
         'order14-1': null,
         'order9-2': null,

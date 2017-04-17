@@ -28,6 +28,7 @@ globals = {
     "RandomVector",
     "RegisterMod",
     "RNG",
+    "RoomShape",
     "RoomType",
     "SeedEffect",
     "SFXManager",

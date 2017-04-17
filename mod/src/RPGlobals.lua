@@ -188,6 +188,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.fastResetFrame       = 0
   RPGlobals.run.teleportSubverted     = false
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
+  RPGlobals.run.dualityCheckFrame     = 0
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -515,6 +516,8 @@ function RPGlobals:GotoNextFloor(upwards, redirect)
   local stageType = level:GetStageType()
   local roomIndexUnsafe = level:GetCurrentRoomIndex()
   local stage = level:GetStage()
+  local player = game:GetPlayer(0)
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- First check to see if we need to redirect the player (used for Sacrifice Room teleports)
   if redirect ~= nil then
@@ -559,6 +562,14 @@ function RPGlobals:GotoNextFloor(upwards, redirect)
       command = command .. "a"
     elseif newStageType == 2 then
       command = command .. "b"
+    end
+
+    -- Mark to check for a narrow boss room (we only care about checking on floors 2 through 7)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and -- 498
+       nextStage >= 2 and nextStage <= 7 then
+
+      -- It takes a frame to load the new stage
+      RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
     end
   end
 

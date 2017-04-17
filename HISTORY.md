@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.5.10* - April 17th, 2017
+
+* It is now impossible to get a narrow boss room on floors 2 through 7 when holding Duality. (Thanks Dea1h)
+
 ### *v0.5.9* - April 15th, 2017
 
 * Fixed the bug where a race trophy would erroneously appear in a R+9/14 speedrun under certain conditions. (Thanks Dea1h)
