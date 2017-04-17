@@ -10,8 +10,6 @@ TODO:
 - Ghosts
 
 TODO DIFFICULT:
-- Unnerf Krampus
-- Unnerf Sisters Vis
 - Fix Isaac babies spawning on top of you
 - Fix Isaac beams never hitting you
 - Fix Conquest beams
