@@ -23,8 +23,8 @@ You may also be interested in [the Lua mod](https://github.com/Zamiell/isaac-rac
 
 
 
-Run
----
+Run (on Windows)
+----------------
 
 * Install [node](https://nodejs.org/en/download/).
 * If you are on Windows, install [Git](https://git-scm.com/download/win).
@@ -41,6 +41,17 @@ Run
 
 <br />
 
+
+
+Run (on OS X)
+----------------
+
+* Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
+  * `touch ~/.bash_profile`
+  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash`
+  * Close and reopen Terminal.
+  * `nvm install node`
+* 
 
 
 Compile / Package

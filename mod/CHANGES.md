@@ -92,7 +92,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
-* It is now impossible to get a narrow boss room on floors 2 through 7 when holding Duality.
+* It is now impossible to get a narrow boss room on floors 2 through 7 when having Duality.
 * The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb.
 * All Spike Chests will now spawn as Mimics instead.
 * Fixed the unavoidable damage when Mimics happen to spawn on top of you.

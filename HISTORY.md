@@ -2,7 +2,7 @@
 
 ### *v0.5.10* - April 17th, 2017
 
-* It is now impossible to get a narrow boss room on floors 2 through 7 when holding Duality. (Thanks Dea1h)
+* It is now impossible to get a narrow boss room on floors 2 through 7 when having Duality. (Thanks Dea1h)
 
 ### *v0.5.9* - April 15th, 2017
 
