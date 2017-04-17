@@ -210,10 +210,10 @@ function RPFastClear:Main()
      roomType == RoomType.ROOM_BOSS and -- 5
      roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
-               Isaac.GetEntityVariantByName("Room Clear Delay"),
+    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay Effect"),
+               Isaac.GetEntityVariantByName("Room Clear Delay Effect"),
                RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity (for The Lamb).")
+    Isaac.DebugString("Spawned the \"Room Clear Delay Effect\" custom entity (for The Lamb).")
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340

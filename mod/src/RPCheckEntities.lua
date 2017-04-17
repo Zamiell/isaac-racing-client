@@ -749,6 +749,9 @@ function RPCheckEntities:ReplacePedestal(entity)
   local putInSchoolbag = RPSchoolbag:CheckSecondItem(entity)
   if putInSchoolbag == false then
     -- Replace the pedestal
+    RPGlobals.run.usedButter = false
+    -- If we are replacing a pedestal, make sure this is set to false to avoid the bug where
+    -- it takes two item trouches to re-enable the Schoolbag
     local randomItem = false
     local newPedestal
     if offLimits then

@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.5.13* - April 17th, 2017
+
+* Fixed the bug where finishing the Mega Satan fight would trigger the natural finish code instead of the custom Racing+ finish code.
+* 
+
+### *v0.5.12* - April 17th, 2017
+
+* Fixed the bug where the opening the client would make it complain about the "save.dat".
+
 ### *v0.5.10* - April 17th, 2017
 
 * It is now impossible to get a narrow boss room on floors 2 through 7 when having Duality. (Thanks Dea1h)

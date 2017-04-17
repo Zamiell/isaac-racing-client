@@ -192,10 +192,10 @@ function RPNPCUpdate:Main(npc)
 
     -- Stop the room from being cleared, which has a chance to take us back to the menu
     RPGlobals.run.megaSatanDead = true
-    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay"),
-               Isaac.GetEntityVariantByName("Room Clear Delay"),
+    game:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay NPC"),
+               Isaac.GetEntityVariantByName("Room Clear Delay NPC"),
                RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Spawned the \"Room Clear Delay\" custom entity (for Mega Satan).")
+    Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340

@@ -140,6 +140,7 @@ function RPSchoolbag:CheckActiveCharges()
 end
 
 -- Called from the PostUpdate callback (the "RPCheckEntities:ReplacePedestal()" function)
+-- (essentially this code check runs only when the item is first spawned)
 function RPSchoolbag:CheckSecondItem(entity)
   -- Local variables
   local game = Game()
@@ -155,8 +156,10 @@ function RPSchoolbag:CheckSecondItem(entity)
        RPGlobals.run.usedButter == true then
 
       RPGlobals.run.usedButter = false
-      entity:ToPickup().Touched = false
-      return
+      --entity:ToPickup().Touched = false
+      Isaac.DebugString("Prevented putting item " .. tostring(entity.SubType) ..
+                        " in the Schoolbag since they dropped it with Butter!")
+      return false
     end
 
     -- Put the item in our Schoolbag and delete the pedestal
