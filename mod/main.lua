@@ -116,6 +116,10 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.
 -- by the time the callback is reached, the trinkets are already consumed
 
 -- Welcome banner
-Isaac.DebugString("+----------------------+")
-Isaac.DebugString("| Racing+ initialized. |")
-Isaac.DebugString("+----------------------+")
+local hyphens = ''
+for i = 1, string.len(RPGlobals.version) + 23 do
+  hyphens = hyphens .. "-"
+end
+Isaac.DebugString("+" .. hyphens .. "+")
+Isaac.DebugString("| Racing+ " .. RPGlobals.version .. " initialized. |")
+Isaac.DebugString("+" .. hyphens .. "+")

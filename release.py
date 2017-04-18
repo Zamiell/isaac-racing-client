@@ -7,7 +7,6 @@ import json
 import subprocess
 import os
 import dotenv
-import fileinput
 import re
 import shutil
 import psutil
@@ -45,6 +44,25 @@ number_version = data['version']
 version = 'v' + data['version']
 
 if args.skipmod == False:
+    # Put the version in the "RPGlobals.lua" file
+    # From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
+    lua_file = os.path.join(mod_dir, 'src', 'RPGlobals.lua')
+    with open(lua_file, 'r') as file:
+        file_data = file.read()
+
+    # Replace the target string
+    new_file = ''
+    for line in iter(file_data.splitlines()):
+        match = re.search(r'RPGlobals.version = ', line)
+        if match:
+            new_file += 'RPGlobals.version = "' + version + '"\n'
+        else:
+            new_file += line + '\n'
+
+    # Write the file out again
+    with open(lua_file, 'w', newline='\n') as file:
+        file.write(new_file)
+
     # Draw the version number on the title menu graphic
     large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
     small_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 6)
