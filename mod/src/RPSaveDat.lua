@@ -145,6 +145,11 @@ function RPSaveDat:ChangedStatus()
       end
       RPGlobals.showPlaceGraphic = true
     end
+
+  elseif RPGlobals.race.status == "starting" then
+    -- Remove the final place graphic, if present
+    RPSprites:Init("place2", 0)
+
   elseif RPGlobals.race.status == "in progress" or
          (RPGlobals.race.status == "none" and
           roomIndex == GridRooms.ROOM_DEBUG_IDX) then -- -3

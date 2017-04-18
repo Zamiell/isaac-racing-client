@@ -233,7 +233,7 @@ function RPPostGameStarted:Character()
     end
 
     -- Make sure that the Schoolbag item is fully charged
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
     RPSchoolbag.sprites.item = nil
 
     -- Reorganize the items on the item tracker
@@ -365,7 +365,7 @@ function RPPostGameStarted:Seeded()
     end
 
     -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
-    player:AddCollectible(itemID, RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.race.startingItems[i]), true)
+    player:AddCollectible(itemID, RPGlobals:GetItemMaxCharges(RPGlobals.race.startingItems[i]), true)
 
     -- Giving the player the item does not actually remove it from any of the pools,
     -- so we have to expliticly add it to the ban list
@@ -410,7 +410,7 @@ function RPPostGameStarted:Seeded()
   -- Enable the Schoolbag item
   if RPGlobals.run.schoolbag.item ~= 0 then
     Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
     RPSchoolbag.sprites.item = nil
 
     -- Also make sure that the Schoolbag item is removed from all of the pools
@@ -475,7 +475,7 @@ function RPPostGameStarted:Diversity()
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
         RPGlobals.run.schoolbag.charges = 0 -- Eden's Soul should start on an empty charge
       else
-        RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+        RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       end
       RPSchoolbag.sprites.item = nil
 
@@ -502,7 +502,7 @@ function RPPostGameStarted:Diversity()
       -- Items 2, 3, and 4 are the passives
       -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
       player:AddCollectible(RPGlobals.race.startingItems[i],
-                            RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.race.startingItems[i]), true)
+                            RPGlobals:GetItemMaxCharges(RPGlobals.race.startingItems[i]), true)
 
       -- Giving the player the item does not actually remove it from any of the pools,
       -- so we have to expliticly add it to the ban list

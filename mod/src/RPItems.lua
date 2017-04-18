@@ -23,9 +23,9 @@ function RPItems:Main()
   -- Fix The Battery + 9 Volt synergy (1/2)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) and -- 63
      player:HasCollectible(CollectibleType.COLLECTIBLE_NINE_VOLT) and -- 116
-     RPGlobals:GetActiveCollectibleMaxCharges(activeItem) >= 2 and
-     activeCharge == RPGlobals:GetActiveCollectibleMaxCharges(activeItem) and
-     batteryCharge == RPGlobals:GetActiveCollectibleMaxCharges(activeItem) then
+     RPGlobals:GetItemMaxCharges(activeItem) >= 2 and
+     activeCharge == RPGlobals:GetItemMaxCharges(activeItem) and
+     batteryCharge == RPGlobals:GetItemMaxCharges(activeItem) then
 
     RPGlobals.run.giveExtraCharge = true
   end

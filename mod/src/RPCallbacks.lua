@@ -327,7 +327,7 @@ function RPCallbacks:PostNewLevel2()
 
     -- We arrivated at the Dark Room without going through Sheol
     Isaac.DebugString("Sacrifice Room teleport detected.")
-    RPGlobals:GotoNextFloor(false, RPGlobals.run.currentFloor)
+    RPFastTravel:GotoNextFloor(false, RPGlobals.run.currentFloor)
     -- The first argument is "upwards", the second argument is "redirect"
     return
   end
@@ -432,6 +432,7 @@ function RPCallbacks:PostNewRoom2()
   RPGlobals.run.naturalTeleport = false
   RPGlobals.run.megaSatanDead = false
   RPGlobals.run.teleportSubverted = false
+  RPGlobals.run.trapdoorCollision = nil
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
     extra       = false,

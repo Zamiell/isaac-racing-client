@@ -80,13 +80,9 @@ function RPNPCUpdate:Main(npc)
     -- spawn a pickup inside a Stone Grimace and the like
     -- Check to see if there are any pickups/trinkets overlapping with it
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-      local squareSize = 15
       if (entity.Type == EntityType.ENTITY_BOMBDROP or -- 4
           entity.Type == EntityType.ENTITY_PICKUP) and -- 5
-         entity.Position.X >= npc.Position.X - squareSize and
-         entity.Position.X <= npc.Position.X + squareSize and
-         entity.Position.Y >= npc.Position.Y - squareSize and
-         entity.Position.Y <= npc.Position.Y + squareSize then
+         RPGlobals:InsideSquare(entity.Position, npc.Position, 15) then
 
         -- Respawn it in a accessible location
         local newPosition = room:FindFreePickupSpawnPosition(entity.Position, 0, true)

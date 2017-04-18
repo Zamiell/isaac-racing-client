@@ -218,47 +218,71 @@ function RPFastTravel:CheckPickupOverHole(pickup)
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
   for i = 1, #RPGlobals.run.replacedTrapdoors do
     if roomIndex == RPGlobals.run.replacedTrapdoors[i].room and
-       pickup.Position.X >= RPGlobals.run.replacedTrapdoors[i].pos.X - squareSize and
-       pickup.Position.X <= RPGlobals.run.replacedTrapdoors[i].pos.X + squareSize and
-       pickup.Position.Y >= RPGlobals.run.replacedTrapdoors[i].pos.Y - squareSize and
-       pickup.Position.Y <= RPGlobals.run.replacedTrapdoors[i].pos.Y + squareSize then
+       RPGlobals:InsideSquare(pickup.Position, RPGlobals.run.replacedTrapdoors[i].pos, squareSize) then
 
-      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedTrapdoors[i].pos)
+      RPFastTravel:MovePickupFromHole(pickup, RPGlobals.run.replacedTrapdoors[i].pos)
       return
     end
   end
   for i = 1, #RPGlobals.run.replacedHeavenDoors do
     if roomIndex == RPGlobals.run.replacedHeavenDoors[i].room and
-       pickup.Position.X >= RPGlobals.run.replacedHeavenDoors[i].pos.X - squareSize and
-       pickup.Position.X <= RPGlobals.run.replacedHeavenDoors[i].pos.X + squareSize and
-       pickup.Position.Y >= RPGlobals.run.replacedHeavenDoors[i].pos.Y - squareSize and
-       pickup.Position.Y <= RPGlobals.run.replacedHeavenDoors[i].pos.Y + squareSize then
+       RPGlobals:InsideSquare(pickup.Position, RPGlobals.run.replacedHeavenDoors[i].pos, squareSize) then
 
-      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedHeavenDoors[i].pos)
+      RPFastTravel:MovePickupFromHole(pickup, RPGlobals.run.replacedHeavenDoors[i].pos)
       return
     end
   end
   for i = 1, #RPGlobals.run.replacedCrawlspaces do
     if roomIndex == RPGlobals.run.replacedCrawlspaces[i].room and
-       pickup.Position.X >= RPGlobals.run.replacedCrawlspaces[i].pos.X - squareSize and
-       pickup.Position.X <= RPGlobals.run.replacedCrawlspaces[i].pos.X + squareSize and
-       pickup.Position.Y >= RPGlobals.run.replacedCrawlspaces[i].pos.Y - squareSize and
-       pickup.Position.Y <= RPGlobals.run.replacedCrawlspaces[i].pos.Y + squareSize then
+       RPGlobals:InsideSquare(pickup.Position, RPGlobals.run.replacedCrawlspaces[i].pos, squareSize) then
 
-      RPFastTravel:MovePickupOverHole(pickup, RPGlobals.run.replacedCrawlspaces[i].pos)
+      RPFastTravel:MovePickupFromHole(pickup, RPGlobals.run.replacedCrawlspaces[i].pos)
       return
     end
   end
 end
 
-function RPFastTravel:MovePickupOverHole(pickup, posHole)
+function RPFastTravel:MovePickupFromHole(pickup, posHole)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
 
-  -- Don't attempt to move any pickups with velocity
-  if pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0 then
+  -- Make pickups with velocity "bounce" off of the hole
+  if (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0) and
+     (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y) then
+
+    -- Invert the velocity
+    local reverseVelocity = Vector(pickup.Velocity.X, pickup.Velocity.Y)
+    if math.abs(reverseVelocity.X) == math.abs(reverseVelocity.Y) then
+      reverseVelocity.X = reverseVelocity.X * -1
+      reverseVelocity.Y = reverseVelocity.Y * -1
+    elseif math.abs(reverseVelocity.X) > math.abs(reverseVelocity.Y) then
+      reverseVelocity.X = reverseVelocity.X * -1
+    elseif math.abs(reverseVelocity.X) < math.abs(reverseVelocity.Y) then
+      reverseVelocity.Y = reverseVelocity.Y * -1
+    end
+    pickup.Velocity = reverseVelocity
+
+    -- Use the inverted velocity to slightly move it outside of the trapdoor hitbox
+    local newPos = Vector(pickup.Position.X, pickup.Position.Y)
+    local pushedOut = false
+    for i = 1, 100 do
+      -- The velocity of a pickup decreases over time, so we might hit the threshold where
+      -- it decreases by just the right amount to not move outside of the hole in 1 iteration,
+      -- in which case it will need 2 iterations; but just do 100 iterations to be safe
+      newPos.X = newPos.X + reverseVelocity.X
+      newPos.Y = newPos.Y + reverseVelocity.Y
+      if RPGlobals:InsideSquare(newPos, posHole, squareSize) == false then
+        pushedOut = true
+        break
+      end
+    end
+    if pushedOut == false then
+      Isaac.DebugString("Error: Was not able to move the pickup out of the hole after 100 iterations.")
+    end
+    pickup.Position = newPos
+
     return
   end
 
@@ -267,11 +291,7 @@ function RPFastTravel:MovePickupOverHole(pickup, posHole)
   local overlapping = false
   for i = 0, 100 do
     newPos = room:FindFreePickupSpawnPosition(pickup.Position, i, true)
-    if newPos.X >= posHole.X - squareSize and
-       newPos.X <= posHole.X + squareSize and
-       newPos.Y >= posHole.Y - squareSize and
-       newPos.Y <= posHole.Y + squareSize then
-
+    if RPGlobals:InsideSquare(newPos, posHole, squareSize) then
       overlapping = true
     end
     if overlapping == false then
@@ -302,7 +322,6 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
   local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Check to see if the player is touching the trapdoor
-  local squareSize = RPFastTravel.trapdoorTouchDistance
   if RPGlobals.run.trapdoor.state == 0 and
      ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
       (upwards and stage == 8 and entity.FrameCount >= 40 and entity.InitSeed ~= 0) or
@@ -313,10 +332,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
       -- (we respawn beams of light with an InitSeed of 0)
       (upwards and stage ~= 8 and entity.FrameCount >= 16)) and
       -- The beam of light opening animation is 16 frames long
-     player.Position.X >= entity.Position.X - squareSize and
-     player.Position.X <= entity.Position.X + squareSize and
-     player.Position.Y >= entity.Position.Y - squareSize and
-     player.Position.Y <= entity.Position.Y + squareSize and
+     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) and
      player:IsHoldingItem() == false then
 
     -- State 1 is activated the moment we touch the trapdoor
@@ -375,7 +391,7 @@ function RPFastTravel:CheckTrapdoor()
     RPGlobals.run.trapdoor.state = 3
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.floor = stage
-    RPGlobals:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
+    RPFastTravel:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
   elseif RPGlobals.run.trapdoor.state == 5 and
          player.ControlsEnabled then
@@ -489,6 +505,107 @@ function RPFastTravel:CheckTrapdoor2()
   end
 end
 
+-- Remove the long fade out / fade in when entering trapdoors
+-- (and redirect Sacrifice Room teleports)
+function RPFastTravel:GotoNextFloor(upwards, redirect)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stageType = level:GetStageType()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+  local stage = level:GetStage()
+  local player = game:GetPlayer(0)
+  local isaacFrameCount = Isaac.GetFrameCount()
+
+  -- First check to see if we need to redirect the player (used for Sacrifice Room teleports)
+  if redirect ~= nil then
+    stage = redirect
+  end
+
+  -- First check to see if we are going to the same floor
+  if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
+     (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
+
+    local command = "reseed" -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Executed command: " .. command)
+    return
+  end
+
+  -- Build the command that will take us to the next floor
+  local command
+  if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+    command = "stage 9" -- Blue Womb
+
+  elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
+    if upwards then
+      command = "stage 10a" -- Cathedral
+    else
+      command = "stage 10" -- Sheol
+    end
+
+  elseif stage == 10 and stageType == 0 then
+    -- Sheol goes to the Dark Room
+    command = "stage 11"
+
+  elseif stage == 10 and stageType == 1 then
+    -- Cathedral goes to The Chest
+    command = "stage 11a"
+
+  else
+    local nextStage = stage + 1
+    command = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
+    local newStageType = RPFastTravel:DetermineStageType(nextStage)
+    if newStageType == 1 then
+      command = command .. "a"
+    elseif newStageType == 2 then
+      command = command .. "b"
+    end
+
+    -- Mark to check for a narrow boss room (we only care about checking on floors 2 through 7)
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and -- 498
+       nextStage >= 2 and nextStage <= 7 then
+
+      -- It takes a frame to load the new stage
+      RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
+    end
+  end
+
+  Isaac.ExecuteCommand(command)
+  Isaac.DebugString("Executed command: " .. command)
+end
+
+-- This is not named GetStageType to differentiate it from "level:GetStageType"
+function RPFastTravel:DetermineStageType(stage)
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+  local stageSeed = seeds:GetStageSeed(stage)
+
+  -- Based on the game's internal code (from Spider)
+  --[[
+    u32 Seed = g_Game->GetSeeds().GetStageSeed(NextStage);
+    if (!g_Game->IsGreedMode()) {
+      StageType = ((Seed % 2) == 0 && (
+        ((NextStage == STAGE1_1 || NextStage == STAGE1_2) && gd.Unlocked(ACHIEVEMENT_CELLAR)) ||
+        ((NextStage == STAGE2_1 || NextStage == STAGE2_2) && gd.Unlocked(ACHIEVEMENT_CATACOMBS)) ||
+        ((NextStage == STAGE3_1 || NextStage == STAGE3_2) && gd.Unlocked(ACHIEVEMENT_NECROPOLIS)) ||
+        ((NextStage == STAGE4_1 || NextStage == STAGE4_2)))
+      ) ? STAGETYPE_WOTL : STAGETYPE_ORIGINAL;
+    if (Seed % 3 == 0 && NextStage < STAGE5)
+      StageType = STAGETYPE_AFTERBIRTH;
+  --]]
+  local stageType = StageType.STAGETYPE_ORIGINAL -- 0
+  if stageSeed & 1 == 0 then -- This is the same as "stageSeed % 2 == 0", but faster
+    stageType = StageType.STAGETYPE_WOTL -- 1
+  end
+  if stageSeed % 3 == 0 then
+    stageType = StageType.STAGETYPE_AFTERBIRTH -- 2
+  end
+
+  return stageType
+end
+
 --
 -- Crawlspace functions
 --
@@ -523,12 +640,7 @@ function RPFastTravel:ReplaceCrawlspace(entity, i)
                     tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
 
   -- Figure out if it should spawn open or closed, depending on how close we are
-  local squareSize = RPFastTravel.trapdoorOpenDistance
-  if player.Position.X >= entity.Position.X - squareSize and
-     player.Position.X <= entity.Position.X + squareSize and
-     player.Position.Y >= entity.Position.Y - squareSize and
-     player.Position.Y <= entity.Position.Y + squareSize then
-
+  if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) then
     crawlspace:ToEffect().State = 1
     crawlspace:GetSprite():Play("Closed", true)
     Isaac.DebugString("Spawned crawlspace (closed, state 1).")
@@ -554,12 +666,8 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
   local player = game:GetPlayer(0)
 
   -- Check to see if the player is touching the crawlspace
-  local squareSize = RPFastTravel.trapdoorTouchDistance
   if entity:ToEffect().State == 0 and -- The crawlspace is open
-     player.Position.X >= entity.Position.X - squareSize and
-     player.Position.X <= entity.Position.X + squareSize and
-     player.Position.Y >= entity.Position.Y - squareSize and
-     player.Position.Y <= entity.Position.Y + squareSize then
+     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) then
 
     -- If we don't set this, we will return to the center of the room by default
     level.DungeonReturnPosition = entity.Position
@@ -725,25 +833,16 @@ function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
   end
 
   -- Don't do anything if it is freshly spawned in a boss room and the player is relatively close
-  local squareSizeBig = RPFastTravel.trapdoorOpenDistance * 2.5
   if roomType == RoomType.ROOM_BOSS and -- 5
      entity.FrameCount <= 30 and
      entity.DepthOffset ~= -101 and -- We use -101 to signify that it is a respawned trapdoor
-     player.Position.X >= entity.Position.X - squareSizeBig and
-     player.Position.X <= entity.Position.X + squareSizeBig and
-     player.Position.Y >= entity.Position.Y - squareSizeBig and
-     player.Position.Y <= entity.Position.Y + squareSizeBig then
+     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance * 2.5) then
 
     return
   end
 
   -- Don't do anything if the player is standing too close to the trapdoor / crawlspace
-  local squareSize = RPFastTravel.trapdoorOpenDistance
-  if player.Position.X >= entity.Position.X - squareSize and
-     player.Position.X <= entity.Position.X + squareSize and
-     player.Position.Y >= entity.Position.Y - squareSize and
-     player.Position.Y <= entity.Position.Y + squareSize then
-
+  if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) then
     return
   end
 
@@ -800,11 +899,7 @@ function RPFastTravel:CheckRoomRespawn()
       -- We use -101 instead of -100 to signify that it is a respawned trapdoor
 
       -- Figure out if it should spawn open or closed, depending on how close we are
-      local squareSize = RPFastTravel.trapdoorOpenDistance
-      if (player.Position.X >= entity.Position.X - squareSize and
-          player.Position.X <= entity.Position.X + squareSize and
-          player.Position.Y >= entity.Position.Y - squareSize and
-          player.Position.Y <= entity.Position.Y + squareSize) or
+      if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) or
          roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
          -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
 
@@ -838,11 +933,7 @@ function RPFastTravel:CheckRoomRespawn()
       entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
       -- Figure out if it should spawn open or closed, depending on how close we are
-      local squareSize = RPFastTravel.trapdoorOpenDistance
-      if (player.Position.X >= entity.Position.X - squareSize and
-          player.Position.X <= entity.Position.X + squareSize and
-          player.Position.Y >= entity.Position.Y - squareSize and
-          player.Position.Y <= entity.Position.Y + squareSize) or
+      if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) or
          roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
          -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
 

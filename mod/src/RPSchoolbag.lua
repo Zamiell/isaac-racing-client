@@ -21,7 +21,7 @@ function RPSchoolbag:AddCharge()
   local game = Game()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
-  local maxCharges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+  local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
 
   if RPGlobals.run.schoolbag.item == 0 or
      RPGlobals.run.schoolbag.charges >= maxCharges then
@@ -65,7 +65,7 @@ function RPSchoolbag:SpriteDisplay()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local maxCharges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+  local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
   local itemX = 45
   local itemY = 50
   local barXOffset = 17
@@ -136,7 +136,6 @@ function RPSchoolbag:CheckActiveCharges()
   -- Store the new active charge
   -- (we need to know how many charges we have if we pick up a second active item)
   RPGlobals.run.schoolbag.lastCharge = charges
-  Isaac.DebugString("Active item charges changed: " .. tostring(charges))
 end
 
 -- Called from the PostUpdate callback (the "RPCheckEntities:ReplacePedestal()" function)
@@ -156,7 +155,6 @@ function RPSchoolbag:CheckSecondItem(entity)
        RPGlobals.run.usedButter == true then
 
       RPGlobals.run.usedButter = false
-      --entity:ToPickup().Touched = false
       Isaac.DebugString("Prevented putting item " .. tostring(entity.SubType) ..
                         " in the Schoolbag since they dropped it with Butter!")
       return false
@@ -262,7 +260,7 @@ function RPSchoolbag:Switch()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local sfx = SFXManager()
-  local maxCharges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+  local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
 
   -- Set the new active item
   player:AddCollectible(RPGlobals.run.schoolbag.item, RPGlobals.run.schoolbag.charges, false)

@@ -636,7 +636,6 @@ function RPCheckEntities:ReplacePedestal(entity)
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
   -- Check to see if this is a pedestal that was already replaced
-  local squareSize = 15
   for i = 1, #RPGlobals.run.replacedPedestals do
     if RPGlobals.run.replacedPedestals[i].room == roomIndex and
        RPGlobals.run.replacedPedestals[i].seed == entity.InitSeed then
@@ -659,10 +658,7 @@ function RPCheckEntities:ReplacePedestal(entity)
     -- If we touched this item, we need to set it back to the last seed that we have for this position
     for i = 1, #RPGlobals.run.replacedPedestals do
       if RPGlobals.run.replacedPedestals[i].room == roomIndex and
-         RPGlobals.run.replacedPedestals[i].X >= entity.Position.X - squareSize and
-         RPGlobals.run.replacedPedestals[i].X <= entity.Position.X + squareSize and
-         RPGlobals.run.replacedPedestals[i].Y >= entity.Position.Y - squareSize and
-         RPGlobals.run.replacedPedestals[i].Y <= entity.Position.Y + squareSize then
+         RPGlobals:InsideSquare(RPGlobals.run.replacedPedestals[i], entity.Position, 15) then
 
         -- Don't break after this because we want it to be equal to the seed of the last item
         newSeed = RPGlobals.run.replacedPedestals[i].seed

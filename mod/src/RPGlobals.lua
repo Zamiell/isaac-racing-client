@@ -189,6 +189,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubverted     = false
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
+  RPGlobals.run.trapdoorCollision     = nil
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -205,11 +206,11 @@ function RPGlobals:InitRun()
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {
-    state   = 0,
-    upwards = false,
-    floor   = 0,
-    frame   = 0,
-    scale   = Vector(0, 0),
+    state     = 0,
+    upwards   = false,
+    floor     = 0,
+    frame     = 0,
+    scale     = Vector(0, 0),
   }
 
   -- Keeper + Greed's Gullet tracking
@@ -320,261 +321,24 @@ function RPGlobals:TableEqual(table1, table2)
 end
 
 -- Find out how many charges this item has
-function RPGlobals:GetActiveCollectibleMaxCharges(itemID)
-  local charges = 0
-
-  if itemID == CollectibleType.COLLECTIBLE_KAMIKAZE or -- 40
-     itemID == CollectibleType.COLLECTIBLE_RAZOR_BLADE or -- 126
-     itemID == CollectibleType.COLLECTIBLE_GUPPYS_PAW or -- 133
-     itemID == CollectibleType.COLLECTIBLE_IV_BAG or -- 135
-     itemID == CollectibleType.COLLECTIBLE_REMOTE_DETONATOR or -- 137
-     itemID == CollectibleType.COLLECTIBLE_PORTABLE_SLOT or -- 177
-     itemID == CollectibleType.COLLECTIBLE_BLOOD_RIGHTS or -- 186
-     itemID == CollectibleType.COLLECTIBLE_HOW_TO_JUMP or -- 282
-     itemID == CollectibleType.COLLECTIBLE_THE_JAR or -- 290
-     itemID == CollectibleType.COLLECTIBLE_MAGIC_FINGERS or -- 295
-     itemID == CollectibleType.COLLECTIBLE_CONVERTER or -- 296
-     itemID == CollectibleType.COLLECTIBLE_BLUE_BOX or -- 297
-     itemID == CollectibleType.COLLECTIBLE_DIPLOPIA or -- 347
-     itemID == CollectibleType.COLLECTIBLE_JAR_OF_FLIES or -- 434
-     itemID == CollectibleType.COLLECTIBLE_MYSTERY_GIFT then -- 515
-
-    charges = 0
-
-  elseif itemID == CollectibleType.COLLECTIBLE_POOP or -- 36
-       itemID == CollectibleType.COLLECTIBLE_TAMMYS_HEAD or -- 38
-       itemID == CollectibleType.COLLECTIBLE_BEAN or -- 111
-       itemID == CollectibleType.COLLECTIBLE_FORGET_ME_NOW or -- 127
-       itemID == CollectibleType.COLLECTIBLE_GUPPYS_HEAD or -- 145
-       itemID == CollectibleType.COLLECTIBLE_DEBUG or -- 235
-       itemID == CollectibleType.COLLECTIBLE_D10 or -- 285
-       itemID == CollectibleType.COLLECTIBLE_UNICORN_STUMP or -- 298
-       itemID == CollectibleType.COLLECTIBLE_WOODEN_NICKEL or -- 349
-       itemID == CollectibleType.COLLECTIBLE_TEAR_DETONATOR or -- 383
-       itemID == CollectibleType.COLLECTIBLE_MINE_CRAFTER or -- 427
-       itemID == CollectibleType.COLLECTIBLE_PLAN_C then -- 475
-
-    charges = 1
-
-  elseif itemID == CollectibleType.COLLECTIBLE_MR_BOOM or -- 37
-         itemID == CollectibleType.COLLECTIBLE_TELEPORT or -- 44
-         itemID == CollectibleType.COLLECTIBLE_DOCTORS_REMOTE or -- 47
-         itemID == CollectibleType.COLLECTIBLE_SHOOP_DA_WHOOP or -- 49
-         itemID == CollectibleType.COLLECTIBLE_LEMON_MISHAP or -- 56
-         itemID == CollectibleType.COLLECTIBLE_HOURGLASS or -- 66
-         itemID == CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS or -- 124
-         itemID == CollectibleType.COLLECTIBLE_SPIDER_BUTT or -- 171
-         itemID == CollectibleType.COLLECTIBLE_DADS_KEY or -- 175
-         itemID == CollectibleType.COLLECTIBLE_TELEPATHY_BOOK or -- 192
-         itemID == CollectibleType.COLLECTIBLE_BOX_OF_SPIDERS or -- 288
-         itemID == CollectibleType.COLLECTIBLE_SCISSORS or -- 325
-         itemID == CollectibleType.COLLECTIBLE_KIDNEY_BEAN or -- 421
-         itemID == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS or -- 422
-         itemID == CollectibleType.COLLECTIBLE_PAUSE or -- 478
-         itemID == CollectibleType.COLLECTIBLE_COMPOST or -- 480
-         itemID == CollectibleType.COLLECTIBLE_DULL_RAZOR or -- 486
-         itemID == CollectibleType.COLLECTIBLE_METRONOME or -- 488
-         itemID == CollectibleType.COLLECTIBLE_DINF then -- 489
-
-    charges = 2
-
-  elseif itemID == CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL or -- 34
-         itemID == CollectibleType.COLLECTIBLE_MOMS_BRA or -- 39
-         itemID == CollectibleType.COLLECTIBLE_MOMS_PAD or -- 41
-         itemID == CollectibleType.COLLECTIBLE_BOBS_ROTTEN_HEAD or -- 42
-         itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SHADOWS or -- 58
-         itemID == CollectibleType.COLLECTIBLE_ANARCHIST_COOKBOOK or -- 65
-         itemID == CollectibleType.COLLECTIBLE_MONSTROS_TOOTH or -- 86
-         itemID == CollectibleType.COLLECTIBLE_MONSTER_MANUAL or -- 123
-         itemID == CollectibleType.COLLECTIBLE_BEST_FRIEND or -- 136
-         itemID == CollectibleType.COLLECTIBLE_NOTCHED_AXE or -- 147
-         itemID == CollectibleType.COLLECTIBLE_MEGA_BEAN or -- 351
-         itemID == CollectibleType.COLLECTIBLE_FRIEND_BALL or -- 382
-         itemID == CollectibleType.COLLECTIBLE_D12 or -- 386
-         itemID == CollectibleType.COLLECTIBLE_D7 then -- 437
-
-    charges = 3
-
-  elseif itemID == CollectibleType.COLLECTIBLE_YUM_HEART or -- 45
-         itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN or -- 97
-         itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED or
-         itemID == CollectibleType.COLLECTIBLE_PONY or -- 130
-         itemID == CollectibleType.COLLECTIBLE_CRACK_THE_SKY or -- 160
-         itemID == CollectibleType.COLLECTIBLE_BLANK_CARD or -- 286
-         itemID == CollectibleType.COLLECTIBLE_PLACEBO or -- 348
-         itemID == CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS or -- 357
-         itemID == CollectibleType.COLLECTIBLE_D8 or -- 406
-         itemID == CollectibleType.COLLECTIBLE_TELEPORT_2 or -- 419
-         itemID == CollectibleType.COLLECTIBLE_MOMS_BOX or -- 439
-         itemID == CollectibleType.COLLECTIBLE_D1 or -- 476
-         itemID == CollectibleType.COLLECTIBLE_DATAMINER or -- 481
-         itemID == CollectibleType.COLLECTIBLE_CROOKED_PENNY or -- 485
-         itemID == CollectibleType.COLLECTIBLE_BLACK_HOLE or -- 512
-         itemID == CollectibleType.COLLECTIBLE_SPRINKLER then -- 516
-
-    charges = 4
-
-  elseif itemID == CollectibleType.COLLECTIBLE_BIBLE or -- 33
-         itemID == CollectibleType.COLLECTIBLE_NECRONOMICON or -- 35
-         itemID == CollectibleType.COLLECTIBLE_MY_LITTLE_UNICORN or -- 77
-         itemID == CollectibleType.COLLECTIBLE_BOOK_REVELATIONS or -- 78
-         itemID == CollectibleType.COLLECTIBLE_THE_NAIL or -- 83
-         itemID == CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER or -- 84
-         itemID == CollectibleType.COLLECTIBLE_DECK_OF_CARDS or -- 85
-         itemID == CollectibleType.COLLECTIBLE_GAMEKID or -- 93
-         itemID == CollectibleType.COLLECTIBLE_MOMS_BOTTLE_PILLS or -- 102
-         itemID == CollectibleType.COLLECTIBLE_D6 or -- 105
-         itemID == CollectibleType.COLLECTIBLE_PINKING_SHEARS or -- 107
-         itemID == CollectibleType.COLLECTIBLE_PRAYER_CARD or -- 146
-         itemID == CollectibleType.COLLECTIBLE_CRYSTAL_BALL or -- 158
-         itemID == CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED or
-         itemID == CollectibleType.COLLECTIBLE_D20 or -- 166
-         itemID == CollectibleType.COLLECTIBLE_WHITE_PONY or -- 181
-         itemID == CollectibleType.COLLECTIBLE_D100 or -- 283
-         itemID == CollectibleType.COLLECTIBLE_D4 or -- 284
-         itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SECRETS or -- 287
-         itemID == CollectibleType.COLLECTIBLE_FLUSH or -- 291
-         itemID == CollectibleType.COLLECTIBLE_SATANIC_BIBLE or -- 292
-         itemID == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS or -- 293
-         itemID == CollectibleType.COLLECTIBLE_ISAACS_TEARS or -- 323
-         itemID == CollectibleType.COLLECTIBLE_UNDEFINED or -- 324
-         itemID == CollectibleType.COLLECTIBLE_BREATH_OF_LIFE or -- 326
-         itemID == CollectibleType.COLLECTIBLE_VOID or -- 477
-         itemID == CollectibleType.COLLECTIBLE_SMELTER or -- 479
-         itemID == CollectibleType.COLLECTIBLE_SMELTER_LOGGER or
-         itemID == CollectibleType.COLLECTIBLE_CLICKER then -- 482
-
-    charges = 6
-
-  elseif itemID == CollectibleType.COLLECTIBLE_MEGA_SATANS_BREATH or -- 441
-     itemID == CollectibleType.COLLECTIBLE_EDENS_SOUL or -- 490
-     itemID == CollectibleType.COLLECTIBLE_DELIRIOUS then -- 510
-
-    charges = 12
-
-  elseif itemID == CollectibleType.COLLECTIBLE_BOOMERANG then -- 338
-    charges = 70
-
-  elseif itemID == CollectibleType.COLLECTIBLE_BUTTER_BEAN then -- 294
-    charges = 90
-
-  elseif itemID == CollectibleType.COLLECTIBLE_CANDLE or -- 164
-         itemID == CollectibleType.COLLECTIBLE_RED_CANDLE or -- 289
-         itemID == CollectibleType.COLLECTIBLE_GLASS_CANNON then -- 352
-
-    charges = 110
-
-  elseif itemID == CollectibleType.COLLECTIBLE_BROWN_NUGGET then -- 504
-    charges = 250
-
-  elseif itemID == CollectibleType.COLLECTIBLE_WAIT_WHAT or -- 484
-         itemID == CollectibleType.COLLECTIBLE_SHARP_STRAW then -- 507
-
-    charges = 300
-  end
-
-  return charges
-end
-
--- This is not named GetStageType to differentiate it from "level:GetStageType"
-function RPGlobals:DetermineStageType(stage)
-  -- Local variables
-  local game = Game()
-  local seeds = game:GetSeeds()
-  local stageSeed = seeds:GetStageSeed(stage)
-
-  -- Based on the game's internal code (from Spider)
-  --[[
-    u32 Seed = g_Game->GetSeeds().GetStageSeed(NextStage);
-    if (!g_Game->IsGreedMode()) {
-      StageType = ((Seed % 2) == 0 && (
-        ((NextStage == STAGE1_1 || NextStage == STAGE1_2) && gd.Unlocked(ACHIEVEMENT_CELLAR)) ||
-        ((NextStage == STAGE2_1 || NextStage == STAGE2_2) && gd.Unlocked(ACHIEVEMENT_CATACOMBS)) ||
-        ((NextStage == STAGE3_1 || NextStage == STAGE3_2) && gd.Unlocked(ACHIEVEMENT_NECROPOLIS)) ||
-        ((NextStage == STAGE4_1 || NextStage == STAGE4_2)))
-      ) ? STAGETYPE_WOTL : STAGETYPE_ORIGINAL;
-    if (Seed % 3 == 0 && NextStage < STAGE5)
-      StageType = STAGETYPE_AFTERBIRTH;
-  --]]
-  local stageType = StageType.STAGETYPE_ORIGINAL -- 0
-  if stageSeed & 1 == 0 then -- This is the same as "stageSeed % 2 == 0", but faster
-    stageType = StageType.STAGETYPE_WOTL -- 1
-  end
-  if stageSeed % 3 == 0 then
-    stageType = StageType.STAGETYPE_AFTERBIRTH -- 2
-  end
-
-  return stageType
-end
-
--- Remove the long fade out / fade in when entering trapdoors
--- (and Sacrifice Room teleports)
-function RPGlobals:GotoNextFloor(upwards, redirect)
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stageType = level:GetStageType()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
-  local stage = level:GetStage()
-  local player = game:GetPlayer(0)
-  local isaacFrameCount = Isaac.GetFrameCount()
-
-  -- First check to see if we need to redirect the player (used for Sacrifice Room teleports)
-  if redirect ~= nil then
-    stage = redirect
-  end
-
-  -- First check to see if we are going to the same floor
-  if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
-     (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
-
-    local command = "reseed" -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Executed command: " .. command)
-    return
-  end
-
-  -- Build the command that will take us to the next floor
-  local command
-  if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-    command = "stage 9" -- Blue Womb
-
-  elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
-    if upwards then
-      command = "stage 10a" -- Cathedral
-    else
-      command = "stage 10" -- Sheol
-    end
-
-  elseif stage == 10 and stageType == 0 then
-    -- Sheol goes to the Dark Room
-    command = "stage 11"
-
-  elseif stage == 10 and stageType == 1 then
-    -- Cathedral goes to The Chest
-    command = "stage 11a"
-
+function RPGlobals:GetItemMaxCharges(itemID)
+  if itemID == 0 then
+    return 0
   else
-    local nextStage = stage + 1
-    command = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
-    local newStageType = RPGlobals:DetermineStageType(nextStage)
-    if newStageType == 1 then
-      command = command .. "a"
-    elseif newStageType == 2 then
-      command = command .. "b"
-    end
-
-    -- Mark to check for a narrow boss room (we only care about checking on floors 2 through 7)
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and -- 498
-       nextStage >= 2 and nextStage <= 7 then
-
-      -- It takes a frame to load the new stage
-      RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
-    end
+    return Isaac.GetItemConfig():GetCollectible(itemID).MaxCharges
   end
+end
 
-  Isaac.ExecuteCommand(command)
-  Isaac.DebugString("Executed command: " .. command)
+function RPGlobals:InsideSquare(pos1, pos2, squareSize)
+  if pos1.X >= pos2.X - squareSize and
+     pos1.X <= pos2.X + squareSize and
+     pos1.Y >= pos2.Y - squareSize and
+     pos1.Y <= pos2.Y + squareSize then
+
+    return true
+  else
+    return false
+  end
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

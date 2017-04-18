@@ -1,13 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.5.14* - April 18th, 2017
+
+* Pickups will now bounce off of trapdoors, crawlspaces, and beams of light. (Thanks Cyber_1)
+* Fixed the bug where the countdown graphic would overlap with the final place graphic. (Thanks PassionDrama)
+* Added the PagChomp emote. (Requested by LogBasePotato)
+
 ### *v0.5.13* - April 17th, 2017
 
-* Fixed the bug where finishing the Mega Satan fight would trigger the natural finish code instead of the custom Racing+ finish code.
-* 
+* Fixed the bug where finishing the Mega Satan fight would trigger the natural finish code instead of the custom Racing+ finish code. (Thanks Lobsterosity)
+* Fixed the bug where the Butter! trinket would make the Schoolbag item not work properly. (Thanks blcd and Lobsterosity)
 
 ### *v0.5.12* - April 17th, 2017
 
-* Fixed the bug where the opening the client would make it complain about the "save.dat".
+* Fixed the bug where the opening the client would make it complain about the "save.dat" file.
 
 ### *v0.5.10* - April 17th, 2017
 

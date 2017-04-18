@@ -145,7 +145,7 @@ function RPSpeedrun:Init()
 
     if RPGlobals.run.schoolbag.item ~= 0 then
       -- Make sure that the Schoolbag item is fully charged
-      RPGlobals.run.schoolbag.charges = RPGlobals:GetActiveCollectibleMaxCharges(RPGlobals.run.schoolbag.item)
+      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       RPSchoolbag.sprites.item = nil
     end
   end

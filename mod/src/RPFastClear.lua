@@ -234,14 +234,14 @@ function RPFastClear:Main()
       -- L rooms and 2x2 rooms should grant 2 charges
       chargesToAdd = 2
     elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
-           activeCharge == RPGlobals:GetActiveCollectibleMaxCharges(activeItem) - 2 then
+           activeCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
 
       -- The AAA Battery grants an extra charge when the active item is one away from being fully charged
       chargesToAdd = 2
     elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
-           activeCharge == RPGlobals:GetActiveCollectibleMaxCharges(activeItem) and
+           activeCharge == RPGlobals:GetItemMaxCharges(activeItem) and
            player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) and -- 63
-           batteryCharge == RPGlobals:GetActiveCollectibleMaxCharges(activeItem) - 2 then
+           batteryCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
 
       -- The AAA Battery should grant an extra charge when the active item is one away from being fully charged
       -- with The Battery (this is bugged in vanilla for The Battery)
