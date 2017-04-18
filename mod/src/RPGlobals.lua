@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.15"
+RPGlobals.version = "v0.5.16"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -308,6 +308,17 @@ function RPGlobals:Round(num, numDecimalPlaces)
 end
 
 function RPGlobals:TableEqual(table1, table2)
+  -- First, find out if they are nil
+  if table1 == nil and table2 == nil then
+    return true
+  end
+  if table1 == nil then
+    table1 = {}
+  end
+  if table2 == nil then
+    table2 = {}
+  end
+
   -- First, compare their size
   if #table1 ~= #table2 then
     return false

@@ -542,8 +542,14 @@ function RPSpeedrun:DisplayCharProgress()
   end
 
   -- Check to see if they have a set order
-  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and #RPGlobals.race.order9 == 1) or
-     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and #RPGlobals.race.order14 == 1) then
+  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+      (RPGlobals.race.order9 == nil or
+       #RPGlobals.race.order9 == 0 or
+       #RPGlobals.race.order9 == 1)) or
+     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+      (RPGlobals.race.order14 == nil or
+       #RPGlobals.race.order14 == 0 or
+       #RPGlobals.race.order14 == 1)) then
 
     -- Load the sprites
     if RPSpeedrun.sprites.needToSet1 == nil then

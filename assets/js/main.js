@@ -302,6 +302,8 @@ for (let i = 1; i <= 3; i++) {
         } catch(err) {
             globals.initError = 'Failed to copy the "save-defaults.dat" file to "' + modLoaderFile + '": ' + err;
         }
+        globals.modLoader['order9-' + i] = [0];
+        globals.modLoader['order14-' + i] = [0];
     }
 }
 
