@@ -115,8 +115,10 @@ function RPCheckEntities:NonGrid()
          (roomData.StageID == 4 and roomData.Variant == 519) or
          (roomData.StageID == 5 and roomData.Variant == 19) or -- Catacombs
          (roomData.StageID == 5 and roomData.Variant == 518) or
-         (roomData.StageID == 10 and roomData.Variant == 489) or -- Womb
-         (roomData.StageID == 11 and roomData.Variant == 489) then -- Utero
+         (roomData.StageID == 10 and roomData.Variant == 458) or -- Womb
+         (roomData.StageID == 10 and roomData.Variant == 489) or
+         (roomData.StageID == 11 and roomData.Variant == 458) or -- Utero
+         (roomData.StageID == 11 and roomData.Variant == 489) then
 
         -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
         entity:GetSprite():Load("gfx/005.050_chest.anm2", true)

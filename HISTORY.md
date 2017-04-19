@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.5.15* - April 19th, 2017
+
+* Added the "beginner" format for the Pandora's Box tournament. In this format, Judas starts with the Schoolbag, a full red heart container, and a full soul heart. You can activate this by changing the "rFormat" field to "beginner" in the "save#.dat" file corresponding to your save slot.
+* Fixed the unavoidable damage when a Spiked or Mimic chest spawns in Womb/Utero room #458. (Thanks Dea1h)
+* Added the PunOko emote. (Requested by thisguyisbarry)
+
 ### *v0.5.14* - April 18th, 2017
 
 * Pickups will now bounce off of trapdoors, crawlspaces, and beams of light. (Thanks Cyber_1)

@@ -107,7 +107,8 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Fixed the spelling of Humbling Bundle.
 * Fixed the bug where the main menu would not show the bottom left hand corner of the title screen.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
-* Teleporting to the Dark Room via a Sacrifice Room will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
+  * On Womb 2, the Sacrifice Room teleport will take you to Sheol.
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
 

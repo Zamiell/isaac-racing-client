@@ -260,10 +260,12 @@ end
 
 -- This occurs when first going into the game and after a reset occurs mid-race
 function RPPostGameStarted:Race()
-  -- Do Pageant Boy related initiailization first
-  -- (we want to be able to do Pageant Boy runs without using the R+ client)
+  -- Do special ruleset related initiailization first
+  -- (we want to be able to do runs of them without using the R+ client)
   if RPGlobals.race.rFormat == "pageant" then
     RPPostGameStarted:Pageant()
+  elseif RPGlobals.race.rFormat == "beginner" then
+    RPPostGameStarted:Beginner()
   end
 
   --
@@ -337,7 +339,7 @@ function RPPostGameStarted:Race()
   end
 
   -- Go to the custom "Race Start" room
-  if RPGlobals.race.status == "open" then
+  if RPGlobals.race.status == "open" or RPGlobals.race.status == "starting" then
     Isaac.ExecuteCommand("goto s.boss.9999")
     -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
     Isaac.DebugString("Going to the race room.")
@@ -571,6 +573,22 @@ function RPPostGameStarted:Pageant()
   RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
 
   Isaac.DebugString("Added pageant items.")
+end
+
+function RPPostGameStarted:Beginner()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+
+  if character == PlayerType.PLAYER_JUDAS then -- 3
+    -- Add the extra items
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+
+    -- Add the extra health
+    player:AddHearts(1)
+    player:AddSoulHearts(1)
+  end
 end
 
 return RPPostGameStarted
