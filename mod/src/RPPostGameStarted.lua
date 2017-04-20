@@ -118,7 +118,6 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
-  RPGlobals.RNGCounter.InitialSeed = levelSeed
   RPGlobals.RNGCounter.BookOfSin = levelSeed
   RPGlobals.RNGCounter.CrystalBall = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
@@ -127,7 +126,9 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.RNGCounter.JuicySack = levelSeed
   RPGlobals.RNGCounter.MysterySack = levelSeed
   RPGlobals.RNGCounter.LilChest = levelSeed
+  RPGlobals.RNGCounter.Bumbo = levelSeed
   RPGlobals.RNGCounter.RuneBag = levelSeed
+  RPGlobals.RNGCounter.SpiderMod = levelSeed
   RPGlobals.RNGCounter.AcidBaby = levelSeed
   RPGlobals.RNGCounter.SackOfSacks = levelSeed
 
@@ -360,28 +361,28 @@ function RPPostGameStarted:Seeded()
   -- Give the player the "Instant Start" item(s)
   local replacedD6 = false
   for i = 1, #RPGlobals.race.startingItems do
-    -- The 13 luck is a special case
     local itemID = RPGlobals.race.startingItems[i]
     if itemID == 600 then
-      itemID = CollectibleType.COLLECTIBLE_13_LUCK
-    end
+      -- The 13 luck is a special case
+      player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
+    else
+      -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
+      player:AddCollectible(itemID, RPGlobals:GetItemMaxCharges(itemID), true)
 
-    -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
-    player:AddCollectible(itemID, RPGlobals:GetItemMaxCharges(RPGlobals.race.startingItems[i]), true)
+      -- Giving the player the item does not actually remove it from any of the pools,
+      -- so we have to expliticly add it to the ban list
+      RPGlobals:AddItemBanList(itemID)
 
-    -- Giving the player the item does not actually remove it from any of the pools,
-    -- so we have to expliticly add it to the ban list
-    RPGlobals:AddItemBanList(RPGlobals.race.startingItems[i])
+      -- Find out if Crown of Light is one of the starting items
+      if itemID == 415 then
+        -- Remove the 2 soul hearts that it gives
+        player:AddSoulHearts(-4)
 
-    -- Find out if Crown of Light is one of the starting items
-    if RPGlobals.race.startingItems[i] == 415 then
-      -- Remove the 2 soul hearts that it gives
-      player:AddSoulHearts(-4)
-
-      -- Re-heal Judas and Azazel back to 1 red heart so that they can properly use the Crown of Light
-      -- (this should do nothing on all of the other characters)
-      player:AddHearts(1)
-      break
+        -- Re-heal Judas and Azazel back to 1 red heart so that they can properly use the Crown of Light
+        -- (this should do nothing on all of the other characters)
+        player:AddHearts(1)
+        break
+      end
     end
   end
 

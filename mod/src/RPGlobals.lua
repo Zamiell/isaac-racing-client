@@ -49,7 +49,6 @@ RPGlobals.raceVars = {
 }
 
 RPGlobals.RNGCounter = {
-  InitialSeed   = 0,
   BookOfSin     = 0,
   CrystalBall   = 0,
   Teleport      = 0, -- Broken Remote also uses this
@@ -60,7 +59,9 @@ RPGlobals.RNGCounter = {
   JuicySack     = 0,
   MysterySack   = 0,
   LilChest      = 0,
+  Bumbo         = 0,
   RuneBag       = 0,
+  SpiderMod     = 0,
   AcidBaby      = 0,
   SackOfSacks   = 0,
 }
@@ -153,7 +154,6 @@ RPGlobals.FadeoutTarget = {
 
 function RPGlobals:InitRun()
   -- Tracking per run
-  RPGlobals.run.roomsCleared     = 0
   RPGlobals.run.roomsEntered     = 0
   RPGlobals.run.touchedBookOfSin = false
 
@@ -192,6 +192,18 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
   RPGlobals.run.trapdoorCollision     = nil
+
+  -- Bag familiar tracking
+  RPGlobals.run.roomsCleared = {
+    SackOfPennies = 0,
+    LittleCHAD    = 0,
+    TheRelic      = 0,
+    BombBag       = 0,
+    MysterySack   = 0,
+    RuneBag       = 0,
+    AcidBaby      = 0,
+    SackOfSacks   = 0,
+  }
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
@@ -335,10 +347,13 @@ end
 
 -- Find out how many charges this item has
 function RPGlobals:GetItemMaxCharges(itemID)
+  -- Local variables
+  local itemConfig = Isaac.GetItemConfig()
+
   if itemID == 0 then
     return 0
   else
-    return Isaac.GetItemConfig():GetCollectible(itemID).MaxCharges
+    return itemConfig:GetCollectible(itemID).MaxCharges
   end
 end
 

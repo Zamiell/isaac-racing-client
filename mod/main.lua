@@ -6,6 +6,8 @@
 --[[
 
 TODO:
+- fix lucky build
+- check to see if bomb bag works with humbling bundle
 - Implement time offsets, show on the first room of each floor
 - Ghosts
 

@@ -254,121 +254,157 @@ function RPFastClear:Main()
   end
 
   -- Play the sound effect for the door opening
-  -- (the only way to play sounds is to attach them to an NPC, so we have to create one and then destroy it)
   if room:GetType() ~= RoomType.ROOM_DUNGEON then -- 16
     sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
   end
 
-  -- Emulate various familiars dropping things
-  -- (all of these formula were reverse engineered by blcd)
-  local newRoomsCleared = RPGlobals.run.roomsCleared + 1
+  -- Check to see if any bag familiars will drop anything
+  RPFastClear:CheckBagFamiliars(false) -- The argument is "naturalClear"
+end
+
+-- Emulate various familiars dropping things
+-- (all of these formula were reverse engineered by blcd:
+-- https://bindingofisaacrebirth.gamepedia.com/User:Blcd/RandomTidbits#Pickup_Familiars)
+function RPFastClear:CheckBagFamiliars(naturalClear)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
   local pos
   local vel = Vector(0, 0)
   local constant1 = 1.1 -- For Little C.H.A.D., Bomb Bag, Acid Baby, Sack of Sacks
   local constant2 = 1.11 -- For The Relic, Mystery Sack, Rune Bag
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then -- 247
     constant1 = 1.2
-    constant2 = 1.2
+    constant2 = 1.15
   end
 
   -- Sack of Pennies (21)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SACK_OF_PENNIES) then -- 21
-    -- This drops a penny/nickel/dime/etc. every 2 rooms cleared (or more with BFFs!)
-    RPGlobals.RNGCounter.SackOfPennies = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SackOfPennies)
-    math.randomseed(RPGlobals.RNGCounter.SackOfPennies)
-    local sackBFFChance = math.random(1, 4294967295)
-    if newRoomsCleared & 1 == 0 or
-       (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and sackBFFChance % 3 == 0) then
-
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Sack of Pennies - 3.21
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.SACK_OF_PENNIES then
-
-          pos = entity.Position
-          break
-        end
-      end
-
-      -- Random Coin - 5.20.0
+    if naturalClear then
+      RPGlobals.run.roomsCleared.SackOfPennies = RPGlobals.run.roomsCleared.SackOfPennies + 1
+    else
+      -- This drops a penny/nickel/dime/etc. based on the formula:
+      -- cleared > 0 && cleared & 1 == 0
+      -- or:
+      -- cleared > 0 && (cleared & 1 == 0 || rand() % 3 == 0)
+      local newRoomsCleared = RPGlobals.run.roomsCleared.SackOfPennies + 1
       RPGlobals.RNGCounter.SackOfPennies = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SackOfPennies)
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel,
-                 player, 0, RPGlobals.RNGCounter.SackOfPennies)
+      math.randomseed(RPGlobals.RNGCounter.SackOfPennies)
+      local sackBFFChance = math.random(1, 4294967295)
+      if newRoomsCleared > 0 and
+         (newRoomsCleared & 1 == 0 or
+          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and
+           sackBFFChance % 3 == 0)) then
+
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.SACK_OF_PENNIES then -- 21
+
+            pos = entity.Position
+            break
+          end
+        end
+
+        -- Random Coin - 5.20.0
+        RPGlobals.RNGCounter.SackOfPennies = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SackOfPennies)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel,
+                   player, 0, RPGlobals.RNGCounter.SackOfPennies)
+      end
     end
   end
 
   -- Little C.H.A.D (96)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_LITTLE_CHAD) then -- 96
-    -- This drops a half a red heart based on the formula:
-    -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-    if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Little C.H.A.D. - 3.22
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.LITTLE_CHAD then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.LittleCHAD = RPGlobals.run.roomsCleared.LittleCHAD + 1
+    else
+      -- This drops a half a red heart based on the formula:
+      -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
+      -- or:
+      -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
+      local newRoomsCleared = RPGlobals.run.roomsCleared.LittleCHAD + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.LITTLE_CHAD then -- 22
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- Heart (half) - 5.10.2
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 2, 0)
+        -- Heart (half) - 5.10.2
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 2, 0)
+      end
     end
   end
 
   -- The Relic (98)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_RELIC) then -- 98
-    -- This drops a soul heart based on the formula:
-    -- floor(roomsCleared / 1.11) & 3 == 2
-    if math.floor(newRoomsCleared / constant2) & 3 == 2 then
-      -- Get the position of familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- The Relic - 3.23
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.RELIC then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.TheRelic = RPGlobals.run.roomsCleared.TheRelic + 1
+    else
+      -- This drops a soul heart based on the formula:
+      -- floor(cleared / 1.11) & 3 == 2
+      -- or:
+      -- floor(cleared / 1.15) & 3 == 2
+      local newRoomsCleared = RPGlobals.run.roomsCleared.TheRelic + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- Get the position of familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.RELIC then -- 23
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- Heart (soul) - 5.10.3
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 3, 0)
+        -- Heart (soul) - 5.10.3
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 3, 0)
+      end
     end
   end
 
   -- Bomb Bag (131)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BOMB_BAG) then -- 131
-    -- This drops a bomb based on the formula:
-    -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-    if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Bomb Bag - 3.20
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.BOMB_BAG then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.BombBag = RPGlobals.run.roomsCleared.BombBag + 1
+    else
+      -- This drops a bomb based on the formula:
+      -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
+      -- or:
+      -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
+      local newRoomsCleared = RPGlobals.run.roomsCleared.BombBag + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.BOMB_BAG then -- 20
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- Random Bomb - 5.40.0
-      RPGlobals.RNGCounter.BombBag = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BombBag)
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, player, 0, RPGlobals.RNGCounter.BombBag)
+        -- Random Bomb - 5.40.0
+        RPGlobals.RNGCounter.BombBag = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BombBag)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel,
+                   player, 0, RPGlobals.RNGCounter.BombBag)
+      end
     end
   end
 
   -- Juicy Sack (266)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_JUICY_SACK) then -- 266
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_JUICY_SACK) and -- 266
+     naturalClear == false then
+
     -- Get the position of the familiar
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-      -- Juicy Sack - 3.52
-      if entity.Type == EntityType.ENTITY_FAMILIAR and
-         entity.Variant == FamiliarVariant.JUICY_SACK then
+      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+         entity.Variant == FamiliarVariant.JUICY_SACK then -- 52
 
         pos = entity.Position
         break
@@ -392,55 +428,61 @@ function RPFastClear:Main()
 
   -- Mystery Sack (271)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_MYSTERY_SACK) then -- 271
-    -- This drops a heart, coin, bomb, or key based on the formula:
-    -- floor(roomsCleared / 1.11) & 3 == 2
-    if math.floor(newRoomsCleared / constant2) & 3 == 2 then
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Mystery Sack - 3.57
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.MYSTERY_SACK then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.MysterySack = RPGlobals.run.roomsCleared.MysterySack + 1
+    else
+      -- This drops a heart, coin, bomb, or key based on the formula:
+      -- floor(cleared / 1.11) & 3 == 2
+      -- or:
+      -- floor(cleared / 1.15) & 3 == 2
+      -- (also, each pickup sub-type has an equal chance of occuring)
+      local newRoomsCleared = RPGlobals.run.roomsCleared.MysterySack + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.MYSTERY_SACK then -- 57
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- First, decide whether we get a heart, coin, bomb, or key
-      RPGlobals.RNGCounter.MysterySack = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.MysterySack)
-      math.randomseed(RPGlobals.RNGCounter.MysterySack)
-      local sackPickupType = math.random(1, 4)
-      RPGlobals.RNGCounter.MysterySack = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.MysterySack)
+        -- First, decide whether we get a heart, coin, bomb, or key
+        RPGlobals.RNGCounter.MysterySack = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.MysterySack)
+        math.randomseed(RPGlobals.RNGCounter.MysterySack)
+        local sackPickupType = math.random(1, 4)
+        RPGlobals.RNGCounter.MysterySack = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.MysterySack)
+        math.randomseed(RPGlobals.RNGCounter.MysterySack)
 
-      -- If heart
-      if sackPickupType == 1 then
-        -- Random Heart - 5.10.0
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
-                   player, 0, RPGlobals.RNGCounter.MysterySack)
+        if sackPickupType == 1 then
+          local heartType = math.random(1, 10) -- From Heart (5.10.1) to Blended Heart (5.10.10)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
+                     player, heartType, RPGlobals.RNGCounter.MysterySack)
 
-      -- If coin
-      elseif sackPickupType == 2 then
-        -- Random Coin - 5.20.0
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel,
-                   player, 0, RPGlobals.RNGCounter.MysterySack)
+        elseif sackPickupType == 2 then
+          local coinType = math.random(1, 6) -- From Penny (5.20.1) to Sticky Nickel (5.20.6)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel,
+                     player, coinType, RPGlobals.RNGCounter.MysterySack)
 
-      -- If bomb
-      elseif sackPickupType == 3 then
-        -- Random Bomb - 5.40.0
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel,
-                   player, 0, RPGlobals.RNGCounter.MysterySack)
+        elseif sackPickupType == 3 then
+          local keyType = math.random(1, 4) -- From Key (5.30.1) to Charged Key (5.30.4)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel,
+                     player, keyType, RPGlobals.RNGCounter.MysterySack)
 
-      -- If key
-      elseif sackPickupType == 4 then
-        -- Random Key - 5.30.0
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel,
-                   player, 0, RPGlobals.RNGCounter.MysterySack)
+        elseif sackPickupType == 4 then
+          local bombType = math.random(1, 5) -- From Bomb (5.40.1) to Megatroll Bomb (5.40.5)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel,
+                     player, bombType, RPGlobals.RNGCounter.MysterySack)
+        end
       end
     end
   end
 
   -- Lil' Chest (362)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_LIL_CHEST) then -- 362
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_LIL_CHEST) and -- 362
+     naturalClear == false then
+
     -- This drops a heart, coin, bomb, or key based on the formula:
     -- 10% chance for a trinket, if no trinket, 25% chance for a random consumable (based on time)
     -- Or, with BFFS!, 12.5% chance for a trinket, if no trinket, 31.25% chance for a random consumable
@@ -448,9 +490,8 @@ function RPFastClear:Main()
 
     -- Get the position of the familiar
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-      -- Lil Chest - 3.82
-      if entity.Type == EntityType.ENTITY_FAMILIAR and
-         entity.Variant == FamiliarVariant.LIL_CHEST then
+      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+         entity.Variant == FamiliarVariant.LIL_CHEST then -- 82
 
         pos = entity.Position
         break
@@ -509,80 +550,158 @@ function RPFastClear:Main()
     end
   end
 
+  -- Bumbo (385)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BUMBO) and -- 385
+     naturalClear == false then
+
+    -- Get the position and level of the familiar
+    local bumboLevel
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+         entity.Variant == FamiliarVariant.BUMBO then -- 88
+
+        pos = entity.Position
+        bumboLevel = entity:ToFamiliar().State + 1
+        -- It will be state 0 at level 1, state 1 at level 2, state 2 at level 3, and state 3 at level 4
+        break
+      end
+    end
+
+    if bumboLevel == 2 then
+      -- Level 2 Bumbo has a 32% / 40% chance to drop a random pickup
+      RPGlobals.RNGCounter.Bumbo = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Bumbo)
+      math.randomseed(RPGlobals.RNGCounter.Bumbo)
+      local chestTrinket = math.random(1, 100)
+      if chestTrinket <= 32 or
+         (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 40) then
+
+        -- Spawn a random pickup
+        game:Spawn(EntityType.ENTITY_PICKUP, 0, pos, vel,
+                   player, 0, RPGlobals.RNGCounter.Bumbo)
+      end
+    end
+  end
+
   -- Rune Bag (389)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_RUNE_BAG) then -- 389
-    -- This drops a random rune based on the formula:
-    -- floor(roomsCleared / 1.11) & 3 == 2
-    if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.RuneBag = RPGlobals.run.roomsCleared.RuneBag + 1
+    else
+      -- This drops a random rune based on the formula:
+      -- floor(roomsCleared / 1.11) & 3 == 2
+      local newRoomsCleared = RPGlobals.run.roomsCleared.RuneBag + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.RUNE_BAG then -- 91
+
+            pos = entity.Position
+            break
+          end
+        end
+
+        -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
+        -- So, spawn a random card (5.300.0) over and over until we get a rune
+        while true do
+          RPGlobals.RNGCounter.RuneBag = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.RuneBag)
+          local entity = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
+                                    pos, vel, player, 0, RPGlobals.RNGCounter.RuneBag)
+          -- Hagalaz is 32 and Black Rune is 41
+          if entity.SubType >= 32 and entity.SubType <= 41 then
+            break
+          end
+          entity:Remove()
+        end
+      end
+    end
+  end
+
+  -- Spider Mod
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SPIDER_MOD) and -- 403
+     naturalClear == false then
+
+    -- Spider Mod has a 10% or 12.5% chance to drop something
+    RPGlobals.RNGCounter.SpiderMod = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SpiderMod)
+    math.randomseed(RPGlobals.RNGCounter.SpiderMod)
+    local chestTrinket = math.random(1, 1000)
+    if chestTrinket <= 100 or
+       (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
+
       -- Get the position of the familiar
       for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Rune Bag - 3.91
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.RUNE_BAG then
+        if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+           entity.Variant == FamiliarVariant.SPIDER_MOD then -- 94
 
           pos = entity.Position
           break
         end
       end
 
-      -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
-      -- So, spawn a random card (5.300.0) over and over until we get a rune
-      while true do
-        RPGlobals.RNGCounter.RuneBag = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.RuneBag)
-        local entity = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
-                                  pos, vel, player, 0, RPGlobals.RNGCounter.RuneBag)
-        -- Hagalaz is 32 and Black Rune is 41
-        if entity.SubType >= 32 and entity.SubType <= 41 then
-          break
-        end
-        entity:Remove()
+      -- There is a 1/3 chance to spawn a battery and a 2/3 chance to spawn a blue spider
+      RPGlobals.RNGCounter.SpiderMod = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SpiderMod)
+      math.randomseed(RPGlobals.RNGCounter.SpiderMod)
+      local spiderModDrop = math.random(1, 3)
+      if spiderModDrop == 1 then
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, pos, vel, -- 5.90
+                   player, 0, RPGlobals.RNGCounter.SpiderMod)
+      else
+        player:AddBlueSpider(pos)
       end
     end
   end
 
   -- Acid Baby (491)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_ACID_BABY) then -- 491
-    -- This drops a pill based on the formula:
-    -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-    if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Acid Baby - 3.112
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.ACID_BABY then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.AcidBaby = RPGlobals.run.roomsCleared.AcidBaby + 1
+    else
+      -- This drops a pill based on the formula:
+      -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
+      local newRoomsCleared = RPGlobals.run.roomsCleared.AcidBaby + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.ACID_BABY then -- 112
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- Random Pill - 5.70.0
-      RPGlobals.RNGCounter.AcidBaby = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.AcidBaby)
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel,
-                 player, 0, RPGlobals.RNGCounter.AcidBaby)
+        -- Random Pill - 5.70.0
+        RPGlobals.RNGCounter.AcidBaby = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.AcidBaby)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel,
+                   player, 0, RPGlobals.RNGCounter.AcidBaby)
+      end
     end
   end
 
   -- Sack of Sacks (500)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SACK_OF_SACKS) then -- 500
-    -- This drops a sack based on the formula:
-    -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-    if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-      -- Get the position of the familiar
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        -- Sack of Sacks - 3.114
-        if entity.Type == EntityType.ENTITY_FAMILIAR and
-           entity.Variant == FamiliarVariant.SACK_OF_SACKS then
+    if naturalClear then
+      RPGlobals.run.roomsCleared.SackOfSacks = RPGlobals.run.roomsCleared.SackOfSacks + 1
+    else
+      -- This drops a sack based on the formula:
+      -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
+      local newRoomsCleared = RPGlobals.run.roomsCleared.SackOfSacks + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Get the position of the familiar
+        for i, entity in pairs(Isaac.GetRoomEntities()) do
+          if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+             entity.Variant == FamiliarVariant.SACK_OF_SACKS then -- 114
 
-          pos = entity.Position
-          break
+            pos = entity.Position
+            break
+          end
         end
-      end
 
-      -- Grab Bag - 5.69.0
-      RPGlobals.RNGCounter.SackOfSacks = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SackOfSacks)
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, pos, vel,
-                 player, 0, RPGlobals.RNGCounter.SackOfSacks)
+        -- Grab Bag - 5.69.0
+        RPGlobals.RNGCounter.SackOfSacks = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.SackOfSacks)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, pos, vel,
+                   player, 0, RPGlobals.RNGCounter.SackOfSacks)
+      end
     end
   end
 end

@@ -119,9 +119,8 @@ function RPPostUpdate:CheckRoomCleared()
     return
   end
 
-  -- If the room just got changed to a cleared state, increment the total rooms cleared
-  RPGlobals.run.roomsCleared = RPGlobals.run.roomsCleared + 1
-  Isaac.DebugString("Rooms cleared: " .. tostring(RPGlobals.run.roomsCleared))
+  -- If the room just got changed to a cleared state, increment the variables for the bag familiars
+  RPFastClear:CheckBagFamiliars(true) -- The argument is "naturalClear"
 
   -- Give a charge to the player's Schoolbag item
   RPSchoolbag.AddCharge()

@@ -1,6 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.5.15* - April 19th, 2017
+### *v0.5.18* - April 20th, 2017
+
+* Made it so that all of the bag familiars work based on individual room clear counters, instead of a global room clear counter. This means that they should act more fairly now in a seeded race. (Thanks Cyber_1 and blcd)
+* Fixed the bug where level 2 Bumbo would not drop random pickups after clearing a room. (Thanks blcd)
+* Fixed the bug where Spider Mod would not drop random blue spiders or batteries after clearing a room. (Thanks blcd)
+* Fixed the bug where Mystery Sack drops did not have an equal chance to be each pickup subtype. (Thanks blcd)
+* Fixed the bug where the "13 Luck" custom item was not being given correctly in seeded races with the Fire Mind start.
+
+### *v0.5.17* - April 19th, 2017
 
 * Added the "beginner" format for the Pandora's Box tournament. In this format, Judas starts with the Schoolbag, a full red heart container, and a full soul heart. You can activate this by changing the "rFormat" field to "beginner" in the "save#.dat" file corresponding to your save slot.
 * Fixed the unavoidable damage when a Spiked or Mimic chest spawns in Womb/Utero room #458. (Thanks Dea1h)
