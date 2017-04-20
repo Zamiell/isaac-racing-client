@@ -6,7 +6,7 @@
 * Fixed the bug where level 2 Bumbo would not drop random pickups after clearing a room. (Thanks blcd)
 * Fixed the bug where Spider Mod would not drop random blue spiders or batteries after clearing a room. (Thanks blcd)
 * Fixed the bug where Mystery Sack drops did not have an equal chance to be each pickup subtype. (Thanks blcd)
-* Fixed the bug where the "13 Luck" custom item was not being given correctly in seeded races with the Fire Mind start.
+* Fixed the bug where the "13 Luck" custom item was not being given correctly in seeded races with the Fire Mind start. (Thanks Dea1h)
 
 ### *v0.5.17* - April 19th, 2017
 
