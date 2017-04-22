@@ -337,7 +337,7 @@ function RPPostRender:Race()
          RPGlobals.raceVars.startedTime == 0 then
 
     -- Check to see if we are on a challenge
-    RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
+    --RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
     return
 
   elseif RPSprites.sprites.top ~= nil and

@@ -9,6 +9,7 @@ local RPCallbacks  = require("src/rpcallbacks")
 local RPSprites    = require("src/rpsprites")
 local RPSchoolbag  = require("src/rpschoolbag")
 local RPSoulJar    = require("src/rpsouljar")
+local RPFastClear  = require("src/rpfastclear")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
 local RPTimer      = require("src/rptimer")
@@ -100,6 +101,7 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some global variables that we keep track of per run
   RPGlobals:InitRun()
+  RPFastClear.checkedFrame = 0
 
   -- Reset some race variables that we keep track of per run
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
@@ -121,16 +123,9 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.RNGCounter.BookOfSin = levelSeed
   RPGlobals.RNGCounter.CrystalBall = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
-  RPGlobals.RNGCounter.SackOfPennies = levelSeed
-  RPGlobals.RNGCounter.BombBag = levelSeed
-  RPGlobals.RNGCounter.JuicySack = levelSeed
-  RPGlobals.RNGCounter.MysterySack = levelSeed
-  RPGlobals.RNGCounter.LilChest = levelSeed
-  RPGlobals.RNGCounter.Bumbo = levelSeed
-  RPGlobals.RNGCounter.RuneBag = levelSeed
-  RPGlobals.RNGCounter.SpiderMod = levelSeed
-  RPGlobals.RNGCounter.AcidBaby = levelSeed
-  RPGlobals.RNGCounter.SackOfSacks = levelSeed
+
+  -- Reset some RNG counters for familiars
+  RPFastClear:InitRun()
 
   -- Reset all graphics
   -- (this is needed to prevent a bug where the "Race Start" room graphics

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.18"
+RPGlobals.version = "v0.5.19"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -25,8 +25,8 @@ RPGlobals.race = {
   placeMid        = 0,           -- This is either the number of people ready, or the non-fnished place
   place           = 1,           -- This is the final place
   numEntrants     = 1,           -- The number of people in the race
-  order9          = {0},
-  order14         = {0},
+  order9          = {0},         -- The order for a Racing+ 9 character speedrun
+  order14         = {0},         -- The order for a Racing+ 14 character speedrun
 }
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
@@ -54,16 +54,6 @@ RPGlobals.RNGCounter = {
   Teleport      = 0, -- Broken Remote also uses this
   Undefined     = 0,
   Telepills     = 0,
-  SackOfPennies = 0,
-  BombBag       = 0,
-  JuicySack     = 0,
-  MysterySack   = 0,
-  LilChest      = 0,
-  Bumbo         = 0,
-  RuneBag       = 0,
-  SpiderMod     = 0,
-  AcidBaby      = 0,
-  SackOfSacks   = 0,
 }
 
 --
@@ -134,7 +124,7 @@ RPGlobals.RoomTransition = {
   TRANSITION_LAZARUS_RAGS      = 10,
   TRANSITION_GLOWING_HOURGLASS = 12,
   TRANSITION_D7                = 13,
-  TRANSITION_MISSING_POSTER    = 14
+  TRANSITION_MISSING_POSTER    = 14,
 }
 
 -- Spaded by me
@@ -192,18 +182,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
   RPGlobals.run.trapdoorCollision     = nil
-
-  -- Bag familiar tracking
-  RPGlobals.run.roomsCleared = {
-    SackOfPennies = 0,
-    LittleCHAD    = 0,
-    TheRelic      = 0,
-    BombBag       = 0,
-    MysterySack   = 0,
-    RuneBag       = 0,
-    AcidBaby      = 0,
-    SackOfSacks   = 0,
-  }
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

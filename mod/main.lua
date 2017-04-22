@@ -6,8 +6,8 @@
 --[[
 
 TODO:
-- fix lucky build
-- check to see if bomb bag works with humbling bundle
+- PCH8 TV1L
+- check for champion color via Color thing
 - Implement time offsets, show on the first room of each floor
 - Ghosts
 
@@ -119,7 +119,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.
 
 -- Welcome banner
 local hyphens = ''
-for i = 1, string.len(RPGlobals.version) + 23 do
+for i = 1, 23 + string.len(RPGlobals.version) do
   hyphens = hyphens .. "-"
 end
 Isaac.DebugString("+" .. hyphens .. "+")

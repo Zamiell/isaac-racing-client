@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.5.19* - April 21st, 2017
+
+* Fixed the bug where The Relic would not spawn any soul hearts if it came from an Immaculate Conception. (Thanks blcd)
+* The mod will no longer show the challenge warning when you are in a challenge. (This allows R+9 custom races.) (Thanks BMZ_Loop and SedNegi)
+
 ### *v0.5.18* - April 20th, 2017
 
 * Made it so that all of the bag familiars work based on individual room clear counters, instead of a global room clear counter. This means that they should act more fairly now in a seeded race. (Thanks Cyber_1 and blcd)
@@ -12,12 +17,9 @@
 
 * Added the "beginner" format for the Pandora's Box tournament. In this format, Judas starts with the Schoolbag, a full red heart container, and a full soul heart. You can activate this by changing the "rFormat" field to "beginner" in the "save#.dat" file corresponding to your save slot.
 * Fixed the unavoidable damage when a Spiked or Mimic chest spawns in Womb/Utero room #458. (Thanks Dea1h)
-* Added the PunOko emote. (Requested by thisguyisbarry)
-
-### *v0.5.14* - April 18th, 2017
-
 * Pickups will now bounce off of trapdoors, crawlspaces, and beams of light. (Thanks Cyber_1)
 * Fixed the bug where the countdown graphic would overlap with the final place graphic. (Thanks PassionDrama)
+* Added the PunOko emote. (Requested by thisguyisbarry)
 * Added the PagChomp emote. (Requested by LogBasePotato)
 
 ### *v0.5.13* - April 17th, 2017

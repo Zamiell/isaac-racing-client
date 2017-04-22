@@ -120,7 +120,7 @@ function RPPostUpdate:CheckRoomCleared()
   end
 
   -- If the room just got changed to a cleared state, increment the variables for the bag familiars
-  RPFastClear:CheckBagFamiliars(true) -- The argument is "naturalClear"
+  RPFastClear:IncrementBagFamiliars()
 
   -- Give a charge to the player's Schoolbag item
   RPSchoolbag.AddCharge()
