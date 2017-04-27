@@ -79,9 +79,8 @@ function RPDebug:Main()
   --RPSprites:Init("diversity-item5", tostring(debugVar))
   --RPSprites:Init("speedrun-char1", "0")
   --RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
-  --RPSpeedrun.charNum = 13
+  RPSpeedrun.charNum = 9
   --RPSpeedrun.finishedChar = true
-  RPGlobals.run.consoleWindowOpen = false
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

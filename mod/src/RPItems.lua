@@ -145,7 +145,10 @@ function RPItems:GlowingHourGlass()
   local player = game:GetPlayer(0)
 
   -- Reset the Schoolbag
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
+     player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) == false then
+     -- Broken Remote cancels the Glowing Hour Glass effect
+
     Isaac.DebugString("Rewinding the Schoolbag item.")
     RPGlobals.run.schoolbag.item = RPGlobals.run.schoolbag.lastRoomItem
     RPGlobals.run.schoolbag.nextRoomCharge = true
@@ -220,7 +223,7 @@ function RPItems:BookOfSin()
   elseif bookPickupType == 7 then
     -- Random Card - 5.300.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
-               player, 0, RPGlobals.RNGCounter.RuneBag)
+               player, 0, RPGlobals.RNGCounter.BookOfSin)
   end
 
   -- By returning true, it will play the animation where Isaac holds the Book of Sin over his head

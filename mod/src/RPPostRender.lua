@@ -338,6 +338,7 @@ function RPPostRender:Race()
 
     -- Check to see if we are on a challenge
     --RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
+    -- (commented out to allow custom R+9/14 races)
     return
 
   elseif RPSprites.sprites.top ~= nil and

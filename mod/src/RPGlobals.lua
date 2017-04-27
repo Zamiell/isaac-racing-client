@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.19"
+RPGlobals.version = "v0.5.20"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -242,7 +242,7 @@ end
 function RPGlobals:AddItemBanList(itemID)
   -- Don't add items to the ban list that you can normally get duplicates of
   if itemID == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT or -- 73
-     itemID == CollectibleType.COLLECTIBLE_COLLECTIBLE_BALL_OF_BANDAGES then -- 207
+     itemID == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
 
     return
   end

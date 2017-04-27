@@ -5,6 +5,7 @@ local RPCheckEntities = {}
 --
 
 local RPGlobals    = require("src/rpglobals")
+local RPSprites    = require("src/rpsprites")
 local RPSchoolbag  = require("src/rpschoolbag")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
@@ -161,6 +162,59 @@ function RPCheckEntities:NonGrid()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
+
+      -- Check to see if the player just picked up the "Finish" custom item
+      for j = 1, #RPGlobals.run.finishPedestals do
+        if roomIndex == RPGlobals.run.finishPedestals[j].room and
+           entity.Position.X == RPGlobals.run.finishPedestals[j].pos.X and
+           entity.Position.Y == RPGlobals.run.finishPedestals[j].pos.Y then
+
+          -- Remove the final place graphic if it is showing
+          RPSprites:Init("place2", 0)
+
+          -- No animations will advance once the game is fading out,
+          -- and the first frame of the item pickup animation looks very strange,
+          -- so just make the player invisible to compensate
+          player.Visible = false
+          game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
+
+          break
+        end
+      end
+
+      -- Check to see if the player just picked up the "Victory Lap" custom item
+      for j = 1, #RPGlobals.run.victoryLapPedestals do
+        if roomIndex == RPGlobals.run.victoryLapPedestals[j].room and
+           entity.Position.X == RPGlobals.run.victoryLapPedestals[j].pos.X and
+           entity.Position.Y == RPGlobals.run.victoryLapPedestals[j].pos.Y and
+           RPGlobals.run.trapdoor.state == 0 then
+
+          -- Remove the final place graphic if it is showing
+          RPSprites:Init("place2", 0)
+
+          -- Make them float upwards
+          -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
+          RPGlobals.run.trapdoor.state = 1
+          Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
+          RPGlobals.run.trapdoor.upwards = true
+          RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
+          player.ControlsEnabled = false
+          player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+          -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+          player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+          player:PlayExtraAnimation("LightTravel")
+          RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
+          -- This is needed or else state 5 will not correctly trigger
+          -- (because the PostNewRoom callback will occur 3 times instead of 2)
+          RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+
+          break
+        end
+      end
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
            entity.SubType == CollectibleType.COLLECTIBLE_POLAROID and -- 327
            RPGlobals.race.goal == "The Lamb" and
            RPGlobals.race.rFormat ~= "pageant" then
@@ -204,51 +258,6 @@ function RPCheckEntities:NonGrid()
       -- (respawn it with the initial seed so that it will be replaced normally on the frame)
       entity:Remove()
       Isaac.DebugString("Moved The Negative.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
-
-      -- Check to see if the player just picked up the "Finish" custom item
-      for j = 1, #RPGlobals.run.finishPedestals do
-        if roomIndex == RPGlobals.run.finishPedestals[j].room and
-           entity.Position.X == RPGlobals.run.finishPedestals[j].pos.X and
-           entity.Position.Y == RPGlobals.run.finishPedestals[j].pos.Y then
-
-          player.Visible = false
-          -- No animations will advance once the game is fading out,
-          -- and the first frame of the item pickup animation looks very strange,
-          -- so just make the player invisible to compensate
-          game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
-          break
-        end
-      end
-
-      -- Check to see if the player just picked up the "Victory Lap" custom item
-      for j = 1, #RPGlobals.run.victoryLapPedestals do
-        if roomIndex == RPGlobals.run.victoryLapPedestals[j].room and
-           entity.Position.X == RPGlobals.run.victoryLapPedestals[j].pos.X and
-           entity.Position.Y == RPGlobals.run.victoryLapPedestals[j].pos.Y and
-           RPGlobals.run.trapdoor.state == 0 then
-
-          -- Make them float upwards
-          -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
-          RPGlobals.run.trapdoor.state = 1
-          Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
-          RPGlobals.run.trapdoor.upwards = true
-          RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
-          player.ControlsEnabled = false
-          player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-          -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-          player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
-          player:PlayExtraAnimation("LightTravel")
-          RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
-          -- This is needed or else state 5 will not correctly trigger
-          -- (because the PostNewRoom callback will occur 3 times instead of 2)
-          RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
-          break
-        end
-      end
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
@@ -395,7 +404,12 @@ function RPCheckEntities:NonGrid()
       -- Get rid of the chest
       entity:Remove()
 
-    elseif entity.Type == EntityType.ENTITY_PICKUP then -- 5
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.EntityCollisionClass ~= 0 then
+           -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect"
+           -- animation; however, as soon as they are touched, their EntityCollisionClass will be set to 0
+           -- (this is necessary to fix the bug where pickups can be duplicated from touching them)
+
       -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
       RPFastTravel:CheckPickupOverHole(entity)
 
@@ -694,6 +708,27 @@ function RPCheckEntities:ReplacePedestal(entity)
     offLimits = true
   end
 
+  -- Check to see if this is a "moved" Krampus pedestal
+  -- (this can occur when you have Gimpy and Krampus drops a heart,
+  -- which causes the spawned pedestal to be moved one tile over,
+  -- and this movement can cause the item to be different)
+  -- (this has to be before checking to see if the item is banned)
+  if roomType == RoomType.ROOM_DEVIL and -- 14
+     entity:ToPickup().Touched == false and -- This is necessary because we only want to target fresh Krampus Heads
+     (entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS or -- 293
+      entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+
+    -- Seed the pedestal ourselves manually
+    math.randomseed(newSeed)
+    local krampusItem = math.random(1, 2)
+    if krampusItem == 1 then
+      entity.SubType = 293
+      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
+    else
+      entity.SubType = 132
+    end
+  end
+
   -- Check to see if this item is banned
   local bannedItem = false
   for i = 1, #RPGlobals.raceVars.itemBanList do
@@ -723,26 +758,6 @@ function RPCheckEntities:ReplacePedestal(entity)
     end
   end
 
-  -- Check to see if this is a "moved" Krampus pedestal
-  -- (this can occur when you have Gimpy and Krampus drops a heart,
-  -- which causes the spawned pedestal to be moved one tile over,
-  -- and this movement can cause the item to be different)
-  if roomType == RoomType.ROOM_DEVIL and -- 14
-     entity:ToPickup().Touched == false and -- This is necessary because we only want to target fresh Krampus Heads
-     (entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS or -- 293
-      entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
-
-    -- Seed the pedestal ourselves manually
-    math.randomseed(newSeed)
-    local krampusItem = math.random(1, 2)
-    if krampusItem == 1 then
-      entity.SubType = 293
-      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
-    else
-      entity.SubType = 132
-    end
-  end
-
   -- Check to see if this item should go into a Schoolbag
   local putInSchoolbag = RPSchoolbag:CheckSecondItem(entity)
   if putInSchoolbag == false then
@@ -766,8 +781,8 @@ function RPCheckEntities:ReplacePedestal(entity)
                                entity.Velocity, entity.Parent, specialReroll, newSeed)
       game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      Isaac.DebugString("Made a new special " .. tostring(specialReroll) ..
-                        " pedestal using seed: " .. tostring(newSeed))
+      Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is special, " ..
+                        "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
 
     elseif bannedItem then
       -- Make a new random item pedestal
@@ -776,7 +791,8 @@ function RPCheckEntities:ReplacePedestal(entity)
                                entity.Velocity, entity.Parent, 0, entity.InitSeed)
       game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      Isaac.DebugString("Made a new random pedestal using vanilla seed: " .. tostring(entity.InitSeed))
+      Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is banned, " ..
+                        "made a new random pedestal using vanilla seed: " .. tostring(entity.InitSeed))
       randomItem = true -- Set that this is a random item so that we don't add it to the tracking index
 
     else

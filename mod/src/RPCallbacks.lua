@@ -542,7 +542,7 @@ function RPCallbacks:PostNewRoom2()
     Isaac.DebugString("Opened the Mega Satan door.")
   end
 
-  -- Check to see if we need to remove the final place graphic
+  -- Remove the final place graphic if it is showing
   RPSprites:Init("place2", 0)
 end
 

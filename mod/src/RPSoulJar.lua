@@ -27,8 +27,8 @@ function RPSoulJar:CheckHealth()
     RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls + soulHearts
     player:AddSoulHearts(-1 * soulHearts)
     Isaac.DebugString("Soul heart collection is now at: " .. tostring(RPGlobals.run.soulJarSouls))
-    if RPGlobals.run.soulJarSouls >= 8 then -- 4 soul hearts
-      RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls - 8
+    while RPGlobals.run.soulJarSouls >= 8 do -- This has to be in a while loop because of items like Abaddon
+      RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls - 8  -- 4 soul hearts
       player:AddMaxHearts(2)
       player:AddHearts(2) -- The container starts empty
       Isaac.DebugString("Converted 4 soul hearts to a heart container.")

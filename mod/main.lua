@@ -6,8 +6,6 @@
 --[[
 
 TODO:
-- PCH8 TV1L
-- check for champion color via Color thing
 - Implement time offsets, show on the first room of each floor
 - Ghosts
 

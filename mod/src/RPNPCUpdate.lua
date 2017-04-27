@@ -15,6 +15,7 @@ local RPFastClear = require("src/rpfastclear")
 function RPNPCUpdate:Main(npc)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local room = game:GetRoom()
@@ -118,6 +119,16 @@ function RPNPCUpdate:Main(npc)
        end
        Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
      end
+
+   elseif npc.Type == EntityType.ENTITY_PIN and npc.Variant == 1 and -- 62.1 (Scolex)
+          npc:GetBossColorIdx() == 15 and -- The bugged black champion type
+          npc.GroupIdx == 0 and -- We use the "GroupIdx" variable to keep track of whether we have morphed it yet or not
+          npc:IsDead() == false then -- We need to check for this in case Scolex is being replaced in a seeded race
+
+      -- Replace the bugged Scolex champion with the non-champion version
+      npc.GroupIdx = 1
+      npc:Morph(EntityType.ENTITY_PIN, 1, 0, -1) -- 62.1 (Scolex)
+      Isaac.DebugString("Morphed a black champion Scolex on frame: " .. tostring(gameFrameCount))
 
   elseif ((npc.Type == EntityType.ENTITY_ISAAC and npc.Variant == 1) or -- Blue Baby (102.1)
           (npc.Type == EntityType.ENTITY_THE_LAMB)) and -- 273
