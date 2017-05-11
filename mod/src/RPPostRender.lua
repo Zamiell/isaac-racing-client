@@ -214,11 +214,6 @@ function RPPostRender:CheckResetInput()
   local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  -- If we have opened the console at least once this run, disable fast-resetting
-  if RPGlobals.run.consoleWindowOpen then
-    return
-  end
-
   -- Check to see if we are opening the console window
   -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
   if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) and -- 96
@@ -254,7 +249,7 @@ function RPPostRender:CheckResetInput()
     return
   end
 
-  if stage == 1 or
+  if (stage == 1 and RPGlobals.run.consoleWindowOpen == false) or
      isaacFrameCount <= RPGlobals.run.fastResetFrame + 60 then
 
     RPSpeedrun.fastReset = true
@@ -264,6 +259,7 @@ function RPPostRender:CheckResetInput()
     Isaac.DebugString("Executed command: " .. command)
   else
     -- To fast reset on floors 2 and beyond, we need to double tap R
+    -- (or if we brought the console window up this run)
     RPGlobals.run.fastResetFrame = isaacFrameCount
     Isaac.DebugString("Set fast-reset frame to: " .. tostring(RPGlobals.run.fastResetFrame))
   end
@@ -337,8 +333,7 @@ function RPPostRender:Race()
          RPGlobals.raceVars.startedTime == 0 then
 
     -- Check to see if we are on a challenge
-    --RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
-    -- (commented out to allow custom R+9/14 races)
+    RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
     return
 
   elseif RPSprites.sprites.top ~= nil and

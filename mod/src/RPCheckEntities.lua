@@ -714,31 +714,55 @@ function RPCheckEntities:ReplacePedestal(entity)
   -- and this movement can cause the item to be different)
   -- (this has to be before checking to see if the item is banned)
   if roomType == RoomType.ROOM_DEVIL and -- 14
-     entity:ToPickup().Touched == false and -- This is necessary because we only want to target fresh Krampus Heads
-     (entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS or -- 293
-      entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+     entity:ToPickup().Touched == false and -- This is necessary because we only want to target fresh Krampus items
+     (entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
+      entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
 
     -- Seed the pedestal ourselves manually
     math.randomseed(newSeed)
     local krampusItem = math.random(1, 2)
     if krampusItem == 1 then
-      entity.SubType = 293
-      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
+      entity.SubType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
     else
-      entity.SubType = 132
+      entity.SubType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
     end
   end
 
   -- Check to see if this item is banned
   local bannedItem = false
+  local krampusBannedItem = false
   for i = 1, #RPGlobals.raceVars.itemBanList do
     if entity.SubType == RPGlobals.raceVars.itemBanList[i] then
-      -- If we put down our starting item, it will automaticlly be fart-rolled
-      -- So, make an exception for this
-      if entity:ToPickup().Touched == false then
-        bannedItem = true
+      if krampusBannedItem == false and
+         entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+
+        -- Switch A Lump of Coal to Krampus' Head
+        krampusBannedItem = true
+        entity.SubType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+        entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
+
+      elseif krampusBannedItem == false and
+             entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+
+        -- Switch Krampus' Head to A Lump of Coal
+        krampusBannedItem = true
+        entity.SubType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+
+      elseif krampusBannedItem == true and
+             (entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
+              entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
+
+        -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
+        entity.SubType = 0
+
+      else
+        -- If we put down our starting item, it will automaticlly be fart-rolled
+        -- So, make an exception for this
+        if entity:ToPickup().Touched == false then
+          bannedItem = true
+        end
       end
-      break
     end
   end
 

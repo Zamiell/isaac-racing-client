@@ -143,6 +143,7 @@ end
 function RPSchoolbag:CheckSecondItem(entity)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local player = game:GetPlayer(0)
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
@@ -152,11 +153,12 @@ function RPSchoolbag:CheckSecondItem(entity)
     -- We don't want to put the item in the Schoolbag if we dropped it from a Butter! trinket
     -- (activeItem is always equal to 0 here, so checking for that doesn't help)
     if player:HasTrinket(TrinketType.TRINKET_BUTTER) and
-       RPGlobals.run.usedButter == true then
+       RPGlobals.run.usedButterFrame == gameFrameCount then
 
-      RPGlobals.run.usedButter = false
+      RPGlobals.run.usedButter = 0
       Isaac.DebugString("Prevented putting item " .. tostring(entity.SubType) ..
-                        " in the Schoolbag since they dropped it with Butter!")
+                        " in the Schoolbag on frame " .. tostring(gameFrameCount) ..
+                        " since they dropped it with Butter!")
       return false
     end
 

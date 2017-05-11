@@ -1,12 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.5.21* - May 11th, 2017
+
+* After you have opened the console, you can now double tap R to fast-reset.
+* The delay on Mom's Hands and Mom's Dead Hands will now rotate over a 10 frame interval over the course of a run instead of being random. This prevents the small chance where two hands can drop on the same frame. (Thanks Dea1h)
+* Fixed the old Butter! bug that resurfaced. (Thanks SlashSP)
+
 ### *v0.5.20* - April 27th, 2017
 
 * Fixed the (vanilla) bug where the black Scolex champion had the wrong graphics. (Thanks NorBro86)
 * Fixed the bug where pickups would be duplicated if they appeared over trapdoors under certain conditions. (Thanks Cyber_1)
 * Fixed the bug where the Soul Jar was not working properly with Abaddon. (Thanks Cyber_1)
 * Fixed the bug with Book of Sin where it wouldn't work under certain conditions. (Thanks Thalen22)
-* Fixed the bug where Ball of Bandages was getting fart-rerolled when it shouldn't. (Thanks BMZ_Loop)
+* Fixed the bug where Ball of Bandages was getting fart-rerolled in diversity races when it shouldn't. (Thanks BMZ_Loop)
 * Fixed the bug where Krampus' Head and A Lump of Coal were not being fart-rolled under certain conditions. (Thanks PassionDrama)
 * Fixed the bug where the Schoolbag + Glowing Hour Glass + Broken Remote synergy was not working properly. (Thanks Ou_J)
 * Added the KonCha emote. (Requested by Ou_J)

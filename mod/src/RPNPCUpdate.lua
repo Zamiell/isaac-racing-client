@@ -164,9 +164,11 @@ function RPNPCUpdate:Main(npc)
       -- (StateFrame starts between 0 and a random negative value and ticks upwards)
       -- (we have to do a small adjustment because if multiple hands fall at the exact same time,
       -- they can stack on top of each other and cause buggy behavior)
-      local frameAdjustment = math.random(0, 10)
-      -- If we don't seed this with "math.randomseed()", it will just use a random seed
-      npc.StateFrame = 25 + frameAdjustment
+      npc.StateFrame = 25 + RPGlobals.run.handsDelay
+      RPGlobals.run.handsDelay = RPGlobals.run.handsDelay + 1
+      if RPGlobals.run.handsDelay == 10 then
+        RPGlobals.run.handsDelay = 0
+      end
     end
 
   elseif npc.Type == EntityType.ENTITY_WIZOOB or -- 219

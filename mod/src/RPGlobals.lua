@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.20"
+RPGlobals.version = "v0.5.21"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -146,6 +146,7 @@ function RPGlobals:InitRun()
   -- Tracking per run
   RPGlobals.run.roomsEntered     = 0
   RPGlobals.run.touchedBookOfSin = false
+  RPGlobals.run.handsDelay       = 0
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
@@ -176,7 +177,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.blackRingDropChance  = 0
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
-  RPGlobals.run.usedButter           = false
+  RPGlobals.run.usedButterFrame      = 0
   RPGlobals.run.fastResetFrame       = 0
   RPGlobals.run.teleportSubverted     = false
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
