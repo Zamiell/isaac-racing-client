@@ -498,6 +498,15 @@ function RPCheckEntities:NonGrid()
       end
 
     elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
+           entity.Variant == EffectVariant.FART and -- 34
+           RPGlobals.run.changeFartColor == true then
+
+      -- We want special rolls to have a different fart color to distinguish them
+      RPGlobals.run.changeFartColor = false
+      local color = Color(5.5, 0.2, 0.2, 1, 0, 0, 0) -- Bright red
+      entity:SetColor(color, 0, 0, false, false)
+
+    elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
            entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
 
       RPFastTravel:ReplaceHeavenDoor(entity)
@@ -795,16 +804,19 @@ function RPCheckEntities:ReplacePedestal(entity)
       -- Change the item to Off Limits (5.100.235)
       newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
                                entity.Velocity, entity.Parent, CollectibleType.COLLECTIBLE_OFF_LIMITS, newSeed)
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       Isaac.DebugString("Made an Off Limits pedestal using seed: " .. tostring(newSeed))
 
     elseif specialReroll ~= 0 then
       -- Change the item to the special reroll
       newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
                                entity.Velocity, entity.Parent, specialReroll, newSeed)
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+      RPGlobals.run.changeFartColor = true -- Change it to a bright red fart to distinguish that it is a special reroll
       Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is special, " ..
                         "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
 
@@ -813,8 +825,9 @@ function RPCheckEntities:ReplacePedestal(entity)
       -- (the new random item generated will automatically be decremented from item pools properly on sight)
       newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
                                entity.Velocity, entity.Parent, 0, entity.InitSeed)
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+
       -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
       Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is banned, " ..
                         "made a new random pedestal using vanilla seed: " .. tostring(entity.InitSeed))
       randomItem = true -- Set that this is a random item so that we don't add it to the tracking index

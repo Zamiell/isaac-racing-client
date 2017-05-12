@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.21"
+RPGlobals.version = "v0.5.22"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -183,6 +183,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
   RPGlobals.run.trapdoorCollision     = nil
+  RPGlobals.run.changeFartColor       = false
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
