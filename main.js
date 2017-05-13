@@ -36,6 +36,9 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // Count lines of code:
 // cloc . --exclude-dir .git,dist,node_modules,css,fonts,words
 
+// Convert corrupted PNGs with ImageMagick:
+// http://forums.gamesalad.com/discussion/67365/problems-with-png-images-use-these-methods-to-fix-your-pngs
+
 'use strict';
 
 // Imports

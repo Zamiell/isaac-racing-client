@@ -2,7 +2,7 @@
 
 ### *v0.5.23* - May 13th, 2017
 
-* Racing+ now works with the latest patch. Diversity races will still be messed up.
+* Racing+ now works with the latest patch. Diversity races and the Schoolbag will still be messed up.
 
 ### *v0.5.22* - May 12th, 2017
 
