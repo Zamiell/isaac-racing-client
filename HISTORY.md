@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.5.23* - May 13th, 2017
+
+* Racing+ now works with the latest patch. Diversity races will still be messed up.
+
 ### *v0.5.22* - May 12th, 2017
 
-* Diversity special rerolls will now have a Contagion fart. (Thanks Krakenos)
+* Diversity special rerolls will now have a bright red fart. (Thanks Krakenos)
 * If a Lump of Coal is banned, then Krampus' Head will always drop. If Krampus' Head is banned, then a Lump of Coal will always drop. If both are banned, then a random item will drop. (Thanks thisguyisbarry)
 * Added the VoHiT emote. (Requested by LogBasePotato)
 

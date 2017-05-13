@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.22"
+RPGlobals.version = "v0.5.23"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -62,36 +62,20 @@ RPGlobals.RNGCounter = {
 
 -- Collectibles
 -- (unused normal item IDs: 43, 59, 61, 235, 263)
-CollectibleType.COLLECTIBLE_ANGRY_FLY      = 511
-CollectibleType.COLLECTIBLE_BLACK_HOLE     = 512
-CollectibleType.COLLECTIBLE_BOZO           = 513
-CollectibleType.COLLECTIBLE_BROKEN_MODEM   = 514
-CollectibleType.COLLECTIBLE_MYSTERY_GIFT   = 515
-CollectibleType.COLLECTIBLE_SPRINKLER      = 516
-CollectibleType.COLLECTIBLE_FAST_BOMBS     = 517
-CollectibleType.COLLECTIBLE_BUDDY_IN_A_BOX = 518
-CollectibleType.COLLECTIBLE_LIL_DELIRIUM   = 519
-
-CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 520, active (repl. 97)
-CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 521, active (repl. 158)
-CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM     = Isaac.GetItemIdByName("Betrayal")        -- 522, passive (repl. 391)
-CollectibleType.COLLECTIBLE_SMELTER_LOGGER      = Isaac.GetItemIdByName("Smelter")         -- 523, passive (repl. 479)
-CollectibleType.COLLECTIBLE_DEBUG               = Isaac.GetItemIdByName("Debug")           -- 524, active
-CollectibleType.COLLECTIBLE_SCHOOLBAG           = Isaac.GetItemIdByName("Schoolbag")       -- 525, passive
-CollectibleType.COLLECTIBLE_SOUL_JAR            = Isaac.GetItemIdByName("Soul Jar")        -- 526, passive
-CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy")          -- 527, passive
-CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 528, passive
-CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 529, passive
-CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 530, passive
-CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 531, passive
-CollectibleType.COLLECTIBLE_CHECKPOINT          = Isaac.GetItemIdByName("Checkpoint")      -- 532, passive
+CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 526, active (repl. 97)
+CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 527, active (repl. 158)
+CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM     = Isaac.GetItemIdByName("Betrayal")        -- 528, passive (repl. 391)
+CollectibleType.COLLECTIBLE_SMELTER_LOGGER      = Isaac.GetItemIdByName("Smelter")         -- 529, passive (repl. 479)
+CollectibleType.COLLECTIBLE_DEBUG               = Isaac.GetItemIdByName("Debug")           -- 530, active
+CollectibleType.COLLECTIBLE_SCHOOLBAG           = Isaac.GetItemIdByName("Schoolbag")       -- 531, passive
+CollectibleType.COLLECTIBLE_SOUL_JAR            = Isaac.GetItemIdByName("Soul Jar")        -- 532, passive
+CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy")          -- 533, passive
+CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 534, passive
+CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 535, passive
+CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 536, passive
+CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 537, passive
+CollectibleType.COLLECTIBLE_CHECKPOINT          = Isaac.GetItemIdByName("Checkpoint")      -- 538, passive
 CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("Checkpoint") + 1
-
--- Trinkets
-TrinketType.TRINKET_HAIRPIN      = 120
-TrinketType.TRINKET_WOODEN_CROSS = 121
-TrinketType.TRINKET_BUTTER       = 122
-TrinketType.NUM_TRINKETS         = 123
 
 -- Cards
 Card.CARD_HUGE_GROWTH = 52

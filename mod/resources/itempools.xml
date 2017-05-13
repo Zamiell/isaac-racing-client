@@ -648,6 +648,12 @@
 		<Item Id="513" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Fast Bombs-->
 		<Item Id="517" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Technology Zero-->
+		<Item Id="524" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Leprocy-->
+		<Item Id="525" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Telekinesis-->
+		<Item Id="522" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop"><!-- DecreaseBy="0.5" -->
 		<!--The Compass-->
@@ -788,12 +794,18 @@
 		<Item Id="483" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Poke Go-->
 		<Item Id="505" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
-		<!--Buddy in a box-->
+		<!--Buddy in a Box-->
 		<Item Id="518" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Broken Modem-->
 		<Item Id="514" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Mystery Gift-->
 		<Item Id="515" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Moving Box-->
+		<Item Id="523" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Cereal Cutout-->
+		<Item Id="521" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Jumper Cables-->
+		<Item Id="520" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="boss">
 		<!--Magic Mushroom-->
@@ -2062,6 +2074,30 @@
 		<Item Id="444" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Apple!-->
 		<Item Id="443" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Angry Fly-->
+		<Item Id="511" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Black Hole-->
+		<Item Id="512" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Bozo-->
+		<Item Id="513" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Broken Modem-->
+		<Item Id="514" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Mystery Gift-->
+		<Item Id="515" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Sprinkler-->
+		<Item Id="516" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Fast Bombs-->
+		<Item Id="517" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Buddy in a Box-->
+		<Item Id="518" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Jumper Cables-->
+		<Item Id="520" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Telekinesis-->
+		<Item Id="522" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Technology Zero-->
+		<Item Id="524" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Leprocy-->
+		<Item Id="525" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedBoss">
 		<!--1up!-->
@@ -2282,6 +2318,14 @@
 		<Item Id="472" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Tarot Cloth-->
 		<Item Id="451" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Black Hole-->
+		<Item Id="512" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Mystery Gift-->
+		<Item Id="515" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Sprinkler-->
+		<Item Id="516" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<!--Buddy in a Box-->
+		<Item Id="518" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedCurse">
 		<!--Guppy's Paw-->
@@ -2398,6 +2442,8 @@
 		<Item Id="442" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Shade-->
 		<Item Id="468" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Lil Delirium-->
+		<Item Id="519" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="greedAngel">
 		<!--Crown Of Light-->

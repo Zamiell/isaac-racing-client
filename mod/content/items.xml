@@ -1,44 +1,44 @@
 <items gfxroot="gfx/items/" version="1">
-	<!-- 520 -->
+	<!-- 526 -->
 	<active description="Reusable item generator" gfx="Collectibles_097_BookOfSin.png" maxcharges="4" name="The Book of Sin" />
 	<!-- Originally 97 -->
 
-	<!-- 521 -->
+	<!-- 527 -->
 	<active description="I see my future" gfx="Collectibles_158_CrystalBall.png" maxcharges="6" name="Crystal Ball" />
 	<!-- Originally 158 -->
 
-	<!-- 522 -->
+	<!-- 528 -->
 	<passive description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" name="Betrayal" />
 	<!-- Originally 391 -->
 
-	<!-- 523 -->
+	<!-- 529 -->
 	<active description="Trinket melter!" gfx="Collectibles_479_Smelter.png" name="Smelter" maxcharges="6" />
 	<!-- Originally 479 -->
 
-	<!-- 524 -->
+	<!-- 530 -->
 	<active description="Debug" gfx="Debug.png" maxcharges="1" name="Debug" />
 
-	<!-- 525 -->
+	<!-- 531 -->
 	<passive description="More active item room" gfx="Schoolbag.png" name="Schoolbag" />
 
-	<!-- 526 -->
+	<!-- 532 -->
 	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 
-	<!-- 527 -->
+	<!-- 533 -->
 	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
 
-	<!-- 528 -->
+	<!-- 534 -->
 	<passive description="Let's keep this build going" gfx="Collectibles_127_ForgetMeNow.png" name="Victory Lap" />
 
-	<!-- 529 -->
+	<!-- 535 -->
 	<passive description="Roll the credits" gfx="Finished.png" name="Finished" />
 
-	<!-- 530 -->
+	<!-- 536 -->
 	<passive description="B1 Treasure Room items are off limits in seeded races." gfx="Off_Limits.png" name="Off Limits" />
 
-	<!-- 531 -->
+	<!-- 537 -->
 	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
 
-	<!-- 532 -->
+	<!-- 538 -->
 	<passive description="On to the next character!" gfx="Finished.png" name="Checkpoint" />
 </items>

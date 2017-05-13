@@ -528,8 +528,16 @@
 	<active description="Wrapped up nice for you!" id="515" gfx="Collectibles_515_MysteryGift.png" name="Mystery Gift" />
 	<active cache="familiars" name="Sprinkler" gfx="Collectibles_516_Sprinkler.png" description="Sprinkles." id="516" maxcharges="4" />
 	<passive name="Fast Bombs" gfx="Collectibles_517_FastBombs.png" description="Faster Bomb Drops!" id="517" bombs="7" />
-	<familiar description="What could it be?!" gfx="Collectibles_518_BuddyBox.png" id="518" name="Buddy in a box" />
-	<familiar description="He's Delirious" gfx="Collectibles_519_LilDelirium.png" id="519" name="Lil Delirium" />
+	<familiar description="What could it be?!" gfx="Collectibles_518_BuddyBox.png" id="518" name="Buddy in a Box" />
+	<familiar description="He's Delirious" gfx="Collectibles_519_LilDelirium.png" id="519" name="Lil Delirium" achievement="338" />
+
+	<!-- Booster Pack #2 -->
+	<passive description="Bloody Recharge!" gfx="Collectibles_520_JumperCable.png" name="Jumper Cables" id="520" />
+	<active description="Allow 6 weeks for delivery" gfx="Collectibles_521_CerealCutout.png" maxcharges="6" name="Coupon" id="521" />
+	<active description="The power of mind!" gfx="Collectibles_522_Telekinesis.png" maxcharges="60" name="Telekinesis" id="522" />
+	<active description="Pack and unpack" gfx="collectibles_523_movingbox.png" maxcharges="4" name="Moving Box" id="523" />
+	<passive description="Static tears!" gfx="Collectibles_524_TechnologyZero.png" name="Technology Zero" id="524" cache="tearflag" />
+	<familiar description="You're tearing me apart!" gfx="Collectibles_525_Leprosy.png" name="Leprocy" id="525" />
 
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />
@@ -659,4 +667,7 @@
 	<trinket description="Poke that power outlet! Bosses charge you" gfx="trinket_120_Hairpin.png" id="120" name="Hairpin" />
 	<trinket description="My faith protects me" gfx="trinket_121_WoodenCross.png" id="121" name="Wooden Cross" />
 	<trinket description="Can't hold it!" gfx="trinket_122_Butter.png" id="122" name="Butter!" />
+
+	<!-- Booster Pack #2 -->
+	<trinket description="Angelic Spoils!" gfx="Trinket_123_FiligreeFeather.png" id="123" name="Filigree Feather" />
 </items>
