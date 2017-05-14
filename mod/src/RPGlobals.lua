@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.5.24"
+RPGlobals.version = "v0.5.25"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -34,8 +34,6 @@ RPGlobals.raceVars = {
   loadOnNextFrame    = false,
   difficulty         = 0,
   challenge          = 0,
-  itemBanList        = {},
-  trinketBanList     = {},
   resetEnabled       = true,
   started            = false,
   startedTime        = 0,
@@ -50,7 +48,6 @@ RPGlobals.raceVars = {
 
 RPGlobals.RNGCounter = {
   BookOfSin     = 0,
-  CrystalBall   = 0,
   Teleport      = 0, -- Broken Remote also uses this
   Undefined     = 0,
   Telepills     = 0,
@@ -62,20 +59,22 @@ RPGlobals.RNGCounter = {
 
 -- Collectibles
 -- (unused normal item IDs: 43, 59, 61, 235, 263)
-CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED  = Isaac.GetItemIdByName("The Book of Sin") -- 526, active (repl. 97)
-CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED = Isaac.GetItemIdByName("Crystal Ball")    -- 527, active (repl. 158)
-CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM     = Isaac.GetItemIdByName("Betrayal")        -- 528, passive (repl. 391)
-CollectibleType.COLLECTIBLE_SMELTER_LOGGER      = Isaac.GetItemIdByName("Smelter")         -- 529, passive (repl. 479)
-CollectibleType.COLLECTIBLE_DEBUG               = Isaac.GetItemIdByName("Debug")           -- 530, active
-CollectibleType.COLLECTIBLE_SCHOOLBAG           = Isaac.GetItemIdByName("Schoolbag")       -- 531, passive
-CollectibleType.COLLECTIBLE_SOUL_JAR            = Isaac.GetItemIdByName("Soul Jar")        -- 532, passive
-CollectibleType.COLLECTIBLE_TROPHY              = Isaac.GetItemIdByName("Trophy")          -- 533, passive
-CollectibleType.COLLECTIBLE_VICTORY_LAP         = Isaac.GetItemIdByName("Victory Lap")     -- 534, passive
-CollectibleType.COLLECTIBLE_FINISHED            = Isaac.GetItemIdByName("Finished")        -- 535, passive
-CollectibleType.COLLECTIBLE_OFF_LIMITS          = Isaac.GetItemIdByName("Off Limits")      -- 536, passive
-CollectibleType.COLLECTIBLE_13_LUCK             = Isaac.GetItemIdByName("13 Luck")         -- 537, passive
-CollectibleType.COLLECTIBLE_CHECKPOINT          = Isaac.GetItemIdByName("Checkpoint")      -- 538, passive
-CollectibleType.NUM_COLLECTIBLES                = Isaac.GetItemIdByName("Checkpoint") + 1
+CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED      = Isaac.GetItemIdByName("The Book of Sin") -- Replacing 97
+CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM         = Isaac.GetItemIdByName("Betrayal") -- Replacing 391
+CollectibleType.COLLECTIBLE_SMELTER_LOGGER          = Isaac.GetItemIdByName("Smelter") -- Replacing 479
+CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
+CollectibleType.COLLECTIBLE_SCHOOLBAG               = Isaac.GetItemIdByName("Schoolbag")
+CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
+CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
+CollectibleType.COLLECTIBLE_VICTORY_LAP             = Isaac.GetItemIdByName("Victory Lap")
+CollectibleType.COLLECTIBLE_FINISHED                = Isaac.GetItemIdByName("Finished")
+CollectibleType.COLLECTIBLE_OFF_LIMITS              = Isaac.GetItemIdByName("Off Limits")
+CollectibleType.COLLECTIBLE_13_LUCK                 = Isaac.GetItemIdByName("13 Luck")
+CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Checkpoint")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder #1")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder #2")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder #3")
+CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Diversity Placeholder #3") + 1
 
 -- Cards
 Card.CARD_HUGE_GROWTH = 52
@@ -223,39 +222,6 @@ function RPGlobals:IncrementRNG(seed)
   rng:Next()
   local newSeed = rng:GetSeed()
   return newSeed
-end
-
-function RPGlobals:AddItemBanList(itemID)
-  -- Don't add items to the ban list that you can normally get duplicates of
-  if itemID == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT or -- 73
-     itemID == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
-
-    return
-  end
-
-  local inBanList = false
-  for i = 1, #RPGlobals.raceVars.itemBanList do
-    if RPGlobals.raceVars.itemBanList[i] == itemID then
-      inBanList = true
-      break
-    end
-  end
-  if inBanList == false then
-    RPGlobals.raceVars.itemBanList[#RPGlobals.raceVars.itemBanList + 1] = itemID
-  end
-end
-
-function RPGlobals:AddTrinketBanList(trinketID)
-  local inBanList = false
-  for i = 1, #RPGlobals.raceVars.trinketBanList do
-    if RPGlobals.raceVars.trinketBanList[i] == trinketID then
-      inBanList = true
-      break
-    end
-  end
-  if inBanList == false then
-    RPGlobals.raceVars.trinketBanList[#RPGlobals.raceVars.trinketBanList + 1] = trinketID
-  end
 end
 
 function RPGlobals:GridToPos(x, y)

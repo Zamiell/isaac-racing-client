@@ -156,7 +156,7 @@
 	<familiar description="Plop!" gfx="Collectibles_155_ThePeeper.png" id="155" name="The Peeper" />
 	<passive description="Item martyr" gfx="Collectibles_156_Habit.png" id="156" name="Habit" />
 	<passive achievement="54" cache="damage" description="RAGE!" gfx="Collectibles_157_BloodyLust.png" id="157" name="Bloody Lust" />
-	<active description="I see my future" gfx="Collectibles_158_CrystalBall.png" id="158" maxcharges="6" name="Crystal Ball (Unseeded)" />
+	<active description="I see my future" gfx="Collectibles_158_CrystalBall.png" id="158" maxcharges="6" name="Crystal Ball" />
 	<passive cache="flying tearflag tearcolor" description="Scary" devilprice="2" gfx="Collectibles_159_SpiritOfTheNight.png" id="159" name="Spirit of the Night" />
 	<active cooldown="30" description="Holy white death" gfx="Collectibles_160_CrackTheSky.png" id="160" maxcharges="4" name="Crack the Sky" />
 	<passive description="Eternal life?" gfx="Collectibles_161_Ankh.png" id="161" name="Ankh" />

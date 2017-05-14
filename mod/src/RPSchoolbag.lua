@@ -256,6 +256,7 @@ function RPSchoolbag:CheckInput()
   RPSchoolbag.sprites.item = nil
 end
 
+-- Called from the "RPSchoolbag:CheckInput()" function
 function RPSchoolbag:Switch()
   -- Local variables
   local game = Game()
@@ -288,6 +289,10 @@ function RPSchoolbag:Switch()
     local configItem = RPGlobals:GetConfigItem(activeItem) -- This will crash the game with an item ID of 0
     player:RemoveCostume(configItem)
   end
+
+  -- Set the item hold cooldown to 0 since this doesn't count as picking up a new item
+  -- (this fixes the bug where you can't immediately pick up a new item after performing a Schoolbag switch)
+  player.ItemHoldCooldown = 0
 end
 
 return RPSchoolbag

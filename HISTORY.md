@@ -1,5 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.5.25* - May 14th, 2017
+
+* The new Angel Room changes from vanilla are now in Racing+.
+* The fart-reroll system has been deleted; items will now automatically be removed from pools thanks to new API stuff in the last patch. (In diversity races, Incubus, Crown of Light, and Sacred Heart will still have the special fart-reroll.)
+* You can now pick up items immediately after performing a Schoolbag switch thanks to new API stuff in the last patch.
+* Diversity races will now include Booster Pack #2 items.
+* Racing+ no longer has a custom Crystal Ball since it is now seeded in the base game.
+* Racing+ no longer modifies Portals since they are now seeded in the base game.
+* Champions other than Pulsing Green and Light White are no longer on the fast-clear exception list thanks to new API stuff in the last patch.
+* The Schoolbag will now function properly with the Booster Pack #2 items.
+* The 2nd D6 has been replaced with the Moving Box in the Pageant Boy ruleset.
+* Fixed the bug where if you started with Krampus' Head in a diversity race, it would turn into A Lump of Coal if you dropped it. (Thanks Dune1008)
+* Fixed the bug where the race start room was not properly set up if you reset during the countdown. (Thanks thisguyisbarry)
+
 ### *v0.5.23* - May 13th, 2017
 
 * Racing+ now works with the latest patch. Diversity races and the Schoolbag will still be messed up.

@@ -15,6 +15,12 @@ local RPSpeedrun   = require("src/rpspeedrun")
 local RPTimer      = require("src/rptimer")
 
 --
+-- Variables
+--
+
+RPPostGameStarted.diversity = false
+
+--
 -- Initialization functions
 --
 
@@ -22,6 +28,7 @@ local RPTimer      = require("src/rptimer")
 function RPPostGameStarted:Main(saveState)
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local levelSeed = level:GetDungeonPlacementSeed()
@@ -107,8 +114,6 @@ function RPPostGameStarted:Main(saveState)
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
   -- (difficulty and challenge are set in the "RPPostGameStarted:Race()" function)
   -- (character is set in the "RPPostGameStarted:Character()" function)
-  RPGlobals.raceVars.itemBanList = {}
-  RPGlobals.raceVars.trinketBanList = {}
   RPGlobals.raceVars.resetEnabled = true
   -- (started and startedTime are handled independently of runs)
   RPGlobals.raceVars.finished = false
@@ -121,7 +126,6 @@ function RPPostGameStarted:Main(saveState)
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
   RPGlobals.RNGCounter.BookOfSin = levelSeed
-  RPGlobals.RNGCounter.CrystalBall = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
 
   -- Reset some RNG counters for familiars
@@ -138,6 +142,14 @@ function RPPostGameStarted:Main(saveState)
   RPSpeedrun.sprites = {}
   RPTimer.sprites = {}
 
+  -- Keep track of whether this is a diversity race or not
+  RPPostGameStarted.diversity = false
+
+  -- Racing+ replaces some vanilla items; remove them from all the pools
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SMELTER) -- 497
+
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()
 
@@ -146,6 +158,13 @@ function RPPostGameStarted:Main(saveState)
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()
+
+  -- Remove the 3 placeholder items if this is not a diversity race
+  if RPPostGameStarted.diversity == false then
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #1"))
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
+  end
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPCallbacks:PostNewLevel2()
@@ -222,8 +241,6 @@ function RPPostGameStarted:Character()
     -- Manually fix any custom active items
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
-    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_CRYSTAL_BALL then -- 158
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED
     elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_SMELTER then -- 479
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
     end
@@ -346,6 +363,7 @@ end
 function RPPostGameStarted:Seeded()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
 
@@ -364,9 +382,8 @@ function RPPostGameStarted:Seeded()
       -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
       player:AddCollectible(itemID, RPGlobals:GetItemMaxCharges(itemID), true)
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(itemID)
+      -- Remove it from all the pools
+      itemPool:RemoveCollectible(itemID)
 
       -- Find out if Crown of Light is one of the starting items
       if itemID == 415 then
@@ -412,7 +429,7 @@ function RPPostGameStarted:Seeded()
     RPSchoolbag.sprites.item = nil
 
     -- Also make sure that the Schoolbag item is removed from all of the pools
-    RPGlobals:AddItemBanList(RPGlobals.run.schoolbag.item)
+    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
   end
 
   -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the Schoolbag item
@@ -428,7 +445,7 @@ function RPPostGameStarted:Seeded()
   end
 
   -- Add item bans for seeded mode
-  RPGlobals:AddTrinketBanList(TrinketType.TRINKET_CAINS_EYE) -- 59
+  itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
 
   -- Initialize the sprites for the starting room
   -- (don't show these graphics until the race starts)
@@ -457,8 +474,12 @@ end
 function RPPostGameStarted:Diversity()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
+
+  -- This is a diversity race, so mark to not remove the 3 placeholder items later on
+  RPPostGameStarted.diversity = true
 
   -- Give the player extra starting items (for diversity races)
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
@@ -468,7 +489,7 @@ function RPPostGameStarted:Diversity()
   -- Give the player their five random diversity starting items
   for i = 1, #RPGlobals.race.startingItems do
     if i == 1 then
-      -- Ttem 1 is the active
+      -- Item 1 is the active
       RPGlobals.run.schoolbag.item = RPGlobals.race.startingItems[i]
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
         RPGlobals.run.schoolbag.charges = 0 -- Eden's Soul should start on an empty charge
@@ -477,9 +498,8 @@ function RPPostGameStarted:Diversity()
       end
       RPSchoolbag.sprites.item = nil
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(RPGlobals.race.startingItems[i])
+      -- Remove it from all of the item pools
+      itemPool:RemoveCollectible(RPGlobals.race.startingItems[i])
 
       -- Give them the item so that the player gets any inital pickups (e.g. Remote Detonator)
       player:AddCollectible(RPGlobals.race.startingItems[i], 0, true)
@@ -502,9 +522,13 @@ function RPPostGameStarted:Diversity()
       player:AddCollectible(RPGlobals.race.startingItems[i],
                             RPGlobals:GetItemMaxCharges(RPGlobals.race.startingItems[i]), true)
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(RPGlobals.race.startingItems[i])
+      -- Remove it from all of the item pools
+      -- (make an exception for items that you can normally get duplicates of)
+      if RPGlobals.race.startingItems[i] ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
+         RPGlobals.race.startingItems[i] ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
+
+        itemPool:RemoveCollectible(RPGlobals.race.startingItems[i])
+      end
 
     elseif i == 5 then
       -- Item 5 is the trinket
@@ -518,19 +542,18 @@ function RPPostGameStarted:Diversity()
         player:AddTrinket(trinket1) -- The game crashes if 0 is fed to this function
       end
 
-      -- Giving the player the trinket does not actually remove it from the trinket pool,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddTrinketBanList(RPGlobals.race.startingItems[i])
+      -- Remove it from the trinket pool
+      itemPool:RemoveTrinket(RPGlobals.race.startingItems[i])
     end
   end
 
   -- Add item bans for diversity races
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_TECH_X) -- 395
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_D4) -- 284
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_D100) -- 283
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_DINF) -- 489
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_TECH_X) -- 395
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D4) -- 284
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D100) -- 283
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 489
 
   -- Initialize the sprites for the starting room
   RPSprites:Init("diversity-active", "diversity-active")
@@ -548,11 +571,12 @@ end
 function RPPostGameStarted:Pageant()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
 
   -- Add the extra items
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
-  RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D6 -- 105
+  RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
   RPGlobals.run.schoolbag.charges = 6
   RPSchoolbag.sprites.item = nil
   player:AddCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD, 0, false) -- 4
@@ -563,10 +587,10 @@ function RPPostGameStarted:Pageant()
 
   -- Giving the player these items does not actually remove them from any pools,
   -- so we have to expliticly add them to the ban list
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 246
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
-  RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 246
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
 
   Isaac.DebugString("Added pageant items.")
 end

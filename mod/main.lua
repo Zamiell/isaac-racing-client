@@ -14,11 +14,8 @@ TODO DIFFICULT:
 - Fix Isaac beams never hitting you
 - Fix Conquest beams
 - Speed up the spawning of the first ghost on The Haunt fight
-- Make Devil / Angel Rooms given in order and independent of floor
 
 TODO CAN'T FIX:
-- Do item bans in a proper way via editing item pools (not possible to modify item pools via current bindings)
-- Seed Maw of the Void and Athame black heart drops
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
   function)
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered.
@@ -95,8 +92,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,      CollectibleT
 -- Define custom item callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BookOfSin,   CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED)
 -- Replacing Book of Sin (97)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.CrystalBall, CollectibleType.COLLECTIBLE_CRYSTAL_BALL_SEEDED)
--- Replacing Crystal Ball (158)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Smelter,     CollectibleType.COLLECTIBLE_SMELTER_LOGGER)
 -- Replacing Smelter (479)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main,        CollectibleType.COLLECTIBLE_DEBUG)

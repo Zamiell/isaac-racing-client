@@ -231,46 +231,6 @@ function RPItems:BookOfSin()
   return true
 end
 
-function RPItems:CrystalBall()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local player = game:GetPlayer(0)
-
-  -- Show the map
-  level:ShowMap() -- This is the same as the World/Sun card effect
-
-  -- Decide whether we are dropping a soul heart or a card
-  RPGlobals.RNGCounter.CrystalBall = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.CrystalBall)
-  math.randomseed(RPGlobals.RNGCounter.CrystalBall)
-  local cardChance = math.random(1, 10)
-  local spawnCard = false
-  if player:HasTrinket(TrinketType.TRINKET_DAEMONS_TAIL) then -- 22
-    if cardChance <= 9 then -- 90% chance with Daemon's Tail
-      spawnCard = true
-    end
-  else
-    if cardChance <= 5 then -- 50% chance normally
-      spawnCard = true
-    end
-  end
-
-  local pos = player.Position
-  local vel = Vector(0, 0)
-  if spawnCard then
-    -- Random Card - 5.300.0
-    RPGlobals.RNGCounter.CrystalBall = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.CrystalBall)
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
-               player, 0, RPGlobals.RNGCounter.CrystalBall)
-  else
-    -- Heart (soul) - 5.10.3
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel, player, 3, 0)
-  end
-
-  -- By returning true, it will play the animation where Isaac holds the Book of Sin over his head
-  return true
-end
-
 function RPItems:Smelter()
   -- Local variables
   local game = Game()

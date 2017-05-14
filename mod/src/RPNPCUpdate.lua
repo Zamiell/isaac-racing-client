@@ -224,11 +224,6 @@ function RPNPCUpdate:Main(npc)
     -- so we use an InitSeed of 1)
     npc:Remove()
     Isaac.DebugString("Replaced a Mushroom with a Host.")
-
-  elseif npc.Type == EntityType.ENTITY_PORTAL and -- 306
-         npc.I2 ~= 5 then -- Portals can spawn 1-5 enemies, and this is stored in I2
-
-    npc.I2 = 5 -- Make all portals spawn 5 enemies since this is unseeded
   end
 
   -- Do extra monitoring for blue variant bosses that drop extra soul hearts

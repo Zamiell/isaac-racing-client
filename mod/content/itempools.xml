@@ -1,8 +1,10 @@
 <ItemPools>
 	<Pool Name="treasure">
 		<Item Name="The Book of Sin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Crystal Ball" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Betrayal" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder #1" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder #2" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder #3" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop"><!-- Decrease by 0.5 -->
 		<Item Name="Smelter" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>

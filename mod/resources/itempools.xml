@@ -109,7 +109,7 @@
 		<!--Little C.H.A.D.-->
 		<Item Id="96" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Relic-->
 		<Item Id="98" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Little Gish-->
@@ -205,7 +205,7 @@
 		<!--Blood Lust-->
 		<Item Id="157" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Crystal Ball-->
-		<!--<Item Id="158" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="158" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Crack the Sky-->
 		<Item Id="160" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Ank-->
@@ -467,7 +467,7 @@
 		<!--Zodiac-->
 		<Item Id="392" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Betrayal-->
-		<!--<Item Id="391" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="391" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Rune Bag-->
 		<Item Id="389" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Key Bum-->
@@ -783,7 +783,7 @@
 		<!--Compost-->
 		<Item Id="480" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Smelter-->
-		<!--<Item Id="479" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>-->
+		<Item Id="479" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--Plan C-->
 		<Item Id="475" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 		<!--King Baby-->
@@ -939,7 +939,7 @@
 		<!--We need to go deeper!-->
 		<Item Id="84" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Demon Baby-->
 		<Item Id="113" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Moms Knife-->
@@ -1001,7 +1001,7 @@
 		<!--Maw Of The Void-->
 		<Item Id="399" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Betrayal-->
-		<!--<Item Id="391" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="391" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Incubus-->
 		<Item Id="360" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Empty Vessel-->
@@ -1187,7 +1187,7 @@
 		<!--Book of Revelations-->
 		<Item Id="78" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--Telepathy for Dummies-->
 		<Item Id="192" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--How to Jump-->
@@ -1945,7 +1945,7 @@
 		<!--The Gamekid-->
 		<Item Id="93" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Mom's Bottle of Pills-->
 		<Item Id="102" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Pinking Shears-->
@@ -2401,7 +2401,7 @@
 		<!--Demon Baby-->
 		<Item Id="113" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--The Nail-->
 		<Item Id="83" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<!--Lord of the Pit-->
@@ -2519,7 +2519,7 @@
 		<!--Book of Revelations-->
 		<Item Id="78" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--The Book of Sin-->
-		<!--<Item Id="97" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>-->
+		<Item Id="97" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--Monster Manual-->
 		<Item Id="123" Weight="1" DecreaseBy="0.1" RemoveOn="0.1"/>
 		<!--Telepathy for Dummies-->

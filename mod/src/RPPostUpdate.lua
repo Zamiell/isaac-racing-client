@@ -292,20 +292,6 @@ function RPPostUpdate:RaceChecks()
   local game = Game()
   local player = game:GetPlayer(0)
   local gameFrameCount = game:GetFrameCount()
-  local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
-  local trinket2 = player:GetTrinket(1) -- This will be 0 if there is no trinket
-
-  -- Ban trinkets (2/2)
-  -- (trinkets on the ground are banned in the "RPCheckEntities:NonGrid()" function)
-  -- (it is possible to pick up a banned trinket if it is spawned in a doorway,
-  -- so also check to see if the player has a banned trinket equipped)
-  for j = 1, #RPGlobals.raceVars.trinketBanList do
-    if trinket1 == RPGlobals.raceVars.trinketBanList[j] then
-      player:TryRemoveTrinket(trinket1) -- This will even remove the Tick
-    elseif trinket2 == RPGlobals.raceVars.trinketBanList[j] then
-      player:TryRemoveTrinket(trinket2) -- This will even remove the Tick
-    end
-  end
 
   -- Ban Basement 1 Treasure Rooms (2/2)
   RPPostUpdate:CheckBanB1TreasureRoom()

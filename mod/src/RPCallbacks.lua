@@ -314,6 +314,7 @@ end
 function RPCallbacks:PostNewLevel2()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -359,6 +360,13 @@ function RPCallbacks:PostNewLevel2()
   -- Start showing the place graphic if we get to Basement 2
   if stage >= 2 then
     RPGlobals.raceVars.showPlaceGraphic = true
+  end
+
+  -- Make sure that the diveristy placeholder items are removed
+  if stage >= 2 then
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #1"))
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
+    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)
@@ -606,7 +614,8 @@ function RPCallbacks:PostNewRoomRace()
   -- Set up the "Race Room"
   if gameFrameCount ~= 0 or
      roomIndex ~= GridRooms.ROOM_DEBUG_IDX or -- -3
-     RPGlobals.race.status ~= "open" then
+     (RPGlobals.race.status ~= "open" and
+      RPGlobals.race.status ~= "starting") then
 
     return
   end

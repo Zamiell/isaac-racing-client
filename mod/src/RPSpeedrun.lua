@@ -65,6 +65,7 @@ RPSpeedrun.finishedChar = false -- Reset at the beginning of a run
 function RPSpeedrun:Init()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
@@ -108,15 +109,13 @@ function RPSpeedrun:Init()
       -- Add the Battery
       player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+      -- Remove it from all the pools
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
 
     elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
       -- Add the Soul Jar
-      player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false)
-
       -- (the Soul Jar does not appear in any pools so we don't have to add it to the ban list)
+      player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false)
 
     elseif character == PlayerType.PLAYER_LILITH then -- 13
       -- Lilith starts with the Schoolbag by default
@@ -124,9 +123,8 @@ function RPSpeedrun:Init()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
       Isaac.DebugString("Adding collectible 357") -- Box of Friends
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
+      -- Remove it from all the pools
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
 
       -- Reorganize the items on the item tracker
       Isaac.DebugString("Removing collectible 412") -- Cambion Conception
@@ -138,9 +136,8 @@ function RPSpeedrun:Init()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
       Isaac.DebugString("Adding collectible 477") -- Void
 
-      -- Giving the player the item does not actually remove it from any of the pools,
-      -- so we have to expliticly add it to the ban list
-      RPGlobals:AddItemBanList(CollectibleType.COLLECTIBLE_VOID) -- 477
+      -- Remove it from all the pools
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
 
     if RPGlobals.run.schoolbag.item ~= 0 then

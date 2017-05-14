@@ -4,41 +4,47 @@
 	<!-- Originally 97 -->
 
 	<!-- 527 -->
-	<active description="I see my future" gfx="Collectibles_158_CrystalBall.png" maxcharges="6" name="Crystal Ball" />
-	<!-- Originally 158 -->
-
-	<!-- 528 -->
 	<passive description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" name="Betrayal" />
 	<!-- Originally 391 -->
 
-	<!-- 529 -->
+	<!-- 528 -->
 	<active description="Trinket melter!" gfx="Collectibles_479_Smelter.png" name="Smelter" maxcharges="6" />
 	<!-- Originally 479 -->
 
-	<!-- 530 -->
+	<!-- 529 -->
 	<active description="Debug" gfx="Debug.png" maxcharges="1" name="Debug" />
 
-	<!-- 531 -->
+	<!-- 530 -->
 	<passive description="More active item room" gfx="Schoolbag.png" name="Schoolbag" />
 
-	<!-- 532 -->
+	<!-- 531 -->
 	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 
-	<!-- 533 -->
+	<!-- 532 -->
 	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
 
-	<!-- 534 -->
+	<!-- 533 -->
 	<passive description="Let's keep this build going" gfx="Collectibles_127_ForgetMeNow.png" name="Victory Lap" />
 
-	<!-- 535 -->
+	<!-- 534 -->
 	<passive description="Roll the credits" gfx="Finished.png" name="Finished" />
 
-	<!-- 536 -->
+	<!-- 535 -->
 	<passive description="B1 Treasure Room items are off limits in seeded races." gfx="Off_Limits.png" name="Off Limits" />
 
-	<!-- 537 -->
+	<!-- 536 -->
 	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
 
-	<!-- 538 -->
+	<!-- 537 -->
 	<passive description="On to the next character!" gfx="Finished.png" name="Checkpoint" />
+
+	<!-- 538 -->
+	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #1" />
+
+	<!-- 539 -->
+	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #2" />
+
+	<!-- 540 -->
+	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #3" />
+
 </items>

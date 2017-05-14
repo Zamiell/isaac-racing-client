@@ -131,15 +131,14 @@ function RPFastClear:CheckAlive()
     if npc ~= nil then
       -- We don't fast-clear to apply to splitting enemies, so make an exception for those
       if (npc:IsDead() == false and npc.CanShutDoors == true) or -- This is an alive enemy
-         (npc:IsBoss() == false and npc:IsChampion()) or -- This is a champion
+         npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
+         npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
          npc.Type == EntityType.ENTITY_GAPER or -- 10
          -- All 3 Gaper types have a chance to split into Gusher (11.0) or Pacer (11.1)
          (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16 (Mulligoon and Muliboon do not split)
          -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
          npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
          -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
-         (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
-         -- Globins will only spawn the flesh piles in state 4
          (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
          -- Drowned Boom Flies split into a Drowned Charger
          (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 0) or -- Envy (51.0)
@@ -207,8 +206,8 @@ function RPFastClear:CheckAlive()
          npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
 
         -- The following champions split:
-        -- 1) Pulsing Green champion, spawns 2 versions of itself
-        -- 2) Holy (white) champion, spawns 2 flies
+        -- 1) Pulsing Green, spawns 2 versions of itself
+        -- 2) Light White, spawns 2 flies
         -- The Lua API doesn't allow us to check the specific champion type, so just make an exception for all champions
 
         allDead = false

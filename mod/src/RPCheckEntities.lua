@@ -17,10 +17,11 @@ local RPSpeedrun   = require("src/rpspeedrun")
 -- Check all the grid entities in the room
 -- (called from the PostUpdate callback)
 function RPCheckEntities:Grid()
+  -- Local variables
   local game = Game()
   local room = game:GetRoom()
-
   local num = room:GetGridSize()
+
   for i = 1, num do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
@@ -273,29 +274,6 @@ function RPCheckEntities:NonGrid()
 
       -- Delete Pageant Boy starting trinkets
       entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_TRINKET then -- 350
-
-      -- Ban trinkets (1/2)
-      -- (picked up trinkets are banned in the PostUpdate callback)
-      local bannedTrinket = false
-      for j = 1, #RPGlobals.raceVars.trinketBanList do
-        if entity.SubType == RPGlobals.raceVars.trinketBanList[j] then
-          bannedTrinket = true
-          break
-        end
-      end
-
-      if bannedTrinket then
-        -- Spawn a new random trinket (the seed should not matter since trinkets are given in order per run)
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, entity.Position,
-                   entity.Velocity, entity.Parent, 0, entity.InitSeed) -- 5.350.0
-
-        -- Now that we have created a new trinket, we can delete the old one
-        entity:Remove()
-        Isaac.DebugString("Banned trinket " .. tostring(entity.SubType) .. " and made a new random trinket.")
-      end
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
@@ -738,57 +716,58 @@ function RPCheckEntities:ReplacePedestal(entity)
     end
   end
 
-  -- Check to see if this item is banned
-  local bannedItem = false
-  local krampusBannedItem = false
-  for i = 1, #RPGlobals.raceVars.itemBanList do
-    if entity.SubType == RPGlobals.raceVars.itemBanList[i] then
-      if krampusBannedItem == false and
-         entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+  -- Check to see if we need to swap Krampus items
+  if (entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
+      entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) and -- 293
+     entity:ToPickup().Touched == false then
 
-        -- Switch A Lump of Coal to Krampus' Head
-        krampusBannedItem = true
-        entity.SubType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
-        entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
-
-      elseif krampusBannedItem == false and
-             entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
-
-        -- Switch Krampus' Head to A Lump of Coal
-        krampusBannedItem = true
-        entity.SubType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
-
-      elseif krampusBannedItem == true and
-             (entity.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
-              entity.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
-
-        -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
-        entity.SubType = 0
-
-      else
-        -- If we put down our starting item, it will automaticlly be fart-rolled
-        -- So, make an exception for this
-        if entity:ToPickup().Touched == false then
-          bannedItem = true
-        end
+    local coalBanned = false
+    local headBanned = false
+    for i = 1, #RPGlobals.race.startingItems do
+      if RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+        coalBanned = true
+      elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+        headBanned = true
       end
+    end
+    if coalBanned and headBanned then
+      -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
+      entity.SubType = 0
+      Isaac.DebugString("Switched A Lump of Coal / Krampus' Head to a random item.")
+    elseif coalBanned then
+      -- Switch A Lump of Coal to Krampus' Head
+      entity.SubType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+      entity:ToPickup().Charge = 6 -- This is necessary because it would spawn with 0 charge otherwise
+      Isaac.DebugString("Switched A Lump of Coal to Krampus' Head.")
+    elseif headBanned then
+      -- Switch Krampus' Head to A Lump of Coal
+      entity.SubType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+      Isaac.DebugString("Switched Krampus' Head to A Lump of Coal.")
     end
   end
 
   -- Check to see if this is a special Basement 1 diversity reroll
+  -- (these custom placeholder items are removed in all non-diveristy runs)
   local specialReroll = 0
-  if bannedItem and
-     stage == 1 and
+  if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      RPGlobals.race.rFormat == "diversity" then
 
-    if entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE then -- 114
+    if entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
-    elseif entity.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS then -- 168
+    elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 then
       specialReroll = CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT -- 415
-    elseif entity.SubType == CollectibleType.COLLECTIBLE_TECH_X then -- 395
+    elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 then
       specialReroll = CollectibleType.COLLECTIBLE_SACRED_HEART -- 182
     end
+
+  elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 or
+         entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 or
+         entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 then
+
+    -- If the player is on a diversity race and gets a Treasure pool item on basement 1,
+    -- then there is a chance that they could get a placeholder item
+    entity.SubType = 0
   end
 
   -- Check to see if this item should go into a Schoolbag
@@ -820,18 +799,6 @@ function RPCheckEntities:ReplacePedestal(entity)
       Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is special, " ..
                         "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
 
-    elseif bannedItem then
-      -- Make a new random item pedestal
-      -- (the new random item generated will automatically be decremented from item pools properly on sight)
-      newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
-                               entity.Velocity, entity.Parent, 0, entity.InitSeed)
-
-      -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
-      Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is banned, " ..
-                        "made a new random pedestal using vanilla seed: " .. tostring(entity.InitSeed))
-      randomItem = true -- Set that this is a random item so that we don't add it to the tracking index
-
     else
       -- Make a new copy of this item
       newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
@@ -846,7 +813,7 @@ function RPCheckEntities:ReplacePedestal(entity)
     end
 
     -- We don't want to replicate the charge if this is a brand new item
-    if specialReroll == false or bannedItem == false then
+    if specialReroll == false then
       -- If we don't do this, the item will be fully recharged every time the player swaps it out
       newPedestal:ToPickup().Charge = entity:ToPickup().Charge
     end
