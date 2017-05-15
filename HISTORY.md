@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.6.0* - May 15th, 2017
+
+* Fixed the bug where the client would crash when getting a Booster Pack #2 item in a diversity race. (Thanks leo_ze_tron)
+* Fixed the bug where active items could be recharged by dropping them and picking them up again. (Thanks nicoluwu and ReidMercury)
+
 ### *v0.5.25* - May 14th, 2017
 
 * The new Angel Room changes from vanilla are now in Racing+.

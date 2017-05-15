@@ -6,8 +6,9 @@
 --[[
 
 TODO:
+- make chaos card not work on mega satan
 - Implement time offsets, show on the first room of each floor
-- Ghosts
+- Opponent's shadows
 
 TODO DIFFICULT:
 - Fix Isaac babies spawning on top of you

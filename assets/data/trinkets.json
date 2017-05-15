@@ -471,4 +471,19 @@
       "name": "Stem Cell",
       "introduced_in": "Afterbirth+"
    }
+      "name": "Hairpin",
+      "introduced_in": "Booster Pack #1"
+   },
+   "121": {
+      "name": "Wooden Cross",
+      "introduced_in": "Booster Pack #1"
+   },
+   "122": {
+      "name": "Butter!",
+      "introduced_in": "Booster Pack #1"
+   },
+   "123": {
+      "name": "Filigree Feather",
+      "introduced_in": "Booster Pack #2"
+   }
 }

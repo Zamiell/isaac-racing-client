@@ -39,6 +39,13 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // Convert corrupted PNGs with ImageMagick:
 // http://forums.gamesalad.com/discussion/67365/problems-with-png-images-use-these-methods-to-fix-your-pngs
 
+// List of files to update during Booster Packs:
+// 1) assets/data/items.json
+// 2) assets/img/items/#.png
+// 3) mod/content/items.xml
+// 4) mod/resources/gfx/items2/..
+// 5) mod/resources/gfx/items3/..
+
 'use strict';
 
 // Imports

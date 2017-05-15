@@ -813,7 +813,7 @@ function RPCheckEntities:ReplacePedestal(entity)
     end
 
     -- We don't want to replicate the charge if this is a brand new item
-    if specialReroll == false then
+    if specialReroll == 0 then
       -- If we don't do this, the item will be fully recharged every time the player swaps it out
       newPedestal:ToPickup().Charge = entity:ToPickup().Charge
     end
