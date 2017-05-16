@@ -659,6 +659,7 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local prevRoomIndex = level:GetPreviousRoomIndex()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -668,6 +669,14 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
   -- Check to see if the player is touching the crawlspace
   if entity:ToEffect().State == 0 and -- The crawlspace is open
      RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) then
+
+    -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
+    if prevRoomIndex < 0 then
+      Isaac.DebugString("Skipped saving the crawlspace previous room since it was negative.")
+    else
+      RPGlobals.run.crawlspace.prevRoom = level:GetPreviousRoomIndex()
+      Isaac.DebugString("Set crawlspace previous room to: " .. tostring(RPGlobals.run.crawlspace.prevRoom))
+    end
 
     -- If we don't set this, we will return to the center of the room by default
     level.DungeonReturnPosition = entity.Position
@@ -712,29 +721,68 @@ function RPFastTravel:CheckCrawlspaceSoftlock()
   local player = game:GetPlayer(0)
   local playerGridIndex = room:GetGridIndex(player.Position)
 
-  if room:GetType() == RoomType.ROOM_BOSSRUSH and -- 17
+  if room:GetType() == RoomType.ROOM_DEVIL and -- 14
      prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
+    if playerGridIndex == 7 then -- Top door
+      RPGlobals.run.crawlspace.direction = Direction.UP -- 1
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.UP, -- 1
+                               RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Devil Deal, moving up to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
+    elseif playerGridIndex == 74 then -- Right door
+      RPGlobals.run.crawlspace.direction = Direction.RIGHT -- 2
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.RIGHT, -- 2
+                               RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Devil Deal, moving right to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
+    elseif playerGridIndex == 127 then -- Bottom door
+      RPGlobals.run.crawlspace.direction = Direction.DOWN -- 3
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.DOWN, -- 3
+                               RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Devil Deal, moving down to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
+    elseif playerGridIndex == 60 then -- Left door
+      RPGlobals.run.crawlspace.direction = Direction.LEFT -- 0
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.LEFT, -- 0
+                               RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
+      Isaac.DebugString("Exited Devil Deal, moving left to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+    end
+
+  elseif room:GetType() == RoomType.ROOM_BOSSRUSH and -- 17
+         prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
+
     if playerGridIndex == 7 then -- Top left door
-      RPGlobals.run.bossRushReturn = Direction.UP -- 1
-      game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.UP, -- 1
+      RPGlobals.run.crawlspace.direction = Direction.UP -- 1
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.UP, -- 1
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (up).")
+      Isaac.DebugString("Exited Boss Rush, moving up to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
     elseif playerGridIndex == 139 then -- Right top door
-      RPGlobals.run.bossRushReturn = Direction.RIGHT -- 2
-      game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.RIGHT, -- 2
+      RPGlobals.run.crawlspace.direction = Direction.RIGHT -- 2
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.RIGHT, -- 2
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (right).")
+      Isaac.DebugString("Exited Boss Rush, moving right to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
     elseif playerGridIndex == 427 then -- Bottom left door
-      RPGlobals.run.bossRushReturn = Direction.DOWN -- 3
-      game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.DOWN, -- 3
+      RPGlobals.run.crawlspace.direction = Direction.DOWN -- 3
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.DOWN, -- 3
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (down).")
+      Isaac.DebugString("Exited Boss Rush, moving down to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
+
     elseif playerGridIndex == 112 then -- Left top door
-      RPGlobals.run.bossRushReturn = Direction.LEFT -- 0
-      game:StartRoomTransition(RPFastTravel:GetBossRoomIndex(), Direction.LEFT, -- 0
+      RPGlobals.run.crawlspace.direction = Direction.LEFT -- 0
+      game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.LEFT, -- 0
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving to boss room manually (left).")
+      Isaac.DebugString("Exited Boss Rush, moving left to room: " ..
+                        tostring(RPGlobals.run.crawlspace.prevRoom))
     end
   end
 end
@@ -752,67 +800,62 @@ function RPFastTravel:CheckCrawlspaceMiscBugs()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  -- For some reason, we won't go back to location of the crawlspace if we entered from the Boss Rush,
-  -- so move there manually
-  -- (this will look glitchy because the game wants to spawn us next to the Boss Rush door,
+  -- For some reason, we won't go back to location of the crawlspace if we entered from a room outside of the grid,
+  -- so we need to move there manually
+  -- (in the Boss Rush, this will look glitchy because the game originally sends us next to a Boss Rush door,
   -- but there is no way around this; even if we change player.Position on every frame in the PostRender callback,
   -- the glitchy warp will still occur)
-  if roomIndex == GridRooms.ROOM_BOSSRUSH_IDX and -- --5
+  if roomIndex < 0 and
+     roomIndex ~= GridRooms.ROOM_DUNGEON_IDX and -- -4
+     -- We don't want to teleport if we are returning to a crawlspace from a Black Market
+     roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX and -- -6
+     -- We don't want to teleport in a Black Market
      prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
     player.Position = level.DungeonReturnPosition
-    Isaac.DebugString("Exited crawlspace in Boss Rush, teleport complete.")
+    Isaac.DebugString("Exited a crawlspace in an off-grid room; crawlspace teleport complete.")
   end
 
-  -- For some reason, if we exit and re-enter a crawlspace in a Boss Rush, we won't spawn on the ladder,
-  -- so move there manually (this causes no visual hiccups like the above code does)
+  -- For some reason, if we exit and re-enter a crawlspace from a room outside of the grid,
+  -- we won't spawn on the ladder, so move there manually (this causes no visual hiccups like the above code does)
   if roomIndex == GridRooms.ROOM_DUNGEON_IDX and -- -4
-     level.DungeonReturnRoomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -4
+     level.DungeonReturnRoomIndex < 0 and
+     RPGlobals.run.crawlspace.blackMarket == false then
 
     player.Position = Vector(120, 160) -- This is the standard starting location at the top of the ladder
-    Isaac.DebugString("Entered crawlspace from Boss Rush, teleport complete.")
+    Isaac.DebugString("Entered crawlspace from a room outside the grid; ladder teleport complete.")
   end
 
   -- When returning to the boss room from a Boss Rush with a crawlspace in it,
   -- we might not end up in a spot where the player expects, so move to the most logical position manually
-  if RPGlobals.run.bossRushReturn ~= -1 then
-    if RPGlobals.run.bossRushReturn == Direction.LEFT then -- 0
+  if RPGlobals.run.crawlspace.direction ~= -1 then
+    if RPGlobals.run.crawlspace.direction == Direction.LEFT then -- 0
       -- Returning from the right door
       player.Position = room:GetGridPosition(73)
-      Isaac.DebugString("Entered boss room from Boss Rush (going left), teleport complete.")
-    elseif RPGlobals.run.bossRushReturn == Direction.UP then -- 1
+      Isaac.DebugString("Entered the previous room from a nested crawlspace (going left), teleport complete.")
+    elseif RPGlobals.run.crawlspace.direction == Direction.UP then -- 1
       -- Returning from the bottom door
-      player.Position = RPGlobals.GridToPos(112)
-      Isaac.DebugString("Entered boss room from Boss Rush (going up), teleport complete.")
-    elseif RPGlobals.run.bossRushReturn == Direction.RIGHT then -- 2
+      player.Position = room:GetGridPosition(112)
+      Isaac.DebugString("Entered the previous room from a nested crawlspace (going up), teleport complete.")
+    elseif RPGlobals.run.crawlspace.direction == Direction.RIGHT then -- 2
       -- Returning from the left door
-      player.Position = RPGlobals.GridToPos(61)
-      Isaac.DebugString("Entered boss room from Boss Rush (going left), teleport complete.")
-    elseif RPGlobals.run.bossRushReturn == Direction.DOWN then -- 3
+      player.Position = room:GetGridPosition(61)
+      Isaac.DebugString("Entered the previous room from a nested crawlspace (going left), teleport complete.")
+    elseif RPGlobals.run.crawlspace.direction == Direction.DOWN then -- 3
       -- Returning from the top door
-      player.Position = RPGlobals.GridToPos(22)
-      Isaac.DebugString("Entered boss room from Boss Rush (going down), teleport complete.")
+      player.Position = room:GetGridPosition(22)
+      Isaac.DebugString("Entered the previous room from a nested crawlspace (going down), teleport complete.")
     end
-    RPGlobals.run.bossRushReturn = -1
-  end
-end
-
-function RPFastTravel:GetBossRoomIndex()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local rooms = level:GetRooms()
-
-  for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local roomType = rooms:Get(i).Data.Type
-    if roomType == RoomType.ROOM_BOSS then -- 5
-      return rooms:Get(i).SafeGridIndex
-    end
+    RPGlobals.run.crawlspace.direction = -1
   end
 
-  -- We should never get here
-  Isaac.DebugString("Error: Was not able to find the boss room index.")
-  return level:GetStartingRoomIndex()
+  -- Keep track of whether we are in a Black Market so that we don't teleport the player
+  -- if they return to the crawlspace
+  if roomIndex == GridRooms.ROOM_BLACK_MARKET_IDX then -- -6
+    RPGlobals.run.crawlspace.blackMarket = true
+  else
+    RPGlobals.run.crawlspace.blackMarket = false
+  end
 end
 
 --
@@ -934,8 +977,9 @@ function RPFastTravel:CheckRoomRespawn()
 
       -- Figure out if it should spawn open or closed, depending on how close we are
       if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) or
-         roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
-         -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
+         roomIndex < 0 then
+         -- (always spawn trapdoors closed in rooms outside the grid to prevent specific bugs;
+         -- e.g. if we need to teleport back to a crawlspace and it is open, the player can softlock)
 
         entity:ToEffect().State = 1
         entity:GetSprite():Play("Closed", true)

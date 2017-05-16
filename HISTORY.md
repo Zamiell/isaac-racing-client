@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.6.2* - May 16th, 2017
+
+* It is no longer possible to kill both phases of Mega Satan with one Chaos Card.
+* The Moving Box is now removed from all pools in the Pageant Boy ruleset. (Thanks StoneAgeMarcus)
+* Fixed the bug with the Victory Lap and Finish custom items where they would still take effect even if they were rerolled. (Thanks 910dan)
+* Fixed the bug with the Victory Lap custom item where it would sometimes not work. (Thanks thisguyisbarry)
+* Fixed the bug where going into a crawlspace from a Devil Room would softlock the game. (Thanks ReidMercury and SapphireHX)
+
 ### *v0.6.0* - May 15th, 2017
 
 * Fixed the bug where the client would crash when getting a Booster Pack #2 item in a diversity race. (Thanks leo_ze_tron)

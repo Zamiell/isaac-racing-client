@@ -450,10 +450,10 @@ function RPCallbacks:PostNewRoom2()
   }
   RPGlobals.run.keeper.usedStrength = false
 
-  -- We might need to respawn trapdoors / crawlspaces / beams of light
+  -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()
 
-  -- We might need to respawn a trophy
+  -- Check to see if we need to respawn a trophy
   if stage == 11 and
      roomType == RoomType.ROOM_BOSS and -- 5
      roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7

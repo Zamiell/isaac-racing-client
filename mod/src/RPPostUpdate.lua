@@ -5,6 +5,7 @@ local RPPostUpdate = {}
 --
 
 local RPGlobals       = require("src/rpglobals")
+local RPSprites       = require("src/rpsprites")
 local RPCheckEntities = require("src/rpcheckentities")
 local RPFastClear     = require("src/rpfastclear")
 local RPSchoolbag     = require("src/rpschoolbag")
@@ -292,6 +293,7 @@ function RPPostUpdate:RaceChecks()
   local game = Game()
   local player = game:GetPlayer(0)
   local gameFrameCount = game:GetFrameCount()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Ban Basement 1 Treasure Rooms (2/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
@@ -322,6 +324,45 @@ function RPPostUpdate:RaceChecks()
         fireworkEffect:SetTimeout(20)
       end
     end
+  end
+
+  -- Check to see if the player just picked up the "Victory Lap" custom item
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then
+    -- Remove it so that we don't trigger this behavior again on the next frame
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP)
+
+    -- Remove the final place graphic if it is showing
+    RPSprites:Init("place2", 0)
+
+    -- Make them float upwards
+    -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
+    RPGlobals.run.trapdoor.state = 1
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
+    RPGlobals.run.trapdoor.upwards = true
+    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
+    player.ControlsEnabled = false
+    player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+    -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+    player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+    player:PlayExtraAnimation("LightTravel")
+    RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
+    -- This is needed or else state 5 will not correctly trigger
+    -- (because the PostNewRoom callback will occur 3 times instead of 2)
+    RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+  end
+
+  -- Check to see if the player just picked up the "Finish" custom item
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_FINISHED) then
+    -- Remove the final place graphic if it is showing
+    RPSprites:Init("place2", 0)
+
+    -- No animations will advance once the game is fading out,
+    -- and the first frame of the item pickup animation looks very strange,
+    -- so just make the player invisible to compensate
+    player.Visible = false
+
+    -- Go back to the title screen
+    game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
   end
 end
 

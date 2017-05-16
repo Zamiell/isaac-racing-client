@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.6.1"
+RPGlobals.version = "v0.6.2"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -159,7 +159,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.blackRingTime        = 0
   RPGlobals.run.blackRingDropChance  = 0
   RPGlobals.run.consoleWindowOpen    = false
-  RPGlobals.run.bossRushReturn       = -1 -- Used to fix a misc. bug with custom crawlspaces
   RPGlobals.run.usedButterFrame      = 0
   RPGlobals.run.fastResetFrame       = 0
   RPGlobals.run.teleportSubverted     = false
@@ -188,6 +187,13 @@ function RPGlobals:InitRun()
     floor     = 0,
     frame     = 0,
     scale     = Vector(0, 0),
+  }
+
+  -- Crawlspace tracking
+  RPGlobals.run.crawlspace = {
+    prevRoom    = 0,
+    direction   = -1, -- Used to fix nested room softlocks
+    blackMarket = false,
   }
 
   -- Keeper + Greed's Gullet tracking

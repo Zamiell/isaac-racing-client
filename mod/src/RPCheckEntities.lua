@@ -5,7 +5,6 @@ local RPCheckEntities = {}
 --
 
 local RPGlobals    = require("src/rpglobals")
-local RPSprites    = require("src/rpsprites")
 local RPSchoolbag  = require("src/rpschoolbag")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
@@ -64,7 +63,6 @@ function RPCheckEntities:NonGrid()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
-  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- Go through all the entities
@@ -160,59 +158,6 @@ function RPCheckEntities:NonGrid()
            RPSpeedrun.spawnedCheckpoint then
 
       RPSpeedrun:CheckpointTouched()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
-
-      -- Check to see if the player just picked up the "Finish" custom item
-      for j = 1, #RPGlobals.run.finishPedestals do
-        if roomIndex == RPGlobals.run.finishPedestals[j].room and
-           entity.Position.X == RPGlobals.run.finishPedestals[j].pos.X and
-           entity.Position.Y == RPGlobals.run.finishPedestals[j].pos.Y then
-
-          -- Remove the final place graphic if it is showing
-          RPSprites:Init("place2", 0)
-
-          -- No animations will advance once the game is fading out,
-          -- and the first frame of the item pickup animation looks very strange,
-          -- so just make the player invisible to compensate
-          player.Visible = false
-          game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
-
-          break
-        end
-      end
-
-      -- Check to see if the player just picked up the "Victory Lap" custom item
-      for j = 1, #RPGlobals.run.victoryLapPedestals do
-        if roomIndex == RPGlobals.run.victoryLapPedestals[j].room and
-           entity.Position.X == RPGlobals.run.victoryLapPedestals[j].pos.X and
-           entity.Position.Y == RPGlobals.run.victoryLapPedestals[j].pos.Y and
-           RPGlobals.run.trapdoor.state == 0 then
-
-          -- Remove the final place graphic if it is showing
-          RPSprites:Init("place2", 0)
-
-          -- Make them float upwards
-          -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
-          RPGlobals.run.trapdoor.state = 1
-          Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
-          RPGlobals.run.trapdoor.upwards = true
-          RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
-          player.ControlsEnabled = false
-          player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-          -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-          player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
-          player:PlayExtraAnimation("LightTravel")
-          RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
-          -- This is needed or else state 5 will not correctly trigger
-          -- (because the PostNewRoom callback will occur 3 times instead of 2)
-          RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
-
-          break
-        end
-      end
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
@@ -373,12 +318,6 @@ function RPCheckEntities:NonGrid()
                  nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
       Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
 
-      -- Also keep track of the pedestal position so that we can quickly detect when it is touched
-      RPGlobals.run.victoryLapPedestals[#RPGlobals.run.victoryLapPedestals + 1] = {
-        room = roomIndex,
-        pos = victoryLapPosition,
-      }
-
       -- Get rid of the chest
       entity:Remove()
 
@@ -520,12 +459,6 @@ function RPCheckEntities:NonGrid()
         end
         game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
                    nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-
-        -- Also keep track of the pedestal position so that we can quickly detect when it is touched
-        RPGlobals.run.victoryLapPedestals[#RPGlobals.run.victoryLapPedestals + 1] = {
-          room = roomIndex,
-          pos = victoryLapPosition,
-        }
 
         -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
         local finishedPosition = RPGlobals:GridToPos(1, 1)

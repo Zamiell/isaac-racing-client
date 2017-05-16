@@ -587,6 +587,7 @@ function RPPostGameStarted:Pageant()
 
   -- Giving the player these items does not actually remove them from any pools,
   -- so we have to expliticly add them to the ban list
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 246
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
