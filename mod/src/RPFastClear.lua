@@ -199,6 +199,9 @@ function RPFastClear:CheckAlive()
          -- Meatballs split into a Host (27.0)
          npc.Type == EntityType.ENTITY_BLISTER or -- 303
          -- Blisters split into a Sack (30.2)
+         npc.Type == EntityType.ENTITY_PORTAL or -- 306
+         -- Portals don't split, but they do spawn random enemies and
+         -- have been proven to cause the doors to open prematurely
          npc.Type == EntityType.ENTITY_BROWNIE or -- 402
          -- Brownie splits into a Dangle (217.2)
          npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274

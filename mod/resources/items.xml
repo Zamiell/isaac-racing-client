@@ -202,7 +202,7 @@
 	<passive cache="tearcolor" description="Charm tears" gfx="collectibles_200_momseyeshadow.png" id="200" name="Mom's Eyeshadow" />
 	<passive cache="damage" description="Concussive tears" gfx="collectibles_201_ironbar.png" id="201" name="Iron Bar" />
 	<passive description="Golden touch" gfx="collectibles_202_midastouch.png" id="202" name="Midas' Touch" />
-	<passive description="1+1 free 4Evar" gfx="collectibles_203_humblingbundle.png" id="203" name="Humbling Bundle" />
+	<passive description="1+1 free 4Evar" gfx="collectibles_203_humblingbundle.png" id="203" name="Humbleing Bundle" />
 	<passive description="Filled with goodies" gfx="collectibles_204_fannypack.png" id="204" name="Fanny Pack" />
 	<passive description="Charge with blood" gfx="collectibles_205_sharpplug.png" id="205" name="Sharp Plug" />
 	<familiar achievement="107" cache="damage firedelay" description="An out-of-body experience" gfx="collectibles_206_guillotine.png" id="206" name="Guillotine" />

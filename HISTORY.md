@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.6.3* - May 17th, 2017
+
+* Portals are now on the fast-clear exception list. (Thanks 910dan)
+
 ### *v0.6.2* - May 16th, 2017
 
-* It is no longer possible to kill both phases of Mega Satan with one Chaos Card.
+* It is no longer possible to kill both phases of Mega Satan with one Chaos Card. (Thanks tODDlife)
 * The Moving Box is now removed from all pools in the Pageant Boy ruleset. (Thanks StoneAgeMarcus)
 * Fixed the bug with the Victory Lap and Finish custom items where they would still take effect even if they were rerolled. (Thanks 910dan)
 * Fixed the bug with the Victory Lap custom item where it would sometimes not work. (Thanks thisguyisbarry)

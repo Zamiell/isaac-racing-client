@@ -21,7 +21,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 ### 1) Character Changes
 
-(Most races are done with Judas. The changes to the other characters are mostly done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) speedrun category.)
+(Most races are done with Judas. The Eden change is to preserve her active item and the Keeper change is done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) speedrun category.)
 
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
@@ -64,12 +64,8 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
 * Some things that are unseeded are now seeded:
-  * Pandora's Box boss item rerolls
-  * rerolls on items after being touched
-  * rerolls on items after being purchased
+  * rerolls on items after being touched or purchased
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
-  * drops from Lil Chest and Crystal Ball
-  * the number of enemies spawned from Portals (as a side effect of this, Portals will always spawn 5 enemies instead of 1-5 enemies)
   * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
 * The restart key now immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
@@ -90,7 +86,6 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The colors of some Purity auras have been changed to make them easier to see; speed is now green and range is now yellow.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
-* Maw of the Void and Athame will no longer be canceled upon exiting a room.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
 * It is now impossible to get a narrow boss room on floors 2 through 7 when having Duality.
 * The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb.
@@ -100,12 +95,11 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This fixes the instantaneous damage when you walk over a skull with Leo / Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
-* Returning from a crawlspace in a Boss Rush will no longer send you to the wrong room.
+* Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
 * The Broken Modem sprite is replaced with a better version from freeze, the original creator.
-* Fixed the spelling of Humbling Bundle.
-* Fixed the bug where the main menu would not show the bottom left hand corner of the title screen.
+* The bug where the bottom left hand corner of the title screen would not properly show is fixed.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
   * On Womb 2, the Sacrifice Room teleport will take you to Sheol.
@@ -133,7 +127,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 ### Diversity
 
 * Each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
-* For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-mod/blob/master/README-DIVERSITY.md).
+* For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
 
 ### Dark Room
 
@@ -165,6 +159,6 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ## Individual Room Changes
 
-The [technical specifics of all of the individual room changes are listed in a separate document](https://github.com/Zamiell/isaac-racing-mod/blob/master/CHANGES-ROOM.md), for those who care to know the nitty-gritty details.
+The [technical specifics of all of the individual room changes are listed in a separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md), for those who care to know the nitty-gritty details.
 
 <br />

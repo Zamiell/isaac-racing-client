@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- make chaos card not work on mega satan
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

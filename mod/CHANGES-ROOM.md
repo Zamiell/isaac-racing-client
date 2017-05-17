@@ -6,43 +6,28 @@ Firstly, some rooms were purely changed for balance (racing) reasons. Rooms with
 
 <br />
 
-### Devil Room Buff
+### Devil Room and Angel Room Buff
 
-* No-item Devil Rooms have been changed to have 1 item.
-* Devil Rooms without 4 exits have been changed to have 4 exits.
-* Devil Rooms without weight of 1.0 have been changed to have weight 1.0.
+* No-item Devil Rooms and Angel Rooms have been changed to have 1 item.
+* Devil Rooms and Angel Rooms without 4 exits have been changed to have 4 exits.
+* Devil Rooms and Angel Rooms without weight of 1.0 have been changed to have weight 1.0.
 * Mom's Hand is removed from Devil Room #13.
 
-The changed rooms are as follows:
-* #16 (3 Devil Beggar)
-* #17 (4 items)
-* #18 (5 red chests)
+The changed Devil Rooms are as follows:
 * #5 (3 red chests)
 * #10 (2 items and 1 Devil Beggar)
 * #11 (2 items and 2 Nulls)
 * #13 (1 item and 1 Mom's Hand)
 * #14 (2 black hearts and 1 Imp)
 * #15 (1 item, vertical narrow room)
+* #16 (3 Devil Beggar)
+* #17 (4 items)
+* #18 (5 red chests)
 
-<br />
-
-### Angel Room Buff
-
-* Angel Rooms without at least 1 item have been deleted.
-* Angel Rooms without 4 exits have been changed to have 4 exits.
-* Angel Rooms without weight of 1.0 have been changed to have weight 1.0.
-
-The changed rooms are as follows:
-* #14 (2 items)
-* #6 (1 item, 4 purple fires)
-
-The removed rooms are as follows:
-* #15 (2 soul hearts)
-* #13 (5 soul hearts)
-* #3 (3 soul hearts)
-* #4 (2 eternal hearts)
-* #7 (1 eternal heart and 4 soul hearts)
-* #9 (1 item, vertical narrow room)
+The changes Angel Rooms are as follows:
+* #3 (1 soul heart and 4 eternal hearts)
+* #9 (2 items, vertical narrow room)
+* #14 (2 items and 1 soul heart)
 
 <br />
 
@@ -63,6 +48,7 @@ The removed room is as follows:
 * Sheol: #290
 
 <br />
+
 
 
 
@@ -542,7 +528,7 @@ Props were removed from the starting room for better visibility.
 
 ### Donation Machine Room Removal
 
-One room in the Necropolis has a donation machine in it. Since using a mod removes donation machines from the game, this room is largely useless.
+One room in the Necropolis has a donation machine in it. Since removing curses also removes donation machines from the game, this room is largely useless.
 
 The removed room is as follows:
 * Necropolis: #469
