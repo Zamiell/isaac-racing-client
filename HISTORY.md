@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.6.4* - May 18th, 2017
+### *v0.6.5* - May 18th, 2017
 
 * The Maw of the Void and Athame room extension has been reverted to vanilla. (The result of the poll was 22 to 14.)
 * The spelling of Humbleing Bundle has been reverted to vanilla.

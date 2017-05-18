@@ -21,6 +21,7 @@ function RPNPCUpdate:Main(npc)
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
 
   --Isaac.DebugString("MC_NPC_UPDATE - " ..
   --                  tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
@@ -205,6 +206,12 @@ function RPNPCUpdate:Main(npc)
                Isaac.GetEntityVariantByName("Room Clear Delay NPC"),
                RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
+
+    -- Give a charge to the player's active item
+    if player:NeedsCharge() == true then
+      local currentCharge = player:GetActiveCharge()
+      player:SetActiveCharge(currentCharge + 1)
+    end
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
