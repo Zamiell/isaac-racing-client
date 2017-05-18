@@ -500,31 +500,15 @@ function RPCallbacks:PostNewRoom2()
     RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
   end
 
-  -- Extend the Maw of the Void / Athame ring into the next room
-  if RPGlobals.run.blackRingTime > 1 then
-    player:SpawnMawOfVoid(RPGlobals.run.blackRingTime) -- The argument is "Timeout"
-
-    -- The "player:SpawnMawOfVoid()" will spawn a Maw of the Void ring, but we might be extending an Athame ring,
-    -- so we have to reset the Black HP drop chance
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_LASER and -- 7
-         entity.Variant == 1 and -- A Brimstone laser
-         entity.SubType == 3 then -- A Maw of the Void or Athame ring
-
-        entity:ToLaser():SetBlackHpDropChance(RPGlobals.run.blackRingDropChance)
-      end
-    end
-
-    -- "player:SpawnMawOfVoid()" will cause a new Maw sound effect to play, so mute it
-    sfx:Stop(SoundEffect.SOUND_MAW_OF_VOID) -- 426
-  end
-
   -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
   RPCallbacks:CheckSubvertTeleport()
 
   --
   -- Race stuff
   --
+
+  -- Remove the final place graphic if it is showing
+  RPSprites:Init("place2", 0)
 
   -- Check to see if we need to remove More Options in a diversity race
   if roomType == RoomType.ROOM_TREASURE and -- 4
@@ -550,8 +534,7 @@ function RPCallbacks:PostNewRoom2()
     Isaac.DebugString("Opened the Mega Satan door.")
   end
 
-  -- Remove the final place graphic if it is showing
-  RPSprites:Init("place2", 0)
+  RPCallbacks:CheckSeededMOTreasure()
 end
 
 -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
@@ -631,6 +614,95 @@ function RPCallbacks:PostNewRoomRace()
   -- Spawn two Gaping Maws (235.0)
   game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)
   game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(7, 5), Vector(0, 0), nil, 0, 0)
+end
+
+function RPCallbacks:CheckSeededMOTreasure()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local gridSize = room:GetGridSize()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+
+  -- Check to see if we need to make a custom item room for Seeded MO
+  if roomType == RoomType.ROOM_TREASURE and -- 4
+     RPGlobals.race.rFormat == "seededMO" then
+
+    -- Delete everything in the room
+    for i = 1, gridSize do
+      local gridEntity = room:GetGridEntity(i)
+      if gridEntity ~= nil then
+        if gridEntity:GetSaveState().Type ~= GridEntityType.GRID_WALL and -- 15
+           gridEntity:GetSaveState().Type ~= GridEntityType.GRID_DOOR then -- 16
+
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+        end
+      end
+    end
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type ~= EntityType.ENTITY_PLAYER then -- 1
+        entity:Remove()
+      end
+    end
+
+    -- Define the item pedestal positions
+    local itemPos = {
+      {
+        {X = 6, Y = 3},
+      },
+      {
+        {X = 5, Y = 3},
+        {X = 7, Y = 3},
+      },
+      {
+        {X = 4, Y = 3},
+        {X = 6, Y = 3},
+        {X = 8, Y = 3},
+      },
+      {
+        {X = 5, Y = 2},
+        {X = 7, Y = 2},
+        {X = 5, Y = 4},
+        {X = 7, Y = 4},
+      },
+      {
+        {X = 5, Y = 2},
+        {X = 7, Y = 2},
+        {X = 4, Y = 4},
+        {X = 6, Y = 4},
+        {X = 8, Y = 4},
+      },
+      {
+        {X = 4, Y = 2},
+        {X = 6, Y = 2},
+        {X = 8, Y = 2},
+        {X = 4, Y = 4},
+        {X = 6, Y = 4},
+        {X = 8, Y = 4},
+      },
+    }
+
+    -- Define the various item tiers
+    local itemTiers = {
+      {1, 2, 3, 4, 5},
+      {6, 7, 8, 9, 10},
+    }
+
+    -- Find out which tier we need
+    math.randomseed(roomSeed)
+    local chosenTier = math.random(1, #itemTiers)
+
+    -- Place the item pedestals (5.100)
+    for i = 1, #itemTiers[chosenTier] do
+      local X = itemPos[#itemTiers[chosenTier]][i].X
+      local Y = itemPos[#itemTiers[chosenTier]][i].Y
+      local itemID = itemTiers[chosenTier][i]
+      local itemPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                      RPGlobals:GridToPos(X, Y), Vector(0, 0), nil, itemID, 0)
+      -- The seed can be 0 since the pedestal will be replaced on the next frame
+      itemPedestal:ToPickup().TheresOptionsPickup = true
+    end
+  end
 end
 
 return RPCallbacks

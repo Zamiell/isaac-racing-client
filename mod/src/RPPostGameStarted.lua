@@ -349,6 +349,9 @@ function RPPostGameStarted:Race()
     if RPGlobals.raceVars.started then
       RPPostGameStarted:Diversity()
     end
+
+  elseif RPGlobals.race.rFormat == "seededMO" then
+    RPPostGameStarted:SeededMO()
   end
 
   -- Go to the custom "Race Start" room
@@ -528,6 +531,13 @@ function RPPostGameStarted:Diversity()
          RPGlobals.race.startingItems[i] ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
 
         itemPool:RemoveCollectible(RPGlobals.race.startingItems[i])
+        if RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_INCUBUS then -- 360
+          itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
+        elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_SACRED_HEART then -- 182
+          itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
+        elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+          itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
+        end
       end
 
     elseif i == 5 then
@@ -610,6 +620,50 @@ function RPPostGameStarted:Beginner()
     player:AddHearts(1)
     player:AddSoulHearts(1)
   end
+end
+
+function RPPostGameStarted:SeededMO()
+  -- Local variables
+  local game = Game()
+  local itemPool = game:GetItemPool()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+
+  -- Give the player extra starting items (for seeded races)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+
+  -- Give the player extra Schoolbag items, depending on the character
+  if character == PlayerType.PLAYER_MAGDALENA then -- 1
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_YUM_HEART -- 45
+  elseif character == PlayerType.PLAYER_JUDAS then -- 3
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
+  elseif character == PlayerType.PLAYER_XXX then -- 4
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_POOP -- 36
+  elseif character == PlayerType.PLAYER_EVE then -- 5
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
+  elseif character == PlayerType.PLAYER_THELOST then -- 10
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
+  end
+
+  -- Enable the Schoolbag item
+  if RPGlobals.run.schoolbag.item ~= 0 then
+    Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
+    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+    RPSchoolbag.sprites.item = nil
+
+    -- Also make sure that the Schoolbag item is removed from all of the pools
+    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
+  end
+
+  -- Add item bans for seeded mode
+  itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
+
+  -- Seeded MO specific things
+  player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 59
+
+  Isaac.DebugString("Added seeded MO items.")
 end
 
 return RPPostGameStarted

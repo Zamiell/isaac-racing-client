@@ -569,6 +569,13 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
       -- It takes a frame to load the new stage
       RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
     end
+
+    -- Mark to check for a narrow treasure room (if we are on the seeded MO ruleset)
+    if RPGlobals.race.rFormat == "seededMO" and
+      nextStage >= 2 and nextStage <= 6 then
+
+      RPGlobals.run.seededMOcheckFrame = isaacFrameCount + 1
+    end
   end
 
   Isaac.ExecuteCommand(command)

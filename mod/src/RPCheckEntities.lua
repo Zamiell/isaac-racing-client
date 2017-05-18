@@ -19,9 +19,9 @@ function RPCheckEntities:Grid()
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
-  local num = room:GetGridSize()
+  local gridSize = room:GetGridSize()
 
-  for i = 1, num do
+  for i = 1, gridSize do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
       if gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR and -- 17
@@ -329,17 +329,6 @@ function RPCheckEntities:NonGrid()
 
       -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
       RPFastTravel:CheckPickupOverHole(entity)
-
-    elseif entity.Type == EntityType.ENTITY_LASER and -- 7
-           entity.Variant == 1 and -- A Brimstone laser
-           entity.SubType == 3 then -- A Maw of the Void or Athame ring
-
-      -- Keep track of how much time is left on the ring
-      -- (the lowest this can be is 1, since the entity won't exist when the timer ends)
-      RPGlobals.run.blackRingTime = entity:ToLaser().Timeout
-
-      -- Also keep track of whether this is a Maw of the Void or Athame ring
-      RPGlobals.run.blackRingDropChance = entity:ToLaser().BlackHpDropChance
 
     elseif entity.Type == EntityType.ENTITY_KNIGHT or -- 41
            entity.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
@@ -689,9 +678,9 @@ function RPCheckEntities:ReplacePedestal(entity)
     if entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
     elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 then
-      specialReroll = CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT -- 415
-    elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 then
       specialReroll = CollectibleType.COLLECTIBLE_SACRED_HEART -- 182
+    elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 then
+      specialReroll = CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT -- 415
     end
 
   elseif entity.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 or

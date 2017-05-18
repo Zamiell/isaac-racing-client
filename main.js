@@ -341,7 +341,7 @@ app.on('before-quit', function() {
             json.rType = 'unranked';
             json.solo = false;
             json.rFormat = 'unseeded';
-            json.character = 'Judas';
+            json.character = 3;
             json.goal = 'Blue Baby';
             json.seed = '-';
             json.startingItems = [];

@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.6.4* - May 18th, 2017
+
+* The Maw of the Void and Athame room extension has been reverted to vanilla. (The result of the poll was 22 to 14.)
+* The spelling of Humbleing Bundle has been reverted to vanilla.
+* Fixed the bug where you wouldn't get a charge for clearing Mega Satan. (Thanks LogBasePotato)
+* Fixed the bug where you could find Incubus, Sacred Heart, and Crown of Light on basement 1 if you started with those items in a diversity race. (Thanks Thoday)
+
 ### *v0.6.3* - May 17th, 2017
 
 * Portals are now on the fast-clear exception list. (Thanks 910dan)

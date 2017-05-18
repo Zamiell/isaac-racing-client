@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.6.3"
+RPGlobals.version = "v0.6.4"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -156,14 +156,13 @@ function RPGlobals:InitRun()
   RPGlobals.run.itemReplacementDelay = 0
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false
-  RPGlobals.run.blackRingTime        = 0
-  RPGlobals.run.blackRingDropChance  = 0
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.usedButterFrame      = 0
   RPGlobals.run.fastResetFrame       = 0
   RPGlobals.run.teleportSubverted     = false
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
+  RPGlobals.run.seededMOCheckFrame    = 0
   RPGlobals.run.trapdoorCollision     = nil
   RPGlobals.run.changeFartColor       = false
 
