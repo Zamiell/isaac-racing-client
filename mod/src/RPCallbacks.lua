@@ -322,7 +322,9 @@ function RPCallbacks:PostNewLevel2()
   Isaac.DebugString("MC_POST_NEW_LEVEL2")
 
   -- Find out if we performed a Sacrifice Room teleport
-  if stage == 11 and stageType == 0 and -- 11.0 is Dark Room
+  if (RPGlobals.race.goal == "The Lamb" or
+      RPGlobals.race.goal == "Mega Satan") and
+     stage == 11 and stageType == 0 and -- 11.0 is Dark Room
      (RPGlobals.run.currentFloor ~= 10 and
       RPGlobals.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now
 

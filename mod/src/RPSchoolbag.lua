@@ -265,6 +265,15 @@ function RPSchoolbag:Switch()
   local sfx = SFXManager()
   local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
 
+  -- Fix the bug where you can spam Schoolbag switches to get permanent invincibility from
+  -- My Little Unicorn and Unicorn Stump
+  if (player:HasCollectible(CollectibleType.COLLECTIBLE_MY_LITTLE_UNICORN) or -- 77
+      player:HasCollectible(CollectibleType.COLLECTIBLE_UNICORN_STUMP)) and -- 298
+     player:HasInvincibility() then
+
+    player:ClearTemporaryEffects()
+  end
+
   -- Set the new active item
   player:AddCollectible(RPGlobals.run.schoolbag.item, RPGlobals.run.schoolbag.charges, false)
 

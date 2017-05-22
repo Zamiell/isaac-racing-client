@@ -83,7 +83,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Eden's Soul will now always properly start at 0 charges.
 * AAA Battery will now synergize with The Battery.
 * 9 Volt will now synergize with The Battery.
-* The colors of some Purity auras have been changed to make them easier to see; speed is now green and range is now yellow.
+* The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
@@ -101,8 +101,6 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * The Broken Modem sprite is replaced with a better version from freeze, the original creator.
 * The bug where the bottom left hand corner of the title screen would not properly show is fixed.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
-* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead. (This is to prevent exploiting races to The Lamb or Mega Satan.)
-  * On Womb 2, the Sacrifice Room teleport will take you to Sheol.
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
 
@@ -132,11 +130,13 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 ### Dark Room
 
 * 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 ### Mega Satan
 
 * The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
 * Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 ### R+9 and R+14 Character Speedruns
 

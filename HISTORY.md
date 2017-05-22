@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.6.6* - May 19th, 2017
+
+* The Sacrifice Room teleport will now only go to the next floor if your race goal is to The Lamb or to Mega Satan. (Thanks Cyber_1 and Dea1h)
+* Fixed the bug where you could swap the Schoolbag item over and over to get infinite invincibility from My Little Unicorn and Unicorn Stump. (Thanks aferalsheep)
+
 ### *v0.6.5* - May 18th, 2017
 
 * The Maw of the Void and Athame room extension has been reverted to vanilla. (The result of the poll was 22 to 14.)
