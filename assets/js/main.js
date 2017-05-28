@@ -7,6 +7,7 @@
 /*
 
 Bugs to fix:
+- make it start on the right character in starting room, not just on race start
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive
 - remove double negative on boss cutscenes option

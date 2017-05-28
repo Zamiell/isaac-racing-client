@@ -131,6 +131,7 @@ function RPFastClear:CheckAlive()
     if npc ~= nil then
       -- We don't fast-clear to apply to splitting enemies, so make an exception for those
       if (npc:IsDead() == false and npc.CanShutDoors == true) or -- This is an alive enemy
+         npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
          npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
          npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
          npc.Type == EntityType.ENTITY_GAPER or -- 10
@@ -139,6 +140,8 @@ function RPFastClear:CheckAlive()
          -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
          npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
          -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
+         (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
+         -- (they have been proven to cause the doors to open prematurely)
          (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
          -- Drowned Boom Flies split into a Drowned Charger
          (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 0) or -- Envy (51.0)

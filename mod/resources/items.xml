@@ -125,7 +125,7 @@
 	<active description="It's a mystery" gfx="Collectibles_124_DeadSeaScrolls.png" id="124" maxcharges="2" name="Dead Sea Scrolls" />
 	<passive bombs="5" description="Homing bombs" gfx="Collectibles_125_BobbyBomb.png" id="125" name="Bobby-Bomb" />
 	<active achievement="44" cache="damage" description="Feel my pain" gfx="Collectibles_126_RazorBlade.png" id="126" maxcharges="0" name="Razor Blade" />
-	<active achievement="48" description="I don't remember..." gfx="Collectibles_127_ForgetMeNow.png" id="127" maxcharges="1" name="Forget Me Now" />
+	<active achievement="48" description="I don't remember..." gfx="Collectibles_127_ForgetMeNow.png" id="127" maxcharges="0" name="Forget Me Now" />
 	<familiar description="Attack fly" gfx="Collectibles_128_ForeverAlone.png" id="128" name="Forever alone" />
 	<passive cache="speed range" description="HP up" gfx="Collectibles_129_BucketofLard.png" hearts="1" id="129" maxhearts="4" name="Bucket of Lard" />
 	<active cache="flying speed" description="Flight + dash attack" gfx="Collectibles_130_APony.png" id="130" maxcharges="4" name="A Pony" />
@@ -479,7 +479,7 @@
 	<familiar achievement="286" description="Lord of the dead!" gfx="Collectibles_472_KingBaby.png" id="472" name="King Baby" />
 	<familiar description="Chub chub" gfx="Collectibles_473_BigChubby.png" id="473" name="Big Chubby" />
 	<familiar description="Gross..." gfx="Collectibles_474_Tonsil.png" id="474" name="Tonsil" />
-	<active achievement="305" description="Use with caution" gfx="Collectibles_475_PlanC.png" id="475" name="Plan C" maxcharges="1" />
+	<active achievement="305" description="Use with caution" gfx="Collectibles_475_PlanC.png" id="475" name="Plan C" maxcharges="0" />
 	<active achievement="296" description="What will it be?" gfx="Collectibles_476_D1.png" id="476" name="D1" maxcharges="4" />
 	<active achievement="295" description="Consume" gfx="Collectibles_477_Void.png" id="477" name="Void" maxcharges="6" />
 	<active description="Stop!" gfx="Collectibles_478_Pause.png" id="478" name="Pause" maxcharges="2" />
@@ -537,7 +537,7 @@
 	<active description="The power of mind!" gfx="Collectibles_522_Telekinesis.png" maxcharges="60" name="Telekinesis" id="522" />
 	<active description="Pack and unpack" gfx="collectibles_523_movingbox.png" maxcharges="4" name="Moving Box" id="523" />
 	<passive description="Static tears!" gfx="Collectibles_524_TechnologyZero.png" name="Technology Zero" id="524" cache="tearflag" />
-	<familiar description="You're tearing me apart!" gfx="Collectibles_525_Leprosy.png" name="Leprocy" id="525" />
+	<familiar description="You're tearing me apart!" gfx="Collectibles_525_Leprosy.png" name="Leprosy" id="525" />
 
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />

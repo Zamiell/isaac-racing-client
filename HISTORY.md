@@ -1,6 +1,16 @@
 # Racing+ Version History and News
 
-### *v0.6.6* - May 19th, 2017
+### *v0.6.7* - May 28th, 2017
+
+* Added Globins to the fast-clear exception list. (Thanks Thoday)
+* Added Dark Red champions to the fast-clear exception list. (Thanks ReidMercury__)
+
+### *v0.6.6* - May 22nd, 2017
+
+* Some of the fixes from the last patch are now integrated into Racing+.
+* Basement/Cellar room #811 is deleted.
+
+### *v0.6.6* - May 22nd, 2017
 
 * The Sacrifice Room teleport will now only go to the next floor if your race goal is to The Lamb or to Mega Satan. (Thanks Cyber_1 and Dea1h)
 * Fixed the bug where you could swap the Schoolbag item over and over to get infinite invincibility from My Little Unicorn and Unicorn Stump. (Thanks aferalsheep)

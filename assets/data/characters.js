@@ -19,4 +19,5 @@ module.exports = {
     'Lilith':      13,
     'Keeper':      14,
     'Apollyon':    15,
+    'custom':      16,
 };

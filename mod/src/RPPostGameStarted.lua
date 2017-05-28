@@ -268,6 +268,11 @@ function RPPostGameStarted:Character()
     player:AddCoins(1) -- This fills in the new heart container
     player:AddCoins(25) -- Add a 2nd container
     player:AddCoins(1) -- This fills in the new heart container
+
+  elseif character == 16 then -- Samual
+    -- Decrease his red hearts
+    player:AddHearts(-1)
+
   end
 end
 
