@@ -32,4 +32,21 @@
 	<entity name="Room Clear Delay NPC" id="1002" variant="0" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity><!-- Effects don't work to stop room clear in the Mega Satan room for some reason -->
+
+	<!-- Samael -->
+    <entity anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" name="Samael Scythe" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+		<preload-snd id="77" />
+		<preload-snd id="38" />
+		<preload-snd id="133" />
+    </entity>
+	<entity anm2path="samael_special.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6618" name="Samael Special Animations" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
+		<gibs amount="16" blood="1" bone="1" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="samael_scythe_projectile.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="30" friction="1" id="2" name="Magic Scythe" numGridCollisionPoints="8" shadowSize="0" stageHP="0" variant="617">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+	<entity anm2path="samael_scythe_hitbox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="15" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Scythe Hitbox" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="35" subtype="617">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
 </entities>

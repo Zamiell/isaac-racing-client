@@ -88,7 +88,7 @@ function RPPostUpdate:Main()
   -- Check all the non-grid entities in the room
   RPCheckEntities:NonGrid()
 
-  -- Check for item drop inputs
+  -- Check for item drop inputs (fast-drop)
   RPPostUpdate:CheckDropInput()
 
   -- Check for Schoolbag switch inputs
@@ -186,7 +186,7 @@ function RPPostUpdate:CheckKeeperHearts()
   end
 end
 
--- Check for item drop inputs
+-- Check for item drop inputs (fast-drop)
 function RPPostUpdate:CheckDropInput()
   -- Local variables
   local game = Game()

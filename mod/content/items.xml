@@ -47,4 +47,9 @@
 	<!-- 540 -->
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #3" />
 
+	<!-- Samual Items, 541-544 -->
+	<passive description="Accuracy brings power!" gfx="Collectibles_373_DeadEye.png" name="Samael Dead Eye" />
+	<passive cache="all" description="Charge shots" gfx="Collectibles_069_ChocolateMilk.png" name="Samael Chocolate Milk" />
+	<passive cache="all" description="???" gfx="Collectibles_052_DrFetus.png" name="Samael Dr. Fetus" special="true" />
+	<passive cache="firedelay range" description="Directed tears" gfx="Collectibles_394_Marked.png" name="Samael Marked" />
 </items>

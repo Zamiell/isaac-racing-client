@@ -2,6 +2,7 @@
 
 ### *v0.6.7* - May 28th, 2017
 
+* Added support for racing custom characters to the client.
 * Added Globins to the fast-clear exception list. (Thanks Thoday)
 * Added Dark Red champions to the fast-clear exception list. (Thanks ReidMercury__)
 

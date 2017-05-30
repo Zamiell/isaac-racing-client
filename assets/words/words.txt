@@ -74417,7 +74417,6 @@ sphincter
 sphincters
 sphinx
 sphinxes
-spic
 spice
 spiced
 spices
@@ -74426,7 +74425,6 @@ spiciest
 spicily
 spiciness
 spicing
-spics
 spicule
 spicules
 spicy
@@ -85974,8 +85972,6 @@ westerns
 westward
 westwards
 wet
-wetback
-wetbacks
 wetland
 wetlands
 wetly

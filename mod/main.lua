@@ -5,6 +5,9 @@
 
 --[[
 
+TODO Samael:
+- Dead Eye + Knife doesn't work
+
 TODO:
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
@@ -36,6 +39,7 @@ local RPPostGameStarted -- The PostGameStarted callback
 local RPItems           -- Collectible item functions
 local RPCards           -- Card functions
 local RPPills           -- Pill functions
+local SamaelMod         -- Samael functions
 local RPDebug           -- Debug functions
 
 local function requireFiles()
@@ -49,6 +53,7 @@ local function requireFiles()
   RPItems           = require("src/rpitems")
   RPCards           = require("src/rpcards")
   RPPills           = require("src/rppills")
+  SamaelMod         = require("src/rpsamael")
   RPDebug           = require("src/rpdebug")
 end
 
@@ -109,6 +114,26 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,  PillEffect.
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because
 -- by the time the callback is reached, the trinkets are already consumed
+
+-- Samael callback
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D4)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D100)
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.decapitation, EntityType.ENTITY_ISAAC)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.roomEntitiesLoop)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER, SamaelMod.onRender)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.samaelPostUpdate)
+local scytheID = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.scytheUpdate, scytheID)
+local specialAnim = Isaac.GetEntityTypeByName("Samael Special Animations") --Entity for showing special animations
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.specialAnimFunc, specialAnim)
+RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, SamaelMod.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, SamaelMod.scytheHits)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, SamaelMod.playerDamage, EntityType.ENTITY_PLAYER)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, SamaelMod.PostPlayerInit)
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, SamaelMod.cacheUpdate)
+
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, SamaelMod.PostGameStartedFixBugs)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.PostUpdateFixBugs)
 
 -- Welcome banner
 local hyphens = ''
