@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.6.10* - May 32st, 2017
+
+* Fixed a bug with the "Change Char Order" room. (Thanks leo_ze_tron)
+
 ### *v0.6.9* - May 31st, 2017
 
 * Fixed a bug with the Butter! trinket where it could give unlimited charges to an active item under certain conditions. (Thanks blcd)

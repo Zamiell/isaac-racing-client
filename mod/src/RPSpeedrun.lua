@@ -15,7 +15,7 @@ local SamaelMod   = require("src/rpsamael")
 --
 
 RPSpeedrun.buttons = {
-  R9S1  = {X = 4, Y = 3},
+  R9S1  = {X = 6, Y = 3},
   R14S1 = {X = 4, Y = 5},
   R7S2  = {X = 8, Y = 5},
 }
@@ -646,11 +646,13 @@ function RPSpeedrun:DisplayCharSelectRoom()
     local posRender = Isaac.WorldToRenderPosition(posButton2, false)
     RPSpeedrun.sprites.button2:RenderLayer(0, posRender)
   end
+  --[[
   if RPSpeedrun.sprites.button3 ~= nil then
     local posButton3 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y - 1)
     local posRender = Isaac.WorldToRenderPosition(posButton3, false)
     RPSpeedrun.sprites.button3:RenderLayer(0, posRender)
   end
+  --]]
   if RPSpeedrun.sprites.characters ~= nil then
     for i = 1, #RPSpeedrun.sprites.characters do
       local posGame
