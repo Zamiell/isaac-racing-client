@@ -264,11 +264,13 @@ function SamaelMod:samaelPostUpdate()
     --Replace deadeye with a custom item for samael
     if player:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE) then
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE)
+      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_DEAD_EYE)
       player:AddCollectible(samaelDeadEye, 0, false)
     end
     --Replace chocolate milk with a custom item for samael
     if player:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) then
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK)
+      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_CHOCOLATE_MILK)
       player:AddCollectible(samaelChocMilk, 0, false)
     end
     --Replace Dr Fetus with a custom item if brimstone is also aquired
@@ -276,16 +278,19 @@ function SamaelMod:samaelPostUpdate()
        player:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) then
 
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_DR_FETUS)
+      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_DR_FETUS)
       player:AddCollectible(samaelDrFetus, 0, false)
     elseif not player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and
            player:HasCollectible(samaelDrFetus) then
 
       player:RemoveCollectible(samaelDrFetus)
+      Isaac.DebugString("Removing collectible " .. tostring(samaelDrFetus) .. " (Samael Dr. Fetus)")
       player:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
     --Marked is awful, replace it
     if player:HasCollectible(CollectibleType.COLLECTIBLE_MARKED) then
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_MARKED)
+      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_MARKED)
       player:AddCollectible(samaelMarked, 0, false)
     end
     --Cursed eye + dr fetus doesnt work, so lets just get rid of the shitty item
@@ -293,6 +298,7 @@ function SamaelMod:samaelPostUpdate()
        player:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) then
 
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE)
+      Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_CURSED_EYE)
     end
 
     --Checking for certain items that are incompatable with Samael's standard scythe swing,
@@ -325,18 +331,22 @@ function SamaelMod:samaelPostUpdate()
     --Make sure custom items do not persist outside of Samael
     if player:HasCollectible(samaelDeadEye) then
       player:RemoveCollectible(samaelDeadEye)
+      Isaac.DebugString("Removing collectible " .. tostring(samaelDeadEye) .. " (Samael Dead Eye)")
       player:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE, 0, false)
     end
     if player:HasCollectible(samaelChocMilk) then
       player:RemoveCollectible(samaelChocMilk)
+      Isaac.DebugString("Removing collectible " .. tostring(samaelChocMilk) .. " (Samael Chocolate Milk)")
       player:AddCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, 0, false)
     end
     if player:HasCollectible(samaelDrFetus) then
       player:RemoveCollectible(samaelDrFetus)
+      Isaac.DebugString("Removing collectible " .. tostring(samaelDrFetus) .. " (Samael Dr. Fetus)")
       player:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
     if player:HasCollectible(samaelMarked) then
       player:RemoveCollectible(samaelMarked)
+      Isaac.DebugString("Removing collectible " .. tostring(samaelMarked) .. " (Samael Marked)")
       player:AddCollectible(CollectibleType.COLLECTIBLE_MARKED, 0, false)
     end
     if not player:GetSprite():IsPlaying("Death") and dying then

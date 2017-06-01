@@ -250,8 +250,8 @@ function RPCheckEntities:NonGrid()
            stage == 11 and stageType == 0 and -- Dark Room
            challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
 
-      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
-      -- depending on if we are on the last character or not
+      -- Sometimes, the trophy does not appear, so we need to handle replacing both the trophy and the big chest
+      -- with either a checkpoint flag or a custom trophy, depending on if we are on the last character or not
       if RPSpeedrun.charNum == 7 then
         game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
                    entity.Position, entity.Velocity, nil, 0, 0)
@@ -269,10 +269,10 @@ function RPCheckEntities:NonGrid()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_TROPHY and -- 370
-           stage == 11 and stageType == 1 and -- The Chest
-           (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-            challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") or
-            challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
+           stage == 11 and
+           ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
+            (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
+            (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)) then
 
       -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
       -- depending on if we are on the last character or not

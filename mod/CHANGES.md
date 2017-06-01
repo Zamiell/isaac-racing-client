@@ -129,6 +129,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Dark Room
 
+* Some useless animations during the Satan fight have been removed to make the fight smoother.
 * 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
@@ -138,15 +139,22 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
-### R+9 and R+14 Character Speedruns
+### Custom Character Speedruns
 
-* By pressing "Tab" on the challenges screen, you can access custom challenges. The Racing+ mod has a custom challenge for the R+9 and R+14 speedrun categories, in which you must beat the game 9 or 14 times in a row on various characters.
+* By pressing "Tab" on the challenges screen, you can access custom challenges. The Racing+ mod has several custom challenge for various categories, in which you must beat the game multiple times in a row on various characters.
 * These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
 * Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
 * You can restart with the current character by tapping R. You can go back to the first character by holding R. (On floors 2 and beyond, you have to double-tap R to restart with the current character.)
-* The R+9 category is defined as defeating Blue Baby on the following 9 characters:
+
+#### R+9 Season 1
+
+* You must defeat Blue Baby on the following 9 characters:
   * Cain, Judas, Blue Baby, Eve, Samson, Azazel, Lazarus, The Lost, and Keeper
-* The R+14 category is defined as defeating Blue Baby on all 14 characters. Some characters have additional changes:
+
+#### R+14 Season 1
+
+* You must defeat Blue Baby on all 14 characters.
+* Some characters have additional changes:
   * Isaac starts with The Battery.
   * Maggy starts with the Soul Jar, a new passive item with the following effects:
     * You no longer gain health from soul/black hearts.
@@ -154,6 +162,13 @@ Historically, most speedruns and races have been unseeded with the goal of killi
     * You always have a 100% devil deal chance if no damage is taken.
   * Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
   * Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
+
+#### R+7 Season 2
+
+* You must defeat The Lamb on the following 7 characters:
+  * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
+* After defeating Mom, The Polaroid will spawn instead of The Negative.
+* [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840) is a custom character created by Ghostbroster. He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
 
 <br />
 

@@ -1,8 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.6.10* - May 32st, 2017
+### *v0.6.11* - June 1st, 2017
 
+* The Satan fight is faster now.
 * Fixed a bug with the "Change Char Order" room. (Thanks leo_ze_tron)
+* Fixed a bug where the Checkpoint custom item did not spawn properly under certain conditions. (Thanks CrafterLynx)
 
 ### *v0.6.9* - May 31st, 2017
 

@@ -60,7 +60,7 @@ RPSpeedrun.charPosition7 = { -- The format is character number, X, Y
 -- Variables
 --
 
-RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset
+RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.sprites = {} -- Reset in the PostGameStarted callback
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finished = false -- Reset at the beginning of every run
@@ -88,8 +88,11 @@ function RPSpeedrun:Init()
   local sfx = SFXManager()
 
   -- Always reset these
-  RPSpeedrun.finished = false
-  RPSpeedrun.finishedTime = 0
+  if RPSpeedrun.finished then
+    RPSpeedrun.finished = false
+    RPSpeedrun.finishedTime = 0
+    RPSpeedrun.charNum = 1
+  end
 
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
     -- Make sure that some speedrun related variables are reset

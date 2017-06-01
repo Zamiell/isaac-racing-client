@@ -18,10 +18,15 @@ function RPNPCUpdate:Main(npc)
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomFrameCount = room:GetFrameCount()
   local player = game:GetPlayer(0)
+  local sfx = SFXManager()
 
   --Isaac.DebugString("MC_NPC_UPDATE - " ..
   --                  tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
@@ -94,6 +99,27 @@ function RPNPCUpdate:Main(npc)
         entity:Remove()
       end
     end
+
+  elseif ((npc.Type == EntityType.ENTITY_LEECH and npc.Variant == 1) or -- 55.1 (Kamikaze Leech)
+          (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant == 0 and npc.Scale == 1)) and -- 81.0 (The Fallen)
+         npc.FrameCount == 0 and
+         roomStageID == 0 and roomVariant == 3600 and -- Satan
+         roomFrameCount ~= 0 and
+         npc:IsDead() == false then -- We need to check for this since it takes a frame to remove it
+
+    -- Prevent the leech from exploding by changing it to a normal leech
+    if npc.Type == EntityType.ENTITY_LEECH then
+      npc.Variant = 0
+    end
+
+    -- We already placed a Fallen in the room in the STB, so delete the one that spawns after a delay
+    npc:Remove()
+    Isaac.DebugString("Deleted " .. tostring(npc.Type) .. "." .. tostring(npc.Variant) ..
+                      " that was part of the Satan fight on frame: " .. tostring(roomFrameCount))
+
+    -- Stop the sounds that play when this stage is activated
+    sfx:Stop(SoundEffect.SOUND_SUMMONSOUND) -- 265
+    sfx:Stop(SoundEffect.SOUND_SATAN_BLAST) -- 239
 
   elseif npc.Type == EntityType.ENTITY_PIN and npc.Variant == 1 and -- 62.1 (Scolex)
          npc:IsDead() == false and -- This is necessary because the callback will be hit again during the removal

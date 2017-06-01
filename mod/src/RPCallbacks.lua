@@ -503,7 +503,7 @@ function RPCallbacks:PostNewRoom2()
     RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
   end
 
-  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
+  -- Check for disruptive teleportation from Gurdy
   RPCallbacks:CheckSubvertTeleport()
 
   --
