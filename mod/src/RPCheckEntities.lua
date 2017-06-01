@@ -188,6 +188,13 @@ function RPCheckEntities:NonGrid()
        RPGlobals.race.goal == "Blue Baby" and
        RPGlobals.race.rFormat ~= "pageant" then
 
+      -- Explicitly spawn The Polaroid for custom speedruns to the Dark Room
+      if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+        game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
+                   entity.Parent, CollectibleType.COLLECTIBLE_POLAROID, entity.InitSeed) -- 327
+        Isaac.DebugString("Explicitly spawned The Polaroid for a custom speedrun to the Dark Room.")
+      end
+
       entity:Remove()
       Isaac.DebugString("Removed The Negative.")
 
@@ -223,7 +230,8 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
            stage == 10 and stageType == 0 and -- Sheol
-           player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+           (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
+            challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
 
       -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
       RPFastTravel:ReplaceTrapdoor(entity, -1)
@@ -238,17 +246,42 @@ function RPCheckEntities:NonGrid()
       RPFastTravel:ReplaceHeavenDoor(entity)
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
+           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
+           stage == 11 and stageType == 0 and -- Dark Room
+           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+
+      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
+      -- depending on if we are on the last character or not
+      if RPSpeedrun.charNum == 7 then
+        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                   entity.Position, entity.Velocity, nil, 0, 0)
+        Isaac.DebugString("Spawned the end of speedrun trophy.")
+      else
+        -- Spawn a Checkpoint (a custom item) in the center of the room
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+        RPSpeedrun.spawnedCheckpoint = true
+        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+      end
+
+      -- Get rid of the vanilla big chest
+      entity:Remove()
+
+    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            entity.Variant == PickupVariant.PICKUP_TROPHY and -- 370
            stage == 11 and stageType == 1 and -- The Chest
            (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-            challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)")) then
+            challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") or
+            challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
 
       -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
       -- depending on if we are on the last character or not
       if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
           RPSpeedrun.charNum == 9) or
          (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-          RPSpeedrun.charNum == 14) then
+          RPSpeedrun.charNum == 14) or
+         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+          RPSpeedrun.charNum == 7) then
 
         -- Spawn the "Race Trophy" custom entity
         game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
@@ -426,10 +459,7 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == Isaac.GetEntityTypeByName("Race Trophy") and
            entity.Variant == Isaac.GetEntityVariantByName("Race Trophy") and
            RPGlobals.raceVars.finished == false and
-           player.Position.X >= entity.Position.X - 24 and -- 25 is a touch too big
-           player.Position.X <= entity.Position.X + 24 and
-           player.Position.Y >= entity.Position.Y - 24 and
-           player.Position.Y <= entity.Position.Y + 24 then
+           RPGlobals:InsideSquare(player.Position, entity.Position, 24) then -- 25 is a touch too big
 
       -- Check to see if we are touching the trophy
       entity:Remove()
@@ -696,8 +726,8 @@ function RPCheckEntities:ReplacePedestal(entity)
   local putInSchoolbag = RPSchoolbag:CheckSecondItem(entity)
   if putInSchoolbag == false then
     -- Replace the pedestal
-    RPGlobals.run.usedButter = false
-    -- If we are replacing a pedestal, make sure this is set to false to avoid the bug where
+    RPGlobals.run.usedButterFrame = 0
+    -- If we are replacing a pedestal, make sure this is reset to avoid the bug where
     -- it takes two item trouches to re-enable the Schoolbag
     local randomItem = false
     local newPedestal

@@ -38,6 +38,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local room = game:GetRoom()
   local roomType = room:GetType()
   local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
 
   -- Delete the Womb 2 trapdoor and don't replace it if we have the Polaroid
   -- (also check for The Negative, since we might have both under certain conditions)
@@ -45,11 +46,13 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
       stage == LevelStage.STAGE4_3) and -- 9
      roomType == RoomType.ROOM_BOSS and -- 5
      player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false then -- 328
+     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false and -- 328
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
 
     -- Delete the Womb 2 trapdoor if we have the Polaroid
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+    Isaac.DebugString("Deleted the trapdoor since we are not going in that direction.")
     return
   end
 
@@ -146,8 +149,9 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
 
-  -- Delete the beam of light and don't replace it if we have The Negative
+  -- Delete the beam of light after It Lives / Hush and don't replace it if we have The Negative
   -- (also check for The Polaroid, since we might have both under certain conditions)
   if (stage == LevelStage.STAGE4_2 or -- 8
       stage == LevelStage.STAGE4_3) and -- 9
@@ -156,6 +160,19 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
     entity:Remove()
+    Isaac.DebugString("Deleted the beam of light since we are not going in that direction.")
+    return
+  end
+
+  -- Delete the beam of light after It Lives / Hush and spawn a trapdoor if this is a custom speedrun to the Dark Room
+  if (stage == LevelStage.STAGE4_2 or -- 8
+      stage == LevelStage.STAGE4_3) and -- 9
+     roomType == RoomType.ROOM_BOSS and -- 5
+     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+
+    entity:Remove()
+    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, room:GetCenterPos(), true) -- 17
+    Isaac.DebugString("Spawned a trap door since this is a custom speedrun to the Dark Room.")
     return
   end
 

@@ -269,7 +269,13 @@ function RPPostGameStarted:Character()
     player:AddCoins(25) -- Add a 2nd container
     player:AddCoins(1) -- This fills in the new heart container
 
-  elseif character == 16 then -- Samual
+  elseif character == 16 then -- Samael
+    -- Give him the Schoolbag with the Wraith Skull
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+    RPGlobals.run.schoolbag.item = Isaac.GetItemIdByName("Wraith Skull")
+    RPSchoolbag.sprites.item = nil
+    Isaac.DebugString("Adding collectible " .. tostring(Isaac.GetItemIdByName("Wraith Skull")) .. " (Wraith Skull)")
+
     -- Decrease his red hearts
     player:AddHearts(-1)
 

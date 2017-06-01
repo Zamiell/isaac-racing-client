@@ -1,5 +1,20 @@
 # Racing+ Version History and News
 
+### *v0.6.9* - May 31st, 2017
+
+* Fixed a bug with the Butter! trinket where it could give unlimited charges to an active item under certain conditions. (Thanks blcd)
+* Fixed 4 Sheol rooms with Begotten Chains (#255, #269, #334, and #341) to have Begottens instead.
+* Fixed the bug where you saw the old character briefly after grabbing the Checkpoint custom item.
+* Added the Samael custom character for the purposes of testing him out as a potential canditate for season 2. This is a character made by Ghostbroster: http://steamcommunity.com/sharedfiles/filedetails/?id=897795840
+* Samael now starts with the D6, the Schoolbag, and 1 bomb.
+* Removed Samael's innate ability; he now starts with the Wraith Skull inside the Schoolbag.
+* Removed Samael's custom Isaac decapitation animation. (It's pretty satisfying to see, but it gets old after a while.)
+* Fixed various bugs relating to Samael. (Sacrificial Dagger now works.)
+* Added a new custom challenge for season 2.
+  * It has 7 characters: Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael.
+  * It goes to the Dark Room, but you still get the Polaroid.
+  * It is still in the testing phases.
+
 ### *v0.6.7* - May 28th, 2017
 
 * Added support for racing custom characters to the client.

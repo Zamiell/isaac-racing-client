@@ -117,6 +117,8 @@ function RPPostRender:CheckRestart()
       command = command .. " " .. RPGlobals.race.order9[RPSpeedrun.charNum]
     elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+      command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
     end

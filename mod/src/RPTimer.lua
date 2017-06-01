@@ -24,7 +24,8 @@ function RPTimer:Display()
   if RPGlobals.raceVars.started == false and
      RPGlobals.raceVars.finished == false and
      challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
 
     return
   end

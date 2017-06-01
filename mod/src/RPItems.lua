@@ -12,10 +12,9 @@ local RPSchoolbag = require("src/rpschoolbag")
 --
 
 -- Will get called for all items
-function RPItems:Main()
+function RPItems:Main(collectibleType)
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
@@ -33,8 +32,8 @@ function RPItems:Main()
 
   -- Fix the Schoolbag + Butter! bug
   if player:HasTrinket(TrinketType.TRINKET_BUTTER) then
-    RPGlobals.run.usedButterFrame = gameFrameCount + 1 -- (the pedestal will appear on the next game frame)
-    Isaac.DebugString("The Butter! trinket dropped an item on frame: " .. tostring(gameFrameCount))
+    RPGlobals.run.droppedButterItem = collectibleType -- (the pedestal will appear on the next game frame)
+    Isaac.DebugString("The Butter! trinket dropped item " .. tostring(collectibleType) .. ".")
     -- We will check this variable later in the PostUpdate callback (the "RPSchoolbag:CheckSecondItem()" function)
   end
 end

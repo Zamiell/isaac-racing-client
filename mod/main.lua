@@ -118,9 +118,13 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.
 -- Samael callback
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D4)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D100)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.decapitation, EntityType.ENTITY_ISAAC)
+local wraithItem = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, SamaelMod.activateWraith, wraithItem)
+--RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.decapitation, EntityType.ENTITY_ISAAC)
+-- (commented out because the extra animation wastes time)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.roomEntitiesLoop)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER, SamaelMod.onRender)
+--RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER, SamaelMod.onRender)
+-- (commented out because we will always use the active item)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.samaelPostUpdate)
 local scytheID = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, SamaelMod.scytheUpdate, scytheID)

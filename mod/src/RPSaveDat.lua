@@ -103,13 +103,17 @@ function RPSaveDat:Load()
       Isaac.DebugString("ModData place changed: " .. tostring(RPGlobals.race.place))
       RPSaveDat:ChangedPlace()
     end
+    if RPGlobals:TableEqual(oldRace.order7, RPGlobals.race.order7) == false then
+      Isaac.DebugString("ModData order7 changed.")
+      RPSaveDat:ChangedOrder()
+    end
     if RPGlobals:TableEqual(oldRace.order9, RPGlobals.race.order9) == false then
       Isaac.DebugString("ModData order9 changed.")
-      RPSaveDat:ChangedOrder9()
+      RPSaveDat:ChangedOrder()
     end
     if RPGlobals:TableEqual(oldRace.order14, RPGlobals.race.order14) == false then
       Isaac.DebugString("ModData order14 changed.")
-      RPSaveDat:ChangedOrder9()
+      RPSaveDat:ChangedOrder()
     end
   end
 end
@@ -208,23 +212,14 @@ function RPSaveDat:ChangedPlace()
   end
 end
 
-function RPSaveDat:ChangedOrder9()
+function RPSaveDat:ChangedOrder()
   -- Local variables
   local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Challenge.CHALLENGE_NULL then -- 0
-    -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-  end
-end
+  if challenge ~= Challenge.CHALLENGE_NULL and -- 0
+     challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
 
-function RPSaveDat:ChangedOrder14()
-  -- Local variables
-  local isaacFrameCount = Isaac.GetFrameCount()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Challenge.CHALLENGE_NULL then -- 0
     -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
     RPGlobals.run.restartFrame = isaacFrameCount + 1
   end

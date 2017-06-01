@@ -514,6 +514,16 @@ The changed room is as follows:
 
 <br />
 
+### Begotten Chain Fix
+
+In several rooms, Edmund placed Begotten Chains, which instantly despawn when you enter the room. He probably intended for them to be real Begottens, so the rooms have been adjusted accordingly.
+
+The changed room is as follows:
+
+* Sheol: #255, #269, #334, #341
+
+<br />
+
 
 
 

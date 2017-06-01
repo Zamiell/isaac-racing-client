@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.6.8"
+RPGlobals.version = "v0.6.9"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -25,6 +25,7 @@ RPGlobals.race = {
   placeMid        = 0,           -- This is either the number of people ready, or the non-fnished place
   place           = 1,           -- This is the final place
   numEntrants     = 1,           -- The number of people in the race
+  order7          = {0},         -- The order for a Racing+ 7 character speedrun
   order9          = {0},         -- The order for a Racing+ 9 character speedrun
   order14         = {0},         -- The order for a Racing+ 14 character speedrun
 }
@@ -157,7 +158,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false
   RPGlobals.run.consoleWindowOpen    = false
-  RPGlobals.run.usedButterFrame      = 0
+  RPGlobals.run.droppedButterItem    = 0
   RPGlobals.run.fastResetFrame       = 0
   RPGlobals.run.teleportSubverted     = false
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
