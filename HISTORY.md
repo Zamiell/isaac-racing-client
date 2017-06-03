@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.6.12* - June 3rd, 2017
+
+* The trapdoor now spawns in an open state after defeating Satan. (Thanks Krakenos)
+* Added the BozoT emote. (Requested by MasterofPotato)
+
 ### *v0.6.11* - June 1st, 2017
 
 * The Satan fight is faster now.

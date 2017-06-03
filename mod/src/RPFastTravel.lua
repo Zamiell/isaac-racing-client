@@ -31,6 +31,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -110,9 +111,13 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     pos  = position,
   }
 
-  -- Always spawn the trapdoor closed
-  trapdoor:ToEffect().State = 1
-  trapdoor:GetSprite():Play("Closed", true)
+  -- Always spawn the trapdoor closed, unless it is after Satan in Sheol
+  if stage ~= 10 or stageType ~= 0 or -- Sheol
+     roomType ~= RoomType.ROOM_BOSS then -- 5
+
+    trapdoor:ToEffect().State = 1
+    trapdoor:GetSprite():Play("Closed", true)
+  end
 
   -- Log it
   local debugString = "Replaced "
@@ -995,8 +1000,8 @@ function RPFastTravel:CheckRoomRespawn()
 
       -- Spawn the new custom entity
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
-                                  Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
-                                  RPGlobals.run.replacedCrawlspaces[i].pos, Vector(0,0), nil, 0, 0)
+                                Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
+                                RPGlobals.run.replacedCrawlspaces[i].pos, Vector(0,0), nil, 0, 0)
       entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
       -- Figure out if it should spawn open or closed, depending on how close we are
