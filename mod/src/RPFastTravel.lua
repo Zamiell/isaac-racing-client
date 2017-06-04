@@ -59,18 +59,20 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
 
   -- Find out whether we should move the trapdoor from where it spawned
   local position = entity.Position
-  if ((stage == LevelStage.STAGE4_2 and -- 8
-       entity.Position.X == 280 and -- If it spawned in the vanilla location on Womb 2
-       entity.Position.Y == 280) or
-      (stage == LevelStage.STAGE4_3 and -- 9
-       entity.Position.X == 560 and -- Or if it spawned in the vanilla location on Blue Womb
-       entity.Position.Y == 280)) and
-     roomType == RoomType.ROOM_BOSS and -- 5
-     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
-     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) or -- 328
-     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+  if (((stage == LevelStage.STAGE4_2 and -- 8
+        entity.Position.X == 280 and -- If it spawned in the vanilla location on Womb 2
+        entity.Position.Y == 280) or
+       (stage == LevelStage.STAGE4_3 and -- 9
+        entity.Position.X == 560 and -- Or if it spawned in the vanilla location on Blue Womb
+        entity.Position.Y == 280)) and
+      roomType == RoomType.ROOM_BOSS and -- 5
+      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
+       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
+      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
+       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) or -- 328
+     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+      roomType == RoomType.ROOM_BOSS and -- 5
+      stage == LevelStage.STAGE4_2) then -- 8
 
     -- Since we deleted the beam of light, the trapdoor will look off-center on Womb 2 / Blue Womb,
     -- so move the trapdoor to the center of the room

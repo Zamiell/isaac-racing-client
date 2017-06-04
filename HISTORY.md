@@ -2,7 +2,7 @@
 
 ### *v0.6.13* - June 4th, 2017
 
-* Fixed a bug where the hold was not correctly centered in R+7 S2 if you skipped taking The Polaroid.
+* Fixed a bug where the Womb 2 trapdoor was not correctly centered in R+7 S2 if you skipped taking The Polaroid.
 
 ### *v0.6.12* - June 3rd, 2017
 
