@@ -69,7 +69,8 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) then -- 328
+      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) or -- 328
+     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
 
     -- Since we deleted the beam of light, the trapdoor will look off-center on Womb 2 / Blue Womb,
     -- so move the trapdoor to the center of the room

@@ -1,9 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.6.13* - June 4th, 2017
+
+* Fixed a bug where the hold was not correctly centered in R+7 S2 if you skipped taking The Polaroid.
+
 ### *v0.6.12* - June 3rd, 2017
 
 * The trapdoor now spawns in an open state after defeating Satan. (Thanks Krakenos)
-* Added the BozoT emote. (Requested by MasterofPotato)
+* Added the BozoT emote. (Requested by LogBasePotato)
 
 ### *v0.6.11* - June 1st, 2017
 
