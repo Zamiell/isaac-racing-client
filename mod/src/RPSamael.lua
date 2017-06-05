@@ -381,6 +381,7 @@ function SamaelMod:wraithModeHandler()
     if wraithCooldown == 0 then
       wraithActive = false
     end
+
   elseif wraithActive then --Full wraith form is active
     wraithTime = wraithTime - 1
     wraithCharge = 0
@@ -611,7 +612,6 @@ function SamaelMod:scytheUpdate(scythe)
   --scytheState 0 = Idle, not attacking
   --scytheState 1 = Ready/Charging, holding down an attack direction (holding up the scythe)
   --scytheState 2 = Swinging the scythe
-
 
   --READY ATTACK: When the player is holding down a fire direction, and the scythe is not on cooldown
   if fireDirection ~= -1 and swingDelay == 0 then
@@ -858,7 +858,6 @@ function SamaelMod:scytheUpdate(scythe)
       swing = 0
     end
   end
-
 
   if scytheState == 0 then --When nothing else is going on, idle state
     if scytheScale >= 1.5 then
@@ -1173,22 +1172,30 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
         player.TearHeight = player.TearHeight - 3.15
       end
     end
-    scytheScale = math.max( math.min((player.TearHeight*(-1))/23.75, 2), 1)
+    scytheScale = math.max(math.min((player.TearHeight * (-1)) / 23.75, 2), 1)
     if player:HasCollectible(CollectibleType.COLLECTIBLE_PUPULA_DUPLEX) then
-      scytheScale = math.max( math.min(scytheScale+0.33, 2), 1)
+      scytheScale = math.max(math.min(scytheScale + 0.33, 2), 1)
     end
 
     if cacheFlag == CacheFlag.CACHE_DAMAGE then
-      player.Damage = player.Damage+1.0
+      player.Damage = player.Damage + 1
+
       --Increase damage for having certain items (Chemical Peel, Blood Clot, Peircing tears, etc)
       for i = 1, #itemChecks do
         if itemChecks[i] > 0 then
           player.Damage = player.Damage + itemChecks[i]
         end
       end
+
       if player:HasCollectible(samaelDrFetus) then --damage boost when Brimstone overrides Dr Fetus
-        player.Damage = player.Damage*1.5
+        player.Damage = player.Damage * 1.5
       end
+
+      -- Mom's Knife nerf
+      if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
+        player.Damage = player.Damage / 1.75
+      end
+
       properDamage = player.Damage --Save proper damage stat
       deadEyeBoost = 0
     end
@@ -1219,13 +1226,13 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
       if fireDelayReduced then player.MaxFireDelay = math.ceil(player.MaxFireDelay+fireDelayPenalty) end
     end
 
-    if player:HasCollectible(442) then --???
+    if player:HasCollectible(442) then -- Dark Princes Crown
       if player:GetHearts() == 2 and cacheFlag == CacheFlag.CACHE_FIREDELAY then
         player.MaxFireDelay = math.ceil(player.MaxFireDelay*0.666)
       end
       player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
     end
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_DARK_PRINCESS_CROWN) and
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_DARK_PRINCESS_CROWN) and -- 442
        player:GetHearts() == 2 and
        cacheFlag == CacheFlag.CACHE_DAMAGE then
 
@@ -1314,22 +1321,22 @@ function SamaelMod:hitBoxFunc(hitBox)
      hitBox.SubType == hitBoxType then --If its the right entity
 
     local player = Isaac.GetPlayer(0)
-    hitBox.Size = 40*scytheScale
+    hitBox.Size = 40 * scytheScale
 
     --Put it in the correct position, depending on the direction passed to it
     if hitBox.Coins == Direction.UP then
-      hitBox.Position = Vector(player.Position.X, player.Position.Y-45*scytheScale)
+      hitBox.Position = Vector(player.Position.X, player.Position.Y - 45 * scytheScale)
     elseif hitBox.Coins == Direction.DOWN then
-      hitBox.Position = Vector(player.Position.X, player.Position.Y+35*scytheScale)
+      hitBox.Position = Vector(player.Position.X, player.Position.Y + 35 * scytheScale)
     elseif hitBox.Coins == Direction.LEFT then
-      hitBox.Position = Vector(player.Position.X-40*scytheScale, player.Position.Y)
+      hitBox.Position = Vector(player.Position.X - 40 * scytheScale, player.Position.Y)
     elseif hitBox.Coins == Direction.RIGHT then
-      hitBox.Position = Vector(player.Position.X+40*scytheScale, player.Position.Y)
+      hitBox.Position = Vector(player.Position.X + 40 * scytheScale, player.Position.Y)
     else --If direction is -1, go offscreen
-      hitBox.Position = Vector(0,0)
+      hitBox.Position = Vector(0, 0)
     end
 
-    hitBox.Velocity = Vector(0,0)
+    hitBox.Velocity = Vector(0, 0)
     if hitBox.Parent == nil then --If the scythe disappears, delete this
       hitBox:Remove()
     end
@@ -1392,15 +1399,16 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
            damageSource.SubType == hitBoxType then
 
           wraithCharge = wraithCharge + math.min(player.MaxFireDelay*0.2, 20)
+          Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #1)")
         else
           wraithCharge = wraithCharge + math.min(math.max(player.MaxFireDelay, 1), 20)
+          Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #2)")
         end
         wraithChargeCooldown = player.MaxFireDelay
         --wraithChargePenalty = 3
       else
-        --wraithCharge = wraithCharge + math.min(damage, 20)/wraithChargePenalty
         wraithCharge = wraithCharge + math.min(damage, 20)
-        --wraithChargePenalty = wraithChargePenalty + 2
+        Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from melee)")
       end
     end
     if damType == EntityType.ENTITY_FAMILIAR and
@@ -1614,8 +1622,10 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       hits = hits + 1
     elseif damageSource.Type == EntityType.ENTITY_FAMILIAR and tookDamage:IsVulnerableEnemy() then
       wraithCharge = wraithCharge + math.max(math.min(damage, tookDamage.HitPoints)*0.33, 1)
+      Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from ???)")
     end
     if wraithCharge > 100 then
+      Isaac.DebugString("Set wraithCharge to 100 from overcharge (" .. tostring(wraithCharge) .. ").")
       wraithCharge = 100
     end
   end
@@ -1690,68 +1700,75 @@ end
 ------I tried to limit this mod to only do this once per update------
 function SamaelMod:roomEntitiesLoop()
   local player = Isaac.GetPlayer(0)
-  if player:GetPlayerType() == samaelID then
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
+
+  if player:GetPlayerType() ~= samaelID then
+    return
+  end
+
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if (entity.Type == EntityType.ENTITY_FIREPLACE or
+        entity.Type == EntityType.ENTITY_MOVABLE_TNT) and hitPos ~= nil then
+
       --Break fireplaces with scythe
-      if (entity.Type == EntityType.ENTITY_FIREPLACE or
-          entity.Type == EntityType.ENTITY_MOVABLE_TNT) and hitPos ~= nil then
+      if entity.Position:Distance(hitPos) <= 55*scytheScale then
+        entity:TakeDamage(player.Damage, 0, EntityRef(player), 5)
+      end
 
-        if entity.Position:Distance(hitPos) <= 55*scytheScale then
-          entity:TakeDamage(player.Damage, 0, EntityRef(player), 5)
-        end
+    elseif entity.Type == EntityType.ENTITY_LASER then
       --custom techX stuff
-      elseif entity.Type == EntityType.ENTITY_LASER then
-        if entity.Parent == nil then
+      if entity.Parent == nil then
+        entity:Remove()
+      elseif entity.Parent.Type == scytheID then
+        if scytheState ~= 2 then
           entity:Remove()
-        elseif entity.Parent.Type == scytheID then
-          if scytheState ~= 2 then
-            entity:Remove()
-          else
-            entity.Position = player.Position
-            entity.Velocity = player.Velocity
-          end
-        elseif entity.Parent.Type == EntityType.ENTITY_BOMBDROP then
-          entity.Position = entity.Parent.Position
-          entity.Velocity = entity.Parent.Velocity
-        end
-      --Keep the size of the scythe projectiles consistent whenever it might change (proptosis, lump of coal, etc)
-      elseif entity.Type == EntityType.ENTITY_TEAR and
-             entity.Variant == projVariant and
-             not player:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
-
-        entity = entity:ToTear()
-        entity.SpriteScale = Vector(entity.Scale, entity.Scale)
-      elseif entity.Type == EntityType.ENTITY_TEAR  then
-        entity = entity:ToTear()
-        local sprite = entity:GetSprite()
-        if (entity.TearFlags & 1<<55) ~= 0 and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2" then
-          --entity:ChangeVariant(8)
-          sprite:Load("gfx/samael_scythe_projectile.anm2", true)
-          sprite:Play("Idle", true)
-          entity.SpriteScale = Vector(entity.Scale*0.75, entity.Scale*0.75)
-        end
-      --Handling knives
-      elseif entity.Type == EntityType.ENTITY_KNIFE and
-             (entity.SubType == 0 or entity.SubType == 1) and
-             (entity.Parent.Type == EntityType.ENTITY_PLAYER or
-              entity.Parent.Type == EntityType.ENTITY_KNIFE) then
-
-        SamaelMod:knifeUpdate(entity:ToKnife())
-      elseif entity.Type == EntityType.ENTITY_KNIFE and
-             not entity.Parent.Parent == nil and
-             entity.Parent.Parent.Type == EntityType.ENTITY_PLAYER and
-             entity.Variant ~= 617 then
-
-        entity = entity:ToKnife()
-        entity:GetSprite():Load("gfx/samael_scythe_knife.anm2", true)
-        entity:GetSprite():Play("Hidden", true)
-        entity.Variant = 617
-        if hideScythe then
-          entity.SizeMulti = Vector(4*scytheScale,4*scytheScale)
-          entity.SpriteScale = Vector(scytheScale,scytheScale)
         else
-          entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+          entity.Position = player.Position
+          entity.Velocity = player.Velocity
         end
+      elseif entity.Parent.Type == EntityType.ENTITY_BOMBDROP then
+        entity.Position = entity.Parent.Position
+        entity.Velocity = entity.Parent.Velocity
+      end
+
+    elseif entity.Type == EntityType.ENTITY_TEAR and
+           entity.Variant == projVariant and
+           not player:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
+
+      --Keep the size of the scythe projectiles consistent whenever it might change (proptosis, lump of coal, etc)
+      entity = entity:ToTear()
+      entity.SpriteScale = Vector(entity.Scale, entity.Scale)
+
+    elseif entity.Type == EntityType.ENTITY_TEAR  then
+      entity = entity:ToTear()
+      local sprite = entity:GetSprite()
+      if (entity.TearFlags & 1<<55) ~= 0 and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2" then
+        --entity:ChangeVariant(8)
+        sprite:Load("gfx/samael_scythe_projectile.anm2", true)
+        sprite:Play("Idle", true)
+        entity.SpriteScale = Vector(entity.Scale*0.75, entity.Scale*0.75)
+      end
+    elseif entity.Type == EntityType.ENTITY_KNIFE and
+           (entity.SubType == 0 or entity.SubType == 1) and
+           (entity.Parent.Type == EntityType.ENTITY_PLAYER or
+            entity.Parent.Type == EntityType.ENTITY_KNIFE) then
+
+      --Handling knives
+      SamaelMod:knifeUpdate(entity:ToKnife())
+
+    elseif entity.Type == EntityType.ENTITY_KNIFE and
+           not entity.Parent.Parent == nil and
+           entity.Parent.Parent.Type == EntityType.ENTITY_PLAYER and
+           entity.Variant ~= 617 then
+
+      entity = entity:ToKnife()
+      entity:GetSprite():Load("gfx/samael_scythe_knife.anm2", true)
+      entity:GetSprite():Play("Hidden", true)
+      entity.Variant = 617
+      if hideScythe then
+        entity.SizeMulti = Vector(4*scytheScale,4*scytheScale)
+        entity.SpriteScale = Vector(scytheScale,scytheScale)
+      else
+        entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
       end
     end
   end
@@ -1785,21 +1802,28 @@ function SamaelMod:knifeUpdate(knife)
       sprite:Play("Idle", true)
     end
     knife.Variant = 617
-    knife.SizeMulti = Vector(4,4)
+    knife.SizeMulti = Vector(4, 4)
   end
 
   if knife.Variant == 617 and knife.SubType == 0 then
-    knife.SizeMulti = Vector(4*scytheScale,4*scytheScale)
+    --knife.SizeMulti = Vector(4 * scytheScale, 4 * scytheScale)
+    knife.SizeMulti = Vector(1.5 * scytheScale, 1.5 * scytheScale)
     if scytheScale >= 1.5 then
-      knife.SpriteScale = Vector(scytheScale-(scytheScale/2),scytheScale-(scytheScale/2))
+      local X = scytheScale - (scytheScale / 2)
+      X = X / 1.25
+      local Y = scytheScale - (scytheScale / 2)
+      Y = Y / 1.25
+      knife.SpriteScale = Vector(X, Y)
     else
-      knife.SpriteScale = Vector(scytheScale,scytheScale)
+      --knife.SpriteScale = Vector(scytheScale, scytheScale)
+      knife.SpriteScale = Vector(scytheScale / 1.25, scytheScale / 1.25)
     end
 
     if not player:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) then
       --Only enable the knife-scythe when thrown (requires charging for at least 5 frames)
       if (knife:IsFlying() or knife.Parent.Type == EntityType.ENTITY_KNIFE) and
-         not (sprite:IsPlaying("Idle") or sprite:IsPlaying("Big")) and lastCharge > 5 then
+         not (sprite:IsPlaying("Idle") or sprite:IsPlaying("Big")) and
+         lastCharge > 5 then
 
         knife.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
         if scytheScale >= 1.5 then
@@ -1808,10 +1832,11 @@ function SamaelMod:knifeUpdate(knife)
           sprite:Play("Idle", true)
         end
         hideScythe = true
-      elseif not (knife:IsFlying() or knife.Parent.Type==EntityType.ENTITY_KNIFE) and
-             (sprite:IsPlaying("Idle") or
-              sprite:IsPlaying("Big")) then --Hide and disable the knife-scythe when not thrown
 
+      elseif not (knife:IsFlying() or knife.Parent.Type == EntityType.ENTITY_KNIFE) and
+             (sprite:IsPlaying("Idle") or sprite:IsPlaying("Big")) then
+
+        --Hide and disable the knife-scythe when not thrown
         sprite:SetFrame("Hidden", 0)
         knife.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
         hideScythe = false
@@ -1838,15 +1863,17 @@ function SamaelMod:decapitation(npc)
       special:GetSprite():Play("Decapitation", 1) --Play custom kill animation
       player:GetSprite().Color = Color(0,0,0,0,0,0,0) --Hide and disable player
       player.ControlsEnabled = false
-      Isaac.DebugString(player.EntityCollisionClass)
       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
       isaacDying = true
     end
   end
 end
 
-function SamaelMod.PostGameStartedFixBugs()
+function SamaelMod.PostGameStartedReset()
   SamaelMod.SacDaggerAcquired = false
+  wraithActive = false
+  wraithCooldown = 0
+  wraithTime = 0
 end
 
 function SamaelMod:PostUpdateFixBugs()
@@ -1855,9 +1882,23 @@ function SamaelMod:PostUpdateFixBugs()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
 
+  -- Judas Shadow + Wraith Skull bug
+  if character ~= samaelID then
+    if player:HasCollectible(wraithItem) then
+      player:RemoveCollectible(wraithItem)
+      Isaac.DebugString("Removed the Wraith Skull since we are not on Samael anymore.")
+    end
+    if RPGlobals.run.schoolbag.item == wraithItem then
+      RPGlobals.run.schoolbag.item = 0
+      RPSchoolbag.sprites.item = nil
+      Isaac.DebugString("Removed the Wraith Skull (from the Schoolbag) since we are not on Samael anymore.")
+    end
+
+    return
+  end
+
   -- Sacrificial Dagger bug
-  if character == samaelID and
-     SamaelMod.SacDaggerAcquired == false and
+  if SamaelMod.SacDaggerAcquired == false and
      player:HasCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER) then -- 172
 
     SamaelMod.SacDaggerAcquired = true
@@ -1866,17 +1907,37 @@ function SamaelMod:PostUpdateFixBugs()
     Isaac.DebugString("Sac Dagger detected; giving another one.")
   end
 
-  -- Judas Shadow + Wraith Skull bug
-  if character ~= samaelID and
-     player:HasCollectible(wraithItem) then
+  -- Mom's Knife + Dead Eye bug
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114
+     player:HasCollectible(samaelDeadEye) then
 
-    player:RemoveCollectible(wraithItem)
+    player:RemoveCollectible(samaelDeadEye)
+    Isaac.DebugString("Removed Dead Eye to prevent the bug with the Mom's Knife.")
   end
-  if character ~= samaelID and
-     RPGlobals.run.schoolbag.item == wraithItem then
+end
 
-    RPGlobals.run.schoolbag.item = 0
-    RPSchoolbag.sprites.item = nil
+function SamaelMod:RechargeWraithSkull()
+  wraithCharge = 100
+  Isaac.DebugString("Manually charged the Wraith Skull (from Lil' Battery / Charged Key / Hairpin).")
+end
+
+function SamaelMod:CheckHairpin()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(Isaac.GetItemIdByName("Wraith Skull")) and
+     -- We don't want to check for "player:NeedsCharge()" because the Hairpin will actually work,
+     -- but if the wraithCharge variable is not updated, then it will get uncharged on the next frame
+     player:HasTrinket(TrinketType.TRINKET_HAIRPIN) and -- 120
+     roomType == RoomType.ROOM_BOSS and -- 5
+     level:GetCurrentRoomDesc().VisitedCount == 1 then
+
+    Isaac.DebugString("Hairpin recharge detected.")
+    SamaelMod:RechargeWraithSkull()
   end
 end
 

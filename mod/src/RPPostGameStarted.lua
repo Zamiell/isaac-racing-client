@@ -263,12 +263,6 @@ function RPPostGameStarted:Character()
     -- Add the D6 (to replace the Wooden Nickel)
     player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
 
-    -- Grant an extra coin/heart container
-    player:AddCoins(24) -- Keeper starts with 1 coin so we only need to give 24
-    player:AddCoins(1) -- This fills in the new heart container
-    player:AddCoins(25) -- Add a 2nd container
-    player:AddCoins(1) -- This fills in the new heart container
-
   elseif character == 16 then -- Samael
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)

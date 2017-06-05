@@ -8,7 +8,6 @@ local RPGlobals   = require("src/rpglobals")
 local RPSaveDat   = require("src/rpsavedat")
 local RPSprites   = require("src/rpsprites")
 local RPSchoolbag = require("src/rpschoolbag")
-local SamaelMod   = require("src/rpsamael")
 
 --
 -- Constants
@@ -124,6 +123,23 @@ function RPSpeedrun:Init()
   if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
     Isaac.DebugString("In the R+9 (S1) challenge.")
 
+    -- Give extra items to characters for the R+9 speedrun category
+    if character == PlayerType.PLAYER_KEEPER then -- 14
+      -- Add the items
+      player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
+      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
+
+      -- Remove them from all the pools
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
+
+      -- Grant an extra coin/heart container
+      player:AddCoins(24) -- Keeper starts with 1 coin so we only need to give 24
+      player:AddCoins(1) -- This fills in the new heart container
+      player:AddCoins(25) -- Add a 2nd container
+      player:AddCoins(1) -- This fills in the new heart container
+    end
+
   elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
     Isaac.DebugString("In the R+14 (S1) challenge.")
 
@@ -137,8 +153,8 @@ function RPSpeedrun:Init()
 
     elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
       -- Add the Soul Jar
-      -- (the Soul Jar does not appear in any pools so we don't have to add it to the ban list)
       player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false)
+      -- (the Soul Jar does not appear in any pools so we don't have to add it to the ban list)
 
     elseif character == PlayerType.PLAYER_LILITH then -- 13
       -- Lilith starts with the Schoolbag by default
@@ -154,6 +170,21 @@ function RPSpeedrun:Init()
       -- Reorganize the items on the item tracker
       Isaac.DebugString("Removing collectible 412") -- Cambion Conception
       Isaac.DebugString("Adding collectible 412") -- Cambion Conception
+
+    elseif character == PlayerType.PLAYER_KEEPER then -- 14
+      -- Add the items
+      player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
+      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
+
+      -- Remove them from all the pools
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
+
+      -- Grant an extra coin/heart container
+      player:AddCoins(24) -- Keeper starts with 1 coin so we only need to give 24
+      player:AddCoins(1) -- This fills in the new heart container
+      player:AddCoins(25) -- Add a 2nd container
+      player:AddCoins(1) -- This fills in the new heart container
 
     elseif character == PlayerType.PLAYER_APOLLYON then -- 15
       -- Apollyon starts with the Schoolbag by default
@@ -286,9 +317,6 @@ function RPSpeedrun:CheckpointTouched()
 
   -- Mark to fade out after the "Checkpoint" text has displayed on the screen for a little bit
   RPSpeedrun.fadeFrame = isaacFrameCount + 30
-
-  -- Fix the bug where the invulnerablity from the Wraith Skull custom item sometimes bleeds over to the next character
-  SamaelMod:triggerWraithModeEnd()
 end
 
 -- Called from the PostRender callback

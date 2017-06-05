@@ -8,6 +8,7 @@ local RPGlobals    = require("src/rpglobals")
 local RPSchoolbag  = require("src/rpschoolbag")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
+local SamaelMod    = require("src/rpsamael")
 
 --
 -- Check entities functions
@@ -93,6 +94,18 @@ function RPCheckEntities:NonGrid()
       Isaac.DebugString("Removed boss room heart drop #" .. tostring(#RPGlobals.run.bossHearts.position) .. ": " ..
                         "(" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") " ..
                         "(" .. tostring(entity.Velocity.X) .. "," .. tostring(entity.Velocity.Y) .. ")")
+
+    elseif ((entity.Type == EntityType.ENTITY_PICKUP and -- 5
+             entity.Variant == PickupVariant.PICKUP_KEY and -- 30
+             entity.SubType == 4) or -- Charged Key
+            entity.Variant == PickupVariant.PICKUP_LIL_BATTERY) and -- 90
+           entity:GetSprite():IsPlaying("Collect") and
+           player:HasCollectible(Isaac.GetItemIdByName("Wraith Skull")) and
+           player:NeedsCharge() and
+           entity:ToPickup().Touched == false then
+
+      entity:ToPickup().Touched = true
+      SamaelMod:RechargeWraithSkull()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
            (entity.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52

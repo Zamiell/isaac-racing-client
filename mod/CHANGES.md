@@ -30,7 +30,6 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Azazel starts with half a red heart and half a soul heart.
 * Judas starts with a bomb instead of 3 coins.
 * Eden starts with the Schoolbag (from Antibirth). She will start with her random active item inside the bag.
-* Keeper starts with Greed's Gullet, Duality, and 50 cents.
 
 ### 2) No Curses
 
@@ -77,6 +76,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts will now have faster attack patterns.
+* Lag is reduced via integration of the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod by [Dan](https://moddingofisaac.com/user/255).
 * The Book of Sin and Mystery Sack will now generate actual random pickups.
 * Greed's Gullet will now properly work on Keeper.
 * Double coins and nickels now heal Keeper for their proper amount.
@@ -139,36 +139,37 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
-### Custom Character Speedruns
+## Additional Changes for Multi-Character Speedruns
 
-* By pressing "Tab" on the challenges screen, you can access custom challenges. The Racing+ mod has several custom challenge for various categories, in which you must beat the game multiple times in a row on various characters.
+* By pressing "Tab" on the challenges portion of the main menu, you can access custom challenges added by mods. The Racing+ mod uses custom challenges to facilitate multi-character speedruns, in which you must beat the game multiple times in a row on various characters.
 * These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
 * Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
 * You can restart with the current character by tapping R. You can go back to the first character by holding R. (On floors 2 and beyond, you have to double-tap R to restart with the current character.)
 
-#### R+9 Season 1
+### R+9 Season 1
 
 * You must defeat Blue Baby on the following 9 characters:
   * Cain, Judas, Blue Baby, Eve, Samson, Azazel, Lazarus, The Lost, and Keeper
+* Keeper starts with Greed's Gullet, Duality, and 50 cents.
 
-#### R+14 Season 1
+### R+14 Season 1
 
 * You must defeat Blue Baby on all 14 characters.
-* Some characters have additional changes:
-  * Isaac starts with The Battery.
-  * Maggy starts with the Soul Jar, a new passive item with the following effects:
-    * You no longer gain health from soul/black hearts.
-    * You gain a red heart container after picking up 4 soul/black hearts.
-    * You always have a 100% devil deal chance if no damage is taken.
-  * Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
-  * Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
+* Isaac starts with The Battery.
+* Maggy starts with the Soul Jar, a new passive item with the following effects:
+  * You no longer gain health from soul/black hearts.
+  * You gain a red heart container after picking up 4 soul/black hearts.
+  * You always have a 100% devil deal chance if no damage is taken.
+* Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
+* Keeper starts with Greed's Gullet, Duality, and 50 cents.
+* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 
-#### R+7 Season 2
+### R+7 Season 2
 
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
-* After defeating Mom, The Polaroid will spawn instead of The Negative.
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840) is a custom character created by Ghostbroster. He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
+* After defeating Mom, The Polaroid will spawn instead of The Negative. Neither The Polaroid or The Negative are required to travel to the Dark Room.
 
 <br />
 

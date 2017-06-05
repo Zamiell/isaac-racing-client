@@ -211,11 +211,6 @@ function RPFastClear:CheckAlive()
          -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
          npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
 
-        -- The following champions split:
-        -- 1) Pulsing Green, spawns 2 versions of itself
-        -- 2) Light White, spawns 2 flies
-        -- The Lua API doesn't allow us to check the specific champion type, so just make an exception for all champions
-
         allDead = false
         break
       end
@@ -223,12 +218,12 @@ function RPFastClear:CheckAlive()
   end
   if allDead then
     -- Manually clear the room, emulating all the steps that the game does
-    RPFastClear:Main()
+    RPFastClear:ClearRoom()
   end
 end
 
 -- This emulates what happens when you normally clear a room
-function RPFastClear:Main()
+function RPFastClear:ClearRoom()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -263,6 +258,17 @@ function RPFastClear:Main()
       if openDoor then
         door:Open()
       end
+    end
+  end
+
+  -- Manually kill Death's Heads and Flesh Death's Heads
+  -- (by default, they will only die after the death animations are completed)
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if (entity.Type == EntityType.ENTITY_DEATHS_HEAD and entity.Variant == 0) or -- 212.0
+       entity.Type == EntityType.ENTITY_FLESH_DEATHS_HEAD then -- 286.0
+
+      -- Activate its death state
+      entity:ToNPC().State = 18
     end
   end
 

@@ -8,6 +8,7 @@ local RPGlobals    = require("src/rpglobals")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
 local RPSprites    = require("src/rpsprites")
+local SamaelMod    = require("src/rpsamael")
 
 --
 -- Miscellaneous game callbacks
@@ -434,6 +435,9 @@ function RPCallbacks:PostNewRoom2()
     player:AddMaxHearts(-2, true) -- Take away a heart container
     Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
   end
+
+  -- Check to see if we need to fix the Wraith Skull + Hairpin bug
+  SamaelMod:CheckHairpin()
 
   -- Clear variables that track things per room
   RPGlobals.run.currentGlobins = {} -- Used for softlock prevention

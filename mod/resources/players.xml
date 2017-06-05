@@ -74,7 +74,7 @@
           nameimage="PlayerName_13_Lilith.png"
           portrait="PlayerPortrait_13_Lilith.png"
           bigportrait="PlayerPortraitBig_Lilith.png" costume="34" skinColor="1" />
-	<player id="14" name="Keeper" skin="Character_015_Keeper.png" hp="4" bombs="1" items="105,501,498"
+	<player id="14" name="Keeper" skin="Character_015_Keeper.png" hp="4" bombs="1" items="105"
           nameimage="PlayerName_14_TheKeeper.png"
           portrait="PlayerPortrait_14_Keeper.png"
           bigportrait="PlayerPortraitBig_Keeper.png" skinColor="5" /><!-- Keeper also gets the Wooden Nickel (349) -->

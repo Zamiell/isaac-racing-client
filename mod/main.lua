@@ -7,6 +7,10 @@
 
 TODO Samael:
 - Dead Eye + Knife doesn't work
+- look at satan
+- fix red guys
+- fortunes
+- relook at rules
 
 TODO:
 - Implement time offsets, show on the first room of each floor
@@ -135,8 +139,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, SamaelMod.scytheHits)
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, SamaelMod.playerDamage, EntityType.ENTITY_PLAYER)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, SamaelMod.PostPlayerInit)
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, SamaelMod.cacheUpdate)
-
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, SamaelMod.PostGameStartedFixBugs)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, SamaelMod.PostGameStartedReset)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, SamaelMod.PostUpdateFixBugs)
 
 -- Welcome banner

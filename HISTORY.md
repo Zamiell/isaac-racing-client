@@ -1,8 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.6.15* - June 5th, 2017
+
+* The hitbox size and damage of Samael's Mom's Knife scythe has been reduced.
+* Fortune Teller Machine now have custom fortunes. If you have ideas for more funny fortunes, please message me on Discord.
+* Keeper will now only start with his extra items if he is played in a R+9 or R+9/14 custom challenge.
+* Fixed the bug where Lil' Batteries, Charged Keys, and the Hairpin trinket would not charge the Wraith Skull.
+* Fixed the bug where saving and quitting with the Wraith Skull granted permanent invincibility on other characters. (Thanks TaKer093)
+* Fixed the bug where Mom's Knife and Dead Eye will softlock Samael. (Dead Eye is now automatically removed if you have Mom's Knife.)
+* Fixed the bug where Death's Heads and Flesh Death's Heads died at the end of other enemies death animations instead of when the doors opened.
+* Fixed a bug where trapdoors were always centered in the room in a R+7 custom challenge. (Thanks CrafterLynx and Karolmo)
+
 ### *v0.6.13* - June 4th, 2017
 
-* Fixed a bug where the Womb 2 trapdoor was not correctly centered in R+7 S2 if you skipped taking The Polaroid.
+* Fixed a bug where the Womb 2 trapdoor was not correctly centered in R+7 if you skipped taking The Polaroid.
 
 ### *v0.6.12* - June 3rd, 2017
 
