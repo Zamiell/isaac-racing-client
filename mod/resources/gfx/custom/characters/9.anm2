@@ -3,7 +3,7 @@
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="eden_with_custom_hair.png" Id="0"/>
-			<Spritesheet Path="Characters/costumes/ghost.png" Id="1"/>
+			<Spritesheet Path="../../characters/costumes/ghost.png" Id="1"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="glow" Id="0" SpritesheetId="0"/>

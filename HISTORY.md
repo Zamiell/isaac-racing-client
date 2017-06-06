@@ -1,6 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.6.15* - June 5th, 2017
+### *v0.6.17* - June 6th, 2017
+
+* Putting the Wraith Skull in the Schoolbag will now immediately end the item's invulernability, similar to how My Little Pony and Unicorn Stump work.
+* Fixed the bug with Samael where A Pony and White Pony did not grant the correct amount of speed. (Thanks Krakenos)
+* Fixed the bug where canceling the pickup animation of Sacrificial Dagger would give you two Sacrificial Daggers. (Thanks SlashSP and Lobsterosity)
+* Fixed the bug with Samael where swapping from the Wraith Skull with the invulernability activated incorrectly lowered your speed permanently (until you swapped back to the Wraith Skull). (Thanks ceehe)
+
+### *v0.6.16* - June 5th, 2017
 
 * The hitbox size and damage of Samael's Mom's Knife scythe has been reduced.
 * Fortune Teller Machine now have custom fortunes. If you have ideas for more funny fortunes, please message me on Discord.

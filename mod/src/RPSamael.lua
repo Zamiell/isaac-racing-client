@@ -370,7 +370,13 @@ function SamaelMod:wraithModeHandler()
   --Framecount of current room (to identify a new room)
 
   --Stop wraith form
-  if wraithActive and (player:GetSprite():IsPlaying("Trapdoor") or roomFrames == 1 or dying or isaacDying) then
+  if wraithActive and
+     (player:GetSprite():IsPlaying("Trapdoor") or
+      roomFrames == 1 or
+      dying or
+      isaacDying or
+      player:HasCollectible(wraithItem) == false) then
+
     SamaelMod:triggerWraithModeEnd()
   end
   if wraithCooldown > 0 then --On cooldown after wraith form wears off (briefly flashing and still invulnerable)
@@ -391,12 +397,13 @@ function SamaelMod:wraithModeHandler()
     if wraithTime == 0 then --When wraith time is over
       wraithCooldown = 24
       player.MoveSpeed = player.MoveSpeed - 0.3
+      --Isaac.DebugString("Decreased speed from the Wraith ability being over: " .. tostring(player.MoveSpeed))
       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
       SamaelMod:playSound(316, 1.8, 1.25)
       --Black poof effect
       local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
                                player.Position, Vector(0,0), player):ToEffect()
-      poof:GetSprite().Color = Color(0,0,0,0.66,0,0,0)
+      poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
       poof:FollowParent(player)
     end
   --[[
@@ -444,15 +451,18 @@ function SamaelMod:triggerWraithMode()
   player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
   SamaelMod:playSound(33, 1, 1.1)
   player.MoveSpeed = player.MoveSpeed + 0.3
+  --Isaac.DebugString("Increased speed from the Wraith ability being activated: " .. tostring(player.MoveSpeed))
+
   --Black poof effect
   local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                           player.Position, Vector(0,0), player):ToEffect()
-  poof:GetSprite().Color = Color(0,0,0,0.66,0,0,0)
+                           player.Position, Vector(0, 0), player):ToEffect()
+  poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
   poof:FollowParent(player)
+
   --Special animation
-  player:GetSprite().Color = Color(0,0,0,0,0,0,0)
+  player:GetSprite().Color = Color(0, 0, 0, 0, 0, 0, 0)
   local special = Isaac.Spawn(specialAnim, 0, 0,
-                              player.Position, Vector(0,0), player):ToNPC() --Spawn the special animations entity
+                              player.Position, Vector(0, 0), player):ToNPC() --Spawn the special animations entity
   special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
   special:GetSprite():Play("WraithDown", 1) --Wraith form animation
   special:GetSprite().Color = Color(0.75,0.25,0.25,0.8,0,0,0)
@@ -464,16 +474,19 @@ function SamaelMod:triggerWraithModeEnd()
   local player = Isaac.GetPlayer(0)
 
   if dying then
-    player:SetColor(Color(0,0,0,0,0,0,0), 57, 999, false, false)
+    player:SetColor(Color(0, 0, 0, 0, 0, 0, 0), 57, 999, false, false)
   end
   if wraithCooldown == 0 then
     player.MoveSpeed = player.MoveSpeed - 0.3
+    --Isaac.DebugString("Decreased speed from the Wraith ability being over (inside triggerWraithModeEnd function): " ..
+                      --tostring(player.MoveSpeed))
   end
   wraithActive = false
   wraithCooldown = 0
   wraithTime = 0
-  player:GetSprite().Color = Color(1,1,1,1,0,0,0)
+  player:GetSprite().Color = Color(1, 1, 1, 1, 0, 0, 0)
   player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
+  Isaac.DebugString("Ended wraith mode.")
 end
 
 -----------OnRender function-----------
@@ -1096,17 +1109,17 @@ function SamaelMod:getScytheColor()
          player:HasCollectible(CollectibleType.COLLECTIBLE_EVES_MASCARA) or
          threeDollarBillEffect == "fear" then
 
-    color.R = color.R*0.2
-    color.B = color.B*0.2
-    color.G = color.G*0.2
+    color.R = color.R * 0.2
+    color.B = color.B * 0.2
+    color.G = color.G * 0.2
   --Darken less
   elseif player:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_ONION) or
          player:HasCollectible(samaelChocMilk) or
          threeDollarBillEffect == "slow" then
 
-    color.R = color.R*0.5
-    color.B = color.B*0.5
-    color.G = color.G*0.5
+    color.R = color.R * 0.5
+    color.B = color.B * 0.5
+    color.G = color.G * 0.5
   end
 
   scytheColor = color
@@ -1148,96 +1161,110 @@ end
 
 -----------Cache update function for handling charge time and some damage stuff-----------
 function SamaelMod:cacheUpdate(player, cacheFlag)
-  if player:GetPlayerType() == samaelID then
-    SamaelMod:calcChargeTime()
-    SamaelMod:getScytheColor()
+  if player:GetPlayerType() ~= samaelID then
+    return
+  end
 
-    --Allow or disable normal firing depending on items
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or
-       player:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) or
-       player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or
-       player:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) or
-       (player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
-        not player:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS)) or
-       player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) or
-       player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then
+  --Isaac.DebugString("Cache updating for: " .. tostring(cacheFlag))
 
-      canShoot = true
-    else
-      canShoot = false
+  SamaelMod:calcChargeTime()
+  SamaelMod:getScytheColor()
+
+  --Allow or disable normal firing depending on items
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) or
+     (player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
+      not player:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS)) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then
+
+    canShoot = true
+  else
+    canShoot = false
+  end
+
+  if cacheFlag == CacheFlag.CACHE_RANGE then
+    if player:HasCollectible(samaelMarked) then
+      player.TearHeight = player.TearHeight - 3.15
     end
+  end
+  scytheScale = math.max(math.min((player.TearHeight * (-1)) / 23.75, 2), 1)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_PUPULA_DUPLEX) then
+    scytheScale = math.max(math.min(scytheScale + 0.33, 2), 1)
+  end
 
-    if cacheFlag == CacheFlag.CACHE_RANGE then
-      if player:HasCollectible(samaelMarked) then
-        player.TearHeight = player.TearHeight - 3.15
+  if cacheFlag == CacheFlag.CACHE_DAMAGE then
+    player.Damage = player.Damage + 1
+
+    --Increase damage for having certain items (Chemical Peel, Blood Clot, Peircing tears, etc)
+    for i = 1, #itemChecks do
+      if itemChecks[i] > 0 then
+        player.Damage = player.Damage + itemChecks[i]
       end
     end
-    scytheScale = math.max(math.min((player.TearHeight * (-1)) / 23.75, 2), 1)
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_PUPULA_DUPLEX) then
-      scytheScale = math.max(math.min(scytheScale + 0.33, 2), 1)
+
+    if player:HasCollectible(samaelDrFetus) then --damage boost when Brimstone overrides Dr Fetus
+      player.Damage = player.Damage * 1.5
     end
 
-    if cacheFlag == CacheFlag.CACHE_DAMAGE then
-      player.Damage = player.Damage + 1
-
-      --Increase damage for having certain items (Chemical Peel, Blood Clot, Peircing tears, etc)
-      for i = 1, #itemChecks do
-        if itemChecks[i] > 0 then
-          player.Damage = player.Damage + itemChecks[i]
-        end
-      end
-
-      if player:HasCollectible(samaelDrFetus) then --damage boost when Brimstone overrides Dr Fetus
-        player.Damage = player.Damage * 1.5
-      end
-
-      -- Mom's Knife nerf
-      if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
-        player.Damage = player.Damage / 1.75
-      end
-
-      properDamage = player.Damage --Save proper damage stat
-      deadEyeBoost = 0
+    -- Mom's Knife nerf
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
+      player.Damage = player.Damage / 1.75
     end
 
-    if cacheFlag == CacheFlag.CACHE_SPEED then
+    properDamage = player.Damage --Save proper damage stat
+    deadEyeBoost = 0
+  end
+
+  if cacheFlag == CacheFlag.CACHE_SPEED then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_PONY) == false and -- 130
+       player:HasCollectible(CollectibleType.COLLECTIBLE_WHITE_PONY) == false then -- 181
+
       player.MoveSpeed = player.MoveSpeed - 0.15
+      --Isaac.DebugString("Decreased speed in the speed cache for Samael: " .. tostring(player.MoveSpeed))
     end
-
-    if cacheFlag == CacheFlag.CACHE_FIREDELAY then
-      if player:HasCollectible(samaelMarked) then
-        player.MaxFireDelay = player.MaxFireDelay - math.ceil(player.MaxFireDelay / 8)
-      end
-      if player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
-         not player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
-
-        fireDelayReduced = true
-        fireDelayPenalty = math.min(player.MaxFireDelay*1.5, 30)
-      elseif player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
-             player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
-
-        fireDelayReduced = false
-      elseif player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) then
-        fireDelayReduced = true
-        fireDelayPenalty = math.min(player.MaxFireDelay*0.75, 25)
-      else
-        fireDelayReduced = false
-      end
-      if fireDelayReduced then player.MaxFireDelay = math.ceil(player.MaxFireDelay+fireDelayPenalty) end
+    if wraithActive then
+      player.MoveSpeed = player.MoveSpeed + 0.3
+      --Isaac.DebugString("Increased speed in the speed cache for Samael (wraithActive): " ..
+                          --tostring(player.MoveSpeed))
     end
+  end
 
-    if player:HasCollectible(442) then -- Dark Princes Crown
-      if player:GetHearts() == 2 and cacheFlag == CacheFlag.CACHE_FIREDELAY then
-        player.MaxFireDelay = math.ceil(player.MaxFireDelay*0.666)
-      end
-      player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+  if cacheFlag == CacheFlag.CACHE_FIREDELAY then
+    if player:HasCollectible(samaelMarked) then
+      player.MaxFireDelay = player.MaxFireDelay - math.ceil(player.MaxFireDelay / 8)
     end
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_DARK_PRINCESS_CROWN) and -- 442
-       player:GetHearts() == 2 and
-       cacheFlag == CacheFlag.CACHE_DAMAGE then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
+       not player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
 
-      player.Damage = player.Damage*1.666
+      fireDelayReduced = true
+      fireDelayPenalty = math.min(player.MaxFireDelay*1.5, 30)
+    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
+           player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
+
+      fireDelayReduced = false
+    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) then
+      fireDelayReduced = true
+      fireDelayPenalty = math.min(player.MaxFireDelay*0.75, 25)
+    else
+      fireDelayReduced = false
     end
+    if fireDelayReduced then player.MaxFireDelay = math.ceil(player.MaxFireDelay+fireDelayPenalty) end
+  end
+
+  if player:HasCollectible(442) then -- Dark Princes Crown
+    if player:GetHearts() == 2 and cacheFlag == CacheFlag.CACHE_FIREDELAY then
+      player.MaxFireDelay = math.ceil(player.MaxFireDelay*0.666)
+    end
+    player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_DARK_PRINCESS_CROWN) and -- 442
+     player:GetHearts() == 2 and
+     cacheFlag == CacheFlag.CACHE_DAMAGE then
+
+    player.Damage = player.Damage*1.666
   end
 end
 
@@ -1399,16 +1426,16 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
            damageSource.SubType == hitBoxType then
 
           wraithCharge = wraithCharge + math.min(player.MaxFireDelay*0.2, 20)
-          Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #1)")
+          --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #1)")
         else
           wraithCharge = wraithCharge + math.min(math.max(player.MaxFireDelay, 1), 20)
-          Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #2)")
+          --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #2)")
         end
         wraithChargeCooldown = player.MaxFireDelay
         --wraithChargePenalty = 3
       else
         wraithCharge = wraithCharge + math.min(damage, 20)
-        Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from melee)")
+        --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from melee)")
       end
     end
     if damType == EntityType.ENTITY_FAMILIAR and
@@ -1622,10 +1649,10 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       hits = hits + 1
     elseif damageSource.Type == EntityType.ENTITY_FAMILIAR and tookDamage:IsVulnerableEnemy() then
       wraithCharge = wraithCharge + math.max(math.min(damage, tookDamage.HitPoints)*0.33, 1)
-      Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from ???)")
+      --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from ???)")
     end
     if wraithCharge > 100 then
-      Isaac.DebugString("Set wraithCharge to 100 from overcharge (" .. tostring(wraithCharge) .. ").")
+      --Isaac.DebugString("Set wraithCharge to 100 from overcharge (" .. tostring(wraithCharge) .. ").")
       wraithCharge = 100
     end
   end
@@ -1902,9 +1929,29 @@ function SamaelMod:PostUpdateFixBugs()
      player:HasCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER) then -- 172
 
     SamaelMod.SacDaggerAcquired = true
+
+    -- Check for an existing Sacrifical Dagger
+    local foundSacDag = false
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+         entity.Variant == FamiliarVariant.SACRIFICIAL_DAGGER and -- 35
+         entity.SubType ~= hitBoxType then
+
+        foundSacDag = true
+        Isaac.DebugString("Found Sacrificial Dagger familiar entity: " .. tostring(entity.Index))
+      end
+    end
+    if foundSacDag == false then
+      -- Manually spawn a Sacrificial Dagger familiar (3.35)
+      game:Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER,
+                 player.Position, Vector(0, 0), player, 0, 0)
+      Isaac.DebugString("Spawned a new Sac Dagger familiar.")
+    end
+    --[[
     Isaac.DebugString("Removing collectible 172") -- Fix the item tracker
     player:AddCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER, 0, false) -- 172
     Isaac.DebugString("Sac Dagger detected; giving another one.")
+    --]]
   end
 
   -- Mom's Knife + Dead Eye bug
