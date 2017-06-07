@@ -88,6 +88,7 @@ function RPFastClear:NPCUpdate(npc)
       end
     end
 
+    -- Check to see if any other enemies are alive in the room
     RPFastClear:CheckAlive()
 end
 
@@ -123,8 +124,8 @@ function RPFastClear:CheckPuzzleRoom()
   end
 end
 
+-- Check to see if any other enemies are alive in the room
 function RPFastClear:CheckAlive()
-  -- Check all the (non-grid) entities in the room to see if anything is alive
   local allDead = true
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     local npc = entity:ToNPC()
@@ -264,11 +265,16 @@ function RPFastClear:ClearRoom()
   -- Manually kill Death's Heads and Flesh Death's Heads
   -- (by default, they will only die after the death animations are completed)
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if (entity.Type == EntityType.ENTITY_DEATHS_HEAD and entity.Variant == 0) or -- 212.0
-       entity.Type == EntityType.ENTITY_FLESH_DEATHS_HEAD then -- 286.0
-
+    if entity.Type == EntityType.ENTITY_DEATHS_HEAD and entity.Variant == 0 then -- 212.0
       -- Activate its death state
       entity:ToNPC().State = 18
+    elseif entity.Type == EntityType.ENTITY_FLESH_DEATHS_HEAD then -- 286.0
+      -- Activating the death state won't make the tears explode out of it, so just kill it and spawn another one to die
+      entity.Visible = false
+      entity:Kill()
+      local newHead = game:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity,
+                                 entity.Parent, entity.SubType, entity.InitSeed)
+      newHead:ToNPC().State = 18
     end
   end
 

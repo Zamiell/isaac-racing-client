@@ -1,5 +1,16 @@
 # Racing+ Version History and News
 
+### *v0.6.18* - June 7th, 2017
+
+* Charge accumulation on the Wraith Skull will work more normally now at high levels of damage.
+* Reduced the Samael Mom's Knife damage nerf from 1.75 to 1.5. (Thanks Krakenos)
+* Added the "R+7 (S2)" graphic to he "Choose Char Order" custom challenge. Thanks to Gromfalloon for doing the artwork.
+* Reverted the "jumping into the chest" animation to vanilla.
+* Fixed the bug where Samael would start with extra damage after having certain items on the previous run.
+* Fixed the bug where the statue would take a while to wake up on the Satan fight if you killed the Fallen super quickly. (Thanks SlashSP)
+* Fixed the bug where Flesh Death's Heads would not spit out tears when they died. (Thanks SlashSP)
+* Fixed the bug where the D6 was not getting removed from item pools properly on custom challenges that started as Isaac. (Thanks CrafterLynx)
+
 ### *v0.6.17* - June 6th, 2017
 
 * Putting the Wraith Skull in the Schoolbag will now immediately end the item's invulernability, similar to how My Little Pony and Unicorn Stump work.

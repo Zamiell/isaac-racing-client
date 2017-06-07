@@ -426,7 +426,7 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   RPSpeedrun.sprites.button2:Load("gfx/speedrun/button2.anm2", true)
   RPSpeedrun.sprites.button2:SetFrame("Default", 0)
   RPSpeedrun.sprites.button3 = Sprite()
-  RPSpeedrun.sprites.button3:Load("gfx/speedrun/button2.anm2", true)
+  RPSpeedrun.sprites.button3:Load("gfx/speedrun/button3.anm2", true)
   RPSpeedrun.sprites.button3:SetFrame("Default", 0)
 end
 
@@ -677,13 +677,11 @@ function RPSpeedrun:DisplayCharSelectRoom()
     local posRender = Isaac.WorldToRenderPosition(posButton2, false)
     RPSpeedrun.sprites.button2:RenderLayer(0, posRender)
   end
-  --[[
   if RPSpeedrun.sprites.button3 ~= nil then
     local posButton3 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y - 1)
     local posRender = Isaac.WorldToRenderPosition(posButton3, false)
     RPSpeedrun.sprites.button3:RenderLayer(0, posRender)
   end
-  --]]
   if RPSpeedrun.sprites.characters ~= nil then
     for i = 1, #RPSpeedrun.sprites.characters do
       local posGame

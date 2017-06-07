@@ -5,13 +5,6 @@
 
 --[[
 
-TODO Samael:
-- Dead Eye + Knife doesn't work
-- look at satan
-- fix red guys
-- fortunes
-- relook at rules
-
 TODO:
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows

@@ -192,24 +192,11 @@ function RPCallbacks:PostPlayerInit(player)
   -- Local variables
   local game = Game()
   local mainPlayer = game:GetPlayer(0)
-  local character = mainPlayer:GetPlayerType()
-  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_PLAYER_INIT")
 
   -- Check for co-op babies
   if player.Variant == 0 then
-    -- The "charge" sound effect plays at the beginning of a run if you start with the D6,
-    -- and this is annoying with fast-resets, so stop it from playing
-    -- (at this point we don't have the D6 yet, but once we already have a fully charged D6,
-    -- it won't play the charge sound effect)
-    if character ~= PlayerType.PLAYER_LILITH then -- 13
-      -- Giving the D6 to Lilith here causes the game to crash because the "AddCollectible()" function
-      -- causes a "CheckFamiliar()" call, which uses the current room, which happens to be null because this occurs
-      -- before floor initiailization, so we will handle Lilith later in the PostGameStarted callback
-      player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
-      sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
-    end
     return
   end
 
@@ -507,8 +494,11 @@ function RPCallbacks:PostNewRoom2()
     RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
   end
 
-  -- Check for disruptive teleportation from Gurdy
+  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
   RPCallbacks:CheckSubvertTeleport()
+
+  -- Check for the Satan room
+  RPCallbacks:CheckSatanRoom()
 
   --
   -- Race stuff
@@ -586,6 +576,39 @@ function RPCallbacks:CheckSubvertTeleport()
     RPGlobals.run.teleportSubvertScale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
     -- (we actually move the player on the next PostRender frame)
+  end
+end
+
+function RPCallbacks:CheckSatanRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
+
+  if roomClear == false and
+     roomStageID == 0 and roomVariant == 3600 then -- Satan
+
+    -- Instantly spawn the first part of the fight
+    -- (the vanilla delay is very annoying)
+    game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
+               RPGlobals:GridToPos(5, 3), Vector(0, 0), nil, 0, 0)
+    game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
+               RPGlobals:GridToPos(7, 3), Vector(0, 0), nil, 0, 0)
+    game:Spawn(EntityType.ENTITY_FALLEN, 0, -- 81.0 (The Fallen)
+               RPGlobals:GridToPos(6, 3), Vector(0, 0), nil, 0, 0)
+
+    -- Prime the statue to wake up quicker
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_SATAN then -- 84
+        entity:ToNPC().I1 = 1
+      end
+    end
+
+    Isaac.DebugString("Spawned the first wave manually and primed the statue.")
   end
 end
 

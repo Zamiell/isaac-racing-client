@@ -2,39 +2,39 @@
          portraitroot="gfx/ui/boss/"
          nameimageroot="gfx/ui/boss/"
          bigportraitroot="gfx/ui/stage/">
-	<player id="0" name="Isaac" skin="Character_001_Isaac.png" hp="6" bombs="1" items="105"
+	<player id="0" name="Isaac" skin="Character_001_Isaac.png" hp="6" bombs="1"
           nameimage="PlayerName_01_Isaac.png"
           portrait="PlayerPortrait_01_Isaac.png"
           bigportrait="PlayerPortraitBig_01_Isaac.png" skinColor="-1" />
-	<player id="1" name="Magdalene" skin="Character_002_Magdalene.png" costume="7" hp="8" items="105"
+	<player id="1" name="Magdalene" skin="Character_002_Magdalene.png" costume="7" hp="8"
           nameimage="PlayerName_02_Magdalene.png"
           portrait="PlayerPortrait_02_Magdalene.png"
           bigportrait="PlayerPortraitBig_02_Magdalene.png" skinColor="-1" />
-	<player id="2" name="Cain" skin="Character_003_Cain.png" costume="8" hp="4" keys="1" items="105,46"
+	<player id="2" name="Cain" skin="Character_003_Cain.png" costume="8" hp="4" keys="1" items="46"
           nameimage="PlayerName_03_Cain.png"
           portrait="PlayerPortrait_03_Cain.png"
           bigportrait="PlayerPortraitBig_03_Cain.png" skinColor="-1" />
-	<player id="3" name="Judas" skin="Character_004_Judas.png" costume="9" hp="2" armor="1" bombs="1" items="105"
+	<player id="3" name="Judas" skin="Character_004_Judas.png" costume="9" hp="2" armor="1" bombs="1"
           nameimage="PlayerName_04_Judas.png"
           portrait="PlayerPortrait_04_Judas.png"
           bigportrait="PlayerPortraitBig_04_Judas.png" skinColor="-1" />
-	<player id="4" name="???" skin="Character_006_Bluebaby.png" hp="0" armor="7" items="105"
+	<player id="4" name="???" skin="Character_006_Bluebaby.png" hp="0" armor="7"
           nameimage="PlayerName_06_BlueBaby.png"
           portrait="PlayerPortrait_06_BlueBaby.png"
           bigportrait="PlayerPortraitBig_06_Bluebaby.png" skinColor="2" />
-	<player id="5" name="Eve" skin="Character_005_Eve.png" costume="10" hp="4" items="105,122,117"
+	<player id="5" name="Eve" skin="Character_005_Eve.png" costume="10" hp="4" items="122,117"
           nameimage="PlayerName_05_Eve.png"
           portrait="PlayerPortrait_05_Eve.png"
           bigportrait="PlayerPortraitBig_05_Eve.png" skinColor="-1" /><!-- Eve also gets the Razor Blade (126) -->
-	<player id="6" name="Samson" skin="Character_007_Samson.png" costume="13" hp="6" items="105,157"
+	<player id="6" name="Samson" skin="Character_007_Samson.png" costume="13" hp="6" items="157"
           nameimage="PlayerName_07_Samson.png"
           portrait="PlayerPortrait_07_Samson.png"
           bigportrait="PlayerPortraitBig_07_Samson.png" skinColor="-1" />
-	<player id="7" name="Azazel" skin="Character_008_Azazel.png" costume="11" hp="2" armor="1" card="1" items="105"
+	<player id="7" name="Azazel" skin="Character_008_Azazel.png" costume="11" hp="2" armor="1" card="1"
           nameimage="PlayerName_08_Azazel.png"
           portrait="PlayerPortrait_08_Azazel.png"
           bigportrait="PlayerPortraitBig_08_Azazel.png" skinColor="1" />
-	<player id="8" name="Lazarus" skin="Character_009_Lazarus.png" hp="6" pill="1" items="105"
+	<player id="8" name="Lazarus" skin="Character_009_Lazarus.png" hp="6" pill="1"
           nameimage="PlayerName_10_Lazarus.png"
           portrait="PlayerPortrait_09_Lazarus.png"
           bigportrait="PlayerPortraitBig_09_Lazarus.png" costume="32" skinColor="-1" /><!-- Lazarus also gets Anemic (214) -->
@@ -58,10 +58,10 @@
 		<hair gfx="Character_009_EdenHair14.png" />
 		<hair gfx="Character_009_EdenHair15.png" />
     </player>
-	<player id="10" name="The Lost" skin="Character_012_TheLost.png" hp="0" armor="1" coins="1" items="105"
+	<player id="10" name="The Lost" skin="Character_012_TheLost.png" hp="0" armor="1" coins="1"
           nameimage="PlayerName_12_TheLost.png"
           portrait="PlayerPortrait_12_TheLost.png"
-          bigportrait="PlayerPortraitBig_12_TheLost.png" skinColor="0" />
+          bigportrait="PlayerPortraitBig_12_TheLost.png" skinColor="0" /><!-- The Lost also gets Holy Mantle (313) -->
 	<player id="11" name="Lazarus II" skin="Character_010_Lazarus2.png" hp="2" items="214"
           nameimage="PlayerName_10_Lazarus.png"
           portrait="PlayerPortrait_10_Lazarus2.png"
@@ -70,16 +70,16 @@
           nameimage="PlayerName_04_Judas.png"
           portrait="PlayerPortrait_BlackJudas.png"
           bigportrait="PlayerPortraitBig_BlackJudas.png" skinColor="1" />
-	<player id="13" name="Lilith" skin="Character_014_Lilith.png" hp="2" black="4" canShoot="false" items="105,412"
+	<player id="13" name="Lilith" skin="Character_014_Lilith.png" hp="2" black="4" canShoot="false" items="412"
           nameimage="PlayerName_13_Lilith.png"
           portrait="PlayerPortrait_13_Lilith.png"
           bigportrait="PlayerPortraitBig_Lilith.png" costume="34" skinColor="1" />
-	<player id="14" name="Keeper" skin="Character_015_Keeper.png" hp="4" bombs="1" items="105"
+	<player id="14" name="Keeper" skin="Character_015_Keeper.png" hp="4" bombs="1"
           nameimage="PlayerName_14_TheKeeper.png"
           portrait="PlayerPortrait_14_Keeper.png"
           bigportrait="PlayerPortraitBig_Keeper.png" skinColor="5" /><!-- Keeper also gets the Wooden Nickel (349) -->
-	<player id="15" name="Apollyon" skin="Character_016_Apollyon.png" costume="36" hp="4" items="105"
+	<player id="15" name="Apollyon" skin="Character_016_Apollyon.png" costume="36" hp="4"
           nameimage="PlayerName_15_Apollyon.png"
           portrait="PlayerPortrait_15_Apollyon.png"
-          bigportrait="PlayerPortraitBig_15_Apollyon.png" skinColor="5" /><!-- Void has to come first -->
+          bigportrait="PlayerPortraitBig_15_Apollyon.png" skinColor="5" />
 </players>

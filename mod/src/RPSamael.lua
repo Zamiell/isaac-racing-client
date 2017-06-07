@@ -125,6 +125,7 @@ local wraithTime = 0 --Time left for wraith mode
 local wraithCharge = 0 --How much the wraith ability has been charged (out of 100)
 local wraithActive = false --Is wraith form active?
 local wraithCooldown = 0 --Brief cooldown after wraith form where you still can't take damage
+local wraithChargePenalty = 3 -- ??
 local lastFrameWraithCharge = 0 --% of wraith meter charged during last update
 local wraithChargeCooldown = 0 --Cooldown before the wraith meter charges normally again
 local wraithActivationCooldown = 0 --Minimum cooldown between wraith mode activations
@@ -169,24 +170,19 @@ function SamaelMod:samaelPostUpdate()
 
     SamaelMod:wraithModeHandler()
 
-    local itemWraithCharge = math.floor(110*(wraithCharge/100))
     if player:HasCollectible(wraithItem) then
-      player:SetActiveCharge(itemWraithCharge)
+      player:SetActiveCharge(math.ceil(wraithCharge))
       -- Mute the annoying sound effect
       local sfx = SFXManager()
       sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
     elseif RPGlobals.run.schoolbag.item == wraithItem then
-      RPGlobals.run.schoolbag.charges = itemWraithCharge
+      RPGlobals.run.schoolbag.charges = math.ceil(wraithCharge)
     end
 
     if wraithChargeCooldown > 0 then
       wraithChargeCooldown = wraithChargeCooldown - 1
     end
 
-    if Game():GetFrameCount() == 1 then --On new run, reset wraithCharge
-      wraithCharge = 0
-      --Isaac.SaveModData(SamaelMod, tostring(0))
-    end
     if roomFrames == 1 then
       --Respawn scythe every room (It does not persist otherwise. I prefer it this way.
       -- It's easy to manage, since this is all you have to do to fix it.)
@@ -489,63 +485,6 @@ function SamaelMod:triggerWraithModeEnd()
   Isaac.DebugString("Ended wraith mode.")
 end
 
------------OnRender function-----------
---[[
-function SamaelMod:onRender()
-  local player = Isaac.GetPlayer(0)
-  --Isaac.RenderText("Info: " .. info, 50, 65, 1, 1, 1, 255)
-  if player:GetPlayerType() == samaelID then
-    if showValues then
-      if charge <= chargeTime then
-        Isaac.RenderText("Charge: " .. charge .. "/" .. chargeTime, 50, 65, 1, 1, 1, 255)
-      else
-        Isaac.RenderText("Charge: " .. chargeTime .. "/" .. chargeTime, 50, 65, 1, 1, 1, 255)
-      end
-      local delay = SamaelMod:calcSwingDelay()
-      if delay > swingDelayCap then
-        Isaac.RenderText("Swing Delay: " .. swingDelay .. "/" .. swingDelayCap, 50, 80, 1, 1, 1, 255)
-      else
-        Isaac.RenderText("Swing Delay: " .. swingDelay .. "/" .. delay, 50, 80, 1, 1, 1, 255)
-      end
-      --Isaac.RenderText("scytheState: " .. scytheState, 50, 80, 1, 1, 1, 255)
-    end
-
-    if wraithCharge > lastFrameWraithCharge + 25 then
-      wraithCharge = lastFrameWraithCharge + 25
-    end
-    lastFrameWraithCharge = wraithCharge
-
-    --Wraith meter
-    local room = Game():GetRoom()
-    if not (room:GetType() == RoomType.ROOM_BOSS and not room:IsClear() and room:GetFrameCount() < 1) and
-       not player:HasCollectible(wraithItem) then
-
-      wraithMeter:SetOverlayRenderPriority(true)
-      if wraithIsCharged and wraithCharge < 100 then
-        wraithIsCharged = false
-      elseif not wraithIsCharged and wraithCharge >= 100  and wraithActivationCooldown == 0 then
-        SamaelMod:playSound(170, 1, 0.95)
-        --wraithMeter:Play("charged", true)
-        wraithIsCharged = true
-      end
-      if wraithActive then
-        wraithMeter:SetFrame("charging", math.floor(wraithTime*0.95/5.0))
-      elseif wraithActivationCooldown == 0 then
-        wraithMeter:SetFrame("charging", math.floor(wraithCharge*0.95/5.0))
-      else
-        wraithMeter:SetFrame("charging", math.min(math.floor(wraithCharge*0.95/5.0), 18))
-      end
-      local x = wraithMeterXOffset1
-      if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and RPGlobals.run.schoolbag.item ~= 0 then
-        x = wraithMeterXOffset2
-      end
-      local pos = Vector(x, wraithMeterYOffset)
-      wraithMeter:Render(pos, Vector(0, 0), Vector(0, 0))
-    end
-  end
-end
---]]
-
 -----------NPC update function for the scythe entity-----------
 function SamaelMod:scytheUpdate(scythe)
   local player = Isaac.GetPlayer(0)
@@ -828,13 +767,13 @@ function SamaelMod:scytheUpdate(scythe)
          player:HasCollectible(CollectibleType.COLLECTIBLE_SOY_MILK) and
          not player:HasCollectible(CollectibleType.COLLECTIBLE_LIBRA) then
 
-        hitBox.CollisionDamage = hitBox.CollisionDamage*1.75
+        hitBox.CollisionDamage = hitBox.CollisionDamage * 1.75
       end
       if player:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or
          player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or
          player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then
 
-        hitBox.CollisionDamage = hitBox.CollisionDamage*1.5
+        hitBox.CollisionDamage = hitBox.CollisionDamage * 1.5
       end
       if player:HasCollectible(CollectibleType.COLLECTIBLE_GHOST_PEPPER) and math.random(25) == 1 then
         local flameSpeed = 10
@@ -1149,13 +1088,7 @@ function SamaelMod:PostPlayerInit(player)
     wraithTime = 0
     wraithActive = false
     charge = 0
-    --wraithCharge = tonumber(Isaac.LoadModData(SamaelMod))
     wraithCharge = 0 -- Just set it to 0, we don't care about keeping track of it between runs
-    --spawnSkull = true
-
-    --Void the modded character crashing bug as of booster back 2
-    --Game():GetSeeds():AddSeedEffect(SeedEffect.SEED_KIDS_MODE)
-    -- (we don't need to add any seeds because the crash was fixed)
   end
 end
 
@@ -1211,7 +1144,7 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
 
     -- Mom's Knife nerf
     if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
-      player.Damage = player.Damage / 1.75
+      player.Damage = player.Damage / 1.5
     end
 
     properDamage = player.Damage --Save proper damage stat
@@ -1425,17 +1358,21 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
            damageSource.Variant == FamiliarVariant.SACRIFICIAL_DAGGER and
            damageSource.SubType == hitBoxType then
 
-          wraithCharge = wraithCharge + math.min(player.MaxFireDelay*0.2, 20)
-          --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #1)")
+          local addCharge = math.min(player.MaxFireDelay * 0.2, 20)
+          wraithCharge = wraithCharge + addCharge
+          Isaac.DebugString("Added wraithCharge from #1: " .. tostring(addCharge))
         else
-          wraithCharge = wraithCharge + math.min(math.max(player.MaxFireDelay, 1), 20)
-          --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from thrown #2)")
+          local addCharge = math.min(math.max(player.MaxFireDelay, 1), 20)
+          wraithCharge = wraithCharge + addCharge
+          Isaac.DebugString("Added wraithCharge from #2: " .. tostring(addCharge))
         end
         wraithChargeCooldown = player.MaxFireDelay
-        --wraithChargePenalty = 3
+        wraithChargePenalty = 3
       else
-        wraithCharge = wraithCharge + math.min(damage, 20)
-        --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from melee)")
+        local addCharge = math.min(damage, 20) / wraithChargePenalty
+        wraithCharge = wraithCharge + addCharge
+        wraithChargePenalty = wraithChargePenalty + 2
+        Isaac.DebugString("Added wraithCharge from #3 damage: " .. tostring(addCharge))
       end
     end
     if damType == EntityType.ENTITY_FAMILIAR and
@@ -1462,11 +1399,6 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
        --"Push" the enemy away from the player (knockback)
        local vel = tookDamage.Position:__sub(player.Position):Normalized():__mul(knockbackMagnitude+knockBackBonus)
       tookDamage:AddVelocity(vel)
-
-      --[[--Charge wraith meter (charges less with melee)
-      if wraithCharge < 100 and not wraithActive then
-        wraithCharge = wraithCharge + math.max(swingDelay/4.5, 1)
-      end]]
 
       --Status condition stuff
       math.randomseed(Isaac.GetFrameCount() + Game():GetFrameCount())
@@ -1648,11 +1580,14 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
 
       hits = hits + 1
     elseif damageSource.Type == EntityType.ENTITY_FAMILIAR and tookDamage:IsVulnerableEnemy() then
-      wraithCharge = wraithCharge + math.max(math.min(damage, tookDamage.HitPoints)*0.33, 1)
-      --Isaac.DebugString("Set wraithCharge to: " .. tostring(wraithCharge) .. " (from ???)")
+      local addCharge = math.max(math.min(damage, tookDamage.HitPoints) * 0.33, 1)
+      if addCharge > 20 then
+        addCharge = 20
+      end
+      wraithCharge = wraithCharge + addCharge
+      Isaac.DebugString("Added wraithCharge from #4: " .. tostring(addCharge))
     end
     if wraithCharge > 100 then
-      --Isaac.DebugString("Set wraithCharge to 100 from overcharge (" .. tostring(wraithCharge) .. ").")
       wraithCharge = 100
     end
   end
@@ -1897,10 +1832,23 @@ function SamaelMod:decapitation(npc)
 end
 
 function SamaelMod.PostGameStartedReset()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
   SamaelMod.SacDaggerAcquired = false
+
   wraithActive = false
   wraithCooldown = 0
   wraithTime = 0
+  wraithCharge = 0
+
+  numItems = -1
+  itemChecks = {}
+  player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
+  player:EvaluateItems()
+
+  Isaac.DebugString("Cleared all Samael variables.")
 end
 
 function SamaelMod:PostUpdateFixBugs()
@@ -1947,11 +1895,6 @@ function SamaelMod:PostUpdateFixBugs()
                  player.Position, Vector(0, 0), player, 0, 0)
       Isaac.DebugString("Spawned a new Sac Dagger familiar.")
     end
-    --[[
-    Isaac.DebugString("Removing collectible 172") -- Fix the item tracker
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER, 0, false) -- 172
-    Isaac.DebugString("Sac Dagger detected; giving another one.")
-    --]]
   end
 
   -- Mom's Knife + Dead Eye bug

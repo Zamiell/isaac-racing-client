@@ -196,10 +196,10 @@ function RPCheckEntities:NonGrid()
       Isaac.DebugString("Moved The Polaroid.")
 
     elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-       entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-       entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 328
-       RPGlobals.race.goal == "Blue Baby" and
-       RPGlobals.race.rFormat ~= "pageant" then
+           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
+           entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 328
+           RPGlobals.race.goal == "Blue Baby" and
+           RPGlobals.race.rFormat ~= "pageant" then
 
       -- Explicitly spawn The Polaroid for custom speedruns to the Dark Room
       if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then

@@ -286,7 +286,7 @@ function RPSchoolbag:Switch()
   end
 
   -- Update the cache (in case the old / the new item granted stats, like A Pony)
-  player:AddCacheFlags(CacheFlag.CACHE_ALL)
+  player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
   player:EvaluateItems()
 
   -- Remove the costume, if any (some items give a costume, like A Pony)

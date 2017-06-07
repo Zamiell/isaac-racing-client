@@ -38,10 +38,7 @@ function RPPostGameStarted:Main(saveState)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local seeds = game:GetSeeds()
-  local player = game:GetPlayer(0)
-  local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
-  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
 
@@ -168,14 +165,6 @@ function RPPostGameStarted:Main(saveState)
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPCallbacks:PostNewLevel2()
-
-  -- Silence the recharge noise for Lilith
-  -- (this is normally done in the PostPlayerInit callback, but we need to handle it here for Lilith to avoid a crash)
-  if character == PlayerType.PLAYER_LILITH and -- 13
-     sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then
-
-    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
-  end
 end
 
 -- This is done when a run is started
@@ -184,29 +173,51 @@ function RPPostGameStarted:Character()
   local game = Game()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
+  local itemPool = game:GetItemPool()
+  local sfx = SFXManager()
+
+  -- Give all characters the D6
+  local activeItem = player:GetActiveItem()
+  player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
+  sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
 
   -- Do character-specific actions
-  if character == PlayerType.PLAYER_JUDAS then -- 3
+  if character == PlayerType.PLAYER_CAIN then -- 2
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 46 (Lucky Foot)")
+    Isaac.DebugString("Adding collectible 46 (Lucky Foot)")
+
+  elseif character == PlayerType.PLAYER_JUDAS then -- 3
     -- Judas needs to be at half of a red heart
     player:AddHearts(-1)
 
   elseif character == PlayerType.PLAYER_EVE then -- 5
     -- Remove the Razor Blade from the item tracker
     -- (this is given via an achivement and not from the "players.xml file")
-    Isaac.DebugString("Removing collectible 126")
+    Isaac.DebugString("Removing collectible 126 (Razor Blade)")
 
-    -- Add the D6 (to replace the Razor Blade)
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 122 (Whore of Babylon)")
+    Isaac.DebugString("Adding collectible 122 (Whore of Babylon)")
+    Isaac.DebugString("Removing collectible 117 (Dead Bird)")
+    Isaac.DebugString("Adding collectible 117 (Dead Bird)")
+
+  elseif character == PlayerType.PLAYER_SAMSON then -- 6
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 157 (Bloody Lust)")
+    Isaac.DebugString("Adding collectible 157 (Bloody Lust)")
 
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7
     -- Decrease his red hearts
     player:AddHearts(-1)
 
-  elseif character == PlayerType.PLAYER_EDEN then -- 9
-    -- Swap the random active item with the D6
-    local activeItem = player:GetActiveItem()
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+  elseif character == PlayerType.PLAYER_LAZARUS then -- 8
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 214 (Anemic)")
+    Isaac.DebugString("Adding collectible 214 (Anemic)")
 
+  elseif character == PlayerType.PLAYER_EDEN then -- 9
     -- Find out what the passive item is
     local passiveItem
     for i = 1, CollectibleType.NUM_COLLECTIBLES do
@@ -249,30 +260,36 @@ function RPPostGameStarted:Character()
     RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
     RPSchoolbag.sprites.item = nil
 
-    -- Reorganize the items on the item tracker
+    -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible " .. activeItem)
     Isaac.DebugString("Removing collectible " .. passiveItem)
     Isaac.DebugString("Adding collectible " .. activeItem)
     Isaac.DebugString("Adding collectible " .. passiveItem)
 
+  elseif character == PlayerType.PLAYER_THELOST then -- 10
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 313 (Holy Mantle)")
+    Isaac.DebugString("Adding collectible 313 (Holy Mantle)")
+
+  elseif character == PlayerType.PLAYER_LILITH then -- 13
+    -- Make the D6 appear first on the item tracker
+    Isaac.DebugString("Removing collectible 412 (Cambion Conception)")
+    Isaac.DebugString("Adding collectible 412 (Cambion Conception)")
+
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Remove the Wooden Nickel from the item tracker
     -- (this is given via an achivement and not from the "players.xml file")
-    Isaac.DebugString("Removing collectible 349")
-
-    -- Add the D6 (to replace the Wooden Nickel)
-    player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+    Isaac.DebugString("Removing collectible 349 (Wooden Nickel)")
 
   elseif character == 16 then -- Samael
+    -- Decrease his red hearts
+    player:AddHearts(-1)
+
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
     RPGlobals.run.schoolbag.item = Isaac.GetItemIdByName("Wraith Skull")
     RPSchoolbag.sprites.item = nil
     Isaac.DebugString("Adding collectible " .. tostring(Isaac.GetItemIdByName("Wraith Skull")) .. " (Wraith Skull)")
-
-    -- Decrease his red hearts
-    player:AddHearts(-1)
-
   end
 end
 
@@ -492,7 +509,8 @@ function RPPostGameStarted:Diversity()
   -- Give the player extra starting items (for diversity races)
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
-  Isaac.DebugString("Removing collectible 414") -- We don't need to show this on the item tracker to reduce clutter
+  Isaac.DebugString("Removing collectible 414 (More Options)")
+  -- We don't need to show this on the item tracker to reduce clutter
 
   -- Give the player their five random diversity starting items
   for i = 1, #RPGlobals.race.startingItems do
