@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.7.0* - June 8th, 2017
+### *v0.7.0* - June 12th, 2017
 
 News:
 
@@ -19,7 +19,6 @@ Changes:
   * Shots fired when the room is clear of enemies won't count towards the stats.
   * The stats won't show if you have more than one knife, Epic Fetus, or Brimstone.
 * In the R+7 custom challenge, both The Polaroid and The Negative will now spawn after defeating Mom (instead of just The Polaroid). Neither are required for the trapdoor to appear after Satan. (Thanks SlashSP)
-* For R+9, R+14, and R+7 custom challenges, LiveSplit will now automatically detect a reset when you go back to the first character. (Thanks Hyphen-ated)
 * If there are multiple Mom's Hands or Mom's Dead Hands in a room, they will now fall in 3 frame intervals instead of 1 frame intervals, which will make them look less buggy.
 * If you are on a victory lap, the amount of victory laps will now show in the bottom-right hand corner of the screen.
 * Fixed the bug where Samael could get a double charge out of a Lil' Battery or Charged Key if he swapped Schoolbag items immediately after touching it. (Thanks Blumpkin Idaho)
