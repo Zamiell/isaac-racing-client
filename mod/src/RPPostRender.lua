@@ -54,6 +54,8 @@ function RPPostRender:Main()
   RPTimer:Display()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DisplayCharSelectRoom()
+  RPPostRender:DisplayKnifeStats()
+  RPPostRender:DisplayVictoryLaps()
 
   -- Ban Basement 1 Treasure Rooms
   RPPostUpdate:CheckBanB1TreasureRoom()
@@ -334,6 +336,40 @@ function RPPostRender:CheckSubvertTeleport()
 
     -- Teleport them
     player.Position = pos
+  end
+end
+
+function RPPostRender:DisplayKnifeStats()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- Don't do anything if the player does not exactly 1 knife
+  if player:GetCollectibleNum(CollectibleType.COLLECTIBLE_MOMS_KNIFE) ~= 1 or -- 114
+     player:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) or -- 2
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) or -- 153
+     player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) or -- 245
+     player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) or -- 360
+     player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118; Brimstone causes this to bug out
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then -- 168; Epic Fetus overwrites Mom's Knife
+
+    return
+  end
+
+  local statsText
+  if RPGlobals.run.knife.totalShots ~= 0 then
+    local percent = RPGlobals.run.knife.hitShots / RPGlobals.run.knife.totalShots * 100
+    percent = math.floor(RPGlobals:Round(percent, 0)) -- The "math.floor()" converts the float to an integer
+    statsText = tostring(percent) .. "%" ..
+                " (" .. tostring(RPGlobals.run.knife.hitShots) .. "/" .. tostring(RPGlobals.run.knife.totalShots) .. ")"
+
+    Isaac.RenderText(statsText, 430, 262, 2, 2, 2, 2)
+  end
+end
+
+function RPPostRender:DisplayVictoryLaps()
+  if RPGlobals.raceVars.victoryLaps > 0 then
+    Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), 430, 247, 2, 2, 2, 2)
   end
 end
 

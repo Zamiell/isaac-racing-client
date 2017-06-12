@@ -1,15 +1,41 @@
 # Racing+ Version History and News
 
+### *v0.7.0* - June 8th, 2017
+
+News:
+
+* Season 1 is considered finished!
+  * Congradulations to Cyber_1 for the best R+9 time of 1:31:02 and Dea1h on the second best time of 1:33:27. I was luckily able to nab third place with 1:33:49.
+  * Congradulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
+  * The top 10 times will be stored in a hall of fame page on the website in the future.
+  * If you want to beat these times, The R+9 and R+14 categories will continue to be tracked on speedrun.com, but the official competition will move on to season 2.
+* Season 2 has officially begun! The new category is now considered final; there will be no more major balance changes.
+* If you have ideas for season 3, send them to me on Discord, which is planned for November of 2017.
+
+Changes:
+
+* Azazel's starting health has been changed to be 3 black hearts and 1 half soul heart. This makes him more powerful, but is closer to vanilla. (Thanks Lobsterosity and Krakenos)
+* When you have Mom's Knife, extra stats will now appear in the bottom-right hand corner of your screen to show your accuracy.
+  * Shots fired when the room is clear of enemies won't count towards the stats.
+  * The stats won't show if you have more than one knife, Epic Fetus, or Brimstone.
+* In the R+7 custom challenge, both The Polaroid and The Negative will now spawn after defeating Mom (instead of just The Polaroid). Neither are required for the trapdoor to appear after Satan. (Thanks SlashSP)
+* For R+9, R+14, and R+7 custom challenges, LiveSplit will now automatically detect a reset when you go back to the first character. (Thanks Hyphen-ated)
+* If there are multiple Mom's Hands or Mom's Dead Hands in a room, they will now fall in 3 frame intervals instead of 1 frame intervals, which will make them look less buggy.
+* If you are on a victory lap, the amount of victory laps will now show in the bottom-right hand corner of the screen.
+* Fixed the bug where Samael could get a double charge out of a Lil' Battery or Charged Key if he swapped Schoolbag items immediately after touching it. (Thanks Blumpkin Idaho)
+* Fixed the invisible hitbox on the double Frail fight on seeded races. (Thanks thereisnofuture)
+* The entity checking and fast-clear code has been rewritten so that the game should run faster on potato computers.
+
 ### *v0.6.18* - June 7th, 2017
 
 * Charge accumulation on the Wraith Skull will work more normally now at high levels of damage.
 * Reduced the Samael Mom's Knife damage nerf from 1.75 to 1.5. (Thanks Krakenos)
-* Added the "R+7 (S2)" graphic to he "Choose Char Order" custom challenge. Thanks to Gromfalloon for doing the artwork.
+* Added the "R+7 (S2)" graphic to the "Choose Char Order" custom challenge. Thanks to Gromfalloon for doing the artwork.
 * Reverted the "jumping into the chest" animation to vanilla.
 * Fixed the bug where Samael would start with extra damage after having certain items on the previous run.
 * Fixed the bug where the statue would take a while to wake up on the Satan fight if you killed the Fallen super quickly. (Thanks SlashSP)
 * Fixed the bug where Flesh Death's Heads would not spit out tears when they died. (Thanks SlashSP)
-* Fixed the bug where the D6 was not getting removed from item pools properly on custom challenges that started as Isaac. (Thanks CrafterLynx)
+* Fixed the bug where the D6 was not getting removed from item pools properly when playing as Isaac on custom challenges. (Thanks CrafterLynx)
 
 ### *v0.6.17* - June 6th, 2017
 
@@ -370,11 +396,13 @@
 * Fixed the bug where banned items would roll into other banned items under certain conditions. (Thanks Lobsterosity)
 * If Eden starts with Book of Sin, Crystal Ball, Betrayal, or Smelter, she will now start with the Racing+ custom version of the item.
 
-### News - March 23rd, 2017
+### *v0.3.2* - March 23rd, 2017
+
+News:
 
 * Now that the Mom's Hand change has been played for a while, I've asked around for feedback. Almost everyone likes the change, so it will remain in the game permanently.
 
-### *v0.3.2* - March 23rd, 2017
+Changes:
 
 * Made the mod work with the new patch.
 * Increased the pedestal pickup delay from 10 to 15.
@@ -538,11 +566,13 @@
 * Added the BibleD emote (requested by Birdie).
 * Added the FutureMan emote (requested by Lobsterosity).
 
-### News - March 11th, 2017
+### *v0.2.65* - March 11th, 2017
+
+News:
 
 * tODDlife has officially joined the staff, charged with Community Relations.
 
-### *v0.2.65* - March 11th, 2017
+Changes:
 
 * Updated the FAQ with various things at: https://isaacracing.net/info
 * Fixed the bug where the trophy would drop instead of a chest when you were not in a race. (Thanks Krakenos/Dea1h/CrafterLynx/thisguyisbarry/Victor23799)

@@ -30,7 +30,7 @@
           nameimage="PlayerName_07_Samson.png"
           portrait="PlayerPortrait_07_Samson.png"
           bigportrait="PlayerPortraitBig_07_Samson.png" skinColor="-1" />
-	<player id="7" name="Azazel" skin="Character_008_Azazel.png" costume="11" hp="2" armor="1" card="1"
+	<player id="7" name="Azazel" skin="Character_008_Azazel.png" costume="11" hp="0" black="6" card="1"
           nameimage="PlayerName_08_Azazel.png"
           portrait="PlayerPortrait_08_Azazel.png"
           bigportrait="PlayerPortraitBig_08_Azazel.png" skinColor="1" />

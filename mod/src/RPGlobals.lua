@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.6.18"
+RPGlobals.version = "v0.7.0"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -43,7 +43,6 @@ RPGlobals.raceVars = {
   showPlaceGraphic   = false,
   fireworks          = 0,
   removedMoreOptions = false,
-  placedJailCard     = false,
   victoryLaps        = 0,
 }
 
@@ -130,7 +129,6 @@ function RPGlobals:InitRun()
   -- Tracking per run
   RPGlobals.run.roomsEntered     = 0
   RPGlobals.run.touchedBookOfSin = false
-  RPGlobals.run.handsDelay       = 0
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
@@ -140,14 +138,13 @@ function RPGlobals:InitRun()
   RPGlobals.run.replacedTrapdoors   = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
-  RPGlobals.run.finishPedestals     = {}
-  RPGlobals.run.victoryLapPedestals = {}
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
   RPGlobals.run.currentGlobins        = {}
   RPGlobals.run.currentKnights        = {}
   RPGlobals.run.currentLilHaunts      = {}
+  RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false
 
@@ -194,6 +191,14 @@ function RPGlobals:InitRun()
     prevRoom    = 0,
     direction   = -1, -- Used to fix nested room softlocks
     blackMarket = false,
+  }
+
+  -- Knife stats tracking
+  RPGlobals.run.knife = {
+    hitShots   = 0,
+    totalShots = 0,
+    isFlying   = false,
+    isMissed   = true,
   }
 
   -- Keeper + Greed's Gullet tracking

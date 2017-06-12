@@ -11,6 +11,12 @@ local RPSpeedrun   = require("src/rpspeedrun")
 local SamaelMod    = require("src/rpsamael")
 
 --
+-- Variables
+--
+
+RPCheckEntities.fireworkActive = false
+
+--
 -- Check entities functions
 --
 
@@ -50,427 +56,46 @@ end
 function RPCheckEntities:NonGrid()
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
-  local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local room = game:GetRoom()
-  local roomType = room:GetType()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local roomData = level:GetCurrentRoomDesc().Data
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
   local challenge = Isaac.GetChallenge()
 
   -- Go through all the entities
-  local fireworkActive = false
+  RPCheckEntities.fireworkActive = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_BOMBDROP and -- 4
-       (entity.Variant == 3 or -- Troll Bomb
-        entity.Variant == 4) and -- Mega Troll Bomb
-        entity.FrameCount == 1 then
+    if entity.Type == EntityType.ENTITY_BOMBDROP then -- 4
+      RPCheckEntities:Entity4(entity)
 
-      -- Make Troll Bomb and Mega Troll Bomb fuses deterministic (exactly 2 seconds long)
-      -- (in vanilla the fuse is: 45 + random(1, 2147483647) % 30)
-      local bomb = entity:ToBomb()
-      bomb:SetExplosionCountdown(59) -- 60 minus 1 because we start at frame 1
-      -- Note that game physics occur at 30 frames per second instead of 60
+    elseif entity.Type == EntityType.ENTITY_PICKUP then
+      RPCheckEntities:Entity5(entity)
 
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_HEART and -- 10
-           RPCheckEntities:IsBossType(entity.SpawnerType) and
-           roomType == RoomType.ROOM_BOSS and -- 5
-           stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby or The Lamb or Victory Lap bosses
-
-      -- Delete heart drops in boss rooms so that we can properly seed them
-      RPGlobals.run.bossHearts.spawn = true
-      RPGlobals.run.bossHearts.position[#RPGlobals.run.bossHearts.position + 1] = entity.Position
-      RPGlobals.run.bossHearts.velocity[#RPGlobals.run.bossHearts.velocity + 1] = entity.Velocity
-      entity:Remove()
-      Isaac.DebugString("Removed boss room heart drop #" .. tostring(#RPGlobals.run.bossHearts.position) .. ": " ..
-                        "(" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") " ..
-                        "(" .. tostring(entity.Velocity.X) .. "," .. tostring(entity.Velocity.Y) .. ")")
-
-    elseif ((entity.Type == EntityType.ENTITY_PICKUP and -- 5
-             entity.Variant == PickupVariant.PICKUP_KEY and -- 30
-             entity.SubType == 4) or -- Charged Key
-            entity.Variant == PickupVariant.PICKUP_LIL_BATTERY) and -- 90
-           entity:GetSprite():IsPlaying("Collect") and
-           player:HasCollectible(Isaac.GetItemIdByName("Wraith Skull")) and
-           player:NeedsCharge() and
-           entity:ToPickup().Touched == false then
-
-      entity:ToPickup().Touched = true
-      SamaelMod:RechargeWraithSkull()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           (entity.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
-            entity.Variant == PickupVariant.PICKUP_MIMIC) and -- 54
-           entity:ToPickup().TheresOptionsPickup == false then -- This is used as a replacement counter
-           -- We can't check for the "Appear" animation because this is not fast enough
-           -- to intercept the unavoidable damage when a Mimic spawns on top of the player
-
-      -- Change all Mimics and Spiked Chests to normal chests until the appearing animation is complete
-      -- (this also fixes the unavoidable damage when a Mimic spawns where you happen to be standing)
-      -- (Spiked Chests do not have this problem)
-      -- (the unavoidable damage still happens if you spawn the Mimic using the console, but is fixed from room drops)
-      entity.Variant = 50
-
-      -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
-      if (roomData.StageID == 4 and roomData.Variant == 12) or -- Caves
-         (roomData.StageID == 4 and roomData.Variant == 19) or
-         (roomData.StageID == 4 and roomData.Variant == 244) or
-         (roomData.StageID == 4 and roomData.Variant == 518) or
-         (roomData.StageID == 4 and roomData.Variant == 519) or
-         (roomData.StageID == 5 and roomData.Variant == 19) or -- Catacombs
-         (roomData.StageID == 5 and roomData.Variant == 518) or
-         (roomData.StageID == 10 and roomData.Variant == 458) or -- Womb
-         (roomData.StageID == 10 and roomData.Variant == 489) or
-         (roomData.StageID == 11 and roomData.Variant == 458) or -- Utero
-         (roomData.StageID == 11 and roomData.Variant == 489) then
-
-        -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
-        entity:GetSprite():Load("gfx/005.050_chest.anm2", true)
-
-        -- We have to play an animation for the new sprite to actually appear
-        entity:GetSprite():Play("Appear", false)
-        Isaac.DebugString("Replaced a Spiked Chest / Mimic with a normal chest (for an unavoidable damage room).")
-      else
-        -- Changing the variant doesn't actually change the sprite
-        -- Furthermore, we make it look like a Mimic
-        entity:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
-
-        -- We have to play an animation for the new sprite to actually appear
-        entity:GetSprite():Play("Appear", false)
-
-        -- Use the normally unused "TheresOptionsPickup" varaible to store that this is not a normal chest
-        entity:ToPickup().TheresOptionsPickup = true
-
-        Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
-      end
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_CHEST and -- 50
-           entity:ToPickup().TheresOptionsPickup and
-           entity:GetSprite():IsPlaying("Appear") and
-           entity:GetSprite():GetFrame() == 21 then -- This is the last frame of the "Appear" animation
-
-      -- The "Appear" animation is finished, so now change this back to a Mimic
-      -- (we can't just check for "IsPlaying("Appear") == false" because if the player is touching it,
-      -- they will get the contents of a normal chest before the swap back occurs)
-      entity.Variant = 54
-      Isaac.DebugString("Replaced a Spiked Chest / Mimic (2/2).")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_NULL and -- 0
-           RPSpeedrun.spawnedCheckpoint then
-
-      RPSpeedrun:CheckpointTouched()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_POLAROID and -- 327
-           RPGlobals.race.goal == "The Lamb" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      entity:Remove()
-      Isaac.DebugString("Removed The Polaroid.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_POLAROID and -- 327
-           entity.Position.X >= 270 and entity.Position.X <= 290 and
-           RPGlobals.race.goal ~= "Mega Satan" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      -- Reposition it to the center
-      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
-                 entity.Parent, entity.SubType, entity.InitSeed)
-      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
-      entity:Remove()
-      Isaac.DebugString("Moved The Polaroid.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 328
-           RPGlobals.race.goal == "Blue Baby" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      -- Explicitly spawn The Polaroid for custom speedruns to the Dark Room
-      if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-        game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
-                   entity.Parent, CollectibleType.COLLECTIBLE_POLAROID, entity.InitSeed) -- 327
-        Isaac.DebugString("Explicitly spawned The Polaroid for a custom speedrun to the Dark Room.")
-      end
-
-      entity:Remove()
-      Isaac.DebugString("Removed The Negative.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE and -- 327
-           entity.Position.X >= 350 and entity.Position.X <= 370 and
-           RPGlobals.race.goal ~= "Mega Satan" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      -- Reposition it to the center
-      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
-                 entity.Parent, entity.SubType, entity.InitSeed)
-      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
-      entity:Remove()
-      Isaac.DebugString("Moved The Negative.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and -- 100
-           gameFrameCount >= RPGlobals.run.itemReplacementDelay then
-           -- We need to delay after using a Void (in case the player has consumed a D6)
-
-      RPCheckEntities:ReplacePedestal(entity)
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
-           RPGlobals.run.roomsEntered <= 1 and
-           RPGlobals.race.rFormat == "pageant" then
-
-      -- Delete Pageant Boy starting trinkets
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 10 and stageType == 0 and -- Sheol
-           (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
-            challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
-
-      -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
-      RPFastTravel:ReplaceTrapdoor(entity, -1)
-      -- A -1 indicates that we are replacing an entity instead of a grid entity
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 10 and stageType == 1 and -- Cathedral
-           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-      -- Delete the chest and replace it with the custom beam of light so that we can fast-travel normally
-      RPFastTravel:ReplaceHeavenDoor(entity)
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 11 and stageType == 0 and -- Dark Room
-           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-
-      -- Sometimes, the trophy does not appear, so we need to handle replacing both the trophy and the big chest
-      -- with either a checkpoint flag or a custom trophy, depending on if we are on the last character or not
-      if RPSpeedrun.charNum == 7 then
-        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                   entity.Position, entity.Velocity, nil, 0, 0)
-        Isaac.DebugString("Spawned the end of speedrun trophy.")
-      else
-        -- Spawn a Checkpoint (a custom item) in the center of the room
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
-                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-        RPSpeedrun.spawnedCheckpoint = true
-        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
-      end
-
-      -- Get rid of the vanilla big chest
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_TROPHY and -- 370
-           stage == 11 and
-           ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
-            (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
-            (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)) then
-
-      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
-      -- depending on if we are on the last character or not
-      if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-          RPSpeedrun.charNum == 9) or
-         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-          RPSpeedrun.charNum == 14) or
-         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-          RPSpeedrun.charNum == 7) then
-
-        -- Spawn the "Race Trophy" custom entity
-        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                   entity.Position, entity.Velocity, nil, 0, 0)
-        Isaac.DebugString("Spawned the end of speedrun trophy.")
-
-      else
-        -- Spawn a Checkpoint (a custom item) in the center of the room
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
-                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-        RPSpeedrun.spawnedCheckpoint = true
-        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
-      end
-
-      -- Get rid of the vanilla challenge trophy
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 11 and
-           RPGlobals.race.rFormat == "pageant" then
-
-      -- Delete all big chests on the Pageant Boy ruleset so that
-      -- you don't accidently end your run before you can show off your build to the judges
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 11 and
-           RPGlobals.raceVars.finished == false and
-           RPGlobals.race.status == "in progress" and
-           ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
-            (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
-            (RPGlobals.race.goal == "Mega Satan" and
-             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
-
-      -- Spawn the "Race Trophy" custom entity
-      game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                 entity.Position, entity.Velocity, nil, 0, 0)
-      Isaac.DebugString("Spawned the end of race trophy.")
-
-      -- Get rid of the chest
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 11 and
-           RPGlobals.raceVars.finished == false and
-           RPGlobals.race.status == "in progress" and
-           (RPGlobals.race.goal == "Mega Satan" and
-            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
-
-      -- Get rid of the chest as a reminder that the race goal is Mega Satan
-      entity:Remove()
-      Isaac.DebugString("Got rid of the big chest since the goal is Mega Satan.")
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_BIGCHEST and -- 340
-           stage == 11 and
-           RPGlobals.raceVars.finished then
-
-      -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
-      local victoryLapPosition = room:GetCenterPos()
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
-                 nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-      Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
-
-      -- Get rid of the chest
-      entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.EntityCollisionClass ~= 0 then
-           -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect"
-           -- animation; however, as soon as they are touched, their EntityCollisionClass will be set to 0
-           -- (this is necessary to fix the bug where pickups can be duplicated from touching them)
-
-      -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
-      RPFastTravel:CheckPickupOverHole(entity)
+    elseif entity.Type == EntityType.ENTITY_KNIFE then -- 8
+      RPCheckEntities:Entity8(entity)
 
     elseif entity.Type == EntityType.ENTITY_KNIGHT or -- 41
            entity.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
            entity.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
 
-      -- Knights, Selfless Knights, Floating Knights, and Bone Knights
-      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-      if RPGlobals.run.currentKnights[entity.Index] == nil then
-        -- Add their position to the table so that we can keep track of it on future frames
-        RPGlobals.run.currentKnights[entity.Index] = {
-          pos = entity.Position,
-        }
-      end
-
-      if entity.FrameCount == 4 then
-        -- Changing the NPC's state triggers the invulnerability removal in the next frame
-        entity:ToNPC().State = 4
-
-        -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
-        -- (this is to compensate for having only post update hooks)
-        entity.Visible = true
-
-      elseif entity.FrameCount >= 5 and
-             entity.FrameCount <= 30 then
-
-        -- Keep the 5th frame of the spawn animation going
-        entity:GetSprite():SetFrame("Down", 0)
-
-        -- Make sure that it stays in place
-        entity.Position = RPGlobals.run.currentKnights[entity.Index].pos
-        entity.Velocity = Vector(0, 0)
-      end
+      RPCheckEntities:Entity41(entity)
 
     elseif entity.Type == EntityType.ENTITY_EYE then -- 60
-      -- Eyes and Blootshot Eyes
-      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-      if entity.FrameCount == 4 then
-        entity:GetSprite():SetFrame("Eye Opened", 0)
-        entity:ToNPC().State = 3
-        entity.Visible = true
-      end
+      RPCheckEntities:Entity60(entity)
 
-      -- Prevent the Eye from shooting for 30 frames
-      if (entity:ToNPC().State == 4 or entity:ToNPC().State == 8) and entity.FrameCount < 31 then
-        entity:ToNPC().StateFrame = 0
-      end
+    elseif entity.Type == EntityType.ENTITY_THE_HAUNT then -- 260
+      RPCheckEntities:Entity260(entity)
 
-    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 10 and -- 260.10
-           entity.Parent == nil then
+    elseif entity.Type == EntityType.ENTITY_EFFECT then -- 1000
+      RPCheckEntities:Entity1000(entity)
 
-      -- Lil' Haunts
-      -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-      if RPGlobals.run.currentLilHaunts[entity.Index] == nil then
-        -- Add their position to the table so that we can keep track of it on future frames
-        RPGlobals.run.currentLilHaunts[entity.Index] = {
-          pos = entity.Position,
-        }
-      end
-
-      if entity.FrameCount == 4 then
-        -- Get rid of the Lil' Haunt invulnerability frames
-        entity:ToNPC().State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
-        entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-        -- Tears will pass through Lil' Haunts when they first spawn, so fix that
-        entity.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
-
-      elseif entity.FrameCount >= 5 and
-             entity.FrameCount <= 16 then
-
-        -- Lock Lil' Haunts that are in the "warmup" animation
-        entity.Position = RPGlobals.run.currentLilHaunts[entity.Index].pos
-        entity.Velocity = Vector(0, 0)
-      end
-
-    elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
-           entity.Variant == EffectVariant.FART and -- 34
-           RPGlobals.run.changeFartColor == true then
-
-      -- We want special rolls to have a different fart color to distinguish them
-      RPGlobals.run.changeFartColor = false
-      local color = Color(5.5, 0.2, 0.2, 1, 0, 0, 0) -- Bright red
-      entity:SetColor(color, 0, 0, false, false)
-
-    elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
-           entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
-
-      RPFastTravel:ReplaceHeavenDoor(entity)
-
-    elseif entity.Type == EntityType.ENTITY_EFFECT and -- 1000
-           entity.Variant == EffectVariant.FIREWORKS then -- 104
-
-     -- Check for fireworks so that we can reduce the volume
-     fireworkActive = true
-
-    elseif entity.Type == Isaac.GetEntityTypeByName("Race Trophy") and
-           entity.Variant == Isaac.GetEntityVariantByName("Race Trophy") and
+    elseif entity.Type == Isaac.GetEntityTypeByName("Race Trophy") and -- 1001
+           entity.Variant == Isaac.GetEntityVariantByName("Race Trophy") and -- 0
            RPGlobals.raceVars.finished == false and
            RPGlobals:InsideSquare(player.Position, entity.Position, 24) then -- 25 is a touch too big
 
@@ -500,37 +125,10 @@ function RPCheckEntities:NonGrid()
         game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
                    nil, CollectibleType.COLLECTIBLE_FINISHED, roomSeed)
 
-        -- Also keep track of the pedestal position so that we can quickly detect when it is touched
-        RPGlobals.run.finishPedestals[#RPGlobals.run.finishPedestals + 1] = {
-          room = roomIndex,
-          pos = finishedPosition,
-        }
-
         Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
       else
         RPSpeedrun:Finish()
       end
-
-    elseif (entity.Type == Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)") and
-            entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")) or
-           (entity.Type == Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)") and
-            entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")) or
-           (entity.Type == Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)") and
-            entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")) then
-
-      RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
-      RPFastTravel:CheckTrapdoorEnter(entity, false) -- The second argument is "upwards"
-
-    elseif entity.Type == Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)") and
-           entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") then
-
-      RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
-      RPFastTravel:CheckCrawlspaceEnter(entity)
-
-    elseif entity.Type == Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)") and
-           entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)") then
-
-      RPFastTravel:CheckTrapdoorEnter(entity, true) -- The second argument is "upwards"
     end
   end
 
@@ -581,10 +179,491 @@ function RPCheckEntities:NonGrid()
   end
 
   -- Make Fireworks quieter
-  if fireworkActive then
+  if RPCheckEntities.fireworkActive then
     if sfx:IsPlaying(SoundEffect.SOUND_BOSS1_EXPLOSIONS) then -- 182
       sfx:AdjustVolume(SoundEffect.SOUND_BOSS1_EXPLOSIONS, 0.2)
     end
+  end
+end
+
+-- EntityType.ENTITY_BOMBDROP (4)
+function RPCheckEntities:Entity4(entity)
+  if (entity.Variant == 3 or -- Troll Bomb
+      entity.Variant == 4) and -- Mega Troll Bomb
+     entity.FrameCount == 1 then
+
+    -- Make Troll Bomb and Mega Troll Bomb fuses deterministic (exactly 2 seconds long)
+    -- (in vanilla the fuse is: 45 + random(1, 2147483647) % 30)
+    local bomb = entity:ToBomb()
+    bomb:SetExplosionCountdown(59) -- 60 minus 1 because we start at frame 1
+    -- Note that game physics occur at 30 frames per second instead of 60
+  end
+end
+
+-- EntityType.ENTITY_PICKUP (5)
+function RPCheckEntities:Entity5(entity)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local roomData = level:GetCurrentRoomDesc().Data
+  local roomType = room:GetType()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
+
+  if entity.Variant == PickupVariant.PICKUP_HEART then -- 10
+    if RPCheckEntities:IsBossType(entity.SpawnerType) and
+       roomType == RoomType.ROOM_BOSS and -- 5
+       stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby or The Lamb or Victory Lap bosses
+
+      -- Delete heart drops in boss rooms so that we can properly seed them
+      RPGlobals.run.bossHearts.spawn = true
+      RPGlobals.run.bossHearts.position[#RPGlobals.run.bossHearts.position + 1] = entity.Position
+      RPGlobals.run.bossHearts.velocity[#RPGlobals.run.bossHearts.velocity + 1] = entity.Velocity
+      entity:Remove()
+      Isaac.DebugString("Removed boss room heart drop #" .. tostring(#RPGlobals.run.bossHearts.position) .. ": " ..
+                    "(" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") " ..
+                    "(" .. tostring(entity.Velocity.X) .. "," .. tostring(entity.Velocity.Y) .. ")")
+    end
+
+  elseif entity.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
+         (entity.Variant == PickupVariant.PICKUP_KEY and entity.SubType == 4) then -- Charged Key (30.4)
+
+    if entity:GetSprite():IsPlaying("Collect") and
+       entity:ToPickup().Touched == false then
+
+      -- Mark that we have touched this Lil' Battery / Charged Key
+      entity:ToPickup().Touched = true
+
+      -- Recharge the Wraith Skull
+      -- (we have to do this manually because the charges on the Wraith Skull are not handled naturally by the game)
+      SamaelMod:CheckRechargeWraithSkull()
+    end
+
+  elseif (entity.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
+          entity.Variant == PickupVariant.PICKUP_MIMIC) then -- 54
+
+    -- We can't check for the "Appear" animation because this is not fast enough
+    -- to intercept the unavoidable damage when a Mimic spawns on top of the player
+    if entity:ToPickup().TheresOptionsPickup then -- This is used as a replacement counter
+      return
+    end
+
+    -- Change all Mimics and Spiked Chests to normal chests until the appearing animation is complete
+    -- (this also fixes the unavoidable damage when a Mimic spawns where you happen to be standing)
+    -- (Spiked Chests do not have this problem)
+    -- (the unavoidable damage still happens if you spawn the Mimic using the console, but is fixed from room drops)
+    entity.Variant = 50
+
+    -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
+    if (roomData.StageID == 4 and roomData.Variant == 12) or -- Caves
+       (roomData.StageID == 4 and roomData.Variant == 19) or
+       (roomData.StageID == 4 and roomData.Variant == 244) or
+       (roomData.StageID == 4 and roomData.Variant == 518) or
+       (roomData.StageID == 4 and roomData.Variant == 519) or
+       (roomData.StageID == 5 and roomData.Variant == 19) or -- Catacombs
+       (roomData.StageID == 5 and roomData.Variant == 518) or
+       (roomData.StageID == 10 and roomData.Variant == 458) or -- Womb
+       (roomData.StageID == 10 and roomData.Variant == 489) or
+       (roomData.StageID == 11 and roomData.Variant == 458) or -- Utero
+       (roomData.StageID == 11 and roomData.Variant == 489) then
+
+      -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
+      entity:GetSprite():Load("gfx/005.050_chest.anm2", true)
+
+      -- We have to play an animation for the new sprite to actually appear
+      entity:GetSprite():Play("Appear", false)
+      Isaac.DebugString("Replaced a Spiked Chest / Mimic with a normal chest (for an unavoidable damage room).")
+
+    else
+      -- Changing the variant doesn't actually change the sprite
+      -- Furthermore, we need to make it look like a Mimic
+      entity:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
+
+      -- We have to play an animation for the new sprite to actually appear
+      entity:GetSprite():Play("Appear", false)
+
+      -- Use the normally unused "TheresOptionsPickup" varaible to store that this is not a normal chest
+      entity:ToPickup().TheresOptionsPickup = true
+
+      Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
+    end
+
+  elseif entity.Variant == PickupVariant.PICKUP_CHEST then -- 50
+    if entity:ToPickup().TheresOptionsPickup and
+       entity:GetSprite():IsPlaying("Appear") and
+       entity:GetSprite():GetFrame() == 21 then -- This is the last frame of the "Appear" animation
+
+      -- The "Appear" animation is finished, so now change this back to a Mimic
+      -- (we can't just check for "IsPlaying("Appear") == false" because if the player is touching it,
+      -- they will get the contents of a normal chest before the swap back occurs)
+      entity.Variant = 54
+      Isaac.DebugString("Replaced a Spiked Chest / Mimic (2/2).")
+    end
+
+  elseif entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then -- 100
+    RPCheckEntities:Entity5_100(entity)
+
+  elseif entity.Variant == PickupVariant.PICKUP_TRINKET then -- 350
+    if RPGlobals.run.roomsEntered <= 1 and
+       RPGlobals.race.rFormat == "pageant" then
+
+      -- Delete Pageant Boy starting trinkets
+      entity:Remove()
+    end
+
+  elseif entity.Variant == PickupVariant.PICKUP_BIGCHEST then -- 340
+    if stage == 10 and stageType == 0 and -- Sheol
+       (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
+        challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
+
+      -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
+      RPFastTravel:ReplaceTrapdoor(entity, -1)
+      -- A -1 indicates that we are replacing an entity instead of a grid entity
+
+    elseif stage == 10 and stageType == 1 and -- Cathedral
+           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+      -- Delete the chest and replace it with the custom beam of light so that we can fast-travel normally
+      RPFastTravel:ReplaceHeavenDoor(entity)
+
+    elseif stage == 11 and stageType == 0 and -- Dark Room
+           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+
+      -- For custom Dark Room challenges, sometimes the vanilla end of challenge trophy does not appear
+      -- Thus, we need to handle replacing both the trophy and the big chest
+      -- So replace the big chest with either a checkpoint flag or a custom trophy,
+      -- depending on if we are on the last character or not
+      if RPSpeedrun.charNum == 7 then
+        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                   entity.Position, entity.Velocity, nil, 0, 0)
+        Isaac.DebugString("Spawned the end of speedrun trophy.")
+      else
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+        RPSpeedrun.spawnedCheckpoint = true
+        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+      end
+
+      -- Get rid of the vanilla big chest
+      entity:Remove()
+
+    elseif stage == 11 and
+           RPGlobals.race.rFormat == "pageant" then
+
+      -- Delete all big chests on the Pageant Boy ruleset so that
+      -- you don't accidently end your run before you can show off your build to the judges
+      entity:Remove()
+
+    elseif stage == 11 and
+           RPGlobals.raceVars.finished == false and
+           RPGlobals.race.status == "in progress" and
+           ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+            (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
+             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
+            (RPGlobals.race.goal == "Mega Satan" and
+             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
+
+      -- Spawn the "Race Trophy" custom entity
+      game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                 entity.Position, entity.Velocity, nil, 0, 0)
+      Isaac.DebugString("Spawned the end of race trophy.")
+
+      -- Get rid of the chest
+      entity:Remove()
+
+    elseif stage == 11 and
+           RPGlobals.raceVars.finished == false and
+           RPGlobals.race.status == "in progress" and
+           (RPGlobals.race.goal == "Mega Satan" and
+            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
+
+      -- Get rid of the chest as a reminder that the race goal is Mega Satan
+      entity:Remove()
+      Isaac.DebugString("Got rid of the big chest since the goal is Mega Satan.")
+
+    elseif stage == 11 and
+           RPGlobals.raceVars.finished then
+
+      -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
+      local victoryLapPosition = room:GetCenterPos()
+      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
+                 nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
+      Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
+
+      -- Get rid of the chest
+      entity:Remove()
+    end
+
+  elseif entity.Variant == PickupVariant.PICKUP_TROPHY then -- 370
+    if stage == 11 and
+       ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
+        (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
+        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)) then
+
+      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
+      -- depending on if we are on the last character or not
+      if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+          RPSpeedrun.charNum == 9) or
+         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+          RPSpeedrun.charNum == 14) or
+         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+          RPSpeedrun.charNum == 7) then
+
+        -- Spawn the "Race Trophy" custom entity
+        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                   entity.Position, entity.Velocity, nil, 0, 0)
+        Isaac.DebugString("Spawned the end of speedrun trophy.")
+
+      else
+        -- Spawn a Checkpoint (a custom item) in the center of the room
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+        RPSpeedrun.spawnedCheckpoint = true
+        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+      end
+
+      -- Get rid of the vanilla challenge trophy
+      entity:Remove()
+    end
+
+  elseif entity.EntityCollisionClass ~= 0 then
+    -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect"
+    -- animation; however, as soon as they are touched, their EntityCollisionClass will be set to 0
+    -- (this is necessary to fix the bug where pickups can be duplicated from touching them)
+
+    -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
+    RPFastTravel:CheckPickupOverHole(entity)
+  end
+end
+
+-- Collectible (5.100)
+function RPCheckEntities:Entity5_100(entity)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local challenge = Isaac.GetChallenge()
+
+  if entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
+    if RPSpeedrun.spawnedCheckpoint then
+      RPSpeedrun:CheckpointTouched()
+    end
+
+  elseif entity.SubType == CollectibleType.COLLECTIBLE_POLAROID then -- 327
+    if RPGlobals.race.goal == "The Lamb" and
+       RPGlobals.race.rFormat ~= "pageant" and
+       challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+
+      entity:Remove()
+      Isaac.DebugString("Removed The Polaroid.")
+
+    elseif entity.Position.X >= 270 and entity.Position.X <= 290 and
+           RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.rFormat ~= "pageant" and
+           challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+
+      -- Reposition it to the center
+      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
+                 entity.Parent, entity.SubType, entity.InitSeed)
+      -- (respawn it with the initial seed so that it will be replaced normally on the next frame)
+      entity:Remove()
+      Isaac.DebugString("Moved The Polaroid.")
+    end
+
+  elseif entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
+    if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+      -- Check to see if this is a Negative sitting in the center of the room
+      -- (spawned naturally by the challenge)
+      if entity.Position.X >= 310 and entity.Position.X <= 330 then
+        -- Move The Negative to the right side
+        local negative = game:Spawn(entity.Type, entity.Variant, Vector(360, 360), Vector(0, 0),
+                   entity.Parent, entity.SubType, entity.InitSeed)
+        negative:ToPickup().TheresOptionsPickup = true
+        entity:Remove()
+
+        -- Spawn The Polaroid (5.100.327) on the left side
+        local polaroid = game:Spawn(entity.Type, entity.Variant, Vector(280, 360), Vector(0, 0),
+                                    entity.Parent, CollectibleType.COLLECTIBLE_POLAROID, entity.InitSeed)
+        polaroid:ToPickup().TheresOptionsPickup = true
+
+        Isaac.DebugString("Spawned The Polaroid and Moved The Negative for a custom speedrun to the Dark Room.")
+      end
+
+    elseif RPGlobals.race.goal == "Blue Baby" and
+           RPGlobals.race.rFormat ~= "pageant" then
+
+      entity:Remove()
+      Isaac.DebugString("Removed The Negative.")
+
+    elseif entity.Position.X >= 350 and entity.Position.X <= 370 and
+           RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.rFormat ~= "pageant" then
+
+      -- Reposition it to the center
+      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
+                 entity.Parent, entity.SubType, entity.InitSeed)
+      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
+      entity:Remove()
+      Isaac.DebugString("Moved The Negative.")
+    end
+
+  elseif gameFrameCount >= RPGlobals.run.itemReplacementDelay then
+    -- We need to delay after using a Void (in case the player has consumed a D6)
+    RPCheckEntities:ReplacePedestal(entity)
+  end
+end
+
+-- EntityType.ENTITY_KNIFE (8)
+function RPCheckEntities:Entity8(entity)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
+  local knife = entity:ToKnife()
+  local isFlying = knife:IsFlying()
+
+  -- Keep track of whether the knife is being thrown or not so that we can calculate accuracy
+  if RPGlobals.run.knife.isFlying == false and
+     isFlying and
+     roomClear == false then
+
+    RPGlobals.run.knife.isFlying = true
+    RPGlobals.run.knife.isMissed = true -- Assume they missed the shot by default
+
+  elseif RPGlobals.run.knife.isFlying and
+         isFlying == false then
+
+    RPGlobals.run.knife.isFlying = false
+    RPGlobals.run.knife.totalShots = RPGlobals.run.knife.totalShots + 1
+    if RPGlobals.run.knife.isMissed == false then
+      RPGlobals.run.knife.hitShots = RPGlobals.run.knife.hitShots + 1
+    end
+  end
+end
+
+-- EntityType.ENTITY_KNIGHT (41)
+-- EntityType.ENTITY_FLOATING_KNIGHT (254)
+-- EntityType.ENTITY_BONE_KNIGHT (283)
+function RPCheckEntities:Entity41(entity)
+  -- Knights, Selfless Knights, Floating Knights, and Bone Knights
+  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+  if RPGlobals.run.currentKnights[entity.Index] == nil then
+    -- Add their position to the table so that we can keep track of it on future frames
+    RPGlobals.run.currentKnights[entity.Index] = {
+      pos = entity.Position,
+    }
+  end
+
+  if entity.FrameCount == 4 then
+    -- Changing the NPC's state triggers the invulnerability removal in the next frame
+    entity:ToNPC().State = 4
+
+    -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
+    -- (this is to compensate for having only post update hooks)
+    entity.Visible = true
+
+  elseif entity.FrameCount >= 5 and
+         entity.FrameCount <= 30 then
+
+    -- Keep the 5th frame of the spawn animation going
+    entity:GetSprite():SetFrame("Down", 0)
+
+    -- Make sure that it stays in place
+    entity.Position = RPGlobals.run.currentKnights[entity.Index].pos
+    entity.Velocity = Vector(0, 0)
+  end
+end
+
+-- EntityType.ENTITY_EYE (60)
+function RPCheckEntities:Entity60(entity)
+  -- Eyes and Blootshot Eyes
+  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+  if entity.FrameCount == 4 then
+    entity:GetSprite():SetFrame("Eye Opened", 0)
+    entity:ToNPC().State = 3
+    entity.Visible = true
+  end
+
+  -- Prevent the Eye from shooting for 30 frames
+  if (entity:ToNPC().State == 4 or
+      entity:ToNPC().State == 8) and
+     entity.FrameCount < 31 then
+
+    entity:ToNPC().StateFrame = 0
+  end
+end
+
+-- EntityType.ENTITY_THE_HAUNT (260)
+function RPCheckEntities:Entity260(entity)
+  if entity.Variant ~= 10 or
+     entity.Parent ~= nil then
+
+    return
+  end
+
+  -- Lil' Haunts (260.10)
+  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
+  if RPGlobals.run.currentLilHaunts[entity.Index] == nil then
+    -- Add their position to the table so that we can keep track of it on future frames
+    RPGlobals.run.currentLilHaunts[entity.Index] = {
+      pos = entity.Position,
+    }
+  end
+
+  if entity.FrameCount == 4 then
+    -- Get rid of the Lil' Haunt invulnerability frames
+    entity:ToNPC().State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
+    entity.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+    -- Tears will pass through Lil' Haunts when they first spawn, so fix that
+    entity.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
+
+  elseif entity.FrameCount >= 5 and
+         entity.FrameCount <= 16 then
+
+    -- Lock Lil' Haunts that are in the "warmup" animation
+    entity.Position = RPGlobals.run.currentLilHaunts[entity.Index].pos
+    entity.Velocity = Vector(0, 0)
+  end
+end
+
+-- EntityType.ENTITY_EFFECT (1000)
+function RPCheckEntities:Entity1000(entity)
+  if entity.Variant == EffectVariant.FART and -- 34
+     RPGlobals.run.changeFartColor == true then
+
+    -- We want special rolls to have a different fart color to distinguish them
+    RPGlobals.run.changeFartColor = false
+    local color = Color(5.5, 0.2, 0.2, 1, 0, 0, 0) -- Bright red
+    entity:SetColor(color, 0, 0, false, false)
+
+  elseif entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
+    RPFastTravel:ReplaceHeavenDoor(entity)
+
+  elseif entity.Variant == EffectVariant.FIREWORKS then -- 104
+    -- Check for fireworks so that we can reduce the volume
+    RPCheckEntities.fireworkActive = true
+
+  elseif entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") or -- 201
+         entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)") or -- 203
+         entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)") then -- 204
+
+    RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
+    RPFastTravel:CheckTrapdoorEnter(entity, false) -- The second argument is "upwards"
+
+  elseif entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") then -- 202
+    RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
+    RPFastTravel:CheckCrawlspaceEnter(entity)
+
+  elseif entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)") then -- 205
+    RPFastTravel:CheckTrapdoorEnter(entity, true) -- The second argument is "upwards"
   end
 end
 

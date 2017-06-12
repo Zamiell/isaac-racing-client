@@ -11,12 +11,16 @@ local RPSoulJar = require("src/rpsouljar")
 -- Variables
 --
 
-RPFastClear.familiars = {}
+RPFastClear.familiars = {} -- Reset in the "RPFastClear:InitRun()" function
+RPFastClear.aliveEnemies = {} -- Reset in the "RPCallbacks:PostNewRoom2()" function
+RPFastClear.aliveEnemiesCount = 0 -- Reset in the "RPCallbacks:PostNewRoom2()" function
+RPFastClear.buttonsAllPushed = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
 
 --
 -- Fast clear functions
 --
 
+-- Called from the PostGameStarted callback
 function RPFastClear:InitRun()
   -- Local variables
   local game = Game()
@@ -46,53 +50,169 @@ function RPFastClear:InitRun()
   end
 end
 
--- Look for enemies that are dying so that we can open the doors prematurely
--- (we can't just check once per frame or else it breaks on Bloat and Chub)
+-- Called from the NPCUpdate callback
 function RPFastClear:NPCUpdate(npc)
     -- Local variables
     local game = Game()
     local room = game:GetRoom()
+    local roomClear = room:IsClear()
 
-    -- Only look for enemies that are dying
-    if npc:IsDead() == false then
-      return
-    end
-
-    -- Only look for enemies that can shut the doors
-    if npc.CanShutDoors == false then
-      return
-    end
-
-    -- Only look when the the room is not cleared yet
+    -- We don't care if the room is cleared already or if this is a non-battle NPC
     -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
     -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-    if room:IsClear() then
+    if roomClear or
+       npc.CanShutDoors == false then
+
       return
     end
 
-    -- If we are in a puzzle room, check to see if all of the plates have been pressed
-    if room:HasTriggerPressurePlates() then
-      -- Check all the grid entities in the room
-      local num = room:GetGridSize()
-      for i = 1, num do
-        local gridEntity = room:GetGridEntity(i)
-        if gridEntity ~= nil then
-          -- If this entity is a trap door
-          local test = gridEntity:ToPressurePlate()
-          if test ~= nil then
-            if gridEntity:GetSaveState().State ~= 3 then
-              return
-            end
-          end
-        end
+    -- Add new enemies to the list
+    if npc:IsDead() == false then
+      if RPFastClear.aliveEnemies[npc.Index] == nil then
+        RPFastClear.aliveEnemies[npc.Index] = true
+        RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
+        --Isaac.DebugString("Added NPC " .. tostring(npc.Index) .. ", " ..
+        --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
       end
+      return
+    end
+
+    -- The NPC is dead, so remove it from the table
+    if RPFastClear.aliveEnemies[npc.Index] ~= nil then
+      RPFastClear.aliveEnemies[npc.Index] = nil
+      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+      --Isaac.DebugString("Removed NPC " .. tostring(npc.Index) .. ", " ..
+      --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
     end
 
     -- Check to see if any other enemies are alive in the room
-    RPFastClear:CheckAlive()
+    if RPFastClear.aliveEnemiesCount == 0 and
+       RPFastClear:CheckAllPressurePlatesPushed() and
+       RPFastClear:CheckFastClearException(npc) == false then
+
+      RPFastClear:ClearRoom()
+    end
 end
 
--- Fast-clear for puzzle rooms
+function RPFastClear:CheckAllPressurePlatesPushed()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+
+  -- If we are in a puzzle room, check to see if all of the plates have been pressed
+  if room:HasTriggerPressurePlates() == false or
+     RPFastClear.buttonsAllPushed then
+
+    return true
+  end
+
+  -- Check all the grid entities in the room
+  local num = room:GetGridSize()
+  for i = 1, num do
+    local gridEntity = room:GetGridEntity(i)
+    if gridEntity ~= nil then
+      -- If this entity is a trap door
+      local test = gridEntity:ToPressurePlate()
+      if test ~= nil then
+        if gridEntity:GetSaveState().State ~= 3 then
+          return false
+        end
+      end
+    end
+  end
+
+  RPFastClear.buttonsAllPushed = true
+  return true
+end
+
+function RPFastClear:CheckFastClearException(npc)
+  if npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
+     npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
+     npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
+     npc.Type == EntityType.ENTITY_GAPER or -- 10
+     -- All 3 Gaper types have a chance to split into Gusher (11.0) or Pacer (11.1)
+     (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16 (Mulligoon and Muliboon do not split)
+     -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
+     npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
+     -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
+     (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
+     -- (they have been proven to cause the doors to open prematurely)
+     (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
+     -- Drowned Boom Flies split into a Drowned Charger
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 0) or -- Envy (51.0)
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 1) or -- Super Envy (51.1)
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 10) or -- Envy (level 2) (51.10)
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 11) or -- Super Envy (level 2) (51.11)
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 20) or -- Envy (level 3) (51.20)
+     (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 21) or -- Super Envy (level 3) (51.21)
+     -- 30 and 31 are the final forms of Envy and Super Envy respectively
+     npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57
+     -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
+     npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (both variants split; Teratoma also counts as Fistula)
+     npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (both variants split; Teratoma also counts as Fistula)
+     npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (both variants split; Teratoma also counts as Fistula)
+     npc.Type == EntityType.ENTITY_BLASTOCYST_BIG or -- 74
+     npc.Type == EntityType.ENTITY_BLASTOCYST_MEDIUM or -- 75
+     npc.Type == EntityType.ENTITY_BLASTOCYST_SMALL or -- 76
+     npc.Type == EntityType.ENTITY_MOTER or -- 80
+     -- Moter splits into 2 Attack Flies (18.0)
+     (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or -- 81
+     -- Fast-clear should apply to Krampus and split Fallens
+     npc.Type == EntityType.ENTITY_GURGLE or -- 87
+     -- Gurgles have a chance to split into a Splasher (238.0)
+     npc.Type == EntityType.ENTITY_HANGER or -- 90
+     -- Hangers split into an Attack Fly (18.0)
+     npc.Type == EntityType.ENTITY_SWARMER or -- 91
+     -- Swarmers split into a Boom Fly (25.0)
+     npc.Type == EntityType.ENTITY_BIGSPIDER or -- 94
+     -- Big Spiders split into 2 Spiders (85.0)
+     npc.Type == EntityType.ENTITY_NEST or -- 205 (looks like a Mulligan)
+     -- Nests have a chance to split into a Trite (29.1) or Big Spider (94.0)
+     (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208
+     -- Pale Fatties have a chance to split into a Blubber (210.0)
+     npc.Type == EntityType.ENTITY_FAT_SACK or -- 209
+     -- Fat Sacks have a chance to split into a Blubber (210.0)
+     npc.Type == EntityType.ENTITY_BLUBBER or -- 210
+     -- Blubbers have a chance to split into a Half Sack (211.0)
+     npc.Type == EntityType.ENTITY_SWINGER or -- 216 (both variants split)
+     -- Swingers have a chance to split into a Maw (26.0) if you kill the body,
+     -- or a Globin (24.0) if you kill the head
+     npc.Type == EntityType.ENTITY_SQUIRT or -- 220 (both variants split)
+     -- Squirts split into 2 Dips (217.0) and Dark Squirts split into 2 Clots (15.1)
+     (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226 (Rotties split)
+     -- Rotties split into a Bony (227.0)
+     npc.Type == EntityType.ENTITY_DINGA or -- 223
+     -- Dingas split into two Squirts (220.0)
+     npc.Type == EntityType.ENTITY_GRUB or -- 239
+     -- Grubs split into a random Maggot
+     (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257
+     -- Coinjoined Fatties split into a Fatty (208.0); Blue Conjoined Fatties do not split
+     npc.Type == EntityType.ENTITY_BLACK_GLOBIN or -- 278
+     -- Black Globin's split into Black Globin's Head (279.0) and Black Globin's Body (280.0)
+     npc.Type == EntityType.ENTITY_MEGA_CLOTTY or -- 282
+     -- Mega Clotties split into 2 Clotties (15.0)
+     npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
+     -- Mom's Dead Hands split into 2 Spiders (85.0)
+     npc.Type == EntityType.ENTITY_MEATBALL or -- 290
+     -- Meatballs split into a Host (27.0)
+     npc.Type == EntityType.ENTITY_BLISTER or -- 303
+     -- Blisters split into a Sack (30.2)
+     npc.Type == EntityType.ENTITY_PORTAL or -- 306
+     -- Portals don't split, but they do spawn random enemies and
+     -- have been proven to cause the doors to open prematurely
+     npc.Type == EntityType.ENTITY_BROWNIE or -- 402
+     -- Brownie splits into a Dangle (217.2)
+     npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
+     -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
+     npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
+
+    return true
+  else
+    return false
+  end
+end
+
+-- Fast-clear for puzzle rooms (1/2)
 -- (when puzzle rooms are cleared, there is an annoying delay before the doors are opened)
 -- (called from the PostUpdate callback)
 function RPFastClear:CheckPuzzleRoom()
@@ -102,116 +222,42 @@ function RPFastClear:CheckPuzzleRoom()
   local roomClear = room:IsClear()
 
   -- If we are in a puzzle room, check to see if all of the plates have been pressed
-  if roomClear == false and room:HasTriggerPressurePlates() then
-    -- Check all the grid entities in the room
-    local allPushed = true
-    local num = room:GetGridSize()
-    for i = 1, num do
-      local gridEntity = room:GetGridEntity(i)
-      if gridEntity ~= nil then
-        -- If this entity is a button
-        if gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then
-          if gridEntity:GetSaveState().State ~= 3 then
-            allPushed = false
-            break
-          end
+  if roomClear or
+     room:HasTriggerPressurePlates() == false or
+     RPFastClear.buttonsAllPushed then
+
+    return
+  end
+
+  -- Check all the grid entities in the room
+  local allPushed = true
+  local num = room:GetGridSize()
+  for i = 1, num do
+    local gridEntity = room:GetGridEntity(i)
+    if gridEntity ~= nil then
+      -- If this entity is a button
+      if gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then
+        if gridEntity:GetSaveState().State ~= 3 then
+          allPushed = false
+          break
         end
       end
     end
-    if allPushed then
-      RPFastClear:CheckAlive()
-    end
+  end
+  if allPushed then
+    RPFastClear.buttonsAllPushed = true
+    RPFastClear:CheckAllAlive()
   end
 end
 
--- Check to see if any other enemies are alive in the room
-function RPFastClear:CheckAlive()
+-- Fast-clear for puzzle rooms (2/2)
+-- (check to see if any other enemies are alive in the room)
+function RPFastClear:CheckAllAlive()
   local allDead = true
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     local npc = entity:ToNPC()
     if npc ~= nil then
-      -- We don't fast-clear to apply to splitting enemies, so make an exception for those
-      if (npc:IsDead() == false and npc.CanShutDoors == true) or -- This is an alive enemy
-         npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
-         npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
-         npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
-         npc.Type == EntityType.ENTITY_GAPER or -- 10
-         -- All 3 Gaper types have a chance to split into Gusher (11.0) or Pacer (11.1)
-         (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16 (Mulligoon and Muliboon do not split)
-         -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
-         npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
-         -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
-         (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
-         -- (they have been proven to cause the doors to open prematurely)
-         (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
-         -- Drowned Boom Flies split into a Drowned Charger
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 0) or -- Envy (51.0)
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 1) or -- Super Envy (51.1)
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 10) or -- Envy (level 2) (51.10)
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 11) or -- Super Envy (level 2) (51.11)
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 20) or -- Envy (level 3) (51.20)
-         (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 21) or -- Super Envy (level 3) (51.21)
-         -- 30 and 31 are the final forms of Envy and Super Envy respectively
-         npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57
-         -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
-         npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (both variants split; Teratoma also counts as Fistula)
-         npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (both variants split; Teratoma also counts as Fistula)
-         npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (both variants split; Teratoma also counts as Fistula)
-         npc.Type == EntityType.ENTITY_BLASTOCYST_BIG or -- 74
-         npc.Type == EntityType.ENTITY_BLASTOCYST_MEDIUM or -- 75
-         npc.Type == EntityType.ENTITY_BLASTOCYST_SMALL or -- 76
-         npc.Type == EntityType.ENTITY_MOTER or -- 80
-         -- Moter splits into 2 Attack Flies (18.0)
-         (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or -- 81
-         -- Fast-clear should apply to Krampus and split Fallens
-         npc.Type == EntityType.ENTITY_GURGLE or -- 87
-         -- Gurgles have a chance to split into a Splasher (238.0)
-         npc.Type == EntityType.ENTITY_HANGER or -- 90
-         -- Hangers split into an Attack Fly (18.0)
-         npc.Type == EntityType.ENTITY_SWARMER or -- 91
-         -- Swarmers split into a Boom Fly (25.0)
-         npc.Type == EntityType.ENTITY_BIGSPIDER or -- 94
-         -- Big Spiders split into 2 Spiders (85.0)
-         npc.Type == EntityType.ENTITY_NEST or -- 205 (looks like a Mulligan)
-         -- Nests have a chance to split into a Trite (29.1) or Big Spider (94.0)
-         (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208
-         -- Pale Fatties have a chance to split into a Blubber (210.0)
-         npc.Type == EntityType.ENTITY_FAT_SACK or -- 209
-         -- Fat Sacks have a chance to split into a Blubber (210.0)
-         npc.Type == EntityType.ENTITY_BLUBBER or -- 210
-         -- Blubbers have a chance to split into a Half Sack (211.0)
-         npc.Type == EntityType.ENTITY_SWINGER or -- 216 (both variants split)
-         -- Swingers have a chance to split into a Maw (26.0) if you kill the body,
-         -- or a Globin (24.0) if you kill the head
-         npc.Type == EntityType.ENTITY_SQUIRT or -- 220 (both variants split)
-         -- Squirts split into 2 Dips (217.0) and Dark Squirts split into 2 Clots (15.1)
-         (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226 (Rotties split)
-         -- Rotties split into a Bony (227.0)
-         npc.Type == EntityType.ENTITY_DINGA or -- 223
-         -- Dingas split into two Squirts (220.0)
-         npc.Type == EntityType.ENTITY_GRUB or -- 239
-         -- Grubs split into a random Maggot
-         (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257
-         -- Coinjoined Fatties split into a Fatty (208.0); Blue Conjoined Fatties do not split
-         npc.Type == EntityType.ENTITY_BLACK_GLOBIN or -- 278
-         -- Black Globin's split into Black Globin's Head (279.0) and Black Globin's Body (280.0)
-         npc.Type == EntityType.ENTITY_MEGA_CLOTTY or -- 282
-         -- Mega Clotties split into 2 Clotties (15.0)
-         npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
-         -- Mom's Dead Hands split into 2 Spiders (85.0)
-         npc.Type == EntityType.ENTITY_MEATBALL or -- 290
-         -- Meatballs split into a Host (27.0)
-         npc.Type == EntityType.ENTITY_BLISTER or -- 303
-         -- Blisters split into a Sack (30.2)
-         npc.Type == EntityType.ENTITY_PORTAL or -- 306
-         -- Portals don't split, but they do spawn random enemies and
-         -- have been proven to cause the doors to open prematurely
-         npc.Type == EntityType.ENTITY_BROWNIE or -- 402
-         -- Brownie splits into a Dangle (217.2)
-         npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
-         -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
-         npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
-
+      if npc:IsDead() == false and npc.CanShutDoors then
         allDead = false
         break
       end
@@ -244,6 +290,7 @@ function RPFastClear:ClearRoom()
 
   -- Set the room clear to true (so that it gets marked off on the minimap)
   room:SetClear(true)
+  Isaac.DebugString("Initiated a fast-clear.")
 
   -- Open the doors
   for i = 0, 7 do

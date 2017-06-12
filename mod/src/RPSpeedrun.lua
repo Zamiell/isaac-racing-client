@@ -51,7 +51,7 @@ RPSpeedrun.charPosition7 = { -- The format is character number, X, Y
   {3, 6, 1},   -- Judas
   {7, 8, 1},   -- Azazel
   {9, 10, 1},  -- Eden
-  {15, 2, 3},   -- Apollyon
+  {15, 2, 3},  -- Apollyon
   {16, 10, 3}, -- Samael
 }
 
@@ -276,6 +276,11 @@ function RPSpeedrun:Init()
     RPSpeedrun.charNum = 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because we want to start from the first character again.")
+
+    -- Tell the LiveSplit AutoSplitter to reset
+    player:AddCollectible(CollectibleType.COLLECTIBLE_OFF_LIMITS, 0, false)
+    Isaac.DebugString("Reset the LiveSplit AutoSplitter.")
+
     return
   end
 

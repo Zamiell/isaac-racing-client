@@ -5,6 +5,7 @@ local RPCallbacks = {}
 --
 
 local RPGlobals    = require("src/rpglobals")
+local RPFastClear  = require("src/rpfastclear")
 local RPFastTravel = require("src/rpfasttravel")
 local RPSpeedrun   = require("src/rpspeedrun")
 local RPSprites    = require("src/rpsprites")
@@ -262,6 +263,12 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
         end
       end
     end
+
+  elseif damageSource.Type == EntityType.ENTITY_KNIFE then -- 8
+    -- An enemy that took damage from a knife
+    if RPGlobals.run.knife.isFlying then
+      RPGlobals.run.knife.isMissed = false
+    end
   end
 end
 
@@ -333,8 +340,6 @@ function RPCallbacks:PostNewLevel2()
   RPGlobals.run.replacedTrapdoors = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
-  RPGlobals.run.finishPedestals = {}
-  RPGlobals.run.victoryLapPedestals = {}
 
   -- Reset the RNG of some items that should be seeded per floor
   local floorSeed = level:GetDungeonPlacementSeed()
@@ -373,8 +378,8 @@ function RPCallbacks:PostNewRoom()
 
   Isaac.DebugString("MC_POST_NEW_ROOM")
 
-  -- Make an exception for the race room and the "Change Char Order" room
-  RPCallbacks:PostNewRoomRace()
+  -- Make an exception for the "Race Start Room" and the "Change Char Order" room
+  RPCallbacks:PostNewRoomRaceStart()
   RPSpeedrun:PostNewRoomChangeCharOrder()
 
   -- Make sure the callbacks run in the right order
@@ -395,16 +400,19 @@ function RPCallbacks:PostNewRoom2()
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local activeCharge = player:GetActiveCharge()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
   local challenge = Isaac.GetChallenge()
-  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
 
@@ -414,6 +422,7 @@ function RPCallbacks:PostNewRoom2()
   -- bombing from a room with enemies into an empty room
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
+  -- (this has to be above the resetting of the "RPGlobals.run.keeper.usedStrength" variable)
   if character == PlayerType.PLAYER_KEEPER and -- 14
      RPGlobals.run.keeper.baseHearts == 4 and
      RPGlobals.run.keeper.usedStrength then
@@ -423,15 +432,13 @@ function RPCallbacks:PostNewRoom2()
     Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
   end
 
-  -- Check to see if we need to fix the Wraith Skull + Hairpin bug
-  SamaelMod:CheckHairpin()
-
   -- Clear variables that track things per room
-  RPGlobals.run.currentGlobins = {} -- Used for softlock prevention
-  RPGlobals.run.currentKnights = {} -- Used to delete invulnerability frames
-  RPGlobals.run.currentLilHaunts = {} -- Used to delete invulnerability frames
-  RPGlobals.run.naturalTeleport = false
-  RPGlobals.run.megaSatanDead = false
+  RPGlobals.run.currentGlobins    = {} -- Used for softlock prevention
+  RPGlobals.run.currentKnights    = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
+  RPGlobals.run.naturalTeleport   = false
+  RPGlobals.run.handsDelay        = 0
+  RPGlobals.run.megaSatanDead     = false
   RPGlobals.run.teleportSubverted = false
   RPGlobals.run.trapdoorCollision = nil
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
@@ -442,6 +449,12 @@ function RPCallbacks:PostNewRoom2()
     velocity    = {},
   }
   RPGlobals.run.keeper.usedStrength = false
+  RPFastClear.aliveEnemies = {}
+  RPFastClear.aliveEnemiesCount = 0
+  RPFastClear.buttonsAllPushed = false
+
+  -- Check to see if we need to fix the Wraith Skull + Hairpin bug
+  SamaelMod:CheckHairpin()
 
   -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()
@@ -500,9 +513,92 @@ function RPCallbacks:PostNewRoom2()
   -- Check for the Satan room
   RPCallbacks:CheckSatanRoom()
 
-  --
-  -- Race stuff
-  --
+  -- Check for Scolex's room
+  if roomClear == false and
+     roomStageID == 0 and
+     (roomVariant == 1070 or -- Scolex
+      roomVariant == 1071 or
+      roomVariant == 1072 or
+      roomVariant == 1073 or
+      roomVariant == 1074 or
+      roomVariant == 1075) then
+
+    if RPGlobals.race.rFormat == "seeded" and
+       RPGlobals.race.status == "in progress" then
+
+      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
+      -- (there are 10 Scolex entities)
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 then -- 62.1 (Scolex)
+          entity:Remove() -- This takes a game frame to actually get removed
+        end
+      end
+
+      for i = 1, 2 do
+        -- We don't want to spawn both of them on top of each other since that would make them behave a little glitchy
+        local pos = room:GetCenterPos()
+        if i == 1 then
+          pos.X = pos.X - 150
+        elseif i == 2 then
+          pos.X = pos.X + 150
+        end
+        -- Note that pos.X += 200 causes the hitbox to appear too close to the left/right side,
+        -- causing damage if the player moves into the room too quickly
+        local frail = game:Spawn(EntityType.ENTITY_PIN, 2, pos, Vector(0,0), nil, 0, roomSeed)
+        frail.Visible = false -- It will show the head on the first frame after spawning unless we do this
+        -- The game will automatically make the entity visible later on
+      end
+      Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
+    end
+
+  else
+    -- Check to see if we need to replace the bugged Scolex champion with the non-champion version
+    local foundBuggedChampion = false
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 and -- 62.1 (Scolex)
+         entity:ToNPC():GetBossColorIdx() == 15 then -- The bugged black champion type
+
+        foundBuggedChampion = true
+        break
+      end
+    end
+    if foundBuggedChampion then
+      -- Remove all of the existing Scolexs (there are 10 Scolex entities)
+      for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 then -- 62.1 (Scolex)
+          entity:Remove()
+        end
+      end
+
+      -- Spawn a new one
+      local scolex = game:Spawn(EntityType.ENTITY_PIN, 1, room:GetCenterPos(), Vector(0,0), nil, 0, roomSeed)
+      scolex:ToNPC():Morph(EntityType.ENTITY_PIN, 1, 0, -1) -- 62.1 (Scolex)
+      Isaac.DebugString("Fixed a black champion Scolex.")
+    end
+  end
+
+  -- Do race related stuff
+  RPCallbacks:PostNewRoomRace()
+end
+
+function RPCallbacks:PostNewRoomRace()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local roomType = room:GetType()
+  local roomClear = room:IsClear()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
+  local sfx = SFXManager()
 
   -- Remove the final place graphic if it is showing
   RPSprites:Init("place2", 0)
@@ -529,6 +625,43 @@ function RPCallbacks:PostNewRoom2()
     -- door:IsOpen() is always equal to false here for some reason,
     -- so just open it every time we enter the room and silence the sound effect
     Isaac.DebugString("Opened the Mega Satan door.")
+  end
+
+  -- Check to see if we need to spawn Victory Lap bosses
+  if RPGlobals.raceVars.finished and
+     roomClear == false and
+     roomStageID == 0 and
+     (roomVariant == 3390 or -- Blue Baby
+      roomVariant == 3391 or
+      roomVariant == 3392 or
+      roomVariant == 3393 or
+      roomVariant == 5130) then -- The Lamb
+
+    -- Replace Blue Baby / The Lamb with some random bosses (based on the number of Victory Laps)
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_ISAAC or -- 102
+         entity.Type == EntityType.ENTITY_THE_LAMB then -- 273
+
+        entity:Remove()
+      end
+    end
+
+    local randomBossSeed = roomSeed
+    local numBosses = RPGlobals.raceVars.victoryLaps + 1
+    for i = 1, numBosses do
+      randomBossSeed = RPGlobals:IncrementRNG(randomBossSeed)
+      math.randomseed(randomBossSeed)
+      local randomBoss = RPGlobals.bossArray[math.random(1, #RPGlobals.bossArray)]
+      if randomBoss[1] == 19 then
+        -- Larry Jr. and The Hollow require multiple segments
+        for j = 1, 6 do
+          game:Spawn(randomBoss[1], randomBoss[2], room:GetCenterPos(), Vector(0,0), nil, randomBoss[3], roomSeed)
+        end
+      else
+        game:Spawn(randomBoss[1], randomBoss[2], room:GetCenterPos(), Vector(0,0), nil, randomBoss[3], roomSeed)
+      end
+    end
+    Isaac.DebugString("Replaced Blue Baby / The Lamb with " .. tostring(numBosses) .. " random bosses.")
   end
 
   RPCallbacks:CheckSeededMOTreasure()
@@ -612,7 +745,7 @@ function RPCallbacks:CheckSatanRoom()
   end
 end
 
-function RPCallbacks:PostNewRoomRace()
+function RPCallbacks:PostNewRoomRaceStart()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()

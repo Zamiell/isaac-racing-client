@@ -26,8 +26,8 @@ In terms of what to change about the game, the mod has several goals, and attemp
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
   * Judas starts with half a red heart and half a soul heart.
-  * Blue Baby starts with three and a half soul hearts.
-  * Azazel starts with half a red heart and half a soul heart.
+  * Blue Baby starts with an extra half soul heart.
+  * Azazel starts with an extra half soul heart.
 * Judas starts with a bomb instead of 3 coins.
 * Eden starts with the Schoolbag (from Antibirth). She will start with her random active item inside the bag.
 
@@ -51,11 +51,11 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 
 ## Other Minor Bug Fixes & Quality of Life Changes
 
-* Some items with no effect at all are removed:
-  * the Karma trinket (all Donation Machines are removed when mods are enabled)
-  * the Amnesia pill (this has no effect with curses disabled)
-  * the ??? pill (this has no effect with curses disabled)
-* Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for racers with cutscene skip muscle memory.)
+* Some items with no effect are removed:
+  * the Karma trinket (all Donation Machines are removed when curses are disabled)
+  * the Amnesia pill (this has no effect when curses are disabled)
+  * the ??? pill (this has no effect when curses are disabled)
+* Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for people with cutscene skip muscle memory.)
 * Some useless animations are removed:
   * the fade when entering a new floor
   * the fade when entering or exiting crawlspaces
@@ -67,39 +67,41 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
   * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
-* The restart key now immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
-* Void Portals will automatically be deleted.
-* The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
-* Troll Bombs and Mega Troll Bombs now always have a fuse timer of exactly 2 seconds.
+* Lag is reduced via integration of the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod by [Dan](https://moddingofisaac.com/user/255).
+* Void Portals are automatically deleted.
+* The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
+* The "drop" button immediately drops cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
+* Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Special items are no longer special.
 * Charge bars are no longer obnoxiously big.
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
-* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts will now have faster attack patterns.
-* Lag is reduced via integration of the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod by [Dan](https://moddingofisaac.com/user/255).
-* The Book of Sin and Mystery Sack will now generate actual random pickups.
-* Greed's Gullet will now properly work on Keeper.
-* Double coins and nickels now heal Keeper for their proper amount.
-* Eden's Soul will now always properly start at 0 charges.
-* AAA Battery will now synergize with The Battery.
-* 9 Volt will now synergize with The Battery.
+* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
+* The Book of Sin and Mystery Sack generate actual random pickups.
+* Greed's Gullet works properly on Keeper.
+* Double coins and nickels heal Keeper for their proper amount.
+* Eden's Soul always properly starts at 0 charges.
+* AAA Battery synergizes with The Battery.
+* 9 Volt synergizes with The Battery.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
-* The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! will no longer occur.
-* It is now impossible to get a narrow boss room on floors 2 through 7 when having Duality.
-* The "Would you like to do a Victory Lap!?" popup will no longer appear after defeating The Lamb.
-* All Spike Chests will now spawn as Mimics instead.
-* Fixed the unavoidable damage when Mimics happen to spawn on top of you.
-* Fixed the unavoidable damage when Spiked Chests or Mimics happen to spawn in specific rooms that only have a narrow path surrounded by walls or pits.
-* Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This fixes the instantaneous damage when you walk over a skull with Leo / Thunder Thighs.
+* The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! no longer occurs.
+* Having Duality prevents getting a narrow boss room on floors 2 through 7.
+* The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
+* All Spike Chests will spawn as Mimics instead.
+* You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
+* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as Brown Chests instead.)
+* Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
 * The Broken Modem sprite is replaced with a better version from freeze, the original creator.
-* The bug where the bottom left hand corner of the title screen would not properly show is fixed.
+* The bugged Scolex champion (skeleton version) will now display properly.
+* The bottom left hand corner of the title screen will now properly show.
+* When holding Mom's Knife, accuracy statistics will be shown in the bottom-right hand corner of the screen.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
@@ -118,9 +120,8 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Seeded
 
-* All characters start with The Compass in addition to their other items.
+* All characters start with The Compass and the Schoolbag (from Antibirth) in addition to their other items.
 * The Cain's Eye trinket is removed from the game.
-* All characters start with the Schoolbag (from Antibirth).
 
 ### Diversity
 
@@ -169,7 +170,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840) is a custom character created by Ghostbroster. He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
-* After defeating Mom, The Polaroid will spawn instead of The Negative. Neither The Polaroid or The Negative are required to travel to the Dark Room.
+* After defeating Mom, both The Polaroid and The Negative will spawn. Neither The Polaroid or The Negative are required to travel to the Dark Room.
 
 <br />
 

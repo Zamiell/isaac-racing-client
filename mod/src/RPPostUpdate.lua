@@ -200,8 +200,9 @@ function RPPostUpdate:CheckDropInput()
   local trinket2 = player:GetTrinket(1)
 
   -- We don't want to drop items if the player is intending to do a Schoolbag switch
-  -- Furthermore, adding a null card/pill won't work if there are 2 slots,
-  -- so we have to disable the feature if the player has these items
+  -- Furthermore, it isn't possible to drop/delete a player's 2nd card/pill slot
+  -- (we are able to delete the first slot by adding a null card)
+  -- So we have to disable the fast-drop feature if the player has an item that allows a 2nd card/pill slot
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) or
      player:HasCollectible(CollectibleType.COLLECTIBLE_STARTER_DECK) or -- 251
      player:HasCollectible(CollectibleType.COLLECTIBLE_LITTLE_BAGGY) or -- 252

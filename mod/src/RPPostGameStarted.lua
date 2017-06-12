@@ -105,7 +105,9 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some global variables that we keep track of per run
   RPGlobals:InitRun()
-  RPFastClear.checkedFrame = 0
+
+  -- Reset some RNG counters for familiars
+  RPFastClear:InitRun()
 
   -- Reset some race variables that we keep track of per run
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
@@ -117,16 +119,12 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.raceVars.finishedTime = 0
   RPGlobals.raceVars.fireworks = 0
   RPGlobals.raceVars.removedMoreOptions = false
-  RPGlobals.raceVars.placedJailCard = false
   RPGlobals.raceVars.victoryLaps = 0
 
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
   RPGlobals.RNGCounter.BookOfSin = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
-
-  -- Reset some RNG counters for familiars
-  RPFastClear:InitRun()
 
   -- Reset all graphics
   -- (this is needed to prevent a bug where the "Race Start" room graphics
@@ -209,8 +207,8 @@ function RPPostGameStarted:Character()
     Isaac.DebugString("Adding collectible 157 (Bloody Lust)")
 
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-    -- Decrease his red hearts
-    player:AddHearts(-1)
+    -- Give him an additional half soul heart
+    player:AddSoulHearts(1)
 
   elseif character == PlayerType.PLAYER_LAZARUS then -- 8
     -- Make the D6 appear first on the item tracker
@@ -393,8 +391,14 @@ function RPPostGameStarted:Seeded()
   local character = player:GetPlayerType()
 
   -- Give the player extra starting items (for seeded races)
-  player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) == false then -- 21
+    -- Eden can start with The Compass
+    player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false then
+    -- Eden and Apollyon start with the Schoolbag
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  end
 
   -- Give the player the "Instant Start" item(s)
   local replacedD6 = false
@@ -415,7 +419,7 @@ function RPPostGameStarted:Seeded()
         -- Remove the 2 soul hearts that it gives
         player:AddSoulHearts(-4)
 
-        -- Re-heal Judas and Azazel back to 1 red heart so that they can properly use the Crown of Light
+        -- Re-heal Judas back to 1 red heart so that they can properly use the Crown of Light
         -- (this should do nothing on all of the other characters)
         player:AddHearts(1)
         break
@@ -449,7 +453,9 @@ function RPPostGameStarted:Seeded()
 
   -- Enable the Schoolbag item
   if RPGlobals.run.schoolbag.item ~= 0 then
-    Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
+    if RPGlobals.run.schoolbag.item ~= Isaac.GetItemIdByName("Wraith Skull") then
+      Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
+    end
     RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
     RPSchoolbag.sprites.item = nil
 

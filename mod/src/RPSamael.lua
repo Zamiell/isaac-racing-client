@@ -67,7 +67,6 @@ local swing = 0 --Alternating value that denotes whether the scythe is doing a l
 local swingDelay = 0 --If above 0, this is the number of frames until the scythe can be swung again
 
 local costumeEquipped = false --Are his costumes equipped?
---local roomClear = false --Was the current room clear on the last update?
 local dying = false --Flag for dying animation (to activate custom death animation)
 local itemChecks = {}
 --Array for checking if certain items are held to give damage boosts (multishot items, blood clot etc)
@@ -166,7 +165,6 @@ function SamaelMod:samaelPostUpdate()
     end
 
     local roomFrames = room:GetFrameCount() --Framecount of current room (to identify a new room)
-    --local checkRoomCleared = room:IsClear()
 
     SamaelMod:wraithModeHandler()
 
@@ -189,12 +187,6 @@ function SamaelMod:samaelPostUpdate()
       --Isaac.SaveModData(SamaelMod, tostring(math.floor(wraithCharge))) --Also save the wraithCharge
       spawned = false
     end
-    --[[
-    if checkRoomCleared and not roomClear then --Save wraithCharge upon clearing a room
-      Isaac.SaveModData(SamaelMod, tostring(wraithCharge))
-    end
-    roomClear = checkRoomCleared
-    --]]
 
     if not canShoot then
       player.FireDelay = 10 --Disable tears
@@ -402,68 +394,7 @@ function SamaelMod:wraithModeHandler()
       poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
       poof:FollowParent(player)
     end
-  --[[
-  elseif (Input.IsButtonPressed(wraithModeKey, controller) or
-          (controllerMode and Input.IsActionTriggered(ButtonAction.ACTION_DROP, controller))) and
-         wraithActivationCooldown == 0 and
-         wraithCharge >= 100 then --Activate wraith mode
-
-    SamaelMod:triggerWraithMode()
-  --]]
   end
-end
-
-function SamaelMod:triggerWraithMode()
-  local player = Isaac.GetPlayer(0)
-
-  wraithActivationCooldown = 280
-
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_HOLY_LIGHT) then
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_CRACK_THE_SKY, false, false, false, false)
-  end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_CURSE_OF_THE_TOWER) then
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_ANARCHIST_COOKBOOK, false, false, false, false)
-  end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_VARICOSE_VEINS) then
-    player:UseActiveItem(CollectibleType.COLLECTIBLE_TAMMYS_HEAD, false, false, false, false)
-  end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_ATHAME) or
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MAW_OF_VOID) then
-
-    player:SpawnMawOfVoid(100)
-  end
-
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER) then
-    local pentagram = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER, 0,
-                                  player.Position, Vector(0,0), player):ToEffect()
-    pentagram.State = 1
-    pentagram.Size = 150
-    pentagram.SpriteScale = Vector(0.75,0.75)
-  end
-
-  wraithActive = true
-  wraithCharge = 0
-  wraithTime = 100
-  player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-  SamaelMod:playSound(33, 1, 1.1)
-  player.MoveSpeed = player.MoveSpeed + 0.3
-  --Isaac.DebugString("Increased speed from the Wraith ability being activated: " .. tostring(player.MoveSpeed))
-
-  --Black poof effect
-  local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                           player.Position, Vector(0, 0), player):ToEffect()
-  poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
-  poof:FollowParent(player)
-
-  --Special animation
-  player:GetSprite().Color = Color(0, 0, 0, 0, 0, 0, 0)
-  local special = Isaac.Spawn(specialAnim, 0, 0,
-                              player.Position, Vector(0, 0), player):ToNPC() --Spawn the special animations entity
-  special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-  special:GetSprite():Play("WraithDown", 1) --Wraith form animation
-  special:GetSprite().Color = Color(0.75,0.25,0.25,0.8,0,0,0)
-  special.CanShutDoors = false
-  special.Scale = player.SpriteScale.X
 end
 
 function SamaelMod:triggerWraithModeEnd()
@@ -1360,11 +1291,11 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
 
           local addCharge = math.min(player.MaxFireDelay * 0.2, 20)
           wraithCharge = wraithCharge + addCharge
-          Isaac.DebugString("Added wraithCharge from #1: " .. tostring(addCharge))
+          --Isaac.DebugString("Added wraithCharge from #1: " .. tostring(addCharge))
         else
           local addCharge = math.min(math.max(player.MaxFireDelay, 1), 20)
           wraithCharge = wraithCharge + addCharge
-          Isaac.DebugString("Added wraithCharge from #2: " .. tostring(addCharge))
+          --Isaac.DebugString("Added wraithCharge from #2: " .. tostring(addCharge))
         end
         wraithChargeCooldown = player.MaxFireDelay
         wraithChargePenalty = 3
@@ -1372,7 +1303,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         local addCharge = math.min(damage, 20) / wraithChargePenalty
         wraithCharge = wraithCharge + addCharge
         wraithChargePenalty = wraithChargePenalty + 2
-        Isaac.DebugString("Added wraithCharge from #3 damage: " .. tostring(addCharge))
+        --Isaac.DebugString("Added wraithCharge from #3 damage: " .. tostring(addCharge))
       end
     end
     if damType == EntityType.ENTITY_FAMILIAR and
@@ -1585,7 +1516,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         addCharge = 20
       end
       wraithCharge = wraithCharge + addCharge
-      Isaac.DebugString("Added wraithCharge from #4: " .. tostring(addCharge))
+      --Isaac.DebugString("Added wraithCharge from #4: " .. tostring(addCharge))
     end
     if wraithCharge > 100 then
       wraithCharge = 100
@@ -1625,36 +1556,6 @@ function SamaelMod:specialAnimFunc(npc)
     elseif not sprite:IsPlaying("WraithRight") and dir == Direction.RIGHT then
       sprite:Play("WraithRight", 1)
     end
-  elseif sprite:IsPlaying("Decapitation") and isaacDying == true and npc.Parent ~= nil then --Isaac kill animation
-    local target = npc.TargetPosition
-    local pos = npc.Position
-    local dir = Vector(target.X - pos.X, target.Y - pos.Y)
-    local dist = target:Distance(pos)
-    npc.Velocity = dir:Resized(dist*0.1) --Move towards proper position
-    if sprite:GetFrame() <= 28 then
-      Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0,
-                  npc.Position, Vector(0,0), npc) --Smoke trail
-    end
-
-    if sprite:IsEventTriggered("Cut") then --Blood splatter and noise from decapitation
-      Isaac.Spawn(1000, 77, 0, npc.Parent.Position, Vector(0, 0), npc)
-      Isaac.Spawn(1000, 2, 0, npc.Parent.Position, Vector(0, 0), npc)
-      SamaelMod:playSound(28, 1, 1)
-      player:UseActiveItem(CollectibleType.COLLECTIBLE_NECRONOMICON, false, false, false, false)
-      npc.Parent:Remove()
-      npc.Parent = player
-    end
-  elseif sprite:IsFinished("Decapitation") and
-         isaacDying == true and
-         npc.Parent ~= nil then --When finished, re-enable the player
-
-    player.Position = Vector(npc.Position.X+130, npc.Position.Y-10)
-    player:GetSprite().Color = Color(1,1,1,1,0,0,0)
-    player.ControlsEnabled = true
-    player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
-    npc.Velocity = Vector(0,0)
-    isaacDying = false
-    npc.Parent = nil
   end
 end
 
@@ -1745,10 +1646,58 @@ function SamaelMod:postReroll()
   end
 end
 
+-----------Wraith Skull item-----------
 function SamaelMod:activateWraith()
-  --if wraithCooldown == 0 and not wraithActive and wraithCharge >= 100 and wraithActivationCooldown == 0 then
-    SamaelMod:triggerWraithMode()
-  --end
+  local player = Isaac.GetPlayer(0)
+
+  wraithActivationCooldown = 280
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_HOLY_LIGHT) then
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_CRACK_THE_SKY, false, false, false, false)
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_CURSE_OF_THE_TOWER) then
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_ANARCHIST_COOKBOOK, false, false, false, false)
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_VARICOSE_VEINS) then
+    player:UseActiveItem(CollectibleType.COLLECTIBLE_TAMMYS_HEAD, false, false, false, false)
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_ATHAME) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MAW_OF_VOID) then
+
+    player:SpawnMawOfVoid(100)
+  end
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER) then
+    local pentagram = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER, 0,
+                                  player.Position, Vector(0,0), player):ToEffect()
+    pentagram.State = 1
+    pentagram.Size = 150
+    pentagram.SpriteScale = Vector(0.75,0.75)
+  end
+
+  wraithActive = true
+  wraithCharge = 0
+  wraithTime = 100
+  player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
+  SamaelMod:playSound(33, 1, 1.1)
+  player.MoveSpeed = player.MoveSpeed + 0.3
+  --Isaac.DebugString("Increased speed from the Wraith ability being activated: " .. tostring(player.MoveSpeed))
+
+  --Black poof effect
+  local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
+                           player.Position, Vector(0, 0), player):ToEffect()
+  poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
+  poof:FollowParent(player)
+
+  --Special animation
+  player:GetSprite().Color = Color(0, 0, 0, 0, 0, 0, 0)
+  local special = Isaac.Spawn(specialAnim, 0, 0,
+                              player.Position, Vector(0, 0), player):ToNPC() --Spawn the special animations entity
+  special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
+  special:GetSprite():Play("WraithDown", 1) --Wraith form animation
+  special:GetSprite().Color = Color(0.75,0.25,0.25,0.8,0,0,0)
+  special.CanShutDoors = false
+  special.Scale = player.SpriteScale.X
 end
 
 -----------Replacing knives with scythes-----------
@@ -1808,29 +1757,6 @@ function SamaelMod:knifeUpdate(knife)
   end
 end
 
---------Custom kill animation for the Isaac boss--------
-function SamaelMod:decapitation(npc)
-  local player = Isaac.GetPlayer(0)
-  if player:GetPlayerType() == samaelID and npc.Variant == 0 then
-    if isaacDying == false and npc.HitPoints <= 0 and not npc:GetSprite():IsPlaying("Death") then --When Isaac dies
-      npc:GetSprite().PlaybackSpeed = 0.75 --Slow him down a bit
-      npc.Position = Game():GetRoom():GetCenterPos() --Move him to the center of the room
-      npc:PlaySound(215, 1, 0, false, 1)
-      --Spawn the special animations entity
-      local special = Isaac.Spawn(specialAnim, 0, 0, player.Position, Vector(0,0), player):ToNPC()
-      special.CanShutDoors = false
-      special.TargetPosition = Vector(npc.Position.X-60,npc.Position.Y-40)
-      special.Parent = npc
-      special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-      special:GetSprite():Play("Decapitation", 1) --Play custom kill animation
-      player:GetSprite().Color = Color(0,0,0,0,0,0,0) --Hide and disable player
-      player.ControlsEnabled = false
-      player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
-      isaacDying = true
-    end
-  end
-end
-
 function SamaelMod.PostGameStartedReset()
   -- Local variables
   local game = Game()
@@ -1848,7 +1774,7 @@ function SamaelMod.PostGameStartedReset()
   player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
   player:EvaluateItems()
 
-  Isaac.DebugString("Cleared all Samael variables.")
+  --Isaac.DebugString("Cleared all Samael variables.")
 end
 
 function SamaelMod:PostUpdateFixBugs()
@@ -1906,11 +1832,21 @@ function SamaelMod:PostUpdateFixBugs()
   end
 end
 
-function SamaelMod:RechargeWraithSkull()
-  wraithCharge = 100
-  Isaac.DebugString("Manually charged the Wraith Skull (from Lil' Battery / Charged Key / Hairpin).")
+-- Called from the "RPCheckEntities:NonGrid()" and "SamaelMod:CheckHairpin()" functions
+function SamaelMod:CheckRechargeWraithSkull()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(wraithItem) and
+     wraithCharge ~= 100 then
+
+    wraithCharge = 100
+    Isaac.DebugString("Manually charged the Wraith Skull (from Lil' Battery / Charged Key / Hairpin).")
+  end
 end
 
+-- Called from the "RPCallbacks:PostNewRoom2()" function
 function SamaelMod:CheckHairpin()
   -- Local variables
   local game = Game()
@@ -1927,7 +1863,7 @@ function SamaelMod:CheckHairpin()
      level:GetCurrentRoomDesc().VisitedCount == 1 then
 
     Isaac.DebugString("Hairpin recharge detected.")
-    SamaelMod:RechargeWraithSkull()
+    SamaelMod:CheckRechargeWraithSkull()
   end
 end
 
