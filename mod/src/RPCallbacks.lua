@@ -394,6 +394,7 @@ end
 function RPCallbacks:PostNewRoom2()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
@@ -440,7 +441,6 @@ function RPCallbacks:PostNewRoom2()
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.megaSatanDead     = false
   RPGlobals.run.teleportSubverted = false
-  RPGlobals.run.trapdoorCollision = nil
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
     extra       = false,
@@ -523,8 +523,8 @@ function RPCallbacks:PostNewRoom2()
       roomVariant == 1074 or
       roomVariant == 1075) then
 
-    if RPGlobals.race.rFormat == "seeded" and
-       RPGlobals.race.status == "in progress" then
+    if RPGlobals.race.status == "in progress" and
+       RPGlobals.race.rFormat == "seeded" then
 
       -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
       -- (there are 10 Scolex entities)
@@ -549,31 +549,24 @@ function RPCallbacks:PostNewRoom2()
         -- The game will automatically make the entity visible later on
       end
       Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
-    end
 
-  else
-    -- Check to see if we need to replace the bugged Scolex champion with the non-champion version
-    local foundBuggedChampion = false
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 and -- 62.1 (Scolex)
-         entity:ToNPC():GetBossColorIdx() == 15 then -- The bugged black champion type
-
-        foundBuggedChampion = true
-        break
-      end
-    end
-    if foundBuggedChampion then
-      -- Remove all of the existing Scolexs (there are 10 Scolex entities)
+    else
+      -- Replace the bugged Scolex champion with the non-champion version (1/2)
+      local foundBuggedChampion = false
       for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 then -- 62.1 (Scolex)
-          entity:Remove()
+        if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 and -- 62.1 (Scolex)
+           entity:ToNPC():GetBossColorIdx() == 15 then -- The bugged black champion type
+
+          foundBuggedChampion = true
+          break
         end
       end
-
-      -- Spawn a new one
-      local scolex = game:Spawn(EntityType.ENTITY_PIN, 1, room:GetCenterPos(), Vector(0,0), nil, 0, roomSeed)
-      scolex:ToNPC():Morph(EntityType.ENTITY_PIN, 1, 0, -1) -- 62.1 (Scolex)
-      Isaac.DebugString("Fixed a black champion Scolex.")
+      if foundBuggedChampion then
+        -- If we morph the Scolex right now, it won't do anything, because it takes 1 frame to actually spawn
+        -- (right now there is 1 Scolex entity, but one frame from now there will be 10)
+        -- So mark to morph it on the next frame
+        RPGlobals.run.replaceBuggedScolex = gameFrameCount + 1
+      end
     end
   end
 

@@ -343,6 +343,7 @@ function RPPostRender:DisplayKnifeStats()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
 
   -- Don't do anything if the player does not exactly 1 knife
   if player:GetCollectibleNum(CollectibleType.COLLECTIBLE_MOMS_KNIFE) ~= 1 or -- 114
@@ -351,7 +352,8 @@ function RPPostRender:DisplayKnifeStats()
      player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) or -- 245
      player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) or -- 360
      player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118; Brimstone causes this to bug out
-     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then -- 168; Epic Fetus overwrites Mom's Knife
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or-- 168; Epic Fetus overwrites Mom's Knife
+     character == PlayerType.PLAYER_KEEPER then -- 14; Keeper has innate triple shot
 
     return
   end

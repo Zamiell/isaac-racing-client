@@ -23,6 +23,7 @@ local RPSpeedrun      = require("src/rpspeedrun")
 function RPPostUpdate:Main()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
@@ -67,6 +68,21 @@ function RPPostUpdate:Main()
     end
   else
     RPGlobals.run.edensSoulSet = false
+  end
+
+  -- Replace the bugged Scolex champion with the non-champion version (1/2)
+  if RPGlobals.run.replaceBuggedScolex ~= 0 and
+     RPGlobals.run.replaceBuggedScolex >= gameFrameCount then
+
+    RPGlobals.run.replaceBuggedScolex = 0
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 and -- 62.1 (Scolex)
+         entity:ToNPC():GetBossColorIdx() == 15 then -- The bugged black champion type
+
+        entity:ToNPC():Morph(EntityType.ENTITY_PIN, 1, 0, -1) -- 62.1 (Scolex)
+      end
+    end
+    Isaac.DebugString("Fixed the bugged Scolex champion.")
   end
 
   -- Fix The Battery + 9 Volt synergy (2/2)

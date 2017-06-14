@@ -21,7 +21,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 ### 1) Character Changes
 
-(Most races are done with Judas. The Eden change is to preserve her active item and the Keeper change is done for the [R+9](http://www.speedrun.com/afterbirthplus/full_game#R%2B_9_char) speedrun category.)
+(Most races are done with Judas. The Eden change is to preserve her active item.)
 
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
@@ -41,7 +41,7 @@ Devil Rooms and Angel Rooms without item pedestals in them have been removed.
 
 ### 4) Wrath of the Lamb Style Room Clear
 
-Room clear was incorrectly ported from Wrath of Lamb to Rebirth; doors are supposed to open at the beginning of an enemy's death animation, not at the end. The Racing+ mod fixes this to be the way it was originally intended.
+Rooms are considered cleared at the beginning of an enemy's death animation, rather than the end. (This was the way the game was originally intended to be, but it was incorrectly ported to Rebirth.)
 
 ### 5) Room Fixes
 

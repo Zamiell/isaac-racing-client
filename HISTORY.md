@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.7.1* - June 14th, 2017
+
+* For R+9, R+14, and R+7 custom challenges, the LiveSplit AutoSplitter will now automatically detect a reset when you go back to the first character. (Thanks Hyphen-ated)
+* Knife accuracy statistics will no longer show for Keeper. (Thanks TaKer093)
+* Fixed a bug where the bugged Scolex champion was not being properly fixed.
+
 ### *v0.7.0* - June 12th, 2017
 
 News:

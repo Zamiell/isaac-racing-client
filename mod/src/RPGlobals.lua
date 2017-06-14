@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.0"
+RPGlobals.version = "v0.7.1"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -149,11 +149,10 @@ function RPGlobals:InitRun()
   RPGlobals.run.megaSatanDead         = false
 
   -- Temporary tracking
-  RPGlobals.run.showingStage         = false
   RPGlobals.run.restartFrame         = 0
   RPGlobals.run.itemReplacementDelay = 0
   RPGlobals.run.usedTelepills        = false
-  RPGlobals.run.giveExtraCharge      = false
+  RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.droppedButterItem    = 0
   RPGlobals.run.fastResetFrame       = 0
@@ -161,8 +160,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
   RPGlobals.run.dualityCheckFrame     = 0
   RPGlobals.run.seededMOCheckFrame    = 0
-  RPGlobals.run.trapdoorCollision     = nil
   RPGlobals.run.changeFartColor       = false
+  RPGlobals.run.replaceBuggedScolex   = 0
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
