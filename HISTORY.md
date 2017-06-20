@@ -1,11 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.7.3* - June 20th, 2017
+
+* Fast-clear should work now in the special situation where you kill an enemy with a long death animation and then kill a splitting enemy afterward. (Thanks BMZ_Loop)
+* Fixed an unavoidable damage room with two Sister Vis in the Dark Room (#104). (Thanks Blumpkin Idaho)
+* Knife accuracy statistics will no longer show if you have 3 Dollar Bill, Mom's Eye, Loki's Horns, Monstro's Lung, Conjoined, or Book Worm. (Thanks BMZ_Loop and Blumpkin Idaho)
+
 ### *v0.7.2* - June 19th, 2017
 
 * Knife accuracy statistics will no longer show for Samael. (Thanks TaKer093)
 * Fixed the bug where the starting item graphic (in the starting room) was not being shown correctly in seeded races.
 * Fixed some bugs with the new fast-clear. (Thanks Thoday and 910Dan)
-* Fixed the bug where Mushroom replacement not working properly. (Thanks BMZ_Loop)
+* Fixed the bug where Mushroom replacement did not work properly. (Thanks BMZ_Loop)
 
 ### *v0.7.1* - June 14th, 2017
 

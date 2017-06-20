@@ -36,8 +36,8 @@ function RPPostUpdate:Main()
   -- (to fix the Greed's Gullet bug and the double coin / nickel healing bug)
   RPPostUpdate:CheckKeeperHearts()
 
-  -- Fast-clear for puzzle rooms
-  RPFastClear:CheckPuzzleRoom()
+  -- Check on every frame to see if we need to open the doors
+  RPFastClear:PostUpdate()
 
   -- Check for The Book of Sin (for Bookworm)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED) and

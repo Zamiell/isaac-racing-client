@@ -148,6 +148,7 @@ The changed rooms are as follows:
 * Chest: #301 (Gurglings)
 * The Dark Room: #14, #83 (Cage)
 * The Dark Room: #34 (Monstro)
+* The Dark Room: #104 (Sisters Vis)
 
 <br />
 

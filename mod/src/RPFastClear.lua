@@ -87,60 +87,16 @@ function RPFastClear:NPCUpdate(npc)
     --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
   end
 
-  -- Reset the exception list delay frame
-  if RPFastClear.delayFrame ~= 0 and
-     gameFrameCount > RPFastClear.delayFrame then
-
-    RPFastClear.delayFrame = 0
+  -- Check to see if this is a splitting enemy
+  if RPFastClear:CheckFastClearException(npc) then
+    -- An NPC died that is on the exception list, so we have to stall from fast-clearing the room for the next 4 frames
+    -- (another enemy in the room could die before the adds from this splitting enemy has spawned)
+    RPFastClear.delayFrame = gameFrameCount + 4
+    Isaac.DebugString("Set fast clear exception to frame: " .. tostring(RPFastClear.delayFrame))
   end
-
-  -- Check to see if any other enemies are alive in the room
-  if gameFrameCount <= 2 and -- If a Mushroom is replaced, the room can be clear of enemies on the first or second frame
-     RPFastClear.delayFrame == 0 and
-     RPFastClear.aliveEnemiesCount == 0 and
-     RPFastClear:CheckAllPressurePlatesPushed() and
-     RPFastClear:CheckFastClearException(npc) == false then
-
-    RPFastClear:ClearRoom()
-  end
-end
-
-function RPFastClear:CheckAllPressurePlatesPushed()
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-
-  -- If we are in a puzzle room, check to see if all of the plates have been pressed
-  if room:HasTriggerPressurePlates() == false or
-     RPFastClear.buttonsAllPushed then
-
-    return true
-  end
-
-  -- Check all the grid entities in the room
-  local num = room:GetGridSize()
-  for i = 1, num do
-    local gridEntity = room:GetGridEntity(i)
-    if gridEntity ~= nil then
-      -- If this entity is a trap door
-      local test = gridEntity:ToPressurePlate()
-      if test ~= nil then
-        if gridEntity:GetSaveState().State ~= 3 then
-          return false
-        end
-      end
-    end
-  end
-
-  RPFastClear.buttonsAllPushed = true
-  return true
 end
 
 function RPFastClear:CheckFastClearException(npc)
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-
   if npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
      npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
      npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
@@ -221,76 +177,76 @@ function RPFastClear:CheckFastClearException(npc)
      -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
      npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
 
-    -- An NPC died that is on the exception list, so we have to stall from fast-clearing the room for the next 4 frames
-    -- (another enemy in the room could die before the adds from this splitting enemy has spawned)
-    RPFastClear.delayFrame = gameFrameCount + 4
     return true
   else
     return false
   end
 end
 
--- Fast-clear for puzzle rooms (1/2)
--- (when puzzle rooms are cleared, there is an annoying delay before the doors are opened)
+-- Check on every frame to see if we need to open the doors
 -- (called from the PostUpdate callback)
-function RPFastClear:CheckPuzzleRoom()
+function RPFastClear:PostUpdate()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomClear = room:IsClear()
 
+  -- If 4 frames have passed since a splitting enemy died, reset the delay counter
+  if RPFastClear.delayFrame ~= 0 and
+     gameFrameCount >= RPFastClear.delayFrame then
+
+    RPFastClear.delayFrame = 0
+    Isaac.DebugString("Reset fast-clear exception frame.")
+  end
+
+  -- Check on every frame to see if we need to open the doors
+  if roomClear == false and
+     RPFastClear:CheckAllPressurePlatesPushed() and
+     gameFrameCount >= 2 and -- If a Mushroom is replaced, the room can be clear of enemies on the first or second frame
+     RPFastClear.delayFrame == 0 and
+     RPFastClear.aliveEnemiesCount == 0 then
+
+    RPFastClear:ClearRoom()
+  end
+end
+
+function RPFastClear:CheckAllPressurePlatesPushed()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+
   -- If we are in a puzzle room, check to see if all of the plates have been pressed
-  if roomClear or
-     room:HasTriggerPressurePlates() == false or
+  if room:HasTriggerPressurePlates() == false or
      RPFastClear.buttonsAllPushed then
 
-    return
+    return true
   end
 
   -- Check all the grid entities in the room
-  local allPushed = true
   local num = room:GetGridSize()
   for i = 1, num do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
-      -- If this entity is a button
-      if gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then
+      -- If this entity is a trap door
+      local test = gridEntity:ToPressurePlate()
+      if test ~= nil then
         if gridEntity:GetSaveState().State ~= 3 then
-          allPushed = false
-          break
+          return false
         end
       end
     end
   end
-  if allPushed then
-    RPFastClear.buttonsAllPushed = true
-    RPFastClear:CheckAllAlive()
-  end
-end
 
--- Fast-clear for puzzle rooms (2/2)
--- (check to see if any other enemies are alive in the room)
-function RPFastClear:CheckAllAlive()
-  local allDead = true
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    local npc = entity:ToNPC()
-    if npc ~= nil then
-      if npc:IsDead() == false and npc.CanShutDoors then
-        allDead = false
-        break
-      end
-    end
-  end
-  if allDead then
-    -- Manually clear the room, emulating all the steps that the game does
-    RPFastClear:ClearRoom()
-  end
+  RPFastClear.buttonsAllPushed = true
+  return true
 end
 
 -- This emulates what happens when you normally clear a room
 function RPFastClear:ClearRoom()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -308,7 +264,7 @@ function RPFastClear:ClearRoom()
 
   -- Set the room clear to true (so that it gets marked off on the minimap)
   room:SetClear(true)
-  Isaac.DebugString("Initiated a fast-clear.")
+  Isaac.DebugString("Initiated a fast-clear on frame: " .. tostring(gameFrameCount))
 
   -- Open the doors
   for i = 0, 7 do

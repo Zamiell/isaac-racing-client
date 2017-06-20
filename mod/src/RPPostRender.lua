@@ -351,8 +351,16 @@ function RPPostRender:DisplayKnifeStats()
      player:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) or -- 153
      player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) or -- 245
      player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) or -- 360
-     player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118; Brimstone causes this to bug out
-     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or-- 168; Epic Fetus overwrites Mom's Knife
+     player:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL) or -- 191
+     -- 3 Dollar Bill can proc The Inner Eye and 20/20
+     -- (there are no Fruit Cake effects that give more than one knife)
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYE) or -- 55
+     player:HasCollectible(CollectibleType.COLLECTIBLE_LOKIS_HORNS) or -- 87
+     player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
+     player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168; Epic Fetus overwrites Mom's Knife
+     player:HasPlayerForm(PlayerForm.PLAYERFORM_BABY) or -- 7 (Conjoined)
+     player:HasPlayerForm(PlayerForm.PLAYERFORM_BOOK_WORM) or -- 10
      character == PlayerType.PLAYER_KEEPER or -- 14; Keeper has innate triple shot
      character == 16 then -- Samael; the custom character bugs out
 
