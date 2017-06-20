@@ -353,7 +353,8 @@ function RPPostRender:DisplayKnifeStats()
      player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) or -- 360
      player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118; Brimstone causes this to bug out
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or-- 168; Epic Fetus overwrites Mom's Knife
-     character == PlayerType.PLAYER_KEEPER then -- 14; Keeper has innate triple shot
+     character == PlayerType.PLAYER_KEEPER or -- 14; Keeper has innate triple shot
+     character == 16 then -- Samael; the custom character bugs out
 
     return
   end

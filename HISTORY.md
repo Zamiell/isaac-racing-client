@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.7.2* - June 19th, 2017
+
+* Knife accuracy statistics will no longer show for Samael. (Thanks TaKer093)
+* Fixed the bug where the starting item graphic (in the starting room) was not being shown correctly in seeded races.
+* Fixed some bugs with the new fast-clear. (Thanks Thoday and 910Dan)
+* Fixed the bug where Mushroom replacement not working properly. (Thanks BMZ_Loop)
+
 ### *v0.7.1* - June 14th, 2017
 
 * For R+9, R+14, and R+7 custom challenges, the LiveSplit AutoSplitter will now automatically detect a reset when you hold R to go back to the first character. (Thanks Hyphen-ated)

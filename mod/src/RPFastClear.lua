@@ -15,6 +15,7 @@ RPFastClear.familiars = {} -- Reset in the "RPFastClear:InitRun()" function
 RPFastClear.aliveEnemies = {} -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.aliveEnemiesCount = 0 -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.buttonsAllPushed = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
+RPFastClear.delayFrame = 0
 
 --
 -- Fast clear functions
@@ -52,46 +53,56 @@ end
 
 -- Called from the NPCUpdate callback
 function RPFastClear:NPCUpdate(npc)
-    -- Local variables
-    local game = Game()
-    local room = game:GetRoom()
-    local roomClear = room:IsClear()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
 
-    -- We don't care if the room is cleared already or if this is a non-battle NPC
-    -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
-    -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-    if roomClear or
-       npc.CanShutDoors == false then
+  -- We don't care if the room is cleared already or if this is a non-battle NPC
+  -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
+  -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
+  if roomClear or
+     npc.CanShutDoors == false then
 
-      return
-    end
+    return
+  end
 
-    -- Add new enemies to the list
-    if npc:IsDead() == false then
-      if RPFastClear.aliveEnemies[npc.Index] == nil then
-        RPFastClear.aliveEnemies[npc.Index] = true
-        RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
-        --Isaac.DebugString("Added NPC " .. tostring(npc.Index) .. ", " ..
-        --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-      end
-      return
-    end
-
-    -- The NPC is dead, so remove it from the table
-    if RPFastClear.aliveEnemies[npc.Index] ~= nil then
-      RPFastClear.aliveEnemies[npc.Index] = nil
-      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
-      --Isaac.DebugString("Removed NPC " .. tostring(npc.Index) .. ", " ..
+  -- Add new enemies to the list
+  if npc:IsDead() == false then
+    if RPFastClear.aliveEnemies[npc.Index] == nil then
+      RPFastClear.aliveEnemies[npc.Index] = true
+      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
+      --Isaac.DebugString("Added NPC " .. tostring(npc.Index) .. ", " ..
       --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
     end
+    return
+  end
 
-    -- Check to see if any other enemies are alive in the room
-    if RPFastClear.aliveEnemiesCount == 0 and
-       RPFastClear:CheckAllPressurePlatesPushed() and
-       RPFastClear:CheckFastClearException(npc) == false then
+  -- The NPC is dead, so remove it from the table
+  if RPFastClear.aliveEnemies[npc.Index] ~= nil then
+    RPFastClear.aliveEnemies[npc.Index] = nil
+    RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+    --Isaac.DebugString("Removed NPC " .. tostring(npc.Index) .. ", " ..
+    --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+  end
 
-      RPFastClear:ClearRoom()
-    end
+  -- Reset the exception list delay frame
+  if RPFastClear.delayFrame ~= 0 and
+     gameFrameCount > RPFastClear.delayFrame then
+
+    RPFastClear.delayFrame = 0
+  end
+
+  -- Check to see if any other enemies are alive in the room
+  if gameFrameCount <= 2 and -- If a Mushroom is replaced, the room can be clear of enemies on the first or second frame
+     RPFastClear.delayFrame == 0 and
+     RPFastClear.aliveEnemiesCount == 0 and
+     RPFastClear:CheckAllPressurePlatesPushed() and
+     RPFastClear:CheckFastClearException(npc) == false then
+
+    RPFastClear:ClearRoom()
+  end
 end
 
 function RPFastClear:CheckAllPressurePlatesPushed()
@@ -126,6 +137,10 @@ function RPFastClear:CheckAllPressurePlatesPushed()
 end
 
 function RPFastClear:CheckFastClearException(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
   if npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
      npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
      npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
@@ -206,6 +221,9 @@ function RPFastClear:CheckFastClearException(npc)
      -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
      npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
 
+    -- An NPC died that is on the exception list, so we have to stall from fast-clearing the room for the next 4 frames
+    -- (another enemy in the room could die before the adds from this splitting enemy has spawned)
+    RPFastClear.delayFrame = gameFrameCount + 4
     return true
   else
     return false

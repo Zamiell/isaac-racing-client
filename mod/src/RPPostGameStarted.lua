@@ -481,21 +481,20 @@ function RPPostGameStarted:Seeded()
   -- Initialize the sprites for the starting room
   -- (don't show these graphics until the race starts)
   if RPGlobals.race.status == "in progress" then
-    if #RPGlobals.race.startingItems == 2 then
+    if #RPGlobals.race.startingItems == 1 then
       RPSprites:Init("seeded-starting-item", "seeded-starting-item")
-      RPSprites:Init("seeded-item1", tostring(RPGlobals.race.startingItems[2]))
-      -- The first item is The Compass, and we don't need to display that
-    elseif #RPGlobals.race.startingItems == 3 then
+      RPSprites:Init("seeded-item1", tostring(RPGlobals.race.startingItems[1]))
+    elseif #RPGlobals.race.startingItems == 2 then
+      RPSprites:Init("seeded-starting-build", "seeded-starting-build")
+      RPSprites:Init("seeded-item2", tostring(RPGlobals.race.startingItems[1]))
+      RPSprites:Init("seeded-item3", tostring(RPGlobals.race.startingItems[2]))
+    elseif #RPGlobals.race.startingItems == 4 then
+      -- Only the Mega Blast build has 4 starting items
       RPSprites:Init("seeded-starting-build", "seeded-starting-build")
       RPSprites:Init("seeded-item2", tostring(RPGlobals.race.startingItems[2]))
       RPSprites:Init("seeded-item3", tostring(RPGlobals.race.startingItems[3]))
-    elseif #RPGlobals.race.startingItems == 5 then
-      -- Only the Mega Blast build has 5 starting items
-      RPSprites:Init("seeded-starting-build", "seeded-starting-build")
-      RPSprites:Init("seeded-item2", tostring(RPGlobals.race.startingItems[3]))
-      RPSprites:Init("seeded-item3", tostring(RPGlobals.race.startingItems[4]))
-      RPSprites:Init("seeded-item4", tostring(RPGlobals.race.startingItems[2])) -- This will be to the left of 2
-      RPSprites:Init("seeded-item5", tostring(RPGlobals.race.startingItems[5])) -- This will be to the right of 3
+      RPSprites:Init("seeded-item4", tostring(RPGlobals.race.startingItems[1])) -- This will be to the left of 2
+      RPSprites:Init("seeded-item5", tostring(RPGlobals.race.startingItems[4])) -- This will be to the right of 3
     end
   end
 

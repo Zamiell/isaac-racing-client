@@ -866,7 +866,6 @@ end
 function SamaelMod:deadEyeFunc()
   local player = Isaac.GetPlayer(0)
   if player:HasCollectible(samaelDeadEye) then
-
     if hits > 0 then
       if deadEyeBoost < properDamage*2 then
         --Add to deadEyeBoost to keep track of how much damage has been added by this effect
@@ -1006,21 +1005,23 @@ end
 
 -----------On player init (start/continue)-----------
 function SamaelMod:PostPlayerInit(player)
-  if player:GetPlayerType() == samaelID then --If the player is Samael
-    -- Add Costumes
-    player:AddNullCostume(cloak)
-    player:AddNullCostume(hood)
-    costumeEquipped = true
-
-    numItems = -1
-    swing = 0
-
-    player.FireDelay = 5
-    wraithTime = 0
-    wraithActive = false
-    charge = 0
-    wraithCharge = 0 -- Just set it to 0, we don't care about keeping track of it between runs
+  if player:GetPlayerType() ~= samaelID then --If the player is Samael
+    return
   end
+
+  -- Add Costumes
+  player:AddNullCostume(cloak)
+  player:AddNullCostume(hood)
+  costumeEquipped = true
+
+  numItems = -1
+  swing = 0
+
+  player.FireDelay = 5
+  wraithTime = 0
+  wraithActive = false
+  charge = 0
+  wraithCharge = 0 -- Just set it to 0, we don't care about keeping track of it between runs
 end
 
 -----------Cache update function for handling charge time and some damage stuff-----------
@@ -1761,6 +1762,7 @@ function SamaelMod.PostGameStartedReset()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
 
   SamaelMod.SacDaggerAcquired = false
 
@@ -1771,8 +1773,11 @@ function SamaelMod.PostGameStartedReset()
 
   numItems = -1
   itemChecks = {}
-  player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
-  player:EvaluateItems()
+
+  if character == samaelID then
+    player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
+    player:EvaluateItems()
+  end
 
   --Isaac.DebugString("Cleared all Samael variables.")
 end

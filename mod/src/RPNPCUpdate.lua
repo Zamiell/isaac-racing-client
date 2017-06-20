@@ -192,7 +192,7 @@ function RPNPCUpdate:NPC275(npc)
 end
 
 -- EntityType.ENTITY_MUSHROOM (300)
-function RPNPCUpdate:NPC(npc)
+function RPNPCUpdate:NPC300(npc)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()

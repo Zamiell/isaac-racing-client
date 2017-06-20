@@ -268,6 +268,7 @@ function RPSchoolbag:Switch()
      player:HasInvincibility() then
 
     player:ClearTemporaryEffects()
+    Isaac.DebugString("Ended My Little Unicorn / Unicorn Stump invulnerability early.")
   end
 
   -- Set the new active item
