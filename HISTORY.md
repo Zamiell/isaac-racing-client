@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.7.4* - June 23rd, 2017
+
+* Moving Box will now appear properly in the Schoolbag if it is an open state.
+* Knife accuracy statistics will no longer show if you have the Mom transformation. (Thanks Shigan)
+* Fixed some crashes on Linux. (Thanks Dion)
+
 ### *v0.7.3* - June 20th, 2017
 
 * Fast-clear should work now in the special situation where you kill an enemy with a long death animation and then kill a splitting enemy afterward. (Thanks BMZ_Loop)

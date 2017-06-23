@@ -364,22 +364,22 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
     RPGlobals.run.trapdoor.state = 1
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
     RPGlobals.run.trapdoor.upwards = upwards
-    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
-    -- The "Trapdoor" animation is 16 frames long and the "LightTravel" animation is 28 frames long,
-    -- but we need to delay for longer than that to make it look smooth
-    -- (we keep the "Trapdoor" animation at 2 for quick chest animations and
-    -- make a custom "Trapdoor2" animation that is 40 frames long)
-    -- (we have increased the "FrameNum" for the "LightTravel" animations to 40)
-
+    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
     player.ControlsEnabled = false
     player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
     -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
     player.Position = entity.Position -- Teleport the player on top of the trapdoor
     player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
     if upwards then
-      player:PlayExtraAnimation("LightTravel")
+      -- The vanilla "LightTravel" animation is 28 frames long,
+      -- but we need to delay for longer than that to make it look smooth,
+      -- so we modified it to be 40 frames in the ANM2 file
+      player:PlayExtraAnimation("LightTravel") -- This is modified to be longer than on vanilla;
     else
-      player:PlayExtraAnimation("Trapdoor2") -- This is a custom elongated animation
+      -- The vanilla "Trapdoor" animation is 16 frames long,
+      -- but we need to delay for longer than that to make it look smooth,
+      -- So we made a custom "TrapDoor2" animation that is 40 frames long)
+      player:PlayExtraAnimation("Trapdoor2")
     end
   end
 end

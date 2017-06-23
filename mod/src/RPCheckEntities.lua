@@ -31,20 +31,21 @@ function RPCheckEntities:Grid()
   for i = 1, gridSize do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
-      if gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR and -- 17
-         gridEntity:GetSaveState().VarData == 1 then -- Void Portals have a VarData of 1
+      local saveState = gridEntity:GetSaveState();
+      if saveState.Type == GridEntityType.GRID_TRAPDOOR and -- 17
+         saveState.VarData == 1 then -- Void Portals have a VarData of 1
 
         -- Delete all Void Portals
         gridEntity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
-      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_TRAPDOOR then -- 17
+      elseif saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
         RPFastTravel:ReplaceTrapdoor(gridEntity, i)
 
-      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_STAIRS then -- 18
+      elseif saveState.Type == GridEntityType.GRID_STAIRS then -- 18
         RPFastTravel:ReplaceCrawlspace(gridEntity, i)
 
-      elseif gridEntity:GetSaveState().Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
+      elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         RPSpeedrun:CheckButtonPressed(gridEntity)
       end
     end
@@ -175,7 +176,7 @@ function RPCheckEntities:NonGrid()
       end
     end
 
-    -- The bossHearts variables are reset entering a new room
+    -- The bossHearts variables is reset upon entering a new room
   end
 
   -- Make Fireworks quieter
@@ -221,7 +222,7 @@ function RPCheckEntities:Entity5(entity)
   if entity.Variant == PickupVariant.PICKUP_HEART then -- 10
     if RPCheckEntities:IsBossType(entity.SpawnerType) and
        roomType == RoomType.ROOM_BOSS and -- 5
-       stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby or The Lamb or Victory Lap bosses
+       stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby, The Lamb, or Victory Lap bosses
 
       -- Delete heart drops in boss rooms so that we can properly seed them
       RPGlobals.run.bossHearts.spawn = true
@@ -407,7 +408,8 @@ function RPCheckEntities:Entity5(entity)
     if stage == 11 and
        ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
-        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)) then
+        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)
+        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and stageType == 1)) then
 
       -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
       -- depending on if we are on the last character or not
@@ -416,6 +418,8 @@ function RPCheckEntities:Entity5(entity)
          (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
           RPSpeedrun.charNum == 14) or
          (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+          RPSpeedrun.charNum == 7) or
+         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
           RPSpeedrun.charNum == 7) then
 
         -- Spawn the "Race Trophy" custom entity

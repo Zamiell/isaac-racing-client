@@ -172,6 +172,7 @@ function RPPostGameStarted:Character()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local itemPool = game:GetItemPool()
+  local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
 
   -- Give all characters the D6
@@ -229,12 +230,11 @@ function RPPostGameStarted:Character()
     end
 
     -- Update the cache (in case we had an active item that granted stats, like A Pony)
-    player:AddCacheFlags(CacheFlag.CACHE_ALL)
+    player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
     player:EvaluateItems()
 
     -- Remove the costume, if any (some items give a costume, like A Pony)
-    local configItem = RPGlobals:GetConfigItem(activeItem) -- This will crash the game with an item ID of 0
-    player:RemoveCostume(configItem)
+    player:RemoveCostume(itemConfig:GetCollectible(activeItem))
 
     -- Eden starts with the Schoolbag by default
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
@@ -507,6 +507,7 @@ function RPPostGameStarted:Diversity()
   local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
+  local itemConfig = Isaac.GetItemConfig()
 
   -- This is a diversity race, so mark to not remove the 3 placeholder items later on
   RPPostGameStarted.diversity = true
@@ -543,9 +544,7 @@ function RPPostGameStarted:Diversity()
       player:EvaluateItems()
 
       -- Remove the costume, if any (some items give a costume, like A Pony)
-      local configItem = RPGlobals:GetConfigItem(RPGlobals.race.startingItems[i])
-      -- This will crash the game with an item ID of 0
-      player:RemoveCostume(configItem)
+      player:RemoveCostume(itemConfig:GetCollectible(RPGlobals.race.startingItems[i]))
 
     elseif i == 2 or i == 3 or i == 4 then
       -- Items 2, 3, and 4 are the passives

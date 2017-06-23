@@ -119,7 +119,9 @@ function RPPostRender:CheckRestart()
       command = command .. " " .. RPGlobals.race.order9[RPSpeedrun.charNum]
     elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
+           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
@@ -359,6 +361,7 @@ function RPPostRender:DisplayKnifeStats()
      player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
      player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168; Epic Fetus overwrites Mom's Knife
+     player:HasPlayerForm(PlayerForm.PLAYERFORM_MOM) or -- 6
      player:HasPlayerForm(PlayerForm.PLAYERFORM_BABY) or -- 7 (Conjoined)
      player:HasPlayerForm(PlayerForm.PLAYERFORM_BOOK_WORM) or -- 10
      character == PlayerType.PLAYER_KEEPER or -- 14; Keeper has innate triple shot

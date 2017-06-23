@@ -82,7 +82,14 @@ function RPSchoolbag:SpriteDisplay()
   -- Load the sprites
   if RPSchoolbag.sprites.item == nil then
     RPSchoolbag.sprites.item = Sprite()
-    RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. RPGlobals.run.schoolbag.item .. ".anm2", true)
+    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
+       RPGlobals.run.movingBoxOpen then
+
+      -- We need custom logic to handle Moving Box, which has two different graphics
+      RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/523-2.anm2", true)
+    else
+      RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. RPGlobals.run.schoolbag.item .. ".anm2", true)
+    end
     RPSchoolbag.sprites.item:Play("Default", true)
     RPSchoolbag.sprites.barBack = Sprite()
     RPSchoolbag.sprites.barBack:Load("gfx/ui/ui_chargebar.anm2", true)
@@ -258,6 +265,7 @@ function RPSchoolbag:Switch()
   local game = Game()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
+  local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
   local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
 
@@ -292,8 +300,7 @@ function RPSchoolbag:Switch()
 
   -- Remove the costume, if any (some items give a costume, like A Pony)
   if activeItem ~= 0 then
-    local configItem = RPGlobals:GetConfigItem(activeItem) -- This will crash the game with an item ID of 0
-    player:RemoveCostume(configItem)
+    player:RemoveCostume(itemConfig:GetCollectible(activeItem))
   end
 
   -- Set the item hold cooldown to 0 since this doesn't count as picking up a new item

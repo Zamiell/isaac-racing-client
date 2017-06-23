@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- lump of coal build only shows coal on starting room
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -84,6 +83,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Undefined, CollectibleT
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.GlowingHourGlass,
                                                  CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,      CollectibleType.COLLECTIBLE_VOID) -- 477
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox, CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
 -- Define custom item callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BookOfSin,   CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED)

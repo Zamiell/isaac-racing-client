@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.3"
+RPGlobals.version = "v0.7.4"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -129,6 +129,7 @@ function RPGlobals:InitRun()
   -- Tracking per run
   RPGlobals.run.roomsEntered     = 0
   RPGlobals.run.touchedBookOfSin = false
+  RPGlobals.run.movingBoxOpen    = true
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
@@ -240,17 +241,6 @@ function RPGlobals:GridToPos(x, y)
   x = x + 1
   y = y + 1
   return room:GetGridPosition(y * room:GetGridWidth() + x)
-end
-
--- Get a Config::Item from an collectible ID
--- from ilise rose (@yatboim)
--- (this will crash the game if fed an item ID of 0)
-function RPGlobals:GetConfigItem(id)
-    local player = Isaac.GetPlayer(0)
-    player:GetEffects():AddCollectibleEffect(id, true)
-    local effect = player:GetEffects():GetCollectibleEffect(id)
-    player:GetEffects():RemoveCollectibleEffect(id)
-    return effect.Item
 end
 
 -- From: http://lua-users.org/wiki/SimpleRound

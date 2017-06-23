@@ -470,7 +470,8 @@ function RPCallbacks:PostNewRoom2()
      (RPGlobals.race.status == "in progress" or
       challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
       challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)")) and
      RPGlobals.race.goal ~= "Mega Satan" and
      -- We don't want to respawn any trophies if the player is supposed to kill Mega Satan
      RPSpeedrun.finished == false and -- Don't respawn the trophy if the player just finished a R+9/14 speedrun

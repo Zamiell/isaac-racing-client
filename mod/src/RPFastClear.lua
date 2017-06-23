@@ -228,12 +228,11 @@ function RPFastClear:CheckAllPressurePlatesPushed()
   for i = 1, num do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
-      -- If this entity is a trap door
-      local test = gridEntity:ToPressurePlate()
-      if test ~= nil then
-        if gridEntity:GetSaveState().State ~= 3 then
-          return false
-        end
+      local saveState = gridEntity:GetSaveState();
+      if saveState.Type == GridEntityType.GRID_PRESSURE_PLATE and -- 20
+         saveState.State ~= 3 then
+
+        return false
       end
     end
   end

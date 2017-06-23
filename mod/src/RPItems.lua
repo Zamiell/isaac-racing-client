@@ -42,7 +42,7 @@ end
 -- Existing items
 --
 
-function RPItems:Teleport()
+function RPItems:Teleport() -- 44
   -- This callback is used naturally by Broken Remote
   -- This callback is manually called for Cursed Eye
 
@@ -68,7 +68,7 @@ function RPItems:Teleport()
   -- we have already locked in a room transition
 end
 
-function RPItems:BlankCard()
+function RPItems:BlankCard() -- 286
   local game = Game()
   local player = game:GetPlayer(0)
   local card = player:GetCard(0)
@@ -84,7 +84,7 @@ function RPItems:BlankCard()
   end
 end
 
-function RPItems:Undefined()
+function RPItems:Undefined() -- 324
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -139,7 +139,7 @@ function RPItems:Undefined()
   -- This will override the existing Undefined effect because we have already locked in a room transition
 end
 
-function RPItems:GlowingHourGlass()
+function RPItems:GlowingHourGlass() -- 422
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -162,11 +162,34 @@ function RPItems:GlowingHourGlass()
   end
 end
 
-function RPItems:Void()
+function RPItems:Void() -- 477
   -- We need to delay item replacement after using a Void (in case the player has consumed a D6)
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   RPGlobals.run.itemReplacementDelay = gameFrameCount + 5 -- Stall for 5 frames
+end
+
+function RPItems:MovingBox() -- 523
+  Isaac.DebugString("Moving Box activated.")
+  if RPGlobals.run.movingBoxOpen then
+    -- Check to see if there are any pickups on the ground
+    local pickupsPresent = false
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_PICKUP then
+        pickupsPresent = true
+        break
+      end
+    end
+    if pickupsPresent then
+      RPGlobals.run.movingBoxOpen = false
+      Isaac.DebugString("Set the Moving Box graphic to the open state.")
+    else
+      Isaac.DebugString("No pickups found.")
+    end
+  else
+    RPGlobals.run.movingBoxOpen = true
+    Isaac.DebugString("Set the Moving Box graphic to the closed state.")
+  end
 end
 
 --
