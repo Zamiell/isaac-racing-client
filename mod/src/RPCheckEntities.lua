@@ -408,7 +408,7 @@ function RPCheckEntities:Entity5(entity)
     if stage == 11 and
        ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
-        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0)
+        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0) or
         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and stageType == 1)) then
 
       -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
