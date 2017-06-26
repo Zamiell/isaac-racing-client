@@ -452,6 +452,7 @@ function RPCallbacks:PostNewRoom2()
   RPFastClear.aliveEnemies = {}
   RPFastClear.aliveEnemiesCount = 0
   RPFastClear.buttonsAllPushed = false
+  RPFastClear.roomInitiallyCleared = roomClear
   RPFastClear.delayFrame = 0
 
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug

@@ -15,7 +15,8 @@ RPFastClear.familiars = {} -- Reset in the "RPFastClear:InitRun()" function
 RPFastClear.aliveEnemies = {} -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.aliveEnemiesCount = 0 -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.buttonsAllPushed = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.delayFrame = 0
+RPFastClear.roomInitiallyCleared = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
+RPFastClear.delayFrame = 0 -- Used when a splitting enemy dies
 
 --
 -- Fast clear functions
@@ -96,6 +97,7 @@ function RPFastClear:NPCUpdate(npc)
   end
 end
 
+-- Called from the "RPFastClear:NPCUpdate()" function
 function RPFastClear:CheckFastClearException(npc)
   if npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
      npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
@@ -190,7 +192,20 @@ function RPFastClear:PostUpdate()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local roomClear = room:IsClear()
+
+  -- We don't want fast-clear to apply when we bomb an angel or spawn Greed from bombing a shopkeeper
+  --[[
+  if RPFastClear.roomInitiallyCleared and
+     roomClear == false then
+
+    -- Delay for 4 frames, after which the angel/Greed will have spawned
+    -- and the doors will no longer be in danger of opening prematurely
+    RPFastClear.delayFrame = gameFrameCount + 4
+    Isaac.DebugString("Angel or Greed detected; delaying fast-clear for 4 frames.")
+  end
+  --]]
 
   -- If 4 frames have passed since a splitting enemy died, reset the delay counter
   if RPFastClear.delayFrame ~= 0 and
@@ -201,11 +216,13 @@ function RPFastClear:PostUpdate()
   end
 
   -- Check on every frame to see if we need to open the doors
-  if roomClear == false and
-     RPFastClear:CheckAllPressurePlatesPushed() and
-     gameFrameCount >= 2 and -- If a Mushroom is replaced, the room can be clear of enemies on the first or second frame
+  if RPFastClear.aliveEnemiesCount == 0 and
      RPFastClear.delayFrame == 0 and
-     RPFastClear.aliveEnemiesCount == 0 then
+     roomClear == false and
+     RPFastClear:CheckAllPressurePlatesPushed() and
+     gameFrameCount > 1 and -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
+     roomType ~= RoomType.ROOM_SHOP or -- 2
+     roomType ~= RoomType.ROOM_ANGEL then -- 15
 
     RPFastClear:ClearRoom()
   end

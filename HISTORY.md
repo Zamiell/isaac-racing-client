@@ -4,7 +4,7 @@
 
 * Knife accuracy statistics will no longer show if you have Tech X.
 * Fixed a bug with the "Checkpoint" custom item not showing up under certain conditions. (Thanks Jerseyrebox)
-* The server should no longer crash sometimes randomly during big races. (Thanks Molfried)
+* The server should no longer crash during big races. (Thanks Molfried)
 
 ### *v0.7.4* - June 23rd, 2017
 
