@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.7.7* - June 27th, 2017
+
+* Fixed the bug where the doors would open prematurely when fighting an angel. (Thanks ReidMercury__)
+
+
 ### *v0.7.6* - June 26th, 2017
 
 * Knife accuracy statistics will no longer show if you have Tech X.

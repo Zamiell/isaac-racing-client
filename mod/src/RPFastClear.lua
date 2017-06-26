@@ -16,6 +16,7 @@ RPFastClear.aliveEnemies = {} -- Reset in the "RPCallbacks:PostNewRoom2()" funct
 RPFastClear.aliveEnemiesCount = 0 -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.buttonsAllPushed = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.roomInitiallyCleared = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
+RPFastClear.fightingAngel = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
 RPFastClear.delayFrame = 0 -- Used when a splitting enemy dies
 
 --
@@ -192,20 +193,19 @@ function RPFastClear:PostUpdate()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
-  local roomType = room:GetType()
   local roomClear = room:IsClear()
 
-  -- We don't want fast-clear to apply when we bomb an angel or spawn Greed from bombing a shopkeeper
-  --[[
+  -- Bombing an Angel statue (or getting Greed from bombing a shopkeeper) will make the doors open prematurely
   if RPFastClear.roomInitiallyCleared and
+     RPFastClear.fightingAngel == false and
+     RPFastClear.delayFrame == 0 and
      roomClear == false then
 
-    -- Delay for 4 frames, after which the angel/Greed will have spawned
-    -- and the doors will no longer be in danger of opening prematurely
-    RPFastClear.delayFrame = gameFrameCount + 4
-    Isaac.DebugString("Angel or Greed detected; delaying fast-clear for 4 frames.")
+    -- Delay for 4 frames so that the enemy will spawn and the doors will stay closed
+    RPFastClear.fightingAngel = true
+    RPFastClear.delayFrame = gameFrameCount + 38 -- 37 and below is not long enough for the angel to spawn
+    Isaac.DebugString("Angel or Greed detected; delaying fast-clear for 38 frames.")
   end
-  --]]
 
   -- If 4 frames have passed since a splitting enemy died, reset the delay counter
   if RPFastClear.delayFrame ~= 0 and
@@ -220,10 +220,9 @@ function RPFastClear:PostUpdate()
      RPFastClear.delayFrame == 0 and
      roomClear == false and
      RPFastClear:CheckAllPressurePlatesPushed() and
-     gameFrameCount > 1 and -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
-     roomType ~= RoomType.ROOM_SHOP or -- 2
-     roomType ~= RoomType.ROOM_ANGEL then -- 15
+     gameFrameCount > 1 then -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
 
+    RPFastClear.fightingAngel = false -- There might be 2 angel fights per room, so make sure this variable is reset
     RPFastClear:ClearRoom()
   end
 end

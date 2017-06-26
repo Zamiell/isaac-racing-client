@@ -449,10 +449,13 @@ function RPCallbacks:PostNewRoom2()
     velocity    = {},
   }
   RPGlobals.run.keeper.usedStrength = false
+
+  -- Clear fast-clear related variables that track things per room
   RPFastClear.aliveEnemies = {}
   RPFastClear.aliveEnemiesCount = 0
   RPFastClear.buttonsAllPushed = false
   RPFastClear.roomInitiallyCleared = roomClear
+  RPFastClear.fightingAngel = false
   RPFastClear.delayFrame = 0
 
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
