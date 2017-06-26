@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.7.6* - June 26th, 2017
+
+* Knife accuracy statistics will no longer show if you have Tech X.
+* Fixed a bug with the "Checkpoint" custom item not showing up under certain conditions. (Thanks Jerseyrebox)
+* The server should no longer crash sometimes randomly during big races. (Thanks Molfried)
+
 ### *v0.7.4* - June 23rd, 2017
 
 * Moving Box will now appear properly in the Schoolbag if it is an open state.

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.5"
+RPGlobals.version = "v0.7.6"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)

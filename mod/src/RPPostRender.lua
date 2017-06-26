@@ -361,6 +361,8 @@ function RPPostRender:DisplayKnifeStats()
      player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
      player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168; Epic Fetus overwrites Mom's Knife
+     player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) or -- 395
+     -- Players may prioritize Tech X shots, which makes the accuracy useless
      player:HasPlayerForm(PlayerForm.PLAYERFORM_MOM) or -- 6
      player:HasPlayerForm(PlayerForm.PLAYERFORM_BABY) or -- 7 (Conjoined)
      player:HasPlayerForm(PlayerForm.PLAYERFORM_BOOK_WORM) or -- 10
