@@ -32,6 +32,7 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
   --
 
   if character == PlayerType.PLAYER_KEEPER and -- 14
+     player:HasCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) and -- 501
      cacheFlag == CacheFlag.CACHE_RANGE then -- 8
 
     -- Find out how many coin containers we should have
@@ -88,9 +89,13 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
       176, 182, 184, 189, 193,
       218, 219, 226, 230, 253,
       307, 312, 314, 334, 342,
-      346, 354, 456,
+      346, 354, 456, -1, -2, -- Health Up and Health Down pills
     }
     for i = 1, #HPItemArray do
+      --if HPItemArray[i] == -1 or HPItemArray[i] == -2 then
+      --else
+      -- GetCollectibleNum
+      -- TODO
       if player:HasCollectible(HPItemArray[i]) then
         if RPGlobals.run.keeper.healthItems[HPItemArray[i]] == nil then
           RPGlobals.run.keeper.healthItems[HPItemArray[i]] = true

@@ -11,6 +11,10 @@ local RPItems   = require("src/rpitems")
 -- Pill functions
 --
 
+function RPPills:HealthUpDown()
+
+end
+
 function RPPills:Telepills()
   -- Local variables
   local game = Game()

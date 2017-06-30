@@ -539,6 +539,12 @@
 	<passive description="Static tears!" gfx="Collectibles_524_TechnologyZero.png" name="Technology Zero" id="524" cache="tearflag" />
 	<familiar description="You're tearing me apart!" gfx="Collectibles_525_Leprosy.png" name="Leprosy" id="525" />
 
+	<!-- Booster Pack #3 -->
+	<familiar description="Lil Harbingers!" gfx="Collectibles_526_7Seals.png" name="7 Seals" devilprice="1" id="526"/>
+	<active description="Caaan Do!" gfx="Collectibles_527_Mr_Me.png" maxcharges="4" name="Mr. ME!" id="527" />
+	<familiar description="Eclipsed by the moon" gfx="collectibles_528_angelic prism.png" name="Angelic Prism" id="528" />
+	<passive cache="tearflag" description="Eyeball tears!" gfx="Collectibles_529_Pop.png" name="Pop!" id="529" />
+
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />
 	<trinket description="Trickle charge" gfx="trinket_003_aaabattery.png" id="3" name="AAA Battery" />
@@ -655,7 +661,7 @@
 	<trinket achievement="284" description="Feels lucky..." gfx="trinket_110_silverdollar.png" id="110" name="Silver Dollar" />
 	<trinket achievement="287" description="Drips with blood..." gfx="trinket_111_bloodycrown.png" id="111" name="Bloody Crown" />
 	<trinket description="..." gfx="trinket_112_paytowin.png" id="112" name="Pay To Win" />
-	<trinket achievement="310" description="I Bring Wrath" gfx="trinket_113_LocustOfWrath.png" id="113" name="Locust of Wrath" />
+	<trinket achievement="310" description="I Bring War" gfx="trinket_113_LocustOfWrath.png" id="113" name="Locust of War" />
 	<trinket achievement="311" description="I Bring Pestilence" gfx="trinket_114_LocustOfPestilence.png" id="114" name="Locust of Pestilence" />
 	<trinket achievement="312" description="I Bring Famine" gfx="trinket_115_LocustOfFamine.png" id="115" name="Locust of Famine" />
 	<trinket achievement="313" description="I Bring Death" gfx="trinket_116_LocustOfDeath.png" id="116" name="Locust of Death" />
@@ -670,4 +676,7 @@
 
 	<!-- Booster Pack #2 -->
 	<trinket description="Angelic Spoils!" gfx="Trinket_123_FiligreeFeather.png" id="123" name="Filigree Feather" />
+
+	<!-- Booster Pack #3 -->
+	<trinket description="Hold the door!" gfx="trinket_124_woodendoorstop.png" id="124" name="Door Stop" />
 </items>

@@ -57,6 +57,31 @@
 		<hair gfx="Character_009_EdenHair13.png" />
 		<hair gfx="Character_009_EdenHair14.png" />
 		<hair gfx="Character_009_EdenHair15.png" />
+        <hair gfx="Character_009_EdenHair16.png" />
+		<hair gfx="Character_009_EdenHair17.png" />
+		<hair gfx="Character_009_EdenHair18.png" />
+		<hair gfx="Character_009_EdenHair19.png" />
+		<hair gfx="Character_009_EdenHair20.png" />
+		<hair gfx="Character_009_EdenHair21.png" />
+		<hair gfx="Character_009_EdenHair22.png" />
+		<hair gfx="Character_009_EdenHair23.png" />
+		<hair gfx="Character_009_EdenHair24.png" />
+		<hair gfx="Character_009_EdenHair25.png" />
+		<hair gfx="Character_009_EdenHair26.png" />
+		<hair gfx="Character_009_EdenHair27.png" />
+		<hair gfx="Character_009_EdenHair28.png" />
+		<hair gfx="Character_009_EdenHair29.png" />
+		<hair gfx="Character_009_EdenHair30.png" />
+		<hair gfx="Character_009_EdenHair31.png" />
+		<hair gfx="Character_009_EdenHair32.png" />
+		<hair gfx="Character_009_EdenHair33.png" />
+		<hair gfx="Character_009_EdenHair34.png" />
+		<hair gfx="Character_009_EdenHair35.png" />
+		<hair gfx="Character_009_EdenHair36.png" />
+		<hair gfx="Character_009_EdenHair37.png" />
+		<hair gfx="Character_009_EdenHair38.png" />
+		<hair gfx="Character_009_EdenHair39.png" />
+		<hair gfx="Character_009_EdenHair40.png" />
     </player>
 	<player id="10" name="The Lost" skin="Character_012_TheLost.png" hp="0" armor="1" coins="1"
           nameimage="PlayerName_12_TheLost.png"

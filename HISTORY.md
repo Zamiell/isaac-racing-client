@@ -1,9 +1,9 @@
 # Racing+ Version History and News
 
-### *v0.7.7* - June 27th, 2017
+### *v0.7.8* - June 27th, 2017
 
+* Racing+ will now work with the latest patch (Booster Pack #3).
 * Fixed the bug where the doors would open prematurely when fighting an angel. (Thanks ReidMercury__)
-
 
 ### *v0.7.6* - June 26th, 2017
 
