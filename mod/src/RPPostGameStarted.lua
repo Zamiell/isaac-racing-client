@@ -520,9 +520,19 @@ function RPPostGameStarted:Diversity()
 
   -- Give the player their five random diversity starting items
   for i = 1, #RPGlobals.race.startingItems do
+    -- Replace the custom items
+    local itemID = RPGlobals.race.startingItems[i]
+    if itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
+      itemID = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
+    elseif itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
+      itemID = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
+    elseif itemID == CollectibleType.COLLECTIBLE_SMELTER then -- 479
+      itemID = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
+    end
+
     if i == 1 then
       -- Item 1 is the active
-      RPGlobals.run.schoolbag.item = RPGlobals.race.startingItems[i]
+      RPGlobals.run.schoolbag.item = itemID
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
         RPGlobals.run.schoolbag.charges = 0 -- Eden's Soul should start on an empty charge
       else
@@ -531,10 +541,10 @@ function RPPostGameStarted:Diversity()
       RPSchoolbag.sprites.item = nil
 
       -- Remove it from all of the item pools
-      itemPool:RemoveCollectible(RPGlobals.race.startingItems[i])
+      itemPool:RemoveCollectible(itemID)
 
       -- Give them the item so that the player gets any inital pickups (e.g. Remote Detonator)
-      player:AddCollectible(RPGlobals.race.startingItems[i], 0, true)
+      player:AddCollectible(itemID, 0, true)
 
       -- Swap back for the D6
       player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
@@ -544,25 +554,24 @@ function RPPostGameStarted:Diversity()
       player:EvaluateItems()
 
       -- Remove the costume, if any (some items give a costume, like A Pony)
-      player:RemoveCostume(itemConfig:GetCollectible(RPGlobals.race.startingItems[i]))
+      player:RemoveCostume(itemConfig:GetCollectible(itemID))
 
     elseif i == 2 or i == 3 or i == 4 then
       -- Items 2, 3, and 4 are the passives
       -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
-      player:AddCollectible(RPGlobals.race.startingItems[i],
-                            RPGlobals:GetItemMaxCharges(RPGlobals.race.startingItems[i]), true)
+      player:AddCollectible(itemID, RPGlobals:GetItemMaxCharges(itemID), true)
 
       -- Remove it from all of the item pools
       -- (make an exception for items that you can normally get duplicates of)
-      if RPGlobals.race.startingItems[i] ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
-         RPGlobals.race.startingItems[i] ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
+      if itemID ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
+         itemID ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
 
-        itemPool:RemoveCollectible(RPGlobals.race.startingItems[i])
-        if RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_INCUBUS then -- 360
+        itemPool:RemoveCollectible(itemID)
+        if itemID == CollectibleType.COLLECTIBLE_INCUBUS then -- 360
           itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
-        elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_SACRED_HEART then -- 182
+        elseif itemID == CollectibleType.COLLECTIBLE_SACRED_HEART then -- 182
           itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
-        elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+        elseif itemID == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
           itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
         end
       end
@@ -570,7 +579,7 @@ function RPPostGameStarted:Diversity()
     elseif i == 5 then
       -- Item 5 is the trinket
       player:TryRemoveTrinket(trinket1) -- It is safe to feed 0 to this function
-      player:AddTrinket(RPGlobals.race.startingItems[i])
+      player:AddTrinket(itemID)
       player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER_LOGGER, false, false, false, false)
       -- Use the custom Smelter so that the item tracker knows about the trinket we consumed
 
@@ -580,7 +589,7 @@ function RPPostGameStarted:Diversity()
       end
 
       -- Remove it from the trinket pool
-      itemPool:RemoveTrinket(RPGlobals.race.startingItems[i])
+      itemPool:RemoveTrinket(itemID)
     end
   end
 

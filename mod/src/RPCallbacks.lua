@@ -48,113 +48,73 @@ function RPCallbacks:EvaluateCache(player, cacheFlag)
     end
     local baseHearts = maxHearts - coinContainers
 
-    -- We have to add the range cache to all health up items
-    --   12  - Magic Mushroom (already has range cache)
-    --   15  - <3
-    --   16  - Raw Liver (gives 2 containers)
-    --   22  - Lunch
-    --   23  - Dinner
-    --   24  - Dessert
-    --   25  - Breakfast
-    --   26  - Rotten Meat
-    --   81  - Dead Cat
-    --   92  - Super Bandage
-    --   101 - The Halo (already has range cache)
-    --   119 - Blood Bag
-    --   121 - Odd Mushroom (Thick) (already has range cache)
-    --   129 - Bucket of Lard (gives 2 containers)
-    --   138 - Stigmata
-    --   176 - Stem Cells
-    --   182 - Sacred Heart (already has range cache)
-    --   184 - Holy Grail
-    --   189 - SMB Super Fan (already has range cache)
-    --   193 - Meat!
-    --   218 - Placenta
-    --   219 - Old Bandage
-    --   226 - Black Lotus
-    --   230 - Abaddon
-    --   253 - Magic Scab
-    --   307 - Capricorn (already has range cache)
-    --   312 - Maggy's Bow
-    --   314 - Thunder Theighs
-    --   334 - The Body (gives 3 containers)
-    --   342 - Blue Cap
-    --   346 - A Snack
-    --   354 - Crack Jacks
-    --   456 - Moldy Bread
-    local HPItemArray = {
-      12,  15,  16,  22,  23,
-      24,  25,  26,  81,  92,
-      101, 119, 121, 129, 138,
-      176, 182, 184, 189, 193,
-      218, 219, 226, 230, 253,
-      307, 312, 314, 334, 342,
-      346, 354, 456, -1, -2, -- Health Up and Health Down pills
-    }
-    for i = 1, #HPItemArray do
-      --if HPItemArray[i] == -1 or HPItemArray[i] == -2 then
-      --else
-      -- GetCollectibleNum
-      -- TODO
-      if player:HasCollectible(HPItemArray[i]) then
-        if RPGlobals.run.keeper.healthItems[HPItemArray[i]] == nil then
-          RPGlobals.run.keeper.healthItems[HPItemArray[i]] = true
+    -- We have to add the range cache to all health up items in "items.xml"
+    for i = 1, #RPGlobals.healthUpItems do
+      local itemID = RPGlobals.healthUpItems[i]
+      if (itemID ~= 1000 and player:GetCollectibleNum(itemID) > RPGlobals.run.keeper.healthUpItems[itemID]) or
+         (itemID == 1000 and RPGlobals.run.keeper.usedHealthUpPill) then
 
-          if HPItemArray[i] == CollectibleType.COLLECTIBLE_ABADDON then -- 230
-            player:AddMaxHearts(-24, true) -- Remove all hearts
-            player:AddMaxHearts(coinContainers, true) -- Give whatever containers we should have from coins
-            player:AddHearts(24) -- This is needed because all the new heart containers will be empty
-            -- We have no way of knowing what the current health was before, because "player:GetHearts()"
-            -- returns 0 at this point. So, just give them max health.
-            Isaac.DebugString("Set 0 heart containers to Keeper (Abaddon).")
+        RPGlobals.run.keeper.healthUpItems[itemID] = RPGlobals.run.keeper.healthUpItems[itemID] + 1
+        if itemID == 1000 then
+          RPGlobals.run.keeper.usedHealthUpPill = false
+        end
+        Isaac.DebugString("Keeper got a health up item: " .. tostring(itemID))
 
-          elseif HPItemArray[i] == CollectibleType.COLLECTIBLE_DEAD_CAT then -- 81
-            player:AddMaxHearts(-24, true) -- Remove all hearts
-            player:AddMaxHearts(2 + coinContainers, true) -- Give 1 heart container +
-                                                          -- whatever containers we should have from coins
-            player:AddHearts(24) -- This is needed because all the new heart containers will be empty
-            -- We have no way of knowing what the current health was before, because "player:GetHearts()"
-            -- returns 0 at this point. So, just give them max health.
-            Isaac.DebugString("Set 1 heart container to Keeper (Dead Cat).")
+        if itemID == CollectibleType.COLLECTIBLE_ABADDON then -- 230
+          player:AddMaxHearts(-24, true) -- Remove all hearts
+          player:AddMaxHearts(coinContainers, true) -- Give whatever containers we should have from coins
+          player:AddHearts(24) -- This is needed because all the new heart containers will be empty
+          -- We have no way of knowing what the current health was before, because "player:GetHearts()"
+          -- returns 0 at this point. So, just give them max health.
+          Isaac.DebugString("Set 0 heart containers to Keeper (Abaddon).")
 
-          elseif baseHearts < 0 and
-             HPItemArray[i] == CollectibleType.COLLECTIBLE_BODY then -- 334
+        elseif itemID == CollectibleType.COLLECTIBLE_DEAD_CAT then -- 81
+          player:AddMaxHearts(-24, true) -- Remove all hearts
+          player:AddMaxHearts(2 + coinContainers, true)
+          -- Give 1 heart container + whatever containers we should have from coins
+          player:AddHearts(24) -- This is needed because all the new heart containers will be empty
+          -- We have no way of knowing what the current health was before, because "player:GetHearts()"
+          -- returns 0 at this point. So, just give them max health.
+          Isaac.DebugString("Set 1 heart container to Keeper (Dead Cat).")
 
-            player:AddMaxHearts(6, true) -- Give 3 heart containers
-            Isaac.DebugString("Gave 3 heart containers to Keeper.")
+        elseif baseHearts < 0 and
+               itemID == CollectibleType.COLLECTIBLE_BODY then -- 334
 
-            -- Fill in the new containers
+          player:AddMaxHearts(6, true) -- Give 3 heart containers
+          Isaac.DebugString("Gave 3 heart containers to Keeper.")
+
+          -- Fill in the new containers
+          player:AddCoins(1)
+          player:AddCoins(1)
+          player:AddCoins(1)
+
+        elseif baseHearts < 2 and
+               (itemID == CollectibleType.COLLECTIBLE_RAW_LIVER or -- 16
+                itemID == CollectibleType.COLLECTIBLE_BUCKET_LARD or -- 129
+                itemID == CollectibleType.COLLECTIBLE_BODY) then -- 334
+
+          player:AddMaxHearts(4, true) -- Give 2 heart containers
+          Isaac.DebugString("Gave 2 heart containers to Keeper.")
+
+          -- Fill in the new containers
+          player:AddCoins(1)
+          player:AddCoins(1)
+
+        elseif baseHearts < 4 then
+          player:AddMaxHearts(2, true) -- Give 1 heart container
+          Isaac.DebugString("Gave 1 heart container to Keeper.")
+
+          if itemID ~= CollectibleType.COLLECTIBLE_ODD_MUSHROOM_DAMAGE and -- 121
+             itemID ~= CollectibleType.COLLECTIBLE_OLD_BANDAGE and -- 219
+             itemID ~= 1000 then -- Health Up pill
+
+            -- Fill in the new container
+            -- (Odd Mushroom (Thick) and Old Bandage do not give filled heart containers)
             player:AddCoins(1)
-            player:AddCoins(1)
-            player:AddCoins(1)
-
-          elseif baseHearts < 2 and
-                 (HPItemArray[i] == CollectibleType.COLLECTIBLE_RAW_LIVER or -- 16
-                  HPItemArray[i] == CollectibleType.COLLECTIBLE_BUCKET_LARD or -- 129
-                  HPItemArray[i] == CollectibleType.COLLECTIBLE_BODY) then -- 334
-
-            player:AddMaxHearts(4, true) -- Give 2 heart containers
-            Isaac.DebugString("Gave 2 heart containers to Keeper.")
-
-            -- Fill in the new containers
-            player:AddCoins(1)
-            player:AddCoins(1)
-
-          elseif baseHearts < 4 then
-            player:AddMaxHearts(2, true) -- Give 1 heart container
-            Isaac.DebugString("Gave 1 heart container to Keeper.")
-
-            if HPItemArray[i] ~= CollectibleType.COLLECTIBLE_ODD_MUSHROOM_DAMAGE and -- 121
-               HPItemArray[i] ~= CollectibleType.COLLECTIBLE_OLD_BANDAGE then -- 219
-
-              -- Fill in the new container
-              -- (Odd Mushroom (Thick) and Old Bandage do not give filled heart containers)
-              player:AddCoins(1)
-            end
-
-          else
-            Isaac.DebugString("Health up detected, but baseHearts are full.")
           end
+
+        else
+          Isaac.DebugString("Health up detected, but baseHearts are full.")
         end
       end
     end

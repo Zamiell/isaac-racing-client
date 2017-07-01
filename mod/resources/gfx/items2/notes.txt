@@ -1,0 +1,1 @@
+These files are used for the Schoolbag custom item.

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.8"
+RPGlobals.version = "v0.7.9"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -203,11 +203,16 @@ function RPGlobals:InitRun()
 
   -- Keeper + Greed's Gullet tracking
   RPGlobals.run.keeper = {
-    baseHearts   = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
-    healthItems  = {},
-    coins        = 50,
-    usedStrength = false,
+    baseHearts       = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
+    healthUpItems    = {},
+    coins            = 50,
+    usedStrength     = false,
+    usedHealthUpPill = false,
   }
+  for i = 1, #RPGlobals.healthUpItems do
+    local itemID = RPGlobals.healthUpItems[i]
+    RPGlobals.run.keeper.healthUpItems[itemID] = 0
+  end
 
   -- Schoolbag tracking
   RPGlobals.run.schoolbag = {
@@ -422,6 +427,44 @@ RPGlobals.bossArray = {
   {409, 0, 0}, -- Rag Mega
   {410, 0, 0}, -- Sisters Vis
   {411, 0, 0}, -- Big Horn
+}
+
+-- Used to fix Greed's Gullet bugs
+RPGlobals.healthUpItems = {
+  12, -- Magic Mushroom (already has range cache)
+  15, -- <3
+  16, -- Raw Liver (gives 2 containers)
+  22, -- Lunch
+  23, -- Dinner
+  24, -- Dessert
+  25, -- Breakfast
+  26, -- Rotten Meat
+  81, -- Dead Cat
+  92, -- Super Bandage
+  101, -- The Halo (already has range cache)
+  119, -- Blood Bag
+  121, -- Odd Mushroom (Thick) (already has range cache)
+  129, -- Bucket of Lard (gives 2 containers)
+  138, -- Stigmata
+  176, -- Stem Cells
+  182, -- Sacred Heart (already has range cache)
+  184, -- Holy Grail
+  189, -- SMB Super Fan (already has range cache)
+  193, -- Meat!
+  218, -- Placenta
+  219, -- Old Bandage
+  226, -- Black Lotus
+  230, -- Abaddon
+  253, -- Magic Scab
+  307, -- Capricorn (already has range cache)
+  312, -- Maggy's Bow
+  314, -- Thunder Theighs
+  334, -- The Body (gives 3 containers)
+  342, -- Blue Cap
+  346, -- A Snack
+  354, -- Crack Jacks
+  456, -- Moldy Bread
+  1000, -- Health Up (pill)
 }
 
 return RPGlobals

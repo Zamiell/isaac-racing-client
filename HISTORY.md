@@ -1,6 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.7.8* - June 27th, 2017
+### *v0.7.9* - June 27th, 2017
+
+* The Schoolbag now works with the Booster Pack #3 items.
+* Diversity races now include the Booster Pack #3 items.
+* Fixed the bug where fireworks would play on the next run after a completed speedrun. (Thanks molfried)
+* Fixed the bug where the HP up pill would not work on Keeper if he has Greed's Gullet. (Thanks Dea1h)
+
+### *v0.7.8* - June 30th, 2017
 
 * Racing+ will now work with the latest patch (Booster Pack #3).
 * Fixed the bug where the doors would open prematurely when fighting an angel. (Thanks ReidMercury__)

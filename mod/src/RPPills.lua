@@ -11,8 +11,15 @@ local RPItems   = require("src/rpitems")
 -- Pill functions
 --
 
-function RPPills:HealthUpDown()
+function RPPills:HealthUp()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
 
+  RPGlobals.run.keeper.usedHealthUpPill = true
+  player:AddCacheFlags(CacheFlag.CACHE_RANGE) -- 8
+  player:EvaluateItems()
+  -- We check to see if we are Keeper, have Greed's Gullet, and are at maximum hearts inside this function
 end
 
 function RPPills:Telepills()

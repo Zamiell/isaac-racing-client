@@ -81,15 +81,25 @@ function RPSchoolbag:SpriteDisplay()
 
   -- Load the sprites
   if RPSchoolbag.sprites.item == nil then
-    RPSchoolbag.sprites.item = Sprite()
+    -- By default, use the item ID as the file name for the ANM2 to load
+    local fileName = RPGlobals.run.schoolbag.item
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
        RPGlobals.run.movingBoxOpen then
 
       -- We need custom logic to handle Moving Box, which has two different graphics
-      RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/523-2.anm2", true)
-    else
-      RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. RPGlobals.run.schoolbag.item .. ".anm2", true)
+      fileName = "523-2"
+    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED then
+      fileName = "book_of_sin"
+    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_SMELTER_LOGGER then
+      fileName = "smelter"
+    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_DEBUG then
+      fileName = "debug"
+    elseif RPGlobals.run.schoolbag.item == Isaac.GetItemIdByName("Wraith Skull") then
+      fileName = "wraith_skull"
     end
+
+    RPSchoolbag.sprites.item = Sprite()
+    RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. fileName .. ".anm2", true)
     RPSchoolbag.sprites.item:Play("Default", true)
     RPSchoolbag.sprites.barBack = Sprite()
     RPSchoolbag.sprites.barBack:Load("gfx/ui/ui_chargebar.anm2", true)

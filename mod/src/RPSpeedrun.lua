@@ -95,6 +95,11 @@ function RPSpeedrun:Init()
   local challenge = Isaac.GetChallenge()
   local sfx = SFXManager()
 
+  -- Reset some per-run variables
+  RPSpeedrun.spawnedCheckpoint = false
+  RPSpeedrun.fadeFrame = 0
+  RPSpeedrun.resetFrame = 0
+
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
     -- Make sure that some speedrun related variables are reset
     RPSpeedrun.charNum = 1
@@ -116,11 +121,6 @@ function RPSpeedrun:Init()
 
     return
   end
-
-  -- Reset some per-run variables
-  RPSpeedrun.spawnedCheckpoint = false
-  RPSpeedrun.fadeFrame = 0
-  RPSpeedrun.resetFrame = 0
 
   -- Move to the first character if we finished
   if RPSpeedrun.finished then

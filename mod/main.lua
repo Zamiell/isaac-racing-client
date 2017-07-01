@@ -103,10 +103,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_MOO
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_JOKER) -- 31
 
 -- Define pill callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUpDown, PillEffect.PILLEFFECT_HEALTH_DOWN) -- 6
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUpDown, PillEffect.PILLEFFECT_HEALTH_UP) -- 7
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,    PillEffect.PILLEFFECT_TELEPILLS) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,         PillEffect.PILLEFFECT_GULP_LOGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUp,   PillEffect.PILLEFFECT_HEALTH_UP) -- 7
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,  PillEffect.PILLEFFECT_TELEPILLS) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because
 -- by the time the callback is reached, the trinkets are already consumed
 
