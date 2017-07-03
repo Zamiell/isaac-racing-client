@@ -73,9 +73,7 @@ function RPSchoolbag:SpriteDisplay()
   local itemVector = Vector(itemX, itemY)
   local barVector = Vector(itemX + barXOffset, itemY + barYOffset)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
-     RPGlobals.run.schoolbag.item == 0 then
-
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false then
     return
   end
 
@@ -89,11 +87,11 @@ function RPSchoolbag:SpriteDisplay()
       -- We need custom logic to handle Moving Box, which has two different graphics
       fileName = "523-2"
     elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED then
-      fileName = "book_of_sin"
+      fileName = "Book_of_Sin"
     elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_SMELTER_LOGGER then
       fileName = "smelter"
     elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_DEBUG then
-      fileName = "debug"
+      fileName = "Debug"
     elseif RPGlobals.run.schoolbag.item == Isaac.GetItemIdByName("Wraith Skull") then
       fileName = "wraith_skull"
     end
@@ -113,6 +111,12 @@ function RPSchoolbag:SpriteDisplay()
       RPSchoolbag.sprites.barLines:Play("BarOverlay1", true)
     else
       RPSchoolbag.sprites.barLines:Play("BarOverlay" .. tostring(maxCharges), true)
+    end
+
+    -- Fade the placeholder image (the Schoolbag icon)
+    if RPGlobals.run.schoolbag.item == 0 then
+      RPSchoolbag.sprites.item.Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+      RPSchoolbag.sprites.item.Scale = Vector(0.75, 0.75)
     end
   end
 

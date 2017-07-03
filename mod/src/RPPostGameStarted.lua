@@ -448,6 +448,10 @@ function RPPostGameStarted:Seeded()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
     elseif character == PlayerType.PLAYER_THELOST then -- 10
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
+    elseif character == PlayerType.PLAYER_LILITH then -- 13
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
+    elseif character == PlayerType.PLAYER_KEEPER then -- 14
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WOODEN_NICKEL -- 349
     end
   end
 

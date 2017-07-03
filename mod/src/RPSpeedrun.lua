@@ -100,6 +100,18 @@ function RPSpeedrun:Init()
   RPSpeedrun.fadeFrame = 0
   RPSpeedrun.resetFrame = 0
 
+  -- Move to the first character if we finished
+  -- (this has to be above the challenge name check so that the fireworks won't carry over to another run)
+  if RPSpeedrun.finished then
+    RPSpeedrun.charNum = 1
+    RPSpeedrun.finished = false
+    RPSpeedrun.finishedTime = 0
+    RPSpeedrun.fastReset = false
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
+    return
+  end
+
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
     -- Make sure that some speedrun related variables are reset
     RPSpeedrun.charNum = 1
@@ -119,17 +131,6 @@ function RPSpeedrun:Init()
      challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
      challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
 
-    return
-  end
-
-  -- Move to the first character if we finished
-  if RPSpeedrun.finished then
-    RPSpeedrun.charNum = 1
-    RPSpeedrun.finished = false
-    RPSpeedrun.finishedTime = 0
-    RPSpeedrun.fastReset = false
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
   end
 

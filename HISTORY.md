@@ -1,6 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.7.9* - June 27th, 2017
+### *v0.7.10* - June 30th, 2017
+
+* When you have the Schoolbag but no 2nd active item, there will now be a faded placeholder graphic of a Schoolbag to indicate this. (Thanks thisguyisbarry)
+* Mid-race floor updates are turned off for races over 10 people in order to prevent server crashes. This means that you won't know what place you are in until you actually finish the race. Fixing this in the long term is somewhat complicated.
+* Fixed the bug where fireworks would play on the next run after a completed speedrun during certain conditions. (Thanks Thoday)
+* Fixed the bug where Lilith was not starting with the Box of Friends inside the Schoolbag in seeded races. (Thanks thisguyisbarry)
+* Fixed the bug where Keeper was not starting with the Wooden Nickle inside the Schoolbag in seeded races. (Thanks thisguyisbarry)
+
+### *v0.7.9* - June 30th, 2017
 
 * The Schoolbag now works with the Booster Pack #3 items.
 * Diversity races now include the Booster Pack #3 items.
