@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.7.11* - July 4th, 2017
+### *v0.7.12* - July 5th, 2017
 
 * Added a new race format called "Unseeded (Beginner)". This is similar to the Racing+ Light mod. More details can be found on the website.
 * Removed the knife accuracy feature, since it was not displaying properly on for some people; there seems to be no way to display text in a standardized location.

@@ -149,6 +149,11 @@ function RPNPCUpdate:NPC219(npc)
     npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
   end
 
+  -- Disable the speed-up on the "Unseeded (Beginner)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-beginner" then
+    return
+  end
+
   -- Speed up their attack pattern
   if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
     npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead

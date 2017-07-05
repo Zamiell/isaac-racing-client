@@ -134,7 +134,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.
 * The "fast-reset" feature is disabled.
 * The "fast-clear" feature is disabled.
-* Mom's Hands and Mom's Dead Hands are no longer sped up.
+* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts are no longer sped up.
 
 ### Dark Room
 
