@@ -128,6 +128,14 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
 * For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
 
+### Unseeded (Beginner)
+
+* All Treasure Rooms on Basement 1 will have two items.
+* Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.
+* The "fast-reset" feature is disabled.
+* The "fast-clear" feature is disabled.
+* Mom's Hands and Mom's Dead Hands are no longer sped up.
+
 ### Dark Room
 
 * Some useless animations during the Satan fight have been removed to make the fight smoother.

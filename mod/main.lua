@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- deep sound on reset with keeper
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

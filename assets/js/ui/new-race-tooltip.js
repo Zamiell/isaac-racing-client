@@ -59,9 +59,13 @@ $(document).ready(function() {
             newCharacter = 'Judas';
         } else if (newFormat === 'diversity') {
             newCharacter = 'Judas';
+        } else if (newFormat === 'unseeded-beginner') {
+            newCharacter = 'Judas';
         } else if (newFormat === 'custom') {
             // The custom format has no default character, so don't change anything
             newCharacter = $('#new-race-character').val();
+        } else {
+            misc.errorShow('That is an unknown format.');
         }
         if ($('#new-race-character').val() !== newCharacter) {
             $('#new-race-character').val(newCharacter).change();

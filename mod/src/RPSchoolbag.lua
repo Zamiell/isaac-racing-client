@@ -300,7 +300,7 @@ function RPSchoolbag:Switch()
   if player:GetActiveCharge() == maxCharges and
      sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then -- 170
 
-    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
   end
   if player:GetActiveCharge() ~= 0 and
      sfx:IsPlaying(SoundEffect.SOUND_BEEP) then -- 171

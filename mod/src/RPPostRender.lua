@@ -54,7 +54,6 @@ function RPPostRender:Main()
   RPTimer:Display()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DisplayCharSelectRoom()
-  RPPostRender:DisplayKnifeStats()
   RPPostRender:DisplayVictoryLaps()
 
   -- Ban Basement 1 Treasure Rooms
@@ -262,6 +261,11 @@ function RPPostRender:CheckResetInput()
   local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
+  -- Disable this on the "Unseeded (Beginner)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-beginner" then
+    return
+  end
+
   -- Check to see if we are opening the console window
   -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
   if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) and -- 96
@@ -338,48 +342,6 @@ function RPPostRender:CheckSubvertTeleport()
 
     -- Teleport them
     player.Position = pos
-  end
-end
-
-function RPPostRender:DisplayKnifeStats()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-  local character = player:GetPlayerType()
-
-  -- Don't do anything if the player does not exactly 1 knife
-  if player:GetCollectibleNum(CollectibleType.COLLECTIBLE_MOMS_KNIFE) ~= 1 or -- 114
-     player:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) or -- 2
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) or -- 153
-     player:HasCollectible(CollectibleType.COLLECTIBLE_20_20) or -- 245
-     player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) or -- 360
-     player:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL) or -- 191
-     -- 3 Dollar Bill can proc The Inner Eye and 20/20
-     -- (there are no Fruit Cake effects that give more than one knife)
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYE) or -- 55
-     player:HasCollectible(CollectibleType.COLLECTIBLE_LOKIS_HORNS) or -- 87
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
-     player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
-     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168; Epic Fetus overwrites Mom's Knife
-     player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) or -- 395
-     -- Players may prioritize Tech X shots, which makes the accuracy useless
-     player:HasPlayerForm(PlayerForm.PLAYERFORM_MOM) or -- 6
-     player:HasPlayerForm(PlayerForm.PLAYERFORM_BABY) or -- 7 (Conjoined)
-     player:HasPlayerForm(PlayerForm.PLAYERFORM_BOOK_WORM) or -- 10
-     character == PlayerType.PLAYER_KEEPER or -- 14; Keeper has innate triple shot
-     character == 16 then -- Samael; the custom character bugs out
-
-    return
-  end
-
-  local statsText
-  if RPGlobals.run.knife.totalShots ~= 0 then
-    local percent = RPGlobals.run.knife.hitShots / RPGlobals.run.knife.totalShots * 100
-    percent = math.floor(RPGlobals:Round(percent, 0)) -- The "math.floor()" converts the float to an integer
-    statsText = tostring(percent) .. "%" ..
-                " (" .. tostring(RPGlobals.run.knife.hitShots) .. "/" .. tostring(RPGlobals.run.knife.totalShots) .. ")"
-
-    Isaac.RenderText(statsText, 430, 262, 2, 2, 2, 2)
   end
 end
 

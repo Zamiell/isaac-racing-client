@@ -179,7 +179,7 @@ function RPPostGameStarted:Character()
   local activeItem = player:GetActiveItem()
   player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
-  sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE)
+  sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
 
   -- Do character-specific actions
   if character == PlayerType.PLAYER_CAIN then -- 2
@@ -372,6 +372,9 @@ function RPPostGameStarted:Race()
 
   elseif RPGlobals.race.rFormat == "seededMO" then
     RPPostGameStarted:SeededMO()
+
+  elseif RPGlobals.race.rFormat == "unseeded-beginner" then
+    RPPostGameStarted:UnseededBeginner()
   end
 
   -- Go to the custom "Race Start" room
@@ -521,6 +524,7 @@ function RPPostGameStarted:Diversity()
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
+  -- More Options will be removed upon entering the first Treasure Room
 
   -- Give the player their five random diversity starting items
   for i = 1, #RPGlobals.race.startingItems do
@@ -704,6 +708,20 @@ function RPPostGameStarted:SeededMO()
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 59
 
   Isaac.DebugString("Added seeded MO items.")
+end
+
+function RPPostGameStarted:UnseededBeginner()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- Give the player extra starting items
+  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+  Isaac.DebugString("Removing collectible 414 (More Options)")
+  -- We don't need to show this on the item tracker to reduce clutter
+  -- More Options will be removed upon entering the first Treasure Room
+
+  Isaac.DebugString("Added unseeded-beginner items.")
 end
 
 return RPPostGameStarted

@@ -61,6 +61,11 @@ function RPFastClear:NPCUpdate(npc)
   local room = game:GetRoom()
   local roomClear = room:IsClear()
 
+  -- Disable this on the "Unseeded (Beginner)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-beginner" then
+    return
+  end
+
   -- We don't care if the room is cleared already or if this is a non-battle NPC
   -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
   -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
@@ -75,9 +80,20 @@ function RPFastClear:NPCUpdate(npc)
     if RPFastClear.aliveEnemies[npc.Index] == nil then
       RPFastClear.aliveEnemies[npc.Index] = true
       RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
-      --Isaac.DebugString("Added NPC " .. tostring(npc.Index) .. ", " ..
-      --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+      --[[
+      Isaac.DebugString("Added NPC " ..
+                        tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                        " (" .. tostring(npc.Index) .. "), " ..
+                        "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+      --]]
     end
+    return
+  end
+
+  -- Keep Dark Red champions in the aliveEnemies table forever
+  if npc:GetChampionColorIdx() == 12 then -- Dark Red champion (collapses into a flesh pile upon death)
+    -- When it collapses into a flesh pile, the NPCUpdate callback fires once for its death
+    -- I don't know of a way to detect the flesh pile state, so just ignore all of these champions
     return
   end
 
@@ -85,8 +101,12 @@ function RPFastClear:NPCUpdate(npc)
   if RPFastClear.aliveEnemies[npc.Index] ~= nil then
     RPFastClear.aliveEnemies[npc.Index] = nil
     RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
-    --Isaac.DebugString("Removed NPC " .. tostring(npc.Index) .. ", " ..
-    --                  "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+    --[[
+    Isaac.DebugString("Removed NPC " ..
+                      tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                      " (" .. tostring(npc.Index) .. "), " ..
+                      "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+    --]]
   end
 
   -- Check to see if this is a splitting enemy
@@ -100,8 +120,7 @@ end
 
 -- Called from the "RPFastClear:NPCUpdate()" function
 function RPFastClear:CheckFastClearException(npc)
-  if npc:GetChampionColorIdx() == 12 or -- Dark Red champion (collapses into a flesh pile upon death)
-     npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
+  if npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
      npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
      npc.Type == EntityType.ENTITY_GAPER or -- 10
      -- All 3 Gaper types have a chance to split into Gusher (11.0) or Pacer (11.1)
@@ -109,6 +128,10 @@ function RPFastClear:CheckFastClearException(npc)
      -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
      npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
      -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
+     (npc.Type == EntityType.ENTITY_LARRYJR and npc.Variant == 1 and npc.SubType == 1) or -- 19.1.1
+     -- The green champion Hollow splits into Chargers
+     (npc.Type == EntityType.ENTITY_LARRYJR and npc.Variant == 1 and npc.SubType == 2) or -- 19.1.2
+     -- The black champion Hollow splits into Boom Flies
      (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
      -- (they have been proven to cause the doors to open prematurely)
      (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
@@ -161,6 +184,9 @@ function RPFastClear:CheckFastClearException(npc)
      -- Grubs split into a random Maggot
      (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257
      -- Coinjoined Fatties split into a Fatty (208.0); Blue Conjoined Fatties do not split
+     npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
+     npc.Type == EntityType.ENTITY_MEGA_SATAN_2 or -- 275
+     -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
      npc.Type == EntityType.ENTITY_BLACK_GLOBIN or -- 278
      -- Black Globin's split into Black Globin's Head (279.0) and Black Globin's Body (280.0)
      npc.Type == EntityType.ENTITY_MEGA_CLOTTY or -- 282
@@ -176,9 +202,8 @@ function RPFastClear:CheckFastClearException(npc)
      -- have been proven to cause the doors to open prematurely
      npc.Type == EntityType.ENTITY_BROWNIE or -- 402
      -- Brownie splits into a Dangle (217.2)
-     npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
-     -- We explicitly handle the win condition for the Mega Satan fight in the NPCUpdate callback
-     npc.Type == EntityType.ENTITY_MEGA_SATAN_2 then -- 275
+     (npc.Type == EntityType.ENTITY_RAG_MAN and npc.Variant == 1) then -- 405.1 (Rag Man's Head)
+     -- This is the head that rolls around; it despawns and turns into 246.1 (Rag man's Rag Ling)
 
     return true
   else
@@ -194,6 +219,11 @@ function RPFastClear:PostUpdate()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomClear = room:IsClear()
+
+  -- Disable this on the "Unseeded (Beginner)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-beginner" then
+    return
+  end
 
   -- Bombing an Angel statue (or getting Greed from bombing a shopkeeper) will make the doors open prematurely
   if RPFastClear.roomInitiallyCleared and

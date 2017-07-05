@@ -120,6 +120,11 @@ end
 -- EntityType.ENTITY_MOMS_HAND (213)
 -- EntityType.ENTITY_MOMS_DEAD_HAND (287)
 function RPNPCUpdate:NPC213(npc)
+  -- Disable the speed-up on the "Unseeded (Beginner)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-beginner" then
+    return
+  end
+
   -- Mom's Hands and Mom's Dead Hands
   if npc.State == 4 and npc.StateFrame < 25 then
     -- Speed up their attack patterns

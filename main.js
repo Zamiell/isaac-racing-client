@@ -348,6 +348,9 @@ app.on('before-quit', function() {
             json.countdown = -1;
             json.placeMid = 0;
             json.place = 1;
+            if (typeof json.order7 === 'undefined') {
+                json.order7 = [0];
+            }
             if (typeof json.order9 === 'undefined') {
                 json.order9 = [0];
             }

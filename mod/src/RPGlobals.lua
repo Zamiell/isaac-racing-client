@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.10"
+RPGlobals.version = "v0.7.11"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -16,7 +16,8 @@ RPGlobals.race = {
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
   solo            = false,       -- Can be either false or true
-  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "custom"
+  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "unseeded-beginner", or "custom"
+  -- Unofficially this can also be "pageant" and "beginner"
   character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
   seed            = "-",         -- Corresponds to the seed that is the race goal
@@ -191,14 +192,6 @@ function RPGlobals:InitRun()
     prevRoom    = 0,
     direction   = -1, -- Used to fix nested room softlocks
     blackMarket = false,
-  }
-
-  -- Knife stats tracking
-  RPGlobals.run.knife = {
-    hitShots   = 0,
-    totalShots = 0,
-    isFlying   = false,
-    isMissed   = true,
   }
 
   -- Keeper + Greed's Gullet tracking

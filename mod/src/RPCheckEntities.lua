@@ -77,9 +77,6 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP then
       RPCheckEntities:Entity5(entity)
 
-    elseif entity.Type == EntityType.ENTITY_KNIFE then -- 8
-      RPCheckEntities:Entity8(entity)
-
     elseif entity.Type == EntityType.ENTITY_KNIGHT or -- 41
            entity.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
            entity.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
@@ -525,34 +522,6 @@ function RPCheckEntities:Entity5_100(entity)
   end
 end
 
--- EntityType.ENTITY_KNIFE (8)
-function RPCheckEntities:Entity8(entity)
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-  local roomClear = room:IsClear()
-  local knife = entity:ToKnife()
-  local isFlying = knife:IsFlying()
-
-  -- Keep track of whether the knife is being thrown or not so that we can calculate accuracy
-  if RPGlobals.run.knife.isFlying == false and
-     isFlying and
-     roomClear == false then
-
-    RPGlobals.run.knife.isFlying = true
-    RPGlobals.run.knife.isMissed = true -- Assume they missed the shot by default
-
-  elseif RPGlobals.run.knife.isFlying and
-         isFlying == false then
-
-    RPGlobals.run.knife.isFlying = false
-    RPGlobals.run.knife.totalShots = RPGlobals.run.knife.totalShots + 1
-    if RPGlobals.run.knife.isMissed == false then
-      RPGlobals.run.knife.hitShots = RPGlobals.run.knife.hitShots + 1
-    end
-  end
-end
-
 -- EntityType.ENTITY_KNIGHT (41)
 -- EntityType.ENTITY_FLOATING_KNIGHT (254)
 -- EntityType.ENTITY_BONE_KNIGHT (283)
@@ -818,92 +787,119 @@ function RPCheckEntities:ReplacePedestal(entity)
     entity.SubType = 0
   end
 
+  -- Check to see if this is a banned item on the "Unseeded (Beginner)" ruleset
+  local big4Reroll = false
+  if stage == 1 and
+     roomType == RoomType.ROOM_TREASURE and -- 4
+     RPGlobals.race.rFormat == "unseeded-beginner" then
+
+    if entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE or -- 114
+       entity.SubType == CollectibleType.COLLECTIBLE_IPECAC or -- 149
+       entity.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS or -- 168
+       entity.SubType == CollectibleType.COLLECTIBLE_TECH_X then -- 395
+
+      big4Reroll = true
+    end
+  end
+
   -- Check to see if this item should go into a Schoolbag
   local putInSchoolbag = RPSchoolbag:CheckSecondItem(entity)
-  if putInSchoolbag == false then
-    -- Replace the pedestal
-    RPGlobals.run.usedButterFrame = 0
-    -- If we are replacing a pedestal, make sure this is reset to avoid the bug where
-    -- it takes two item trouches to re-enable the Schoolbag
-    local randomItem = false
-    local newPedestal
-    if offLimits then
-      -- Change the item to Off Limits (5.100.235)
-      newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
-                               entity.Velocity, entity.Parent, CollectibleType.COLLECTIBLE_OFF_LIMITS, newSeed)
-
-      -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
-      Isaac.DebugString("Made an Off Limits pedestal using seed: " .. tostring(newSeed))
-
-    elseif specialReroll ~= 0 then
-      -- Change the item to the special reroll
-      newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
-                               entity.Velocity, entity.Parent, specialReroll, newSeed)
-
-      -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-      game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
-      RPGlobals.run.changeFartColor = true -- Change it to a bright red fart to distinguish that it is a special reroll
-      Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is special, " ..
-                        "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
-
-    else
-      -- Make a new copy of this item
-      newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
-                               entity.Velocity, entity.Parent, entity.SubType, newSeed)
-
-      -- We don't need to make a fart noise because the swap will be completely transparent to the user
-      -- (the sprites of the two items will obviously be identical)
-      -- We don't need to add this item to the ban list because since it already existed, it was properly
-      -- decremented from the pools on sight
-      Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) ..
-                        " pedestal using seed: " .. tostring(newSeed))
-    end
-
-    -- We don't want to replicate the charge if this is a brand new item
-    if specialReroll == 0 then
-      -- If we don't do this, the item will be fully recharged every time the player swaps it out
-      newPedestal:ToPickup().Charge = entity:ToPickup().Charge
-    end
-
-    -- If we don't do this, shop and Devil Room items will become automatically bought
-    newPedestal:ToPickup().Price = entity:ToPickup().Price
-
-    -- We need to keep track of touched items for banned item exception purposes
-    newPedestal:ToPickup().Touched = entity:ToPickup().Touched
-
-    -- If we don't do this, shop items will reroll into consumables and
-    -- shop items that are on sale will no longer be on sale
-    newPedestal:ToPickup().ShopItemId = entity:ToPickup().ShopItemId
-
-    -- If we don't do this, you can take both of the pedestals in a double Treasure Room
-    newPedestal:ToPickup().TheresOptionsPickup = entity:ToPickup().TheresOptionsPickup
-
-    -- Also reduce the vanilla delay that is imposed upon newly spawned collectible items
-    -- (this is commented out because people were accidentally taking items)
-    --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
-
-    -- Add it to the tracking table so that we don't replace it again
-    -- (don't add random items to the index in case a banned item rolls into another banned item)
-    if randomItem == false then
-      RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
-        room = roomIndex,
-        X    = entity.Position.X,
-        Y    = entity.Position.Y,
-        seed = newSeed,
-      }
-      --[[
-      Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
-                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..
-                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].X) .. "," ..
-                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].Y) .. "," ..
-                        tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
-      --]]
-    end
-
-    -- Now that we have created a new pedestal, we can delete the old one
-    entity:Remove()
+  if putInSchoolbag then
+    return
   end
+
+  -- Replace the pedestal
+  RPGlobals.run.usedButterFrame = 0
+  -- If we are replacing a pedestal, make sure this is reset to avoid the bug where
+  -- it takes two item touches to re-enable the Schoolbag
+  local randomItem = false
+  local newPedestal
+  if offLimits then
+    -- Change the item to Off Limits (5.100.235)
+    newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
+                             entity.Velocity, entity.Parent, CollectibleType.COLLECTIBLE_OFF_LIMITS, newSeed)
+
+    -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+    game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+    Isaac.DebugString("Made an Off Limits pedestal using seed: " .. tostring(newSeed))
+
+  elseif specialReroll ~= 0 then
+    -- Change the item to the special reroll
+    newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
+                             entity.Velocity, entity.Parent, specialReroll, newSeed)
+
+    -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+    game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+    RPGlobals.run.changeFartColor = true -- Change it to a bright red fart to distinguish that it is a special reroll
+    Isaac.DebugString("Item " .. tostring(entity.SubType) .. " is special, " ..
+                      "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
+
+  elseif big4Reroll then
+    -- Make a new random item pedestal
+    -- (the new random item generated will automatically be decremented from item pools properly on sight)
+    newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
+                             entity.Velocity, entity.Parent, 0, newSeed)
+
+    -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
+    game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
+    Isaac.DebugString("Rerolled a big 4 item: " .. tostring(entity.SubType))
+
+  else
+    -- Make a new copy of this item
+    newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
+                             entity.Velocity, entity.Parent, entity.SubType, newSeed)
+
+    -- We don't need to make a fart noise because the swap will be completely transparent to the user
+    -- (the sprites of the two items will obviously be identical)
+    -- We don't need to add this item to the ban list because since it already existed, it was properly
+    -- decremented from the pools on sight
+    Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) ..
+                      " pedestal using seed: " .. tostring(newSeed))
+  end
+
+  -- We don't want to replicate the charge if this is a brand new item
+  if specialReroll == 0 then
+    -- If we don't do this, the item will be fully recharged every time the player swaps it out
+    newPedestal:ToPickup().Charge = entity:ToPickup().Charge
+  end
+
+  -- If we don't do this, shop and Devil Room items will become automatically bought
+  newPedestal:ToPickup().Price = entity:ToPickup().Price
+
+  -- We need to keep track of touched items for banned item exception purposes
+  newPedestal:ToPickup().Touched = entity:ToPickup().Touched
+
+  -- If we don't do this, shop items will reroll into consumables and
+  -- shop items that are on sale will no longer be on sale
+  newPedestal:ToPickup().ShopItemId = entity:ToPickup().ShopItemId
+
+  -- If we don't do this, you can take both of the pedestals in a double Treasure Room
+  newPedestal:ToPickup().TheresOptionsPickup = entity:ToPickup().TheresOptionsPickup
+
+  -- Also reduce the vanilla delay that is imposed upon newly spawned collectible items
+  -- (this is commented out because people were accidentally taking items)
+  --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
+
+  -- Add it to the tracking table so that we don't replace it again
+  -- (don't add random items to the index in case a banned item rolls into another banned item)
+  if randomItem == false then
+    RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
+      room = roomIndex,
+      X    = entity.Position.X,
+      Y    = entity.Position.Y,
+      seed = newSeed,
+    }
+    --[[
+    Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
+                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..
+                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].X) .. "," ..
+                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].Y) .. "," ..
+                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
+    --]]
+  end
+
+  -- Now that we have created a new pedestal, we can delete the old one
+  entity:Remove()
 end
 
 -- We can't use "entity:IsBoss()" for certain things, like if the parent of a pickup is dead

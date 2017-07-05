@@ -158,11 +158,23 @@ function RPCallbacks:PostPlayerInit(player)
   -- Local variables
   local game = Game()
   local mainPlayer = game:GetPlayer(0)
+  local character = mainPlayer:GetPlayerType()
+  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_PLAYER_INIT")
 
-  -- Check for co-op babies
+  -- Return if this is not a co-op babies
   if player.Variant == 0 then
+    -- With Eve and Keeper, the beginning of the recharge sound will play, which is annoying
+    if character == PlayerType.PLAYER_EVE or -- 5
+       character == PlayerType.PLAYER_KEEPER then -- 14
+
+      -- Stop the faint beginning of the recharge sound
+      -- (adding the D6 is necessary because Eve and Keeper have not been given their Razor Blade / Wooden Nickel yet;
+      -- the recharge sounds happens somewhere between this callback and the PostGameStarted callback)
+      player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
+      sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
+    end
     return
   end
 
@@ -227,12 +239,6 @@ function RPCallbacks:EntityTakeDamage(tookDamage, damageAmount, damageFlag, dama
           npc:AddCharmed(150) -- 5 seconds
         end
       end
-    end
-
-  elseif damageSource.Type == EntityType.ENTITY_KNIFE then -- 8
-    -- An enemy that took damage from a knife
-    if RPGlobals.run.knife.isFlying then
-      RPGlobals.run.knife.isMissed = false
     end
   end
 end
@@ -570,7 +576,8 @@ function RPCallbacks:PostNewRoomRace()
   -- Check to see if we need to remove More Options in a diversity race
   if roomType == RoomType.ROOM_TREASURE and -- 4
      player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
-     RPGlobals.race.rFormat == "diversity" and
+     (RPGlobals.race.rFormat == "diversity" or
+      RPGlobals.race.rFormat == "unseeded-beginner") and
      RPGlobals.raceVars.removedMoreOptions == false then
 
     RPGlobals.raceVars.removedMoreOptions = true

@@ -282,12 +282,17 @@ for (let i = 1; i <= 3; i++) {
     if (fs.existsSync(modLoaderFile)) {
         try {
             let json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
+            if (typeof json.order7 === 'undefined') {
+                globals.modLoader['order7-' + i] = [0];
+            } else {
+                globals.modLoader['order7-' + i] = json.order7;
+            }
             if (typeof json.order9 === 'undefined') {
                 globals.modLoader['order9-' + i] = [0];
             } else {
                 globals.modLoader['order9-' + i] = json.order9;
             }
-            if (typeof json.order9 === 'undefined') {
+            if (typeof json.order14 === 'undefined') {
                 globals.modLoader['order14-' + i] = [0];
             } else {
                 globals.modLoader['order14-' + i] = json.order14;
@@ -303,6 +308,7 @@ for (let i = 1; i <= 3; i++) {
         } catch(err) {
             globals.initError = 'Failed to copy the "save-defaults.dat" file to "' + modLoaderFile + '": ' + err;
         }
+        globals.modLoader['order7-' + i] = [0];
         globals.modLoader['order9-' + i] = [0];
         globals.modLoader['order14-' + i] = [0];
     }
