@@ -750,42 +750,44 @@ function RPFastTravel:CheckCrawlspaceSoftlock()
   local level = game:GetLevel()
   local room = game:GetRoom()
   local prevRoomIndex = level:GetPreviousRoomIndex() -- We need the unsafe version here
+  local roomType = room:GetType()
   local player = game:GetPlayer(0)
   local playerGridIndex = room:GetGridIndex(player.Position)
 
-  if room:GetType() == RoomType.ROOM_DEVIL and -- 14
+  if (roomType == RoomType.ROOM_DEVIL or -- 14
+      roomType == RoomType.ROOM_ANGEL) and -- 15
      prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
     if playerGridIndex == 7 then -- Top door
       RPGlobals.run.crawlspace.direction = Direction.UP -- 1
       game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.UP, -- 1
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil Deal, moving up to room: " ..
+      Isaac.DebugString("Exited Devil/Angel Room, moving up to room: " ..
                         tostring(RPGlobals.run.crawlspace.prevRoom))
 
     elseif playerGridIndex == 74 then -- Right door
       RPGlobals.run.crawlspace.direction = Direction.RIGHT -- 2
       game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.RIGHT, -- 2
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil Deal, moving right to room: " ..
+      Isaac.DebugString("Exited Devil/Angel Room, moving right to room: " ..
                         tostring(RPGlobals.run.crawlspace.prevRoom))
 
     elseif playerGridIndex == 127 then -- Bottom door
       RPGlobals.run.crawlspace.direction = Direction.DOWN -- 3
       game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.DOWN, -- 3
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil Deal, moving down to room: " ..
+      Isaac.DebugString("Exited Devil Devil/Angel Room, moving down to room: " ..
                         tostring(RPGlobals.run.crawlspace.prevRoom))
 
     elseif playerGridIndex == 60 then -- Left door
       RPGlobals.run.crawlspace.direction = Direction.LEFT -- 0
       game:StartRoomTransition(RPGlobals.run.crawlspace.prevRoom, Direction.LEFT, -- 0
                                RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil Deal, moving left to room: " ..
+      Isaac.DebugString("Exited Devil/Angel Room, moving left to room: " ..
                         tostring(RPGlobals.run.crawlspace.prevRoom))
     end
 
-  elseif room:GetType() == RoomType.ROOM_BOSSRUSH and -- 17
+  elseif roomType == RoomType.ROOM_BOSSRUSH and -- 17
          prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
 
     if playerGridIndex == 7 then -- Top left door
@@ -924,7 +926,7 @@ function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
   -- Open it
   entity:ToEffect().State = 0
   entity:GetSprite():Play("Open Animation", true)
-  Isaac.DebugString("Opened trap door (player moved away).")
+  --Isaac.DebugString("Opened trap door (player moved away).")
 end
 
 -- Called from the PostNewRoom callback

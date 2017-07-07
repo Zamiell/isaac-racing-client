@@ -3981,6 +3981,16 @@
         transform: scale(0.75);
     }
 
+    .lobby-current-races-unseeded-beginner {
+        background-image: url("../img/formats/unseeded-beginner.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2.1em;
+        width: 2em;
+        position: absolute;
+    }
+
     .lobby-current-races-custom {
         background-image: url("../img/formats/custom.png");
         background-repeat: no-repeat;

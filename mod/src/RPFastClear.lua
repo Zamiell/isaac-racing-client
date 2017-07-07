@@ -163,6 +163,9 @@ function RPFastClear:CheckFastClearException(npc)
      -- Swarmers split into a Boom Fly (25.0)
      npc.Type == EntityType.ENTITY_BIGSPIDER or -- 94
      -- Big Spiders split into 2 Spiders (85.0)
+     (npc.Type == EntityType.ENTITY_WIDOW and npc.Variant == 0 and npc.SubType == 1) or -- Widow (100.0)
+     -- The black champion Widow can spawn a spider immediately before its death animation and
+     -- the doors will open prematurely
      npc.Type == EntityType.ENTITY_NEST or -- 205 (looks like a Mulligan)
      -- Nests have a chance to split into a Trite (29.1) or Big Spider (94.0)
      (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208
@@ -193,6 +196,8 @@ function RPFastClear:CheckFastClearException(npc)
      -- Mega Clotties split into 2 Clotties (15.0)
      npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
      -- Mom's Dead Hands split into 2 Spiders (85.0)
+     npc.Type == EntityType.ENTITY_DUKIE or -- 288
+     -- Dukies can spawn Dart Flies (256.0) and this can open the doors prematurely
      npc.Type == EntityType.ENTITY_MEATBALL or -- 290
      -- Meatballs split into a Host (27.0)
      npc.Type == EntityType.ENTITY_BLISTER or -- 303

@@ -1,14 +1,21 @@
 # Racing+ Version History and News
 
+### *v0.7.13* - July 6th, 2017
+
+* Reduced the damage penalty on Samael for Mom's Knife from 1.5 to 1.25.
+* Fixed the bug where the black champion Widow would open the doors prematurely under certain circumstances.
+* Fixed the bug where pickups could sometimes spawn on top of trapdoors and crawlspaces. (Thanks Cyber_1)
+* Fixed the bug where killing a Dukie would open the doors prematurely under certain conditions. (Thanks NorBro86)
+* Fixed the bug where if Eden started with Eden's Soul, it would incorrectly show as fully charged inside of the Schoolbag. (Thanks Birdie0)
+* Fixed the bug where the game softlocks if you enter a crawlspace inside of an Angel Room. (Thanks TheMoonSage)
+* Fixed the bug where the races with the "Unseeded (Beginner)" format would not show up correctly in the lobby.
+
 ### *v0.7.12* - July 5th, 2017
 
 * Added a new race format called "Unseeded (Beginner)". This is similar to the Racing+ Light mod. More details can be found on the website.
 * Removed the knife accuracy feature, since it was not displaying properly on for some people; there seems to be no way to display text in a standardized location.
 * Fixed the bug where you could faintly hear the recharge sound when resetting as Keeper and Eve.
-* Fixed the bug where killing Dark Red champions would open the doors prematurely. (Thanks BMZ_Loop)
-* Fixed the bug where killing Rag Man's Head would open the doors prematurely. (Thanks BMZ_Loop)
-* Fixed the bug where the green champion Hollow would open the doors prematurely.
-* Fixed the bug where the black champion Hollow would open the doors prematurely.
+* Fixed the bug where killing Dark Red champions, Rag Man's Head, the green champion Hollow, the black champion Hollow would open the doors prematurely if you killed them last. (Thanks BMZ_Loop)
 
 ### *v0.7.10* - July 3rd, 2017
 

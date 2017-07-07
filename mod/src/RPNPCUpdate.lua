@@ -18,8 +18,10 @@ function RPNPCUpdate:Main(npc)
   local room = game:GetRoom()
   local roomType = room:GetType()
 
-  --Isaac.DebugString("MC_NPC_UPDATE - " ..
-  --                  tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
+  --[[
+  Isaac.DebugString("MC_NPC_UPDATE - " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
+  --]]
 
   -- Do extra monitoring for blue variant bosses that drop extra soul hearts
   -- (should only be Larry Jr., Mom, Famine, and Gemini)

@@ -168,7 +168,11 @@ exports.raceDraw = function(race) {
     raceDiv += '<span class="lobby-current-races-format-icon">';
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    raceDiv += '<span lang="en">' + race.ruleset.format.capitalize() + '</span></td>';
+    let format = race.ruleset.format.capitalize();
+    if (format === 'Unseeded-beginner') {
+        format = 'Unseeded';
+    }
+    raceDiv += '<span lang="en">' + format + '</span></td>';
 
     // Column 5 - Size
     raceDiv += '<td id="lobby-current-races-' + race.id + '-size" class="lobby-current-races-size">';

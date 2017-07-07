@@ -86,11 +86,11 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,      CollectibleT
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox, CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
 -- Define custom item callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BookOfSin,   CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BookOfSin, CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED)
 -- Replacing Book of Sin (97)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Smelter,     CollectibleType.COLLECTIBLE_SMELTER_LOGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Smelter,   CollectibleType.COLLECTIBLE_SMELTER_LOGGER)
 -- Replacing Smelter (479)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main,        CollectibleType.COLLECTIBLE_DEBUG)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main,      CollectibleType.COLLECTIBLE_DEBUG)
 -- Debug (custom item, 263)
 
 -- Define card callbacks
@@ -103,9 +103,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_MOO
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_JOKER) -- 31
 
 -- Define pill callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUp,   PillEffect.PILLEFFECT_HEALTH_UP) -- 7
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills,  PillEffect.PILLEFFECT_TELEPILLS) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,       PillEffect.PILLEFFECT_GULP_LOGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUp,  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills, PillEffect.PILLEFFECT_TELEPILLS) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because
 -- by the time the callback is reached, the trinkets are already consumed
 

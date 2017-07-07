@@ -1076,7 +1076,7 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
 
     -- Mom's Knife nerf
     if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
-      player.Damage = player.Damage / 1.5
+      player.Damage = player.Damage / 1.25
     end
 
     properDamage = player.Damage --Save proper damage stat

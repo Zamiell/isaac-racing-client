@@ -216,6 +216,22 @@ function RPCheckEntities:Entity5(entity)
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
+  -- Keep track of pickups that are touched
+  -- (used for moving pickups on top of a trapdoor/crawlspace)
+  if entity:GetSprite():IsPlaying("Collect") and
+     entity:ToPickup().Touched == false then
+
+    entity:ToPickup().Touched = true
+
+    if entity.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
+       (entity.Variant == PickupVariant.PICKUP_KEY and entity.SubType == 4) then -- Charged Key (30.4)
+
+      -- Recharge the Wraith Skull
+      -- (we have to do this manually because the charges on the Wraith Skull are not handled naturally by the game)
+      SamaelMod:CheckRechargeWraithSkull()
+    end
+  end
+
   if entity.Variant == PickupVariant.PICKUP_HEART then -- 10
     if RPCheckEntities:IsBossType(entity.SpawnerType) and
        roomType == RoomType.ROOM_BOSS and -- 5
@@ -229,20 +245,6 @@ function RPCheckEntities:Entity5(entity)
       Isaac.DebugString("Removed boss room heart drop #" .. tostring(#RPGlobals.run.bossHearts.position) .. ": " ..
                     "(" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") " ..
                     "(" .. tostring(entity.Velocity.X) .. "," .. tostring(entity.Velocity.Y) .. ")")
-    end
-
-  elseif entity.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
-         (entity.Variant == PickupVariant.PICKUP_KEY and entity.SubType == 4) then -- Charged Key (30.4)
-
-    if entity:GetSprite():IsPlaying("Collect") and
-       entity:ToPickup().Touched == false then
-
-      -- Mark that we have touched this Lil' Battery / Charged Key
-      entity:ToPickup().Touched = true
-
-      -- Recharge the Wraith Skull
-      -- (we have to do this manually because the charges on the Wraith Skull are not handled naturally by the game)
-      SamaelMod:CheckRechargeWraithSkull()
     end
 
   elseif (entity.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
@@ -436,10 +438,13 @@ function RPCheckEntities:Entity5(entity)
       entity:Remove()
     end
 
-  elseif entity.EntityCollisionClass ~= 0 then
-    -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect"
-    -- animation; however, as soon as they are touched, their EntityCollisionClass will be set to 0
-    -- (this is necessary to fix the bug where pickups can be duplicated from touching them)
+  elseif entity:ToPickup().Touched == false then
+    -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect" animation
+    -- So we don't want to move a pickup that is already collected, or it will duplicate it
+    -- ("Touched" was manually set to true by the mod earlier)
+
+    -- Alternatively, we could check for "entity.EntityCollisionClass ~= 0",
+    -- but this is bad because the collision is 0 during the long "Appaer" animation
 
     -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
     RPFastTravel:CheckPickupOverHole(entity)

@@ -255,7 +255,11 @@ function RPPostGameStarted:Character()
     end
 
     -- Make sure that the Schoolbag item is fully charged
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then
+      RPGlobals.run.schoolbag.charges = 0 -- This is the only item that does not start with any charges
+    else
+      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+    end
     RPSchoolbag.sprites.item = nil
 
     -- Make the D6 appear first on the item tracker
@@ -542,7 +546,7 @@ function RPPostGameStarted:Diversity()
       -- Item 1 is the active
       RPGlobals.run.schoolbag.item = itemID
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
-        RPGlobals.run.schoolbag.charges = 0 -- Eden's Soul should start on an empty charge
+        RPGlobals.run.schoolbag.charges = 0 -- This is the only item that does not start with any charges
       else
         RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       end
