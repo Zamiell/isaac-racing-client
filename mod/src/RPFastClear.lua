@@ -145,6 +145,10 @@ function RPFastClear:CheckFastClearException(npc)
      -- 30 and 31 are the final forms of Envy and Super Envy respectively
      npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57
      -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
+     (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 0) or -- 66.0
+     -- Death can split (or spawn scythes) and open the doors prematurely
+     (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 30) or -- 66.30 (Death without horse)
+     -- The Death body can spawn Knights
      npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (both variants split; Teratoma also counts as Fistula)
      npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (both variants split; Teratoma also counts as Fistula)
      npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (both variants split; Teratoma also counts as Fistula)

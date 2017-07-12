@@ -444,7 +444,7 @@ function RPCheckEntities:Entity5(entity)
     -- ("Touched" was manually set to true by the mod earlier)
 
     -- Alternatively, we could check for "entity.EntityCollisionClass ~= 0",
-    -- but this is bad because the collision is 0 during the long "Appaer" animation
+    -- but this is bad because the collision is 0 during the long "Appear" animation
 
     -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
     RPFastTravel:CheckPickupOverHole(entity)

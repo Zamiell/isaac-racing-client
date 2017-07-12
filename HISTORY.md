@@ -1,6 +1,11 @@
 # Racing+ Version History and News
 
-### *v0.7.13* - July 6th, 2017
+### *v0.7.14* - July 12th, 2017
+
+* Fixed the bug where diversity races would crash when starting with certain trinkets. (Thanks BMZ_Loop)
+* Fixed the bug where using Clicker on Samael would cause the scythe to float in the air.
+
+### *v0.7.13* - July 7th, 2017
 
 * Reduced the damage penalty on Samael for Mom's Knife from 1.5 to 1.25.
 * Fixed the bug where the black champion Widow would open the doors prematurely under certain circumstances.

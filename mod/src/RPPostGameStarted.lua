@@ -534,12 +534,14 @@ function RPPostGameStarted:Diversity()
   for i = 1, #RPGlobals.race.startingItems do
     -- Replace the custom items
     local itemID = RPGlobals.race.startingItems[i]
-    if itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
-      itemID = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
-    elseif itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
-      itemID = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
-    elseif itemID == CollectibleType.COLLECTIBLE_SMELTER then -- 479
-      itemID = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
+    if i ~= 5 then -- We don't want to replace trinkets
+      if itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
+        itemID = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
+      elseif itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
+        itemID = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
+      elseif itemID == CollectibleType.COLLECTIBLE_SMELTER then -- 479
+        itemID = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
+      end
     end
 
     if i == 1 then

@@ -124,10 +124,10 @@ local wraithTime = 0 --Time left for wraith mode
 local wraithCharge = 0 --How much the wraith ability has been charged (out of 100)
 local wraithActive = false --Is wraith form active?
 local wraithCooldown = 0 --Brief cooldown after wraith form where you still can't take damage
-local wraithChargePenalty = 3 -- ??
 local lastFrameWraithCharge = 0 --% of wraith meter charged during last update
 local wraithChargeCooldown = 0 --Cooldown before the wraith meter charges normally again
 local wraithActivationCooldown = 0 --Minimum cooldown between wraith mode activations
+local wraithChargePenalty = 0
 
 local fireDelayPenalty = 0 --Nerfs
 local fireDelayReduced = false
@@ -422,6 +422,10 @@ function SamaelMod:scytheUpdate(scythe)
   scythe = scythe:ToNPC()
 
   if player:GetPlayerType() ~= samaelID then
+    scythe:Remove()
+    return
+  end
+  if dying then
     return
   end
 
@@ -482,7 +486,9 @@ function SamaelMod:scytheUpdate(scythe)
     scythe:GetSprite().Color = Color(0,0,0,0,0,0,0)
     swingDelay = 4
   else
-    if player:HasCollectible(samaelDeadEye) then --Set redness for deadEye boost
+    if player:HasCollectible(samaelDeadEye) and
+       not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then --Set redness for deadEye boost
+
       scytheColor.RO = (deadEyeBoost/properDamage)/2
     end
     scythe:GetSprite().Color = scytheColor --Set colour
@@ -1209,46 +1215,55 @@ end
 
 -----------Callback function for the Scythe's hitbox (Its an invisible sacrificial dagger)-----------
 function SamaelMod:hitBoxFunc(hitBox)
-  if hitBox.Variant == FamiliarVariant.SACRIFICIAL_DAGGER and
-     hitBox.SubType == hitBoxType then --If its the right entity
+  -- Local variables
+  local player = Isaac.GetPlayer(0)
+  local character = player:GetPlayerType()
 
-    local player = Isaac.GetPlayer(0)
-    hitBox.Size = 40 * scytheScale
+  if hitBox.Variant ~= FamiliarVariant.SACRIFICIAL_DAGGER or
+     hitBox.SubType ~= hitBoxType then --If its the right entity
 
-    --Put it in the correct position, depending on the direction passed to it
-    if hitBox.Coins == Direction.UP then
-      hitBox.Position = Vector(player.Position.X, player.Position.Y - 45 * scytheScale)
-    elseif hitBox.Coins == Direction.DOWN then
-      hitBox.Position = Vector(player.Position.X, player.Position.Y + 35 * scytheScale)
-    elseif hitBox.Coins == Direction.LEFT then
-      hitBox.Position = Vector(player.Position.X - 40 * scytheScale, player.Position.Y)
-    elseif hitBox.Coins == Direction.RIGHT then
-      hitBox.Position = Vector(player.Position.X + 40 * scytheScale, player.Position.Y)
-    else --If direction is -1, go offscreen
-      hitBox.Position = Vector(0, 0)
-    end
+    return
+  end
 
-    hitBox.Velocity = Vector(0, 0)
-    if hitBox.Parent == nil then --If the scythe disappears, delete this
-      hitBox:Remove()
-    end
+  if hitBox.Parent == nil or
+     character ~= samaelID or
+     dying then
 
-    --Destroy poop
-    if hitBox.Coins ~= -1 then
-      local room = Game():GetLevel():GetCurrentRoom()
-      local index = room:GetGridIndex(hitBox.Position) --Get grid index of hitBox's position
-      local indexes = { --Array of that index and adjacent tiles
-        index, index+1, index-1, index+room:GetGridWidth(), index-room:GetGridWidth(),
-      }
-      for i = 1, 5 do
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_SULFURIC_ACID) then
-          room:DestroyGrid(indexes[i], 1) --Destroy rocks and poop on these tiles if the player has sulfuric acid
-        else
-          room:DamageGrid(indexes[i], 1) --Damage poop in any of these tiles
-        end
+    hitBox:Remove()
+    return
+   end
+
+  hitBox.Size = 40 * scytheScale
+
+  --Put it in the correct position, depending on the direction passed to it
+  if hitBox.Coins == Direction.UP then
+    hitBox.Position = Vector(player.Position.X, player.Position.Y - 45 * scytheScale)
+  elseif hitBox.Coins == Direction.DOWN then
+    hitBox.Position = Vector(player.Position.X, player.Position.Y + 35 * scytheScale)
+  elseif hitBox.Coins == Direction.LEFT then
+    hitBox.Position = Vector(player.Position.X - 40 * scytheScale, player.Position.Y)
+  elseif hitBox.Coins == Direction.RIGHT then
+    hitBox.Position = Vector(player.Position.X + 40 * scytheScale, player.Position.Y)
+  else --If direction is -1, go offscreen
+    hitBox.Position = Vector(0, 0)
+  end
+
+  hitBox.Velocity = Vector(0, 0)
+
+  --Destroy poop
+  if hitBox.Coins ~= -1 then
+    local room = Game():GetLevel():GetCurrentRoom()
+    local index = room:GetGridIndex(hitBox.Position) --Get grid index of hitBox's position
+    local indexes = { --Array of that index and adjacent tiles
+      index, index+1, index-1, index+room:GetGridWidth(), index-room:GetGridWidth(),
+    }
+    for i = 1, 5 do
+      if player:HasCollectible(CollectibleType.COLLECTIBLE_SULFURIC_ACID) then
+        room:DestroyGrid(indexes[i], 1) --Destroy rocks and poop on these tiles if the player has sulfuric acid
+      else
+        room:DamageGrid(indexes[i], 1) --Damage poop in any of these tiles
       end
     end
-
   end
 end
 
@@ -1826,14 +1841,6 @@ function SamaelMod:PostUpdateFixBugs()
                  player.Position, Vector(0, 0), player, 0, 0)
       Isaac.DebugString("Spawned a new Sac Dagger familiar.")
     end
-  end
-
-  -- Mom's Knife + Dead Eye bug
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114
-     player:HasCollectible(samaelDeadEye) then
-
-    player:RemoveCollectible(samaelDeadEye)
-    Isaac.DebugString("Removed Dead Eye to prevent the bug with the Mom's Knife.")
   end
 end
 
