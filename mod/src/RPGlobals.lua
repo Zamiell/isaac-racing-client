@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.8.2"
+RPGlobals.version = "v0.8.3"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -279,6 +279,11 @@ function RPGlobals:GetItemMaxCharges(itemID)
   else
     return itemConfig:GetCollectible(itemID).MaxCharges
   end
+end
+
+function RPGlobals:ExecuteCommand(command)
+  Isaac.ExecuteCommand(command)
+  Isaac.DebugString("Executed command: " .. command)
 end
 
 function RPGlobals:InsideSquare(pos1, pos2, squareSize)

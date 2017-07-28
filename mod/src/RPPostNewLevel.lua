@@ -22,6 +22,14 @@ function RPPostNewLevel:Main()
     return
   end
 
+  -- We need to delay if we are doing a "reseed" immediately after a "stage X",
+  -- because the "RPPostNewRoom:CheckTrapdoor2()" function will fire before the reseed happens
+  if RPFastTravel.delayNewRoomCallback then
+    RPFastTravel.delayNewRoomCallback = false
+    Isaac.DebugString("Delaying before loading the room due to an imminent reseed.")
+    return
+  end
+
   RPPostNewLevel:NewLevel()
 end
 

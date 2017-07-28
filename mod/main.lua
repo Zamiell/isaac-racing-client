@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- cath and sehol layouts are the same
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

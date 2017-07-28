@@ -11,7 +11,8 @@ local RPSchoolbag = require("src/rpschoolbag")
 -- Pre-use collectible item functions
 --
 
-function RPItems.WeNeedToGoDeeper()
+-- This callback is used naturally by Ehwaz (Passage) runes
+function RPItems:WeNeedToGoDeeper()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -146,10 +147,9 @@ function RPItems:Main(collectibleType)
   end
 end
 
+-- This callback is used naturally by Broken Remote
+-- This callback is manually called for Cursed Eye
 function RPItems:Teleport() -- 44
-  -- This callback is used naturally by Broken Remote
-  -- This callback is manually called for Cursed Eye
-
   -- Local variables
   local game = Game()
   local level = game:GetLevel()

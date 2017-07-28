@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.8.3* - July 28th, 2017
+
+* Fixed the bug in the "Everything" race goal where Sheol and the Dark Room had the same layouts as Cathdral and The Chest.
+
 ### *v0.8.0* - July 27th, 2017
 
 * Added a new seeded build: Technology Zero + Pop! + Cupid's Arrow

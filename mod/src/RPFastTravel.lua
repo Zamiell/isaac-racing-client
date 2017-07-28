@@ -13,6 +13,7 @@ local RPSprites = require("src/rpsprites")
 
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
 RPFastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
+RPFastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"
 
 --
 -- Variables
@@ -565,23 +566,38 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
     stage = redirect
   end
 
-  -- Check for the custom "Everything" final teleport
-  if RPGlobals.race.goal == "Everything" and
-     (stage == 11 and stageType == 1) then -- The Chest
+  -- The "Everything" race goal requires custom floor paths
+  if RPGlobals.race.goal == "Everything" then
+    if stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
+      RPFastTravel.delayNewRoomCallback = true
+      -- We use the "delayNewRoomCallback" variable to delay firing
+      -- the "CheckTrapdoor2()" function before the reseed happens
+      RPGlobals:ExecuteCommand("stage 10")
+      RPGlobals:ExecuteCommand("reseed")
+      -- We need to reseed it because by default, Sheol will have the same layout as Cathedral
+      return
 
-    local command = "stage 11"
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Executed command: " .. command)
-    return
+    elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
+      RPGlobals:ExecuteCommand("stage 11a") -- The Chest
+      return
+
+    elseif stage == 11 and stageType == 1 then -- 11.0 (The Chest)
+      RPFastTravel.delayNewRoomCallback = true
+      -- We use the "delayNewRoomCallback" variable to delay firing
+      -- the "CheckTrapdoor2()" function before the reseed happens
+      RPGlobals:ExecuteCommand("stage 11") -- Dark Room
+      RPGlobals:ExecuteCommand("reseed")
+      -- We need to reseed it because by default, the Dark Room will have the same layout as The Chest
+      return
+    end
   end
 
   -- Check to see if we are going to the same floor
   if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
      (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
 
-    local command = "reseed" -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Executed command: " .. command)
+    RPGlobals:ExecuteCommand("reseed")
+    -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
     return
   end
 
@@ -598,18 +614,10 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
     end
 
   elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
-    if RPGlobals.race.goal == "Everything" then
-      command = command .. "11a" -- The Chest
-    else
-      command = command .. "11" -- Dark Room
-    end
+    command = command .. "11" -- Dark Room
 
   elseif stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
-    if RPGlobals.race.goal == "Everything" then
-      command = command .. "10" -- Sheol
-    else
-      command = command .. "11a" -- The Chest
-    end
+    command = command .. "11a" -- The Chest
 
   else
     local nextStage = stage + 1
@@ -630,6 +638,7 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
     end
 
     -- Mark to check for a narrow treasure room (if we are on the seeded MO ruleset)
+    -- (we only care about checking on floors 2 through 6)
     if RPGlobals.race.rFormat == "seededMO" and
       nextStage >= 2 and nextStage <= 6 then
 
@@ -637,8 +646,7 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
     end
   end
 
-  Isaac.ExecuteCommand(command)
-  Isaac.DebugString("Executed command: " .. command)
+  RPGlobals:ExecuteCommand(command)
 end
 
 -- This is not named GetStageType to differentiate it from "level:GetStageType"

@@ -106,9 +106,7 @@ function RPPostRender:CheckRestart()
        RPGlobals.race.status == "in progress" then
 
       -- Change the seed of the run and restart the game
-      local command = "seed " .. RPGlobals.race.seed
-      Isaac.ExecuteCommand(command)
-      Isaac.DebugString("Issued a \"" .. command .. "\" command.")
+      RPGlobals:ExecuteCommand("seed " .. RPGlobals.race.seed)
       -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
     end
 
@@ -125,8 +123,7 @@ function RPPostRender:CheckRestart()
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
     end
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Issued a \"" .. command .. "\" command.")
+    RPGlobals:ExecuteCommand(command)
     return
   end
 end
@@ -150,9 +147,8 @@ function RPPostRender:CheckDualityNarrowRoom()
         if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
            roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
 
-          local command = "reseed"
-          Isaac.ExecuteCommand(command)
-          Isaac.DebugString("Executed command: " .. command .. " (narrow boss room detected with Duality)")
+          RPGlobals:ExecuteCommand("reseed")
+          Isaac.DebugString("(narrow boss room detected with Duality)")
 
           -- Respawn the hole
           game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
@@ -187,9 +183,8 @@ function RPPostRender:CheckSeededMONarrowRoom()
         if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
            roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
 
-          local command = "reseed"
-          Isaac.ExecuteCommand(command)
-          Isaac.DebugString("Executed command: " .. command .. " (narrow Treasure Room detected with seeded MO)")
+          RPGlobals:ExecuteCommand("reseed")
+          Isaac.DebugString("(narrow Treasure Room detected with seeded MO)")
 
           -- Respawn the hole
           if stage ~= 1 then
@@ -306,9 +301,7 @@ function RPPostRender:CheckResetInput()
 
     RPSpeedrun.fastReset = true
     -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
-    local command = "restart"
-    Isaac.ExecuteCommand(command)
-    Isaac.DebugString("Executed command: " .. command)
+    RPGlobals:ExecuteCommand("restart")
   else
     -- To fast reset on floors 2 and beyond, we need to double tap R
     -- (or if we brought the console window up this run)
