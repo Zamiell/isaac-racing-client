@@ -386,6 +386,7 @@ function RPSpeedrun:CheckpointTouched()
   -- Give them the Checkpoint custom item
   -- (this is used by the AutoSplitter to know when to split)
   player:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
+  Isaac.DebugString("Checkpoint custom item given (" .. tostring(CollectibleType.COLLECTIBLE_CHECKPOINT) .. ").")
 
   -- Freeze the player
   player.ControlsEnabled = false

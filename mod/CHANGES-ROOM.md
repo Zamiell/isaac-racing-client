@@ -396,7 +396,10 @@ The changed rooms are as follows:
 
 ### Bomb Puzzle Room Fix
 
-On the bomb puzzle room with four entrances, the random bomb drops were replaced with a set bomb drop to prevent troll bombs from spawning. Also, a rock was also removed to prevent a softlock if the player enters from the left side.
+The bomb puzzle room with four entrances has many problems with it:
+* The random bomb drops (5.40.0) were replaced with set bomb drops (5.40.1) to prevent troll bombs from spawning.
+* A rock was also removed to prevent a softlock if the player enters from the left side.
+* On the Dank Depths, any rocks that are randomly replaced with spikes are reverted back to rocks in order to prevent unavoidable damage.
 
 The changed room is as follows:
 * Depths: #41

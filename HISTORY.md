@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.8.4* - July 28th, 2017
+
+* The "fast-clear" feature was not working properly in the last patch, but it should be better now. (Thanks Cyber_1, BMZ_Loop, and 910Dan)
+
 ### *v0.8.3* - July 28th, 2017
 
 * Fixed the bug in the "Everything" race goal where Sheol and the Dark Room had the same layouts as Cathdral and The Chest.

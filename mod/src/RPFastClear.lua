@@ -98,6 +98,11 @@ function RPFastClear:CheckNewNPC(npc)
     return
   end
 
+  -- Furthermore, we don't care if this is a child NPC attached to some boss
+  if RPFastClear:AttachedNPC(npc) then
+    return
+  end
+
   -- We don't care if the NPC is already dead
   -- (this is needed because we can enter this function from the MC_NPC_UPDATE callback)
   if npc:IsDead() then
@@ -107,15 +112,14 @@ function RPFastClear:CheckNewNPC(npc)
   -- If we are entering a new room, flush all of the stuff in the old room
   -- (we can't use the POST_NEW_ROOM callback to handle this since that callback fires after this one)
   -- (roomFrameCount will be at -1 during the initialization phase)
+  Isaac.DebugString("roomFrameCount: " .. tostring(roomFrameCount))
   if roomFrameCount == -1 and RPFastClear.roomInitializing == false then
     RPFastClear.aliveEnemies = {}
     RPFastClear.aliveEnemiesCount = 0
     RPFastClear.buttonsAllPushed = false
-    RPFastClear.roomInitializing = true
+    RPFastClear.roomInitializing = true -- This will get set back to false in the MC_POST_NEW_ROOM callback
     RPFastClear.delayFrame = 0
     Isaac.DebugString("Reset fast-clear variables.")
-  elseif roomFrameCount > -1 then
-    RPFastClear.roomInitializing = false
   end
 
   -- Keep track of the enemies in the room that are alive
@@ -125,6 +129,15 @@ function RPFastClear:CheckNewNPC(npc)
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
                     " (index " .. tostring(index) .. "), " ..
                     "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+end
+
+function RPFastClear:AttachedNPC(npc)
+  if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
+     (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
+     (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) then -- Mama Gurdy Right Hand (266.2)
+
+    return true
+  end
 end
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
