@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.8.0* - July ?th, 2017
+### *v0.8.0* - July 27th, 2017
 
 * Added a new seeded build: Technology Zero + Pop! + Cupid's Arrow
 * Added a new race goal of "Everything", which takes you on an epic journey to kill Blue Baby, The Lamb, and Mega Satan. (This is the mode that will be used for the Papaya Party tournament.)
