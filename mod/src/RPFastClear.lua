@@ -11,13 +11,15 @@ local RPSoulJar = require("src/rpsouljar")
 -- Variables
 --
 
-RPFastClear.familiars = {} -- Reset in the "RPFastClear:InitRun()" function
-RPFastClear.aliveEnemies = {} -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.aliveEnemiesCount = 0 -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.buttonsAllPushed = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.roomInitiallyCleared = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.fightingAngel = false -- Reset in the "RPCallbacks:PostNewRoom2()" function
-RPFastClear.delayFrame = 0 -- Used when a splitting enemy dies
+-- These are reset in the "RPFastClear:InitRun()" function
+RPFastClear.familiars = {}
+
+-- These are reset in the "RPFastClear:InitRun()" function and the "CheckNewNPC()" function (upon entering a new room)
+RPFastClear.aliveEnemies = {}
+RPFastClear.aliveEnemiesCount = 0
+RPFastClear.buttonsAllPushed = false
+RPFastClear.roomInitializing = false
+RPFastClear.delayFrame = 0
 
 --
 -- Fast clear functions
@@ -51,90 +53,167 @@ function RPFastClear:InitRun()
       incremented  = false,
     }
   end
+
+  RPFastClear.aliveEnemies = {}
+  RPFastClear.aliveEnemiesCount = 0
+  RPFastClear.buttonsAllPushed = false
+  RPFastClear.roomInitializing = false
+  RPFastClear.delayFrame = 0
 end
 
--- Called from the NPCUpdate callback
+-- ModCallbacks.MC_NPC_UPDATE (0)
 function RPFastClear:NPCUpdate(npc)
+  -- We can't rely on the MC_NPC_UPDATE callback because it doesn't work for NPCs
+  -- that emerge from splitting enemies like Gapers
+  RPFastClear:CheckNewNPC(npc)
+end
+
+-- ModCallbacks.MC_POST_NPC_INIT (27)
+function RPFastClear:PostNPCInit(npc)
+  RPFastClear:CheckNewNPC(npc)
+end
+
+function RPFastClear:CheckNewNPC(npc)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
+  local roomFrameCount = room:GetFrameCount()
+
+  -- Don't do anything if we are already tracking this NPC
+  local index = GetPtrHash(npc)
+  if RPFastClear.aliveEnemies[index] ~= nil then
+    return
+  end
+
+  -- We don't care if the room is cleared already
+  -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
+  -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
+  if roomClear then
+    return
+  end
+
+  -- We don't care if this is a non-battle NPC
+  if npc.CanShutDoors == false then
+    return
+  end
+
+  -- We don't care if the NPC is already dead
+  -- (this is needed because we can enter this function from the MC_NPC_UPDATE callback)
+  if npc:IsDead() then
+    return
+  end
+
+  -- If we are entering a new room, flush all of the stuff in the old room
+  -- (we can't use the POST_NEW_ROOM callback to handle this since that callback fires after this one)
+  -- (roomFrameCount will be at -1 during the initialization phase)
+  if roomFrameCount == -1 and RPFastClear.roomInitializing == false then
+    RPFastClear.aliveEnemies = {}
+    RPFastClear.aliveEnemiesCount = 0
+    RPFastClear.buttonsAllPushed = false
+    RPFastClear.roomInitializing = true
+    RPFastClear.delayFrame = 0
+    Isaac.DebugString("Reset fast-clear variables.")
+  elseif roomFrameCount > -1 then
+    RPFastClear.roomInitializing = false
+  end
+
+  -- Keep track of the enemies in the room that are alive
+  RPFastClear.aliveEnemies[index] = true
+  RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
+  Isaac.DebugString("Added NPC " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                    " (index " .. tostring(index) .. "), " ..
+                    "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+end
+
+-- ModCallbacks.MC_POST_ENTITY_KILL (68)
+function RPFastClear:PostEntityKill(entity)
+
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomClear = room:IsClear()
 
-  -- Disable this on the "Unseeded (Beginner)" ruleset
+  -- Disable fast-clear on the "Unseeded (Beginner)" ruleset
   if RPGlobals.race.rFormat == "unseeded-beginner" then
     return
   end
 
-  -- We don't care if the room is cleared already or if this is a non-battle NPC
+  -- We only care about NPCs dying
+  local npc = entity:ToNPC()
+  if npc == nil then
+    return
+  end
+
+  --Isaac.DebugString("MC_POST_ENTITY_KILL - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant))
+
+  -- We don't care if the room is cleared already
   -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
   -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-  if roomClear or
-     npc.CanShutDoors == false then
-
+  if roomClear then
     return
   end
 
-  -- Add new enemies to the list
-  if npc:IsDead() == false then
-    if RPFastClear.aliveEnemies[npc.Index] == nil then
-      RPFastClear.aliveEnemies[npc.Index] = true
-      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
-      --[[
-      Isaac.DebugString("Added NPC " ..
-                        tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                        " (" .. tostring(npc.Index) .. "), " ..
-                        "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-      --]]
-    end
+  -- We don't care if this is a non-battle NPC
+  if npc.CanShutDoors == false then
     return
   end
 
-  -- Keep Dark Red champions in the aliveEnemies table forever
-  if npc:GetChampionColorIdx() == 12 then -- Dark Red champion (collapses into a flesh pile upon death)
-    -- When it collapses into a flesh pile, the NPCUpdate callback fires once for its death
-    -- I don't know of a way to detect the flesh pile state, so just ignore all of these champions
+  -- We don't care if this is a Dark Red champion flesh pile
+  if npc:GetChampionColorIdx() == 12 and -- Dark Red champion (collapses into a flesh pile upon death)
+     npc:GetSprite():GetFilename() ~= "gfx/024.000_Globin.anm2" then
+     -- The filename will be set to this if it is in the flesh pile state
+
+    -- This callback will be triggered when the champion changes into the flesh pile
+    -- We don't want to open the doors yet until the flesh pile is actually killed
     return
   end
 
-  -- The NPC is dead, so remove it from the table
-  if RPFastClear.aliveEnemies[npc.Index] ~= nil then
-    RPFastClear.aliveEnemies[npc.Index] = nil
-    RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
-    --[[
-    Isaac.DebugString("Removed NPC " ..
-                      tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                      " (" .. tostring(npc.Index) .. "), " ..
-                      "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-    --]]
+  -- Keep track of the enemies in the room that are alive
+  local index = GetPtrHash(npc)
+  if RPFastClear.aliveEnemies[index] == nil then
+    Isaac.DebugString("Error: NPC #" .. tostring(index) .. " died, " ..
+                      "but it wasn't in the \"aliveEnemies\" table.")
+    return
   end
+  RPFastClear.aliveEnemies[index] = nil
+  RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+  Isaac.DebugString("Removed NPC " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                    " (index " .. tostring(index) .. "), " ..
+                    "total: " .. tostring(RPFastClear.aliveEnemiesCount))
 
   -- Check to see if this is a splitting enemy
   if RPFastClear:CheckFastClearException(npc) then
-    -- An NPC died that is on the exception list, so we have to stall from fast-clearing the room for the next 4 frames
-    -- (another enemy in the room could die before the adds from this splitting enemy has spawned)
-    RPFastClear.delayFrame = gameFrameCount + 4
-    Isaac.DebugString("Set fast clear exception to frame: " .. tostring(RPFastClear.delayFrame))
+    -- A splitting enemy died, so we have to stall from fast-clearing the room for a frame
+    RPFastClear.delayFrame = gameFrameCount + 1
+    Isaac.DebugString("Delaying fast-clear until frame " .. tostring(RPFastClear.delayFrame) .. ".")
   end
 end
 
 -- Called from the "RPFastClear:NPCUpdate()" function
 function RPFastClear:CheckFastClearException(npc)
-  if npc:GetChampionColorIdx() == 15 or -- Pulsing Green champion (splits into two copies of itself upon death)
-     npc:GetChampionColorIdx() == 17 or -- Light White champion (spawns one or more flies upon death)
-     npc.Type == EntityType.ENTITY_GAPER or -- 10
+  -- We need to delay a frame if the enemy splits, or else the doors will open prematurely
+  if npc.Type == EntityType.ENTITY_GAPER or -- 10
      -- All 3 Gaper types have a chance to split into Gusher (11.0) or Pacer (11.1)
-     (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16 (Mulligoon and Muliboon do not split)
+     (npc.Type == EntityType.ENTITY_MULLIGAN and npc.Variant == 0) or -- 16.0
+     -- Mulligoon and Muliboon do not split
      -- Mulligan splits into 4 flies; nothing will spawn if damage is high enough
-     npc.Type == EntityType.ENTITY_HIVE or -- 22 (both variants split)
+     npc.Type == EntityType.ENTITY_HIVE or -- 22
+     -- Both variants split
      -- Hive splits into 4 flies and Drowned Hive splits into 2 Drowned Chargers
      (npc.Type == EntityType.ENTITY_LARRYJR and npc.Variant == 1 and npc.SubType == 1) or -- 19.1.1
      -- The green champion Hollow splits into Chargers
      (npc.Type == EntityType.ENTITY_LARRYJR and npc.Variant == 1 and npc.SubType == 2) or -- 19.1.2
      -- The black champion Hollow splits into Boom Flies
-     (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24 (all 3 variants split)
-     -- (they have been proven to cause the doors to open prematurely)
-     (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25
+     (npc.Type == EntityType.ENTITY_GLOBIN and npc.State == 4) or -- 24
+     -- Globins cause a death event when they transform into a flesh pile
+     -- They will not get re-addded to the "aliveEnemies" table until the next frame
+     -- All 3 variants go into the flesh pile
+     -- State 4 is NpcState.STATE_MOVE (when the Globin is moving around at you)
+     (npc.Type == EntityType.ENTITY_BOOMFLY and npc.Variant == 2) or -- 25.2
      -- Drowned Boom Flies split into a Drowned Charger
      (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 0) or -- Envy (51.0)
      (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 1) or -- Super Envy (51.1)
@@ -142,22 +221,23 @@ function RPFastClear:CheckFastClearException(npc)
      (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 11) or -- Super Envy (level 2) (51.11)
      (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 20) or -- Envy (level 3) (51.20)
      (npc.Type == EntityType.ENTITY_ENVY and npc.Variant == 21) or -- Super Envy (level 3) (51.21)
-     -- 30 and 31 are the final forms of Envy and Super Envy respectively
+     -- 30 and 31 are the final forms of Envy and Super Envy, respectively
      npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57
      -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
      (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 0) or -- 66.0
-     -- Death can split (or spawn scythes) and open the doors prematurely
-     (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 30) or -- 66.30 (Death without horse)
-     -- The Death body can spawn Knights
-     npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (both variants split; Teratoma also counts as Fistula)
-     npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (both variants split; Teratoma also counts as Fistula)
-     npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (both variants split; Teratoma also counts as Fistula)
+     -- Death splits into Death Horse (66.20) and Death without horse (66.30)
+     npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71
+     npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72
+     npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73
+     -- Teratoma also counts as Fistula (both variants split)
      npc.Type == EntityType.ENTITY_BLASTOCYST_BIG or -- 74
      npc.Type == EntityType.ENTITY_BLASTOCYST_MEDIUM or -- 75
      npc.Type == EntityType.ENTITY_BLASTOCYST_SMALL or -- 76
+     -- Blastocyst triggers a death event when you would expect
+     -- However, on the next frame it turns back alive and remains alive for the duration of the death animation
      npc.Type == EntityType.ENTITY_MOTER or -- 80
      -- Moter splits into 2 Attack Flies (18.0)
-     (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or -- 81
+     (npc.Type == EntityType.ENTITY_FALLEN and npc.Variant ~= 1 and npc.Scale ~= 0.75) or -- 81.0 & 81.1
      -- Fast-clear should apply to Krampus and split Fallens
      npc.Type == EntityType.ENTITY_GURGLE or -- 87
      -- Gurgles have a chance to split into a Splasher (238.0)
@@ -167,29 +247,27 @@ function RPFastClear:CheckFastClearException(npc)
      -- Swarmers split into a Boom Fly (25.0)
      npc.Type == EntityType.ENTITY_BIGSPIDER or -- 94
      -- Big Spiders split into 2 Spiders (85.0)
-     (npc.Type == EntityType.ENTITY_WIDOW and npc.Variant == 0 and npc.SubType == 1) or -- Widow (100.0)
-     -- The black champion Widow can spawn a spider immediately before its death animation and
-     -- the doors will open prematurely
-     npc.Type == EntityType.ENTITY_NEST or -- 205 (looks like a Mulligan)
+     npc.Type == EntityType.ENTITY_NEST or -- 205
+     -- (This looks like a Mulligan.)
      -- Nests have a chance to split into a Trite (29.1) or Big Spider (94.0)
-     (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208
+     (npc.Type == EntityType.ENTITY_FATTY and npc.Variant == 1) or -- 208.1
      -- Pale Fatties have a chance to split into a Blubber (210.0)
      npc.Type == EntityType.ENTITY_FAT_SACK or -- 209
      -- Fat Sacks have a chance to split into a Blubber (210.0)
      npc.Type == EntityType.ENTITY_BLUBBER or -- 210
      -- Blubbers have a chance to split into a Half Sack (211.0)
-     npc.Type == EntityType.ENTITY_SWINGER or -- 216 (both variants split)
-     -- Swingers have a chance to split into a Maw (26.0) if you kill the body,
-     -- or a Globin (24.0) if you kill the head
-     npc.Type == EntityType.ENTITY_SQUIRT or -- 220 (both variants split)
+     npc.Type == EntityType.ENTITY_SWINGER or -- 216
+     -- All three variants comprise the Swinger
+     -- Swingers have a chance to split into a Maw (26.0) if you kill the body or a Globin (24.0) if you kill the head
+     npc.Type == EntityType.ENTITY_SQUIRT or -- 220
      -- Squirts split into 2 Dips (217.0) and Dark Squirts split into 2 Clots (15.1)
-     (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226 (Rotties split)
+     (npc.Type == EntityType.ENTITY_SKINNY and npc.Variant == 1) or -- 226.1
      -- Rotties split into a Bony (227.0)
      npc.Type == EntityType.ENTITY_DINGA or -- 223
      -- Dingas split into two Squirts (220.0)
      npc.Type == EntityType.ENTITY_GRUB or -- 239
      -- Grubs split into a random Maggot
-     (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257
+     (npc.Type == EntityType.ENTITY_CONJOINED_FATTY and npc.Variant == 0) or -- 257.0
      -- Coinjoined Fatties split into a Fatty (208.0); Blue Conjoined Fatties do not split
      npc.Type == EntityType.ENTITY_MEGA_SATAN or -- 274
      npc.Type == EntityType.ENTITY_MEGA_SATAN_2 or -- 275
@@ -200,21 +278,21 @@ function RPFastClear:CheckFastClearException(npc)
      -- Mega Clotties split into 2 Clotties (15.0)
      npc.Type == EntityType.ENTITY_MOMS_DEAD_HAND or -- 287
      -- Mom's Dead Hands split into 2 Spiders (85.0)
-     npc.Type == EntityType.ENTITY_DUKIE or -- 288
-     -- Dukies can spawn Dart Flies (256.0) and this can open the doors prematurely
      npc.Type == EntityType.ENTITY_MEATBALL or -- 290
      -- Meatballs split into a Host (27.0)
      npc.Type == EntityType.ENTITY_BLISTER or -- 303
      -- Blisters split into a Sack (30.2)
-     npc.Type == EntityType.ENTITY_PORTAL or -- 306
-     -- Portals don't split, but they do spawn random enemies and
-     -- have been proven to cause the doors to open prematurely
      npc.Type == EntityType.ENTITY_BROWNIE or -- 402
      -- Brownie splits into a Dangle (217.2)
-     (npc.Type == EntityType.ENTITY_RAG_MAN and npc.Variant == 1) then -- 405.1 (Rag Man's Head)
-     -- This is the head that rolls around; it despawns and turns into 246.1 (Rag man's Rag Ling)
+     (npc.Type == EntityType.ENTITY_RAG_MAN and npc.Variant == 1) or -- 405.1
+     -- Rag Man's Head despawns and turns into 246.1 (Rag man's Rag Ling)
+     npc:GetChampionColorIdx() == 15 or
+     -- Pulsing Green champion (splits into two copies of itself upon death)
+     npc:GetChampionColorIdx() == 17 then
+     -- Light White champion (spawns one or more flies upon death)
 
     return true
+
   else
     return false
   end
@@ -234,18 +312,6 @@ function RPFastClear:PostUpdate()
     return
   end
 
-  -- Bombing an Angel statue (or getting Greed from bombing a shopkeeper) will make the doors open prematurely
-  if RPFastClear.roomInitiallyCleared and
-     RPFastClear.fightingAngel == false and
-     RPFastClear.delayFrame == 0 and
-     roomClear == false then
-
-    -- Delay for 4 frames so that the enemy will spawn and the doors will stay closed
-    RPFastClear.fightingAngel = true
-    RPFastClear.delayFrame = gameFrameCount + 38 -- 37 and below is not long enough for the angel to spawn
-    Isaac.DebugString("Angel or Greed detected; delaying fast-clear for 38 frames.")
-  end
-
   -- If 4 frames have passed since a splitting enemy died, reset the delay counter
   if RPFastClear.delayFrame ~= 0 and
      gameFrameCount >= RPFastClear.delayFrame then
@@ -261,7 +327,6 @@ function RPFastClear:PostUpdate()
      RPFastClear:CheckAllPressurePlatesPushed() and
      gameFrameCount > 1 then -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
 
-    RPFastClear.fightingAngel = false -- There might be 2 angel fights per room, so make sure this variable is reset
     RPFastClear:ClearRoom()
   end
 end
@@ -377,6 +442,10 @@ function RPFastClear:ClearRoom()
                Isaac.GetEntityVariantByName("Room Clear Delay Effect"),
                RPGlobals:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay Effect\" custom entity (for The Lamb).")
+    -- This won't work to delay the room clearing if "debug 10" is on
+
+    -- Track that we have defeated The Lamb (for the "Everything" race goal)
+    RPGlobals.run.killedLamb = true
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
@@ -418,7 +487,7 @@ function RPFastClear:ClearRoom()
 
   -- Play the sound effect for the door opening
   if room:GetType() ~= RoomType.ROOM_DUNGEON then -- 16
-    sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+    sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
   end
 
   -- Check to see if any bag familiars will drop anything

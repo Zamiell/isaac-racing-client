@@ -84,16 +84,12 @@ function RPSchoolbag:SpriteDisplay()
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
        RPGlobals.run.movingBoxOpen then
 
-      -- We need custom logic to handle Moving Box, which has two different graphics
+      -- We need custom logic to handle Moving Box, which has two different sprites
       fileName = "523-2"
-    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED then
-      fileName = "Book_of_Sin"
-    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_SMELTER_LOGGER then
-      fileName = "smelter"
     elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_DEBUG then
       fileName = "Debug"
     elseif RPGlobals.run.schoolbag.item == Isaac.GetItemIdByName("Wraith Skull") then
-      fileName = "wraith_skull"
+      fileName = "Wraith_Skull"
     end
 
     RPSchoolbag.sprites.item = Sprite()

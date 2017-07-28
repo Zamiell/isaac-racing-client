@@ -46,9 +46,10 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   if (stage == LevelStage.STAGE4_2 or -- 8
       stage == LevelStage.STAGE4_3) and -- 9
      roomType == RoomType.ROOM_BOSS and -- 5
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false and -- 328
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+     (RPGlobals.race.goal == "Everything" or
+      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) then -- 328
 
     -- Delete the Womb 2 trapdoor if we have the Polaroid
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
@@ -164,6 +165,7 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   if (stage == LevelStage.STAGE4_2 or -- 8
       stage == LevelStage.STAGE4_3) and -- 9
      roomType == RoomType.ROOM_BOSS and -- 5
+     RPGlobals.race.goal ~= "Everything" and
      player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
@@ -193,10 +195,11 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
        entity.Position.X == 640 and -- Or if it spawned in the vanilla location on Blue Womb
        entity.Position.Y == 280)) and
      roomType == RoomType.ROOM_BOSS and -- 5
-     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
-     (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
-      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false) then -- 328
+     (RPGlobals.race.goal == "Everything" or
+      ((player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
+        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
+       (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
+        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false))) then -- 328
 
     -- Since we deleted the trapdoor, the beam of light will look off-center on Womb 2 / Blue Womb,
     -- so move the beam of light to the center of the room
@@ -229,7 +232,9 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   entity:Remove()
 end
 
--- Called from the "RPCheckEntities:NonGrid()" function
+-- Called from the "RPCheckEntities:Entity5()" function
+-- (we can't use the MC_POST_PICKUP_INIT callback for this because the position
+-- for newly initialized pickups is always equal to 0, 0)
 function RPFastTravel:CheckPickupOverHole(pickup)
   -- Local variables
   local game = Game()
@@ -238,6 +243,12 @@ function RPFastTravel:CheckPickupOverHole(pickup)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
+
+  --[[
+  Isaac.DebugString("Checking pickup: " ..
+                    tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+  Isaac.DebugString("Position: " .. tostring(pickup.Position.X) .. ", " .. tostring(pickup.Position.Y))
+  --]]
 
   -- Check to see if it is overlapping with a trapdoor / beam of light / crawlspace
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
@@ -273,6 +284,7 @@ function RPFastTravel:MovePickupFromHole(pickup, posHole)
   local room = game:GetRoom()
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
 
+  Isaac.DebugString("MovePickupFromHole")
   -- Make pickups with velocity "bounce" off of the hole
   if (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0) and
      (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y) then
@@ -497,7 +509,7 @@ function RPFastTravel:CheckTrapdoor2()
   local player = game:GetPlayer(0)
 
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
-  -- (this is just an artifact of the manually reordering)
+  -- (this is just an artifact of the manual reordering)
   if RPGlobals.run.trapdoor.state == 3 then
     RPGlobals.run.trapdoor.state = 4
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
@@ -542,12 +554,22 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
   local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  -- First check to see if we need to redirect the player (used for Sacrifice Room teleports)
+  -- Check to see if we need to redirect the player (used for Sacrifice Room teleports)
   if redirect ~= nil then
     stage = redirect
   end
 
-  -- First check to see if we are going to the same floor
+  -- Check for the custom "Everything" final teleport
+  if RPGlobals.race.goal == "Everything" and
+     (stage == 11 and stageType == 1) then -- The Chest
+
+    local command = "stage 11"
+    Isaac.ExecuteCommand(command)
+    Isaac.DebugString("Executed command: " .. command)
+    return
+  end
+
+  -- Check to see if we are going to the same floor
   if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
      (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
 
@@ -558,28 +580,34 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
   end
 
   -- Build the command that will take us to the next floor
-  local command
+  local command = "stage "
   if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-    command = "stage 9" -- Blue Womb
+    command = command .. "9" -- Blue Womb
 
   elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
     if upwards then
-      command = "stage 10a" -- Cathedral
+      command = command .. "10a" -- Cathedral
     else
-      command = "stage 10" -- Sheol
+      command = command .. "10" -- Sheol
     end
 
-  elseif stage == 10 and stageType == 0 then
-    -- Sheol goes to the Dark Room
-    command = "stage 11"
+  elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
+    if RPGlobals.race.goal == "Everything" then
+      command = command .. "11a" -- The Chest
+    else
+      command = command .. "11" -- Dark Room
+    end
 
-  elseif stage == 10 and stageType == 1 then
-    -- Cathedral goes to The Chest
-    command = "stage 11a"
+  elseif stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
+    if RPGlobals.race.goal == "Everything" then
+      command = command .. "10" -- Sheol
+    else
+      command = command .. "11a" -- The Chest
+    end
 
   else
     local nextStage = stage + 1
-    command = "stage " .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
+    command = command .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
     local newStageType = RPFastTravel:DetermineStageType(nextStage)
     if newStageType == 1 then
       command = command .. "a"

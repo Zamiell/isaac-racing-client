@@ -1858,7 +1858,7 @@ function SamaelMod:CheckRechargeWraithSkull()
   end
 end
 
--- Called from the "RPCallbacks:PostNewRoom2()" function
+-- Called from the "RPPostNewRoom:NewRoom2()" function
 function SamaelMod:CheckHairpin()
   -- Local variables
   local game = Game()

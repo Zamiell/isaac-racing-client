@@ -18,6 +18,7 @@ globals = {
     "EntityType",
     "FamiliarVariant",
     "Game",
+    "GetPtrHash",
     "GridCollisionClass",
     "GridEntityType",
     "GridRooms",

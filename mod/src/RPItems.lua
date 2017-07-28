@@ -8,7 +8,115 @@ local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 
 --
--- Collectible item functions
+-- Pre-use collectible item functions
+--
+
+function RPItems.WeNeedToGoDeeper()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local stage = level:GetStage()
+  local player = game:GetPlayer(0)
+  local sfx = SFXManager()
+
+  -- Prevent the racers from "cheating" by using the shovel on Womb 2 in the "Everything" race goal
+  if RPGlobals.race.goal == "Everything" and
+     stage == 8 then
+
+    -- Do a little something fun
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
+    for i = 1, 5 do
+      local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
+      -- Use a value of 50 to spawn them far from the player
+      game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
+    end
+
+    -- By returning true, it will cancel the original Book of Sin effect
+    return true
+  end
+end
+
+function RPItems:BookOfSin()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune.
+  RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
+  math.randomseed(RPGlobals.RNGCounter.BookOfSin)
+  local bookPickupType = math.random(1, 7)
+  RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
+
+  local pos = player.Position
+  local vel = Vector(0, 0)
+
+  -- If heart
+  if bookPickupType == 1 then
+    -- Random Heart - 5.10.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
+               player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If coin
+  elseif bookPickupType == 2 then
+    -- Random Coin - 5.20.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If bomb
+  elseif bookPickupType == 3 then
+    -- Random Bomb - 5.40.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If key
+  elseif bookPickupType == 4 then
+    -- Random Key - 5.30.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If battery
+  elseif bookPickupType == 5 then
+    -- Lil' Battery - 5.90.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, pos, vel,
+               player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If pill
+  elseif bookPickupType == 6 then
+    -- Random Pill - 5.70.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
+
+  -- If card/rune
+  elseif bookPickupType == 7 then
+    -- Random Card - 5.300.0
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
+               player, 0, RPGlobals.RNGCounter.BookOfSin)
+  end
+
+  -- By returning true, it will cancel the original Book of Sin effect
+  return true
+end
+
+function RPItems:Smelter()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
+  local trinket2 = player:GetTrinket(1) -- This will be 0 if there is no trinket
+
+  if trinket1 ~= 0 then
+    -- Send a message to the item tracker to add this trinket
+    Isaac.DebugString("Gulping trinket " .. trinket1)
+  end
+
+  if trinket2 ~= 0 then
+    -- Send a message to the item tracker to add this trinket
+    Isaac.DebugString("Gulping trinket " .. trinket2)
+  end
+
+  -- By returning nothing, it will go on to do the Smelter effect
+end
+
+--
+-- Post-use collectible item functions
 --
 
 -- Will get called for all items
@@ -37,10 +145,6 @@ function RPItems:Main(collectibleType)
     -- We will check this variable later in the PostUpdate callback (the "RPSchoolbag:CheckSecondItem()" function)
   end
 end
-
---
--- Existing items
---
 
 function RPItems:Teleport() -- 44
   -- This callback is used naturally by Broken Remote
@@ -190,91 +294,6 @@ function RPItems:MovingBox() -- 523
     RPGlobals.run.movingBoxOpen = true
     Isaac.DebugString("Set the Moving Box graphic to the closed state.")
   end
-end
-
---
--- Custom items
---
-
-function RPItems:BookOfSin()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-
-  -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune.
-  RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
-  math.randomseed(RPGlobals.RNGCounter.BookOfSin)
-  local bookPickupType = math.random(1, 7)
-  RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
-
-  local pos = player.Position
-  local vel = Vector(0, 0)
-
-  -- If heart
-  if bookPickupType == 1 then
-    -- Random Heart - 5.10.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
-               player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If coin
-  elseif bookPickupType == 2 then
-    -- Random Coin - 5.20.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If bomb
-  elseif bookPickupType == 3 then
-    -- Random Bomb - 5.40.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If key
-  elseif bookPickupType == 4 then
-    -- Random Key - 5.30.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If battery
-  elseif bookPickupType == 5 then
-    -- Lil' Battery - 5.90.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, pos, vel,
-               player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If pill
-  elseif bookPickupType == 6 then
-    -- Random Pill - 5.70.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
-
-  -- If card/rune
-  elseif bookPickupType == 7 then
-    -- Random Card - 5.300.0
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
-               player, 0, RPGlobals.RNGCounter.BookOfSin)
-  end
-
-  -- By returning true, it will play the animation where Isaac holds the Book of Sin over his head
-  return true
-end
-
-function RPItems:Smelter()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-  local trinket1 = player:GetTrinket(0) -- This will be 0 if there is no trinket
-  local trinket2 = player:GetTrinket(1) -- This will be 0 if there is no trinket
-
-  if trinket1 ~= 0 then
-    -- Send a message to the item tracker to add this trinket
-    Isaac.DebugString("Gulping trinket " .. trinket1)
-  end
-
-  if trinket2 ~= 0 then
-    -- Send a message to the item tracker to add this trinket
-    Isaac.DebugString("Gulping trinket " .. trinket2)
-  end
-
-  -- Do the real Smelter effect
-  player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false) -- 479
-
-  -- Display the "use" animation
-  return true
 end
 
 return RPItems

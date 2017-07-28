@@ -31,7 +31,7 @@ function RPCheckEntities:Grid()
   for i = 1, gridSize do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
-      local saveState = gridEntity:GetSaveState();
+      local saveState = gridEntity:GetSaveState()
       if saveState.Type == GridEntityType.GRID_TRAPDOOR and -- 17
          saveState.VarData == 1 then -- Void Portals have a VarData of 1
 
@@ -222,6 +222,8 @@ function RPCheckEntities:Entity5(entity)
      entity:ToPickup().Touched == false then
 
     entity:ToPickup().Touched = true
+    Isaac.DebugString("Touched pickup: " ..
+                      tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType))
 
     if entity.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
        (entity.Variant == PickupVariant.PICKUP_KEY and entity.SubType == 4) then -- Charged Key (30.4)
@@ -321,10 +323,25 @@ function RPCheckEntities:Entity5(entity)
 
   elseif entity.Variant == PickupVariant.PICKUP_BIGCHEST then -- 340
     if stage == 10 and stageType == 0 and -- Sheol
-       (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
-        challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
+       RPGlobals.race.goal == "Everything" then
+
+      -- Delete the chest and replace it with the custom beam of light
+      -- (Sheol goes to The Chest in the "Everything" race goal)
+      RPFastTravel:ReplaceHeavenDoor(entity)
+
+    elseif stage == 10 and stageType == 0 and -- Sheol
+           (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
+           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
 
       -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
+      RPFastTravel:ReplaceTrapdoor(entity, -1)
+      -- A -1 indicates that we are replacing an entity instead of a grid entity
+
+    elseif stage == 10 and stageType == 1 and -- Cathedral
+           RPGlobals.race.goal == "Everything" then
+
+      -- Delete the chest and replace it with a custom trapdoor
+      -- (Cathedral goes to Sheol in the "Everything" race goal)
       RPFastTravel:ReplaceTrapdoor(entity, -1)
       -- A -1 indicates that we are replacing an entity instead of a grid entity
 
@@ -369,7 +386,8 @@ function RPCheckEntities:Entity5(entity)
              roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
             (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
              roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
-            (RPGlobals.race.goal == "Mega Satan" and
+            ((RPGlobals.race.goal == "Mega Satan" or
+              RPGlobals.race.goal == "Everything") and
              roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
 
       -- Spawn the "Race Trophy" custom entity
@@ -380,15 +398,24 @@ function RPCheckEntities:Entity5(entity)
       -- Get rid of the chest
       entity:Remove()
 
+    elseif stage == 11 and stageType == 1 and
+           RPGlobals.race.goal == "Everything" and
+           roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- 7
+
+      -- Delete the chest and replace it with a custom trapdoor
+      -- (The Chest goes to the Dark Room in the "Everything" race goal)
+      RPFastTravel:ReplaceTrapdoor(entity, -1)
+      -- A -1 indicates that we are replacing an entity instead of a grid entity
+
     elseif stage == 11 and
            RPGlobals.raceVars.finished == false and
            RPGlobals.race.status == "in progress" and
-           (RPGlobals.race.goal == "Mega Satan" and
+           ((RPGlobals.race.goal == "Mega Satan" or
+             RPGlobals.race.goal == "Everything") and
             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
 
-      -- Get rid of the chest as a reminder that the race goal is Mega Satan
       entity:Remove()
-      Isaac.DebugString("Got rid of the big chest since the goal is Mega Satan.")
+      Isaac.DebugString("Got rid of the big chest since the goal involves Mega Satan.")
 
     elseif stage == 11 and
            RPGlobals.raceVars.finished then
@@ -437,8 +464,10 @@ function RPCheckEntities:Entity5(entity)
       -- Get rid of the vanilla challenge trophy
       entity:Remove()
     end
+  end
 
-  elseif entity:ToPickup().Touched == false then
+  -- We want to check all pickups
+  if entity:ToPickup().Touched == false then
     -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect" animation
     -- So we don't want to move a pickup that is already collected, or it will duplicate it
     -- ("Touched" was manually set to true by the mod earlier)
@@ -473,6 +502,7 @@ function RPCheckEntities:Entity5_100(entity)
 
     elseif entity.Position.X >= 270 and entity.Position.X <= 290 and
            RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.goal ~= "Everything" and
            RPGlobals.race.rFormat ~= "pageant" and
            challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
 
@@ -511,6 +541,7 @@ function RPCheckEntities:Entity5_100(entity)
 
     elseif entity.Position.X >= 350 and entity.Position.X <= 370 and
            RPGlobals.race.goal ~= "Mega Satan" and
+           RPGlobals.race.goal ~= "Everything" and
            RPGlobals.race.rFormat ~= "pageant" then
 
       -- Reposition it to the center

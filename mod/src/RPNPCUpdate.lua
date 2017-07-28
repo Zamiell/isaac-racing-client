@@ -5,7 +5,6 @@ local RPNPCUpdate = {}
 --
 
 local RPGlobals   = require("src/rpglobals")
-local RPFastClear = require("src/rpfastclear")
 
 --
 -- Functions
@@ -38,9 +37,6 @@ function RPNPCUpdate:Main(npc)
       RPGlobals.run.bossHearts.extraIsSoul = true
     end
   end
-
-  -- Look for enemies that are dying so that we can open the doors prematurely
-  RPFastClear:NPCUpdate(npc)
 end
 
 -- EntityType.ENTITY_GLOBIN (24)
@@ -164,9 +160,42 @@ end
 
 -- EntityType.ENTITY_THE_LAMB (273)
 function RPNPCUpdate:NPC273(npc)
-  if npc.Variant == 10 and -- Lamb Body (273.10)
-     npc:IsInvincible() and -- It only turns invincible once it is defeated
-     npc:IsDead() == false then -- This is necessary because the callback will be hit again during the removal
+  if npc.Variant == 0 then -- The Lamb (273.0)
+    -- The spinning brimstone attack can persist during the period where The Lamb starts moving,
+    -- which can be unavoidable damage, so delete the brimstones
+    local brimstoneFiring = false
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_LASER and -- 7
+         entity.Parent.Type == EntityType.ENTITY_THE_LAMB then -- 273
+
+        brimstoneFiring = true
+        break
+      end
+    end
+
+    if brimstoneFiring then
+      if RPGlobals.run.theLambLockedPos == nil and
+         npc.State == 4 then -- The state where he is slowly moving around and not doing any attack
+
+        RPGlobals.run.theLambLockedPos = npc.Position
+        Isaac.DebugString("Locked The Lamb to prevent unavoidable damage.")
+      end
+
+    else
+      if RPGlobals.run.theLambLockedPos ~= nil then
+        RPGlobals.run.theLambLockedPos = nil
+        Isaac.DebugString("Unlocked The Lamb now that all of the brimstones are gone.")
+      end
+    end
+
+    -- Lock him in place on every frame until the brimstones go away
+    if RPGlobals.run.theLambLockedPos ~= nil then
+      npc.Position = RPGlobals.run.theLambLockedPos
+    end
+
+  elseif npc.Variant == 10 and -- Lamb Body (273.10)
+         npc:IsInvincible() and -- It only turns invincible once it is defeated
+         npc:IsDead() == false then -- This is necessary because the callback will be hit again during the removal
 
     -- Remove the body once it is defeated so that it does not interfere with taking the trophy
     npc:Kill() -- This plays the blood and guts animation, but does not actually remove the entity

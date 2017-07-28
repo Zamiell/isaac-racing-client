@@ -1,11 +1,5 @@
 <items gfxroot="gfx/items/" version="1">
-	<active description="Reusable item generator" gfx="Collectibles_097_BookOfSin.png" maxcharges="4" name="The Book of Sin" />
-	<!-- Originally 97 -->
-	<passive description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" name="Betrayal" />
-	<!-- Originally 391 -->
-	<active description="Trinket melter!" gfx="Collectibles_479_Smelter.png" name="Smelter" maxcharges="6" />
-	<!-- Originally 479 -->
-	<active description="Debug" gfx="Debug.png" maxcharges="1" name="Debug" />
+	<passive description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" name="Betrayal" /> <!-- Originally 391 -->
 	<passive description="More active item room" gfx="Schoolbag.png" name="Schoolbag" />
 	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
@@ -17,6 +11,7 @@
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #1" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #2" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #3" />
+	<active description="Debug" gfx="Debug.png" maxcharges="1" name="Debug" />
 
 	<!-- Samual Items -->
 	<passive description="Accuracy brings power!" gfx="Collectibles_373_DeadEye.png" name="Samael Dead Eye" />

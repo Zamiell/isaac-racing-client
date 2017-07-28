@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.7.14"
+RPGlobals.version = "v0.8.0"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -19,7 +19,7 @@ RPGlobals.race = {
   rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "unseeded-beginner", or "custom"
   -- Unofficially this can also be "pageant" and "beginner"
   character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
-  goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan"
+  goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", or "Everything"
   seed            = "-",         -- Corresponds to the seed that is the race goal
   startingItems   = {},          -- The starting items for this race
   countdown       = -1,          -- This corresponds to the graphic to draw on the screen
@@ -59,11 +59,8 @@ RPGlobals.RNGCounter = {
 --
 
 -- Collectibles
--- (unused normal item IDs: 43, 59, 61, 235, 263)
-CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED      = Isaac.GetItemIdByName("The Book of Sin") -- Replacing 97
+-- (unused normal item IDs are: 43, 59, 61, 235, 263)
 CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM         = Isaac.GetItemIdByName("Betrayal") -- Replacing 391
-CollectibleType.COLLECTIBLE_SMELTER_LOGGER          = Isaac.GetItemIdByName("Smelter") -- Replacing 479
-CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
 CollectibleType.COLLECTIBLE_SCHOOLBAG               = Isaac.GetItemIdByName("Schoolbag")
 CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
 CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
@@ -75,13 +72,8 @@ CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Che
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder #1")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder #2")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder #3")
+CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
 CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Diversity Placeholder #3") + 1
-
--- Cards
-Card.CARD_HUGE_GROWTH = 52
-Card.CARD_ANCIENT_RECALL = 53
-Card.CARD_ERA_WALK = 54
-Card.NUM_CARDS = 55
 
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
@@ -131,10 +123,12 @@ function RPGlobals:InitRun()
   RPGlobals.run.roomsEntered     = 0
   RPGlobals.run.touchedBookOfSin = false
   RPGlobals.run.movingBoxOpen    = true
+  RPGlobals.run.killedLamb       = false -- Used for the "Everything" race goal
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
   -- (start at 0 so that we can trigger the PostNewRoom callback after the PostNewLevel callback)
+  RPGlobals.run.currentFloorType    = 0 -- We need to track this because we can go from Cathedral to Sheol, for example
   RPGlobals.run.levelDamaged        = false
   RPGlobals.run.replacedPedestals   = {}
   RPGlobals.run.replacedTrapdoors   = {}
@@ -158,12 +152,14 @@ function RPGlobals:InitRun()
   RPGlobals.run.consoleWindowOpen    = false
   RPGlobals.run.droppedButterItem    = 0
   RPGlobals.run.fastResetFrame       = 0
-  RPGlobals.run.teleportSubverted     = false
-  RPGlobals.run.teleportSubvertScale  = Vector(1, 1)
-  RPGlobals.run.dualityCheckFrame     = 0
-  RPGlobals.run.seededMOCheckFrame    = 0
-  RPGlobals.run.changeFartColor       = false
-  RPGlobals.run.replaceBuggedScolex   = 0
+  RPGlobals.run.teleportSubverted    = false
+  RPGlobals.run.teleportSubvertScale = Vector(1, 1)
+  RPGlobals.run.dualityCheckFrame    = 0
+  RPGlobals.run.seededMOCheckFrame   = 0
+  RPGlobals.run.changeFartColor      = false
+  RPGlobals.run.replaceBuggedScolex  = 0
+  -- Equal to the game frame number with which to replace Scolex, or 0 for disabled
+  RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

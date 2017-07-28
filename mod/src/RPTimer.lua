@@ -18,6 +18,14 @@ RPTimer.sprites = {}
 --
 
 function RPTimer:Display()
+  -- Don't show the timer if the user wants it explicitly disabled
+  -- (through an additional setting in the "save#.dat" file)
+  if RPGlobals.race.timer ~= nil and
+     RPGlobals.race.timer == false then
+
+    return
+  end
+
   -- Don't show the timer if the race has not started yet or they quit in the middle of the race
   -- (and always show the timer in a custom speedrun challenge)
   local challenge = Isaac.GetChallenge()

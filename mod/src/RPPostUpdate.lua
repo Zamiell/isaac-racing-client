@@ -39,23 +39,6 @@ function RPPostUpdate:Main()
   -- Check on every frame to see if we need to open the doors
   RPFastClear:PostUpdate()
 
-  -- Check for The Book of Sin (for Bookworm)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED) and
-     RPGlobals.run.touchedBookOfSin == false then
-
-    -- We can't just put the real The Book of Sin in the pools and swap it out on pickup because
-    -- the item pickup text would be wrong
-    RPGlobals.run.touchedBookOfSin = true
-    player:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN, 0, false) -- 97
-    Isaac.DebugString("Removing collectible 97")
-    player:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED, 4, false)
-
-    -- Fix the bug where doing this swap will mess up their charges if they happen to have The Battery
-    while player:GetBatteryCharge() < batteryCharge do
-      player:SetActiveCharge(player:GetActiveCharge() + 1) -- This will add 1 charge to their battery
-    end
-  end
-
   -- Check for Eden's Soul (to fix the charge bug)
   if activeItem == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
     if RPGlobals.run.edensSoulSet and RPGlobals.run.edensSoulCharges ~= activeCharge then

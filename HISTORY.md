@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.8.0* - July ?th, 2017
+
+* Added a new seeded build: Technology Zero + Pop! + Cupid's Arrow
+* Added a new race goal of "Everything", which takes you on an epic journey to kill Blue Baby, The Lamb, and Mega Satan. (This is the mode that will be used for the Papaya Party tournament.)
+* The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.) (Thanks ceehe)
+* Fixed the unavoidable damage on the Dank Depths bomb puzzle room where a spike could sometimes overwrite a rock. (Thanks Nariom)
+* Fast-clear will now work properly with Dark Red champions.
+* Added functionality to hide the in-game timer. Just add `"timer":false` to your "save#.dat" file. (Thanks Gustavo Hernandez Pachito)
+* Fixed the bug where sometimes pickups spawn on (or get pushed on to) trapdoors.
+
 ### *v0.7.14* - July 12th, 2017
 
 * Fixed the bug where diversity races would crash when starting with certain trinkets. (Thanks BMZ_Loop)

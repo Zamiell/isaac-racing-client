@@ -23,7 +23,8 @@ $(document).ready(function() {
 
         // Get some random words
         let randomNumbers = [];
-        for (let i = 0; i < 2; i++) {
+        let numWords = 2;
+        for (let i = 0; i < numWords; i++) {
             while (true) {
                 let randomNumber = misc.getRandomNumber(0, globals.wordList.length - 1);
                 if (randomNumbers.indexOf(randomNumber) === -1) {
@@ -33,7 +34,7 @@ $(document).ready(function() {
             }
         }
         let randomlyGeneratedName = '';
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < numWords; i++) {
             randomlyGeneratedName += globals.wordList[randomNumbers[i]] + ' ';
         }
 

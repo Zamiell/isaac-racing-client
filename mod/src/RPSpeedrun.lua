@@ -253,20 +253,19 @@ function RPSpeedrun:Init()
 
     -- Give extra items to characters for the R+7 (S3) speedrun category
     if character == PlayerType.PLAYER_ISAAC then -- 0
-      -- Add the Battery
-      player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
-
-      -- Make Isaac start with a double charge instead of a single charge
-      player:SetActiveCharge(12)
-      sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
-
-      -- Remove it from all the pools
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+      -- Isaac starts with Wait What?
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WAIT_WHAT -- 484
+      Isaac.DebugString("Adding collectible 484 (Wait What?)")
 
     elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
       -- Magdalene starts with the Moving Box
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
       Isaac.DebugString("Adding collectible 523 (Moving Box)")
+
+    elseif character == PlayerType.PLAYER_JUDAS then -- 3
+      -- Judas starts with the Book of Belial
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
+      Isaac.DebugString("Adding collectible 34 (Book of Belial)")
 
     elseif character == PlayerType.PLAYER_EVE then -- 5
       -- Eve starts with Delirious
@@ -274,10 +273,9 @@ function RPSpeedrun:Init()
       Isaac.DebugString("Adding collectible 510 (Delirious)")
 
     elseif character == PlayerType.PLAYER_SAMSON then -- 6
-      -- Samsom starts with Compost and Hive Mind
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_COMPOST -- 480
-      Isaac.DebugString("Adding collectible 480 (Compost)")
-      player:AddCollectible(CollectibleType.COLLECTIBLE_HIVE_MIND, 0, false) -- 248
+      -- Samsom starts with Mr. ME!
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MR_ME -- 527
+      Isaac.DebugString("Adding collectible 527 (Mr. ME!)")
 
     elseif character == PlayerType.PLAYER_LAZARUS then -- 8
       -- Lazarus starts with Ventricle Razor
@@ -292,6 +290,9 @@ function RPSpeedrun:Init()
 
     -- Set the Schoolbag item charges
     RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+
+    -- Remove the Schoolbag item from all pools
+    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
   end
 
   if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
@@ -445,7 +446,7 @@ function RPSpeedrun:Finish()
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
 
   -- Play a sound effect
-  sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1)
+  sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
 
   -- Fireworks will play on the next frame (from the PostUpdate callback)
 end

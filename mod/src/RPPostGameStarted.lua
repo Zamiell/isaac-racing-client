@@ -4,15 +4,15 @@ local RPPostGameStarted = {}
 -- Includes
 --
 
-local RPGlobals    = require("src/rpglobals")
-local RPCallbacks  = require("src/rpcallbacks")
-local RPSprites    = require("src/rpsprites")
-local RPSchoolbag  = require("src/rpschoolbag")
-local RPSoulJar    = require("src/rpsouljar")
-local RPFastClear  = require("src/rpfastclear")
-local RPFastTravel = require("src/rpfasttravel")
-local RPSpeedrun   = require("src/rpspeedrun")
-local RPTimer      = require("src/rptimer")
+local RPGlobals      = require("src/rpglobals")
+local RPPostNewLevel = require("src/rppostnewlevel")
+local RPSprites      = require("src/rpsprites")
+local RPSchoolbag    = require("src/rpschoolbag")
+local RPSoulJar      = require("src/rpsouljar")
+local RPFastClear    = require("src/rpfastclear")
+local RPFastTravel   = require("src/rpfasttravel")
+local RPSpeedrun     = require("src/rpspeedrun")
+local RPTimer        = require("src/rptimer")
 
 --
 -- Variables
@@ -31,6 +31,7 @@ function RPPostGameStarted:Main(saveState)
   local itemPool = game:GetItemPool()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local levelSeed = level:GetDungeonPlacementSeed()
   local curses = level:GetCurses()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
@@ -45,7 +46,9 @@ function RPPostGameStarted:Main(saveState)
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
     RPGlobals.run.currentFloor = stage
-    Isaac.DebugString("New floor: " .. tostring(RPGlobals.run.currentFloor) .. " (from S+Q)")
+    RPGlobals.run.currentFloorType = stageType
+    Isaac.DebugString("New floor: " .. tostring(RPGlobals.run.currentFloor) .. "-" ..
+                      tostring(RPGlobals.run.currentFloorType) .. " (from S+Q)")
 
     -- Fix the bug where the Gaping Maws will not respawn in the "Race Room"
     if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
@@ -162,7 +165,7 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Call PostNewLevel manually (they get naturally called out of order)
-  RPCallbacks:PostNewLevel2()
+  RPPostNewLevel:NewLevel()
 end
 
 -- This is done when a run is started
@@ -240,18 +243,11 @@ function RPPostGameStarted:Character()
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
     RPGlobals.run.schoolbag.item = activeItem
 
-    -- Manually fix any custom passive items
+    -- Manually fix any custom items
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
       player:AddCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM)
       passiveItem = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
-    end
-
-    -- Manually fix any custom active items
-    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
-    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_SMELTER then -- 479
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
     end
 
     -- Make sure that the Schoolbag item is fully charged
@@ -535,12 +531,8 @@ function RPPostGameStarted:Diversity()
     -- Replace the custom items
     local itemID = RPGlobals.race.startingItems[i]
     if i ~= 5 then -- We don't want to replace trinkets
-      if itemID == CollectibleType.COLLECTIBLE_BOOK_OF_SIN then -- 97
-        itemID = CollectibleType.COLLECTIBLE_BOOK_OF_SIN_SEEDED
-      elseif itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
+      if itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
         itemID = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
-      elseif itemID == CollectibleType.COLLECTIBLE_SMELTER then -- 479
-        itemID = CollectibleType.COLLECTIBLE_SMELTER_LOGGER
       end
     end
 
@@ -594,7 +586,7 @@ function RPPostGameStarted:Diversity()
       -- Item 5 is the trinket
       player:TryRemoveTrinket(trinket1) -- It is safe to feed 0 to this function
       player:AddTrinket(itemID)
-      player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER_LOGGER, false, false, false, false)
+      player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false)
       -- Use the custom Smelter so that the item tracker knows about the trinket we consumed
 
       -- Regive Paper Clip to Cain, for example

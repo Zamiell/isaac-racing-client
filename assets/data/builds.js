@@ -4,7 +4,7 @@
 
 module.exports = [
     // Build IDs start at 1, so make a null array for element 0
-    [],                                               // 0
+    [],                                           // 0
 
     // Treasure Room Starts
     [{ id: 245, name: "20/20" }],                 // 1
@@ -51,11 +51,15 @@ module.exports = [
     [{ id: 257, name: "Fire Mind" },              // 30
      { id: 600, name: "13 luck" }],
 
+     [{ id: 524, name: "Technology Zero" },       // 31
+      { id: 529, name: "Pop!" },
+      { id: 48,  name: "Cupid's Arrow" }],
+
     // Custom starts (with an active item)
-    [{ id: 40,  name: "Kamikaze!" },              // 31
+    [{ id: 40,  name: "Kamikaze!" },              // 32
      { id: 375, name: "Host Hat" }],
 
-    [{ id: 441, name: "Mega Blast" },             // 32
+    [{ id: 441, name: "Mega Blast" },             // 33
      { id: 63,  name: "The Battery" },
      { id: 156, name: "Habit" },
      { id: 205, name: "Sharp Plug" }],

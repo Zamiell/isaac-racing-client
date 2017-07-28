@@ -95,6 +95,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
+* The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.)
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
@@ -148,6 +149,16 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
+### Everything
+
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to complete the run.
+* After defeating It Lives!, the beam of light will always spawn to take you to The Cathedral.
+* After defeating Isaac, a trapdoor will spawn to take you to Sheol.
+* After defeating Satan, a beam of light will spawn to take you to The Chest.
+* After defeating Blue Baby, a trapdoor will spawn to take you to the Dark Room.
+* After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
+* Defeat Mega Satan to complete the run.
+
 ## Additional Changes for Multi-Character Speedruns
 
 * By pressing "Tab" on the challenges portion of the main menu, you can access custom challenges added by mods. The Racing+ mod uses custom challenges to facilitate multi-character speedruns, in which you must beat the game multiple times in a row on various characters.
@@ -178,7 +189,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840) is a custom character created by Ghostbroster. He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
-* After defeating Mom, both The Polaroid and The Negative will spawn. Neither The Polaroid or The Negative are required to travel to the Dark Room.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 
 <br />
 
