@@ -244,6 +244,13 @@ function RPFastTravel:CheckPickupOverHole(pickup)
     roomIndex = level:GetCurrentRoomIndex()
   end
 
+  -- We don't need to move Big Chests and Trophies
+  if pickup.Variant == PickupVariant.PICKUP_BIGCHEST or -- 340
+     pickup.Variant == PickupVariant.PICKUP_TROPHY then -- 370
+
+    return
+  end
+
   --[[
   Isaac.DebugString("Checking pickup: " ..
                     tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
@@ -284,7 +291,6 @@ function RPFastTravel:MovePickupFromHole(pickup, posHole)
   local room = game:GetRoom()
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
 
-  Isaac.DebugString("MovePickupFromHole")
   -- Make pickups with velocity "bounce" off of the hole
   if (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0) and
      (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y) then
