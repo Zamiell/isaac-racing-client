@@ -297,8 +297,6 @@ function RPPostGameStarted:Race()
   -- (we want to be able to do runs of them without using the R+ client)
   if RPGlobals.race.rFormat == "pageant" then
     RPPostGameStarted:Pageant()
-  elseif RPGlobals.race.rFormat == "beginner" then
-    RPPostGameStarted:Beginner()
   end
 
   --
@@ -314,7 +312,10 @@ function RPPostGameStarted:Race()
   -- Local variables
   local game = Game()
   local seeds = game:GetSeeds()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
+
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   RPGlobals.raceVars.difficulty = game.Difficulty
@@ -354,6 +355,14 @@ function RPPostGameStarted:Race()
       Isaac.DebugString("Restarting because we were on a set seed.")
       return
     end
+  end
+
+  -- Validate that we are on the right character
+  if character ~= RPGlobals.race.character then
+    -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    Isaac.DebugString("Restarting because we were not on the right character.")
+    return
   end
 
   --
@@ -646,22 +655,6 @@ function RPPostGameStarted:Pageant()
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
 
   Isaac.DebugString("Added pageant items.")
-end
-
-function RPPostGameStarted:Beginner()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-  local character = player:GetPlayerType()
-
-  if character == PlayerType.PLAYER_JUDAS then -- 3
-    -- Add the extra items
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
-
-    -- Add the extra health
-    player:AddHearts(1)
-    player:AddSoulHearts(1)
-  end
 end
 
 function RPPostGameStarted:SeededMO()

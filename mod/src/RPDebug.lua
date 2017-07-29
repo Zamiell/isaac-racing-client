@@ -71,16 +71,16 @@ function RPDebug:Main()
       Isaac.DebugString("  " .. k .. ": " .. tostring(v))
     end
   end
-  Isaac.DebugString("room index: " .. tostring(roomIndex))
 
+  --
   -- Test stuff
-  --RPGlobals.raceVars.finished = true
-  --debugVar = debugVar + 1
-  --RPSprites:Init("diversity-item5", tostring(debugVar))
-  --RPSprites:Init("speedrun-char1", "0")
-  --RPGlobals.raceVars.startedTime = RPGlobals.raceVars.startedTime - (1000 * 60 * 2)
-  RPSpeedrun.charNum = 9
-  --RPSpeedrun.finishedChar = true
+  --
+
+  RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+
+  --
+  -- End test stuff
+  --
 
   Isaac.DebugString("+------------------------+")
   Isaac.DebugString("| Exiting test callback. |")

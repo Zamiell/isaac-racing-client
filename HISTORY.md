@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.8.5* - July 29th, 2017
+
+* When there is more than one Sloth, Super Sloth, Pride, or Super Pride in a room, they should now always drop the same card no matter which order you kill them in. (Thanks Krakenos)
+* The LiveSplit autosplitter should now work again. (Thanks Norbro86, Sillypears and Hyphen-ated)
+* The "Victory Lap" text will now appear on the top-left hand corner of the screen instead of the top-right. This should make it display more consistently across different resolutions.
+* Fixed the bug where the doors would not stay closed after bombing an angel (again). (Thanks SlashSP)
+* Fixed the bug where it was possible to play a race on the wrong character. (Racing+ will always automatically change your character to the correct character for the race.) (Thanks Darkwolf)
+
 ### *v0.8.4* - July 28th, 2017
 
 * The "fast-clear" feature was not working properly in the last patch, but it should be better now. (Thanks Cyber_1, BMZ_Loop, and 910Dan)

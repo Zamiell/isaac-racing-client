@@ -165,6 +165,9 @@ function RPPostNewRoom:NewRoom()
   -- Check for the unavoidable puzzle room in the Dank Depths
   RPPostNewRoom:CheckDepthsPuzzle()
 
+  -- Check for double Sloths / Super Sloths / Pride / Super Prides
+  RPPostNewRoom:CheckSlothPride()
+
   -- Do race related stuff
   RPPostNewRoom:Race()
 end
@@ -361,6 +364,45 @@ function RPPostNewRoom:CheckDepthsPuzzle()
         -- Add a rock
         Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, gridEntity.Position, true) -- 17
         Isaac.DebugString("Removed spikes from the Dank Depths bomb puzzle room.")
+      end
+    end
+  end
+end
+
+-- Check for more than one Sloth / Super Sloth / Pride / Super Prides
+-- (we want the card drop to always be the same; in vanilla it will depend on the order you kill them in)
+function RPPostNewRoom:CheckSlothPride()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local room = game:GetRoom()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+
+  if (roomStageID == 10 and roomVariant == 120) or -- Womb (Double Sloth)
+     (roomStageID == 11 and roomVariant == 120) or -- Utero (Double Sloth)
+     (roomStageID == 14 and roomVariant == 63) or -- Sheol (Double Sloth)
+     (roomStageID == 14 and roomVariant == 64) or -- Sheol (Double Sloth)
+     (roomStageID == 15 and roomVariant == 63) or -- Cathedral (Double Sloth)
+     (roomStageID == 15 and roomVariant == 64) or -- Cathedral (Double Sloth)
+     (roomStageID == 15 and roomVariant == 111) or -- Cathedral (Double Pride)
+     (roomStageID == 15 and roomVariant == 133) or -- Cathedral (Quadruple Pride)
+     (roomStageID == 16 and roomVariant == 30) or -- Dark Room (Triple Super Sloth)
+     (roomStageID == 16 and roomVariant == 73) or -- Dark Room (Double Sloth + Double Super Sloth)
+     (roomStageID == 17 and roomVariant == 8) then -- The Chest (Double Super Sloth)
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
+         entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
+
+        -- Replace it with a new one that has an InitSeed equal to the room
+        game:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity,
+                   entity.Parent, entity.SubType, roomSeed)
+
+        -- Delete the old one
+        entity:Remove()
       end
     end
   end

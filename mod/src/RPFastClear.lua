@@ -70,6 +70,9 @@ end
 
 -- ModCallbacks.MC_POST_NPC_INIT (27)
 function RPFastClear:PostNPCInit(npc)
+  Isaac.DebugString("MC_POST_NPC_INIT - " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
+
   RPFastClear:CheckNewNPC(npc)
 end
 
@@ -89,7 +92,13 @@ function RPFastClear:CheckNewNPC(npc)
   -- We don't care if the room is cleared already
   -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
   -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-  if roomClear then
+  if roomClear and
+     npc.Type ~= EntityType.ENTITY_GREED and -- 50
+     npc.Type ~= EntityType.ENTITY_URIEL and -- 271
+     npc.Type ~= EntityType.ENTITY_GABRIEL then -- 272
+
+    -- We want to make an exception for Greed, Uriel, and Gabriel because
+    -- the room can be already cleared when those enemies spawn
     return
   end
 

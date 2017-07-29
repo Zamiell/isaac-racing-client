@@ -11,7 +11,7 @@
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #1" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #2" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder #3" />
-	<active description="Debug" gfx="Debug.png" maxcharges="1" name="Debug" />
+	<active description="Debug" gfx="Debug.png" maxcharges="0" name="Debug" />
 
 	<!-- Samual Items -->
 	<passive description="Accuracy brings power!" gfx="Collectibles_373_DeadEye.png" name="Samael Dead Eye" />

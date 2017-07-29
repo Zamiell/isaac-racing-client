@@ -6,16 +6,6 @@
 --[[
 
 TODO:
-- livesplit not working (just need hyphen to update)
-
-* When there are more than one Sloth, Super Sloth, Pride, or Super Pride in a room, they should now always drop the same card.
-* The "Victory Lap" text will now appear on the top-left hand corner of the screen instead of the top-right. This should make it display more consistently across different resolutions.
-
-- move victory lap text to the top left
-- fix sloth double cards
-- fix keeper to maggy bug
-
-
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

@@ -340,7 +340,10 @@ end
 
 function RPPostRender:DisplayVictoryLaps()
   if RPGlobals.raceVars.victoryLaps > 0 then
-    Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), 430, 247, 2, 2, 2, 2)
+    -- We want to place the text to the right of the heart containers
+    -- (which will depend on how many heart containers we have)
+    local x = 55 + RPSoulJar:GetHeartXOffset()
+    Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, 10, 2, 2, 2, 2)
   end
 end
 
