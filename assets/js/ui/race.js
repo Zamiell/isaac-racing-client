@@ -722,7 +722,7 @@ function placeMidRecalculateAll() {
             }
             if (racer2.floorNum > racer.floorNum) {
                 racer.placeMid++;
-            } else if (racer2.floorNum === racer.floorNum && racer2.stageType < racersStageType) {
+            } else if (racer2.floorNum === racer.floorNum && racer2.stageType < racer.StageType) {
                 // This is custom logic for the "Everything" race goal
                 // Sheol is StageType 0 and the Dark Room is StageType 0
                 // Those are considered ahead of Cathedral and The Chest

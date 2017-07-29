@@ -255,7 +255,7 @@ function RPFastClear:PostEntityKill(entity)
     RPFastClear.aliveSpecialEnemies[index] = nil
   end
 
-  -- Check to see if any of the special enemies that don't trigger a death event have died
+  -- Check to see if any of the special enemies that don't trigger a death event have died in the meantime
   for index2, value in pairs(RPFastClear.aliveSpecialEnemies) do
     if RPFastClear.aliveSpecialEnemies[index2].Ref == nil then
       -- This enemy has died because its pointer has disappeared, so remove it
