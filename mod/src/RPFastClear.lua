@@ -14,12 +14,15 @@ local RPSoulJar = require("src/rpsouljar")
 -- These are reset in the "RPFastClear:InitRun()" function
 RPFastClear.familiars = {}
 
--- These are reset in the "RPFastClear:InitRun()" function and the "CheckNewNPC()" function (upon entering a new room)
+-- These are reset in the "RPFastClear:InitRun()" function and
+-- the "RPFastClear:CheckNewNPC()" function (upon entering a new room)
 RPFastClear.aliveEnemies = {}
 RPFastClear.aliveEnemiesCount = 0
-RPFastClear.buttonsAllPushed = false
-RPFastClear.roomInitializing = false
+RPFastClear.roomInitializing = false -- Set to true in the MC_POST_NEW_ROOM callback
 RPFastClear.delayFrame = 0
+
+-- These are reset in the "RPPostNewRoom:NewRoom()" function
+RPFastClear.buttonsAllPushed = false
 
 --
 -- Fast clear functions
@@ -107,14 +110,27 @@ function RPFastClear:CheckNewNPC(npc)
     return
   end
 
-  -- Furthermore, we don't care if this is a child NPC attached to some boss
+  -- We don't care if the NPC is already dead
+  -- (this is needed because we can enter this function from the MC_NPC_UPDATE callback)
+  if npc:IsDead() then
+    return
+  end
+
+  -- We don't care if this is a child NPC attached to some boss
   if RPFastClear:AttachedNPC(npc) then
     return
   end
 
-  -- We don't care if the NPC is already dead
-  -- (this is needed because we can enter this function from the MC_NPC_UPDATE callback)
-  if npc:IsDead() then
+  -- We don't care if this is a charmed enemy
+  -- (from Delirious or a charmed enemy carried over from a previous room)
+  local entityFlags = npc:GetEntityFlags()
+  local charmed = false
+  local i = 8 -- EntityFlag.FLAG_CHARM
+  local bit = (entityFlags & (1 << i)) >> i
+  if bit == 1 then
+    charmed = true
+  end
+  if charmed then
     return
   end
 
@@ -125,7 +141,6 @@ function RPFastClear:CheckNewNPC(npc)
   if roomFrameCount == -1 and RPFastClear.roomInitializing == false then
     RPFastClear.aliveEnemies = {}
     RPFastClear.aliveEnemiesCount = 0
-    RPFastClear.buttonsAllPushed = false
     RPFastClear.roomInitializing = true -- This will get set back to false in the MC_POST_NEW_ROOM callback
     RPFastClear.delayFrame = 0
     Isaac.DebugString("Reset fast-clear variables.")
@@ -142,6 +157,7 @@ end
 
 function RPFastClear:AttachedNPC(npc)
   if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
+     (npc.Type == EntityType.ENTITY_SATAN and npc.Variant == 10) -- Satan Stomp (84.10)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) then -- Mama Gurdy Right Hand (266.2)
 
@@ -169,7 +185,8 @@ function RPFastClear:PostEntityKill(entity)
     return
   end
 
-  --Isaac.DebugString("MC_POST_ENTITY_KILL - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant))
+  Isaac.DebugString("MC_POST_ENTITY_KILL - " ..
+                    tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType))
 
   -- We don't care if the room is cleared already
   -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
@@ -246,6 +263,8 @@ function RPFastClear:CheckFastClearException(npc)
      -- 30 and 31 are the final forms of Envy and Super Envy, respectively
      npc.Type == EntityType.ENTITY_MEMBRAIN or -- 57
      -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
+     (npc.Type == EntityType.ENTITY_PIN and npc.Variant == 2) or -- 62.2
+     -- Frail splits into itself (its 2nd form)
      (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 0) or -- 66.0
      -- Death splits into Death Horse (66.20) and Death without horse (66.30)
      npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71

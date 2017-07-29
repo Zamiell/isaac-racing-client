@@ -92,9 +92,10 @@ function RPPostNewRoom:NewRoom()
   }
   RPGlobals.run.keeper.usedStrength = false
 
-  -- Clear fast-clear variables too
-  -- (this is set to true when the room frame count is -1 and set to false here, where the frame count is 0)
+  -- Clear fast-clear variables that track things per room
+  RPFastClear.buttonsAllPushed = false
   RPFastClear.roomInitializing = false
+  -- (this is set to true when the room frame count is -1 and set to false here, where the frame count is 0)
 
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
   SamaelMod:CheckHairpin()

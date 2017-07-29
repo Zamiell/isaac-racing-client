@@ -74,9 +74,9 @@ function RPNPCUpdate:NPC27(npc)
   -- Find out if they are feared
   local entityFlags = npc:GetEntityFlags()
   local feared = false
-  local i = 11
+  local i = 11 -- EntityFlag.FLAG_FEAR
   local bit = (entityFlags & (1 << i)) >> i
-  if bit == 1 then -- 11 is FLAG_FEAR
+  if bit == 1 then
     feared = true
   end
   if feared then

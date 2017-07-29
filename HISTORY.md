@@ -1,8 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.8.6* - Unreleased
+### *v0.8.6* - July 29th, 2017
 
-* The LiveSplit autosplitter should now work again. (Thanks Norbro86, Sillypears and Hyphen-ated)
+* It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
+* Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)
+* Fixed the bug where charmed enemies were stopping fast-clear from happening. (Thanks tODDlife)
+* Fixed the bug where fast-clear was not working with Satan.
+* Fixed the bug where Frail was making the doors open early. (Thanks tODDlife)
+* Fixed the bug where a pickup on top of a trapdoor would play a spawning animation instead of just being moved. (Thanks tODDlife)
+* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal. (Thanks Antizoubilamaka)
 
 ### *v0.8.5* - July 29th, 2017
 
@@ -13,11 +19,11 @@
 
 ### *v0.8.4* - July 28th, 2017
 
-* The "fast-clear" feature was not working properly in the last patch, but it should be better now. (Thanks Cyber_1, BMZ_Loop, and 910Dan)
+* The "fast-clear" feature was not working properly in the last patch, but it should be better now. (Thanks CrafterLynx, Cyber_1, BMZ_Loop, and 910Dan)
 
 ### *v0.8.3* - July 28th, 2017
 
-* Fixed the bug in the "Everything" race goal where Sheol and the Dark Room had the same layouts as Cathdral and The Chest.
+* Fixed the bug in the "Everything" race goal where Sheol and the Dark Room had the same layouts as Cathedral and The Chest.
 
 ### *v0.8.0* - July 27th, 2017
 
@@ -682,7 +688,7 @@ Changes:
 * Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
 * Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi & stoogebag)
 * Fixed the bug where if too many races were open, the lobby would mess up and overflow.
-* The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks Anti)
+* The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks Antizoubilamaka)
 
 ### *v0.2.64* - March 10th, 2017
 

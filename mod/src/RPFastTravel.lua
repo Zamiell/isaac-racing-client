@@ -42,8 +42,6 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
-  -- Delete the Womb 2 trapdoor and don't replace it if we have the Polaroid
-  -- (also check for The Negative, since we might have both under certain conditions)
   if (stage == LevelStage.STAGE4_2 or -- 8
       stage == LevelStage.STAGE4_3) and -- 9
      roomType == RoomType.ROOM_BOSS and -- 5
@@ -52,10 +50,20 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
       (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) then -- 328
 
-    -- Delete the Womb 2 trapdoor if we have the Polaroid
+    -- Delete the Womb 2 trapdoor and don't replace it if we have the Polaroid
+    -- (also check for The Negative, since we might have both under certain conditions)
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
     Isaac.DebugString("Deleted the trapdoor since we are not going in that direction.")
+    return
+
+  elseif stage == LevelStage.STAGE4_2 and -- 8
+         roomType == RoomType.ROOM_ERROR and -- 3
+         RPGlobals.race.goal == "Everything" then
+
+    -- Prevent players from skipping a floor by using Undefined on W2 on the "Everything" race goal
+    RPFastTravel:ReplaceHeavenDoor(entity)
+    Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
     return
   end
 
@@ -349,8 +357,7 @@ function RPFastTravel:MovePickupFromHole(pickup, posHole)
                       tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
   else
     -- Move it
-    game:Spawn(pickup.Type, pickup.Variant, newPos, pickup.Velocity, pickup.Parent, pickup.SubType, pickup.InitSeed)
-    pickup:Remove()
+    pickup.Position = newPos
     Isaac.DebugString("Moved a pickup that was overlapping with a hole: " ..
                       tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
   end
