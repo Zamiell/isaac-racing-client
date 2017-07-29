@@ -168,7 +168,6 @@ function RPFastClear:AttachedNPC(npc)
   if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
      (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 11) or -- Bloat Eye (68.11)
      (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 10) or -- Death Scythe (66.10)
-     (npc.Type == EntityType.ENTITY_SATAN and npc.Variant == 10) or -- Satan Stomp (84.10)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) or -- Mama Gurdy Right Hand (266.2)
      (npc.Type == EntityType.ENTITY_BIG_HORN and npc.Variant == 1) or -- Small Hole (411.1)
@@ -182,7 +181,8 @@ function RPFastClear:AttachedNPC(npc)
 end
 
 function RPFastClear:NoDeathEventNPC(npc)
-  if npc.Type == EntityType.ENTITY_DADDYLONGLEGS or -- 101
+  if npc.Type == EntityType.ENTITY_SATAN or -- 84
+     npc.Type == EntityType.ENTITY_DADDYLONGLEGS or -- 101
      -- Daddy Long Legs (101.0) and Triachnid (101.1)
      npc.Type == EntityType.ENTITY_PORTAL then -- 306
 
@@ -239,7 +239,9 @@ function RPFastClear:PostEntityKill(entity)
 
   -- Keep track of the enemies in the room that are alive
   local index = GetPtrHash(npc)
-  if RPFastClear.aliveEnemies[index] == nil then
+  if RPFastClear.aliveEnemies[index] == nil and
+     RPFastClear:AttachedNPC() == false then
+
     Isaac.DebugString("Error: NPC #" .. tostring(index) .. " died, " ..
                       "but it wasn't in the \"aliveEnemies\" table.")
     return
@@ -254,18 +256,6 @@ function RPFastClear:PostEntityKill(entity)
   -- Check to see if this was a special enemy
   if RPFastClear.aliveSpecialEnemies[index] ~= nil then
     RPFastClear.aliveSpecialEnemies[index] = nil
-  end
-
-  -- Check to see if any of the special enemies that don't trigger a death event have died in the meantime
-  for index2, value in pairs(RPFastClear.aliveSpecialEnemies) do
-    if RPFastClear.aliveSpecialEnemies[index2].Ref == nil then
-      -- This enemy has died because its pointer has disappeared, so remove it
-      RPFastClear.aliveSpecialEnemies[index2] = nil
-      RPFastClear.aliveEnemies[index2] = nil
-      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
-      Isaac.DebugString("Removed special NPC (index " .. tostring(index2) .. "), " ..
-                        "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-    end
   end
 
   -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
@@ -286,6 +276,21 @@ function RPFastClear:PostUpdate()
   -- Disable this on the "Unseeded (Beginner)" ruleset
   if RPGlobals.race.rFormat == "unseeded-beginner" then
     return
+  end
+
+  -- Check to see if any of the special enemies that don't trigger a death event have died
+  for index, value in pairs(RPFastClear.aliveSpecialEnemies) do
+    if RPFastClear.aliveSpecialEnemies[index].Ref == nil then
+      -- This enemy has died because its pointer has disappeared, so remove it
+      RPFastClear.aliveSpecialEnemies[index] = nil
+      RPFastClear.aliveEnemies[index] = nil
+      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+      Isaac.DebugString("Removed special NPC (index " .. tostring(index) .. "), " ..
+                        "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+
+      -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
+        RPFastClear.delayFrame = gameFrameCount + 1
+    end
   end
 
   -- If a frame has passed since an enemy died, reset the delay counter

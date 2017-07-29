@@ -1,9 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.8.11* - July 29th, 2017
+
+* Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks Norbro86)
+
 ### *v0.8.10* - July 29th, 2017
 
 * The LiveSplit autosplitter should now work again. (Thanks Norbro86, Sillypears and Hyphen-ated)
-* Fixed the bug where fast-clear was not working as Samael.
+* Fixed the bug where the client was crashing. (Thanks DiaTech, rerol, Shigan, and Drunkenshoe)
+* Fixed the bug where fast-clear was not working as Samael. (Thanks Norbro86 and thereisnofuture)
 
 ### *v0.8.8* - July 29th, 2017
 
