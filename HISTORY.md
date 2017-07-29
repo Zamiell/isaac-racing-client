@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.8.10* - July 29th, 2017
+
+* The LiveSplit autosplitter should now work again. (Thanks Norbro86, Sillypears and Hyphen-ated)
+* Fixed the bug where fast-clear was not working as Samael.
+
 ### *v0.8.8* - July 29th, 2017
 
 * Fixed the bug where fast-clear was not working properly with Peep, Bloat, Death, Mama Gurdy, Big Horn, Daddy Long Legs, Triachnid, and Portals.
