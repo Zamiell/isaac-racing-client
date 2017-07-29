@@ -157,7 +157,7 @@ end
 
 function RPFastClear:AttachedNPC(npc)
   if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
-     (npc.Type == EntityType.ENTITY_SATAN and npc.Variant == 10) -- Satan Stomp (84.10)
+     (npc.Type == EntityType.ENTITY_SATAN and npc.Variant == 10) or -- Satan Stomp (84.10)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) then -- Mama Gurdy Right Hand (266.2)
 
@@ -265,8 +265,6 @@ function RPFastClear:CheckFastClearException(npc)
      -- Membrain splits into 2 Brains (32.0) and Mama Guts splits into 2 Guts (40.0)
      (npc.Type == EntityType.ENTITY_PIN and npc.Variant == 2) or -- 62.2
      -- Frail splits into itself (its 2nd form)
-     (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 0) or -- 66.0
-     -- Death splits into Death Horse (66.20) and Death without horse (66.30)
      npc.Type == EntityType.ENTITY_FISTULA_BIG or -- 71
      npc.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72
      npc.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73

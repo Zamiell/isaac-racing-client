@@ -32,7 +32,7 @@
 * The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.) (Thanks ceehe)
 * Fixed the unavoidable damage on the Dank Depths bomb puzzle room where a spike could sometimes overwrite a rock. (Thanks Nariom)
 * Fast-clear will now work properly with Dark Red champions.
-* Added functionality to hide the in-game timer. Just add `"timer":false` to your "save#.dat" file. (Thanks Gustavo Hernandez Pachito)
+* Added functionality to hide the in-game timer. Just add "timer":false to your "save#.dat" file. (Thanks Gustavo Hernandez Pachito)
 * Fixed the bug where sometimes pickups spawn on (or get pushed on to) trapdoors.
 
 ### *v0.7.14* - July 12th, 2017
