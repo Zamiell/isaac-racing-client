@@ -71,6 +71,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC300, EntityTyp
 
 -- Define miscellaneous callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPPostUpdate.Main) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPFastClear.PostUpdate) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       RPPostRender.Main) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPEvaluateCache.Main) -- 8
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPPostPlayerInit.Main) -- 9

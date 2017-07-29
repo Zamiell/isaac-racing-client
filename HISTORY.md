@@ -1,6 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.8.8* - July 29th, 2017
+
+* Fixed the bug where fast-clear was not working properly with Peep, Bloat, Death, Mama Gurdy, Big Horn, Daddy Long Legs, Triachnid, and Portals.
+
 ### *v0.8.6* - July 29th, 2017
+
+* It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
+* Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)
+* Fixed the bug where charmed enemies were stopping fast-clear from happening. (Thanks tODDlife)
+* Fixed the bug where fast-clear was not working with Satan.
+* Fixed the bug where Frail was making the doors open early. (Thanks tODDlife)
+* Fixed the bug where a pickup on top of a trapdoor would play a spawning animation instead of just being moved. (Thanks tODDlife)
+* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal. (Thanks Antizoubilamaka)
 
 * It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
 * Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)

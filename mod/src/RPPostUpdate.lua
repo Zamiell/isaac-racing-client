@@ -27,7 +27,6 @@ function RPPostUpdate:Main()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
-  local batteryCharge = player:GetBatteryCharge()
 
   -- Keep track of the total amount of rooms cleared on this run thus far
   RPPostUpdate:CheckRoomCleared()
@@ -35,9 +34,6 @@ function RPPostUpdate:Main()
   -- Keep track of our max hearts if we are Keeper
   -- (to fix the Greed's Gullet bug and the double coin / nickel healing bug)
   RPPostUpdate:CheckKeeperHearts()
-
-  -- Check on every frame to see if we need to open the doors
-  RPFastClear:PostUpdate()
 
   -- Check for Eden's Soul (to fix the charge bug)
   if activeItem == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490

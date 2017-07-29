@@ -14,6 +14,7 @@ globals = {
     "EffectVariant",
     "EntityCollisionClass",
     "EntityFlag",
+    "EntityPtr",
     "EntityRef",
     "EntityType",
     "FamiliarVariant",
