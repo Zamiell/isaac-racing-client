@@ -165,9 +165,12 @@ function RPFastClear:CheckNewNPC(npc)
 end
 
 function RPFastClear:AttachedNPC(npc)
+  -- These are NPCs that have "CanShutDoors" equal to true naturally by the game,
+  -- but shouldn't actually keep the doors closed
   if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
      (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 11) or -- Bloat Eye (68.11)
      (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 10) or -- Death Scythe (66.10)
+     (npc.Type == EntityType.ENTITY_BEGOTTEN and npc.Variant == 10) or -- Begotten Chain (251.10)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) or -- Mama Gurdy Right Hand (266.2)
      (npc.Type == EntityType.ENTITY_BIG_HORN and npc.Variant == 1) or -- Small Hole (411.1)

@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.8.12* - July 30th, 2017
+
+* Fixed the bug where fast-clear was not working with Begottens.
+
 ### *v0.8.11* - July 29th, 2017
 
 * Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks Norbro86)
