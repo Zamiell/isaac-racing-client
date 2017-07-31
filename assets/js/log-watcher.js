@@ -88,10 +88,6 @@ const logWatcher = function(event, message) {
     } else if (message === 'Race error: Wrong mode.') {
         globals.gameState.hardMode = true;
         raceScreen.checkReadyValid();
-
-    } else if (message === 'Race error: On a challenge.') {
-        globals.gameState.challenge = true;
-        raceScreen.checkReadyValid();
     }
 
     /*

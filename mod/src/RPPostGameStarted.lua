@@ -324,13 +324,6 @@ function RPPostGameStarted:Race()
     return
   end
 
-  -- Validate that we are not on a challenge
-  RPGlobals.raceVars.challenge = Isaac.GetChallenge()
-  if RPGlobals.raceVars.challenge ~= 0 then
-    Isaac.DebugString("Race error: On a challenge.")
-    return
-  end
-
   if RPGlobals.race.rFormat == "seeded" and
      RPGlobals.race.status == "in progress" then
 

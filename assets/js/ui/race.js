@@ -715,6 +715,7 @@ function placeMidRecalculateAll() {
             continue;
         }
         racer.placeMid = currentPlace + 1;
+        globals.log.info('Starting with place:', racer.placeMid);
         for (let j = 0; j < globals.raceList[globals.currentRaceID].racerList.length; j++) {
             let racer2 = globals.raceList[globals.currentRaceID].racerList[j];
             if (racer2.status !== 'racing') {
@@ -722,12 +723,16 @@ function placeMidRecalculateAll() {
             }
             if (racer2.floorNum > racer.floorNum) {
                 racer.placeMid++;
-            } else if (racer2.floorNum === racer.floorNum && racer2.stageType < racer.StageType) {
+            } else if (racer2.floorNum === racer.floorNum && racer2.stageType < racer.stageType) {
                 // This is custom logic for the "Everything" race goal
                 // Sheol is StageType 0 and the Dark Room is StageType 0
                 // Those are considered ahead of Cathedral and The Chest
                 racer.placeMid++
-            } else if (racer2.floorNum == racer.floorNum && racer2.floorArrived < racer.floorArrived) {
+            } else if (
+                racer2.floorNum === racer.floorNum &&
+                racer2.stageType === racer.stageType &&
+                racer2.floorArrived < racer.floorArrived
+            ) {
                 racer.placeMid++;
             }
         }
@@ -774,6 +779,8 @@ const participantsSetFloor = function(i) {
         floorDiv = 'Chest';
     } else if (floorNum === 12) {
         floorDiv = 'Void';
+    } else if (floorNum === 13) { // This is not a real floor
+        floorDiv = 'MS'; // Mega Satan
     } else {
         misc.errorShow('The floor for ' + name + ' is unrecognized: ' + floorNum);
     }
@@ -1099,9 +1106,6 @@ const checkReadyValid = function() {
     } else if (globals.gameState.hardMode === true) {
         valid = false;
         tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
-    } else if (globals.gameState.challenge === true) {
-        valid = false;
-        tooltipContent = '<span lang="en">You must not be in a challenge before you can mark yourself as ready.</span>';
     }
 
     if (valid === false) {

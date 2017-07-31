@@ -97,6 +97,12 @@ function RPPostNewRoom:NewRoom()
   RPFastClear.roomInitializing = false
   -- (this is set to true when the room frame count is -1 and set to false here, where the frame count is 0)
 
+  -- Check to see if we are entering the Mega Satan room
+  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+    -- Emulate reaching a new floor, using a custom floor number of 13 (The Void is 12)
+    Isaac.DebugString('Entered the Mega Satan room.')
+  end
+
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
   SamaelMod:CheckHairpin()
 

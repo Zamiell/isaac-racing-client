@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
-### *v0.8.12* - July 30th, 2017
+### *v0.8.13* - July 31st, 2017
 
+* For the "Mega Satan" and "Everything" race goals, going into the Mega Satan room will count as a new floor for the purposes of updating the mid-race place indicator. (It will show as "MS" for your floor inside the client.)
+* Fixed the bug where fast-clear would not work with Samael when his special animations were playing. (Thanks Noowoo)
 * Fixed the bug where you could use a Sacrifice Room to cheat on the "Everything" race goal. (Thanks thereisnofuture)
+* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal (for real this time). (Thanks Krakenos)
+* Fixed the bug where you could ready up while in a hard mode or greed mode run.
 
 ### *v0.8.12* - July 30th, 2017
 

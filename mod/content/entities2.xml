@@ -3,22 +3,22 @@
 
 	<!-- Fast-travel entities -->
 	<!-- (we want them as effects because we don't want the smoke to appear when they are spawned) -->
-	<entity name="Trapdoor (Fast-Travel)" id="1000" variant="201" anm2path="grid/door_11_trapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Trapdoor (Fast-Travel)" id="1000" variant="201" anm2path="grid/door_11_trapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Crawlspace (Fast-Travel)" id="1000" variant="202" anm2path="grid/door_20_secrettrapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Crawlspace (Fast-Travel)" id="1000" variant="202" anm2path="grid/door_20_secrettrapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Womb Trapdoor (Fast-Travel)" id="1000" variant="203" anm2path="grid/door_11_wombhole.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Womb Trapdoor (Fast-Travel)" id="1000" variant="203" anm2path="grid/door_11_wombhole.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Blue Womb Trapdoor (Fast-Travel)" id="1000" variant="204" anm2path="grid/door_11_wombhole_blue.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Blue Womb Trapdoor (Fast-Travel)" id="1000" variant="204" anm2path="grid/door_11_wombhole_blue.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Heaven Door (Fast-Travel)" id="1000" variant="205" anm2path="custom/heaven_door_fast_travel.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Heaven Door (Fast-Travel)" id="1000" variant="205" anm2path="custom/heaven_door_fast_travel.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Pitfall (Custom)" id="1000" variant="206" anm2path="291.000_Pitfall.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" stageHP="0">
+	<entity name="Pitfall (Custom)" id="1000" variant="206" anm2path="291.000_Pitfall.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 	<entity name="Room Clear Delay Effect" id="1000" variant="207" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
@@ -34,19 +34,19 @@
 	</entity><!-- Effects don't work to stop room clear in the Mega Satan room for some reason -->
 
 	<!-- Samael -->
-    <entity anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" name="Samael Scythe" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
+    <entity name="Samael Scythe" anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 		<preload-snd id="77" />
 		<preload-snd id="38" />
 		<preload-snd id="133" />
     </entity>
-	<entity anm2path="samael_special.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6618" name="Samael Special Animations" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0">
+	<entity name="Samael Special Animations" anm2path="samael_special.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6618" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
 		<gibs amount="16" blood="1" bone="1" eye="0" gut="0" large="0" />
     </entity>
-	<entity anm2path="samael_scythe_projectile.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="30" friction="1" id="2" name="Magic Scythe" numGridCollisionPoints="8" shadowSize="0" stageHP="0" variant="617">
+	<entity name="Magic Scythe" anm2path="samael_scythe_projectile.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="30" friction="1" id="2" numGridCollisionPoints="8" shadowSize="0" stageHP="0" variant="617" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
-	<entity anm2path="samael_scythe_hitbox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="15" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Scythe Hitbox" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="35" subtype="617">
+	<entity name="Scythe Hitbox" anm2path="samael_scythe_hitbox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="15" collisionMass="3" collisionRadius="13" friction="1" id="3" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="35" subtype="617" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
     </entity>
 </entities>

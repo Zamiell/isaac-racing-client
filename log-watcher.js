@@ -135,11 +135,8 @@ const parseLine = function(line) {
         // They have entered the menu
         process.send('Title menu initialized.');
 
-    } else if (line.startsWith('Race error: Wrong mode.')) {
+    } else if (line.startsWith('Lua Debug: Race error: Wrong mode.')) {
         process.send('Race error: Wrong mode.');
-
-    } else if (line.startsWith('Race error: On a challenge.')) {
-        process.send('Race error: On a challenge.');
 
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
@@ -161,6 +158,10 @@ const parseLine = function(line) {
             let type = match[2];
             process.send('New floor: ' + stage + '-' + type);
         }
+
+    } else if (line === 'Lua Debug: Entered the Mega Satan room.') {
+        // The Void is floor 12; we use 13 as a fake floor
+        process.send('New floor: 13-0');
 
     } else if (line.startsWith('Room ')) {
         // A new room was entered

@@ -17,8 +17,8 @@
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
-    "dist": "build",
-    "dist2": "build --publish always --draft false"
+    "dist": "build --ia32 --x64",
+    "dist2": "build --ia32 --x64 --publish always --draft false"
   },
   "build": {
     "appId": "org.electron.IsaacRacingPlus",

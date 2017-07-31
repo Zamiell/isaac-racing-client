@@ -1001,12 +1001,9 @@ function SamaelMod:getScytheColor()
 end
 
 -----------Play sound using dummy NPC if needed-----------
-function SamaelMod:playSound(ID, vol, pitch)
-  local dummy = Isaac.Spawn(EntityType.ENTITY_FLY, 0, 0, Vector(0,0), Vector(0,0), Isaac.GetPlayer(0)):ToNPC()
-  dummy:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-  dummy.CanShutDoors = false
-  dummy:PlaySound(ID, vol, 0, false, pitch)
-  dummy:Remove()
+function SamaelMod:playSound(ID, volume, pitch)
+  local sfx = SFXManager()
+  sfx:Play(ID, volume, 0, false, pitch) -- (SoundEffect ID, float Volume, integer FrameDelay, boolean Loop, float Pitch)
 end
 
 -----------On player init (start/continue)-----------

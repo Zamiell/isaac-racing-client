@@ -174,8 +174,7 @@ function RPFastClear:AttachedNPC(npc)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 2) or -- Mama Gurdy Right Hand (266.2)
      (npc.Type == EntityType.ENTITY_BIG_HORN and npc.Variant == 1) or -- Small Hole (411.1)
-     (npc.Type == EntityType.ENTITY_BIG_HORN and npc.Variant == 2) or -- Big Hole (411.2)
-     npc.Type == Isaac.GetEntityTypeByName("Samael Scythe") then
+     (npc.Type == EntityType.ENTITY_BIG_HORN and npc.Variant == 2) then -- Big Hole (411.2)
 
     return true
   else

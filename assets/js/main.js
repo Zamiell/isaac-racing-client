@@ -7,6 +7,8 @@
 /*
 
 Bugs to fix:
+- rewrite twitch servern mod check system so that it doesn't spam
+- set timer to 3 hours once you can see how long each race has been going for from the lobby
 - make it start on the right character in starting room, not just on race start
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive
@@ -14,7 +16,6 @@ Bugs to fix:
 - unlock every easter egg for racing+ save file
 - fix sounds so that last place and race completed come as a callback so that both play
 - set twitch bot to disable after no mod found
-- https://github.com/electron-userland/electron-builder/issues/1095
 - make it so that you can see the random thing before you submit the race
 - mouseover format and see ruleset in lobby
 - enforce version checking upon creating/joining race
@@ -63,6 +64,7 @@ Features to add:
 
 
 Features to add (low priority):
+- Fix bug where Desktop shortcut gets continually recreated: https://github.com/electron-userland/electron-builder/issues/1095
 - make UI expand horizontally properly
 - add items + date to "Top 10 Unseeded Times" leaderboard
 
