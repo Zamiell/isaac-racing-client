@@ -2,6 +2,10 @@
 
 ### *v0.8.12* - July 30th, 2017
 
+* Fixed the bug where you could use a Sacrifice Room to cheat on the "Everything" race goal. (Thanks thereisnofuture)
+
+### *v0.8.12* - July 30th, 2017
+
 * Fixed the bug where fast-clear was not working with Begottens.
 
 ### *v0.8.11* - July 29th, 2017
@@ -19,14 +23,6 @@
 * Fixed the bug where fast-clear was not working properly with Peep, Bloat, Death, Mama Gurdy, Big Horn, Daddy Long Legs, Triachnid, and Portals.
 
 ### *v0.8.6* - July 29th, 2017
-
-* It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
-* Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)
-* Fixed the bug where charmed enemies were stopping fast-clear from happening. (Thanks tODDlife)
-* Fixed the bug where fast-clear was not working with Satan.
-* Fixed the bug where Frail was making the doors open early. (Thanks tODDlife)
-* Fixed the bug where a pickup on top of a trapdoor would play a spawning animation instead of just being moved. (Thanks tODDlife)
-* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal. (Thanks Antizoubilamaka)
 
 * It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
 * Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)
@@ -526,7 +522,7 @@ Changes:
 * Fixed the unavoidable damage when Spiked Chests or Mimics spawn in Caves/Catacombs room #19. (Thanks PassionDrama)
 * In diversity races, when you pick up Crown of Light from a Basement 1 Treasure Room, it will now heal you for half a heart if you are not already at full red hearts. (Thanks Dea1h)
 * Fixed the bug where banned items would roll into other banned items under certain conditions. (Thanks Lobsterosity)
-* If Eden starts with Book of Sin, Crystal Ball, Betrayal, or Smelter, she will now start with the Racing+ custom version of the item.
+* If Eden starts with Book of Sin, Crystal Ball, Betrayal, or Smelter, they will now start with the Racing+ custom version of the item.
 
 ### *v0.3.2* - March 23rd, 2017
 
@@ -725,11 +721,11 @@ Changes:
     * You no longer gain health from soul/black hearts.
     * You gain an empty red heart container for every 4 soul/black hearts picked up.
     * You always have a 100% Devil Room chance if no damage is taken.
-  * Eden now starts with the Schoolbag. She will start with her random active item inside the bag.
+  * Eden now starts with the Schoolbag. They will start with her random active item inside the bag.
   * Lilith now starts with the Schoolbag. She will start with Box of Friends inside the bag.
   * Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 * Fixed the bug where red chest teleports could kill you in certain situations.
-* Fixed the bug where Eden would incorrectly retain the stats from her starting active item. (Thanks SlashSP)
+* Fixed the bug where Eden would incorrectly retain the stats from their starting active item. (Thanks SlashSP)
 * Fixed the bug where the Joker card would not work if you had Cursed Eye. (Thanks thereisnofuture)
 * Fixed the bug where the current trinket for the diversity race would not display in the tooltip.
 * Replaced the Glowing Hour Glass rewind process of starting a race with a better method. This should help people with potato computers.
@@ -835,7 +831,7 @@ Changes:
 ### *v0.2.53* - February 27th, 2017
 
 * The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
-* Holding R on Eden no longer kills her (since Nicalis fixed it in the vanilla game).
+* Holding R on Eden no longer kills them (since Nicalis fixed it in the vanilla game).
 * Fixed the crash that occured with Schoolbag when you swapped at the same time as picking up a new item.
 * You will no longer recieve the Polaroid and get teleported to Womb 1 if you arrive at the Void floor (since Nicalis fixed the instant Void teleport).
 * Removed the use animation from Telepills.
@@ -862,7 +858,7 @@ Changes:
 
 ### *v0.2.48* - February 22nd, 2017
 
-* Pressing the reset button on Eden now instantly kills her. (It is not currently possible to fix the resetting bug in a proper way.)
+* Pressing the reset button on Eden now instantly kills them. (It is not currently possible to fix the resetting bug in a proper way.)
 * There will no longer be sound notifications when someone starts a solo races.
 * There will no longer be text notifications when someone starts a solo races.
 * There will no longer be text notifications when a test account connects or disconnects.

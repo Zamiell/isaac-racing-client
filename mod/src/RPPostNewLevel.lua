@@ -45,12 +45,13 @@ function RPPostNewLevel:NewLevel()
 
   -- Find out if we performed a Sacrifice Room teleport
   if (RPGlobals.race.goal == "The Lamb" or
-      RPGlobals.race.goal == "Mega Satan") and
+      RPGlobals.race.goal == "Mega Satan" or
+      RPGlobals.race.goal == "Everything") and
      stage == 11 and stageType == 0 and -- 11.0 is Dark Room
      (RPGlobals.run.currentFloor ~= 10 and
       RPGlobals.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now
 
-    -- We arrivated at the Dark Room without going through Sheol
+    -- We arrived at the Dark Room without going through Sheol
     Isaac.DebugString("Sacrifice Room teleport detected.")
     RPFastTravel:GotoNextFloor(false, RPGlobals.run.currentFloor)
     -- The first argument is "upwards", the second argument is "redirect"

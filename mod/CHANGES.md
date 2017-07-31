@@ -21,7 +21,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 ### 1) Character Changes
 
-(Most races are done with Judas. The Eden change is to preserve her active item.)
+(Most races are done with Judas. The Eden change is to preserve the active item.)
 
 * All characters now start with the D6.
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
@@ -29,7 +29,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Blue Baby starts with an extra half soul heart.
   * Azazel starts with an extra half soul heart.
 * Judas starts with a bomb instead of 3 coins.
-* Eden starts with the Schoolbag (from Antibirth). She will start with her random active item inside the bag.
+* Eden starts with the Schoolbag (from Antibirth). They will start with their random active item inside the bag.
 
 ### 2) No Curses
 
@@ -67,6 +67,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
   * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
+  * cards from Sloth, Super Sloth, Pride, and Super Pride
 * Lag is reduced via integration of the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod by [Dan](https://moddingofisaac.com/user/255).
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
@@ -158,6 +159,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * After defeating Blue Baby, a trapdoor will spawn to take you to the Dark Room.
 * After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
 * Defeat Mega Satan to complete the run.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 ## Additional Changes for Multi-Character Speedruns
 
