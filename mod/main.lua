@@ -6,8 +6,6 @@
 --[[
 
 TODO:
-- add seed to the end of the run
-
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

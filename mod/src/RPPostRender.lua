@@ -359,16 +359,8 @@ function RPPostRender:Race()
     RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return
 
-  elseif RPGlobals.raceVars.challenge ~= 0 and
-         RPGlobals.raceVars.startedTime == 0 then
-
-    -- Check to see if we are on a challenge
-    RPSprites:Init("top", "error-challenge") -- Error: You are on a challenge.
-    return
-
   elseif RPSprites.sprites.top ~= nil and
-         (RPSprites.sprites.top.spriteName == "error-hard-mode" or
-          RPSprites.sprites.top.spriteName == "error-challenge") then
+         RPSprites.sprites.top.spriteName == "error-hard-mode" then
 
     RPSprites:Init("top", 0)
   end
@@ -400,9 +392,9 @@ function RPPostRender:Race()
      roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
     RPSprites:Init("raceType", RPGlobals.race.rType)
-    RPSprites:Init("raceTypeIcon", RPGlobals.race.rType .. "Icon")
+    RPSprites:Init("raceTypeIcon", RPGlobals.race.rType .. "-icon")
     RPSprites:Init("raceFormat", RPGlobals.race.rFormat)
-    RPSprites:Init("raceFormatIcon", RPGlobals.race.rFormat .. "Icon")
+    RPSprites:Init("raceFormatIcon", RPGlobals.race.rFormat .. "-icon")
     RPSprites:Init("goal", "goal")
     RPSprites:Init("raceGoal", RPGlobals.race.goal)
   else
