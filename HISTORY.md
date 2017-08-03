@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.8.15* - August 3rd, 2017
+
+* Fixed the bug where you could take both The Polaroid and The Negative if both spawned. (Thanks Krakenos and CrafterLynx)
+
 ### *v0.8.14* - August 3rd, 2017
 
 * The seed will now be shown in the upper-left hand corner of the screen after finishing a race or finishing a run on a multi-character speedrun custom challenge. Now, players do not have to use Hyphen-ated's item tracker (or manually pause the game) in order to have their runs be legal on Speedrun.com. (Thanks Krakenos)

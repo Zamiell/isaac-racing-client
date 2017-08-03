@@ -100,12 +100,14 @@ function RPPostNPCDeath:NPC45(npc)
   elseif photoSituation == 3 then
     -- A situation of 3 means to spawn both The Polaroid and The Negative
     RPGlobals.run.spawningPhoto = true
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenterLeft, Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
+    local polaroid = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                posCenterLeft, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
+    polaroid:ToPickup().TheresOptionsPickup = true
 
     RPGlobals.run.spawningPhoto = true
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenterRight, Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
+    local negative = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                posCenterRight, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
+    negative:ToPickup().TheresOptionsPickup = true
 
     Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
