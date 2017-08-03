@@ -762,11 +762,11 @@ function RPCheckEntities:ReplacePedestal(entity)
     entity.SubType = 0
   end
 
-  -- Check to see if this is a banned item on the "Unseeded (Beginner)" ruleset
+  -- Check to see if this is a banned item on the "Unseeded (Lite)" ruleset
   local big4Reroll = false
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
-     RPGlobals.race.rFormat == "unseeded-beginner" and
+     RPGlobals.race.rFormat == "unseeded-lite" and
      (entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE or -- 114
       entity.SubType == CollectibleType.COLLECTIBLE_IPECAC or -- 149
       entity.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS or -- 168

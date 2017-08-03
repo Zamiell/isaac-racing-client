@@ -130,7 +130,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
 * For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
 
-### Unseeded (Beginner)
+### Unseeded (Lite)
 
 * All Treasure Rooms on Basement 1 will have two items.
 * Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.

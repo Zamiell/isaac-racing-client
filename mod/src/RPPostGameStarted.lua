@@ -375,8 +375,8 @@ function RPPostGameStarted:Race()
   elseif RPGlobals.race.rFormat == "seededMO" then
     RPPostGameStarted:SeededMO()
 
-  elseif RPGlobals.race.rFormat == "unseeded-beginner" then
-    RPPostGameStarted:UnseededBeginner()
+  elseif RPGlobals.race.rFormat == "unseeded-lite" then
+    RPPostGameStarted:UnseededLite()
   end
 
   -- Go to the custom "Race Start" room
@@ -694,7 +694,7 @@ function RPPostGameStarted:SeededMO()
   Isaac.DebugString("Added seeded MO items.")
 end
 
-function RPPostGameStarted:UnseededBeginner()
+function RPPostGameStarted:UnseededLite()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -705,7 +705,7 @@ function RPPostGameStarted:UnseededBeginner()
   -- We don't need to show this on the item tracker to reduce clutter
   -- More Options will be removed upon entering the first Treasure Room
 
-  Isaac.DebugString("Added unseeded-beginner items.")
+  Isaac.DebugString("Added unseeded-lite items.")
 end
 
 return RPPostGameStarted

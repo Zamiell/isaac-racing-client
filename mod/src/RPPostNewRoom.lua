@@ -441,11 +441,11 @@ function RPPostNewRoom:Race()
   -- Remove the final place graphic if it is showing
   RPSprites:Init("place2", 0)
 
-  -- Check to see if we need to remove More Options in a diversity race
+  -- Check to see if we need to remove More Options in a diversity race or an "Unseeded (Lite)" race
   if roomType == RoomType.ROOM_TREASURE and -- 4
      player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
      (RPGlobals.race.rFormat == "diversity" or
-      RPGlobals.race.rFormat == "unseeded-beginner") and
+      RPGlobals.race.rFormat == "unseeded-lite") and
      RPGlobals.raceVars.removedMoreOptions == false then
 
     RPGlobals.raceVars.removedMoreOptions = true

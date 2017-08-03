@@ -118,8 +118,8 @@ end
 -- EntityType.ENTITY_MOMS_HAND (213)
 -- EntityType.ENTITY_MOMS_DEAD_HAND (287)
 function RPNPCUpdate:NPC213(npc)
-  -- Disable the speed-up on the "Unseeded (Beginner)" ruleset
-  if RPGlobals.race.rFormat == "unseeded-beginner" then
+  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-lite" then
     return
   end
 
@@ -147,8 +147,8 @@ function RPNPCUpdate:NPC219(npc)
     npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
   end
 
-  -- Disable the speed-up on the "Unseeded (Beginner)" ruleset
-  if RPGlobals.race.rFormat == "unseeded-beginner" then
+  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-lite" then
     return
   end
 

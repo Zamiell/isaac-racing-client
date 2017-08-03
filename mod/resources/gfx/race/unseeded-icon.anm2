@@ -2,7 +2,7 @@
 	<Info CreatedBy="Unknown" CreatedOn="2/1/2017 6:09:20 AM" Version="2" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="seededIcon.png" Id="0"/>
+			<Spritesheet Path="unseeded-icon.png" Id="0"/>
 		</Spritesheets>
 		<Layers>
 			<Layer Name="Layer 0" Id="0" SpritesheetId="0"/>

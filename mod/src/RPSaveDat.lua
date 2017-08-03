@@ -192,9 +192,7 @@ function RPSaveDat:ChangedFormat()
   -- Local variables
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if RPGlobals.race.rFormat == "pageant" or
-     RPGlobals.race.rFormat == "beginner" then
-
+  if RPGlobals.race.rFormat == "pageant" then
     -- For special rulesets, fix the bug where it is not loaded on the first run
     -- Doing a "restart" won't work since we are just starting a run, so mark to reset on the next frame
     RPGlobals.run.restartFrame = isaacFrameCount + 1

@@ -215,8 +215,8 @@ function RPPostRender:CheckResetInput()
   local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  -- Disable this on the "Unseeded (Beginner)" ruleset
-  if RPGlobals.race.rFormat == "unseeded-beginner" then
+  -- Disable this on the "Unseeded (Lite)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-lite" then
     return
   end
 
