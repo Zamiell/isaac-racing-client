@@ -3981,8 +3981,8 @@
         transform: scale(0.75);
     }
 
-    .lobby-current-races-unseeded-beginner {
-        background-image: url("../img/formats/unseeded-beginner.png");
+    .lobby-current-races-unseeded-lite {
+        background-image: url("../img/formats/unseeded-lite.png");
         background-repeat: no-repeat;
         background-position: center center;
         display: inline-block;
