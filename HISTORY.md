@@ -3,16 +3,16 @@
 ### *v0.8.14* - August 3rd, 2017
 
 * The seed will now be shown in the upper-left hand corner of the screen after finishing a race or finishing a run on a multi-character speedrun custom challenge. Now, players do not have to use Hyphen-ated's item tracker (or manually pause the game) in order to have their runs be legal on Speedrun.com. (Thanks Krakenos)
-* The "Unseeded (Beginner)" ruleset is renamed to "Unseeded (Lite)". (Thanks SlashSP)
+* The "Unseeded (Beginner)" format is renamed to "Unseeded (Lite)". (Thanks SlashSP)
 * Isaac now starts with 1.6 speed (instead of 1.0 speed) in the "Change Char Order" custom challenge. This should making choosing your order a little less cumbersome. (Thanks Thoday)
 * If you start with The Polaroid or The Negative in a diversity race, the opposite photo will now spawn after defeating Mom. If you start with both The Polaroid and The Negative, a random boss item will spawn. (Thanks tODDlife, Krakenos, and BMZ_Loop)
-* Fixed the bug where the bomb puzzle room in Dank Depths would have invisible collision on squares where spikes were removed. Spikes will still be removed, but now they won't be replaced with anything. (Thanks Karolmo)
-* Fixed the bug where fast-clear would not work if a black worm spawned from the My Shadow item. (Thanks BMZ_Loop)
-* Fixed the bug where big 4 items could fart-reroll into other big 4 items in the "Unseeded (Beginner)" format. (Thanks leo_ze_tron)
+* Fixed the bug where the bomb puzzle room in Dank Depths would have invisible collision on squares where spikes were removed. Spikes will still be removed, but now they won't be replaced with rocks. (Thanks Karolmo)
+* Fixed the bug where fast-clear would not work if a black worm was spawned from the My Shadow item. (Thanks BMZ_Loop)
+* Fixed the bug where big 4 items could fart-reroll into other big 4 items in the "Unseeded (Lite)" format. (Thanks leo_ze_tron)
 * Fixed the bug where fast-clear would not work with Hosts that were spawned as a Mushroom replacement. (Thanks Chronometrics)
 * Fixed the bug where fast-clear would not work with Rag Man's Raglings. (Thanks BMZ_Loop)
 * Fixed the bug where you could sometimes see The Polaroid or The Negative for a frame before it was moved or deleted.
-* Fixed the bug where you could sometimes see the trapdoor on Womb 2 for a frame before it was moved or deleted.
+* Fixed the bug where you could sometimes see the trapdoor on Womb 2 for a frame before it was moved or deleted. (Thanks BMZ_Loop)
 * Fixed the bug where the trapdoor would spawn closed after Isaac and Blue Baby in the "Everything" race goal. (It will now spawn open like it does after Satan.)
 * Fixed the bug where the beam of light that spawns after It Lives! would take a while to activate when reloading the room.
 
