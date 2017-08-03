@@ -2,6 +2,7 @@
 
 ### *v0.8.15* - August 3rd, 2017
 
+* The Racing+ client installer will now work on 32-bit systems. (Thanks missingyes)
 * Fixed the bug where you could take both The Polaroid and The Negative if both spawned. (Thanks Krakenos and CrafterLynx)
 
 ### *v0.8.14* - August 3rd, 2017
