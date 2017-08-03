@@ -43,9 +43,6 @@ function RPPostRender:Main()
   -- Reseed the floor if we have Duality and there is a narrow boss room
   RPPostRender:CheckDualityNarrowRoom()
 
-  -- Reseed the floor if we are playing on a seeded MO ruleset there is a narrow Treasure Room
-  RPPostRender:CheckSeededMONarrowRoom()
-
   -- Draw graphics
   RPSprites:Display()
   RPFastTravel:SpriteDisplay()
@@ -54,7 +51,7 @@ function RPPostRender:Main()
   RPTimer:Display()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DisplayCharSelectRoom()
-  RPPostRender:DisplayVictoryLaps()
+  RPPostRender:DisplayTopLeftText()
 
   -- Ban Basement 1 Treasure Rooms
   RPPostUpdate:CheckBanB1TreasureRoom()
@@ -156,44 +153,6 @@ function RPPostRender:CheckDualityNarrowRoom()
 
           -- Mark to check for a narrow room again on the next frame, just in case
           RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
-        end
-        break
-      end
-    end
-  end
-end
-
--- Reseed the floor if we have a narrow Treasure Room on a seeded MO ruleset
-function RPPostRender:CheckSeededMONarrowRoom()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local rooms = level:GetRooms()
-  local room = game:GetRoom()
-  local isaacFrameCount = Isaac.GetFrameCount()
-
-  if RPGlobals.run.seededMOCheckFrame ~= 0 and isaacFrameCount >= RPGlobals.run.seededMOCheckFrame then
-    RPGlobals.run.seededMOCheckFrame = 0
-
-    -- Check to see if the boss room is narrow
-    for i = 0, rooms.Size - 1 do -- This is 0 indexed
-      local roomData = rooms:Get(i).Data
-      if roomData.Type == RoomType.ROOM_TREASURE then -- 4
-        if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
-           roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
-
-          RPGlobals:ExecuteCommand("reseed")
-          Isaac.DebugString("(narrow Treasure Room detected with seeded MO)")
-
-          -- Respawn the hole
-          if stage ~= 1 then
-            game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
-                       room:GetCenterPos(), Vector(0,0), nil, 0, 0)
-          end
-
-          -- Mark to check for a narrow room again on the next frame, just in case
-          RPGlobals.run.seededMOCheckFrame = isaacFrameCount + 1
         end
         break
       end
@@ -338,12 +297,29 @@ function RPPostRender:CheckSubvertTeleport()
   end
 end
 
-function RPPostRender:DisplayVictoryLaps()
+function RPPostRender:DisplayTopLeftText()
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+  local seedString = seeds:GetStartSeedString()
+  local player = game:GetPlayer(0)
+
+  -- We want to place informational text for the player to the right of the heart containers
+  -- (which will depend on how many heart containers we have)
+  local x = 55 + RPSoulJar:GetHeartXOffset()
+
   if RPGlobals.raceVars.victoryLaps > 0 then
-    -- We want to place the text to the right of the heart containers
-    -- (which will depend on how many heart containers we have)
-    local x = 55 + RPSoulJar:GetHeartXOffset()
+    -- Display the number of victory laps
+    -- (this should have priority over showing the seed)
     Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, 10, 2, 2, 2, 2)
+
+  elseif RPGlobals.raceVars.finished or
+         RPSpeedrun.spawnedCheckpoint or -- This will turn false as soon as the player touches it
+         player:HasCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT) or
+         -- This is so the seed will show as we fade to black
+         RPSpeedrun.finished then
+
+    Isaac.RenderText("Seed: " .. seedString, x, 10, 2, 2, 2, 2)
   end
 end
 

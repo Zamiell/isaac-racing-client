@@ -17,7 +17,6 @@ RPFastClear.familiars = {}
 -- These are reset in the "RPFastClear:InitRun()" function and
 -- the "RPFastClear:CheckNewNPC()" function (upon entering a new room)
 RPFastClear.aliveEnemies = {}
-RPFastClear.aliveSpecialEnemies = {} -- These are enemies that do not fire the death callback
 RPFastClear.aliveEnemiesCount = 0
 RPFastClear.roomInitializing = false -- Set to true in the MC_POST_NEW_ROOM callback
 RPFastClear.delayFrame = 0
@@ -59,7 +58,6 @@ function RPFastClear:InitRun()
   end
 
   RPFastClear.aliveEnemies = {}
-  RPFastClear.aliveSpecialEnemies = {}
   RPFastClear.aliveEnemiesCount = 0
   RPFastClear.buttonsAllPushed = false
   RPFastClear.roomInitializing = false
@@ -68,15 +66,22 @@ end
 
 -- ModCallbacks.MC_NPC_UPDATE (0)
 function RPFastClear:NPCUpdate(npc)
-  -- We can't rely on the MC_NPC_UPDATE callback because it doesn't work for NPCs
-  -- that emerge from splitting enemies like Gapers
+  -- We can't rely on the MC_POST_NPC_INIT callback because it is not fired for certain NPCs
+  -- (like when a Gusher emerges from killing a Gaper)
   RPFastClear:CheckNewNPC(npc)
 end
 
 -- ModCallbacks.MC_POST_NPC_INIT (27)
 function RPFastClear:PostNPCInit(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local index = GetPtrHash(npc)
+
   Isaac.DebugString("MC_POST_NPC_INIT - " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType))
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                    " (index " .. tostring(index) .. ") " ..
+                    " (frame " .. tostring(gameFrameCount) .. ")")
 
   RPFastClear:CheckNewNPC(npc)
 end
@@ -85,26 +90,12 @@ function RPFastClear:CheckNewNPC(npc)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
-  local roomClear = room:IsClear()
   local roomFrameCount = room:GetFrameCount()
 
   -- Don't do anything if we are already tracking this NPC
   -- (we can't use npc.Index for this because it is always 0 in the MC_POST_NPC_INIT callback)
   local index = GetPtrHash(npc)
   if RPFastClear.aliveEnemies[index] ~= nil then
-    return
-  end
-
-  -- We don't care if the room is cleared already
-  -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
-  -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-  if roomClear and
-     npc.Type ~= EntityType.ENTITY_GREED and -- 50
-     npc.Type ~= EntityType.ENTITY_URIEL and -- 271
-     npc.Type ~= EntityType.ENTITY_GABRIEL then -- 272
-
-    -- We want to make an exception for Greed, Uriel, and Gabriel because
-    -- the room can be already cleared when those enemies spawn
     return
   end
 
@@ -119,7 +110,7 @@ function RPFastClear:CheckNewNPC(npc)
     return
   end
 
-  -- We don't care if this is a child NPC attached to some boss
+  -- We don't care if this is a specific child NPC attached to some other NPC
   if RPFastClear:AttachedNPC(npc) then
     return
   end
@@ -137,12 +128,28 @@ function RPFastClear:CheckNewNPC(npc)
     return
   end
 
+  -- There are two separate fast-clear bugs with Rag Man Raglings (246.1)
+  if npc.Type == EntityType.ENTITY_RAGLING and npc.Variant == 1 then -- 246.1
+    -- Rag Man Raglings are bugged such that they are still alive during the death event (for some reason),
+    -- so they will get past the "IsDead()" check above
+    if npc.FrameCount ~= 0 then
+      return
+    end
+
+    -- A new Rag Man Ragling will spawn if the death of a Rag Man Ragling happens to kill Rag Man;
+    -- this prevents fast-clear from working properly, as it will only remove the new Ragling once
+    -- the death animation for Rag Man is over
+    -- To fix this bug, don't bother adding the final Ragling to the "aliveEnemies" table
+    if RPFastClear.aliveEnemiesCount == 0 then
+      return
+    end
+  end
+
   -- If we are entering a new room, flush all of the stuff in the old room
   -- (we can't use the POST_NEW_ROOM callback to handle this since that callback fires after this one)
   -- (roomFrameCount will be at -1 during the initialization phase)
   if roomFrameCount == -1 and RPFastClear.roomInitializing == false then
     RPFastClear.aliveEnemies = {}
-    RPFastClear.aliveSpecialEnemies = {}
     RPFastClear.aliveEnemiesCount = 0
     RPFastClear.roomInitializing = true -- This will get set back to false in the MC_POST_NEW_ROOM callback
     RPFastClear.delayFrame = 0
@@ -156,19 +163,15 @@ function RPFastClear:CheckNewNPC(npc)
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
                     " (index " .. tostring(index) .. "), " ..
                     "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-
-  -- If this is an enemy that doesn't fire a death event, keep track of that too
-  if RPFastClear:NoDeathEventNPC(npc) then
-    RPFastClear.aliveSpecialEnemies[index] = EntityPtr(npc)
-    Isaac.DebugString("(special enemy that doesn't fire a death event)")
-  end
 end
 
 function RPFastClear:AttachedNPC(npc)
   -- These are NPCs that have "CanShutDoors" equal to true naturally by the game,
   -- but shouldn't actually keep the doors closed
-  if (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 10) or -- Peep Eye (68.10)
-     (npc.Type == EntityType.ENTITY_PEEP and npc.Variant == 11) or -- Bloat Eye (68.11)
+  -- (there's no need to add Peep / Bloat eyes since they die on the same frame as Peep / Bloat)
+  if (npc.Type == EntityType.ENTITY_CHARGER and npc.Variant == 0 and npc.Subtype == 1) or -- My Shadow (23.0.1)
+     -- These are the black worms generated by My Shadow; they are similar to charmed enemies,
+     -- but do not actually have the "charmed" flag set, so we don't want to add them to the "aliveEnemies" table
      (npc.Type == EntityType.ENTITY_DEATH and npc.Variant == 10) or -- Death Scythe (66.10)
      (npc.Type == EntityType.ENTITY_BEGOTTEN and npc.Variant == 10) or -- Begotten Chain (251.10)
      (npc.Type == EntityType.ENTITY_MAMA_GURDY and npc.Variant == 1) or -- Mama Gurdy Left Hand (266.1)
@@ -182,50 +185,60 @@ function RPFastClear:AttachedNPC(npc)
   end
 end
 
-function RPFastClear:NoDeathEventNPC(npc)
-  if npc.Type == EntityType.ENTITY_SATAN or -- 84
-     npc.Type == EntityType.ENTITY_DADDYLONGLEGS or -- 101
-     -- Daddy Long Legs (101.0) and Triachnid (101.1)
-     npc.Type == EntityType.ENTITY_PORTAL then -- 306
-
-    return true
-  else
-    return false
-  end
-end
-
--- ModCallbacks.MC_POST_ENTITY_KILL (68)
-function RPFastClear:PostEntityKill(entity)
-
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-  local room = game:GetRoom()
-  local roomClear = room:IsClear()
-
-  -- Disable fast-clear on the "Unseeded (Beginner)" ruleset
-  if RPGlobals.race.rFormat == "unseeded-beginner" then
-    return
-  end
-
+-- ModCallbacks.MC_POST_ENTITY_REMOVE (67)
+function RPFastClear:PostEntityRemove(entity)
   -- We only care about NPCs dying
   local npc = entity:ToNPC()
   if npc == nil then
     return
   end
 
-  Isaac.DebugString("MC_POST_ENTITY_KILL - " ..
-                    tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType))
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local index = GetPtrHash(npc)
 
-  -- We don't care if the room is cleared already
-  -- (the room clear state is always true when fighting in Challenge Rooms and Boss Rushes,
-  -- but we don't want fast-clear to apply to those due to limitations in the Afterbirth+ API)
-  if roomClear then
+  Isaac.DebugString("MC_POST_ENTITY_REMOVE - " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
+                    " (index " .. tostring(index) .. ") " ..
+                    " (frame " .. tostring(gameFrameCount) .. ")")
+
+  -- We can't rely on the MC_POST_ENTITY_KILL callback because it is not fired for certain NPCs
+  -- (like when Daddy Long Legs does a stomp attack or a Portal despawns)
+  RPFastClear:CheckDeadNPC(npc)
+end
+
+-- ModCallbacks.MC_POST_ENTITY_KILL (68)
+-- (we can't use the MC_POST_NPC_DEATH callback because that will only fire once the death animation is finished)
+function RPFastClear:PostEntityKill(entity)
+  -- We only care about NPCs dying
+  local npc = entity:ToNPC()
+  if npc == nil then
     return
   end
 
-  -- We don't care if this is a non-battle NPC
-  if npc.CanShutDoors == false then
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local index = GetPtrHash(npc)
+
+  Isaac.DebugString("MC_POST_ENTITY_KILL - " ..
+                    tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType) ..
+                    " (index " .. tostring(index) .. ") " ..
+                    " (frame " .. tostring(gameFrameCount) .. ")")
+
+  -- We can't rely on the MC_POST_ENTITY_REMOVE callback because it is only fired once the death animation is complete
+  RPFastClear:CheckDeadNPC(npc)
+end
+
+function RPFastClear:CheckDeadNPC(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  -- We only care about entities that are in the aliveEnemies table
+  local index = GetPtrHash(npc)
+  if RPFastClear.aliveEnemies[index] == nil then
     return
   end
 
@@ -240,14 +253,6 @@ function RPFastClear:PostEntityKill(entity)
   end
 
   -- Keep track of the enemies in the room that are alive
-  local index = GetPtrHash(npc)
-  if RPFastClear.aliveEnemies[index] == nil and
-     RPFastClear:AttachedNPC() == false then
-
-    Isaac.DebugString("Error: NPC #" .. tostring(index) .. " died, " ..
-                      "but it wasn't in the \"aliveEnemies\" table.")
-    return
-  end
   RPFastClear.aliveEnemies[index] = nil
   RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
   Isaac.DebugString("Removed NPC " ..
@@ -255,15 +260,10 @@ function RPFastClear:PostEntityKill(entity)
                     " (index " .. tostring(index) .. "), " ..
                     "total: " .. tostring(RPFastClear.aliveEnemiesCount))
 
-  -- Check to see if this was a special enemy
-  if RPFastClear.aliveSpecialEnemies[index] ~= nil then
-    RPFastClear.aliveSpecialEnemies[index] = nil
-  end
-
   -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
   RPFastClear.delayFrame = gameFrameCount + 1
 
-  -- We check every frame to see if the "RPFastClear.aliveEnemiesCount" is set to 0 in MC_POST_UPDATE callback
+  -- We check every frame to see if the "aliveEnemiesCount" variable is set to 0 in MC_POST_UPDATE callback
 end
 
 -- ModCallbacks.MC_POST_UPDATE (1)
@@ -278,21 +278,6 @@ function RPFastClear:PostUpdate()
   -- Disable this on the "Unseeded (Beginner)" ruleset
   if RPGlobals.race.rFormat == "unseeded-beginner" then
     return
-  end
-
-  -- Check to see if any of the special enemies that don't trigger a death event have died
-  for index, value in pairs(RPFastClear.aliveSpecialEnemies) do
-    if RPFastClear.aliveSpecialEnemies[index].Ref == nil then
-      -- This enemy has died because its pointer has disappeared, so remove it
-      RPFastClear.aliveSpecialEnemies[index] = nil
-      RPFastClear.aliveEnemies[index] = nil
-      RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
-      Isaac.DebugString("Removed special NPC (index " .. tostring(index) .. "), " ..
-                        "total: " .. tostring(RPFastClear.aliveEnemiesCount))
-
-      -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
-        RPFastClear.delayFrame = gameFrameCount + 1
-    end
   end
 
   -- If a frame has passed since an enemy died, reset the delay counter

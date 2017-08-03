@@ -169,7 +169,7 @@ exports.raceDraw = function(race) {
     raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     let format = race.ruleset.format.capitalize();
-    if (format === 'Unseeded-beginner') {
+    if (format === 'Unseeded-lite') {
         format = 'Unseeded';
     }
     raceDiv += '<span lang="en">' + format + '</span></td>';

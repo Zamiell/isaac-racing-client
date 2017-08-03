@@ -86,7 +86,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 * 9 Volt synergizes with The Battery.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
-* The pickup delay on reloaded pedestal items is decreased from 0.67 seconds to 0.33 seconds.
+* The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! no longer occurs.
 * Having Duality prevents getting a narrow boss room on floors 2 through 7.
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.

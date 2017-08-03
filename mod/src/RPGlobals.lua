@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.8.13"
+RPGlobals.version = "v0.8.14"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -145,21 +145,22 @@ function RPGlobals:InitRun()
   RPGlobals.run.megaSatanDead         = false
 
   -- Temporary tracking
-  RPGlobals.run.restartFrame         = 0
-  RPGlobals.run.itemReplacementDelay = 0
+  RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
+  RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
-  RPGlobals.run.consoleWindowOpen    = false
+  RPGlobals.run.consoleWindowOpen    = false -- We don't want to do a fast-reset if the console window is open
   RPGlobals.run.droppedButterItem    = 0
-  RPGlobals.run.fastResetFrame       = 0
-  RPGlobals.run.teleportSubverted    = false
-  RPGlobals.run.teleportSubvertScale = Vector(1, 1)
+  RPGlobals.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
+  RPGlobals.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
+  RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
   RPGlobals.run.dualityCheckFrame    = 0
-  RPGlobals.run.seededMOCheckFrame   = 0
   RPGlobals.run.changeFartColor      = false
   RPGlobals.run.replaceBuggedScolex  = 0
   -- Equal to the game frame number with which to replace Scolex, or 0 for disabled
   RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
+  RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
+  RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

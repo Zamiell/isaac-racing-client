@@ -35,6 +35,11 @@ function RPPostUpdate:Main()
   -- (to fix the Greed's Gullet bug and the double coin / nickel healing bug)
   RPPostUpdate:CheckKeeperHearts()
 
+  -- Check on every frame to see if we need to open the doors
+  -- (we can't just add this as a new MC_POST_UPDATE callback because
+  -- it causes a bug where the Womb 2 trapdoor appears for a frame)
+  RPFastClear:PostUpdate()
+
   -- Check for Eden's Soul (to fix the charge bug)
   if activeItem == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
     if RPGlobals.run.edensSoulSet and RPGlobals.run.edensSoulCharges ~= activeCharge then

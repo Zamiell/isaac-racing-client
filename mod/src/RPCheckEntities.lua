@@ -485,73 +485,12 @@ function RPCheckEntities:Entity5_100(entity)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
-  local challenge = Isaac.GetChallenge()
 
   if entity.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
     if RPSpeedrun.spawnedCheckpoint then
+      RPSpeedrun.spawnedCheckpoint = false
       RPSpeedrun:CheckpointTouched()
     end
-
-  elseif entity.SubType == CollectibleType.COLLECTIBLE_POLAROID then -- 327
-    if RPGlobals.race.goal == "The Lamb" and
-       RPGlobals.race.rFormat ~= "pageant" and
-       challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-
-      entity:Remove()
-      Isaac.DebugString("Removed The Polaroid.")
-
-    elseif entity.Position.X >= 270 and entity.Position.X <= 290 and
-           RPGlobals.race.goal ~= "Mega Satan" and
-           RPGlobals.race.goal ~= "Everything" and
-           RPGlobals.race.rFormat ~= "pageant" and
-           challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-
-      -- Reposition it to the center
-      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
-                 entity.Parent, entity.SubType, entity.InitSeed)
-      -- (respawn it with the initial seed so that it will be replaced normally on the next frame)
-      entity:Remove()
-      Isaac.DebugString("Moved The Polaroid.")
-    end
-
-  elseif entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
-    if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-      -- Check to see if this is a Negative sitting in the center of the room
-      -- (spawned naturally by the challenge)
-      if entity.Position.X >= 310 and entity.Position.X <= 330 then
-        -- Move The Negative to the right side
-        local negative = game:Spawn(entity.Type, entity.Variant, Vector(360, 360), Vector(0, 0),
-                   entity.Parent, entity.SubType, entity.InitSeed)
-        negative:ToPickup().TheresOptionsPickup = true
-        entity:Remove()
-
-        -- Spawn The Polaroid (5.100.327) on the left side
-        local polaroid = game:Spawn(entity.Type, entity.Variant, Vector(280, 360), Vector(0, 0),
-                                    entity.Parent, CollectibleType.COLLECTIBLE_POLAROID, entity.InitSeed)
-        polaroid:ToPickup().TheresOptionsPickup = true
-
-        Isaac.DebugString("Spawned The Polaroid and Moved The Negative for a custom speedrun to the Dark Room.")
-      end
-
-    elseif RPGlobals.race.goal == "Blue Baby" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      entity:Remove()
-      Isaac.DebugString("Removed The Negative.")
-
-    elseif entity.Position.X >= 350 and entity.Position.X <= 370 and
-           RPGlobals.race.goal ~= "Mega Satan" and
-           RPGlobals.race.goal ~= "Everything" and
-           RPGlobals.race.rFormat ~= "pageant" then
-
-      -- Reposition it to the center
-      game:Spawn(entity.Type, entity.Variant, Vector(320, 360), Vector(0, 0),
-                 entity.Parent, entity.SubType, entity.InitSeed)
-      -- (respawn it with the initial seed so that it will be replaced normally on the frame)
-      entity:Remove()
-      Isaac.DebugString("Moved The Negative.")
-    end
-
   elseif gameFrameCount >= RPGlobals.run.itemReplacementDelay then
     -- We need to delay after using a Void (in case the player has consumed a D6)
     RPCheckEntities:ReplacePedestal(entity)
@@ -677,10 +616,10 @@ function RPCheckEntities:Entity1000(entity)
 end
 
 -- Fix seed "incrementation" from touching active pedestal items and do other various pedestal fixes
--- (this also fixes Angel key pieces and Pandora's Box items being unseeded)
 function RPCheckEntities:ReplacePedestal(entity)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
@@ -827,15 +766,13 @@ function RPCheckEntities:ReplacePedestal(entity)
   local big4Reroll = false
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
-     RPGlobals.race.rFormat == "unseeded-beginner" then
+     RPGlobals.race.rFormat == "unseeded-beginner" and
+     (entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE or -- 114
+      entity.SubType == CollectibleType.COLLECTIBLE_IPECAC or -- 149
+      entity.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS or -- 168
+      entity.SubType == CollectibleType.COLLECTIBLE_TECH_X) then -- 395
 
-    if entity.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE or -- 114
-       entity.SubType == CollectibleType.COLLECTIBLE_IPECAC or -- 149
-       entity.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS or -- 168
-       entity.SubType == CollectibleType.COLLECTIBLE_TECH_X then -- 395
-
-      big4Reroll = true
-    end
+    big4Reroll = true
   end
 
   -- Check to see if this item should go into a Schoolbag
@@ -875,12 +812,21 @@ function RPCheckEntities:ReplacePedestal(entity)
     -- (the new random item generated will automatically be decremented from item pools properly on sight)
     newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
                              entity.Velocity, entity.Parent, 0, newSeed)
+    randomItem = true -- We need to set this so that banned items don't reroll into other banned items
 
     -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
     game:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
     Isaac.DebugString("Rerolled a big 4 item: " .. tostring(entity.SubType))
 
   else
+    -- Code in the MC_POST_PICKUP_SELECTION callback will prevent The Polaroid or The Negative from spawning,
+    -- so let it know that we are explicitly spawning it using Lua code
+    if entity.SubType == CollectibleType.COLLECTIBLE_POLAROID or -- 327
+       entity.SubType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
+
+      RPGlobals.run.spawningPhoto = true
+    end
+
     -- Make a new copy of this item
     newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, entity.Position,
                              entity.Velocity, entity.Parent, entity.SubType, newSeed)
@@ -889,8 +835,8 @@ function RPCheckEntities:ReplacePedestal(entity)
     -- (the sprites of the two items will obviously be identical)
     -- We don't need to add this item to the ban list because since it already existed, it was properly
     -- decremented from the pools on sight
-    Isaac.DebugString("Made a copied " .. tostring(newPedestal.SubType) ..
-                      " pedestal using seed: " .. tostring(newSeed))
+    Isaac.DebugString("Made a copied " .. tostring(entity.SubType) ..
+                      " pedestal using seed " .. tostring(newSeed) .. " (on frame " .. tostring(gameFrameCount) .. ").")
   end
 
   -- We don't want to replicate the charge if this is a brand new item
@@ -917,7 +863,7 @@ function RPCheckEntities:ReplacePedestal(entity)
   --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
 
   -- Add it to the tracking table so that we don't replace it again
-  -- (don't add random items to the index in case a banned item rolls into another banned item)
+  -- (and don't add random items to the index in case a banned item rolls into another banned item)
   if randomItem == false then
     RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
       room = roomIndex,
@@ -925,6 +871,7 @@ function RPCheckEntities:ReplacePedestal(entity)
       Y    = entity.Position.Y,
       seed = newSeed,
     }
+
     --[[
     Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
                       tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..

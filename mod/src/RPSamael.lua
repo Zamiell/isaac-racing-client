@@ -10,6 +10,7 @@ local RPSchoolbag = require("src/rpschoolbag")
 ----Samael Character Mod---
 --Version 1.6
 --By Ghostbroster
+-- (heavily modified by Zamiel for Racing+ and to pass the linter)
 
 --Settings
 --local wraithModeKey = Keyboard.KEY_F --Which keyboard key activates wraith mode

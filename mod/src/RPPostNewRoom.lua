@@ -368,8 +368,12 @@ function RPPostNewRoom:CheckDepthsPuzzle()
         gridEntity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
-        -- Add a rock
-        Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, gridEntity.Position, true) -- 17
+        -- Originally, we would add a rock here with:
+        --Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, gridEntity.Position, true) -- 17
+        -- However, this results in invisible collision persisting after the rock is killed
+        -- This bug can probably be subverted by waiting a frame for the spikes to fully despawn,
+        -- but then having rocks spawn "out of nowhere" would look glitchy,
+        -- so just remove the spikes and don't do anything else
         Isaac.DebugString("Removed spikes from the Dank Depths bomb puzzle room.")
       end
     end

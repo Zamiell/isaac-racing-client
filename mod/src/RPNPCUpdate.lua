@@ -4,7 +4,7 @@ local RPNPCUpdate = {}
 -- Includes
 --
 
-local RPGlobals   = require("src/rpglobals")
+local RPGlobals = require("src/rpglobals")
 
 --
 -- Functions

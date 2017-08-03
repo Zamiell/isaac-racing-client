@@ -402,8 +402,8 @@ const show = function(raceID) {
             formatTooltipContent += '<strong><span lang="en">Diversity</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
             formatTooltipContent += '<span lang="en">All players will start with the same five items.</span>';
-        } else if (format === 'unseeded-beginner') {
-            formatTooltipContent += '<strong><span lang="en">Unseeded (Beginner)</span>:</strong><br />';
+        } else if (format === 'unseeded-lite') {
+            formatTooltipContent += '<strong><span lang="en">Unseeded (Lite)</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
             formatTooltipContent += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span><br />';
             formatTooltipContent += '<span lang="en">Extra changes will also be in effect; see the Racing+ website for details.</span>';

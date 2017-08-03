@@ -1,8 +1,12 @@
 <entities anm2root="gfx/" version="5">
-	<!-- Custom effects take variants past 200 -->
+	<entity name="Invisible Pickup" id="5" variant="500" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	</entity>
 
-	<!-- Fast-travel entities -->
+	<!-- Custom effects take variants past 200 -->
+	<!-- All of these are used for fast-travel -->
 	<!-- (we want them as effects because we don't want the smoke to appear when they are spawned) -->
+	<!-- (another advantage of this is "debug 10" doesn't kill effects) -->
 	<entity name="Trapdoor (Fast-Travel)" id="1000" variant="201" anm2path="grid/door_11_trapdoor.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
@@ -31,7 +35,7 @@
 	</entity>
 	<entity name="Room Clear Delay NPC" id="1002" variant="0" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
-	</entity><!-- Effects don't work to stop room clear in the Mega Satan room for some reason -->
+	</entity><!-- Effects don't work to stop room clear for some reason; this will be killed with "debug 10" -->
 
 	<!-- Samael -->
     <entity name="Samael Scythe" anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">

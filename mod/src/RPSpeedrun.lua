@@ -93,6 +93,7 @@ function RPSpeedrun:Init()
   local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
+  local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
 
   -- Reset some per-run variables
@@ -116,6 +117,11 @@ function RPSpeedrun:Init()
     -- Make sure that some speedrun related variables are reset
     RPSpeedrun.charNum = 1
     RPSpeedrun.fastReset = false
+
+    -- Max out Isaac's speed
+    player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
+    player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
+    player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BELT)) -- 28
 
     -- Go to the "Change Char Order" room
     Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
@@ -380,8 +386,6 @@ function RPSpeedrun:CheckpointTouched()
   local game = Game()
   local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
-
-  RPSpeedrun.spawnedCheckpoint = false
 
   -- Give them the Checkpoint custom item
   -- (this is used by the AutoSplitter to know when to split)

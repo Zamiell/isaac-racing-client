@@ -6,6 +6,8 @@
 --[[
 
 TODO:
+- add seed to the end of the run
+
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -26,23 +28,25 @@ TODO CAN'T FIX:
 local RacingPlus = RegisterMod("Racing+", 1)
 
 -- The Lua code is split up into separate files for organizational purposes
-local RPGlobals         = require("src/rpglobals") -- Global variables
-local RPNPCUpdate       = require("src/rpnpcupdate") -- The NPCUpdate callback (0)
-local RPPostUpdate      = require("src/rppostupdate") -- The PostUpdate callback (1)
-local RPPostRender      = require("src/rppostrender") -- The PostRender callback (2)
-local RPEvaluateCache   = require("src/rpevaluatecache") -- The EvaluateCache callback (8)
-local RPPostPlayerInit  = require("src/rppostplayerinit") -- The PostPlayerInit callback (9)
-local RPEntityTakeDmg   = require("src/rpentitytakedmg") -- The EntityTakeDmg callback (11)
-local RPInputAction     = require("src/rpinputaction") -- The InputAction callback (13)
-local RPPostGameStarted = require("src/rppostgamestarted") -- The PostGameStarted callback (15)
-local RPPostNewLevel    = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
-local RPPostNewRoom     = require("src/rppostnewroom") -- The PostNewRoom callback (19)
-local RPItems           = require("src/rpitems") -- Collectible item functions
-local RPCards           = require("src/rpcards") -- Card functions
-local RPPills           = require("src/rppills") -- Pill functions
-local RPFastClear       = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
-local SamaelMod         = require("src/rpsamael") -- Samael functions
-local RPDebug           = require("src/rpdebug") -- Debug functions
+local RPGlobals             = require("src/rpglobals") -- Global variables
+local RPNPCUpdate           = require("src/rpnpcupdate") -- The NPCUpdate callback (0)
+local RPPostUpdate          = require("src/rppostupdate") -- The PostUpdate callback (1)
+local RPPostRender          = require("src/rppostrender") -- The PostRender callback (2)
+local RPEvaluateCache       = require("src/rpevaluatecache") -- The EvaluateCache callback (8)
+local RPPostPlayerInit      = require("src/rppostplayerinit") -- The PostPlayerInit callback (9)
+local RPEntityTakeDmg       = require("src/rpentitytakedmg") -- The EntityTakeDmg callback (11)
+local RPInputAction         = require("src/rpinputaction") -- The InputAction callback (13)
+local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameStarted callback (15)
+local RPPostNewLevel        = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
+local RPPostNewRoom         = require("src/rppostnewroom") -- The PostNewRoom callback (19)
+local RPPostNPCDeath        = require("src/rppostnpcdeath") -- The RPPostNPCDeath callback (29)
+local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
+local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
+local RPCards               = require("src/rpcards") -- Card callbacks (5)
+local RPPills               = require("src/rppills") -- Pill callbacks (10)
+local RPFastClear           = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
+local RPSamael              = require("src/rpsamael") -- Samael functions
+local RPDebug               = require("src/rpdebug") -- Debug functions
 
 -- Initiailize the "RPGlobals.run" table
 RPGlobals:InitRun()
@@ -53,14 +57,14 @@ RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" 
 -- Define NPC callbacks (0)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.Main) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPCUpdate) -- 0
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24, EntityType.ENTITY_GLOBIN) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27, EntityType.ENTITY_HOST) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27, EntityType.ENTITY_MOBILE_HOST) -- 204
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42, EntityType.ENTITY_STONEHEAD) -- 42
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42, EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42, EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42, EntityType.ENTITY_GAPING_MAW) -- 235
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42, EntityType.ENTITY_BROKEN_GAPING_MAW) -- 236
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24,  EntityType.ENTITY_GLOBIN) -- 24
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_HOST) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_MOBILE_HOST) -- 204
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_STONEHEAD) -- 42
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_GAPING_MAW) -- 235
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_BROKEN_GAPING_MAW) -- 236
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityType.ENTITY_MOMS_HAND) -- 213
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_WIZOOB) -- 219
@@ -70,18 +74,20 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC275, EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC300, EntityType.ENTITY_MUSHROOM) -- 300
 
 -- Define miscellaneous callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPPostUpdate.Main) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPFastClear.PostUpdate) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       RPPostRender.Main) -- 2
-RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPEvaluateCache.Main) -- 8
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPPostPlayerInit.Main) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPEntityTakeDmg.Main) -- 11
-RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,      RPInputAction.Main) -- 13
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPPostGameStarted.Main) -- 15
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,    RPPostNewLevel.Main) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     RPPostNewRoom.Main) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,     RPFastClear.PostNPCInit) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,  RPFastClear.PostEntityKill) -- 68
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           RPPostUpdate.Main) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           RPPostRender.Main) -- 2
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        RPEvaluateCache.Main) -- 8
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      RPPostPlayerInit.Main) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       RPEntityTakeDmg.Main) -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          RPInputAction.Main) -- 13
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     RPPostGameStarted.Main) -- 15
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Main) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPFastClear.PostNPCInit) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_DEATH,        RPPostNPCDeath.NPC45, EntityType.ENTITY_MOM) -- 29 / 45
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPFastClear.PostEntityKill) -- 68
 
 -- Define pre-use item callback (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,
@@ -123,20 +129,20 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.P
 local wraithItem  = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
 local scytheID    = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
 local specialAnim = Isaac.GetEntityTypeByName("Samael Special Animations") --Entity for showing special animations
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D4)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          SamaelMod.postReroll, CollectibleType.COLLECTIBLE_D100)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          SamaelMod.activateWraith, wraithItem)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       SamaelMod.roomEntitiesLoop)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       SamaelMod.samaelPostUpdate)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        SamaelMod.scytheUpdate, scytheID)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        SamaelMod.specialAnimFunc, specialAnim)
-RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   SamaelMod.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER)
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   SamaelMod.scytheHits)
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   SamaelMod.playerDamage, EntityType.ENTITY_PLAYER)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  SamaelMod.PostPlayerInit)
-RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    SamaelMod.cacheUpdate)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, SamaelMod.PostGameStartedReset)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       SamaelMod.PostUpdateFixBugs)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D4)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D100)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.activateWraith, wraithItem)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.roomEntitiesLoop)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.samaelPostUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate, scytheID)
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFunc, specialAnim)
+RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   RPSamael.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.scytheHits)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.playerDamage, EntityType.ENTITY_PLAYER)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPSamael.PostPlayerInit)
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPSamael.cacheUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPSamael.PostGameStartedReset)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs)
 
 -- Welcome banner
 local hyphens = ''

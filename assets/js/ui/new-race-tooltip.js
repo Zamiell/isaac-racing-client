@@ -60,7 +60,7 @@ $(document).ready(function() {
             newCharacter = 'Judas';
         } else if (newFormat === 'diversity') {
             newCharacter = 'Judas';
-        } else if (newFormat === 'unseeded-beginner') {
+        } else if (newFormat === 'unseeded-lite') {
             newCharacter = 'Judas';
         } else if (newFormat === 'custom') {
             // The custom format has no default character, so don't change anything

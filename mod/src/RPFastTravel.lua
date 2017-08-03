@@ -32,7 +32,6 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -125,9 +124,8 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   }
 
   -- Always spawn the trapdoor closed, unless it is after Satan in Sheol
-  if stage ~= 10 or stageType ~= 0 or -- Sheol
-     roomType ~= RoomType.ROOM_BOSS then -- 5
-
+  -- (or after a boss in the "Everything" race goal)
+  if stage ~= 10 and stage ~= 11 then
     trapdoor:ToEffect().State = 1
     trapdoor:GetSprite():Play("Closed", true)
   end
@@ -378,11 +376,13 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
       (upwards and stage == 8 and entity.FrameCount >= 40 and entity.InitSeed ~= 0) or
       -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
       -- (we initially spawn it with an InitSeed equal to the room seed)
-      (upwards and stage == 8 and entity.FrameCount >= 16 and entity.InitSeed == 0) or
+      (upwards and stage == 8 and entity.FrameCount >= 8 and entity.InitSeed == 0) or
       -- The extra delay should not apply if they are re-entering the room
       -- (we respawn beams of light with an InitSeed of 0)
-      (upwards and stage ~= 8 and entity.FrameCount >= 16)) and
-      -- The beam of light opening animation is 16 frames long
+      (upwards and stage ~= 8 and entity.FrameCount >= 8)) and
+      -- The beam of light opening animation is 16 frames long,
+      -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
+      -- (and the minimum for this is 8 frames, determined from trial and error)
      RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) and
      player:IsHoldingItem() == false then
 
@@ -642,14 +642,6 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
 
       -- It takes a frame to load the new stage
       RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
-    end
-
-    -- Mark to check for a narrow treasure room (if we are on the seeded MO ruleset)
-    -- (we only care about checking on floors 2 through 6)
-    if RPGlobals.race.rFormat == "seededMO" and
-      nextStage >= 2 and nextStage <= 6 then
-
-      RPGlobals.run.seededMOcheckFrame = isaacFrameCount + 1
     end
   end
 

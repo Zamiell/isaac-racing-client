@@ -76,7 +76,8 @@ function RPDebug:Main()
   -- Test stuff
   --
 
-  RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+  --RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
+  RPGlobals.raceVars.finished = true
 
   --
   -- End test stuff
