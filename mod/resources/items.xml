@@ -1,6 +1,16 @@
+<!--
+
+Changes:
+- Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
+- Removed the "special" tag from all items
+- Renamed "Betrayal" to "Betrayal (Animation)"
+- Disabled the "Karma" trinket
+
+-->
+
 <items gfxroot="gfx/items/" version="1">
 	<passive cache="firedelay" description="Tears up" gfx="Collectibles_001_TheSadOnion.png" id="1" name="The Sad Onion" />
-	<passive cache="damage firedelay" description="Triple shot" gfx="Collectibles_002_TheInnerEye.png" id="2" name="The Inner Eye" />
+	<passive cache="firedelay damage" description="Triple shot" gfx="Collectibles_002_TheInnerEye.png" id="2" name="The Inner Eye" />
 	<passive cache="speed tearcolor tearflag" description="Homing shots" gfx="Collectibles_003_SpoonBender.png" id="3" name="Spoon Bender" />
 	<passive cache="damage shotspeed" description="DMG up" gfx="Collectibles_004_CricketsHead.png" id="4" name="Cricket's Head" />
 	<passive cache="tearflag shotspeed range" description="Boomerang tears" gfx="Collectibles_005_MyReflection.png" id="5" name="My Reflection" />
@@ -95,7 +105,7 @@
 	<familiar achievement="21" description="Gives money" gfx="Collectibles_094_SackOfPennies.png" id="94" name="Sack of Pennies" />
 	<familiar description="Friends 'till the bbbbzzzt" gfx="Collectibles_095_RoboBaby.png" id="95" name="Robo-Baby" />
 	<familiar achievement="25" description="Gives kisses" gfx="Collectibles_096_LittleChad.png" id="96" name="Little C.H.A.D." />
-	<active achievement="22" description="Reusable item generator" gfx="Collectibles_097_BookOfSin.png" id="97" maxcharges="4" name="The Book of Sin (Unseeded)" />
+	<active achievement="22" description="Reusable item generator" gfx="Collectibles_097_BookOfSin.png" id="97" maxcharges="4" name="The Book of Sin" />
 	<familiar achievement="20" description="Soul generator" gfx="Collectibles_098_TheRelic.png" id="98" name="The Relic" />
 	<familiar achievement="23" description="Sticky friend" gfx="Collectibles_099_LittleGish.png" id="99" name="Little Gish" />
 	<familiar achievement="24" description="Psychic friend" gfx="Collectibles_100_LittleSteve.png" id="100" name="Little Steven" />
@@ -151,7 +161,7 @@
 	<passive description="Tooth shot" gfx="Collectibles_150_ToughLove.png" id="150" name="Tough Love" />
 	<passive cache="tearflag" description="They grow inside" gfx="Collectibles_151_TheMulligan.png" id="151" name="The Mulligan" />
 	<passive cache="weapon damage" description="Laser" gfx="Collectibles_152_Technology2.png" id="152" name="Technology 2" />
-	<passive cache="damage firedelay" description="Quad shot" gfx="Collectibles_153_MutantSpider.png" id="153" name="Mutant Spider" />
+	<passive cache="firedelay damage" description="Quad shot" gfx="Collectibles_153_MutantSpider.png" id="153" name="Mutant Spider" />
 	<passive cache="damage" description="DMG up" gfx="Collectibles_154_ChemicalPeel.png" id="154" name="Chemical Peel" />
 	<familiar description="Plop!" gfx="Collectibles_155_ThePeeper.png" id="155" name="The Peeper" />
 	<passive description="Item martyr" gfx="Collectibles_156_Habit.png" id="156" name="Habit" />

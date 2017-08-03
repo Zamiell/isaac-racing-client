@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.8.20* - August 3rd, 2017
+
+* Fixed the bug where the Booster Pack #3 items were not in any item pools. (Thanks Flaw98)
+
 ### *v0.8.15* - August 3rd, 2017
 
 * The Racing+ client installer will now work on 32-bit systems. (Thanks missingyes)
