@@ -2,17 +2,15 @@
     Lobby screen
 */
 
-'use strict';
-
 // Imports
-const shell      = nodeRequire('electron').shell;
-const globals    = nodeRequire('./assets/js/globals');
-const misc       = nodeRequire('./assets/js/misc');
-const chat       = nodeRequire('./assets/js/chat');
+const shell = nodeRequire('electron').shell;
+const globals = nodeRequire('./assets/js/globals');
+const misc = nodeRequire('./assets/js/misc');
+const chat = nodeRequire('./assets/js/chat');
 const logWatcher = nodeRequire('./assets/js/log-watcher');
-const isaac      = nodeRequire('./assets/js/isaac');
-const modLoader  = nodeRequire('./assets/js/mod-loader');
-const header     = nodeRequire('./assets/js/ui/header');
+const isaac = nodeRequire('./assets/js/isaac');
+const modLoader = nodeRequire('./assets/js/mod-loader');
+const header = nodeRequire('./assets/js/ui/header');
 
 /*
     Event handlers
@@ -369,7 +367,7 @@ exports.usersDraw = function() {
 
     function userTooltipChange(username) {
         $('#user-click-profile').click(function() {
-            let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profile/' + username;
+            const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/profile/' + username;
             shell.openExternal(url);
         });
         $('#user-click-private-message').click(function() {

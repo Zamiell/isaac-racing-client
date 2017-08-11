@@ -2,16 +2,13 @@
     Header buttons
 */
 
-'use strict';
-
 // Imports
-const ipcRenderer     = nodeRequire('electron').ipcRenderer;
-const shell           = nodeRequire('electron').shell;
-const globals         = nodeRequire('./assets/js/globals');
-const misc            = nodeRequire('./assets/js/misc');
-const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const shell = nodeRequire('electron').shell;
+const globals = nodeRequire('./assets/js/globals');
+const lobbyScreen = nodeRequire('./assets/js/ui/lobby');
 const settingsTooltip = nodeRequire('./assets/js/ui/settings-tooltip');
-const newRaceTooltip  = nodeRequire('./assets/js/ui/new-race-tooltip');
+const newRaceTooltip = nodeRequire('./assets/js/ui/new-race-tooltip');
 
 /*
     Header event handlers
@@ -39,17 +36,17 @@ $(document).ready(function() {
     */
 
     $('#header-profile').click(function() {
-        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/profile/' + globals.myUsername;
+        const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/profile/' + globals.myUsername;
         shell.openExternal(url);
     });
 
     $('#header-leaderboards').click(function() {
-        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/leaderboards';
+        const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/leaderboards';
         shell.openExternal(url);
     });
 
     $('#header-help').click(function() {
-        let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/info';
+        const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/info';
         shell.openExternal(url);
     });
 

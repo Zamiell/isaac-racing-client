@@ -2,12 +2,10 @@
     Register screen
 */
 
-'use strict';
-
 // Imports
-const globals     = nodeRequire('./assets/js/globals');
-const misc        = nodeRequire('./assets/js/misc');
-const websocket   = nodeRequire('./assets/js/websocket');
+const globals = nodeRequire('./assets/js/globals');
+const misc = nodeRequire('./assets/js/misc');
+const websocket = nodeRequire('./assets/js/websocket');
 
 /*
     Event handlers
@@ -73,7 +71,7 @@ function register(username) {
         ticket:   globals.steam.ticket, // This will be verified on the server via the Steam web API
         username: username,             // Our desired screen name that will be visible to other racers
     };
-    let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/register';
+    let url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/register';
     let request = $.ajax({
         url:  url,
         type: 'POST',

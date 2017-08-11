@@ -2,30 +2,27 @@
     Websocket handling
 */
 
-'use strict';
-
 // Imports
-const ipcRenderer    = nodeRequire('electron').ipcRenderer;
-const isDev          = nodeRequire('electron-is-dev');
-const golem          = nodeRequire('./assets/js/lib/golem');
-const globals        = nodeRequire('./assets/js/globals');
-const settings       = nodeRequire('./assets/js/settings');
-const chat           = nodeRequire('./assets/js/chat');
-const misc           = nodeRequire('./assets/js/misc');
-const modLoader      = nodeRequire('./assets/js/mod-loader');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const isDev = nodeRequire('electron-is-dev');
+const golem = nodeRequire('./assets/js/lib/golem');
+const globals = nodeRequire('./assets/js/globals');
+const chat = nodeRequire('./assets/js/chat');
+const misc = nodeRequire('./assets/js/misc');
+const modLoader = nodeRequire('./assets/js/mod-loader');
 const registerScreen = nodeRequire('./assets/js/ui/register');
-const lobbyScreen    = nodeRequire('./assets/js/ui/lobby');
-const raceScreen     = nodeRequire('./assets/js/ui/race');
-const discordEmotes  = nodeRequire('./assets/data/discord-emotes');
+const lobbyScreen = nodeRequire('./assets/js/ui/lobby');
+const raceScreen = nodeRequire('./assets/js/ui/race');
+const discordEmotes = nodeRequire('./assets/data/discord-emotes');
 
 exports.init = function(username, password, remember) {
     // We have successfully authenticated with the server, so we no longer need the Greenworks process open
     ipcRenderer.send('asynchronous-message', 'steamExit');
 
     // Establish a WebSocket connection
-    let url = 'ws' + (globals.secure ? 's' : '') + '://' + globals.domain + '/ws';
+    const url = 'ws' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/ws';
     globals.conn = new golem.Connection(url, isDev); // It will automatically use the cookie that we recieved earlier
-                                                     // If the second argument is true, debugging is turned on
+    // If the second argument is true, debugging is turned on
     globals.log.info('Establishing WebSocket connection to:', url);
 
     /*

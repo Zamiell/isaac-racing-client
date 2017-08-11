@@ -2,14 +2,12 @@
     Steam functions (and automatic login)
 */
 
-'use strict';
-
 // Imports
-const ipcRenderer    = nodeRequire('electron').ipcRenderer;
-const isDev          = nodeRequire('electron-is-dev');
-const globals        = nodeRequire('./assets/js/globals');
-const misc           = nodeRequire('./assets/js/misc');
-const websocket      = nodeRequire('./assets/js/websocket');
+const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const isDev = nodeRequire('electron-is-dev');
+const globals = nodeRequire('./assets/js/globals');
+const misc = nodeRequire('./assets/js/misc');
+const websocket = nodeRequire('./assets/js/websocket');
 const registerScreen = nodeRequire('./assets/js/ui/register');
 
 // Check to see if Steam is running on startup
@@ -36,7 +34,7 @@ $(document).ready(function() {
         });
 
         // Automatically log in with account #1
-        //$('#title-choose-1').click();
+        // $('#title-choose-1').click();
     } else {
         // Tell the main process to start the child process that will initialize Greenworks
         // That process will get our Steam ID, Steam screen name, and authentication ticket
@@ -52,19 +50,16 @@ const steam = function(event, message) {
         globals.steam.screenName = message.screenName;
         globals.steam.ticket = message.ticket;
         login();
-
     } else if (message === 'errorInit' ||
         message.startsWith('error: Error: channel closed') ||
         message.startsWith('error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')) {
 
         // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
         misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
-
     } else if (message.startsWith('error: ')) {
         // This is some other uncommon error
         let error = message.match(/error: (.+)/)[1];
         misc.errorShow(error);
-
     } else {
         // The child process is sending us a message to log
         globals.log.info('Steam child message: ' + message);
@@ -139,11 +134,11 @@ function login() {
         steamID: globals.steam.id,
         ticket:  globals.steam.ticket, // This will be verified on the server via the Steam web API
     };
-    let url = 'http' + (globals.secure ? 's' : '') + '://' + globals.domain + '/login';
-    let request = $.ajax({
-        url:  url,
+    const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/login';
+    const request = $.ajax({
+        url,
         type: 'POST',
-        data: data,
+        data,
     });
     request.done(function(data) {
         data = data.trim();
@@ -178,7 +173,7 @@ function loginDebug(account) {
         // Normal login
         ipcRenderer.send('asynchronous-message', 'steam', account);
     } else {
-        globals.steam.id = "-" + account;
+        globals.steam.id = '-' + account;
         globals.steam.screenName = 'TestAccount' + account;
         globals.steam.ticket = 'debug';
         login();
