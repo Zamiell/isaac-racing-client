@@ -2,20 +2,11 @@
     Miscellaneous functions
 */
 
-'use strict';
-
 // Imports
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const fs          = nodeRequire('fs-extra');
-const globals     = nodeRequire('./assets/js/globals');
-const settings    = nodeRequire('./assets/js/settings');
-const debug       = nodeRequire('./assets/js/debug');
-
-exports.debug = function() {
-    // The "/debug" command
-    globals.log.info('Entering debug function.');
-    debug();
-};
+const fs = nodeRequire('fs-extra');
+const globals = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
 
 // Create a custom error type so that the Raven dataCallback knows not to go back to the errorShow function
 // The new error object will prototypically inherit from the Error constructor

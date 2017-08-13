@@ -104,6 +104,7 @@ if args.skipmod == False:
     mod_dir2 = 'mod'
     if os.path.exists(mod_dir2):
         try:
+            time.sleep(1) # This is try and mitigate "The directory is not empty" errors
             shutil.rmtree(mod_dir2)
             time.sleep(1) # This is necessary or else we get "ACCESS DENIED" errors for some reason
         except Exception as e:

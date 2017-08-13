@@ -203,7 +203,7 @@ exports.init = (username, password, remember) => {
         }
     });
 
-    globals.conn.on('roomHistory', function(data) {
+    globals.conn.on('roomHistory', (data) => {
         // Figure out what kind of chat room this is
         let destination;
         if (data.room === 'lobby') {
@@ -213,7 +213,7 @@ exports.init = (username, password, remember) => {
         }
 
         // Empty the existing chat room, since there might still be some chat in there from a previous race or session
-        $('#' + destination + '-chat-text').html('');
+        $(`#${destination}-chat-text`).html('');
 
         // Add all of the chat
         for (let i = 0; i < data.history.length; i++) {

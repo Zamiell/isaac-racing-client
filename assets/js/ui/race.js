@@ -681,7 +681,6 @@ function placeMidRecalculateAll() {
                 racer.placeMid += 1;
             } else if (
                 racer2.floorNum === racer.floorNum &&
-                racer2.stageType === racer.stageType &&
                 racer2.datetimeArrivedFloor < racer.floorArrived
             ) {
                 racer.placeMid += 1;

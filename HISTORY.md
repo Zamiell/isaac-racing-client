@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.9.2* - August 14th, 2017
+
+* Mid-race placements will now work in races with over 10 people in them.
+
 ### *v0.9.0* - August 13th, 2017
 
 * The server has been rewritten mostly from scratch in an attempt to fix the deadlocking issue that was causing it to crash every once in a while. This process took around 60 hours over the past week, with around 7500 new lines of code.
@@ -12,7 +16,7 @@
   * All room shapes are preserved with the exception of L rooms, which are flipped accordingly.
   * Since the probabilities of getting each individual room are the same (discounting entrances), there are no general strategical implications of this change.
     * One small exception is that instead of there being only 3 types of top-left L-rooms in The Chest, there are now 12.
-    * Another small exception is that the trapdoor room on the Caves/Catacombs and Depths/Necropolis is flipped, so you can get it from the bottom now instead of only from the top.
+    * Another small exception is that the trapdoor room on the Caves/Catacombs/Depths/Necropolis is flipped, so you can get it from the bottom now instead of only from the top.
   * An enormous thanks goes to Chronometrics for this, as he designed the custom code that allowed this to be programatically done.
 * The server will no longer send messages to your Twitch chat if your client is closed.
 * In the client, the "Custom" character is now replaced with "Samael" and shows a graphic for him.
