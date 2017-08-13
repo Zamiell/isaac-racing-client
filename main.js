@@ -48,7 +48,8 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // 5) mod/resources/gfx/items3/..
 
 // Imports
-const electron = require('electron');
+const electron = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
+// The "electron" package is only allowed to be in the devDependencies section
 const autoUpdater = require('electron-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
 const execFile = require('child_process').execFile;
