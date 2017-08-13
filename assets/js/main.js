@@ -6,6 +6,12 @@
 
 /*
 
+New TODO:
+- fix captain not being bolded on race left
+- fix panic that happens when 30 min timeout is hit
+- report panics to sentry!
+- fix /races
+
 Bugs to fix:
 - rewrite twitch servern mod check system so that it doesn't spam
 - set timer to 3 hours once you can see how long each race has been going for from the lobby
@@ -74,15 +80,13 @@ Bugs to fix (low priority):
 
 */
 
-'use strict';
-
 // Import NPM packages
-const path     = nodeRequire('path');
+const path = nodeRequire('path');
 const execSync = nodeRequire('child_process').execSync;
-const remote   = nodeRequire('electron').remote;
-const isDev    = nodeRequire('electron-is-dev');
-const fs       = nodeRequire('fs-extra');
-const tracer   = nodeRequire('tracer');
+const remote = nodeRequire('electron').remote;
+const isDev = nodeRequire('electron-is-dev');
+const fs = nodeRequire('fs-extra');
+const tracer = nodeRequire('tracer');
 
 // Import local modules
 const globals         = nodeRequire('./assets/js/globals');

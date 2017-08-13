@@ -647,26 +647,34 @@ exports.participantsSetStatus = participantsSetStatus;
 
 // Recalculate everyone's mid-race places
 function placeMidRecalculateAll() {
+    // Local variables
+    const race = globals.raceList[globals.currentRaceID];
+
     // Get the place that someone would be if they finished the race right now
     let currentPlace = 0;
-    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        if (globals.raceList[globals.currentRaceID].racerList[i].place > currentPlace) {
-            currentPlace = globals.raceList[globals.currentRaceID].racerList[i].place;
+    for (let i = 0; i < race.racerList.length; i++) {
+        if (race.racerList[i].place > currentPlace) {
+            currentPlace = race.racerList[i].place;
         }
     }
     currentPlace += 1;
 
-    for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-        const racer = globals.raceList[globals.currentRaceID].racerList[i];
+    for (let i = 0; i < race.racerList.length; i++) {
+        const racer = race.racerList[i];
         if (racer.status !== 'racing') {
             continue;
         }
         racer.placeMid = currentPlace;
-        globals.log.info('Starting with place:', racer.placeMid);
-        for (let j = 0; j < globals.raceList[globals.currentRaceID].racerList.length; j++) {
-            const racer2 = globals.raceList[globals.currentRaceID].racerList[j];
+        globals.log.info(`Calculating "${racer.name}" place, starting at: ${racer.placeMid}`);
+        for (let j = 0; j < race.racerList.length; j++) {
+            const racer2 = race.racerList[j];
             if (racer2.status !== 'racing') {
                 continue;
+            }
+            if (racer2.floorNum === racer.floorNum) {
+                globals.log.info('SAME FLOOR');
+                globals.log.info(`1-${racer.name}-${racer.datetimeArrivedFloor}`);
+                globals.log.info(`2-${racer2.name}-${racer2.datetimeArrivedFloor}`);
             }
             if (racer2.floorNum > racer.floorNum) {
                 racer.placeMid += 1;
@@ -681,12 +689,12 @@ function placeMidRecalculateAll() {
                 racer.placeMid += 1;
             } else if (
                 racer2.floorNum === racer.floorNum &&
-                racer2.datetimeArrivedFloor < racer.floorArrived
+                racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor
             ) {
                 racer.placeMid += 1;
             }
         }
-        globals.raceList[globals.currentRaceID].racerList[i].placeMid = racer.placeMid;
+        race.racerList[i].placeMid = racer.placeMid;
         const ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $(`#race-participants-table-${racer.name}-place`).html(ordinal);
     }
