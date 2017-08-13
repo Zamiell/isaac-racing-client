@@ -33,7 +33,7 @@ $(document).ready(function() {
 // Called from the login screen or the register screen
 exports.show = function() {
     // Start the log watcher
-    if (logWatcher.start() === -1) {
+    if (!logWatcher.start()) {
         return;
     }
 
@@ -153,9 +153,9 @@ exports.raceDraw = function(race) {
     // Column 3 - Type
     raceDiv += '<td class="lobby-current-races-type">';
     raceDiv += '<span class="lobby-current-races-type-icon">';
-    raceDiv += '<span class="lobby-current-races-' + race.ruleset.type + '" lang="en"></span></span>';
+    raceDiv += '<span class="lobby-current-races-' + (race.ruleset.ranked ? 'ranked' : 'unranked') + '" lang="en"></span></span>';
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    raceDiv += '<span lang="en">' + race.ruleset.type.capitalize() + '</span>';
+    raceDiv += '<span lang="en">' + (race.ruleset.ranked ? 'Ranked' : 'Unranked') + '</span>';
     if (race.ruleset.solo) {
         raceDiv += ' (<span lang="en">Solo</span>)';
     }

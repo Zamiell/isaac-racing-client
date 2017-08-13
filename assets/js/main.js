@@ -19,7 +19,6 @@ Bugs to fix:
 - make it so that you can see the random thing before you submit the race
 - mouseover format and see ruleset in lobby
 - enforce version checking upon creating/joining race
-- write seed to file so that it works with ctrl+c and ctrl+v
 - add tooltips to new race tooltip for all the things
 - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
 - make it remember new race settings

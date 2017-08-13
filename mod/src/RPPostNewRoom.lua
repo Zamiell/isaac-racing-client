@@ -19,8 +19,11 @@ function RPPostNewRoom:Main()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
 
-  Isaac.DebugString("MC_POST_NEW_ROOM")
+  Isaac.DebugString("MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
 
   -- Make an exception for the "Race Start Room" and the "Change Char Order" room
   RPPostNewRoom:RaceStart()
@@ -175,6 +178,9 @@ function RPPostNewRoom:NewRoom()
   -- Check for double Sloths / Super Sloths / Pride / Super Prides
   RPPostNewRoom:CheckSlothPride()
 
+  -- Check for Doples / Evil Twins
+  RPPostNewRoom:CheckDoples()
+
   -- Do race related stuff
   RPPostNewRoom:Race()
 end
@@ -191,29 +197,35 @@ function RPPostNewRoom:CheckSubvertTeleport()
   local roomClear = room:IsClear()
   local player = game:GetPlayer(0)
 
-  if roomClear == false and
-     ((roomStageID == 0 and roomVariant == 1040) or -- Gurdy
-      (roomStageID == 0 and roomVariant == 1041) or
-      (roomStageID == 0 and roomVariant == 1042) or
-      (roomStageID == 0 and roomVariant == 1043) or
-      (roomStageID == 0 and roomVariant == 1044) or
-      (roomStageID == 0 and roomVariant == 1058) or
-      (roomStageID == 0 and roomVariant == 1059) or
-      (roomStageID == 0 and roomVariant == 1065) or
-      (roomStageID == 0 and roomVariant == 1066) or
-      (roomStageID == 0 and roomVariant == 1130) or
-      (roomStageID == 0 and roomVariant == 1131) or
-      (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
-      (roomStageID == 0 and roomVariant == 1081) or
-      (roomStageID == 0 and roomVariant == 1082) or
-      (roomStageID == 0 and roomVariant == 1083) or
-      (roomStageID == 0 and roomVariant == 1084) or
-      (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
-      (roomStageID == 0 and roomVariant == 1091) or
-      (roomStageID == 0 and roomVariant == 1092) or
-      (roomStageID == 0 and roomVariant == 1093) or
-      (roomStageID == 0 and roomVariant == 1094) or
-      (roomStageID == 17 and roomVariant == 18)) then -- Gurdy (The Chest)
+  if roomClear then
+    return
+  end
+
+  if (roomStageID == 0 and roomVariant == 1040) or -- Gurdy
+     (roomStageID == 0 and roomVariant == 1041) or
+     (roomStageID == 0 and roomVariant == 1042) or
+     (roomStageID == 0 and roomVariant == 1043) or
+     (roomStageID == 0 and roomVariant == 1044) or
+     (roomStageID == 0 and roomVariant == 1058) or
+     (roomStageID == 0 and roomVariant == 1059) or
+     (roomStageID == 0 and roomVariant == 1065) or
+     (roomStageID == 0 and roomVariant == 1066) or
+     (roomStageID == 0 and roomVariant == 1130) or
+     (roomStageID == 0 and roomVariant == 1131) or
+     (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
+     (roomStageID == 0 and roomVariant == 1081) or
+     (roomStageID == 0 and roomVariant == 1082) or
+     (roomStageID == 0 and roomVariant == 1083) or
+     (roomStageID == 0 and roomVariant == 1084) or
+     (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
+     (roomStageID == 0 and roomVariant == 1091) or
+     (roomStageID == 0 and roomVariant == 1092) or
+     (roomStageID == 0 and roomVariant == 1093) or
+     (roomStageID == 0 and roomVariant == 1094) or
+     (roomStageID == 17 and roomVariant == 18) or -- Gurdy (The Chest)
+     (roomStageID == 17 and roomVariant == 1018) or -- Gurdy (The Chest) (mirrored)
+     (roomStageID == 17 and roomVariant == 2018) or -- Gurdy (The Chest) (mirrored)
+     (roomStageID == 17 and roomVariant == 3018) then -- Gurdy (The Chest) (mirrored)
 
     -- Make the player invisible or else it will show them on the teleported position for 1 frame
     -- (we can't just move the player here because the teleport occurs after this callback finishes)
@@ -415,6 +427,14 @@ function RPPostNewRoom:CheckSlothPride()
         -- Delete the old one
         entity:Remove()
       end
+    end
+  end
+end
+
+function RPPostNewRoom:CheckDoples()
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_DOPLE then -- 53
+      -- TODO
     end
   end
 end

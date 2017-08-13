@@ -85,10 +85,10 @@ function RPSprites:Display()
       vec.Y = vec.Y - 80
     elseif k == "myStatus" then
       vec.Y = vec.Y - 40
-    elseif k == "raceType" then
+    elseif k == "raceRanked" then
       vec.X = vec.X - typeFormatX
       vec.Y = vec.Y + typeFormatY
-    elseif k == "raceTypeIcon" then
+    elseif k == "raceRankedIcon" then
       vec.X = vec.X - typeFormatX
       vec.Y = vec.Y + typeFormatY + 23
     elseif k == "raceFormat" then
@@ -193,8 +193,8 @@ function RPSprites:ClearStartingRoomGraphicsTop()
 end
 
 function RPSprites:ClearStartingRoomGraphicsBottom()
-  RPSprites:Init("raceType", 0)
-  RPSprites:Init("raceTypeIcon", 0)
+  RPSprites:Init("raceRanked", 0)
+  RPSprites:Init("raceRankedIcon", 0)
   RPSprites:Init("raceFormat", 0)
   RPSprites:Init("raceFormatIcon", 0)
   RPSprites:Init("goal", 0)

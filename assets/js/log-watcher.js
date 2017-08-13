@@ -2,20 +2,16 @@
     Log watcher functions
 */
 
-'use strict';
-
 // Imports
-const fs          = nodeRequire('fs-extra');
+const fs = nodeRequire('fs-extra');
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const globals     = nodeRequire('./assets/js/globals');
-const settings    = nodeRequire('./assets/js/settings');
-const misc        = nodeRequire('./assets/js/misc');
-const isaac       = nodeRequire('./assets/js/isaac');
-const modLoader   = nodeRequire('./assets/js/mod-loader');
-const raceScreen  = nodeRequire('./assets/js/ui/race');
+const globals = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
+const misc = nodeRequire('./assets/js/misc');
+const raceScreen = nodeRequire('./assets/js/ui/race');
 
 // globals.currentScreen is equal to "transition" when this is called
-exports.start = function() {
+exports.start = () => {
     // Check to make sure the log file exists
     let logPath = settings.get('logFilePath');
     if (fs.existsSync(logPath) === false) {
@@ -28,7 +24,7 @@ exports.start = function() {
     if (logPath === null) {
         globals.currentScreen = 'null';
         misc.errorShow('', false, true); // Show the log file path modal
-        return -1;
+        return false;
     }
 
     // Check to make sure they don't have a Rebirth log.txt selected
@@ -36,7 +32,7 @@ exports.start = function() {
         $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
         globals.currentScreen = 'null';
         misc.errorShow('', false, true); // Show the log file path modal
-        return -1;
+        return false;
     }
 
     // Check to make sure they don't have an Afterbirth log.txt selected
@@ -44,15 +40,16 @@ exports.start = function() {
         $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
         globals.currentScreen = 'null';
         misc.errorShow('', false, true); // Show the log file path modal
-        return -1;
+        return false;
     }
 
     // Send a message to the main process to start up the log watcher
     ipcRenderer.send('asynchronous-message', 'logWatcher', logPath);
+    return true;
 };
 
 // Monitor for notifications from the child process that is doing the log watching
-const logWatcher = function(event, message) {
+const logWatcher = (event, message) => {
     // Don't log everything to reduce spam
     if (message.startsWith('New floor: ') === false &&
         message.startsWith('New room: ') === false &&
@@ -61,7 +58,7 @@ const logWatcher = function(event, message) {
         globals.log.info('Recieved log-watcher notification: ' + message);
     }
 
-    if (message.startsWith("error: ")) {
+    if (message.startsWith('error: ')) {
         // First, parse for errors
         let error = message.match(/^error: (.+)/)[1];
         misc.errorShow('Something went wrong with the log monitoring program: ' + error);
@@ -75,16 +72,14 @@ const logWatcher = function(event, message) {
         globals.gameState.hardMode = false; // Assume by default that the user is playing on normal mode
         globals.gameState.challenge = false; // Assume by default that the user is not playing on a challenge
         raceScreen.checkReadyValid();
-
     } else if (message === 'A new run has begun.') {
         // We detect this through the "RNG Start Seed:" line
         // We could detect this through the "Going to the race room." line but then Racing+ wouldn't work for vanilla / custom mods
-        setTimeout(function() {
+        setTimeout(() => {
             // Delay a second before enabling the checkbox to avoid a race condition where they can ready before race validation occurs
             globals.gameState.inGame = true;
             raceScreen.checkReadyValid();
         }, 1000);
-
     } else if (message === 'Race error: Wrong mode.') {
         globals.gameState.hardMode = true;
         raceScreen.checkReadyValid();
@@ -116,17 +111,16 @@ const logWatcher = function(event, message) {
 
     // Parse the message
     if (message.startsWith('New seed: ')) {
-        let m = message.match(/New seed: (.... ....)/);
+        const m = message.match(/New seed: (.... ....)/);
         if (m) {
-            let seed = m[1];
+            const seed = m[1];
             globals.conn.send('raceSeed', {
-                id:   globals.currentRaceID,
-                seed: seed,
+                id: globals.currentRaceID,
+                seed,
             });
         } else {
             misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
         }
-
     } else if (message.startsWith('New floor: ')) {
         let m = message.match(/New floor: (\d+)-(\d+)/);
         if (m) {
@@ -140,19 +134,17 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process.');
         }
-
     } else if (message.startsWith('New room: ')) {
-        let m = message.match(/New room: (.+)/);
+        const m = message.match(/New room: (.+)/);
         if (m) {
-            let roomID = m[1];
+            const roomID = m[1];
             globals.conn.send('raceRoom', {
-                id:   globals.currentRaceID,
-                roomID: roomID,
+                id: globals.currentRaceID,
+                roomID,
             });
         } else {
             misc.errorShow('Failed to parse the new room from the message sent by the log watcher process.');
         }
-
     } else if (message.startsWith('New item: ')) {
         let m = message.match(/New item: (\d+)/);
         if (m) {
@@ -164,28 +156,24 @@ const logWatcher = function(event, message) {
         } else {
             misc.errorShow('Failed to parse the new item from the message sent by the log watcher process.');
         }
-
     } else if (message === 'Finished run: Blue Baby') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
-
     } else if (message === 'Finished run: The Lamb') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'The Lamb') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
-
     } else if (message === 'Finished run: Mega Satan') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Mega Satan') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
-
     } else if (message === 'Finished run: Trophy') {
         globals.conn.send('raceFinish', {
             id: globals.currentRaceID,

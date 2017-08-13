@@ -6,6 +6,8 @@
 --[[
 
 TODO:
+- fix mimics in code
+- undo mom's heart change
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -19,6 +21,10 @@ TODO CAN'T FIX:
   function)
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered.
 - Make fast-clear apply to Challenge rooms and the Boss Rush ("room:SetAmbushDone()" doesn't do anything)
+
+POST-FLIP ACTIONS:
+1) Remove duplicated start room for The Chest / Dark Room
+2) Remove Y-flipped Gurdy rooms from The Chest
 
 --]]
 

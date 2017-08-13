@@ -23,12 +23,12 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 (Most races are done with Judas. The Eden change is to preserve the active item.)
 
-* All characters now start with the D6.
+* All characters now start with the D6. (Much of the strategy in the game is centered around having this item and it heavily mitigates run disparity.)
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
   * Judas starts with half a red heart and half a soul heart.
   * Blue Baby starts with an extra half soul heart.
   * Azazel starts with an extra half soul heart.
-* Judas starts with a bomb instead of 3 coins.
+* Judas starts with a bomb instead of 3 coins (so that he can get a Treasure Room item without spending a soul heart).
 * Eden starts with the Schoolbag (from Antibirth). They will start with their random active item inside the bag.
 
 ### 2) No Curses
@@ -46,6 +46,10 @@ Rooms are considered cleared at the beginning of an enemy's death animation, rat
 ### 5) Room Fixes
 
 Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
+
+### 6) Room Flipping
+
+While there are thousands of rooms in the game, many players have already seen them all. To increase run variety, asymmetrical rooms have a chance to be flipped on the X axis, Y axis, or both axises.
 
 <br />
 

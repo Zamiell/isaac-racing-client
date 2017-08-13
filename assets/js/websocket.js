@@ -15,12 +15,12 @@ const lobbyScreen = nodeRequire('./assets/js/ui/lobby');
 const raceScreen = nodeRequire('./assets/js/ui/race');
 const discordEmotes = nodeRequire('./assets/data/discord-emotes');
 
-exports.init = function(username, password, remember) {
+exports.init = (username, password, remember) => {
     // We have successfully authenticated with the server, so we no longer need the Greenworks process open
     ipcRenderer.send('asynchronous-message', 'steamExit');
 
     // Establish a WebSocket connection
-    const url = 'ws' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/ws';
+    const url = `ws${(globals.secure ? 's' : '')}://${(globals.localhost ? 'localhost' : globals.domain)}/ws`;
     globals.conn = new golem.Connection(url, isDev); // It will automatically use the cookie that we recieved earlier
     // If the second argument is true, debugging is turned on
     globals.log.info('Establishing WebSocket connection to:', url);
@@ -29,14 +29,15 @@ exports.init = function(username, password, remember) {
         Extended connection functions
     */
 
-    globals.conn.send = function(command, data) {
+    globals.conn.send = (command, data) => {
         globals.conn.emit(command, data);
 
         // Don't log some commands to reduce spam
-        if (command === 'raceFloor' ||
+        if (
+            command === 'raceFloor' ||
             command === 'raceRoom' ||
-            command === 'raceItem') {
-
+            command === 'raceItem'
+        ) {
             return;
         }
         globals.log.info('WebSocket sent: ' + command + ' ' + JSON.stringify(data));
@@ -46,31 +47,30 @@ exports.init = function(username, password, remember) {
         Miscellaneous WebSocket handlers
     */
 
-    globals.conn.on('open', function(event) {
+    globals.conn.on('open', (event) => {
         globals.log.info('WebSocket connection established.');
 
         // Login success; join the lobby chat channel
         globals.conn.send('roomJoin', {
-            'room': 'lobby',
+            room: 'lobby',
         });
 
         // Do the proper transition to the lobby depending on where we logged in from
         if (globals.currentScreen === 'title-ajax') {
             globals.currentScreen = 'transition';
-            $('#title').fadeOut(globals.fadeTime, function() {
+            $('#title').fadeOut(globals.fadeTime, () => {
                 lobbyScreen.show();
             });
         } else if (globals.currentScreen === 'register-ajax') {
             globals.currentScreen = 'transition';
-            $('#register').fadeOut(globals.fadeTime, function() {
+            $('#register').fadeOut(globals.fadeTime, () => {
                 registerScreen.reset();
                 lobbyScreen.show();
             });
         } else if (globals.currentScreen === 'error') {
             // If we are showing an error screen already, then don't bother going to the lobby
-            return;
         } else {
-            misc.errorShow('Can\'t transition to the lobby from screen: ' + globals.currentScreen);
+            misc.errorShow(`Can't transition to the lobby from screen: ${globals.currentScreen}`);
         }
     });
 
@@ -221,13 +221,13 @@ exports.init = function(username, password, remember) {
         }
     });
 
-    globals.conn.on('roomJoined', function(data) {
+    globals.conn.on('roomJoined', (data) => {
         // Log the event
         globals.log.info('Websocket - roomJoined - ' + JSON.stringify(data));
 
         // Keep track of the person who just joined
         globals.roomList[data.room].users[data.user.name] = data.user;
-        globals.roomList[data.room].numUsers++;
+        globals.roomList[data.room].numUsers += 1;
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
@@ -240,7 +240,7 @@ exports.init = function(username, password, remember) {
                 return; // Don't send notifications for test accounts connecting
             }
 
-            let message = data.user.name + ' has connected.';
+            const message = `${data.user.name} has connected.`;
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
                 chat.draw('_race_' + globals.currentRaceID, '!server', message);
@@ -250,13 +250,13 @@ exports.init = function(username, password, remember) {
         }
     });
 
-    globals.conn.on('roomLeft', function(data) {
+    globals.conn.on('roomLeft', (data) => {
         // Log the event
         globals.log.info('Websocket - roomLeft - ' + JSON.stringify(data));
 
         // Remove them from the room list
         delete globals.roomList[data.room].users[data.name];
-        globals.roomList[data.room].numUsers--;
+        globals.roomList[data.room].numUsers -= 1;
 
         // Redraw the users list in the lobby
         if (data.room === 'lobby') {
@@ -269,7 +269,7 @@ exports.init = function(username, password, remember) {
                 return; // Don't send notifications for test accounts disconnecting
             }
 
-            let message = data.name + ' has disconnected.';
+            const message = `${data.name} has disconnected.`;
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
                 chat.draw('_race_' + globals.currentRaceID, '!server', message);
@@ -277,14 +277,26 @@ exports.init = function(username, password, remember) {
         } else {
             chat.draw(data.room, '!server', data.name + ' has left the race.');
         }
-
     });
 
-    globals.conn.on('roomMessage', function(data) {
+    globals.conn.on('roomUpdate', (data) => {
+        // Log the event
+        globals.log.info('Websocket - roomLeft - ' + JSON.stringify(data));
+
+        // Keep track of the person who just joined
+        globals.roomList[data.room].users[data.user.name] = data.user;
+
+        // Redraw the users list in the lobby
+        if (data.room === 'lobby') {
+            lobbyScreen.usersDraw();
+        }
+    });
+
+    globals.conn.on('roomMessage', (data) => {
         chat.draw(data.room, data.name, data.message);
     });
 
-    globals.conn.on('privateMessage', function(data) {
+    globals.conn.on('privateMessage', (data) => {
         chat.draw('PM-from', data.name, data.message);
     });
 
@@ -293,14 +305,14 @@ exports.init = function(username, password, remember) {
     function discordMessage(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 adminMessage(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
         // Convert discord style emotes to Racing+ style emotes
-        let messageArray = data.message.split(' ');
+        const messageArray = data.message.split(' ');
         for (let i = 0; i < messageArray.length; i++) {
             if (messageArray[i] in discordEmotes) {
                 messageArray[i] = discordEmotes[messageArray[i]];
@@ -317,7 +329,7 @@ exports.init = function(username, password, remember) {
     */
 
     // On initial connection, we get a list of all of the races that are currently open or ongoing
-    globals.conn.on('raceList', function(data) {
+    globals.conn.on('raceList', (data) => {
         // Log the event
         globals.log.info('Websocket - raceList - ' + JSON.stringify(data));
 
@@ -347,17 +359,18 @@ exports.init = function(username, password, remember) {
             }
         }
         if (mostCurrentRaceID !== false) {
-            globals.currentRaceID = mostCurrentRaceID; // This is normally set at the top of the raceScreen.show function, but we need to set it now since we have to delay
-            setTimeout(function() {
+            // This is normally set at the top of the raceScreen.show function, but we need to set it now since we have to delay
+            globals.currentRaceID = mostCurrentRaceID;
+            setTimeout(() => {
                 raceScreen.show(mostCurrentRaceID);
             }, globals.fadeTime * 2 + 5); // Account for fade out and fade in, then add 5 milliseconds of leeway
         }
     });
 
     // Sent when we create a race or reconnect in the middle of a race
-    globals.conn.on('racerList', function(data) {
+    globals.conn.on('racerList', (data) => {
         // Log the event
-        globals.log.info('Websocket - racerList - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - racerList - ${JSON.stringify(data)}`);
 
         // Store the racer list
         globals.raceList[data.id].racerList = data.racers;
@@ -376,14 +389,14 @@ exports.init = function(username, password, remember) {
     function connRaceCreated(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRaceCreated(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
         }
 
         // Log the event
-        globals.log.info('Websocket - raceCreated - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceCreated - ${JSON.stringify(data)}`);
 
         // Keep track of what races are currently going
         globals.raceList[data.id] = data;
@@ -391,15 +404,12 @@ exports.init = function(username, password, remember) {
         // Update the "Current races" area
         lobbyScreen.raceDraw(data);
 
-        // Check to see if we created this race
-        if (data.captain === globals.myUsername) {
-            raceScreen.show(data.id);
-        } else if (data.ruleset.solo === false) { // Don't send notifications for solo races
-            // Send a chat notification if we did not create this race
-            let message = data.captain + ' has started a new race.';
+        // Send a chat notification if we did not create this race and this is not a solo race
+        if (data.captain !== globals.myUsername && data.ruleset.solo === false) {
+            const message = `${data.captain} has started a new race.`;
             chat.draw('lobby', '!server', message);
             if (globals.currentRaceID !== false) {
-                chat.draw('_race_' + globals.currentRaceID, '!server', message);
+                chat.draw(`_race_${globals.currentRaceID}`, '!server', message);
             }
         }
 
@@ -419,7 +429,7 @@ exports.init = function(username, password, remember) {
     function connRaceJoined(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRaceJoined(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -744,7 +754,7 @@ exports.init = function(username, password, remember) {
                 // Update their place and floor locally
                 globals.raceList[data.id].racerList[i].floorNum = data.floorNum;
                 globals.raceList[data.id].racerList[i].stageType = data.stageType;
-                globals.raceList[data.id].racerList[i].floorArrived = data.floorArrived;
+                globals.raceList[data.id].racerList[i].datetimeArrivedFloor = data.datetimeArrivedFloor;
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {

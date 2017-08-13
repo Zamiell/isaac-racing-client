@@ -391,8 +391,13 @@ function RPPostRender:Race()
   if (RPGlobals.race.status == "open" or RPGlobals.race.status == "starting") and
      roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
-    RPSprites:Init("raceType", RPGlobals.race.rType)
-    RPSprites:Init("raceTypeIcon", RPGlobals.race.rType .. "-icon")
+    if RPGlobals.race.ranked then
+      RPSprites:Init("raceRanked", "ranked")
+      RPSprites:Init("raceRankedIcon", "ranked-icon")
+    else
+      RPSprites:Init("raceRanked", "unranked")
+      RPSprites:Init("raceRankedIcon", "unranked-icon")
+    end
     RPSprites:Init("raceFormat", RPGlobals.race.rFormat)
     RPSprites:Init("raceFormatIcon", RPGlobals.race.rFormat .. "-icon")
     RPSprites:Init("goal", "goal")

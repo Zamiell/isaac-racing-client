@@ -1,7 +1,7 @@
 {
    "status":        "none",
    "myStatus":      "not ready",
-   "rType":         "unranked",
+   "ranked":        false,
    "solo":          false,
    "rFormat":       "unseeded",
    "character":     3,

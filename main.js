@@ -47,38 +47,37 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // 4) mod/resources/gfx/items2/..
 // 5) mod/resources/gfx/items3/..
 
-'use strict';
-
 // Imports
-const electron       = require('electron');
-const app            = electron.app;
-const BrowserWindow  = electron.BrowserWindow;
-const ipcMain        = electron.ipcMain;
+const electron = require('electron');
+const autoUpdater = require('electron-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
+// See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
+const execFile = require('child_process').execFile;
+const fork = require('child_process').fork;
+const fs = require('fs-extra');
+const path = require('path');
+const isDev = require('electron-is-dev');
+const tracer = require('tracer');
+const Raven = require('raven');
+const teeny = require('teeny-conf');
+const opn = require('opn');
+
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
 const globalShortcut = electron.globalShortcut;
-const autoUpdater    = require('electron-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
-                                                                // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
-const execFile       = require('child_process').execFile;
-const fork           = require('child_process').fork;
-const fs             = require('fs-extra');
-const os             = require('os');
-const path           = require('path');
-const isDev          = require('electron-is-dev');
-const tracer         = require('tracer');
-const Raven          = require('raven');
-const teeny          = require('teeny-conf');
-const opn            = require('opn');
 
 // Constants
-const modName    = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 
 // Global variables
-var mainWindow; // Keep a global reference of the window object
-                // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
-var childLogWatcher = null;
-var childSteam = null;
-var childIsaac = null;
-var errorHappened = false;
+let mainWindow;
+// Keep a global reference of the window object
+// (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
+let childLogWatcher = null;
+let childSteam = null;
+let childIsaac = null;
+let errorHappened = false;
 
 /*
     Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
@@ -105,7 +104,15 @@ const log = tracer.console({
 let packageFileLocation = path.join(__dirname, 'package.json');
 let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
 let version = 'v' + JSON.parse(packageFile).version;
-log.info('Racing+ client', version, 'started!');
+
+const middleLine = `Racing+ client ${version} started!`;
+let separatorLine = '';
+for (let i = 0; i < middleLine.length; i++) {
+    separatorLine += '-';
+}
+log.info(`+-${separatorLine}-+`);
+log.info(`| ${middleLine} |`);
+log.info(`+-${separatorLine}-+`);
 
 // Raven (error logging to Sentry)
 Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb86908446e5c9d@sentry.io/124813', {

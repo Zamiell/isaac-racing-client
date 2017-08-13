@@ -1,5 +1,23 @@
 # Racing+ Version History and News
 
+### *v0.9.0* - August 13th, 2017
+
+* The server has been rewritten mostly from scratch in an attempt to fix the deadlocking issue that was causing it to crash every once in a while. This process took around 60 hours over the past week, with around 7500 new lines of code.
+  * The new server should be an order of magnitude faster and will be able to support race ghosts in the same vein that Mario Kart has.
+  * The [SQLite](https://www.sqlite.org/about.html) database was replaced with [MariaDB](https://mariadb.org/about/). This was the thing holding leaderboards back. Now it should be pretty easy to make them.
+  * The Golem WebSocket framework was replaced with the Melody WebSocket framework. Golem's handling of WebSockets was causing the deadlock during times of mass sending.
+* Are you ready to get flipped? In order to promote run diveristy, all rooms now have the possibility to be flipped on the X axis, the Y axis, or both axises.
+  * This is probably something that should have been in the original game, but I can only guess that no-one thought of it (or Nicalis was too lazy).
+  * This will only be noticable in non-symmetrical rooms.
+  * All room shapes are preserved with the exception of L rooms, which are flipped accordingly.
+  * Since the probabilities of getting each individual room are the same (discounting entrances), there are no general strategical implications of this change.
+    * One small exception is that instead of there being only 3 types of top-left L-rooms in The Chest, there are now 12.
+    * Another small exception is that the trapdoor room on the Caves/Catacombs and Depths/Necropolis is flipped, so you can get it from the bottom now instead of only from the top.
+  * An enormous thanks goes to Chronometrics for this, as he designed the custom code that allowed this to be programatically done.
+* The server will no longer send messages to your Twitch chat if your client is closed.
+* In the client, the "Custom" character is now replaced with "Samael" and shows a graphic for him.
+* Fixed the bug where mid-race placements were messed up on non-seeded races. (Thanks Shigan and BMZ_Loop)
+
 ### *v0.8.20* - August 3rd, 2017
 
 * Fixed the bug where the Booster Pack #3 items were not in any item pools. (Thanks Flaw98)

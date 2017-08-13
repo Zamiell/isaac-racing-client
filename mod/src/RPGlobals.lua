@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.8.20"
+RPGlobals.version = "v0.9.0"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -14,8 +14,8 @@ RPGlobals.run = {}
 RPGlobals.race = {
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
-  rType           = "unranked",  -- Can be "unranked", "ranked" (this is not currently used)
-  solo            = false,       -- Can be either false or true
+  ranked          = false,       -- Can be true or false
+  solo            = false,       -- Can be true or false
   rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "unseeded-lite", or "custom"
   -- Unofficially this can also be "pageant"
   character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)

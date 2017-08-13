@@ -2,19 +2,17 @@
     New race tooltip
 */
 
-'use strict';
-
 // Imports
 const globals = nodeRequire('./assets/js/globals');
-const misc    = nodeRequire('./assets/js/misc');
-const builds  = nodeRequire('./assets/data/builds');
+const misc = nodeRequire('./assets/js/misc');
+const builds = nodeRequire('./assets/data/builds');
 
 /*
     Event handlers
 */
 
-$(document).ready(function() {
-    $('#new-race-randomize').click(function() {
+$(document).ready(() => {
+    $('#new-race-randomize').click(() => {
         // Don't randomize the race name if we are on a test account
         if (globals.myUsername.match(/TestAccount\d+/)) {
             $('#new-race-title').val('{ test race }');
@@ -47,9 +45,9 @@ $(document).ready(function() {
 
     $('#new-race-type').change(newRaceTypeChange);
 
-    $('#new-race-format').change(function() {
+    $('#new-race-format').change(function newRaceFormatChange() {
         // Change the displayed icon
-        let newFormat = $(this).val();
+        const newFormat = $(this).val();
         $('#new-race-format-icon').css('background-image', 'url("assets/img/formats/' + newFormat + '.png")');
 
         // Change to the default character for this ruleset
@@ -112,15 +110,15 @@ $(document).ready(function() {
         }
     });
 
-    $('#new-race-character').change(function() {
+    $('#new-race-character').change(function newRaceCharacterChange() {
         // Change the displayed icon
-        let newCharacter = $(this).val();
+        const newCharacter = $(this).val();
         $('#new-race-character-icon').css('background-image', 'url("assets/img/characters/' + newCharacter + '.png")');
     });
 
-    $('#new-race-goal').change(function() {
+    $('#new-race-goal').change(function newRaceGoalChange() {
         // Change the displayed icon
-        let newGoal = $(this).val();
+        const newGoal = $(this).val();
         $('#new-race-goal-icon').css('background-image', 'url("assets/img/goals/' + newGoal + '.png")');
     });
 
@@ -144,20 +142,17 @@ $(document).ready(function() {
         );
     }
 
-    $('#new-race-starting-build').change(function() {
+    $('#new-race-starting-build').change(function newRaceStartingBuildChange() {
         // Change the displayed icon
-        let newBuild = $(this).val();
-        globals.log.info('newBuild: ' + newBuild);
+        const newBuild = $(this).val();
         if (newBuild.startsWith('random')) {
             $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/random.png")');
-            globals.log.info('newBuild1');
         } else {
             $('#new-race-starting-build-icon').css('background-image', 'url("assets/img/builds/' + newBuild + '.png")');
-            globals.log.info('newBuild2');
         }
     });
 
-    $('#new-race-form').submit(function() {
+    $('#new-race-form').submit(() => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 

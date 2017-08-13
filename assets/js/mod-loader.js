@@ -14,7 +14,7 @@ const builds  = nodeRequire('./assets/data/builds');
 
 // We can communicate with the Racing+ Lua mod via file I/O
 // Specifically, we use the 3 "save.dat" files located in the mod subdirectory
-const send = function() {
+const send = () => {
     // Do nothing if the mod loader file is set to null
     // (this can happen if the user is closing the program, for example)
     if (globals.modPath === null) {
@@ -70,24 +70,24 @@ const send = function() {
             json.order14 = globals.modLoader['order14-' + i];
 
             // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
-            let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+            const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
             fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
         }
-    } catch(err) {
+    } catch (err) {
         globals.log.info('Error while filling up the "save#.dat" file: ' + err);
 
         // Try again in 1/20 of a second
-        setTimeout(function() {
+        setTimeout(() => {
             send();
         }, 50);
     }
 };
 exports.send = send;
 
-const reset = function() {
+const reset = () => {
     globals.modLoader.myStatus = 'not ready';
     globals.modLoader.status = 'none';
-    globals.modLoader.rType = 'unranked';
+    globals.modLoader.ranked = false;
     globals.modLoader.solo = false;
     globals.modLoader.rFormat = 'unseeded';
     globals.modLoader.character = 3; // Judas
@@ -102,7 +102,7 @@ const reset = function() {
 exports.reset = reset;
 
 // This sends an up-to-date myStatus, numEntrants, placeMid and place to the mod
-const sendPlace = function() {
+const sendPlace = () => {
     if (globals.raceList[globals.currentRaceID].status === 'in progress') {
         // Find our value of "placeMid"
         let numLeft = 0;

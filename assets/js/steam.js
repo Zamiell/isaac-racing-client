@@ -11,24 +11,24 @@ const websocket = nodeRequire('./assets/js/websocket');
 const registerScreen = nodeRequire('./assets/js/ui/register');
 
 // Check to see if Steam is running on startup
-$(document).ready(function() {
+$(document).ready(() => {
     if (isDev) {
         // Don't automatically log in with our Steam account
         // We want to choose from a list of login options
         $('#title-ajax').fadeOut(0);
         $('#title-choose').fadeIn(0);
 
-        $('#title-choose-steam').click(function() {
+        $('#title-choose-steam').click(() => {
             loginDebug(null);
         });
 
         for (let i = 1; i <= 10; i++) {
-            $('#title-choose-' + i).click(function() {
+            $(`#title-choose-${i}`).click(() => {
                 loginDebug(i);
             });
         }
 
-        $('#title-restart').click(function() {
+        $('#title-restart').click(() => {
             // Restart the client
             ipcRenderer.send('asynchronous-message', 'restart');
         });
@@ -43,26 +43,27 @@ $(document).ready(function() {
 });
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
-const steam = function(event, message) {
-    if (typeof(message) !== 'string') {
+const steam = (event, message) => {
+    if (typeof message !== 'string') {
         // The child process is finished and has sent us the Steam-related information that we seek
         globals.steam.id = message.id;
         globals.steam.screenName = message.screenName;
         globals.steam.ticket = message.ticket;
         login();
-    } else if (message === 'errorInit' ||
+    } else if (
+        message === 'errorInit' ||
         message.startsWith('error: Error: channel closed') ||
-        message.startsWith('error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')) {
-
+        message.startsWith('error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')
+    ) {
         // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
         misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
     } else if (message.startsWith('error: ')) {
         // This is some other uncommon error
-        let error = message.match(/error: (.+)/)[1];
+        const error = message.match(/error: (.+)/)[1];
         misc.errorShow(error);
     } else {
         // The child process is sending us a message to log
-        globals.log.info('Steam child message: ' + message);
+        globals.log.info(`Steam child message: ${message}`);
     }
 };
 ipcRenderer.on('steam', steam);
@@ -80,9 +81,9 @@ function login() {
         } else {
             // The client has not yet begun to check for an update, so stall
             // However, sometimes this can be permanently null in production (maybe after an automatic update?), so allow them to procede after 2 seconds
-            let now = new Date().getTime();
+            const now = new Date().getTime();
             if (now - globals.timeLaunched < 2000) {
-                setTimeout(function() {
+                setTimeout(() => {
                     login();
                 }, 250);
                 globals.log.info('Logging in (without having checked for an update yet). Stalling for 0.25 seconds...');
@@ -90,7 +91,7 @@ function login() {
             }
         }
     } else if (globals.autoUpdateStatus === 'checking-for-update') {
-        setTimeout(function() {
+        setTimeout(() => {
             login();
         }, 250);
         globals.log.info('Logging in (while checking for an update). Stalling for 0.25 seconds...');
@@ -101,8 +102,8 @@ function login() {
     } else if (globals.autoUpdateStatus === 'update-available') {
         // They are beginning to download the update
         globals.currentScreen = 'transition';
-        $('#title').fadeOut(globals.fadeTime, function() {
-            $('#updating').fadeIn(globals.fadeTime, function() {
+        $('#title').fadeOut(globals.fadeTime, () => {
+            $('#updating').fadeIn(globals.fadeTime, () => {
                 globals.currentScreen = 'updating';
             });
         });
@@ -115,11 +116,11 @@ function login() {
         // The update was downloaded in the background before the user logged in
         // Show them the updating screen so they are not confused at the program restarting
         globals.currentScreen = 'transition';
-        $('#title').fadeOut(globals.fadeTime, function() {
-            $('#updating').fadeIn(globals.fadeTime, function() {
+        $('#title').fadeOut(globals.fadeTime, () => {
+            $('#updating').fadeIn(globals.fadeTime, () => {
                 globals.currentScreen = 'updating';
 
-                setTimeout(function() {
+                setTimeout(() => {
                     ipcRenderer.send('asynchronous-message', 'quitAndInstall');
                 }, 1500);
                 globals.log.info('Logging in (with an update was downloaded successfully). Showing the "updating" screen and automatically restart in 1.5 seconds."');
@@ -130,17 +131,17 @@ function login() {
 
     // Send a request to the Racing+ server
     globals.log.info('Sending a login request to the Racing+ server.');
-    let data = {
+    const postData = {
         steamID: globals.steam.id,
-        ticket:  globals.steam.ticket, // This will be verified on the server via the Steam web API
+        ticket: globals.steam.ticket, // This will be verified on the server via the Steam web API
     };
-    const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/login';
+    const url = `http${(globals.secure ? 's' : '')}://${(globals.localhost ? 'localhost' : globals.domain)}/login`;
     const request = $.ajax({
         url,
         type: 'POST',
-        data,
+        data: postData,
     });
-    request.done(function(data) {
+    request.done((data) => {
         data = data.trim();
         if (data === 'Accepted') {
             // If the server gives us "Accepeted", then our Steam credentials are valid, but we don't have an account on the server yet
@@ -151,10 +152,10 @@ function login() {
             websocket.init();
         }
     });
-    request.fail(function(jqXHR) {
+    request.fail((jqXHR) => {
         // Show the error screen (and don't bother reporting this to Sentry)
         globals.log.info('Login failed.');
-        let error = misc.findAjaxError(jqXHR);
+        const error = misc.findAjaxError(jqXHR);
         misc.errorShow(error, false);
     });
 }
@@ -165,7 +166,7 @@ function loginDebug(account) {
         return;
     }
 
-    $('#title-choose').fadeOut(globals.fadeTime, function() {
+    $('#title-choose').fadeOut(globals.fadeTime, () => {
         $('#title-ajax').fadeIn(globals.fadeTime);
     });
 
@@ -173,8 +174,8 @@ function loginDebug(account) {
         // Normal login
         ipcRenderer.send('asynchronous-message', 'steam', account);
     } else {
-        globals.steam.id = '-' + account;
-        globals.steam.screenName = 'TestAccount' + account;
+        globals.steam.id = `-${account}`;
+        globals.steam.screenName = `TestAccount${account}`;
         globals.steam.ticket = 'debug';
         login();
     }
