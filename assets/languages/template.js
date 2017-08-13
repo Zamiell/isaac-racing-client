@@ -1,5 +1,6 @@
+/* eslint-disable quotes */
 Lang.prototype.pack.zz = {
-    "token": {
+    token: {
         // Title screen
         "A racing mod for The Binding of Isaac: Afterbirth+.": "",
 

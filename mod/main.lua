@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- hear reset sounds on eden
 - fix mimics in code
 - undo mom's heart change
 - Implement time offsets, show on the first room of each floor

@@ -139,7 +139,7 @@ $(document).ready(() => {
         });
     });
 
-    $('#race-finish-button').click(function() {
+    $('#race-finish-button').click(() => {
         if (globals.currentScreen !== 'race') {
             return;
         } else if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
@@ -180,7 +180,7 @@ $(document).ready(() => {
         });
     });
 
-    $('#race-chat-form').submit(function(event) {
+    $('#race-chat-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 
@@ -193,10 +193,10 @@ $(document).ready(() => {
     Race functions
 */
 
-const show = function(raceID) {
+const show = (raceID) => {
     // We should be on the lobby screen unless there is severe lag
     if (globals.currentScreen === 'transition') {
-        setTimeout(function() {
+        setTimeout(() => {
             show(raceID);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
@@ -245,7 +245,7 @@ const show = function(raceID) {
             }
         }
     }
-    $('#header-settings').fadeOut(globals.fadeTime, function() {
+    $('#header-settings').fadeOut(globals.fadeTime, () => {
         $('#header-profile').fadeIn(globals.fadeTime);
         $('#header-leaderboards').fadeIn(globals.fadeTime);
         $('#header-help').fadeIn(globals.fadeTime);
@@ -256,8 +256,8 @@ const show = function(raceID) {
     misc.closeAllTooltips();
 
     // Show the race screen
-    $('#lobby').fadeOut(globals.fadeTime, function() {
-        $('#race').fadeIn(globals.fadeTime, function() {
+    $('#lobby').fadeOut(globals.fadeTime, () => {
+        $('#race').fadeIn(globals.fadeTime, () => {
             globals.currentScreen = 'race';
         });
 
@@ -475,7 +475,7 @@ const show = function(raceID) {
         $('#race-participants-table-offset').fadeOut(0);
 
         // Automatically scroll to the bottom of the chat box
-        let bottomPixel = $('#race-chat-text').prop('scrollHeight') - $('#race-chat-text').height();
+        const bottomPixel = $('#race-chat-text').prop('scrollHeight') - $('#race-chat-text').height();
         $('#race-chat-text').scrollTop(bottomPixel);
 
         // Focus the chat input
@@ -492,7 +492,7 @@ const show = function(raceID) {
 exports.show = show;
 
 // Add a row to the table with the race participants on the race screen
-exports.participantAdd = function(i) {
+exports.participantAdd = (i) => {
     // Begin building the row
     let racer = globals.raceList[globals.currentRaceID].racerList[i];
     let racerDiv = '<tr id="race-participants-table-' + racer.name + '">';
@@ -559,7 +559,7 @@ exports.participantAdd = function(i) {
     checkReadyValid();
 };
 
-const participantsSetStatus = function(i, initial = false) {
+const participantsSetStatus = (i, initial = false) => {
     let racer = globals.raceList[globals.currentRaceID].racerList[i];
 
     // Update the status column of the row
@@ -665,16 +665,10 @@ function placeMidRecalculateAll() {
             continue;
         }
         racer.placeMid = currentPlace;
-        globals.log.info(`Calculating "${racer.name}" place, starting at: ${racer.placeMid}`);
         for (let j = 0; j < race.racerList.length; j++) {
             const racer2 = race.racerList[j];
             if (racer2.status !== 'racing') {
                 continue;
-            }
-            if (racer2.floorNum === racer.floorNum) {
-                globals.log.info('SAME FLOOR');
-                globals.log.info(`1-${racer.name}-${racer.datetimeArrivedFloor}`);
-                globals.log.info(`2-${racer2.name}-${racer2.datetimeArrivedFloor}`);
             }
             if (racer2.floorNum > racer.floorNum) {
                 racer.placeMid += 1;
@@ -749,7 +743,7 @@ const participantsSetFloor = (i) => {
 };
 exports.participantsSetFloor = participantsSetFloor;
 
-const participantsSetItem = function(i) {
+const participantsSetItem = (i) => {
     // Go through the array and find the starting item
     let items = globals.raceList[globals.currentRaceID].racerList[i].items;
     let startingItem = false;
@@ -772,18 +766,18 @@ const participantsSetItem = function(i) {
 };
 exports.participantsSetItem = participantsSetItem;
 
-exports.markOnline = function() {
+exports.markOnline = () => {
     // TODO
 };
 
-exports.markOffline = function() {
+exports.markOffline = () => {
     // TODO
 };
 
-const startCountdown = function() {
+const startCountdown = () => {
     if (globals.currentScreen === 'transition') {
         // Come back when the current transition finishes
-        setTimeout(function() {
+        setTimeout(() => {
             startCountdown();
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
@@ -812,7 +806,7 @@ const startCountdown = function() {
         globals.log.info('modLoader - Sent a countdown of 10.');
 
         // Show the countdown
-        $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, function() {
+        $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, () => {
             $('#race-countdown').css('font-size', '1.75em');
             $('#race-countdown').css('bottom', '0.25em');
             $('#race-countdown').css('color', '#e89980');
@@ -823,10 +817,10 @@ const startCountdown = function() {
 };
 exports.startCountdown = startCountdown;
 
-const countdownTick = function(i) {
+const countdownTick = (i) => {
     if (globals.currentScreen === 'transition') {
         // Come back when the current transition finishes
-        setTimeout(function() {
+        setTimeout(() => {
             countdownTick();
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
@@ -839,7 +833,7 @@ const countdownTick = function(i) {
 
     // Schedule the next tick
     if (i >= 0) {
-        setTimeout(function() {
+        setTimeout(() => {
             countdownTick(i - 1);
         }, 1000);
     } else {
@@ -847,7 +841,7 @@ const countdownTick = function(i) {
     }
 
     // Update the Lua mod with how many seconds are left until the race starts
-    setTimeout(function() {
+    setTimeout(() => {
         globals.modLoader.countdown = i;
         if (i === 0) { // This is to avoid bugs where things happen out of order
             globals.modLoader.status = "in progress";
@@ -859,7 +853,7 @@ const countdownTick = function(i) {
 
     if (i > 0) {
         // Change the number on the race controls area (5, 4, 3, 2, 1)
-        $('#race-countdown').fadeOut(globals.fadeTime, function() {
+        $('#race-countdown').fadeOut(globals.fadeTime, () => {
             $('#race-countdown').css('font-size', '2.5em');
             $('#race-countdown').css('bottom', '0.375em');
             $('#race-countdown').css('color', 'red');
@@ -878,7 +872,7 @@ const countdownTick = function(i) {
             }
         });
     } else if (i === 0) {
-        setTimeout(function() {
+        setTimeout(() => {
             // Update the text to "Go!" on the race controls area
             $('#race-countdown').html('<span lang="en">Go</span>!');
             $('#race-title-status').html('<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>');
@@ -891,7 +885,7 @@ const countdownTick = function(i) {
 
             // If this is a diversity race, show the three diversity items
             if (globals.raceList[globals.currentRaceID].ruleset.format === 'diversity') {
-                $('#race-title-items-blind').fadeOut(globals.fadeTime, function() {
+                $('#race-title-items-blind').fadeOut(globals.fadeTime, () => {
                     $('#race-title-items').fadeIn(globals.fadeTime);
                 });
             }
@@ -914,7 +908,7 @@ const countdownTick = function(i) {
 };
 exports.countdownTick = countdownTick;
 
-const start = function() {
+const start = () => {
     // Don't do anything if we are not on the race screen
     // (it is okay to proceed here if we are on the transition screen since we want the race controls to be drawn before it fades in)
     if (globals.currentScreen !== 'race' && globals.currentScreen !== 'transition') {
@@ -933,7 +927,7 @@ const start = function() {
     setTimeout(raceTimerTick, 0);
 
     // Change the controls on the race screen
-    $('#race-countdown').fadeOut(globals.fadeTime, function() {
+    $('#race-countdown').fadeOut(globals.fadeTime, () => {
         // Find out if we have quit or finished this race already and count the number of people who are still in the race
         // (which should be everyone, but just in case)
         let alreadyFinished = false;
@@ -1017,10 +1011,10 @@ function raceTimerTick() {
     setTimeout(raceTimerTick, 1000);
 }
 
-const checkReadyValid = function() {
+const checkReadyValid = () => {
     if (globals.currentScreen === 'transition') {
         // Come back when the current transition finishes
-        setTimeout(function() {
+        setTimeout(() => {
             checkReadyValid();
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;

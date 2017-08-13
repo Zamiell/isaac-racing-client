@@ -1,5 +1,6 @@
+/* eslint-disable quotes */
 Lang.prototype.pack.fr = {
-    "token": {
+    token: {
         // Title screen
         "A racing mod for The Binding of Isaac: Afterbirth+": "Un mod pour participer à des courses sur The Binding of Isaac: Afterbirth+",
 
