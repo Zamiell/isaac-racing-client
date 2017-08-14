@@ -7,13 +7,16 @@
 /*
 
 New TODO:
-- disallow logging in with old versions
+- make sure isaac.js matches:
+    <li>It makes sure that the Racing+ mod exists in your mods directory.</li>
+    <li>It makes sure that mods are enabled in your <code>options.ini</code> file.</li>
+    <li>It makes sure that you have at least one fully unlocked save file.</li>
+- restart isaac on corrupt mod
 - announce to discord when server is started
 - get server messages to be written to chat DB
 - get discord messages to be written to chat DB
 - when twitch bot warning message comes into client, set local variables accordingly
 - fix captain not being bolded on race left
-- fix /races
 
 Bugs to fix:
 - set timer to 4 hours for custom races once you can see how long each race has been going for from the lobby
@@ -66,8 +69,6 @@ Features to add:
 - /shame - Shame on those who haven't readied up.
 - volume slider update number better
 - wait until raceList before going to lobby so that we can go directly to current race
-
-
 
 Features to add (low priority):
 - Fix bug where Desktop shortcut gets continually recreated: https://github.com/electron-userland/electron-builder/issues/1095
@@ -136,7 +137,7 @@ if (isDev) {
 */
 
 // Get the version
-const packageFileLocation = path.join(__dirname, 'package.json');
+const packageFileLocation = path.join(__dirname, '..', 'package.json');
 const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
 const version = `v${JSON.parse(packageFile).version}`;
 globals.version = version;
@@ -151,28 +152,27 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
         // We want to report errors to Sentry that are passed to the "errorShow" function
         // But because "captureException" in that function will send us back to this callback, check for that so that we don't report the same error twice
         if (data.exception[0].type !== 'RavenMiscError') {
-            misc.errorShow('A unexpected JavaScript error occured. Here\'s what happened:<br /><br />' + JSON.stringify(data.exception), false);
+            misc.errorShow(`A unexpected JavaScript error occured. Here's what happened:<br /><br />${JSON.stringify(data.exception)}`, false);
         }
         return data;
     },
 }).install();
 
 // Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
-globals.log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
-    dateformat: "ddd mmm dd HH:MM:ss Z",
-    transport: (data) => {
-        // #1 - Log to the JavaScript console
-        console.log(data.output);
+globals.log = tracer.dailyfile({
+    // Log file settings
+    root: (isDev ? '.' : process.execPath),
+    logPathFormat: '{{root}}/Racing+ {{date}}.log',
+    splitFormat: 'yyyy-mm-dd',
+    maxLogFiles: 10,
 
-        // #2 - Log to a file
-        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', (err) => {
-            if (err) {
-                throw err;
-            }
-        });
-    }
+    // Global tracer settings
+    format: '{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}',
+    dateformat: 'ddd mmm dd HH:MM:ss Z',
+    transport: (data) => {
+        // Log errors to the JavaScript console in addition to the log file
+        console.log(data.output);
+    },
 });
 
 $(document).ready(() => {
@@ -181,14 +181,14 @@ $(document).ready(() => {
     $('#settings-version').html(version);
 
     // Preload some sounds by playing all of them
-    let soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
-    for (let file of soundFiles) {
-        let audio = new Audio('assets/sounds/' + file + '.mp3');
+    const soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
+    for (const file of soundFiles) {
+        const audio = new Audio(`assets/sounds/${file}.mp3`);
         audio.volume = 0;
         audio.play();
     }
     for (let i = 1; i <= 16; i++) {
-        let audio = new Audio('assets/sounds/place/' + i + '.mp3');
+        const audio = new Audio(`assets/sounds/place/${i}.mp3`);
         audio.volume = 0;
         audio.play();
     }
@@ -254,14 +254,14 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
 } else if (process.platform === 'linux') { // Linux
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
 } else {
-    globals.initError = 'The platform of "' + process.platform + '" is not supported."';
+    globals.initError = `The platform of "${process.platform}" is not supported.`;
 }
 let logFilePath = settings.get('logFilePath');
 if (typeof logFilePath === 'undefined' || logFilePath === null) {
     logFilePath = globals.defaultLogFilePath;
     settings.set('logFilePath', globals.defaultLogFilePath);
     settings.saveSync();
-    globals.log.info('logFilePath was undefined or null on boot, it was set to: ' + globals.defaultLogFilePath);
+    globals.log.info(`logFilePath was undefined (or null) on boot, it was set to: ${globals.defaultLogFilePath}`);
 }
 
 // Get the default mod directory
@@ -272,49 +272,49 @@ if (process.platform === 'win32' || process.platform === 'darwin') {
     // This is lowercase on Linux for some reason
     modPath = path.join(path.dirname(logFilePath), '..', 'binding of isaac afterbirth+ mods');
 }
-let modPathDev = path.join(modPath, globals.modNameDev);
-if (isDev || fs.existsSync(modPathDev) ) {
+const modPathDev = path.join(modPath, globals.modNameDev);
+if (isDev || fs.existsSync(modPathDev)) {
     globals.modPath = modPathDev; // We prefer to use development directories if they are present, even in production
 } else {
     globals.modPath = path.join(modPath, globals.modName);
 }
 
 // Store what their R+9/14 character order is
-let defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
+const defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
 for (let i = 1; i <= 3; i++) {
-    let modLoaderFile = path.join(globals.modPath, 'save' + i + '.dat');
+    const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
     if (fs.existsSync(modLoaderFile)) {
         try {
-            let json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
+            const json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
             if (typeof json.order7 === 'undefined') {
-                globals.modLoader['order7-' + i] = [0];
+                globals.modLoader[`order7-${i}`] = [0];
             } else {
-                globals.modLoader['order7-' + i] = json.order7;
+                globals.modLoader[`order7-${i}`] = json.order7;
             }
             if (typeof json.order9 === 'undefined') {
-                globals.modLoader['order9-' + i] = [0];
+                globals.modLoader[`order9-${i}`] = [0];
             } else {
-                globals.modLoader['order9-' + i] = json.order9;
+                globals.modLoader[`order9-${i}`] = json.order9;
             }
             if (typeof json.order14 === 'undefined') {
-                globals.modLoader['order14-' + i] = [0];
+                globals.modLoader[`order14-${i}`] = [0];
             } else {
-                globals.modLoader['order14-' + i] = json.order14;
+                globals.modLoader[`order14-${i}`] = json.order14;
             }
-        } catch(err) {
-            globals.initError = 'Error while reading the "save' + i + '.dat" file: ' + err;
+        } catch (err) {
+            globals.initError = `Error while reading the "save${i}.dat" file: ${err}`;
         }
     } else if (fs.existsSync(defaultSaveDatFile)) {
         // Copy over the default file
         // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
         try {
             fs.copySync(defaultSaveDatFile, modLoaderFile);
-        } catch(err) {
-            globals.initError = 'Failed to copy the "save-defaults.dat" file to "' + modLoaderFile + '": ' + err;
+        } catch (err) {
+            globals.initError = `Failed to copy the "save-defaults.dat" file to "${modLoaderFile}": ${err}`;
         }
-        globals.modLoader['order7-' + i] = [0];
-        globals.modLoader['order9-' + i] = [0];
-        globals.modLoader['order14-' + i] = [0];
+        globals.modLoader[`order7-${i}`] = [0];
+        globals.modLoader[`order9-${i}`] = [0];
+        globals.modLoader[`order14-${i}`] = [0];
     }
 }
 
@@ -323,7 +323,7 @@ const itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
 try {
     globals.itemList = JSON.parse(fs.readFileSync(itemListLocation, 'utf8'));
 } catch (err) {
-    globals.initError = 'Failed to read the "' + itemListLocation + '" file: ' + err;
+    globals.initError = `Failed to read the "${itemListLocation}" file: ${err}`;
 }
 
 // Trinket list
@@ -331,7 +331,7 @@ const trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.jso
 try {
     globals.trinketList = JSON.parse(fs.readFileSync(trinketListLocation, 'utf8'));
 } catch (err) {
-    globals.initError = 'Failed to read the "' + trinketListLocation + '" file: ' + err;
+    globals.initError = `Failed to read the "${trinketListLocation}" file: ${err}`;
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion

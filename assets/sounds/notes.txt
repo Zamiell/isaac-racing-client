@@ -1,8 +1,0 @@
-Notes:
-
-- Race voices are ripped from Moto Racer 2 using Audacity Windows WASAPI.
-- Reduced the volume by 15 dB using Audacity and converted them to MP3.
-- "finished.wav" is ripped from Final Fantasy 7.
-- "quit.wav" is ripped from Final Fantasy 8.
-- "race-created.wav" is ripped from Final Fantasy 8 (cursor move).
-- Countdown tones are from Mario Kart Wii.

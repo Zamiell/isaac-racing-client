@@ -3,6 +3,8 @@
 ### *v0.9.7* - August 14th, 2017
 
 * Shops were not meant to be flipped; this has been reverted to vanilla.
+* The server now requires that you have the latest version of the client before letting you connect.
+* Fixed the bug where the Chinese racer named "box" would mess up the lobby users list.
 
 ### *v0.9.5* - August 14th, 2017
 

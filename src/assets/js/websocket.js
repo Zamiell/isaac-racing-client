@@ -40,7 +40,7 @@ exports.init = (username, password, remember) => {
         ) {
             return;
         }
-        globals.log.info('WebSocket sent: ' + command + ' ' + JSON.stringify(data));
+        globals.log.info(`WebSocket sent: ${command} ${JSON.stringify(data)}`);
     };
 
     /*
@@ -80,27 +80,25 @@ exports.init = (username, password, remember) => {
 
         if (globals.currentScreen === 'error') {
             // The client is programmed to close the connection when an error occurs, so if we are already on the error screen, then we don't have to do anything else
-            return;
         } else {
             // The WebSocket connection dropped because of a bad network connection or similar issue, so show the error screen
             misc.errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!', false);
-            return;
         }
     }
 
     globals.conn.on('socketError', (event) => {
         globals.log.info('WebSocket error:', event);
         if (globals.currentScreen === 'title-ajax') {
-            let error = 'Failed to connect to the WebSocket server. The server might be down!';
+            const error = 'Failed to connect to the WebSocket server. The server might be down!';
             misc.errorShow(error, false);
         } else if (globals.currentScreen === 'register-ajax') {
-            let error = 'Failed to connect to the WebSocket server. The server might be down!';
-            let jqXHR = { // Emulate a jQuery error because that is what the "registerFail" function expects
+            const error = 'Failed to connect to the WebSocket server. The server might be down!';
+            const jqXHR = { // Emulate a jQuery error because that is what the "registerFail" function expects
                 responseText: error,
             };
             registerScreen.fail(jqXHR);
         } else {
-            let error = 'Encountered a WebSocket error. The server might be down!';
+            const error = 'Encountered a WebSocket error. The server might be down!';
             misc.errorShow(error, false);
         }
     });
@@ -125,10 +123,10 @@ exports.init = (username, password, remember) => {
     // Sent after a successful connection
     globals.conn.on('settings', (data) => {
         // Log the event
-        globals.log.info('Websocket - settings - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - settings - ${JSON.stringify(data)}`);
 
         // Time
-        let now = new Date().getTime();
+        const now = new Date().getTime();
         globals.timeOffset = data.time - now;
 
         // Username
@@ -226,7 +224,7 @@ exports.init = (username, password, remember) => {
 
     globals.conn.on('roomJoined', (data) => {
         // Log the event
-        globals.log.info('Websocket - roomJoined - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - roomJoined - ${JSON.stringify(data)}`);
 
         // Keep track of the person who just joined
         globals.roomList[data.room].users[data.user.name] = data.user;
@@ -246,16 +244,16 @@ exports.init = (username, password, remember) => {
             const message = `${data.user.name} has connected.`;
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
-                chat.draw('_race_' + globals.currentRaceID, '!server', message);
+                chat.draw(`_race_${globals.currentRaceID}`, '!server', message);
             }
         } else {
-            chat.draw(data.room, '!server', data.user.name + ' has joined the race.');
+            chat.draw(data.room, '!server', `${data.user.name} has joined the race.`);
         }
     });
 
     globals.conn.on('roomLeft', (data) => {
         // Log the event
-        globals.log.info('Websocket - roomLeft - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - roomLeft - ${JSON.stringify(data)}`);
 
         // Remove them from the room list
         delete globals.roomList[data.room].users[data.name];
@@ -275,16 +273,16 @@ exports.init = (username, password, remember) => {
             const message = `${data.name} has disconnected.`;
             chat.draw(data.room, '!server', message);
             if (globals.currentRaceID !== false) {
-                chat.draw('_race_' + globals.currentRaceID, '!server', message);
+                chat.draw(`_race_${globals.currentRaceID}`, '!server', message);
             }
         } else {
-            chat.draw(data.room, '!server', data.name + ' has left the race.');
+            chat.draw(data.room, '!server', `${data.name} has left the race.`);
         }
     });
 
     globals.conn.on('roomUpdate', (data) => {
         // Log the event
-        globals.log.info('Websocket - roomLeft - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - roomLeft - ${JSON.stringify(data)}`);
 
         // Keep track of the person who just joined
         globals.roomList[data.room].users[data.user.name] = data.user;
@@ -321,7 +319,7 @@ exports.init = (username, password, remember) => {
                 messageArray[i] = discordEmotes[messageArray[i]];
             }
         }
-        let newMessage = messageArray.join(' ');
+        const newMessage = messageArray.join(' ');
 
         // Send it to the lobby
         chat.draw('lobby', data.name, newMessage, null, true);
@@ -334,7 +332,7 @@ exports.init = (username, password, remember) => {
     // On initial connection, we get a list of all of the races that are currently open or ongoing
     globals.conn.on('raceList', (data) => {
         // Log the event
-        globals.log.info('Websocket - raceList - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceList - ${JSON.stringify(data)}`);
 
         // Check for empty races
         if (data.length === 0) {
@@ -376,11 +374,12 @@ exports.init = (username, password, remember) => {
         globals.log.info(`Websocket - racerList - ${JSON.stringify(data)}`);
 
         // Store the racer list
-        globals.raceList[data.id].racerList = data.racers;
+        const race = globals.raceList[data.id];
+        race.racerList = data.racers;
 
         // Build the table with the race participants on the race screen
         $('#race-participants-table-body').html('');
-        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
+        for (let i = 0; i < race.racerList.length; i++) {
             raceScreen.participantAdd(i);
         }
 
@@ -420,7 +419,10 @@ exports.init = (username, password, remember) => {
         let playSound = false;
         if (globals.currentScreen === 'lobby') {
             playSound = true;
-        } else if (globals.currentScreen === 'race' && globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+        } else if (
+            globals.currentScreen === 'race' &&
+            !Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)
+        ) {
             playSound = true;
         }
         if (playSound && data.ruleset.solo === false) { // Don't play sounds for solo races
@@ -439,12 +441,12 @@ exports.init = (username, password, remember) => {
         }
 
         // Due to lag, the race might have been deleted already, so check for that
-        if (globals.raceList.hasOwnProperty(data.id) === false) {
+        if (!Object.prototype.hasOwnProperty.call(globals.raceList, data.id)) {
             return;
         }
 
         // Log the event
-        globals.log.info('Websocket - raceJoined - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceJoined - ${JSON.stringify(data)}`);
 
         // Keep track of the people in each race
         globals.raceList[data.id].racers.push(data.name);
@@ -455,28 +457,26 @@ exports.init = (username, password, remember) => {
         if (data.name === globals.myUsername) {
             // If we joined this race
             raceScreen.show(data.id);
-        } else {
-            if (data.id === globals.currentRaceID) {
-                // We are in this race, so add this racer to the racerList with all default values (defaults)
-                let datetime = new Date().getTime();
-                globals.raceList[data.id].racerList.push({
-                    name:   data.name,
-                    status: 'not ready',
-                    datetimeJoined: datetime,
-                    floorNum: 0,
-                    place: 0,
-                    placeMid: 1,
-                    items: [],
-                });
+        } else if (data.id === globals.currentRaceID) {
+            // We are in this race, so add this racer to the racerList with all default values (defaults)
+            const datetime = new Date().getTime();
+            globals.raceList[data.id].racerList.push({
+                name: data.name,
+                status: 'not ready',
+                datetimeJoined: datetime,
+                floorNum: 0,
+                place: 0,
+                placeMid: 1,
+                items: [],
+            });
 
-                // Update the race screen
-                raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
+            // Update the race screen
+            raceScreen.participantAdd(globals.raceList[data.id].racerList.length - 1);
 
-                // Update the mod
-                globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
-                modLoader.send();
-                globals.log.info('modLoader - Sent a numEntrants of "' + globals.modLoader.numEntrants + '".');
-            }
+            // Update the mod
+            globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
+            modLoader.send();
+            // globals.log.info(`modLoader - Sent a numEntrants of "${globals.modLoader.numEntrants}".`);
         }
     }
 
@@ -491,7 +491,7 @@ exports.init = (username, password, remember) => {
         }
 
         // Log the event
-        globals.log.info('Websocket - raceLeft - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceLeft - ${JSON.stringify(data)}`);
 
         // Find out if we are in this race
         let inThisRace = false;
@@ -503,7 +503,7 @@ exports.init = (username, password, remember) => {
         if (globals.raceList[data.id].racers.indexOf(data.name) !== -1) {
             globals.raceList[data.id].racers.splice(globals.raceList[data.id].racers.indexOf(data.name), 1);
         } else {
-            misc.errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the "racers" array.');
+            misc.errorShow(`"${data.name}" left race #${data.id}, but they were not in the "racers" array.`);
             return;
         }
 
@@ -518,7 +518,7 @@ exports.init = (username, password, remember) => {
                 }
             }
             if (foundRacer === false) {
-                misc.errorShow('"' + data.name + '" left race #' + data.id + ', but they were not in the "racerList" array.');
+                misc.errorShow(`"${data.name}" left race #${data.id}, but they were not in the "racerList" array.`);
                 return;
             }
         }
@@ -548,7 +548,7 @@ exports.init = (username, password, remember) => {
         // If this is the current race
         if (data.id === globals.currentRaceID) {
             // Remove the row for this player
-            $('#race-participants-table-' + data.name).remove();
+            $(`#race-participants-table-${data.name}`).remove();
 
             // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
             if (globals.raceList[globals.currentRaceID].racerList.length > 6) { // More than 6 races causes the overflow
@@ -565,7 +565,7 @@ exports.init = (username, password, remember) => {
             // Update the mod
             globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
             modLoader.send();
-            globals.log.info('modLoader - Sent a race numEntrants of "' + globals.modLoader.numEntrants + '".');
+            // globals.log.info(`modLoader - Sent a race numEntrants of "${globals.modLoader.numEntrants}".`);
         }
     }
 
@@ -580,7 +580,7 @@ exports.init = (username, password, remember) => {
         }
 
         // Log the event
-        globals.log.info('Websocket - raceSetStatus - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceSetStatus - ${JSON.stringify(data)}`);
 
         // Update the status
         globals.raceList[data.id].status = data.status;
@@ -593,7 +593,7 @@ exports.init = (username, password, remember) => {
             if (data.status !== 'in progress' && data.status !== 'finished') {
                 globals.modLoader.status = data.status;
                 modLoader.send();
-                globals.log.info('modLoader - Sent a race status of "' + data.status + '".');
+                // globals.log.info(`modLoader - Sent a race status of "${data.status}".`);
             }
 
             // Do different things depending on the status
@@ -625,7 +625,7 @@ exports.init = (username, password, remember) => {
                     misc.playSound('race-completed', 1300);
                 }
             } else {
-                misc.errorShow('Failed to parse the status of race #' + data.id + ': ' + globals.raceList[data.id].status);
+                misc.errorShow(`Failed to parse the status of race #${data.id}: ${globals.raceList[data.id].status}`);
             }
         }
 
@@ -635,8 +635,8 @@ exports.init = (username, password, remember) => {
             circleClass = 'open';
         } else if (data.status === 'starting') {
             circleClass = 'starting';
-            $('#lobby-current-races-' + data.id).removeClass('lobby-race-row-open');
-            $('#lobby-current-races-' + data.id).unbind();
+            $(`#lobby-current-races-${data.id}`).removeClass('lobby-race-row-open');
+            $(`#lobby-current-races-${data.id}`).unbind();
         } else if (data.status === 'in progress') {
             circleClass = 'in-progress';
         } else if (data.status === 'finished') {
@@ -646,9 +646,9 @@ exports.init = (username, password, remember) => {
         } else {
             misc.errorShow('Unable to parse the race status from the raceSetStatus command.');
         }
-        $('#lobby-current-races-' + data.id + '-status-circle').removeClass();
-        $('#lobby-current-races-' + data.id + '-status-circle').addClass('circle lobby-current-races-' + circleClass);
-        $('#lobby-current-races-' + data.id + '-status').html('<span lang="en">' + data.status.capitalize() + '</span>');
+        $(`#lobby-current-races-${data.id}-status-circle`).removeClass();
+        $(`#lobby-current-races-${data.id}-status-circle`).addClass(`circle lobby-current-races-${circleClass}`);
+        $(`#lobby-current-races-${data.id}-status`).html(`<span lang="en">${data.status.capitalize()}</span>`);
 
         // Remove the race if it is finished
         if (data.status === 'finished') {
@@ -667,7 +667,7 @@ exports.init = (username, password, remember) => {
         }
 
         // Log the event
-        globals.log.info('Websocket - racerSetStatus - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - racerSetStatus - ${JSON.stringify(data)}`);
 
         // We don't care about racer updates for a race that is not showing on the current screen
         if (data.id !== globals.currentRaceID) {
@@ -675,7 +675,6 @@ exports.init = (username, password, remember) => {
         }
 
         // Find the player in the racerList
-        let numReady = 0;
         for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
             if (data.name === globals.raceList[data.id].racerList[i].name) {
                 // Update their status and place locally
@@ -710,7 +709,7 @@ exports.init = (username, password, remember) => {
         }
 
         // Log the event
-        globals.log.info('Websocket - raceStart - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - raceStart - ${JSON.stringify(data)}`);
 
         // Check to see if this message actually applies to the race that is showing on the screen
         if (data.id !== globals.currentRaceID) {
@@ -721,8 +720,8 @@ exports.init = (username, password, remember) => {
         globals.raceList[globals.currentRaceID].datetimeStarted = data.time;
 
         // Schedule the countdown, which will start roughly 5 seconds from now
-        // (on solo races, the countdown starts immediately)
-        let now = new Date().getTime();
+        // (or 3 seconds from now in a solo race)
+        const now = new Date().getTime();
         let timeToStartCountdown = data.time - now - globals.timeOffset - globals.fadeTime;
         if (globals.raceList[globals.currentRaceID].ruleset.solo) {
             timeToStartCountdown -= 3000;
@@ -804,6 +803,6 @@ exports.init = (username, password, remember) => {
     globals.conn.on('achievement', connAchievement);
     function connAchievement(data) {
         // Log the event
-        globals.log.info('Websocket - achievement - ' + JSON.stringify(data));
+        globals.log.info(`Websocket - achievement - ${JSON.stringify(data)}`);
     }
 };

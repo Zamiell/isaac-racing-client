@@ -40,6 +40,5 @@ jspm_packages
 # Isaac Racing Client Stuff
 # -------------------------
 .env
-Racing+.log
 settings.json
 dist

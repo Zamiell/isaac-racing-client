@@ -80,31 +80,27 @@ let childSteam = null;
 let childIsaac = null;
 let errorHappened = false;
 
-/*
-    Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
-*/
+// Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
+const log = tracer.dailyfile({
+    // Log file settings
+    root: (isDev ? '.' : process.execPath),
+    logPathFormat: '{{root}}/Racing+ {{date}}.log',
+    splitFormat: 'yyyy-mm-dd',
+    maxLogFiles: 10,
 
-const log = tracer.console({
-    format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
-    dateformat: "ddd mmm dd HH:MM:ss Z",
-    transport: function(data) {
-        // #1 - Log to the JavaScript console
+    // Global tracer settings
+    format: '{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}',
+    dateformat: 'ddd mmm dd HH:MM:ss Z',
+    transport: (data) => {
+        // Log errors to the JavaScript console in addition to the log file
         console.log(data.output);
-
-        // #2 - Log to a file
-        let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
-            if (err) {
-                throw err;
-            }
-        });
-    }
+    },
 });
 
 // Get the version
-let packageFileLocation = path.join(__dirname, 'package.json');
-let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
-let version = 'v' + JSON.parse(packageFile).version;
+const packageFileLocation = path.join(__dirname, '..', 'package.json');
+const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
+const version = `v${JSON.parse(packageFile).version}`;
 
 const middleLine = `Racing+ client ${version} started!`;
 let separatorLine = '';
@@ -120,7 +116,7 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     autoBreadcrumbs: true,
     release: version,
     environment: (isDev ? 'development' : 'production'),
-    dataCallback: function(data) {
+    dataCallback: (data) => {
         log.error(data);
         return data;
     },
@@ -133,7 +129,7 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 // Open the file that contains all of the user's settings
 // (We use teeny-conf instead of localStorage because localStorage persists after uninstallation)
 const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
-let settings = new teeny(settingsFile);
+const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 
 /*
@@ -147,11 +143,11 @@ function createWindow() {
         settings.set('window', {});
         settings.saveSync();
     }
-    let windowSettings = settings.get('window');
+    const windowSettings = settings.get('window');
 
     // Width
     let width;
-    if (windowSettings.hasOwnProperty('width')) {
+    if (Object.prototype.hasOwnProperty.call(windowSettings, 'width')) {
         width = windowSettings.width;
     } else {
         width = (isDev ? 1610 : 1110);
@@ -159,7 +155,7 @@ function createWindow() {
 
     // Height
     let height;
-    if (windowSettings.hasOwnProperty('height')) {
+    if (Object.prototype.hasOwnProperty.call(windowSettings, 'height')) {
         height = windowSettings.height;
     } else {
         height = 720;
@@ -167,13 +163,13 @@ function createWindow() {
 
     // Create the browser window
     mainWindow = new BrowserWindow({
-        x:      windowSettings.x,
-        y:      windowSettings.y,
-        width:  width,
-        height: height,
-        icon:   path.resolve(__dirname, 'assets', 'img', 'favicon.png'),
-        title:  'Racing+',
-        frame:  false,
+        x: windowSettings.x,
+        y: windowSettings.y,
+        width,
+        height,
+        icon: path.resolve(__dirname, 'assets', 'img', 'favicon.png'),
+        title: 'Racing+',
+        frame: false,
     });
     if (isDev === true) {
         mainWindow.webContents.openDevTools();
@@ -182,13 +178,13 @@ function createWindow() {
 
     // Remove the taskbar flash state
     // (this is not currently used)
-    mainWindow.once('focus', function() {
+    mainWindow.once('focus', () => {
         mainWindow.flashFrame(false);
     });
 
     // Save the window size and position
-    mainWindow.on('close', function() {
-        let windowBounds = mainWindow.getBounds();
+    mainWindow.on('close', () => {
+        const windowBounds = mainWindow.getBounds();
 
         // We have to re-get the settings, since the renderer process may have changed them
         // If so, our local copy of all of the settings is no longer current
@@ -198,7 +194,7 @@ function createWindow() {
     });
 
     // Dereference the window object when it is closed
-    mainWindow.on('closed', function() {
+    mainWindow.on('closed', () => {
         mainWindow = null;
     });
 }
@@ -206,25 +202,25 @@ function createWindow() {
 function autoUpdate() {
     // Now that the window is created, check for updates
     if (isDev === false) {
-        autoUpdater.on('error', function(err) {
+        autoUpdater.on('error', (err) => {
             log.error(err.message);
             Raven.captureException(err);
             mainWindow.webContents.send('autoUpdater', 'error');
         });
 
-        autoUpdater.on('checking-for-update', function() {
+        autoUpdater.on('checking-for-update', () => {
             mainWindow.webContents.send('autoUpdater', 'checking-for-update');
         });
 
-        autoUpdater.on('update-available', function() {
+        autoUpdater.on('update-available', () => {
             mainWindow.webContents.send('autoUpdater', 'update-available');
         });
 
-        autoUpdater.on('update-not-available', function() {
+        autoUpdater.on('update-not-available', () => {
             mainWindow.webContents.send('autoUpdater', 'update-not-available');
         });
 
-        autoUpdater.on('update-downloaded', function(e, notes, name, date, url) {
+        autoUpdater.on('update-downloaded', (e, notes, name, date, url) => {
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 
@@ -235,17 +231,17 @@ function autoUpdate() {
 
 function registerKeyboardHotkeys() {
     // Register global hotkeys
-    const hotkeyIsaacLaunch = globalShortcut.register('Alt+B', function() {
+    const hotkeyIsaacLaunch = globalShortcut.register('Alt+B', () => {
         opn('steam://rungameid/250900');
     });
     if (!hotkeyIsaacLaunch) {
         log.warn('Alt+B hotkey registration failed.');
     }
 
-    const hotkeyIsaacFocus = globalShortcut.register('Alt+1', function() {
+    const hotkeyIsaacFocus = globalShortcut.register('Alt+1', () => {
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToFocusIsaac = path.join(__dirname, 'assets', 'programs', 'focusIsaac', 'focusIsaac.exe');
-            execFile(pathToFocusIsaac, function(error, stdout, stderr) {
+            const pathToFocusIsaac = path.join(__dirname, 'assets', 'programs', 'focusIsaac', 'focusIsaac.exe');
+            execFile(pathToFocusIsaac, (error, stdout, stderr) => {
                 // We have to attach an empty callback to this or it does not work for some reason
             });
         }
@@ -254,28 +250,28 @@ function registerKeyboardHotkeys() {
         log.warn('Alt+1 hotkey registration failed.');
     }
 
-    const hotkeyRacingPlusFocus = globalShortcut.register('Alt+2', function() {
+    const hotkeyRacingPlusFocus = globalShortcut.register('Alt+2', () => {
         mainWindow.focus();
     });
     if (!hotkeyRacingPlusFocus) {
         log.warn('Alt+2 hotkey registration failed.');
     }
 
-    const hotkeyReady = globalShortcut.register('Alt+R', function() {
+    const hotkeyReady = globalShortcut.register('Alt+R', () => {
         mainWindow.webContents.send('hotkey', 'ready');
     });
     if (!hotkeyReady) {
         log.warn('Alt+R hotkey registration failed.');
     }
 
-    const hotkeyFinish = globalShortcut.register('Alt+F', function() {
+    const hotkeyFinish = globalShortcut.register('Alt+F', () => {
         mainWindow.webContents.send('hotkey', 'finish');
     });
     if (!hotkeyFinish) {
         log.warn('Alt+F hotkey registration failed.');
     }
 
-    const hotkeyQuit = globalShortcut.register('Alt+Q', function() {
+    const hotkeyQuit = globalShortcut.register('Alt+Q', () => {
         mainWindow.webContents.send('hotkey', 'quit');
     });
     if (!hotkeyQuit) {
@@ -304,14 +300,14 @@ if (isDev === false) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function() {
+app.on('ready', () => {
     createWindow();
     autoUpdate();
     registerKeyboardHotkeys();
 });
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
@@ -319,7 +315,7 @@ app.on('window-all-closed', function() {
     }
 });
 
-app.on('activate', function() {
+app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
@@ -327,7 +323,7 @@ app.on('activate', function() {
     }
 });
 
-app.on('before-quit', function() {
+app.on('before-quit', () => {
     if (errorHappened === false) {
         // Write all default values to the "save1.dat", "save2.dat", and "save3.dat" files
         let modsPath;
@@ -338,13 +334,13 @@ app.on('before-quit', function() {
         }
         for (let i = 1; i <= 3; i++) {
             // Find the location of the file
-            let saveDat = path.join(modsPath, modNameDev, 'save' + i + '.dat');
+            let saveDat = path.join(modsPath, modNameDev, `save${i}.dat`);
             if (fs.existsSync(saveDat) === false) {
-                saveDat = path.join(modsPath, modName, 'save' + i + '.dat');
+                saveDat = path.join(modsPath, modName, `save${i}.dat`);
             }
 
             // Read it and set all non-speedrun order variables to defaults
-            let json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
+            const json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
             json.status = 'none';
             json.myStatus = 'not ready';
             json.rType = 'unranked';
@@ -368,8 +364,8 @@ app.on('before-quit', function() {
             }
             try {
                 fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');
-            } catch(err) {
-                log.error('Error while writing the "save#.dat" file: ' + err);
+            } catch (err) {
+                log.error(`Error while writing the "save${i}.dat" file: ${err}`);
             }
         }
         log.info('Copied over default "save1.dat", "save2.dat", and "save3.dat" files.');
@@ -378,7 +374,7 @@ app.on('before-quit', function() {
     }
 });
 
-app.on('will-quit', function() {
+app.on('will-quit', () => {
     // Unregister the global keyboard hotkeys
     globalShortcut.unregisterAll();
 
@@ -398,124 +394,114 @@ app.on('will-quit', function() {
     IPC handlers
 */
 
-ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
+ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
     log.info('Main process recieved message:', arg1);
 
     if (arg1 === 'minimize') {
         mainWindow.minimize();
-
     } else if (arg1 === 'maximize') {
         if (mainWindow.isMaximized() === true) {
             mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
         }
-
     } else if (arg1 === 'close') {
         app.quit();
-
     } else if (arg1 === 'restart') {
         errorHappened = true; // Don't reset our 3 "save.dat" files if we did a /restart
         app.relaunch();
         app.quit();
-
     } else if (arg1 === 'quitAndInstall') {
         autoUpdater.quitAndInstall();
-
     } else if (arg1 === 'devTools') {
         mainWindow.webContents.openDevTools();
-
     } else if (arg1 === 'error') {
         errorHappened = true;
-
     } else if (arg1 === 'steam' && childSteam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
         // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
         if (isDev) {
-            childSteam = fork('./steam');
+            childSteam = fork('./src/steam');
         } else {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
-            childSteam = fork('./app.asar/steam', {
+            childSteam = fork('./app.asar/src/steam', {
                 cwd: path.join(__dirname, '..'),
             });
         }
         log.info('Started the Greenworks child process.');
 
         // Receive notifications from the child process
-        childSteam.on('message', function(message) {
+        childSteam.on('message', (message) => {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('steam', message);
         });
 
         // Track errors
-        childSteam.on('error', function(err) {
+        childSteam.on('error', (err) => {
             // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('steam', 'error: ' + err);
+            mainWindow.webContents.send('steam', `error: ${err}`);
         });
 
         // Track when the process exits
-        childSteam.on('exit', function() {
+        childSteam.on('exit', () => {
             mainWindow.webContents.send('steam', 'exited');
         });
-
     } else if (arg1 === 'steamExit') {
         // The renderer has successfully authenticated and is now establishing a WebSocket connection, so we can kill the Greenworks process
         if (childSteam !== null) {
             childSteam.send('exit');
         }
-
     } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
         // Start the log watcher in a separate process for performance reasons
         if (isDev) {
-            childLogWatcher = fork('./log-watcher');
+            childLogWatcher = fork('./src/log-watcher');
         } else {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
-            childLogWatcher = fork('./app.asar/log-watcher', {
+            childLogWatcher = fork('./app.asar/src/log-watcher', {
                 cwd: path.join(__dirname, '..'),
             });
         }
         log.info('Started the log watcher child process.');
 
         // Receive notifications from the child process
-        childLogWatcher.on('message', function(message) {
+        childLogWatcher.on('message', (message) => {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('logWatcher', message);
         });
 
         // Track errors
-        childLogWatcher.on('error', function(err) {
+        childLogWatcher.on('error', (err) => {
             // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('logWatcher', 'error: ' + err);
+            mainWindow.webContents.send('logWatcher', `error: ${err}`);
         });
 
         // Feed the child the path to the Isaac log file
         childLogWatcher.send(arg2);
-
     } else if (arg1 === 'isaac') {
         // Start the Isaac launcher in a separate process for performance reasons
         if (isDev) {
-            childIsaac = fork('./isaac');
+            childIsaac = fork('./src/isaac');
         } else {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
-            childIsaac = fork('./app.asar/isaac', {
+            childIsaac = fork('./app.asar/src/isaac', {
                 cwd: path.join(__dirname, '..'),
             });
         }
         log.info('Started the Isaac launcher child process.');
 
         // Receive notifications from the child process
-        childIsaac.on('message', function(message) {
+        childIsaac.on('message', (message) => {
             // Pass the message to the renderer (browser) process
             mainWindow.webContents.send('isaac', message);
         });
 
         // Track errors
-        childIsaac.on('error', function(err) {
+        childIsaac.on('error', (err) => {
             // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('isaac', 'error: ' + err);
+            mainWindow.webContents.send('isaac', `error: ${err}`);
         });
 
         // Feed the child the path to the Isaac mods directory and the "force" boolean
@@ -523,8 +509,8 @@ ipcMain.on('asynchronous-message', function(event, arg1, arg2) {
 
         // After being launched, Isaac will wrest control, so automatically switch focus back to the Racing+ client when this occurs
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            let pathToFocusRacing = path.join(__dirname, 'assets', 'programs', 'focusRacing+', 'focusRacing+.exe');
-            execFile(pathToFocusRacing, function(error, stdout, stderr) {
+            const pathToFocusRacing = path.join(__dirname, 'assets', 'programs', 'focusRacing+', 'focusRacing+.exe');
+            execFile(pathToFocusRacing, (error, stdout, stderr) => {
                 // We have to attach an empty callback to this or it does not work for some reason
             });
         } else if (process.platform === 'darwin') { // OS X

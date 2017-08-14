@@ -225,7 +225,7 @@ const show = (raceID) => {
     globals.modLoader.seed = globals.raceList[globals.currentRaceID].ruleset.seed;
     globals.modLoader.startingBuild = globals.raceList[globals.currentRaceID].ruleset.startingBuild;
     globals.modLoader.countdown = -1;
-    globals.log.info('modLoader - Set all new race variables (but didn\'t send).');
+    // globals.log.info('modLoader - Set all new race variables (but didn\'t send).');
     // We will send all of this stuff along with "place", "placeMid", and "numEntrants" later (in a few milliseconds) once we recieve the "racerList" command from the server
 
     // Show and hide some buttons in the header
@@ -803,7 +803,7 @@ const startCountdown = () => {
         // Tell the Lua mod that we are starting a race
         globals.modLoader.countdown = 10;
         modLoader.send();
-        globals.log.info('modLoader - Sent a countdown of 10.');
+        // globals.log.info('modLoader - Sent a countdown of 10.');
 
         // Show the countdown
         $('#race-ready-checkbox-container').fadeOut(globals.fadeTime, () => {
@@ -844,11 +844,11 @@ const countdownTick = (i) => {
     setTimeout(() => {
         globals.modLoader.countdown = i;
         if (i === 0) { // This is to avoid bugs where things happen out of order
-            globals.modLoader.status = "in progress";
+            globals.modLoader.status = 'in progress';
             globals.modLoader.place = 0;
         }
         modLoader.send();
-        globals.log.info('modLoader - Sent a countdown of ' + i + '.');
+        // globals.log.info(`modLoader - Sent a countdown of ${i}.`);
     }, globals.fadeTime);
 
     if (i > 0) {
@@ -862,7 +862,7 @@ const countdownTick = (i) => {
 
             // Focus the game with 3 seconds remaining on the countdown
             if (i === 3 && process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-                let command = path.join(__dirname, '/assets/programs/focusIsaac/focusIsaac.exe');
+                const command = path.join(__dirname, '/assets/programs/focusIsaac/focusIsaac.exe');
                 execFile(command);
             }
 
