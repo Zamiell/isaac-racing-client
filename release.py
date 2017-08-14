@@ -11,6 +11,7 @@ import re
 import shutil
 import psutil
 import time
+import paramiko
 from PIL import Image, ImageFont, ImageDraw
 
 # Configuration
@@ -37,13 +38,15 @@ parser.add_argument('-s', '--skipmod', help="skip all mod related stuff", action
 parser.add_argument('-m', '--mod', help="only do mod related stuff", action='store_true')
 args = parser.parse_args()
 
+# Load environment variables
+dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
 # Get the version
 with open('package.json') as package_JSON:
     data = json.load(package_JSON)
 number_version = data['version']
 version = 'v' + data['version']
 
-'''
 if args.skipmod == False:
     # Put the version in the "RPGlobals.lua" file
     # From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
@@ -141,35 +144,26 @@ for process in psutil.process_iter():
 # Build/package
 print('Building:', repository_name, version)
 if args.github:
-    dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
     run_command = 'dist2'
 else:
     run_command = 'dist'
 return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27/python.exe"'], shell=True)
 if return_code != 0:
     error('Failed to build.')
-'''
 
-# Also upload it to a Chinese mirror
+# Set the latest client version number on the server
 if args.github:
-    # Copy the installer
-    setup_exe_filename = 'Racing+ Setup ' + number_version + '.exe'
-    setup_exe_path = os.path.join(repository_dir, 'dist', setup_exe_filename)
-    repo_mirror_dir = os.path.join(repository_dir, '..', repository_name + '-release-mirror')
-    copied_exe_path = os.path.join(repo_mirror_dir, setup_exe_filename)
-    shutil.copyfile(setup_exe_path, copied_exe_path)
+    latest_client_version_file = 'latest_client_version.txt'
+    with open(latest_client_version_file, "w") as version_file:
+        print(version, file=version_file)
 
-    # Commit to the client repository
-    os.chdir(repository_dir)
-    return_code = subprocess.call(['git', 'add', '-A'])
-    if return_code != 0:
-        error('Failed to git add.')
-    return_code = subprocess.call(['git', 'commit', '-m', version])
-    if return_code != 0:
-        error('Failed to git commit.')
-    return_code = subprocess.call(['git', 'push'])
-    if return_code != 0:
-        error('Failed to git push.')
+    t = paramiko.Transport((os.environ.get('VPS_IP'), 22))
+    t.connect(None, os.environ.get('VPS_USER'), os.environ.get('VPS_PASS'))
+    sftp = paramiko.SFTPClient.from_transport(t)
+    remote_latest_client_version_file_path = 'go/src/github.com/Zamiell/isaac-racing-server/' + latest_client_version_file
+    sftp.put(latest_client_version_file, remote_latest_client_version_file_path)
+    t.close()
+    os.remove(latest_client_version_file)
 
 # Done
 print('Released version', number_version, 'successfully.')

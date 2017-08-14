@@ -7,6 +7,7 @@
 /*
 
 New TODO:
+- disallow logging in with old versions
 - announce to discord when server is started
 - get server messages to be written to chat DB
 - get discord messages to be written to chat DB
@@ -89,19 +90,19 @@ const fs = nodeRequire('fs-extra');
 const tracer = nodeRequire('tracer');
 
 // Import local modules
-const globals         = nodeRequire('./assets/js/globals');
-const settings        = nodeRequire('./assets/js/settings');
-const misc            = nodeRequire('./assets/js/misc');
-const automaticUpdate = nodeRequire('./assets/js/automatic-update');
-const localization    = nodeRequire('./assets/js/localization');
-const keyboard        = nodeRequire('./assets/js/keyboard');
-const steam           = nodeRequire('./assets/js/steam'); // This handles automatic login
-const header          = nodeRequire('./assets/js/ui/header');
-const tutorialScreen  = nodeRequire('./assets/js/ui/tutorial');
-const registerScreen  = nodeRequire('./assets/js/ui/register');
-const lobbyScreen     = nodeRequire('./assets/js/ui/lobby');
-const raceScreen      = nodeRequire('./assets/js/ui/race');
-const modals          = nodeRequire('./assets/js/ui/modals');
+const globals = nodeRequire('./assets/js/globals');
+const settings = nodeRequire('./assets/js/settings');
+const misc = nodeRequire('./assets/js/misc');
+nodeRequire('./assets/js/automatic-update');
+nodeRequire('./assets/js/localization');
+nodeRequire('./assets/js/keyboard');
+nodeRequire('./assets/js/steam'); // This handles automatic login
+nodeRequire('./assets/js/ui/header');
+nodeRequire('./assets/js/ui/tutorial');
+nodeRequire('./assets/js/ui/register');
+nodeRequire('./assets/js/ui/lobby');
+nodeRequire('./assets/js/ui/race');
+nodeRequire('./assets/js/ui/modals');
 
 /*
     Development-only stuff
@@ -114,13 +115,13 @@ if (isDev) {
     const menu = new remote.Menu();
     const menuItem = new remote.MenuItem({
         label: 'Inspect Element',
-        click: function() {
+        click: () => {
             remote.getCurrentWindow().inspectElement(rightClickPosition.x, rightClickPosition.y);
         },
     });
     menu.append(menuItem);
 
-    window.addEventListener('contextmenu', function(e) {
+    window.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         rightClickPosition = {
             x: e.x,
@@ -135,9 +136,10 @@ if (isDev) {
 */
 
 // Get the version
-let packageFileLocation = path.join(__dirname, 'package.json');
-let packageFile = fs.readFileSync(packageFileLocation, 'utf8');
-let version = 'v' + JSON.parse(packageFile).version;
+const packageFileLocation = path.join(__dirname, 'package.json');
+const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
+const version = `v${JSON.parse(packageFile).version}`;
+globals.version = version;
 
 // Raven (error logging to Sentry)
 globals.Raven = nodeRequire('raven');
@@ -145,7 +147,7 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
     autoBreadcrumbs: true,
     release: version,
     environment: (isDev ? 'development' : 'production'),
-    dataCallback: function(data) {
+    dataCallback: (data) => {
         // We want to report errors to Sentry that are passed to the "errorShow" function
         // But because "captureException" in that function will send us back to this callback, check for that so that we don't report the same error twice
         if (data.exception[0].type !== 'RavenMiscError') {
@@ -159,13 +161,13 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
 globals.log = tracer.console({
     format: "{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}",
     dateformat: "ddd mmm dd HH:MM:ss Z",
-    transport: function(data) {
+    transport: (data) => {
         // #1 - Log to the JavaScript console
         console.log(data.output);
 
         // #2 - Log to a file
         let logFile = (isDev ? 'Racing+.log' : path.resolve(process.execPath, '..', '..', 'Racing+.log'));
-        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', function(err) {
+        fs.appendFile(logFile, data.output + (process.platform === 'win32' ? '\r' : '') + '\n', (err) => {
             if (err) {
                 throw err;
             }
@@ -173,7 +175,7 @@ globals.log = tracer.console({
     }
 });
 
-$(document).ready(function() {
+$(document).ready(() => {
     // Version
     $('#title-version').html(version);
     $('#settings-version').html(version);
@@ -203,10 +205,10 @@ $(document).ready(function() {
 */
 
 // Word list
-let wordListLocation = path.join(__dirname, 'assets', 'words', 'words.txt');
-fs.readFile(wordListLocation, function(err, data) {
+const wordListLocation = path.join(__dirname, 'assets', 'data', 'words.txt');
+fs.readFile(wordListLocation, (err, data) => {
     if (err) {
-        globals.initError = 'Failed to read the "' + wordListLocation + '" file: ' + err;
+        globals.initError = `Failed to read the "${wordListLocation}" file: ${err}`;
         return;
     }
     globals.wordList = data.toString().split('\n');
@@ -218,25 +220,25 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
     // First, try to find their "Documents" folder using PowerShell
     let powershellFailed = false;
     try {
-        let command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
+        const command = 'powershell.exe -command "[Environment]::GetFolderPath(\'mydocuments\')"';
         let documentsPath = execSync(command, {
-            'encoding': 'utf8',
+            encoding: 'utf8',
         });
         documentsPath = $.trim(documentsPath); // Remove the trailing newline
         globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
         if (fs.existsSync(globals.defaultLogFilePath) === false) {
             powershellFailed = true;
         }
-    } catch(err) {
+    } catch (err) {
         powershellFailed = true;
     }
 
     // Executing "powershell.exe" can fail on some computers, so let's try using the "USERPROFILE" environment variable
     if (powershellFailed) {
-        let documentsDirNames = ['Documents', 'My Documents'];
+        const documentsDirNames = ['Documents', 'My Documents'];
         let found = false;
-        for (let name of documentsDirNames) {
-            let documentsPath = path.join(process.env.USERPROFILE, name);
+        for (const name of documentsDirNames) {
+            const documentsPath = path.join(process.env.USERPROFILE, name);
             if (fs.existsSync(documentsPath)) {
                 found = true;
                 globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
@@ -247,13 +249,10 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
             globals.initError = 'Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.';
         }
     }
-
 } else if (process.platform === 'darwin') { // OS X
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
-
 } else if (process.platform === 'linux') { // Linux
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');
-
 } else {
     globals.initError = 'The platform of "' + process.platform + '" is not supported."';
 }
@@ -320,23 +319,23 @@ for (let i = 1; i <= 3; i++) {
 }
 
 // Item list
-let itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
+const itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
 try {
     globals.itemList = JSON.parse(fs.readFileSync(itemListLocation, 'utf8'));
-} catch(err) {
+} catch (err) {
     globals.initError = 'Failed to read the "' + itemListLocation + '" file: ' + err;
 }
 
 // Trinket list
-let trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.json');
+const trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.json');
 try {
     globals.trinketList = JSON.parse(fs.readFileSync(trinketListLocation, 'utf8'));
-} catch(err) {
+} catch (err) {
     globals.initError = 'Failed to read the "' + trinketListLocation + '" file: ' + err;
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion
-let emotePath = path.join(__dirname, 'assets', 'img', 'emotes');
+const emotePath = path.join(__dirname, 'assets', 'img', 'emotes');
 globals.emoteList = misc.getAllFilesFromFolder(emotePath);
 for (let i = 0; i < globals.emoteList.length; i++) { // Remove ".png" from each elemet of emoteList
     globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long

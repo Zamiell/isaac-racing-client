@@ -134,6 +134,7 @@ function login() {
     const postData = {
         steamID: globals.steam.id,
         ticket: globals.steam.ticket, // This will be verified on the server via the Steam web API
+        version: globals.version,
     };
     const url = `http${(globals.secure ? 's' : '')}://${(globals.localhost ? 'localhost' : globals.domain)}/login`;
     const request = $.ajax({
