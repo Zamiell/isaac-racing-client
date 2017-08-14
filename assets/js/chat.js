@@ -34,6 +34,7 @@ exports.send = (destination) => {
     let isPM = false;
     let PMrecipient;
     let PMmessage;
+    let noticeMessage;
     if (message.startsWith('/')) {
         isCommand = true;
 
@@ -83,10 +84,20 @@ exports.send = (destination) => {
                 misc.warningShow('That user is not currently online.');
                 return;
             }
-        }
-
-        // Check if the user is replying to a message
-        if (message.match(/^\/r\b/)) {
+        } else if (message.match(/^\/notice\b/)) {
+            // Validate that there is an attached message
+            const m = message.match(/^\/\w+ (.+)/);
+            if (m) {
+                noticeMessage = m[1];
+                globals.log.info('lol noticeMessage:', noticeMessage);
+            } else {
+                // Open the error tooltip
+                // TODO
+                // <span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>
+                return;
+            }
+        } else if (message.match(/^\/r\b/)) {
+            // Check if the user is replying to a message
             isPM = true;
 
             // Validate that a PM has been received already
@@ -145,10 +156,10 @@ exports.send = (destination) => {
         draw('PM-to', PMrecipient, PMmessage);
     } else if (message === '/debug') {
         // /debug - Debug command
-        if (isDev) {
-            globals.log.info('Sending debug command.');
-            globals.conn.send('debug', {});
+        globals.log.info('Sending debug command.');
+        globals.conn.send('debug', {});
 
+        if (isDev) {
             globals.log.info('Entering debug function.');
             debug();
         }
@@ -169,13 +180,13 @@ exports.send = (destination) => {
             });
         }
     } else if (message === '/shutdown') {
-        if (isDev) {
-            globals.conn.send('adminShutdown', {});
-        }
+        globals.conn.send('adminShutdown', {});
     } else if (message === '/unshutdown') {
-        if (isDev) {
-            globals.conn.send('adminUnshutdown', {});
-        }
+        globals.conn.send('adminUnshutdown', {});
+    } else if (message.startsWith('/notice ')) {
+        globals.conn.send('adminMessage', {
+            message: noticeMessage,
+        });
     }
 };
 

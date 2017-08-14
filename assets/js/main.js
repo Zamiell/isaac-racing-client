@@ -7,9 +7,11 @@
 /*
 
 New TODO:
+- announce to discord when server is started
+- get server messages to be written to chat DB
+- get discord messages to be written to chat DB
+- test / fix twitch chat bot
 - fix captain not being bolded on race left
-- fix panic that happens when 30 min timeout is hit
-- report panics to sentry!
 - fix /races
 
 Bugs to fix:

@@ -1,8 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.9.2* - August 14th, 2017
+### *v0.9.5* - August 14th, 2017
 
-* Mid-race placements will now work in races with over 10 people in them.
+* Mid-race placements will now work in races with over 10 people in them. (This was previously disabled to stop the server from crashing.)
+* Fixed some placements of Mega Maws and Gates in flipped rooms on The Chest and The Dark Room. (Thanks Thalen22 and thereisnofuture)
+* Fixed some miscellaneous bugs with the server. (Thanks PassionDrama and Molfried)
 
 ### *v0.9.0* - August 13th, 2017
 
@@ -142,7 +144,7 @@
 
 * The Schoolbag now works with the Booster Pack #3 items.
 * Diversity races now include the Booster Pack #3 items.
-* Fixed the bug where fireworks would play on the next run after a completed speedrun. (Thanks molfried)
+* Fixed the bug where fireworks would play on the next run after a completed speedrun. (Thanks Molfried)
 * Fixed the bug where the HP up pill would not work on Keeper if he has Greed's Gullet. (Thanks Dea1h)
 
 ### *v0.7.8* - June 30th, 2017

@@ -65,7 +65,7 @@ module.exports = {
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
     raceList: {},
-    secure,
+    secure: (localhost ? false : secure), // Always default to HTTP if connecting to localhost
     spamTimer: new Date().getTime(),
     steam: {
         id: null,

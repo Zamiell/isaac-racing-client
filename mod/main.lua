@@ -26,6 +26,12 @@ TODO CAN'T FIX:
 POST-FLIP ACTIONS:
 1) Remove duplicated start room for The Chest / Dark Room
 2) Remove Y-flipped Gurdy rooms from The Chest
+3) Double Gate room - Move the Gates all the way down
+    The Chest - #20040, #30040
+    Dark Room - #20012, #30012
+4) Mega Maw rooms - Move the Mega Maws all the way down
+    The Chest - #20269, #20039, #20059, #30269, #30039, #30059
+    Dark Room - #20011, #20052, #20080, #30011, #30052, #30080
 
 --]]
 

@@ -16,8 +16,8 @@ const header = nodeRequire('./assets/js/ui/header');
     Event handlers
 */
 
-$(document).ready(function() {
-    $('#lobby-chat-form').submit(function(event) {
+$(document).ready(() => {
+    $('#lobby-chat-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 */
 
 // Called from the login screen or the register screen
-exports.show = function() {
+exports.show = () => {
     // Start the log watcher
     if (!logWatcher.start()) {
         return;
@@ -61,7 +61,7 @@ exports.show = function() {
 
     // Show the lobby
     $('#page-wrapper').removeClass('vertical-center');
-    $('#lobby').fadeIn(globals.fadeTime, function() {
+    $('#lobby').fadeIn(globals.fadeTime, () => {
         globals.currentScreen = 'lobby';
     });
 
@@ -76,7 +76,7 @@ exports.show = function() {
     $('#lobby-chat-box-input').focus();
 };
 
-exports.showFromRace = function() {
+exports.showFromRace = () => {
     // We should be on the race screen unless there is severe lag
     if (globals.currentScreen !== 'race') {
         misc.errorShow('Failed to return to the lobby since currentScreen is equal to "' + globals.currentScreen + '".');
@@ -89,7 +89,7 @@ exports.showFromRace = function() {
     $('#header-profile').fadeOut(globals.fadeTime);
     $('#header-leaderboards').fadeOut(globals.fadeTime);
     $('#header-help').fadeOut(globals.fadeTime);
-    $('#header-lobby').fadeOut(globals.fadeTime, function() {
+    $('#header-lobby').fadeOut(globals.fadeTime, () => {
         $('#header-profile').fadeIn(globals.fadeTime);
         $('#header-leaderboards').fadeIn(globals.fadeTime);
         $('#header-help').fadeIn(globals.fadeTime);
@@ -99,8 +99,8 @@ exports.showFromRace = function() {
     });
 
     // Show the lobby
-    $('#race').fadeOut(globals.fadeTime, function() {
-        $('#lobby').fadeIn(globals.fadeTime, function() {
+    $('#race').fadeOut(globals.fadeTime, () => {
+        $('#lobby').fadeIn(globals.fadeTime, () => {
             globals.currentScreen = 'lobby';
         });
 
@@ -119,7 +119,7 @@ exports.showFromRace = function() {
     });
 };
 
-exports.raceDraw = function(race) {
+exports.raceDraw = (race) => {
     // Create the new row
     let raceDiv = '<tr id="lobby-current-races-' + race.id + '" class="';
     if (race.status === 'open' && race.ruleset.solo === false) {
@@ -192,7 +192,7 @@ exports.raceDraw = function(race) {
     // Add it and fade it in
     $('#lobby-current-races-table-body').append(raceDiv);
     if ($('#lobby-current-races-table-no').css('display') !== 'none') {
-        $('#lobby-current-races-table-no').fadeOut(globals.fadeTime, function() {
+        $('#lobby-current-races-table-no').fadeOut(globals.fadeTime, () => {
             $('#lobby-current-races-table').fadeIn(0);
             raceDraw2(race);
         });
@@ -203,7 +203,7 @@ exports.raceDraw = function(race) {
 
 function raceDraw2(race) {
     // Fade in the race row
-    $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, function() {
+    $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, () => {
         // While we were fading in, the race might have ended
         if (globals.raceList.hasOwnProperty(race.id) === false) {
             return;
@@ -211,7 +211,7 @@ function raceDraw2(race) {
 
         // Make the row clickable
         if (globals.raceList[race.id].status === 'open' && globals.raceList[race.id].ruleset.solo === false) {
-            $('#lobby-current-races-' + race.id).click(function() {
+            $('#lobby-current-races-' + race.id).click(() => {
                 if (globals.currentScreen === 'lobby') {
                     globals.currentScreen = 'waiting-for-server';
                     globals.conn.send('raceJoin', {
@@ -229,7 +229,7 @@ function raceDraw2(race) {
     raceUpdatePlayers(race.id);
 }
 
-const raceUpdatePlayers = function(raceID) {
+const raceUpdatePlayers = (raceID) => {
     // Draw the new size
     $('#lobby-current-races-' + raceID + '-size').html(globals.raceList[raceID].racers.length);
 
@@ -308,8 +308,8 @@ function raceDrawCheckForOverflow(raceID, target) {
     }
 }
 
-exports.raceUndraw = function(raceID) {
-    $('#lobby-current-races-' + raceID).fadeOut(globals.fadeTime, function() {
+exports.raceUndraw = (raceID) => {
+    $('#lobby-current-races-' + raceID).fadeOut(globals.fadeTime, () => {
         $('#lobby-current-races-' + raceID).remove();
 
         if (Object.keys(globals.raceList).length === 0) {
@@ -326,20 +326,22 @@ exports.raceUndraw = function(raceID) {
     }
 };
 
-exports.usersDraw = function() {
+exports.usersDraw = () => {
     // Update the header that shows shows the amount of people online or in the race
     $('#lobby-users-online').html(globals.roomList.lobby.numUsers);
 
     // Make an array with the name of every user and alphabetize it
-    let userList = [];
-    for (let user in globals.roomList.lobby.users) {
+    const userList = [];
+    for (const user in globals.roomList.lobby.users) {
         if (globals.roomList.lobby.users.hasOwnProperty(user)) {
             userList.push(user);
         }
     }
 
     // Case insensitive sort of the connected users
-    userList.sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+    userList.sort(function (a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
 
     // Empty the existing list
     $('#lobby-users-users').html('');
@@ -347,30 +349,35 @@ exports.usersDraw = function() {
     // Add a div for each player
     for (let i = 0; i < userList.length; i++) {
         if (userList[i] === globals.myUsername) {
-            let userDiv = '<div>' + userList[i] + '</div>';
+            const userDiv = `<div>${userList[i]}</div>`;
             $('#lobby-users-users').append(userDiv);
         } else {
-            let userDiv = '<div id="lobby-users-' + userList[i] + '" class="users-user" data-tooltip-content="#user-click-tooltip">';
-            userDiv += userList[i] + '</div>';
+            const userDiv = `
+                <div id="lobby-users-user-${userList[i]}" class="users-user" data-tooltip-content="#user-click-tooltip">
+                    ${userList[i]}
+                </div>
+            `;
             $('#lobby-users-users').append(userDiv);
 
             // Add the tooltip (commented out since it doesn't work)
-            /*$('#lobby-users-' + userList[i]).tooltipster({
+            /*
+            $('#lobby-users-' + userList[i]).tooltipster({
                 theme: 'tooltipster-shadow',
                 trigger: 'click',
                 interactive: true,
                 side: 'left',
                 functionBefore: userTooltipChange(userList[i]),
-            });*/
+            });
+            */
         }
     }
 
     function userTooltipChange(username) {
-        $('#user-click-profile').click(function() {
+        $('#user-click-profile').click(() => {
             const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/profile/' + username;
             shell.openExternal(url);
         });
-        $('#user-click-private-message').click(function() {
+        $('#user-click-private-message').click(() => {
             if (globals.currentScreen === 'lobby') {
                 $('#lobby-chat-box-input').val('/msg ' + username + ' ');
                 $('#lobby-chat-box-input').focus();

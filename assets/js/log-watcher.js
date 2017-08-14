@@ -122,14 +122,14 @@ const logWatcher = (event, message) => {
             misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
         }
     } else if (message.startsWith('New floor: ')) {
-        let m = message.match(/New floor: (\d+)-(\d+)/);
+        const m = message.match(/New floor: (\d+)-(\d+)/);
         if (m) {
-            let floorNum = parseInt(m[1]); // The server expects this to be an integer
-            let stageType = parseInt(m[2]); // The server expects this to be an integer
+            const floorNum = parseInt(m[1], 10); // The server expects this to be an integer
+            const stageType = parseInt(m[2], 10); // The server expects this to be an integer
             globals.conn.send('raceFloor', {
-                id:        globals.currentRaceID,
-                floorNum:  floorNum,
-                stageType: stageType,
+                id: globals.currentRaceID,
+                floorNum,
+                stageType,
             });
         } else {
             misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process.');

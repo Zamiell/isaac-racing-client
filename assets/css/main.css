@@ -3819,7 +3819,6 @@
         border: 1px;
         margin-bottom: 1em;
         padding: 0 0.5em 0 0.5em;
-        -webkit-user-select: auto;
     }
 
     /*
@@ -3866,8 +3865,8 @@
 
     /* This is column 1 of the lobby races table */
     .lobby-current-races-name {
-        width: 12em;
-        max-width: 12em;
+        width: 11em;
+        max-width: 11em;
         white-space: nowrap;
         overflow: hidden;
     }

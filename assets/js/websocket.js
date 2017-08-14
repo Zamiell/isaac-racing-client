@@ -88,7 +88,7 @@ exports.init = (username, password, remember) => {
         }
     }
 
-    globals.conn.on('socketError', function(event) {
+    globals.conn.on('socketError', (event) => {
         globals.log.info('WebSocket error:', event);
         if (globals.currentScreen === 'title-ajax') {
             let error = 'Failed to connect to the WebSocket server. The server might be down!';
@@ -110,12 +110,12 @@ exports.init = (username, password, remember) => {
     */
 
     // Sent if the server rejects a command; we should completely reload the client since something may be out of sync
-    globals.conn.on('error', function(data) {
+    globals.conn.on('error', (data) => {
         misc.errorShow(data.message);
     });
 
     // Sent if the server rejects a command, but in a normal way that does not indicate that anything is out of sync
-    globals.conn.on('warning', function(data) {
+    globals.conn.on('warning', (data) => {
         if (data.message === 'Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.') {
             globals.stream.URL = globals.stream.URLBeforeSubmit;
         }
@@ -123,7 +123,7 @@ exports.init = (username, password, remember) => {
     });
 
     // Sent after a successful connection
-    globals.conn.on('settings', function(data) {
+    globals.conn.on('settings', (data) => {
         // Log the event
         globals.log.info('Websocket - settings - ' + JSON.stringify(data));
 
@@ -157,7 +157,7 @@ exports.init = (username, password, remember) => {
     function adminMessage(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 adminMessage(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -167,7 +167,7 @@ exports.init = (username, password, remember) => {
         chat.draw('lobby', '!server', data.message);
 
         if (globals.currentRaceID !== false) {
-            chat.draw('_race_' + globals.currentRaceID, '!server', data.message);
+            chat.draw(`_race_${globals.currentRaceID}`, '!server', data.message);
         }
     }
 
@@ -175,7 +175,10 @@ exports.init = (username, password, remember) => {
         Chat command handlers
     */
 
-    globals.conn.on('roomList', function(data) {
+    globals.conn.on('roomList', (data) => {
+        // Log the event
+        // globals.log.info(`Websocket - roomJoined - ${JSON.stringify(data)}`);
+
         // We entered a new room, so keep track of all users in this room
         globals.roomList[data.room] = {
             users: {},
@@ -193,7 +196,7 @@ exports.init = (username, password, remember) => {
             // Redraw the users list in the lobby
             lobbyScreen.usersDraw();
         } else if (data.room.startsWith('_race_')) {
-            let raceID = parseInt(data.room.match(/_race_(\d+)/)[1]);
+            const raceID = parseInt(data.room.match(/_race_(\d+)/)[1], 10);
             if (raceID === globals.currentRaceID) {
                 // Update the online/offline markers
                 for (let i = 0; i < data.users.length; i++) {
@@ -481,7 +484,7 @@ exports.init = (username, password, remember) => {
     function connRaceLeft(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRaceLeft(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -570,7 +573,7 @@ exports.init = (username, password, remember) => {
     function connRaceSetStatus(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRaceSetStatus(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -609,7 +612,7 @@ exports.init = (username, password, remember) => {
                 // Remove the race controls
                 $('#race-quit-button-container').fadeOut(globals.fadeTime);
                 $('#race-controls-padding').fadeOut(globals.fadeTime);
-                $('#race-num-left-container').fadeOut(globals.fadeTime, function() {
+                $('#race-num-left-container').fadeOut(globals.fadeTime, () => {
                     $('#race-countdown').css('font-size', '1.75em');
                     $('#race-countdown').css('bottom', '0.25em');
                     $('#race-countdown').css('color', '#e89980');
@@ -657,7 +660,7 @@ exports.init = (username, password, remember) => {
     function connRacerSetStatus(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRacerSetStatus(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -692,7 +695,7 @@ exports.init = (username, password, remember) => {
         modLoader.sendPlace();
     }
 
-    globals.conn.on('raceSetRuleset', function(data) {
+    globals.conn.on('raceSetRuleset', (data) => {
         // Not implemented
     });
 
@@ -700,7 +703,7 @@ exports.init = (username, password, remember) => {
     function connRaceStart(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRacerSetStatus(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -723,12 +726,12 @@ exports.init = (username, password, remember) => {
         let timeToStartCountdown = data.time - now - globals.timeOffset - globals.fadeTime;
         if (globals.raceList[globals.currentRaceID].ruleset.solo) {
             timeToStartCountdown -= 3000;
-            setTimeout(function() {
+            setTimeout(() => {
                 raceScreen.countdownTick(3);
             }, timeToStartCountdown);
         } else {
             timeToStartCountdown -= 5000;
-            setTimeout(function() {
+            setTimeout(() => {
                 raceScreen.countdownTick(5);
             }, timeToStartCountdown);
         }
@@ -738,7 +741,7 @@ exports.init = (username, password, remember) => {
     function connRacerSetFloor(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRacerSetFloor(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;
@@ -773,7 +776,7 @@ exports.init = (username, password, remember) => {
     function connRacerAddItem(data) {
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
-            setTimeout(function() {
+            setTimeout(() => {
                 connRacerAddItem(data);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
             return;

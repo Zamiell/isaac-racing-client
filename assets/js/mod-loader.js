@@ -29,20 +29,20 @@ const send = () => {
     // We want to send the "modLoader" object to the Lua mod, but with some modifications
     // So, start by making a copy (just making it equal won't make a copy)
     // From: https://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
-    let json = Object.assign({}, globals.modLoader);
+    const json = Object.assign({}, globals.modLoader);
 
     // Start to compile the list of starting items
     json.startingItems = [];
     if (globals.modLoader.rFormat === 'diversity') {
-        let items = globals.modLoader.seed.split(',');
-        for (let item of items) {
-            json.startingItems.push(parseInt(item)); // The Lua mod expects this to be a number
+        const items = globals.modLoader.seed.split(',');
+        for (const item of items) {
+            json.startingItems.push(parseInt(item, 10)); // The Lua mod expects this to be a number
         }
     }
 
     // Parse the starting build
     if (globals.modLoader.startingBuild !== -1) {
-        for (let item of builds[globals.modLoader.startingBuild]) {
+        for (const item of builds[globals.modLoader.startingBuild]) {
             // The Lua mod just needs the item ID, not the name
             json.startingItems.push(item.id);
         }
@@ -66,15 +66,15 @@ const send = () => {
     try {
         for (let i = 1; i <= 3; i++) {
             // Add the speedrun orders
-            json.order9 = globals.modLoader['order9-' + i];
-            json.order14 = globals.modLoader['order14-' + i];
+            json.order9 = globals.modLoader[`order9-${i}`];
+            json.order14 = globals.modLoader[`order14-${i}`];
 
             // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
             const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
             fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
         }
     } catch (err) {
-        globals.log.info('Error while filling up the "save#.dat" file: ' + err);
+        globals.log.info(`Error while filling up the "save#.dat" file: ${err}`);
 
         // Try again in 1/20 of a second
         setTimeout(() => {
@@ -103,15 +103,17 @@ exports.reset = reset;
 
 // This sends an up-to-date myStatus, numEntrants, placeMid and place to the mod
 const sendPlace = () => {
-    if (globals.raceList[globals.currentRaceID].status === 'in progress') {
+    const race = globals.raceList[globals.currentRaceID];
+
+    if (race.status === 'in progress') {
         // Find our value of "placeMid"
         let numLeft = 0;
         let amRacing = false;
-        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
 
             if (racer.status === 'racing') {
-                numLeft++;
+                numLeft += 1;
             }
 
             if (racer.name === globals.myUsername) {
@@ -123,17 +125,17 @@ const sendPlace = () => {
                 }
             }
         }
-        if (numLeft === 1 && amRacing && globals.raceList[globals.currentRaceID].racerList.length > 2) {
+        if (numLeft === 1 && amRacing && race.racerList.length > 2) {
             globals.modLoader.placeMid = -1; // This will show "last person left"
         }
     } else {
         // Count how many people are ready
         let numReady = 0;
-        for (let i = 0; i < globals.raceList[globals.currentRaceID].racerList.length; i++) {
-            let racer = globals.raceList[globals.currentRaceID].racerList[i];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
 
             if (racer.status === 'ready') {
-                numReady++;
+                numReady += 1;
             }
 
             if (racer.name === globals.myUsername) {
@@ -142,14 +144,14 @@ const sendPlace = () => {
         }
         globals.modLoader.placeMid = numReady;
     }
-    globals.modLoader.numEntrants = globals.raceList[globals.currentRaceID].racerList.length;
+    globals.modLoader.numEntrants = race.racerList.length;
 
-    if (globals.raceList[globals.currentRaceID].ruleset.solo) {
+    if (race.ruleset.solo) {
         // We don't want to send our final place for solo races to avoid showing the "1st place" graphic at the end of the race
         globals.modLoader.place = 0;
     }
 
     send();
-    globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a numEntrants of "' + globals.modLoader.numEntrants + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
+    // globals.log.info('modLoader - Sent a myStatus of "' + globals.modLoader.status + '" and a numEntrants of "' + globals.modLoader.numEntrants + '" and a place of ' + globals.modLoader.place + ' and a placeMid of ' + globals.modLoader.placeMid + '.');
 };
 exports.sendPlace = sendPlace;
