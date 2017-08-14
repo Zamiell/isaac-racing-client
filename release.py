@@ -43,6 +43,7 @@ with open('package.json') as package_JSON:
 number_version = data['version']
 version = 'v' + data['version']
 
+'''
 if args.skipmod == False:
     # Put the version in the "RPGlobals.lua" file
     # From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
@@ -147,6 +148,28 @@ else:
 return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27/python.exe"'], shell=True)
 if return_code != 0:
     error('Failed to build.')
+'''
+
+# Also upload it to a Chinese mirror
+if args.github:
+    # Copy the installer
+    setup_exe_filename = 'Racing+ Setup ' + number_version + '.exe'
+    setup_exe_path = os.path.join(repository_dir, 'dist', setup_exe_filename)
+    repo_mirror_dir = os.path.join(repository_dir, '..', repository_name + '-release-mirror')
+    copied_exe_path = os.path.join(repo_mirror_dir, setup_exe_filename)
+    shutil.copyfile(setup_exe_path, copied_exe_path)
+
+    # Commit to the client repository
+    os.chdir(repository_dir)
+    return_code = subprocess.call(['git', 'add', '-A'])
+    if return_code != 0:
+        error('Failed to git add.')
+    return_code = subprocess.call(['git', 'commit', '-m', version])
+    if return_code != 0:
+        error('Failed to git commit.')
+    return_code = subprocess.call(['git', 'push'])
+    if return_code != 0:
+        error('Failed to git push.')
 
 # Done
 print('Released version', number_version, 'successfully.')

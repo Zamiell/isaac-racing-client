@@ -10,14 +10,12 @@ New TODO:
 - announce to discord when server is started
 - get server messages to be written to chat DB
 - get discord messages to be written to chat DB
-- test / fix twitch chat bot
+- when twitch bot warning message comes into client, set local variables accordingly
 - fix captain not being bolded on race left
 - fix /races
 
 Bugs to fix:
-- rewrite twitch servern mod check system so that it doesn't spam
-- set timer to 3 hours once you can see how long each race has been going for from the lobby
-- make it start on the right character in starting room, not just on race start
+- set timer to 4 hours for custom races once you can see how long each race has been going for from the lobby
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive
 - remove double negative on boss cutscenes option

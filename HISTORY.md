@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.9.7* - August 14th, 2017
+
+* Shops were not meant to be flipped; this has been reverted to vanilla.
+
 ### *v0.9.5* - August 14th, 2017
 
 * Mid-race placements will now work in races with over 10 people in them. (This was previously disabled to stop the server from crashing.)
