@@ -7,12 +7,24 @@
 /*
 
 New TODO:
+- fix thoday parse problem
+
+Default race creation settings
+new_race_name       NVARCHAR(100)  NOT NULL  DEFAULT "-",
+new_race_type       VARCHAR(20)    NOT NULL  DEFAULT "unranked"
+new_race_format     VARCHAR(50)    NOT NULL  DEFAULT "unseeded"
+new_race_character  VARCHAR(50)    NOT NULL  DEFAULT "Judas"
+new_race_goal       VARCHAR(50)    NOT NULL  DEFAULT "Blue Baby"
+new_race_build      VARCHAR(10)    NOT NULL  DEFAULT "random"
+
+- what happens in melody if user sends wrong data type in IncomingWebsocketMessage??
+- test all isaac checks to see if they work
+
+- unlock every easter egg for racing+ save file
+
 - STORE NEW CRAP IN DATABASE FOR CREATE NEW RACE VALUES
-- make sure isaac.js matches:
-    <li>It makes sure that the Racing+ mod exists in your mods directory.</li>
-    <li>It makes sure that mods are enabled in your <code>options.ini</code> file.</li>
-    <li>It makes sure that you have at least one fully unlocked save file.</li>
-- restart isaac on corrupt mod
+- FINISH SAVE FILE CHECKING BYTES READING
+- restart isaac on corrupt mod TEST
 - announce to discord when server is started
 - get server messages to be written to chat DB
 - get discord messages to be written to chat DB
@@ -24,7 +36,6 @@ Bugs to fix:
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive
 - remove double negative on boss cutscenes option
-- unlock every easter egg for racing+ save file
 - fix sounds so that last place and race completed come as a callback so that both play
 - set twitch bot to disable after no mod found
 - make it so that you can see the random thing before you submit the race
@@ -159,10 +170,19 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
     },
 }).install();
 
-// Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
+// Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+let logRoot;
+if (isDev) {
+    // For development, this puts the log file in the root of the repository
+    logRoot = path.join(__dirname, '..');
+} else {
+    // For production, this puts the log file in the "Programs" directory
+    // (the __dirname is "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src")
+    logRoot = path.join(__dirname, '..', '..', '..', '..');
+}
 globals.log = tracer.dailyfile({
     // Log file settings
-    root: path.join(__dirname, '..'),
+    root: logRoot,
     logPathFormat: '{{root}}/Racing+ {{date}}.log',
     splitFormat: 'yyyy-mm-dd',
     maxLogFiles: 10,
@@ -276,8 +296,9 @@ if (process.platform === 'win32' || process.platform === 'darwin') {
     modPath = path.join(path.dirname(logFilePath), '..', 'binding of isaac afterbirth+ mods');
 }
 const modPathDev = path.join(modPath, globals.modNameDev);
-if (isDev || fs.existsSync(modPathDev)) {
-    globals.modPath = modPathDev; // We prefer to use development directories if they are present, even in production
+if (fs.existsSync(modPathDev)) {
+    // We prefer to use development directories if they are present, even in production
+    globals.modPath = modPathDev;
 } else {
     globals.modPath = path.join(modPath, globals.modName);
 }

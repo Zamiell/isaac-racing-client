@@ -108,7 +108,6 @@ Lang.prototype.pack.zz = {
 
         // Race ready error messages
         "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "",
-        "You must turn on the \"BLCK CNDL\" easter egg before you can mark yourself as ready.": "",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
         "You must be in a run with the correct character before you can mark yourself as ready.": "",
         "You must be in a run with the correct seed before you can mark yourself as ready.": "",
@@ -172,7 +171,6 @@ Lang.prototype.pack.zz = {
         "Language": "",
         "Volume": "",
         "Test": "",
-        "Automatically enter the game with Alt+C and Alt+V (for keyboard users)": "",
         "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "",
         "Change stream URL": "",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "",

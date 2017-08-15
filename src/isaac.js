@@ -1,19 +1,18 @@
 /*
-    Child process that validating everything is right in the file system and then launches the game
+    Child process that validates everything is right in the file system
 */
 
 // Imports
 const fs = require('fs-extra');
-const klawSync = require('klaw-sync');
 const path = require('path');
 const isDev = require('electron-is-dev');
-const tracer = require('tracer');
 const Raven = require('raven');
 const ps = require('ps-node');
 const tasklist = require('tasklist');
 const opn = require('opn');
 const hashFiles = require('hash-files');
 const teeny = require('teeny-conf');
+const Registry = require('winreg');
 
 // Handle errors
 process.on('uncaughtException', (err) => {
@@ -22,23 +21,6 @@ process.on('uncaughtException', (err) => {
 const processExit = () => {
     process.exit();
 };
-
-// Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
-const log = tracer.dailyfile({
-    // Log file settings
-    root: path.join(__dirname, '..'),
-    logPathFormat: '{{root}}/Racing+ {{date}}.log',
-    splitFormat: 'yyyy-mm-dd',
-    maxLogFiles: 10,
-
-    // Global tracer settings
-    format: '{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}',
-    dateformat: 'ddd mmm dd HH:MM:ss Z',
-    transport: (data) => {
-        // Log errors to the JavaScript console in addition to the log file
-        console.log(data.output);
-    },
-});
 
 // Get the version
 const packageFileLocation = path.join(__dirname, '..', 'package.json');
@@ -53,8 +35,16 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 }).install();
 
 // Open the file that contains all of the user's settings
-// (we use teeny-conf instead of localStorage because localStorage persists after uninstallation)
-const settingsFile = path.join(__dirname, '..', 'settings.json'); // This will be created if it does not exist already
+let settingsRoot;
+if (isDev) {
+    // For development, this puts the settings file in the root of the repository
+    settingsRoot = path.join(__dirname, '..');
+} else {
+    // For production, this puts the settings file in the "Programs" directory
+    // (the __dirname is "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src")
+    settingsRoot = path.join(__dirname, '..', '..', '..', '..');
+}
+const settingsFile = path.join(settingsRoot, 'settings.json'); // This will be created if it does not exist already
 const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 
@@ -67,10 +57,14 @@ let modPath;
 let IsaacOpen = false;
 let IsaacPID;
 let fileSystemValid = true; // By default, we assume the user has everything set up correctly
-let steamCloud; // This will get filled in during the "checkOptionsINIForModsEnabled" function
+let steamCloud; // This will get filled in during the "checkOptionsINIForModsEnabled" function to be either true or false
+let steamPath; // This will get filled in during the "checkSteam1" function
+let steamID; // This will get filled in during the "checkSteam2" function
+let atLeastOneSaveFileChecked = false;
+let fullyUnlockedSaveFileFound = false;
 let secondTime = false; // We might have to do everything twice
 
-// The parent will communicate with us, telling us the path to the log file
+// The parent will communicate with us, telling us the path to the mods path
 process.on('message', (message) => {
     // The child will stay alive even if the parent has closed, so we depend on the parent telling us when to die
     if (message === 'exit') {
@@ -79,7 +73,7 @@ process.on('message', (message) => {
 
     // If the message is not "exit", we can assume that it is the mods path
     modPath = message;
-    log.info(`Starting Isaac checks with mod path: ${modPath}`);
+    process.send(`Starting Isaac checks with a mod path of: ${modPath}`);
 
     // The logic in this file is only written to support Windows, OS X, and Linux
     if (
@@ -91,20 +85,13 @@ process.on('message', (message) => {
         return;
     }
 
-    // Check to see if the mods directory exists
-    if (!fs.existsSync(modPath)) {
-        const errorMsg = `error: Failed to find the Racing+ mod at:<br/><code>${modPath}</code><br />Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it.<br /><br />(By default, the mods directory is located at:<br /><code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code><br />For more information, see the download instructions at: <code>https://isaacracing.net/download</code>`;
-        process.send(errorMsg, processExit);
-        return;
-    }
-
     // Begin the work
     checkOptionsINIForModsEnabled();
 });
 
 function checkOptionsINIForModsEnabled() {
     // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
-    log.info('Checking the "options.ini" file to see if "EnabledMods=1".');
+    process.send('Checking the "options.ini" file to see if "EnabledMods=1".');
     let optionsPath;
     if (process.platform === 'linux') {
         optionsPath = path.join(modPath, '..', '..', 'binding of isaac afterbirth+', 'options.ini');
@@ -154,123 +141,187 @@ function checkOptionsINIForModsEnabled() {
         return;
     }
 
+    checkOneMillionPercent();
+}
+
+function checkOneMillionPercent() {
+    process.send('Checking the save files to see if there is at least one fully unlocked file.');
+
+    if (process.platform !== 'win32') {
+        process.send('Save file checking is not supported on OS X / Linux. Skipping this part.');
+        checkModIntegrity();
+    }
+
+    if (steamCloud) {
+        checkSteam1();
+    } else {
+        checkDocuments();
+    }
+}
+
+function checkSteam1() {
+    // Get the path of where the user has Steam installed to
+    // We can find this in the Windows registry
+    const steamKey = new Registry({
+        hive: Registry.HKCU,
+        key: '\\Software\\Valve\\Steam',
+    });
+    steamKey.get('SteamPath', (err, item) => {
+        if (err) {
+            process.send('error: Failed to read the Windows registry when trying to figure out what the Steam path is.', processExit);
+            return;
+        }
+
+        steamPath = item.value;
+        checkSteam2();
+    });
+}
+
+function checkSteam2() {
+    process.send(`Steam path found: ${steamPath}`);
+
+    // Get the Steam ID of the active user
+    // We can also find this in the Windows registry
+    const steamKey = new Registry({
+        hive: Registry.HKCU,
+        key: '\\Software\\Valve\\Steam\\ActiveProcess',
+    });
+    steamKey.get('ActiveUser', (err, item) => {
+        if (err) {
+            process.send('error: Failed to read the Windows registry when trying to figure out what the active Steam user is.', processExit);
+            return;
+        }
+
+        steamID = item.value;
+        checkSteam3();
+    });
+}
+
+function checkSteam3() {
+    // Go through the 3 save files, if they exist
+    for (let i = 1; i <= 3; i++) {
+        const saveFile = path.join(steamPath, 'userdata', steamID, '250900', 'remote', `abp_persistentgamedata${i}.dat`);
+        if (checkSaveFile(saveFile)) {
+            break;
+        }
+    }
+
+    if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
+        //process.send(`error: NO SAVE ${steamCloud}`, processExit);
+        //return;
+    }
+
     checkModIntegrity();
 }
 
+function checkDocuments() {
+    const documentsPath = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+');
+
+    for (let i = 1; i <= 3; i++) {
+        const saveFile = path.join(documentsPath, `persistentgamedata${i}.dat`);
+        if (checkSaveFile(saveFile)) {
+            break;
+        }
+    }
+
+    if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
+        //process.send(`error: NO SAVE ${steamCloud}`, processExit);
+        //return;
+    }
+
+    checkModIntegrity();
+}
+
+function checkSaveFile(saveFile) {
+    try {
+        if (fs.existsSync(saveFile)) {
+            atLeastOneSaveFileChecked = true;
+            const saveFileBytes = fs.readFileSync(saveFile); // We don't specify any encoding to get the raw bytes
+            // "saveFileBytes.data" is now an array of bytes
+            // TODO CHECK BYTES
+
+            if (false) {
+                fullyUnlockedSaveFileFound = true;
+                return true;
+            }
+        }
+    } catch (err) {
+        process.send(`error: Failed to check for the "${saveFile}" file: ${err}`, processExit);
+    }
+
+    return false;
+}
+
+// After an update, Steam can partially download some of the files, which seems to happen pretty commonly
+// (not sure exactly what causes it, perhaps opening the game in the middle of the download)
+// We computed the SHA1 hash of every file during the build process and wrote it to "sha1.json";
+// compare all files in the mod directory to this JSON
 function checkModIntegrity() {
-    // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
-    // (even if we are in production, don't mess with the mod if it is marked as a development folder)
-    if (isDev || modPath.includes('dev')) {
-        checkOtherModsEnabled();
+    // Check to see if the mods directory exists
+    if (!fs.existsSync(modPath)) {
+        process.send(`The Racing+ mod was not found at "${modPath}". Skipping Racing+ mod related checks.`);
+        checkIsaacOpen();
         return;
     }
 
-    log.info('Checking to see if the Racing+ mod is corrupted.');
+    // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
+    // (even if we are in production, we don't mess with the mod if it is marked as a development folder)
+    if (isDev || modPath.includes('dev')) {
+        checkIsaacOpen();
+        return;
+    }
 
-    // After an update, Steam can partially download some of the files, which seems to happen pretty commonly
-    // (not sure exactly what causes it, perhaps opening the game in the middle of the download)
-    let files;
+    process.send('Checking to see if the Racing+ mod is corrupted.');
+
+    // Get the checksums
     let backupModPath;
     if (isDev) {
         backupModPath = 'mod';
     } else {
         backupModPath = path.join('app.asar', 'mod');
     }
+    const checksumsPath = path.join(backupModPath, 'sha1.json');
+    let checksums;
     try {
-        files = klawSync(backupModPath);
+        checksums = JSON.parse(fs.readFileSync(checksumsPath, 'utf8'));
     } catch (err) {
-        process.send(`error: Failed to enumerate the files in the "${backupModPath}" directory: ${err}`, processExit);
+        process.send(`error: Failed to read the "${checksumsPath}" file: ${err}`, processExit);
         return;
     }
-    for (const fileObject of files) {
-        if (!fileObject.stats.isFile()) {
-            continue;
-        } else if (
-            path.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
-            path.basename(fileObject.path) === 'save1.dat' || // These are the IPC files, so it doesn't matter if they are different
-            path.basename(fileObject.path) === 'save2.dat' ||
-            path.basename(fileObject.path) === 'save3.dat'
-        ) {
-            continue;
-        }
 
-        const path1 = fileObject.path;
-        const hash1 = hashFiles.sync({ // This defaults to SHA1
-            files: path1,
-        });
+    // Each key of the JSON is the relative path to the file
+    for (const relativePath of Object.keys(checksums)) {
+        const filePath = path.join(modPath, relativePath);
+        const backupFilePath = path.join(backupModPath, relativePath);
+        const backupFileHash = checksums[relativePath];
 
-        // Get the path of the matching file in the real mod directory
-        const backupModPathDoubleSlashes = backupModPath.replace(/\\/g, '\\\\');
-        const re = new RegExp(`.+${backupModPathDoubleSlashes}(.+)`);
-        const suffix = path1.match(re)[1];
-        const path2 = path.join(modPath, suffix);
-
-        let copyFile = false;
-
-        if (fs.existsSync(path2)) {
-            const hash2 = hashFiles.sync({ // This defaults to SHA1
-                files: path2,
+        // Check to see if it is corrupt or missing
+        let copyFile = false; // If this gets set to true, the file is missing or corrupt
+        if (fs.existsSync(filePath)) {
+            const fileHash = hashFiles.sync({ // This defaults to SHA1
+                files: filePath,
             });
-            if (hash1 !== hash2) {
+            if (fileHash !== backupFileHash) {
                 copyFile = true;
-                fs.removeSync(path2);
+                try {
+                    fs.removeSync(filePath);
+                } catch (err) {
+                    process.send(`error: Failed to delete the "${filePath}" file (since it was corrupt): ${err}`, processExit);
+                    return;
+                }
             }
         } else {
             copyFile = true;
         }
+
+        // Copy it
         if (copyFile) {
-            log.error(`File is corrupt or missing: ${path2}`);
+            process.send(`File is corrupt or missing: ${filePath}`);
             fileSystemValid = false;
-            fs.copySync(path1, path2);
-        }
-    }
-
-    checkOtherModsEnabled();
-}
-
-function checkOtherModsEnabled() {
-    log.info('Checking to see if any other mods are enabled.');
-
-    /*
-        Note that it is possible for a mod to have a "disable.it" in a mod's directory but still be enabled in game.
-        (This can happen if the "disable.it" file was created after the game was already launched, and perhaps other ways.)
-        To counteract this, we could always force Isaac to restart upon Racing+ launching.
-        However, this would mean that if a user's internet drops during the race, they would get booted out of the game.
-        So let's leave open this loophole for now.
-    */
-
-    // Go through all the subdirectories of the "Binding of Isaac Afterbirth+ Mods" folder
-    const files = fs.readdirSync(path.join(modPath, '..'));
-    for (const file of files) {
-        // Ignore normal files in this directory (there shouldn't be any)
-        if (!fs.statSync(path.join(modPath, '..', file)).isDirectory()) {
-            continue;
-        }
-
-        if (file === path.basename(modPath)) {
-            // This is the Racing+ mod subdirectory
-            if (fs.existsSync(path.join(modPath, 'disable.it'))) {
-                // The Racing+ mod is not enabled
-                fileSystemValid = false;
-
-                // Enable it by removing the "disable.it" file
-                try {
-                    fs.removeSync(path.join(modPath, 'disable.it'));
-                } catch (err) {
-                    process.send(`error: Failed to remove the "disable.it" file for the Racing+ Lua mod: ${err}`, processExit);
-                    return;
-                }
-            }
-        } else if (!fs.existsSync(path.join(modPath, '..', file, 'disable.it'))) {
-            log.info(`Making a "disable.it" for: ${file}`);
-            // Some other mod is enabled
-            fileSystemValid = false;
-
-            // Disable it by writing a 0 byte "disable.it" file
             try {
-                fs.writeFileSync(path.join(modPath, '..', file, 'disable.it'), '', 'utf8');
+                fs.copySync(backupFilePath, filePath);
             } catch (err) {
-                process.send(`error: Failed to disable one of the existing mods: ${err}`, processExit);
+                process.send(`error: Failed to copy over the "${backupFilePath}" file (since the original was corrupt): ${err}`, processExit);
                 return;
             }
         }
@@ -293,7 +344,8 @@ function enableBossCutscenes() {
     if (bossCutscenes) {
         // Make sure the file is deleted
         if (fs.existsSync(bossCutsceneFile)) {
-            log.info('Re-enabling boss cutscenes.');
+            process.send('Re-enabling boss cutscenes.');
+            fileSystemValid = false;
             try {
                 fs.removeSync(bossCutsceneFile);
             } catch (err) {
@@ -302,47 +354,30 @@ function enableBossCutscenes() {
                 return;
             }
         }
-    } else if (!fs.existsSync(bossCutsceneFile)) {
-        // Make sure the file is there
-        log.info('Disabling boss cutscenes.');
-        let newBossCutsceneFile;
-        if (isDev) {
-            newBossCutsceneFile = path.join('mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-        } else {
-            newBossCutsceneFile = path.join('app.asar', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-        }
-        try {
-            fs.copySync(newBossCutsceneFile, bossCutsceneFile);
-        } catch (err) {
-            const errorMsg = `error: Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ${err}`;
-            process.send(errorMsg, processExit);
-            return;
-        }
     }
 
-    checkOneMillionPercent();
-}
-
-function checkOneMillionPercent() {
-    if (steamCloud) {
-        // TODO
-    } else {
-        // TODO
-    }
-
-    closeIsaac();
+    checkIsaacOpen();
 }
 
 // If we make changes to files and Isaac is closed, it will overwrite all of our changes
 // So first, we need to find out if it is open
 function checkIsaacOpen() {
-    // If we are doing this the second time around, just jump to the end
+    // If all of the file system checks passed, we don't care if Isaac is open or not, we are finished
+    if (fileSystemValid && !secondTime) {
+        process.send('File system validation passed.');
+        setTimeout(() => {
+            processExit();
+        }, 5000);
+        return;
+    }
+
+    // If we are doing this the second time around, we already know that Isaac is closed
     if (secondTime) {
         startIsaac();
         return;
     }
 
-    log.info('Checking to see if Isaac is open.');
+    process.send('Checking to see if Isaac is open.');
     if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
         // On Windows, we use the taskkill module (the ps-node module is very slow)
         const processName = 'isaac-ng.exe';
@@ -391,39 +426,32 @@ function closeIsaac() {
     if (!IsaacOpen) {
         // Isaac wasn't open, we are done
         // Don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually
-        log.info('File system validation passed. (Isaac was not open.)');
+        process.send('File system validation passed. (Isaac was not open.)');
         setTimeout(() => {
             processExit();
         }, 5000);
         return;
     }
 
-    if (fileSystemValid) {
-        // Isaac was open, but all of the file system checks passed, so we don't have to reboot Isaac
-        log.info('File system validation passed. (Isaac was open.)');
-        setTimeout(() => {
-            processExit();
-        }, 5000);
-        return;
-    }
-
-    log.info('File system checks failed, so we need to restart Isaac.');
+    process.send('File system checks failed, so we need to restart Isaac.');
     ps.kill(IsaacPID.toString(), (err) => { // This expects the first argument to be in a string for some reason
         if (err) {
             process.send(`error: Failed to close Isaac: ${err}`, processExit);
-        } else {
-            // We have to redo all of the steps from before, since when Isaac closes it overwrites files
-            secondTime = true;
-            setTimeout(() => {
-                checkOptionsINIForModsEnabled();
-            }, 1000); // Pause an extra second to let all file writes occur
+            return;
         }
+
+        // When Isaac closes, it will overwrite the "options.ini" file
+        // So redo all of the steps from before to be thorough
+        secondTime = true;
+        setTimeout(() => {
+            checkOptionsINIForModsEnabled();
+        }, 1000); // Pause an extra second to let all file writes occur
     });
 }
 
 // Start Isaac
 function startIsaac() {
-    // Use Steam to launch it so that we don't have to bother with finding out where the binary is
+    // Use Steam to launch it so that we don't have to bother with finding out where the binary executable is
     opn('steam://rungameid/250900');
 
     // The child will stay alive even if the parent has closed

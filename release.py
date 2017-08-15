@@ -12,6 +12,7 @@ import shutil
 import psutil
 import time
 import paramiko
+import hashlib
 from PIL import Image, ImageFont, ImageDraw
 
 # Configuration
@@ -30,10 +31,22 @@ def error(message, exception = None):
         print(message, exception)
     sys.exit(1)
 
+# From: https://gist.github.com/techtonik/5175896
+def filehash(filepath):
+    blocksize = 64 * 1024
+    sha = hashlib.sha1()
+    with open(filepath, 'rb') as fp:
+        while True:
+            data = fp.read(blocksize)
+            if not data:
+                break
+            sha.update(data)
+    return sha.hexdigest()
+
 # Get command-line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-gh', '--github', help="upload to GitHub in addition to building locally", action='store_true')
-parser.add_argument('-l', '--logo', help="only udate the logo", action='store_true')
+parser.add_argument('-l', '--logo', help="only update the logo", action='store_true')
 parser.add_argument('-s', '--skipmod', help="skip all mod related stuff", action='store_true')
 parser.add_argument('-m', '--mod', help="only do mod related stuff", action='store_true')
 args = parser.parse_args()
@@ -68,9 +81,9 @@ if args.skipmod == False:
         file.write(new_file)
 
     # Draw the version number on the title menu graphic
-    large_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 9)
-    small_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Jelly Crazies.ttf'), 6)
-    URL_font = ImageFont.truetype(os.path.join('assets', 'fonts', 'Vera.ttf'), 11)
+    large_font = ImageFont.truetype(os.path.join('src', 'fonts', 'Jelly Crazies.ttf'), 9)
+    small_font = ImageFont.truetype(os.path.join('src', 'fonts', 'Jelly Crazies.ttf'), 6)
+    URL_font = ImageFont.truetype(os.path.join('src', 'fonts', 'Vera.ttf'), 11)
     title_img = Image.open(os.path.join(title_screen_path, 'titlemenu-orig.png'))
     title_draw = ImageDraw.Draw(title_img)
     w, h = title_draw.textsize(version, font=large_font)
@@ -108,9 +121,7 @@ if args.skipmod == False:
     mod_dir2 = 'mod'
     if os.path.exists(mod_dir2):
         try:
-            time.sleep(1) # This is try and mitigate "The directory is not empty" errors
             shutil.rmtree(mod_dir2)
-            time.sleep(1) # This is necessary or else we get "ACCESS DENIED" errors for some reason
         except Exception as e:
             error('Failed to remove the "' + mod_dir2 + '" directory:', e)
     try:
@@ -118,6 +129,31 @@ if args.skipmod == False:
     except Exception as e:
         error('Failed to copy the "' + mod_dir + '" directory:', e)
     print('Copied the mod.')
+
+    # Get the SHA1 hash of every file in the mod directory
+    # From: https://gist.github.com/techtonik/5175896
+    hashes = {}
+    for root, subdirs, files in os.walk(mod_dir2):
+        for fpath in [os.path.join(root, f) for f in files]:
+            # We don't care about certain files
+            name = os.path.relpath(fpath, root)
+            if (name == 'metadata.xml' or # This file will be one version number ahead of the one distributed through steam
+                name == 'save1.dat' or # These are the IPC files, so it doesn't matter if they are different
+                name == 'save2.dat' or
+                name == 'save3.dat'):
+
+                continue
+
+            hashes[fpath] = filehash(fpath)
+
+    # Write the dictionary to a JSON file
+    sha1_file_path = os.path.join(mod_dir2, 'sha1.json')
+    with open(sha1_file_path, 'w') as fp:
+        json.dump(hashes, fp, separators=(',', ':')) # We specify separators because it uses some whitespace by default
+
+# Exit if we are only supposed to be doing work on the mod
+if args.mod:
+    sys.exit(0)
 
 if args.github:
     # Open the mod updater tool from Nicalis
@@ -144,7 +180,7 @@ for process in psutil.process_iter():
 # Build/package
 print('Building:', repository_name, version)
 if args.github:
-    run_command = 'dist2'
+    run_command = 'distPub'
 else:
     run_command = 'dist'
 return_code = subprocess.call(['npm', 'run', run_command, '--python="C:/Python27/python.exe"'], shell=True)

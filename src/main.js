@@ -80,10 +80,19 @@ let childSteam = null;
 let childIsaac = null;
 let errorHappened = false;
 
-// Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
+// Logging (code duplicated between main and renderer because of require/nodeRequire issues)
+let logRoot;
+if (isDev) {
+    // For development, this puts the log file in the root of the repository
+    logRoot = path.join(__dirname, '..');
+} else {
+    // For production, this puts the log file in the "Programs" directory
+    // (the __dirname is "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src")
+    logRoot = path.join(__dirname, '..', '..', '..', '..');
+}
 const log = tracer.dailyfile({
     // Log file settings
-    root: path.join(__dirname, '..'),
+    root: logRoot,
     logPathFormat: '{{root}}/Racing+ {{date}}.log',
     splitFormat: 'yyyy-mm-dd',
     maxLogFiles: 10,
@@ -127,8 +136,7 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 */
 
 // Open the file that contains all of the user's settings
-// (we use teeny-conf instead of localStorage because localStorage persists after uninstallation)
-const settingsFile = path.join(__dirname, '..', 'settings.json'); // This will be created if it does not exist already
+const settingsFile = path.join(logRoot, 'settings.json'); // This will be created if it does not exist already
 const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 
@@ -426,7 +434,7 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
             childSteam = fork('./app.asar/src/steam', {
-                cwd: path.join(__dirname, '..'),
+                cwd: path.join(__dirname, '..', '..'),
             });
         }
         log.info('Started the Greenworks child process.');
@@ -460,7 +468,7 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
             childLogWatcher = fork('./app.asar/src/log-watcher', {
-                cwd: path.join(__dirname, '..'),
+                cwd: path.join(__dirname, '..', '..'),
             });
         }
         log.info('Started the log watcher child process.');
@@ -487,10 +495,10 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
             // There are problems when forking inside of an ASAR archive
             // See: https://github.com/electron/electron/issues/2708
             childIsaac = fork('./app.asar/src/isaac', {
-                cwd: path.join(__dirname, '..'),
+                cwd: path.join(__dirname, '..', '..'),
             });
         }
-        log.info('Started the Isaac launcher child process.');
+        log.info('Started the Isaac launcher child process with an argument of:', arg2);
 
         // Receive notifications from the child process
         childIsaac.on('message', (message) => {
@@ -506,18 +514,5 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
 
         // Feed the child the path to the Isaac mods directory and the "force" boolean
         childIsaac.send(arg2);
-
-        // After being launched, Isaac will wrest control, so automatically switch focus back to the Racing+ client when this occurs
-        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            const pathToFocusRacing = path.join(__dirname, 'programs', 'focusRacing+', 'focusRacing+.exe');
-            execFile(pathToFocusRacing, (error, stdout, stderr) => {
-                // We have to attach an empty callback to this or it does not work for some reason
-            });
-        } else if (process.platform === 'darwin') { // OS X
-            // Try using "opn(pathToRacingPlusBinary)" to see if that works
-            // (not implemented)
-        } else {
-            // Linux is not supported
-        }
     }
 });

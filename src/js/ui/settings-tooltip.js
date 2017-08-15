@@ -145,11 +145,7 @@ $(document).ready(() => {
         settings.set('volume', $('#settings-volume-slider').val() / 100);
         settings.saveSync();
 
-        // "Automatically enter the game with Alt+C and Alt+V" checkbox
-        settings.set('keyboard', $('#settings-keyboard-checkbox').prop('checked'));
-        settings.saveSync();
-
-        // "Don't disable boss cutscenes" checkbox
+        // "Enable boss cutscenes" checkbox
         const bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
@@ -168,9 +164,13 @@ $(document).ready(() => {
                 }
             } else if (!fs.existsSync(bossCutsceneFile)) {
                 // Make sure the file is there
-                // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\js\ui
+                // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\src\js\ui
                 const newBossCutsceneFile = path.join(__dirname, '..', '..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
                 try {
+                    if (!fs.existsSync(newBossCutsceneFile)) {
+                        misc.errorShow(`The "${newBossCutsceneFile}" file does not exist! Your Racing+ client may be corrupted.`);
+                        return false;
+                    }
                     fs.copySync(newBossCutsceneFile, bossCutsceneFile);
                 } catch (err) {
                     misc.errorShow(`Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ${err}`);
@@ -295,10 +295,6 @@ exports.tooltipFunctionReady = () => {
     // Volume
     $('#settings-volume-slider').val(settings.get('volume') * 100);
     $('#settings-volume-slider-value').html(`${(settings.get('volume') * 100)}%`);
-
-    // "Automatically enter the game with Alt+C and Alt+V" checkbox
-    const keyboard = settings.get('keyboard');
-    $('#settings-keyboard-checkbox').prop('checked', keyboard);
 
     // "Don't disable boss cutscenes" checkbox
     const bossCutscenes = settings.get('bossCutscenes');

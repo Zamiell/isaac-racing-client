@@ -13,9 +13,15 @@ exports.start = () => {
     ipcRenderer.send('asynchronous-message', 'isaac', globals.modPath);
 };
 
-// Monitor for notifications from the main process that doing the work of opening Isaac
+// Monitor for notifications from the child process that does file checks and opens Isaac
 ipcRenderer.on('isaac', (event, message) => {
-    if (message.startsWith('error: ')) {
+    // All messages should be strings
+    if (message.startsWith('error: NO SAVE ')) {
+        // The user does not have a fully unlocked save file, so show them a custom model
+        const steamCloud = message[message.length - 1];
+        // TODO
+        return;
+    } else if (message.startsWith('error: ')) {
         // globals.currentScreen is equal to "transition" when this is called
         globals.currentScreen = 'null';
 

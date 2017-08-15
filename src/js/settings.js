@@ -8,12 +8,17 @@
 
 // Imports
 const path = nodeRequire('path');
+const isDev = nodeRequire('electron-is-dev');
 const teeny = nodeRequire('teeny-conf');
 
 // Open the file that contains all of the user's settings
-// (we use teeny-conf instead of localStorage because localStorage persists after uninstallation)
-// (code duplicated between main, renderer, and child processes)
-const settingsFile = path.join(__dirname, '..', '..', 'settings.json'); // This will be created if it does not exist already
+let settingsRoot;
+if (isDev) {
+    settingsRoot = path.join(__dirname, '..', '..');
+} else {
+    settingsRoot = path.join(__dirname, '..', '..', '..', '..', '..');
+}
+const settingsFile = path.join(settingsRoot, 'settings.json'); // This will be created if it does not exist already
 const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 initDefaults();
@@ -45,7 +50,7 @@ function initDefaults() {
     // n/a
     // (initialized in main.js since it depends on the return value of a PowerShell command)
 
-    // "Don't disable boss cutscenes"
+    // "Enable boss cutscenes"
     if (typeof settings.get('bossCutscenes') === 'undefined') {
         // If this is the first run, default to false
         settings.set('bossCutscenes', false);

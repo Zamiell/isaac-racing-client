@@ -108,7 +108,6 @@ Lang.prototype.pack.fr = {
 
         // Race ready error messages
         "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\". Si vous êtes déjà dans une partie, maintenez R pour en recommencer une.",
-        "You must turn on the \"BLCK CNDL\" easter egg before you can mark yourself as ready.": "",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
         "You must be in a run with the correct character before you can mark yourself as ready.": "Vous devez sélectionner le personnage indiqué pour pouvoir cocher la case \"prêt\".",
         "You must be in a run with the correct seed before you can mark yourself as ready.": "Vous devez commencer une partie avez la seed indiquée pour pouvoir cocher la case \"prêt\".",
@@ -172,7 +171,6 @@ Lang.prototype.pack.fr = {
         "Language": "Langue",
         "Volume": "Volume",
         "Test": "Test",
-        "Automatically enter the game with Alt+C and Alt+V (for keyboard users)": "",
         "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "Ne pas désactiver les cinématiques de boss (pour les personnes habituées au vanilla, vous devez redémarrer le jeu)",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",

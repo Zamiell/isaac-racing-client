@@ -29,7 +29,7 @@ POST-FLIP ACTIONS:
 3) Double Gate room - Move the Gates all the way down
     The Chest - #20040, #30040
     Dark Room - #20012, #30012
-4) Mega Maw rooms - Move the Mega Maws all the way down
+4) Mega Maw rooms - Move the Mega Maws (to a custom position depending on the room)
     The Chest - #20269, #20039, #20059, #30269, #30039, #30059
     Dark Room - #20011, #20052, #20080, #30011, #30052, #30080
 

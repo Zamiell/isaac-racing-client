@@ -6,6 +6,7 @@
 const path = nodeRequire('path');
 const fs = nodeRequire('fs-extra');
 const globals = nodeRequire('./js/globals');
+const misc = nodeRequire('./js/misc');
 const builds = nodeRequire('./data/builds');
 
 // We can communicate with the Racing+ Lua mod via file I/O
@@ -67,6 +68,10 @@ const send = () => {
 
             // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
             const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
+            if (!fs.existsSync(modLoaderFile)) {
+                misc.errorShow(`The "${modLoaderFile}" does not exist; the Racing+ client needs to write to this file in order to communicate with the mod. Is your Racing+ mod installed correctly? Is it corrupted? Is your "log.txt" file location set correctly in your Racing+ settings?`);
+                return;
+            }
             fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
         }
     } catch (err) {
