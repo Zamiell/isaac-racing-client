@@ -48,7 +48,7 @@ process.on('message', (message) => {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465%28v=vs.85%29.aspx
     // Instead we need to use fs.watchFile, which is polling based and less efficient
     process.send(`Starting to watch file: ${logPath}`);
-    if (fs.existsSync(logPath) === false) {
+    if (!fs.existsSync(logPath)) {
         process.send(`error: The "${logPath}" file does not exist.`, processExit);
         return;
     }

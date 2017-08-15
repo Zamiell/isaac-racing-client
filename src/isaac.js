@@ -26,7 +26,7 @@ const processExit = () => {
 // Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 const log = tracer.dailyfile({
     // Log file settings
-    root: (isDev ? '.' : process.execPath),
+    root: path.join(__dirname, '..'),
     logPathFormat: '{{root}}/Racing+ {{date}}.log',
     splitFormat: 'yyyy-mm-dd',
     maxLogFiles: 10,
@@ -54,7 +54,7 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 
 // Open the file that contains all of the user's settings
 // (we use teeny-conf instead of localStorage because localStorage persists after uninstallation)
-const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
+const settingsFile = path.join(__dirname, '..', 'settings.json'); // This will be created if it does not exist already
 const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 
@@ -92,7 +92,7 @@ process.on('message', (message) => {
     }
 
     // Check to see if the mods directory exists
-    if (fs.existsSync(modPath) === false) {
+    if (!fs.existsSync(modPath)) {
         const errorMsg = `error: Failed to find the Racing+ mod at:<br/><code>${modPath}</code><br />Are you sure that you subscribed to it on the Steam Workshop AND have launched the game at least one time since then? If you did, double check your mods directory to make sure that Steam actually downloaded it.<br /><br />(By default, the mods directory is located at:<br /><code>C:\\Users\\[YourUsername]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_857628390\\</code><br />For more information, see the download instructions at: <code>https://isaacracing.net/download</code>`;
         process.send(errorMsg, processExit);
         return;
@@ -111,7 +111,7 @@ function checkOptionsINIForModsEnabled() {
     } else {
         optionsPath = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+', 'options.ini');
     }
-    if (fs.existsSync(optionsPath) === false) {
+    if (!fs.existsSync(optionsPath)) {
         process.send('error: The "options.ini" file does not exist.', processExit);
         return;
     }
@@ -183,7 +183,7 @@ function checkModIntegrity() {
         return;
     }
     for (const fileObject of files) {
-        if (fileObject.stats.isFile() === false) {
+        if (!fileObject.stats.isFile()) {
             continue;
         } else if (
             path.basename(fileObject.path) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
@@ -243,7 +243,7 @@ function checkOtherModsEnabled() {
     const files = fs.readdirSync(path.join(modPath, '..'));
     for (const file of files) {
         // Ignore normal files in this directory (there shouldn't be any)
-        if (fs.statSync(path.join(modPath, '..', file)).isDirectory() === false) {
+        if (!fs.statSync(path.join(modPath, '..', file)).isDirectory()) {
             continue;
         }
 
@@ -261,7 +261,7 @@ function checkOtherModsEnabled() {
                     return;
                 }
             }
-        } else if (fs.existsSync(path.join(modPath, '..', file, 'disable.it')) === false) {
+        } else if (!fs.existsSync(path.join(modPath, '..', file, 'disable.it'))) {
             log.info(`Making a "disable.it" for: ${file}`);
             // Some other mod is enabled
             fileSystemValid = false;
@@ -284,7 +284,7 @@ function enableBossCutscenes() {
     // Default to deleting boss cutscenes
     let bossCutscenes = false;
     if (typeof settings.get('bossCutscenes') !== 'undefined') {
-        if (settings.get('bossCutscenes') === true) {
+        if (settings.get('bossCutscenes')) {
             bossCutscenes = true;
         }
     }
@@ -302,7 +302,7 @@ function enableBossCutscenes() {
                 return;
             }
         }
-    } else if (fs.existsSync(bossCutsceneFile) === false) {
+    } else if (!fs.existsSync(bossCutsceneFile)) {
         // Make sure the file is there
         log.info('Disabling boss cutscenes.');
         let newBossCutsceneFile;
@@ -324,13 +324,10 @@ function enableBossCutscenes() {
 }
 
 function checkOneMillionPercent() {
-    if (steamCloud === true) {
-        // TODO
-    } else if (steamCloud === false) {
+    if (steamCloud) {
         // TODO
     } else {
-        process.send('error: Could not detect whether "SteamCloud" was enabled or disabled.', processExit);
-        return;
+        // TODO
     }
 
     closeIsaac();
@@ -340,7 +337,7 @@ function checkOneMillionPercent() {
 // So first, we need to find out if it is open
 function checkIsaacOpen() {
     // If we are doing this the second time around, just jump to the end
-    if (secondTime === true) {
+    if (secondTime) {
         startIsaac();
         return;
     }
@@ -391,7 +388,7 @@ function checkIsaacOpen() {
 }
 
 function closeIsaac() {
-    if (IsaacOpen === false) {
+    if (!IsaacOpen) {
         // Isaac wasn't open, we are done
         // Don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually
         log.info('File system validation passed. (Isaac was not open.)');
@@ -401,7 +398,7 @@ function closeIsaac() {
         return;
     }
 
-    if (fileSystemValid === true) {
+    if (fileSystemValid) {
         // Isaac was open, but all of the file system checks passed, so we don't have to reboot Isaac
         log.info('File system validation passed. (Isaac was open.)');
         setTimeout(() => {

@@ -4,13 +4,13 @@
 
 // Imports
 const shell = nodeRequire('electron').shell;
-const globals = nodeRequire('./assets/js/globals');
-const misc = nodeRequire('./assets/js/misc');
-const chat = nodeRequire('./assets/js/chat');
-const logWatcher = nodeRequire('./assets/js/log-watcher');
-const isaac = nodeRequire('./assets/js/isaac');
-const modLoader = nodeRequire('./assets/js/mod-loader');
-const header = nodeRequire('./assets/js/ui/header');
+const globals = nodeRequire('./js/globals');
+const misc = nodeRequire('./js/misc');
+const chat = nodeRequire('./js/chat');
+const logWatcher = nodeRequire('./js/log-watcher');
+const isaac = nodeRequire('./js/isaac');
+const modLoader = nodeRequire('./js/mod-loader');
+const header = nodeRequire('./js/ui/header');
 
 /*
     Event handlers
@@ -69,7 +69,7 @@ exports.show = () => {
     chat.indentAll('lobby');
 
     // Automatically scroll to the bottom of the chat box
-    let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
+    const bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
     $('#lobby-chat-text').scrollTop(bottomPixel);
 
     // Focus the chat input
@@ -79,7 +79,7 @@ exports.show = () => {
 exports.showFromRace = () => {
     // We should be on the race screen unless there is severe lag
     if (globals.currentScreen !== 'race') {
-        misc.errorShow('Failed to return to the lobby since currentScreen is equal to "' + globals.currentScreen + '".');
+        misc.errorShow(`Failed to return to the lobby since currentScreen is equal to "${globals.currentScreen}".`);
         return;
     }
     globals.currentScreen = 'transition';
@@ -108,7 +108,7 @@ exports.showFromRace = () => {
         chat.indentAll('lobby');
 
         // Automatically scroll to the bottom of the chat box
-        let bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
+        const bottomPixel = $('#lobby-chat-text').prop('scrollHeight') - $('#lobby-chat-text').height();
         $('#lobby-chat-text').scrollTop(bottomPixel);
 
         // Focus the chat input
@@ -121,16 +121,16 @@ exports.showFromRace = () => {
 
 exports.raceDraw = (race) => {
     // Create the new row
-    let raceDiv = '<tr id="lobby-current-races-' + race.id + '" class="';
-    if (race.status === 'open' && race.ruleset.solo === false) {
+    let raceDiv = `<tr id="lobby-current-races-${race.id}" class="`;
+    if (race.status === 'open' && !race.ruleset.solo) {
         raceDiv += 'lobby-race-row-open ';
     }
     raceDiv += 'hidden">';
 
     // Column 1 - Name
-    raceDiv += '<td id="lobby-current-races-' + race.id + '-name" class="lobby-current-races-name">';
+    raceDiv += `<td id="lobby-current-races-${race.id}-name" class="lobby-current-races-name">`;
     if (race.name === '-') {
-        raceDiv += '<span lang="en">Race</span> ' + race.id;
+        raceDiv += `<span lang="en">Race</span> ${race.id}`;
     } else {
         raceDiv += misc.escapeHtml(race.name);
     }
@@ -146,16 +146,16 @@ exports.raceDraw = (race) => {
     } else if (race.status === 'in progress') {
         circleClass = 'in-progress';
     }
-    raceDiv += '<span id="lobby-current-races-' + race.id + '-status-circle" class="circle lobby-current-races-' + circleClass + '"></span>';
-    raceDiv += ' &nbsp; <span id="lobby-current-races-' + race.id + '-status"><span lang="en">' + race.status.capitalize() + '</span></span>';
+    raceDiv += `<span id="lobby-current-races-${race.id}-status-circle" class="circle lobby-current-races-${circleClass}"></span>`;
+    raceDiv += ` &nbsp; <span id="lobby-current-races-${race.id}-status"><span lang="en">${race.status.capitalize()}</span></span>`;
     raceDiv += '</td>';
 
     // Column 3 - Type
     raceDiv += '<td class="lobby-current-races-type">';
     raceDiv += '<span class="lobby-current-races-type-icon">';
-    raceDiv += '<span class="lobby-current-races-' + (race.ruleset.ranked ? 'ranked' : 'unranked') + '" lang="en"></span></span>';
+    raceDiv += `<span class="lobby-current-races-${(race.ruleset.ranked ? 'ranked' : 'unranked')}" lang="en"></span></span>`;
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    raceDiv += '<span lang="en">' + (race.ruleset.ranked ? 'Ranked' : 'Unranked') + '</span>';
+    raceDiv += `<span lang="en">${(race.ruleset.ranked ? 'Ranked' : 'Unranked')}</span>`;
     if (race.ruleset.solo) {
         raceDiv += ' (<span lang="en">Solo</span>)';
     }
@@ -164,21 +164,21 @@ exports.raceDraw = (race) => {
     // Column 4 - Format
     raceDiv += '<td class="lobby-current-races-format">';
     raceDiv += '<span class="lobby-current-races-format-icon">';
-    raceDiv += '<span class="lobby-current-races-' + race.ruleset.format + '" lang="en"></span></span>';
+    raceDiv += `<span class="lobby-current-races-${race.ruleset.format}" lang="en"></span></span>`;
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
     let format = race.ruleset.format.capitalize();
     if (format === 'Unseeded-lite') {
         format = 'Unseeded';
     }
-    raceDiv += '<span lang="en">' + format + '</span></td>';
+    raceDiv += `<span lang="en">${format}</span></td>`;
 
     // Column 5 - Size
-    raceDiv += '<td id="lobby-current-races-' + race.id + '-size" class="lobby-current-races-size">';
+    raceDiv += `<td id="lobby-current-races-${race.id}-size" class="lobby-current-races-size">`;
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 
     // Column 6 - Entrants
-    raceDiv += '<td id="lobby-current-races-' + race.id + '-racers" class="lobby-current-races-racers">';
+    raceDiv += `<td id="lobby-current-races-${race.id}-racers" class="lobby-current-races-racers">`;
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 
@@ -203,19 +203,19 @@ exports.raceDraw = (race) => {
 
 function raceDraw2(race) {
     // Fade in the race row
-    $('#lobby-current-races-' + race.id).fadeIn(globals.fadeTime, () => {
+    $(`#lobby-current-races-${race.id}`).fadeIn(globals.fadeTime, () => {
         // While we were fading in, the race might have ended
-        if (globals.raceList.hasOwnProperty(race.id) === false) {
+        if (!Object.prototype.hasOwnProperty.call(globals.raceList, race.id)) {
             return;
         }
 
         // Make the row clickable
-        if (globals.raceList[race.id].status === 'open' && globals.raceList[race.id].ruleset.solo === false) {
-            $('#lobby-current-races-' + race.id).click(() => {
+        if (globals.raceList[race.id].status === 'open' && !globals.raceList[race.id].ruleset.solo) {
+            $(`#lobby-current-races-${race.id}`).click(() => {
                 if (globals.currentScreen === 'lobby') {
                     globals.currentScreen = 'waiting-for-server';
                     globals.conn.send('raceJoin', {
-                        'id': race.id,
+                        id: race.id,
                     });
                 }
             });
@@ -231,19 +231,19 @@ function raceDraw2(race) {
 
 const raceUpdatePlayers = (raceID) => {
     // Draw the new size
-    $('#lobby-current-races-' + raceID + '-size').html(globals.raceList[raceID].racers.length);
+    $(`#lobby-current-races-${raceID}-size`).html(globals.raceList[raceID].racers.length);
 
     // Draw the new racer list
     let racers = '';
-    for (let racer of globals.raceList[raceID].racers) {
+    for (const racer of globals.raceList[raceID].racers) {
         if (racer === globals.raceList[raceID].captain) {
-            racers += '<strong>' + racer + '</strong>, ';
+            racers += `<strong>${racer}</strong>, `;
         } else {
-            racers += racer + ', ';
+            racers += `${racer}, `;
         }
     }
     racers = racers.slice(0, -2); // Chop off the trailing comma and space
-    $('#lobby-current-races-' + raceID + '-racers').html(racers);
+    $(`#lobby-current-races-${raceID}-racers`).html(racers);
 
     // Check for overflow in the racer list
     raceDrawCheckForOverflow(raceID, 'racers');
@@ -253,8 +253,8 @@ exports.raceUpdatePlayers = raceUpdatePlayers;
 // Make tooltips for long names if necessary
 function raceDrawCheckForOverflow(raceID, target) {
     // Check to make sure that the race hasn't ended in the meantime
-    if (typeof $('#lobby-current-races-' + raceID + '-' + target) === 'undefined') {
-        let errorMessage = 'The "raceDrawCheckForOverflow" function was called for a race that does not exist anymore.';
+    if (typeof $(`#lobby-current-races-${raceID}-${target}`) === 'undefined') {
+        const errorMessage = 'The "raceDrawCheckForOverflow" function was called for a race that does not exist anymore.';
         globals.log.info(errorMessage);
 
         try {
@@ -269,48 +269,46 @@ function raceDrawCheckForOverflow(raceID, target) {
     // Race name column
     let shortened = false;
     let counter = 0; // It is possible to get stuck in the bottom while loop
-    while ($('#lobby-current-races-' + raceID + '-' + target)[0].scrollWidth > $('#lobby-current-races-' + raceID + '-' + target).innerWidth()) {
-        counter++;
+    while ($(`#lobby-current-races-${raceID}-${target}`)[0].scrollWidth > $(`#lobby-current-races-${raceID}-${target}`).innerWidth()) {
+        counter += 1;
         if (counter >= 1000) {
             // Something is weird and the page is not rendering properly
             break;
         }
-        let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1);
-        $('#lobby-current-races-' + raceID + '-' + target).html(shortenedName);
+        const shortenedName = $(`#lobby-current-races-${raceID}-${target}`).html().slice(0, -1);
+        $(`#lobby-current-races-${raceID}-${target}`).html(shortenedName);
         shortened = true;
     }
     let content = '';
     if (target === 'name') {
         content = globals.raceList[raceID].name; // This does not need to be escaped because tooltipster displays HTML as plain text
     } else if (target === 'racers') {
-        for (let racer of globals.raceList[raceID].racers) {
-            content += racer + ', ';
+        for (const racer of globals.raceList[raceID].racers) {
+            content += `${racer}, `;
         }
         content = content.slice(0, -2); // Chop off the trailing comma and space
     }
     if (shortened) {
-        let shortenedName = $('#lobby-current-races-' + raceID + '-' + target).html().slice(0, -1); // Make it a bit shorter to account for the padding
-        $('#lobby-current-races-' + raceID + '-' + target).html(shortenedName + '...');
-        if ($('#lobby-current-races-' + raceID + '-' + target).hasClass('tooltipstered')) {
-            $('#lobby-current-races-' + raceID + '-' + target).tooltipster('content', content);
+        const shortenedName = $(`#lobby-current-races-${raceID}-${target}`).html().slice(0, -1); // Make it a bit shorter to account for the padding
+        $(`#lobby-current-races-${raceID}-${target}`).html(`${shortenedName}...`);
+        if ($(`#lobby-current-races-${raceID}-${target}`).hasClass('tooltipstered')) {
+            $(`#lobby-current-races-${raceID}-${target}`).tooltipster('content', content);
         } else {
-            $('#lobby-current-races-' + raceID + '-' + target).tooltipster({
-                theme:   'tooltipster-shadow',
-                delay:   0,
-                content: content,
+            $(`#lobby-current-races-${raceID}-${target}`).tooltipster({
+                theme: 'tooltipster-shadow',
+                delay: 0,
+                content,
             });
         }
-    } else {
+    } else if ($(`#lobby-current-races-${raceID}-${target}`).hasClass('tooltipstered')) {
         // Delete any existing tooltips, if they exist
-        if ($('#lobby-current-races-' + raceID + '-' + target).hasClass('tooltipstered')) {
-            $('#lobby-current-races-' + raceID + '-' + target).tooltipster('content', null);
-        }
+        $(`#lobby-current-races-${raceID}-${target}`).tooltipster('content', null);
     }
 }
 
 exports.raceUndraw = (raceID) => {
-    $('#lobby-current-races-' + raceID).fadeOut(globals.fadeTime, () => {
-        $('#lobby-current-races-' + raceID).remove();
+    $(`#lobby-current-races-${raceID}`).fadeOut(globals.fadeTime, () => {
+        $(`#lobby-current-races-${raceID}`).remove();
 
         if (Object.keys(globals.raceList).length === 0) {
             $('#lobby-current-races-table').fadeOut(0);
@@ -332,16 +330,12 @@ exports.usersDraw = () => {
 
     // Make an array with the name of every user and alphabetize it
     const userList = [];
-    for (const user in globals.roomList.lobby.users) {
-        if (globals.roomList.lobby.users.hasOwnProperty(user)) {
-            userList.push(user);
-        }
+    for (const user of Object.keys(globals.roomList.lobby.users)) {
+        userList.push(user);
     }
 
     // Case insensitive sort of the connected users
-    userList.sort(function (a, b) {
-        return a.toLowerCase().localeCompare(b.toLowerCase());
-    });
+    userList.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
     // Empty the existing list
     $('#lobby-users-users').html('');
@@ -374,18 +368,19 @@ exports.usersDraw = () => {
 
     function userTooltipChange(username) {
         $('#user-click-profile').click(() => {
-            const url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/profile/' + username;
+            const url = `${globals.websiteURL}/profile/${username}`;
             shell.openExternal(url);
         });
         $('#user-click-private-message').click(() => {
+            const boxContents = `/msg ${username} `;
             if (globals.currentScreen === 'lobby') {
-                $('#lobby-chat-box-input').val('/msg ' + username + ' ');
+                $('#lobby-chat-box-input').val(boxContents);
                 $('#lobby-chat-box-input').focus();
             } else if (globals.currentScreen === 'race') {
-                $('#race-chat-box-input').val('/msg ' + username + ' ');
+                $('#race-chat-box-input').val(boxContents);
                 $('#race-chat-box-input').focus();
             } else {
-                misc.errorShow('Failed to fill in the chat box since currentScreen is "' + globals.currentScreen + '".');
+                misc.errorShow(`Failed to fill in the chat box since currentScreen is "${globals.currentScreen}".`);
             }
             misc.closeAllTooltips();
         });

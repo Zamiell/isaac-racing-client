@@ -3,16 +3,16 @@
 */
 
 // Imports
-const globals = nodeRequire('./assets/js/globals');
-const misc = nodeRequire('./assets/js/misc');
-const websocket = nodeRequire('./assets/js/websocket');
+const globals = nodeRequire('./js/globals');
+const misc = nodeRequire('./js/misc');
+const websocket = nodeRequire('./js/websocket');
 
 /*
     Event handlers
 */
 
-$(document).ready(function() {
-    $('#register-form').submit(function(event) {
+$(document).ready(() => {
+    $('#register-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 
@@ -22,7 +22,7 @@ $(document).ready(function() {
         }
 
         // Validate username/password/email
-        let username = document.getElementById('register-username').value.trim();
+        const username = document.getElementById('register-username').value.trim();
         if (username === '') {
             $('#register-error').fadeIn(globals.fadeTime);
             $('#register-error').html('<span lang="en">The username field is required.</span>');
@@ -51,10 +51,10 @@ $(document).ready(function() {
     Register functions
 */
 
-exports.show = function() {
+exports.show = () => {
     globals.currentScreen = 'transition';
-    $('#title').fadeOut(globals.fadeTime, function() {
-        $('#register').fadeIn(globals.fadeTime, function() {
+    $('#title').fadeOut(globals.fadeTime, () => {
+        $('#register').fadeIn(globals.fadeTime, () => {
             globals.currentScreen = 'register';
         });
         $('#register-username').val(globals.steam.screenName);
@@ -66,39 +66,39 @@ exports.show = function() {
 // We will resend our Steam ID and ticket, just like we did previously in the login function, but this time we will also include our desired username
 function register(username) {
     globals.log.info('Sending a register request to the Racing+ server.');
-    let data = {
-        steamID:  globals.steam.id,
-        ticket:   globals.steam.ticket, // This will be verified on the server via the Steam web API
-        username: username,             // Our desired screen name that will be visible to other racers
+    const data = {
+        steamID: globals.steam.id,
+        ticket: globals.steam.ticket, // This will be verified on the server via the Steam web API
+        username, // Our desired screen name that will be visible to other racers
     };
-    let url = 'http' + (globals.secure ? 's' : '') + '://' + (globals.localhost ? 'localhost' : globals.domain) + '/register';
-    let request = $.ajax({
-        url:  url,
+    const url = `${globals.websiteURL}/register`;
+    const request = $.ajax({
+        url,
         type: 'POST',
-        data: data,
+        data,
     });
-    request.done(function(data) {
+    request.done(() => {
         // We successfully got a cookie; attempt to establish a WebSocket connection
         websocket.init();
     });
     request.fail(fail);
 }
 
-const fail = function(jqXHR) {
+const fail = (jqXHR) => {
     globals.currentScreen = 'transition';
     reset();
 
     // Fade in the error box
-    let error = misc.findAjaxError(jqXHR);
-    $('#register-error').html('<span lang="en">' + error + '</span>');
-    $('#register-error').fadeTo(globals.fadeTime, 1, function() {
+    const error = misc.findAjaxError(jqXHR);
+    $('#register-error').html(`<span lang="en">${error}</span>`);
+    $('#register-error').fadeTo(globals.fadeTime, 1, () => {
         globals.currentScreen = 'register';
     });
 };
 exports.fail = fail;
 
 // A function to return the register form back to the way it was initially
-const reset = function() {
+const reset = () => {
     $('#register-explanation1').fadeTo(globals.fadeTime, 1);
     $('#register-explanation2').fadeTo(globals.fadeTime, 1);
     $('#register-form').fadeTo(globals.fadeTime, 1);

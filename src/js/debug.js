@@ -1,0 +1,7 @@
+/*
+    Debug functions
+*/
+
+module.exports = () => {
+
+};

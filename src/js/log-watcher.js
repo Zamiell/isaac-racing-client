@@ -5,16 +5,16 @@
 // Imports
 const fs = nodeRequire('fs-extra');
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const globals = nodeRequire('./assets/js/globals');
-const settings = nodeRequire('./assets/js/settings');
-const misc = nodeRequire('./assets/js/misc');
-const raceScreen = nodeRequire('./assets/js/ui/race');
+const globals = nodeRequire('./js/globals');
+const settings = nodeRequire('./js/settings');
+const misc = nodeRequire('./js/misc');
+const raceScreen = nodeRequire('./js/ui/race');
 
 // globals.currentScreen is equal to "transition" when this is called
 exports.start = () => {
     // Check to make sure the log file exists
     let logPath = settings.get('logFilePath');
-    if (fs.existsSync(logPath) === false) {
+    if (!fs.existsSync(logPath)) {
         logPath = null;
         settings.set('logFilePath', null);
         settings.saveSync();
@@ -51,17 +51,18 @@ exports.start = () => {
 // Monitor for notifications from the child process that is doing the log watching
 const logWatcher = (event, message) => {
     // Don't log everything to reduce spam
-    if (message.startsWith('New floor: ') === false &&
-        message.startsWith('New room: ') === false &&
-        message.startsWith('New item: ') === false) {
-
-        globals.log.info('Recieved log-watcher notification: ' + message);
+    if (
+        !message.startsWith('New floor: ') &&
+        !message.startsWith('New room: ') &&
+        !message.startsWith('New item: ')
+    ) {
+        globals.log.info(`Recieved log-watcher notification: ${message}`);
     }
 
     if (message.startsWith('error: ')) {
         // First, parse for errors
-        let error = message.match(/^error: (.+)/)[1];
-        misc.errorShow('Something went wrong with the log monitoring program: ' + error);
+        const error = message.match(/^error: (.+)/)[1];
+        misc.errorShow(`Something went wrong with the log monitoring program: ${error}`);
         return;
     }
 
@@ -90,12 +91,12 @@ const logWatcher = (event, message) => {
     */
 
     // Don't do anything if we are not in a race
-    if (globals.currentScreen !== 'race' || globals.currentRaceID === false) {
+    if (globals.currentScreen !== 'race' || !globals.currentRaceID) {
         return;
     }
 
     // Don't do anything if the race is over
-    if (globals.raceList.hasOwnProperty(globals.currentRaceID) === false) {
+    if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
         return;
     }
 
@@ -146,12 +147,12 @@ const logWatcher = (event, message) => {
             misc.errorShow('Failed to parse the new room from the message sent by the log watcher process.');
         }
     } else if (message.startsWith('New item: ')) {
-        let m = message.match(/New item: (\d+)/);
+        const m = message.match(/New item: (\d+)/);
         if (m) {
-            let itemID = parseInt(m[1]); // The server expects this to be an integer
+            const itemID = parseInt(m[1], 10); // The server expects this to be an integer
             globals.conn.send('raceItem', {
-                id:     globals.currentRaceID,
-                itemID: itemID,
+                id: globals.currentRaceID,
+                itemID,
             });
         } else {
             misc.errorShow('Failed to parse the new item from the message sent by the log watcher process.');

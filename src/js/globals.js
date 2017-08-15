@@ -30,7 +30,6 @@ module.exports = {
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js
     lastPM: null,
-    localhost,
     log: null,
     lang: null, // The language switcher instance
     modLoader: {
@@ -65,7 +64,6 @@ module.exports = {
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
     raceList: {},
-    secure: (localhost ? false : secure), // Always default to HTTP if connecting to localhost
     spamTimer: new Date().getTime(),
     steam: {
         id: null,
@@ -85,6 +83,8 @@ module.exports = {
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
     trinketList: {}, // Filled in main.js
+    websiteURL: `http${(secure ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
+    websocketURL: `ws${(secure ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost
     wordList: null, // Filled in main.js
     version: null, // Filled in main.js
 };

@@ -6,9 +6,9 @@
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
 const isDev = nodeRequire('electron-is-dev');
 const linkifyHTML = nodeRequire('linkifyjs/html');
-const globals = nodeRequire('./assets/js/globals');
-const misc = nodeRequire('./assets/js/misc');
-const debug = nodeRequire('./assets/js/debug');
+const globals = nodeRequire('./js/globals');
+const misc = nodeRequire('./js/misc');
+const debug = nodeRequire('./js/debug');
 
 // Constants
 const chatIndentSize = '3.2em';
@@ -66,10 +66,8 @@ exports.send = (destination) => {
 
             // Get the current list of connected users
             const userList = [];
-            for (const user in globals.roomList.lobby.users) {
-                if (globals.roomList.lobby.users.hasOwnProperty(user)) {
-                    userList.push(user);
-                }
+            for (const user of Object.keys(globals.roomList.lobby.users)) {
+                userList.push(user);
             }
 
             // Validate that the receipient is online
@@ -80,7 +78,7 @@ exports.send = (destination) => {
                     PMrecipient = userList[i];
                 }
             }
-            if (isConnected === false) {
+            if (!isConnected) {
                 misc.warningShow('That user is not currently online.');
                 return;
             }
@@ -139,7 +137,7 @@ exports.send = (destination) => {
     // Reset the history index
     globals.roomList[room].historyIndex = -1;
 
-    if (isCommand === false) {
+    if (!isCommand) {
         // If this is a normal chat message
         globals.conn.send('roomMessage', {
             room,
@@ -220,7 +218,7 @@ const draw = (room, name, message, datetime = null, discord = false) => {
     }
 
     // Make sure that the room still exists in the roomList
-    if (globals.roomList.hasOwnProperty(room) === false) {
+    if (!Object.prototype.hasOwnProperty.call(globals.roomList, room)) {
         return;
     }
 
@@ -232,11 +230,9 @@ const draw = (room, name, message, datetime = null, discord = false) => {
 
     // Check for links and insert them if present (using linkifyjs)
     message = linkifyHTML(message, {
-        attributes: function(href, type) {
-            return {
-                onclick: 'nodeRequire(\'electron\').shell.openExternal(\'' + href + '\');',
-            };
-        },
+        attributes: (href, type) => ({
+            onclick: `nodeRequire('electron').shell.openExternal('${href}');`,
+        }),
         formatHref: (href, type) => '#',
         target: '_self',
     });
@@ -268,15 +264,15 @@ const draw = (room, name, message, datetime = null, discord = false) => {
         chatLine += '<span class="chat-discord">[Discord]</span> ';
     }
     if (privateMessage) {
-        chatLine += '<span class="chat-pm">[PM ' + privateMessage + ' <strong class="chat-pm">' + name + '</strong>]</span> &nbsp; ';
+        chatLine += `<span class="chat-pm">[PM ${privateMessage} <strong class="chat-pm">${name}</strong>]</span> &nbsp; `;
     } else if (name === '!server') {
         // Do nothing
     } else {
-        chatLine += '&lt;<strong>' + name + '</strong>&gt; &nbsp; ';
+        chatLine += `&lt;<strong>${name}</strong>&gt; &nbsp; `;
     }
     chatLine += '</span>';
     if (name === '!server') {
-        chatLine += '<span class="chat-server">' + message + '</span>';
+        chatLine += `<span class="chat-server">${message}</span>`;
     } else {
         chatLine += message;
     }
@@ -294,20 +290,20 @@ const draw = (room, name, message, datetime = null, discord = false) => {
 
     // Find out if we should automatically scroll down after adding the new line of chat
     let autoScroll = false;
-    let bottomPixel = $('#' + destination + '-chat-text').prop('scrollHeight') - $('#' + destination + '-chat-text').height();
-    if ($('#' + destination + '-chat-text').scrollTop() === bottomPixel) {
+    let bottomPixel = $(`#${destination}-chat-text`).prop('scrollHeight') - $(`#${destination}-chat-text`).height();
+    if ($(`#${destination}-chat-text`).scrollTop() === bottomPixel) {
         // If we are already scrolled to the bottom, then it is ok to automatically scroll
         autoScroll = true;
     }
 
     // Add the new line
     if (datetime === null) {
-        $('#' + destination + '-chat-text').append(chatLine);
+        $(`#${destination}-chat-text`).append(chatLine);
     } else {
         // We prepend instead of append because the chat history comes in order from most recent to least recent
-        $('#' + destination + '-chat-text').prepend(chatLine);
+        $(`#${destination}-chat-text`).prepend(chatLine);
     }
-    $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).fadeIn(globals.fadeTime);
+    $(`#${room}-chat-text-line-${globals.roomList[room].chatLine}`).fadeIn(globals.fadeTime);
 
     // Set indentation for long lines
     if (room === 'lobby') {
@@ -320,14 +316,14 @@ const draw = (room, name, message, datetime = null, discord = false) => {
         */
 
         // Indent the text to the "<Username>" to signify that it is a continuation of the last line
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('padding-left', chatIndentSize);
-        $('#' + room + '-chat-text-line-' + globals.roomList[room].chatLine).css('text-indent', '-' + chatIndentSize);
+        $(`#${room}-chat-text-line-${globals.roomList[room].chatLine}`).css('padding-left', chatIndentSize);
+        $(`#${room}-chat-text-line-${globals.roomList[room].chatLine}`).css('text-indent', `-${chatIndentSize}`);
     }
 
     // Automatically scroll
     if (autoScroll) {
-        bottomPixel = $('#' + destination + '-chat-text').prop('scrollHeight') - $('#' + destination + '-chat-text').height();
-        $('#' + destination + '-chat-text').scrollTop(bottomPixel);
+        bottomPixel = $(`#${destination}-chat-text`).prop('scrollHeight') - $(`#${destination}-chat-text`).height();
+        $(`#${destination}-chat-text`).scrollTop(bottomPixel);
     }
 };
 exports.draw = draw;
@@ -347,8 +343,8 @@ exports.indentAll = (room) => {
         */
 
         // If this line overflows, indent it to the "<Username>" to signify that it is a continuation of the last line
-        $('#' + room + '-chat-text-line-' + i).css('padding-left', chatIndentSize);
-        $('#' + room + '-chat-text-line-' + i).css('text-indent', '-' + chatIndentSize);
+        $(`#${room}-chat-text-line-${i}`).css('padding-left', chatIndentSize);
+        $(`#${room}-chat-text-line-${i}`).css('text-indent', `-${chatIndentSize}`);
     }
 };
 
@@ -356,20 +352,20 @@ function fillEmotes(message) {
     // Search through the text for each emote
     for (let i = 0; i < globals.emoteList.length; i++) {
         if (message.indexOf(globals.emoteList[i]) !== -1) {
-            const emoteTag = '<img class="chat-emote" src="assets/img/emotes/' + globals.emoteList[i] + '.png" title="' + globals.emoteList[i] + '" />';
-            const re = new RegExp('\\b' + globals.emoteList[i] + '\\b', 'g'); // "\b" is a word boundary in regex
+            const emoteTag = `<img class="chat-emote" src="img/emotes/${globals.emoteList[i]}.png" title="${globals.emoteList[i]}" />`;
+            const re = new RegExp(`\\b${globals.emoteList[i]}\\b`, 'g'); // "\b" is a word boundary in regex
             message = message.replace(re, emoteTag);
         }
     }
 
     // Special emotes that don't match the filenames
     if (message.indexOf('&lt;3') !== -1) {
-        const emoteTag = '<img class="chat-emote" src="assets/img/emotes2/3.png" title="&lt;3" />';
+        const emoteTag = '<img class="chat-emote" src="img/emotes2/3.png" title="&lt;3" />';
         const re = new RegExp('&lt;3', 'g'); // "\b" is a word boundary in regex
         message = message.replace(re, emoteTag);
     }
     if (message.indexOf(':thinking:') !== -1) {
-        const emoteTag = '<img class="chat-emote" src="assets/img/emotes2/thinking.svg" title=":thinking:" />';
+        const emoteTag = '<img class="chat-emote" src="img/emotes2/thinking.svg" title=":thinking:" />';
         const re = new RegExp(':thinking:', 'g'); // "\b" is a word boundary in regex
         message = message.replace(re, emoteTag);
     }

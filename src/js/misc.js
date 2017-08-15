@@ -3,10 +3,11 @@
 */
 
 // Imports
+const path = nodeRequire('path');
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
 const fs = nodeRequire('fs-extra');
-const globals = nodeRequire('./assets/js/globals');
-const settings = nodeRequire('./assets/js/settings');
+const globals = nodeRequire('./js/globals');
+const settings = nodeRequire('./js/settings');
 
 // Create a custom error type so that the Raven dataCallback knows not to go back to the errorShow function
 // The new error object will prototypically inherit from the Error constructor
@@ -19,13 +20,13 @@ function RavenMiscError(message) {
 RavenMiscError.prototype = Object.create(Error.prototype);
 RavenMiscError.prototype.constructor = RavenMiscError;
 
-const errorShow = function(message, sendToSentry = true, alternateScreen = false, customTitle = null) {
+const errorShow = (message, sendToSentry = true, alternateScreen = false, customTitle = null) => {
     // Let the main process know to not overwrite the 3 "save.dat" files in case we are in the middle of a race
     ipcRenderer.send('asynchronous-message', 'error');
 
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
-        setTimeout(function() {
+        setTimeout(() => {
             errorShow(message, sendToSentry, alternateScreen);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
@@ -84,8 +85,8 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
         $('#error-modal-title').html(customTitle);
     }
 
-    $('#gui').fadeTo(globals.fadeTime, 0.1, function() {
-        if (alternateScreen === true) {
+    $('#gui').fadeTo(globals.fadeTime, 0.1, () => {
+        if (alternateScreen) {
             // Show the log file selector screen
             $('#log-file-modal').fadeIn(globals.fadeTime);
         } else {
@@ -97,10 +98,10 @@ const errorShow = function(message, sendToSentry = true, alternateScreen = false
 };
 exports.errorShow = errorShow;
 
-const warningShow = function(message) {
+const warningShow = (message) => {
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
-        setTimeout(function() {
+        setTimeout(() => {
             warningShow(message);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
@@ -113,75 +114,79 @@ const warningShow = function(message) {
     closeAllTooltips();
 
     // Show the warning modal
-    $('#gui').fadeTo(globals.fadeTime, 0.1, function() {
+    $('#gui').fadeTo(globals.fadeTime, 0.1, () => {
         $('#warning-modal').fadeIn(globals.fadeTime);
         $('#warning-modal-description').html(message);
     });
 };
 exports.warningShow = warningShow;
 
-exports.playSound = function(path, exclusive = false) {
+exports.playSound = (soundFilename, exclusive = false) => {
     // First check to see if sound is disabled
-    let volume = settings.get('volume');
+    const volume = settings.get('volume');
     if (volume === 0) {
         return;
     }
 
     if (exclusive !== false) {
         // For some sound effects, we only want one of them playing at once to prevent confusion
-        if (globals.playingSound === true) {
+        if (globals.playingSound) {
             return; // Do nothing if we are already playing a sound
         }
 
         globals.playingSound = true;
-        setTimeout(function() {
+        setTimeout(() => {
             globals.playingSound = false;
         }, exclusive); // The 2nd argument to the function should be the length of the sound effect in milliseconds
     }
 
     // Sometimes this can give "net::ERR_REQUEST_RANGE_NOT_SATISFIABLE" for some reason
     // (might be related to having multiple Electron apps trying to play the same sound at the same time)
-    let fullPath = 'assets/sounds/' + path + '.mp3';
-    let audio = new Audio(fullPath);
+    const audioPath = path.join('sounds', `${soundFilename}.mp3`);
+    const audio = new Audio(audioPath);
     audio.volume = volume;
-    audio.play().catch(function (err) {
-        globals.log.info('Failed to play "' + fullPath + '":', err);
+    audio.play().catch((err) => {
+        globals.log.info(`Failed to play "${audioPath}": ${err}`);
     });
-    globals.log.info('Played "' + fullPath + '".');
+    globals.log.info(`Played "${audioPath}".`);
 };
 
-exports.findAjaxError = function(jqXHR) {
+exports.findAjaxError = (jqXHR) => {
     if (jqXHR.readyState === 0) {
         return 'A network error occured. The server might be down!';
     } else if (jqXHR.responseText === '') {
         return 'An unknown error occured.';
-    } else {
-        return jqXHR.responseText;
     }
+
+    return jqXHR.responseText;
 };
 
-const closeAllTooltips = function() {
-    let instances = $.tooltipster.instances();
-    $.each(instances, function(i, instance){
+const closeAllTooltips = () => {
+    const instances = $.tooltipster.instances();
+    $.each(instances, (i, instance) => {
         instance.close();
     });
 };
 exports.closeAllTooltips = closeAllTooltips;
 
 // From: https://stackoverflow.com/questions/20822273/best-way-to-get-folder-and-file-list-in-javascript
-exports.getAllFilesFromFolder = function(dir) {
-    let results = [];
-    fs.readdirSync(dir).forEach(function(file) {
+exports.getAllFilesFromFolder = (dir) => {
+    const results = [];
+    fs.readdirSync(dir).forEach((file) => {
         // Commenting this out because we don't need the full path
-        //file = dir + '/' + file;
+        /*
+        file = dir + '/' + file;
+        */
 
         // Commenting this out because we don't need recursion
-        /*let stat = fs.statSync(file);
+        /*
+        let stat = fs.statSync(file);
         if (stat && stat.isDirectory()) {
             results = results.concat(getAllFilesFromFolder(file));
         } else {
             results.push(file);
-        }*/
+        }
+        */
         results.push(file);
     });
 
@@ -189,9 +194,9 @@ exports.getAllFilesFromFolder = function(dir) {
 };
 
 // From: https://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try
-const tryParseJSON = function(jsonString) {
+const tryParseJSON = (jsonString) => {
     try {
-        let o = JSON.parse(jsonString);
+        const o = JSON.parse(jsonString);
 
         // Handle non-exception-throwing cases:
         // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
@@ -200,60 +205,56 @@ const tryParseJSON = function(jsonString) {
         if (o && typeof o === 'object') {
             return o;
         }
+    } catch (err) {
+        // We don't care about the error
     }
-    catch (e) { }
 
     return false;
 };
 exports.tryParseJSON = tryParseJSON;
 
-exports.getRandomNumber = function(minNumber, maxNumber) {
-    // Get a random number between minNumber and maxNumber
-    return Math.floor(Math.random() * (parseInt(maxNumber) - parseInt(minNumber) + 1) + parseInt(minNumber));
+exports.getRandomNumber = (min, max) => {
+    // Get a random number between min and max
+    min = parseInt(min, 10);
+    max = parseInt(max, 10);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 // From: https://stackoverflow.com/questions/2332811/capitalize-words-in-string
-String.prototype.capitalize = function() {
-    return this.replace(/(?:^|\s)\S/g, function(a) {
-        return a.toUpperCase();
-    });
+/* eslint-disable no-extend-native */
+String.prototype.capitalize = function stringCapitalize() {
+    return this.replace(/(?:^|\s)\S/g, a => a.toUpperCase());
 };
 
 // From: https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
-exports.pad = function(val) {
-    return val > 9 ? val : '0' + val;
-};
+exports.pad = val => (val > 9 ? val : `0${val}`);
 
 // From: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
-exports.escapeHtml = function(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
- };
+exports.escapeHtml = unsafe => unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
 // From: https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number
-exports.ordinal_suffix_of = function(i) {
+exports.ordinal_suffix_of = (i) => {
+    // Handle French ordinals
     if (settings.get('language') === 'fr') {
-        if (i === 1) {
-            return i + 'er';
-        } else {
-            return i + 'ème';
-        }
-    } else { // Default to English
-        let j = i % 10;
-        let k = i % 100;
-        if (j == 1 && k != 11) {
-            return i + 'st';
-        }
-        if (j == 2 && k != 12) {
-            return i + 'nd';
-        }
-        if (j == 3 && k != 13) {
-            return i + 'rd';
-        }
-        return i + 'th';
+        return (i === 1 ? `${i}er` : `${i}ème`);
     }
+
+    // Default to English
+    const j = i % 10;
+    const k = i % 100;
+    if (j === 1 && k !== 11) {
+        return `${i}st`;
+    }
+    if (j === 2 && k !== 12) {
+        return `${i}nd`;
+    }
+    if (j === 3 && k !== 13) {
+        return `${i}rd`;
+    }
+    return `${i}th`;
 };

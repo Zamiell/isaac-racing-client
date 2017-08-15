@@ -2,6 +2,9 @@
     Builds for seeded racing
 */
 
+/* eslint-disable no-multi-spaces */
+/* eslint-disable quotes */
+/* eslint-disable indent */
 module.exports = [
     // Build IDs start at 1, so make a null array for element 0
     [],                                           // 0

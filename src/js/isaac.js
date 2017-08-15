@@ -4,8 +4,8 @@
 
 // Imports
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const globals = nodeRequire('./assets/js/globals');
-const misc = nodeRequire('./assets/js/misc');
+const globals = nodeRequire('./js/globals');
+const misc = nodeRequire('./js/misc');
 
 // This tells the main process to start launching Isaac
 exports.start = () => {

@@ -41,8 +41,8 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // sips --deleteColorManagementProperties ###.png
 
 // List of files to update during Booster Packs:
-// 1) assets/data/items.json
-// 2) assets/img/items/#.png
+// 1) data/items.json
+// 2) img/items/#.png
 // 3) mod/content/items.xml
 // 4) mod/resources/gfx/items2/..
 // 5) mod/resources/gfx/items3/..
@@ -83,7 +83,7 @@ let errorHappened = false;
 // Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 const log = tracer.dailyfile({
     // Log file settings
-    root: (isDev ? '.' : process.execPath),
+    root: path.join(__dirname, '..'),
     logPathFormat: '{{root}}/Racing+ {{date}}.log',
     splitFormat: 'yyyy-mm-dd',
     maxLogFiles: 10,
@@ -123,12 +123,12 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
 }).install();
 
 /*
-    Settings (on persistent storage)
+    Settings (through persistent storage)
 */
 
 // Open the file that contains all of the user's settings
-// (We use teeny-conf instead of localStorage because localStorage persists after uninstallation)
-const settingsFile = (isDev ? 'settings.json' : path.resolve(process.execPath, '..', '..', 'settings.json'));
+// (we use teeny-conf instead of localStorage because localStorage persists after uninstallation)
+const settingsFile = path.join(__dirname, '..', 'settings.json'); // This will be created if it does not exist already
 const settings = new teeny(settingsFile); // eslint-disable-line new-cap
 settings.loadOrCreateSync();
 
@@ -167,11 +167,11 @@ function createWindow() {
         y: windowSettings.y,
         width,
         height,
-        icon: path.resolve(__dirname, 'assets', 'img', 'favicon.png'),
+        icon: path.resolve(__dirname, 'img', 'favicon.png'),
         title: 'Racing+',
         frame: false,
     });
-    if (isDev === true) {
+    if (isDev) {
         mainWindow.webContents.openDevTools();
     }
     mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -201,7 +201,7 @@ function createWindow() {
 
 function autoUpdate() {
     // Now that the window is created, check for updates
-    if (isDev === false) {
+    if (!isDev) {
         autoUpdater.on('error', (err) => {
             log.error(err.message);
             Raven.captureException(err);
@@ -240,7 +240,7 @@ function registerKeyboardHotkeys() {
 
     const hotkeyIsaacFocus = globalShortcut.register('Alt+1', () => {
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            const pathToFocusIsaac = path.join(__dirname, 'assets', 'programs', 'focusIsaac', 'focusIsaac.exe');
+            const pathToFocusIsaac = path.join(__dirname, 'programs', 'focusIsaac', 'focusIsaac.exe');
             execFile(pathToFocusIsaac, (error, stdout, stderr) => {
                 // We have to attach an empty callback to this or it does not work for some reason
             });
@@ -284,7 +284,7 @@ function registerKeyboardHotkeys() {
 */
 
 // Check to see if the application is already open
-if (isDev === false) {
+if (!isDev) {
     const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
         // A second instance of the program was opened, so just focus the existing window
         if (mainWindow) {
@@ -324,7 +324,7 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', () => {
-    if (errorHappened === false) {
+    if (!errorHappened) {
         // Write all default values to the "save1.dat", "save2.dat", and "save3.dat" files
         let modsPath;
         if (process.platform === 'linux') {
@@ -335,7 +335,7 @@ app.on('before-quit', () => {
         for (let i = 1; i <= 3; i++) {
             // Find the location of the file
             let saveDat = path.join(modsPath, modNameDev, `save${i}.dat`);
-            if (fs.existsSync(saveDat) === false) {
+            if (!fs.existsSync(saveDat)) {
                 saveDat = path.join(modsPath, modName, `save${i}.dat`);
             }
 
@@ -400,7 +400,7 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
     if (arg1 === 'minimize') {
         mainWindow.minimize();
     } else if (arg1 === 'maximize') {
-        if (mainWindow.isMaximized() === true) {
+        if (mainWindow.isMaximized()) {
             mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
@@ -509,13 +509,13 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
 
         // After being launched, Isaac will wrest control, so automatically switch focus back to the Racing+ client when this occurs
         if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            const pathToFocusRacing = path.join(__dirname, 'assets', 'programs', 'focusRacing+', 'focusRacing+.exe');
+            const pathToFocusRacing = path.join(__dirname, 'programs', 'focusRacing+', 'focusRacing+.exe');
             execFile(pathToFocusRacing, (error, stdout, stderr) => {
                 // We have to attach an empty callback to this or it does not work for some reason
             });
         } else if (process.platform === 'darwin') { // OS X
-            // Try using "opn(pathToRacingPlusBinary)"
-            // TODO
+            // Try using "opn(pathToRacingPlusBinary)" to see if that works
+            // (not implemented)
         } else {
             // Linux is not supported
         }

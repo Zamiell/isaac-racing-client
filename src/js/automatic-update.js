@@ -2,19 +2,15 @@
     Automatic update functions
 */
 
-'use strict';
-
 // Imports
-
 const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const globals     = nodeRequire('./assets/js/globals');
-const misc        = nodeRequire('./assets/js/misc');
+const globals = nodeRequire('./js/globals');
 
 /*
     IPC handlers
 */
 
-const autoUpdater = function(event, message) {
+const autoUpdater = (event, message) => {
     globals.log.info('Recieved autoUpdater message:', message);
     globals.autoUpdateStatus = message;
     if (message === 'error') {
@@ -27,7 +23,7 @@ const autoUpdater = function(event, message) {
         // Do nothing special
     } else if (message === 'update-downloaded') {
         if (globals.currentScreen === 'transition') {
-            setTimeout(function() {
+            setTimeout(() => {
                 autoUpdater(event, message);
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (globals.currentScreen === 'updating') {

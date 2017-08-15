@@ -2,33 +2,30 @@
     Settings tooltip
 */
 
-'use strict';
-
 // Imports
-const ipcRenderer  = nodeRequire('electron').ipcRenderer;
-const remote       = nodeRequire('electron').remote;
-const fs           = nodeRequire('fs-extra');
-const path         = nodeRequire('path');
-const globals      = nodeRequire('./assets/js/globals');
-const settings     = nodeRequire('./assets/js/settings');
-const misc         = nodeRequire('./assets/js/misc');
-const localization = nodeRequire('./assets/js/localization');
+const remote = nodeRequire('electron').remote;
+const fs = nodeRequire('fs-extra');
+const path = nodeRequire('path');
+const globals = nodeRequire('./js/globals');
+const settings = nodeRequire('./js/settings');
+const misc = nodeRequire('./js/misc');
+const localization = nodeRequire('./js/localization');
 
 /*
     Event handlers
 */
 
-$(document).ready(function() {
-    $('#settings-log-file-location-change').click(function() {
-        let titleText = $('#select-your-log-file').html();
-        let newLogFilePath = remote.dialog.showOpenDialog({
+$(document).ready(() => {
+    $('#settings-log-file-location-change').click(() => {
+        const titleText = $('#select-your-log-file').html();
+        const newLogFilePath = remote.dialog.showOpenDialog({
             title: titleText,
             defaultPath: globals.defaultLogFilePath,
             filters: [
                 {
-                    'name': 'Text',
-                    'extensions': ['txt'],
-                }
+                    name: 'Text',
+                    extensions: ['txt'],
+                },
             ],
             properties: ['openFile'],
         });
@@ -44,26 +41,26 @@ $(document).ready(function() {
             return;
         }
 
-        let shortenedPath = newLogFilePath[0].substring(0, 24);
-        $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+        const shortenedPath = newLogFilePath[0].substring(0, 24);
+        $('#settings-log-file-location').html(`<code>${shortenedPath}...</code>`);
         $('#settings-log-file-location').tooltipster('content', newLogFilePath[0]);
     });
 
-    $('#settings-volume-slider').change(function() {
-        $('#settings-volume-slider-value').html($(this).val() + '%');
+    $('#settings-volume-slider').change(function settingsVolumeSliderChange() {
+        $('#settings-volume-slider-value').html(`${$(this).val()}%`);
     });
 
-    $('#settings-volume-test').click(function() {
+    $('#settings-volume-test').click(() => {
         // Play the "Go" sound effect
-        let audio = new Audio('assets/sounds/go.mp3');
+        const audio = new Audio('sounds/go.mp3');
         audio.volume = $('#settings-volume-slider').val() / 100;
         audio.play();
     });
 
     $('#settings-stream-url').keyup(settingsStreamURLKeyup);
     function settingsStreamURLKeyup() {
-        let oldStreamURL = globals.stream.URLBeforeTyping;
-        let newStreamURL = $('#settings-stream-url').val();
+        const oldStreamURL = globals.stream.URLBeforeTyping;
+        const newStreamURL = $('#settings-stream-url').val();
 
         if (oldStreamURL.indexOf('twitch.tv/') === -1 && newStreamURL.indexOf('twitch.tv/') !== -1) {
             // There was no Twitch stream set before, but now there is
@@ -77,7 +74,7 @@ $(document).ready(function() {
             $('#settings-twitch-bot-delay').prop('disabled', true);
 
             // Wait for the fading to finish
-            setTimeout(function() {
+            setTimeout(() => {
                 settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
         } else if (oldStreamURL.indexOf('twitch.tv/') !== -1 && newStreamURL.indexOf('twitch.tv/') === -1) {
@@ -92,28 +89,26 @@ $(document).ready(function() {
             $('#settings-twitch-bot-delay').prop('disabled', true);
 
             // Wait for the fading to finish
-            setTimeout(function() {
+            setTimeout(() => {
                 settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
             }, globals.fadeTime + 5); // 5 milliseconds of leeway
-
         }
 
         globals.stream.URLBeforeTyping = newStreamURL;
     }
-    function settingsStreamURLCheck() {
-    }
 
-    $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', function() {
+    $('#settings-enable-twitch-bot-checkbox-container').on('mouseover', () => {
         // Check if the tooltip is open
-        if ($('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open === false &&
+        if (
+            !$('#settings-enable-twitch-bot-checkbox-container').tooltipster('status').open &&
             $('#settings-stream-url').val().indexOf('twitch.tv/') !== -1 &&
-            $('#settings-enable-twitch-bot-checkbox').is(':checked') === false) {
-
+            !$('#settings-enable-twitch-bot-checkbox').is(':checked')
+        ) {
             $('#settings-enable-twitch-bot-checkbox-container').tooltipster('open');
         }
     });
 
-    $('#settings-enable-twitch-bot-checkbox').change(function(data) {
+    $('#settings-enable-twitch-bot-checkbox').change((data) => {
         if ($('#settings-enable-twitch-bot-checkbox').prop('checked')) {
             $('#settings-twitch-bot-delay-label').fadeTo(globals.fadeTime, 1);
             $('#settings-twitch-bot-delay').fadeTo(globals.fadeTime, 1);
@@ -125,17 +120,17 @@ $(document).ready(function() {
         }
     });
 
-    $('#settings-form').submit(function() {
+    $('#settings-form').submit(() => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 
         // Don't do anything if we are not on the right screen
         if (globals.currentScreen !== 'lobby') {
-            return;
+            return false;
         }
 
         // Log file location
-        let newLogFilePath = $('#settings-log-file-location').tooltipster('content');
+        const newLogFilePath = $('#settings-log-file-location').tooltipster('content');
         let changedLogFilePath = false;
         if (settings.get('logFilePath') !== newLogFilePath) {
             changedLogFilePath = true;
@@ -155,33 +150,31 @@ $(document).ready(function() {
         settings.saveSync();
 
         // "Don't disable boss cutscenes" checkbox
-        let bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
+        const bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
         settings.set('bossCutscenes', bossCutscenes);
         settings.saveSync();
-        if (changedLogFilePath === false) {
-            let bossCutsceneFile = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+        if (!changedLogFilePath) {
+            const bossCutsceneFile = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
             if (bossCutscenes) {
                 // Make sure the file is deleted
                 if (fs.existsSync(bossCutsceneFile)) {
                     globals.log.info('Re-enabling boss cutscenes.');
                     try {
                         fs.removeSync(bossCutsceneFile);
-                    } catch(err) {
-                        misc.errorShow('Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ' + err);
-                        return;
+                    } catch (err) {
+                        misc.errorShow(`Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ${err}`);
+                        return false;
                     }
                 }
-            } else {
+            } else if (!fs.existsSync(bossCutsceneFile)) {
                 // Make sure the file is there
-                if (fs.existsSync(bossCutsceneFile) === false) {
-                    // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\assets\js\ui
-                    let newBossCutsceneFile = path.join(__dirname, '..', '..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-                    try {
-                        fs.copySync(newBossCutsceneFile, bossCutsceneFile);
-                    } catch(err) {
-                        misc.errorShow('Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ' + err);
-                        return;
-                    }
+                // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\js\ui
+                const newBossCutsceneFile = path.join(__dirname, '..', '..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
+                try {
+                    fs.copySync(newBossCutsceneFile, bossCutsceneFile);
+                } catch (err) {
+                    misc.errorShow(`Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ${err}`);
+                    return false;
                 }
             }
         }
@@ -195,46 +188,46 @@ $(document).ready(function() {
             newStreamURL = newStreamURL.replace('twitch.tv', 'www.twitch.tv');
         }
         if (newStreamURL.startsWith('twitch.tv/')) {
-            newStreamURL = 'https://www.' + newStreamURL;
+            newStreamURL = `https://www.${newStreamURL}`;
         }
         if (newStreamURL.startsWith('www.twitch.tv/')) {
-            newStreamURL = 'https://' + newStreamURL;
+            newStreamURL = `https://${newStreamURL}`;
         }
         $('#settings-stream-url').val(newStreamURL);
-        if (newStreamURL.startsWith('https://www.twitch.tv/') === false && newStreamURL !== '') {
+        if (!newStreamURL.startsWith('https://www.twitch.tv/') && newStreamURL !== '') {
             // We tried to enter a non-valid stream URL
             $('#settings-stream-url').tooltipster('open');
-            return;
-        } else {
-            $('#settings-stream-url').tooltipster('close');
-            if (newStreamURL === '') {
-                newStreamURL = '-'; // Streams cannot be blank on the server-side
-            }
+            return false;
+        }
+        $('#settings-stream-url').tooltipster('close');
+        if (newStreamURL === '') {
+            newStreamURL = '-'; // Streams cannot be blank on the server-side
         }
 
         // Twitch bot enabled
-        let newTwitchBotEnabled = $('#settings-enable-twitch-bot-checkbox').prop('checked');
+        const newTwitchBotEnabled = $('#settings-enable-twitch-bot-checkbox').prop('checked');
 
         // Twitch bot delay
         let newTwitchBotDelay = $('#settings-twitch-bot-delay').val();
-        if (/^\d+$/.test(newTwitchBotDelay) === false) {
+        if (!/^\d+$/.test(newTwitchBotDelay)) {
             // We tried to enter a non-number Twitch bot delay
             $('#settings-twitch-bot-delay').tooltipster('open');
-            return;
+            return false;
         }
-        newTwitchBotDelay = parseInt(newTwitchBotDelay);
+        newTwitchBotDelay = parseInt(newTwitchBotDelay, 10);
         if (newTwitchBotDelay < 0 || newTwitchBotDelay > 60) {
             // We tried to enter a delay out of the valid range
             $('#settings-twitch-bot-delay').tooltipster('open');
-            return;
+            return false;
         }
         $('#settings-twitch-bot-delay').tooltipster('close');
 
         // Send new stream settings if something changed
-        if (newStreamURL !== globals.stream.URL ||
+        if (
+            newStreamURL !== globals.stream.URL ||
             newTwitchBotEnabled !== globals.stream.TwitchBotEnabled ||
-            newTwitchBotDelay !== globals.stream.TwitchBotDelay) {
-
+            newTwitchBotDelay !== globals.stream.TwitchBotDelay
+        ) {
             // Back up the stream URL in case we get a error/warning back from the server
             globals.stream.URLBeforeSubmit = globals.stream.URL;
 
@@ -245,13 +238,13 @@ $(document).ready(function() {
                 globals.stream.URL = newStreamURL;
             }
             globals.stream.TwitchBotEnabled = newTwitchBotEnabled;
-            globals.stream.TwitchBotDelay   = newTwitchBotDelay;
+            globals.stream.TwitchBotDelay = newTwitchBotDelay;
 
             // Send them to the server
             globals.conn.send('profileSetStream', {
-                name:    newStreamURL,
+                name: newStreamURL,
                 enabled: newTwitchBotEnabled,
-                value:   newTwitchBotDelay,
+                value: newTwitchBotDelay,
             });
         }
 
@@ -273,7 +266,7 @@ $(document).ready(function() {
 */
 
 // The "functionBefore" function for Tooltipster
-exports.tooltipFunctionBefore = function() {
+exports.tooltipFunctionBefore = () => {
     if (globals.currentScreen !== 'lobby') {
         return false;
     }
@@ -283,7 +276,7 @@ exports.tooltipFunctionBefore = function() {
 };
 
 // The "functionReady" function for Tooltipster
-exports.tooltipFunctionReady = function() {
+exports.tooltipFunctionReady = () => {
     /*
         Fill in all of the settings every time the tooltip is opened
         (this prevents the user having unsaved settings displayed, which is confusing)
@@ -293,22 +286,22 @@ exports.tooltipFunctionReady = function() {
     $('#settings-username').html(globals.myUsername);
 
     // Log file location
-    let shortenedPath = settings.get('logFilePath').substring(0, 24);
-    $('#settings-log-file-location').html('<code>' + shortenedPath + '...</code>');
+    const shortenedPath = settings.get('logFilePath').substring(0, 24);
+    $('#settings-log-file-location').html(`<code>${shortenedPath}...</code>`);
 
     // Loanguage
     $('#settings-language').val(settings.get('language'));
 
     // Volume
     $('#settings-volume-slider').val(settings.get('volume') * 100);
-    $('#settings-volume-slider-value').html((settings.get('volume') * 100) + '%');
+    $('#settings-volume-slider-value').html(`${(settings.get('volume') * 100)}%`);
 
     // "Automatically enter the game with Alt+C and Alt+V" checkbox
-    let keyboard = settings.get('keyboard');
+    const keyboard = settings.get('keyboard');
     $('#settings-keyboard-checkbox').prop('checked', keyboard);
 
     // "Don't disable boss cutscenes" checkbox
-    let bossCutscenes = settings.get('bossCutscenes');
+    const bossCutscenes = settings.get('bossCutscenes');
     $('#settings-cutscene-checkbox').prop('checked', bossCutscenes);
 
     // Change stream URL
@@ -347,7 +340,7 @@ exports.tooltipFunctionReady = function() {
         So, check for this every time the tooltip is opened and reinitialize them if necessary
     */
 
-    if ($('#settings-log-file-location').hasClass('tooltipstered') === false) {
+    if (!$('#settings-log-file-location').hasClass('tooltipstered')) {
         $('#settings-log-file-location').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 0,
@@ -355,7 +348,7 @@ exports.tooltipFunctionReady = function() {
         });
     }
 
-    if ($('#settings-stream-url').hasClass('tooltipstered') === false) {
+    if (!$('#settings-stream-url').hasClass('tooltipstered')) {
         $('#settings-stream-url').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 0,
@@ -363,7 +356,7 @@ exports.tooltipFunctionReady = function() {
         });
     }
 
-    if ($('#settings-enable-twitch-bot-checkbox-container').hasClass('tooltipstered') === false) {
+    if (!$('#settings-enable-twitch-bot-checkbox-container').hasClass('tooltipstered')) {
         $('#settings-enable-twitch-bot-checkbox-container').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 750,
@@ -376,7 +369,7 @@ exports.tooltipFunctionReady = function() {
         });
     }
 
-    if ($('#settings-twitch-bot-delay').hasClass('tooltipstered') === false) {
+    if (!$('#settings-twitch-bot-delay').hasClass('tooltipstered')) {
         $('#settings-twitch-bot-delay').tooltipster({
             theme: 'tooltipster-shadow',
             delay: 0,

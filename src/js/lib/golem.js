@@ -15,23 +15,19 @@
 */
 
 // We need access to the globals here so that we can use the logger
-const globals = nodeRequire('./assets/js/globals');
+const globals = nodeRequire('./js/globals');
 
-var separator = ' ';
-var DefaultJSONProtocol = {
-    unpack: function(data) {
-        var name = data.split(separator)[0];
+const separator = ' ';
+const DefaultJSONProtocol = {
+    unpack: (data) => {
+        const name = data.split(separator)[0];
         return [name, data.substring(name.length + 1, data.length)];
     },
-    unmarshal: function(data) {
-        return JSON.parse(data);
-    },
-    marshalAndPack: function(name, data) {
-        return name + separator + JSON.stringify(data);
-    },
+    unmarshal: data => JSON.parse(data),
+    marshalAndPack: (name, data) => name + separator + JSON.stringify(data),
 };
 
-var Connection = function(addr, debug) {
+const Connection = function Connection(addr, debug) {
     this.ws = new WebSocket(addr);
     this.callbacks = {};
     this.debug = debug;
@@ -43,48 +39,46 @@ var Connection = function(addr, debug) {
 Connection.prototype = {
     constructor: Connection,
     protocol: DefaultJSONProtocol,
-    setProtocol: function(protocol) {
+    setProtocol: function setProtocol(protocol) {
         this.protocol = protocol;
     },
-    enableBinary: function() {
+    enableBinary: function enableBinary() {
         this.ws.binaryType = 'arraybuffer';
     },
-    onClose: function(evt) {
+    onClose: function onClose(evt) {
         if (this.callbacks.close) {
             this.callbacks.close(evt);
         }
     },
-    onMessage: function(evt) {
-        var data = this.protocol.unpack(evt.data);
+    onMessage: function onMessage(evt) {
+        const data = this.protocol.unpack(evt.data);
         if (this.callbacks[data[0]]) {
-            var obj = this.protocol.unmarshal(data[1]);
+            const obj = this.protocol.unmarshal(data[1]);
             this.callbacks[data[0]](obj);
-        } else {
-            if (this.debug) {
-                globals.log.error('Recieved WebSocket message with no callback:', data[0], JSON.parse(data[1]));
-            }
+        } else if (this.debug) {
+            globals.log.error('Recieved WebSocket message with no callback:', data[0], JSON.parse(data[1]));
         }
     },
-    onOpen: function(evt) {
+    onOpen: function onOpen(evt) {
         if (this.callbacks.open) {
             this.callbacks.open(evt);
         }
     },
-    on: function(name, callback) {
+    on: function on(name, callback) {
         this.callbacks[name] = callback;
     },
-    emit: function(name, data) {
+    emit: function emit(name, data) {
         this.ws.send(this.protocol.marshalAndPack(name, data));
     },
 
     // Added stuff
-    onError: function(evt) {
+    onError: function onError(evt) {
         if (this.callbacks.socketError) {
             this.callbacks.socketError(evt);
         }
     },
-    close: function() {
+    close: function close() {
         this.ws.close();
-    }
+    },
 };
 exports.Connection = Connection;

@@ -61,7 +61,7 @@ function greenworksInit() {
 
     // Initialize Greenworks
     try {
-        if (greenworks.init() === false) {
+        if (greenworks.init() === false) { // This cannot be written as "!greenworks.init()"
             // Don't bother sending this message to Sentry; the user not having Steam open is a fairly ordinary error
             process.send('errorInit', processExit);
             return;

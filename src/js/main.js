@@ -7,6 +7,7 @@
 /*
 
 New TODO:
+- STORE NEW CRAP IN DATABASE FOR CREATE NEW RACE VALUES
 - make sure isaac.js matches:
     <li>It makes sure that the Racing+ mod exists in your mods directory.</li>
     <li>It makes sure that mods are enabled in your <code>options.ini</code> file.</li>
@@ -91,19 +92,19 @@ const fs = nodeRequire('fs-extra');
 const tracer = nodeRequire('tracer');
 
 // Import local modules
-const globals = nodeRequire('./assets/js/globals');
-const settings = nodeRequire('./assets/js/settings');
-const misc = nodeRequire('./assets/js/misc');
-nodeRequire('./assets/js/automatic-update');
-nodeRequire('./assets/js/localization');
-nodeRequire('./assets/js/keyboard');
-nodeRequire('./assets/js/steam'); // This handles automatic login
-nodeRequire('./assets/js/ui/header');
-nodeRequire('./assets/js/ui/tutorial');
-nodeRequire('./assets/js/ui/register');
-nodeRequire('./assets/js/ui/lobby');
-nodeRequire('./assets/js/ui/race');
-nodeRequire('./assets/js/ui/modals');
+const globals = nodeRequire('./js/globals');
+const settings = nodeRequire('./js/settings');
+const misc = nodeRequire('./js/misc');
+nodeRequire('./js/automatic-update');
+nodeRequire('./js/localization');
+nodeRequire('./js/keyboard');
+nodeRequire('./js/steam'); // This handles automatic login
+nodeRequire('./js/ui/header');
+nodeRequire('./js/ui/tutorial');
+nodeRequire('./js/ui/register');
+nodeRequire('./js/ui/lobby');
+nodeRequire('./js/ui/race');
+nodeRequire('./js/ui/modals');
 
 /*
     Development-only stuff
@@ -161,7 +162,7 @@ globals.Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1a
 // Logging (code duplicated between main, renderer, and child processes because of require/nodeRequire issues)
 globals.log = tracer.dailyfile({
     // Log file settings
-    root: (isDev ? '.' : process.execPath),
+    root: path.join(__dirname, '..'),
     logPathFormat: '{{root}}/Racing+ {{date}}.log',
     splitFormat: 'yyyy-mm-dd',
     maxLogFiles: 10,
@@ -183,12 +184,14 @@ $(document).ready(() => {
     // Preload some sounds by playing all of them
     const soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
     for (const file of soundFiles) {
-        const audio = new Audio(`assets/sounds/${file}.mp3`);
+        const audioPath = path.join('sounds', `${file}.mp3`);
+        const audio = new Audio(audioPath);
         audio.volume = 0;
         audio.play();
     }
     for (let i = 1; i <= 16; i++) {
-        const audio = new Audio(`assets/sounds/place/${i}.mp3`);
+        const audioPath = path.join('sounds', 'place', `${i}.mp3`);
+        const audio = new Audio(audioPath);
         audio.volume = 0;
         audio.play();
     }
@@ -205,7 +208,7 @@ $(document).ready(() => {
 */
 
 // Word list
-const wordListLocation = path.join(__dirname, 'assets', 'data', 'words.txt');
+const wordListLocation = path.join(__dirname, 'data', 'words.txt');
 fs.readFile(wordListLocation, (err, data) => {
     if (err) {
         globals.initError = `Failed to read the "${wordListLocation}" file: ${err}`;
@@ -226,7 +229,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
         });
         documentsPath = $.trim(documentsPath); // Remove the trailing newline
         globals.defaultLogFilePath = path.join(documentsPath, 'My Games', 'Binding of Isaac Afterbirth+', 'log.txt');
-        if (fs.existsSync(globals.defaultLogFilePath) === false) {
+        if (!fs.existsSync(globals.defaultLogFilePath)) {
             powershellFailed = true;
         }
     } catch (err) {
@@ -245,7 +248,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
                 break;
             }
         }
-        if (found === false) {
+        if (!found) {
             globals.initError = 'Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.';
         }
     }
@@ -319,7 +322,7 @@ for (let i = 1; i <= 3; i++) {
 }
 
 // Item list
-const itemListLocation = path.join(__dirname, 'assets', 'data', 'items.json');
+const itemListLocation = path.join(__dirname, 'data', 'items.json');
 try {
     globals.itemList = JSON.parse(fs.readFileSync(itemListLocation, 'utf8'));
 } catch (err) {
@@ -327,7 +330,7 @@ try {
 }
 
 // Trinket list
-const trinketListLocation = path.join(__dirname, 'assets', 'data', 'trinkets.json');
+const trinketListLocation = path.join(__dirname, 'data', 'trinkets.json');
 try {
     globals.trinketList = JSON.parse(fs.readFileSync(trinketListLocation, 'utf8'));
 } catch (err) {
@@ -335,7 +338,7 @@ try {
 }
 
 // We need to have a list of all of the emotes for the purposes of tab completion
-const emotePath = path.join(__dirname, 'assets', 'img', 'emotes');
+const emotePath = path.join(__dirname, 'img', 'emotes');
 globals.emoteList = misc.getAllFilesFromFolder(emotePath);
 for (let i = 0; i < globals.emoteList.length; i++) { // Remove ".png" from each elemet of emoteList
     globals.emoteList[i] = globals.emoteList[i].slice(0, -4); // ".png" is 4 characters long
