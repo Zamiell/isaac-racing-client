@@ -7,6 +7,7 @@
 /*
 
 New TODO:
+- make starting_item entry in DB work
 - fix thoday parse problem
 
 Default race creation settings
