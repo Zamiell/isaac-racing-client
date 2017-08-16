@@ -7,6 +7,9 @@
 /*
 
 New TODO:
+- don't have isaac-racing-server run as root
+    * Redirect connections on port 80 to 8080 (since [non-root users can't bind to port 80](https://serverfault.com/questions/112795/how-to-run-a-server-on-port-80-as-a-normal-user-on-linux)):
+* sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 - make starting_item entry in DB work
 - fix thoday parse problem
 
