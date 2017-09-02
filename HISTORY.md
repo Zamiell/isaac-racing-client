@@ -1,12 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.9.7* - August 14th, 2017
+### *v0.9.9* - Unreleased
 
 * Shops were not meant to be flipped; this has been reverted to vanilla.
 * The server now requires that you have the latest version of the client before letting you connect.
 * The client no longer checks to see if you have the Racing+ mod installed when you launch it. (Thanks Hyphen-ated)
 * The client will now perform a more robust check to see if your mod is corrupted. If it detects your mod is corrupted, it will ? was it already restarting the game before, test it...
 * Fixed the bug where the Chinese racer named "box" would mess up the lobby users list. (It wasn't his fault.)
+* Fixed the bug where selecting a random character in the new race tooltip would not include Samael. (Thanks Shigan)
 * Removed the "Ctrl+C" and "Ctrl+V" hotkeys since they are not needed anymore.
 * Removed the double negative in the "Enable boss cutscenes" checkbox. (Thanks tyrannasauruslex)
 

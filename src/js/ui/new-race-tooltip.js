@@ -210,6 +210,7 @@ $(document).ready(() => {
                 'Lilith', // 11
                 'Keeper', // 12
                 'Apollyon', // 13
+                'Samael', // 14
             ];
             const randomNumber = misc.getRandomNumber(0, 12);
             character = characterArray[randomNumber];
