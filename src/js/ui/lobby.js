@@ -8,6 +8,7 @@ const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const chat = nodeRequire('./js/chat');
 const logWatcher = nodeRequire('./js/log-watcher');
+const steamWatcher = nodeRequire('./js/steam-watcher');
 const isaac = nodeRequire('./js/isaac');
 const modLoader = nodeRequire('./js/mod-loader');
 const header = nodeRequire('./js/ui/header');
@@ -36,6 +37,9 @@ exports.show = () => {
     if (!logWatcher.start()) {
         return;
     }
+
+    // Start the Steam watcher
+    steamWatcher.start();
 
     // Launch Isaac
     isaac.start();

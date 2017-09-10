@@ -144,7 +144,7 @@ function RPSpeedrun:Init()
   if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
     Isaac.DebugString("In the R+9 (S1) challenge.")
 
-    -- Give extra items to characters for the R+9 speedrun category
+    -- Give extra items to characters for the R+9 speedrun category (Season 1)
     if character == PlayerType.PLAYER_KEEPER then -- 14
       -- Add the items
       player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
@@ -164,7 +164,7 @@ function RPSpeedrun:Init()
   elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
     Isaac.DebugString("In the R+14 (S1) challenge.")
 
-    -- Give extra items to characters for the R+14 speedrun category
+    -- Give extra items to characters for the R+14 speedrun category (Season 1)
     if character == PlayerType.PLAYER_ISAAC then -- 0
       -- Add the Battery
       player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
@@ -226,7 +226,7 @@ function RPSpeedrun:Init()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
     Isaac.DebugString("In the R+7 (S2) challenge.")
 
-    -- Give extra items to characters for the R+7 (S2) speedrun category
+    -- Give extra items to characters for the R+7 (S2) speedrun category (Season 2)
     if character == PlayerType.PLAYER_ISAAC then -- 0
       -- Add the Battery
       player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
@@ -257,16 +257,19 @@ function RPSpeedrun:Init()
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
     RPSchoolbag.sprites.item = nil
 
-    -- Give extra items to characters for the R+7 (S3) speedrun category
+    -- Give extra items to characters for the R+7 (S3) speedrun category (Season 3)
     if character == PlayerType.PLAYER_ISAAC then -- 0
-      -- Isaac starts with Wait What?
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WAIT_WHAT -- 484
-      Isaac.DebugString("Adding collectible 484 (Wait What?)")
-
-    elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
-      -- Magdalene starts with the Moving Box
+      -- Isaac starts with Moving Box
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
       Isaac.DebugString("Adding collectible 523 (Moving Box)")
+
+    elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
+      -- Magdalene starts with the How to Jump
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_HOW_TO_JUMP -- 282
+      Isaac.DebugString("Adding collectible 282 (How to Jump)")
+
+      -- Remove her speed up pill
+      player:SetCard(0, 0)
 
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
       -- Judas starts with the Book of Belial
@@ -275,8 +278,8 @@ function RPSpeedrun:Init()
 
     elseif character == PlayerType.PLAYER_EVE then -- 5
       -- Eve starts with Delirious
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_DELIRIOUS -- 510
-      Isaac.DebugString("Adding collectible 510 (Delirious)")
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_DULL_RAZOR -- 486
+      Isaac.DebugString("Adding collectible 486 (Dull Razor)")
 
     elseif character == PlayerType.PLAYER_SAMSON then -- 6
       -- Samsom starts with Mr. ME!

@@ -362,7 +362,7 @@ function RPFastTravel:MovePickupFromHole(pickup, posHole)
 end
 
 -- Called from the "RPCheckEntities:NonGrid()" function
-function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
+function RPFastTravel:CheckTrapdoorEnter(effect, upwards)
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -372,18 +372,18 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
 
   -- Check to see if the player is touching the trapdoor
   if RPGlobals.run.trapdoor.state == 0 and
-     ((upwards == false and entity:ToEffect().State == 0) or -- The trapdoor is open
-      (upwards and stage == 8 and entity.FrameCount >= 40 and entity.InitSeed ~= 0) or
+     ((upwards == false and effect.State == 0) or -- The trapdoor is open
+      (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
       -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
       -- (we initially spawn it with an InitSeed equal to the room seed)
-      (upwards and stage == 8 and entity.FrameCount >= 8 and entity.InitSeed == 0) or
+      (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
       -- The extra delay should not apply if they are re-entering the room
       -- (we respawn beams of light with an InitSeed of 0)
-      (upwards and stage ~= 8 and entity.FrameCount >= 8)) and
+      (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
       -- The beam of light opening animation is 16 frames long,
       -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
       -- (and the minimum for this is 8 frames, determined from trial and error)
-     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) and
+     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
      player:IsHoldingItem() == false then
 
     -- State 1 is activated the moment we touch the trapdoor
@@ -394,7 +394,7 @@ function RPFastTravel:CheckTrapdoorEnter(entity, upwards)
     player.ControlsEnabled = false
     player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
     -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-    player.Position = entity.Position -- Teleport the player on top of the trapdoor
+    player.Position = effect.Position -- Teleport the player on top of the trapdoor
     player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
     if upwards then
       -- The vanilla "LightTravel" animation is 28 frames long,
@@ -728,7 +728,7 @@ function RPFastTravel:ReplaceCrawlspace(entity, i)
 end
 
 -- Called from the "RPCheckEntities:NonGrid()" function
-function RPFastTravel:CheckCrawlspaceEnter(entity)
+function RPFastTravel:CheckCrawlspaceEnter(effect)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -740,8 +740,8 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
   local player = game:GetPlayer(0)
 
   -- Check to see if the player is touching the crawlspace
-  if entity:ToEffect().State == 0 and -- The crawlspace is open
-     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorTouchDistance) then
+  if effect.State == 0 and -- The crawlspace is open
+     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) then
 
     -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
     if prevRoomIndex < 0 then
@@ -752,7 +752,7 @@ function RPFastTravel:CheckCrawlspaceEnter(entity)
     end
 
     -- If we don't set this, we will return to the center of the room by default
-    level.DungeonReturnPosition = entity.Position
+    level.DungeonReturnPosition = effect.Position
 
     -- We need to keep track of which room we came from
     -- (this is needed in case we are in a Boss Rush or other room with a negative room index)
@@ -938,7 +938,7 @@ end
 --
 
 -- Called from the "RPCheckEntities:NonGrid()" function
-function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
+function RPFastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
@@ -946,27 +946,27 @@ function RPFastTravel:CheckTrapdoorCrawlspaceOpen(entity)
   local player = game:GetPlayer(0)
 
   -- Don't do anything if the trapdoor / crawlspace is already open
-  if entity:ToEffect().State == 0 then
+  if effect.State == 0 then
     return
   end
 
   -- Don't do anything if it is freshly spawned in a boss room and the player is relatively close
   if roomType == RoomType.ROOM_BOSS and -- 5
-     entity.FrameCount <= 30 and
-     entity.DepthOffset ~= -101 and -- We use -101 to signify that it is a respawned trapdoor
-     RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance * 2.5) then
+     effect.FrameCount <= 30 and
+     effect.DepthOffset ~= -101 and -- We use -101 to signify that it is a respawned trapdoor
+     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorOpenDistance * 2.5) then
 
     return
   end
 
   -- Don't do anything if the player is standing too close to the trapdoor / crawlspace
-  if RPGlobals:InsideSquare(player.Position, entity.Position, RPFastTravel.trapdoorOpenDistance) then
+  if RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorOpenDistance) then
     return
   end
 
   -- Open it
-  entity:ToEffect().State = 0
-  entity:GetSprite():Play("Open Animation", true)
+  effect.State = 0
+  effect:GetSprite():Play("Open Animation", true)
   --Isaac.DebugString("Opened trap door (player moved away).")
 end
 

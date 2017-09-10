@@ -1,4 +1,4 @@
-local RPPostNPCDeath = {}
+local RPPostEntityKill = {}
 
 --
 -- Includes
@@ -7,13 +7,11 @@ local RPPostNPCDeath = {}
 local RPGlobals = require("src/rpglobals")
 
 --
--- ModCallbacks.MC_POST_NPC_DEATH (29)
+-- ModCallbacks.MC_POST_ENTITY_KILL (68)
 --
 
 -- EntityType.ENTITY_MOM (45)
--- (for Mom, the MC_POST_NPC_DEATH will trigger a frame after the MC_POST_ENTITY_KILL callback,
--- which is good enough for our purposes)
-function RPPostNPCDeath:NPC45(npc)
+function RPPostEntityKill:NPC45(npc)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -21,12 +19,6 @@ function RPPostNPCDeath:NPC45(npc)
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
-
-  --[[
-  Isaac.DebugString("MC_POST_NPC_DEATH - " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                    " (frame " .. tostring(gameFrameCount) .. ")")
-  --]]
 
   -- There can be up to 5 Mom entities in the room, so don't do anything if we have already spawned the photos
   if RPGlobals.run.spawnedPhotos then
@@ -41,7 +33,13 @@ function RPPostNPCDeath:NPC45(npc)
 
   -- Figure out if we need to spawn either The Polaroid, The Negative, or both
   local photoSituation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+  if player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
+    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
+    -- so since it is impossible to determine their actual photo status,
+    -- just give the player a choice between the photos
+    photoSituation = 3
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
      player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
     -- The player has both photos already (this can only occur in a diversity race)
@@ -58,7 +56,9 @@ function RPPostNPCDeath:NPC45(npc)
     -- So, spawn The Polaroid instead
     photoSituation = 1
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+
     -- Give the player a choice between the photos on the season 2 speedrun challenge
     photoSituation = 3
 
@@ -121,4 +121,64 @@ function RPPostNPCDeath:NPC45(npc)
   end
 end
 
-return RPPostNPCDeath
+-- EntityType.ENTITY_FALLEN (81)
+-- We want to manually spawn the Krampus item instead of letting the game do it
+-- This slightly speeds up the spawn so that it can not be accidently deleted by leaving the room
+-- Furthermore, it fixes the seeding issue where if you have Gimpy and Krampus drops a heart,
+-- the spawned pedestal to be moved one tile over, and this movement can cause the item to be different
+function RPPostEntityKill:NPC81(npc)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+
+  -- We only care about Krampus (81.1)
+  if npc.Variant ~= 1 then
+    return
+  end
+
+  -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
+  local coalBanned = false
+  local headBanned = false
+  for i = 1, #RPGlobals.race.startingItems do
+    if RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+      coalBanned = true
+    elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+      headBanned = true
+    end
+  end
+  local krampusItem
+  if coalBanned and headBanned then
+    -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
+    krampusItem = 0
+    Isaac.DebugString("Spawned a random item since both A Lump of Coal and Krampus' Head are banned.")
+  elseif coalBanned then
+    -- Switch A Lump of Coal to Krampus' Head
+    krampusItem = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+    Isaac.DebugString("Spawned Krampus' Head since A Lump of Coal is banned.")
+  elseif headBanned then
+    -- Switch Krampus' Head to A Lump of Coal
+    krampusItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+    Isaac.DebugString("Spawned A Lump of Coal since Krampus' Head is banned.")
+  else
+    math.randomseed(roomSeed)
+    krampusItem = math.random(1, 2)
+    if krampusItem == 1 then
+      krampusItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+      Isaac.DebugString("Spawned A Lump of Coal (randomly based on the room seed).")
+    else
+      krampusItem = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+      Isaac.DebugString("Spawned Krampus' Head (randomly based on the room seed).")
+    end
+  end
+
+  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
+  if krampusItem ~= 0 then
+    -- We have to let the "ReplacePedestal" function know that this is not a natural Krampus pedestal
+    RPGlobals.run.spawningKrampusItem = true
+  end
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0),
+             nil, krampusItem, 0)
+end
+
+return RPPostEntityKill

@@ -24,25 +24,23 @@ settings.loadOrCreateSync();
 initDefaults();
 module.exports = settings;
 
+// If this is the first run (or the settings.json file got corrupted), set default values
 function initDefaults() {
     // Language
     if (typeof settings.get('language') === 'undefined') {
-        // If this is the first run, default to English
-        settings.set('language', 'en');
+        settings.set('language', 'en'); // English
         settings.saveSync();
     }
 
     // Tutorial
     if (typeof settings.get('tutorial') === 'undefined') {
-        // If this is the first run, default to true)
         settings.set('tutorial', 'true');
         settings.saveSync();
     }
 
     // Volume
     if (typeof settings.get('volume') === 'undefined') {
-        // If this is the first run, default to 50%
-        settings.set('volume', 0.5);
+        settings.set('volume', 0.5); // 50%
         settings.saveSync();
     }
 
@@ -52,8 +50,33 @@ function initDefaults() {
 
     // "Enable boss cutscenes"
     if (typeof settings.get('bossCutscenes') === 'undefined') {
-        // If this is the first run, default to false
         settings.set('bossCutscenes', false);
+        settings.saveSync();
+    }
+
+    // Race creation defaults
+    if (typeof settings.get('newRaceTitle') === 'undefined') {
+        settings.set('newRaceTitle', ''); // An empty string means to use the random name generator
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceType') === 'undefined') {
+        settings.set('newRaceType', 'unranked');
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceFormat') === 'undefined') {
+        settings.set('newRaceFormat', 'unseeded');
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceCharacter') === 'undefined') {
+        settings.set('newRaceCharacter', 'Judas');
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceGoal') === 'undefined') {
+        settings.set('newRaceGoal', 'Blue Baby');
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceBuild') === 'undefined') {
+        settings.set('newRaceBuild', 'random');
         settings.saveSync();
     }
 }

@@ -492,15 +492,18 @@ exports.init = (username, password, remember) => {
         // Log the event
         globals.log.info(`Websocket - raceLeft - ${JSON.stringify(data)}`);
 
+        // Local variables
+        const race = globals.raceList[data.id];
+
         // Find out if we are in this race
         let inThisRace = false;
-        if (globals.raceList[data.id].racers.indexOf(globals.myUsername) !== -1) {
+        if (race.racers.indexOf(globals.myUsername) !== -1) {
             inThisRace = true;
         }
 
         // Delete this person from the "racers" array
-        if (globals.raceList[data.id].racers.indexOf(data.name) !== -1) {
-            globals.raceList[data.id].racers.splice(globals.raceList[data.id].racers.indexOf(data.name), 1);
+        if (race.racers.indexOf(data.name) !== -1) {
+            race.racers.splice(race.racers.indexOf(data.name), 1);
         } else {
             misc.errorShow(`"${data.name}" left race #${data.id}, but they were not in the "racers" array.`);
             return;
@@ -509,10 +512,10 @@ exports.init = (username, password, remember) => {
         // If we are in this race, we also need to delete this person them from the "racerList" array
         if (inThisRace) {
             let foundRacer = false;
-            for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
-                if (data.name === globals.raceList[globals.currentRaceID].racerList[i].name) {
+            for (let i = 0; i < race.racerList.length; i++) {
+                if (data.name === race.racerList[i].name) {
                     foundRacer = true;
-                    globals.raceList[data.id].racerList.splice(i, 1);
+                    race.racerList.splice(i, 1);
                     break;
                 }
             }
@@ -523,14 +526,14 @@ exports.init = (username, password, remember) => {
         }
 
         // Update the "Current races" area on the lobby
-        if (globals.raceList[data.id].racers.length === 0) {
+        if (race.racers.length === 0) {
             // Delete the race since the last person in the race left
             delete globals.raceList[data.id];
             lobbyScreen.raceUndraw(data.id);
         } else {
             // Check to see if this person was the captain, and if so, make the next person in line the captain
-            if (globals.raceList[data.id].captain === data.name) {
-                globals.raceList[data.id].captain = globals.raceList[data.id].racers[0];
+            if (race.captain === data.name) {
+                race.captain = race.racers[0];
             }
 
             // Update the row for this race in the lobby
@@ -550,21 +553,22 @@ exports.init = (username, password, remember) => {
             $(`#race-participants-table-${data.name}`).remove();
 
             // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
-            if (globals.raceList[globals.currentRaceID].racerList.length > 6) { // More than 6 races causes the overflow
+            if (race.racerList.length > 6) { // More than 6 races causes the overflow
                 $('#race-participants-table-wrapper').removeClass('vertical-center');
             } else {
                 $('#race-participants-table-wrapper').addClass('vertical-center');
             }
 
-            if (globals.raceList[globals.currentRaceID].status === 'open') {
+            if (race.status === 'open') {
                 // Update the captian
                 // [not implemented]
             }
 
             // Update the mod
-            globals.modLoader.numEntrants = globals.raceList[data.id].racerList.length;
-            modLoader.send();
-            // globals.log.info(`modLoader - Sent a race numEntrants of "${globals.modLoader.numEntrants}".`);
+            globals.modLoader.numEntrants = race.racerList.length;
+
+            // Since the person could have been readied up, recount how many people are ready
+            modLoader.sendPlace();
         }
     }
 

@@ -76,6 +76,7 @@ let mainWindow;
 // Keep a global reference of the window object
 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 let childLogWatcher = null;
+let childSteamWatcher = null;
 let childSteam = null;
 let childIsaac = null;
 let errorHappened = false;
@@ -393,6 +394,9 @@ app.on('will-quit', () => {
     if (childLogWatcher !== null) {
         childLogWatcher.send('exit');
     }
+    if (childSteamWatcher !== null) {
+        childSteamWatcher.send('exit');
+    }
     if (childIsaac !== null) {
         childIsaac.send('exit');
     }
@@ -487,6 +491,33 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
 
         // Feed the child the path to the Isaac log file
         childLogWatcher.send(arg2);
+    } else if (arg1 === 'steamWatcher' && childSteamWatcher === null) {
+        // Start the log watcher in a separate process for performance reasons
+        if (isDev) {
+            childSteamWatcher = fork('./src/steam-watcher');
+        } else {
+            // There are problems when forking inside of an ASAR archive
+            // See: https://github.com/electron/electron/issues/2708
+            childSteamWatcher = fork('./app.asar/src/steam-watcher', {
+                cwd: path.join(__dirname, '..', '..'),
+            });
+        }
+        log.info('Started the Steam watcher child process.');
+
+        // Receive notifications from the child process
+        childSteamWatcher.on('message', (message) => {
+            // Pass the message to the renderer (browser) process
+            mainWindow.webContents.send('steamWatcher', message);
+        });
+
+        // Track errors
+        childSteamWatcher.on('error', (err) => {
+            // Pass the error to the renderer (browser) process
+            mainWindow.webContents.send('steamWatcher', `error: ${err}`);
+        });
+
+        // Feed the child the ID of the Steam user
+        childSteamWatcher.send(arg2);
     } else if (arg1 === 'isaac') {
         // Start the Isaac launcher in a separate process for performance reasons
         if (isDev) {

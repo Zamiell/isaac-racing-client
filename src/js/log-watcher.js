@@ -11,6 +11,7 @@ const misc = nodeRequire('./js/misc');
 const raceScreen = nodeRequire('./js/ui/race');
 
 // globals.currentScreen is equal to "transition" when this is called
+// Called from the "lobby.show()" function
 exports.start = () => {
     // Check to make sure the log file exists
     let logPath = settings.get('logFilePath');
@@ -49,7 +50,7 @@ exports.start = () => {
 };
 
 // Monitor for notifications from the child process that is doing the log watching
-const logWatcher = (event, message) => {
+ipcRenderer.on('logWatcher', (event, message) => {
     // Don't log everything to reduce spam
     if (
         !message.startsWith('New floor: ') &&
@@ -180,5 +181,4 @@ const logWatcher = (event, message) => {
             id: globals.currentRaceID,
         });
     }
-};
-ipcRenderer.on('logWatcher', logWatcher);
+});

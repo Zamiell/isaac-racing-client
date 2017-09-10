@@ -260,6 +260,7 @@ function RPPostRender:CheckResetInput()
 
     RPSpeedrun.fastReset = true
     -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
+    Isaac.DebugString("Fast-restart activated.")
     RPGlobals:ExecuteCommand("restart")
   else
     -- To fast reset on floors 2 and beyond, we need to double tap R

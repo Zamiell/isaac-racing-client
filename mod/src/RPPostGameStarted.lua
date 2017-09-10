@@ -399,6 +399,7 @@ function RPPostGameStarted:Seeded()
   if player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) == false then -- 21
     -- Eden can start with The Compass
     player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   end
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false then
     -- Eden and Apollyon start with the Schoolbag
@@ -659,6 +660,7 @@ function RPPostGameStarted:SeededMO()
 
   -- Give the player extra starting items (for seeded races)
   player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
 
   -- Give the player extra Schoolbag items, depending on the character

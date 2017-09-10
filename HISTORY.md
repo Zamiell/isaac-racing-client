@@ -1,15 +1,39 @@
 # Racing+ Version History and News
 
-### *v0.9.9* - Unreleased
+### *v0.10.0* - September 10th, 2017
 
-* Shops were not meant to be flipped; this has been reverted to vanilla.
+Gameplay:
+
+* Shops are no longer flipped.
+* The Y-flipped double Gate rooms and double Mega Maw rooms have been unflipped due to how the patterns from their respective champion versions are much harder to dodge from behind. (Thanks Shigan)
+* Krampus' item will now spawn at the beginning of the death animation rather than midway through. This prevents the Krampus item getting deleted if you accidently leave the Devil Room as soon as the doors open. Furthermore, this means that it is now possible to do the "Anti Quick Roll" strategy in Racing+, where you can roll the item before the room is cleared to get an extra charge on the D6. (Note that unlike before, this is now a frame perfect trick.) (Thanks Thoday)
+* Unfair Dople / Evil Twin tears that fire on the first frame were previously "fixed" by adjusting the Dople / Evil Twin placement in the room. However, this method did not reliably stop Evil Twin triple shots from hitting the player, so Dople / Evil Twin placement has been reverted to vanilla in all rooms and new Lua code will automatically delete any projectiles fired on the first frame.
+* If you enter the Mega Satan room without defeating the Lamb first on the "Everything" race goal, something very bad will happen. (Thanks Shigan and BMZ_Loop)
+* You can no longer use the Glowing Hour Glass in the pre-race room. (Thanks Gamonymous)
+* If you have the Mysterious Paper trinket, you will now always have a choice between the two photos after defeating Mom. (It is impossible to tell if the player has the real Polaroid or Negative when this trinket is equipped.) (Thanks Molfried and Smoom)
+* Fixed the bug where friendly enemies would prevent fast-clear from functioning. (Thanks thereisnofuture)
+* Fixed the bug where The Compass was not being removed from all pools in seeded races.
+* Fixed the bug where Rag Man Raglings would not work with fast-clear under certain conditions. (Thanks 910dan)
+* Fixed the bug where the spike deleting code for the Depths/Necropolis bomb puzzle room was not being applied to the flipped versions of those rooms. (Thanks SlashSP)
+* Fixed the bug where you could hear the beginning of the recharge sound every time you reset on Eden.
+* Fixed the bug where the number of people ready was not properly updated in the pre-race room if someone left the race. (Thanks Nariom)
+
+Client/Server:
+
+* The server once again shows the [race listing](https://isaacracing.net/races). The page has been updated and looks much better than before. Sillypears programmed this, so a big thanks goes to him.
+* The server once again shows [player profiles](https://isaacracing.net/profiles). This was also programmed by Sillypears.
 * The server now requires that you have the latest version of the client before letting you connect.
+* The client will now automatically logout if you logout of Steam in order to curb unscrupulous behavior.
 * The client no longer checks to see if you have the Racing+ mod installed when you launch it. (Thanks Hyphen-ated)
-* The client will now perform a more robust check to see if your mod is corrupted. If it detects your mod is corrupted, it will ? was it already restarting the game before, test it...
+* When creating a new race, the client now remembers all of the values that you entered in the last time the client was open. (Thanks Hyphen-ated)
+* The client will now perform a more robust check to see if your mod is corrupted. If it detects your mod is corrupted, it will ? (was it already restarting the game before?)
 * Fixed the bug where the Chinese racer named "box" would mess up the lobby users list. (It wasn't his fault.)
 * Fixed the bug where selecting a random character in the new race tooltip would not include Samael. (Thanks Shigan)
 * Removed the "Ctrl+C" and "Ctrl+V" hotkeys since they are not needed anymore.
 * Removed the double negative in the "Enable boss cutscenes" checkbox. (Thanks tyrannasauruslex)
+* The client will now automatically remove all trailing slashes in your Twitch URL. (Thanks Thoday)
+* The server now keeps track of when you enter all rooms and when you pick up all items.
+* The server now keeps track of what item you started (in non-seeded races).
 
 ### *v0.9.5* - August 14th, 2017
 
@@ -460,7 +484,7 @@ Changes:
 * Mimics now have vanilla graphics instead of the special Racing+ graphic. (The final tally on the vote was 19 to 18.)
 * The beam of light on Womb 2 will no longer have the extra delay if the room is already cleared.
 * The colors of some Purity auras have been changed to make them easier to see; speed is now green (think "Roid Rage") and range is now yellow. (Thanks to Inschato for helping with this and BMZ_Loop for the graphics and Ou_J for the idea.)
-* Fixed the bug where the beam of light would be incorrectly placed in Black Markets and I AM ERROR rooms. (Thanks blcd & Lobsterosity)
+* Fixed the bug where the beam of light would be incorrectly placed in Black Markets and I AM ERROR rooms. (Thanks blcd and Lobsterosity)
 * Fixed the bug where Eden's Soul would always be fully charged if you had the Schoolbag. (Thanks Lobsterosity)
 * Fixed the bug where the recharge sound would play during a reset on potato computers.
 * Fixed the bug where trapdoors would appear for a frame before being removed.
@@ -555,7 +579,7 @@ Changes:
 
 * For races to Mega Satan and races that are already completed, the Mega Satan door will be automatically opened. (This is simpler than placing a Get Ouf of Jail Free Card next to the door.)
 * Fast-travel no longer applies to the portal to the Blue Womb. This fixes the bug where the Blue Womb trapdoor would take you to Sheol instead of the Blue Womb. (Thanks Dea1h)
-* Fixed the bug where Dr. Fetus bombs could be shot while jumping through the new trapdoors. (Thanks PassionDrama & tyrannasauruslex)
+* Fixed the bug where Dr. Fetus bombs could be shot while jumping through the new trapdoors. (Thanks PassionDrama and tyrannasauruslex)
 * The 13 luck for the Fire Mind build is now a custom item called "13 Luck". It should now function properly with other items. (Thanks thisguyisbarry)
 * Reduced the delay for the beam of light in the Cathedral to 16 frames. (Thanks Dea1h)
 * Made the fast-reset feature work for people who have reset bound to shift. (Thanks MasterofPotato)
@@ -606,7 +630,7 @@ Changes:
 
 * The size of the mod has been reduced by around 12 MB. (Thanks ArseneLapin)
 * Fixed a bug that prevents the lobby from being loaded in certain circumstances. (Thanks Gandi)
-* Fixed a bug where the "Enable Boss Cutscenes" checkbox was not working in certain circumstances. (Thanks Lex)
+* Fixed a bug where the "Enable Boss Cutscenes" checkbox was not working in certain circumstances. (Thanks tyrannasauruslex)
 
 ### *v0.2.85* - March 21st, 2017
 
@@ -626,7 +650,7 @@ Changes:
 
 * Fixed the bug where in certain circumstances, the client was not able to find the Racing+ mod directory.
 * Trinkets consumed with the Gulp! pill will now show up on the item tracker. (This only works if you are using the Racing+ mod.)
-* Fixed the bug where some glowing item & trinket images were not showing up properly on the starting room. (Thanks Krakenos)
+* Fixed the bug where some glowing item and trinket images were not showing up properly on the starting room. (Thanks Krakenos)
 * Fixed the bug where starting the Boss Rush would not grant a charge to the Schoolbag item. Note that actually clearing the Boss Rush still won't give any charges, due to limiations with the Afterbirth+ API. (Thanks Dea1h, who saw it on tyrannasauruslex's stream)
 * Fixed the bug where fart-reroll items would start at 0 charges. (Thanks Munch, who saw it on tyrannasauruslex's stream)
 * The Polaroid and The Negative are no longer automatically removed in the Pageant Boy ruleset.
@@ -643,7 +667,7 @@ Changes:
 * Before a race, you will now see the race type and the race format next to the Gaping Maws.
 * Before a race, you will see an indication of whether you are ready or not.
 * Seeded races now show the starting item / starting build in a manner similar to diversity races.
-* Items shown on the starting room in seeded & diversity races now have a glow so that it is easier to see them. (The glow images were taken from the item tracker.)
+* Items shown on the starting room in seeded and diversity races now have a glow so that it is easier to see them. (The glow images were taken from the item tracker.)
 * Fixed the bug where you could see the diversity items early under certain conditions. (Thanks Lobsterosity, Ou_J, and Cyber_1)
 * Fixed the bug where enemies spawned after touching the trophy under certain conditions. (Thanks MasterofPotato, Ou_J, and Cyber_1)
 * Fixed the bug where on seeded races, the door to the Treasure Room that was inside a Secret Room would behave weirdly on Basement 1.
@@ -702,7 +726,7 @@ Changes:
 * It is no longer possible to start with D4, D100, or D Infinity as the random active item in diversity races.
 * Fixed a crash that occured in the client on diversity races that gave Betrayal.
 * Cursed Eye no longer overrides Cursed Skull. (Thanks Cyber_1)
-* Cursed Eye no longer overrides Devil Room teleports from Red Chests. (Thanks Dea1h & Lex)
+* Cursed Eye no longer overrides Devil Room teleports from Red Chests. (Thanks Dea1h and tyrannasauruslex)
 * The Schoolbag will now work properly with the Glowing Hour Glass. (Thanks TheMoonSage)
 * PMs will no longer give an error message when the recipient is online. (Thanks to InvaderTim for coding this.)
 * You can now use the "/r" command to reply to PMs. (Thanks to InvaderTim for coding this.)
@@ -723,7 +747,7 @@ Changes:
 * The Racing+ mod will now work on Linux. (Thanks mithrandi)
 * Fixed the bug where the AAA Battery did not work with the Schoolbag. (Thanks Dea1h)
 * Fixed the bug where the race timer would not appear. (Thanks Krakenos)
-* Fixed the bug where the format & goal tooltips in the client were wrong. (Thanks vertopolkaLF)
+* Fixed the bug where the format and goal tooltips in the client were wrong. (Thanks vertopolkaLF)
 * Fixed the bug where the question mark icon for the random character would not show. (Thanks Birdie)
 
 ### *v0.2.67* - March 13th, 2017
@@ -772,7 +796,7 @@ Changes:
 * Changed the Alt+C and Alt+V hotkeys to work more reliably.
 * Resetting is now disabled when the countdown is between 2 and 0 seconds in order to prevent bugs on potato computers. (Thanks Krakenos)
 * Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
-* Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi & stoogebag)
+* Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi and stoogebag)
 * Fixed the bug where if too many races were open, the lobby would mess up and overflow.
 * The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks Antizoubilamaka)
 
@@ -803,7 +827,7 @@ Changes:
 
 * Fixed the crash when you teleported to an L room. (Thanks to SlashSP for reporting and blcd for the code fix)
 * Betrayal no longer pauses the game and plays an animation before charming enemies. (Thanks InvaderTim)
-* Fixed some miscellaneous bugs with the end of race trophy. (Thanks Lex)
+* Fixed some miscellaneous bugs with the end of race trophy. (Thanks tyrannasauruslex)
 * Added D4 to the Lost's Schoolbag for seeded races. (Thanks Krakenos)
 * The Schoolbag is a lot more responsive now and you can switch items much faster. Additionally, if you hold the switch button down, it will only switch the items once. (Thanks Cyber_1)
 * Fixed the bug where stat caches were not properly updated after switching an item into a Schoolbag. (Thanks Cyber_1)

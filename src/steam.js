@@ -74,11 +74,50 @@ function greenworksInit() {
     // Get the object that contains the computer's Steam ID and screen name
     const steamIDObject = greenworks.getSteamId();
 
+    /*
+        The object will look something like the following:
+        {
+           "flags":{
+              "anonymous":false,
+              "anonymousGameServer":false,
+              "anonymousGameServerLogin":false,
+              "anonymousUser":false,
+              "chat":false,
+              "clan":false,
+              "consoleUser":false,
+              "contentServer":false,
+              "gameServer":false,
+              "individual":true,
+              "gameServerPersistent":false,
+              "lobby":false
+           },
+           "type":{
+              "name":"k_EAccountTypeIndividual",
+              "value":1
+           },
+           "accountId":33000000,
+           "steamId":"76561190000000000",
+           "staticAccountId":"76561190000000000",
+           "isValid":1,
+           "level":7,
+           "screenName":"Zamie"
+        }
+    */
+
+    // Check to see if it is valid
+    // (I'm not sure what governs this, but probably best to check it to be thorough)
+    if (steamIDObject.isValid !== 1) {
+        process.send('error: It appears that your Steam account is invalid.');
+        return;
+    }
+
     // Get a session ticket from Steam and login to the Racing+ server
+    process.send(JSON.stringify(steamIDObject));
     greenworks.getAuthSessionTicket((ticket) => {
         const ticketString = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
         process.send({
             id: steamIDObject.steamId,
+            accountID: steamIDObject.accountId,
             screenName: steamIDObject.screenName,
             ticket: ticketString,
         });

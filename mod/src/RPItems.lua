@@ -95,6 +95,39 @@ function RPItems:BookOfSin()
   return true
 end
 
+function RPItems:GlowingHourGlass() -- 422
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomVariant = roomDesc.Data.Variant
+  local player = game:GetPlayer(0)
+
+  -- Prevent the usage of the Glowing Hour Glass in the pre-race room
+  if roomVariant == 9999 then -- Only the pre-race room has this specific ID
+    -- We want to signify to the player that using the Glowing Hour Glass here is forbidden
+    player:AnimateSad()
+    return true
+  end
+
+  -- Reset the Schoolbag
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
+     player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) == false then
+     -- Broken Remote cancels the Glowing Hour Glass effect
+
+    Isaac.DebugString("Rewinding the Schoolbag item.")
+    RPGlobals.run.schoolbag.item = RPGlobals.run.schoolbag.lastRoomItem
+    RPGlobals.run.schoolbag.nextRoomCharge = true
+    -- If we don't wait until the next room is entered, the slot 1 charge will just apply to the Glowing Hour Glass
+    -- and not the item that was in the Schoolbag
+    RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastRoomSlot2Charges
+    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then
+       RPGlobals.run.schoolbag.charges = 0 -- Prevent using the Glowing Hour Glass over and over
+    end
+    RPSchoolbag.sprites.item = nil
+  end
+end
+
 function RPItems:Smelter()
   -- Local variables
   local game = Game()
@@ -241,29 +274,6 @@ function RPItems:Undefined() -- 324
   Isaac.DebugString("Undefined to room: " .. tostring(gridIndex))
 
   -- This will override the existing Undefined effect because we have already locked in a room transition
-end
-
-function RPItems:GlowingHourGlass() -- 422
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-
-  -- Reset the Schoolbag
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
-     player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) == false then
-     -- Broken Remote cancels the Glowing Hour Glass effect
-
-    Isaac.DebugString("Rewinding the Schoolbag item.")
-    RPGlobals.run.schoolbag.item = RPGlobals.run.schoolbag.lastRoomItem
-    RPGlobals.run.schoolbag.nextRoomCharge = true
-    -- If we don't wait until the next room is entered, the slot 1 charge will just apply to the Glowing Hour Glass
-    -- and not the item that was in the Schoolbag
-    RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastRoomSlot2Charges
-    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then
-       RPGlobals.run.schoolbag.charges = 0 -- Prevent using the Glowing Hour Glass over and over
-    end
-    RPSchoolbag.sprites.item = nil
-  end
 end
 
 function RPItems:Void() -- 477

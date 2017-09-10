@@ -182,16 +182,24 @@ $(document).ready(() => {
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
         if (newStreamURL.startsWith('http://')) {
+            // Add HTTPS
             newStreamURL = newStreamURL.replace('http://', 'https://');
         }
         if (newStreamURL.startsWith('https://twitch.tv/')) {
+            // Add the www
             newStreamURL = newStreamURL.replace('twitch.tv', 'www.twitch.tv');
         }
         if (newStreamURL.startsWith('twitch.tv/')) {
+            // Add the protocol and www
             newStreamURL = `https://www.${newStreamURL}`;
         }
         if (newStreamURL.startsWith('www.twitch.tv/')) {
+            // Add the protocol
             newStreamURL = `https://${newStreamURL}`;
+        }
+        if (newStreamURL.endsWith('/')) {
+            // Remove any trailing forward slashes
+            newStreamURL = newStreamURL.replace(/\/+$/, '');
         }
         $('#settings-stream-url').val(newStreamURL);
         if (!newStreamURL.startsWith('https://www.twitch.tv/') && newStreamURL !== '') {

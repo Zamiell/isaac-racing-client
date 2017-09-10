@@ -29,6 +29,7 @@ globals = {
     "LevelCurse",
     "LevelStage",
     "ModCallbacks",
+    "NpcState",
     "PickupVariant",
     "PillEffect",
     "PlayerForm",

@@ -47,6 +47,7 @@ const steam = (event, message) => {
     if (typeof message !== 'string') {
         // The child process is finished and has sent us the Steam-related information that we seek
         globals.steam.id = message.id;
+        globals.steam.accountID = message.accountID;
         globals.steam.screenName = message.screenName;
         globals.steam.ticket = message.ticket;
         login();
@@ -177,6 +178,7 @@ function loginDebug(account) {
         ipcRenderer.send('asynchronous-message', 'steam', account);
     } else {
         globals.steam.id = `-${account}`;
+        globals.steam.accountID = 0;
         globals.steam.screenName = `TestAccount${account}`;
         globals.steam.ticket = 'debug';
         login();

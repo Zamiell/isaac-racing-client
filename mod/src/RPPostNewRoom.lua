@@ -59,6 +59,7 @@ function RPPostNewRoom:NewRoom()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
   local challenge = Isaac.GetChallenge()
+  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
 
@@ -85,6 +86,7 @@ function RPPostNewRoom:NewRoom()
   RPGlobals.run.naturalTeleport   = false
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.megaSatanDead     = false
+  RPGlobals.run.dopleRoom         = false
   RPGlobals.run.teleportSubverted = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
@@ -104,6 +106,19 @@ function RPPostNewRoom:NewRoom()
   if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
     -- Emulate reaching a new floor, using a custom floor number of 13 (The Void is 12)
     Isaac.DebugString('Entered the Mega Satan room.')
+
+    -- Check to see if we are cheating on the "Everything" race goal
+    if RPGlobals.race.goal == "Everything" and RPGlobals.run.killedLamb == false then
+      -- Do a little something fun
+      sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
+      for i = 1, 20 do
+        local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
+        -- Use a value of 50 to spawn them far from the player
+        local monstro = game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
+        monstro.MaxHitPoints = 1000000
+        monstro.HitPoints = 1000000
+      end
+    end
   end
 
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
@@ -360,13 +375,16 @@ function RPPostNewRoom:CheckDepthsPuzzle()
   local gridSize = room:GetGridSize()
 
   -- We only need to check if we are in the Dank Depths
-  if stage ~= LevelStage.STAGE3_2 and -- 6
-     stageType ~= StageType.STAGETYPE_AFTERBIRTH then -- 2
+  if stage ~= LevelStage.STAGE3_1 and -- 5
+     stage ~= LevelStage.STAGE3_2 then -- 6
 
     return
   end
+  if stageType ~= StageType.STAGETYPE_AFTERBIRTH then -- 2
+    return
+  end
 
-  if roomVariant ~= 41 then
+  if roomVariant ~= 41 and roomVariant ~= 10041 and roomVariant ~= 20041 and roomVariant ~= 30041 then
     return
   end
 
@@ -434,7 +452,9 @@ end
 function RPPostNewRoom:CheckDoples()
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_DOPLE then -- 53
-      -- TODO
+      -- The "RPCheckEntities:Entity9" function will need this variable
+      -- in order to know when to delete Dople projectiles
+      RPGlobals.run.dopleRoom = true
     end
   end
 end

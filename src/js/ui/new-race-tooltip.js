@@ -4,6 +4,7 @@
 
 // Imports
 const globals = nodeRequire('./js/globals');
+const settings = nodeRequire('./js/settings');
 const misc = nodeRequire('./js/misc');
 const builds = nodeRequire('./data/builds');
 
@@ -39,6 +40,13 @@ $(document).ready(() => {
 
         // Set it
         $('#new-race-title').val(randomlyGeneratedName);
+
+        // Keep track of the last randomly generated name so that we know if they user changes it
+        globals.lastRaceTitle = randomlyGeneratedName;
+
+        // Mark that we should use randomly generated names from now on
+        settings.set('newRaceTitle', ''); // An empty string means to use the random name generator
+        settings.saveSync();
     });
 
     $('#new-race-type').change(newRaceTypeChange);
@@ -157,13 +165,33 @@ $(document).ready(() => {
             return false;
         }
 
-        // Get values from the form
+        // Get values from the form and update the stored defaults in the settings.json file if necessary
         let title = $('#new-race-title').val().trim();
+        if (title !== globals.lastRaceTitle) {
+            settings.set('newRaceTitle', title); // An empty string means to use the random name generator
+            settings.saveSync();
+        }
         let type = $('#new-race-type').val();
+        if (type !== settings.get('newRaceType')) {
+            settings.set('newRaceType', type);
+            settings.saveSync();
+        }
         const format = $('#new-race-format').val();
+        if (format !== settings.get('newRaceFormat')) {
+            settings.set('newRaceFormat', format);
+            settings.saveSync();
+        }
         let character = $('#new-race-character').val();
+        if (character !== settings.get('newRaceCharacter')) {
+            settings.set('newRaceCharacter', character);
+            settings.saveSync();
+        }
         const goal = $('#new-race-goal').val();
-        let startingBuild;
+        if (goal !== settings.get('newRaceGoal')) {
+            settings.set('newRaceGoal', goal);
+            settings.saveSync();
+        }
+
         let solo = false;
         if (type === 'ranked-solo') {
             type = 'ranked';
@@ -172,8 +200,14 @@ $(document).ready(() => {
             type = 'unranked';
             solo = true;
         }
+
+        let startingBuild;
         if (format === 'seeded') {
             startingBuild = $('#new-race-starting-build').val();
+            if (startingBuild !== settings.get('newRaceBuild')) {
+                settings.set('newRaceBuild', startingBuild);
+                settings.saveSync();
+            }
         } else {
             startingBuild = -1;
         }
@@ -212,7 +246,7 @@ $(document).ready(() => {
                 'Apollyon', // 13
                 'Samael', // 14
             ];
-            const randomNumber = misc.getRandomNumber(0, 12);
+            const randomNumber = misc.getRandomNumber(0, characterArray.length - 1);
             character = characterArray[randomNumber];
         }
 
@@ -348,6 +382,22 @@ exports.tooltipFunctionBefore = () => {
 
 // The "functionReady" function for Tooltipster
 exports.tooltipFunctionReady = () => {
+    // Load the default settings from the settings.json file
+    const newRaceTitle = settings.get('newRaceTitle');
+    globals.log.info('NEW RACE TITLE:', newRaceTitle);
+    if (newRaceTitle === '') {
+        // Randomize the race title
+        $('#new-race-randomize').click();
+    } else {
+        $('#new-race-title').val(newRaceTitle);
+        globals.lastRaceTitle = newRaceTitle;
+    }
+    $('#new-race-type').val(settings.get('newRaceType'));
+    $('#new-race-format').val(settings.get('newRaceFormat'));
+    $('#new-race-character').val(settings.get('newRaceCharacter'));
+    $('#new-race-goal').val(settings.get('newRaceGoal'));
+    $('#new-race-build').val(settings.get('newRaceBuild'));
+
     // Set default background images
     const typeURL = `img/types/${$('#new-race-type').val()}.png`;
     $('#new-race-type-icon').css('background-image', `url("${typeURL}")`);
@@ -358,10 +408,8 @@ exports.tooltipFunctionReady = () => {
     const goalURL = `img/goals/${$('#new-race-goal').val()}.png`;
     $('#new-race-goal-icon').css('background-image', `url("${goalURL}")`);
 
-    // Randomize the race title every time we start a new race
-    $('#new-race-randomize').click();
+    // Focus the race title box
     $('#new-race-title').focus();
-
 
     /*
         Tooltips within tooltips seem to be buggy and can sometimes be uninitialized

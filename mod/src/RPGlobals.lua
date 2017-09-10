@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.9.8"
+RPGlobals.version = "v0.10.0"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -143,6 +143,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false
+  RPGlobals.run.dopleRoom             = false
 
   -- Temporary tracking
   RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
@@ -161,6 +162,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
   RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
+  RPGlobals.run.spawningKrampusItem  = false
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

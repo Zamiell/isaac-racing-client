@@ -207,8 +207,8 @@ function checkSteam3() {
     }
 
     if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
-        //process.send(`error: NO SAVE ${steamCloud}`, processExit);
-        //return;
+        process.send(`error: NO SAVE ${steamCloud}`, processExit);
+        return;
     }
 
     checkModIntegrity();
@@ -225,8 +225,8 @@ function checkDocuments() {
     }
 
     if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
-        //process.send(`error: NO SAVE ${steamCloud}`, processExit);
-        //return;
+        process.send(`error: NO SAVE ${steamCloud}`, processExit);
+        return;
     }
 
     checkModIntegrity();
@@ -240,7 +240,7 @@ function checkSaveFile(saveFile) {
             // "saveFileBytes.data" is now an array of bytes
             // TODO CHECK BYTES
 
-            if (false) {
+            if (true) {
                 fullyUnlockedSaveFileFound = true;
                 return true;
             }

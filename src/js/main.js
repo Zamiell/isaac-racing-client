@@ -7,35 +7,19 @@
 /*
 
 New TODO:
-- don't have isaac-racing-server run as root
-    * Redirect connections on port 80 to 8080 (since [non-root users can't bind to port 80](https://serverfault.com/questions/112795/how-to-run-a-server-on-port-80-as-a-normal-user-on-linux)):
-* sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
-- make starting_item entry in DB work
-- fix thoday parse problem
-
-Default race creation settings
-new_race_name       NVARCHAR(100)  NOT NULL  DEFAULT "-",
-new_race_type       VARCHAR(20)    NOT NULL  DEFAULT "unranked"
-new_race_format     VARCHAR(50)    NOT NULL  DEFAULT "unseeded"
-new_race_character  VARCHAR(50)    NOT NULL  DEFAULT "Judas"
-new_race_goal       VARCHAR(50)    NOT NULL  DEFAULT "Blue Baby"
-new_race_build      VARCHAR(10)    NOT NULL  DEFAULT "random"
-
-- what happens in melody if user sends wrong data type in IncomingWebsocketMessage??
 - test all isaac checks to see if they work
+- restart isaac on corrupt mod TEST
 
 - unlock every easter egg for racing+ save file
-
-- STORE NEW CRAP IN DATABASE FOR CREATE NEW RACE VALUES
 - FINISH SAVE FILE CHECKING BYTES READING
-- restart isaac on corrupt mod TEST
+
+- when twitch bot warning message comes into client, set local variables accordingly
+
+Bugs to fix:
 - announce to discord when server is started
 - get server messages to be written to chat DB
 - get discord messages to be written to chat DB
-- when twitch bot warning message comes into client, set local variables accordingly
 - fix captain not being bolded on race left
-
-Bugs to fix:
 - set timer to 4 hours for custom races once you can see how long each race has been going for from the lobby
 - finish times are different between clients so add a thing that sends the finish time to everyone on race finish
 - make autoscroll less restrictive

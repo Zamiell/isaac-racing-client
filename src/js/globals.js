@@ -30,6 +30,7 @@ module.exports = {
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js
     lastPM: null,
+    lastRaceTitle: '',
     log: null,
     lang: null, // The language switcher instance
     modLoader: {
@@ -65,8 +66,9 @@ module.exports = {
     roomList: {},
     raceList: {},
     spamTimer: new Date().getTime(),
-    steam: {
+    steam: { // Filled in steam.js
         id: null,
+        accountID: null,
         screenName: null,
         ticket: null,
     },
@@ -83,8 +85,8 @@ module.exports = {
     timeLaunched: new Date().getTime(),
     timeOffset: 0,
     trinketList: {}, // Filled in main.js
-    websiteURL: `http${(secure ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
-    websocketURL: `ws${(secure ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost
+    websiteURL: `http${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
+    websocketURL: `ws${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost
     wordList: null, // Filled in main.js
     version: null, // Filled in main.js
 };

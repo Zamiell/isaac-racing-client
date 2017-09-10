@@ -122,18 +122,6 @@ The changed rooms are as follows:
 
 <br />
 
-### Dople & Evil Twin Fix
-
-When shooting in a forward direction and entering a room with a Dople or Evil Twin, the player can be with an unavoidable tear. Rarely, this can also occur even if the player is not shooting. This bug is fixed by changing all the spawn points of the enemies to be near the corner of the room. Once the room is loaded, the enemy will snap back to where they are supposed to be, but the initial buggy tear will not be in line with the player.
-
-The changed rooms are as follows:
-* Womb: #56-#62, #114-#118, #259-#261, #289, #301, #598, #605, #624, #646, #661
-* Utero: #56-#62, #114-#117, #259-#261, #289, #301, #598, #605, #624, #646, #661
-* Sheol: #19-#24, #42, #56-#57, #61, #166, #181, #188, #196
-* Dark Room: #272
-
-<br />
-
 ### Double Boss Champion Fix
 
 Some rooms have Monstros, Gurdy Jr.'s, Cages, or Sisters Vis that spawn near an entrance. If the double champion version spawns and they happen to spawn in a diagonal orientation, the player will be touched while the room is loading and automatically take damage. This bug is fixed by moving the enemies closer to the center of the room.

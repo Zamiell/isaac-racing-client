@@ -82,6 +82,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
+* Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads.
 * The Book of Sin and Mystery Sack generate actual random pickups.
 * Greed's Gullet works properly on Keeper.
 * Double coins and nickels heal Keeper for their proper amount.

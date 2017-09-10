@@ -66,9 +66,31 @@ end
 
 -- ModCallbacks.MC_NPC_UPDATE (0)
 function RPFastClear:NPCUpdate(npc)
+  -- Friendly enemies (from Delirious or Friendly Ball) will be added to the aliveEnemies table because
+  -- there are no flags set yet in the MC_POST_NPC_INIT callback
+  -- Thus, we have to wait until they are initialized and then remove them from the table
+  if npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
+    -- Remove it from the list if it is on it
+    RPFastClear:CheckDeadNPC(npc)
+    return
+  end
+
   -- We can't rely on the MC_POST_NPC_INIT callback because it is not fired for certain NPCs
   -- (like when a Gusher emerges from killing a Gaper)
   RPFastClear:CheckNewNPC(npc)
+end
+
+-- ModCallbacks.MC_NPC_UPDATE (0)
+-- EntityType.ENTITY_RAGLING (246)
+function RPFastClear:NPC246(npc)
+  -- Rag Man Raglings don't actually die (they turn into patches on the ground),
+  -- so we need to manually keep track of when this happens
+  if npc.Variant == 1 and -- 246.1
+     npc.State ~= NpcState.STATE_UNIQUE_DEATH then -- 16
+     -- They go to state 16 when they are patches on the ground
+
+    RPFastClear:CheckDeadNPC(npc)
+  end
 end
 
 -- ModCallbacks.MC_POST_NPC_INIT (27)
@@ -79,9 +101,10 @@ function RPFastClear:PostNPCInit(npc)
   local index = GetPtrHash(npc)
 
   Isaac.DebugString("MC_POST_NPC_INIT - " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                    " (index " .. tostring(index) .. ") " ..
-                    " (frame " .. tostring(gameFrameCount) .. ")")
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount))
 
   RPFastClear:CheckNewNPC(npc)
 end
@@ -89,6 +112,7 @@ end
 function RPFastClear:CheckNewNPC(npc)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
 
@@ -110,39 +134,18 @@ function RPFastClear:CheckNewNPC(npc)
     return
   end
 
+  -- Rag Man Raglings don't actually die (they turn into patches on the ground),
+  -- so they will get past the above check
+  if npc.Type == EntityType.ENTITY_RAGLING and npc.Variant == 1 and -- 246.1
+     npc.State == NpcState.STATE_UNIQUE_DEATH then -- 16
+     -- They go to state 16 when they are patches on the ground
+
+    return
+  end
+
   -- We don't care if this is a specific child NPC attached to some other NPC
   if RPFastClear:AttachedNPC(npc) then
     return
-  end
-
-  -- We don't care if this is a charmed enemy
-  -- (from Delirious or a charmed enemy carried over from a previous room)
-  local entityFlags = npc:GetEntityFlags()
-  local charmed = false
-  local i = 8 -- EntityFlag.FLAG_CHARM
-  local bit = (entityFlags & (1 << i)) >> i
-  if bit == 1 then
-    charmed = true
-  end
-  if charmed then
-    return
-  end
-
-  -- There are two separate fast-clear bugs with Rag Man Raglings (246.1)
-  if npc.Type == EntityType.ENTITY_RAGLING and npc.Variant == 1 then -- 246.1
-    -- Rag Man Raglings are bugged such that they are still alive during the death event (for some reason),
-    -- so they will get past the "IsDead()" check above
-    if npc.FrameCount ~= 0 then
-      return
-    end
-
-    -- A new Rag Man Ragling will spawn if the death of a Rag Man Ragling happens to kill Rag Man;
-    -- this prevents fast-clear from working properly, as it will only remove the new Ragling once
-    -- the death animation for Rag Man is over
-    -- To fix this bug, don't bother adding the final Ragling to the "aliveEnemies" table
-    if RPFastClear.aliveEnemiesCount == 0 then
-      return
-    end
   end
 
   -- If we are entering a new room, flush all of the stuff in the old room
@@ -160,15 +163,17 @@ function RPFastClear:CheckNewNPC(npc)
   RPFastClear.aliveEnemies[index] = true
   RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
   Isaac.DebugString("Added NPC " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                    " (index " .. tostring(index) .. "), " ..
-                    "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount) .. ", " ..
+                    "total " .. tostring(RPFastClear.aliveEnemiesCount))
 end
 
 function RPFastClear:AttachedNPC(npc)
   -- These are NPCs that have "CanShutDoors" equal to true naturally by the game,
   -- but shouldn't actually keep the doors closed
-  -- (there's no need to add Peep / Bloat eyes since they die on the same frame as Peep / Bloat)
+  -- (there's no need to add Peep / Bloat eyes here since they die on the same frame as Peep / Bloat)
   if (npc.Type == EntityType.ENTITY_CHARGER and npc.Variant == 0 and npc.Subtype == 1) or -- My Shadow (23.0.1)
      -- These are the black worms generated by My Shadow; they are similar to charmed enemies,
      -- but do not actually have the "charmed" flag set, so we don't want to add them to the "aliveEnemies" table
@@ -199,9 +204,10 @@ function RPFastClear:PostEntityRemove(entity)
   local index = GetPtrHash(npc)
 
   Isaac.DebugString("MC_POST_ENTITY_REMOVE - " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                    " (index " .. tostring(index) .. ") " ..
-                    " (frame " .. tostring(gameFrameCount) .. ")")
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount))
 
   -- We can't rely on the MC_POST_ENTITY_KILL callback because it is not fired for certain NPCs
   -- (like when Daddy Long Legs does a stomp attack or a Portal despawns)
@@ -223,9 +229,10 @@ function RPFastClear:PostEntityKill(entity)
   local index = GetPtrHash(npc)
 
   Isaac.DebugString("MC_POST_ENTITY_KILL - " ..
-                    tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." .. tostring(entity.SubType) ..
-                    " (index " .. tostring(index) .. ") " ..
-                    " (frame " .. tostring(gameFrameCount) .. ")")
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount))
 
   -- We can't rely on the MC_POST_ENTITY_REMOVE callback because it is only fired once the death animation is complete
   RPFastClear:CheckDeadNPC(npc)
@@ -256,9 +263,11 @@ function RPFastClear:CheckDeadNPC(npc)
   RPFastClear.aliveEnemies[index] = nil
   RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
   Isaac.DebugString("Removed NPC " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." .. tostring(npc.SubType) ..
-                    " (index " .. tostring(index) .. "), " ..
-                    "total: " .. tostring(RPFastClear.aliveEnemiesCount))
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount) .. ", " ..
+                    "total " .. tostring(RPFastClear.aliveEnemiesCount))
 
   -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
   RPFastClear.delayFrame = gameFrameCount + 1

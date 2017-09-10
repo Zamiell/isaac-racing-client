@@ -493,7 +493,7 @@ Changes:
 	<active achievement="296" description="What will it be?" gfx="Collectibles_476_D1.png" id="476" name="D1" maxcharges="4" />
 	<active achievement="295" description="Consume" gfx="Collectibles_477_Void.png" id="477" name="Void" maxcharges="6" />
 	<active description="Stop!" gfx="Collectibles_478_Pause.png" id="478" name="Pause" maxcharges="2" />
-	<active achievement="318" description="Trinket melter!" gfx="Collectibles_479_Smelter.png" id="479" name="Smelter (No Log)" maxcharges="6" />
+	<active achievement="318" description="Trinket melter!" gfx="Collectibles_479_Smelter.png" id="479" name="Smelter" maxcharges="6" />
 	<active description="Gain more friends!" gfx="Collectibles_480_Compost.png" id="480" name="Compost" maxcharges="2" />
 	<active description="109" gfx="Collectibles_481_Dataminer.png" id="481" name="Dataminer" maxcharges="4" />
 	<active description="Change" gfx="Collectibles_482_Clicker.png" id="482" name="Clicker" maxcharges="6" />

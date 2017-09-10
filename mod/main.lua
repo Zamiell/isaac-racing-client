@@ -6,16 +6,17 @@
 --[[
 
 TODO:
-- hear reset sounds on eden
+- add cardback mod
+- add better bombs
 - fix mimics in code
-- undo mom's heart change
+- Speed up the spawning of the first ghost on The Haunt fight
+
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
 TODO DIFFICULT:
 - Fix Isaac beams never hitting you
 - Fix Conquest beams
-- Speed up the spawning of the first ghost on The Haunt fight
 
 TODO CAN'T FIX:
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
@@ -24,14 +25,15 @@ TODO CAN'T FIX:
 - Make fast-clear apply to Challenge rooms and the Boss Rush ("room:SetAmbushDone()" doesn't do anything)
 
 POST-FLIP ACTIONS:
-1) Remove duplicated start room for The Chest / Dark Room
-2) Remove Y-flipped Gurdy rooms from The Chest
-3) Double Gate room - Move the Gates all the way down
+1) Remove the duplicated start rooms for The Chest / Dark Room
+2) Un-flip Y-flipped Gurdy rooms:
+    The Chest - #20018, #30018
+3) Un-flip double Gate rooms
     The Chest - #20040, #30040
     Dark Room - #20012, #30012
-4) Mega Maw rooms - Move the Mega Maws (to a custom position depending on the room)
-    The Chest - #20269, #20039, #20059, #30269, #30039, #30059
-    Dark Room - #20011, #20052, #20080, #30011, #30052, #30080
+4) Un-flip some Mega Maw rooms:
+    The Chest - #20269, #20039, #30269, #30039
+    Dark Room - #20011, #30011
 
 --]]
 
@@ -50,8 +52,9 @@ local RPInputAction         = require("src/rpinputaction") -- The InputAction ca
 local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameStarted callback (15)
 local RPPostNewLevel        = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
 local RPPostNewRoom         = require("src/rppostnewroom") -- The PostNewRoom callback (19)
-local RPPostNPCDeath        = require("src/rppostnpcdeath") -- The RPPostNPCDeath callback (29)
+local RPExecuteCmd          = require("src/rpexecutecmd") -- The ExecuteCmd callback (22)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
+local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
 local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
 local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
@@ -77,6 +80,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_GAPING_MAW) -- 235
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_BROKEN_GAPING_MAW) -- 236
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityType.ENTITY_MOMS_HAND) -- 213
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPC246, EntityType.ENTITY_RAGLING) -- 246
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_WIZOOB) -- 219
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_RED_GHOST) -- 285
@@ -94,16 +98,21 @@ RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          RPInputAction.Main
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     RPPostGameStarted.Main) -- 15
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Main) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main) -- 22
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPFastClear.PostNPCInit) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_DEATH,        RPPostNPCDeath.NPC45, EntityType.ENTITY_MOM) -- 29 / 45
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPFastClear.PostEntityKill) -- 68
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPPostEntityKill.NPC45, EntityType.ENTITY_MOM) -- 68 / 45
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPPostEntityKill.NPC81, -- 68
+                                                              EntityType.ENTITY_FALLEN) -- 81
 
 -- Define pre-use item callback (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,
                                                      CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.BookOfSin, CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.GlowingHourGlass,
+                                                     CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.Smelter,   CollectibleType.COLLECTIBLE_SMELTER) -- 479
 
 -- Define post-use item callbacks (3)
@@ -112,8 +121,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Teleport,  CollectibleT
 -- (this callback is also used by Broken Remote)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BlankCard, CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Undefined, CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.GlowingHourGlass,
-                                                 CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
+
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,      CollectibleType.COLLECTIBLE_VOID) -- 477
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox, CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
