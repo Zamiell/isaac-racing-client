@@ -20,7 +20,7 @@ repository_owner = 'Zamiell'
 repository_name = 'isaac-racing-client'
 mod_dir = 'C:\\Users\\james\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_dev'
 title_screen_path = os.path.join(mod_dir, 'resources\\gfx\\ui\\main menu')
-repository_dir = os.path.join('D:\\Repositories\\', repository_name)
+repository_dir = os.path.join('C:\\Repositories\\', repository_name)
 os.chdir(repository_dir)
 
 # Subroutines
