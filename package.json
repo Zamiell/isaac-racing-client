@@ -2,7 +2,7 @@
   "name": "RacingPlus",
   "productName": "Racing+",
   "description": "A racing mod for The Binding of Isaac: Afterbirth+",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "author": "Racing+",
   "license": "GPL-3.0",
   "homepage": "https://isaacracing.net",
@@ -29,22 +29,25 @@
   },
   "dependencies": {
     "electron-is-dev": "^0.3.0",
-    "electron-updater": "^2.8.7",
+    "electron-updater": "^2.8.9",
     "fs-extra": "^4.0.1",
     "greenworks": "git+https://github.com/greenheartgames/greenworks.git",
     "hash-files": "^1.1.1",
     "linkifyjs": "^2.1.4",
     "opn": "^5.1.0",
     "ps-node": "^0.1.6",
-    "raven": "^2.1.1",
+    "raven": "^2.1.2",
     "tasklist": "^3.1.0",
     "teeny-conf": "^1.1.0",
-    "tracer": "^0.8.9",
+    "tracer": "^0.8.11",
     "winreg": "^1.2.4"
   },
   "devDependencies": {
-    "electron": "^1.7.5",
-    "electron-builder": "^19.22.1",
-    "electron-rebuild": "^1.6.0"
+    "electron": "^1.7.6",
+    "electron-builder": "^19.27.7",
+    "electron-rebuild": "^1.6.0",
+    "eslint": "^4.6.0",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0"
   }
 }

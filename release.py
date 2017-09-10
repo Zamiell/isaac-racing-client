@@ -144,7 +144,8 @@ if args.skipmod == False:
 
                 continue
 
-            hashes[fpath] = filehash(fpath)
+            choppedPath = fpath[4:] # Chop off the "mod\" prefix
+            hashes[choppedPath] = filehash(fpath)
 
     # Write the dictionary to a JSON file
     sha1_file_path = os.path.join(mod_dir2, 'sha1.json')

@@ -289,13 +289,17 @@ function checkModIntegrity() {
         return;
     }
 
+    // Check to see if it is corrupt or missing
+    // (skip this for now)
+    enableBossCutscenes();
+
+    /*
     // Each key of the JSON is the relative path to the file
     for (const relativePath of Object.keys(checksums)) {
         const filePath = path.join(modPath, relativePath);
         const backupFilePath = path.join(backupModPath, relativePath);
         const backupFileHash = checksums[relativePath];
 
-        // Check to see if it is corrupt or missing
         let copyFile = false; // If this gets set to true, the file is missing or corrupt
         if (fs.existsSync(filePath)) {
             const fileHash = hashFiles.sync({ // This defaults to SHA1
@@ -328,6 +332,7 @@ function checkModIntegrity() {
     }
 
     enableBossCutscenes();
+    */
 }
 
 // We can revert boss cutscenes to vanilla by deleting a single file, for users that are used to vanilla
