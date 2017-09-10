@@ -7,6 +7,7 @@
 /*
 
 New TODO:
+- test corrupt mod auto-restart
 - test all isaac checks to see if they work
 - restart isaac on corrupt mod TEST
 
@@ -38,7 +39,6 @@ Bugs to fix:
 - make title column and entrants column in lobby selectable
 - add time to lobby for current races
 - make spacing slightly smaller for Type and Format on lobby
-- split up racing+ logs based on day
 - add "Upload log" button
 - add # of people to race in prerace
 

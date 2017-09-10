@@ -26,7 +26,7 @@ Client/Server:
 * The client will now automatically logout if you logout of Steam in order to curb unscrupulous behavior.
 * The client no longer checks to see if you have the Racing+ mod installed when you launch it. (Thanks Hyphen-ated)
 * When creating a new race, the client now remembers all of the values that you entered in the last time the client was open. (Thanks Hyphen-ated)
-* The client will now perform a more robust check to see if your mod is corrupted. If it detects your mod is corrupted, it will ? (was it already restarting the game before?)
+* The client will now perform a more robust check to see if your mod is corrupted. If it detects your mod is corrupted, it will restart your game.
 * Fixed the bug where the Chinese racer named "box" would mess up the lobby users list. (It wasn't his fault.)
 * Fixed the bug where selecting a random character in the new race tooltip would not include Samael. (Thanks Shigan)
 * Removed the "Ctrl+C" and "Ctrl+V" hotkeys since they are not needed anymore.
