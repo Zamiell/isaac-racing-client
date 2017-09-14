@@ -51,82 +51,11 @@ $(document).ready(() => {
 
     $('#new-race-type').change(newRaceTypeChange);
 
-    $('#new-race-format').change(function newRaceFormatChange() {
-        // Change the displayed icon
-        const newFormat = $(this).val();
-        $('#new-race-format-icon').css('background-image', `url("img/formats/${newFormat}.png")`);
+    $('#new-race-format').change(newRaceFormatChange);
 
-        // Change to the default character for this ruleset
-        let newCharacter;
-        if (newFormat === 'unseeded') {
-            newCharacter = 'Judas';
-        } else if (newFormat === 'seeded') {
-            newCharacter = 'Judas';
-        } else if (newFormat === 'diversity') {
-            newCharacter = 'Judas';
-        } else if (newFormat === 'unseeded-lite') {
-            newCharacter = 'Judas';
-        } else if (newFormat === 'custom') {
-            // The custom format has no default character, so don't change anything
-            newCharacter = $('#new-race-character').val();
-        } else {
-            misc.errorShow('That is an unknown format.');
-        }
-        if ($('#new-race-character').val() !== newCharacter) {
-            $('#new-race-character').val(newCharacter).change();
-        }
+    $('#new-race-character').change(newRaceCharacterChange);
 
-        // Show or hide the "Custom" goal
-        if (newFormat === 'custom') {
-            $('#new-race-goal-custom').fadeIn(0);
-
-            // Make the goal border flash to signify that there are new options there
-            const oldColor = $('#new-race-goal').css('border-color');
-            $('#new-race-goal').css('border-color', 'green');
-            setTimeout(() => {
-                $('#new-race-goal').css('border-color', oldColor);
-            }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
-        } else {
-            $('#new-race-goal-custom').fadeOut(0);
-            if ($('#new-race-goal').val() === 'custom') {
-                $('#new-race-goal').val('Blue Baby').change();
-            }
-        }
-
-        // Show or hide the character, goal, and starting build row
-        if (newFormat === 'seeded') {
-            setTimeout(() => {
-                $('#new-race-character-container').fadeIn(globals.fadeTime);
-                $('#new-race-goal-container').fadeIn(globals.fadeTime);
-                $('#new-race-starting-build-container').fadeIn(globals.fadeTime);
-                $('#new-race-starting-build').change();
-                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-            }, globals.fadeTime);
-        } else {
-            const type = $('#new-race-type').val();
-            if (type === 'ranked') {
-                $('#new-race-character-container').fadeOut(globals.fadeTime);
-                $('#new-race-goal-container').fadeOut(globals.fadeTime);
-            }
-            if ($('#new-race-starting-build-container').is(':visible')) {
-                $('#new-race-starting-build-container').fadeOut(globals.fadeTime, () => {
-                    $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-                });
-            }
-        }
-    });
-
-    $('#new-race-character').change(function newRaceCharacterChange() {
-        // Change the displayed icon
-        const newCharacter = $(this).val();
-        $('#new-race-character-icon').css('background-image', `url("img/characters/${newCharacter}.png")`);
-    });
-
-    $('#new-race-goal').change(function newRaceGoalChange() {
-        // Change the displayed icon
-        const newGoal = $(this).val();
-        $('#new-race-goal-icon').css('background-image', `url("img/goals/${newGoal}.png")`);
-    });
+    $('#new-race-goal').change(newRaceGoalChange);
 
     // Add the options to the starting build dropdown
     for (let i = 0; i < builds.length; i++) {
@@ -146,17 +75,9 @@ $(document).ready(() => {
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
     }
 
-    $('#new-race-starting-build').change(function newRaceStartingBuildChange() {
-        // Change the displayed icon
-        const newBuild = $(this).val();
-        if (newBuild.startsWith('random')) {
-            $('#new-race-starting-build-icon').css('background-image', 'url("img/builds/random.png")');
-        } else {
-            $('#new-race-starting-build-icon').css('background-image', `url("img/builds/${newBuild}.png")`);
-        }
-    });
+    $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
-    $('#new-race-form').submit(() => {
+    $('#new-race-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 
@@ -289,28 +210,33 @@ $(document).ready(() => {
     New race tooltip functions
 */
 
-function newRaceTypeChange() {
+function newRaceTypeChange(event, fast = false) {
     const newType = $('#new-race-type').val();
 
     // Make the format border flash to signify that there are new options there
-    const oldColor = $('#new-race-format').css('border-color');
-    $('#new-race-format').css('border-color', 'green');
-    setTimeout(() => {
-        $('#new-race-format').css('border-color', oldColor);
-    }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
+    if (!fast) {
+        const oldColor = $('#new-race-format').css('border-color');
+        $('#new-race-format').css('border-color', 'green');
+        setTimeout(() => {
+            $('#new-race-format').css('border-color', oldColor);
+        }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
+    }
 
     // Change the subsequent options accordingly
     const format = $('#new-race-format').val();
     if (newType === 'ranked-solo') {
         // Change the format dropdown
-        $('#new-race-format').val('unseeded').change();
-        $('#new-race-character').val('Judas').change();
-        $('#new-race-goal').val('Blue Baby').change();
+        $('#new-race-format').val('unseeded');
+        newRaceFormatChange(null, fast);
+        $('#new-race-character').val('Judas');
+        newRaceCharacterChange(null, fast);
+        $('#new-race-goal').val('Blue Baby');
+        newRaceGoalChange(null, fast);
 
         // Hide the format, character and goal dropdowns if it is not a seeded race
-        $('#new-race-format-container').fadeOut(globals.fadeTime);
-        $('#new-race-character-container').fadeOut(globals.fadeTime);
-        $('#new-race-goal-container').fadeOut(globals.fadeTime, () => {
+        $('#new-race-format-container').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-character-container').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-goal-container').fadeOut((fast ? 0 : globals.fadeTime), () => {
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
         });
     } else if (newType === 'unranked-solo') {
@@ -321,23 +247,26 @@ function newRaceTypeChange() {
 
         // Show the character and goal dropdowns
         setTimeout(() => {
-            $('#new-race-format-container').fadeIn(globals.fadeTime);
-            $('#new-race-character-container').fadeIn(globals.fadeTime);
-            $('#new-race-goal-container').fadeIn(globals.fadeTime);
+            $('#new-race-format-container').fadeIn((fast ? 0 : globals.fadeTime));
+            $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
+            $('#new-race-goal-container').fadeIn((fast ? 0 : globals.fadeTime));
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-        }, globals.fadeTime);
+        }, (fast ? 0 : globals.fadeTime));
     } else if (newType === 'ranked') {
         // Show the format dropdown
         setTimeout(() => {
-            $('#new-race-format-container').fadeIn(globals.fadeTime);
+            $('#new-race-format-container').fadeIn((fast ? 0 : globals.fadeTime));
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-        }, globals.fadeTime);
+        }, (fast ? 0 : globals.fadeTime));
 
         // Change the format dropdown
         if (format === 'diversity' || format === 'custom') {
-            $('#new-race-format').val('unseeded').change();
-            $('#new-race-character').val('Judas').change();
-            $('#new-race-goal').val('Blue Baby').change();
+            $('#new-race-format').val('unseeded');
+            newRaceFormatChange(null, fast);
+            $('#new-race-character').val('Judas');
+            newRaceCharacterChange(null, fast);
+            $('#new-race-goal').val('Blue Baby');
+            newRaceGoalChange(null, fast);
         }
         $('#new-race-format-seeded').fadeIn(0);
         $('#new-race-format-diversity').fadeOut(0);
@@ -345,8 +274,8 @@ function newRaceTypeChange() {
 
         // Hide the character and goal dropdowns if it is not a seeded race
         if (format !== 'seeded') {
-            $('#new-race-character-container').fadeOut(globals.fadeTime);
-            $('#new-race-goal-container').fadeOut(globals.fadeTime, () => {
+            $('#new-race-character-container').fadeOut((fast ? 0 : globals.fadeTime));
+            $('#new-race-goal-container').fadeOut((fast ? 0 : globals.fadeTime), () => {
                 $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
             });
         }
@@ -358,16 +287,107 @@ function newRaceTypeChange() {
         // Show the character and goal dropdowns (if it is a seeded race, they should be already shown)
         if (format !== 'seeded') {
             setTimeout(() => {
-                $('#new-race-format-container').fadeIn(globals.fadeTime);
-                $('#new-race-character-container').fadeIn(globals.fadeTime);
-                $('#new-race-goal-container').fadeIn(globals.fadeTime);
+                $('#new-race-format-container').fadeIn((fast ? 0 : globals.fadeTime));
+                $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
+                $('#new-race-goal-container').fadeIn((fast ? 0 : globals.fadeTime));
                 $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
-            }, globals.fadeTime);
+            }, (fast ? 0 : globals.fadeTime));
         }
     }
 
     // Change the displayed icon
     $('#new-race-type-icon').css('background-image', `url("img/types/${newType}.png")`);
+}
+
+function newRaceFormatChange(event, fast = false) {
+    // Change the displayed icon
+    const newFormat = $('#new-race-format').val();
+    $('#new-race-format-icon').css('background-image', `url("img/formats/${newFormat}.png")`);
+
+    // Change to the default character for this ruleset
+    let newCharacter;
+    if (newFormat === 'unseeded') {
+        newCharacter = 'Judas';
+    } else if (newFormat === 'seeded') {
+        newCharacter = 'Judas';
+    } else if (newFormat === 'diversity') {
+        newCharacter = 'Judas';
+    } else if (newFormat === 'unseeded-lite') {
+        newCharacter = 'Judas';
+    } else if (newFormat === 'custom') {
+        // The custom format has no default character, so don't change anything
+        newCharacter = $('#new-race-character').val();
+    } else {
+        misc.errorShow('That is an unknown format.');
+    }
+    if ($('#new-race-character').val() !== newCharacter) {
+        $('#new-race-character').val(newCharacter);
+        newRaceCharacterChange(null, fast);
+    }
+
+    // Show or hide the "Custom" goal
+    if (newFormat === 'custom') {
+        $('#new-race-goal-custom').fadeIn(0);
+
+        // Make the goal border flash to signify that there are new options there
+        if (!fast) {
+            const oldColor = $('#new-race-goal').css('border-color');
+            $('#new-race-goal').css('border-color', 'green');
+            setTimeout(() => {
+                $('#new-race-goal').css('border-color', oldColor);
+            }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
+        }
+    } else {
+        $('#new-race-goal-custom').fadeOut(0);
+        if ($('#new-race-goal').val() === 'custom') {
+            $('#new-race-goal').val('Blue Baby');
+            newRaceGoalChange(null, fast);
+        }
+    }
+
+    // Show or hide the character, goal, and starting build row
+    if (newFormat === 'seeded') {
+        setTimeout(() => {
+            $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
+            $('#new-race-goal-container').fadeIn((fast ? 0 : globals.fadeTime));
+            $('#new-race-starting-build-container').fadeIn((fast ? 0 : globals.fadeTime));
+            newRaceStartingBuildChange(null, fast);
+            $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+        }, (fast ? 0 : globals.fadeTime));
+    } else {
+        const type = $('#new-race-type').val();
+        if (type === 'ranked') {
+            $('#new-race-character-container').fadeOut((fast ? 0 : globals.fadeTime));
+            $('#new-race-goal-container').fadeOut((fast ? 0 : globals.fadeTime));
+        }
+        if ($('#new-race-starting-build-container').is(':visible')) {
+            $('#new-race-starting-build-container').fadeOut((fast ? 0 : globals.fadeTime), () => {
+                $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+            });
+        }
+    }
+}
+
+function newRaceCharacterChange(event, fast = false) {
+    // Change the displayed icon
+    const newCharacter = $('#new-race-character').val();
+    $('#new-race-character-icon').css('background-image', `url("img/characters/${newCharacter}.png")`);
+}
+
+function newRaceGoalChange(event, fast = false) {
+    // Change the displayed icon
+    const newGoal = $('#new-race-goal').val();
+    $('#new-race-goal-icon').css('background-image', `url("img/goals/${newGoal}.png")`);
+}
+
+function newRaceStartingBuildChange(event, fast = false) {
+    // Change the displayed icon
+    const newBuild = $('#new-race-starting-build').val();
+    if (newBuild.startsWith('random')) {
+        $('#new-race-starting-build-icon').css('background-image', 'url("img/builds/random.png")');
+    } else {
+        $('#new-race-starting-build-icon').css('background-image', `url("img/builds/${newBuild}.png")`);
+    }
 }
 
 // The "functionBefore" function for Tooltipster
@@ -384,7 +404,6 @@ exports.tooltipFunctionBefore = () => {
 exports.tooltipFunctionReady = () => {
     // Load the default settings from the settings.json file
     const newRaceTitle = settings.get('newRaceTitle');
-    globals.log.info('NEW RACE TITLE:', newRaceTitle);
     if (newRaceTitle === '') {
         // Randomize the race title
         $('#new-race-randomize').click();
@@ -396,20 +415,21 @@ exports.tooltipFunctionReady = () => {
     $('#new-race-format').val(settings.get('newRaceFormat'));
     $('#new-race-character').val(settings.get('newRaceCharacter'));
     $('#new-race-goal').val(settings.get('newRaceGoal'));
-    $('#new-race-build').val(settings.get('newRaceBuild'));
+    $('#new-race-starting-build').val(settings.get('newRaceBuild'));
 
-    // Set default background images
-    const typeURL = `img/types/${$('#new-race-type').val()}.png`;
-    $('#new-race-type-icon').css('background-image', `url("${typeURL}")`);
-    const formatURL = `img/formats/${$('#new-race-format').val()}.png`;
-    $('#new-race-format-icon').css('background-image', `url("${formatURL}")`);
-    const characterURL = `img/characters/${$('#new-race-character').val()}.png`;
-    $('#new-race-character-icon').css('background-image', `url("${characterURL}")`);
-    const goalURL = `img/goals/${$('#new-race-goal').val()}.png`;
-    $('#new-race-goal-icon').css('background-image', `url("${goalURL}")`);
+    // Hide or show some rows based on the race type and format
+    // (the first argument is "event", the second argument is "fast")
+    newRaceTypeChange(null, true);
+    newRaceFormatChange(null, true);
+    newRaceCharacterChange(null, true);
+    newRaceGoalChange(null, true);
+    newRaceStartingBuildChange(null, true);
 
     // Focus the race title box
-    $('#new-race-title').focus();
+    // (we have to wait 1 millisecond because the above code that changes rows will wrest focus away)
+    setTimeout(() => {
+        $('#new-race-title').focus();
+    }, 1);
 
     /*
         Tooltips within tooltips seem to be buggy and can sometimes be uninitialized

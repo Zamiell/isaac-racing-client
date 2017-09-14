@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.10.3* - September 13th, 2017
+
+* Fixed the bug where Krampus' Head would get deleted under certain conditions. (Thanks leo_ze_tron)
+* Fixed the bug where the new race tooltip would not show some sections on startup under certain conditions. (Thanks Shigan and Blumpkin Idaho)
+* Fixed the bug where you could fight Mega Satan twice if you teleported out of the fight after killing him. (Thanks Gamonymous)
+
 ### *v0.10.0* - September 10th, 2017
 
 Gameplay:

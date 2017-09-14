@@ -229,6 +229,10 @@ function RPNPCUpdate:NPC275(npc)
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+
+    -- Set the room status to clear so that the player cannot fight Mega Satan a second time
+    -- if they happen to use a Fool card after defeating it
+    room:SetClear(true)
   end
 end
 

@@ -47,13 +47,21 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // 4) mod/resources/gfx/items2/..
 // 5) mod/resources/gfx/items3/..
 
+/*
+
+Other notes:
+- Electron 1.7.6 gives error with graceful-fs, so staying on version
+
+*/
+
+
 // Imports
 const electron = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
 // The "electron" package is only allowed to be in the devDependencies section
-const autoUpdater = require('electron-updater').autoUpdater; // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
+const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
-const execFile = require('child_process').execFile;
-const fork = require('child_process').fork;
+const { execFile } = require('child_process');
+const { fork } = require('child_process');
 const fs = require('fs-extra');
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -62,10 +70,10 @@ const Raven = require('raven');
 const teeny = require('teeny-conf');
 const opn = require('opn');
 
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const ipcMain = electron.ipcMain;
-const globalShortcut = electron.globalShortcut;
+const { app } = electron;
+const { BrowserWindow } = electron;
+const { ipcMain } = electron;
+const { globalShortcut } = electron;
 
 // Constants
 const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
@@ -157,7 +165,7 @@ function createWindow() {
     // Width
     let width;
     if (Object.prototype.hasOwnProperty.call(windowSettings, 'width')) {
-        width = windowSettings.width;
+        ({ width } = windowSettings);
     } else {
         width = (isDev ? 1610 : 1110);
     }
@@ -165,7 +173,7 @@ function createWindow() {
     // Height
     let height;
     if (Object.prototype.hasOwnProperty.call(windowSettings, 'height')) {
-        height = windowSettings.height;
+        ({ height } = windowSettings);
     } else {
         height = 720;
     }

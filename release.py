@@ -121,7 +121,8 @@ if args.skipmod == False:
     mod_dir2 = 'mod'
     if os.path.exists(mod_dir2):
         try:
-            shutil.rmtree(mod_dir2)
+            # Used to use "shutil.rmtree" here, but it was unreliable
+            subprocess.call(['rm', '-rf', mod_dir2])
         except Exception as e:
             error('Failed to remove the "' + mod_dir2 + '" directory:', e)
     try:
@@ -159,7 +160,7 @@ if args.mod:
 if args.github:
     # Open the mod updater tool from Nicalis
     path_to_uploader = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
-    subprocess.Popen([path_to_uploader]) # Popen will run it in the background
+    subprocess.Popen([path_to_uploader], cwd=mod_dir) # Popen will run it in the background
 
     # Commit to the client repository
     return_code = subprocess.call(['git', 'add', '-A'])

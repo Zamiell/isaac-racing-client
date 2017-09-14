@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- make keys instaspawn like krampus items (test to see frame differential)
 - add cardback mod
 - add better bombs
 - fix mimics in code
@@ -102,10 +103,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPFastClear.PostNPCInit) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPFastClear.PostEntityKill) -- 68
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPPostEntityKill.NPC45, EntityType.ENTITY_MOM) -- 68 / 45
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      RPPostEntityKill.NPC81, -- 68
-                                                              EntityType.ENTITY_FALLEN) -- 81
 
 -- Define pre-use item callback (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,
@@ -143,6 +140,13 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills, PillEffect.P
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.PILLEFFECT_GULP_LOGGER)
 -- This is a callback for a custom "Gulp!" pill; we can't use the original because
 -- by the time the callback is reached, the trinkets are already consumed
+
+-- Define NPC kill callbacks (68)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPFastClear.PostEntityKill) -- 68
+-- (will get called for all kills)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC45, EntityType.ENTITY_MOM) -- 45
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_MOMS_HEART) -- 78
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC81, EntityType.ENTITY_FALLEN) -- 81
 
 -- Samael callbacks
 local wraithItem  = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation

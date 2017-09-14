@@ -79,6 +79,7 @@ RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
 RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
+RPSpeedrun.s3direction = 1 -- 1 is up and 2 is down; reset at the beginning of a new run
 
 --
 -- Speedrun functions
@@ -108,6 +109,7 @@ function RPSpeedrun:Init()
     RPSpeedrun.finished = false
     RPSpeedrun.finishedTime = 0
     RPSpeedrun.fastReset = false
+    RPSpeedrun.s3direction = 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
@@ -353,6 +355,7 @@ function RPSpeedrun:Init()
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPSpeedrun.s3direction = 1
     Isaac.DebugString("Restarting because we want to start from the first character again.")
 
     -- Tell the LiveSplit AutoSplitter to reset
@@ -433,6 +436,13 @@ function RPSpeedrun:CheckRestart()
     RPSpeedrun.fastReset = true -- Set this so that we don't go back to the beginning again
     RPSpeedrun.charNum = RPSpeedrun.charNum + 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
+
+    -- Make the next run go to the other path
+    RPSpeedrun.s3direction = RPSpeedrun.s3direction + 1
+    if RPSpeedrun.s3direction == 2 then
+      RPSpeedrun.s3direction = 1
+    end
+
     Isaac.DebugString("Switching to the next character for the speedrun.")
     return
   end
@@ -743,6 +753,26 @@ function RPSpeedrun:RemoveAllRoomButtons()
   RPSpeedrun.sprites.button1 = nil
   RPSpeedrun.sprites.button2 = nil
   RPSpeedrun.sprites.button3 = nil
+end
+
+-- Called from the PostEntityKill callback
+function RPSpeedrun:CheckItLivesDeath(npc)
+  local game = Game()
+  local room = game:GetRoom()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+    return
+  end
+
+  if RPSpeedrun ~= 2 then
+    return
+  end
+
+  -- We need to spawn a trapdoor since the custom challenge goes to The Chest by default
+  game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
+             Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
+             room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
 end
 
 --

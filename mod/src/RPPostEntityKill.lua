@@ -121,6 +121,11 @@ function RPPostEntityKill:NPC45(npc)
   end
 end
 
+-- EntityType.ENTITY_MOMS_HEART (78)
+function RPPostEntityKill:NPC78(npc)
+  RPSpeedrun:CheckItLivesDeath(npc)
+end
+
 -- EntityType.ENTITY_FALLEN (81)
 -- We want to manually spawn the Krampus item instead of letting the game do it
 -- This slightly speeds up the spawn so that it can not be accidently deleted by leaving the room
