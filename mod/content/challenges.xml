@@ -4,6 +4,6 @@
 	<challenge name="R+9 Speedrun (S1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+9/14 Speedrun (S1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 Speedrun (S2)" endstage="11" altpath="false" cursefilter="127" />
-	<!-- <challenge name="R+7 Speedrun (S3)" endstage="11" altpath="true" cursefilter="127" /> -->
+	<!--<challenge name="R+7 Speedrun (S3)" endstage="11" altpath="true" cursefilter="127" />-->
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" />
 </challenges>
