@@ -3,7 +3,7 @@
 */
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 
@@ -21,6 +21,8 @@ exports.start = () => {
 // Monitor for notifications from the child process that is doing the log watching
 ipcRenderer.on('steamWatcher', (event, message) => {
     globals.log.info(`Recieved steam-watcher notification: ${message}`);
+
+    // TODO check for logout
 
     if (message.startsWith('error: ')) {
         // First, parse for errors
