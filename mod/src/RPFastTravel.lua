@@ -44,6 +44,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   if (stage == LevelStage.STAGE4_2 or -- 8
       stage == LevelStage.STAGE4_3) and -- 9
      roomType == RoomType.ROOM_BOSS and -- 5
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
      (RPGlobals.race.goal == "Everything" or
       (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) then -- 328
