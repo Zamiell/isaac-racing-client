@@ -283,6 +283,15 @@ function RPItems:Void() -- 477
   RPGlobals.run.itemReplacementDelay = gameFrameCount + 5 -- Stall for 5 frames
 end
 
+function RPItems:MysteryGift() -- 515
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  RPGlobals.run.mysteryGiftFrame = gameFrameCount + 1
+  Isaac.DebugString("Mystery Gift activated; setting the coal check frame to: " ..
+                    tostring(RPGlobals.run.mysteryGiftFrame))
+end
+
 function RPItems:MovingBox() -- 523
   Isaac.DebugString("Moving Box activated.")
   if RPGlobals.run.movingBoxOpen then

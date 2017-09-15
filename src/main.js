@@ -237,7 +237,8 @@ function autoUpdate() {
             mainWindow.webContents.send('autoUpdater', 'update-not-available');
         });
 
-        autoUpdater.on('update-downloaded', (e, notes, name, date, url) => {
+        autoUpdater.on('update-downloaded', (info) => {
+            log.info('updated-downloaded:', info);
             mainWindow.webContents.send('autoUpdater', 'update-downloaded');
         });
 

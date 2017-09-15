@@ -726,6 +726,8 @@ function RPCheckEntities:ReplacePedestal(entity)
       -- This is a manually spawned Krampus item with a seed of 0,
       -- so proceed with the replacement and change the flag to false
       RPGlobals.run.spawningKrampusItem = false
+    elseif gameFrameCount <= RPGlobals.run.mysteryGiftFrame then
+      Isaac.DebugString("A Lump of Coal from Mystery Gift detected; not deleting.")
     elseif entity.Touched == false then -- We don't want to delete a head that we are swapping for something else
       -- This is a naturally spawned Krampus item
       entity:Remove()

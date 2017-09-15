@@ -403,6 +403,8 @@ exports.tooltipFunctionBefore = () => {
 // The "functionReady" function for Tooltipster
 exports.tooltipFunctionReady = () => {
     // Load the default settings from the settings.json file
+    // and hide or show some rows based on the race type and format
+    // (the first argument is "event", the second argument is "fast")
     const newRaceTitle = settings.get('newRaceTitle');
     if (newRaceTitle === '') {
         // Randomize the race title
@@ -412,18 +414,16 @@ exports.tooltipFunctionReady = () => {
         globals.lastRaceTitle = newRaceTitle;
     }
     $('#new-race-type').val(settings.get('newRaceType'));
-    $('#new-race-format').val(settings.get('newRaceFormat'));
-    $('#new-race-character').val(settings.get('newRaceCharacter'));
-    $('#new-race-goal').val(settings.get('newRaceGoal'));
-    $('#new-race-starting-build').val(settings.get('newRaceBuild'));
-
-    // Hide or show some rows based on the race type and format
-    // (the first argument is "event", the second argument is "fast")
     newRaceTypeChange(null, true);
+    $('#new-race-format').val(settings.get('newRaceFormat'));
     newRaceFormatChange(null, true);
+    $('#new-race-character').val(settings.get('newRaceCharacter'));
     newRaceCharacterChange(null, true);
+    $('#new-race-goal').val(settings.get('newRaceGoal'));
     newRaceGoalChange(null, true);
+    $('#new-race-starting-build').val(settings.get('newRaceBuild'));
     newRaceStartingBuildChange(null, true);
+    // (the change functions have to be interspersed here, otherwise the format change would overwrite the character change)
 
     // Focus the race title box
     // (we have to wait 1 millisecond because the above code that changes rows will wrest focus away)

@@ -119,8 +119,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Teleport,  CollectibleT
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BlankCard, CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Undefined, CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
 
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,      CollectibleType.COLLECTIBLE_VOID) -- 477
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox, CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,        CollectibleType.COLLECTIBLE_VOID) -- 477
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MysteryGift, CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox,   CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
 -- Define custom item callbacks (3)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main, CollectibleType.COLLECTIBLE_DEBUG)

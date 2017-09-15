@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.10.7* - September 14th, 2017
+
+* Fixed the bug where the client would not remember that you selected a random character. (Thanks Shigan)
+* Fixed the bug where the mod was inproperly deleting A Lump of Coal from Mystery Gift. (Thanks Thalen22)
+
 ### *v0.10.3* - September 13th, 2017
 
 * Fixed the bug where Krampus' Head would get deleted under certain conditions. (Thanks leo_ze_tron)

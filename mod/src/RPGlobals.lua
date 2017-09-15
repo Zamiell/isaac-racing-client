@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.10.6"
+RPGlobals.version = "v0.10.7"
 
 -- These are per run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
@@ -162,7 +162,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
   RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
-  RPGlobals.run.spawningKrampusItem  = false
+  RPGlobals.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
+  RPGlobals.run.mysteryGiftFrame     = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {
