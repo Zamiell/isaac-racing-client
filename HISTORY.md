@@ -7,7 +7,7 @@
 * There will no longer be a delay before The Haunt sends out his first Lil' Haunt to attack you.
 * The spawning of Key Piece 1 and Key Piece 2 are now sped up in the same way that Krampus items are.
 * Fixed the bug where both photos would spawn on the season 1 speedrun challenges if you had Mysterious Paper.
-* Fixed the bug where the wrong direction would appear after It Lives! or Hush under if you had Mysterious Paper under certain conditions.
+* Fixed the bug where the wrong direction would appear after It Lives! or Hush if you had Mysterious Paper under certain conditions.
 * Fixed the bug where the Sloth, Super Sloth, Pride, and Super Pride card seeding wasn't being applied to flipped rooms.
 
 ### *v0.10.7* - September 14th, 2017
