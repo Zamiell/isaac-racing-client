@@ -3,7 +3,7 @@
 */
 
 // Imports
-const { ipcRenderer, shell } = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer, shell } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const lobbyScreen = nodeRequire('./js/ui/lobby');
 const settingsTooltip = nodeRequire('./js/ui/settings-tooltip');

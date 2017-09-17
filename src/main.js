@@ -56,12 +56,16 @@ Other notes:
 
 
 // Imports
-const electron = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
+const {
+    app,
+    BrowserWindow,
+    ipcMain,
+    globalShortcut,
+} = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
 // The "electron" package is only allowed to be in the devDependencies section
 const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
-const { execFile } = require('child_process');
-const { fork } = require('child_process');
+const { execFile, fork } = require('child_process');
 const fs = require('fs-extra');
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -69,15 +73,7 @@ const tracer = require('tracer');
 const Raven = require('raven');
 const teeny = require('teeny-conf');
 const opn = require('opn');
-
-const { app } = electron;
-const { BrowserWindow } = electron;
-const { ipcMain } = electron;
-const { globalShortcut } = electron;
-
-// Constants
-const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
-const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+const globals = require('./js/globals.js');
 
 // Global variables
 let mainWindow;
@@ -352,9 +348,9 @@ app.on('before-quit', () => {
         }
         for (let i = 1; i <= 3; i++) {
             // Find the location of the file
-            let saveDat = path.join(modsPath, modNameDev, `save${i}.dat`);
+            let saveDat = path.join(modsPath, globals.modNameDev, `save${i}.dat`);
             if (!fs.existsSync(saveDat)) {
-                saveDat = path.join(modsPath, modName, `save${i}.dat`);
+                saveDat = path.join(modsPath, globals.modName, `save${i}.dat`);
             }
 
             // Read it and set all non-speedrun order variables to defaults
