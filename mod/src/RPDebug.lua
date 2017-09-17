@@ -71,13 +71,22 @@ function RPDebug:Main()
       Isaac.DebugString("  " .. k .. ": " .. tostring(v))
     end
   end
+  Isaac.DebugString("sprites: ")
+  for k, v in pairs(RPSprites.sprites) do
+    for k2, v2 in pairs(v) do
+      if k2 == "spriteName" and v2 ~= 0 then
+        Isaac.DebugString("  " .. k .. ":")
+        Isaac.DebugString("    " .. k2 .. ": " .. tostring(v2))
+      end
+    end
+  end
 
   --
   -- Test stuff
   --
 
   --RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
-  RPGlobals.raceVars.finished = true
+  --RPGlobals.raceVars.finished = true
 
   --
   -- End test stuff

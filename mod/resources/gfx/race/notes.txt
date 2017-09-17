@@ -6,6 +6,7 @@ Graphic notes:
 - color 2: #3c3c00 (default)
 - color 3: #ffffff (default)
 - font size 21
+- Font: Balls on the Rampage
 
 
 "Type" race image:

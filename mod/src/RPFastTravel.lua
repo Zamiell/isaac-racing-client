@@ -30,89 +30,57 @@ RPFastTravel.sprites = {}
 function RPFastTravel:ReplaceTrapdoor(entity, i)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
+  local room = game:GetRoom()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local room = game:GetRoom()
   local roomType = room:GetType()
-  local player = game:GetPlayer(0)
-  local challenge = Isaac.GetChallenge()
 
-  if (stage == LevelStage.STAGE4_2 or -- 8
-      stage == LevelStage.STAGE4_3) and -- 9
-     roomType == RoomType.ROOM_BOSS and -- 5
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     (RPGlobals.race.goal == "Everything" or
-      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) then -- 328
-
-    -- Delete the Womb 2 trapdoor and don't replace it if we have the Polaroid
-    -- (also check for The Negative, since we might have both under certain conditions)
+  -- Delete the "natural" trapdoor that spawns one frame after It Lives! (or Hush) is killed
+  -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
+  if gameFrameCount == RPGlobals.run.itLivesKillFrame + 1 then
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-    Isaac.DebugString("Deleted the trapdoor since we are not going in that direction.")
+    Isaac.DebugString("Deleted the natural trapdoor after It Lives! (or Hush).")
     return
+  end
 
-  elseif stage == LevelStage.STAGE4_2 and -- 8
-         roomType == RoomType.ROOM_ERROR and -- 3
-         RPGlobals.race.goal == "Everything" then
+  -- Prevent players from skipping a floor by using Undefined on W2 on the "Everything" race goal
+  if stage == LevelStage.STAGE4_2 and -- 8
+     roomType == RoomType.ROOM_ERROR and -- 3
+     RPGlobals.race.goal == "Everything" then
 
-    -- Prevent players from skipping a floor by using Undefined on W2 on the "Everything" race goal
     RPFastTravel:ReplaceHeavenDoor(entity)
     Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
     return
   end
 
-  -- Find out whether we should move the trapdoor from where it spawned
-  local position = entity.Position
-  if (((stage == LevelStage.STAGE4_2 and -- 8
-        entity.Position.X == 280 and -- If it spawned in the vanilla location on Womb 2
-        entity.Position.Y == 280) or
-       (stage == LevelStage.STAGE4_3 and -- 9
-        entity.Position.X == 560 and -- Or if it spawned in the vanilla location on Blue Womb
-        entity.Position.Y == 280)) and
-      roomType == RoomType.ROOM_BOSS and -- 5
-      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
-       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
-      (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
-       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false)) or -- 328
-     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-      roomType == RoomType.ROOM_BOSS and -- 5
-      stage == LevelStage.STAGE4_2) then -- 8
-
-    -- Since we deleted the beam of light, the trapdoor will look off-center on Womb 2 / Blue Womb,
-    -- so move the trapdoor to the center of the room
-    -- (we can't modify entity.Position for some reason, so we have to make a new position variable)
-    position = room:GetCenterPos()
-    if stage == LevelStage.STAGE4_3 then -- 9
-      -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
-      position.Y = entity.Position.Y
-    end
-  end
-
   -- Spawn a custom entity to emulate the original
   local trapdoor
-  local type = 0
+  local type
   if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     type = 2
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
-                          position, Vector(0, 0), nil, 0, 0)
+                          entity.Position, Vector(0, 0), nil, 0, 0)
 
   elseif stage == LevelStage.STAGE3_2 or -- 6
-     stage == LevelStage.STAGE4_1 then -- 7
+         stage == LevelStage.STAGE4_1 then -- 7
 
     type = 1
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
-                          position, Vector(0, 0), nil, 0, 0)
+                          entity.Position, Vector(0, 0), nil, 0, 0)
+
   else
+    type = 0
     trapdoor = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                           Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                          position, Vector(0, 0), nil, 0, 0)
+                          entity.Position, Vector(0, 0), nil, 0, 0)
   end
   trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
@@ -120,7 +88,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   -- so we need to keep track of it for the remainder of the floor
   RPGlobals.run.replacedTrapdoors[#RPGlobals.run.replacedTrapdoors + 1] = {
     room = roomIndex,
-    pos  = position,
+    pos  = entity.Position,
   }
 
   -- Always spawn the trapdoor closed, unless it is after Satan in Sheol
@@ -131,7 +99,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   end
 
   -- Log it
-  local debugString = "Replaced "
+  local debugString = "Replaced a "
   if type == 2 then
     debugString = debugString .. "blue womb "
   elseif type == 1 then
@@ -155,84 +123,38 @@ end
 function RPFastTravel:ReplaceHeavenDoor(entity)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
-  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
   local room = game:GetRoom()
-  local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
-  local player = game:GetPlayer(0)
-  local challenge = Isaac.GetChallenge()
 
-  -- Delete the beam of light after It Lives / Hush and don't replace it if we have The Negative
-  -- (also check for The Polaroid, since we might have both under certain conditions)
-  if (stage == LevelStage.STAGE4_2 or -- 8
-      stage == LevelStage.STAGE4_3) and -- 9
-     roomType == RoomType.ROOM_BOSS and -- 5
-     RPGlobals.race.goal ~= "Everything" and
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false and -- 327
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
+  -- Delete the "natural" beam of light that spawns one frame after It Lives! (or Hush) is killed
+  -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
+  if gameFrameCount == RPGlobals.run.itLivesKillFrame + 1 then
     entity:Remove()
-    Isaac.DebugString("Deleted the beam of light since we are not going in that direction.")
+    Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
     return
-  end
-
-  -- Delete the beam of light after It Lives / Hush and spawn a trapdoor if this is a custom speedrun to the Dark Room
-  if (stage == LevelStage.STAGE4_2 or -- 8
-      stage == LevelStage.STAGE4_3) and -- 9
-     roomType == RoomType.ROOM_BOSS and -- 5
-     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-
-    entity:Remove()
-    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, room:GetCenterPos(), true) -- 17
-    Isaac.DebugString("Spawned a trap door since this is a custom speedrun to the Dark Room.")
-    return
-  end
-
-  -- Find out whether we should move the trapdoor from where it spawned
-  local position = entity.Position
-  if ((stage == LevelStage.STAGE4_2 and -- 8
-       entity.Position.X == 360 and -- If it spawned in the vanilla location on Womb 2
-       entity.Position.Y == 280) or
-      (stage == LevelStage.STAGE4_3 and -- 9
-       entity.Position.X == 640 and -- Or if it spawned in the vanilla location on Blue Womb
-       entity.Position.Y == 280)) and
-     roomType == RoomType.ROOM_BOSS and -- 5
-     (RPGlobals.race.goal == "Everything" or
-      ((player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) or -- 327
-        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)) and -- 328
-       (player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) == false or -- 327
-        player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) == false))) then -- 328
-
-    -- Since we deleted the trapdoor, the beam of light will look off-center on Womb 2 / Blue Womb,
-    -- so move the beam of light to the center of the room
-    -- (we can't modify entity.Position for some reason, so we have to make a new position variable)
-    position = room:GetCenterPos()
-    if stage == LevelStage.STAGE4_3 then -- 9
-      -- It looks weird if we move it to the center on the Blue Womb; just make it aligned horizontally instead
-      position.Y = entity.Position.Y
-    end
   end
 
   -- Spawn a custom entity to emulate the original
   local heaven = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                            position, Vector(0,0), nil, 0, roomSeed)
+                            entity.Position, Vector(0,0), nil, 0, roomSeed)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
   RPGlobals.run.replacedHeavenDoors[#RPGlobals.run.replacedHeavenDoors + 1] = {
     room = roomIndex,
-    pos  = position,
+    pos  = entity.Position,
   }
 
   -- Log it
-  Isaac.DebugString("Replaced beam of light in room " .. tostring(roomIndex) .. " at (" ..
+  Isaac.DebugString("Replaced a beam of light in room " .. tostring(roomIndex) .. " at (" ..
                     tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
 
   -- Remove the original entity

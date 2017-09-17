@@ -43,6 +43,8 @@ function RPPostGameStarted:Main(saveState)
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
 
+  RPPostGameStarted:CheckCorruptMod()
+
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
     RPGlobals.run.currentFloor = stage
@@ -139,6 +141,12 @@ function RPPostGameStarted:Main(saveState)
   RPSoulJar.sprites = {}
   RPSpeedrun.sprites = {}
   RPTimer.sprites = {}
+  if RPGlobals.corrupted then
+    -- We want to check for corruption at the beginning of the MC_POST_GAME_STARTED callback,
+    -- but we have to initialize the sprite after the sprite table is reset
+    RPSprites:Init("corrupt1", "corrupt1")
+    RPSprites:Init("corrupt2", "corrupt2")
+  end
 
   -- Keep track of whether this is a diversity race or not
   RPPostGameStarted.diversity = false
@@ -166,6 +174,24 @@ function RPPostGameStarted:Main(saveState)
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPPostNewLevel:NewLevel()
+end
+
+function RPPostGameStarted:CheckCorruptMod()
+  -- If Racing+ is turned on from the mod menu and then the user immediately tries to play,
+  -- it won't work properly; some things like boss cutscenes will still be enabled
+  -- In order to fix this, the game needs to be completely restarted
+  -- One way to detect this corrupted state is to get how many frames there are
+  -- in the currently loaded boss cutscene animation file (located at "gfx/ui/boss/versusscreen.anm2")
+  -- Racing+ removes boss cutscenes, so this value should be 0
+  local sprite = Sprite()
+  sprite:Load("gfx/ui/boss/versusscreen.anm2", true)
+  sprite:SetFrame("Scene", 0)
+  sprite:SetLastFrame()
+  local lastFrame = sprite:GetFrame()
+  if lastFrame ~= 0 then
+    Isaac.DebugString("Corrupted Racing+ instantiation detected.")
+    RPGlobals.corrupted = true
+  end
 end
 
 -- This is done when a run is started

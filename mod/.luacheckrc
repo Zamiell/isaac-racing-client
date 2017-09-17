@@ -2,6 +2,7 @@ unused_args = false
 
 -- These are from the "enums.lua" file in the "scripts" subdirectory
 globals = {
+    "BombVariant",
     "ButtonAction",
     "CacheFlag",
     "Card",

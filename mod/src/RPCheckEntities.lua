@@ -444,7 +444,7 @@ function RPCheckEntities:Entity5(pickup)
   end
 end
 
--- Collectible (5.100)
+-- PickupVariant.PICKUP_COLLECTIBLE (5.100)
 function RPCheckEntities:Entity5_100(pickup)
   -- Local variables
   local game = Game()
@@ -528,33 +528,34 @@ end
 
 -- EntityType.ENTITY_THE_HAUNT (260)
 function RPCheckEntities:Entity260(npc)
-  if npc.Variant ~= 10 or
-     npc.Parent ~= nil then
+  -- We only care about Lil' Haunts (260.10)
+  if npc.Variant ~= 10 then
+    return
+  end
+
+  -- We don't care about Lil' Haunts that are attached to a Haunt
+  -- (but make an exception for ones that we manually detached)
+  local index = GetPtrHash(npc)
+  if npc.Parent ~= nil and
+     RPGlobals.run.currentLilHaunts[index] == nil then
 
     return
   end
 
-  -- Lil' Haunts (260.10)
-  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-  if RPGlobals.run.currentLilHaunts[npc.Index] == nil then
-    -- Add their position to the table so that we can keep track of it on future frames
-    RPGlobals.run.currentLilHaunts[npc.Index] = {
+  -- Add their position to the table so that we can track them
+  if RPGlobals.run.currentLilHaunts[index] == nil then
+    -- We can't put this in the MC_POST_NPC_INIT callback because the position is always equal to (0, 0) there
+    RPGlobals.run.currentLilHaunts[index] = {
       pos = npc.Position,
     }
+    Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table.")
   end
 
-  if npc.FrameCount == 4 then
-    -- Get rid of the Lil' Haunt invulnerability frames
-    npc.State = 4 -- Changing the NPC's state triggers the invulnerability removal in the next frame
-    npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-    -- Tears will pass through Lil' Haunts when they first spawn, so fix that
-    npc.Visible = true -- If we don't do this, they will be invisible after being spawned by a Haunt
+  -- Lock newly spawned Lil' Haunts in place so that they don't immediately rush the player
+  if npc.State == NpcState.STATE_MOVE and -- 4
+     npc.FrameCount <= 16 then
 
-  elseif npc.FrameCount >= 5 and
-         npc.FrameCount <= 16 then
-
-    -- Lock Lil' Haunts that are in the "warmup" animation
-    npc.Position = RPGlobals.run.currentLilHaunts[npc.Index].pos
+    npc.Position = RPGlobals.run.currentLilHaunts[index].pos
     npc.Velocity = Vector(0, 0)
   end
 end
@@ -732,6 +733,23 @@ function RPCheckEntities:ReplacePedestal(entity)
       -- This is a naturally spawned Krampus item
       entity:Remove()
       Isaac.DebugString("Removed a naturally spawned Krampus item.")
+      return
+    end
+  end
+
+  -- Check to see if this is a natural Key Piece 1 or Key Piece 2
+  -- (we want to remove it because we spawn key pieces manually to speed it up)
+  if entity.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
+     entity.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_2 then -- 239
+
+    if RPGlobals.run.spawningKeyPiece then
+      -- This is a manually spawned key piece with a seed of 0,
+      -- so proceed with the replacement and change the flag to false
+      RPGlobals.run.spawningKeyPiece = false
+    else
+      -- This is a naturally spawned Key Piece
+      entity:Remove()
+      Isaac.DebugString("Removed a naturally spawned Key Piece.")
       return
     end
   end

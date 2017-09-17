@@ -6,6 +6,7 @@ local RPPostPickupSelection = {}
 
 local RPGlobals = require("src/rpglobals")
 
+-- ModCallbacks.MC_POST_PICKUP_SELECTION (37)
 function RPPostPickupSelection:Main(pickup, variant, subType)
   -- Local variables
   local game = Game()
@@ -29,7 +30,7 @@ function RPPostPickupSelection:Main(pickup, variant, subType)
                     tostring(EntityType.ENTITY_PICKUP) .. "." .. tostring(variant) .. "." .. tostring(subType))
   --]]
 
-  -- We don't want to mess with pedestals that we explicitly spawned with Lua
+  -- We don't want to mess with pedestals that we explicitly spawned with Lua in the "RPPostEntityKill:NPC45()" function
   if RPGlobals.run.spawningPhoto then
     RPGlobals.run.spawningPhoto = false
     Isaac.DebugString("Reset the \"spawningPhoto\" variable.")

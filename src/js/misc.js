@@ -4,7 +4,7 @@
 
 // Imports
 const path = nodeRequire('path');
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer } = nodeRequire('electron');
 const fs = nodeRequire('fs-extra');
 const globals = nodeRequire('./js/globals');
 const settings = nodeRequire('./js/settings');

@@ -44,22 +44,13 @@ end
 function RPPostNewRoom:NewRoom()
   -- Local variables
   local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = level:GetCurrentRoomIndex()
-  end
   local room = game:GetRoom()
-  local roomType = room:GetType()
   local roomClear = room:IsClear()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local activeCharge = player:GetActiveCharge()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
-  local challenge = Isaac.GetChallenge()
-  local sfx = SFXManager()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
 
@@ -102,55 +93,11 @@ function RPPostNewRoom:NewRoom()
   RPFastClear.roomInitializing = false
   -- (this is set to true when the room frame count is -1 and set to false here, where the frame count is 0)
 
-  -- Check to see if we are entering the Mega Satan room
-  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-    -- Emulate reaching a new floor, using a custom floor number of 13 (The Void is 12)
-    Isaac.DebugString('Entered the Mega Satan room.')
-
-    -- Check to see if we are cheating on the "Everything" race goal
-    if RPGlobals.race.goal == "Everything" and RPGlobals.run.killedLamb == false then
-      -- Do a little something fun
-      sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
-      for i = 1, 20 do
-        local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
-        -- Use a value of 50 to spawn them far from the player
-        local monstro = game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
-        monstro.MaxHitPoints = 1000000
-        monstro.HitPoints = 1000000
-      end
-    end
-  end
-
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
   SamaelMod:CheckHairpin()
 
   -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
   RPFastTravel:CheckRoomRespawn()
-
-  -- Check to see if we need to respawn a trophy
-  if stage == 11 and
-     roomType == RoomType.ROOM_BOSS and -- 5
-     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
-     -- The Mega Satan room counts as a boss room, and we don't want to respawn any trophies there
-     roomClear and
-     RPGlobals.raceVars.finished == false and
-     (RPGlobals.race.status == "in progress" or
-      challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-      challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)")) and
-     RPGlobals.race.goal ~= "Mega Satan" and
-     RPGlobals.race.goal ~= "Everything" and
-     -- We don't want to respawn any trophies if the player is supposed to kill Mega Satan
-     -- (Mega Satan is also killed in the "Everything" race goal)
-     RPSpeedrun.finished == false and -- Don't respawn the trophy if the player just finished a R+9/14 speedrun
-     RPSpeedrun.spawnedCheckpoint == false then
-     -- Don't respawn the trophy if the player is in the middle of a R+9/14 speedrun
-
-    game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-               room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Respawned the end of race trophy.")
-  end
 
   -- Check if we are just arriving on a new floor
   RPFastTravel:CheckTrapdoor2()
@@ -178,11 +125,15 @@ function RPPostNewRoom:NewRoom()
     RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
   end
 
-  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
-  RPPostNewRoom:CheckSubvertTeleport()
-
   -- Check for the Satan room
   RPPostNewRoom:CheckSatanRoom()
+
+  -- Check to see if we are entering the Mega Satan room so we can update the floor tracker and
+  -- prevent cheating on the "Everything" race goal
+  RPPostNewRoom:CheckMegaSatanRoom()
+
+  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
+  RPPostNewRoom:CheckSubvertTeleport()
 
   -- Check for all of the Scolex boss rooms
   RPPostNewRoom:CheckScolexRoom()
@@ -191,13 +142,87 @@ function RPPostNewRoom:NewRoom()
   RPPostNewRoom:CheckDepthsPuzzle()
 
   -- Check for double Sloths / Super Sloths / Pride / Super Prides
-  RPPostNewRoom:CheckSlothPride()
-
   -- Check for Doples / Evil Twins
-  RPPostNewRoom:CheckDoples()
+  -- Check for Haunts
+  RPPostNewRoom:CheckEntities()
+
+  -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
+  RPPostNewRoom:CheckRespawnTrophy()
 
   -- Do race related stuff
   RPPostNewRoom:Race()
+end
+
+-- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)
+function RPPostNewRoom:CheckSatanRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local room = game:GetRoom()
+  local roomClear = room:IsClear()
+
+  if roomClear then
+    return
+  end
+
+  if roomStageID ~= 0 or roomVariant ~= 3600 then -- Satan
+    return
+  end
+
+  game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
+             RPGlobals:GridToPos(5, 3), Vector(0, 0), nil, 0, 0)
+  game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
+             RPGlobals:GridToPos(7, 3), Vector(0, 0), nil, 0, 0)
+  game:Spawn(EntityType.ENTITY_FALLEN, 0, -- 81.0 (The Fallen)
+             RPGlobals:GridToPos(6, 3), Vector(0, 0), nil, 0, 0)
+
+  -- Prime the statue to wake up quicker
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_SATAN then -- 84
+      entity:ToNPC().I1 = 1
+    end
+  end
+
+  Isaac.DebugString("Spawned the first wave manually and primed the statue.")
+end
+
+-- Check to see if we are entering the Mega Satan room so we can update the floor tracker and
+-- prevent cheating on the "Everything" race goal
+function RPPostNewRoom:CheckMegaSatanRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local player = game:GetPlayer(0)
+  local sfx = SFXManager()
+
+  -- Check to see if we are entering the Mega Satan room
+  if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+    return
+  end
+
+  -- Emulate reaching a new floor, using a custom floor number of 13 (The Void is 12)
+  Isaac.DebugString('Entered the Mega Satan room.')
+
+  -- Check to see if we are cheating on the "Everything" race goal
+  if RPGlobals.race.goal == "Everything" and RPGlobals.run.killedLamb == false then
+    -- Do a little something fun
+    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
+    for i = 1, 20 do
+      local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
+      -- Use a value of 50 to spawn them far from the player
+      local monstro = game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
+      monstro.MaxHitPoints = 1000000
+      monstro.HitPoints = 1000000
+    end
+  end
 end
 
 -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
@@ -238,9 +263,9 @@ function RPPostNewRoom:CheckSubvertTeleport()
      (roomStageID == 0 and roomVariant == 1093) or
      (roomStageID == 0 and roomVariant == 1094) or
      (roomStageID == 17 and roomVariant == 18) or -- Gurdy (The Chest)
-     (roomStageID == 17 and roomVariant == 1018) or -- Gurdy (The Chest) (mirrored)
-     (roomStageID == 17 and roomVariant == 2018) or -- Gurdy (The Chest) (mirrored)
-     (roomStageID == 17 and roomVariant == 3018) then -- Gurdy (The Chest) (mirrored)
+     (roomStageID == 17 and roomVariant == 1018) or -- Gurdy (The Chest) (flipped)
+     (roomStageID == 17 and roomVariant == 2018) or -- Gurdy (The Chest) (flipped)
+     (roomStageID == 17 and roomVariant == 3018) then -- Gurdy (The Chest) (flipped)
 
     -- Make the player invisible or else it will show them on the teleported position for 1 frame
     -- (we can't just move the player here because the teleport occurs after this callback finishes)
@@ -248,39 +273,6 @@ function RPPostNewRoom:CheckSubvertTeleport()
     RPGlobals.run.teleportSubvertScale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
     -- (we actually move the player on the next PostRender frame)
-  end
-end
-
-function RPPostNewRoom:CheckSatanRoom()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local roomDesc = level:GetCurrentRoomDesc()
-  local roomStageID = roomDesc.Data.StageID
-  local roomVariant = roomDesc.Data.Variant
-  local room = game:GetRoom()
-  local roomClear = room:IsClear()
-
-  if roomClear == false and
-     roomStageID == 0 and roomVariant == 3600 then -- Satan
-
-    -- Instantly spawn the first part of the fight
-    -- (the vanilla delay is very annoying)
-    game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-               RPGlobals:GridToPos(5, 3), Vector(0, 0), nil, 0, 0)
-    game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-               RPGlobals:GridToPos(7, 3), Vector(0, 0), nil, 0, 0)
-    game:Spawn(EntityType.ENTITY_FALLEN, 0, -- 81.0 (The Fallen)
-               RPGlobals:GridToPos(6, 3), Vector(0, 0), nil, 0, 0)
-
-    -- Prime the statue to wake up quicker
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_SATAN then -- 84
-        entity:ToNPC().I1 = 1
-      end
-    end
-
-    Isaac.DebugString("Spawned the first wave manually and primed the statue.")
   end
 end
 
@@ -307,6 +299,7 @@ function RPPostNewRoom:CheckScolexRoom()
   end
 
   -- Don't do anything if we are not in one of the Scolex boss rooms
+  -- (there are no Double Trouble rooms with Scolexes)
   if roomVariant ~= 1070 and
      roomVariant ~= 1071 and
      roomVariant ~= 1072 and
@@ -384,7 +377,11 @@ function RPPostNewRoom:CheckDepthsPuzzle()
     return
   end
 
-  if roomVariant ~= 41 and roomVariant ~= 10041 and roomVariant ~= 20041 and roomVariant ~= 30041 then
+  if roomVariant ~= 41 and
+     roomVariant ~= 10041 and -- (flipped)
+     roomVariant ~= 20041 and -- (flipped)
+     roomVariant ~= 30041 then -- (flipped)
+
     return
   end
 
@@ -410,53 +407,126 @@ function RPPostNewRoom:CheckDepthsPuzzle()
   end
 end
 
--- Check for more than one Sloth / Super Sloth / Pride / Super Prides
--- (we want the card drop to always be the same; in vanilla it will depend on the order you kill them in)
-function RPPostNewRoom:CheckSlothPride()
+-- We want to only loop through all of the entities in the room once to maximize performance
+function RPPostNewRoom:CheckEntities()
   -- Local variables
   local game = Game()
-  local level = game:GetLevel()
-  local roomDesc = level:GetCurrentRoomDesc()
-  local roomStageID = roomDesc.Data.StageID
-  local roomVariant = roomDesc.Data.Variant
+  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
-  if (roomStageID == 10 and roomVariant == 120) or -- Womb (Double Sloth)
-     (roomStageID == 11 and roomVariant == 120) or -- Utero (Double Sloth)
-     (roomStageID == 14 and roomVariant == 63) or -- Sheol (Double Sloth)
-     (roomStageID == 14 and roomVariant == 64) or -- Sheol (Double Sloth)
-     (roomStageID == 15 and roomVariant == 63) or -- Cathedral (Double Sloth)
-     (roomStageID == 15 and roomVariant == 64) or -- Cathedral (Double Sloth)
-     (roomStageID == 15 and roomVariant == 111) or -- Cathedral (Double Pride)
-     (roomStageID == 15 and roomVariant == 133) or -- Cathedral (Quadruple Pride)
-     (roomStageID == 16 and roomVariant == 30) or -- Dark Room (Triple Super Sloth)
-     (roomStageID == 16 and roomVariant == 73) or -- Dark Room (Double Sloth + Double Super Sloth)
-     (roomStageID == 17 and roomVariant == 8) then -- The Chest (Double Super Sloth)
-
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
-         entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
-
-        -- Replace it with a new one that has an InitSeed equal to the room
-        game:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity,
-                   entity.Parent, entity.SubType, roomSeed)
-
-        -- Delete the old one
-        entity:Remove()
-      end
-    end
-  end
-end
-
-function RPPostNewRoom:CheckDoples()
+  local hauntCount = 0
+  local blackChampionHaunt = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_DOPLE then -- 53
+    if entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
+       entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
+
+      -- Replace all Sloths / Super Sloths / Prides / Super Prides with a new one that has an InitSeed equal to the room
+      -- (we want the card drop to always be the same if there happens to be more than one in the room;
+      -- in vanilla the type of card that drops depends on the order you kill them in)
+      game:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity, entity.Parent, entity.SubType, roomSeed)
+      entity:Remove()
+
+    elseif entity.Type == EntityType.ENTITY_DOPLE then -- 53
       -- The "RPCheckEntities:Entity9" function will need this variable
       -- in order to know when to delete Dople projectiles
       RPGlobals.run.dopleRoom = true
+
+    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 0 then -- Haunt (260.0)
+      hauntCount = hauntCount + 1
+      Isaac.DebugString("Found a Haunt; count is now at: " .. tostring(hauntCount))
+
+      -- We also need to check for the black champion version of The Haunt,
+      -- since both of his Lil' Haunts should detach at the same time
+      if entity:ToNPC():GetBossColorIdx() == 17 then
+        blackChampionHaunt = true
+      end
     end
   end
+
+  -- Speed up the first Lil' Haunt attached to a Haunt (1/3)
+  -- (we mark to detach it one frame from now since the Lil' Haunts are not currently spawned)
+  -- (we only want to do this if there is one Haunt in the room because otherwise it gets confusing to code)
+  if hauntCount == 1 then
+    RPGlobals.run.speedLilHauntsFrame = gameFrameCount + 1
+    RPGlobals.run.speedLilHauntsBlack = blackChampionHaunt
+    Isaac.DebugString("Marking to detach the first Lil' Haunt on frame: " .. tostring(gameFrameCount))
+    -- Later on this frame, the Lil' Haunt will spawn and will be altered in the "RPPostNPCInit:Main()" function
+  end
+end
+
+-- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
+function RPPostNewRoom:CheckRespawnTrophy()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local stage = level:GetStage()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local roomType = room:GetType()
+  local roomClear = room:IsClear()
+  local challenge = Isaac.GetChallenge()
+
+  -- There are only trophies on The Chest or the Dark Room
+  if stage ~= 11 then
+    return
+  end
+
+  -- If the room is not clear, we couldn't have already finished the race/speedrun
+  if roomClear == false then
+    return
+  end
+
+  -- All races finish in some sort of boss room
+  if roomType ~= RoomType.ROOM_BOSS then -- 5
+    return
+  end
+
+  -- From here on out, handle custom speedrun challenges and races separately
+  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)")) then
+
+    -- All of the custom speedrun challenges end in with Blue Baby or The Lamb
+    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+      return
+    end
+
+     -- Don't respawn the trophy if the player just finished a R+9/14 speedrun
+    if RPSpeedrun.finished then
+      return
+    end
+
+    -- Don't respawn the trophy if the player is in the middle of a R+9/14 speedrun
+    if RPSpeedrun.spawnedCheckpoint then
+      return
+    end
+
+  elseif RPGlobals.raceVars.finished == false and
+         RPGlobals.race.status == "in progress" then
+
+    -- We are in a non-finished race, which could end at either Blue Baby, The Lamb, or Mega Satan
+    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX and
+       RPGlobals.race.goal ~= "Mega Satan" and
+       RPGlobals.race.goal ~= "Everything" then
+
+      return
+    end
+
+  else
+    -- We are not in a custom speedrun challenge and not in a race
+    return
+  end
+
+  -- We are re-entering a boss room after we have already spawned the trophy (which is a custom entity),
+  -- so we need to respawn it
+  game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+             room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+  Isaac.DebugString("Respawned the end of race trophy.")
 end
 
 function RPPostNewRoom:Race()

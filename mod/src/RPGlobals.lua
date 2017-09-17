@@ -4,9 +4,10 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.10.7"
+RPGlobals.version = "v0.11.0"
+RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
--- These are per run
+-- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
 RPGlobals.run = {}
 
@@ -163,7 +164,11 @@ function RPGlobals:InitRun()
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
   RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
   RPGlobals.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
+  RPGlobals.run.spawningKeyPiece     = false -- Used for spawning Key Piece 1 or Key Piece 2 early
   RPGlobals.run.mysteryGiftFrame     = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
+  RPGlobals.run.itLivesKillFrame     = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
+  RPGlobals.run.speedLilHauntsFrame  = 0 -- Used to speed up The Haunt fight (1/2)
+  RPGlobals.run.speedLilHauntsBlack  = false -- Used to speed up The Haunt fight (2/2)
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

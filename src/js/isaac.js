@@ -3,7 +3,7 @@
 */
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 

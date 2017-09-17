@@ -3,9 +3,7 @@
 */
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
-const remote = nodeRequire('electron').remote;
-const shell = nodeRequire('electron').shell;
+const { ipcRenderer, remote, shell } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const settings = nodeRequire('./js/settings');
 

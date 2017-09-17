@@ -84,8 +84,8 @@ Bugs to fix (low priority):
 
 // Import NPM packages
 const path = nodeRequire('path');
-const execSync = nodeRequire('child_process').execSync;
-const remote = nodeRequire('electron').remote;
+const { execSync } = nodeRequire('child_process');
+const { remote } = nodeRequire('electron');
 const isDev = nodeRequire('electron-is-dev');
 const fs = nodeRequire('fs-extra');
 const tracer = nodeRequire('tracer');

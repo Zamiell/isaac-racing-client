@@ -3,7 +3,7 @@
 */
 
 // Imports
-const remote = nodeRequire('electron').remote;
+const { remote } = nodeRequire('electron');
 const fs = nodeRequire('fs-extra');
 const path = nodeRequire('path');
 const globals = nodeRequire('./js/globals');
@@ -120,7 +120,7 @@ $(document).ready(() => {
         }
     });
 
-    $('#settings-form').submit(() => {
+    $('#settings-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
 

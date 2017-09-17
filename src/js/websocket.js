@@ -3,7 +3,7 @@
 */
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer } = nodeRequire('electron');
 const isDev = nodeRequire('electron-is-dev');
 const golem = nodeRequire('./js/lib/golem');
 const globals = nodeRequire('./js/globals');
@@ -533,7 +533,7 @@ exports.init = (username, password, remember) => {
         } else {
             // Check to see if this person was the captain, and if so, make the next person in line the captain
             if (race.captain === data.name) {
-                race.captain = race.racers[0];
+                [race.captain] = race.racers;
             }
 
             // Update the row for this race in the lobby

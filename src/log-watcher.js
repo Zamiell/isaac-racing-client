@@ -62,12 +62,12 @@ process.on('message', (message) => {
         } else if (prev.size < curr.size) {
             // Case 2 - The log file has grown, so only read the new bytes
             const differential = curr.size - prev.size;
-            const buffer = new Buffer(differential);
+            const buffer = Buffer.alloc(differential);
             fs.read(fd, buffer, 0, differential, prev.size, logReadCallback);
         } else {
             // Case 3 - The log file has been truncated, so read everything
             // (this occurs whenever the game is restarted)
-            const buffer = new Buffer(curr.size);
+            const buffer = Buffer.alloc(curr.size);
             fs.read(fd, buffer, 0, curr.size, 0, logReadCallback);
         }
     });

@@ -3,7 +3,7 @@
 */
 
 // Imports
-const ipcRenderer = nodeRequire('electron').ipcRenderer;
+const { ipcRenderer } = nodeRequire('electron');
 const isDev = nodeRequire('electron-is-dev');
 const linkifyHTML = nodeRequire('linkifyjs/html');
 const globals = nodeRequire('./js/globals');
@@ -55,8 +55,7 @@ exports.send = (destination) => {
             // Validate that private messages have a recipient
             const m = message.match(/^\/\w+ (.+?) (.+)/);
             if (m) {
-                PMrecipient = m[1];
-                PMmessage = m[2];
+                [, PMrecipient, PMmessage] = m;
             } else {
                 // Open the error tooltip
                 // TODO
@@ -86,7 +85,7 @@ exports.send = (destination) => {
             // Validate that there is an attached message
             const m = message.match(/^\/\w+ (.+)/);
             if (m) {
-                noticeMessage = m[1];
+                [, noticeMessage] = m;
                 globals.log.info('lol noticeMessage:', noticeMessage);
             } else {
                 // Open the error tooltip
@@ -107,7 +106,7 @@ exports.send = (destination) => {
             const m = message.match(/^\/r (.+)/);
             if (m) {
                 PMrecipient = globals.lastPM;
-                PMmessage = m[1];
+                [, PMmessage] = m;
             } else {
                 misc.warningShow('The format of a reply is: <code>/r [message]</code>');
                 return;

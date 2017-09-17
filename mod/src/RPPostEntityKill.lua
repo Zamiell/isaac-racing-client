@@ -4,7 +4,8 @@ local RPPostEntityKill = {}
 -- Includes
 --
 
-local RPGlobals = require("src/rpglobals")
+local RPGlobals  = require("src/rpglobals")
+local RPSpeedrun = require("src/rpspeedrun")
 
 --
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
@@ -32,72 +33,78 @@ function RPPostEntityKill:NPC45(npc)
   local posCenterRight = Vector(360, 360)
 
   -- Figure out if we need to spawn either The Polaroid, The Negative, or both
-  local photoSituation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
-  if player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
-    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
-    -- so since it is impossible to determine their actual photo status,
-    -- just give the player a choice between the photos
-    photoSituation = 3
+  local situation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
+  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
 
-  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-    -- The player has both photos already (this can only occur in a diversity race)
-    -- So, spawn a random boss item instead of a photo
-    photoSituation = 4
-
-  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-    -- The player has The Polaroid already (this can only occur in a diversity race)
-    -- So, spawn The Negative instead
-    photoSituation = 2
-
-  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-    -- The player has The Negative already (this can only occur in a diversity race)
-    -- So, spawn The Polaroid instead
-    photoSituation = 1
+    -- Season 1 speedrun challenges always go to The Chest
+    situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
          challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
 
-    -- Give the player a choice between the photos on the season 2 speedrun challenge
-    photoSituation = 3
+    -- Give the player a choice between the photos on the season 2 and season 3 speedrun challenges
+    situation = 3
+
+  elseif player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
+    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
+    -- so since it is impossible to determine their actual photo status,
+    -- just give the player a choice between the photos
+    situation = 3
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    -- The player has both photos already (this can only occur in a diversity race)
+    -- So, spawn a random boss item instead of a photo
+    situation = 4
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+    -- The player has The Polaroid already (this can only occur in a diversity race)
+    -- So, spawn The Negative instead
+    situation = 2
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+    -- The player has The Negative already (this can only occur in a diversity race)
+    -- So, spawn The Polaroid instead
+    situation = 1
 
   elseif RPGlobals.race.rFormat == "pageant" then
     -- Give the player a choice between the photos on the Pageant Boy ruleset
-    photoSituation = 3
+    situation = 3
 
   elseif RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb need The Negative
-    photoSituation = 2
+    situation = 2
 
   elseif RPGlobals.race.goal == "Mega Satan" or
          RPGlobals.race.goal == "Everything" then
 
     -- Give the player a choice between the photos for races to Mega Satan
-    photoSituation = 3
+    situation = 3
 
   else
     -- By default, spawn just The Polaroid
     -- (this applies to races with a goal of "Blue Baby" and all normal runs)
-    photoSituation = 1
+    situation = 1
   end
 
   -- Do the appropriate action depending on the situation
-  if photoSituation == 1 then
+  if situation == 1 then
     -- A situation of 1 means to spawn The Polaroid
     RPGlobals.run.spawningPhoto = true
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
                nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
     Isaac.DebugString("Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif photoSituation == 2 then
+  elseif situation == 2 then
     -- A situation of 2 means to spawn The Negative
     RPGlobals.run.spawningPhoto = true
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
                nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
     Isaac.DebugString("Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif photoSituation == 3 then
+  elseif situation == 3 then
     -- A situation of 3 means to spawn both The Polaroid and The Negative
     RPGlobals.run.spawningPhoto = true
     local polaroid = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
@@ -111,7 +118,7 @@ function RPPostEntityKill:NPC45(npc)
 
     Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif photoSituation == 4 then
+  elseif situation == 4 then
     -- A situation of 4 means to spawn a random boss item
     RPGlobals.run.spawningPhoto = true
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0), nil, 0, roomSeed)
@@ -122,8 +129,108 @@ function RPPostEntityKill:NPC45(npc)
 end
 
 -- EntityType.ENTITY_MOMS_HEART (78)
+-- EntityType.ENTITY_HUSH (407)
 function RPPostEntityKill:NPC78(npc)
-  RPSpeedrun:CheckItLivesDeath(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
+
+  -- Record when we killed It Lives! or Hush;
+  -- a trapdoor and/or beam of light will spawn 1 frame from now, and we will delete it in the
+  -- "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions
+  RPGlobals.run.itLivesKillFrame = gameFrameCount
+
+  -- Define positions for the trapdoor and beam of light (recorded from vanilla)
+  local posCenter = Vector(320, 280)
+  local posCenterLeft = Vector(280, 280)
+  local posCenterRight = Vector(360, 280)
+  if stage == LevelStage.STAGE4_3 then -- 9
+    -- The positions are different for the Blue Womb; they are more near the top wall
+    posCenter = Vector(600, 280)
+    posCenterLeft = Vector(560, 280)
+    posCenterRight = Vector(640, 280)
+  end
+
+  -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
+  local situation -- 1 for the beam of light, 2 for the trapdoor, 3 for both
+  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+
+    -- Season 1 speedrun challenges always go to The Chest
+    situation = 1
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+    -- Season 1 speedrun challenges always go to the Dark Room
+    situation = 2
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+    -- Season 3 speedrun challenges alternate between The Chest and the Dark Room
+    situation = RPSpeedrun.s3direction
+
+  elseif RPGlobals.race.goal == "The Lamb" then
+    -- Races to The Lamb go to the Dark Room
+    situation = 2
+
+  elseif RPGlobals.race.rFormat == "pageant" or
+         RPGlobals.race.goal == "Mega Satan" or
+         RPGlobals.race.goal == "Everything" then
+
+    -- On races to Mega Satan (and the Pageant Boy ruleset), we can potentially go in either direction
+    -- So, determine the direction by looking at the photo(s) that we collected
+    if player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
+      -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
+      -- so since it is impossible to determine their actual photo status,
+      -- just give the player a choice between the directions
+      situation = 3
+
+    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+           player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+      -- The player has both photos (this can only occur in a diversity race)
+      -- So, give the player a choice between the directions
+      situation = 3
+
+    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+      -- The player has The Polaroid, so send them to The Chest
+      situation = 1
+
+    elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+      -- The player has The Negative, so send them to the Dark Room
+      situation = 2
+
+    else
+      -- The player does not have either The Polaroid or The Negative, so give them a choice between the directions
+      situation = 3
+    end
+
+  else
+    -- By default, go to The Chest
+    -- (this applies to races with a goal of "Blue Baby" and all normal runs)
+    situation = 1
+  end
+
+  -- Do the appropriate action depending on the situation
+  if situation == 1 then
+    -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
+    -- (it will get replaced with the fast-travel version on this frame)
+    game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("It Lives! or Hush killed; situation 1.")
+
+  elseif situation == 2 then
+    -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
+    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenter, true) -- 17
+    Isaac.DebugString("It Lives! or Hush killed; situation 2.")
+
+  elseif situation == 3 then
+    -- Spawn both a trapdoor and a beam of light (they will get replaced with the fast-travel versions on this frame)
+    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
+    game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("It Lives! or Hush killed; situation 3.")
+  end
 end
 
 -- EntityType.ENTITY_FALLEN (81)
@@ -152,38 +259,71 @@ function RPPostEntityKill:NPC81(npc)
       headBanned = true
     end
   end
-  local krampusItem
+  local subType
   if coalBanned and headBanned then
     -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
-    krampusItem = 0
+    subType = 0
     Isaac.DebugString("Spawned a random item since both A Lump of Coal and Krampus' Head are banned.")
   elseif coalBanned then
     -- Switch A Lump of Coal to Krampus' Head
-    krampusItem = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+    subType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
     Isaac.DebugString("Spawned Krampus' Head since A Lump of Coal is banned.")
   elseif headBanned then
     -- Switch Krampus' Head to A Lump of Coal
-    krampusItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+    subType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
     Isaac.DebugString("Spawned A Lump of Coal since Krampus' Head is banned.")
   else
     math.randomseed(roomSeed)
-    krampusItem = math.random(1, 2)
-    if krampusItem == 1 then
-      krampusItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+    local seededChoice = math.random(1, 2)
+    if seededChoice == 1 then
+      subType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
       Isaac.DebugString("Spawned A Lump of Coal (randomly based on the room seed).")
     else
-      krampusItem = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+      subType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
       Isaac.DebugString("Spawned Krampus' Head (randomly based on the room seed).")
     end
   end
 
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  if krampusItem ~= 0 then
-    -- We have to let the "ReplacePedestal" function know that this is not a natural Krampus pedestal
+  -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
+  if subType ~= 0 then
     RPGlobals.run.spawningKrampusItem = true
   end
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0),
-             nil, krampusItem, 0)
+
+  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0), nil, subType, 0)
+end
+
+-- EntityType.ENTITY_URIEL (271)
+-- EntityType.ENTITY_GABRIEL (272)
+-- We want to manually spawn the key pieces instead of letting the game do it
+-- This slightly speeds up the spawn so that they can not be accidently deleted by leaving the room
+function RPPostEntityKill.NPC271(npc)
+  -- Local variables
+  local game = Game()
+
+  -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
+  local subType
+  if npc.Type == EntityType.ENTITY_URIEL then -- 271
+    subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
+  elseif npc.Type == EntityType.ENTITY_GABRIEL then -- 272
+    subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
+  end
+
+  -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
+  RPGlobals.run.spawningKeyPiece = true
+
+  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0), nil, subType, 0)
+end
+
+-- EntityType.ENTITY_HUSH (407)
+function RPPostEntityKill.NPC407(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  Isaac.DebugString("Killed Hush on frame: " .. tostring(gameFrameCount))
+  RPGlobals.run.itLivesKillFrame = gameFrameCount
 end
 
 return RPPostEntityKill

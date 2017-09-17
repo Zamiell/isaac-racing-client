@@ -54,7 +54,7 @@ function RPPostUpdate:Main()
     RPGlobals.run.edensSoulSet = false
   end
 
-  -- Replace the bugged Scolex champion with the non-champion version (1/2)
+  -- Replace the bugged Scolex champion with the non-champion version (2/2)
   if RPGlobals.run.replaceBuggedScolex ~= 0 and
      RPGlobals.run.replaceBuggedScolex >= gameFrameCount then
 
@@ -87,6 +87,10 @@ function RPPostUpdate:Main()
 
   -- Check all the non-grid entities in the room
   RPCheckEntities:NonGrid()
+
+  -- Check for a Haunt fight speedup
+  -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
+  RPPostUpdate:CheckHauntSpeedup()
 
   -- Check for item drop inputs (fast-drop)
   RPPostUpdate:CheckDropInput()
@@ -183,6 +187,55 @@ function RPPostUpdate:CheckKeeperHearts()
 
     -- Set the new coin count (we re-get it since it may have changed)
     RPGlobals.run.keeper.coins = player:GetNumCoins()
+  end
+end
+
+-- Check for a Haunt fight speedup
+function RPPostUpdate:CheckHauntSpeedup()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  -- Speed up the first Lil' Haunt attached to a Haunt (3/3)
+  local blackChampionHaunt = RPGlobals.run.speedLilHauntsBlack
+  if gameFrameCount ~= RPGlobals.run.speedLilHauntsFrame then
+    RPGlobals.run.speedLilHauntsFrame = 0
+    RPGlobals.run.speedLilHauntsBlack = false
+    return
+  end
+
+  -- Find all of the indexes and sort them
+  local indexes = {}
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 10 then -- Lil' Haunt (260.10)
+      indexes[#indexes + 1] = entity.Index
+    end
+  end
+  table.sort(indexes)
+
+  -- Manually detach the first Lil' Haunt
+  -- (or the first and the second Lil' Haunt, if this is a black champion Haunt)
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Index == indexes[1] or
+       (entity.Index == indexes[2] and blackChampionHaunt) then
+
+      local npc = entity:ToNPC()
+      npc.State = NpcState.STATE_MOVE -- 4
+      -- (doing this will detach them)
+
+      -- We need to manually set the color, or else the Lil' Haunt will remain faded
+      npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
+
+      -- Add them to the tracking table so that they won't immediately rush the player
+      local index = GetPtrHash(npc)
+      RPGlobals.run.currentLilHaunts[index] = {
+        pos = npc.Position,
+      }
+      Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table (special).")
+
+      Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
+                        " on frame: " .. tostring(gameFrameCount))
+    end
   end
 end
 

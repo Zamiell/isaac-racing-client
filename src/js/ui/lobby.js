@@ -3,7 +3,7 @@
 */
 
 // Imports
-const shell = nodeRequire('electron').shell;
+const { shell } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const chat = nodeRequire('./js/chat');

@@ -93,22 +93,6 @@ function RPFastClear:NPC246(npc)
   end
 end
 
--- ModCallbacks.MC_POST_NPC_INIT (27)
-function RPFastClear:PostNPCInit(npc)
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-  local index = GetPtrHash(npc)
-
-  Isaac.DebugString("MC_POST_NPC_INIT - " ..
-                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
-                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
-                    "index " .. tostring(index) .. ", " ..
-                    "frame " .. tostring(gameFrameCount))
-
-  RPFastClear:CheckNewNPC(npc)
-end
-
 function RPFastClear:CheckNewNPC(npc)
   -- Local variables
   local game = Game()

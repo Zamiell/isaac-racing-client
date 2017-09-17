@@ -61,6 +61,11 @@ function RPSprites:Init(spriteType, spriteName)
   elseif spriteType == "place2" then
     RPSprites.sprites[spriteType].sprite:Load("gfx/race/place2/" .. spriteName .. ".anm2", true)
 
+  elseif spriteType == "corrupt1" or
+         spriteType == "corrupt2" then
+
+    RPSprites.sprites[spriteType].sprite:Load("gfx/misc/" .. spriteName .. ".anm2", true)
+
   else
     RPSprites.sprites[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
@@ -74,7 +79,7 @@ function RPSprites:Display()
   -- Loop through all the sprites and render them
   for k, v in pairs(RPSprites.sprites) do
     -- Position it
-    local vec = RPSprites:GetScreenCenterPosition() -- Start the vector off in the center of the screen by default
+    local pos = RPSprites:GetScreenCenterPosition() -- Start in the center of the screen by default
 
     -- Type stuff
     local typeFormatX = 110
@@ -82,86 +87,90 @@ function RPSprites:Display()
 
     -- Position all the sprites
     if k == "top" then -- Pre-race messages and the countdown
-      vec.Y = vec.Y - 80
+      pos.Y = pos.Y - 80
     elseif k == "myStatus" then
-      vec.Y = vec.Y - 40
+      pos.Y = pos.Y - 40
     elseif k == "raceRanked" then
-      vec.X = vec.X - typeFormatX
-      vec.Y = vec.Y + typeFormatY
+      pos.X = pos.X - typeFormatX
+      pos.Y = pos.Y + typeFormatY
     elseif k == "raceRankedIcon" then
-      vec.X = vec.X - typeFormatX
-      vec.Y = vec.Y + typeFormatY + 23
+      pos.X = pos.X - typeFormatX
+      pos.Y = pos.Y + typeFormatY + 23
     elseif k == "raceFormat" then
-      vec.X = vec.X + typeFormatX
-      vec.Y = vec.Y + typeFormatY
+      pos.X = pos.X + typeFormatX
+      pos.Y = pos.Y + typeFormatY
     elseif k == "raceFormatIcon" then
-      vec.X = vec.X + typeFormatX
-      vec.Y = vec.Y + typeFormatY + 23
+      pos.X = pos.X + typeFormatX
+      pos.Y = pos.Y + typeFormatY + 23
     elseif k == "ready" then
-      vec.X = vec.X - 20
-      vec.Y = vec.Y - 15
+      pos.X = pos.X - 20
+      pos.Y = pos.Y - 15
     elseif k == "slash" then
-      vec.Y = vec.Y - 15
+      pos.Y = pos.Y - 15
     elseif k == "readyTotal" then
-      vec.X = vec.X + 20
-      vec.Y = vec.Y - 15
+      pos.X = pos.X + 20
+      pos.Y = pos.Y - 15
     elseif k == "goal" then
-      vec.X = vec.X - 25
-      vec.Y = vec.Y + 95
+      pos.X = pos.X - 25
+      pos.Y = pos.Y + 95
     elseif k == "raceGoal" then
-      vec.X = vec.X + 25
-      vec.Y = vec.Y + 95
+      pos.X = pos.X + 25
+      pos.Y = pos.Y + 95
     elseif k == "seeded-starting-item" then
-      vec.Y = vec.Y - 40
+      pos.Y = pos.Y - 40
     elseif k == "seeded-starting-build" then
-      vec.Y = vec.Y - 40
+      pos.Y = pos.Y - 40
     elseif k == "seeded-item1" then
-      vec.Y = vec.Y - 10
+      pos.Y = pos.Y - 10
     elseif k == "seeded-item2" then
-      vec.X = vec.X - 15
-      vec.Y = vec.Y - 10
+      pos.X = pos.X - 15
+      pos.Y = pos.Y - 10
     elseif k == "seeded-item3" then
-      vec.X = vec.X + 15
-      vec.Y = vec.Y - 10
+      pos.X = pos.X + 15
+      pos.Y = pos.Y - 10
     elseif k == "seeded-item4" then
-      vec.X = vec.X - 45
-      vec.Y = vec.Y - 10
+      pos.X = pos.X - 45
+      pos.Y = pos.Y - 10
     elseif k == "seeded-item5" then
-      vec.X = vec.X + 45
-      vec.Y = vec.Y - 10
+      pos.X = pos.X + 45
+      pos.Y = pos.Y - 10
     elseif k == "diversity-active" then
-      vec.X = vec.X - 80
-      vec.Y = vec.Y - 40
+      pos.X = pos.X - 80
+      pos.Y = pos.Y - 40
     elseif k == "diversity-passives" then
-      vec.Y = vec.Y - 40
+      pos.Y = pos.Y - 40
     elseif k == "diversity-trinket" then
-      vec.X = vec.X + 80
-      vec.Y = vec.Y - 40
+      pos.X = pos.X + 80
+      pos.Y = pos.Y - 40
     elseif k == "diversity-item1" then -- The active item
-      vec.X = vec.X - 80
-      vec.Y = vec.Y - 10
+      pos.X = pos.X - 80
+      pos.Y = pos.Y - 10
     elseif k == "diversity-item2" then -- The 1st passive item
-      vec.X = vec.X - 30
-      vec.Y = vec.Y - 10
+      pos.X = pos.X - 30
+      pos.Y = pos.Y - 10
     elseif k == "diversity-item3" then -- The 2nd passive item
-      vec.Y = vec.Y - 10
+      pos.Y = pos.Y - 10
     elseif k == "diversity-item4" then -- The 3rd passive item
-      vec.X = vec.X + 30
-      vec.Y = vec.Y - 10
+      pos.X = pos.X + 30
+      pos.Y = pos.Y - 10
     elseif k == "diversity-item5" then -- The trinket
-      vec.X = vec.X + 80
-      vec.Y = vec.Y - 10
+      pos.X = pos.X + 80
+      pos.Y = pos.Y - 10
     elseif k == "place" then -- "1st", "2nd", etc.
-      vec.X = 24 -- Move it next to the "R+" icon
-      vec.Y = 79
+      pos.X = 24 -- Move it next to the "R+" icon
+      pos.Y = 79
     elseif k == "place2" then -- The final place graphic
-      vec.Y = vec.Y - 80
+      pos.Y = pos.Y - 80
+    elseif k == "corrupt1" then -- The final place graphic
+      pos.Y = pos.Y - 80
+    elseif k == "corrupt2" then -- The final place graphic
+      pos.Y = pos.Y - 50
     end
 
     -- Draw it
     if v.sprite ~= nil then
       -- For non-animations, we want to just render frame 0
-      RPSprites.sprites[k].sprite:RenderLayer(0, vec)
+      RPSprites.sprites[k].sprite:RenderLayer(0, pos)
     end
   end
 end

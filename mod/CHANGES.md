@@ -53,6 +53,11 @@ While there are thousands of rooms in the game, many players have already seen t
 
 <br />
 
+## Other Mods Included
+
+* [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
+* [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod created by [piber20](https://steamcommunity.com/id/piber20).
+
 ## Other Minor Bug Fixes & Quality of Life Changes
 
 * Some items with no effect are removed:
@@ -195,7 +200,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
-* [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840) is a custom character created by Ghostbroster. He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
+* More information on Samael can be found above in the "Other Mods Included" section.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 
 <br />

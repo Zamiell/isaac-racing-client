@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.11.0* - September 16th, 2017
+
+* Integrated the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20) into Racing+, which is a quality of life / sprite improvement mod.
+* Since the game's mod support is very buggy, Racing+ has always had an issue where when you enable Racing+ for the first time from the mod menu and then immediately go into a game, certain things will not be initialized properly. (For example, boss cutscenes will play during this state.) Racing+ will now detect this corrupted state and show an error message advising you to close and reopen the game.
+* There will no longer be a delay before The Haunt sends out his first Lil' Haunt to attack you.
+* The spawning of Key Piece 1 and Key Piece 2 are now sped up in the same way that Krampus items are.
+* Fixed the bug where both photos would spawn on the season 1 speedrun challenges if you had Mysterious Paper.
+* Fixed the bug where the wrong direction would appear after It Lives! or Hush under if you had Mysterious Paper under certain conditions.
+* Fixed the bug where the Sloth, Super Sloth, Pride, and Super Pride card seeding wasn't being applied to flipped rooms.
+
 ### *v0.10.7* - September 14th, 2017
 
 * Fixed the bug where the client would not remember that you selected a random character. (Thanks Shigan)

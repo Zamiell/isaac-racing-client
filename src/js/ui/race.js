@@ -3,7 +3,7 @@
 */
 
 // Imports
-const execFile = nodeRequire('child_process').execFile;
+const { execFile } = nodeRequire('child_process');
 const path = nodeRequire('path');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
@@ -308,8 +308,7 @@ const show = (raceID) => {
         $('#race-title-status').html(statusText);
 
         // Column 2 - Ranked
-        const ranked = race.ruleset.ranked;
-        const solo = race.ruleset.solo;
+        const { ranked, solo } = race.ruleset;
         const typeIconURL = `img/types/${(ranked ? 'ranked' : 'unranked')}${(solo ? '-solo' : '')}.png`;
         $('#race-title-type-icon').css('background-image', `url("${typeIconURL}")`);
         let typeTooltipContent = '<strong>';
@@ -329,7 +328,7 @@ const show = (raceID) => {
         $('#race-title-type-icon').tooltipster('content', typeTooltipContent);
 
         // Column 3 - Format
-        const format = race.ruleset.format;
+        const { format } = race.ruleset;
         $('#race-title-format-icon').css('background-image', `url("img/formats/${format}.png")`);
         let formatTooltipContent = '<span lang="en">';
         if (format === 'unseeded') {
@@ -359,7 +358,7 @@ const show = (raceID) => {
         $('#race-title-character').html(race.ruleset.character);
 
         // Column 5 - Goal
-        const goal = race.ruleset.goal;
+        const { goal } = race.ruleset;
         $('#race-title-goal-icon').css('background-image', `url("img/goals/${goal}.png")`);
         let goalTooltipContent = '';
         if (goal === 'Blue Baby') {
@@ -690,9 +689,9 @@ function placeMidRecalculateAll() {
 }
 
 const participantsSetFloor = (i) => {
-    const name = globals.raceList[globals.currentRaceID].racerList[i].name;
-    const floorNum = globals.raceList[globals.currentRaceID].racerList[i].floorNum;
-    const stageType = globals.raceList[globals.currentRaceID].racerList[i].stageType;
+    const race = globals.raceList[globals.currentRaceID];
+    const racer = race.racerList[i];
+    const { name, floorNum, stageType } = racer;
 
     // Update the floor column of the row
     let floorDiv;
@@ -740,7 +739,9 @@ exports.participantsSetFloor = participantsSetFloor;
 
 const participantsSetItem = (i) => {
     // Go through the array and find the starting item
-    const items = globals.raceList[globals.currentRaceID].racerList[i].items;
+    const race = globals.raceList[globals.currentRaceID];
+    const racer = race.racerList[i];
+    const { name, items } = racer;
     let startingItem = false;
     for (let j = 0; j < items.length; j++) {
         if (items[j].id === 105) {

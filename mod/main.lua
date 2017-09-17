@@ -6,11 +6,7 @@
 --[[
 
 TODO:
-- make keys instaspawn like krampus items (test to see frame differential)
-- add cardback mod
-- add better bombs
-- fix mimics in code
-- Speed up the spawning of the first ghost on The Haunt fight
+- add better bombs (waiting on him to rewrite)
 
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
@@ -22,7 +18,7 @@ TODO DIFFICULT:
 TODO CAN'T FIX:
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
   function)
-- Make a 3rd color hue on the map for rooms that are not cleared but you have entered.
+- Make a 3rd color hue on the map for rooms that are not cleared but you have entered
 - Make fast-clear apply to Challenge rooms and the Boss Rush ("room:SetAmbushDone()" doesn't do anything)
 
 POST-FLIP ACTIONS:
@@ -54,6 +50,8 @@ local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameSt
 local RPPostNewLevel        = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
 local RPPostNewRoom         = require("src/rppostnewroom") -- The PostNewRoom callback (19)
 local RPExecuteCmd          = require("src/rpexecutecmd") -- The ExecuteCmd callback (22)
+local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callback (27)
+local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
 local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
 local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
@@ -100,7 +98,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     RPPostGameStarted.
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Main) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main) -- 22
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPFastClear.PostNPCInit) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
 
@@ -148,6 +147,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPFastClear.PostEntityK
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC45, EntityType.ENTITY_MOM) -- 45
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_MOMS_HEART) -- 78
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC81, EntityType.ENTITY_FALLEN) -- 81
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC271, EntityType.ENTITY_URIEL) -- 271
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC271, EntityType.ENTITY_GABRIEL) -- 272
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_HUSH) -- 407
 
 -- Samael callbacks
 local wraithItem  = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation

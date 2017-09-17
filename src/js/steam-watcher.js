@@ -22,10 +22,10 @@ exports.start = () => {
 ipcRenderer.on('steamWatcher', (event, message) => {
     globals.log.info(`Recieved steam-watcher notification: ${message}`);
 
-    // TODO check for logout
-
-    if (message.startsWith('error: ')) {
-        // First, parse for errors
+    if (message === 'error: It appears that you have logged out of Steam.') {
+        // This is an ordinary error, so don't send it to Sentry
+        misc.errorShow('It appears that you have logged out of Steam.', false);
+    } else if (message.startsWith('error: ')) {
         const error = message.match(/^error: (.+)/)[1];
         misc.errorShow(`Something went wrong with the Steam monitoring program: ${error}`);
     }

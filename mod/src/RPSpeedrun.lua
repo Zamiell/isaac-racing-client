@@ -755,26 +755,6 @@ function RPSpeedrun:RemoveAllRoomButtons()
   RPSpeedrun.sprites.button3 = nil
 end
 
--- Called from the PostEntityKill callback
-function RPSpeedrun:CheckItLivesDeath(npc)
-  local game = Game()
-  local room = game:GetRoom()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
-    return
-  end
-
-  if RPSpeedrun ~= 2 then
-    return
-  end
-
-  -- We need to spawn a trapdoor since the custom challenge goes to The Chest by default
-  game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
-             Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-             room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
-end
-
 --
 -- Display functions
 --
