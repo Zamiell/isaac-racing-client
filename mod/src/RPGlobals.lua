@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.11.1"
+RPGlobals.version = "v0.11.2"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -152,7 +152,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
   RPGlobals.run.consoleWindowOpen    = false -- We don't want to do a fast-reset if the console window is open
-  RPGlobals.run.droppedButterItem    = 0
+  RPGlobals.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
   RPGlobals.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
   RPGlobals.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
   RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
@@ -276,6 +276,41 @@ function RPGlobals:TableEqual(table1, table2)
     end
   end
   return true
+end
+
+-- From: http://lua-users.org/wiki/TableUtils
+function RPGlobals:TableValToStr(v)
+  if "string" == type(v) then
+    v = string.gsub(v, "\n", "\\n")
+    if string.match(string.gsub(v, "[^'\"]", ""), '^"+$') then
+      return "'" .. v .. "'"
+    end
+    return '"' .. string.gsub(v, '"', '\\"') .. '"'
+  else
+    return "table" == type(v) and RPGlobals.TableToString(v) or tostring(v)
+  end
+end
+
+function RPGlobals:TableKeyToStr(k)
+  if "string" == type(k) and string.match(k, "^[_%a][_%a%d]*$") then
+    return k
+  else
+    return "[" .. RPGlobals:TableValToStr(k) .. "]"
+  end
+end
+
+function RPGlobals:TableToString(tbl)
+  local result, done = {}, {}
+  for k, v in ipairs( tbl ) do
+    table.insert(result, RPGlobals:TableValToStr(v))
+    done[k] = true
+  end
+  for k, v in pairs(tbl) do
+    if not done[k] then
+      table.insert(result, RPGlobals:TableKeyToStr(k) .. "=" .. RPGlobals:TableValToStr(v))
+    end
+  end
+  return "{" .. table.concat(result, ",") .. "}"
 end
 
 -- Find out how many charges this item has

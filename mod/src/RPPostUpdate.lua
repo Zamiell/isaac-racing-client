@@ -190,19 +190,17 @@ function RPPostUpdate:CheckKeeperHearts()
   end
 end
 
--- Check for a Haunt fight speedup
+-- Speed up the first Lil' Haunt attached to a Haunt (3/3)
 function RPPostUpdate:CheckHauntSpeedup()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
-
-  -- Speed up the first Lil' Haunt attached to a Haunt (3/3)
   local blackChampionHaunt = RPGlobals.run.speedLilHauntsBlack
   if gameFrameCount ~= RPGlobals.run.speedLilHauntsFrame then
-    RPGlobals.run.speedLilHauntsFrame = 0
-    RPGlobals.run.speedLilHauntsBlack = false
     return
   end
+  RPGlobals.run.speedLilHauntsFrame = 0
+  RPGlobals.run.speedLilHauntsBlack = false
 
   -- Find all of the indexes and sort them
   local indexes = {}
@@ -223,15 +221,24 @@ function RPPostUpdate:CheckHauntSpeedup()
       npc.State = NpcState.STATE_MOVE -- 4
       -- (doing this will detach them)
 
+      -- We need to manually set them to visible (or else they will be invisible for some reason)
+      npc.Visible = true
+
       -- We need to manually set the color, or else the Lil' Haunt will remain faded
       npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
+
+      -- We need to manually set their collision or else tears will pass through them
+      npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
       -- Add them to the tracking table so that they won't immediately rush the player
       local index = GetPtrHash(npc)
       RPGlobals.run.currentLilHaunts[index] = {
+        index = npc.Index, -- It's safer to use the hash as an index instead of this
         pos = npc.Position,
+        ptr = EntityPtr(npc),
       }
-      Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table (special).")
+      Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) ..
+                        " to the table (RPPostUpdate:CheckHauntSpeedup).")
 
       Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
                         " on frame: " .. tostring(gameFrameCount))

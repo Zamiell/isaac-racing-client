@@ -126,6 +126,9 @@ function RPPostEntityKill:NPC45(npc)
     -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
     Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
   end
+
+  -- Fix the (vanilla) Globin bug
+  RPPostEntityKill:KillGlobins()
 end
 
 -- EntityType.ENTITY_MOMS_HEART (78)
@@ -231,6 +234,9 @@ function RPPostEntityKill:NPC78(npc)
     game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, Vector(0, 0), nil, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 3.")
   end
+
+  -- Fix the (vanilla) Globin bug
+  RPPostEntityKill:KillGlobins()
 end
 
 -- EntityType.ENTITY_FALLEN (81)
@@ -324,6 +330,21 @@ function RPPostEntityKill.NPC407(npc)
 
   Isaac.DebugString("Killed Hush on frame: " .. tostring(gameFrameCount))
   RPGlobals.run.itLivesKillFrame = gameFrameCount
+end
+
+-- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
+-- However, Nicalis didn't consider that Globins need to be killed twice
+-- Racing+ manually fixes this bug
+-- This code is also necessary to fix the issue where a Globin will prevent the
+-- removal of the natural trapdoor and beam of light after It Lives!
+--- (in the "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions)
+function RPPostEntityKill:KillGlobins()
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_GLOBIN then -- 24
+      entity:Kill()
+      Isaac.DebugString("Manually killed a Globin after Mom / It Lives!")
+    end
+  end
 end
 
 return RPPostEntityKill

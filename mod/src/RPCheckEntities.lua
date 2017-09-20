@@ -533,22 +533,34 @@ function RPCheckEntities:Entity260(npc)
     return
   end
 
-  -- We don't care about Lil' Haunts that are attached to a Haunt
-  -- (but make an exception for ones that we manually detached)
+  -- Add them to the table so that we can track them
   local index = GetPtrHash(npc)
-  if npc.Parent ~= nil and
-     RPGlobals.run.currentLilHaunts[index] == nil then
-
-    return
-  end
-
-  -- Add their position to the table so that we can track them
   if RPGlobals.run.currentLilHaunts[index] == nil then
-    -- We can't put this in the MC_POST_NPC_INIT callback because the position is always equal to (0, 0) there
+    -- This can't be in the NPC_UPDATE callback because it does not fire during the "Appear" animation
+    -- This can't be in the MC_POST_NPC_INIT callback because the position is always equal to (0, 0) there
     RPGlobals.run.currentLilHaunts[index] = {
+      index = npc.Index, -- It's safer to use the hash as an index instead of this
       pos = npc.Position,
+      ptr = EntityPtr(npc),
     }
     Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table.")
+  end
+
+  -- Remove invulnerability frames from Lil' Haunts that are not attached to a Haunt
+  -- (we can't do it any earlier than the 4th frame because it will introduce additional bugs,
+  -- such as the Lil' Haunt becoming invisible)
+  if npc.Parent == nil and
+     npc.FrameCount == 4 then
+
+     -- Changing the NPC's state triggers the invulnerability removal in the next frame
+    npc.State = NpcState.STATE_MOVE -- 4
+
+    -- Additionally, we also have to manually set the collision, because
+    -- tears will pass through Lil' Haunts when they first spawn
+    npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+
+    Isaac.DebugString("Removed invulnerability frames and set collision for a Lil' Haunt with index: " ..
+                      tostring(npc.Index))
   end
 
   -- Lock newly spawned Lil' Haunts in place so that they don't immediately rush the player

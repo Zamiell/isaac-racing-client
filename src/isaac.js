@@ -207,7 +207,7 @@ function checkSteam3() {
     }
 
     if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
-        process.send(`error: NO SAVE ${steamCloud}`, processExit);
+        process.send(`error: NO SAVE ${steamCloud} ""`, processExit);
         return;
     }
 

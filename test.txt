@@ -1,0 +1,42 @@
+./js/chat.js:287:        misc.errorShow('Failed to parse the room in the "chat.draw" function.');
+./js/isaac.js:30:        misc.errorShow(error, false);
+./js/log-watcher.js:27:        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
+./js/log-watcher.js:35:        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
+./js/log-watcher.js:43:        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
+./js/log-watcher.js:66:        misc.errorShow(`Something went wrong with the log monitoring program: ${error}`);
+./js/log-watcher.js:124:            misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
+./js/log-watcher.js:137:            misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process.');
+./js/log-watcher.js:148:            misc.errorShow('Failed to parse the new room from the message sent by the log watcher process.');
+./js/log-watcher.js:159:            misc.errorShow('Failed to parse the new item from the message sent by the log watcher process.');
+./js/main.js:155:            misc.errorShow(`A unexpected JavaScript error occured. Here's what happened:<br /><br />${JSON.stringify(data.exception)}`, false);
+./js/main.js:209:        misc.errorShow(globals.initError);
+./js/main.js:214:    We can't use the "misc.errorShow()" function yet for the following initialization-related stuff because the document is not ready
+./js/mod-loader.js:72:                misc.errorShow(`The "${modLoaderFile}" does not exist; the Racing+ client needs to write to this file in order to communicate with the mod. Is your Racing+ mod installed correctly? Is it corrupted? Is your "log.txt" file location set correctly in your Racing+ settings?`);
+./js/steam-watcher.js:27:        misc.errorShow('It appears that you have logged out of Steam.', false);
+./js/steam-watcher.js:30:        misc.errorShow(`Something went wrong with the Steam monitoring program: ${error}`);
+./js/steam.js:61:        misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
+./js/steam.js:65:        misc.errorShow(error);
+./js/steam.js:162:        misc.errorShow(error, false);
+./js/ui/lobby.js:86:        misc.errorShow(`Failed to return to the lobby since currentScreen is equal to "${globals.currentScreen}".`);
+./js/ui/lobby.js:387:                misc.errorShow(`Failed to fill in the chat box since currentScreen is "${globals.currentScreen}".`);
+./js/ui/new-race-tooltip.js:321:        misc.errorShow('That is an unknown format.');
+./js/ui/race.js:205:        misc.errorShow(`Failed to enter the race screen since currentScreen is equal to "${globals.currentScreen}".`);
+./js/ui/race.js:215:        misc.errorShow(`The character of "${race.ruleset.character}" is unsupported.`);
+./js/ui/race.js:421:                        misc.errorShow(`Trinket ${items[i]} was not found in the items list.`);
+./js/ui/race.js:428:                        misc.errorShow(`Item ${items[i]} was not found in the items list.`);
+./js/ui/race.js:479:            misc.errorShow('You rejoined the race during the countdown, which is not supported. Please relaunch the program.');
+./js/ui/race.js:731:        misc.errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
+./js/ui/settings-tooltip.js:161:                        misc.errorShow(`Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ${err}`);
+./js/ui/settings-tooltip.js:171:                        misc.errorShow(`The "${newBossCutsceneFile}" file does not exist! Your Racing+ client may be corrupted.`);
+./js/ui/settings-tooltip.js:176:                    misc.errorShow(`Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ${err}`);
+./js/ui/settings-tooltip.js:264:            misc.errorShow('Now that you have changed the location of the log file, please restart Racing+.', false, false, '<span lang="en">Success</span>');
+./js/websocket.js:72:            misc.errorShow(`Can't transition to the lobby from screen: ${globals.currentScreen}`);
+./js/websocket.js:84:            misc.errorShow('Disconnected from the server. Either your Internet is having problems or the server went down!', false);
+./js/websocket.js:92:            misc.errorShow(error, false);
+./js/websocket.js:101:            misc.errorShow(error, false);
+./js/websocket.js:111:        misc.errorShow(data.message);
+./js/websocket.js:508:            misc.errorShow(`"${data.name}" left race #${data.id}, but they were not in the "racers" array.`);
+./js/websocket.js:523:                misc.errorShow(`"${data.name}" left race #${data.id}, but they were not in the "racerList" array.`);
+./js/websocket.js:631:                misc.errorShow(`Failed to parse the status of race #${data.id}: ${globals.raceList[data.id].status}`);
+./js/websocket.js:650:            misc.errorShow('Unable to parse the race status from the raceSetStatus command.');
+./js/websocket.js:719:            misc.errorShow('Got a "raceStart" command for a race that is not the current race.');

@@ -93,6 +93,20 @@ function RPFastClear:NPC246(npc)
   end
 end
 
+-- ModCallbacks.MC_NPC_UPDATE (0)
+-- EntityType.ENTITY_STONEY (302)
+function RPFastClear:NPC302(npc)
+  -- Stoneys have a chance to morph from EntityType.ENTITY_FATTY (208),
+  -- so they will get added to the aliveEnemies table before the room is loaded
+  -- To correct for this, we constantly check to see if Stoneys are on the aliveEnemies table
+  local index = GetPtrHash(npc)
+  if RPFastClear.aliveEnemies[index] ~= nil then
+    RPFastClear.aliveEnemies[index] = nil
+    RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+    Isaac.DebugString("Removed a Fatty that morphed into Stoney from the aliveEnemies table.")
+  end
+end
+
 function RPFastClear:CheckNewNPC(npc)
   -- Local variables
   local game = Game()

@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.11.2* - September 20th, 2017
+
+* Fixed the bug where Lil' Haunt delay canceling wouldn't work under certain conditions. (Thanks Gamonymous)
+* Fixed the bug where non-boss Lil' Haunts had boss health bars. (Thanks Krakenos)
+* Fixed the bug where fast-clear would not work properly with Stoneys that morph from Fatties.
+* Fixed the (vanilla) bug where Globins are not properly killed after defeating Mom, Mom's Heart, or It Lives! (Thanks Gamonymous)
+* Added the TehePelo emote. (Requested by Lobsterosity)
+
 ### *v0.11.0* - September 16th, 2017
 
 * Integrated the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20) into Racing+, which is a quality of life / sprite improvement mod.

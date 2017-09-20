@@ -12,7 +12,7 @@ local RPSchoolbag = require("src/rpschoolbag")
 --
 
 -- This callback is used naturally by Ehwaz (Passage) runes
-function RPItems:WeNeedToGoDeeper()
+function RPItems:WeNeedToGoDeeper() -- 84
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -38,7 +38,7 @@ function RPItems:WeNeedToGoDeeper()
   end
 end
 
-function RPItems:BookOfSin()
+function RPItems:BookOfSin() -- 97
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -128,7 +128,7 @@ function RPItems:GlowingHourGlass() -- 422
   end
 end
 
-function RPItems:Smelter()
+function RPItems:Smelter() -- 479
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -157,6 +157,7 @@ end
 function RPItems:Main(collectibleType)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
@@ -175,7 +176,8 @@ function RPItems:Main(collectibleType)
   -- Fix the Schoolbag + Butter! bug
   if player:HasTrinket(TrinketType.TRINKET_BUTTER) then
     RPGlobals.run.droppedButterItem = collectibleType -- (the pedestal will appear on the next game frame)
-    Isaac.DebugString("The Butter! trinket dropped item " .. tostring(collectibleType) .. ".")
+    Isaac.DebugString("The Butter! trinket dropped item " .. tostring(collectibleType) ..
+                      " (on frame " .. tostring(gameFrameCount) .. ").")
     -- We will check this variable later in the PostUpdate callback (the "RPSchoolbag:CheckSecondItem()" function)
   end
 end

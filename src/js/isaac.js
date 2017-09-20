@@ -18,8 +18,10 @@ ipcRenderer.on('isaac', (event, message) => {
     // All messages should be strings
     if (message.startsWith('error: NO SAVE ')) {
         // The user does not have a fully unlocked save file, so show them a custom model
-        const steamCloud = message[message.length - 1];
-        // TODO
+        const steamCloud = message[message.length - 1]; // In "isaac.js" there is validation to ensure that this is either 0 or 1
+
+        // Show the respective save file modal that corresponds to whether they have steam cloud on or off
+        misc.errorShow('', false, `save-file-modal-${steamCloud}`);
         return;
     } else if (message.startsWith('error: ')) {
         // globals.currentScreen is equal to "transition" when this is called

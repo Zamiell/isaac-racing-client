@@ -55,66 +55,44 @@ While there are thousands of rooms in the game, many players have already seen t
 
 ## Other Mods Included
 
-* [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
-* [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod created by [piber20](https://steamcommunity.com/id/piber20).
+* [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. In Racing+, Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
+* [Fogless!](https://moddingofisaac.com/mod/950/fogless), a mod by [Dan](https://moddingofisaac.com/user/255) that removes fog for the purposes of lag reduction.
+* [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod by [piber20](https://steamcommunity.com/id/piber20).
 
-## Other Minor Bug Fixes & Quality of Life Changes
+## List of Minor Changes
+
+### Gameplay & Quality of Life Changes
 
 * Some items with no effect are removed:
   * the Karma trinket (all Donation Machines are removed when curses are disabled)
   * the Amnesia pill (this has no effect when curses are disabled)
   * the ??? pill (this has no effect when curses are disabled)
-* Cutscenes are removed. (However, there is an option in the client to re-enable boss cutscenes for people with cutscene skip muscle memory.)
-* Some useless animations are removed:
-  * the fade when entering a new floor
-  * the fade when entering or exiting crawlspaces
-  * teleporting upwards
-  * the use animation for Telepills
-  * the use animation for Blank Card when you have a teleport card
 * Some things that are unseeded are now seeded:
   * rerolls on items after being touched or purchased
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
   * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
   * cards from Sloth, Super Sloth, Pride, and Super Pride
-* Lag is reduced via integration of the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod by [Dan](https://moddingofisaac.com/user/255).
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
 * The "drop" button immediately drops cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
-* Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Special items are no longer special.
-* Charge bars are no longer obnoxiously big.
-* Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
+* Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
-* Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads.
-* The Book of Sin and Mystery Sack generate actual random pickups.
-* Greed's Gullet works properly on Keeper.
-* Double coins and nickels heal Keeper for their proper amount.
-* Eden's Soul always properly starts at 0 charges.
-* AAA Battery synergizes with The Battery.
-* 9 Volt synergizes with The Battery.
-* The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
+* There is no longer a delay before The Haunt sends out his first Lil' Haunt.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
-* The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! no longer occurs.
-* Having Duality prevents getting a narrow boss room on floors 2 through 7.
-* The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
+* The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
+* Having Duality now prevents getting a narrow boss room on floors 2 through 7.
 * All Spike Chests will spawn as Mimics instead.
-* You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
-* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as Brown Chests instead.)
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear.
-* You no longer have a chance to be sent to the menu after defeating Mega Satan.
-* The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.)
-* Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
-* The recharge sound will no longer play at the beginning of a run.
-* The door opening sound will no longer play in crawlspaces.
-* The Broken Modem sprite is replaced with a better version from freeze, the original creator.
-* The bugged Scolex champion (skeleton version) will now display properly.
-* The bottom left hand corner of the title screen will now properly show.
-* When holding Mom's Knife, accuracy statistics will be shown in the bottom-right hand corner of the screen.
+* The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
+
+### Streamlined Path
+
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
 * The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
 
@@ -124,9 +102,49 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 ```
 (The "save1.dat" file corresponds to save slot #1. If you play on save slot #2 or #3, edit "save2.dat" or "save3.dat" accordingly.)
 
+### Cutscene & Animation Removal
+
+* The cutscenes that occur when you launch the game and you finish a run are removed.
+* The cutscenes that occur before each boss are removed.
+* Some animations are removed for the purposes of eliminating needless downtime:
+  * the fade when entering a new floor (replaced with a custom animation)
+  * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
+  * teleporting upwards
+  * the use animation for Telepills
+  * the use animation for Blank Card when you have a teleport card
+  * various animations during the Satan fight
+  * various animations during the Mega Satan fight
+
+### Bug Fixes
+
+* Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
+* Globins will now properly die after defeating Mom, Mom's Heart, or It Lives!
+* Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads. (This is to prevent unavoidable damage, which can happen even if the player is not shooting.)
+* The Book of Sin and Mystery Sack generate actual random pickups.
+* Greed's Gullet works properly on Keeper.
+* Double coins and nickels heal Keeper for their proper amount.
+* Eden's Soul always properly starts at 0 charges.
+* AAA Battery now properly synergizes with The Battery.
+* 9 Volt now properly synergizes with The Battery.
+* You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
+* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as Brown Chests instead.)
+* You no longer have a chance to be sent to the menu after defeating Mega Satan.
+* The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.)
+* Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
+
+### Graphics & Sound Fixes
+
+* Charge bars are no longer obnoxiously big.
+* The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
+* The recharge sound will no longer play at the beginning of a run.
+* The door opening sound will no longer play in crawlspaces.
+* The Broken Modem sprite is replaced with a better version from freeze, the original creator.
+* The bugged Scolex champion (skeleton version) will now display properly.
+* The bottom left hand corner of the title screen will now properly show.
+
 <br />
 
-## Additional Changes for Custom Rulesets
+## Additional Changes for Custom Race Rulesets
 
 Historically, most speedruns and races have been unseeded with the goal of killing Blue Baby. However, there are other rulesets used:
 
@@ -150,14 +168,12 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Dark Room
 
-* Some useless animations during the Satan fight have been removed to make the fight smoother.
 * 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 ### Mega Satan
 
 * The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
-* Some useless animations during the Mega Satan fight have been removed to make the fight smoother.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 ### Everything
@@ -171,7 +187,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Defeat Mega Satan to complete the run.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
-## Additional Changes for Multi-Character Speedruns
+## Additional Changes for Multi-Character Speedruns (Custom Challenges)
 
 * By pressing "Tab" on the challenges portion of the main menu, you can access custom challenges added by mods. The Racing+ mod uses custom challenges to facilitate multi-character speedruns, in which you must beat the game multiple times in a row on various characters.
 * These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
@@ -207,6 +223,6 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ## Individual Room Changes
 
-The [technical specifics of all of the individual room changes are listed in a separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md), for those who care to know the nitty-gritty details.
+The [technical specifics of all of the individual room changes are listed in a separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md), for those who need to know the nitty-gritty details.
 
 <br />

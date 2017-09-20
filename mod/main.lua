@@ -6,14 +6,15 @@
 --[[
 
 TODO:
-- add better bombs (waiting on him to rewrite)
+- fix Samael + Dead Eye key spam dropping multiplier
 
+- add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
 TODO DIFFICULT:
 - Fix Isaac beams never hitting you
-- Fix Conquest beams
+- Fix Conquest beams hitting you
 
 TODO CAN'T FIX:
 - Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
@@ -86,6 +87,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC273, EntityType.ENTITY_THE_LAMB) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC275, EntityType.ENTITY_MEGA_SATAN_2) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC300, EntityType.ENTITY_MUSHROOM) -- 300
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPC302, EntityType.ENTITY_STONEY) -- 302
 
 -- Define miscellaneous callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           RPPostUpdate.Main) -- 1
@@ -107,6 +109,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEn
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,
                                                      CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.BookOfSin, CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.BreathOfLife,
+                                                     CollectibleType.COLLECTIBLE_BREATH_OF_LIFE) -- 326
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.GlowingHourGlass,
                                                      CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.Smelter,   CollectibleType.COLLECTIBLE_SMELTER) -- 479

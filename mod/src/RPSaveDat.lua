@@ -91,7 +91,7 @@ function RPSaveDat:Load()
       Isaac.DebugString("ModData seed changed: " .. RPGlobals.race.seed)
     end
     if RPGlobals:TableEqual(oldRace.startingItems, RPGlobals.race.startingItems) == false then
-      Isaac.DebugString("ModData startingItems amount changed: " .. tostring(#RPGlobals.race.startingItems))
+      Isaac.DebugString("ModData startingItems changed: " .. RPGlobals:TableToString(RPGlobals.race.startingItems))
     end
     if oldRace.countdown ~= RPGlobals.race.countdown then
       Isaac.DebugString("ModData countdown changed: " .. tostring(RPGlobals.race.countdown))

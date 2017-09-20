@@ -20,7 +20,7 @@ function RavenMiscError(message) {
 RavenMiscError.prototype = Object.create(Error.prototype);
 RavenMiscError.prototype.constructor = RavenMiscError;
 
-const errorShow = (message, sendToSentry = true, alternateScreen = false, customTitle = null) => {
+const errorShow = (message, sendToSentry = true, alternateScreen = '') => {
     // Let the main process know to not overwrite the 3 "save.dat" files in case we are in the middle of a race
     ipcRenderer.send('asynchronous-message', 'error');
 
@@ -80,15 +80,10 @@ const errorShow = (message, sendToSentry = true, alternateScreen = false, custom
     // Close all tooltips
     closeAllTooltips();
 
-    // Change the title, if necessary
-    if (customTitle !== null) {
-        $('#error-modal-title').html(customTitle);
-    }
-
     $('#gui').fadeTo(globals.fadeTime, 0.1, () => {
-        if (alternateScreen) {
-            // Show the log file selector screen
-            $('#log-file-modal').fadeIn(globals.fadeTime);
+        if (alternateScreen !== '') {
+            // Show the specific ID that was passed as an argument to this function
+            $(`#${alternateScreen}`).fadeIn(globals.fadeTime);
         } else {
             // Show the error modal
             $('#error-modal').fadeIn(globals.fadeTime);

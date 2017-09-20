@@ -24,7 +24,7 @@ exports.start = () => {
     // Check to ensure that we have a valid log file path
     if (logPath === null) {
         globals.currentScreen = 'null';
-        misc.errorShow('', false, true); // Show the log file path modal
+        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
         return false;
     }
 
@@ -32,7 +32,7 @@ exports.start = () => {
     if (logPath.match(/[/\\]Binding of Isaac Rebirth[/\\]/)) { // Match a forward or backslash
         $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
         globals.currentScreen = 'null';
-        misc.errorShow('', false, true); // Show the log file path modal
+        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
         return false;
     }
 
@@ -40,7 +40,7 @@ exports.start = () => {
     if (logPath.match(/[/\\]Binding of Isaac Afterbirth[/\\]/)) {
         $('#log-file-description-1').html('<span lang="en">It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</span>');
         globals.currentScreen = 'null';
-        misc.errorShow('', false, true); // Show the log file path modal
+        misc.errorShow('', false, 'log-file-modal'); // Show the log file path modal
         return false;
     }
 
