@@ -439,8 +439,10 @@ function RPSpeedrun:CheckRestart()
 
     -- Make the next run go to the other path
     RPSpeedrun.s3direction = RPSpeedrun.s3direction + 1
-    if RPSpeedrun.s3direction == 2 then
+    Isaac.DebugString("Set season 3 direction to: " .. tostring(RPSpeedrun.s3direction))
+    if RPSpeedrun.s3direction == 3 then
       RPSpeedrun.s3direction = 1
+      Isaac.DebugString("Set season 3 direction back to 1.")
     end
 
     Isaac.DebugString("Switching to the next character for the speedrun.")

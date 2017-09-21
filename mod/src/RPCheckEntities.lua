@@ -167,18 +167,10 @@ function RPCheckEntities:Entity5(pickup)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
-  local room = game:GetRoom()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
-  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = level:GetCurrentRoomIndex()
-  end
   local roomData = level:GetCurrentRoomDesc().Data
+  local room = game:GetRoom()
   local roomType = room:GetType()
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
-  local player = game:GetPlayer(0)
-  local challenge = Isaac.GetChallenge()
 
   -- Keep track of pickups that are touched
   -- (used for moving pickups on top of a trapdoor/crawlspace)
@@ -286,148 +278,10 @@ function RPCheckEntities:Entity5(pickup)
     end
 
   elseif pickup.Variant == PickupVariant.PICKUP_BIGCHEST then -- 340
-    if stage == 10 and stageType == 0 and -- Sheol
-       RPGlobals.race.goal == "Everything" then
-
-      -- Delete the chest and replace it with the custom beam of light
-      -- (Sheol goes to The Chest in the "Everything" race goal)
-      RPFastTravel:ReplaceHeavenDoor(pickup)
-
-    elseif stage == 10 and stageType == 0 and -- Sheol
-           (player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) or -- 328
-           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)")) then
-
-      -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
-      RPFastTravel:ReplaceTrapdoor(pickup, -1)
-      -- A -1 indicates that we are replacing an entity instead of a grid entity
-
-    elseif stage == 10 and stageType == 1 and -- Cathedral
-           RPGlobals.race.goal == "Everything" then
-
-      -- Delete the chest and replace it with a custom trapdoor
-      -- (Cathedral goes to Sheol in the "Everything" race goal)
-      RPFastTravel:ReplaceTrapdoor(pickup, -1)
-      -- A -1 indicates that we are replacing an entity instead of a grid entity
-
-    elseif stage == 10 and stageType == 1 and -- Cathedral
-           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-      -- Delete the chest and replace it with the custom beam of light so that we can fast-travel normally
-      RPFastTravel:ReplaceHeavenDoor(pickup)
-
-    elseif stage == 11 and stageType == 0 and -- Dark Room
-           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-
-      -- For custom Dark Room challenges, sometimes the vanilla end of challenge trophy does not appear
-      -- Thus, we need to handle replacing both the trophy and the big chest
-      -- So replace the big chest with either a checkpoint flag or a custom trophy,
-      -- depending on if we are on the last character or not
-      if RPSpeedrun.charNum == 7 then
-        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                   pickup.Position, pickup.Velocity, nil, 0, 0)
-        Isaac.DebugString("Spawned the end of speedrun trophy.")
-      else
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
-                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-        RPSpeedrun.spawnedCheckpoint = true
-        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
-      end
-
-      -- Get rid of the vanilla big chest
-      pickup:Remove()
-
-    elseif stage == 11 and
-           RPGlobals.race.rFormat == "pageant" then
-
-      -- Delete all big chests on the Pageant Boy ruleset so that
-      -- you don't accidently end your run before you can show off your build to the judges
-      pickup:Remove()
-
-    elseif stage == 11 and
-           RPGlobals.raceVars.finished == false and
-           RPGlobals.race.status == "in progress" and
-           ((RPGlobals.race.goal == "Blue Baby" and stageType == 1 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
-            (RPGlobals.race.goal == "The Lamb" and stageType == 0 and
-             roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) or -- -7
-            ((RPGlobals.race.goal == "Mega Satan" or
-              RPGlobals.race.goal == "Everything") and
-             roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX)) then -- -7
-
-      -- Spawn the "Race Trophy" custom entity
-      game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                 pickup.Position, pickup.Velocity, nil, 0, 0)
-      Isaac.DebugString("Spawned the end of race trophy.")
-
-      -- Get rid of the chest
-      pickup:Remove()
-
-    elseif stage == 11 and stageType == 1 and
-           RPGlobals.race.goal == "Everything" and
-           roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- 7
-
-      -- Delete the chest and replace it with a custom trapdoor
-      -- (The Chest goes to the Dark Room in the "Everything" race goal)
-      RPFastTravel:ReplaceTrapdoor(pickup, -1)
-      -- A -1 indicates that we are replacing an entity instead of a grid entity
-
-    elseif stage == 11 and
-           RPGlobals.raceVars.finished == false and
-           RPGlobals.race.status == "in progress" and
-           ((RPGlobals.race.goal == "Mega Satan" or
-             RPGlobals.race.goal == "Everything") and
-            roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX) then -- -7
-
-      pickup:Remove()
-      Isaac.DebugString("Got rid of the big chest since the goal involves Mega Satan.")
-
-    elseif stage == 11 and
-           RPGlobals.raceVars.finished then
-
-      -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
-      local victoryLapPosition = room:GetCenterPos()
-      game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
-                 nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-      Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
-
-      -- Get rid of the chest
-      pickup:Remove()
-    end
+    RPCheckEntities:Entity5_340(pickup)
 
   elseif pickup.Variant == PickupVariant.PICKUP_TROPHY then -- 370
-    if stage == 11 and
-       ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and stageType == 1) or
-        (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and stageType == 1) or
-        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and stageType == 0) or
-        (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and stageType == 1)) then
-
-      -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
-      -- depending on if we are on the last character or not
-      if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-          RPSpeedrun.charNum == 9) or
-         (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-          RPSpeedrun.charNum == 14) or
-         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-          RPSpeedrun.charNum == 7) or
-         (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
-          RPSpeedrun.charNum == 7) then
-
-        -- Spawn the "Race Trophy" custom entity
-        game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-                   pickup.Position, pickup.Velocity, nil, 0, 0)
-        Isaac.DebugString("Spawned the end of speedrun trophy.")
-
-      else
-        -- Spawn a Checkpoint (a custom item) in the center of the room
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
-                   nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-        RPSpeedrun.spawnedCheckpoint = true
-        Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
-      end
-
-      -- Get rid of the vanilla challenge trophy
-      pickup:Remove()
-    end
+    RPCheckEntities:Entity5_370(pickup)
   end
 
   -- We want to check all pickups
@@ -459,6 +313,359 @@ function RPCheckEntities:Entity5_100(pickup)
     -- We need to delay after using a Void (in case the player has consumed a D6)
     RPCheckEntities:ReplacePedestal(pickup)
   end
+end
+
+-- PickupVariant.PICKUP_BIGCHEST (5.340)
+function RPCheckEntities:Entity5_340(pickup)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local challenge = Isaac.GetChallenge()
+
+  RPCheckEntities.bigChestAction = "leave" -- Leave the big chest there by default
+  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
+     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+
+    RPCheckEntities:Entity5_340_S1(pickup)
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+    RPCheckEntities:Entity5_340_S2(pickup)
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+    RPCheckEntities:Entity5_340_S3(pickup)
+
+  elseif RPGlobals.raceVars.finished then
+    RPCheckEntities.bigChestAction = "victorylap"
+
+  elseif RPGlobals.race.rFormat == "pageant" then
+    RPCheckEntities:Entity5_340_Pageant(pickup)
+
+  elseif RPGlobals.race.goal == "Blue Baby" then
+    RPCheckEntities:Entity5_340_BlueBaby(pickup)
+
+  elseif RPGlobals.race.goal == "The Lamb" then
+    RPCheckEntities:Entity5_340_BlueBaby(pickup)
+
+  elseif RPGlobals.race.goal == "Mega Satan" then
+    RPCheckEntities:Entity5_340_MegaSatan(pickup)
+
+  elseif RPGlobals.race.goal == "Everything" then
+    RPCheckEntities:Entity5_340_Everything(pickup)
+
+  else
+    Isaac.DebugString("Error: Failed to parse the race goal when figuring out what to do with the big chest.")
+  end
+
+  -- Now that we know what to do with the big chest, do it
+  if RPCheckEntities.bigChestAction == "up" then
+    -- Delete the chest and replace it with a beam of light so that we can fast-travel normally
+    RPFastTravel:ReplaceHeavenDoor(pickup, -1)
+    -- A -1 indicates that we are replacing an entity instead of a grid entity
+
+  elseif RPCheckEntities.bigChestAction == "down" then
+    -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
+    RPFastTravel:ReplaceTrapdoor(pickup, -1)
+    -- A -1 indicates that we are replacing an entity instead of a grid entity
+
+  elseif RPCheckEntities.bigChestAction == "remove" then
+    pickup:Remove()
+
+  elseif RPCheckEntities.bigChestAction == "checkpoint" then
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+    RPSpeedrun.spawnedCheckpoint = true
+    Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+    pickup:Remove()
+
+  elseif RPCheckEntities.bigChestAction == "trophy" then
+    if challenge ~= 0 or RPGlobals.race.status ~= "none" then
+      -- We only want to spawn a trophy if we are on a custom speedrun challenge or currently in a race
+      game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+                 pickup.Position, pickup.Velocity, nil, 0, 0)
+      Isaac.DebugString("Spawned the end of race/speedrun trophy.")
+      pickup:Remove()
+    end
+
+  elseif RPCheckEntities.bigChestAction == "victorylap" then
+    -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
+    local victoryLapPosition = room:GetCenterPos()
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
+    Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
+    pickup:Remove()
+  end
+end
+
+function RPCheckEntities:Entity5_340_S1(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- The Chest
+    if RPSpeedrun.charNum == 7 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_S2(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  if stage == 10 and stageType == 0 then -- Sheol
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 and stageType == 0 then -- Dark Room
+    -- For custom Dark Room challenges, sometimes the vanilla end of challenge trophy does not appear
+    -- Thus, we need to handle replacing both the trophy and the big chest
+    -- So replace the big chest with either a checkpoint flag or a custom trophy,
+    -- depending on if we are on the last character or not
+    if RPSpeedrun.charNum == 7 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_S3(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  -- Season 3 runs can go in either direction so we need to handle all 4 cases
+  if stage == 10 and stageType == 1 then -- Cathedral
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 10 and stageType == 0 then -- Sheol
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 then -- The Chest or the Dark Room
+    -- Sometimes the vanilla end of challenge trophy does not appear
+    -- Thus, we need to handle replacing both the trophy and the big chest
+    -- So replace the big chest with either a checkpoint flag or a custom trophy,
+    -- depending on if we are on the last character or not
+    if RPSpeedrun.charNum == 7 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_Pageant(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
+
+  -- Pageant Boy races can go in either direction so we need to handle all 4 cases
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 10 and stageType == 0 and -- Sheol
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 then -- The Chest or the Dark Room
+    -- We want to delete all big chests on the Pageant Boy ruleset so that
+    -- you don't accidently end your run before you can show off your build to the judges
+    RPCheckEntities.bigChestAction = "remove"
+  end
+end
+
+function RPCheckEntities:Entity5_340_BlueBaby(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local player = game:GetPlayer(0)
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 and -- The Chest
+         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    RPCheckEntities.bigChestAction = "remove"
+
+  elseif stage == 11 and stageType == 1 and -- The Chest
+         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    RPCheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function RPCheckEntities:Entity5_340_TheLamb(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local player = game:GetPlayer(0)
+
+  if stage == 10 and stageType == 0 and -- Sheol
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 and stageType == 0 and -- Dark Room
+         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    RPCheckEntities.bigChestAction = "remove"
+
+  elseif stage == 11 and stageType == 0 and -- Dark Room
+         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    RPCheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function RPCheckEntities:Entity5_340_Everything(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  if stage == 10 and stageType == 1 then
+    -- Cathedral goes to Sheol
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 10 and stageType == 0 then
+    -- Sheol goes to The Chest
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- 7
+    -- The Chest goes to the Dark Room
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 and stageType == 0 then
+    if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+      RPCheckEntities.bigChestAction = "remove"
+    else
+      RPCheckEntities.bigChestAction = "trophy"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_MegaSatan(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
+
+  -- Mega Satan races can go in either direction so we need to handle all 4 cases
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 10 and stageType == 0 and -- Sheol
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif stage == 11 and -- The Chest or the Dark Room
+         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    -- We want to delete the big chest after Blue Baby or The Lamb
+    -- to remind the player that they have to go to Mega Satan
+    RPCheckEntities.bigChestAction = "remove"
+
+  elseif stage == 11 and -- The Chest or the Dark Room
+        roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+
+    RPCheckEntities.bigChestAction = "trophy"
+  end
+end
+
+-- PickupVariant.PICKUP_TROPHY (5.370)
+function RPCheckEntities:Entity5_370(pickup)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local challenge = Isaac.GetChallenge()
+
+  -- Do nothing if we are not on a custom speedrun challenge
+  -- (otherwise we would mess with the normal challenges)
+  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+
+    return
+  end
+
+  -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
+  -- depending on if we are on the last character or not
+  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+      RPSpeedrun.charNum == 9) or
+     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+      RPSpeedrun.charNum == 14) or
+     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+      RPSpeedrun.charNum == 7) or
+     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+      RPSpeedrun.charNum == 7) then
+
+    -- Spawn the "Race Trophy" custom entity
+    game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+               pickup.Position, pickup.Velocity, nil, 0, 0)
+    Isaac.DebugString("Spawned the end of speedrun trophy.")
+
+  else
+    -- Spawn a Checkpoint (a custom item) in the center of the room
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+    RPSpeedrun.spawnedCheckpoint = true
+    Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+  end
+
+  -- Get rid of the vanilla challenge trophy
+  pickup:Remove()
 end
 
 -- EntityType.ENTITY_PROJECTILE (9)

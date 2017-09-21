@@ -10,7 +10,7 @@ const Raven = require('raven');
 const ps = require('ps-node');
 const tasklist = require('tasklist');
 const opn = require('opn');
-const hashFiles = require('hash-files');
+// const hashFiles = require('hash-files');
 const teeny = require('teeny-conf');
 const Registry = require('winreg');
 
@@ -57,10 +57,9 @@ let modPath;
 let IsaacOpen = false;
 let IsaacPID;
 let fileSystemValid = true; // By default, we assume the user has everything set up correctly
-let steamCloud; // This will get filled in during the "checkOptionsINIForModsEnabled" function to be either true or false
-let steamPath; // This will get filled in during the "checkSteam1" function
-let steamID; // This will get filled in during the "checkSteam2" function
-let atLeastOneSaveFileChecked = false;
+let steamCloud; // This will get filled in during the "checkOptionsINI" function to be either true or false
+let steamPath; // This will get filled in during the "checkSteam1()" function
+let saveFileDir; // This will get filled in during the "checkOneMillionPercent()" function or the "checkSteam3()" function
 let fullyUnlockedSaveFileFound = false;
 let secondTime = false; // We might have to do everything twice
 
@@ -86,12 +85,11 @@ process.on('message', (message) => {
     }
 
     // Begin the work
-    checkOptionsINIForModsEnabled();
+    checkOptionsINI();
 });
 
-function checkOptionsINIForModsEnabled() {
-    // Check to see if the user has ALL mods disabled (by pressing "Tab" in the mods menu)
-    process.send('Checking the "options.ini" file to see if "EnabledMods=1".');
+function checkOptionsINI() {
+    process.send('Checking the "options.ini" file for "EnabledMods" and "SteamCloud".');
     let optionsPath;
     if (process.platform === 'linux') {
         optionsPath = path.join(modPath, '..', '..', 'binding of isaac afterbirth+', 'options.ini');
@@ -152,11 +150,19 @@ function checkOneMillionPercent() {
         checkModIntegrity();
     }
 
+    // TODO remove this and uncomment below
+    checkModIntegrity();
+
+    /*
     if (steamCloud) {
+        // Their save files are located in their Steam directory, so we have to check 2 registry entries
         checkSteam1();
     } else {
-        checkDocuments();
+        // Their save files are in the options directory, and we can derive where that is from the mod path
+        saveFileDir = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+');
+        checkOneMillionPercent2();
     }
+    */
 }
 
 function checkSteam1() {
@@ -192,40 +198,29 @@ function checkSteam2() {
             return;
         }
 
-        steamID = item.value;
-        checkSteam3();
+        const steamID = item.value;
+        saveFileDir = path.join(steamPath, 'userdata', steamID, '250900', 'remote');
+        checkOneMillionPercent2();
     });
 }
 
-function checkSteam3() {
+function checkOneMillionPercent2() {
     // Go through the 3 save files, if they exist
     for (let i = 1; i <= 3; i++) {
-        const saveFile = path.join(steamPath, 'userdata', steamID, '250900', 'remote', `abp_persistentgamedata${i}.dat`);
-        if (checkSaveFile(saveFile)) {
+        let saveFile;
+        if (steamCloud) {
+            saveFile = path.join(saveFileDir, `abp_persistentgamedata${i}.dat`);
+        } else {
+            saveFile = path.join(saveFileDir, `persistentgamedata${i}.dat`);
+        }
+        checkSaveFile(saveFile);
+        if (fullyUnlockedSaveFileFound) {
             break;
         }
     }
 
-    if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
-        process.send(`error: NO SAVE ${steamCloud} ""`, processExit);
-        return;
-    }
-
-    checkModIntegrity();
-}
-
-function checkDocuments() {
-    const documentsPath = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+');
-
-    for (let i = 1; i <= 3; i++) {
-        const saveFile = path.join(documentsPath, `persistentgamedata${i}.dat`);
-        if (checkSaveFile(saveFile)) {
-            break;
-        }
-    }
-
-    if (!atLeastOneSaveFileChecked || !fullyUnlockedSaveFileFound) {
-        process.send(`error: NO SAVE ${steamCloud}`, processExit);
+    if (!fullyUnlockedSaveFileFound) {
+        process.send(`error: NO SAVE ${steamCloud} "${saveFileDir}"`, processExit);
         return;
     }
 
@@ -235,21 +230,20 @@ function checkDocuments() {
 function checkSaveFile(saveFile) {
     try {
         if (fs.existsSync(saveFile)) {
-            atLeastOneSaveFileChecked = true;
+            /*
             const saveFileBytes = fs.readFileSync(saveFile); // We don't specify any encoding to get the raw bytes
             // "saveFileBytes.data" is now an array of bytes
+
             // TODO CHECK BYTES
 
             if (true) {
                 fullyUnlockedSaveFileFound = true;
-                return true;
             }
+            */
         }
     } catch (err) {
         process.send(`error: Failed to check for the "${saveFile}" file: ${err}`, processExit);
     }
-
-    return false;
 }
 
 // After an update, Steam can partially download some of the files, which seems to happen pretty commonly
@@ -449,7 +443,7 @@ function closeIsaac() {
         // So redo all of the steps from before to be thorough
         secondTime = true;
         setTimeout(() => {
-            checkOptionsINIForModsEnabled();
+            checkOptionsINI();
         }, 1000); // Pause an extra second to let all file writes occur
     });
 }
