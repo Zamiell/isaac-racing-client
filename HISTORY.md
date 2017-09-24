@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.11.4* - Unreleased
+### *v0.11.4* - September 23rd, 2017
 
 Gameplay:
 
@@ -14,8 +14,6 @@ Client:
 * The Racing+ client will now show you a message if it is restarting your Isaac for you. (It won't do this unless it detects a corrupted mod.)
 * The Racing+ client will no longer let you ready up if you are playing a non-custom race without the Racing+ mod enabled.
 * Previously in v.10.0, the automatic corrupted mod repair was disabled. This is now re-enabled and more robust in that it will check for extraneous files in your mod directory.
-
-
 
 ### *v0.11.2* - September 20th, 2017
 

@@ -242,7 +242,7 @@ function checkModIntegrity() {
     // In development, we don't want to overwrite potential work in progress, so just skip to the next thing
     // (even if we are in production, we don't mess with the mod if it is marked as a development folder)
     if (isDev || modPath.includes('dev')) {
-        checkIsaacOpen();
+        process.send('The Racing+ mod directory has "dev" in it. Skipping Racing+ mod related checks.', processExit);
         return;
     }
 
