@@ -127,8 +127,8 @@ function RPPostEntityKill:NPC45(npc)
     Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
   end
 
-  -- Fix the (vanilla) Globin bug
-  RPPostEntityKill:KillGlobins()
+  -- Fix the (vanilla) Globin / Sack bug
+  RPPostEntityKill:KillExtraEnemies()
 end
 
 -- EntityType.ENTITY_MOMS_HEART (78)
@@ -235,8 +235,8 @@ function RPPostEntityKill:NPC78(npc)
     Isaac.DebugString("It Lives! or Hush killed; situation 3.")
   end
 
-  -- Fix the (vanilla) Globin bug
-  RPPostEntityKill:KillGlobins()
+  -- Fix the (vanilla) Globin / Sack bug
+  RPPostEntityKill:KillExtraEnemies()
 end
 
 -- EntityType.ENTITY_FALLEN (81)
@@ -333,16 +333,19 @@ function RPPostEntityKill.NPC407(npc)
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
--- However, Nicalis didn't consider that Globins need to be killed twice
--- Racing+ manually fixes this bug
+-- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
+-- Blisters also need to be killed twice (to kill the spawned Sacks)
+-- Racing+ manually fixes this bug by expliticly killing them
 -- This code is also necessary to fix the issue where a Globin will prevent the
 -- removal of the natural trapdoor and beam of light after It Lives!
 --- (in the "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions)
 function RPPostEntityKill:KillGlobins()
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_GLOBIN then -- 24
+    if entity.Type == EntityType.ENTITY_GLOBIN or -- 24
+       entity.Type == EntityType.ENTITY_BOIL then -- 30
+
       entity:Kill()
-      Isaac.DebugString("Manually killed a Globin after Mom / It Lives!")
+      Isaac.DebugString("Manually killed a Globin / Sack after Mom / It Lives!")
     end
   end
 end

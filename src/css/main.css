@@ -1926,6 +1926,7 @@
         font-size: 0.9em;
         margin: 0 0.25em;
         padding: 0.25em 0.65em;
+        -webkit-user-select: auto; /* added */
     }
 
     .align-left {
@@ -3498,7 +3499,7 @@
     }
 
     .underline {
-        border-bottom: 1px solid #e4886a; /* asdf */
+        border-bottom: 1px solid #e4886a;
     }
 
     /*
@@ -4405,10 +4406,10 @@
     }
 
     /*
-        Error modal
+        Modals
     */
 
-    .error {
+    .modal {
         font-size: 16pt !important;
         position: absolute;
         z-index: 1;
@@ -4425,15 +4426,6 @@
 
     #error-modal-description ul {
         margin-bottom: 0;
-    }
-
-    /*
-        Log file modal
-    */
-
-    #log-file-modal {
-        font-size: 16pt !important;
-        margin: 0 2.5em 0 2.5em;
     }
 
     #log-file-link {

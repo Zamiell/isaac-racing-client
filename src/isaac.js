@@ -4,13 +4,14 @@
 
 // Imports
 const fs = require('fs-extra');
+const klawSync = require('klaw-sync');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const ps = require('ps-node');
 const tasklist = require('tasklist');
 const opn = require('opn');
-// const hashFiles = require('hash-files');
+const hashFiles = require('hash-files');
 const teeny = require('teeny-conf');
 const Registry = require('winreg');
 
@@ -54,14 +55,14 @@ settings.loadOrCreateSync();
 
 // Global variables
 let modPath;
+let documentsDir;
 let IsaacOpen = false;
 let IsaacPID;
-let fileSystemValid = true; // By default, we assume the user has everything set up correctly
+let fileSystemValid = true; // By default, we assume the mod is not corrupted
 let steamCloud; // This will get filled in during the "checkOptionsINI" function to be either true or false
 let steamPath; // This will get filled in during the "checkSteam1()" function
 let saveFileDir; // This will get filled in during the "checkOneMillionPercent()" function or the "checkSteam3()" function
 let fullyUnlockedSaveFileFound = false;
-let secondTime = false; // We might have to do everything twice
 
 // The parent will communicate with us, telling us the path to the mods path
 process.on('message', (message) => {
@@ -89,47 +90,27 @@ process.on('message', (message) => {
 });
 
 function checkOptionsINI() {
-    process.send('Checking the "options.ini" file for "EnabledMods" and "SteamCloud".');
-    let optionsPath;
+    process.send('Checking the "options.ini" file for "SteamCloud".');
     if (process.platform === 'linux') {
-        optionsPath = path.join(modPath, '..', '..', 'binding of isaac afterbirth+', 'options.ini');
+        documentsDir = path.join(modPath, '..', '..', 'binding of isaac afterbirth+');
     } else {
-        optionsPath = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+', 'options.ini');
+        documentsDir = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+');
     }
+    const optionsPath = path.join(documentsDir, 'options.ini');
     if (!fs.existsSync(optionsPath)) {
         process.send('error: The "options.ini" file does not exist.', processExit);
         return;
     }
 
-    // Check for "EnableMods=1" in the "options.ini" file
-    let optionsFile = fs.readFileSync(optionsPath, 'utf8');
-    const match1 = optionsFile.match(/\bEnableMods=(\d+)\b/);
-    if (match1) {
-        const value = match1[1];
-        if (value !== '1') {
-            // Change it to 1 and rewrite the file
-            fileSystemValid = false;
-            optionsFile = optionsFile.replace(`EnableMods=${value}`, 'EnableMods=1');
-            try {
-                fs.writeFileSync(optionsPath, optionsFile, 'utf8');
-            } catch (err) {
-                process.send(`error: Failed to write to the "options.ini" file: ${err}`, processExit);
-                return;
-            }
-        }
-    } else {
-        process.send('error: Failed to parse the "options.ini" file for the "EnableMods" field.', processExit);
-        return;
-    }
-
     // Check for "SteamCloud=1" in the "options.ini" file
-    const match2 = optionsFile.match(/\bSteamCloud=(\d+)\b/);
-    if (match2) {
-        const value = match1[1];
+    const optionsFile = fs.readFileSync(optionsPath, 'utf8');
+    const match = optionsFile.match(/\bSteamCloud=(\d+)\b/);
+    if (match) {
+        const value = match[1];
         if (value === '0') {
-            steamCloud = true;
-        } else if (value === '1') {
             steamCloud = false;
+        } else if (value === '1') {
+            steamCloud = true;
         } else {
             process.send('error: The "SteamCloud" field in "options.ini" is not set to either 0 or 1.', processExit);
             return;
@@ -150,19 +131,14 @@ function checkOneMillionPercent() {
         checkModIntegrity();
     }
 
-    // TODO remove this and uncomment below
-    checkModIntegrity();
-
-    /*
     if (steamCloud) {
         // Their save files are located in their Steam directory, so we have to check 2 registry entries
         checkSteam1();
     } else {
-        // Their save files are in the options directory, and we can derive where that is from the mod path
-        saveFileDir = path.join(modPath, '..', '..', 'Binding of Isaac Afterbirth+');
+        // Their save files are in the documents directory that we found/declared earlier
+        saveFileDir = documentsDir;
         checkOneMillionPercent2();
     }
-    */
 }
 
 function checkSteam1() {
@@ -198,7 +174,9 @@ function checkSteam2() {
             return;
         }
 
-        const steamID = item.value;
+        let steamID = item.value; // This comes from the registry in hexidecimal format
+        steamID = parseInt(steamID, 16); // Convert it to decimal, which will match what the directory is
+        steamID = steamID.toString(); // Convert it to a string so that it can be used in the path.join() function
         saveFileDir = path.join(steamPath, 'userdata', steamID, '250900', 'remote');
         checkOneMillionPercent2();
     });
@@ -220,7 +198,9 @@ function checkOneMillionPercent2() {
     }
 
     if (!fullyUnlockedSaveFileFound) {
-        process.send(`error: NO SAVE ${steamCloud} "${saveFileDir}"`, processExit);
+        // We need to send both the steamCloud variable and the path to the save directory so that
+        // the client knows the correct prefix for the save file to replace
+        process.send(`error: NO SAVE ${(steamCloud ? '1' : '0')} "${saveFileDir}"`, processExit);
         return;
     }
 
@@ -230,16 +210,17 @@ function checkOneMillionPercent2() {
 function checkSaveFile(saveFile) {
     try {
         if (fs.existsSync(saveFile)) {
-            /*
             const saveFileBytes = fs.readFileSync(saveFile); // We don't specify any encoding to get the raw bytes
             // "saveFileBytes.data" is now an array of bytes
 
-            // TODO CHECK BYTES
-
-            if (true) {
-                fullyUnlockedSaveFileFound = true;
+            // Achievements are located at 0x20 (32) + achievement number
+            // So we need to check 33 through 371
+            for (let i = 33; i <= 371; i++) {
+                if (saveFileBytes[i] === 1) {
+                    fullyUnlockedSaveFileFound = true;
+                    break;
+                }
             }
-            */
         }
     } catch (err) {
         process.send(`error: Failed to check for the "${saveFile}" file: ${err}`, processExit);
@@ -283,11 +264,7 @@ function checkModIntegrity() {
         return;
     }
 
-    // Check to see if it is corrupt or missing
-    // (skip this for now)
-    enableBossCutscenes();
-
-    /*
+    // Check to see if the mod is corrupt or missing
     // Each key of the JSON is the relative path to the file
     for (const relativePath of Object.keys(checksums)) {
         const filePath = path.join(modPath, relativePath);
@@ -325,57 +302,56 @@ function checkModIntegrity() {
         }
     }
 
-    enableBossCutscenes();
-    */
-}
-
-// We can revert boss cutscenes to vanilla by deleting a single file, for users that are used to vanilla
-function enableBossCutscenes() {
-    // Default to deleting boss cutscenes
-    let bossCutscenes = false;
-    if (typeof settings.get('bossCutscenes') !== 'undefined') {
-        if (settings.get('bossCutscenes')) {
-            bossCutscenes = true;
-        }
+    // To be thorough, also go through the mod directory and check to see if there are any extraneous files that are not on the hash list
+    let modFiles;
+    try {
+        modFiles = klawSync(modPath);
+    } catch (err) {
+        process.send(`error: Failed to enumerate the files in the "${modPath}" directory: ${err}`, processExit);
+        return;
     }
+    for (const fileObject of modFiles) {
+        // Get the relative path by chopping off the left side
+        const modFile = fileObject.path.substring(modPath.length + 1); // We add one to remove the trailing slash
 
-    const bossCutsceneFile = path.join(modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-    if (bossCutscenes) {
-        // Make sure the file is deleted
-        if (fs.existsSync(bossCutsceneFile)) {
-            process.send('Re-enabling boss cutscenes.');
+        if (!fileObject.stats.isFile()) {
+            // Ignore directories; even extraneous directories shouldn't cause any harm
+            continue;
+        } else if (
+            path.basename(modFile) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
+            path.basename(modFile) === 'save1.dat' || // These are the IPC files, so it doesn't matter if they are different
+            path.basename(modFile) === 'save2.dat' ||
+            path.basename(modFile) === 'save3.dat'
+        ) {
+            continue;
+        }
+
+        // Delete all files that are not found within the JSON hashes
+        if (!Object.prototype.hasOwnProperty.call(checksums, modFile)) {
+            const filePath = path.join(modPath, modFile);
+            process.send(`Extraneous file found: ${filePath}`);
             fileSystemValid = false;
             try {
-                fs.removeSync(bossCutsceneFile);
+                fs.removeSync(filePath);
             } catch (err) {
-                const errorMsg = `error: Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ${err}`;
-                process.send(errorMsg, processExit);
+                process.send(`error: Failed to delete the extraneous "${filePath}" file: ${err}`, processExit);
                 return;
             }
         }
     }
 
-    checkIsaacOpen();
+    // We are finished checking the integrity of the Racing+ Lua mod
+    if (fileSystemValid) {
+        // We are done
+        process.send('File system validation passed.', processExit);
+    } else {
+        checkIsaacOpen();
+    }
 }
 
-// If we make changes to files and Isaac is closed, it will overwrite all of our changes
-// So first, we need to find out if it is open
+// The Racing+ mod was corrupt, so we need to restart Isaac to ensure that everything is loaded correctly
+// First, find out if Isaac is open
 function checkIsaacOpen() {
-    // If all of the file system checks passed, we don't care if Isaac is open or not, we are finished
-    if (fileSystemValid && !secondTime) {
-        process.send('File system validation passed.');
-        setTimeout(() => {
-            processExit();
-        }, 5000);
-        return;
-    }
-
-    // If we are doing this the second time around, we already know that Isaac is closed
-    if (secondTime) {
-        startIsaac();
-        return;
-    }
-
     process.send('Checking to see if Isaac is open.');
     if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
         // On Windows, we use the taskkill module (the ps-node module is very slow)
@@ -383,7 +359,10 @@ function checkIsaacOpen() {
         tasklist({
             filter: [`Imagename eq ${processName}`], // https://technet.microsoft.com/en-us/library/bb491010.aspx
         }).then((data) => {
-            if (data.length === 1) {
+            if (data.length === 0) {
+                // Isaac is not open
+                closeIsaac();
+            } else if (data.length === 1) {
                 IsaacOpen = true;
                 IsaacPID = data[0].pid;
                 closeIsaac();
@@ -391,8 +370,7 @@ function checkIsaacOpen() {
                 process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
             }
         }, (err) => {
-            // Isaac is closed
-            closeIsaac();
+            process.send(`error: Failed to detect if Isaac is open: ${err}`, processExit);
         });
     } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
         // On macOS and Linux, we use the ps-node module
@@ -424,27 +402,22 @@ function checkIsaacOpen() {
 function closeIsaac() {
     if (!IsaacOpen) {
         // Isaac wasn't open, we are done
-        // Don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually
-        process.send('File system validation passed. (Isaac was not open.)');
-        setTimeout(() => {
-            processExit();
-        }, 5000);
+        // (don't automatically open Isaac for them; it might be annoying, so we can let them open the game manually)
+        process.send('File system repair complete. (Isaac was not open.)', processExit);
         return;
     }
 
-    process.send('File system checks failed, so we need to restart Isaac.');
+    process.send('File system was repaired, so we need to restart Isaac.');
     ps.kill(IsaacPID.toString(), (err) => { // This expects the first argument to be in a string for some reason
         if (err) {
             process.send(`error: Failed to close Isaac: ${err}`, processExit);
             return;
         }
 
-        // When Isaac closes, it will overwrite the "options.ini" file
-        // So redo all of the steps from before to be thorough
-        secondTime = true;
+        // Wait a second, and then start Isaac again
         setTimeout(() => {
-            checkOptionsINI();
-        }, 1000); // Pause an extra second to let all file writes occur
+            startIsaac();
+        }, 1000);
     });
 }
 
@@ -456,5 +429,6 @@ function startIsaac() {
     // The child will stay alive even if the parent has closed
     setTimeout(() => {
         process.exit();
-    }, 30000); // We need delay before exiting or else Isaac won't actually open
+    }, 30000); // Delay 30 seconds before exiting
+    // We need to delay before exiting or else Isaac won't actually open
 }

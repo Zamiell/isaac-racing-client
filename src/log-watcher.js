@@ -106,6 +106,9 @@ const parseLine = (line) => {
         process.send('Title menu initialized.');
     } else if (line.startsWith('Lua Debug: Race error: Wrong mode.')) {
         process.send('Race error: Wrong mode.');
+    } else if (line.startsWith('Lua Debug: Race validation succeeded.')) {
+        // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
+        process.send('Race validation succeeded.');
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         // (send this separately from the seed because race validation messages are checked before parsing the seed)

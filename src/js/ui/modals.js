@@ -98,61 +98,60 @@ $(document).ready(() => {
         Save file modal
     */
 
-    $('#save-file-0-slot-1').click(() => {
-        saveFileReplace(0, 1);
+    $('#save-file-modal-slot-1').click(() => {
+        saveFileReplace(1);
     });
 
-    $('#save-file-0-slot-2').click(() => {
-        saveFileReplace(0, 2);
+    $('#save-file-modal-slot-2').click(() => {
+        saveFileReplace(2);
     });
 
-    $('#save-file-0-slot-3').click(() => {
-        saveFileReplace(0, 3);
+    $('#save-file-modal-slot-3').click(() => {
+        saveFileReplace(3);
     });
 
-    $('#save-file-0-exit').click(() => {
+    $('#save-file-modal-exit').click(() => {
         ipcRenderer.send('asynchronous-message', 'close');
     });
 
-    $('#save-file-0-relaunch').click(() => {
+    $('#save-file-modal-relaunch').click(() => {
         ipcRenderer.send('asynchronous-message', 'restart');
     });
 
-    $('#save-file-1-slot-1').click(() => {
-        saveFileReplace(1, 1);
-    });
-
-    $('#save-file-1-slot-2').click(() => {
-        saveFileReplace(1, 2);
-    });
-
-    $('#save-file-1-slot-3').click(() => {
-        saveFileReplace(1, 3);
-    });
-
-    $('#save-file-1-exit').click(() => {
-        ipcRenderer.send('asynchronous-message', 'close');
-    });
-
-    $('#save-file-1-relaunch').click(() => {
-        ipcRenderer.send('asynchronous-message', 'restart');
-    });
-
-    function saveFileReplace(steamCloud, slot) {
-        globals.log.info(`Replacing save slot ${slot} (with steam cloud ${steamCloud}.`);
+    function saveFileReplace(slot) {
+        globals.log.info(`Replacing save slot ${slot} (with a steam cloud value of "${globals.saveFileDir[0]}" and a save directory of "${globals.saveFileDir[1]}").`);
 
         // Make sure the directory for the old save exists
-        let oldSaveFile;
-        if (steamCloud === 0) {
-            oldSaveFile = path.join(globals.modPath, '..', 'Binding of Isaac Afterbirth+', '');
-        } else if (steamCloud === 1) {
-            oldSaveFile = path.join(globals.modPath, '..', 'Binding of Isaac Afterbirth+', '');
-        } else {
-            misc.errorShow('The "saveFileReplace()" function got an invalid value for "steamCloud".');
+        try {
+            if (!fs.existsSync(globals.saveFileDir[1])) {
+                misc.errorShow(`Racing+ detected that your Isaac save file directory was at "${globals.saveFileDir[1]}", but that directory doesn't seem to exist.`);
+                return;
+            }
+        } catch (err) {
+            misc.errorShow(`Failed to check to see if the "${globals.saveFileDir[1]}" directory exists: ${err}`);
             return;
         }
 
-        // Make sure the hacked save file is there
+        // Remove the old save file, if it exists
+        let saveFileName;
+        if (globals.saveFileDir[0] === '1') {
+            // SteamCloud is equal to 1
+            saveFileName = `abp_persistentgamedata${slot}.dat`;
+        } else if (globals.saveFileDir[0] === '0') {
+            // SteamCloud is equal to 0
+            saveFileName = `persistentgamedata${slot}.dat`;
+        }
+        const saveFile = path.join(globals.saveFileDir[1], saveFileName);
+        try {
+            if (fs.existsSync(saveFile)) {
+                fs.removeSync(saveFile);
+            }
+        } catch (err) {
+            misc.errorShow(`Failed to check/delete the "${saveFile}" file: ${err}`);
+            return;
+        }
+
+        // Make sure the fully unlocked save file is there
         // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\src\js\ui
         const hackedSaveFile = path.join(__dirname, '..', '..', 'data', 'persistentgamedata.dat');
         try {
@@ -160,21 +159,19 @@ $(document).ready(() => {
                 misc.errorShow(`The "${hackedSaveFile}" file does not exist! Your Racing+ client may be corrupted.`);
                 return;
             }
-            fs.copySync(hackedSaveFile, oldSaveFile);
+            fs.copySync(hackedSaveFile, saveFile);
         } catch (err) {
-            misc.errorShow(`Failed to copy the "persistentgamedata.dat" file: ${err}`);
+            misc.errorShow(`Failed to copy the fully unlocked save file to "${saveFile}": ${err}`);
             return;
         }
 
-        $(`#save-file-modal-${steamCloud}-description-1`).fadeOut(globals.fadeTime);
-        $(`#save-file-modal-${steamCloud}-description-2`).fadeOut(globals.fadeTime, () => {
-            $(`#save-file-modal-${steamCloud}-description-3`).fadeIn(globals.fadeTime);
+        $('#save-file-modal-description-1').fadeOut(globals.fadeTime);
+        $('#save-file-modal-description-2').fadeOut(globals.fadeTime, () => {
+            $('#save-file-modal-description-3').fadeIn(globals.fadeTime);
+            $('#save-file-modal-description-4').fadeIn(globals.fadeTime);
         });
-        $(`#save-file-modal-${steamCloud}-slot-1`).fadeOut(globals.fadeTime);
-        $(`#save-file-modal-${steamCloud}-slot-2`).fadeOut(globals.fadeTime);
-        $(`#save-file-modal-${steamCloud}-slot-3`).fadeOut(globals.fadeTime);
-        $(`#save-file-modal-${steamCloud}-exit`).fadeOut(globals.fadeTime, () => {
-            $(`#save-file-modal-${steamCloud}-relaunch`).fadeIn(globals.fadeTime);
+        $('#save-file-modal-replace-buttons').fadeOut(globals.fadeTime, () => {
+            $('#save-file-modal-relaunch').fadeIn(globals.fadeTime);
         });
     }
 });

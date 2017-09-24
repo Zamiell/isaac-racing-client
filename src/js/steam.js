@@ -43,7 +43,7 @@ $(document).ready(() => {
 });
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
-const steam = (event, message) => {
+ipcRenderer.on('steam', (event, message) => {
     if (typeof message !== 'string') {
         // The child process is finished and has sent us the Steam-related information that we seek
         globals.steam.id = message.id;
@@ -67,8 +67,7 @@ const steam = (event, message) => {
         // The child process is sending us a message to log
         globals.log.info(`Steam child message: ${message}`);
     }
-};
-ipcRenderer.on('steam', steam);
+});
 
 // Get a WebSockets cookie from the Racing+ server using our Steam ticket generated from Greenworks
 // The authentication flow is described here: https://partner.steamgames.com/documentation/auth#client_to_backend_webapi

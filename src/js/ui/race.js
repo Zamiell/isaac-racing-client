@@ -1031,12 +1031,13 @@ const checkReadyValid = () => {
     }
 
     // Don't do anything if the race status is not set to ready
-    if (globals.raceList[globals.currentRaceID].status !== 'open') {
+    const race = globals.raceList[globals.currentRaceID];
+    if (race.status !== 'open') {
         return;
     }
 
     // Due to lag, we might get here before the racerList is defined, so check for that
-    if (!Object.prototype.hasOwnProperty.call(globals.raceList[globals.currentRaceID], 'racerList')) {
+    if (!Object.prototype.hasOwnProperty.call(race, 'racerList')) {
         return;
     }
 
@@ -1044,13 +1045,10 @@ const checkReadyValid = () => {
     let valid = true;
     let tooltipContent;
 
-    if (
-        !globals.raceList[globals.currentRaceID].ruleset.solo &&
-        globals.raceList[globals.currentRaceID].racerList.length === 1
-    ) {
+    if (!race.ruleset.solo && race.racerList.length === 1) {
         valid = false;
         tooltipContent = '<span lang="en">You should wait for someone else to join this race before marking yourself as ready.</span>';
-    } else if (globals.raceList[globals.currentRaceID].ruleset.format === 'custom') {
+    } else if (race.ruleset.format === 'custom') {
         // Do nothing
         // (we want to do no validation for custom rulesets; it's all up to the players to decide when they are ready)
     } else if (!globals.gameState.inGame) {
@@ -1059,6 +1057,9 @@ const checkReadyValid = () => {
     } else if (globals.gameState.hardMode) {
         valid = false;
         tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
+    } else if (!globals.gameState.racingPlusModEnabled && race.ruleset.format !== 'custom') {
+        valid = false;
+        tooltipContent = '<span lang="en">You must having the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
     }
 
     if (!valid) {

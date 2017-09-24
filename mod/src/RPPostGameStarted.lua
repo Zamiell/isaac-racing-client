@@ -384,9 +384,9 @@ function RPPostGameStarted:Race()
     return
   end
 
-  --
-  -- Race validation succeeded
-  --
+  -- The Racing+ client will look for this message to determine that
+  -- the user has successfully downloaded and is running the Racing+ Lua mod
+  Isaac.DebugString("Race validation succeeded.")
 
   -- Give extra items depending on the format
   if RPGlobals.race.rFormat == "seeded" then

@@ -25,7 +25,7 @@ module.exports = {
     gameState: {
         inGame: false, // The log will tell us if we are in the menu or in a run
         hardMode: false, // The log will tell us if a run is started on hard mode or Greed mode
-        challenge: false, // The log will tell us if a run is started on a challenge
+        racingPlusModEnabled: false, // The log will tell us if race validation succeeded, which is an indicator that they have successfully downloaded and are running the Racing+ Lua mod
     },
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js
@@ -65,6 +65,7 @@ module.exports = {
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
     raceList: {},
+    saveFileDir: [], // Filled in the "isaac.js" file if no fully unlocked save file is found
     spamTimer: new Date().getTime(),
     steam: { // Filled in steam.js
         id: null,

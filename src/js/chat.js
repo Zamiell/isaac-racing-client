@@ -151,15 +151,14 @@ exports.send = (destination) => {
 
         // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
         draw('PM-to', PMrecipient, PMmessage);
-    } else if (message === '/debug') {
-        // /debug - Debug command
+    } else if (message === '/debug1') {
+        // /debug1 - Debug command for the client
+        globals.log.info('Entering debug function.');
+        debug();
+    } else if (message === '/debug2') {
+        // /debug2 - Debug command for the server
         globals.log.info('Sending debug command.');
         globals.conn.send('debug', {});
-
-        if (isDev) {
-            globals.log.info('Entering debug function.');
-            debug();
-        }
     } else if (message === '/restart') {
         // /restart - Restart the client
         ipcRenderer.send('asynchronous-message', 'restart');
@@ -177,6 +176,12 @@ exports.send = (destination) => {
             });
         }
     } else if (message === '/shutdown') {
+        // We want to automatically restart the server by default
+        globals.conn.send('adminShutdown', {
+            comment: 'restart',
+        });
+    } else if (message === '/shutdown2') {
+        // This will not automatically restart the server
         globals.conn.send('adminShutdown', {});
     } else if (message === '/unshutdown') {
         globals.conn.send('adminUnshutdown', {});
@@ -184,10 +189,21 @@ exports.send = (destination) => {
         globals.conn.send('adminMessage', {
             message: noticeMessage,
         });
+    } else if (message.startsWith('/loadnev')) {
+        globals.conn.send('adminLoadEnv', {});
+    } else {
+        // Manually call the draw function
+        draw(room, '_error', 'That is not a valid command.');
     }
 };
 
 const draw = (room, name, message, datetime = null, discord = false) => {
+    // Check for errors
+    let error = false;
+    if (name === '_error') {
+        error = true;
+    }
+
     // Check for the existence of a PM
     let privateMessage = false;
     if (room === 'PM-to') {
@@ -259,17 +275,21 @@ const draw = (room, name, message, datetime = null, discord = false) => {
     let chatLine = `<div id="${room}-chat-text-line-${globals.roomList[room].chatLine}" class="hidden">`;
     chatLine += `<span id="${room}-chat-text-line-${globals.roomList[room].chatLine}-header">`;
     chatLine += `[${hours}:${minutes}] &nbsp; `;
+
     if (discord) {
-        chatLine += '<span class="chat-discord">[Discord]</span> ';
+        chatLine += '<span class="chat-discord">[Discord]</span> &nbsp; ';
     }
-    if (privateMessage) {
+
+    if (error) {
+        // The "chat-pm" class will make it red
+        chatLine += '<span class="chat-pm">[ERROR]</span> ';
+    } else if (privateMessage) {
         chatLine += `<span class="chat-pm">[PM ${privateMessage} <strong class="chat-pm">${name}</strong>]</span> &nbsp; `;
-    } else if (name === '!server') {
-        // Do nothing
-    } else {
+    } else if (name !== '!server') {
         chatLine += `&lt;<strong>${name}</strong>&gt; &nbsp; `;
     }
     chatLine += '</span>';
+
     if (name === '!server') {
         chatLine += `<span class="chat-server">${message}</span>`;
     } else {

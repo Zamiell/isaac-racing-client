@@ -245,7 +245,7 @@
 
                         <p lang="en">Start each race at the character selection screen, shown below.</p>
 
-                        <img src="img/character-selection-screen.png" class="align-center" />
+                        <img src="img/character-selection-screen.png" />
                         <br />
                         <br />
 
@@ -482,7 +482,7 @@
         </div><!-- page-wrapper -->
 
         <!-- Error modal -->
-        <div id="error-modal" class="error hidden selectable">
+        <div id="error-modal" class="modal hidden selectable">
             <section class="box">
                 <h3 id="error-modal-title"><span lang="en">Error</span></h3>
                 <p id="error-modal-description" lang="en"></p>
@@ -493,7 +493,7 @@
         </div><!-- error-modal -->
 
         <!-- Warning modal -->
-        <div id="warning-modal" class="error hidden selectable">
+        <div id="warning-modal" class="modal hidden selectable">
             <section class="box">
                 <h3><span lang="en">Warning</span></h3>
                 <p id="warning-modal-description"></p>
@@ -504,7 +504,7 @@
         </div><!-- warning-modal -->
 
         <!-- Log file modal -->
-        <div id="log-file-modal" class="hidden">
+        <div id="log-file-modal" class="modal hidden">
             <section class="box">
                 <h3><span lang="en">Log File</span></h3>
                 <p id="log-file-description-1">
@@ -528,44 +528,35 @@
         <!-- JavaScript pulls the contents of this div for automatic translation purposes -->
         <div id="select-your-log-file" class="hidden" lang="en">Select your Isaac "log.txt" file</div>
 
-        <!-- Save file modal 0 (when steam cloud is off)-->
-        <div id="save-file-modal-0" class="hidden">
+        <!-- Save file modal -->
+        <div id="save-file-modal" class="modal hidden">
             <section class="box">
                 <h3><span lang="en">Save File</span></h3>
-                <p id="save-file-modal-0-description-1">
+                <p id="save-file-modal-description-1">
                     <span lang="en">Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.</span>
                 </p>
-                <p id="save-file-modal-0-description-2">
+                <p id="save-file-modal-description-2">
                     <span lang="en">If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.</span>
                 </p>
-                <p id="save-file-modal-0-description-3" class="hidden" lang="en">Please relaunch the program.</p>
-                <br />
-                <button id="save-file-0-slot-1" class="button small" type="button" lang="en">Replace save slot 1</button>
-                <button id="save-file-0-slot-2" class="button small" type="button" lang="en">Replace save slot 2</button>
-                <button id="save-file-0-slot-3" class="button small" type="button" lang="en">Replace save slot 3</button>
-                <button id="save-file-0-exit" class="button small" type="button" lang="en">Do nothing and exit</button>
-                <button id="save-file-0-relaunch" class="button small hidden" type="button" lang="en">Exit and relaunch</button>
-            </section>
-        </div><!-- save-file-modal-0 -->
-
-        <!-- Save file modal 1 (when steam cloud is on)-->
-        <div id="save-file-modal-0" class="hidden">
-            <section class="box">
-                <h3><span lang="en">Save File</span></h3>
-                <p id="save-file-modal-1-description-1">
-                    <span lang="en">Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.</span>
+                <p id="save-file-modal-description-3" class="hidden">
+                    <span lang="en">The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.</span>
                 </p>
-                <p id="save-file-modal-1-description-2">
-                    <span lang="en">If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite one of your existing save files. If you arn't sure, make sure to back up your save files before proceeding.</span>
+                <p id="save-file-modal-description-4" class="hidden">
+                    (<span lang="en">If it doesn't work, then you need to go into the game once on that slot, exit the game, and then redo this process.</span>)
                 </p>
-                <p id="save-file-modal-1-description-3" class="hidden" lang="en">Please relaunch the program.</p>
                 <br />
-                <button id="save-file-1-slot-1" class="button small" type="button" lang="en">Replace save slot 1</button>
-                <button id="save-file-1-slot-2" class="button small" type="button" lang="en">Replace save slot 2</button>
-                <button id="save-file-1-slot-3" class="button small" type="button" lang="en">Replace save slot 3</button>
-                <button id="save-file-1-exit" class="button small" type="button" lang="en">Do nothing and exit</button>
+                <span id="save-file-modal-replace-buttons">
+                    <center>
+                        <button id="save-file-modal-slot-1" class="button small" type="button" lang="en">Replace save slot #1</button>
+                        <button id="save-file-modal-slot-2" class="button small" type="button" lang="en">Replace save slot #2</button>
+                        <button id="save-file-modal-slot-3" class="button small" type="button" lang="en">Replace save slot #3</button>
+                        <br /><br />
+                        <button id="save-file-modal-exit" class="button small" type="button" lang="en">Do nothing and exit</button>
+                    </center>
+                </span>
+                <button id="save-file-modal-relaunch" class="button small hidden" type="button" lang="en">Exit and relaunch Racing+</button>
             </section>
-        </div><!-- save-file-modal-1 -->
+        </div><!-- save-file-modal -->
 
         <div id="tooltips" class="hidden">
             <div id="new-race-tooltip">

@@ -7,20 +7,9 @@ local SamaelMod = {}
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 
-----Samael Character Mod---
---Version 1.6
---By Ghostbroster
--- (heavily modified by Zamiel for Racing+ and to pass the linter)
-
---Settings
---local wraithModeKey = Keyboard.KEY_F --Which keyboard key activates wraith mode
---local controllerMode = false
---Changing this to true will allow wraith mode to be activated with the "item drop" button (Ctrl on a keyboard)
--- Currently the only practical way to allow controller input
-
---local wraithMeterXOffset = 45 --Wraith Meter HUD sprite offsets
---local wraithMeterYOffset = 50
---local showValues = false --Show charge and swingDelay values on screen
+-- Samael was originally created by Ghostbroster
+-- It's heavily modified by Zamiel for Racing+
+-- (and to pass the linter)
 
 --References and junk
 local scytheID = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
@@ -36,6 +25,7 @@ local samaelDrFetus = Isaac.GetItemIdByName("Samael Dr. Fetus")
 --Replaces Dr. Fetus for Samael if brimstone is also acquired
 local samaelMarked = Isaac.GetItemIdByName("Samael Marked") --Replaces marked for Samael
 local wraithItem = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
+local deadEyeCountdown = 3
 
 --Wraith meter HUD sprite
 local wraithMeter = Sprite()
@@ -538,7 +528,7 @@ function SamaelMod:scytheUpdate(scythe)
     if scytheState == 2 then --If previous attack was interrupted (due to fast attack rate)
       hitBox.Coins = -1 --Reset hitbox (explained more later)
       hitBox.CollisionDamage = 0
-      SamaelMod:deadEyeFunc()
+      SamaelMod:deadEyeFunc(true)
       if swing == 0 then --Switch 'swing' value (left or right swing)
         swing = 1
       else
@@ -553,9 +543,13 @@ function SamaelMod:scytheUpdate(scythe)
 
 
   --INITIATE ATTACK: When the player releases the fire direction, swing the scythe
-  if fireDirection == -1  and scytheState == 1 then --or swingDelay > 0
-    --if scytheState == 1 then --If player was holding up the scythe
-      --If they were charging long enough to fire a projectile...
+  if fireDirection == -1  and scytheState == 1 then
+    -- Do not fire a projectile when player picks something up
+    if player:IsHoldingItem() then
+      charge = 0
+    end
+
+    --If they were charging long enough to fire a projectile...
     if charge >= chargeTime and
        not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and
        not player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then
@@ -735,7 +729,7 @@ function SamaelMod:scytheUpdate(scythe)
       hitBox.Coins = -1 --"No direction"
       hitBox.CollisionDamage = 0 --Remove the collision damage (just making sure it cant hurt anything)
       hitBox.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
-      SamaelMod:deadEyeFunc()
+      SamaelMod:deadEyeFunc(false)
     end
   elseif scytheState == 2 and
          (sprite:IsFinished("Swing") or sprite:IsFinished("BigSwing")) then --If the swinging animation finished
@@ -868,16 +862,23 @@ function SamaelMod:fireScytheProjectile(projVel, angle, XOffset, YOffset)
 
 end
 
-----Custom deadeye functionality (increases damage every time a scythe swing hits something;
-----bonus is lost when a swing misses----
-function SamaelMod:deadEyeFunc()
+-- Custom deadeye functionality
+-- (increases damage every time a scythe swing hits something; bonus is lost when a swing misses
+function SamaelMod:deadEyeFunc(interrupt)
   local player = Isaac.GetPlayer(0)
   if player:HasCollectible(samaelDeadEye) then
     if hits > 0 then
-      if deadEyeBoost < properDamage*2 then
+      if deadEyeBoost < properDamage * 2 then
+        deadEyeBoost = deadEyeBoost + properDamage * 0.2
         --Add to deadEyeBoost to keep track of how much damage has been added by this effect
-        deadEyeBoost = deadEyeBoost+properDamage*0.2
         player.Damage = player.Damage+properDamage*0.2 --Add damage
+      end
+      deadEyeCountdown = 3
+    elseif interrupt then
+      deadEyeCountdown = deadEyeCountdown - 1
+      if deadEyeCountdown <= 0 then
+        player.Damage = player.Damage - deadEyeBoost --Revert damage to original value
+        deadEyeBoost = 0
       end
     else
       player.Damage = player.Damage - deadEyeBoost --Revert damage to original value

@@ -72,7 +72,7 @@ ipcRenderer.on('logWatcher', (event, message) => {
     if (message === 'Title menu initialized.') {
         globals.gameState.inGame = false;
         globals.gameState.hardMode = false; // Assume by default that the user is playing on normal mode
-        globals.gameState.challenge = false; // Assume by default that the user is not playing on a challenge
+        globals.gameState.racingPlusModEnabled = false; // Assume by default that the user does not have the Racing+ mod initialized
         raceScreen.checkReadyValid();
     } else if (message === 'A new run has begun.') {
         // We detect this through the "RNG Start Seed:" line
@@ -84,6 +84,10 @@ ipcRenderer.on('logWatcher', (event, message) => {
         }, 1000);
     } else if (message === 'Race error: Wrong mode.') {
         globals.gameState.hardMode = true;
+        raceScreen.checkReadyValid();
+    } else if (message === 'Race validation succeeded.') {
+        // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
+        globals.gameState.racingPlusModEnabled = true;
         raceScreen.checkReadyValid();
     }
 

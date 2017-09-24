@@ -1,5 +1,22 @@
 # Racing+ Version History and News
 
+### *v0.11.4* - Unreleased
+
+Gameplay:
+
+* Samael's scythe charge will now be deleted instead of automatically released if you pick up an item. This should help prevent damaging yourself with Ipecac. (Thanks missingyes)
+* Fixed the bug where Samael would lose the Dead Eye multiplier if you hit a tear shoot button but he didn't actually swing the scythe. (Thanks Krakenos)
+* Fixed the bug where Sacks spawned from killed Blisters would stay alive after killing Mom under certain conditions. (Thanks Krakenos)
+
+Client:
+
+* The Racing+ client will now check to see if you have a fully unlocked save file upon logging in. If none is found, it will ask you if you want it to automatically install one for you. This save file is actually fully unlocked in the sense that it has every completion mark on the post-it notes, 999 coins in the donation machine, 9,999,999 Eden tokens, and every easter egg unlocked.
+* The Racing+ client will now show you a message if it is restarting your Isaac for you. (It won't do this unless it detects a corrupted mod.)
+* The Racing+ client will no longer let you ready up if you are playing a non-custom race without the Racing+ mod enabled.
+* Previously in v.10.0, the automatic corrupted mod repair was disabled. This is now re-enabled and more robust in that it will check for extraneous files in your mod directory.
+
+
+
 ### *v0.11.2* - September 20th, 2017
 
 * Fixed the bug where Lil' Haunt delay canceling wouldn't work under certain conditions. (Thanks Gamonymous)
@@ -254,9 +271,9 @@ News:
   * Congradulations to Cyber_1 for the best R+9 time of 1:31:02 and Dea1h on the second best time of 1:33:27. I was luckily able to nab third place with 1:33:49.
   * Congradulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
-  * If you want to beat these times, The R+9 and R+14 categories will continue to be tracked on speedrun.com, but the official competition will move on to season 2.
+  * If you want to beat these times, the R+9 and R+14 categories will continue to be tracked on speedrun.com, but the official competition will move on to season 2.
 * Season 2 has officially begun! The new category is now considered final; there will be no more major balance changes.
-* If you have ideas for season 3, send them to me on Discord, which is planned for November of 2017.
+* If you have ideas for season 3, send them to me on Discord, which is planned for November 2017.
 
 Changes:
 
