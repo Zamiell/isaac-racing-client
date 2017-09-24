@@ -41,6 +41,24 @@ process.on('message', (message) => {
 
     // If the message is not "exit", we can assume that it is the log path
     const logPath = message;
+    if (!fs.existsSync(logPath)) {
+        process.send(`error: The "${logPath}" file does not exist.`, processExit);
+        return;
+    }
+
+    // Before we start to monitor the log file for new lines, we first want to read all of the existing log file
+    // Otherwise, the Racing+ client may not work properly if the user opens up the game, goes on save file 3,
+    // and then opens the client, for example
+    let existingLines;
+    try {
+        existingLines = fs.readFileSync(logPath, 'utf8').split('\n');
+    } catch (err) {
+        process.send(`error: Failed to read from the "${logPath}" file: ${err}`);
+        return;
+    }
+    for (const line of existingLines) {
+        parseLine(line);
+    }
 
     // None of the existing tail modules on NPM seem to work correctly with the Isaac log, so we have to code our own
     // The Isaac log file is glitchy; it is written to in such a way that the directory does not recieve updates
@@ -48,10 +66,6 @@ process.on('message', (message) => {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365465%28v=vs.85%29.aspx
     // Instead we need to use fs.watchFile, which is polling based and less efficient
     process.send(`Starting to watch file: ${logPath}`);
-    if (!fs.existsSync(logPath)) {
-        process.send(`error: The "${logPath}" file does not exist.`, processExit);
-        return;
-    }
     const fd = fs.openSync(logPath, 'r');
     fs.watchFile(logPath, {
         interval: 50, // The default is 5007, so we need to poll much more frequently than that
@@ -101,7 +115,20 @@ const parseLine = (line) => {
         return;
     }
 
-    if (line.startsWith('Menu Title Init')) {
+    if (line.startsWith('Loading PersistentData ')) {
+        // We want to keep track of which save file we are on so that we don't have to write 3 files at a time
+        // This line looks like:
+        // Loading PersistentData 1 from SteamCloud!
+        // or:
+        // Loading PersistentData 1 from local folder!
+        const match = line.match(/Loading PersistentData (\d) /);
+        if (match) {
+            const slot = match[1];
+            process.send(`Save file slot: ${slot}`);
+        } else {
+            process.send('error: Failed to parse the save slot number from the log.');
+        }
+    } else if (line.startsWith('Menu Title Init')) {
         // They have entered the menu
         process.send('Title menu initialized.');
     } else if (line.startsWith('Lua Debug: Race error: Wrong mode.')) {
@@ -119,6 +146,8 @@ const parseLine = (line) => {
         if (match) {
             const seed = match[1];
             process.send(`New seed: ${seed}`);
+        } else {
+            process.send('error: Failed to parse the run seed from the log.');
         }
     } else if (line.startsWith('Level::Init ')) {
         // A new floor was entered
@@ -127,24 +156,28 @@ const parseLine = (line) => {
             const stage = match[1];
             const type = match[2];
             process.send(`New floor: ${stage}-${type}`);
+        } else {
+            process.send('error: Failed to parse the floor from the log.');
         }
     } else if (line === 'Lua Debug: Entered the Mega Satan room.') {
         // The Void is floor 12; we use 13 as a fake floor
         process.send('New floor: 13-0');
     } else if (line.startsWith('Room ')) {
         // A new room was entered
-        // Sometimes there are lines of "Room count #", so filter those out
         const match = line.match(/Room (.+?)\(/);
         if (match) {
             const roomID = match[1];
             process.send(`New room: ${roomID}`);
         }
+        // Sometimes there are lines of "Room count #", so don't throw an error if the match fails
     } else if (line.startsWith('Adding collectible ')) {
         // A new item was picked up
         const match = line.match(/Adding collectible (\d+) /);
         if (match) {
             const item = match[1];
             process.send(`New item: ${item}`);
+        } else {
+            process.send('error: Failed to parse the item number from the log.');
         }
     } else if (line === 'playing cutscene 17 (Chest).') {
         process.send('Finished run: Blue Baby');

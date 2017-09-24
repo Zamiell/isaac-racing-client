@@ -382,8 +382,17 @@ exports.init = (username, password, remember) => {
             raceScreen.participantAdd(i);
         }
 
+        if (race.status === 'in progress') {
+            // If the race is in progress, we are coming back after a disconnect
+            // Write this to the save.dat file so that it does not reset us in the middle of the run
+            globals.modLoader.status = race.status;
+            globals.log.info('Coming back after a disconnect.');
+        }
+
         // Update the mod with "myStatus", "placeMid" and "place"
+        // (and "status" if we are reconnecting)
         modLoader.sendPlace();
+        // globals.log.info('modLoader - Sent after recieving a "racerList" data.');
     });
 
     globals.conn.on('raceCreated', connRaceCreated);

@@ -50,12 +50,15 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 /*
 
 Other notes:
-- Electron 1.7.6 gives error with graceful-fs, so staying on version
+- Electron 1.7.6 gives error with graceful-fs, so staying on version 1.6.11
 
 */
 
 
 // Imports
+const fs = require('fs-extra');
+const path = require('path');
+const { execFile, fork } = require('child_process');
 const {
     app,
     BrowserWindow,
@@ -65,9 +68,6 @@ const {
 // The "electron" package is only allowed to be in the devDependencies section
 const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
-const { execFile, fork } = require('child_process');
-const fs = require('fs-extra');
-const path = require('path');
 const isDev = require('electron-is-dev');
 const tracer = require('tracer');
 const Raven = require('raven');
@@ -337,54 +337,95 @@ app.on('activate', () => {
     }
 });
 
+// Write all default values to the "save1.dat", "save2.dat", and "save3.dat" files
 app.on('before-quit', () => {
-    if (!errorHappened) {
-        // Write all default values to the "save1.dat", "save2.dat", and "save3.dat" files
-        let modsPath;
-        if (process.platform === 'linux') {
-            modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
-        } else {
-            modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
-        }
-        for (let i = 1; i <= 3; i++) {
-            // Find the location of the file
-            let saveDat = path.join(modsPath, globals.modNameDev, `save${i}.dat`);
-            if (!fs.existsSync(saveDat)) {
-                saveDat = path.join(modsPath, globals.modName, `save${i}.dat`);
-            }
+    if (errorHappened) {
+        log.info('Not modifying the 3 "save.dat" files since we got an error.');
+        return;
+    }
 
-            // Read it and set all non-speedrun order variables to defaults
-            const json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
-            json.status = 'none';
-            json.myStatus = 'not ready';
-            json.rType = 'unranked';
-            json.solo = false;
-            json.rFormat = 'unseeded';
-            json.character = 3;
-            json.goal = 'Blue Baby';
-            json.seed = '-';
-            json.startingItems = [];
-            json.countdown = -1;
-            json.placeMid = 0;
-            json.place = 1;
-            if (typeof json.order7 === 'undefined') {
-                json.order7 = [0];
-            }
-            if (typeof json.order9 === 'undefined') {
-                json.order9 = [0];
-            }
-            if (typeof json.order14 === 'undefined') {
-                json.order14 = [0];
-            }
-            try {
-                fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');
-            } catch (err) {
-                log.error(`Error while writing the "save${i}.dat" file: ${err}`);
-            }
-        }
-        log.info('Copied over default "save1.dat", "save2.dat", and "save3.dat" files.');
+    // Find the location of the Isaac mods directory
+    let modsPath;
+    if (process.platform === 'linux') {
+        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'binding of isaac afterbirth+ mods');
     } else {
-        log.info('Not copying over the 3 default "save.dat" files since we got an error.');
+        modsPath = path.join(path.dirname(settings.get('logFilePath')), '..', 'Binding of Isaac Afterbirth+ Mods');
+    }
+    if (!fs.existsSync(modsPath)) {
+        log.info('Attempted to write default values to the "save.dat" files, but the Isaac mods directory does not appear to exist.');
+        return;
+    }
+
+    // Find the location of the Racing+ mod, if it exists
+    let racingPlusModPath = path.join(modsPath, globals.modNameDev); // Assume a dev environment by default
+    if (!fs.existsSync(racingPlusModPath)) {
+        racingPlusModPath = path.join(modsPath, globals.modName);
+    }
+    if (!fs.existsSync(racingPlusModPath)) {
+        log.info('Attempted to write default values to the "save.dat" files, but the Racing+ mod does not appear to exist.');
+        return;
+    }
+
+    // Find the location of "save-defaults.dat", if it exists
+    const defaultSaveDat = path.join(racingPlusModPath, 'save-defaults.dat');
+    if (!fs.existsSync(defaultSaveDat)) {
+        log.info('Attempted to write default values to the "save.dat" files, but the "save-defaults.dat" does not appear to exist.');
+        return;
+    }
+
+    // Go through the 3 "save.dat" files
+    for (let i = 1; i <= 3; i++) {
+        // Find the location of the file
+        const saveDat = path.join(racingPlusModPath, `save${i}.dat`);
+        if (!fs.existsSync(saveDat)) {
+            // The "save.dat" file does not exist for some reason
+            // This should never happen because all 3 save.dat files are downloaded by default when the user subscribes over Steam
+            // Furthermore, if doing non-custom races, the Racing+ client is also writing to these files during races
+            // For now, just copy over the default save.dat file
+            try {
+                fs.copySync(defaultSaveDat, saveDat);
+                log.info(`The "${saveDat}" does not exist. (This should never happen.) Made a new one from the "save-defaults.dat" file.`);
+            } catch (err) {
+                log.error(`Error while copying the the "save-defaults.dat" file to the "save${i}.dat" file: ${err}`);
+            }
+            continue;
+        }
+
+        // Read it and set all non-speedrun order variables to defaults
+        let json;
+        try {
+            json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
+        } catch (err) {
+            log.error(`Failed to read the "${saveDat}" file: ${err}`);
+            continue;
+        }
+        json.status = 'none';
+        json.myStatus = 'not ready';
+        json.ranked = false;
+        json.solo = false;
+        json.rFormat = 'unseeded';
+        json.character = 3;
+        json.goal = 'Blue Baby';
+        json.seed = '-';
+        json.startingItems = [];
+        json.countdown = -1;
+        json.placeMid = 0;
+        json.place = 1;
+        if (typeof json.order7 === 'undefined') {
+            json.order7 = [0];
+        }
+        if (typeof json.order9 === 'undefined') {
+            json.order9 = [0];
+        }
+        if (typeof json.order14 === 'undefined') {
+            json.order14 = [0];
+        }
+        try {
+            fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');
+            log.info(`Wrote default values to "save${i}.dat".`);
+        } catch (err) {
+            log.error(`Error while writing the "save${i}.dat" file: ${err}`);
+        }
     }
 });
 

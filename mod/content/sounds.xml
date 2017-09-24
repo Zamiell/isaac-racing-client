@@ -2,4 +2,15 @@
 	<sound name="Speedrun Finish">
 		<sample weight="1" path="speedrun_finish.wav" />
 	</sound>
+
+	<!-- Mahalath -->
+	<sound name="Baseball">
+		<sample weight="1" path="mahalath/baseball.wav"/>
+	</sound>
+	<sound name="Muffled Explosion">
+		<sample weight="1" path="mahalath/muffled_explosion.wav"/>
+	</sound>
+	<sound name="Balloon Inflate">
+		<sample weight="1" path="mahalath/balloon_inflate.wav"/>
+	</sound>
 </sounds>

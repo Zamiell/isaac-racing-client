@@ -1,18 +1,31 @@
 # Racing+ Version History and News
 
+### *v0.11.6* - September 24th, 2017
+
+Gameplay:
+
+* Fixed the bug where the Gulp! pill wouldn't do anything. (Thanks thereisnofuture)
+* Fixed the bug where races to The Lamb wouldn't work properly. (Thanks Gamonymous)
+
+Client:
+
+* The Racing+ client now uses a much faster auto update system; instead of having to download everything, you will only have to download the changed files.
+* Fixed the bug where the Racing+ client would think your mod was corrupted if it was disabled. (Thanks thereisnofuture)
+* Fixed the bug where Racing+ would restart the run if your internet died in the middle of a race.
+
 ### *v0.11.4* - September 23rd, 2017
 
 Gameplay:
 
 * Samael's scythe charge will now be deleted instead of automatically released if you pick up an item. This should help prevent damaging yourself with Ipecac. (Thanks missingyes)
-* Fixed the bug where Samael would lose the Dead Eye multiplier if you hit a tear shoot button but he didn't actually swing the scythe. (Thanks Krakenos)
+* Fixed the bug where Samael would lose the Dead Eye multiplier if you hit a tear shoot button in between swings. (Thanks Krakenos)
 * Fixed the bug where Sacks spawned from killed Blisters would stay alive after killing Mom under certain conditions. (Thanks Krakenos)
 
 Client:
 
-* The Racing+ client will now check to see if you have a fully unlocked save file upon logging in. If none is found, it will ask you if you want it to automatically install one for you. This save file is actually fully unlocked in the sense that it has every completion mark on the post-it notes, 999 coins in the donation machine, 9,999,999 Eden tokens, and every easter egg unlocked.
-* The Racing+ client will now show you a message if it is restarting your Isaac for you. (It won't do this unless it detects a corrupted mod.)
-* The Racing+ client will no longer let you ready up if you are playing a non-custom race without the Racing+ mod enabled.
+* The client will now check to see if you have a fully unlocked save file upon logging in. If none is found, it will ask you if you want it to automatically install one for you. This save file is actually fully unlocked in the sense that it has every completion mark on the post-it notes, 999 coins in the donation machine, 9,999,999 Eden tokens, and every easter egg unlocked.
+* The client will now show you a message if it is restarting your Isaac for you. (It won't do this unless it detects a corrupted mod.)
+* The client will no longer let you ready up if you are playing a non-custom race without the Racing+ mod enabled.
 * Previously in v.10.0, the automatic corrupted mod repair was disabled. This is now re-enabled and more robust in that it will check for extraneous files in your mod directory.
 
 ### *v0.11.2* - September 20th, 2017

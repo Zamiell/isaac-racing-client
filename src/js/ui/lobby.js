@@ -41,8 +41,10 @@ exports.show = () => {
     // Start the Steam watcher
     steamWatcher.start();
 
-    // Launch Isaac
-    isaac.start();
+    // Do file-system related checks
+    if (!isaac.start()) {
+        return;
+    }
 
     // Make sure that all of the forms are cleared out
     $('#login-username').val('');

@@ -7,13 +7,6 @@
 /*
 
 New TODO:
-- test corrupt mod auto-restart
-- test all isaac checks to see if they work
-- restart isaac on corrupt mod TEST
-
-- unlock every easter egg for racing+ save file
-- FINISH SAVE FILE CHECKING BYTES READING
-
 - when twitch bot warning message comes into client, set local variables accordingly
 
 Bugs to fix:
@@ -34,7 +27,6 @@ Bugs to fix:
 - "duplicate name" tooltip doesn't appear after doing it, going into race, coming back, trying to create again
 - make it remember new race settings
 - unranked solo doesn't show right icon on lobby
-- detect 1million%
 - make it so that diversity doesn't give repeat items
 - make title column and entrants column in lobby selectable
 - add time to lobby for current races
@@ -42,7 +34,6 @@ Bugs to fix:
 - add "Upload log" button
 - add # of people to race in prerace
 
-- "Isaac is not open" when it really is - implement hyphen's suggestion
 - tooltip for "Entrants" row of lobby gets deleted when coming back from that race
     (probably have to reinit tooltipster every time on enter lobby from race function)
 - error while recieving PM during a transition
@@ -274,6 +265,7 @@ if (typeof logFilePath === 'undefined' || logFilePath === null) {
     settings.saveSync();
     globals.log.info(`logFilePath was undefined (or null) on boot, it was set to: ${globals.defaultLogFilePath}`);
 }
+// We check to see the log file actually exists in the "log-watcher.js" file
 
 // Get the default mod directory
 let modPath;
@@ -290,45 +282,7 @@ if (fs.existsSync(modPathDev)) {
 } else {
     globals.modPath = path.join(modPath, globals.modName);
 }
-
-// Store what their R+9/14 character order is
-const defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
-for (let i = 1; i <= 3; i++) {
-    const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
-    if (fs.existsSync(modLoaderFile)) {
-        try {
-            const json = JSON.parse(fs.readFileSync(modLoaderFile, 'utf8'));
-            if (typeof json.order7 === 'undefined') {
-                globals.modLoader[`order7-${i}`] = [0];
-            } else {
-                globals.modLoader[`order7-${i}`] = json.order7;
-            }
-            if (typeof json.order9 === 'undefined') {
-                globals.modLoader[`order9-${i}`] = [0];
-            } else {
-                globals.modLoader[`order9-${i}`] = json.order9;
-            }
-            if (typeof json.order14 === 'undefined') {
-                globals.modLoader[`order14-${i}`] = [0];
-            } else {
-                globals.modLoader[`order14-${i}`] = json.order14;
-            }
-        } catch (err) {
-            globals.initError = `Error while reading the "save${i}.dat" file: ${err}`;
-        }
-    } else if (fs.existsSync(defaultSaveDatFile)) {
-        // Copy over the default file
-        // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
-        try {
-            fs.copySync(defaultSaveDatFile, modLoaderFile);
-        } catch (err) {
-            globals.initError = `Failed to copy the "save-defaults.dat" file to "${modLoaderFile}": ${err}`;
-        }
-        globals.modLoader[`order7-${i}`] = [0];
-        globals.modLoader[`order9-${i}`] = [0];
-        globals.modLoader[`order14-${i}`] = [0];
-    }
-}
+// We check to see if the mod directory actually exists in "isaac.js" file
 
 // Item list
 const itemListLocation = path.join(__dirname, 'data', 'items.json');

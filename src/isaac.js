@@ -321,7 +321,8 @@ function checkModIntegrity() {
             path.basename(modFile) === 'metadata.xml' || // This file will be one version number ahead of the one distributed through steam
             path.basename(modFile) === 'save1.dat' || // These are the IPC files, so it doesn't matter if they are different
             path.basename(modFile) === 'save2.dat' ||
-            path.basename(modFile) === 'save3.dat'
+            path.basename(modFile) === 'save3.dat' ||
+            path.basename(modFile) === 'disable.it' // They might have the mod disabled
         ) {
             continue;
         }
@@ -370,6 +371,8 @@ function checkIsaacOpen() {
                 process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
             }
         }, (err) => {
+            // There is a bug with this on non-English platforms:
+            // https://github.com/sindresorhus/tasklist/issues/11
             process.send(`error: Failed to detect if Isaac is open: ${err}`, processExit);
         });
     } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux

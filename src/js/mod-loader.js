@@ -6,7 +6,6 @@
 const path = nodeRequire('path');
 const fs = nodeRequire('fs-extra');
 const globals = nodeRequire('./js/globals');
-const misc = nodeRequire('./js/misc');
 const builds = nodeRequire('./data/builds');
 
 // We can communicate with the Racing+ Lua mod via file I/O
@@ -51,33 +50,16 @@ const send = () => {
         json.seed = '-';
     }
 
-    // Delete the speedrun orders (we will add them later)
-    delete json['order9-1'];
-    delete json['order14-1'];
-    delete json['order9-2'];
-    delete json['order14-2'];
-    delete json['order9-3'];
-    delete json['order14-3'];
-
     // Write to it
     try {
-        for (let i = 1; i <= 3; i++) {
-            // Add the speedrun orders
-            json.order9 = globals.modLoader[`order9-${i}`];
-            json.order14 = globals.modLoader[`order14-${i}`];
-
-            // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
-            const modLoaderFile = path.join(globals.modPath, `save${i}.dat`);
-            if (!fs.existsSync(modLoaderFile)) {
-                misc.errorShow(`The "${modLoaderFile}" does not exist; the Racing+ client needs to write to this file in order to communicate with the mod. Is your Racing+ mod installed correctly? Is it corrupted? Is your "log.txt" file location set correctly in your Racing+ settings?`);
-                return;
-            }
-            fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
-        }
+        // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
+        const modLoaderFile = path.join(globals.modPath, `save${globals.modLoaderSlot}.dat`);
+        fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
+        // globals.log.info(`successfully wrote to: ${modLoaderFile}`);
     } catch (err) {
-        globals.log.info(`Error while filling up the "save#.dat" file: ${err}`);
-
-        // Try again in 1/20 of a second
+        // Ocassional errors are normal, because there can be a ton of file writes going on,
+        // so just try again in 1/20 of a second
+        globals.log.info(`Error while filling up the "save${globals.modLoaderSlot}.dat" file: ${err}`);
         setTimeout(() => {
             send();
         }, 50);

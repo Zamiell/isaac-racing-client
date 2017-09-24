@@ -55,7 +55,7 @@ function checkActiveUser() {
     });
     steamKey.get('ActiveUser', (err, item) => {
         if (err) {
-            process.send('error: Failed to read the Windows registry when trying to figure out what the active Steam user is.', processExit);
+            process.send(`error: Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`, processExit);
             return;
         }
 

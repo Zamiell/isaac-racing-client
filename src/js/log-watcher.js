@@ -69,7 +69,15 @@ ipcRenderer.on('logWatcher', (event, message) => {
 
     // Do some things regardless of whether we are in a race or not
     // (all relating to the Racing+ Lua mod)
-    if (message === 'Title menu initialized.') {
+    if (message.startsWith('Save file slot: ')) {
+        // We want to keep track of which save file we are on so that we don't have to write 3 files at a time
+        const match = message.match(/Save file slot: (\d)/);
+        if (match) {
+            globals.modLoaderSlot = parseInt(match[1], 10);
+        } else {
+            misc.errorShow('Failed to parse the save slot number from the message sent by the log watcher process.');
+        }
+    } else if (message === 'Title menu initialized.') {
         globals.gameState.inGame = false;
         globals.gameState.hardMode = false; // Assume by default that the user is playing on normal mode
         globals.gameState.racingPlusModEnabled = false; // Assume by default that the user does not have the Racing+ mod initialized
@@ -117,9 +125,9 @@ ipcRenderer.on('logWatcher', (event, message) => {
 
     // Parse the message
     if (message.startsWith('New seed: ')) {
-        const m = message.match(/New seed: (.... ....)/);
-        if (m) {
-            const seed = m[1];
+        const match = message.match(/New seed: (.... ....)/);
+        if (match) {
+            const seed = match[1];
             globals.conn.send('raceSeed', {
                 id: globals.currentRaceID,
                 seed,
@@ -128,10 +136,10 @@ ipcRenderer.on('logWatcher', (event, message) => {
             misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
         }
     } else if (message.startsWith('New floor: ')) {
-        const m = message.match(/New floor: (\d+)-(\d+)/);
-        if (m) {
-            const floorNum = parseInt(m[1], 10); // The server expects this to be an integer
-            const stageType = parseInt(m[2], 10); // The server expects this to be an integer
+        const match = message.match(/New floor: (\d+)-(\d+)/);
+        if (match) {
+            const floorNum = parseInt(match[1], 10); // The server expects this to be an integer
+            const stageType = parseInt(match[2], 10); // The server expects this to be an integer
             globals.conn.send('raceFloor', {
                 id: globals.currentRaceID,
                 floorNum,

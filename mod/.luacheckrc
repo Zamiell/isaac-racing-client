@@ -35,6 +35,7 @@ globals = {
     "PillEffect",
     "PlayerForm",
     "PlayerType",
+    "ProjectileParams",
     "RandomVector",
     "RegisterMod",
     "RNG",

@@ -345,7 +345,7 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_BlueBaby(pickup)
 
   elseif RPGlobals.race.goal == "The Lamb" then
-    RPCheckEntities:Entity5_340_BlueBaby(pickup)
+    RPCheckEntities:Entity5_340_TheLamb(pickup)
 
   elseif RPGlobals.race.goal == "Mega Satan" then
     RPCheckEntities:Entity5_340_MegaSatan(pickup)
@@ -537,7 +537,7 @@ function RPCheckEntities:Entity5_340_TheLamb(pickup)
   local player = game:GetPlayer(0)
 
   if stage == 10 and stageType == 0 and -- Sheol
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
     RPCheckEntities.bigChestAction = "down"
 

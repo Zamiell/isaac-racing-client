@@ -34,33 +34,29 @@ module.exports = {
     log: null,
     lang: null, // The language switcher instance
     modLoader: {
-        'status': 'none',
-        'myStatus': 'not ready',
-        'ranked': false,
-        'solo': false,
-        'rFormat': 'unseeded',
-        'character': 3, // Judas
-        'goal': 'Blue Baby',
-        'seed': '-',
-        'startingBuild': -1,
-        'countdown': -1,
-        'placeMid': 0,
-        'place': 1,
-        'numEntrants': 1,
-        'timeOffset': 0,
-        'order9-1': null, // The rest are filled in main.js
-        'order14-1': null,
-        'order9-2': null,
-        'order14-2': null,
-        'order9-3': null,
-        'order14-3': null,
+        status: 'none',
+        myStatus: 'not ready',
+        ranked: false,
+        solo: false,
+        rFormat: 'unseeded',
+        character: 3, // Judas
+        goal: 'Blue Baby',
+        seed: '-',
+        startingBuild: -1,
+        countdown: -1,
+        placeMid: 0,
+        place: 1,
+        numEntrants: 1,
+        timeOffset: 0,
+        order7: [0], // Speedrun orders are filled in isaac.js
+        order9: [0],
+        order14: [0],
     },
+    modLoaderSlot: 1,
     modName,
     modNameDev,
     modPath: null, // Set in main.js
     myUsername: null,
-    order9: null, // Set in main.js by reading the "save-defaults.dat" file
-    order14: null, // Set in main.js by reading the "save-defaults.dat" file
     playingSound: false,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
