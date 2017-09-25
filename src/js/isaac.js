@@ -39,26 +39,16 @@ exports.start = () => {
             }
 
             // We only want to replace our stored orders if they are changed from the default
-            if (
-                typeof json.order7 !== 'undefined' &&
-                json.order7.toString() !== '[0]' &&
-                globals.modLoader.order7.toString() === '[0]'
-            ) {
-                globals.modLoader.order7 = json.order7;
-            }
-            if (
-                typeof json.order9 !== 'undefined' &&
-                json.order9.toString() !== '[0]' &&
-                globals.modLoader.order9.toString() === '[0]'
-            ) {
-                globals.modLoader.order9 = json.order9;
-            }
-            if (
-                typeof json.order14 !== 'undefined' &&
-                json.order14.toString() !== '[0]' &&
-                globals.modLoader.order14.toString() === '[0]'
-            ) {
-                globals.modLoader.order14 = json.order14;
+            const orders = ['order7', 'order9', 'order14'];
+            for (const order of orders) {
+                if (
+                    typeof json[order] !== 'undefined' &&
+                    json[order] !== null &&
+                    json[order].toString() !== '[0]' &&
+                    globals.modLoader[order].toString() === '[0]'
+                ) {
+                    globals.modLoader[order] = json[order];
+                }
             }
         } else {
             // Copy over the default file
