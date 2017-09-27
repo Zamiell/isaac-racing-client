@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.11.8* - September 27th, 2017
+### *v0.11.9* - September 27th, 2017
 
 * The annoying vanilla in-game timer and score text will no longer appear.
 * Fixed the (vanilla) unavoidable damage in Caves/Catacombs room with 2 Mushrooms and 8 Maggots. (Thanks Dea1h and NorBro86)
