@@ -178,9 +178,12 @@ function RPPostEntityKill:NPC78(npc)
     -- Races to The Lamb go to the Dark Room
     situation = 2
 
+  elseif RPGlobals.race.goal == "Everything" then
+    -- "Everything" races always go to Cathedral first (and then Sheol after that)
+    situation = 1
+
   elseif RPGlobals.race.rFormat == "pageant" or
-         RPGlobals.race.goal == "Mega Satan" or
-         RPGlobals.race.goal == "Everything" then
+         RPGlobals.race.goal == "Mega Satan" then
 
     -- On races to Mega Satan (and the Pageant Boy ruleset), we can potentially go in either direction
     -- So, determine the direction by looking at the photo(s) that we collected
@@ -198,11 +201,11 @@ function RPPostEntityKill:NPC78(npc)
       situation = 3
 
     elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-      -- The player has The Polaroid, so send them to The Chest
+      -- The player has The Polaroid, so send them to Cathdral
       situation = 1
 
     elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-      -- The player has The Negative, so send them to the Dark Room
+      -- The player has The Negative, so send them to Sheol
       situation = 2
 
     else

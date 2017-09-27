@@ -462,6 +462,7 @@ function RPPostNewRoom:CheckRespawnTrophy()
   local level = game:GetLevel()
   local room = game:GetRoom()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -509,12 +510,26 @@ function RPPostNewRoom:CheckRespawnTrophy()
   elseif RPGlobals.raceVars.finished == false and
          RPGlobals.race.status == "in progress" then
 
-    -- We are in a non-finished race, which could end at either Blue Baby, The Lamb, or Mega Satan
-    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX and
-       RPGlobals.race.goal ~= "Mega Satan" and
-       RPGlobals.race.goal ~= "Everything" then
+    -- Check to see if we are in the final room corresponding to the goal
+    if RPGlobals.race.goal == "Blue Baby" then
+      if stageType == 0 or roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+        return
+      end
 
-      return
+    elseif RPGlobals.race.goal == "The Lamb" then
+      if stageType == 1 or roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+        return
+      end
+
+    elseif RPGlobals.race.goal == "Mega Satan" then
+      if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then
+        return
+      end
+
+    elseif RPGlobals.race.goal == "Everything" then
+      if stageType == 1 or roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then
+        return
+      end
     end
 
   else

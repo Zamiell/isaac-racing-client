@@ -134,6 +134,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 
 ### Graphics & Sound Fixes
 
+* The annoying vanilla in-game timer and score text will no longer appear.
 * Charge bars are no longer obnoxiously big.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * The recharge sound will no longer play at the beginning of a run.

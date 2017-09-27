@@ -134,6 +134,10 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
         log.error(data);
         return data;
     },
+    shouldSendCallback: (data) => {
+        log.info('shouldSendCallback');
+        log.info(data);
+    },
 }).install();
 
 /*

@@ -145,27 +145,24 @@ The changed rooms are as follows:
 Some rooms have exploding enemies that spawn near an entrance. If the player has a sufficient number of unused blue flies, the flies will kill the enemy while the room is loading and the player will automatically take damage. This bug is fixed by moving the enemy closer to the center of the room.
 
 The changed rooms are as follows:
-* Basement: #129, #130, #393, #359 (Mulligan)
-* Cellar: #129, #130 (Mulligoon)
+* Basement: #393, #359 (Mulligan)
+* Basement/Cellar: #129 (Mulligoon)
+* Basement/Cellar: #130 (Mulligan/Mulligoon)
 * Cellar: #359 (Mulligan)
-* Caves: #46, #50, #440, #518 (Boom Fly)
+* Caves: #50 (Boom Fly)
 * Caves: #141 (Clotty)
 * Caves: #255 (Maggot)
 * Caves: #553 (Hive)
-* Caves: #548 (Drowned Hive)
-* Catacombs: #46, #440, #518 (Boom Fly)
-* Catacombs: #548 (Drowned Hive)
+* Caves/Catacombs: #46, #440, #518 (Boom Fly)
+* Caves/Catacombs: #548 (Drowned Hive)
+* Caves/Catacombs: #919 (Maggot)
 * Depths: #11 (Boom Fly)
 * Depths: #16 (Brain)
-* Womb: #203 (Lump)
-* Womb: #333 (Fistula)
-* Womb: #410 (Sucker)
-* Utero: #203 (Lump)
-* Utero #333 (Fistula)
-* Utero #410 (Sucker)
-* Cathedral: #30 (Kamikaze Leech)
+* Womb/Utero: #203 (Lump)
+* Womb/Utero: #333 (Fistula)
+* Womb/Utero: #410 (Sucker)
 * Cathedral: #272 (Floating Knight)
-* Sheol: #30 (Kamikaze Leech)
+* Cathedral/Sheol: #30 (Kamikaze Leech)
 * Chest: #53, #72, #84 (Fistula)
 * Dark Room: #238, #272 (Kamikaze Leech)
 * Dark Room: #264 (Bone Knight)
@@ -178,8 +175,7 @@ The changed rooms are as follows:
 Some rooms have TNT barrels that will immediately explode if the player is holding Mom's Knife. These rooms have been fixed by replacing the barrels in question.
 
 The changed rooms are as follows:
-* Basement: #748
-* Cellar: #748
+* Basement/Cellar: #748
 
 <br />
 
@@ -189,8 +185,8 @@ Certain enemies spawn near a door. If they spawn as the white fly champion varia
 
 The changed rooms are as follows:
 * Cellar: #236 (Sack)
-* Womb: #182, #471, #508, #733 (Gurglings)
-* Utero: #182, #471, #733 (Gurglings)
+* Womb:  #508 (Gurglings)
+* Womb/Utero: #182, #471, #733 (Gurglings)
 * Chest: #35, #87, #301 (Gurglings)
 
 <br />
@@ -200,8 +196,7 @@ The changed rooms are as follows:
 If a player enters from the bottom door of the 2x1 Depths / Necropolis room with the single Begotten, they will automatically take damage. It seems clear that Edmund intended for the Begotten to be attached to the block, so the room has been adjusted accordingly.
 
 The changed rooms are as follows:
-* Depths: #316
-* Necropolis: #316
+* Depths/Necropolis: #316
 
 <br />
 
@@ -210,8 +205,7 @@ The changed rooms are as follows:
 One room has Begottens that are not close enough to a well, so they immediately despawn upon entering the room, making the room completely pointless.
 
 The deleted rooms are as follows:
-* Depths: #422
-* Necropolis: #422
+* Depths/Necropolis: #422
 
 <br />
 
@@ -221,8 +215,7 @@ The deleted rooms are as follows:
 * In both of these rooms, there is no consistent strategy to avoid damage when entering from the bottom-left-hand door. Two pots have been placed to alleviate this.
 
 The changed rooms are as follows:
-* Womb: #424
-* Utero: #424
+* Womb/Utero: #424
 
 <br />
 
@@ -304,12 +297,10 @@ The changed room is as follows:
 Low range builds softlock in certain rooms. The rooms are fixed by moving the enemies closer.
 
 The changed rooms are as follows:
-* Caves: #226, #305
-* Catacombs: #305
-* Depths: #226, #417
-* Necropolis: #226, #417
-* Womb: #458, #459
-* Utero: #458, #459
+* Caves: #226
+* Caves/Catacombs: #305
+* Depths/Necropolis: #226, #417
+* Womb/Utero: #458, #459
 
 <br />
 
@@ -318,10 +309,8 @@ The changed rooms are as follows:
 The rooms with a bugged Magician or Lovers card are fixed to be a random card.
 
 The changed rooms are as follows:
-* Depths: #286 (Magician)
-* Necropolis: #286 (Magician)
-* Womb: #687 (Magician)
-* Utero: #687 (Magician)
+* Depths/Necropolis: #286 (Magician)
+* Womb/Utero: #687 (Magician)
 * Curse Room: #21 (Lovers)
 
 <br />
@@ -359,8 +348,7 @@ The changed room is as follows:
 One room in the Womb / Utero has two Rage Creeps and four Round Worms in the center. In Afterbirth, the top Rage Creep will hit the player if they stay at the top door. However, this is not unavoidable damage, as it is possible to kill the top Rage Creep before it fires. Alternatively, it is possible to run to the bottom wall before either Rage Creep begins firing. However, the pot in the center of the room messes with the AI of the Round Worms, so the pot has been removed to make traversing this room slightly more consistent.
 
 The changed rooms are as follows:
-* Womb: #202
-* Utero: #202
+* Womb/Utero: #202
 
 <br />
 
@@ -390,8 +378,7 @@ The bomb puzzle room with four entrances has many problems with it:
 * On the Dank Depths, any rocks that are randomly replaced with spikes are reverted back to rocks in order to prevent unavoidable damage.
 
 The changed room is as follows:
-* Depths: #41
-* Necropolis: #41
+* Depths/Necropolis: #41
 
 <br />
 
@@ -400,8 +387,7 @@ The changed room is as follows:
 The puzzle rooms with the red fires along the sides of the room have no consistent strategy with which to avoid the random shots.
 
 The removed room is as follows:
-* Basement: #771
-* Cellar: #771
+* Basement/Cellar: #771
 
 <br />
 
@@ -428,8 +414,7 @@ The changed room is as follows:
 Some rooms in the game have Nerve Endings next to doors. These are unavoidable damage if the Nerve Endings happen to spawn as their champion variant. This bug is fixed by removing or moving some Nerve Endings.
 
 The changed rooms are as follows:
-* Womb: #147, #825
-* Utero: #147, #825
+* Womb/Utero: #147, #825
 
 <br />
 
@@ -438,8 +423,7 @@ The changed rooms are as follows:
 In some rooms, Edmund placed a rediculous amount of Pale Fatties. The number has been reduced to 8, which is possible to consistently kill without getting hit on a basic build.
 
 The changed rooms are as follows:
-* Caves: #843, #854
-* Catacombs: #843, #854
+* Caves/Catacombs: #843, #854
 
 <br />
 
@@ -448,8 +432,7 @@ The changed rooms are as follows:
 In one room, fires spawn close to the entrance. If the fire becomes a champion red fire, then the player can take unavoidable damage. This bug has been fixed by replacing the Fire with Fire Places, which are guaranteed to not spawn as red fires.
 
 The changed rooms are as follows:
-* Depths: #863
-* Necropolis: #863
+* Depths/Necropolis: #863
 
 <br />
 
@@ -467,8 +450,7 @@ The changed room is as follows:
 In one room, there are Boils behind a Key Block, which can lead to a softlock if you have no keys or bombs. The stacked Boils have been removed.
 
 The changed room is as follows:
-* Womb: #692
-* Utero: #692
+* Womb/Utero: #692
 
 <br />
 
@@ -477,7 +459,7 @@ The changed room is as follows:
 On several I AM ERROR rooms, objects overlap with the doors, which can cause unavoidable damage in certain situations.
 
 The changed rooms are as follows:
-*
+
 * #14 (deleted poops)
 * #15 (added doors)
 * #26 (moved pickups)
@@ -542,40 +524,39 @@ The removed room is as follows:
 A small number of rooms in the game do not have anything in them. Some other rooms do not have anything in them except for a few rocks.
 
 The removed rooms are as follows:
-* Basement: #39, #315
-* Cellar: #39
+* Basement: #315
+* Basement/Cellar: #39
 * Caves: #170
 * Depths: #378, #428
-* Sheol: #73, #89, #255
-* Cathedral: #57, #73, #89
+* Cathedral: #57
+* Sheol: #255
+* Cathedral/Sheol: #73, #89
 * Chest: #42
 
 One room on the Basement/Cellar has the chance to be empty because of stacked entities.
 
 The changed rooms are as follows:
-* Basement: #875
-* Cellar: #875
+* Basement/Cellar: #875
 
 <br />
 
 ### Out of Bounds Fix
 
 Rooms with entities out of bounds have been placed in bounds. This does not affect gameplay in any way.
-* Caves: #203, #363, #406, #427, #428, #429
-* Catacombs: #363, #406, #427, #428, #429
-* Depths: #430, #455, #457, #460, #463, #471, #472
-* Necropolis: #430, #455
+* Caves: #203
+* Caves/Catacombs: #363, #406, #427, #428, #429
+* Depths: #457, #460, #463, #471, #472
+* Depths/Necropolis: #430, #455
 
 <br />
 
 ### Symmetry Fix
 
 Certain rooms in the game were probably meant to be symmetrical, but one entity or tile was incorrectly placed. This is fixed.
-* Basement: #581, #772
-* Cellar: #772
+* Basement: #581
+* Basement/Cellar: #772
 * Caves: #28, #120, #416, #541
-* Womb: #705, #757
-* Utero: #705, #757
+* Womb/Utero: #705, #757
 * Cathedral: #23, #41
 * Monstro II: #1051
 * The Gate: #5042
