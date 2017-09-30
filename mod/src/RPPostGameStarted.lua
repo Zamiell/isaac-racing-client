@@ -15,12 +15,6 @@ local RPSpeedrun     = require("src/rpspeedrun")
 local RPTimer        = require("src/rptimer")
 
 --
--- Variables
---
-
-RPPostGameStarted.diversity = false
-
---
 -- Initialization functions
 --
 
@@ -341,7 +335,16 @@ function RPPostGameStarted:Race()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
+  local challenge = Isaac.GetChallenge()
 
+  -- Validate that we are not on a custom challenge
+  if challenge ~= 0 and
+     RPGlobals.race.rFormat ~= "custom" then
+
+    game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+    Isaac.DebugString("We are in a race but also in a custom challenge; fading out back to the menu.")
+    return
+  end
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   RPGlobals.raceVars.difficulty = game.Difficulty
@@ -361,7 +364,11 @@ function RPPostGameStarted:Race()
       return
     end
 
-  else
+  elseif RPGlobals.race.rFormat == "unseeded" or
+          RPGlobals.race.rFormat == "diversity" or
+          RPGlobals.race.rFormat == "unseeded-lite" or
+          RPGlobals.race.rFormat == "pageant" then
+
     -- Validate that we are not on a set seed
     -- (this will be true if we are on a set seed or on a challenge,
     -- but we won't get this far if we are on a challenge)

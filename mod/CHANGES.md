@@ -56,7 +56,6 @@ While there are thousands of rooms in the game, many players have already seen t
 ## Other Mods Included
 
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. In Racing+, Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
-* [Fogless!](https://moddingofisaac.com/mod/950/fogless), a mod by [Dan](https://moddingofisaac.com/user/255) that removes fog for the purposes of lag reduction.
 * [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod by [piber20](https://steamcommunity.com/id/piber20).
 
 ## List of Minor Changes
@@ -139,9 +138,11 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
-* The Broken Modem sprite is replaced with a better version from freeze, the original creator.
+* The Broken Modem sprite is replaced with a better version from [freeze](http://steamcommunity.com/id/frezin/myworkshopfiles/?appid=250900), the original creator.
 * The bugged Scolex champion (skeleton version) will now display properly.
 * The bottom left hand corner of the title screen will now properly show.
+* Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
+* Daemon's Tail, Error (404), Karma, and No! now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005/myworkshopfiles/?appid=250900) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
 
 <br />
 

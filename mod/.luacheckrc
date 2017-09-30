@@ -36,6 +36,7 @@ globals = {
     "PlayerForm",
     "PlayerType",
     "ProjectileParams",
+    "ProjectileVariant",
     "RandomVector",
     "RegisterMod",
     "RNG",

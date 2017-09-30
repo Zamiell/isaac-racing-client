@@ -9,7 +9,6 @@ local sfx = SFXManager()
 local rng = RNG()
 
 local barf = {
-  challenge = 0,
   girl = {
     Type = Isaac.GetEntityTypeByName("Mahalath")
   },
@@ -38,6 +37,8 @@ local barfballs = 0
 local barfbombs = 0
 local delfight = false
 
+-- In Racing+ we modify the level 1 balance values
+-- (the original values are noted in a comment next to each value)
 local bal = {
   barfcolor = {Color(132/255, 188/255, 88/255, 1, 0, 0, 0), Color(138/255, 36/255, 49/255, 1, 0, 0, 0)},
   bloodcolor = {Color(215/255, 10/255, 10/255, 1, 0, 0, 0), Color(15/255, 15/255, 15/255, 1, 0, 0, 0)},
@@ -123,27 +124,8 @@ local function getAddress(p)
   --return addr + 8
 end
 
---rip the stain
-function l:replaceStain(en)
-  local var = 0
-  if barf.challenge == 20 then
-    var = 1
-  end
-  if barf.challenge == 19 then
-    barf.challenge = 20
-  end
-  if en:Exists() then
-    Isaac.Spawn(barf.girl.Type, var, 0, en.Position, Vector(0, 0), nil)
-  end
-  en:Remove()
-  --en:Morph(barf.girl.Type, var, 0, 0)
-  --en.HitPoints = en.MaxHitPoints
-  --en:SetColor(BaseColor, 1, -10000, false, false)
-end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.replaceStain, EntityType.ENTITY_STAIN)
-
 --mahalath aka barf girl
-function l:check_girl(en)
+function RPMahalath:check_girl(en)
   local player = Isaac.GetPlayer(0)
   local d = en:GetData()
   local s = en:GetSprite()
@@ -218,7 +200,7 @@ function l:check_girl(en)
     end
   end
   --move
-  move_me(en)
+  RPMahalath:move_me(en)
   --jumps
   d.jumping = false
   d.landed = false
@@ -401,7 +383,7 @@ function l:check_girl(en)
         d.eaten = true
         sfx:Play(SoundEffect.SOUND_MEAT_FEET_SLOW0, 1, 0, false, .8)
         en.Scale = 0
-        local angle = 0
+        local angle
         local params = ProjectileParams()
         params.FallingAccelModifier = 1.2
         params.Color = bal.barfcolor[d.v]
@@ -458,7 +440,11 @@ function l:check_girl(en)
       end
     end
     --finish
-    if s:IsFinished("ShotgunLeft") or s:IsFinished("ShotgunRight") or s:IsFinished("ShotgunLeft2") or s:IsFinished("ShotgunRight2") then
+    if s:IsFinished("ShotgunLeft") or
+       s:IsFinished("ShotgunRight") or
+       s:IsFinished("ShotgunLeft2") or
+       s:IsFinished("ShotgunRight2") then
+
       d.state = 'idle'
       d.idletime = bal.ShotgunIdleTime[d.v] + rng:RandomInt(bal.ShotgunIdleVariance[d.v])
       if d.v == 2 then
@@ -632,8 +618,8 @@ function l:check_girl(en)
       if timer == 27 then
         sfx:Play(sound.baseball, 1, 0, false, 1)
         if d.v == 1 then
-          local vel = (ppos + player.Velocity - d.batbomb.Position):Normalized() * 13
-          local bbomb = Isaac.Spawn(barf.bomb.Type, 0, 0, d.batbomb.Position, vel, en):ToNPC()
+          local vel2 = (ppos + player.Velocity - d.batbomb.Position):Normalized() * 13
+          local bbomb = Isaac.Spawn(barf.bomb.Type, 0, 0, d.batbomb.Position, vel2, en):ToNPC()
           bbomb:GetData().whacked = true
           bbomb:GetData().girl = en
           bbomb:GetData().nosuck = true
@@ -647,9 +633,9 @@ function l:check_girl(en)
           end
         else
           for i = -15, 15, 15 do
-            local vel = (ppos + player.Velocity - d.batbomb.Position):Normalized() * 13
-            vel = vel:Rotated(i)
-            local bbomb = Isaac.Spawn(barf.bomb.Type, 0, 0, d.batbomb.Position, vel, en):ToNPC()
+            local vel2 = (ppos + player.Velocity - d.batbomb.Position):Normalized() * 13
+            vel2 = vel2:Rotated(i)
+            local bbomb = Isaac.Spawn(barf.bomb.Type, 0, 0, d.batbomb.Position, vel2, en):ToNPC()
             bbomb:GetData().girl = en
             bbomb:GetData().nosuck = true
             bbomb.Scale = .7
@@ -790,7 +776,9 @@ function l:check_girl(en)
         sfx:Play(SoundEffect.SOUND_PLOP, 1.5, 0, false, 1)
         for i = -90, 150, 120 do
           for j = 30, 330, 15 do
-            tear = Isaac.Spawn(9, 4, 0, pos, vel + (Vector.FromAngle(i) * 5 * bal.BarfBubbleSize[d.v]) + (Vector.FromAngle(j + i) * 7 * bal.BarfBubbleSize[d.v]), en)
+            local tearVel = vel + (Vector.FromAngle(i) * 5 * bal.BarfBubbleSize[d.v]) +
+                            (Vector.FromAngle(j + i) * 7 * bal.BarfBubbleSize[d.v])
+            local tear = Isaac.Spawn(9, 4, 0, pos, tearVel, en)
             tear.Color = bal.barfcolor[d.v]
             tear:GetData().behavior = 'pop'
             table.insert(barf.tears, tear)
@@ -820,10 +808,9 @@ function l:check_girl(en)
   end
 
 end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.check_girl, barf.girl.Type)
 
 --barf mouth
-function l:check_mouth(en)
+function RPMahalath:check_mouth(en)
   local player = Isaac.GetPlayer(0)
   local d = en:GetData()
   local s = en:GetSprite()
@@ -860,7 +847,7 @@ function l:check_mouth(en)
   end
   --move
   d.eat = 0
-  move_me(en)
+  RPMahalath:move_me(en)
   --avoid overlap
   for i, mouth in ipairs(barf.mouths) do
     if mouth:Exists() and not mouth:IsDead() then
@@ -892,7 +879,9 @@ function l:check_mouth(en)
     if s:IsPlaying("Chew") then
       player:TakeDamage(1, 0, EntityRef(en), 0)
       if d.statetime % 3 == 0 then
-        gore = Isaac.Spawn(1000, 5, 0, player.Position + (Vector.FromAngle(math.random(360)) * math.random(10)) , Vector.FromAngle(math.random(360)) * (2 + (math.random() * 6)), nil)
+        local gorePos = player.Position + (Vector.FromAngle(math.random(360)) * math.random(10))
+        local goreVel = Vector.FromAngle(math.random(360)) * (2 + (math.random() * 6))
+        Isaac.Spawn(1000, 5, 0, gorePos, goreVel, nil)
       end
       if d.statetime % 7 == 0 then
         sfx:Play(SoundEffect.SOUND_MEATY_DEATHS, 1, 0, false, .7)
@@ -904,7 +893,7 @@ function l:check_mouth(en)
     end
     if s:IsFinished("EatClose") then
       s:Play("Chew")
-      blood = Isaac.Spawn(1000, 22, 0, player.Position, Vector(0, 0), nil)
+      local blood = Isaac.Spawn(1000, 22, 0, player.Position, Vector(0, 0), nil)
       blood.SpriteScale = Vector(2, 2)
       blood.SizeMulti = Vector(2, 2)
     end
@@ -970,7 +959,7 @@ function l:check_mouth(en)
     if s:IsEventTriggered("QuickBarf") then
       sfx:Play(SoundEffect.SOUND_BOSS2_BUBBLES, 1.5, 0, false, 1)
       sfx:Play(SoundEffect.SOUND_LITTLE_SPIT, 1, 0, false, 1.8)
-      local bball = Isaac.Spawn(barf.ball.Type, 0, 0, pos + Vector(0, 5), Vector(0, 0), v):ToNPC()
+      local bball = Isaac.Spawn(barf.ball.Type, 0, 0, pos + Vector(0, 5), Vector(0, 0), nil):ToNPC()
       bball.Velocity = (ppos - (pos + Vector(0, 5))):Normalized() * bal.ShootBallSpeed[d.v]
       if d.v == 2 then
         local predict = game:GetRoom():GetClampedPosition(ppos + (player.Velocity * bal.ShootBallSpeed[d.v]), 40)
@@ -1034,7 +1023,6 @@ function l:check_mouth(en)
     if s:IsPlaying("Suck") then
       d.eat = 1
       local dif = cpos - ppos
-      local len = dif:Length()
       local force = math.min(bal.SuckMaxSuck[d.v], d.statetime * bal.SuckIncreaseRate[d.v]) / 450
 
       if d.statetime % 5 == 0 then
@@ -1065,13 +1053,13 @@ function l:check_mouth(en)
             d.girl:GetData().atebomb = bomb
             break
           else
-            local dif = cpos - bomb.Position
+            local dif2 = cpos - bomb.Position
             local len = dif:Length()
-            local force = (120 - math.min(120, len)) / 120
+            local force2 = (120 - math.min(120, len)) / 120
             if type == barf.bomb.Type then
-              bomb.Velocity = Lerp(bomb.Velocity, dif:Normalized() * math.min(len, 7), force * .08)
+              bomb.Velocity = Lerp(bomb.Velocity, dif2:Normalized() * math.min(len, 7), force2 * .08)
             else
-              bomb.Velocity = Lerp(bomb.Velocity, dif:Normalized() * math.min(len, 7), force * .05)
+              bomb.Velocity = Lerp(bomb.Velocity, dif2:Normalized() * math.min(len, 7), force2 * .05)
             end
           end
         end
@@ -1112,7 +1100,8 @@ function l:check_mouth(en)
     if s:IsEventTriggered("EatBarf") then
       local angle = math.random(360)
       for i = 0, 2 do
-        local creep = Isaac.Spawn(1000, bal.creeptype[d.v], 0, en.Position + (Vector.FromAngle((i * 120) + angle) * 22), Vector(0, 0), en):ToEffect()
+        local creepPos = en.Position + (Vector.FromAngle((i * 120) + angle) * 22)
+        local creep = Isaac.Spawn(1000, bal.creeptype[d.v], 0, creepPos, Vector(0, 0), en):ToEffect()
         creep.SpriteScale = Vector(2, 2)
         creep.SizeMulti = Vector(2, 2)
       end
@@ -1155,7 +1144,6 @@ function l:check_mouth(en)
     end
   end
 end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.check_mouth, barf.mouth.Type)
 
 --complex movement
 function RPMahalath:move_me(en)
@@ -1201,7 +1189,6 @@ function RPMahalath:move_me(en)
     if newmove or retarget then
       local rcenter = game:GetRoom():GetCenterPos()
       local avoiddir = (rcenter - ppos):GetAngleDegrees() - 20 + math.random(40)
-      local pastplr = ppos + (Vector.FromAngle(avoiddir) * 300)
       local dest = game:GetRoom():GetClampedPosition(ppos + (Vector.FromAngle(avoiddir) * 250), 80)
       d.dest = dest
     end
@@ -1259,8 +1246,7 @@ function RPMahalath:move_me(en)
     d.dest = ppos
   --ball knocker (pardon the mess)
   elseif d.move == 'ballknocker' then
-    if barfballs == 0 then
-    else
+    if barfballs ~= 0 then
       accel = bal.MoveBallKnockerAccel[d.v]
       mspeed = bal.MoveBallKnockerSpeed[d.v]
       mcorrect = .09
@@ -1272,13 +1258,20 @@ function RPMahalath:move_me(en)
       if retarget or newmove then
         for i, ball in ipairs(barf.balls) do
           local dist = (ball.Position - pos):Length()
-          if (dist < maxdist and (d.tgtball == nil or not d.tgtball:Exists())) or (ball:GetData().lastscore and ball:GetData().lastscore + 60 < ball.FrameCount) then
+          if (dist < maxdist and
+              (d.tgtball == nil or
+               not d.tgtball:Exists())) or
+             (ball:GetData().lastscore and
+              ball:GetData().lastscore + 60 < ball.FrameCount) then
+
             d.tgtball = ball
             maxdist = dist
           end
         end
       end
-      d.dest = game:GetRoom():GetClampedPosition(d.tgtball.Position + (d.tgtball.Velocity * ((d.tgtball.Position - pos):Length() / vel:Length())), 20)
+      local room = game:GetRoom()
+      local midVel = d.tgtball.Velocity * ((d.tgtball.Position - pos):Length() / vel:Length())
+      d.dest = room:GetClampedPosition(d.tgtball.Position + midVel, 20)
       if newmove then
         en.Velocity = en.Velocity * .5
       end
@@ -1387,15 +1380,22 @@ function RPMahalath:move_me(en)
   if d.tgt and d.tgt:Exists() then d.tgt.Position = d.dest end
 end
 
---shit
-function l:post_update()
+-- Update entity inventories
+function RPMahalath:PostUpdate()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+     challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
+
+    return
+  end
+
   barfballs = 0
   for i, en in ipairs(barf.balls) do
     if en:Exists() and not en:IsDead() then
       barfballs = barfballs + 1
     else
       barf.balls.i = nil
-      i = i - 1
+      i = i - 1 --luacheck: ignore
     end
   end
 
@@ -1405,22 +1405,21 @@ function l:post_update()
       barfbombs = barfbombs + 1
     else
       barf.bombs.i = nil
-      i = i - 1
+      i = i - 1 --luacheck: ignore
     end
   end
 
   for i, en in pairs(barf.mouths) do
-    if en:Exists() and not en:IsDead() then
-    else
+    if not en:Exists() or en:IsDead() then
       barf.mouths.i = nil
-      i = i - 1
+      i = i - 1 --luacheck: ignore
     end
   end
 
   for i, en in pairs(barf.tears) do
     if not en:Exists() then
       table.remove(barf.tears, i)
-      i = i - 1
+      i = i - 1 --luacheck: ignore
     else
       local d = en:GetData()
       --HOMING
@@ -1445,50 +1444,10 @@ function l:post_update()
       barf.particles.i = nil
     end
   end
-
-  --challenge
-  if barf.challenge > 0 then
-    local room = game:GetRoom()
-    local size = room:GetGridSize() - 1
-    for i=0, size do
-      local grid = room:GetGridEntity(i)
-      if grid and grid.Desc.Type == GridEntityType.GRID_TRAPDOOR and grid.VarData ~= 1958 then
-        grid.VarData = 1958
-        grid.Sprite = mouthSprite
-      end
-    end
-  end
-  if barf.challenge == 2 then
-    barf.challenge = 3
-  end
-  if barf.challenge == 3 then
-    local player = Isaac.GetPlayer(0)
-    if player:GetCollectibleCount() >= 2 then
-      barf.challenge = 10
-      Isaac.ExecuteCommand("stage 3a")
-      Isaac.ExecuteCommand("goto s.boss.1106")
-    end
-  end
-  if barf.challenge == 10 or barf.challenge == 20 then
-    for i, en in ipairs(Isaac.GetRoomEntities()) do
-      local type = en.Type
-      if type == 5 and en.Variant == 100 then
-        if barf.challenge == 10 then
-          Isaac.Spawn(5, 370, 0, en.Position, Vector(0, 0), nil)
-        elseif barf.challenge == 20 then
-          for i = 20, 200, 10 do
-            Isaac.Spawn(5, 370, 0, Isaac.GetFreeNearPosition(game:GetRoom():GetCenterPos(), i), Vector(0, 0), nil)
-          end
-        end
-        en:Remove()
-      end
-    end
-  end
 end
-l:AddCallback(ModCallbacks.MC_POST_UPDATE, l.post_update)
 
 --barf balls
-function l:check_balls(en)
+function RPMahalath:check_balls(en)
   local player = Isaac.GetPlayer(0)
   local d = en:GetData()
   local s = en:GetSprite()
@@ -1548,7 +1507,6 @@ function l:check_balls(en)
     en.Velocity = Vector(en.Velocity.X, en.Velocity.Y * -bounce)
   end
   en.Position = bounds
-  pos = en.Position
 
   if d.hittimer + 120 < en.FrameCount then
     en.Velocity = en.Velocity + ((player.Position - en.Position):Normalized() * .012)
@@ -1573,10 +1531,9 @@ function l:check_balls(en)
     splash.Color = bal.barfcolor[d.v]
   end
 end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.check_balls, barf.ball.Type)
 
 --barf bombs
-function l:check_bomb(en)
+function RPMahalath:check_bomb(en)
   local d = en:GetData()
   local s = en:GetSprite()
 
@@ -1627,7 +1584,7 @@ function l:check_bomb(en)
     params.FallingAccelModifier = .8
     params.Color = bal.barfcolor[d.v]
     params.Variant = 4
-    local angle = 0
+    local angle
     for i = 1, 360, 360/5 do
       params.FallingSpeedModifier = -12 - math.random(5)
       angle = i + math.random(20)
@@ -1637,14 +1594,13 @@ function l:check_bomb(en)
     en:Remove()
   end
 end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.check_bomb, barf.bomb.Type)
 
-function l:check_del(en)
+-- EntityType.ENTITY_DELIRIUM (412)
+function RPMahalath:check_del(entity)
   delfight = true
 end
-l:AddCallback(ModCallbacks.MC_NPC_UPDATE, l.check_del, 412)
 
-function l:take_dmg(ent, damage, flags, ref, cooldown)
+function RPMahalath:take_dmg(ent, damage, flags, ref, cooldown)
   local type = ent.Type
   if type == barf.girl.Type and not delfight then
     if ent.HitPoints < damage then
@@ -1654,19 +1610,17 @@ function l:take_dmg(ent, damage, flags, ref, cooldown)
     end
   end
 end
-l:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, l.take_dmg)
 
-l:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function()
-  if Isaac.GetChallenge() == Isaac.GetChallengeIdByName("Mahalath") then
-    barf.challenge = 1
-  else
-    barf.challenge = 0
-  end
-end)
-
-function l:onRoomEnter()
+function RPMahalath:PostNewRoom()
   -- Local variables
-  local player = Isaac.GetPlayer(0)
+  local gameFrameCount = game:GetFrameCount()
+  local room = game:GetRoom()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local challenge = Isaac.GetChallenge()
 
   -- This sound effect plays in a loop; unless we explicitly stop it,
   -- it can go on forever if the player leaves the boss room mid-fight
@@ -1674,34 +1628,28 @@ function l:onRoomEnter()
     sfx:Stop(SoundEffect.SOUND_ULTRA_GREED_SPINNING)
   end
 
-  if barf.challenge == 1 then
-    barf.challenge = 2
-    Isaac.ExecuteCommand("goto s.barren.9998")
-  elseif barf.challenge == 2 then
-    local room = game:GetRoom()
-    for i=0, 7 do
-      room:RemoveDoor(i)
-    end
-  elseif barf.challenge == 3 then
-    barf.challenge = 4
-    Isaac.ExecuteCommand("stage 5b")
-  elseif barf.challenge == 4 then
-    player:AddCollectible(79, 0, 1)
-    barf.challenge = 20
-    if player:HasCollectible(241) then
-      barf.challenge = 19
-      Isaac.ExecuteCommand("goto s.boss.9098")
-    else
-      Isaac.ExecuteCommand("goto s.boss.1106")
-    end
-  end
-  delfight = false
-end
-RPMahalath:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, RPMahalath.onRoomEnter)
+  if gameFrameCount == 0 and
+     challenge == Isaac.GetChallengeIdByName("Mahalath Practice") and
+     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
---I guess I have to do this!
-function RPMahalath:PostNewRoom()
+    -- Stop the boss room sound effect
+    sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+
+    -- Spawn her
+    Isaac.Spawn(barf.girl.Type, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+    Isaac.DebugString("Spawned Mahalath (for the practice challenge).")
+  end
 end
-RPMahalath:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, RPMahalath.PostNewRoom)
+
+function RPMahalath:PostGameStarted()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge == Isaac.GetChallengeIdByName("Mahalath Practice") then
+    Isaac.ExecuteCommand("stage 11a")
+    Isaac.ExecuteCommand("goto s.boss.9998")
+    Isaac.DebugString("Going to the \"Mahalath Practice\" room.")
+  end
+end
 
 return RPMahalath

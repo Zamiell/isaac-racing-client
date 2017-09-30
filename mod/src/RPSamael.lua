@@ -123,28 +123,11 @@ local wraithChargePenalty = 0
 local fireDelayPenalty = 0 --Nerfs
 local fireDelayReduced = false
 
---local info = 0
-
------------Post update function-----------
-function SamaelMod:samaelPostUpdate()
+function SamaelMod:PostUpdate()
   local player = Isaac.GetPlayer(0)
   if player:GetPlayerType() == samaelID then --If the player is Samael
-
     local level = Game():GetLevel()
     local room = level:GetCurrentRoom()
-
-    --[[ We don't want to spawn the skull in the starting room
-    if spawnSkull then
-      if level:GetCurrentRoomIndex() == level:GetStartingRoomIndex() and Game():GetFrameCount() == 1 then
-        Isaac.Spawn(5, 100, wraithItem, room:GetGridPosition(32), Vector(0,0), nil)
-        local sign = Isaac.Spawn(specialAnim, 0, 0, room:GetGridPosition(33), Vector(0,0), nil):ToNPC()
-        sign:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
-        sign:GetSprite():Play("Sign", 1)
-        sign.CanShutDoors = false
-      end
-      spawnSkull = false
-    end
-    --]]
 
     if wraithActivationCooldown > 0 then
       wraithActivationCooldown = wraithActivationCooldown - 1
@@ -1769,6 +1752,12 @@ function SamaelMod:knifeUpdate(knife)
       end
     end
     scytheColor = sprite.Color
+  end
+
+  -- This fixes the bug where if you have Mom's Knife on Samael and respawn as another character,
+  -- the knife will be be gone and you won't be able to shoot tears and the game will softlock
+  if dying then
+    knife:Remove()
   end
 end
 

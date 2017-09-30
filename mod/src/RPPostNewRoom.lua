@@ -73,6 +73,7 @@ function RPPostNewRoom:NewRoom()
   -- Clear variables that track things per room
   RPGlobals.run.currentGlobins    = {} -- Used for softlock prevention
   RPGlobals.run.currentKnights    = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
   RPGlobals.run.naturalTeleport   = false
   RPGlobals.run.handsDelay        = 0
@@ -141,9 +142,7 @@ function RPPostNewRoom:NewRoom()
   -- Check for the unavoidable puzzle room in the Dank Depths
   RPPostNewRoom:CheckDepthsPuzzle()
 
-  -- Check for double Sloths / Super Sloths / Pride / Super Prides
-  -- Check for Doples / Evil Twins
-  -- Check for Haunts
+  -- Check for various NPCs
   RPPostNewRoom:CheckEntities()
 
   -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
@@ -407,7 +406,8 @@ function RPPostNewRoom:CheckDepthsPuzzle()
   end
 end
 
--- We want to only loop through all of the entities in the room once to maximize performance
+-- Check for various NPCs all at once
+-- (we want to loop through all of the entities in the room only once to maximize performance)
 function RPPostNewRoom:CheckEntities()
   -- Local variables
   local game = Game()
@@ -415,8 +415,6 @@ function RPPostNewRoom:CheckEntities()
   local room = game:GetRoom()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
-  local hauntCount = 0
-  local blackChampionHaunt = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
        entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
@@ -433,25 +431,23 @@ function RPPostNewRoom:CheckEntities()
       RPGlobals.run.dopleRoom = true
 
     elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 0 then -- Haunt (260.0)
-      hauntCount = hauntCount + 1
-      Isaac.DebugString("Found a Haunt; count is now at: " .. tostring(hauntCount))
+      -- Speed up the first Lil' Haunt attached to a Haunt (1/3)
+      -- Later on this frame, the Lil' Haunts will spawn and have their state altered
+      -- in the "RPPostNPCInit:Main()" function
+      -- We will mark to actually detach one of them one frame from now
+      -- (or two of them, if there are two Haunts in the room)
+      RPGlobals.run.speedLilHauntsFrame = gameFrameCount + 1
 
       -- We also need to check for the black champion version of The Haunt,
       -- since both of his Lil' Haunts should detach at the same time
       if entity:ToNPC():GetBossColorIdx() == 17 then
-        blackChampionHaunt = true
+        RPGlobals.run.speedLilHauntsBlack = true
       end
-    end
-  end
 
-  -- Speed up the first Lil' Haunt attached to a Haunt (1/3)
-  -- (we mark to detach it one frame from now since the Lil' Haunts are not currently spawned)
-  -- (we only want to do this if there is one Haunt in the room because otherwise it gets confusing to code)
-  if hauntCount == 1 then
-    RPGlobals.run.speedLilHauntsFrame = gameFrameCount + 1
-    RPGlobals.run.speedLilHauntsBlack = blackChampionHaunt
-    Isaac.DebugString("Marking to detach the first Lil' Haunt on frame: " .. tostring(gameFrameCount))
-    -- Later on this frame, the Lil' Haunt will spawn and will be altered in the "RPPostNPCInit:Main()" function
+      RPGlobals.run.currentHaunts[#RPGlobals.run.currentHaunts + 1] = entity.Index
+      Isaac.DebugString("Added Haunt #" .. tostring(#RPGlobals.run.currentHaunts) ..
+                        " with index " .. tostring(entity.Index) .. " to the table.")
+    end
   end
 end
 

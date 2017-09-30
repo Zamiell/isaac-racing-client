@@ -746,10 +746,14 @@ function RPCheckEntities:Entity260(npc)
     -- This can't be in the NPC_UPDATE callback because it does not fire during the "Appear" animation
     -- This can't be in the MC_POST_NPC_INIT callback because the position is always equal to (0, 0) there
     RPGlobals.run.currentLilHaunts[index] = {
-      index = npc.Index, -- It's safer to use the hash as an index instead of this
+      index = npc.Index, -- We could have this just be table index instead, but it's safer to use the hash
       pos = npc.Position,
       ptr = EntityPtr(npc),
     }
+    if npc.Parent ~= nil then
+      RPGlobals.run.currentLilHaunts[index].parentIndex = npc.Parent.Index
+    end
+
     Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table.")
   end
 

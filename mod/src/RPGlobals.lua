@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.11.9"
+RPGlobals.version = "v0.11.10"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -17,7 +17,7 @@ RPGlobals.race = {
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked          = false,       -- Can be true or false
   solo            = false,       -- Can be true or false
-  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diveristy", "unseeded-lite", or "custom"
+  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diversity", "unseeded-lite", or "custom"
   -- Unofficially this can also be "pageant"
   character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
   goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", or "Everything"
@@ -138,9 +138,10 @@ function RPGlobals:InitRun()
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
-  RPGlobals.run.currentGlobins        = {}
-  RPGlobals.run.currentKnights        = {}
-  RPGlobals.run.currentLilHaunts      = {}
+  RPGlobals.run.currentGlobins        = {} -- Used for softlock prevention
+  RPGlobals.run.currentKnights        = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
+  RPGlobals.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false

@@ -6,8 +6,6 @@
 --[[
 
 TODO:
-- fix Samael + Dead Eye key spam dropping multiplier
-
 - add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
@@ -60,6 +58,7 @@ local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
 local RPFastClear           = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
 local RPSamael              = require("src/rpsamael") -- Samael functions
+local RPMahalath            = require("src/rpmahalath") -- Mahalath functions
 local RPDebug               = require("src/rpdebug") -- Debug functions
 
 -- Initiailize the "RPGlobals.run" table
@@ -156,23 +155,36 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC271
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_HUSH) -- 407
 
 -- Samael callbacks
-local wraithItem  = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
-local scytheID    = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
-local specialAnim = Isaac.GetEntityTypeByName("Samael Special Animations") --Entity for showing special animations
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D4)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D100)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.activateWraith, wraithItem)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D4) -- 284
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D100) -- 283
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.activateWraith,
+                                                          Isaac.GetItemIdByName("Wraith Skull"))
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.roomEntitiesLoop)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.samaelPostUpdate)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate, scytheID)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFunc, specialAnim)
-RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   RPSamael.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs)
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate,
+                                                          Isaac.GetEntityTypeByName("Samael Scythe"))
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFunc,
+                                                          Isaac.GetEntityTypeByName("Samael Special Animations"))
+RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   RPSamael.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER) -- 35
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.scytheHits)
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.playerDamage, EntityType.ENTITY_PLAYER)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.playerDamage, EntityType.ENTITY_PLAYER) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPSamael.PostPlayerInit)
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPSamael.cacheUpdate)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPSamael.PostGameStartedReset)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs)
+
+-- Mahalath callbacks
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPMahalath.PostUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_girl, Isaac.GetEntityTypeByName("Mahalath"))
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_mouth,
+                                                          Isaac.GetEntityTypeByName("Barf Mouth"))
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_balls,
+                                                          Isaac.GetEntityTypeByName("Barf Ball"))
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_bomb, Isaac.GetEntityTypeByName("Barf Bomb"))
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_del, EntityType.ENTITY_DELIRIUM) -- 412
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPMahalath.take_dmg)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     RPMahalath.PostNewRoom)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPMahalath.PostGameStarted)
 
 -- Welcome banner
 local hyphens = ''

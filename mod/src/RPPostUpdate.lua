@@ -202,46 +202,51 @@ function RPPostUpdate:CheckHauntSpeedup()
   RPGlobals.run.speedLilHauntsFrame = 0
   RPGlobals.run.speedLilHauntsBlack = false
 
-  -- Find all of the indexes and sort them
-  local indexes = {}
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 10 then -- Lil' Haunt (260.10)
-      indexes[#indexes + 1] = entity.Index
+  -- Detach the first Lil' Haunt for each Haunt in the room
+  for i = 1, #RPGlobals.run.currentHaunts do
+    -- Get the index of all the Lil' Haunts attached to this particular haunt and sort them
+    local indexes = {}
+    for j, lilHaunt in pairs(RPGlobals.run.currentLilHaunts) do
+      if lilHaunt.parentIndex ~= nil and
+         lilHaunt.parentIndex == RPGlobals.run.currentHaunts[i] then
+
+        indexes[#indexes + 1] = lilHaunt.index
+      end
     end
-  end
-  table.sort(indexes)
+    table.sort(indexes)
 
-  -- Manually detach the first Lil' Haunt
-  -- (or the first and the second Lil' Haunt, if this is a black champion Haunt)
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Index == indexes[1] or
-       (entity.Index == indexes[2] and blackChampionHaunt) then
+    -- Manually detach the first Lil' Haunt
+    -- (or the first and the second Lil' Haunt, if this is a black champion Haunt)
+    for j, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Index == indexes[1] or
+         (entity.Index == indexes[2] and blackChampionHaunt) then
 
-      local npc = entity:ToNPC()
-      npc.State = NpcState.STATE_MOVE -- 4
-      -- (doing this will detach them)
+        local npc = entity:ToNPC()
+        npc.State = NpcState.STATE_MOVE -- 4
+        -- (doing this will detach them)
 
-      -- We need to manually set them to visible (or else they will be invisible for some reason)
-      npc.Visible = true
+        -- We need to manually set them to visible (or else they will be invisible for some reason)
+        npc.Visible = true
 
-      -- We need to manually set the color, or else the Lil' Haunt will remain faded
-      npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
+        -- We need to manually set the color, or else the Lil' Haunt will remain faded
+        npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
 
-      -- We need to manually set their collision or else tears will pass through them
-      npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+        -- We need to manually set their collision or else tears will pass through them
+        npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
-      -- Add them to the tracking table so that they won't immediately rush the player
-      local index = GetPtrHash(npc)
-      RPGlobals.run.currentLilHaunts[index] = {
-        index = npc.Index, -- It's safer to use the hash as an index instead of this
-        pos = npc.Position,
-        ptr = EntityPtr(npc),
-      }
-      Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) ..
-                        " to the table (RPPostUpdate:CheckHauntSpeedup).")
+        -- Add them to the tracking table so that they won't immediately rush the player
+        local index = GetPtrHash(npc)
+        RPGlobals.run.currentLilHaunts[index] = {
+          index = npc.Index, -- It's safer to use the hash as an index instead of this
+          pos = npc.Position,
+          ptr = EntityPtr(npc),
+        }
+        Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) ..
+                          " to the table (RPPostUpdate:CheckHauntSpeedup).")
 
-      Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
-                        " on frame: " .. tostring(gameFrameCount))
+        Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
+                          " on frame: " .. tostring(gameFrameCount))
+      end
     end
   end
 end
@@ -347,7 +352,7 @@ function RPPostUpdate:CheckDropInput()
 end
 
 -- Do race related checks
--- (some race related checks are also in CheckGridEntities, CheckEntities, and CheckEntitiesNPC
+-- (some race related checks are also in CheckGridEntities and CheckEntities
 -- so that we don't have to iterate through all of the entities in the room twice)
 function RPPostUpdate:RaceChecks()
   -- Local variables

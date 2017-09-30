@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.11.10* - September 30th, 2017
+
+* Integrated the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod by [O_o](http://steamcommunity.com/profiles/76561197993627005/myworkshopfiles/?appid=250900) into Racing+, which is a sprite improvement mod.
+* Fixed the bug where the Lil' Haunt delay reduction wouldn't work if there was more than one Haunt in the room. (Thanks Gamonymous and NorBro86)
+* Fixed the bug where the game would lock up if you joined a race while in a custom challenge. (Thanks Thoday)
+* Fixed the bug where the game would softlock if you had Mom's Knife and died on Samael and respawned as another character. (Thanks Zazima)
+
 ### *v0.11.9* - September 27th, 2017
 
 * The annoying vanilla in-game timer and score text will no longer appear.
@@ -162,13 +169,13 @@ Client/Server:
 
 ### *v0.8.11* - July 29th, 2017
 
-* Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks Norbro86)
+* Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks NorBro86)
 
 ### *v0.8.10* - July 29th, 2017
 
-* The LiveSplit autosplitter should now work again. (Thanks Norbro86, Sillypears and Hyphen-ated)
+* The LiveSplit autosplitter should now work again. (Thanks NorBro86, Sillypears and Hyphen-ated)
 * Fixed the bug where the client was crashing. (Thanks DiaTech, rerol, Shigan, and Drunkenshoe)
-* Fixed the bug where fast-clear was not working as Samael. (Thanks Norbro86 and thereisnofuture)
+* Fixed the bug where fast-clear was not working as Samael. (Thanks NorBro86 and thereisnofuture)
 
 ### *v0.8.8* - July 29th, 2017
 
