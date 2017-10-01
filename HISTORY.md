@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.11.11* - October 1st, 2017
+
+* Fixed the bug where the doors would open prematurely with Rag Man's Raglings under certain conditions. (Thanks thereisnofuture)
+* Fixed the bug where the Racing+ client told you that the mod was corrupt under certain conditions. (Thanks thereisnofuture)
+
 ### *v0.11.10* - September 30th, 2017
 
 * Integrated the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod by [O_o](http://steamcommunity.com/profiles/76561197993627005/myworkshopfiles/?appid=250900) into Racing+, which is a sprite improvement mod.

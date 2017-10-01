@@ -58,6 +58,8 @@ While there are thousands of rooms in the game, many players have already seen t
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. In Racing+, Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
 * [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod by [piber20](https://steamcommunity.com/id/piber20).
 
+<br />
+
 ## List of Minor Changes
 
 ### Gameplay & Quality of Life Changes
@@ -188,6 +190,8 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
 * Defeat Mega Satan to complete the run.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+<br />
 
 ## Additional Changes for Multi-Character Speedruns (Custom Challenges)
 

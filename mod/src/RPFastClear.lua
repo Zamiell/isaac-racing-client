@@ -86,7 +86,7 @@ function RPFastClear:NPC246(npc)
   -- Rag Man Raglings don't actually die (they turn into patches on the ground),
   -- so we need to manually keep track of when this happens
   if npc.Variant == 1 and -- 246.1
-     npc.State ~= NpcState.STATE_UNIQUE_DEATH then -- 16
+     npc.State == NpcState.STATE_UNIQUE_DEATH then -- 16
      -- They go to state 16 when they are patches on the ground
 
     RPFastClear:CheckDeadNPC(npc)
