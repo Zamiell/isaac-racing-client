@@ -6,6 +6,18 @@ If you want to learn more about Racing+, you can visit [the official website](ht
 
 <br />
 
+## Table of Contents
+
+1. [Design Goals](#design-goals)
+2. [List of Main Changes](#list-of-main-changes)
+3. [Other Mods Included](#other-mods-included)
+4. [List of Minor Changes](#list-of-minor-changes)
+5. [Additional Changes for Custom Race Rulesets](#additional-changes-for-custom-race-rulesets)
+6. [Additional Changes for Multi-Character Speedruns (Custom Challenges)](#additional-changes-for-multi-character-speedruns-(custom-challenges))
+7. [Individual Room Changes](#individual-room-changes)
+
+<br />
+
 ## Design Goals
 
 In terms of what to change about the game, the mod has several goals, and attempts to strike a balance between them. However, certain things are prioritized. The goals are listed below in order of importance:
@@ -88,7 +100,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Having Duality now prevents getting a narrow boss room on floors 2 through 7.
 * All Spike Chests will spawn as Mimics instead.
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
-* Hosts and Mobile Hosts are now immune to fear.
+* Hosts and Mobile Hosts are now immune to fear. This prevents bugs where feared Hosts will not properly play animations.
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 * Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
 
@@ -140,11 +152,9 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
-* The Broken Modem sprite is replaced with a better version from [freeze](http://steamcommunity.com/id/frezin/myworkshopfiles/?appid=250900), the original creator.
-* The bugged Scolex champion (skeleton version) will now display properly.
 * The bottom left hand corner of the title screen will now properly show.
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
-* Daemon's Tail, Error (404), Karma, and No! now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005/myworkshopfiles/?appid=250900) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* Daemon's Tail, Error (404), Karma, and No! now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
 
 <br />
 

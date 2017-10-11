@@ -6,6 +6,10 @@
 --[[
 
 TODO:
+- stop double r reset during console
+- stop crashes when you do stage 15+
+- flooded caves #939
+
 - add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows

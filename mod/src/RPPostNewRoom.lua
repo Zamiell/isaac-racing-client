@@ -150,6 +150,9 @@ function RPPostNewRoom:NewRoom()
 
   -- Do race related stuff
   RPPostNewRoom:Race()
+
+  -- Do speedrun related stuff
+  RPSpeedrun:PostNewRoom()
 end
 
 -- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)
@@ -333,24 +336,6 @@ function RPPostNewRoom:CheckScolexRoom()
       -- The game will automatically make the entity visible later on
     end
     Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
-
-  else
-    -- Replace the bugged Scolex champion with the non-champion version (1/2)
-    local foundBuggedChampion = false
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 and -- 62.1 (Scolex)
-         entity:ToNPC():GetBossColorIdx() == 15 then -- The bugged black champion type
-
-        foundBuggedChampion = true
-        break
-      end
-    end
-    if foundBuggedChampion then
-      -- If we morph the Scolex right now, it won't do anything, because it takes 1 frame to actually spawn
-      -- (right now there is 1 Scolex entity, but one frame from now there will be 10)
-      -- So mark to morph it on the next frame
-      RPGlobals.run.replaceBuggedScolex = gameFrameCount + 1
-    end
   end
 end
 

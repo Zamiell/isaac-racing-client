@@ -35,20 +35,21 @@ exports.send = (destination) => {
     let PMrecipient;
     let PMmessage;
     let noticeMessage;
+    let adminRecipient;
+    let adminReason;
     if (message.startsWith('/')) {
         isCommand = true;
 
-        // Find out if the user is sending a private message
-        // /p, /pm, /msg, /m, /whisper, /w, /tell, /t
+        // First, for any formatted command, validate that it is formatted correctly
         if (
             message.match(/^\/p\b/) ||
             message.match(/^\/pm\b/) ||
-            message.match(/^\/msg\b/) ||
             message.match(/^\/m\b/) ||
-            message.match(/^\/whisper\b/) ||
+            message.match(/^\/msg\b/) ||
             message.match(/^\/w\b/) ||
-            message.match(/^\/tell\b/) ||
-            message.match(/^\/t\b/)
+            message.match(/^\/whisper\b/) ||
+            message.match(/^\/t\b/) ||
+            message.match(/^\/tell\b/)
         ) {
             isPM = true;
 
@@ -57,9 +58,7 @@ exports.send = (destination) => {
             if (m) {
                 [, PMrecipient, PMmessage] = m;
             } else {
-                // Open the error tooltip
-                // TODO
-                // <span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>
+                misc.warningShow('<span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>');
                 return;
             }
 
@@ -86,11 +85,26 @@ exports.send = (destination) => {
             const m = message.match(/^\/\w+ (.+)/);
             if (m) {
                 [, noticeMessage] = m;
-                globals.log.info('lol noticeMessage:', noticeMessage);
             } else {
-                // Open the error tooltip
-                // TODO
-                // <span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>
+                misc.warningShow('<span lang="en">The format of a notice is</span>: <code>/notice Hey guys!</code>');
+                return;
+            }
+        } else if (message.match(/^\/ban\b/)) {
+            // Validate that ban commands have a recipient and a reason
+            const m = message.match(/^\/ban (.+?) (.+)/);
+            if (m) {
+                [, adminRecipient, adminReason] = m;
+            } else {
+                misc.warningShow('<span lang="en">The format of a ban is</span>: <code>/ban Krakenos being too Polish</code>');
+                return;
+            }
+        } else if (message.match(/^\/unban\b/)) {
+            // Validate that unban commands have a recipient
+            const m = message.match(/^\/unban (.+)/);
+            if (m) {
+                [, adminRecipient] = m;
+            } else {
+                misc.warningShow('<span lang="en">The format of an unban is</span>: <code>/unban Krakenos</code>');
                 return;
             }
         } else if (message.match(/^\/r\b/)) {
@@ -189,8 +203,15 @@ exports.send = (destination) => {
         globals.conn.send('adminMessage', {
             message: noticeMessage,
         });
-    } else if (message.startsWith('/loadnev')) {
-        globals.conn.send('adminLoadEnv', {});
+    } else if (message.startsWith('/ban ')) {
+        globals.conn.send('adminBan', {
+            name: adminRecipient,
+            comment: adminReason,
+        });
+    } else if (message.startsWith('/unban ')) {
+        globals.conn.send('adminUnban', {
+            name: adminRecipient,
+        });
     } else {
         // Manually call the draw function
         draw(room, '_error', 'That is not a valid command.');

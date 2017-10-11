@@ -80,6 +80,7 @@ RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and 
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
 RPSpeedrun.s3direction = 1 -- 1 is up and 2 is down; reset at the beginning of a new run
+RPSpeedrun.liveSplitReset = false
 
 --
 -- Speedrun functions
@@ -101,6 +102,14 @@ function RPSpeedrun:Init()
   RPSpeedrun.spawnedCheckpoint = false
   RPSpeedrun.fadeFrame = 0
   RPSpeedrun.resetFrame = 0
+
+  if RPSpeedrun.liveSplitReset then
+    RPSpeedrun.liveSplitReset = false
+    player:AddCollectible(CollectibleType.COLLECTIBLE_OFF_LIMITS, 0, false)
+    Isaac.DebugString("Reset the LiveSplit AutoSplitter by giving \"Off Limits\", item ID " ..
+                      tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. ".")
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. " (Off Limits)")
+  end
 
   -- Move to the first character if we finished
   -- (this has to be above the challenge name check so that the fireworks won't carry over to another run)
@@ -359,9 +368,7 @@ function RPSpeedrun:Init()
     Isaac.DebugString("Restarting because we want to start from the first character again.")
 
     -- Tell the LiveSplit AutoSplitter to reset
-    player:AddCollectible(CollectibleType.COLLECTIBLE_OFF_LIMITS, 0, false)
-    Isaac.DebugString("Reset the LiveSplit AutoSplitter.")
-
+    RPSpeedrun.liveSplitReset = true
     return
   end
 
@@ -921,6 +928,54 @@ function RPSpeedrun:DisplayCharProgress()
     RPSpeedrun.sprites.digit[3]:SetFrame("Default", digit4)
     RPSpeedrun.sprites.digit[3]:RenderLayer(0, posDigit4)
   end
+end
+
+-- Replace bosses in season 3
+function RPSpeedrun:PostNewRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+    return
+  end
+
+  if stage ~= 11 then
+    return
+  end
+
+  if roomType ~= RoomType.ROOM_BOSS then -- 5
+    return
+  end
+
+  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+    return
+  end
+
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if stageType == 1 and -- The Chest
+       entity.Type == EntityType.ENTITY_ISAAC then -- 102
+
+      entity:Remove()
+    elseif stageType == 0 and -- Dark Room
+           entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
+
+      entity:Remove()
+    end
+  end
+
+  -- Spawn her
+  Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+  Isaac.DebugString("Spawned Mahalath (for season 3).")
 end
 
 return RPSpeedrun

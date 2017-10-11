@@ -1,8 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.11.12* - October 10th
+
+* Racing+ will now work with the latest patch (Booster Pack #4). Rooms are currently unflipped and the Booster Pack rooms are not yet integrated. Diversity races won't have the new items yet.
+* Racing+ no longer fixes the champion Scolex, since the bug was fixed in the vanilla game.
+* Racing+ no longer has a custom Broken Modem sprite, since they added a good one to the vanilla game.
+* Fixed the bug where holding R to go back to the first character on a custom speedun challenge would not reset LiveSplit.
+* You will now get a warning if you try to perform an inproperly formatted command.
+* The valid commands are now listed on the website.
+
 ### *v0.11.11* - October 1st, 2017
 
-* Fixed the bug where the doors would open prematurely with Rag Man's Raglings under certain conditions. (Thanks thereisnofuture)
+* Fixed the bug where the doors would open prematurely with Rag Man's Raglings under certain conditions. (Thanks thereisnofuture and FezzesOrBowties)
 * Fixed the bug where the Racing+ client told you that the mod was corrupt under certain conditions. (Thanks thereisnofuture)
 
 ### *v0.11.10* - September 30th, 2017

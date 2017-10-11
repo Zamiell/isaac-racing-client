@@ -555,6 +555,13 @@ Changes:
 	<familiar description="Eclipsed by the moon" gfx="collectibles_528_angelic prism.png" name="Angelic Prism" id="528" />
 	<passive cache="tearflag" description="Eyeball tears!" gfx="Collectibles_529_Pop.png" name="Pop!" id="529" />
 
+	<!-- Booster Pack #4 -->
+	<passive description="Just hope you're not next..." gfx="Collectibles_530_DeathsList.png" name="Death's List" id="530" />
+	<passive cache="weapon firedelay" description="I'm seeing red..." gfx="Collectibles_531_Haemolacria.png" name="Haemolacria" id="531" />
+	<passive description="Feed them!" gfx="Collectibles_532_Lachryphagy.png" name="Lachryphagy" id="532" />
+	<passive cache="tearflag" description="Smite thy enemy" gfx="Collectibles_533_Trisagion.png" name="Trisagion" id="533" />
+	<passive description="Extra active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag (Vanilla)" id="534" />
+
 	<trinket achievement="101" description="Gulp!" gfx="trinket_001_swallowedpenny.png" id="1" name="Swallowed Penny" />
 	<trinket description="It feels lucky?" gfx="trinket_002_petrifiedpoop.png" id="2" name="Petrified Poop" />
 	<trinket description="Trickle charge" gfx="trinket_003_aaabattery.png" id="3" name="AAA Battery" />
@@ -689,4 +696,7 @@ Changes:
 
 	<!-- Booster Pack #3 -->
 	<trinket description="Hold the door!" gfx="trinket_124_woodendoorstop.png" id="124" name="Door Stop" />
+
+	<!-- Booster Pack #4 -->
+	<trinket description="Charged friends" gfx="trinket_125_Extensioncord.png" id="125" name="Extension Cord" />
 </items>

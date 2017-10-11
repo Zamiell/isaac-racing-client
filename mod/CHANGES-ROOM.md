@@ -1,6 +1,13 @@
 # Racing+ Mod Room Changes
 
-## Room Changes - Balance
+## Table of Contents
+
+1. [Balance Changes](#balance)
+2. [Bug Fixes](#bug-fixes)
+3. [Miscellaneous](#miscellaneous)
+4. [Rooms That Were Deliberately Not Changed](#rooms-that-were-deliberately-not-changed)
+
+## Balance
 
 Firstly, some rooms were purely changed for balance (racing) reasons. Rooms with bug fixes are below in a different section.
 
@@ -54,7 +61,7 @@ The removed room is as follows:
 
 
 
-## Room Changes - Bug Fixes
+## Bug Fixes
 
 The Racing+ mod tries to fix as many bugs as possible. Unavoidable damage is classified as a bug, but difficult rooms are not.
 
@@ -502,7 +509,7 @@ The changed room is as follows:
 
 
 
-## Room Changes - Miscellaneous
+## Miscellaneous
 
 ### Graphics
 
