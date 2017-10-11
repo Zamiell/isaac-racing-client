@@ -7,9 +7,7 @@
 A racing mod for The Binding of Isaac: Afterbirth+[/b][/h1]
 
 Normally a single player game, the Lua mod, client, and server allow players to be able to race against each other in real time. Find out more at [url=https://isaacracing.net]the official Racing+ webpage[/url].</description>
-
-For questions or technical support, do not post a comment. Instead, please join the Racing+ Discord server at: https://discord.gg/JzbhWQb
-    <version>0.0.223</version>
+    <version>0.0.224</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
