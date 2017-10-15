@@ -43,8 +43,8 @@ Run (on Windows)
 
 
 
-Run (on OS X)
-----------------
+Run (on macOS)
+--------------
 
 * Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
   * `touch ~/.bash_profile`
@@ -60,5 +60,15 @@ Run (on OS X)
 * `npm install`
 * `node_modules/.bin/electron-rebuild`
 * `npm start`
+
+<br />
+
+Run (on Ubuntu 17.04)
+---------------------
+
+* Follow the steps above for macOS.
+* You might have to do a `apt --fix-broken install` after installing NodeJS.
+* `electron-rebuild` might not run due to a missing token for a dependency check. Instead, use electron-builder to build the initial electron modules. 
+* You might have to create a symbolic link for nodejs: `ln -s /usr/bin/nodejs /usr/bin/node`
 
 <br />

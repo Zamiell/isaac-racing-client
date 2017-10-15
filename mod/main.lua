@@ -6,10 +6,6 @@
 --[[
 
 TODO:
-- stop double r reset during console
-- stop crashes when you do stage 15+
-- flooded caves #939
-
 - add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
@@ -19,8 +15,6 @@ TODO DIFFICULT:
 - Fix Conquest beams hitting you
 
 TODO CAN'T FIX:
-- Fix Dead Eye on poop / red poop / static TNT barrels (can't modify existing items, no "player:GetDeadEyeCharge()"
-  function)
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered
 - Make fast-clear apply to Challenge rooms and the Boss Rush ("room:SetAmbushDone()" doesn't do anything)
 

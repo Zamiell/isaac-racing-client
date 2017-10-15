@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.12.1"
+RPGlobals.version = "v0.12.2"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -13,6 +13,7 @@ RPGlobals.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 RPGlobals.race = {
+  id              = 0,           -- 0 if no race, a number otherwise
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked          = false,       -- Can be true or false
@@ -35,7 +36,6 @@ RPGlobals.race = {
 -- These are things that pertain to the race but are not read from the "save.dat" file
 RPGlobals.raceVars = {
   loadOnNextFrame    = false,
-  difficulty         = 0,
   challenge          = 0,
   resetEnabled       = true,
   started            = false,
@@ -62,7 +62,7 @@ RPGlobals.RNGCounter = {
 -- Collectibles
 -- (unused normal item IDs are: 43, 59, 61, 235, 263)
 CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM         = Isaac.GetItemIdByName("Betrayal") -- Replacing 391
-CollectibleType.COLLECTIBLE_SCHOOLBAG               = Isaac.GetItemIdByName("Schoolbag")
+CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
 CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
 CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
 CollectibleType.COLLECTIBLE_VICTORY_LAP             = Isaac.GetItemIdByName("Victory Lap")

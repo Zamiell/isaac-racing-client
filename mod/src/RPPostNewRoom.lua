@@ -133,9 +133,6 @@ function RPPostNewRoom:NewRoom()
   -- prevent cheating on the "Everything" race goal
   RPPostNewRoom:CheckMegaSatanRoom()
 
-  -- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
-  RPPostNewRoom:CheckSubvertTeleport()
-
   -- Check for all of the Scolex boss rooms
   RPPostNewRoom:CheckScolexRoom()
 
@@ -227,61 +224,9 @@ function RPPostNewRoom:CheckMegaSatanRoom()
   end
 end
 
--- Check for disruptive teleportation from Gurdy, Mom's Heart, or It Lives
-function RPPostNewRoom:CheckSubvertTeleport()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local roomDesc = level:GetCurrentRoomDesc()
-  local roomStageID = roomDesc.Data.StageID
-  local roomVariant = roomDesc.Data.Variant
-  local room = game:GetRoom()
-  local roomClear = room:IsClear()
-  local player = game:GetPlayer(0)
-
-  if roomClear then
-    return
-  end
-
-  if (roomStageID == 0 and roomVariant == 1040) or -- Gurdy
-     (roomStageID == 0 and roomVariant == 1041) or
-     (roomStageID == 0 and roomVariant == 1042) or
-     (roomStageID == 0 and roomVariant == 1043) or
-     (roomStageID == 0 and roomVariant == 1044) or
-     (roomStageID == 0 and roomVariant == 1058) or
-     (roomStageID == 0 and roomVariant == 1059) or
-     (roomStageID == 0 and roomVariant == 1065) or
-     (roomStageID == 0 and roomVariant == 1066) or
-     (roomStageID == 0 and roomVariant == 1130) or
-     (roomStageID == 0 and roomVariant == 1131) or
-     (roomStageID == 0 and roomVariant == 1080) or -- Mom's Heart
-     (roomStageID == 0 and roomVariant == 1081) or
-     (roomStageID == 0 and roomVariant == 1082) or
-     (roomStageID == 0 and roomVariant == 1083) or
-     (roomStageID == 0 and roomVariant == 1084) or
-     (roomStageID == 0 and roomVariant == 1090) or -- It Lives!
-     (roomStageID == 0 and roomVariant == 1091) or
-     (roomStageID == 0 and roomVariant == 1092) or
-     (roomStageID == 0 and roomVariant == 1093) or
-     (roomStageID == 0 and roomVariant == 1094) or
-     (roomStageID == 17 and roomVariant == 18) or -- Gurdy (The Chest)
-     (roomStageID == 17 and roomVariant == 1018) or -- Gurdy (The Chest) (flipped)
-     (roomStageID == 17 and roomVariant == 2018) or -- Gurdy (The Chest) (flipped)
-     (roomStageID == 17 and roomVariant == 3018) then -- Gurdy (The Chest) (flipped)
-
-    -- Make the player invisible or else it will show them on the teleported position for 1 frame
-    -- (we can't just move the player here because the teleport occurs after this callback finishes)
-    RPGlobals.run.teleportSubverted = true
-    RPGlobals.run.teleportSubvertScale = player.SpriteScale
-    player.SpriteScale = Vector(0, 0)
-    -- (we actually move the player on the next PostRender frame)
-  end
-end
-
 function RPPostNewRoom:CheckScolexRoom()
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local roomDesc = level:GetCurrentRoomDesc()
   local roomStageID = roomDesc.Data.StageID
@@ -398,10 +343,19 @@ function RPPostNewRoom:CheckEntities()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
+  local roomClear = room:IsClear()
+  local roomShape = room:GetRoomShape()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
 
+  local subvertTeleport = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
+    if entity.Type == EntityType.ENTITY_GURDY or -- 36
+       entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78 (this includes It Lives!)
+
+      subvertTeleport = true
+
+    elseif entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
        entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
 
       -- Replace all Sloths / Super Sloths / Prides / Super Prides with a new one that has an InitSeed equal to the room
@@ -433,6 +387,20 @@ function RPPostNewRoom:CheckEntities()
       Isaac.DebugString("Added Haunt #" .. tostring(#RPGlobals.run.currentHaunts) ..
                         " with index " .. tostring(entity.Index) .. " to the table.")
     end
+  end
+
+  -- Subvert the disruptive teleportation from Gurdy, Mom's Heart, and It Lives
+  if subvertTeleport and
+     roomClear == false and
+     roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
+     -- (there are Double Trouble rooms with Gurdy but they don't cause a teleport)
+
+    -- Make the player invisible or else it will show them on the teleported position for 1 frame
+    -- (we can't just move the player here because the teleport occurs after this callback finishes)
+    RPGlobals.run.teleportSubverted = true
+    RPGlobals.run.teleportSubvertScale = player.SpriteScale
+    player.SpriteScale = Vector(0, 0)
+    -- (we actually move the player on the next PostRender frame)
   end
 end
 

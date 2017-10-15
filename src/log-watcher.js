@@ -46,9 +46,9 @@ process.on('message', (message) => {
         return;
     }
 
-    // Before we start to monitor the log file for new lines, we first want to read all of the existing log file
-    // Otherwise, the Racing+ client may not work properly if the user opens up the game, goes on save file 3,
-    // and then opens the client, for example
+    // Before we start to monitor the log file for new lines, we first want to read all of the existing log file to look for the save slot
+    // Otherwise, the Racing+ client may not work properly if, for example, the user opens up the game, goes on save file 3,
+    // and then opens the client
     let existingLines;
     try {
         existingLines = fs.readFileSync(logPath, 'utf8').split('\n');
@@ -57,7 +57,21 @@ process.on('message', (message) => {
         return;
     }
     for (const line of existingLines) {
-        parseLine(line);
+        // This code is copy-pasted from below
+        if (line.startsWith('Loading PersistentData ')) {
+            // We want to keep track of which save file we are on so that we don't have to write 3 files at a time
+            // This line looks like:
+            // Loading PersistentData 1 from SteamCloud!
+            // or:
+            // Loading PersistentData 1 from local folder!
+            const match = line.match(/Loading PersistentData (\d) /);
+            if (match) {
+                const slot = match[1];
+                process.send(`Save file slot: ${slot}`);
+            } else {
+                process.send('error: Failed to parse the save slot number from the log.');
+            }
+        }
     }
 
     // None of the existing tail modules on NPM seem to work correctly with the Isaac log, so we have to code our own

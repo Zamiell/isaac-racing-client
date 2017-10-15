@@ -487,7 +487,9 @@
                 <h3 id="error-modal-title"><span lang="en">Error</span></h3>
                 <p id="error-modal-description" lang="en"></p>
                 <ul class="actions">
-                    <li><input id="error-modal-button" type="button" value="Exit and relaunch" lang="en" /></li>
+                    <li>
+                        <button id="error-modal-button" class="button small" lang="en">Exit and relaunch Racing+</button>
+                    </li>
                 </ul>
             </section>
         </div><!-- error-modal -->
@@ -496,9 +498,11 @@
         <div id="warning-modal" class="modal hidden selectable">
             <section class="box">
                 <h3><span lang="en">Warning</span></h3>
-                <p id="warning-modal-description"></p>
+                <p id="warning-modal-description" lang="en"></p>
                 <ul class="actions">
-                    <li><input id="warning-modal-button" type="button" value="OK" lang="en" /></li>
+                    <li>
+                        <button id="warning-modal-button" class="button small" lang="en">OK</button>
+                    </li>
                 </ul>
             </section>
         </div><!-- warning-modal -->
@@ -521,7 +525,7 @@
                 <p id="log-file-description-3" class="hidden" lang="en">Please relaunch the program.</p>
                 <br />
                 <button id="log-file-find" class="button small" type="button" lang="en">Locate "log.txt"</button>
-                <button id="log-file-exit" class="button small hidden" type="button" lang="en">Exit and relaunch</button>
+                <button id="log-file-exit" class="button small hidden" type="button" lang="en">Exit and relaunch Racing+</button>
             </section>
         </div><!-- log-file-modal -->
 
@@ -547,9 +551,15 @@
                 <br />
                 <span id="save-file-modal-replace-buttons">
                     <center>
-                        <button id="save-file-modal-slot-1" class="button small" type="button" lang="en">Replace save slot #1</button>
-                        <button id="save-file-modal-slot-2" class="button small" type="button" lang="en">Replace save slot #2</button>
-                        <button id="save-file-modal-slot-3" class="button small" type="button" lang="en">Replace save slot #3</button>
+                        <button id="save-file-modal-slot-1" class="button small" type="button">
+                            <span lang="en">Replace save slot</span> #1
+                        </button>
+                        <button id="save-file-modal-slot-2" class="button small" type="button">
+                            <span lang="en">Replace save slot</span> #2
+                        </button>
+                        <button id="save-file-modal-slot-3" class="button small" type="button">
+                            <span lang="en">Replace save slot</span> #3
+                        </button>
                         <br /><br />
                         <button id="save-file-modal-exit" class="button small" type="button" lang="en">Do nothing and exit</button>
                     </center>
@@ -569,9 +579,7 @@
                                     <input id="new-race-title" type="text" placeholder="Race title (optional)" lang="en" data-tooltip-content="#new-race-title-error" />
                                 </li>
                                 <li>
-                                    <button id="new-race-randomize" class="button alt small" type="button">
-                                        <span lang="en">Randomize</span>
-                                    </button>
+                                    <button id="new-race-randomize" class="button alt small" type="button" lang="en">Randomize</button>
                                 </li>
                             </ul>
                         </div>
@@ -821,7 +829,9 @@
                     <div class="row uniform">
                         <div class="6u">
                             <ul class="actions">
-                                <li><input id="settings-save-button" type="submit" value="Save" lang="en" /></li>
+                                <li>
+                                    <button id="settings-save-button" class="button small" lang="en">Save</button>
+                                </li>
                             </ul>
                         </div>
                     </div>

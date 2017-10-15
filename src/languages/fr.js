@@ -12,7 +12,6 @@ Lang.prototype.pack.fr = {
         "Only use letters, numbers, and underscores.": "Utilisez seulement des lettres et des chiffres.",
         "Username": "Utilisateur",
         "Submit": "Soumettre",
-        "The username field is required.": "Le nom d'utilisateur est requis.",
         "Username can only contain alphanumeric characters and '_'. Username should have between 2 and 15 characters.": "Le nom d'utilisateur doit se composer de lettres, chiffres et '_' seulement. Le nom d'utilisateur doit contenir entre 2 et 15 caractères.",
         "The username provided is in use already.": "Ce nom d'utilisateur est déjà utilisé.",
 
@@ -65,6 +64,7 @@ Lang.prototype.pack.fr = {
         "Unseeded": "Non Seeded",
         "Seeded": "Seeded",
         "Diversity": "Diversity",
+        "Unseeded (Lite)": "",
         "Custom": "Personnalisée",
 
         // Lobby screen (other)
@@ -78,40 +78,14 @@ Lang.prototype.pack.fr = {
         "Seed": "Seed",
         "Build": "Build",
 
-        // Tooltips for race "Type"
-        "This race will not count towards the leaderboards.": "Cette course ne comptera pas pour le classement.",
-        "This race will count towards the leaderboards.": "Cette course comptera pour le classement.",
-        "No-one else can join this race.": "Plus personne ne peut se joindre à cette course.",
-
-        // Tooltips for race "Format"
-        "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",
-        "You will be playing on an entirely different seed than your opponent(s).": "Vous allez jouer une \"seed\" différente de celles de vos adversaires.",
-        "You will play on the same seed as your opponent and start with The Compass.": "Vous allez jouer la même \"seed\" que votre adversaire et commncer avec la boussole (The Compass).",
-        "This is the same as the \"Unseeded\" format, but you will also start with three random passive items.": "Similaire au format \"Non Seeded\", mais vous commencez en plus avec trois items passifs aléatoires.",
-        "All players will start with the same three items.": "Ces trois items sont les mêmes pour tous les joueurs.",
-
-        // Tooltips for race "Goal"
-        "Defeat Blue Baby (the boss of The Chest) and jump into the chest that falls down afterward.": "Battre blue Baby (le boss de The Chest) et entrer dans le coffre qui tombe par la suite.",
-        "Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.": "Battre The Lamb (le boss de The Dark Room) et entrer dans le coffre qui tombe par la suite.",
-        "Defeat Mega Satan (the boss behind the giant locked door).": "Battre Mega Satan (le boss derrière la porte dorée géante).",
-
-        // Tooltips for race "Seed"
-        "It was automatically put in your clipboard when you joined the race.": "A été copiée automatiquement dans votre clipboard lorsque vous avez rejoint la course.",
-
         // Race screen (race controls)
         "Ready": "Prêt",
         "Race starting in 10 seconds!": "La course commence dans 10 secondes!",
         "Go": "Partez",
+        "Finish Race": "",
         "Quit Race": "Quitter la Course",
         "left": "restant(s)",
-        "Race completed!": "Course terminée!",
-
-        // Race ready error messages
-        "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\". Si vous êtes déjà dans une partie, maintenez R pour en recommencer une.",
-        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
-        "You must be in a run with the correct character before you can mark yourself as ready.": "Vous devez sélectionner le personnage indiqué pour pouvoir cocher la case \"prêt\".",
-        "You must be in a run with the correct seed before you can mark yourself as ready.": "Vous devez commencer une partie avez la seed indiquée pour pouvoir cocher la case \"prêt\".",
-        "You should wait for someone else to join this race before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
+        "Race completed": "Course terminée",
 
         // Race screen (racer table)
         "Place": "Place",
@@ -129,7 +103,7 @@ Lang.prototype.pack.fr = {
 
         // Error modal
         "Error": "Erreur",
-        "Exit and relaunch": "Quitter et redémarrer",
+        "Exit and relaunch Racing+": "",
 
         // Warning modal
         "Warning": "Attention",
@@ -145,9 +119,16 @@ Lang.prototype.pack.fr = {
         "Please relaunch the program.": "Veuillez redémarrer le programme.",
         "Locate \"log.txt\"": "Localiser \"log.txt\"",
         "Select your Isaac \"log.txt\" file": "Sélectionnez votre fichier Isaac \"log.txt\".",
-        "It appears that you have selected your Rebirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Rebirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
-        "It appears that you have selected your Afterbirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Afterbirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
         "Please try again and select your Afterbirth+ log file.": "Veuillez réessayer et sélectionner le fichier log d'Afterbirth+.",
+
+        // Save file modal
+        "Save File": "",
+        "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.": "",
+        "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.": "",
+        "Replace save slot": "",
+        "Do nothing and exit": "",
+        "The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.": "",
+        "If it doesn't work, then you need to go into the game once on that slot, exit the game, and then redo this process.": "",
 
         // New race tooltip
         "Race title (optional)": "Nom de la course (facultatif)",
@@ -158,8 +139,9 @@ Lang.prototype.pack.fr = {
         "Practice": "Entraînement",
         "Casual": "Amical",
         "Season": "Saison",
-        "Random (all, 1-32)": "Aléatoire (tous, 1-32)",
-        "Random (D6 builds only, 1-30)": "Aléatoire (D6 seulement, 1-30)",
+        "Random": "Aléatoire",
+        "Random (all, 1-33)": "Aléatoire (tous, 1-33)",
+        "Random (single items only, 1-26)": "",
         "Random (Treasure Room only, 1-20)": "Aléatoire (Treasure Room seulement, 1-20)",
         "Create": "Créer",
 
@@ -171,7 +153,7 @@ Lang.prototype.pack.fr = {
         "Language": "Langue",
         "Volume": "Volume",
         "Test": "Test",
-        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "Ne pas désactiver les cinématiques de boss (pour les personnes habituées au vanilla, vous devez redémarrer le jeu)",
+        "Enable boss cutscenes (for people used to vanilla; requires game restart)": "",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
         "Enable Twitch chat bot": "Activé le bot dans le chat Twitch",
@@ -191,5 +173,41 @@ Lang.prototype.pack.fr = {
 
         // Error messages (from the server)
         "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.": "Cette URL de stream est déjà utilisée par quelqu'un d'autre. Si vous êtes le véritable propriétaire de ce stream, veuillez contacter un administrateur.",
+
+        // chat.js
+        "The format of a private message is": "",
+        "The format of a notice is": "",
+        "The format of a ban is": "",
+        "The format of an unban is": "",
+
+        // log-watcher.js
+        "It appears that you have selected your Rebirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Rebirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
+        "It appears that you have selected your Afterbirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Afterbirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
+
+        // race.js
+        "The random items are not revealed until the race begins!": "",
+        "This race will count towards the leaderboards.": "Cette course comptera pour le classement.",
+        "This race will not count towards the leaderboards.": "Cette course ne comptera pas pour le classement.",
+        "No-one else can join this race.": "Plus personne ne peut se joindre à cette course.",
+        "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",
+        "You will be playing on an entirely different seed than your opponent(s).": "Vous allez jouer une \"seed\" différente de celles de vos adversaires.",
+        "You will play on the same seed as your opponent and start with The Compass.": "Vous allez jouer la même \"seed\" que votre adversaire et commncer avec la boussole (The Compass).",
+        "This is the same as the \"Unseeded\" format, but you will also start with five random items.": "",
+        "All players will start with the same five items.": "",
+        "Extra changes will also be in effect; see the Racing+ website for details.": "",
+        "You make the rules! Make sure that everyone in the race knows what to do before you start.": "",
+        "Defeat Blue Baby (the boss of The Chest)": "",
+        "Defeat The Lamb (the boss of The Dark Room)": "",
+        "Defeat Mega Satan (the boss behind the giant locked door)": "",
+        "and touch the trophy that falls down afterward.": "",
+
+        // Race ready error messages
+        "You should wait for someone else to join this race before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
+        "You have to start a run before you can mark yourself as ready.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\".",
+        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
+        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
+
+        // register.js
+        "The username field is required.": "Le nom d'utilisateur est requis.",
     },
 };

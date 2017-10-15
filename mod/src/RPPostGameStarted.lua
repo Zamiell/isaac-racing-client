@@ -260,7 +260,8 @@ function RPPostGameStarted:Character()
     player:RemoveCostume(itemConfig:GetCollectible(activeItem))
 
     -- Eden starts with the Schoolbag by default
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
     RPGlobals.run.schoolbag.item = activeItem
 
     -- Manually fix any custom items
@@ -304,7 +305,8 @@ function RPPostGameStarted:Character()
     player:AddHearts(-1)
 
     -- Give him the Schoolbag with the Wraith Skull
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
     RPGlobals.run.schoolbag.item = Isaac.GetItemIdByName("Wraith Skull")
     RPSchoolbag.sprites.item = nil
     Isaac.DebugString("Adding collectible " .. tostring(Isaac.GetItemIdByName("Wraith Skull")) .. " (Wraith Skull)")
@@ -347,8 +349,9 @@ function RPPostGameStarted:Race()
   end
 
   -- Validate the difficulty (hard mode / Greed mode) for races
-  RPGlobals.raceVars.difficulty = game.Difficulty
-  if RPGlobals.raceVars.difficulty ~= 0 then
+  if game.Difficulty ~= 0 and
+     RPGlobals.race.rFormat ~= "custom" then
+
     Isaac.DebugString("Race error: Wrong mode.")
     return
   end
@@ -434,9 +437,9 @@ function RPPostGameStarted:Seeded()
     player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false then
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
     -- Eden and Apollyon start with the Schoolbag
-    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
   end
 
   -- Give the player the "Instant Start" item(s)
@@ -556,7 +559,8 @@ function RPPostGameStarted:Diversity()
   RPPostGameStarted.diversity = true
 
   -- Give the player extra starting items (for diversity races)
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
@@ -663,7 +667,8 @@ function RPPostGameStarted:Pageant()
   local player = game:GetPlayer(0)
 
   -- Add the extra items
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
   RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
   RPGlobals.run.schoolbag.charges = 6
   RPSchoolbag.sprites.item = nil
@@ -694,7 +699,8 @@ function RPPostGameStarted:SeededMO()
   -- Give the player extra starting items (for seeded races)
   player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 0, false)
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
 
   -- Give the player extra Schoolbag items, depending on the character
   if character == PlayerType.PLAYER_MAGDALENA then -- 1

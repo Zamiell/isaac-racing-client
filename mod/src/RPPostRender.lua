@@ -277,25 +277,27 @@ function RPPostRender:CheckSubvertTeleport()
   local level = game:GetLevel()
   local player = game:GetPlayer(0)
 
-  if RPGlobals.run.teleportSubverted then
-    RPGlobals.run.teleportSubverted = false
-    player.SpriteScale = RPGlobals.run.teleportSubvertScale
-
-    -- Find the correct position to teleport to, depending on which door we entered from
-    local pos
-    if level.EnterDoor == Direction.LEFT then -- 0
-      pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
-    elseif level.EnterDoor == Direction.UP then -- 1
-      pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
-    elseif level.EnterDoor == Direction.RIGHT then -- 2
-      pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
-    elseif level.EnterDoor == Direction.DOWN then -- 3
-      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
-    end
-
-    -- Teleport them
-    player.Position = pos
+  if RPGlobals.run.teleportSubverted == false then
+    return
   end
+
+  RPGlobals.run.teleportSubverted = false
+  player.SpriteScale = RPGlobals.run.teleportSubvertScale
+
+  -- Find the correct position to teleport to, depending on which door we entered from
+  local pos
+  if level.EnterDoor == Direction.LEFT then -- 0
+    pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
+  elseif level.EnterDoor == Direction.UP then -- 1
+    pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+  elseif level.EnterDoor == Direction.RIGHT then -- 2
+    pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
+  elseif level.EnterDoor == Direction.DOWN then -- 3
+    pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+  end
+
+  -- Teleport them
+  player.Position = pos
 end
 
 function RPPostRender:DisplayTopLeftText()
@@ -353,8 +355,9 @@ function RPPostRender:Race()
   --
 
   -- Show warning messages
-  if RPGlobals.raceVars.difficulty ~= 0 and
-     RPGlobals.raceVars.startedTime == 0 then
+  if game.Difficulty ~= 0 and
+     RPGlobals.raceVars.startedTime == 0 and
+     RPGlobals.race.rFormat ~= "custom" then -- We want to allow hard mode for custom races
 
     -- Check to see if we are on hard mode
     RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.

@@ -86,7 +86,14 @@ process.on('message', (message) => {
     }
 
     // Begin the work
-    checkOptionsINI();
+    if (process.platform === 'win32') {
+        // This will check to see if the user has at least one fully unlocked save file;
+        // however, the code only works on Windows and needs to be made cross-platform
+        checkOptionsINI();
+    } else {
+        // Skip checking for the fully unlocked save file and go to the next thing after that
+        checkModIntegrity();
+    }
 });
 
 function checkOptionsINI() {

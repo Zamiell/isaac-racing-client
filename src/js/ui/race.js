@@ -330,7 +330,7 @@ const show = (raceID) => {
         // Column 3 - Format
         const { format } = race.ruleset;
         $('#race-title-format-icon').css('background-image', `url("img/formats/${format}.png")`);
-        let formatTooltipContent = '<span lang="en">';
+        let formatTooltipContent = '<span>';
         if (format === 'unseeded') {
             formatTooltipContent += '<strong><span lang="en">Unseeded</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
@@ -1054,7 +1054,7 @@ const checkReadyValid = () => {
     } else if (!globals.gameState.inGame) {
         valid = false;
         tooltipContent = '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
-    } else if (globals.gameState.hardMode) {
+    } else if (globals.gameState.hardMode && race.ruleset.format !== 'custom') {
         valid = false;
         tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
     } else if (!globals.gameState.racingPlusModEnabled && race.ruleset.format !== 'custom') {

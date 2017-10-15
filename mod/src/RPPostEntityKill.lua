@@ -342,7 +342,7 @@ end
 -- This code is also necessary to fix the issue where a Globin will prevent the
 -- removal of the natural trapdoor and beam of light after It Lives!
 --- (in the "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions)
-function RPPostEntityKill:KillGlobins()
+function RPPostEntityKill:KillExtraEnemies()
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_GLOBIN or -- 24
        entity.Type == EntityType.ENTITY_BOIL then -- 30

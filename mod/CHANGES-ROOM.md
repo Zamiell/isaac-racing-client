@@ -104,7 +104,7 @@ If you have Duality and there is only 2 entrances to a boss room, the Angel Room
 While not technically unavoidable, many narrow rooms have near-impossible attack patterns, especially on Dr. Fetus builds.
 
 The changed rooms are as follows:
-* Basement #755 (Rag Man) (replaced a pot with a red fire)
+* Basement/Burning: #755 (Rag Man) (replaced a pot with a red fire)
 * Cathedral: #286 (Uriel) (changed to 1x1)
 * Cathedral: #291 (Gabriel) (changed to 1x1)
 * Chest: #262 (Headless Horseman Head x2) (changed to 1x1)
@@ -152,22 +152,22 @@ The changed rooms are as follows:
 Some rooms have exploding enemies that spawn near an entrance. If the player has a sufficient number of unused blue flies, the flies will kill the enemy while the room is loading and the player will automatically take damage. This bug is fixed by moving the enemy closer to the center of the room.
 
 The changed rooms are as follows:
-* Basement: #393, #359 (Mulligan)
-* Basement/Cellar: #129 (Mulligoon)
-* Basement/Cellar: #130 (Mulligan/Mulligoon)
+* Basement/Burning: #393, #359 (Mulligan)
+* Basement/Cellar/Burning: #129 (Mulligoon)
+* Basement/Cellar/Burning: #130 (Mulligan/Mulligoon)
 * Cellar: #359 (Mulligan)
-* Caves: #50 (Boom Fly)
-* Caves: #141 (Clotty)
-* Caves: #255 (Maggot)
-* Caves: #553 (Hive)
-* Caves/Catacombs: #46, #440, #518 (Boom Fly)
-* Caves/Catacombs: #548 (Drowned Hive)
-* Caves/Catacombs: #919 (Maggot)
-* Depths: #11 (Boom Fly)
-* Depths: #16 (Brain)
-* Womb/Utero: #203 (Lump)
-* Womb/Utero: #333 (Fistula)
-* Womb/Utero: #410 (Sucker)
+* Caves/Flooded: #50 (Boom Fly)
+* Caves/Flooded: #141 (Clotty)
+* Caves/Flooded: #255 (Maggot)
+* Caves/Flooded: #553 (Hive)
+* Caves/Catacombs/Flooded: #46, #440, #518 (Boom Fly)
+* Caves/Catacombs/Flooded: #548 (Drowned Hive)
+* Caves/Catacombs/Flooded: #919 (Maggot)
+* Depths/Dank: #11 (Boom Fly)
+* Depths/Dank: #16 (Brain)
+* Womb/Utero/Scarred: #203 (Lump)
+* Womb/Utero/Scarred: #333 (Fistula)
+* Womb/Utero/Scarred: #410 (Sucker)
 * Cathedral: #272 (Floating Knight)
 * Cathedral/Sheol: #30 (Kamikaze Leech)
 * Chest: #53, #72, #84 (Fistula)
@@ -182,7 +182,7 @@ The changed rooms are as follows:
 Some rooms have TNT barrels that will immediately explode if the player is holding Mom's Knife. These rooms have been fixed by replacing the barrels in question.
 
 The changed rooms are as follows:
-* Basement/Cellar: #748
+* Basement/Cellar/Burning: #748
 
 <br />
 
@@ -192,8 +192,8 @@ Certain enemies spawn near a door. If they spawn as the white fly champion varia
 
 The changed rooms are as follows:
 * Cellar: #236 (Sack)
-* Womb:  #508 (Gurglings)
-* Womb/Utero: #182, #471, #733 (Gurglings)
+* Womb/Scarred:  #508 (Gurglings)
+* Womb/Utero/Scarred: #182, #471, #733 (Gurglings)
 * Chest: #35, #87, #301 (Gurglings)
 
 <br />
@@ -203,7 +203,7 @@ The changed rooms are as follows:
 If a player enters from the bottom door of the 2x1 Depths / Necropolis room with the single Begotten, they will automatically take damage. It seems clear that Edmund intended for the Begotten to be attached to the block, so the room has been adjusted accordingly.
 
 The changed rooms are as follows:
-* Depths/Necropolis: #316
+* Depths/Necropolis/Dank: #316
 
 <br />
 
@@ -212,7 +212,7 @@ The changed rooms are as follows:
 One room has Begottens that are not close enough to a well, so they immediately despawn upon entering the room, making the room completely pointless.
 
 The deleted rooms are as follows:
-* Depths/Necropolis: #422
+* Depths/Necropolis/Dank: #422
 
 <br />
 
@@ -222,7 +222,7 @@ The deleted rooms are as follows:
 * In both of these rooms, there is no consistent strategy to avoid damage when entering from the bottom-left-hand door. Two pots have been placed to alleviate this.
 
 The changed rooms are as follows:
-* Womb/Utero: #424
+* Womb/Utero/Scarred: #424
 
 <br />
 
@@ -244,7 +244,7 @@ In certain rooms with Blastocyst near a door, the player is not given enough tim
 
 The changed room is as follows:
 * Boss: #2042
-* Womb: #507
+* Womb/Scarred: #507
 * Chest: #54
 
 <br />
@@ -304,10 +304,10 @@ The changed room is as follows:
 Low range builds softlock in certain rooms. The rooms are fixed by moving the enemies closer.
 
 The changed rooms are as follows:
-* Caves: #226
-* Caves/Catacombs: #305
-* Depths/Necropolis: #226, #417
-* Womb/Utero: #458, #459
+* Caves/Flooded: #226
+* Caves/Catacombs/Flooded: #305
+* Depths/Necropolis/Dank: #226, #417
+* Womb/Utero/Scarred: #458, #459
 
 <br />
 
@@ -316,8 +316,8 @@ The changed rooms are as follows:
 The rooms with a bugged Magician or Lovers card are fixed to be a random card.
 
 The changed rooms are as follows:
-* Depths/Necropolis: #286 (Magician)
-* Womb/Utero: #687 (Magician)
+* Depths/Necropolis/Dank: #286 (Magician)
+* Womb/Utero/Scarred: #687 (Magician)
 * Curse Room: #21 (Lovers)
 
 <br />
@@ -337,7 +337,7 @@ The changed rooms are as follows:
 One room has an enemy close to an entrance. If the player has an allied Charger, it will cause the enemy to spawn inside of the player.
 
 The changed room is as follows:
-* Caves: #167 (Attack Fly)
+* Caves/Flooded: #167 (Attack Fly)
 
 <br />
 
@@ -355,7 +355,7 @@ The changed room is as follows:
 One room in the Womb / Utero has two Rage Creeps and four Round Worms in the center. In Afterbirth, the top Rage Creep will hit the player if they stay at the top door. However, this is not unavoidable damage, as it is possible to kill the top Rage Creep before it fires. Alternatively, it is possible to run to the bottom wall before either Rage Creep begins firing. However, the pot in the center of the room messes with the AI of the Round Worms, so the pot has been removed to make traversing this room slightly more consistent.
 
 The changed rooms are as follows:
-* Womb/Utero: #202
+* Womb/Utero/Scarred: #202
 
 <br />
 
@@ -364,7 +364,7 @@ The changed rooms are as follows:
 On the room with the two Leapers and two Pokeys, certain attack patterns can lead to unavoidable damage. The room has been made slightly more spacious to account for this.
 
 The changed room is as follows:
-* Depths: #110
+* Depths/Dank: #110
 
 <br />
 
@@ -373,7 +373,7 @@ The changed room is as follows:
 On certain rooms in the Basement/Cellar, some Pooters can fly over rocks, causing a pseudo-softlock.
 
 The changed rooms are as follows:
-* Basement: #135, #391
+* Basement/Burning: #135, #391
 
 <br />
 
@@ -385,7 +385,7 @@ The bomb puzzle room with four entrances has many problems with it:
 * On the Dank Depths, any rocks that are randomly replaced with spikes are reverted back to rocks in order to prevent unavoidable damage.
 
 The changed room is as follows:
-* Depths/Necropolis: #41
+* Depths/Necropolis/Dank: #41
 
 <br />
 
@@ -394,7 +394,7 @@ The changed room is as follows:
 The puzzle rooms with the red fires along the sides of the room have no consistent strategy with which to avoid the random shots.
 
 The removed room is as follows:
-* Basement/Cellar: #771
+* Basement/Cellar/Burning: #771
 
 <br />
 
@@ -412,7 +412,7 @@ The changed rooms are as follows:
 One room in the game does not have any doors, which is obviously a mistake.
 
 The changed room is as follows:
-* Caves: #208
+* Caves/Flooded: #208
 
 <br />
 
@@ -421,7 +421,7 @@ The changed room is as follows:
 Some rooms in the game have Nerve Endings next to doors. These are unavoidable damage if the Nerve Endings happen to spawn as their champion variant. This bug is fixed by removing or moving some Nerve Endings.
 
 The changed rooms are as follows:
-* Womb/Utero: #147, #825
+* Womb/Utero/Scarred: #147, #825
 
 <br />
 
@@ -430,7 +430,7 @@ The changed rooms are as follows:
 In some rooms, Edmund placed a rediculous amount of Pale Fatties. The number has been reduced to 8, which is possible to consistently kill without getting hit on a basic build.
 
 The changed rooms are as follows:
-* Caves/Catacombs: #843, #854
+* Caves/Catacombs/Flooded: #843, #854
 
 <br />
 
@@ -439,7 +439,7 @@ The changed rooms are as follows:
 In one room, fires spawn close to the entrance. If the fire becomes a champion red fire, then the player can take unavoidable damage. This bug has been fixed by replacing the Fire with Fire Places, which are guaranteed to not spawn as red fires.
 
 The changed rooms are as follows:
-* Depths/Necropolis: #863
+* Depths/Necropolis/Dank: #863
 
 <br />
 
@@ -448,7 +448,7 @@ The changed rooms are as follows:
 In one room, the Drowned Chargers that spawn from a Hive can be unavoidable damage. The Hives have been slightly moved to accommodate for this.
 
 The changed room is as follows:
-* Caves: #519
+* Caves/Flooded: #519
 
 <br />
 
@@ -457,7 +457,7 @@ The changed room is as follows:
 In one room, there are Boils behind a Key Block, which can lead to a softlock if you have no keys or bombs. The stacked Boils have been removed.
 
 The changed room is as follows:
-* Womb/Utero: #692
+* Womb/Utero/Scarred: #692
 
 <br />
 
@@ -491,7 +491,7 @@ On one room, Edmund forgot to implement entity stacking.
 
 The changed room is as follows:
 
-* Caves: #267
+* Caves/Flooded: #267
 
 <br />
 
@@ -531,10 +531,10 @@ The removed room is as follows:
 A small number of rooms in the game do not have anything in them. Some other rooms do not have anything in them except for a few rocks.
 
 The removed rooms are as follows:
-* Basement: #315
-* Basement/Cellar: #39
-* Caves: #170
-* Depths: #378, #428
+* Basement/Burning: #315
+* Basement/Cellar/Burning: #39
+* Caves/Flooded: #170
+* Depths/Dank: #378, #428
 * Cathedral: #57
 * Sheol: #255
 * Cathedral/Sheol: #73, #89
@@ -543,27 +543,28 @@ The removed rooms are as follows:
 One room on the Basement/Cellar has the chance to be empty because of stacked entities.
 
 The changed rooms are as follows:
-* Basement/Cellar: #875
+* Basement/Cellar/Burning: #875
 
 <br />
 
 ### Out of Bounds Fix
 
 Rooms with entities out of bounds have been placed in bounds. This does not affect gameplay in any way.
-* Caves: #203
-* Caves/Catacombs: #363, #406, #427, #428, #429
-* Depths: #457, #460, #463, #471, #472
-* Depths/Necropolis: #430, #455
+* Caves/Flooded: #203
+* Caves/Catacombs/Flooded: #363, #406, #427, #428, #429
+* Depths/Dank: #457, #460, #463, #471, #472
+* Depths/Necropolis/Dank: #430, #455
 
 <br />
 
 ### Symmetry Fix
 
 Certain rooms in the game were probably meant to be symmetrical, but one entity or tile was incorrectly placed. This is fixed.
-* Basement: #581
-* Basement/Cellar: #772
-* Caves: #28, #120, #416, #541
-* Womb/Utero: #705, #757
+* Basement/Burning: #581
+* Basement/Cellar/Burning: #772
+* Caves/Flooded: #28, #120, #416, #541
+* Flooded: #939
+* Womb/Utero/Scarred: #705, #757
 * Cathedral: #23, #41
 * Monstro II: #1051
 * The Gate: #5042
@@ -578,19 +579,19 @@ Certain rooms in the game were probably meant to be symmetrical, but one entity 
 
 ## Rooms That Were Deliberately Not Changed
 
-* Basement #274 - This is a 1x1 room with a TNT barrel to the left/right of the top/bottom entrances. However, on a knife build, if you are playing correctly, you should be pointing it towards the center of the room upon entering.
-* Basement/Cellar #401 - This is a 2x1 room with 4 Pooters. If there is a tinted rock in the room, you should ignore it and hustle to kill the Pooters before they get into a softlock position.
-* Basement/Cellar #603 - This is a narrow room with 2 Mullibooms. On base speed, you have enough room to dodge them if you avoid the cobwebs.
-* Basement/Cellar #752 - This is a narrow room with 3 Mega Troll Bombs. This room is not unavoidable with deterministic fuse timers.
-* Basement/Cellar #767 - This is a room with 2 Mega Troll Bombs. This room is not unavoidable with deterministic fuse timers.
+* Basement/Burning #274 - This is a 1x1 room with a TNT barrel to the left/right of the top/bottom entrances. However, on a knife build, if you are playing correctly, you should be pointing it towards the center of the room upon entering.
+* Basement/Cellar/Burning #401 - This is a 2x1 room with 4 Pooters. If there is a tinted rock in the room, you should ignore it and hustle to kill the Pooters before they get into a softlock position.
+* Basement/Cellar/Burning #603 - This is a narrow room with 2 Mullibooms. On base speed, you have enough room to dodge them if you avoid the cobwebs.
+* Basement/Cellar/Burning #752 - This is a narrow room with 3 Mega Troll Bombs. This room is not unavoidable with deterministic fuse timers.
+* Basement/Cellar/Burning #767 - This is a room with 2 Mega Troll Bombs. This room is not unavoidable with deterministic fuse timers.
 * Cellar #766 - This is a 1x1 room with 3 mega troll bombs, but if you stand completely still, they will not damage you.
-* Caves #161, #271, #553 - If the enemy by the top door is a explosive champion, the player will not be hit. If the enemy by the top door is a tear champion, the player has a full second to react upon entering.
-* Caves #692 - This is a narrow 1x1 room filled with poops. With Ipecac, you can safely shoot left from the top right-hand corner. With Dr. Fetus, you can walk diagonally through the poops to plant your first bomb. With Dr. Fetus and Bomber Boy, it is unavoidable damage.
-* Caves/Catacombs #690 - This is a narrow room with 9 Troll Bombs. This room is not unavoidable with deterministic fuse timers.
-* Caves/Catacombs #862 - This is a room with 5 Crazy Long Legs. On a low damage build, it is possible for the spiders to come at you from every angle and cause unavoidable damage. However, spider movement is RNG dependant and actual unavoidable damage is rare.
-* Caves/Catacombs #885 - This is a narrow room with 4 Blue Gapers. You have enough room to consistently dodge the Gapers.
+* Caves/Flooded #161, #271, #553 - If the enemy by the top door is a explosive champion, the player will not be hit. If the enemy by the top door is a tear champion, the player has a full second to react upon entering.
+* Caves/Flooded #692 - This is a narrow 1x1 room filled with poops. With Ipecac, you can safely shoot left from the top right-hand corner. With Dr. Fetus, you can walk diagonally through the poops to plant your first bomb. With Dr. Fetus and Bomber Boy, it is unavoidable damage.
+* Caves/Catacombs/Flooded #690 - This is a narrow room with 9 Troll Bombs. This room is not unavoidable with deterministic fuse timers.
+* Caves/Catacombs/Flooded #862 - This is a room with 5 Crazy Long Legs. On a low damage build, it is possible for the spiders to come at you from every angle and cause unavoidable damage. However, spider movement is RNG dependant and actual unavoidable damage is rare.
+* Caves/Catacombs/Flooded #885 - This is a narrow room with 4 Blue Gapers. You have enough room to consistently dodge the Gapers.
 * Catacombs #267 - This is a room with a Night Crawler right next to the bottom entrance. Night Crawler's cannot spawn as champions, so it will never explode in your face from blue flies.
-* Depths/Necropolis #699 - This is a room with 2 Mega Troll Bombs and 4 Troll Bombs. This room is not unavoidable with deterministic fuse timers.
+* Depths/Necropolis/Dank #699 - This is a room with 2 Mega Troll Bombs and 4 Troll Bombs. This room is not unavoidable with deterministic fuse timers.
 * Sheol #285 - This is a narrow room with 3 Mega Troll Bombs and 1 Troll Bomb. You can simply leave this room, as there are no enemies that cause the doors to become closed.
 * Dark Room #287 - This is a room with 3 mega troll bombs and an Imp. If you stand completely still, the troll bombs will not damage you.
 * Chest #39 - This is a room with 2 Mega Maws. Even with the champion version, there is enough time to react to the patterns.

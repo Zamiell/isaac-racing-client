@@ -88,6 +88,13 @@ function RPDebug:Main()
   --RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
   --RPGlobals.raceVars.finished = true
 
+  -- New Booster Pack item images testing
+  --RPSprites:Init("diversity-item1", 530) -- Collectible
+  --RPSprites:Init("diversity-item2", 531) -- Collectible
+  --RPSprites:Init("diversity-item3", 532) -- Collectible
+  --RPSprites:Init("diversity-item4", 534) -- Collectible
+  --RPSprites:Init("diversity-item5", 125) -- Trinket
+
   --
   -- End test stuff
   --

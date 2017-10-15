@@ -12,7 +12,6 @@ Lang.prototype.pack.zz = {
         "Only use letters, numbers, and underscores.": "",
         "Username": "",
         "Submit": "",
-        "The username field is required.": "",
         "Username can only contain alphanumeric characters and '_'. Username should have between 2 and 15 characters.": "",
         "The username provided is in use already.": "",
 
@@ -65,6 +64,7 @@ Lang.prototype.pack.zz = {
         "Unseeded": "",
         "Seeded": "",
         "Diversity": "",
+        "Unseeded (Lite)": "",
         "Custom": "",
 
         // Lobby screen (other)
@@ -78,40 +78,14 @@ Lang.prototype.pack.zz = {
         "Seed": "",
         "Build": "",
 
-        // Tooltips for race "Type"
-        "This race will not count towards the leaderboards.": "",
-        "This race will count towards the leaderboards.": "",
-        "No-one else can join this race.": "",
-
-        // Tooltips for race "Format"
-        "Reset over and over until you find something good from a Treasure Room.": "",
-        "You will be playing on an entirely different seed than your opponent(s).": "",
-        "You will play on the same seed as your opponent and start with The Compass.": "",
-        "This is the same as the \"Unseeded\" format, but you will also start with three random passive items.": "",
-        "All players will start with the same three items.": "",
-
-        // Tooltips for race "Goal"
-        "Defeat Blue Baby (the boss of The Chest) and jump into the chest that falls down afterward.": "",
-        "Defeat The Lamb (the boss of The Dark Room) and jump into the chest that falls down afterward.": "",
-        "Defeat Mega Satan (the boss behind the giant locked door).": "",
-
-        // Tooltips for race "Seed"
-        "It was automatically put in your clipboard when you joined the race.": "",
-
         // Race screen (race controls)
         "Ready": "",
         "Race starting in 10 seconds!": "",
         "Go": "",
+        "Finish Race": "",
         "Quit Race": "",
         "left": "",
-        "Race completed!": "",
-
-        // Race ready error messages
-        "You have to start a run before you can mark yourself as ready. If you are already in a run, hold R to reset the game one time.": "",
-        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
-        "You must be in a run with the correct character before you can mark yourself as ready.": "",
-        "You must be in a run with the correct seed before you can mark yourself as ready.": "",
-        "You should wait for someone else to join this race before marking yourself as ready.": "",
+        "Race completed": "",
 
         // Race screen (racer table)
         "Place": "",
@@ -129,7 +103,7 @@ Lang.prototype.pack.zz = {
 
         // Error modal
         "Error": "",
-        "Exit and relaunch": "",
+        "Exit and relaunch Racing+": "",
 
         // Warning modal
         "Warning": "",
@@ -145,9 +119,16 @@ Lang.prototype.pack.zz = {
         "Please relaunch the program.": "",
         "Locate \"log.txt\"": "",
         "Select your Isaac \"log.txt\" file": "",
-        "It appears that you have selected your Rebirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "",
-        "It appears that you have selected your Afterbirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "",
         "Please try again and select your Afterbirth+ log file.": "",
+
+        // Save file modal
+        "Save File": "",
+        "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.": "",
+        "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.": "",
+        "Replace save slot": "",
+        "Do nothing and exit": "",
+        "The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.": "",
+        "If it doesn't work, then you need to go into the game once on that slot, exit the game, and then redo this process.": "",
 
         // New race tooltip
         "Race title (optional)": "",
@@ -158,8 +139,9 @@ Lang.prototype.pack.zz = {
         "Practice": "",
         "Casual": "",
         "Season": "",
-        "Random (all, 1-32)": "Aléatoire",
-        "Random (D6 builds only, 1-30)": "",
+        "Random": "",
+        "Random (all, 1-33)": "Aléatoire",
+        "Random (single items only, 1-26)": "",
         "Random (Treasure Room only, 1-20)": "",
         "Create": "",
 
@@ -171,7 +153,7 @@ Lang.prototype.pack.zz = {
         "Language": "",
         "Volume": "",
         "Test": "",
-        "Don't disable boss cutscenes (for people used to vanilla; requires game restart)": "",
+        "Enable boss cutscenes (for people used to vanilla; requires game restart)": "",
         "Change stream URL": "",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "",
         "Enable Twitch chat bot": "",
@@ -191,5 +173,41 @@ Lang.prototype.pack.zz = {
 
         // Error messages (from the server)
         "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.": "",
+
+        // chat.js
+        "The format of a private message is": "",
+        "The format of a notice is": "",
+        "The format of a ban is": "",
+        "The format of an unban is": "",
+
+        // log-watcher.js
+        "It appears that you have selected your Rebirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "",
+        "It appears that you have selected your Afterbirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "",
+
+        // race.js
+        "The random items are not revealed until the race begins!": "",
+        "This race will count towards the leaderboards.": "",
+        "This race will not count towards the leaderboards.": "",
+        "No-one else can join this race.": "",
+        "Reset over and over until you find something good from a Treasure Room.": "",
+        "You will be playing on an entirely different seed than your opponent(s).": "",
+        "You will play on the same seed as your opponent and start with The Compass.": "",
+        "This is the same as the \"Unseeded\" format, but you will also start with five random items.": "",
+        "All players will start with the same five items.": "",
+        "Extra changes will also be in effect; see the Racing+ website for details.": "",
+        "You make the rules! Make sure that everyone in the race knows what to do before you start.": "",
+        "Defeat Blue Baby (the boss of The Chest)": "",
+        "Defeat The Lamb (the boss of The Dark Room)": "",
+        "Defeat Mega Satan (the boss behind the giant locked door)": "",
+        "and touch the trophy that falls down afterward.": "",
+
+        // Race ready error messages
+        "You should wait for someone else to join this race before marking yourself as ready.": "",
+        "You have to start a run before you can mark yourself as ready.": "",
+        "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
+        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
+
+        // register.js
+        "The username field is required.": "",
     },
 };

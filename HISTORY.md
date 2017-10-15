@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.12.2* - October 14th
+
+* The Booster Pack #4 rooms have now been integrated into Racing+ (and flipped).
+* The Booster Pack #4 items will now be included in diversity races.
+* The vanilla Schoolbag will now be removed from all pools when you have the Racing+ version of the Schoolbag. Until The Battery synergy is fixed in vanilla, it is better to use the Racing+ version.
+* Fixed the bug where you could not play hard mode runs in races with a custom format. (Thanks CrafterLynx)
+* Fixed the bug where extra enemies were not being killed upon killing Mom, Mom's Heart, or It Lives! (Thanks ReidMercury and NorBro86)
+* Fixed the bug where the Gurdy teleport was not being subverted in two flipped rooms. (Thanks Cyber_1)
+* Fixed the bug where you would prematurely finish a race if your internet disconnected and you reconnected under certain conditions. (Thanks Molfried)
+
 ### *v0.12.0* - October 10th
 
 * Racing+ will now work with the latest patch (Booster Pack #4). The new Booster Pack rooms are not yet integrated. Diversity races won't have the new items yet.
@@ -270,7 +280,7 @@ Client/Server:
 ### *v0.7.8* - June 30th, 2017
 
 * Racing+ will now work with the latest patch (Booster Pack #3).
-* Fixed the bug where the doors would open prematurely when fighting an angel. (Thanks ReidMercury__)
+* Fixed the bug where the doors would open prematurely when fighting an angel. (Thanks ReidMercury)
 
 ### *v0.7.6* - June 26th, 2017
 
@@ -390,7 +400,7 @@ Changes:
 
 * Added support for racing custom characters to the client.
 * Added Globins to the fast-clear exception list. (Thanks Thoday)
-* Added Dark Red champions to the fast-clear exception list. (Thanks ReidMercury__)
+* Added Dark Red champions to the fast-clear exception list. (Thanks ReidMercury)
 
 ### *v0.6.6* - May 22nd, 2017
 
@@ -586,7 +596,7 @@ Changes:
 
 * Increased the pedestal pickup delay on freshly spawned items from 15 to 20. (It is 20 in vanilla.) (Thanks Lobsterosity)
 * Fixed the bug where Big Horn would drop an extra heart under certain conditions.
-* Fixed the bug where the Mega Satan fight could end early under certain conditions. (Thanks PassionDrama and ReidMercury__)
+* Fixed the bug where the Mega Satan fight could end early under certain conditions. (Thanks PassionDrama and ReidMercury)
 * Fixed the bug where the timer would get messed up under certain conditions. (Thanks PassionDrama)
 * Fixed the bug where the trapdoor would troll you after coming out of a Devil Room.
 * Fixed the bug where it would not show the correct "pre-race" graphic under certain conditions. (Thanks blcd)

@@ -41,11 +41,16 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // sips --deleteColorManagementProperties ###.png
 
 // List of files to update during Booster Packs:
-// 1) data/items.json
-// 2) img/items/#.png
-// 3) mod/content/items.xml
-// 4) mod/resources/gfx/items2/..
-// 5) mod/resources/gfx/items3/..
+// 1) mod/content/items.xml
+// 2) mod/resources/gfx/items2/items/..
+// 3) mod/resources/gfx/items2/trinkets/..
+// 4) mod/resources/gfx/items3/items/..
+// 5) mod/resources/gfx/items3/trinkets/..
+// 6) data/items.json
+// 7) data/trinkets.json
+// 8) img/items/#.png
+// 9) img/trinkets/#.png
+// 10) website images copy from item tracker
 
 /*
 
