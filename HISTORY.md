@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.12.3* - October 15th
+
+* Fixed the Schoolbag not working.
+* Fixed the vanilla bug where a Flooded Caves room with a Slot Machine (#976) was incorrectly given 1000 weight. (Thanks Lobsterosity)
+
 ### *v0.12.2* - October 14th
 
 * The Booster Pack #4 rooms have now been integrated into Racing+ (and flipped).

@@ -91,7 +91,7 @@ ipcRenderer.on('isaac', (event, message) => {
         const error = message.match(/error: (.+)/)[1];
         misc.errorShow(error, false);
     } else if (message === 'File system was repaired, so we need to restart Isaac.') {
-        misc.warningShow('Racing+ detected that your mod was corrupted and automatically fixed it. Your game has been restarted to ensure that everything is now loaded correctly.');
+        misc.warningShow('Racing+ detected that your mod was corrupted and automatically fixed it. Your game has been restarted to ensure that everything is now loaded correctly. (If a patch just came out, this message is normal, as Steam has likely not had time to download the newest version yet.)');
     } else {
         // The child process is sending us a message to log
         globals.log.info(`Isaac child message: ${message}`);

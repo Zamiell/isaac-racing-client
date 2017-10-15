@@ -284,6 +284,7 @@ function checkModIntegrity() {
                 files: filePath,
             });
             if (fileHash !== backupFileHash) {
+                process.send(`File is corrupt: ${filePath}`);
                 copyFile = true;
                 try {
                     fs.removeSync(filePath);
@@ -293,12 +294,12 @@ function checkModIntegrity() {
                 }
             }
         } else {
+            process.send(`File is not corrupt but is missing: ${filePath}`);
             copyFile = true;
         }
 
         // Copy it
         if (copyFile) {
-            process.send(`File is corrupt or missing: ${filePath}`);
             fileSystemValid = false;
             try {
                 fs.copySync(backupFilePath, filePath);

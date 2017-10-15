@@ -57,8 +57,8 @@ process.on('message', (message) => {
         return;
     }
     for (const line of existingLines) {
-        // This code is copy-pasted from below
-        if (line.startsWith('Loading PersistentData ')) {
+        // This code is copy-pasted from below (but added the "[INFO] - " prefix)
+        if (line.startsWith('[INFO] - Loading PersistentData ')) {
             // We want to keep track of which save file we are on so that we don't have to write 3 files at a time
             // This line looks like:
             // Loading PersistentData 1 from SteamCloud!

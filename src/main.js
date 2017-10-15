@@ -12,7 +12,7 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+\log.txt
 ```
 And send me your Racing+ log file, which is located here:
 ```
-C:\Users\james\AppData\Local\Programs\Racing+.log
+C:\Users\james\AppData\Local\Programs\Racing+ 2017-##-##.log
 ```
 And if you are still in the race, send me your `save1.dat` file (for save slot #1), which is located here:
 ```
