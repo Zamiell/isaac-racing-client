@@ -269,6 +269,7 @@ function RPPostUpdate:CheckDropInput()
   -- (we are able to delete the first slot by adding a null card)
   -- So we have to disable the fast-drop feature if the player has an item that allows a 2nd card/pill slot
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) or
+     player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      player:HasCollectible(CollectibleType.COLLECTIBLE_STARTER_DECK) or -- 251
      player:HasCollectible(CollectibleType.COLLECTIBLE_LITTLE_BAGGY) or -- 252
      player:HasCollectible(CollectibleType.COLLECTIBLE_DEEP_POCKETS) or -- 416

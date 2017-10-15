@@ -111,7 +111,7 @@ function RPItems:GlowingHourGlass() -- 422
   end
 
   -- Reset the Schoolbag
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) == false then
      -- Broken Remote cancels the Glowing Hour Glass effect
 

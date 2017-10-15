@@ -7,7 +7,7 @@
 * The vanilla Schoolbag will now be removed from all pools when you have the Racing+ version of the Schoolbag. Until The Battery synergy is fixed in vanilla, it is better to use the Racing+ version.
 * Fixed the bug where you could not play hard mode runs in races with a custom format. (Thanks CrafterLynx)
 * Fixed the bug where extra enemies were not being killed upon killing Mom, Mom's Heart, or It Lives! (Thanks ReidMercury and NorBro86)
-* Fixed the bug where the Gurdy teleport was not being subverted in two flipped rooms. (Thanks Cyber_1)
+* Fixed the bug where the Gurdy teleport was not being subverted in three flipped rooms in The Chest. (Thanks Cyber_1)
 * Fixed the bug where you would prematurely finish a race if your internet disconnected and you reconnected under certain conditions. (Thanks Molfried)
 
 ### *v0.12.0* - October 10th

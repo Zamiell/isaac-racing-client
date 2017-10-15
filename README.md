@@ -63,12 +63,16 @@ Run (on macOS)
 
 <br />
 
-Run (on Ubuntu 17.04)
+Run (on Ubuntu 16.04)
 ---------------------
 
-* Follow the steps above for macOS.
+* `sudo apt install curl git -y`
+* Follow the instructions for macOS above.
+
+If you are on Ubuntu 17.04:
+
 * You might have to do a `apt --fix-broken install` after installing NodeJS.
-* `electron-rebuild` might not run due to a missing token for a dependency check. Instead, use electron-builder to build the initial electron modules. 
+* `electron-rebuild` might not run due to a missing token for a dependency check. Instead, use electron-builder to build the initial electron modules.
 * You might have to create a symbolic link for nodejs: `ln -s /usr/bin/nodejs /usr/bin/node`
 
 <br />

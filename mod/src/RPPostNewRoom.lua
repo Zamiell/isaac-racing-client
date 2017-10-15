@@ -113,7 +113,7 @@ function RPPostNewRoom:NewRoom()
   end
 
   -- Make the Schoolbag work properly with the Glowing Hour Glass
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
     -- Recharge our active item if we used the Glowing Hour Glass
     if RPGlobals.run.schoolbag.nextRoomCharge then
       RPGlobals.run.schoolbag.nextRoomCharge = false

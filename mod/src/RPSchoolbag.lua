@@ -73,7 +73,7 @@ function RPSchoolbag:SpriteDisplay()
   local itemVector = Vector(itemX, itemY)
   local barVector = Vector(itemX + barXOffset, itemY + barYOffset)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false then
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
     return
   end
 
@@ -143,7 +143,7 @@ function RPSchoolbag:CheckActiveCharges()
   local player = game:GetPlayer(0)
   local charges = player:GetActiveCharge()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
      player:GetActiveItem() == 0 or
      charges == RPGlobals.run.schoolbag.lastCharge then
 
@@ -162,7 +162,7 @@ function RPSchoolbag:CheckSecondItem(entity)
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      RPGlobals.run.schoolbag.item == 0 and
      entity:ToPickup().Touched then
 
@@ -194,7 +194,7 @@ function RPSchoolbag:CheckEmptyActive()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
      RPGlobals.run.schoolbag.item == 0 or
      player:GetActiveItem() ~= 0 or
      player:IsItemQueueEmpty() == false then
@@ -219,7 +219,7 @@ function RPSchoolbag:CheckBossRush()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
      RPGlobals.run.schoolbag.item == 0 or
      roomIndexUnsafe ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
      room:IsAmbushActive() == false or
@@ -241,7 +241,7 @@ function RPSchoolbag:CheckInput()
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) == false or
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
      RPGlobals.run.schoolbag.item == 0 or
      player:IsItemQueueEmpty() == false then
      -- This will allow switches while the use animation is occuring but
