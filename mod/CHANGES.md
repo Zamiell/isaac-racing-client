@@ -219,7 +219,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 ### R+14 Season 1
 
 * You must defeat Blue Baby on all 14 characters.
-* Isaac starts with The Battery.
+* Isaac starts with The Battery (and a double charged D6).
 * Maggy starts with the Soul Jar, a new passive item with the following effects:
   * You no longer gain health from soul/black hearts.
   * You gain a red heart container after picking up 4 soul/black hearts.
@@ -233,6 +233,8 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
 * More information on Samael can be found above in the "Other Mods Included" section.
+* Isaac starts with The Battery (and a double charged D6).
+* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 
 <br />
