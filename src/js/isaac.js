@@ -44,10 +44,11 @@ exports.start = () => {
                 if (
                     typeof json[order] !== 'undefined' &&
                     json[order] !== null &&
-                    json[order].toString() !== '[0]' &&
-                    globals.modLoader[order].toString() === '[0]'
+                    json[order].toString() !== '0' &&
+                    globals.modLoader[order].toString() === '0'
                 ) {
                     globals.modLoader[order] = json[order];
+                    globals.log.info(`Found proerty "${order}" on save file ${i}: ${json[order]}`);
                 }
             }
         } else {

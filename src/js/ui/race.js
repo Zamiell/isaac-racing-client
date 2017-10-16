@@ -505,7 +505,7 @@ exports.participantAdd = (i) => {
     racerDiv += '</td>';
 
     // The racer's name
-    racerDiv += `<td id="race-participants-table-${racer.name}-name">${racer.name}</td>`;
+    racerDiv += `<td id="race-participants-table-${racer.name}-name" class="selectable">${racer.name}</td>`;
 
     // The racer's status
     racerDiv += `<td id="race-participants-table-${racer.name}-status">`;

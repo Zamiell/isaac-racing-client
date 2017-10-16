@@ -92,7 +92,7 @@ $(document).ready(() => {
             settings.set('newRaceTitle', title); // An empty string means to use the random name generator
             settings.saveSync();
         }
-        let type = $('#new-race-type').val();
+        const type = $('#new-race-type').val();
         if (type !== settings.get('newRaceType')) {
             settings.set('newRaceType', type);
             settings.saveSync();
@@ -113,13 +113,20 @@ $(document).ready(() => {
             settings.saveSync();
         }
 
-        let solo = false;
+        let ranked;
+        let solo;
         if (type === 'ranked-solo') {
-            type = 'ranked';
+            ranked = true;
             solo = true;
         } else if (type === 'unranked-solo') {
-            type = 'unranked';
+            ranked = false;
             solo = true;
+        } else if (type === 'ranked') {
+            ranked = true;
+            solo = false;
+        } else if (type === 'unranked') {
+            ranked = false;
+            solo = false;
         }
 
         let startingBuild;
@@ -188,7 +195,7 @@ $(document).ready(() => {
 
         // Create the race
         const rulesetObject = {
-            type,
+            ranked,
             solo,
             format,
             character,

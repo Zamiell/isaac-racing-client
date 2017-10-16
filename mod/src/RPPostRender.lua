@@ -109,12 +109,12 @@ function RPPostRender:CheckRestart()
 
     -- The "restart" command takes an optional argument to specify the character; we might want to specify this
     local command = "restart"
-    if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
+    if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
       command = command .. " " .. RPGlobals.race.order9[RPSpeedrun.charNum]
-    elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then

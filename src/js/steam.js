@@ -157,6 +157,7 @@ function login() {
     request.fail((jqXHR) => {
         // Show the error screen (and don't bother reporting this to Sentry)
         globals.log.info('Login failed.');
+        globals.log.info(jqXHR);
         const error = misc.findAjaxError(jqXHR);
         misc.errorShow(error, false);
     });

@@ -34,14 +34,14 @@ function RPPostEntityKill:NPC45(npc)
 
   -- Figure out if we need to spawn either The Polaroid, The Negative, or both
   local situation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
-  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
 
     -- Season 1 speedrun challenges always go to The Chest
     situation = 1
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
     -- Give the player a choice between the photos on the season 2 and season 3 speedrun challenges
     situation = 3
@@ -160,17 +160,17 @@ function RPPostEntityKill:NPC78(npc)
 
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
   local situation -- 1 for the beam of light, 2 for the trapdoor, 3 for both
-  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
 
     -- Season 1 speedrun challenges always go to The Chest
     situation = 1
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     -- Season 1 speedrun challenges always go to the Dark Room
     situation = 2
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     -- Season 3 speedrun challenges alternate between The Chest and the Dark Room
     situation = RPSpeedrun.s3direction
 

@@ -206,7 +206,7 @@ function RPCheckEntities:Entity5(pickup)
     end
 
   elseif pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
-         pickup.Variant == PickupVariant.PICKUP_MIMIC then -- 54
+         pickup.Variant == PickupVariant.PICKUP_MIMICCHEST then -- 54
 
     -- We can't check for the "Appear" animation because this is not fast enough
     -- to intercept the unavoidable damage when a Mimic spawns on top of the player
@@ -324,15 +324,15 @@ function RPCheckEntities:Entity5_340(pickup)
   local challenge = Isaac.GetChallenge()
 
   RPCheckEntities.bigChestAction = "leave" -- Leave the big chest there by default
-  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") or
-     challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
 
     RPCheckEntities:Entity5_340_S1(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     RPCheckEntities:Entity5_340_S2(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
 
   elseif RPGlobals.raceVars.finished then
@@ -632,23 +632,19 @@ function RPCheckEntities:Entity5_370(pickup)
 
   -- Do nothing if we are not on a custom speedrun challenge
   -- (otherwise we would mess with the normal challenges)
-  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
-
+  if RPSpeedrun:InSpeedrun() == false then
     return
   end
 
   -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
   -- depending on if we are on the last character or not
-  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+  if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
       RPSpeedrun.charNum == 9) or
-     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+     (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
       RPSpeedrun.charNum == 14) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
       RPSpeedrun.charNum == 7) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
       RPSpeedrun.charNum == 7) then
 
     -- Spawn the "Race Trophy" custom entity

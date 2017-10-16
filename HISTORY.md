@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.12.4* - October 15th
+
+* Fixed the bug where the Racing+ mod would not work on the first race if you used save slot 2 or save slot 3. (Thanks 910dan)
+* Fixed the bug where the tenths digit of the timer was inaccurate under certain conditions. (Thanks TheMoonSage and PassionDrama)
+* Fixed the bug where you could not do R+9 / R+14 / R+7 races using the Racing+ client.
+
 ### *v0.12.3* - October 15th
 
 * Fixed the Schoolbag not working.

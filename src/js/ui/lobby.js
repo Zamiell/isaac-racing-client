@@ -134,7 +134,7 @@ exports.raceDraw = (race) => {
     raceDiv += 'hidden">';
 
     // Column 1 - Name
-    raceDiv += `<td id="lobby-current-races-${race.id}-name" class="lobby-current-races-name">`;
+    raceDiv += `<td id="lobby-current-races-${race.id}-name" class="lobby-current-races-name selectable">`;
     if (race.name === '-') {
         raceDiv += `<span lang="en">Race</span> ${race.id}`;
     } else {
@@ -184,7 +184,7 @@ exports.raceDraw = (race) => {
     raceDiv += '</td>';
 
     // Column 6 - Entrants
-    raceDiv += `<td id="lobby-current-races-${race.id}-racers" class="lobby-current-races-racers">`;
+    raceDiv += `<td id="lobby-current-races-${race.id}-racers" class="lobby-current-races-racers selectable">`;
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 

@@ -226,7 +226,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
   * You always have a 100% devil deal chance if no damage is taken.
 * Lilith starts with the Schoolbag. She will start with Box of Friends inside the bag.
 * Keeper starts with Greed's Gullet, Duality, and 50 cents.
-* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
+* Apollyon starts with the Schoolbag. He will start with Void inside the bag.
 
 ### R+7 Season 2
 
@@ -234,8 +234,23 @@ Historically, most speedruns and races have been unseeded with the goal of killi
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
 * More information on Samael can be found above in the "Other Mods Included" section.
 * Isaac starts with The Battery (and a double charged D6).
-* Apollyon now starts with the Schoolbag. He will start with Void inside the bag.
+* Apollyon starts with the Schoolbag. He will start with Void inside the bag.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
+
+### R+7 Season 3 (Unreleased / Beta)
+
+* You must complete the game with the following 7 characters:
+  * Isaac, Magadalene, Judas, Eve, Samson, Lazarus, and The Lost
+* The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
+* The bosses of Cathedral, Sheol, The Chest, and the Dark Room have been replaced with ?.
+* Isaac starts with the Schoolbag. He will start with Moving Box inside the bag.
+* Magadalene starts with the Schoolbag. She will start with How to Jump inside the bag.
+* Magadalene no longer starts with a speed up pill. Speed up will still be in the pill pool.
+* Judas starts with the Schoolbag. He will start with Book of Belial inside the bag.
+* Eve starts with the Schoolbag. She will start with Dull Razor inside the bag.
+* Samson starts with the Schoolbag. He will start with Mr. ME! inside the bag.
+* Lazarus starts with the Schoolbag. He will start with Ventricle Razor inside the bag.
+* The Lost starts with the Schoolbag. He will start with Glass Cannon inside the bag.
 
 <br />
 

@@ -1383,7 +1383,7 @@ end
 -- Update entity inventories
 function RPMahalath:PostUpdate()
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
      challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
 
     return

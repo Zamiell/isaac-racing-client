@@ -387,7 +387,9 @@ function RPPostGameStarted:Race()
   end
 
   -- Validate that we are on the right character
-  if character ~= RPGlobals.race.character then
+  if character ~= RPGlobals.race.character and
+     RPGlobals.race.rFormat ~= "custom" then
+
     -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
     RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting because we were not on the right character.")

@@ -7,7 +7,6 @@
 /*
 
 New TODO:
-- add better parsing
 - 10 min timeout after disconnect for races
 - make server notice from discord part of chat log
 - when twitch bot warning message comes into client, set local variables accordingly

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.12.3"
+RPGlobals.version = "v0.12.4"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -13,7 +13,6 @@ RPGlobals.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 RPGlobals.race = {
-  id              = 0,           -- 0 if no race, a number otherwise
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked          = false,       -- Can be true or false
@@ -79,9 +78,6 @@ CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Div
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
 PillEffect.NUM_PILL_EFFECTS       = Isaac.GetPillEffectByName("Gulp!") + 1
-
--- Pickups
-PickupVariant.PICKUP_MIMIC = 54
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")

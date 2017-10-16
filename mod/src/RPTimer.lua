@@ -31,10 +31,10 @@ function RPTimer:Display()
   local challenge = Isaac.GetChallenge()
   if RPGlobals.raceVars.started == false and
      RPGlobals.raceVars.finished == false and
-     challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+9 (Season 1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+14 (Season 1)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 2)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
     return
   end
@@ -113,9 +113,9 @@ function RPTimer:Display()
   local second2 = string.sub(seconds, 2, 2) -- The second character
 
   -- Calculate the tenths digit
-  local rawSeconds = elapsedTime % 60
-  local tenths = RPGlobals:Round(rawSeconds, 1) - math.floor(rawSeconds) -- This will be betwen 0.0 and 0.9
-  tenths = string.sub(tostring(tenths), 3, 3)
+  local rawSeconds = elapsedTime % 60 -- 0.000 to 59.999
+  local decimals = rawSeconds - math.floor(rawSeconds)
+  local tenths = math.floor(decimals * 10)
 
   -- Local variables
   local digitLength = 7.25

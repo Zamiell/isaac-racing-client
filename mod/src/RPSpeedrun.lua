@@ -143,17 +143,13 @@ function RPSpeedrun:Init()
     return
   end
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
-
+  if RPSpeedrun:InSpeedrun() == false then
     return
   end
 
   -- Do actions based on the specific challenge
-  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") then
-    Isaac.DebugString("In the R+9 (S1) challenge.")
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
+    Isaac.DebugString("In the R+9 (Season 1) challenge.")
 
     -- Give extra items to characters for the R+9 speedrun category (Season 1)
     if character == PlayerType.PLAYER_KEEPER then -- 14
@@ -172,8 +168,8 @@ function RPSpeedrun:Init()
       player:AddCoins(1) -- This fills in the new heart container
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
-    Isaac.DebugString("In the R+14 (S1) challenge.")
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 Speedrun (Season 1)") then
+    Isaac.DebugString("In the R+14 (Season 1) challenge.")
 
     -- Give extra items to characters for the R+14 speedrun category (Season 1)
     if character == PlayerType.PLAYER_ISAAC then -- 0
@@ -236,10 +232,10 @@ function RPSpeedrun:Init()
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") then
-    Isaac.DebugString("In the R+7 (S2) challenge.")
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
+    Isaac.DebugString("In the R+7 (Season 2) challenge.")
 
-    -- Give extra items to characters for the R+7 (S2) speedrun category (Season 2)
+    -- Give extra items to characters for the R+7 speedrun category (Season 2)
     if character == PlayerType.PLAYER_ISAAC then -- 0
       -- Add the Battery
       player:AddCollectible(CollectibleType.COLLECTIBLE_BATTERY, 0, false) -- 63
@@ -264,15 +260,15 @@ function RPSpeedrun:Init()
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
-    Isaac.DebugString("In the R+7 (S3) challenge.")
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+    Isaac.DebugString("In the R+7 (Season 3) challenge.")
 
     -- Everyone starts with the Schoolbag in this season
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
     RPSchoolbag.sprites.item = nil
 
-    -- Give extra items to characters for the R+7 (S3) speedrun category (Season 3)
+    -- Give extra items to characters for the R+7 speedrun category (Season 3)
     if character == PlayerType.PLAYER_ISAAC then -- 0
       -- Isaac starts with Moving Box
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
@@ -319,35 +315,35 @@ function RPSpeedrun:Init()
     itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
   end
 
-  if challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
      character ~= RPGlobals.race.order9[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+9 (S1) speedrun." ..
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+9 (Season 1) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
          character ~= RPGlobals.race.order14[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+14 (S1) speedrun." ..
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+14 (Season 1) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
          character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (S2) speedrun." ..
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 2) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
          character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (S3) speedrun." ..
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 3) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
   end
@@ -356,13 +352,13 @@ function RPSpeedrun:Init()
     RPSpeedrun.fastReset = false
 
   elseif RPSpeedrun.fastReset == false and
-         ((challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+         ((challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
            character ~= RPGlobals.race.order9[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+          (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
            character ~= RPGlobals.race.order14[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
            character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
            character ~= RPGlobals.race.order7[1])) then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
@@ -383,12 +379,7 @@ end
 
 -- Called from the the PostUpdate callback
 function RPSpeedrun:StartTimer()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
-
+  if RPSpeedrun:InSpeedrun() == false then
     return
   end
 
@@ -574,7 +565,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
      gridEntity.Position.Y == buttonPos1.Y then
 
     RPSpeedrun.chooseType = "R+9"
-    Isaac.DebugString("The R+9 (S1) button was pressed.")
+    Isaac.DebugString("The R+9 (Season 1) button was pressed.")
 
     RPSpeedrun:RemoveAllRoomButtons()
 
@@ -599,7 +590,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
          gridEntity.Position.Y == buttonPos2.Y then
 
     RPSpeedrun.chooseType = "R+14"
-    Isaac.DebugString("The R+14 (S1) button was pressed.")
+    Isaac.DebugString("The R+14 (Season 1) button was pressed.")
 
     RPSpeedrun:RemoveAllRoomButtons()
 
@@ -624,7 +615,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
          gridEntity.Position.Y == buttonPos3.Y then
 
     RPSpeedrun.chooseType = "R+7 (S2)"
-    Isaac.DebugString("The R+7 (S2) button was pressed.")
+    Isaac.DebugString("The R+7 (Season 2) button was pressed.")
 
     RPSpeedrun:RemoveAllRoomButtons()
 
@@ -813,30 +804,28 @@ end
 
 -- Called from the PostRender callback
 function RPSpeedrun:DisplayCharProgress()
-  -- Don't show the progress if we are not in the custom challenge
+  -- Local variables
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
 
+  -- Don't show the progress if we are not in the custom challenge
+  if RPSpeedrun:InSpeedrun() == false then
     return
   end
 
   -- Check to see if they have a set order
-  if (challenge == Isaac.GetChallengeIdByName("R+9 Speedrun (S1)") and
+  if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
       (RPGlobals.race.order9 == nil or
        #RPGlobals.race.order9 == 0 or
        #RPGlobals.race.order9 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") and
+     (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
       (RPGlobals.race.order14 == nil or
        #RPGlobals.race.order14 == 0 or
        #RPGlobals.race.order14 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -900,12 +889,12 @@ function RPSpeedrun:DisplayCharProgress()
   end
   local digit3 = 9 -- Assume a 9 character speedrun by default
   local digit4 = -1
-  if challenge == Isaac.GetChallengeIdByName("R+9/14 Speedrun (S1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     digit3 = 1
     digit4 = 4
   end
-  if challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
     digit3 = 7
   end
@@ -934,6 +923,10 @@ function RPSpeedrun:DisplayCharProgress()
   end
 end
 
+--
+-- Other
+--
+
 -- Replace bosses in season 3
 function RPSpeedrun:PostNewRoom()
   -- Local variables
@@ -949,7 +942,7 @@ function RPSpeedrun:PostNewRoom()
   local roomType = room:GetType()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 Speedrun (S3)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     return
   end
 
@@ -980,6 +973,20 @@ function RPSpeedrun:PostNewRoom()
   -- Spawn her
   Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
   Isaac.DebugString("Spawned Mahalath (for season 3).")
+end
+
+function RPSpeedrun:InSpeedrun()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+
+    return true
+  else
+    return false
+  end
 end
 
 return RPSpeedrun
