@@ -13,7 +13,7 @@ If you want to learn more about Racing+, you can visit [the official website](ht
 3. [Other Mods Included](#other-mods-included)
 4. [List of Minor Changes](#list-of-minor-changes)
 5. [Additional Changes for Custom Race Rulesets](#additional-changes-for-custom-race-rulesets)
-6. [Additional Changes for Multi-Character Speedruns (Custom Challenges)](#additional-changes-for-multi-character-speedruns-(custom-challenges))
+6. [Additional Changes for Multi-Character Speedruns (Custom Challenges)](#additional-changes-for-multi-character-speedruns-custom-challenges)
 7. [Individual Room Changes](#individual-room-changes)
 
 <br />

@@ -146,9 +146,7 @@ function RPPostGameStarted:Main(saveState)
   RPPostGameStarted.diversity = false
 
   -- Racing+ replaces some vanilla items; remove them from all the pools
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SMELTER) -- 497
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()

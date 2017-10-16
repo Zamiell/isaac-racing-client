@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.12.6* - October 16th
+
+* The list of races on the website will now only show multiplayer races. (Thanks thisguyisbarry)
+* Fixed the bug where The Book of Sin and Smelter were mistakenly removed from all pools on all runs. (Thanks 910dan)
+* Fixed the bug where Keeper did not start with the intended items on the R+14 custom challenge. (Thanks ceehe)
+* Fixed the bug where trying to create a ranked race would result in an unranked race being created.
+* Fixed the bug that prevented you from clicking ready under certain circumstances. (Thanks Shigan and Ivana)
+
 ### *v0.12.5* - October 15th
 
 * The LiveSplit AutoSplitter should now work with the latest patch. (Thanks blcd, Sillypears, NorBro86, and Hyphenated)

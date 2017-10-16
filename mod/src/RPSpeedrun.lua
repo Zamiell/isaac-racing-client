@@ -168,7 +168,7 @@ function RPSpeedrun:Init()
       player:AddCoins(1) -- This fills in the new heart container
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+14 Speedrun (Season 1)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     Isaac.DebugString("In the R+14 (Season 1) challenge.")
 
     -- Give extra items to characters for the R+14 speedrun category (Season 1)
