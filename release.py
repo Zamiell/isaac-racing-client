@@ -168,6 +168,21 @@ if ARGS.mod:
     sys.exit(0)
 
 if ARGS.github:
+    # Make sure that the localhost version of the client is not activated
+    # http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
+    GLOBALS_FILE = os.path.join('src', 'js', 'globals.js')
+    with open(GLOBALS_FILE, 'r') as file_handle:
+        FILE_DATA = file_handle.read()
+    NEW_FILE = ''
+    for line in iter(FILE_DATA.splitlines()):
+        match = re.search(r'const localhost = true;(.*)', line)
+        if match:
+            NEW_FILE += 'const localhost = false;' + match.group(1) + '\n'
+        else:
+            NEW_FILE += line + '\n'
+    with open(GLOBALS_FILE, 'w', newline='\n') as file:
+        file.write(NEW_FILE)
+
     # Open the mod updater tool from Nicalis
     UPLOADER_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
     subprocess.Popen([UPLOADER_PATH], cwd=MOD_DIR) # Popen will run it in the background
