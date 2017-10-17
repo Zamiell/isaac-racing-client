@@ -306,7 +306,7 @@ end
 -- EntityType.ENTITY_GABRIEL (272)
 -- We want to manually spawn the key pieces instead of letting the game do it
 -- This slightly speeds up the spawn so that they can not be accidently deleted by leaving the room
-function RPPostEntityKill.NPC271(npc)
+function RPPostEntityKill:NPC271(npc)
   -- Local variables
   local game = Game()
 
@@ -326,7 +326,7 @@ function RPPostEntityKill.NPC271(npc)
 end
 
 -- EntityType.ENTITY_HUSH (407)
-function RPPostEntityKill.NPC407(npc)
+function RPPostEntityKill:NPC407(npc)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()

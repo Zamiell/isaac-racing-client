@@ -82,8 +82,10 @@ function RPPostGameStarted:Main(saveState)
   for i = 0, SeedEffect.NUM_SEEDS do
     if seeds:HasSeedEffect(i) and
        i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70
+       i ~= SeedEffect.SEED_CHRISTMAS and -- 54
+       -- Make an exception for fun seeds
        i ~= SeedEffect.SEED_ALL_CHAMPIONS then -- 13
-       -- (make an exception for seeds that have no beneficial effect and are used for testing purposes)
+       -- Make an exception for seeds that have no beneficial effect and are used for testing purposes
 
       validEasterEggs = false
       break
@@ -147,6 +149,7 @@ function RPPostGameStarted:Main(saveState)
 
   -- Racing+ replaces some vanilla items; remove them from all the pools
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()

@@ -27,6 +27,7 @@ function RPPostUpdate:Main()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
+  local sfx = SFXManager()
 
   -- Keep track of the total amount of rooms cleared on this run thus far
   RPPostUpdate:CheckRoomCleared()
@@ -91,6 +92,14 @@ function RPPostUpdate:Main()
   -- Check for a Haunt fight speedup
   -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
   RPPostUpdate:CheckHauntSpeedup()
+
+  -- Check to see if a D6 / Void got canceled
+  -- (this has to be done a frame later or else it won't work)
+  if RPGlobals.run.rechargeItemFrame == gameFrameCount then
+    RPGlobals.run.rechargeItemFrame = 0
+    player:FullCharge()
+    sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
+  end
 
   -- Check for item drop inputs (fast-drop)
   RPPostUpdate:CheckDropInput()

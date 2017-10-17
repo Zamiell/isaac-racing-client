@@ -149,6 +149,50 @@ function RPItems:Smelter() -- 479
   -- By returning nothing, it will go on to do the Smelter effect
 end
 
+function RPItems:PreventItemPedestalEffects(itemID)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  if RPItems:UnreplacedItemsExist() then
+    Isaac.DebugString("Canceling item " .. tostring(itemID) .. " due to unreplaced items in the room.")
+    RPGlobals.run.rechargeItemFrame = gameFrameCount + 1
+    return true
+  end
+end
+
+function RPItems:UnreplacedItemsExist()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+
+  -- Look for pedestals that have not been replaced yet
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_PICKUP and -- 5
+       entity.Variant == PickupVariant.PICKUP_COLLECTIBLE then -- 100
+
+      local alreadyReplaced = false
+      for j = 1, #RPGlobals.run.replacedPedestals do
+        if RPGlobals.run.replacedPedestals[j].room == roomIndex and
+           RPGlobals.run.replacedPedestals[j].seed == entity.InitSeed then
+
+          alreadyReplaced = true
+        end
+      end
+
+      if alreadyReplaced == false then
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
 --
 -- Post-use collectible item functions
 --
