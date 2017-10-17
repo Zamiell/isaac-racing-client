@@ -2,10 +2,10 @@
 
 ### *v0.12.7* - October 17th
 
-* The [unseeded leaderboards](https://isaacracing.net/leaderboards) have been officially released.
+* The [unseeded leaderboards](https://isaacracing.net/leaderboards) have been officially released. 
 * The vanilla Schoolbag will not work properly with fast-clear, so it has been replaced with the Racing+ version.
 * Fixed the bug where the angel key pieces were not being spawned at the correct time.
-* Fixed the bug where the D6, D100, Diplopia, Void, Crooked Penny, D Infinity, and Moving Box would have buggy behavior if they were used on the same frame as an pedestal item spawned. (Thanks thereisnofuture)
+* Fixed the bug where the D6, D100, Diplopia, Void, Crooked Penny, D Infinity, and Moving Box would have buggy behavior if they were used on the same frame as a pedestal item spawned. (Thanks thereisnofuture)
 
 ### *v0.12.6* - October 16th
 
