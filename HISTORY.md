@@ -1,8 +1,34 @@
 # Racing+ Version History and News
 
+### *v0.12.8* - October 19th
+
+Mod:
+
+* Fixed the bug where key pieces would drop from angels on the Mega Satan fight, Boss Rush, and The Chest. Note that key pieces are intended to drop from super secret rooms, as that is a new feature of the vanilla game. (Thanks Cyber_1)
+* Fixed the bug where the D6 would have infinite charges if you had Car Battery. (Thanks At3ch)
+* Fixed the bug where The Book of Sin did not have an animation. (Thanks thereisnofuture)
+* Fixed the bug where the player was able to enter a trapdoor or crawlspace while performing the Happy animation. (Thanks Krakenos)
+* Fixed the bug where the player was able to a crawlspace while in a item pickup animation. (Thanks Krakenos)
+
+Client:
+
+* Fixed the bug where the client would not communicate to the Racing+ mod under certain conditions. (Thanks Lobsterosity, Shigan, and Nanahachiyasu)
+* Fixed the bug where the Technology Zero build was not being included in the "Random (all)" build selection.
+
+Website:
+
+* You now need at least 5 races played to show up on leaderboards.
+* The leaderboards will now link to the profile pages of the racers. (Thanks SlashSP)
+* Fixed the bug where some player profiles were not working. (Thanks Lobsterosity)
+* Fixed the bug where the races listing would show blank pages. (Thanks Lobsterosity)
+
+Item tracker:
+
+* Fixed the bug where the Schoolbag would show as a "?" on the item tracker.
+
 ### *v0.12.7* - October 17th
 
-* The [unseeded leaderboards](https://isaacracing.net/leaderboards) have been officially released. 
+* The [unseeded leaderboards](https://isaacracing.net/leaderboards) have been officially released.
 * The vanilla Schoolbag will not work properly with fast-clear, so it has been replaced with the Racing+ version.
 * Fixed the bug where the angel key pieces were not being spawned at the correct time.
 * Fixed the bug where the D6, D100, Diplopia, Void, Crooked Penny, D Infinity, and Moving Box would have buggy behavior if they were used on the same frame as a pedestal item spawned. (Thanks thereisnofuture)

@@ -19,21 +19,20 @@ function RPItems:WeNeedToGoDeeper() -- 84
   local room = game:GetRoom()
   local stage = level:GetStage()
   local player = game:GetPlayer(0)
-  local sfx = SFXManager()
 
   -- Prevent the racers from "cheating" by using the shovel on Womb 2 in the "Everything" race goal
   if RPGlobals.race.goal == "Everything" and
      stage == 8 then
 
     -- Do a little something fun
-    sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
+    player:AnimateSad()
     for i = 1, 5 do
       local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
       -- Use a value of 50 to spawn them far from the player
       game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
     end
 
-    -- By returning true, it will cancel the original Book of Sin effect
+    -- By returning true, it will cancel the original effect
     return true
   end
 end
@@ -91,7 +90,10 @@ function RPItems:BookOfSin() -- 97
                player, 0, RPGlobals.RNGCounter.BookOfSin)
   end
 
-  -- By returning true, it will cancel the original Book of Sin effect
+  -- When we return from the function below, no animation will play, so we have to explitily perform one
+  player:AnimateCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN, "UseItem", "PlayerPickup") -- 97
+
+  -- By returning true, it will cancel the original effect
   return true
 end
 
@@ -153,6 +155,13 @@ function RPItems:PreventItemPedestalEffects(itemID)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
+
+  -- Car Battery will mess up the D6 and D100 (and possibly others) because
+  -- this function will be entered twice on the same frame (and there will be no time to replace the pedestal)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then -- 356
+    return nil
+  end
 
   if RPItems:UnreplacedItemsExist() then
     Isaac.DebugString("Canceling item " .. tostring(itemID) .. " due to unreplaced items in the room.")

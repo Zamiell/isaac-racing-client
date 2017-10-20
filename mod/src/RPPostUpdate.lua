@@ -93,7 +93,7 @@ function RPPostUpdate:Main()
   -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
   RPPostUpdate:CheckHauntSpeedup()
 
-  -- Check to see if a D6 / Void got canceled
+  -- Check to see if an item that messes with item pedestals got canceled
   -- (this has to be done a frame later or else it won't work)
   if RPGlobals.run.rechargeItemFrame == gameFrameCount then
     RPGlobals.run.rechargeItemFrame = 0

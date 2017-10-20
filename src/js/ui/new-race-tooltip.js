@@ -180,7 +180,7 @@ $(document).ready(() => {
 
         // If necessary, get a random starting build,
         if (startingBuild === 'random') {
-            startingBuild = misc.getRandomNumber(1, 32); // There are 32 starts
+            startingBuild = misc.getRandomNumber(1, builds.length);
         } else if (startingBuild === 'random-single') {
             startingBuild = misc.getRandomNumber(1, 26); // There are 26 starts that have single items
         } else if (startingBuild === 'random-treasure') {

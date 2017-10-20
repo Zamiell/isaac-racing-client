@@ -306,7 +306,8 @@ function RPFastTravel:CheckTrapdoorEnter(effect, upwards)
       -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
       -- (and the minimum for this is 8 frames, determined from trial and error)
      RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
-     player:IsHoldingItem() == false then
+     player:IsHoldingItem() == false and
+     player:GetSprite():IsPlaying("Happy") == false then -- Account for lucky pennies
 
     -- State 1 is activated the moment we touch the trapdoor
     RPGlobals.run.trapdoor.state = 1
@@ -663,7 +664,9 @@ function RPFastTravel:CheckCrawlspaceEnter(effect)
 
   -- Check to see if the player is touching the crawlspace
   if effect.State == 0 and -- The crawlspace is open
-     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) then
+     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
+     player:IsHoldingItem() == false and
+     player:GetSprite():IsPlaying("Happy") == false then -- Account for lucky pennies
 
     -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
     if prevRoomIndex < 0 then

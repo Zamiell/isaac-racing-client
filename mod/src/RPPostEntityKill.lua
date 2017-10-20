@@ -309,6 +309,19 @@ end
 function RPPostEntityKill:NPC271(npc)
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+
+  -- We only want to spawn key pieces from the non-Fallen versions
+  if npc.Variant == 1 then
+    return
+  end
+
+  -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
+  if roomType == RoomType.ROOM_BOSS or -- 5
+     roomType == RoomType.ROOM_BOSSRUSH then -- 17
+    return
+  end
 
   -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
   local subType

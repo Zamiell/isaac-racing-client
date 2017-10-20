@@ -7,6 +7,7 @@ const fs = nodeRequire('fs-extra');
 const { ipcRenderer } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const settings = nodeRequire('./js/settings');
+const modLoader = nodeRequire('./js/mod-loader');
 const misc = nodeRequire('./js/misc');
 const raceScreen = nodeRequire('./js/ui/race');
 
@@ -74,6 +75,7 @@ ipcRenderer.on('logWatcher', (event, message) => {
         const match = message.match(/Save file slot: (\d)/);
         if (match) {
             globals.modLoaderSlot = parseInt(match[1], 10);
+            modLoader.send();
         } else {
             misc.errorShow('Failed to parse the save slot number from the message sent by the log watcher process.');
         }
