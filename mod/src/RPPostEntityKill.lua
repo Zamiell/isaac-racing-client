@@ -318,8 +318,10 @@ function RPPostEntityKill:NPC271(npc)
   end
 
   -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
-  if roomType == RoomType.ROOM_BOSS or -- 5
-     roomType == RoomType.ROOM_BOSSRUSH then -- 17
+  if roomType ~= RoomType.ROOM_ANGEL and -- 15
+     roomType ~= RoomType.ROOM_SUPERSECRET then -- 8
+     -- Key pieces dropping from angels in Super Secret Room #12 was introduced in Booster Pack #4
+
     return
   end
 

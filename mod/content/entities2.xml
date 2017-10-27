@@ -73,4 +73,9 @@
 	<entity id="1000" variant="781" subtype="0" name="Suction Ring" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" anm2path="mahalath_suction.anm2">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
+
+	<!-- For testing -->
+	<entity id="231" variant="2" name="Test Enemy" reroll="true" baseHP="1000" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="22" portrait="108" anm2path="231.000_NerveEnding.anm2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+		<gibs amount="4" blood="1" bone="0" eye="0" gut="0" large="0" />
+	</entity>
 </entities>

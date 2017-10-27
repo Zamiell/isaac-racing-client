@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.12.9* - October 27th
+
+* Isaac is now feeling festive. Happy Halloween!
+* Custom races now have a time limit of 4 hours. (Normal races still have a 30 minute time limit.) (Thanks Molfried)
+* You can now easily do DPS tests by entering a "spawn test" at the Isaac console, which will spawn a Nerve Ending with 1000 HP.
+* Fixed the bug where the Schoolbag was not being removed during seeded races. (Thanks thisguyisbarry)
+* Fixed the bug where Apollyon was not starting with Void inside the Schoolbag during seeded races. (Thanks 910dan)
+
 ### *v0.12.8* - October 19th
 
 Mod:
@@ -8,12 +16,12 @@ Mod:
 * Fixed the bug where the D6 would have infinite charges if you had Car Battery. (Thanks At3ch)
 * Fixed the bug where The Book of Sin did not have an animation. (Thanks thereisnofuture)
 * Fixed the bug where the player was able to enter a trapdoor or crawlspace while performing the Happy animation. (Thanks Krakenos)
-* Fixed the bug where the player was able to a crawlspace while in a item pickup animation. (Thanks Krakenos)
+* Fixed the bug where the player was able to enter a crawlspace while in a item pickup animation. (Thanks Krakenos)
 
 Client:
 
 * Fixed the bug where the client would not communicate to the Racing+ mod under certain conditions. (Thanks Lobsterosity, Shigan, and Nanahachiyasu)
-* Fixed the bug where the Technology Zero build was not being included in the "Random (all)" build selection.
+* Fixed the bug where the Technology Zero build was not being included in the "Random (all)" build selection. (Thanks Shigan)
 
 Website:
 

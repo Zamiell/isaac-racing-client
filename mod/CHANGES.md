@@ -41,7 +41,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Blue Baby starts with an extra half soul heart.
   * Azazel starts with an extra half soul heart.
 * Judas starts with a bomb instead of 3 coins (so that he can get a Treasure Room item without spending a soul heart).
-* Eden starts with the Schoolbag (from Antibirth). They will start with their random active item inside the bag.
+* Eden starts with the Schoolbag. They will start with their random active item inside the bag.
 
 ### 2) No Curses
 
@@ -164,7 +164,8 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### Seeded
 
-* All characters start with The Compass and the Schoolbag (from Antibirth) in addition to their other items.
+* All characters start with The Compass and the Schoolbag in addition to their other items.
+* If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
 * The Cain's Eye trinket is removed from the game.
 
 ### Diversity

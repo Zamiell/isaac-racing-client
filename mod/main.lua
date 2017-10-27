@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- change trinket bans to trinket pool API
 - add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows

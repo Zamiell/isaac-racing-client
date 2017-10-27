@@ -33,6 +33,7 @@ function RPPostGameStarted:Main(saveState)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local seeds = game:GetSeeds()
+  local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
@@ -76,6 +77,9 @@ function RPPostGameStarted:Main(saveState)
       return
     end
   end
+
+  -- Make sure that the festive hat shows
+  player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
   -- Make sure that all other Easter Eggs are disabled
   local validEasterEggs = true
@@ -443,6 +447,7 @@ function RPPostGameStarted:Seeded()
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
     -- Eden and Apollyon start with the Schoolbag
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
   end
 
   -- Give the player the "Instant Start" item(s)
@@ -497,6 +502,8 @@ function RPPostGameStarted:Seeded()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
     elseif character == PlayerType.PLAYER_KEEPER then -- 14
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WOODEN_NICKEL -- 349
+    elseif character == PlayerType.PLAYER_APOLLYON then -- 15
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
     end
   end
 
