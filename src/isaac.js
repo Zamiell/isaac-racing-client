@@ -75,7 +75,7 @@ process.on('message', (message) => {
     modPath = message;
     process.send(`Starting Isaac checks with a mod path of: ${modPath}`);
 
-    // The logic in this file is only written to support Windows, OS X, and Linux
+    // The logic in this file is only written to support Windows, macOS, and Linux
     if (
         process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
         process.platform !== 'darwin' &&
@@ -134,7 +134,7 @@ function checkOneMillionPercent() {
     process.send('Checking the save files to see if there is at least one fully unlocked file.');
 
     if (process.platform !== 'win32') {
-        process.send('Save file checking is not supported on OS X / Linux. Skipping this part.');
+        process.send('Save file checking is not supported on macOS / Linux. Skipping this part.');
         checkModIntegrity();
     }
 
