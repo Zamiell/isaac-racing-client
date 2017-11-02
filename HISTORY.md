@@ -1,11 +1,38 @@
 # Racing+ Version History and News
 
+### *v0.12.9* - October 29th
+
+News:
+
+* Lobsterosity has officially joined the staff, charged with Community Relations.
+
+Mod:
+
+* Fixed the bug where Filigree Feather would cause Angels to drop an extra key piece. (Thanks HauntedQuest)
+* Fixed the bug where Eden could start with both the vanilla Schoolbag and the Racing+ Schoolbag. (Thanks ceehe)
+* Fixed the bug where Peep Eyes and Bloat Eyes would prevent fast-clear from working properly in certain situations.
+
+Client:
+
+* Fixed the bug where it would complain about the Windows registry on macOS and Linux. (Thanks kwidz)
+
+Website:
+
+* On your profile page, you can now see the last 50 ranked unseeded races. This allows you to determine which races will next be cut off.
+* There is now a diversity leaderboard, based on TrueSkill. (Solo diversity races will not affect your ranking.)
+* You now need at least 20 races to appear on the unseeded leaderboard.
+* The columns on the leaderboard are now sortable if you click on them. (Thanks SlashSP)
+* On the leaderboards, next to the verified checkmark or X, there is now a link to the racer's Twitch stream.
+* The races page now shows the starting item.
+
+All website work was performed by sillypears, so thanks goes to him.
+
 ### *v0.12.9* - October 27th
 
-* Isaac is now feeling festive. Happy Halloween!
+* Isaac is now feeling festive. Happy Halloween! (Thanks to Gromfalloon for this)
 * Custom races now have a time limit of 4 hours. (Normal races still have a 30 minute time limit.) (Thanks Molfried)
-* You can now easily do DPS tests by entering a "spawn test" at the Isaac console, which will spawn a Nerve Ending with 1000 HP.
-* Fixed the bug where the Schoolbag was not being removed during seeded races. (Thanks thisguyisbarry)
+* You can now easily do DPS tests by entering a "spawn test" at the Isaac console, which will spawn a Nerve Ending with 1000 HP. (Thanks Krakenos)
+* Fixed the bug where the vanilla Schoolbag was not being removed during seeded races. (Thanks thisguyisbarry)
 * Fixed the bug where Apollyon was not starting with Void inside the Schoolbag during seeded races. (Thanks 910dan)
 
 ### *v0.12.8* - October 19th
