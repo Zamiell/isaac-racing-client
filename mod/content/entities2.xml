@@ -38,33 +38,51 @@
 	</entity><!-- Effects don't work to stop room clear for some reason; this will be killed with "debug 10" -->
 
 	<!-- Samael -->
-    <entity name="Samael Scythe" anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
+	<entity name="Samael Scythe" anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 		<preload-snd id="77" />
 		<preload-snd id="38" />
 		<preload-snd id="133" />
-    </entity>
+	</entity>
 	<entity name="Samael Special Animations" anm2path="samael_special.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6618" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
 		<gibs amount="16" blood="1" bone="1" eye="0" gut="0" large="0" />
-    </entity>
+	</entity>
 	<entity name="Magic Scythe" anm2path="samael_scythe_projectile.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="30" friction="1" id="2" numGridCollisionPoints="8" shadowSize="0" stageHP="0" variant="617" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
+	</entity>
 	<entity name="Scythe Hitbox" anm2path="samael_scythe_hitbox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="15" collisionMass="3" collisionRadius="13" friction="1" id="3" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="35" subtype="617" shutdoors="false">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
+	</entity>
+
+	<!-- Jr. Fetus -->
+	<entity anm2path="drfetusboss/drfetusjr.anm2" baseHP="2000" boss="1" champion="0" collisionDamage="0" friction="0" id="838" variant="0" name="Dr Fetus Jr" collisionMass="999" collisionRadius="45" numGridCollisionPoints="12" shadowSize="14" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity anm2path="1000.030_Dr. Fetus Target.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="0.95" id="1000" name="FetusBossTarget" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="1710">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity anm2path="1000.031_Dr. Fetus Rocket.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="0" id="1000" name="FetusBossRocket" numGridCollisionPoints="0" shadowSize="22" stageHP="0" variant="1711">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity anm2path="drfetusboss/creep_fetus.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="1" id="1000" name="Creep (Dr Fetus Boss)" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="22" subtype="689">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+	<entity anm2path="drfetusboss/fetus_embryo.anm2" baseHP="12" boss="0" champion="0" collisionDamage="1" collisionMass="3" collisionRadius="13" friction="1" id="77" name="Dr Fetus Boss Embryo" numGridCollisionPoints="12" shadowSize="22" stageHP="0" variant="12542">
+		<gibs amount="4" blood="1" bone="0" eye="0" gut="1" large="0" />
+		<preload-snd id="205" /> <!-- SOUND_GOOATTACH0 -->
+	</entity>
 
 	<!-- Mahalath -->
-	<entity id="777" variant="0" name="Mahalath" baseHP="2000" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="20" friction="1" numGridCollisionPoints="24" shadowSize="20" portrait="79" anm2path="mahalath_barfgirl.anm2">
+	<entity id="777" variant="0" name="Mahalath" baseHP="1750" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="20" friction="1" numGridCollisionPoints="24" shadowSize="20" portrait="79" anm2path="mahalath_barfgirl.anm2">
 		<gibs amount="25" blood="1" bone="1" eye="1" gut="1" large="1" poop="0" />
 	</entity><!-- Original base HP was 360 -->
-	<entity id="777" variant="1" name="Ruthless Mahalath" baseHP="2000" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="18" friction="1" numGridCollisionPoints="24" shadowSize="18" portrait="79" anm2path="mahalath_barfgirl.anm2">
+	<entity id="777" variant="1" name="Ruthless Mahalath" baseHP="1750" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="18" friction="1" numGridCollisionPoints="24" shadowSize="18" portrait="79" anm2path="mahalath_barfgirl.anm2">
 		<gibs amount="45" blood="1" bone="1" eye="1" gut="1" large="1" poop="0" />
 	</entity>
 	<entity id="778" variant="0" subtype="0" name="Barf Mouth" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="2000" collisionRadius="22" friction="1" numGridCollisionPoints="12" shadowSize="0" portrait="0" anm2path="mahalath_barfmouth.anm2">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
-	<entity id="779" variant="0" subtype="0" name="Barf Ball" baseHP="100" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="16" friction="1" numGridCollisionPoints="24" shadowSize="12" portrait="161" anm2path="mahalath_barfball.anm2"><!-- Originally 25 HP -->
+	<entity id="779" variant="0" subtype="0" name="Barf Ball" baseHP="75" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="16" friction="1" numGridCollisionPoints="24" shadowSize="12" portrait="161" anm2path="mahalath_barfball.anm2"><!-- Originally 25 HP -->
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 	<entity id="780" variant="0" subtype="0" name="Barf Bomb" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="30" collisionRadius="16" friction="1" numGridCollisionPoints="12" shadowSize="17" shutdoors="false" anm2path="mahalath_barfbomb.anm2">

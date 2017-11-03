@@ -332,7 +332,7 @@ function RPCheckEntities:Entity5_340(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     RPCheckEntities:Entity5_340_S2(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
     RPCheckEntities:Entity5_340_S3(pickup)
 
   elseif RPGlobals.raceVars.finished then
@@ -644,7 +644,7 @@ function RPCheckEntities:Entity5_370(pickup)
       RPSpeedrun.charNum == 14) or
      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
       RPSpeedrun.charNum == 7) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
       RPSpeedrun.charNum == 7) then
 
     -- Spawn the "Race Trophy" custom entity

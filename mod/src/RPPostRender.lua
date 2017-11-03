@@ -72,7 +72,7 @@ function RPPostRender:Main()
   -- Check for reset inputs
   RPPostRender:CheckResetInput()
 
-  -- Check to see if we are subverting a teleport from Gurdy, Mom's Heart, or It Lives
+  -- Check to see if we are subverting a teleport from Gurdy, Mom, Mom's Heart, or It Lives
   RPPostRender:CheckSubvertTeleport()
 
   -- Do race specific stuff
@@ -114,7 +114,7 @@ function RPPostRender:CheckRestart()
     elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then
@@ -270,7 +270,7 @@ function RPPostRender:CheckResetInput()
   end
 end
 
--- Check to see if we are subverting a teleport from Gurdy, Mom's Heart, or It Lives
+-- Check to see if we are subverting a teleport from Gurdy, Mom, Mom's Heart, or It Lives
 function RPPostRender:CheckSubvertTeleport()
   -- Local variables
   local game = Game()

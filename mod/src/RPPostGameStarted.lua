@@ -235,6 +235,9 @@ function RPPostGameStarted:Character()
     Isaac.DebugString("Removing collectible 157 (Bloody Lust)")
     Isaac.DebugString("Adding collectible 157 (Bloody Lust)")
 
+    -- Remove the trinket, since everyone just drops it anyway
+    player:TryRemoveTrinket(TrinketType.TRINKET_CHILDS_HEART) -- 34
+
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7
     -- Give him an additional half soul heart
     player:AddSoulHearts(1)

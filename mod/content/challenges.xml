@@ -4,7 +4,8 @@
 	<challenge name="R+9 (Season 1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+14 (Season 1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 (Season 2)" endstage="11" altpath="false" cursefilter="127" />
-	<!-- <challenge name="R+7 (Season 3)" endstage="11" altpath="true" cursefilter="127" /> -->
+	<challenge name="R+7 (Season 3) beta" endstage="11" altpath="true" cursefilter="127" />
+	<challenge name="Jr. Fetus Practice" endstage="11" altpath="false" cursefilter="127" />
+	<challenge name="Mahalath Practice" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" />
-	<!-- <challenge name="Mahalath Practice" endstage="11" altpath="false" cursefilter="127" /> -->
 </challenges>

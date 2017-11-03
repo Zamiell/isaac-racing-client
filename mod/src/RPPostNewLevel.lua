@@ -40,13 +40,15 @@ function RPPostNewLevel:NewLevel()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
+  local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_NEW_LEVEL2")
 
   -- Find out if we performed a Sacrifice Room teleport
   if (RPGlobals.race.goal == "The Lamb" or
       RPGlobals.race.goal == "Mega Satan" or
-      RPGlobals.race.goal == "Everything") and
+      RPGlobals.race.goal == "Everything" or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta")) and
      stage == 11 and stageType == 0 and -- 11.0 is Dark Room
      (RPGlobals.run.currentFloor ~= 10 and
       RPGlobals.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now

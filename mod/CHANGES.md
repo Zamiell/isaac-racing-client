@@ -41,6 +41,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Blue Baby starts with an extra half soul heart.
   * Azazel starts with an extra half soul heart.
 * Judas starts with a bomb instead of 3 coins (so that he can get a Treasure Room item without spending a soul heart).
+* Samson no longer starts with the Child's Heart (a quality of life change).
 * Eden starts with the Schoolbag. They will start with their random active item inside the bag.
 
 ### 2) No Curses
@@ -95,7 +96,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * There is no longer a delay before The Haunt sends out his first Lil' Haunt.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
-* The disruptive teleport that occurs when entering a room with Gurdy, Mom's Heart, or It Lives! no longer occurs.
+* The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality now prevents getting a narrow boss room on floors 2 through 7.
 * All Spike Chests will spawn as Mimics instead.
@@ -252,6 +253,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Samson starts with the Schoolbag. He will start with Mr. ME! inside the bag.
 * Lazarus starts with the Schoolbag. He will start with Ventricle Razor inside the bag.
 * The Lost starts with the Schoolbag. He will start with Glass Cannon inside the bag.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
 

@@ -34,7 +34,7 @@ function RPTimer:Display()
      challenge ~= Isaac.GetChallengeIdByName("R+9 (Season 1)") and
      challenge ~= Isaac.GetChallengeIdByName("R+14 (Season 1)") and
      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
 
     return
   end

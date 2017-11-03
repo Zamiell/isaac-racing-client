@@ -50,8 +50,9 @@ local bal = {
   FirstState = {'queasy', 'queasy'}, -- idle
   T2HealthBuff = 0,
   TransformPercent = {.6, .55},
-  IdleRetargetRate = {20, 20}, -- 50
-  ShotgunIdleTime = {7, 7}, -- 18
+  IdleRetargetRate = {50, 20}, -- 50 / 20
+  -- How many frames she waits when she's idle between attacks to pick a new spot to move to
+  ShotgunIdleTime = {18, 7}, -- 18 / 7
   ShotgunIdleVariance = {4, 4}, -- 10
   T2ExtraShotgunRate = 35,
   ShotgunSpreadMax = {105, 105}, -- 65
@@ -59,9 +60,9 @@ local bal = {
   SpinBarfFireRate = {2, 2}, -- 3
   SpinBarfRotation = {274, 274}, -- 125
   BallKnockerHitLimit = {8, 8}, -- 5
-  BaseballIdleTime = {5, 5}, -- 20
-  BarfBallsIdleTime = {10, 10}, -- 50
-  ShootBallIdleTime = {5, 5}, -- 25
+  BaseballIdleTime = {20, 5}, -- 20 / 5
+  BarfBallsIdleTime = {50, 10}, -- 50 / 10
+  ShootBallIdleTime = {25, 5}, -- 25 / 5
   BarfBubbleSize = {1.75, 1.75}, -- 1.5
   SpitTearSpeed = {11, 11}, -- 3
   SpitTearAngle = {22, 22}, -- 30
@@ -807,6 +808,10 @@ function RPMahalath:check_girl(en)
     sfx:Play(SoundEffect.SOUND_SHELLGAME, 1, 0, false, 1)
   end
 
+  -- Adding this because she is too fast!
+  local slowModifier = 0.9
+  local slowedVelocity = Vector(en.Velocity.X * slowModifier, en.Velocity.Y * slowModifier)
+  en.Velocity = slowedVelocity
 end
 
 --barf mouth
@@ -1383,7 +1388,7 @@ end
 -- Update entity inventories
 function RPMahalath:PostUpdate()
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
      challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
 
     return

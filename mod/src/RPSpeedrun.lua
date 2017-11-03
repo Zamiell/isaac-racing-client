@@ -14,9 +14,10 @@ local RPSchoolbag = require("src/rpschoolbag")
 --
 
 RPSpeedrun.buttons = {
-  R9S1  = {X = 6, Y = 3},
+  R9S1  = {X = 1, Y = 5},
   R14S1 = {X = 4, Y = 5},
   R7S2  = {X = 8, Y = 5},
+  R7S3  = {X = 11, Y = 5},
 }
 RPSpeedrun.charPosition9 = { -- The format is character number, X, Y
   {2, 2, 1},   -- Cain
@@ -42,8 +43,8 @@ RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
   {9, 7, 3},   -- Eden
   {10, 9, 3},  -- The Lost
   {13, 11, 3}, -- Lilith
-  {14, 1, 5},  -- Keeper
-  {15, 11, 5}, -- Apollyon
+  {14, 2, 5},  -- Keeper
+  {15, 10, 5}, -- Apollyon
 }
 RPSpeedrun.charPosition7_1 = { -- The format is character number, X, Y
   {0, 2, 1},   -- Isaac
@@ -260,7 +261,7 @@ function RPSpeedrun:Init()
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
     Isaac.DebugString("In the R+7 (Season 3) challenge.")
 
     -- Everyone starts with the Schoolbag in this season
@@ -288,9 +289,9 @@ function RPSpeedrun:Init()
       Isaac.DebugString("Adding collectible 34 (Book of Belial)")
 
     elseif character == PlayerType.PLAYER_EVE then -- 5
-      -- Eve starts with Delirious
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_DULL_RAZOR -- 486
-      Isaac.DebugString("Adding collectible 486 (Dull Razor)")
+      -- Eve starts with The Candle
+      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_CANDLE -- 164
+      Isaac.DebugString("Adding collectible 164 (The Candle)")
 
     elseif character == PlayerType.PLAYER_SAMSON then -- 6
       -- Samsom starts with Mr. ME!
@@ -339,7 +340,7 @@ function RPSpeedrun:Init()
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
          character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
@@ -358,7 +359,7 @@ function RPSpeedrun:Init()
            character ~= RPGlobals.race.order14[1]) or
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
            character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
            character ~= RPGlobals.race.order7[1])) then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
@@ -514,6 +515,8 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
   pos = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y)
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
+  pos = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S3.X, RPSpeedrun.buttons.R7S3.Y)
+  Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
   -- Spawn the graphics over the buttons
   RPSpeedrun.sprites.button1 = Sprite()
@@ -525,6 +528,9 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   RPSpeedrun.sprites.button3 = Sprite()
   RPSpeedrun.sprites.button3:Load("gfx/speedrun/button3.anm2", true)
   RPSpeedrun.sprites.button3:SetFrame("Default", 0)
+  RPSpeedrun.sprites.button4 = Sprite()
+  RPSpeedrun.sprites.button4:Load("gfx/speedrun/button4.anm2", true)
+  RPSpeedrun.sprites.button4:SetFrame("Default", 0)
 end
 
 -- Called from the PostRender callback
@@ -560,6 +566,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
   local buttonPos1 = RPGlobals:GridToPos(RPSpeedrun.buttons.R9S1.X, RPSpeedrun.buttons.R9S1.Y)
   local buttonPos2 = RPGlobals:GridToPos(RPSpeedrun.buttons.R14S1.X, RPSpeedrun.buttons.R14S1.Y)
   local buttonPos3 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y)
+  local buttonPos4 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S3.X, RPSpeedrun.buttons.R7S3.Y)
   if gridEntity:GetSaveState().State == 3 and
      gridEntity.Position.X == buttonPos1.X and
      gridEntity.Position.Y == buttonPos1.Y then
@@ -629,6 +636,31 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
       local newIndex = #RPSpeedrun.sprites.characters + 1
       RPSpeedrun.sprites.characters[newIndex] = Sprite()
       local charNum = RPSpeedrun.charPosition7_1[i][1]
+      RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+      RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+      RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+      -- Fade the character so it looks like a ghost
+    end
+
+  elseif gridEntity:GetSaveState().State == 3 and
+         gridEntity.Position.X == buttonPos4.X and
+         gridEntity.Position.Y == buttonPos4.Y then
+
+    RPSpeedrun.chooseType = "R+7 (S3)"
+    Isaac.DebugString("The R+7 (Season 3) button was pressed.")
+
+    RPSpeedrun:RemoveAllRoomButtons()
+
+    RPSpeedrun.sprites.characters = {}
+    for i = 1, #RPSpeedrun.charPosition7_1 do
+      -- Spawn 7 buttons for the 7 characters
+      Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_2[i][2], RPSpeedrun.charPosition7_2[i][3]), true)
+
+      -- Spawn the character selection graphics next to the buttons
+      local newIndex = #RPSpeedrun.sprites.characters + 1
+      RPSpeedrun.sprites.characters[newIndex] = Sprite()
+      local charNum = RPSpeedrun.charPosition7_2[i][1]
       RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
       RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
       RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
@@ -757,6 +789,7 @@ function RPSpeedrun:RemoveAllRoomButtons()
   RPSpeedrun.sprites.button1 = nil
   RPSpeedrun.sprites.button2 = nil
   RPSpeedrun.sprites.button3 = nil
+  RPSpeedrun.sprites.button4 = nil
 end
 
 --
@@ -784,6 +817,11 @@ function RPSpeedrun:DisplayCharSelectRoom()
     local posButton3 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y - 1)
     local posRender = Isaac.WorldToRenderPosition(posButton3, false)
     RPSpeedrun.sprites.button3:RenderLayer(0, posRender)
+  end
+  if RPSpeedrun.sprites.button4 ~= nil then
+    local posButton4 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S3.X, RPSpeedrun.buttons.R7S3.Y - 1)
+    local posRender = Isaac.WorldToRenderPosition(posButton4, false)
+    RPSpeedrun.sprites.button4:RenderLayer(0, posRender)
   end
   if RPSpeedrun.sprites.characters ~= nil then
     for i = 1, #RPSpeedrun.sprites.characters do
@@ -825,7 +863,7 @@ function RPSpeedrun:DisplayCharProgress()
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -894,7 +932,7 @@ function RPSpeedrun:DisplayCharProgress()
     digit4 = 4
   end
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
 
     digit3 = 7
   end
@@ -942,11 +980,13 @@ function RPSpeedrun:PostNewRoom()
   local roomType = room:GetType()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
     return
   end
 
-  if stage ~= 11 then
+  if stage ~= 10 and
+     stage ~= 11 then
+
     return
   end
 
@@ -959,10 +999,21 @@ function RPSpeedrun:PostNewRoom()
   end
 
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if stageType == 1 and -- The Chest
+    if stageType == 1 and -- Cathedral
+       entity.Type == EntityType.ENTITY_ISAAC then -- 273
+
+      entity:Remove()
+
+    elseif stageType == 0 and -- Sheol
+           entity.Type == EntityType.ENTITY_SATAN then -- 84
+
+      entity:Remove()
+
+    elseif stageType == 1 and -- The Chest
        entity.Type == EntityType.ENTITY_ISAAC then -- 102
 
       entity:Remove()
+
     elseif stageType == 0 and -- Dark Room
            entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
 
@@ -971,8 +1022,13 @@ function RPSpeedrun:PostNewRoom()
   end
 
   -- Spawn her
-  Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
-  Isaac.DebugString("Spawned Mahalath (for season 3).")
+  if stage == 10 then
+    Isaac.Spawn(838, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+    Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
+  elseif stage == 11 then
+    Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+    Isaac.DebugString("Spawned Mahalath (for season 3).")
+  end
 end
 
 function RPSpeedrun:InSpeedrun()
@@ -981,7 +1037,7 @@ function RPSpeedrun:InSpeedrun()
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
 
     return true
   else

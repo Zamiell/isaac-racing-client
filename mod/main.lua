@@ -57,6 +57,7 @@ local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
 local RPFastClear           = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
 local RPSamael              = require("src/rpsamael") -- Samael functions
+local RPJrFetus             = require("src/rpjrfetus") -- Jr. Fetus functions (2/2)
 local RPMahalath            = require("src/rpmahalath") -- Mahalath functions
 local RPDebug               = require("src/rpdebug") -- Debug functions
 
@@ -186,6 +187,17 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPSamael.PostPlayerIni
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPSamael.cacheUpdate)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPSamael.PostGameStartedReset)
 
+-- Jr. Fetus callbacks
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,         RPJrFetus.UpdateDrFetus,
+                                                           Isaac.GetEntityTypeByName("Dr Fetus Jr"))
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,    RPJrFetus.DrFetusTakeDamage,
+                                                           Isaac.GetEntityTypeByName("Dr Fetus Jr"))
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, RPJrFetus.UpdateMissileTarget)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,    RPJrFetus.DrFetusEmbryoTakeDamage,
+                                                           Isaac.GetEntityTypeByName("Dr Fetus Boss Embryo"))
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,      RPJrFetus.PostNewRoom)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,  RPJrFetus.PostGameStarted)
+
 -- Mahalath callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPMahalath.PostUpdate)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_girl, Isaac.GetEntityTypeByName("Mahalath"))
@@ -198,6 +210,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPMahalath.check_del, 
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPMahalath.take_dmg)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     RPMahalath.PostNewRoom)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPMahalath.PostGameStarted)
+
 
 -- Welcome banner
 local hyphens = ''

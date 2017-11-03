@@ -162,12 +162,18 @@ function RPPostNewRoom:CheckSatanRoom()
   local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomClear = room:IsClear()
+  local challenge = Isaac.GetChallenge()
 
   if roomClear then
     return
   end
 
   if roomStageID ~= 0 or roomVariant ~= 3600 then -- Satan
+    return
+  end
+
+  -- In the season 3 speedrun challenge, there is a custom boss instead of Satan
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
     return
   end
 
@@ -351,6 +357,7 @@ function RPPostNewRoom:CheckEntities()
   local subvertTeleport = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_GURDY or -- 36
+       entity.Type == EntityType.ENTITY_MOM or -- 45
        entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78 (this includes It Lives!)
 
       subvertTeleport = true
@@ -389,7 +396,7 @@ function RPPostNewRoom:CheckEntities()
     end
   end
 
-  -- Subvert the disruptive teleportation from Gurdy, Mom's Heart, and It Lives
+  -- Subvert the disruptive teleportation from Gurdy, Mom, Mom's Heart, and It Lives
   if subvertTeleport and
      roomClear == false and
      roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
@@ -439,7 +446,7 @@ function RPPostNewRoom:CheckRespawnTrophy()
   if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
       challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta")) then
 
     -- All of the custom speedrun challenges end in with Blue Baby or The Lamb
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7

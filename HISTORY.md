@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.12.9* - October 29th
+### *v0.13.0* - October 29th
 
 News:
 
@@ -8,6 +8,9 @@ News:
 
 Mod:
 
+* The "R+7 (Season 3)" custom challenge is now available for beta testing. All of the changes are documented on the website. It will be in beta testing for 2 weeks. Note that if anything changes during the beta, any runs you submit to the leaderboards will become invalid. Season 2 will also end in 2 weeks.
+* Samson no longer starts with the Child's Heart. (This is a quality of life change, since the "correct" strategy is to instantly drop it.)
+* Mom will no longer subversively teleport you.
 * Fixed the bug where Filigree Feather would cause Angels to drop an extra key piece. (Thanks HauntedQuest)
 * Fixed the bug where Eden could start with both the vanilla Schoolbag and the Racing+ Schoolbag. (Thanks ceehe)
 * Fixed the bug where Peep Eyes and Bloat Eyes would prevent fast-clear from working properly in certain situations.

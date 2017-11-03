@@ -41,7 +41,7 @@ function RPPostEntityKill:NPC45(npc)
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
 
     -- Give the player a choice between the photos on the season 2 and season 3 speedrun challenges
     situation = 3
@@ -170,7 +170,7 @@ function RPPostEntityKill:NPC78(npc)
     -- Season 1 speedrun challenges always go to the Dark Room
     situation = 2
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
     -- Season 3 speedrun challenges alternate between The Chest and the Dark Room
     situation = RPSpeedrun.s3direction
 
@@ -311,6 +311,7 @@ function RPPostEntityKill:NPC271(npc)
   local game = Game()
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local player = game:GetPlayer(0)
 
   -- We only want to spawn key pieces from the non-Fallen versions
   if npc.Variant == 1 then
@@ -322,6 +323,12 @@ function RPPostEntityKill:NPC271(npc)
      roomType ~= RoomType.ROOM_SUPERSECRET then -- 8
      -- Key pieces dropping from angels in Super Secret Room #12 was introduced in Booster Pack #4
 
+    return
+  end
+
+  -- We don't want to drop key pieces from angels if the player has the Filigree Feather
+  -- (we could spawn a SubType 0 collectible, but then we wouldn't know how to remove the naturally dropped random item)
+  if player:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
     return
   end
 
