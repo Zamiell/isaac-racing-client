@@ -253,6 +253,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Samson starts with the Schoolbag. He will start with Mr. ME! inside the bag.
 * Lazarus starts with the Schoolbag. He will start with Ventricle Razor inside the bag.
 * The Lost starts with the Schoolbag. He will start with Glass Cannon inside the bag.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
