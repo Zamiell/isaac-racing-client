@@ -978,6 +978,7 @@ function RPSpeedrun:PostNewRoom()
   end
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local roomClear = room:IsClear()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
@@ -995,6 +996,10 @@ function RPSpeedrun:PostNewRoom()
   end
 
   if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+    return
+  end
+
+  if roomClear then
     return
   end
 
