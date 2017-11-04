@@ -59,7 +59,6 @@ Other notes:
 
 */
 
-
 // Imports
 const fs = require('fs-extra');
 const path = require('path');
@@ -196,7 +195,19 @@ function createWindow() {
     if (isDev) {
         mainWindow.webContents.openDevTools();
     }
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+    // Figure out if we should use the Singapore proxy or not
+    // (only Chinese users should use it)
+    // https://github.com/electron/electron/blob/master/docs/api/locales.md
+    if (app.getLocale().startsWith('zh')) {
+        mainWindow.webContents.session.setProxy({
+            proxyRules: globals.chineseProxy,
+        }, () => {
+            mainWindow.loadURL(`file://${__dirname}/index.html`);
+        });
+    } else {
+        mainWindow.loadURL(`file://${__dirname}/index.html`);
+    }
 
     // Remove the taskbar flash state
     // (this is not currently used)

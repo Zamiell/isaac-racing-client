@@ -1,7 +1,9 @@
 # Racing+ Version History and News
 
-### *v0.13.2* - Unreleased
+### *v0.13.2* - November 4th
 
+* If you live in China, the client will now automatically use a proxy in Singapore to access the racing server.
+* You can no longer enter a trapdoor or crawlspace when the jump animation is playing. (Thanks NorBro86)
 * Fixed the bug where the Mom teleportation subversion did not work or teleported you to the wrong spot. (Thanks 910dan)
 
 ### *v0.13.1* - November 4th

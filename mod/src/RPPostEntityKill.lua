@@ -171,8 +171,11 @@ function RPPostEntityKill:NPC78(npc)
     situation = 2
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
-    -- Season 3 speedrun challenges alternate between The Chest and the Dark Room
-    situation = RPSpeedrun.s3direction
+    -- Season 3 speedrun challenges alternate between The Chest and the Dark Room, starting with The Chest
+    situation = RPSpeedrun.charNum % 2
+    if situation == 0 then
+      situation = 2
+    end
 
   elseif RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb go to the Dark Room

@@ -138,6 +138,7 @@ function login() {
         version: globals.version,
     };
     const url = `${globals.websiteURL}/login`;
+
     const request = $.ajax({
         url,
         type: 'POST',

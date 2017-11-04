@@ -80,7 +80,6 @@ RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
 RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
-RPSpeedrun.s3direction = 1 -- 1 is up and 2 is down; reset at the beginning of a new run
 RPSpeedrun.liveSplitReset = false
 
 --
@@ -119,7 +118,6 @@ function RPSpeedrun:Init()
     RPSpeedrun.finished = false
     RPSpeedrun.finishedTime = 0
     RPSpeedrun.fastReset = false
-    RPSpeedrun.s3direction = 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
@@ -130,9 +128,11 @@ function RPSpeedrun:Init()
     RPSpeedrun.charNum = 1
     RPSpeedrun.fastReset = false
 
-    -- Max out Isaac's speed
+    -- Give Isaac's some speed
     player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
+    Isaac.DebugString("Removing collectible 28 (The Belt)")
     player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
+    Isaac.DebugString("Removing collectible 28 (The Belt)")
     player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BELT)) -- 28
 
     -- Go to the "Change Char Order" room
@@ -365,7 +365,6 @@ function RPSpeedrun:Init()
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    RPSpeedrun.s3direction = 1
     Isaac.DebugString("Restarting because we want to start from the first character again.")
 
     -- Tell the LiveSplit AutoSplitter to reset
@@ -439,14 +438,6 @@ function RPSpeedrun:CheckRestart()
     RPSpeedrun.fastReset = true -- Set this so that we don't go back to the beginning again
     RPSpeedrun.charNum = RPSpeedrun.charNum + 1
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-
-    -- Make the next run go to the other path
-    RPSpeedrun.s3direction = RPSpeedrun.s3direction + 1
-    Isaac.DebugString("Set season 3 direction to: " .. tostring(RPSpeedrun.s3direction))
-    if RPSpeedrun.s3direction == 3 then
-      RPSpeedrun.s3direction = 1
-      Isaac.DebugString("Set season 3 direction back to 1.")
-    end
 
     Isaac.DebugString("Switching to the next character for the speedrun.")
     return

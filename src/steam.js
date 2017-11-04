@@ -112,7 +112,6 @@ function greenworksInit() {
     }
 
     // Get a session ticket from Steam and login to the Racing+ server
-    process.send(JSON.stringify(steamIDObject));
     greenworks.getAuthSessionTicket((ticket) => {
         const ticketString = ticket.ticket.toString('hex'); // The ticket object contains other stuff that we don't care about
         process.send({

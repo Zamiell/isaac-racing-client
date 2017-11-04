@@ -2,7 +2,7 @@
   "name": "RacingPlus",
   "productName": "Racing+",
   "description": "A racing mod for The Binding of Isaac: Afterbirth+",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "author": "Racing+",
   "license": "GPL-3.0",
   "homepage": "https://isaacracing.net",
@@ -35,6 +35,7 @@
   "dependencies": {
     "electron-is-dev": "^0.3.0",
     "electron-updater": "^2.10.0",
+    "evil-dns": "^0.2.0",
     "fs-extra": "^4.0.2",
     "greenworks": "git+https://github.com/greenheartgames/greenworks.git",
     "hash-files": "^1.1.1",

@@ -287,6 +287,7 @@ end
 function RPFastTravel:CheckTrapdoorEnter(effect, upwards)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local player = game:GetPlayer(0)
   local level = game:GetLevel()
   local stage = level:GetStage()
@@ -307,11 +308,12 @@ function RPFastTravel:CheckTrapdoorEnter(effect, upwards)
       -- (and the minimum for this is 8 frames, determined from trial and error)
      RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
      player:IsHoldingItem() == false and
-     player:GetSprite():IsPlaying("Happy") == false then -- Account for lucky pennies
+     player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
+     player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
 
     -- State 1 is activated the moment we touch the trapdoor
     RPGlobals.run.trapdoor.state = 1
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
     RPGlobals.run.trapdoor.upwards = upwards
     RPGlobals.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
     player.ControlsEnabled = false
@@ -337,6 +339,7 @@ end
 function RPFastTravel:CheckTrapdoor()
   -- Local varaibles
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local player = game:GetPlayer(0)
@@ -354,7 +357,7 @@ function RPFastTravel:CheckTrapdoor()
 
     -- Mark to change floors after the screen is black
     RPGlobals.run.trapdoor.state = 2
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
     RPGlobals.run.trapdoor.frame = isaacFrameCount + 8
     -- 9 is too many (you can start to see the same room again)
 
@@ -363,7 +366,7 @@ function RPFastTravel:CheckTrapdoor()
 
     -- Stage 3 is actiated when the screen is black
     RPGlobals.run.trapdoor.state = 3
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
     RPGlobals.run.trapdoor.floor = stage
     RPFastTravel:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
@@ -374,7 +377,7 @@ function RPFastTravel:CheckTrapdoor()
      -- (this happens automatically by the game)
      -- (stages 4 and 5 are in the PostNewRoom callback)
      RPGlobals.run.trapdoor.state = 6
-     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
      RPGlobals.run.trapdoor.frame = isaacFrameCount + 10 -- Wait a while longer
      player.ControlsEnabled = false
 
@@ -383,7 +386,7 @@ function RPFastTravel:CheckTrapdoor()
 
      -- State 7 is activated when the the hole is spawned and ready
      RPGlobals.run.trapdoor.state = 7
-     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
      RPGlobals.run.trapdoor.frame = isaacFrameCount + 25
      -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
 
@@ -411,7 +414,8 @@ function RPFastTravel:CheckTrapdoor()
 
     -- We are finished when the the player has emerged from the hole
     RPGlobals.run.trapdoor.state = 0
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (finished)")
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state ..
+                      " (finished) (frame " .. gameFrameCount .. ")")
     player.ControlsEnabled = true
 
     -- Kill the hole
@@ -666,7 +670,8 @@ function RPFastTravel:CheckCrawlspaceEnter(effect)
   if effect.State == 0 and -- The crawlspace is open
      RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
      player:IsHoldingItem() == false and
-     player:GetSprite():IsPlaying("Happy") == false then -- Account for lucky pennies
+     player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
+     player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
 
     -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
     if prevRoomIndex < 0 then

@@ -9,12 +9,14 @@ const localhost = false; // "true" for connecting to a test server on localhost 
 const fadeTime = 300; // In milliseconds
 const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
+const chineseProxy = '13.229.79.236:3128'; // This is a Singapore AWS instance running Squid proxy
 
 // The object that contains all of the global variables
 module.exports = {
     autoUpdateStatus: null,
     builds: null,
     characters: null, // Filled in main.js
+    chineseProxy,
     conn: null,
     currentScreen: 'title-ajax', // We always start on the title-ajax screen
     currentRaceID: false, // Equal to false or the ID of the race (as an integer)

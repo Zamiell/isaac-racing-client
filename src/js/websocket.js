@@ -16,13 +16,14 @@ const raceScreen = nodeRequire('./js/ui/race');
 const discordEmotes = nodeRequire('./data/discord-emotes');
 
 exports.init = (username, password, remember) => {
+    globals.log.info('Successfully recieved a cookie from the server. Establishing a WebSocket connection to:', globals.websocketURL);
+
     // We have successfully authenticated with the server, so we no longer need the Greenworks process open
     ipcRenderer.send('asynchronous-message', 'steamExit');
 
     // Establish a WebSocket connection
     globals.conn = new golem.Connection(globals.websocketURL, isDev); // It will automatically use the cookie that we recieved earlier
     // If the second argument is true, debugging is turned on
-    globals.log.info('Establishing WebSocket connection to:', globals.websocketURL);
 
     /*
         Extended connection functions
