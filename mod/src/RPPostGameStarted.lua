@@ -33,7 +33,7 @@ function RPPostGameStarted:Main(saveState)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local seeds = game:GetSeeds()
-  local player = game:GetPlayer(0)
+  --local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
@@ -77,9 +77,6 @@ function RPPostGameStarted:Main(saveState)
       return
     end
   end
-
-  -- Make sure that the festive hat shows
-  player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
   -- Make sure that all other Easter Eggs are disabled
   local validEasterEggs = true
@@ -170,6 +167,10 @@ function RPPostGameStarted:Main(saveState)
     itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
     itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
   end
+
+  -- Make sure that the festive hat shows
+  -- (disabled until Thanksgiving)
+  --player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPPostNewLevel:NewLevel()
