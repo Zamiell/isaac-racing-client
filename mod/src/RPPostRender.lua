@@ -275,6 +275,7 @@ function RPPostRender:CheckSubvertTeleport()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local player = game:GetPlayer(0)
 
   if RPGlobals.run.teleportSubverted == false then
@@ -286,14 +287,29 @@ function RPPostRender:CheckSubvertTeleport()
 
   -- Find the correct position to teleport to, depending on which door we entered from
   local pos
-  if level.EnterDoor == Direction.LEFT then -- 0
-    pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
-  elseif level.EnterDoor == Direction.UP then -- 1
-    pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
-  elseif level.EnterDoor == Direction.RIGHT then -- 2
-    pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
-  elseif level.EnterDoor == Direction.DOWN then -- 3
-    pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+  if stage == 6 then
+    -- We can't use "level.EnterDoor" for Mom because it gives a random result every time,
+    -- but "level.LeaveDoor" seems to be consistent
+    if level.LeaveDoor == Direction.LEFT then -- 0
+      pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
+    elseif level.LeaveDoor == Direction.UP then -- 1
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+    elseif level.LeaveDoor == Direction.RIGHT then -- 2
+      pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
+    elseif level.LeaveDoor == Direction.DOWN then -- 3
+      pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+    end
+  else
+    -- This will work for Gurdy / Mom's Heart / It Lives!
+    if level.EnterDoor == Direction.LEFT then -- 0
+      pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
+    elseif level.EnterDoor == Direction.UP then -- 1
+      pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+    elseif level.EnterDoor == Direction.RIGHT then -- 2
+      pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
+    elseif level.EnterDoor == Direction.DOWN then -- 3
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+    end
   end
 
   -- Teleport them

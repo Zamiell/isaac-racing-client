@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.13.2* - Unreleased
+
+* Fixed the bug where the Mom teleportation subversion did not work or teleported you to the wrong spot. (Thanks 910dan)
+
 ### *v0.13.1* - November 4th
 
 * Fixed the bug where Jr. Fetus and Mahalath would spawn if you re-entered a cleared room. (Thanks Dea1h and thereisnofuture)

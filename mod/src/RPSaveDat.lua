@@ -75,7 +75,7 @@ function RPSaveDat:Load()
       RPSaveDat:ChangedMyStatus()
     end
     if oldRace.ranked ~= RPGlobals.race.ranked then
-      Isaac.DebugString("ModData ranked changed: " .. RPGlobals.race.ranked)
+      Isaac.DebugString("ModData ranked changed: " .. tostring(RPGlobals.race.ranked))
     end
     if oldRace.rFormat ~= RPGlobals.race.rFormat then
       Isaac.DebugString("ModData rFormat changed: " .. RPGlobals.race.rFormat)
