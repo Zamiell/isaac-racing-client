@@ -1,10 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.13.1* - October 29th
+### *v0.13.1* - November 4th
 
 * Fixed the bug where Jr. Fetus and Mahalath would spawn if you re-entered a cleared room. (Thanks Dea1h and thereisnofuture)
 
-### *v0.13.0* - October 29th
+### *v0.13.0* - November 3rd
 
 News:
 
