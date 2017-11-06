@@ -280,9 +280,6 @@ function RPSpeedrun:Init()
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_HOW_TO_JUMP -- 282
       Isaac.DebugString("Adding collectible 282 (How to Jump)")
 
-      -- Remove her speed up pill
-      player:SetCard(0, 0)
-
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
       -- Judas starts with the Book of Belial
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34

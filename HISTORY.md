@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.13.5* - November 5th
+
+* Maggy now starts with her speed-up pill in the season 3 custom challenge.
+* Fixed the bug where an Attack Fly would spawn every time you re-entered a room with a trapdoor or crawlspace that happened to originally be on top of a Corny Poop. (Thanks Nanahachiyasu)
+
 ### *v0.13.2* - November 4th
 
 * If you live in China, the client will now automatically use a proxy in Singapore to access the racing server.

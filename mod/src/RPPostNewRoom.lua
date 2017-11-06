@@ -331,7 +331,7 @@ function RPPostNewRoom:CheckDepthsPuzzle()
         room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
         -- Originally, we would add a rock here with:
-        --Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, gridEntity.Position, true) -- 17
+        -- "Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, gridEntity.Position, true) -- 17"
         -- However, this results in invisible collision persisting after the rock is killed
         -- This bug can probably be subverted by waiting a frame for the spikes to fully despawn,
         -- but then having rocks spawn "out of nowhere" would look glitchy,

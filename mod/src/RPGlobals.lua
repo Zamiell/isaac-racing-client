@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.13.4"
+RPGlobals.version = "v0.13.5"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -166,6 +166,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.speedLilHauntsFrame  = 0 -- Used to speed up The Haunt fight (1/2)
   RPGlobals.run.speedLilHauntsBlack  = false -- Used to speed up The Haunt fight (2/2)
   RPGlobals.run.rechargeItemFrame    = 0 -- Used to recharge the D6 / Void after a failed attempt
+  RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

@@ -910,21 +910,12 @@ function RPFastTravel:CheckRoomRespawn()
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   -- Respawn trapdoors, if necessary
   for i = 1, #RPGlobals.run.replacedTrapdoors do
     if RPGlobals.run.replacedTrapdoors[i].room == roomIndex then
-      -- Remove any grid entities that will overlap with the custom entity
-      -- (this is needed because rocks may respawn in the room after we remove the trapdoor)
-      local gridIndex = room:GetGridIndex(RPGlobals.run.replacedTrapdoors[i].pos)
-      local gridEntity = room:GetGridEntity(gridIndex)
-      if gridEntity ~= nil then
-        room:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() does not work
-        Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
-                          " that would interfere with the trapdoor.")
-      end
+      RPFastTravel:RemoveOverlappingGridEntity(RPGlobals.run.replacedTrapdoors[i].pos, "trapdoor")
 
       -- Spawn the new custom entity
       local entity
@@ -932,12 +923,14 @@ function RPFastTravel:CheckRoomRespawn()
         entity = game:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
                             RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+
       elseif stage == LevelStage.STAGE3_2 or -- 6
-         stage == LevelStage.STAGE4_1 then -- 7
+             stage == LevelStage.STAGE4_1 then -- 7
 
         entity = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
                             RPGlobals.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+
       else
         entity = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
@@ -964,15 +957,7 @@ function RPFastTravel:CheckRoomRespawn()
   -- Respawn crawlspaces, if necessary
   for i = 1, #RPGlobals.run.replacedCrawlspaces do
     if RPGlobals.run.replacedCrawlspaces[i].room == roomIndex then
-      -- Remove any grid entities that will overlap with the custom entity
-      -- (this is needed because rocks may respawn in the room after we remove the trapdoor)
-      local gridIndex = room:GetGridIndex(RPGlobals.run.replacedCrawlspaces[i].pos)
-      local gridEntity = room:GetGridEntity(gridIndex)
-      if gridEntity ~= nil then
-        room:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() does not work
-        Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
-                          " that would interfere with the crawlspace.")
-      end
+      RPFastTravel:RemoveOverlappingGridEntity(RPGlobals.run.replacedCrawlspaces[i].pos, "crawlspace")
 
       -- Spawn the new custom entity
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
@@ -1003,9 +988,42 @@ function RPFastTravel:CheckRoomRespawn()
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                                 Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
                                 RPGlobals.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
-      -- Use an InitSeed of 0 to signify that it is respawned
+                                -- Use an InitSeed of 0 to signify that it is respawned
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")
+    end
+  end
+end
+
+-- Remove any grid entities that will overlap with the custom trapdoor/crawlspace
+-- (this is needed because rocks/poop will respawn in the room after reentering)
+function RPFastTravel:RemoveOverlappingGridEntity(pos, type)
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+
+  -- Check for the existance of an overlapping grid entity
+  local gridIndex = room:GetGridIndex(pos)
+  local gridEntity = room:GetGridEntity(gridIndex)
+  if gridEntity == nil then
+    return
+  end
+
+  -- Remove it
+  room:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() will only work on destroyable entities like TNT
+  Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
+                    " that would interfere with the " .. tostring(type) .. ".")
+
+  -- If this was a Corny Poop, it turn the Eternal Fly into an Attack Fly
+  local saveState = gridEntity:GetSaveState()
+  if saveState.Type == GridEntityType.GRID_POOP and -- 14
+     saveState.Variant == 2 then -- Corny Poop
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_ETERNALFLY then -- 96
+        entity:Remove()
+        Isaac.DebugString("Removed an Eternal Fly associated with the removed Corny Poop.")
+      end
     end
   end
 end

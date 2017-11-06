@@ -55,13 +55,6 @@ function RPPostUpdate:Main()
     RPGlobals.run.edensSoulSet = false
   end
 
-  -- Check for (and fix) a Schoolbag overlap
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and
-     player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
-
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG)
-  end
-
   -- Replace the bugged Scolex champion with the non-champion version (2/2)
   if RPGlobals.run.replaceBuggedScolex ~= 0 and
      RPGlobals.run.replaceBuggedScolex >= gameFrameCount then

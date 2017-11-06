@@ -279,6 +279,10 @@ function RPPostGameStarted:Character()
       player:AddCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM)
       passiveItem = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
     end
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
+      player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+      Isaac.DebugString("Removing collectible 534 (Schoolbag)")
+    end
 
     -- Make sure that the Schoolbag item is fully charged
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then
