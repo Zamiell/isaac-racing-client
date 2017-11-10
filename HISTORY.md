@@ -1,8 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.13.6* - November 9th
+
+* Added the "Seeded (Hard)" ruleset to the client to faciliate the Lynx Trials tournament. This will only exist for the duration of the tournament.
+* Fixed the bug where angel statues would drop a key piece even if another angel was still alive. (Thanks StoneAgeMarcus)
+
 ### *v0.13.5* - November 5th
 
-* Maggy now starts with her speed-up pill in the season 3 custom challenge.
+* Maggy now starts with her speed-up pill in the season 3 custom challenge. (Thanks Cyber_1)
 * Fixed the bug where an Attack Fly would spawn every time you re-entered a room with a trapdoor or crawlspace that happened to originally be on top of a Corny Poop. (Thanks Nanahachiyasu)
 
 ### *v0.13.2* - November 4th

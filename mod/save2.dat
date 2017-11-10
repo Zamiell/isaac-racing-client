@@ -4,6 +4,7 @@
    "ranked":        false,
    "solo":          false,
    "rFormat":       "unseeded",
+   "hard":          false,
    "character":     3,
    "goal":          "Blue Baby",
    "seed":          "-",

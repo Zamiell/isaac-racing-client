@@ -130,7 +130,7 @@ $(document).ready(() => {
         }
 
         let startingBuild;
-        if (format === 'seeded') {
+        if (format === 'seeded' || format === 'seeded-hard') {
             startingBuild = $('#new-race-starting-build').val();
             if (startingBuild !== settings.get('newRaceBuild')) {
                 settings.set('newRaceBuild', startingBuild);
@@ -280,7 +280,7 @@ function newRaceTypeChange(event, fast = false) {
         $('#new-race-format-custom').fadeOut(0);
 
         // Hide the character and goal dropdowns if it is not a seeded race
-        if (format !== 'seeded') {
+        if (format !== 'seeded' && format !== 'seeded-hard') {
             $('#new-race-character-container').fadeOut((fast ? 0 : globals.fadeTime));
             $('#new-race-goal-container').fadeOut((fast ? 0 : globals.fadeTime), () => {
                 $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
@@ -292,7 +292,7 @@ function newRaceTypeChange(event, fast = false) {
         $('#new-race-format-custom').fadeIn(0);
 
         // Show the character and goal dropdowns (if it is a seeded race, they should be already shown)
-        if (format !== 'seeded') {
+        if (format !== 'seeded' && format !== 'seeded-hard') {
             setTimeout(() => {
                 $('#new-race-format-container').fadeIn((fast ? 0 : globals.fadeTime));
                 $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
@@ -320,6 +320,8 @@ function newRaceFormatChange(event, fast = false) {
     } else if (newFormat === 'diversity') {
         newCharacter = 'Judas';
     } else if (newFormat === 'unseeded-lite') {
+        newCharacter = 'Judas';
+    } else if (newFormat === 'seeded-hard') {
         newCharacter = 'Judas';
     } else if (newFormat === 'custom') {
         // The custom format has no default character, so don't change anything
@@ -353,7 +355,7 @@ function newRaceFormatChange(event, fast = false) {
     }
 
     // Show or hide the character, goal, and starting build row
-    if (newFormat === 'seeded') {
+    if (newFormat === 'seeded' || newFormat === 'seeded-hard') {
         setTimeout(() => {
             $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
             $('#new-race-goal-container').fadeIn((fast ? 0 : globals.fadeTime));

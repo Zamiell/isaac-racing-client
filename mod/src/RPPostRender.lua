@@ -371,11 +371,16 @@ function RPPostRender:Race()
   --
 
   -- Show warning messages
-  if game.Difficulty ~= 0 and
-     RPGlobals.raceVars.startedTime == 0 and
-     RPGlobals.race.rFormat ~= "custom" then -- We want to allow hard mode for custom races
+  if RPGlobals.race.hard and
+     game.Difficulty ~= 1 then
 
-    -- Check to see if we are on hard mode
+    RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
+    return
+
+  elseif RPGlobals.race.hard == false and
+         game.Difficulty ~= 0 and
+         RPGlobals.race.rFormat ~= "custom" then
+
     RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return
 

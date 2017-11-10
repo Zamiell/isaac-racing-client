@@ -335,6 +335,17 @@ function RPPostEntityKill:NPC271(npc)
     return
   end
 
+  -- We don't want to drop a key piece if there is another alive angel in the room
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    local isDead = entity:IsDead()
+    if (entity.Type == EntityType.ENTITY_URIEL or -- 271
+        entity.Type == EntityType.ENTITY_GABRIEL) and -- 272
+        isDead == false then
+
+      return
+    end
+  end
+
   -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
   local subType
   if npc.Type == EntityType.ENTITY_URIEL then -- 271

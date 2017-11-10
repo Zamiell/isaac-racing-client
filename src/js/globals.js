@@ -41,6 +41,7 @@ module.exports = {
         ranked: false,
         solo: false,
         rFormat: 'unseeded',
+        hard: false,
         character: 3, // Judas
         goal: 'Blue Baby',
         seed: '-',
