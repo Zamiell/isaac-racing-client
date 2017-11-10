@@ -290,13 +290,22 @@ function RPPostRender:CheckSubvertTeleport()
   if stage == 6 then
     -- We can't use "level.EnterDoor" for Mom because it gives a random result every time,
     -- but "level.LeaveDoor" seems to be consistent
-    if level.LeaveDoor == Direction.LEFT then -- 0
+    Isaac.DebugString("Entering the Mom fight. LeaveDoor is \"" .. tostring(level.LeaveDoor) .. "\".")
+    if level.LeaveDoor == Direction.LEFT then -- 0 (2x2 left top)
       pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
-    elseif level.LeaveDoor == Direction.UP then -- 1
+    elseif level.LeaveDoor == Direction.UP then -- 1 (2x2 top left)
       pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
-    elseif level.LeaveDoor == Direction.RIGHT then -- 2
+    elseif level.LeaveDoor == Direction.RIGHT then -- 2 (2x2 right top)
       pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
-    elseif level.LeaveDoor == Direction.DOWN then -- 3
+    elseif level.LeaveDoor == Direction.DOWN then -- 3 (2x2 bottom left)
+      pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+    elseif level.LeaveDoor == 4 then -- 2x2 left bottom
+      pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
+    elseif level.LeaveDoor == 5 then -- 2x2 top right
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+    elseif level.LeaveDoor == 6 then -- 2x2 right bottom
+      pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
+    elseif level.LeaveDoor == 7 then -- 2x2 bottom right
       pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
     end
   else

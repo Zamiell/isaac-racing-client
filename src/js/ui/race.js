@@ -380,7 +380,7 @@ const show = (raceID) => {
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
         // Column 6 - Build (only available for seeded races)
-        if (race.ruleset.format === 'seeded') {
+        if (race.ruleset.format === 'seeded' || race.ruleset.format === 'seeded-hard') {
             $('#race-title-table-build').fadeIn(0);
             $('#race-title-build').fadeIn(0);
             const build = race.ruleset.startingBuild;

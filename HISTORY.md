@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.13.7* - November 10th
+
+* Fixed the bug where the place graphic would overlap with the R+ graphic in hard mode.
+* Fixed the bug where no hearts would spawn from bosses appear on hard mode.
+* Fixed the bug where Chubber Projectiles (what Fistuloids spawn on death) prevented fast-clear from functioning.
+* Fixed the bug where the Mom teleport subversion wasn't working properly if you entered from certain 2x2 or L rooms.
+
 ### *v0.13.6* - November 9th
 
 * Added the "Seeded (Hard)" ruleset to the client to faciliate the Lynx Trials tournament. This will only exist for the duration of the tournament.

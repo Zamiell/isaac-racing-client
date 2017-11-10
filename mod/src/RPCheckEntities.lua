@@ -193,7 +193,9 @@ function RPCheckEntities:Entity5(pickup)
   if pickup.Variant == PickupVariant.PICKUP_HEART then -- 10
     if RPCheckEntities:IsBossType(pickup.SpawnerType) and
        roomType == RoomType.ROOM_BOSS and -- 5
-       stage ~= 11 then -- We don't need to seed the heart drops from Blue Baby, The Lamb, or Victory Lap bosses
+       stage ~= 11 and -- We don't need to seed the heart drops from Blue Baby, The Lamb, or Victory Lap bosses
+       game.Difficulty == 0 then
+       -- Seeding heart drops in hard mode is unsupported, since we need to assume that each boss drops a heart
 
       -- Delete heart drops in boss rooms so that we can properly seed them
       RPGlobals.run.bossHearts.spawn = true

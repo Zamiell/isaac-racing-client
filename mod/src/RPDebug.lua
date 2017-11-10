@@ -4,8 +4,8 @@ local RPDebug = {}
 -- Includes
 --
 
-local RPGlobals  = require("src/rpglobals")
-local RPSprites  = require("src/rpsprites")
+local RPGlobals = require("src/rpglobals")
+local RPSprites = require("src/rpsprites")
 local RPSpeedrun = require("src/rpspeedrun")
 
 --
@@ -65,8 +65,8 @@ function RPDebug:Main()
   Isaac.DebugString("speedrun: ")
   for k, v in pairs(RPSpeedrun) do
     if type(v) == "string" or
-       type(v) == "number" or
-       type(v) == "boolean" then
+    type(v) == "number" or
+    type(v) == "boolean" then
 
       Isaac.DebugString("  " .. k .. ": " .. tostring(v))
     end
