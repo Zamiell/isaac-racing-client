@@ -68,6 +68,7 @@ $(document).ready(() => {
         theme: 'tooltipster-shadow',
         delay: 0,
         contentAsHTML: true,
+        trigger: 'custom',
         functionBefore: () => globals.currentScreen === 'race' && $('#race-ready-checkbox').prop('disabled'),
     });
 
@@ -1067,12 +1068,14 @@ const checkReadyValid = () => {
         $('#race-ready-checkbox-label').css('cursor', 'default');
         $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 0.38);
         $('#race-ready-checkbox-container').tooltipster('content', tooltipContent);
+        $('#race-ready-checkbox-container').tooltipster('open');
         return;
     }
 
     // We passed all the tests, so make sure that the checkbox is enabled
     $('#race-ready-checkbox').prop('disabled', false);
     $('#race-ready-checkbox-label').css('cursor', 'pointer');
+    $('#race-ready-checkbox-container').tooltipster('close');
     $('#race-ready-checkbox-container').fadeTo(globals.fadeTime, 1);
 };
 exports.checkReadyValid = checkReadyValid;

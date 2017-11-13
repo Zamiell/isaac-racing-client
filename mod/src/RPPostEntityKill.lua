@@ -296,13 +296,21 @@ function RPPostEntityKill:NPC81(npc)
     end
   end
 
+  -- We have to prevent the bug where the pedestal item can overlap with a grid entity
+  local pos = npc.Position
+  local gridIndex = room:GetGridIndex(pos)
+  local gridEntity = room:GetGridEntity(gridIndex)
+  if gridEntity ~= nil then
+    pos = room:FindFreePickupSpawnPosition(pos, 1, false)
+  end
+
   -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
   if subType ~= 0 then
     RPGlobals.run.spawningKrampusItem = true
   end
 
   -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0), nil, subType, 0)
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, Vector(0, 0), nil, subType, 0)
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -354,11 +362,19 @@ function RPPostEntityKill:NPC271(npc)
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
   end
 
+  -- We have to prevent the bug where the pedestal item can overlap with a grid entity
+  local pos = npc.Position
+  local gridIndex = room:GetGridIndex(pos)
+  local gridEntity = room:GetGridEntity(gridIndex)
+  if gridEntity ~= nil then
+    pos = room:FindFreePickupSpawnPosition(pos, 1, false)
+  end
+
   -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
   RPGlobals.run.spawningKeyPiece = true
 
   -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, npc.Position, Vector(0, 0), nil, subType, 0)
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, Vector(0, 0), nil, subType, 0)
 end
 
 -- EntityType.ENTITY_HUSH (407)

@@ -12,7 +12,7 @@ const misc = nodeRequire('./js/misc');
 exports.start = () => {
     // If we are on a test account, the account ID will be 0
     // We don't want to start the Steam watcher if we are on a test account, since they are not associated with Steam accounts
-    if (globals.steam.accountID > 0) {
+    if (globals.steam.accountID <= 0) {
         return;
     }
 

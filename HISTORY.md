@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.13.8* - November 13th
+
+Mod:
+
+* Fixed the bug where Krampus items and key pieces could potentially spawn on top of grid entities. (Thanks Dea1h)
+
+Client:
+
+* If the ready button is greyed out, the tooltip will now always appear.
+* The new race tooltip has been slightly reorganized; there are now radio buttons to represent size and ranked.
+* The lobby has been slightly reorganized; there are now 3 icons to represent size, ranked, and format. A tooltip will show everything about the race.
+* You can now see how much time has passed in a race from the lobby.
+
 ### *v0.13.7* - November 10th
 
 * Fixed the bug where the place graphic would overlap with the R+ graphic in hard mode.

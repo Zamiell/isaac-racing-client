@@ -3,7 +3,7 @@
 */
 
 // Imports
-const { shell } = nodeRequire('electron');
+// const { shell } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const chat = nodeRequire('./js/chat');
@@ -12,6 +12,7 @@ const steamWatcher = nodeRequire('./js/steam-watcher');
 const isaac = nodeRequire('./js/isaac');
 const modLoader = nodeRequire('./js/mod-loader');
 const header = nodeRequire('./js/ui/header');
+const builds = nodeRequire('./data/builds');
 
 /*
     Event handlers
@@ -103,6 +104,7 @@ exports.showFromRace = () => {
         $('#header-settings').fadeIn(globals.fadeTime);
         header.checkHideLinks(); // We just faded in the links, but they might be hidden on small windows
     });
+    $('#race-ready-checkbox-container').tooltipster('close');
 
     // Show the lobby
     $('#race').fadeOut(globals.fadeTime, () => {
@@ -156,34 +158,31 @@ exports.raceDraw = (race) => {
     raceDiv += ` &nbsp; <span id="lobby-current-races-${race.id}-status"><span lang="en">${race.status.capitalize()}</span></span>`;
     raceDiv += '</td>';
 
-    // Column 3 - Type
-    raceDiv += '<td class="lobby-current-races-type">';
+    // Column 3 - Format
+    raceDiv += `<td id="lobby-current-races-format-${race.id}" class="lobby-current-races-format">`;
+
+    raceDiv += '<span class="lobby-current-races-size-icon">';
+    if (race.ruleset.solo) {
+        raceDiv += '<i class="fa fa-user 2x" aria-hidden="true" style="position: relative; left: 0.1em;"></i>';
+        // Move this to the right so that it lines up with the center of the multiplayer icon
+    } else {
+        raceDiv += '<i class="fa fa-users 2x" aria-hidden="true" style="color: blue;"></i>';
+    }
+    raceDiv += '</span>';
+
     raceDiv += '<span class="lobby-current-races-type-icon">';
     raceDiv += `<span class="lobby-current-races-${(race.ruleset.ranked ? 'ranked' : 'unranked')}" lang="en"></span></span>`;
     raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    raceDiv += `<span lang="en">${(race.ruleset.ranked ? 'Ranked' : 'Unranked')}</span>`;
-    if (race.ruleset.solo) {
-        raceDiv += ' (<span lang="en">Solo</span>)';
-    }
-    raceDiv += '</td>';
 
-    // Column 4 - Format
-    raceDiv += '<td class="lobby-current-races-format">';
     raceDiv += '<span class="lobby-current-races-format-icon">';
     raceDiv += `<span class="lobby-current-races-${race.ruleset.format}" lang="en"></span></span>`;
-    raceDiv += '<span class="lobby-current-races-spacing"></span>';
-    let format = race.ruleset.format.capitalize();
-    if (format === 'Unseeded-lite') {
-        format = 'Unseeded';
-    }
-    raceDiv += `<span lang="en">${format}</span></td>`;
 
-    // Column 5 - Size
+    // Column 4 - Size
     raceDiv += `<td id="lobby-current-races-${race.id}-size" class="lobby-current-races-size">`;
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
 
-    // Column 6 - Entrants
+    // Column 5 - Entrants
     raceDiv += `<td id="lobby-current-races-${race.id}-racers" class="lobby-current-races-racers selectable">`;
     // This will get filled in later by the "raceUpdatePlayers" function
     raceDiv += '</td>';
@@ -226,6 +225,78 @@ function raceDraw2(race) {
                 }
             });
         }
+
+        // Make the format tooltip
+        let content = '<ul style="margin-bottom: 0;">';
+
+        content += '<li class="lobby-current-races-format-li"><strong><span lang="en">Size</span>:</strong> ';
+        if (globals.raceList[race.id].ruleset.solo) {
+            content += '<span lang="en">Solo</span><br />';
+            content += '<span lang="en">This is a single-player race.</span>';
+        } else {
+            content += '<span lang="en">Multiplayer</span><br />';
+            content += '<span lang="en">Anyone can join this race.</span>';
+        }
+        content += '</li>';
+
+        content += '<li class="lobby-current-races-format-li"><strong><span lang="en">Ranked</span>:</strong> ';
+        if (globals.raceList[race.id].ruleset.ranked) {
+            content += '<span lang="en">Yes</span><br />';
+            content += '<span lang="en">This race will count towards the leaderboards.</span>';
+        } else {
+            content += '<span lang="en">No</span><br />';
+            content += '<span lang="en">This race will not count towards the leaderboards.</span>';
+        }
+        content += '</li>';
+
+        const { format } = globals.raceList[race.id].ruleset;
+        content += '<li class="lobby-current-races-format-li"><strong><span lang="en">Format</span>:</strong> ';
+        if (format === 'unseeded') {
+            content += '<span lang="en">Unseeded</span><br />';
+            content += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
+            content += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span>';
+        } else if (format === 'seeded') {
+            content += '<span lang="en">Seeded</span><br />';
+            content += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span>';
+        } else if (format === 'diversity') {
+            content += '<span lang="en">Diversity</span><br />';
+            content += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
+            content += '<span lang="en">All players will start with the same five items.</span>';
+        } else if (format === 'unseeded-lite') {
+            content += '<span lang="en">Unseeded (Lite)</span><br />';
+            content += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
+            content += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span><br />';
+            content += '<span lang="en">Extra changes will also be in effect; see the Racing+ website for details.</span>';
+        } else if (format === 'custom') {
+            content += '<li><span lang="en">Custom</span><br />';
+            content += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
+        }
+        content += '</li>';
+
+        const { character } = globals.raceList[race.id].ruleset;
+        content += `<li class="lobby-current-races-format-li"><strong><span lang="en">Character</span>:</strong> ${character}</li>`;
+
+        const { goal } = globals.raceList[race.id].ruleset;
+        content += `<li class="lobby-current-races-format-li"><strong><span lang="en">Goal</span>:</strong> ${goal}</li>`;
+
+        if (format === 'seeded' || format === 'seeded-hard') {
+            const { startingBuild } = globals.raceList[race.id].ruleset;
+            content += '<li class="lobby-current-races-format-li"><strong><span lang="en">Starting Build</span>:</strong> ';
+            for (const item of builds[startingBuild]) {
+                content += `${item.name} + `;
+            }
+            content = content.slice(0, -3); // Chop off the trailing " + "
+            content += '</li>';
+        }
+
+        content += '</ul>';
+        $(`#lobby-current-races-format-${race.id}`).tooltipster({
+            theme: 'tooltipster-shadow',
+            delay: 0,
+            content,
+            contentAsHTML: true,
+            functionBefore: () => globals.currentScreen === 'lobby',
+        });
     });
 
     // Now that it has begun to fade in, we can fill it
@@ -304,6 +375,8 @@ function raceDrawCheckForOverflow(raceID, target) {
                 theme: 'tooltipster-shadow',
                 delay: 0,
                 content,
+                contentAsHTML: true,
+                functionBefore: () => globals.currentScreen === 'lobby',
             });
         }
     } else if ($(`#lobby-current-races-${raceID}-${target}`).hasClass('tooltipstered')) {
@@ -372,6 +445,7 @@ exports.usersDraw = () => {
         }
     }
 
+    /*
     function userTooltipChange(username) {
         $('#user-click-profile').click(() => {
             const url = `${globals.websiteURL}/profile/${username}`;
@@ -391,4 +465,27 @@ exports.usersDraw = () => {
             misc.closeAllTooltips();
         });
     }
+    */
 };
+
+const statusTimer = (raceID) => {
+    // Stop the timer if the race is over
+    // (the race is over if the entry in the raceList is deleted)
+    if (!Object.prototype.hasOwnProperty.call(globals.raceList, raceID)) {
+        return;
+    }
+    const race = globals.raceList[raceID];
+
+    // Get the elapsed time in the race and set it to the div
+    const now = new Date().getTime();
+    const raceMilliseconds = now - race.datetimeStarted; // Don't use the offset because we are keeping track of when races start locally
+    const raceSeconds = Math.round(raceMilliseconds / 1000);
+    const timeDiv = `<span lang="en">Ongoing</span>: ${misc.pad(parseInt(raceSeconds / 60, 10))}:${misc.pad(raceSeconds % 60)}`;
+    $(`#lobby-current-races-${raceID}-status`).html(timeDiv);
+
+    // Update the timer again a second from now
+    setTimeout(() => {
+        statusTimer(raceID);
+    }, 1000);
+};
+exports.statusTimer = statusTimer;

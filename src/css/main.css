@@ -3899,7 +3899,7 @@
         border: solid 1px black;
     }
 
-    /* This is column 3 of the lobby races table */
+    /* This is the old column 3 of the lobby races table */
     .lobby-current-races-type {
         width: 9.9em;
         max-width: 9.9em;
@@ -3912,6 +3912,12 @@
         position: relative;
         bottom: 1.4em;
         right: 0.35em;
+    }
+
+    .lobby-current-races-size-icon {
+        width: 1.5em;
+        display: inline-block;
+        position: relative;
     }
 
     .lobby-current-races-ranked {
@@ -3938,8 +3944,8 @@
 
     /* This is column 4 of the lobby races table */
     .lobby-current-races-format {
-        width: 7.75em;
-        max-width: 7.75em;
+        width: 4.6em;
+        max-width: 4.6em;
         white-space: nowrap;
         overflow: hidden;
     }
@@ -4021,7 +4027,11 @@
 
     .lobby-current-races-spacing {
         display: inline-block;
-        width: 2em;
+        width: 1.85em;
+    }
+
+    .lobby-current-races-format-li {
+        margin-bottom: 0.5em;
     }
 
     /*
@@ -4091,6 +4101,32 @@
         padding-top: 2em !important;
     }
 
+    .new-race-size-icon-container {
+        position: absolute;
+    }
+
+    #new-race-size-icon-solo-i {
+        position: relative;
+        bottom: 0.2em;
+        left: 0.35em;
+    }
+
+    #new-race-size-icon-multiplayer-i {
+        position: relative;
+        bottom: 0.2em;
+        left: 0.20em;
+    }
+
+    .new-race-radio-label {
+        position: relative;
+        bottom: 0.35em;
+    }
+
+    .new-race-radio-text {
+        position: relative;
+        top: 0.3em;
+    }
+
     .new-race-icon {
         width: 38px;
         height: 52px !important;
@@ -4100,7 +4136,7 @@
         justify-content: center;
     }
 
-    #new-race-type-icon {
+    #new-race-ranked-icon {
         -moz-transition: background-image 0.3s ease-in-out;
         -webkit-transition: background-image 0.3s ease-in-out;
         -ms-transition: background-image 0.3s ease-in-out;
@@ -4108,11 +4144,10 @@
         background-repeat: no-repeat;
         background-position: bottom center;
         display: inline-block;
-        height: 3em;
+        height: 1.75em; /* 3em */
         width: 3em;
         position: relative;
-        bottom: 14px;
-        transform: scale(1.25);
+        bottom: 8px;
     }
 
     #new-race-format {

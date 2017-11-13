@@ -59,8 +59,12 @@ function initDefaults() {
         settings.set('newRaceTitle', ''); // An empty string means to use the random name generator
         settings.saveSync();
     }
-    if (typeof settings.get('newRaceType') === 'undefined') {
-        settings.set('newRaceType', 'unranked');
+    if (typeof settings.get('newRaceSize') === 'undefined') {
+        settings.set('newRaceSize', 'solo');
+        settings.saveSync();
+    }
+    if (typeof settings.get('newRaceRanked') === 'undefined') {
+        settings.set('newRaceRanked', 'no');
         settings.saveSync();
     }
     if (typeof settings.get('newRaceFormat') === 'undefined') {

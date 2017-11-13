@@ -314,7 +314,7 @@
                                             <thead>
                                                 <th class="lobby-current-races-title"><span lang="en">Title</span></th>
                                                 <th class="lobby-current-races-status"><span lang="en">Status</span></th>
-                                                <th class="lobby-current-races-type"><span lang="en">Type</span></th>
+                                                <!--<th class="lobby-current-races-type"><span lang="en">Type</span></th>-->
                                                 <th class="lobby-current-races-format"><span lang="en">Format</span></th>
                                                 <th><span lang="en">Size</span></th><!-- Don't put the class on this element because it makes it look weird -->
                                                 <th class="lobby-current-races-racers"><span lang="en">Entrants</span></th>
@@ -588,33 +588,55 @@
                     <div class="padding2"></div>
 
                     <div class="row uniform 50%">
-                        <div class="2u new-race-note">
-                            <p><span lang="en">Type</span>:</p>
+                        <div class="2u">
+                            <p><span lang="en">Size</span>:</p>
                         </div>
                         <div class="2u">
-                            <span id="new-race-type-icon"></span>
+                            <span id="new-race-size-icon-solo" class="new-race-size-icon-container">
+                                <i id="new-race-size-icon-solo-i" class="fa fa-user fa-2x" aria-hidden="true"></i>
+                            </span>
+                            <span id="new-race-size-icon-multiplayer" class="new-race-size-icon-container hidden">
+                                <i id="new-race-size-icon-multiplayer-i" class="fa fa-users fa-2x" aria-hidden="true" style="color: blue;"></i>
+                            </span>
                         </div>
-                        <div class="8u">
-                            <div class="select-wrapper">
-                                <select id="new-race-type">
-                                    <option value="ranked-solo">
-                                        <span lang="en">Solo</span> <span lang="en">Ranked</span> (<span lang="en">Season</span> 1)
-                                    </option>
-                                    <option value="unranked-solo">
-                                        <span lang="en">Solo</span> <span lang="en">Unranked</span> (<span lang="en">Practice</span>)
-                                    </option>
-                                    <option value="ranked">
-                                        <span lang="en">Multiplayer Ranked</span> (<span lang="en">Season</span> 1)
-                                    </option>
-                                    <option value="unranked" selected="selected">
-                                        <span lang="en">Multiplayer Unranked</span> (<span lang="en">Casual</span>)
-                                    </option>
-                                </select>
-                            </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-size-solo" name="new-race-size" value="solo" checked></td>
+                            <label for="new-race-size-solo" class="new-race-radio-label" >
+                                <span class="new-race-radio-text" lang="en">Solo</span>
+                            </label>
+                        </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-size-multiplayer" name="new-race-size" value="multiplayer">
+                            <label for="new-race-size-multiplayer" class="new-race-radio-label">
+                                <span class="new-race-radio-text" lang="en">Multiplayer</span>
+                            </label>
                         </div>
                     </div>
 
-                    <div id="new-race-format-container" class="row uniform 50%">
+                    <div class="padding3"></div>
+
+                    <div class="row uniform 50%">
+                        <div class="2u">
+                            <p><span lang="en">Ranked</span>:</p>
+                        </div>
+                        <div class="2u">
+                            <span id="new-race-ranked-icon"></span>
+                        </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-ranked-no" name="new-race-ranked" value="no" checked></td>
+                            <label for="new-race-ranked-no" class="new-race-radio-label" >
+                                <span class="new-race-radio-text" lang="en">No</span>
+                            </label>
+                        </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-ranked-yes" name="new-race-ranked" value="yes">
+                            <label for="new-race-ranked-yes" class="new-race-radio-label">
+                                <span class="new-race-radio-text" lang="en">Yes</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row uniform 50%">
                         <div class="2u new-race-note">
                             <p><span lang="en">Format</span>:</p>
                         </div>
@@ -627,8 +649,8 @@
                                     <option value="unseeded" selected="selected" lang="en">Unseeded</option>
                                     <option value="seeded" lang="en">Seeded</option>
                                     <option id="new-race-format-diversity" value="diversity" lang="en">Diversity</option>
-                                    <option value="unseeded-lite" lang="en">Unseeded (Lite)</option>
-                                    <option value="seeded-hard" lang="en">Seeded (Hard)</option>
+                                    <option id="new-race-format-unseeded-lite" value="unseeded-lite" lang="en">Unseeded (Lite)</option>
+                                    <option id="new-race-format-seeded-hard" value="seeded-hard" lang="en">Seeded (Hard)</option>
                                     <option id="new-race-format-custom" value="custom" lang="en">Custom</option>
                                 </select>
                             </div>
@@ -679,8 +701,8 @@
                                     <option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
                                     <option value="The Lamb">The Lamb (Dark Room)</option>
                                     <option value="Mega Satan">Mega Satan</option>
-                                    <option value="Everything">Everything</option>
-                                    <option id="new-race-goal-custom" value="custom" class="hidden">Custom</option>
+                                    <option value="Everything" lang="en">Everything</option>
+                                    <option value="custom" lang="en">Custom</option>
                                 </select>
                             </div>
                         </div>

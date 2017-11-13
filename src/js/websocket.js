@@ -345,16 +345,21 @@ exports.init = (username, password, remember) => {
         let mostCurrentRaceID = false;
         for (let i = 0; i < data.length; i++) {
             // Keep track of what races are currently going
-            globals.raceList[data[i].id] = data[i];
-            globals.raceList[data[i].id].racerList = {};
+            const raceID = data[i].id;
+            globals.raceList[raceID] = data[i];
+            globals.raceList[raceID].racerList = {};
 
             // Update the "Current races" area
             lobbyScreen.raceDraw(data[i]);
 
+            // Start the callback for the lobby timer
+            globals.raceList[raceID].datetimeStarted -= globals.timeOffset; // Account for the delay
+            lobbyScreen.statusTimer(raceID);
+
             // Check to see if we are in any races
             for (let j = 0; j < data[i].racers.length; j++) {
                 if (data[i].racers[j] === globals.myUsername) {
-                    mostCurrentRaceID = data[i].id;
+                    mostCurrentRaceID = raceID;
                     break;
                 }
             }
@@ -662,6 +667,15 @@ exports.init = (username, password, remember) => {
         $(`#lobby-current-races-${data.id}-status-circle`).removeClass();
         $(`#lobby-current-races-${data.id}-status-circle`).addClass(`circle lobby-current-races-${circleClass}`);
         $(`#lobby-current-races-${data.id}-status`).html(`<span lang="en">${data.status.capitalize()}</span>`);
+
+        if (data.status === 'in progress') {
+            // Keep track of when the race starts
+            const now = new Date().getTime();
+            globals.raceList[data.id].datetimeStarted = now;
+
+            // Start the callback for timers
+            lobbyScreen.statusTimer(data.id);
+        }
 
         // Remove the race if it is finished
         if (data.status === 'finished') {
