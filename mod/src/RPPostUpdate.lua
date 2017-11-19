@@ -377,8 +377,11 @@ function RPPostUpdate:RaceChecks()
   -- Ban Basement 1 Treasure Rooms (2/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
 
-  -- Check to see if we need to start the speedrun timer
+  -- Check to see if we need to start the timers
   RPSpeedrun:StartTimer()
+  if RPGlobals.run.startedTime == 0 then
+    RPGlobals.run.startedTime = Isaac.GetTime()
+  end
 
   -- Make race winners get sparklies and fireworks
   if (RPGlobals.raceVars.finished == true and

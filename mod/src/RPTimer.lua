@@ -207,8 +207,13 @@ function RPTimer:DisplayRun()
   end
 
   -- Find out how much time has passed since the run started
-  local elapsedTime = Isaac.GetTime() - RPGlobals.run.startedTime
-  elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
+  local elapsedTime
+  if RPGlobals.run.startedTime == 0 then
+    elapsedTime = 0
+  else
+    elapsedTime = Isaac.GetTime() - RPGlobals.run.startedTime
+    elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
+  end
 
   -- Calcuate the hours digit
   local hours = math.floor(elapsedTime / 3600)

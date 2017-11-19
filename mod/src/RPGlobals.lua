@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.14.0"
+RPGlobals.version = "v0.14.1"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -118,7 +118,7 @@ RPGlobals.FadeoutTarget = {
 
 function RPGlobals:InitRun()
   -- Tracking per run
-  RPGlobals.run.startedTime   = Isaac.GetTime()
+  RPGlobals.run.startedTime   = 0
   RPGlobals.run.roomsEntered  = 0
   RPGlobals.run.movingBoxOpen = true
   RPGlobals.run.killedLamb    = false -- Used for the "Everything" race goal

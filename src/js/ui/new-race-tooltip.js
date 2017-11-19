@@ -6,7 +6,6 @@
 const globals = nodeRequire('./js/globals');
 const settings = nodeRequire('./js/settings');
 const misc = nodeRequire('./js/misc');
-const characters = nodeRequire('./data/characters');
 const builds = nodeRequire('./data/builds');
 
 /*
@@ -87,11 +86,11 @@ $(document).ready(() => {
 
     $('#new-race-build-randomize').click(() => {
         const build = $('#new-race-starting-build').val();
-        let randomBuildNum;
+        let randomBuild;
         do {
-            randomBuildNum = misc.getRandomNumber(1, builds.length - 1);
-        } while (randomBuildNum !== build);
-        $('#new-race-starting-build').val(randomBuildNum);
+            randomBuild = misc.getRandomNumber(1, builds.length - 1);
+        } while (randomBuild === build);
+        $('#new-race-starting-build').val(randomBuild);
         newRaceStartingBuildChange(null);
     });
 
@@ -124,8 +123,9 @@ $(document).ready(() => {
         // Add the option for this build
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
     }
-    // $('#new-race-starting-build').append($('<option lang="en"></option>').val('random').html('Random'));
-    // (commented out for now since it requires server-side changes)
+    $('#new-race-starting-build option[value="random"]').remove();
+    // (we remove this for now since it requires server-side changes)
+    // (we need this to have at least one option to avoid undefined errors)
 
     $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
