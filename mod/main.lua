@@ -56,6 +56,7 @@ local RPItems               = require("src/rpitems") -- Collectible item callbac
 local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
 local RPFastClear           = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
+local RPSpeedrun            = require("src/rpspeedrun") -- Functions relating to the custom challenges
 local RPSamael              = require("src/rpsamael") -- Samael functions
 local RPJrFetus             = require("src/rpjrfetus") -- Jr. Fetus functions (2/2)
 local RPMahalath            = require("src/rpmahalath") -- Mahalath functions
@@ -96,6 +97,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      RPPostPlayerInit.M
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       RPEntityTakeDmg.Main) -- 11
 RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          RPInputAction.Main) -- 13
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     RPPostGameStarted.Main) -- 15
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         RPSpeedrun.PostGameEnd) -- 16
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Main) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main) -- 22

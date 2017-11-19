@@ -230,6 +230,11 @@ function RPPostUpdate:CheckHauntSpeedup()
       if entity.Index == indexes[1] or
          (entity.Index == indexes[2] and blackChampionHaunt) then
 
+        if entity.Index == indexes[1] then
+          Isaac.DebugString("Found the first Lil' Haunt to detach at index: " .. tostring(entity.Index))
+        elseif entity.Index == indexes[2] and blackChampionHaunt then
+          Isaac.DebugString("Found the second Lil' Haunt to detach at index: " .. tostring(entity.Index))
+        end
         local npc = entity:ToNPC()
         npc.State = NpcState.STATE_MOVE -- 4
         -- (doing this will detach them)
@@ -243,15 +248,13 @@ function RPPostUpdate:CheckHauntSpeedup()
         -- We need to manually set their collision or else tears will pass through them
         npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
-        -- Add them to the tracking table so that they won't immediately rush the player
+        -- Add a check to make sure they are in the tracking table
+        -- (this might be unnecessary; included for debugging purposes)
         local index = GetPtrHash(npc)
-        RPGlobals.run.currentLilHaunts[index] = {
-          index = npc.Index, -- It's safer to use the hash as an index instead of this
-          pos = npc.Position,
-          ptr = EntityPtr(npc),
-        }
-        Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) ..
-                          " to the table (RPPostUpdate:CheckHauntSpeedup).")
+        if RPGlobals.run.currentLilHaunts[index] == nil then
+          Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
+                            " was not already in the \"currentLilHaunts\" table.")
+        end
 
         Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
                           " on frame: " .. tostring(gameFrameCount))

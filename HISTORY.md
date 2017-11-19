@@ -1,5 +1,42 @@
 # Racing+ Version History and News
 
+### *v0.14.0* - November 18th
+
+News:
+
+* Isaac is now feeling festive. Happy Thanksgiving! (Thanks to Gromfalloon for this)
+* Season 2 is considered finished!
+  * Congradulations to Dea1h for the best R+7 time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
+  * The top 10 times will be stored in a hall of fame page on the website in the future.
+  * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
+  * If you tried out Season 2 and did not like it, Samael is being heavily buffed in this patch with the goal of making him more fun to play (see below).
+* Season 3 has officially begun! The new category is now considered final; there will be no more major balance changes.
+* Thanks goes to [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900), who created the [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of Cathedral / Sheol.
+* Thanks goes to [melon goodposter](http://steamcommunity.com/id/pleasebecareful), who created the [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of The Chest / Dark Room.
+* If you have ideas for season 4, send them to me on Discord, which is planned for May 2018.
+* Thanks goes to Krakenos for taking some screenshots that showcase Racing+ on the [Steam Workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=857628390).
+
+Mod changes:
+
+* You can now hold down tab (map) to see the time spent on the current run. (Thanks Ou_J)
+* Samael's starting speed has been increased to 1.15 from 0.85.
+* Samael's starting health has been changed to 1 red heart, 1 soul heart, and 1 black heart.
+* The Haunt's "Peel" and "AngrySkin" animations are now sped up.
+* Fixed the bug where We Need to Go Deeper! would not work on Womb 2 in the season 3 custom challenge. (Thanks sillypears)
+* Fixed the bug where on the season 3 custom challenge, certain entities would ocassionally despawn (trapdoors, devil statues, angel statues, and Epic Fetus targets). DeadInfinity / Meowlala deserves credit for finding and fixing this bug in the base Mahalath mod. (Thanks to Moucheron Quipet, Gamonymous, Dea1h, and Krakenos for reporting.)
+* Fixed the bug where you could take the wrong path on the season 3 custom challenge and still progress to the next character.
+* Fixed the bug where dying with Guppy's Collar in custom challenges would send you back to the first character. (Thanks Gamonymous)
+* Fixed the bug where the place graphic next to the R+ icon would overlap with the character progress graphic in races. (Thanks molfried)
+* Fixed the bug where the I AM ERROR room on Womb 2 would always give you the "correct" direction during a custom challenge. (Thanks ceehe)
+
+Client/server changes:
+
+* It is now impossible to get Abaddon when playing a diversity race as Keeper. (Thanks leo_ze_tron)
+* Removed the "Ongoing" label from races in the lobby. (Thanks Cyber_1)
+* Added some random buttons to the new race tooltip. (Thanks HauntedQuest)
+* Added a new icon for seeded hard mode races.
+* Fixed the bug where the icon would not show for seeded hard mode races.
+
 ### *v0.13.8* - November 13th
 
 Mod:

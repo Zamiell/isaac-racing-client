@@ -1388,7 +1388,7 @@ end
 -- Update entity inventories
 function RPMahalath:PostUpdate()
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
      challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
 
     return
@@ -1444,9 +1444,13 @@ function RPMahalath:PostUpdate()
   end
 
   for i, en in ipairs(barf.particles) do
-    if en.FrameCount >= 12 then
-      en:Remove()
-      barf.particles.i = nil
+    if en:Exists() then
+      if en.FrameCount >= 12 then
+        en:Remove()
+        table.remove(barf.particles, i)
+      end
+    else
+      table.remove(barf.particles, i)
     end
   end
 end

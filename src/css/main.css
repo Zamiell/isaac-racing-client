@@ -3977,6 +3977,16 @@
         position: absolute;
     }
 
+    .lobby-current-races-seeded-hard {
+        background-image: url("../img/formats/seeded-hard.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2.1em;
+        width: 2em;
+        position: absolute;
+    }
+
     .lobby-current-races-diversity {
         background-image: url("../img/formats/diversity.png");
         background-repeat: no-repeat;
@@ -4086,7 +4096,7 @@
     }
 
     #new-race-title {
-        width: 15em;
+        width: 22em;
     }
 
     #new-race-title-error {
@@ -4098,7 +4108,7 @@
     }
 
     .new-race-randomize {
-        padding-top: 2em !important;
+        padding-top: 1.5em !important;
     }
 
     .new-race-size-icon-container {

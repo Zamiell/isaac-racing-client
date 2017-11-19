@@ -1075,7 +1075,7 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
     if player:HasCollectible(CollectibleType.COLLECTIBLE_PONY) == false and -- 130
        player:HasCollectible(CollectibleType.COLLECTIBLE_WHITE_PONY) == false then -- 181
 
-      player.MoveSpeed = player.MoveSpeed - 0.15
+      player.MoveSpeed = player.MoveSpeed + 0.15
       --Isaac.DebugString("Decreased speed in the speed cache for Samael: " .. tostring(player.MoveSpeed))
     end
     if wraithActive then

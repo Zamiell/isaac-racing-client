@@ -173,7 +173,7 @@ function RPPostNewRoom:CheckSatanRoom()
   end
 
   -- In the season 3 speedrun challenge, there is a custom boss instead of Satan
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     return
   end
 
@@ -446,7 +446,7 @@ function RPPostNewRoom:CheckRespawnTrophy()
   if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
       challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")) then
 
     -- All of the custom speedrun challenges end in with Blue Baby or The Lamb
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
@@ -516,11 +516,33 @@ function RPPostNewRoom:Race()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local gridSize = room:GetGridSize()
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
 
   -- Remove the final place graphic if it is showing
   RPSprites:Init("place2", 0)
+
+  -- Prevent players from skipping a floor by using the I AM ERROR room on Womb 2 on the "Everything" race goal
+  if stage == LevelStage.STAGE4_2 and -- 8
+     roomType == RoomType.ROOM_ERROR and -- 3
+     RPGlobals.race.goal == "Everything" then
+
+    for i = 1, gridSize do
+      local gridEntity = room:GetGridEntity(i)
+      if gridEntity ~= nil then
+        local saveState = gridEntity:GetSaveState()
+        if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
+          -- Remove the crawlspace and spawn a Heaven Door (1000.39), which will get replaced on the next frame
+          -- in the "RPFastTravel:ReplaceHeavenDoor()" function
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+          game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR,
+                     gridEntity.Position, Vector(0, 0), nil, 0, 0)
+          Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
+        end
+      end
+    end
+  end
 
   -- Check to see if we need to remove More Options in a diversity race or an "Unseeded (Lite)" race
   if roomType == RoomType.ROOM_TREASURE and -- 4

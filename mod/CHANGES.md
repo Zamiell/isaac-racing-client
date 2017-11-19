@@ -128,6 +128,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
   * the use animation for Blank Card when you have a teleport card
   * various animations during the Satan fight
   * various animations during the Mega Satan fight
+  * various animations during The Haunt fight
 
 ### Bug Fixes
 
@@ -239,20 +240,21 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Apollyon starts with the Schoolbag. He will start with Void inside the bag.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 
-### R+7 Season 3 (Unreleased / Beta)
+### R+7 Season 3
 
 * You must complete the game with the following 7 characters:
   * Isaac, Magadalene, Judas, Eve, Samson, Lazarus, and The Lost
 * The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
-* The bosses of Cathedral, Sheol, The Chest, and the Dark Room have been replaced with ?.
-* Isaac starts with the Schoolbag. He will start with Moving Box inside the bag.
-* Magadalene starts with the Schoolbag. She will start with How to Jump inside the bag.
-* Magadalene no longer starts with a speed up pill. Speed up will still be in the pill pool.
-* Judas starts with the Schoolbag. He will start with Book of Belial inside the bag.
-* Eve starts with the Schoolbag. She will start with Dull Razor inside the bag.
-* Samson starts with the Schoolbag. He will start with Mr. ME! inside the bag.
-* Lazarus starts with the Schoolbag. He will start with Ventricle Razor inside the bag.
-* The Lost starts with the Schoolbag. He will start with Glass Cannon inside the bag.
+* The bosses of Cathedral and Sheol have been replaced with [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762), a custom boss by [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900).
+* The bosses of The Chest and Dark Room have been replaced with [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762), a custom boss by [melon goodposter](http://steamcommunity.com/id/pleasebecareful).
+* All characters start with the Schoolbag.
+* Isaac starts with Moving Box inside the Schoolbag.
+* Magadalene starts with How to Jump inside the Schoolbag.
+* Judas starts the Book of Belial inside the Schoolbag.
+* Eve starts with The Candle inside the Schoolbag.
+* Samson starts with Mr. ME! inside the Schoolbag.
+* Lazarus starts with Ventricle Razor inside the Schoolbag.
+* The Lost starts with Glass Cannon inside the Schoolbag.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 

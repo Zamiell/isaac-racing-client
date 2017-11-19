@@ -4,8 +4,9 @@ local RPFastTravel = {}
 -- Includes
 --
 
-local RPGlobals = require("src/rpglobals")
-local RPSprites = require("src/rpsprites")
+local RPGlobals  = require("src/rpglobals")
+local RPSpeedrun = require("src/rpspeedrun")
+local RPSprites  = require("src/rpsprites")
 
 --
 -- Constants
@@ -39,6 +40,7 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local roomType = room:GetType()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
   -- Delete the "natural" trapdoor that spawns one frame after It Lives! (or Hush) is killed
   -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
@@ -46,16 +48,6 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
     Isaac.DebugString("Deleted the natural trapdoor after It Lives! (or Hush).")
-    return
-  end
-
-  -- Prevent players from skipping a floor by using Undefined on W2 on the "Everything" race goal
-  if stage == LevelStage.STAGE4_2 and -- 8
-     roomType == RoomType.ROOM_ERROR and -- 3
-     RPGlobals.race.goal == "Everything" then
-
-    RPFastTravel:ReplaceHeavenDoor(entity)
-    Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
     return
   end
 
@@ -125,11 +117,13 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
   -- Delete the "natural" beam of light that spawns one frame after It Lives! (or Hush) is killed
@@ -138,6 +132,23 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
     entity:Remove()
     Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
     return
+  end
+
+  -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (2/2)
+  if stage == LevelStage.STAGE4_2 and -- 8
+     roomType == RoomType.ROOM_ERROR and -- 3
+     RPSpeedrun:InSpeedrun() then
+
+    -- Find out whether we should spawn a passage up or down, depending on the room seed
+    math.randomseed(roomSeed)
+    local direction = math.random(1, 2)
+    if direction == 1 then
+      Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be up (no replacement).")
+    elseif direction == 2 then
+      RPFastTravel:ReplaceTrapdoor(entity, -1)
+      Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be down (replaced a beam).")
+      return
+    end
   end
 
   -- Spawn a custom entity to emulate the original

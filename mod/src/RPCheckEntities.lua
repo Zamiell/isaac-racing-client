@@ -334,7 +334,7 @@ function RPCheckEntities:Entity5_340(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     RPCheckEntities:Entity5_340_S2(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
 
   elseif RPGlobals.raceVars.finished then
@@ -451,14 +451,27 @@ function RPCheckEntities:Entity5_340_S3(pickup)
   local stage = level:GetStage()
   local stageType = level:GetStageType()
 
-  -- Season 3 runs can go in either direction so we need to handle all 4 cases
-  if stage == 10 and stageType == 1 then -- Cathedral
+  -- Season 3 runs alternate between directions, so we need to make sure we only handle the intended direction
+  local direction = RPSpeedrun.charNum % 2 -- 1 is up, 2 is down
+  if direction == 0 then
+    direction = 2
+  end
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     direction == 1 then
+
     RPCheckEntities.bigChestAction = "up"
 
-  elseif stage == 10 and stageType == 0 then -- Sheol
+  elseif stage == 10 and stageType == 0 and -- Sheol
+         direction == 2 then
+
     RPCheckEntities.bigChestAction = "down"
 
-  elseif stage == 11 then -- The Chest or the Dark Room
+  elseif (stage == 11 and stageType == 1 and -- The Chest
+          direction == 1) or
+         (stage == 11 and stageType == 0 and -- Dark Room
+          direction == 2) then
+
     -- Sometimes the vanilla end of challenge trophy does not appear
     -- Thus, we need to handle replacing both the trophy and the big chest
     -- So replace the big chest with either a checkpoint flag or a custom trophy,
@@ -646,7 +659,7 @@ function RPCheckEntities:Entity5_370(pickup)
       RPSpeedrun.charNum == 14) or
      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
       RPSpeedrun.charNum == 7) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
       RPSpeedrun.charNum == 7) then
 
     -- Spawn the "Race Trophy" custom entity
@@ -748,11 +761,15 @@ function RPCheckEntities:Entity260(npc)
       pos = npc.Position,
       ptr = EntityPtr(npc),
     }
-    if npc.Parent ~= nil then
+    local string = "Added a Lil' Haunt with index " .. tostring(index) .. " to the table (with "
+    if npc.Parent == nil then
+      string = string .. "no"
+    else
+      string = string .. "a"
       RPGlobals.run.currentLilHaunts[index].parentIndex = npc.Parent.Index
     end
-
-    Isaac.DebugString("Added a Lil' Haunt with index " .. tostring(index) .. " to the table.")
+    string = string .. " parent)."
+    Isaac.DebugString(string)
   end
 
   -- Remove invulnerability frames from Lil' Haunts that are not attached to a Haunt

@@ -6,14 +6,39 @@
 const globals = nodeRequire('./js/globals');
 const settings = nodeRequire('./js/settings');
 const misc = nodeRequire('./js/misc');
+const characters = nodeRequire('./data/characters');
 const builds = nodeRequire('./data/builds');
+
+/*
+    Constants
+*/
+
+// We can't reuse the object in "characters.js",
+// because it contains Lazarus II and Dark Judas
+const characterArray = [
+    'Isaac', // 0
+    'Magdalene', // 1
+    'Cain', // 2
+    'Judas', // 3
+    'Blue Baby', // 4
+    'Eve', // 5
+    'Samson', // 6
+    'Azazel', // 7
+    'Lazarus', // 8
+    'Eden', // 9
+    'The Lost', // 10
+    'Lilith', // 11
+    'Keeper', // 12
+    'Apollyon', // 13
+    'Samael', // 14
+];
 
 /*
     Event handlers
 */
 
 $(document).ready(() => {
-    $('#new-race-randomize').click(() => {
+    $('#new-race-title-randomize').click(() => {
         // Don't randomize the race name if we are on a test account
         if (globals.myUsername.match(/TestAccount\d+/)) {
             $('#new-race-title').val('{ test race }');
@@ -49,6 +74,27 @@ $(document).ready(() => {
         settings.saveSync();
     });
 
+    $('#new-race-character-randomize').click(() => {
+        const char = $('#new-race-character').val();
+        let randomChar;
+        do {
+            const randomCharNum = misc.getRandomNumber(0, characterArray.length - 1);
+            randomChar = characterArray[randomCharNum];
+        } while (randomChar === char);
+        $('#new-race-character').val(randomChar);
+        newRaceCharacterChange(null);
+    });
+
+    $('#new-race-build-randomize').click(() => {
+        const build = $('#new-race-starting-build').val();
+        let randomBuildNum;
+        do {
+            randomBuildNum = misc.getRandomNumber(1, builds.length - 1);
+        } while (randomBuildNum !== build);
+        $('#new-race-starting-build').val(randomBuildNum);
+        newRaceStartingBuildChange(null);
+    });
+
     $('#new-race-size-solo').change(newRaceSizeChange);
     $('#new-race-size-multiplayer').change(newRaceSizeChange);
 
@@ -78,6 +124,8 @@ $(document).ready(() => {
         // Add the option for this build
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
     }
+    // $('#new-race-starting-build').append($('<option lang="en"></option>').val('random').html('Random'));
+    // (commented out for now since it requires server-side changes)
 
     $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
@@ -168,25 +216,6 @@ $(document).ready(() => {
 
         // If necessary, get a random character
         if (character === 'random') {
-            // We can't reuse the object in "characters.js",
-            // because it contains Lazarus II and Dark Judas
-            const characterArray = [
-                'Isaac', // 0
-                'Magdalene', // 1
-                'Cain', // 2
-                'Judas', // 3
-                'Blue Baby', // 4
-                'Eve', // 5
-                'Samson', // 6
-                'Azazel', // 7
-                'Lazarus', // 8
-                'Eden', // 9
-                'The Lost', // 10
-                'Lilith', // 11
-                'Keeper', // 12
-                'Apollyon', // 13
-                'Samael', // 14
-            ];
             const randomNumber = misc.getRandomNumber(0, characterArray.length - 1);
             character = characterArray[randomNumber];
         }
@@ -373,7 +402,7 @@ exports.tooltipFunctionReady = () => {
     const newRaceTitle = settings.get('newRaceTitle');
     if (newRaceTitle === '') {
         // Randomize the race title
-        $('#new-race-randomize').click();
+        $('#new-race-title-randomize').click();
     } else {
         $('#new-race-title').val(newRaceTitle);
         globals.lastRaceTitle = newRaceTitle;

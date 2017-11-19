@@ -258,6 +258,10 @@ function raceDraw2(race) {
         } else if (format === 'seeded') {
             content += '<span lang="en">Seeded</span><br />';
             content += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span>';
+        } else if (format === 'seeded-hard') {
+            content += '<span lang="en">Seeded (Hard)</span><br />';
+            content += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span><br />';
+            content += '<span lang="en">You will also play on hard mode.</span><br />';
         } else if (format === 'diversity') {
             content += '<span lang="en">Diversity</span><br />';
             content += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
@@ -480,7 +484,7 @@ const statusTimer = (raceID) => {
     const now = new Date().getTime();
     const raceMilliseconds = now - race.datetimeStarted; // Don't use the offset because we are keeping track of when races start locally
     const raceSeconds = Math.round(raceMilliseconds / 1000);
-    const timeDiv = `<span lang="en">Ongoing</span>: ${misc.pad(parseInt(raceSeconds / 60, 10))}:${misc.pad(raceSeconds % 60)}`;
+    const timeDiv = `${misc.pad(parseInt(raceSeconds / 60, 10))}:${misc.pad(raceSeconds % 60)}`;
     $(`#lobby-current-races-${raceID}-status`).html(timeDiv);
 
     // Update the timer again a second from now

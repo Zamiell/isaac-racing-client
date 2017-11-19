@@ -5,7 +5,6 @@ local RPSprites = {}
 --
 
 RPSprites.sprites = {}
-
 --
 -- Sprite functions
 --
@@ -78,6 +77,7 @@ function RPSprites:Init(spriteType, spriteName)
   function RPSprites:Display()
     -- Local variables
     local game = Game()
+    local challenge = Isaac.GetChallenge()
 
     -- Loop through all the sprites and render them
     for k, v in pairs(RPSprites.sprites) do
@@ -165,6 +165,9 @@ function RPSprites:Init(spriteType, spriteName)
         if game.Difficulty == 1 then
           -- The hard mode symbol will interfere, so it needs to be moved to the right
           pos.X = 34
+        end
+        if challenge ~= 0 then
+          pos.X = 50
         end
         pos.Y = 79
       elseif k == "place2" then -- The final place graphic

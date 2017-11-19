@@ -261,7 +261,7 @@ function RPSpeedrun:Init()
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     Isaac.DebugString("In the R+7 (Season 3) challenge.")
 
     -- Everyone starts with the Schoolbag in this season
@@ -337,7 +337,7 @@ function RPSpeedrun:Init()
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
          character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
@@ -356,7 +356,7 @@ function RPSpeedrun:Init()
            character ~= RPGlobals.race.order14[1]) or
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
            character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
            character ~= RPGlobals.race.order7[1])) then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
@@ -409,17 +409,6 @@ function RPSpeedrun:CheckRestart()
   -- Local variables
   local game = Game()
   local isaacFrameCount = Isaac.GetFrameCount()
-  local player = game:GetPlayer(0)
-  local playerSprite = player:GetSprite()
-
-  -- Don't move to the first character of the speedrun if we die
-  if (playerSprite:IsPlaying("Death") or
-      playerSprite:IsPlaying("LostDeath")) and
-      -- The Lost has a different death animation than all of the other characters
-     player:GetExtraLives() == 0 then
-
-    RPSpeedrun.fastReset = true
-  end
 
   -- We grabbed the checkpoint, so fade out the screen before we reset
   if RPSpeedrun.fadeFrame ~= 0 and isaacFrameCount >= RPSpeedrun.fadeFrame then
@@ -851,7 +840,7 @@ function RPSpeedrun:DisplayCharProgress()
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") and
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -920,7 +909,7 @@ function RPSpeedrun:DisplayCharProgress()
     digit4 = 4
   end
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
     digit3 = 7
   end
@@ -953,8 +942,75 @@ end
 -- Other
 --
 
--- Replace bosses in season 3
 function RPSpeedrun:PostNewRoom()
+  if RPSpeedrun:InSpeedrun() == false then
+    return
+  end
+
+  RPSpeedrun:PostNewRoomWomb2()
+  RPSpeedrun:PostNewRoomReplaceBosses()
+end
+
+-- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges
+function RPSpeedrun:PostNewRoomWomb2()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local gridSize = room:GetGridSize()
+
+  if stage ~= LevelStage.STAGE4_2 then -- 8
+    return
+  end
+
+  if roomType ~= RoomType.ROOM_ERROR then -- 3
+    return
+  end
+
+  -- Remove any existing trapdoors
+  local pos
+  for i = 1, gridSize do
+    local gridEntity = room:GetGridEntity(i)
+    if gridEntity ~= nil then
+      local saveState = gridEntity:GetSaveState()
+      if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
+        pos = gridEntity.Position
+        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+        Isaac.DebugString("Removed an existing trapdoor in an I AM ERROR room on Womb 2.")
+      end
+    end
+  end
+
+  -- Remove any existing beams of light
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_EFFECT and -- 1000
+       entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
+
+      pos = entity.Position
+      entity:Remove()
+      Isaac.DebugString("Removed an existing beam of light in an I AM ERROR room on Womb 2.")
+    end
+  end
+
+  -- Find out whether we should spawn a passage up or down, depending on the room seed
+  math.randomseed(roomSeed)
+  local direction = math.random(1, 2)
+  if direction == 1 then
+    -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
+    game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, Vector(0, 0), nil, 0, 0)
+    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be up.")
+  elseif direction == 2 then
+    -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
+    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, pos, true) -- 17
+    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be down.")
+  end
+end
+
+-- Replace the two final bosses in season 3
+function RPSpeedrun:PostNewRoomReplaceBosses()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -969,7 +1025,7 @@ function RPSpeedrun:PostNewRoom()
   local roomClear = room:IsClear()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     return
   end
 
@@ -991,6 +1047,23 @@ function RPSpeedrun:PostNewRoom()
     return
   end
 
+  -- Don't do anything if we have somehow gone the wrong direction
+  -- (via We Need to Go Deeper!, Undefined, etc.)
+  local direction = RPSpeedrun.charNum % 2 -- 1 is up, 2 is down
+  if direction == 0 then
+    direction = 2
+  end
+  if stageType == 1 and -- Cathedral or The Chest
+     direction == 2 then
+
+    return
+  end
+  if stageType == 0 and -- Sheol or Dark Room
+     direction == 1 then
+
+    return
+  end
+
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if stageType == 1 and -- Cathedral
        entity.Type == EntityType.ENTITY_ISAAC then -- 273
@@ -1000,28 +1073,42 @@ function RPSpeedrun:PostNewRoom()
     elseif stageType == 0 and -- Sheol
            entity.Type == EntityType.ENTITY_SATAN then -- 84
 
-      entity:Remove()
+        entity:Remove()
 
     elseif stageType == 1 and -- The Chest
-       entity.Type == EntityType.ENTITY_ISAAC then -- 102
+           entity.Type == EntityType.ENTITY_ISAAC then -- 102
 
-      entity:Remove()
+        entity:Remove()
 
-    elseif stageType == 0 and -- Dark Room
-           entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
+      elseif stageType == 0 and -- Dark Room
+             entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
 
-      entity:Remove()
+        entity:Remove()
+      end
     end
+
+    -- Spawn the replacement boss
+    if stage == 10 then
+      Isaac.Spawn(838, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+      Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
+    elseif stage == 11 then
+      Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
+      Isaac.DebugString("Spawned Mahalath (for season 3).")
+    end
+end
+
+-- Don't move to the first character of the speedrun if we die
+function RPSpeedrun:PostGameEnd(gameOver)
+  if gameOver == false then
+    return
   end
 
-  -- Spawn her
-  if stage == 10 then
-    Isaac.Spawn(838, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
-    Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
-  elseif stage == 11 then
-    Isaac.Spawn(777, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
-    Isaac.DebugString("Spawned Mahalath (for season 3).")
+  if RPSpeedrun:InSpeedrun() == false then
+    return
   end
+
+  RPSpeedrun.fastReset = true
+  Isaac.DebugString("Game over detected.")
 end
 
 function RPSpeedrun:InSpeedrun()
@@ -1030,7 +1117,7 @@ function RPSpeedrun:InSpeedrun()
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
     return true
   else

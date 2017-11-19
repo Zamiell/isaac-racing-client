@@ -33,10 +33,11 @@ function RPPostGameStarted:Main(saveState)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local seeds = game:GetSeeds()
-  --local player = game:GetPlayer(0)
+  local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
+  Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
   RPPostGameStarted:CheckCorruptMod()
 
@@ -169,8 +170,8 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Make sure that the festive hat shows
-  -- (disabled until Thanksgiving)
-  --player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
+  -- (enabled until Thanksgiving ends)
+  player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPPostNewLevel:NewLevel()
@@ -314,9 +315,6 @@ function RPPostGameStarted:Character()
     Isaac.DebugString("Removing collectible 349 (Wooden Nickel)")
 
   elseif character == 16 then -- Samael
-    -- Decrease his red hearts
-    player:AddHearts(-1)
-
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.13.8"
+RPGlobals.version = "v0.14.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -31,6 +31,7 @@ RPGlobals.race = {
   order9          = {0},         -- The order for a Racing+ 9 character speedrun
   order14         = {0},         -- The order for a Racing+ 14 character speedrun
 }
+-- (unofficially, this can also have "timer = false")
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
 RPGlobals.raceVars = {
@@ -117,6 +118,7 @@ RPGlobals.FadeoutTarget = {
 
 function RPGlobals:InitRun()
   -- Tracking per run
+  RPGlobals.run.startedTime   = Isaac.GetTime()
   RPGlobals.run.roomsEntered  = 0
   RPGlobals.run.movingBoxOpen = true
   RPGlobals.run.killedLamb    = false -- Used for the "Everything" race goal

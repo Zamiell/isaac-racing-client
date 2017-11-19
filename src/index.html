@@ -579,7 +579,9 @@
                                     <input id="new-race-title" type="text" placeholder="Race title (optional)" lang="en" data-tooltip-content="#new-race-title-error" />
                                 </li>
                                 <li>
-                                    <button id="new-race-randomize" class="button alt small" type="button" lang="en">Randomize</button>
+                                    <button id="new-race-title-randomize" class="button alt small" type="button">
+                                        <i class="fa fa-random" aria-hidden="true"></i>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -664,7 +666,7 @@
                         <div class="2u">
                             <span id="new-race-character-icon"></span>
                         </div>
-                        <div class="8u">
+                        <div class="7u">
                             <div class="select-wrapper">
                                 <select id="new-race-character">
                                     <option value="Isaac">Isaac</option>
@@ -682,9 +684,15 @@
                                     <option value="Keeper">Keeper</option>
                                     <option value="Apollyon">Apollyon</option>
                                     <option value="Samael">Samael</option>
-                                    <option value="random" lang="en">Random</option>
+                                    <!--<option value="random" lang="en">Random</option>-->
+                                    <!-- (commented out for now since it requires server-side changes) -->
                                 </select>
                             </div>
+                        </div>
+                        <div class="1u new-race-randomize">
+                            <button id="new-race-character-randomize" class="button alt small" type="button">
+                                <i class="fa fa-random" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -715,14 +723,15 @@
                         <div class="2u">
                             <span id="new-race-starting-build-icon"></span>
                         </div>
-                        <div class="8u">
+                        <div class="7u">
                             <div class="select-wrapper">
-                                <select id="new-race-starting-build">
-                                    <option value="random" lang="en" selected="selected">Random (all, 1-33)</option>
-                                    <option value="random-single" lang="en">Random (single items only, 1-26)</option>
-                                    <option value="random-treasure" lang="en">Random (Treasure Room only, 1-20)</option>
-                                </select>
+                                <select id="new-race-starting-build"></select>
                             </div>
+                        </div>
+                        <div class="1u new-race-randomize">
+                            <button id="new-race-build-randomize" class="button alt small" type="button">
+                                <i class="fa fa-random" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 

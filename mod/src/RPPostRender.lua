@@ -49,6 +49,7 @@ function RPPostRender:Main()
   RPSchoolbag:SpriteDisplay()
   RPSoulJar:SpriteDisplay()
   RPTimer:Display()
+  RPTimer:DisplayRun()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
@@ -114,7 +115,7 @@ function RPPostRender:CheckRestart()
     elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3) beta") then
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then
