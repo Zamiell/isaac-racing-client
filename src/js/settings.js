@@ -74,7 +74,7 @@ function initDefaults() {
         settings.saveSync();
     }
     if (typeof settings.get('newRaceBuild') === 'undefined') {
-        settings.set('newRaceBuild', 'random');
+        settings.set('newRaceBuild', '1'); // 20/20
         settings.saveSync();
     }
 }
