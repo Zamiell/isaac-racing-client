@@ -23,7 +23,7 @@ Mod changes:
 * Samael's starting health has been changed to 1 red heart, 1 soul heart, and 1 black heart.
 * The Haunt's "Peel" and "AngrySkin" animations are now sped up.
 * Fixed the bug where We Need to Go Deeper! would not work on Womb 2 in the season 3 custom challenge. (Thanks sillypears)
-* Fixed the bug where on the season 3 custom challenge, certain entities would ocassionally despawn (trapdoors, devil statues, angel statues, and Epic Fetus targets). DeadInfinity / Meowlala deserves credit for finding and fixing this bug in the base Mahalath mod. (Thanks to Moucheron Quipet, Gamonymous, Dea1h, and Krakenos for reporting.)
+* Fixed the bug where on the season 3 custom challenge, certain entities would occasionally despawn (trapdoors, devil statues, angel statues, and Epic Fetus targets). DeadInfinity / Meowlala deserves credit for finding and fixing this bug in the base Mahalath mod. (Thanks to Moucheron Quipet, Gamonymous, Dea1h, and Krakenos for reporting.)
 * Fixed the bug where you could take the wrong path on the season 3 custom challenge and still progress to the next character.
 * Fixed the bug where dying with Guppy's Collar in custom challenges would send you back to the first character. (Thanks Gamonymous)
 * Fixed the bug where the place graphic next to the R+ icon would overlap with the character progress graphic in races. (Thanks molfried)
