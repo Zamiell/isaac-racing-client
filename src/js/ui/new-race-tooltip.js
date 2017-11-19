@@ -106,8 +106,7 @@ $(document).ready(() => {
     for (const character of characterArray) {
         $('#new-race-character').append($('<option></option>').val(character).html(character));
     }
-    // $('#new-race-character').append($('<option lang="en"></option>').val('random').html('Random'));
-    // (we comment this out for now since it requires server-side changes)
+    $('#new-race-character').append($('<option lang="en"></option>').val('random').html('Random'));
 
     $('#new-race-character').change(newRaceCharacterChange);
 
@@ -130,8 +129,7 @@ $(document).ready(() => {
         // Add the option for this build
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
     }
-    // $('#new-race-starting-build').append($('<option lang="en"></option>').val('0').html('Random'));
-    // (we comment this out for now since it requires server-side changes)
+    $('#new-race-starting-build').append($('<option lang="en"></option>').val('0').html('Random'));
 
     $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
@@ -191,6 +189,11 @@ $(document).ready(() => {
             ranked = false;
         } else {
             misc.errorShow('Expected either "yes" or "no" for the value of ranked.');
+        }
+
+        if (ranked && format === 'seeded') {
+            misc.warningShow('Ranked seeded races are currently disabled. The leaderboards are coming soon!');
+            return false;
         }
 
         let startingBuild;
@@ -326,7 +329,7 @@ function newRaceRankedChange(event, fast = false) {
             $('#new-race-goal').val(rankedGoal);
             newRaceGoalChange(null, fast);
         }
-        const rankedBuild = 'random';
+        const rankedBuild = '0'; // random
         if ($('#new-race-starting-build').val() !== rankedBuild) {
             $('#new-race-starting-build').val(rankedBuild);
             newRaceStartingBuildChange(null, fast);
