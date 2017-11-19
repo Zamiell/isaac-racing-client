@@ -85,7 +85,7 @@ $(document).ready(() => {
     });
 
     $('#new-race-build-randomize').click(() => {
-        const build = $('#new-race-starting-build').val();
+        const build = Number.parseInt($('#new-race-starting-build').val(), 10);
         let randomBuild;
         do {
             randomBuild = misc.getRandomNumber(1, builds.length - 1);
@@ -101,6 +101,13 @@ $(document).ready(() => {
     $('#new-race-ranked-yes').change(newRaceRankedChange);
 
     $('#new-race-format').change(newRaceFormatChange);
+
+    // Add the options to the character dropdown
+    for (const character of characterArray) {
+        $('#new-race-character').append($('<option></option>').val(character).html(character));
+    }
+    // $('#new-race-character').append($('<option lang="en"></option>').val('random').html('Random'));
+    // (we comment this out for now since it requires server-side changes)
 
     $('#new-race-character').change(newRaceCharacterChange);
 
@@ -123,9 +130,8 @@ $(document).ready(() => {
         // Add the option for this build
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
     }
-    $('#new-race-starting-build option[value="random"]').remove();
-    // (we remove this for now since it requires server-side changes)
-    // (we need this to have at least one option to avoid undefined errors)
+    // $('#new-race-starting-build').append($('<option lang="en"></option>').val('0').html('Random'));
+    // (we comment this out for now since it requires server-side changes)
 
     $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
@@ -159,7 +165,7 @@ $(document).ready(() => {
             settings.set('newRaceFormat', format);
             settings.saveSync();
         }
-        let character = $('#new-race-character').val();
+        const character = $('#new-race-character').val();
         if (character !== settings.get('newRaceCharacter')) {
             settings.set('newRaceCharacter', character);
             settings.saveSync();
@@ -212,24 +218,6 @@ $(document).ready(() => {
         const maximumLength = 100;
         if (title.length > maximumLength) {
             title = title.substring(0, maximumLength);
-        }
-
-        // If necessary, get a random character
-        if (character === 'random') {
-            const randomNumber = misc.getRandomNumber(0, characterArray.length - 1);
-            character = characterArray[randomNumber];
-        }
-
-        // If necessary, get a random starting build,
-        if (startingBuild === 'random') {
-            startingBuild = misc.getRandomNumber(1, builds.length);
-        } else if (startingBuild === 'random-single') {
-            startingBuild = misc.getRandomNumber(1, 26); // There are 26 starts that have single items
-        } else if (startingBuild === 'random-treasure') {
-            startingBuild = misc.getRandomNumber(1, 20); // There are 20 Treasure Room starts
-        } else {
-            // The value was read from the form as a string and needs to be sent to the server as an intenger
-            startingBuild = parseInt(startingBuild, 10);
         }
 
         // Close the tooltip (and all error tooltips, if present)
@@ -377,7 +365,7 @@ function newRaceGoalChange(event, fast = false) {
 function newRaceStartingBuildChange(event, fast = false) {
     // Change the displayed icon
     const newBuild = $('#new-race-starting-build').val();
-    if (newBuild.startsWith('random')) {
+    if (newBuild === 'random') {
         $('#new-race-starting-build-icon').css('background-image', 'url("img/builds/random.png")');
     } else {
         $('#new-race-starting-build-icon').css('background-image', `url("img/builds/${newBuild}.png")`);
