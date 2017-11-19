@@ -48,12 +48,6 @@ function initDefaults() {
     // n/a
     // (initialized in main.js since it depends on the return value of a PowerShell command)
 
-    // "Enable boss cutscenes"
-    if (typeof settings.get('bossCutscenes') === 'undefined') {
-        settings.set('bossCutscenes', false);
-        settings.saveSync();
-    }
-
     // Race creation defaults
     if (typeof settings.get('newRaceTitle') === 'undefined') {
         settings.set('newRaceTitle', ''); // An empty string means to use the random name generator

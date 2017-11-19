@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.14.3* - Unreleased
+
+* Removed the setting in the options to enable boss cutscenes.
+
 ### *v0.14.0* - November 18th
 
 News:

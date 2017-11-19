@@ -200,6 +200,9 @@ $(document).ready(() => {
                 settings.set('newRaceBuild', startingBuild);
                 settings.saveSync();
             }
+
+            // The server expects this to be a number
+            startingBuild = Number.parseInt(startingBuild, 10);
         } else {
             startingBuild = -1;
         }

@@ -145,40 +145,6 @@ $(document).ready(() => {
         settings.set('volume', $('#settings-volume-slider').val() / 100);
         settings.saveSync();
 
-        // "Enable boss cutscenes" checkbox
-        const bossCutscenes = $('#settings-cutscene-checkbox').prop('checked');
-        settings.set('bossCutscenes', bossCutscenes);
-        settings.saveSync();
-        if (!changedLogFilePath) {
-            const bossCutsceneFile = path.join(globals.modPath, 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-            if (bossCutscenes) {
-                // Make sure the file is deleted
-                if (fs.existsSync(bossCutsceneFile)) {
-                    globals.log.info('Re-enabling boss cutscenes.');
-                    try {
-                        fs.removeSync(bossCutsceneFile);
-                    } catch (err) {
-                        misc.errorShow(`Failed to delete the "versusscreen.anm2" file in order to enable boss cutscenes for the Racing+ Lua mod: ${err}`);
-                        return false;
-                    }
-                }
-            } else if (!fs.existsSync(bossCutsceneFile)) {
-                // Make sure the file is there
-                // The current working directory is: C:\Users\james\AppData\Local\Programs\RacingPlus\resources\app.asar\src\js\ui
-                const newBossCutsceneFile = path.join(__dirname, '..', '..', '..', 'mod', 'resources', 'gfx', 'ui', 'boss', 'versusscreen.anm2');
-                try {
-                    if (!fs.existsSync(newBossCutsceneFile)) {
-                        misc.errorShow(`The "${newBossCutsceneFile}" file does not exist! Your Racing+ client may be corrupted.`);
-                        return false;
-                    }
-                    fs.copySync(newBossCutsceneFile, bossCutsceneFile);
-                } catch (err) {
-                    misc.errorShow(`Failed to copy the "versusscreen.anm2" file in order to disable boss cutscenes for the Racing+ Lua mod: ${err}`);
-                    return false;
-                }
-            }
-        }
-
         // Stream URL
         let newStreamURL = $('#settings-stream-url').val();
         if (newStreamURL.startsWith('http://')) {
@@ -303,10 +269,6 @@ exports.tooltipFunctionReady = () => {
     // Volume
     $('#settings-volume-slider').val(settings.get('volume') * 100);
     $('#settings-volume-slider-value').html(`${(settings.get('volume') * 100)}%`);
-
-    // "Don't disable boss cutscenes" checkbox
-    const bossCutscenes = settings.get('bossCutscenes');
-    $('#settings-cutscene-checkbox').prop('checked', bossCutscenes);
 
     // Change stream URL
     $('#settings-stream-url').val(globals.stream.URL);
