@@ -271,7 +271,7 @@ function RPPostGameStarted:Character()
 
     -- Eden starts with the Schoolbag by default
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     RPGlobals.run.schoolbag.item = activeItem
 
     -- Manually fix any custom items
@@ -317,7 +317,7 @@ function RPPostGameStarted:Character()
   elseif character == 16 then -- Samael
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     RPGlobals.run.schoolbag.item = Isaac.GetItemIdByName("Wraith Skull")
     RPSchoolbag.sprites.item = nil
     Isaac.DebugString("Adding collectible " .. tostring(Isaac.GetItemIdByName("Wraith Skull")) .. " (Wraith Skull)")
@@ -458,9 +458,9 @@ function RPPostGameStarted:Seeded()
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   end
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
-    -- Eden and Apollyon start with the Schoolbag
+    -- Eden and Samael start with the Schoolbag
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
   end
 
   -- Give the player the "Instant Start" item(s)
@@ -582,8 +582,11 @@ function RPPostGameStarted:Diversity()
   RPPostGameStarted.diversity = true
 
   -- Give the player extra starting items (for diversity races)
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+    -- Eden and Samael start with the Schoolbag
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+  end
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
@@ -691,7 +694,7 @@ function RPPostGameStarted:Pageant()
 
   -- Add the extra items
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
   RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
   RPGlobals.run.schoolbag.charges = 6
   RPSchoolbag.sprites.item = nil
@@ -720,10 +723,16 @@ function RPPostGameStarted:SeededMO()
   local character = player:GetPlayerType()
 
   -- Give the player extra starting items (for seeded races)
-  player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) == false then -- 21
+    -- Eden can start with The Compass
+    player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+    -- Eden and Samael start with the Schoolbag
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+  end
 
   -- Give the player extra Schoolbag items, depending on the character
   if character == PlayerType.PLAYER_MAGDALENA then -- 1
@@ -736,6 +745,12 @@ function RPPostGameStarted:SeededMO()
     RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
   elseif character == PlayerType.PLAYER_THELOST then -- 10
     RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
+  elseif character == PlayerType.PLAYER_LILITH then -- 13
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
+  elseif character == PlayerType.PLAYER_KEEPER then -- 14
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WOODEN_NICKEL -- 349
+  elseif character == PlayerType.PLAYER_APOLLYON then -- 15
+    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
   end
 
   -- Enable the Schoolbag item

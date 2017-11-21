@@ -259,4 +259,15 @@ function RPNPCUpdate:NPC300(npc)
   end
 end
 
+-- EntityType.ENTITY_BIG_HORN (411)
+function RPNPCUpdate:NPC411(npc)
+  -- Speed up coming out of the ground
+  if npc.State == NpcState.STATE_MOVE and -- 4
+     npc.StateFrame >= 67 and
+     npc.StateFrame < 100 then
+
+    npc.StateFrame = 100
+  end
+end
+
 return RPNPCUpdate

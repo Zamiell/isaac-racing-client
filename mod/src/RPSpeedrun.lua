@@ -192,7 +192,7 @@ function RPSpeedrun:Init()
     elseif character == PlayerType.PLAYER_LILITH then -- 13
       -- Lilith starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
       RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       RPSchoolbag.sprites.item = nil
@@ -223,7 +223,7 @@ function RPSpeedrun:Init()
     elseif character == PlayerType.PLAYER_APOLLYON then -- 15
       -- Apollyon starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
       RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       RPSchoolbag.sprites.item = nil
@@ -251,7 +251,7 @@ function RPSpeedrun:Init()
     elseif character == PlayerType.PLAYER_APOLLYON then -- 15
       -- Apollyon starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
       RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
       RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
       RPSchoolbag.sprites.item = nil
@@ -266,7 +266,7 @@ function RPSpeedrun:Init()
 
     -- Everyone starts with the Schoolbag in this season
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     RPSchoolbag.sprites.item = nil
 
     -- Give extra items to characters for the R+7 speedrun category (Season 3)

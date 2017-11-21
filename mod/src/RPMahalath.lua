@@ -1,5 +1,11 @@
 local RPMahalath = {}
 
+--
+-- Includes
+--
+
+local RPFastClear = require("src/rpfastclear")
+
 -- Mahalath was originally created by melon goodposter
 -- It's heavily modified by Zamiel for Racing+
 -- (and to pass the linter)
@@ -322,6 +328,9 @@ function RPMahalath:check_girl(en)
     end
   --BARF DEATH
   elseif d.state == 'barfdeath' then
+    Isaac.DebugString("Manually killing Mahalath (barfdeath).")
+    en:Kill()
+
     if d.statetime == 0 then
       d.move = 'alignx'
       s:Play("Queasy")
@@ -361,6 +370,9 @@ function RPMahalath:check_girl(en)
     end
   --EAT DEATH
   elseif d.state == 'escape' then
+    Isaac.DebugString("Manually killing Mahalath (escape).")
+    en:Kill()
+
     d.move = ''
     local ms = d.mouth:GetSprite()
     local tomouth = d.mouth.Position - pos

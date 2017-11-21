@@ -1,8 +1,20 @@
 # Racing+ Version History and News
 
-### *v0.14.3* - Unreleased
+### *v0.14.3* - November 21st
+
+Mod:
+
+* Certain parts of the Big Horn fight have been sped up in order to remove pointless downtime where there are no entities are on the screen.
+* Mahalath will no longer play a death animation (as it was not affected by fast-clear). (Thanks Dea1h)
+* Fixed the bug where the Schoolbag was not being properly removed from pools. (Thanks Krakenos)
+
+Client:
 
 * Removed the setting in the options to enable boss cutscenes.
+
+Website (coded by sillypears):
+
+* Player's profiles now show more information.
 
 ### *v0.14.0* - November 18th
 
@@ -23,7 +35,7 @@ News:
 Mod changes:
 
 * You can now hold down tab (map) to see the time spent on the current run. (Thanks Ou_J)
-* Samael's starting speed has been increased to 1.15 from 0.85.
+* Samael's starting speed has been increased from 0.85 to 1.15.
 * Samael's starting health has been changed to 1 red heart, 1 soul heart, and 1 black heart.
 * The Haunt's "Peel" and "AngrySkin" animations are now sped up.
 * Fixed the bug where We Need to Go Deeper! would not work on Womb 2 in the season 3 custom challenge. (Thanks sillypears)

@@ -33,8 +33,6 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 ### 1) Character Changes
 
-(Most races are done with Judas. The Eden change is to preserve the active item.)
-
 * All characters now start with the D6. (Much of the strategy in the game is centered around having this item and it heavily mitigates run disparity.)
 * Certain characters have their starting health changed so that they can consistently take a devil deal:
   * Judas starts with half a red heart and half a soul heart.
@@ -42,7 +40,7 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Azazel starts with an extra half soul heart.
 * Judas starts with a bomb instead of 3 coins (so that he can get a Treasure Room item without spending a soul heart).
 * Samson no longer starts with the Child's Heart (a quality of life change).
-* Eden starts with the Schoolbag. They will start with their random active item inside the bag.
+* Eden starts with the Schoolbag. They will start with their random active item inside the bag. (This is to preserve the active item.))
 
 ### 2) No Curses
 
@@ -108,7 +106,7 @@ While there are thousands of rooms in the game, many players have already seen t
 ### Streamlined Path
 
 * The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
-* The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal. By default, it will remove the trapdoor.
+* The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal or which photo you have. By default, it will remove the trapdoor.
 
 If you want, you can change the run goal manually in your "save1.dat" file, located in the Racing+ mod folder. By default, this is located at:
 ```
@@ -133,7 +131,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 ### Bug Fixes
 
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
-* Globins will now properly die after defeating Mom, Mom's Heart, or It Lives!
+* Globins and Sacks will now properly die after defeating Mom, Mom's Heart, or It Lives!
 * Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads. (This is to prevent unavoidable damage, which can happen even if the player is not shooting.)
 * The Book of Sin and Mystery Sack generate actual random pickups.
 * Greed's Gullet works properly on Keeper.
