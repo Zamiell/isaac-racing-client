@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.3* - November 21st
+### *v0.14.6* - November 21st
 
 Mod:
 
