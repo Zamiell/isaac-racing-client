@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.14.7* - November 24th
+
+* Adjusted Big Horn's "BigHoleOpen" animation length from 24 frames to 32 frames. (Thanks Krakenos)
+* Fixed the bug where having Dead Cat and Greed's Gullet on Keeper would result in an incorrect amount of coin containers under certain conditions. (Thanks NorBro86)
+
 ### *v0.14.6* - November 21st
 
 Mod:

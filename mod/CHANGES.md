@@ -92,7 +92,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
-* There is no longer a delay before The Haunt sends out his first Lil' Haunt.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
@@ -127,6 +126,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
   * various animations during the Satan fight
   * various animations during the Mega Satan fight
   * various animations during The Haunt fight
+  * various animations during the Big Horn fight
 
 ### Bug Fixes
 
@@ -244,7 +244,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
   * Isaac, Magadalene, Judas, Eve, Samson, Lazarus, and The Lost
 * The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
 * The bosses of Cathedral and Sheol have been replaced with [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762), a custom boss by [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900).
-* The bosses of The Chest and Dark Room have been replaced with [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762), a custom boss by [melon goodposter](http://steamcommunity.com/id/pleasebecareful).
+* The bosses of The Chest and Dark Room have been replaced with [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=960253826), a custom boss by [melon goodposter](http://steamcommunity.com/id/pleasebecareful).
 * All characters start with the Schoolbag.
 * Isaac starts with Moving Box inside the Schoolbag.
 * Magadalene starts with How to Jump inside the Schoolbag.
@@ -260,6 +260,6 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ## Individual Room Changes
 
-The [technical specifics of all of the individual room changes are listed in a separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md), for those who need to know the nitty-gritty details.
+The technical specifics of all of the individual room changes are listed in a [separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md).
 
 <br />

@@ -455,6 +455,9 @@ function RPCheckEntities:Entity5_340_S3(pickup)
   local direction = RPSpeedrun.charNum % 2 -- 1 is up, 2 is down
   if direction == 0 then
     direction = 2
+    Isaac.DebugString("Going down.")
+  else
+    Isaac.DebugString("Going up.")
   end
 
   if stage == 10 and stageType == 1 and -- Cathedral

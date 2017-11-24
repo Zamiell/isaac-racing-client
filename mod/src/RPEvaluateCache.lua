@@ -46,6 +46,11 @@ function RPEvaluateCache:Main(player, cacheFlag)
          (itemID == 1000 and RPGlobals.run.keeper.usedHealthUpPill) then
 
         RPGlobals.run.keeper.healthUpItems[itemID] = RPGlobals.run.keeper.healthUpItems[itemID] + 1
+        if itemID == CollectibleType.COLLECTIBLE_DEAD_CAT then -- 81
+          -- "player:GetCollectibleNum(81)" will return 9 after a player picks up Dead Cat,
+          -- so we need to account for this
+          RPGlobals.run.keeper.healthUpItems[itemID] = RPGlobals.run.keeper.healthUpItems[itemID] + 8
+        end
         if itemID == 1000 then
           RPGlobals.run.keeper.usedHealthUpPill = false
         end
