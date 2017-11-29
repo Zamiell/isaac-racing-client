@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.14.7"
+RPGlobals.version = "v0.14.8"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 
 -- These are variables that are reset at the beginning of every run
@@ -74,7 +74,7 @@ CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Div
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder #2")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder #3")
 CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
-CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Diversity Placeholder #3") + 1
+CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Debug") + 1
 
 -- Pills
 PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
@@ -226,6 +226,17 @@ function RPGlobals:InitRun()
 
   -- Soul Jar tracking
   RPGlobals.run.soulJarSouls = 0
+
+  -- Special death handling for seeded races
+  RPGlobals.run.seededDeath = {
+    state = 0,
+    -- 0 is not dead, 1 is during the death animation, 2 is during the AppearVanilla animation, 3 is during the debuff
+    pos      = Vector(0, 0),
+    time     = 0,
+    items    = {},
+    charge   = 0,
+    dealTime = Isaac.GetTime(),
+  }
 end
 
 function RPGlobals:IncrementRNG(seed)
@@ -313,6 +324,11 @@ function RPGlobals:TableToString(tbl)
   return "{" .. table.concat(result, ",") .. "}"
 end
 
+-- From: http://lua-users.org/wiki/CopyTable
+function RPGlobals:TableClone(tbl)
+  return {table.unpack(tbl)}
+end
+
 -- Find out how many charges this item has
 function RPGlobals:GetItemMaxCharges(itemID)
   -- Local variables
@@ -340,6 +356,30 @@ function RPGlobals:InsideSquare(pos1, pos2, squareSize)
   else
     return false
   end
+end
+
+-- From the ProAPI
+function RPGlobals:RevivePlayer(item)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  player:Revive()
+  if item then
+      if type(item) == "table" and item.ID ~= nil then
+          item = item.ID
+      end
+      local d = player:GetData()
+      d.api_HoldingItem = item
+      d.api_HoldingFrame = 0
+  end
+  local enterDoor = level.EnterDoor
+  local door = room:GetDoor(enterDoor)
+  local direction = door and door.Direction or Direction.NO_DIRECTION
+  game:StartRoomTransition(level:GetPreviousRoomIndex(),direction,0)
+  level.LeaveDoor = enterDoor
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

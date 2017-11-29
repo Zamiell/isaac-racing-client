@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.14.8* - November 28th
+
+* The Checkpoint item will no longer have any pedestal delay.
+* Fixed the bug where the run timer would be misaligned if you did not have the Schoolbag.
+
 ### *v0.14.7* - November 24th
 
 * Adjusted Big Horn's "BigHoleOpen" animation length from 24 frames to 32 frames. (Thanks Krakenos)

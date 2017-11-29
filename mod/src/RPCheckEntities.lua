@@ -1119,6 +1119,11 @@ function RPCheckEntities:ReplacePedestal(entity)
   -- (this is commented out because people were accidentally taking items)
   --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
 
+  -- We never need to worry about players accidentally picking up Checkpoint
+  if entity.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
+    newPedestal:ToPickup().Wait = 0 -- On vanilla, all pedestals get a 20 frame delay
+  end
+
   -- Add it to the tracking table so that we don't replace it again
   -- (and don't add random items to the index in case a banned item rolls into another banned item)
   if randomItem == false then

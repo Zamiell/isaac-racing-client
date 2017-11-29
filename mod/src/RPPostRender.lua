@@ -4,16 +4,17 @@ local RPPostRender = {}
 -- Includes
 --
 
-local RPGlobals    = require("src/rpglobals")
-local RPSaveDat    = require("src/rpsavedat")
-local RPSprites    = require("src/rpsprites")
-local RPSchoolbag  = require("src/rpschoolbag")
-local RPSoulJar    = require("src/rpsouljar")
-local RPPostUpdate = require("src/rppostupdate")
-local RPItems      = require("src/rpitems")
-local RPFastTravel = require("src/rpfasttravel")
-local RPTimer      = require("src/rptimer")
-local RPSpeedrun   = require("src/rpspeedrun")
+local RPGlobals     = require("src/rpglobals")
+local RPSaveDat     = require("src/rpsavedat")
+local RPSprites     = require("src/rpsprites")
+local RPSchoolbag   = require("src/rpschoolbag")
+local RPSoulJar     = require("src/rpsouljar")
+local RPPostUpdate  = require("src/rppostupdate")
+local RPItems       = require("src/rpitems")
+local RPFastTravel  = require("src/rpfasttravel")
+local RPTimer       = require("src/rptimer")
+local RPSpeedrun    = require("src/rpspeedrun")
+local RPSeededDeath = require("src/rpseededdeath")
 
 --
 -- PostRender functions
@@ -50,6 +51,7 @@ function RPPostRender:Main()
   RPSoulJar:SpriteDisplay()
   RPTimer:Display()
   RPTimer:DisplayRun()
+  RPTimer:DisplayDebuff()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
@@ -375,6 +377,8 @@ function RPPostRender:Race()
     end
     return
   end
+
+  RPSeededDeath:PostRender()
 
   --
   -- Race validation stuff

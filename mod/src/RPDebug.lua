@@ -89,6 +89,7 @@ function RPDebug:Main()
   --RPGlobals.raceVars.finished = true
 
   -- New Booster Pack item images testing
+  RPSprites:Init("place", 1)
   --RPSprites:Init("diversity-item1", 530) -- Collectible
   --RPSprites:Init("diversity-item2", 531) -- Collectible
   --RPSprites:Init("diversity-item3", 532) -- Collectible
