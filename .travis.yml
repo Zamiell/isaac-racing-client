@@ -11,6 +11,8 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - FTP_USER=anonymous
+        - FTP_PASSWORD=travis
 
 # These directories will be cached between subsequent builds
 cache:
@@ -22,11 +24,30 @@ cache:
 # At this point, the current working directory is: /Users/travis/build/Zamiell/isaac-racing-client
 before_install:
   - |
-    # For Greenworks to successfully compile, it needs the Steamworks SDK
+    # For Greenworks to successfully compile, it needs the Steamworks SDK:
     # https://github.com/greenheartgames/greenworks/blob/master/docs/get-steamworks-sdk.md
-    # However, we have to install it first, or the general "npm install" will blow away the existing folder structure (including the downloaded dependencies)
+    # However, we have to install it individually first, as the following "npm install" by Travis will blow away the existing folder structure (including the downloaded dependencies)
     npm install --ignore-scripts git+https://github.com/greenheartgames/greenworks.git
     wget https://isaacracing.net/public/steamworks_sdk.tar.gz
-    mkdir -p node_modules/greenworks/deps
     tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
     rm -f steamworks_sdk.tar.gz
+
+# This will run after Travis does its "npm install" step
+script:
+  - |
+    npm dist
+
+# You are supposed to include this when uploading files
+deploy:
+  skip_cleanup: true
+
+# FTP the finished result
+# https://docs.travis-ci.com/user/deployment/custom/
+env:
+  global:
+    - "FTP_USER=anonymous"
+    - "FTP_PASSWORD=travis"
+after_success:
+    "echo TRAVIS COMPLETED"
+    "ls -l"
+    "curl --ftp-create-dirs -T macos -u $FTP_USER:$FTP_PASSWORD ftp://104.251.219.97/macos"

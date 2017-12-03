@@ -16,14 +16,18 @@
   "main": "./src/main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "build --dir",
-    "dist": "build",
-    "distPub": "build --ia32 --x64 --publish always --draft false"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "distPub": "electron-builder --ia32 --x64 --publish always --draft false",
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "org.electron.IsaacRacingPlus",
     "win": {
       "target": "nsis-web"
+    },
+    "mac": {
+      "category": "public.app-category.games"
     },
     "publish": {
       "provider": "github"
@@ -51,7 +55,6 @@
   "devDependencies": {
     "electron": "1.6.11",
     "electron-builder": "^19.30.1",
-    "electron-rebuild": "^1.6.0",
     "eslint": "^4.7.2",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0"
