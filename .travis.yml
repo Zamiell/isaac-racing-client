@@ -33,7 +33,7 @@ before_install:
 # This will run after Travis does its "npm install" step
 script:
   - |
-    npm dist
+    npm run dist
 
 # You are supposed to include this when uploading files
 deploy:
