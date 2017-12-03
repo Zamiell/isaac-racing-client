@@ -253,7 +253,7 @@ if (process.platform === 'win32') { // This will return "win32" even on 64-bit W
             globals.initError = 'Failed to find your "Documents" directory. Do you have a non-standard Windows installation? Please contact an administrator for help.';
         }
     }
-} else if (process.platform === 'darwin') { // OS X
+} else if (process.platform === 'darwin') { // macOS
     globals.defaultLogFilePath = path.join(process.env.HOME, 'Library', 'Application Support', 'Binding of Isaac Afterbirth+', 'log.txt');
 } else if (process.platform === 'linux') { // Linux
     globals.defaultLogFilePath = path.join(process.env.HOME, '.local', 'share', 'binding of isaac afterbirth+', 'log.txt');

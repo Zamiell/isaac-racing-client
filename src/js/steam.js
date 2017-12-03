@@ -137,6 +137,12 @@ function login() {
         ticket: globals.steam.ticket, // This will be verified on the server via the Steam web API
         version: globals.version,
     };
+    if (process.platform === 'darwin') { // macOS
+        // Normally, the server will not allow clients to login if they are running old versions
+        // However, on macOS, there is no auto-update mechanism currently
+        // Thus, we allow macOS users to login with older versions
+        postData.version = 'macOS';
+    }
     const url = `${globals.websiteURL}/login`;
 
     const request = $.ajax({

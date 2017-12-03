@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.14.9* - December 3rd
+
+* Racing+ should now work on macOS.
+* Using the "~" button to open the console will no longer work when you are currently in a race.
+
 ### *v0.14.8* - November 28th
 
 * The Checkpoint item will no longer have any pedestal delay.

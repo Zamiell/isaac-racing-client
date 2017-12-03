@@ -233,34 +233,42 @@ function createWindow() {
 }
 
 function autoUpdate() {
-    // Now that the window is created, check for updates
-    if (!isDev) {
-        autoUpdater.on('error', (err) => {
-            log.error(err.message);
-            Raven.captureException(err);
-            mainWindow.webContents.send('autoUpdater', 'error');
-        });
-
-        autoUpdater.on('checking-for-update', () => {
-            mainWindow.webContents.send('autoUpdater', 'checking-for-update');
-        });
-
-        autoUpdater.on('update-available', () => {
-            mainWindow.webContents.send('autoUpdater', 'update-available');
-        });
-
-        autoUpdater.on('update-not-available', () => {
-            mainWindow.webContents.send('autoUpdater', 'update-not-available');
-        });
-
-        autoUpdater.on('update-downloaded', (info) => {
-            log.info('updated-downloaded:', info);
-            mainWindow.webContents.send('autoUpdater', 'update-downloaded');
-        });
-
-        log.info('Checking for updates.');
-        autoUpdater.checkForUpdates();
+    // Don't check for updates when running the program from source
+    if (isDev) {
+        return;
     }
+
+    // Don't check for updates on macOS
+    if (process.platform === 'darwin') {
+        return;
+    }
+
+    // Now that the window is created, check for updates
+    autoUpdater.on('error', (err) => {
+        log.error(err.message);
+        Raven.captureException(err);
+        mainWindow.webContents.send('autoUpdater', 'error');
+    });
+
+    autoUpdater.on('checking-for-update', () => {
+        mainWindow.webContents.send('autoUpdater', 'checking-for-update');
+    });
+
+    autoUpdater.on('update-available', () => {
+        mainWindow.webContents.send('autoUpdater', 'update-available');
+    });
+
+    autoUpdater.on('update-not-available', () => {
+        mainWindow.webContents.send('autoUpdater', 'update-not-available');
+    });
+
+    autoUpdater.on('update-downloaded', (info) => {
+        log.info('updated-downloaded:', info);
+        mainWindow.webContents.send('autoUpdater', 'update-downloaded');
+    });
+
+    log.info('Checking for updates.');
+    autoUpdater.checkForUpdates();
 }
 
 function registerKeyboardHotkeys() {
@@ -342,7 +350,7 @@ app.on('ready', () => {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
+    // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
         app.quit();
@@ -350,7 +358,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
+    // On macOS it is common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
         createWindow();
