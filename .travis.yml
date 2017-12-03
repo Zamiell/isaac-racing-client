@@ -19,17 +19,14 @@ cache:
   - $HOME/.cache/electron
   - $HOME/.cache/electron-builder
 
-# At this point, the current working directory is at the base of the repository
+# At this point, the current working directory is: /Users/travis/build/Zamiell/isaac-racing-client
 before_install:
   - |
-    pwd && wget https://isaacracing.net/public/steamworks_sdk.tar.gz && mkdir -p node_modules/greenworks/deps && tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
-    echo Step 1
-    ls -l
-    echo Step 2
-    ls -l node_modules
-    echo Step 3
-    ls -l node_modules/greenworks
-    echo Step 4
-    ls -l node_modules/greenworks/deps
-    echo Step 5
-    ls -l node_modules/greenworks/deps/steamworks_sdk
+    # For Greenworks to successfully compile, it needs the Steamworks SDK
+    # https://github.com/greenheartgames/greenworks/blob/master/docs/get-steamworks-sdk.md
+    # However, we have to install it first, or the general "npm install" will blow away the existing folder structure (including the downloaded dependencies)
+    npm install --ignore-scripts git+https://github.com/greenheartgames/greenworks.git
+    wget https://isaacracing.net/public/steamworks_sdk.tar.gz
+    mkdir -p node_modules/greenworks/deps
+    tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
+    rm -f steamworks_sdk.tar.gz
