@@ -1,3 +1,7 @@
+# ------------------------------
+# gitignore template from GitHub
+# ------------------------------
+
 # Logs
 logs
 *.log
@@ -37,8 +41,9 @@ jspm_packages
 .node_repl_history
 
 # -------------------------
-# Isaac Racing Client Stuff
+# isaac-racing-client Stuff
 # -------------------------
+
 .env
 settings.json
 dist

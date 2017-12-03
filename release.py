@@ -161,7 +161,9 @@ if not ARGS.skipmod:
     # Write the dictionary to a JSON file
     SHA1_FILE_PATH = os.path.join(MOD_DIR2, 'sha1.json')
     with open(SHA1_FILE_PATH, 'w') as file_pointer:
-        json.dump(HASHES, file_pointer, separators=(',', ':')) # We specify separators because it uses some whitespace by default
+        # By default the JSON will be all combined into a single line, so we specify the indent to make it pretty
+        # By default the JSON will be dumped in a random order, so we use "sort_keys" to make it alphabetical
+        json.dump(HASHES, file_pointer, indent=4, sort_keys=True)
 
 # Exit if we are only supposed to be doing work on the mod
 if ARGS.mod:

@@ -480,6 +480,11 @@ const statusTimer = (raceID) => {
     }
     const race = globals.raceList[raceID];
 
+    // Don't replace anything if this race is not in progress
+    if (race.status !== 'in progress') {
+        return;
+    }
+
     // Get the elapsed time in the race and set it to the div
     const now = new Date().getTime();
     const raceMilliseconds = now - race.datetimeStarted; // Don't use the offset because we are keeping track of when races start locally

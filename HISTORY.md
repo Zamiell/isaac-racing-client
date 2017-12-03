@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.14.9* - Unreleased
+
+* Fixed the bug where a bunch of numbers would show as the status for a race in the lobby under certain conditions. (Thanks PassionDrama)
+
 ### *v0.14.9* - December 3rd
 
 * Racing+ should now work on macOS.
