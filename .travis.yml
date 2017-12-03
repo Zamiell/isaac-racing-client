@@ -11,8 +11,6 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-        - FTP_USER=anonymous
-        - FTP_PASSWORD=travis
 
 # These directories will be cached between subsequent builds
 cache:
