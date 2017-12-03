@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "electron-is-dev": "^0.3.0",
-    "electron-updater": "^2.10.0",
+    "electron-updater": "^2.16.3",
     "fs-extra": "^4.0.2",
     "greenworks": "git+https://github.com/greenheartgames/greenworks.git",
     "hash-files": "^1.1.1",
