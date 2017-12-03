@@ -19,20 +19,17 @@ cache:
   - $HOME/.cache/electron
   - $HOME/.cache/electron-builder
 
+# At this point, the current working directory is at the base of the repository
 before_install:
   - |
-    wget https://isaacracing.net/public/steamworks_sdk.tar.gz && mkdir -p Zamiell/isaac-racing-client/node_modules/greenworks/deps && tar xzf steamworks_sdk.tar.gz --directory Zamiell/isaac-racing-client/node_modules/greenworks/deps
+    pwd && wget https://isaacracing.net/public/steamworks_sdk.tar.gz && mkdir -p node_modules/greenworks/deps && tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
     echo Step 1
     ls -l
     echo Step 2
-    ls -l Zamiell
+    ls -l node_modules
     echo Step 3
-    ls -l Zamiell/isaac-racing-client
+    ls -l node_modules/greenworks
     echo Step 4
-    ls -l Zamiell/isaac-racing-client/node_modules
+    ls -l node_modules/greenworks/deps
     echo Step 5
-    ls -l Zamiell/isaac-racing-client/node_modules/greenworks
-    echo Step 6
-    ls -l Zamiell/isaac-racing-client/node_modules/greenworks/deps
-    echo Step 7
-    ls -l Zamiell/isaac-racing-client/node_modules/greenworks/deps/steamworks_sdk
+    ls -l node_modules/greenworks/deps/steamworks_sdk
