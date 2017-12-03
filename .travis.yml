@@ -21,7 +21,7 @@ cache:
 
 before_install:
   - |
-    wget https://isaacracing.net/public/steamworks_sdk.tar.gz && tar -cxzf steamworks_sdk.tar.gz Zamiell/isaac-racing-client/node_modules/greenworks/deps
+    wget https://isaacracing.net/public/steamworks_sdk.tar.gz && tar xzf steamworks_sdk.tar.gz --directory Zamiell/isaac-racing-client/node_modules/greenworks/deps
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
