@@ -41,7 +41,7 @@ deploy:
 
 # FTP the finished result
 # https://docs.travis-ci.com/user/deployment/custom/
-after_success:
-    - echo TRAVIS COMPLETED
-    - ls -l
-    - curl --ftp-create-dirs -T macos -u anonymous:travis ftp://104.251.219.97/macos
+#after_success:
+    #- echo TRAVIS COMPLETED
+    #- ls -l
+    #- curl --ftp-create-dirs -T macos -u anonymous:travis ftp://104.251.219.97/macos
