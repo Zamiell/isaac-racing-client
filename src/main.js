@@ -85,6 +85,15 @@ let mainWindow;
 // Keep a global reference of the window object
 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
 const childProcesses = {};
+const childProcessNames = [
+    'steam',
+    'log-watcher',
+    'steam-water',
+    'isaac',
+];
+for (const childProcessName of childProcessNames) {
+    childProcesses[childProcessName] = null;
+}
 let errorHappened = false;
 
 // Logging (code duplicated between main and renderer because of require/nodeRequire issues)
@@ -143,7 +152,6 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
         return data;
     },
     shouldSendCallback: (data) => {
-        log.info('shouldSendCallback');
         log.info(data);
     },
 }).install();
