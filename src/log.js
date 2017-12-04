@@ -5,6 +5,7 @@ let isDev;
 let tracer;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
+    /* eslint-disable global-require */
     os = require('os');
     path = require('path');
     isDev = require('electron-is-dev');
@@ -21,7 +22,9 @@ if (typeof nodeRequire === 'undefined') {
 // (this is called in both the main and renderer processes)
 let logRoot;
 if (isDev) {
-    // For development, this puts the log file in the root of the repository
+    // In development, "__dirname" is:
+    // "C:\Repositories\isaac-racing-client\src"
+    // We want the log file in the root of the repository
     logRoot = path.join(__dirname, '..');
 } else if (process.platform === 'darwin') {
     // We want the log file in the macOS user's "Logs" directory

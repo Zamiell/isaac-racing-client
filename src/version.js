@@ -4,6 +4,7 @@ let path;
 let isDev;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
+    /* eslint-disable global-require */
     fs = require('fs-extra');
     path = require('path');
     isDev = require('electron-is-dev');
@@ -17,7 +18,9 @@ if (typeof nodeRequire === 'undefined') {
 // Get the version of the client (from the "package.json" file)
 let basePath;
 if (isDev) {
-    // In development, this is the root of the repository
+    // In development, "__dirname" is:
+    // "C:\Repositories\isaac-racing-client\src"
+    // The package file is in the root of the repository
     basePath = path.join(__dirname, '..');
 } else if (process.platform === 'darwin') {
     // On a bundled macOS app, this is:

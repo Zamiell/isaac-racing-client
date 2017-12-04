@@ -13,6 +13,7 @@ let isDev;
 let teeny;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
+    /* eslint-disable global-require */
     os = require('os');
     path = require('path');
     isDev = require('electron-is-dev');
@@ -29,7 +30,9 @@ if (typeof nodeRequire === 'undefined') {
 // (this is called in both the main and renderer processes)
 let settingsRoot;
 if (isDev) {
-    // For development, this puts the settings file in the root of the repository
+    // In development, "__dirname" is:
+    // "C:\Repositories\isaac-racing-client\src"
+    // We want the settings file in the root of the repository
     settingsRoot = path.join(__dirname, '..');
 } else if (process.platform === 'darwin') {
     // By convention, settings files are usually stored in the "Application Support" directory

@@ -293,8 +293,9 @@ function startChildProcess(name) {
     let childProcessBasePath;
     const childProcessOptions = {};
     if (isDev) {
-        // In development, "__dirname" should be the root of the repository
-        childProcessBasePath = path.join(__dirname, 'src');
+        // In development, "__dirname" is:
+        // "C:\Repositories\isaac-racing-client\src"
+        childProcessBasePath = __dirname;
     } else if (process.platform === 'darwin') {
         // On a bundled macOS app, "__dirname" is:
         // "/Applications/Racing+.app"
