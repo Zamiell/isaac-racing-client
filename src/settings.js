@@ -7,10 +7,23 @@
 // "teeny-conf" is used instead of localstorage (cookies) because the main Electron process is not able to natively access cookies, and we might want to do that.
 
 // Imports
-const os = require('os');
-const path = require('path');
-const isDev = require('electron-is-dev');
-const teeny = require('teeny-conf');
+let os;
+let path;
+let isDev;
+let teeny;
+if (typeof nodeRequire === 'undefined') {
+    // We are in the main process
+    os = require('os');
+    path = require('path');
+    isDev = require('electron-is-dev');
+    teeny = require('teeny-conf');
+} else {
+    // We are in the renderer process
+    os = nodeRequire('os');
+    path = nodeRequire('path');
+    isDev = nodeRequire('electron-is-dev');
+    teeny = nodeRequire('teeny-conf');
+}
 
 // Initialize the settings file
 // (this is called in both the main and renderer processes)

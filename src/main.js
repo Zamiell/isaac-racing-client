@@ -316,7 +316,7 @@ function startChildProcess(name) {
     // Start it
     const childProcessPath = path.join(childProcessBasePath, name);
     childProcesses[name] = fork(childProcessPath, childProcessOptions);
-    log.info(`Started the "${name}" child process.`);
+    log.info(`Started the "${childProcessPath}" child process:`);
 
     // Receive notifications from the child process
     childProcesses[name].on('message', (message) => {

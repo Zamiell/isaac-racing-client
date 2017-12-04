@@ -1,8 +1,21 @@
 // Imports
-const os = require('os');
-const path = require('path');
-const isDev = require('electron-is-dev');
-const tracer = require('tracer');
+let os;
+let path;
+let isDev;
+let tracer;
+if (typeof nodeRequire === 'undefined') {
+    // We are in the main process
+    os = require('os');
+    path = require('path');
+    isDev = require('electron-is-dev');
+    tracer = require('tracer');
+} else {
+    // We are in the renderer process
+    os = nodeRequire('os');
+    path = nodeRequire('path');
+    isDev = nodeRequire('electron-is-dev');
+    tracer = nodeRequire('tracer');
+}
 
 // Initialize the logger
 // (this is called in both the main and renderer processes)
