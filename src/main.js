@@ -333,7 +333,10 @@ function startChildProcess(name) {
 
     // Track when the process exits
     childProcesses[name].on('exit', () => {
-        mainWindow.webContents.send(name, 'exited');
+        // If the user is exiting the program, the main window might have already closed, so check for that
+        if (mainWindow !== null) {
+            mainWindow.webContents.send(name, 'exited');
+        }
     });
 }
 
