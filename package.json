@@ -16,7 +16,7 @@
   "main": "./src/main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
+    "pack": "electron-builder --dir --publish never",
     "dist": "electron-builder --publish never",
     "distPub": "electron-builder --ia32 --x64 --publish always --draft false",
     "postinstall": "electron-builder install-app-deps"
