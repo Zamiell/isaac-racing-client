@@ -25,7 +25,7 @@ if (isDev) {
 } else if (process.platform === 'darwin') {
     // On a bundled macOS app, this is:
     // "/Applications/Racing+/Contents/Resources/app.asar/"
-    basePath = path.join(__dirname, 'Contents', 'Resources', 'app.asar');
+    basePath = path.join(__dirname, '..');
 } else {
     // On a bundled Windows app, this is:
     // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\"

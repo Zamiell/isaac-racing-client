@@ -36,7 +36,7 @@ if (isDev) {
     settingsRoot = path.join(__dirname, '..');
 } else if (process.platform === 'darwin') {
     // By convention, settings files are usually stored in the "Application Support" directory
-    settingsRoot = path.join(os.homedir(), 'Application Support', 'Racing+');
+    settingsRoot = path.join(os.homedir(), 'Library', 'Application Support', 'Racing+');
 } else {
     // On a bundled Windows app, "__dirname" is:
     // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"

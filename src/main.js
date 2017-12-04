@@ -298,12 +298,12 @@ function startChildProcess(name) {
         childProcessBasePath = __dirname;
     } else if (process.platform === 'darwin') {
         // On a bundled macOS app, "__dirname" is:
-        // "/Applications/Racing+.app"
-        childProcessBasePath = path.join(__dirname, 'Contents', 'Resources', 'app.asar', 'src');
+        // "/Applications/Racing+.app/Contents/Resources/app.asar/src"
+        childProcessBasePath = __dirname;
 
         // There are problems when forking inside of an ASAR archive
         // See: https://github.com/electron/electron/issues/2708
-        childProcessOptions.cwd = path.join(__dirname, 'Contents', 'Resources');
+        childProcessOptions.cwd = path.join(__dirname, '..', '..');
     } else {
         // On a bundled Windows app, "__dirname" is:
         // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"
@@ -314,8 +314,21 @@ function startChildProcess(name) {
         childProcessOptions.cwd = path.join(__dirname, '..', '..');
     }
 
-    // Start it
+    // Validate that we got the path calculation correct
     const childProcessPath = path.join(childProcessBasePath, name);
+    /*
+    try {
+        if (!fs.existsSync(childProcessPath)) {
+            log.error(`Attempted to start the child process of "${childProcessPath}", but that file does not exist.`);
+            return;
+        }
+    } catch (err) {
+        log.error(`Failed to check if the "${childProcessPath}" exists: ${err}`);
+        return;
+    }
+    */
+
+    // Start it
     childProcesses[name] = fork(childProcessPath, childProcessOptions);
     log.info(`Started the "${childProcessPath}" child process:`);
 

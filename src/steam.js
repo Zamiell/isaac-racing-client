@@ -9,6 +9,8 @@ const Raven = require('raven');
 const greenworks = require('greenworks'); // This is not an NPM module
 const version = require('./version');
 
+procoss.send('hi: ' + __dirname);
+
 // Handle errors
 process.on('uncaughtException', (err) => {
     greenworksGotError(err);
