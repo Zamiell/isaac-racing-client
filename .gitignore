@@ -45,5 +45,6 @@ jspm_packages
 # -------------------------
 
 .env
+.DS_Store
 settings.json
 dist
