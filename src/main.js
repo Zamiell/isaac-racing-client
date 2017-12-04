@@ -84,10 +84,7 @@ const globals = require('./js/globals.js');
 let mainWindow;
 // Keep a global reference of the window object
 // (otherwise the window will be closed automatically when the JavaScript object is garbage collected)
-let childLogWatcher = null;
-let childSteamWatcher = null;
-let childSteam = null;
-let childIsaac = null;
+const childProcesses = {};
 let errorHappened = false;
 
 // Logging (code duplicated between main and renderer because of require/nodeRequire issues)
@@ -328,6 +325,52 @@ function registerKeyboardHotkeys() {
     }
 }
 
+function startChildProcess(name) {
+    // Our starting location in the directory structure will be different depending certain factors
+    let childProcessBasePath;
+    const childProcessOptions = {};
+    if (isDev) {
+        // In development, "__dirname" should be the root of the repository
+        childProcessBasePath = path.join(__dirname, 'src');
+    } else if (process.platform === 'darwin') {
+        // There are problems when forking inside of an ASAR archive
+        // See: https://github.com/electron/electron/issues/2708
+        // On a bundled macOS app, "__dirname" is:
+        // "/Applications/Racing+.app"
+        childProcessBasePath = path.join(__dirname, 'Contents', 'Resources', 'app.asar', 'src');
+        childProcessOptions.cwd = path.join(__dirname, 'Contents', 'Resources');
+    } else {
+        // There are problems when forking inside of an ASAR archive
+        // See: https://github.com/electron/electron/issues/2708
+        // On a bundled Windows app, "__dirname" is:
+        // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"
+        childProcessBasePath = path.join(__dirname, 'app.asar', 'src');
+        childProcessOptions.cwd = path.join(__dirname, '..', '..');
+    }
+
+    // Start it
+    const childProcessPath = path.join(childProcessBasePath, name);
+    childProcesses[name] = fork(childProcessPath, childProcessOptions);
+    log.info(`Started the "${name}" child process.`);
+
+    // Receive notifications from the child process
+    childProcesses[name].on('message', (message) => {
+        // Pass the message to the renderer (browser) process
+        mainWindow.webContents.send(name, message);
+    });
+
+    // Track errors
+    childProcesses[name].on('error', (err) => {
+        // Pass the error to the renderer (browser) process
+        mainWindow.webContents.send(name, `error: ${err}`);
+    });
+
+    // Track when the process exits
+    childProcesses[name].on('exit', () => {
+        mainWindow.webContents.send(name, 'exited');
+    });
+}
+
 /*
     Application handlers
 */
@@ -469,17 +512,10 @@ app.on('will-quit', () => {
     globalShortcut.unregisterAll();
 
     // Tell the child processes to exit (in Node, they will live forever even if the parent closes)
-    if (childSteam !== null) {
-        childSteam.send('exit');
-    }
-    if (childLogWatcher !== null) {
-        childLogWatcher.send('exit');
-    }
-    if (childSteamWatcher !== null) {
-        childSteamWatcher.send('exit');
-    }
-    if (childIsaac !== null) {
-        childIsaac.send('exit');
+    for (const childProcess of Object.values(childProcesses)) {
+        if (childProcess !== null) {
+            childProcess.send('exit');
+        }
     }
 });
 
@@ -510,121 +546,32 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
         mainWindow.webContents.openDevTools();
     } else if (arg1 === 'error') {
         errorHappened = true;
-    } else if (arg1 === 'steam' && childSteam === null) {
+    } else if (arg1 === 'steam' && childProcesses.steam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
         // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
-        if (isDev) {
-            childSteam = fork('./src/steam');
-        } else {
-            // There are problems when forking inside of an ASAR archive
-            // See: https://github.com/electron/electron/issues/2708
-            childSteam = fork('./app.asar/src/steam', {
-                cwd: path.join(__dirname, '..', '..'),
-            });
-        }
-        log.info('Started the Greenworks child process.');
-
-        // Receive notifications from the child process
-        childSteam.on('message', (message) => {
-            // Pass the message to the renderer (browser) process
-            mainWindow.webContents.send('steam', message);
-        });
-
-        // Track errors
-        childSteam.on('error', (err) => {
-            // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('steam', `error: ${err}`);
-        });
-
-        // Track when the process exits
-        childSteam.on('exit', () => {
-            mainWindow.webContents.send('steam', 'exited');
-        });
+        startChildProcess('steam');
     } else if (arg1 === 'steamExit') {
         // The renderer has successfully authenticated and is now establishing a WebSocket connection, so we can kill the Greenworks process
-        if (childSteam !== null) {
-            childSteam.send('exit');
+        if (childProcesses.steam !== null) {
+            childProcesses.steam.send('exit');
         }
-    } else if (arg1 === 'logWatcher' && childLogWatcher === null) {
+    } else if (arg1 === 'logWatcher' && childProcesses['log-watcher'] === null) {
         // Start the log watcher in a separate process for performance reasons
-        if (isDev) {
-            childLogWatcher = fork('./src/log-watcher');
-        } else {
-            // There are problems when forking inside of an ASAR archive
-            // See: https://github.com/electron/electron/issues/2708
-            childLogWatcher = fork('./app.asar/src/log-watcher', {
-                cwd: path.join(__dirname, '..', '..'),
-            });
-        }
-        log.info('Started the log watcher child process.');
-
-        // Receive notifications from the child process
-        childLogWatcher.on('message', (message) => {
-            // Pass the message to the renderer (browser) process
-            mainWindow.webContents.send('logWatcher', message);
-        });
-
-        // Track errors
-        childLogWatcher.on('error', (err) => {
-            // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('logWatcher', `error: ${err}`);
-        });
+        startChildProcess('log-watcher');
 
         // Feed the child the path to the Isaac log file
-        childLogWatcher.send(arg2);
-    } else if (arg1 === 'steamWatcher' && childSteamWatcher === null) {
+        childProcesses['log-watcher'].send(arg2);
+    } else if (arg1 === 'steamWatcher' && childProcesses['steam-watcher'] === null) {
         // Start the log watcher in a separate process for performance reasons
-        if (isDev) {
-            childSteamWatcher = fork('./src/steam-watcher');
-        } else {
-            // There are problems when forking inside of an ASAR archive
-            // See: https://github.com/electron/electron/issues/2708
-            childSteamWatcher = fork('./app.asar/src/steam-watcher', {
-                cwd: path.join(__dirname, '..', '..'),
-            });
-        }
-        log.info('Started the Steam watcher child process.');
-
-        // Receive notifications from the child process
-        childSteamWatcher.on('message', (message) => {
-            // Pass the message to the renderer (browser) process
-            mainWindow.webContents.send('steamWatcher', message);
-        });
-
-        // Track errors
-        childSteamWatcher.on('error', (err) => {
-            // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('steamWatcher', `error: ${err}`);
-        });
+        startChildProcess('steam-watcher');
 
         // Feed the child the ID of the Steam user
-        childSteamWatcher.send(arg2);
-    } else if (arg1 === 'isaac') {
+        childProcesses['steam-watcher'].send(arg2);
+    } else if (arg1 === 'isaac' && childProcesses.isaac === null) {
         // Start the Isaac launcher in a separate process for performance reasons
-        if (isDev) {
-            childIsaac = fork('./src/isaac');
-        } else {
-            // There are problems when forking inside of an ASAR archive
-            // See: https://github.com/electron/electron/issues/2708
-            childIsaac = fork('./app.asar/src/isaac', {
-                cwd: path.join(__dirname, '..', '..'),
-            });
-        }
-        log.info('Started the Isaac launcher child process with an argument of:', arg2);
-
-        // Receive notifications from the child process
-        childIsaac.on('message', (message) => {
-            // Pass the message to the renderer (browser) process
-            mainWindow.webContents.send('isaac', message);
-        });
-
-        // Track errors
-        childIsaac.on('error', (err) => {
-            // Pass the error to the renderer (browser) process
-            mainWindow.webContents.send('isaac', `error: ${err}`);
-        });
+        startChildProcess('isaac');
 
         // Feed the child the path to the Isaac mods directory and the "force" boolean
-        childIsaac.send(arg2);
+        childProcesses.isaac.send(arg2);
     }
 });

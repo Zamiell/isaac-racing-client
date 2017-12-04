@@ -163,8 +163,9 @@ if (isDev) {
     // We want the log file in the macOS user's "Logs" directory
     logRoot = path.join(os.homedir(), 'Library', 'Logs');
 } else {
-    // For production, this puts the log file in the "Programs" directory
-    // (the __dirname is "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src")
+    // On a bundled Windows app, "__dirname" is:
+    // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"
+    // We want the log file in the "Programs" directory
     logRoot = path.join(__dirname, '..', '..', '..', '..');
 }
 globals.log = tracer.dailyfile({

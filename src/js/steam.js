@@ -51,21 +51,23 @@ ipcRenderer.on('steam', (event, message) => {
         globals.steam.screenName = message.screenName;
         globals.steam.ticket = message.ticket;
         login();
-    } else if (
+        return;
+    }
+
+    // The child process is sending us a message to log
+    globals.log.info(`Steam child message: ${message}`);
+
+    if (
         message === 'errorInit' ||
         message.startsWith('error: Error: channel closed') ||
         message.startsWith('error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.')
     ) {
         // Don't bother sending these messages to Sentry; the user not having Steam open is a fairly ordinary error
-        globals.log.info(message);
         misc.errorShow('Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.', false);
     } else if (message.startsWith('error: ')) {
         // This is some other uncommon error
         const error = message.match(/error: (.+)/)[1];
         misc.errorShow(error);
-    } else {
-        // The child process is sending us a message to log
-        globals.log.info(`Steam child message: ${message}`);
     }
 });
 
