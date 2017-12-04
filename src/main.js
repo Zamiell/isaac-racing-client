@@ -129,7 +129,7 @@ const log = tracer.dailyfile({
 });
 
 // Get the version
-const packageFileLocation = path.join(__dirname, '..', 'package.json');
+let packageFileLocation = path.join(__dirname, '..', 'package.json');
 const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
 const version = `v${JSON.parse(packageFile).version}`;
 
@@ -341,18 +341,20 @@ function startChildProcess(name) {
         // In development, "__dirname" should be the root of the repository
         childProcessBasePath = path.join(__dirname, 'src');
     } else if (process.platform === 'darwin') {
-        // There are problems when forking inside of an ASAR archive
-        // See: https://github.com/electron/electron/issues/2708
         // On a bundled macOS app, "__dirname" is:
         // "/Applications/Racing+.app"
         childProcessBasePath = path.join(__dirname, 'Contents', 'Resources', 'app.asar', 'src');
-        childProcessOptions.cwd = path.join(__dirname, 'Contents', 'Resources');
-    } else {
+
         // There are problems when forking inside of an ASAR archive
         // See: https://github.com/electron/electron/issues/2708
+        childProcessOptions.cwd = path.join(__dirname, 'Contents', 'Resources');
+    } else {
         // On a bundled Windows app, "__dirname" is:
         // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"
         childProcessBasePath = path.join(__dirname, 'app.asar', 'src');
+
+        // There are problems when forking inside of an ASAR archive
+        // See: https://github.com/electron/electron/issues/2708
         childProcessOptions.cwd = path.join(__dirname, '..', '..');
     }
 
