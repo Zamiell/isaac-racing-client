@@ -76,6 +76,7 @@ Bugs to fix (low priority):
 */
 
 // Import NPM packages
+const os = nodeRequire('os');
 const path = nodeRequire('path');
 const { execSync } = nodeRequire('child_process');
 const { remote } = nodeRequire('electron');
@@ -156,6 +157,11 @@ let logRoot;
 if (isDev) {
     // For development, this puts the log file in the root of the repository
     logRoot = path.join(__dirname, '..');
+} else if (process.platform === 'darwin') {
+    // On a bundled macOS app, "__dirname" is:
+    // "/Applications/Racing+.app"
+    // We want the log file in the macOS user's "Logs" directory
+    logRoot = path.join(os.homedir(), 'Library', 'Logs');
 } else {
     // For production, this puts the log file in the "Programs" directory
     // (the __dirname is "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src")

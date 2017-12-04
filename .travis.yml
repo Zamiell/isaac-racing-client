@@ -30,6 +30,9 @@ before_install:
   tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
   rm -f steamworks_sdk.tar.gz
 
+after_install:
+  - 'node_modules\.bin\electron-rebuild'
+
 # This will run after Travis does its "npm install" step
 script:
 - 'npm run dist'
@@ -42,7 +45,7 @@ deploy:
   file_glob: true
   file: "dist/*.dmg"
   on:
-    #tags: true
+    tags: true
     branch: master
 
 notifications:
