@@ -6,11 +6,10 @@
 const fs = require('fs-extra');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
-const greenworks = require('greenworks'); // This is not an NPM module
+// const greenworks = require('greenworks'); // This is not an NPM module
 const version = require('./version');
 
-process.send('hi: ' + __dirname);
-
+/*
 // Handle errors
 process.on('uncaughtException', (err) => {
     greenworksGotError(err);
@@ -38,11 +37,13 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     release: version,
     environment: (isDev ? 'development' : 'production'),
 }).install();
+*/
 
 /*
     Greenworks stuff
 */
 
+/*
 function greenworksInit() {
     // Create the "steam_appid.txt" that Greenworks expects to find in:
     //   C:\Users\james\AppData\Local\Programs\RacingPlus\steam_appid.txt (in production)
@@ -70,6 +71,7 @@ function greenworksInit() {
 
     // Get the object that contains the computer's Steam ID and screen name
     const steamIDObject = greenworks.getSteamId();
+    */
 
     /*
         The object will look something like the following:
@@ -101,6 +103,7 @@ function greenworksInit() {
         }
     */
 
+    /*
     // Check to see if it is valid
     // (I'm not sure what governs this, but probably best to check it to be thorough)
     if (steamIDObject.isValid !== 1) {
@@ -126,3 +129,4 @@ function greenworksInit() {
 }
 
 greenworksInit();
+*/
