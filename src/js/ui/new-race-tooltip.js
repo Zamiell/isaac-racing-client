@@ -3,8 +3,8 @@
 */
 
 // Imports
+const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
-const settings = nodeRequire('./js/settings');
 const misc = nodeRequire('./js/misc');
 const builds = nodeRequire('./data/builds');
 

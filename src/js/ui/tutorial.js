@@ -3,8 +3,8 @@
 */
 
 // Imports
+const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
-const settings = nodeRequire('./js/settings');
 
 $(document).ready(() => {
     if (settings.get('tutorial') === 'true') {

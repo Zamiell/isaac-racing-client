@@ -61,7 +61,6 @@ Other notes:
 
 // Imports
 const fs = require('fs-extra');
-const os = require('os');
 const path = require('path');
 const { execFile, fork } = require('child_process');
 const {
@@ -74,11 +73,12 @@ const {
 const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
 const isDev = require('electron-is-dev');
-const tracer = require('tracer');
 const Raven = require('raven');
-const teeny = require('teeny-conf');
 const opn = require('opn');
-const globals = require('./js/globals.js');
+const globals = require('./js/globals');
+const version = require('./version');
+const log = require('./log');
+const settings = require('./settings');
 
 // Global variables
 let mainWindow;
@@ -96,43 +96,7 @@ for (const childProcessName of childProcessNames) {
 }
 let errorHappened = false;
 
-// Logging (code duplicated between main and renderer because of require/nodeRequire issues)
-let logRoot;
-if (isDev) {
-    // For development, this puts the log file in the root of the repository
-    logRoot = path.join(__dirname, '..');
-} else if (process.platform === 'darwin') {
-    // On a bundled macOS app, "__dirname" is:
-    // "/Applications/Racing+.app"
-    // We want the log file in the macOS user's "Logs" directory
-    logRoot = path.join(os.homedir(), 'Library', 'Logs');
-} else {
-    // On a bundled Windows app, "__dirname" is:
-    // "C:\Users\[Username]\AppData\Local\Programs\RacingPlus\resources\app.asar\src"
-    // We want the log file in the "Programs" directory
-    logRoot = path.join(__dirname, '..', '..', '..', '..');
-}
-const log = tracer.dailyfile({
-    // Log file settings
-    root: logRoot,
-    logPathFormat: '{{root}}/Racing+ {{date}}.log',
-    splitFormat: 'yyyy-mm-dd',
-    maxLogFiles: 10,
-
-    // Global tracer settings
-    format: '{{timestamp}} <{{title}}> {{file}}:{{line}} - {{message}}',
-    dateformat: 'ddd mmm dd HH:MM:ss Z',
-    transport: (data) => {
-        // Log errors to the JavaScript console in addition to the log file
-        console.log(data.output);
-    },
-});
-
-// Get the version
-let packageFileLocation = path.join(__dirname, '..', 'package.json');
-const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
-const version = `v${JSON.parse(packageFile).version}`;
-
+// Welcome message
 const middleLine = `Racing+ client ${version} started!`;
 let separatorLine = '';
 for (let i = 0; i < middleLine.length; i++) {
@@ -155,15 +119,6 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
         log.info(data);
     },
 }).install();
-
-/*
-    Settings (through persistent storage)
-*/
-
-// Open the file that contains all of the user's settings
-const settingsFile = path.join(logRoot, 'settings.json'); // This will be created if it does not exist already
-const settings = new teeny(settingsFile); // eslint-disable-line new-cap
-settings.loadOrCreateSync();
 
 /*
     Subroutines

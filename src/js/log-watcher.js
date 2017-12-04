@@ -5,8 +5,8 @@
 // Imports
 const fs = nodeRequire('fs-extra');
 const { ipcRenderer } = nodeRequire('electron');
+const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
-const settings = nodeRequire('./js/settings');
 const modLoader = nodeRequire('./js/mod-loader');
 const misc = nodeRequire('./js/misc');
 const raceScreen = nodeRequire('./js/ui/race');

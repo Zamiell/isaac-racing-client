@@ -6,8 +6,8 @@
 const path = nodeRequire('path');
 const { ipcRenderer } = nodeRequire('electron');
 const fs = nodeRequire('fs-extra');
+const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
-const settings = nodeRequire('./js/settings');
 
 // Create a custom error type so that the Raven dataCallback knows not to go back to the errorShow function
 // The new error object will prototypically inherit from the Error constructor

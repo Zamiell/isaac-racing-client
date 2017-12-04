@@ -4,10 +4,8 @@
 
 // Imports
 const { remote } = nodeRequire('electron');
-const fs = nodeRequire('fs-extra');
-const path = nodeRequire('path');
+const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
-const settings = nodeRequire('./js/settings');
 const misc = nodeRequire('./js/misc');
 const localization = nodeRequire('./js/localization');
 

@@ -4,9 +4,9 @@
 
 // Imports
 const fs = require('fs-extra');
-const path = require('path');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
+const version = require('./version');
 
 // Handle errors
 process.on('uncaughtException', (err) => {
@@ -15,11 +15,6 @@ process.on('uncaughtException', (err) => {
 const processExit = () => {
     process.exit();
 };
-
-// Get the version
-const packageFileLocation = path.join(__dirname, '..', 'package.json');
-const packageFile = fs.readFileSync(packageFileLocation, 'utf8');
-const version = `v${JSON.parse(packageFile).version}`;
 
 // Raven (error logging to Sentry)
 Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb86908446e5c9d@sentry.io/124813', {
