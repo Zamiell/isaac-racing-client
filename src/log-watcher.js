@@ -40,6 +40,7 @@ process.on('message', (message) => {
         process.send(`error: The "${logPath}" file does not exist.`, processExit);
         return;
     }
+    process.send(`Starting to watch log file: ${logPath}`);
 
     // Before we start to monitor the log file for new lines, we first want to read all of the existing log file to look for the save slot
     // Otherwise, the Racing+ client may not work properly if, for example, the user opens up the game, goes on save file 3,

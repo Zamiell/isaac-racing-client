@@ -526,13 +526,13 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
         if (childProcesses.steam !== null) {
             childProcesses.steam.send('exit');
         }
-    } else if (arg1 === 'logWatcher' && childProcesses['log-watcher'] === null) {
+    } else if (arg1 === 'log-watcher' && childProcesses['log-watcher'] === null) {
         // Start the log watcher in a separate process for performance reasons
         startChildProcess('log-watcher');
 
         // Feed the child the path to the Isaac log file
         childProcesses['log-watcher'].send(arg2);
-    } else if (arg1 === 'steamWatcher' && childProcesses['steam-watcher'] === null) {
+    } else if (arg1 === 'steam-watcher' && childProcesses['steam-watcher'] === null) {
         // Start the log watcher in a separate process for performance reasons
         startChildProcess('steam-watcher');
 

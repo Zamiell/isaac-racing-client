@@ -46,12 +46,12 @@ exports.start = () => {
     }
 
     // Send a message to the main process to start up the log watcher
-    ipcRenderer.send('asynchronous-message', 'logWatcher', logPath);
+    ipcRenderer.send('asynchronous-message', 'log-watcher', logPath);
     return true;
 };
 
 // Monitor for notifications from the child process that is doing the log watching
-ipcRenderer.on('logWatcher', (event, message) => {
+ipcRenderer.on('log-watcher', (event, message) => {
     // Don't log everything to reduce spam
     if (
         !message.startsWith('New floor: ') &&

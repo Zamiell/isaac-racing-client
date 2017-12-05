@@ -22,11 +22,11 @@ exports.start = () => {
     }
 
     // Send a message to the main process to start up the Steam watcher
-    ipcRenderer.send('asynchronous-message', 'steamWatcher', globals.steam.accountID);
+    ipcRenderer.send('asynchronous-message', 'steam-watcher', globals.steam.accountID);
 };
 
 // Monitor for notifications from the child process that is doing the log watching
-ipcRenderer.on('steamWatcher', (event, message) => {
+ipcRenderer.on('steam-watcher', (event, message) => {
     globals.log.info(`Recieved steam-watcher notification: ${message}`);
 
     if (message === 'error: It appears that you have logged out of Steam.') {
