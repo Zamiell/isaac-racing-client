@@ -34,16 +34,16 @@ before_install:
 script:
 - 'npm run dist'
 
-deploy:
-  provider: releases
-  api_key:
-    secure: f+igWm0fyLBKDOv5IdnnDli89CqtCXCv9Jfcs2wdmlSlfe4QBFjc0ir9QhtIMaseVvzJIbRvMURuw0oPRetgJdzDbUeR8DTD/QpZiv+1DPlIgXwvBSFcqzJbcVq08X31PwGS7jhaW25MW5/0K4Ji4a633aTn8kePVUgIl8vrkEEKnDSxOU+yxxoP/f5QqaVK2FhbHl36ak6ZbBIKlag8v/VHF+azAc7PgDUgAMgnJ64fAw5Ww/B6Y+Y3f5Sf+U8VsR3U+yrz+bdk8Yzz2Ty7WT21649CwM53RSVcGBxHUwVC5k3dJ26MENsBIRTOnzqHJFrF+whnYQZHooXNBPk8Fc4Kq2tRQrMyfC18jkmWUVJyBewAYNK7+Z2w6xF2DovNDwehVOri+ZvDN32EaN/tYM+Tgnv91TKsw/J1zX+8XtQMVPvPJpI3nPsL2jemZ/vMa9g3ZQiyWG4CP7GCxTID3dF8INFKdI5EFbDlVrtHoNkzOUm291KHvf2YBfynXAYfwXTmskdjSGZlg8gk4h5fsxlbxKVM+g3gtEPC2fSR8rlZyHA/RnKpUiVq5Y0QHefbCnvMEudciRYEc7zYDIpygbOC3mXXZ5KB1pNGOwpHDBzpPoBkHlkrP7yXduXlpN1xuy2vqedSCti+KuRjkNFRe51piQEeoe0ZrQY/P9gnDeg=
-  skip_cleanup: true
-  file_glob: true
-  file: "dist/*.dmg"
-  #on:
-  #  tags: true
-  #  branch: master
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: f+igWm0fyLBKDOv5IdnnDli89CqtCXCv9Jfcs2wdmlSlfe4QBFjc0ir9QhtIMaseVvzJIbRvMURuw0oPRetgJdzDbUeR8DTD/QpZiv+1DPlIgXwvBSFcqzJbcVq08X31PwGS7jhaW25MW5/0K4Ji4a633aTn8kePVUgIl8vrkEEKnDSxOU+yxxoP/f5QqaVK2FhbHl36ak6ZbBIKlag8v/VHF+azAc7PgDUgAMgnJ64fAw5Ww/B6Y+Y3f5Sf+U8VsR3U+yrz+bdk8Yzz2Ty7WT21649CwM53RSVcGBxHUwVC5k3dJ26MENsBIRTOnzqHJFrF+whnYQZHooXNBPk8Fc4Kq2tRQrMyfC18jkmWUVJyBewAYNK7+Z2w6xF2DovNDwehVOri+ZvDN32EaN/tYM+Tgnv91TKsw/J1zX+8XtQMVPvPJpI3nPsL2jemZ/vMa9g3ZQiyWG4CP7GCxTID3dF8INFKdI5EFbDlVrtHoNkzOUm291KHvf2YBfynXAYfwXTmskdjSGZlg8gk4h5fsxlbxKVM+g3gtEPC2fSR8rlZyHA/RnKpUiVq5Y0QHefbCnvMEudciRYEc7zYDIpygbOC3mXXZ5KB1pNGOwpHDBzpPoBkHlkrP7yXduXlpN1xuy2vqedSCti+KuRjkNFRe51piQEeoe0ZrQY/P9gnDeg=
+#  skip_cleanup: true
+#  file_glob: true
+#  file: "dist/*.dmg"
+#  on:
+#    tags: true
+#    branch: master
 
 notifications:
   email:

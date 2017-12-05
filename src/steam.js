@@ -6,10 +6,9 @@
 const fs = require('fs-extra');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
-// const greenworks = require('greenworks'); // This is not an NPM module
+const greenworks = require('greenworks'); // Not an NPM module
 const version = require('./version');
 
-/*
 // Handle errors
 process.on('uncaughtException', (err) => {
     greenworksGotError(err);

@@ -86,7 +86,7 @@ function checkOptionsINI() {
     }
     const optionsPath = path.join(documentsDir, 'options.ini');
     if (!fs.existsSync(optionsPath)) {
-        process.send('error: The "options.ini" file does not exist.', processExit);
+        process.send(`error: Failed to find the "options.ini" file at "${optionsPath}".`, processExit);
         return;
     }
 
