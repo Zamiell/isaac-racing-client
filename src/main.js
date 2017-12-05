@@ -124,9 +124,6 @@ Raven.config('https://0d0a2118a3354f07ae98d485571e60be:843172db624445f1acb869084
     Subroutines
 */
 
-// DEBUG
-const greenworks = require('greenworks'); // This is not an NPM module
-
 function createWindow() {
     // Figure out what the window size and position should be
     if (typeof settings.get('window') === 'undefined') {
