@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.9* - Unreleased
+### *v0.14.11* - December 5th
 
 * Fixed the bug where a bunch of numbers would show as the status for a race in the lobby under certain conditions. (Thanks PassionDrama)
 
