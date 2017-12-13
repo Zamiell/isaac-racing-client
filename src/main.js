@@ -79,6 +79,7 @@ const globals = require('./js/globals');
 const version = require('./version');
 const log = require('./log');
 const settings = require('./settings');
+require('./greenworks'); // Including this in the main process is necessary for the macOS version to work for some reason
 
 // Global variables
 let mainWindow;
@@ -432,7 +433,10 @@ app.on('before-quit', () => {
             // Furthermore, if doing non-custom races, the Racing+ client is also writing to these files during races
             // For now, just copy over the default save.dat file
             try {
-                fs.copyFileSync(defaultSaveDat, saveDat);
+                // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
+                // fs.copyFileSync(defaultSaveDat, saveDat);
+                const data = fs.readFileSync(defaultSaveDat);
+                fs.writeFileSync(saveDat, data);
                 log.info(`The "${saveDat}" does not exist. (This should never happen.) Made a new one from the "save-defaults.dat" file.`);
             } catch (err) {
                 log.error(`Error while copying the the "save-defaults.dat" file to the "save${i}.dat" file: ${err}`);

@@ -159,7 +159,11 @@ $(document).ready(() => {
                 misc.errorShow(`The "${hackedSaveFile}" file does not exist! Your Racing+ client may be corrupted.`);
                 return;
             }
-            fs.copyFileSync(hackedSaveFile, saveFile);
+
+            // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
+            // fs.copyFileSync(hackedSaveFile, saveFile);
+            const data = fs.readFileSync(hackedSaveFile);
+            fs.writeFileSync(saveFile, data);
         } catch (err) {
             misc.errorShow(`Failed to copy the fully unlocked save file to "${saveFile}": ${err}`);
             return;

@@ -283,7 +283,10 @@ function checkModIntegrity() {
         if (copyFile) {
             fileSystemValid = false;
             try {
-                fs.copyFileSync(backupFilePath, filePath);
+                // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
+                // fs.copyFileSync(backupFilePath, filePath);
+                const data = fs.readFileSync(backupFilePath);
+                fs.writeFileSync(filePath, data);
             } catch (err) {
                 process.send(`error: Failed to copy over the "${backupFilePath}" file (since the original was corrupt): ${err}`, processExit);
                 return;

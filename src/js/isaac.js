@@ -55,7 +55,10 @@ exports.start = () => {
             // Copy over the default file
             // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
             try {
-                fs.copyFileSync(defaultSaveDatFile, saveDatFile);
+                // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
+                // fs.copyFileSync(defaultSaveDatFile, saveDatFile);
+                const data = fs.readFileSync(defaultSaveDatFile);
+                fs.writeFileSync(saveDatFile, data);
             } catch (err) {
                 misc.errorShow(`Failed to copy the "${defaultSaveDatFile}" file to "${saveDatFile}": ${err}`);
                 return false;
