@@ -6,6 +6,9 @@
 --[[
 
 TODO:
+- play with SecondaryActiveItem (can't replace item?)
+- USE QUEUE ITEM FOR CHECKPOINT
+- USE QUEUE ITEM FOR SCHOOLBAG
 - change trinket bans to trinket pool API
 - add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor

@@ -3,10 +3,10 @@
 */
 
 // Imports
-const fs = require('fs-extra');
+const fs = require('fs');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
-const greenworks = require('greenworks'); // Not an NPM module
+const greenworks = require('./greenworks');
 const version = require('./version');
 
 // Handle errors

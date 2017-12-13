@@ -24,7 +24,8 @@ function RPInputAction:Main(entity, inputHook, buttonAction)
 
   -- Prevent opening the console during a race
   if RPGlobals.race.status == "in progress" and
-    buttonAction == ButtonAction.ACTION_CONSOLE then -- 28
+    buttonAction == ButtonAction.ACTION_CONSOLE and
+    RPGlobals.debug == false then -- 28
 
     return false
   end

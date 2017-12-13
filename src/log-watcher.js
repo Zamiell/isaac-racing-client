@@ -3,7 +3,7 @@
 */
 
 // Imports
-const fs = require('fs-extra');
+const fs = require('fs');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const version = require('./version');

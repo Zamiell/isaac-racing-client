@@ -4,7 +4,7 @@
 
 // Imports
 const { ipcRenderer, remote, shell } = nodeRequire('electron');
-const fs = nodeRequire('fs-extra');
+const fs = nodeRequire('fs');
 const path = nodeRequire('path');
 const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
@@ -144,7 +144,7 @@ $(document).ready(() => {
         const saveFile = path.join(globals.saveFileDir[1], saveFileName);
         try {
             if (fs.existsSync(saveFile)) {
-                fs.removeSync(saveFile);
+                fs.unlinkSync(saveFile);
             }
         } catch (err) {
             misc.errorShow(`Failed to check/delete the "${saveFile}" file: ${err}`);
@@ -159,7 +159,7 @@ $(document).ready(() => {
                 misc.errorShow(`The "${hackedSaveFile}" file does not exist! Your Racing+ client may be corrupted.`);
                 return;
             }
-            fs.copySync(hackedSaveFile, saveFile);
+            fs.copyFileSync(hackedSaveFile, saveFile);
         } catch (err) {
             misc.errorShow(`Failed to copy the fully unlocked save file to "${saveFile}": ${err}`);
             return;

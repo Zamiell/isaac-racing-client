@@ -78,6 +78,17 @@ if not ARGS.skipmod:
         else:
             NEW_FILE += line + '\n'
 
+    # Also ensure that the debug flag is turned to false
+    if ARGS.github:
+        NEW_FILE2 = ''
+        for line in iter(NEW_FILE.splitlines()):
+            match = re.search(r'RPGlobals.debug = true', line)
+            if match:
+                NEW_FILE2 += 'RPGlobals.debug = false\n'
+            else:
+                NEW_FILE2 += line + '\n'
+        NEW_FILE = NEW_FILE2
+
     # Write the file out again
     with open(LUA_FILE, 'w', newline='\n') as file:
         file.write(NEW_FILE)

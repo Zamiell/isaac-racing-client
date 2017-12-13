@@ -3,7 +3,7 @@
 */
 
 // Imports
-const fs = require('fs-extra');
+const fs = require('fs');
 const klawSync = require('klaw-sync');
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -268,7 +268,7 @@ function checkModIntegrity() {
                 process.send(`File is corrupt: ${filePath}`);
                 copyFile = true;
                 try {
-                    fs.removeSync(filePath);
+                    fs.unlinkSync(filePath);
                 } catch (err) {
                     process.send(`error: Failed to delete the "${filePath}" file (since it was corrupt): ${err}`, processExit);
                     return;
@@ -283,7 +283,7 @@ function checkModIntegrity() {
         if (copyFile) {
             fileSystemValid = false;
             try {
-                fs.copySync(backupFilePath, filePath);
+                fs.copyFileSync(backupFilePath, filePath);
             } catch (err) {
                 process.send(`error: Failed to copy over the "${backupFilePath}" file (since the original was corrupt): ${err}`, processExit);
                 return;
@@ -322,7 +322,7 @@ function checkModIntegrity() {
             process.send(`Extraneous file found: ${filePath}`);
             fileSystemValid = false;
             try {
-                fs.removeSync(filePath);
+                fs.unlinkSync(filePath);
             } catch (err) {
                 process.send(`error: Failed to delete the extraneous "${filePath}" file: ${err}`, processExit);
                 return;

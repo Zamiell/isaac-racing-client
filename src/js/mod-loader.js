@@ -4,7 +4,7 @@
 
 // Imports
 const path = nodeRequire('path');
-const fs = nodeRequire('fs-extra');
+const fs = nodeRequire('fs');
 const globals = nodeRequire('./js/globals');
 const builds = nodeRequire('./data/builds');
 

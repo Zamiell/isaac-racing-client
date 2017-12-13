@@ -4,7 +4,7 @@
 
 // Imports
 const path = nodeRequire('path');
-const fs = nodeRequire('fs-extra');
+const fs = nodeRequire('fs');
 const { ipcRenderer } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
@@ -55,7 +55,7 @@ exports.start = () => {
             // Copy over the default file
             // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
             try {
-                fs.copySync(defaultSaveDatFile, saveDatFile);
+                fs.copyFileSync(defaultSaveDatFile, saveDatFile);
             } catch (err) {
                 misc.errorShow(`Failed to copy the "${defaultSaveDatFile}" file to "${saveDatFile}": ${err}`);
                 return false;

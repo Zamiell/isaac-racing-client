@@ -216,7 +216,6 @@ function RPPostRender:CheckResetInput()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local isaacFrameCount = Isaac.GetFrameCount()
-  local challenge = Isaac.GetChallenge()
 
   -- Disable this on the "Unseeded (Lite)" ruleset
   if RPGlobals.race.rFormat == "unseeded-lite" then
@@ -225,9 +224,7 @@ function RPPostRender:CheckResetInput()
 
   -- Check to see if we are opening the console window
   -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
-  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) and -- 96
-     challenge == Challenge.CHALLENGE_NULL then -- 0
-
+  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) then -- 96
     RPGlobals.run.consoleWindowOpen = true
     return
   end

@@ -5,12 +5,12 @@ let isDev;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
     /* eslint-disable global-require */
-    fs = require('fs-extra');
+    fs = require('fs');
     path = require('path');
     isDev = require('electron-is-dev');
 } else {
     // We are in the renderer process
-    fs = nodeRequire('fs-extra');
+    fs = nodeRequire('fs');
     path = nodeRequire('path');
     isDev = nodeRequire('electron-is-dev');
 }

@@ -7,6 +7,10 @@
 /*
 
 New TODO:
+- Make it able to finish the race if you connect back to the server
+- also I have an idea for the R+ client for races, is it posssible that after a ranked / diversity race you'll see the +/- points you get (similar to SRL) ?
+- have you considered incorporating the item tracker into racing+?
+- make random char/build hidden until the race starts
 - 10 min timeout after disconnect for races
 - make server notice from discord part of chat log
 - when twitch bot warning message comes into client, set local variables accordingly
@@ -80,7 +84,7 @@ const path = nodeRequire('path');
 const { execSync } = nodeRequire('child_process');
 const { remote } = nodeRequire('electron');
 const isDev = nodeRequire('electron-is-dev');
-const fs = nodeRequire('fs-extra');
+const fs = nodeRequire('fs');
 
 // Import local modules
 const globals = nodeRequire('./js/globals');

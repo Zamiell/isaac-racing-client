@@ -1,3 +1,5 @@
+const greenworks = require('./greenworks');
+
 /*
     Racing+ Client
     for The Binding of Isaac: Afterbirth+
@@ -60,7 +62,7 @@ Other notes:
 */
 
 // Imports
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const { execFile, fork } = require('child_process');
 const {
@@ -432,7 +434,7 @@ app.on('before-quit', () => {
             // Furthermore, if doing non-custom races, the Racing+ client is also writing to these files during races
             // For now, just copy over the default save.dat file
             try {
-                fs.copySync(defaultSaveDat, saveDat);
+                fs.copyFileSync(defaultSaveDat, saveDat);
                 log.info(`The "${saveDat}" does not exist. (This should never happen.) Made a new one from the "save-defaults.dat" file.`);
             } catch (err) {
                 log.error(`Error while copying the the "save-defaults.dat" file to the "save${i}.dat" file: ${err}`);

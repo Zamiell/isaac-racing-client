@@ -5,7 +5,7 @@
 // Imports
 const path = nodeRequire('path');
 const { ipcRenderer } = nodeRequire('electron');
-const fs = nodeRequire('fs-extra');
+const fs = nodeRequire('fs');
 const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
 
@@ -168,20 +168,6 @@ exports.closeAllTooltips = closeAllTooltips;
 exports.getAllFilesFromFolder = (dir) => {
     const results = [];
     fs.readdirSync(dir).forEach((file) => {
-        // Commenting this out because we don't need the full path
-        /*
-        file = dir + '/' + file;
-        */
-
-        // Commenting this out because we don't need recursion
-        /*
-        let stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) {
-            results = results.concat(getAllFilesFromFolder(file));
-        } else {
-            results.push(file);
-        }
-        */
         results.push(file);
     });
 
