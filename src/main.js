@@ -1,5 +1,3 @@
-const greenworks = require('./greenworks');
-
 /*
     Racing+ Client
     for The Binding of Isaac: Afterbirth+
