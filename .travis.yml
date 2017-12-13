@@ -13,37 +13,27 @@ matrix:
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
 # These directories will be cached between subsequent builds
-cache:
-  directories:
-  - node_modules
-  - "$HOME/.cache/electron"
-  - "$HOME/.cache/electron-builder"
-
-# At this point, the current working directory is: /Users/travis/build/Zamiell/isaac-racing-client
-before_install:
-- |
-  # For Greenworks to successfully compile, it needs the Steamworks SDK:
-  # https://github.com/greenheartgames/greenworks/blob/master/docs/get-steamworks-sdk.md
-  # However, we have to install it individually first, as the following "npm install" by Travis will blow away the existing folder structure (including the downloaded dependencies)
-  npm install --ignore-scripts git+https://github.com/greenheartgames/greenworks.git
-  wget https://isaacracing.net/public/steamworks_sdk.tar.gz
-  tar xzf steamworks_sdk.tar.gz --directory node_modules/greenworks/deps
-  rm -f steamworks_sdk.tar.gz
+# (commented out because node_modules has changed)
+#cache:
+#  directories:
+#  - node_modules
+#  - "$HOME/.cache/electron"
+#  - "$HOME/.cache/electron-builder"
 
 # This will run after Travis does its "npm install" step
 script:
 - 'npm run dist'
 
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: f+igWm0fyLBKDOv5IdnnDli89CqtCXCv9Jfcs2wdmlSlfe4QBFjc0ir9QhtIMaseVvzJIbRvMURuw0oPRetgJdzDbUeR8DTD/QpZiv+1DPlIgXwvBSFcqzJbcVq08X31PwGS7jhaW25MW5/0K4Ji4a633aTn8kePVUgIl8vrkEEKnDSxOU+yxxoP/f5QqaVK2FhbHl36ak6ZbBIKlag8v/VHF+azAc7PgDUgAMgnJ64fAw5Ww/B6Y+Y3f5Sf+U8VsR3U+yrz+bdk8Yzz2Ty7WT21649CwM53RSVcGBxHUwVC5k3dJ26MENsBIRTOnzqHJFrF+whnYQZHooXNBPk8Fc4Kq2tRQrMyfC18jkmWUVJyBewAYNK7+Z2w6xF2DovNDwehVOri+ZvDN32EaN/tYM+Tgnv91TKsw/J1zX+8XtQMVPvPJpI3nPsL2jemZ/vMa9g3ZQiyWG4CP7GCxTID3dF8INFKdI5EFbDlVrtHoNkzOUm291KHvf2YBfynXAYfwXTmskdjSGZlg8gk4h5fsxlbxKVM+g3gtEPC2fSR8rlZyHA/RnKpUiVq5Y0QHefbCnvMEudciRYEc7zYDIpygbOC3mXXZ5KB1pNGOwpHDBzpPoBkHlkrP7yXduXlpN1xuy2vqedSCti+KuRjkNFRe51piQEeoe0ZrQY/P9gnDeg=
-#  skip_cleanup: true
-#  file_glob: true
-#  file: "dist/*.dmg"
-#  on:
-#    tags: true
-#    branch: master
+deploy:
+  provider: releases
+  api_key:
+    secure: f+igWm0fyLBKDOv5IdnnDli89CqtCXCv9Jfcs2wdmlSlfe4QBFjc0ir9QhtIMaseVvzJIbRvMURuw0oPRetgJdzDbUeR8DTD/QpZiv+1DPlIgXwvBSFcqzJbcVq08X31PwGS7jhaW25MW5/0K4Ji4a633aTn8kePVUgIl8vrkEEKnDSxOU+yxxoP/f5QqaVK2FhbHl36ak6ZbBIKlag8v/VHF+azAc7PgDUgAMgnJ64fAw5Ww/B6Y+Y3f5Sf+U8VsR3U+yrz+bdk8Yzz2Ty7WT21649CwM53RSVcGBxHUwVC5k3dJ26MENsBIRTOnzqHJFrF+whnYQZHooXNBPk8Fc4Kq2tRQrMyfC18jkmWUVJyBewAYNK7+Z2w6xF2DovNDwehVOri+ZvDN32EaN/tYM+Tgnv91TKsw/J1zX+8XtQMVPvPJpI3nPsL2jemZ/vMa9g3ZQiyWG4CP7GCxTID3dF8INFKdI5EFbDlVrtHoNkzOUm291KHvf2YBfynXAYfwXTmskdjSGZlg8gk4h5fsxlbxKVM+g3gtEPC2fSR8rlZyHA/RnKpUiVq5Y0QHefbCnvMEudciRYEc7zYDIpygbOC3mXXZ5KB1pNGOwpHDBzpPoBkHlkrP7yXduXlpN1xuy2vqedSCti+KuRjkNFRe51piQEeoe0ZrQY/P9gnDeg=
+  skip_cleanup: true
+  file_glob: true
+  file: "dist/*.dmg"
+  on:
+    tags: true
+    branch: master
 
 notifications:
   email:

@@ -56,12 +56,6 @@ process.on('message', (message) => {
     modPath = message;
     process.send(`Starting Isaac checks with a mod path of: ${modPath}`);
 
-    // The logic in this file is only written to support Windows
-    if (process.platform !== 'win32') { // This will return "win32" even on 64-bit Windows
-        process.send(`The "${process.platform}" platform is not supported for the file system integrity checks.`, processExit);
-        return;
-    }
-
     // Begin the work
     checkOptionsINI();
 });
@@ -103,14 +97,14 @@ function checkOptionsINI() {
 function checkOneMillionPercent() {
     process.send('Checking the save files to see if there is at least one fully unlocked file.');
 
-    if (process.platform !== 'win32') {
-        process.send('Save file checking is not supported on macOS / Linux. Skipping this part.');
-        checkModIntegrity();
-    }
-
     if (steamCloud) {
-        // Their save files are located in their Steam directory, so we have to check 2 registry entries
-        checkSteam1();
+        if (process.platform === 'win32') {
+            // Their save files are located in their Steam directory, so we have to check 2 registry entries
+            checkSteam1();
+        } else {
+            process.send('Save file checking (with "SteamCloud=1" in the "options.ini" file) is not supported on macOS / Linux. Skipping this part.');
+            checkModIntegrity();
+        }
     } else {
         // Their save files are in the documents directory that we found/declared earlier
         saveFileDir = documentsDir;
@@ -243,7 +237,11 @@ function checkModIntegrity() {
 
     // Check to see if the mod is corrupt or missing
     // Each key of the JSON is the relative path to the file
-    for (const relativePath of Object.keys(checksums)) {
+    for (let relativePath of Object.keys(checksums)) {
+        if (process.platform !== 'win32') {
+            // In the file are double backslashes, so they need to be converted to macOS/Linux format
+            relativePath = relativePath.replace('\\', '/');
+        }
         const filePath = path.join(modPath, relativePath);
         const backupFilePath = path.join(backupModPath, relativePath);
         const backupFileHash = checksums[relativePath];
