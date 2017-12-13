@@ -56,25 +56,14 @@ process.on('message', (message) => {
     modPath = message;
     process.send(`Starting Isaac checks with a mod path of: ${modPath}`);
 
-    // The logic in this file is only written to support Windows, macOS, and Linux
-    if (
-        process.platform !== 'win32' && // This will return "win32" even on 64-bit Windows
-        process.platform !== 'darwin' &&
-        process.platform !== 'linux'
-    ) {
+    // The logic in this file is only written to support Windows
+    if (process.platform !== 'win32') { // This will return "win32" even on 64-bit Windows
         process.send(`The "${process.platform}" platform is not supported for the file system integrity checks.`, processExit);
         return;
     }
 
     // Begin the work
-    if (process.platform === 'win32') {
-        // This will check to see if the user has at least one fully unlocked save file;
-        // however, the code only works on Windows and needs to be made cross-platform
-        checkOptionsINI();
-    } else {
-        // Skip checking for the fully unlocked save file and go to the next thing after that
-        checkModIntegrity();
-    }
+    checkOptionsINI();
 });
 
 function checkOptionsINI() {
