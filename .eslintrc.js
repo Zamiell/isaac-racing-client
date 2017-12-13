@@ -1,4 +1,4 @@
-{
+module.exports = {
   // The linter base is the airbnb style guide, located here:
   // https://github.com/airbnb/javascript
   "extends": "airbnb-base",
@@ -58,4 +58,4 @@
     "Lang": true,
     "nodeRequire": true,
   },
-}
+};
