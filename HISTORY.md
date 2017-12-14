@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.11* - December 14th
+### *v0.14.14* - December 14th
 
 * The macOS version should actually work now.
 * All multiplayer races (past and present) are now considered ranked for the purposes of calculating a leaderboard. There are now 3 multiplayer leaderboards for seeded, unseeded, and diversity. (Thanks SlashSP)
