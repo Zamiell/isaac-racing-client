@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.14.13"
+RPGlobals.version = "v0.14.14"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -140,6 +140,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.currentKnights        = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentHoppers        = {} -- Used to prevent softlocks
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false

@@ -947,12 +947,12 @@ function RPSpeedrun:PostNewRoom()
     return
   end
 
-  RPSpeedrun:PostNewRoomWomb2()
+  RPSpeedrun:PostNewRoomWomb2Error()
   RPSpeedrun:PostNewRoomReplaceBosses()
 end
 
--- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges
-function RPSpeedrun:PostNewRoomWomb2()
+-- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
+function RPSpeedrun:PostNewRoomWomb2Error()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -970,42 +970,58 @@ function RPSpeedrun:PostNewRoomWomb2()
     return
   end
 
-  -- Remove any existing trapdoors
+  -- Find out whether we should spawn a passage up or down, depending on the room seed
+  math.randomseed(roomSeed)
+  local direction = math.random(1, 2)
+  if direction == 1 then
+    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be up.")
+  elseif direction == 2 then
+    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be down.")
+  end
+
+  -- Find any existing trapdoors
   local pos
   for i = 1, gridSize do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
       local saveState = gridEntity:GetSaveState()
       if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
-        pos = gridEntity.Position
-        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-        Isaac.DebugString("Removed an existing trapdoor in an I AM ERROR room on Womb 2.")
+        if direction == 1 then
+          -- We need to remove it since we are going up
+          pos = gridEntity.Position
+          room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+
+          -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
+          game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, Vector(0, 0), nil, 0, 0)
+          Isaac.DebugString("Replaced a trapdoor with a beam of light.")
+          return
+        elseif direction == 2 then
+          -- If we are going down and there is already a trapdoor, we don't need to do anything
+          return
+        end
       end
     end
   end
 
-  -- Remove any existing beams of light
+  -- Find any existing beams of light
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_EFFECT and -- 1000
        entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
 
-      pos = entity.Position
-      entity:Remove()
-      Isaac.DebugString("Removed an existing beam of light in an I AM ERROR room on Womb 2.")
-    end
-  end
+      if direction == 1 then
+        -- If we are going up and there is already a beam of light, we don't need to do anything
+        return
+      elseif direction == 2 then
+        -- We need to remove it since we are going down
+        pos = entity.Position
+        entity:Remove()
 
-  -- Find out whether we should spawn a passage up or down, depending on the room seed
-  math.randomseed(roomSeed)
-  local direction = math.random(1, 2)
-  if direction == 1 then
-    -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
-    game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be up.")
-  elseif direction == 2 then
-    -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
-    Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, pos, true) -- 17
-    Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be down.")
+        -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
+        Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, pos, true) -- 17
+        Isaac.DebugString("Replaced a beam of light with a trapdoor.")
+        return
+      end
+    end
   end
 end
 

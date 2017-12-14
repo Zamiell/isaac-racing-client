@@ -131,7 +131,8 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 ### Bug Fixes
 
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
-* Globins and Sacks will now properly die after defeating Mom, Mom's Heart, or It Lives!
+* Flaming Hoppers will now automatically die after 5 seconds of being immobile to prevent softlocks.
+* Globins, Sacks, Fistula, and Teratoma will now properly die after defeating Mom, Mom's Heart, or It Lives!
 * Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads. (This is to prevent unavoidable damage, which can happen even if the player is not shooting.)
 * The Book of Sin and Mystery Sack generate actual random pickups.
 * Greed's Gullet works properly on Keeper.

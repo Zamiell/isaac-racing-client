@@ -127,7 +127,7 @@ function RPPostEntityKill:NPC45(npc)
     Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
   end
 
-  -- Fix the (vanilla) Globin / Sack bug
+  -- Fix the (vanilla) bug with Globins, Sacks, etc.
   RPPostEntityKill:KillExtraEnemies()
 end
 
@@ -241,7 +241,7 @@ function RPPostEntityKill:NPC78(npc)
     Isaac.DebugString("It Lives! or Hush killed; situation 3.")
   end
 
-  -- Fix the (vanilla) Globin / Sack bug
+  -- Fix the (vanilla) bug with Globins, Sacks, etc.
   RPPostEntityKill:KillExtraEnemies()
 end
 
@@ -390,7 +390,7 @@ end
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
 -- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
 -- Blisters also need to be killed twice (to kill the spawned Sacks)
--- Racing+ manually fixes this bug by expliticly killing them
+-- Racing+ manually fixes this bug by expliticly killing them (and removing Fistula and Teratoma)
 -- This code is also necessary to fix the issue where a Globin will prevent the
 -- removal of the natural trapdoor and beam of light after It Lives!
 --- (in the "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions)
@@ -401,6 +401,17 @@ function RPPostEntityKill:KillExtraEnemies()
 
       entity:Kill()
       Isaac.DebugString("Manually killed a Globin / Sack after Mom / It Lives!")
+    end
+
+    -- Fistula and Teratoma will spawn adds, so they must be removed and not killed
+    if entity.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (also includes Teratoma)
+       entity.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (also includes Teratoma)
+       entity.Type == EntityType.ENTITY_FISTULA_SMALL then -- 73 (also includes Teratoma)
+
+      -- Removing it just causes it to disappear, which looks buggy, so show a small blood explosion as well
+      entity:BloodExplode()
+      entity:Remove()
+      Isaac.DebugString("Manually removed a Fistula / Teratoma after Mom / It Lives!")
     end
   end
 end

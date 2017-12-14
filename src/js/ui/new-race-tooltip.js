@@ -191,8 +191,9 @@ $(document).ready(() => {
             misc.errorShow('Expected either "yes" or "no" for the value of ranked.');
         }
 
+        // TODO remove this
         if (ranked && format === 'seeded') {
-            misc.warningShow('Ranked seeded races are currently disabled. The leaderboards are coming soon!');
+            misc.warningShow('Solo ranked seeded races are currently disabled. The leaderboards are coming soon!');
             return false;
         }
 
@@ -259,11 +260,22 @@ function newRaceSizeChange(event, fast = false) {
     if (newSize === 'solo') {
         $('#new-race-size-icon-solo').fadeIn((fast ? 0 : globals.fadeTime));
         $('#new-race-size-icon-multiplayer').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-ranked-row').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#new-race-ranked-row-padding').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
     } else if (newSize === 'multiplayer') {
         $('#new-race-size-icon-solo').fadeOut((fast ? 0 : globals.fadeTime));
         $('#new-race-size-icon-multiplayer').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#new-race-ranked-row').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-ranked-row-padding').fadeOut((fast ? 0 : globals.fadeTime), () => {
+            // Unlike the fade in above, the fade out needs to complete before the tooltip is redrawn
+            $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
+        });
+
+        // Multiplayer races must be unranked
+        $('#new-race-ranked-no').prop('checked', true);
+        newRaceRankedChange(null, true);
     }
-    $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
 }
 
 function newRaceRankedChange(event, fast = false) {

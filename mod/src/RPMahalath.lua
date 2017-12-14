@@ -1,11 +1,5 @@
 local RPMahalath = {}
 
---
--- Includes
---
-
-local RPFastClear = require("src/rpfastclear")
-
 -- Mahalath was originally created by melon goodposter
 -- It's heavily modified by Zamiel for Racing+
 -- (and to pass the linter)
@@ -46,8 +40,8 @@ local delfight = false
 -- In Racing+ we modify the level 1 balance values
 -- (the original values are noted in a comment next to each value)
 local bal = {
-  barfcolor = {Color(132/255, 188/255, 88/255, 1, 0, 0, 0), Color(138/255, 36/255, 49/255, 1, 0, 0, 0)},
-  bloodcolor = {Color(215/255, 10/255, 10/255, 1, 0, 0, 0), Color(15/255, 15/255, 15/255, 1, 0, 0, 0)},
+  barfcolor = {Color(132 / 255, 188 / 255, 88 / 255, 1, 0, 0, 0), Color(138 / 255, 36 / 255, 49 / 255, 1, 0, 0, 0)},
+  bloodcolor = {Color(215 / 255, 10 / 255, 10 / 255, 1, 0, 0, 0), Color(15 / 255, 15 / 255, 15 / 255, 1, 0, 0, 0)},
   creeptype = {23, 22},
 
   RegBallHitSpeed = {7, 7}, -- 5
@@ -100,8 +94,8 @@ mouthSprite:Load("gfx/grid/door_11_wombhole.anm2", false)
 mouthSprite:ReplaceSpritesheet(0, "gfx/bosses/mahalath_mouth.png")
 mouthSprite:LoadGraphics()
 
-local function Lerp(first,second,percent)
-  return (first + (second - first)*percent)
+local function Lerp(first, second, percent)
+  return (first + (second - first) * percent)
 end
 
 local function checkpunt(pos, ppos)
@@ -259,7 +253,7 @@ function RPMahalath:check_girl(en)
       d.state = bal.FirstState[d.v]
       d.idletime = 10
     end
-  --IDLE
+    --IDLE
   elseif d.state == 'idle' then
     --transform check
     if d.mouth == nil and en.HitPoints < en.MaxHitPoints * bal.TransformPercent[d.v] and not delfight then
@@ -299,7 +293,7 @@ function RPMahalath:check_girl(en)
         end
       end
     end
-  --TRANSFORM
+    --TRANSFORM
   elseif d.state == 'transform' then
     --start
     if d.statetime == 0 then
@@ -326,7 +320,7 @@ function RPMahalath:check_girl(en)
     if s:IsFinished("MouthOff") then
       d.state = 'shotgun'
     end
-  --BARF DEATH
+    --BARF DEATH
   elseif d.state == 'barfdeath' then
     Isaac.DebugString("Manually killing Mahalath (barfdeath).")
     en:Kill()
@@ -347,10 +341,10 @@ function RPMahalath:check_girl(en)
       if frame >= 3 and frame <= 67 then
         sfx:Play(SoundEffect.SOUND_BLOODSHOOT, 1, 0, false, 1)
         local params = ProjectileParams()
-        params.FallingSpeedModifier = -5 -(math.random() * 5)
+        params.FallingSpeedModifier = -5 - (math.random() * 5)
         params.FallingAccelModifier = 1
         params.Variant = 4
-        params.PositionOffset = Vector(0, -45)
+        params.PositionOffset = Vector(0, - 45)
         params.BulletFlags = 8192
         local div = math.min(45, math.max(15, frame)) / 60
         local red = Lerp(bal.barfcolor[d.v].R, bal.bloodcolor[d.v].R, div)
@@ -358,9 +352,9 @@ function RPMahalath:check_girl(en)
         local blue = Lerp(bal.barfcolor[d.v].B, bal.bloodcolor[d.v].B, div)
         params.Color = Color(red, green, blue, 1, 0, 0, 0)
         en:FireProjectiles(en.Position + Vector(0, 35),
-                           Vector(0, 7.5) + (Vector.FromAngle(math.random(360)) * (math.random() * 2)),
-                           0, getAddress(params))
-        en.Velocity = en.Velocity + Vector(0, -.7)
+          Vector(0, 7.5) + (Vector.FromAngle(math.random(360)) * (math.random() * 2)),
+        0, getAddress(params))
+        en.Velocity = en.Velocity + Vector(0, - .7)
       end
     end
     if s:IsFinished("Blood") then
@@ -368,7 +362,7 @@ function RPMahalath:check_girl(en)
       en:BloodExplode()
       en:Kill()
     end
-  --EAT DEATH
+    --EAT DEATH
   elseif d.state == 'escape' then
     Isaac.DebugString("Manually killing Mahalath (escape).")
     en:Kill()
@@ -401,7 +395,7 @@ function RPMahalath:check_girl(en)
         params.FallingAccelModifier = 1.2
         params.Color = bal.barfcolor[d.v]
         params.Variant = 4
-        for i = 1, 360, 360/6 do
+        for i = 1, 360, 360 / 6 do
           params.FallingSpeedModifier = -11 - math.random(3)
           angle = i + math.random(20)
           en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * 1)), 0, getAddress(params))
@@ -416,13 +410,13 @@ function RPMahalath:check_girl(en)
       d.mouth:Remove()
       en:Remove()
     end
-  --SHOTGUN
+    --SHOTGUN
   elseif d.state == 'shotgun' then
     d.move = 'avoid'
     --start
     if d.statetime == 0 then
       d.shotguns = d.shotguns - 1
-      d.sgdir = d.sgdir * -1
+      d.sgdir = d.sgdir * - 1
       if d.sgdir == -1 then
         if not d.mouth then s:Play("ShotgunRight", false)
         else s:Play("ShotgunRight2") end
@@ -454,9 +448,9 @@ function RPMahalath:check_girl(en)
     end
     --finish
     if s:IsFinished("ShotgunLeft") or
-       s:IsFinished("ShotgunRight") or
-       s:IsFinished("ShotgunLeft2") or
-       s:IsFinished("ShotgunRight2") then
+    s:IsFinished("ShotgunRight") or
+    s:IsFinished("ShotgunLeft2") or
+    s:IsFinished("ShotgunRight2") then
 
       d.state = 'idle'
       d.idletime = bal.ShotgunIdleTime[d.v] + rng:RandomInt(bal.ShotgunIdleVariance[d.v])
@@ -472,7 +466,7 @@ function RPMahalath:check_girl(en)
         d.mouth:GetData().state = 'spit'
       end
     end
-  --SPIN BARF
+    --SPIN BARF
   elseif d.state == 'spinbarf' then
     --start
     if d.statetime == 0 then
@@ -515,7 +509,7 @@ function RPMahalath:check_girl(en)
         d.mouth:GetData().state = 'idle'
       end
     end
-  --BALL KNOCKER
+    --BALL KNOCKER
   elseif d.state == 'ballknocker' then
     if d.mouth then
       if d.mouth:GetData().state == 'eat' then
@@ -589,7 +583,7 @@ function RPMahalath:check_girl(en)
     if s:IsFinished("PostSpin") or s:IsFinished("PostSpin2") then
       d.state = 'queasy'
     end
-  --BASEBALL
+    --BASEBALL
   elseif d.state == 'baseball' then
     if d.statetime == 0 then
       d.move = 'baseball'
@@ -673,7 +667,7 @@ function RPMahalath:check_girl(en)
     if s:IsFinished("ShotgunRight2") then
       s:Play("Laugh2")
     end
-  --ATE BOMB
+    --ATE BOMB
   elseif d.state == 'atebomb' then
     if d.statetime == 0 then
       d.move = 'slowdown'
@@ -695,7 +689,7 @@ function RPMahalath:check_girl(en)
     if s:IsFinished("MouthBombed") then
       d.state = 'spinbarf'
     end
-  --QUEASY
+    --QUEASY
   elseif d.state == 'queasy' then
     if d.statetime == 0 then
       if not d.mouth then
@@ -726,7 +720,7 @@ function RPMahalath:check_girl(en)
       d.state = 'shootball'
       s:Play("Idle2")
     end
-  --BARF BALLS
+    --BARF BALLS
   elseif d.state == 'barfballs' then
     --start
     if d.statetime == 0 then
@@ -737,11 +731,11 @@ function RPMahalath:check_girl(en)
       d.move = 'slowdown'
       sfx:Play(SoundEffect.SOUND_BOSS2_BUBBLES, 1.5, 0, false, 1)
       sfx:Play(SoundEffect.SOUND_LITTLE_SPIT, 1, 0, false, 1.8)
-      en.Velocity = en.Velocity + Vector(0, -14)
+      en.Velocity = en.Velocity + Vector(0, - 14)
       local bball = Isaac.Spawn(barf.ball.Type, 0, 0, pos + Vector(0, 40), Vector(0, 0), en):ToNPC()
       bball.Velocity = Vector(0, 6)
       bball.State = 4
-      bball.PositionOffset = Vector(0, -45)
+      bball.PositionOffset = Vector(0, - 45)
       bball.HitPoints = math.min(bball.HitPoints + (d.ballskilled * 5), bball.MaxHitPoints * 2)
       bball:GetData().girl = en
       bball:GetData().lasthit = 0
@@ -760,7 +754,7 @@ function RPMahalath:check_girl(en)
         d.idletime = bal.BarfBallsIdleTime[d.v]
       end
     end
-  --SHOOT BALL
+    --SHOOT BALL
   elseif d.state == 'shootball' then
     if d.statetime == 0 then
       d.mouth:GetData().state = 'shootball'
@@ -769,7 +763,7 @@ function RPMahalath:check_girl(en)
       d.state = 'idle'
       d.idletime = bal.ShootBallIdleTime[d.v]
     end
-  --BARF BUBBLE
+    --BARF BUBBLE
   elseif d.state == 'barfbubble' then
     d.move = 'slowfollow'
     --start
@@ -790,7 +784,7 @@ function RPMahalath:check_girl(en)
         for i = -90, 150, 120 do
           for j = 30, 330, 15 do
             local tearVel = vel + (Vector.FromAngle(i) * 5 * bal.BarfBubbleSize[d.v]) +
-                            (Vector.FromAngle(j + i) * 7 * bal.BarfBubbleSize[d.v])
+            (Vector.FromAngle(j + i) * 7 * bal.BarfBubbleSize[d.v])
             local tear = Isaac.Spawn(9, 4, 0, pos, tearVel, en)
             tear.Color = bal.barfcolor[d.v]
             tear:GetData().behavior = 'pop'
@@ -883,7 +877,7 @@ function RPMahalath:check_mouth(en)
     if d.statetime % 50 == 0 then
       d.retarget = true
     end
-  --EAT
+    --EAT
   elseif d.state == 'eat' then
     d.move = 'stop'
     if d.statetime == 0 then
@@ -928,7 +922,7 @@ function RPMahalath:check_mouth(en)
       player.Velocity = (pos - pos)
       player.Position = pos
     end
-  --SPIT
+    --SPIT
   elseif d.state == 'spit' then
     d.move = 'stop'
     if d.statetime == 0 then
@@ -948,27 +942,27 @@ function RPMahalath:check_mouth(en)
       params.Color = bal.barfcolor[d.v]
       params.Variant = 4
       for i = 1, 7 do
-        params.FallingSpeedModifier = (i * -2)
+        params.FallingSpeedModifier = (i * - 2)
         local velocity = Vector.FromAngle(d.spitang - bal.SpitTearAngle[d.v] +
-                                          (math.random() * bal.SpitTearAngle[d.v] * 2)) *
-                         bal.SpitTearSpeed[d.v]
+        (math.random() * bal.SpitTearAngle[d.v] * 2)) *
+        bal.SpitTearSpeed[d.v]
         en:FireProjectiles(pos + Vector(0, 15) + (Vector.FromAngle(math.random(360)) * 8),
-                           velocity,
-                           0, getAddress(params))
+          velocity,
+        0, getAddress(params))
       end
     end
     if d.checktime ~= 0 then
       if d.statetime - d.checktime <= 10 then
         local creep = Isaac.Spawn(1000, bal.creeptype[d.v], 0,
-                      (Vector.FromAngle(math.random(360)) * 15) + Lerp(pos + Vector(0, 15),
-                      d.spitpos, (d.statetime - d.checktime) / 10), Vector(0, 0), en)
+          (Vector.FromAngle(math.random(360)) * 15) + Lerp(pos + Vector(0, 15),
+        d.spitpos, (d.statetime - d.checktime) / 10), Vector(0, 0), en)
         creep.SpriteScale = Vector(1, 1)
         creep.SizeMulti = Vector(1, 1)
       else
         d.state = 'idle'
       end
     end
-  --SHOOT BALL
+    --SHOOT BALL
   elseif d.state == 'shootball' then
     if d.statetime == 0 then
       s:Play("QuickBarf")
@@ -982,9 +976,9 @@ function RPMahalath:check_mouth(en)
         local predict = game:GetRoom():GetClampedPosition(ppos + (player.Velocity * bal.ShootBallSpeed[d.v]), 40)
         bball.Velocity = (predict - (pos + Vector(0, 5))):Normalized() * 9
       end
-      en.Velocity = bball.Velocity * -1.5
+      en.Velocity = bball.Velocity * - 1.5
       bball.State = 4
-      bball.PositionOffset = Vector(0, -5)
+      bball.PositionOffset = Vector(0, - 5)
       bball.HitPoints = math.min(bball.HitPoints + (d.girl:GetData().ballskilled * 5), bball.MaxHitPoints * 2)
       bball:GetData().girl = d.girl
       bball:GetData().lasthit = 0
@@ -1001,7 +995,7 @@ function RPMahalath:check_mouth(en)
         d.state = 'idle'
       end
     end
-  --SPIN BARF
+    --SPIN BARF
   elseif d.state == 'spinbarf' then
     local gs = d.girl:GetSprite()
     if d.statetime == 0 then
@@ -1014,7 +1008,7 @@ function RPMahalath:check_mouth(en)
     end
     if gs:IsFinished("PreSpin2") then
       s:Play("Suck")
-      sfx:Play(SoundEffect.SOUND_BOSS_SPIT_BLOB_BARF , 1, 0, false, 1.7)
+      sfx:Play(SoundEffect.SOUND_BOSS_SPIT_BLOB_BARF, 1, 0, false, 1.7)
     end
     if gs:IsPlaying("Spin2") then
       if d.statetime % bal.SpinBarfFireRate[d.v] == 0 and not d.mouth then
@@ -1026,7 +1020,7 @@ function RPMahalath:check_mouth(en)
         d.spinshot = d.spinshot + bal.SpinBarfRotation[d.v]
       end
     end
-  --SUCK
+    --SUCK
   elseif d.state == 'suck' then
     local cpos = pos + Vector(0, 15)
     if d.statetime == 0 then
@@ -1105,7 +1099,7 @@ function RPMahalath:check_mouth(en)
         d.state = 'baseball'
       end
     end
-  --BASEBALL
+    --BASEBALL
   elseif d.state == 'baseball' then
     if d.statetime == 0 then
       s:Play("EatBall")
@@ -1128,7 +1122,7 @@ function RPMahalath:check_mouth(en)
       params.Color = bal.barfcolor[d.v]
       params.Variant = 4
 
-      for i = 1, 360, 360/5 do
+      for i = 1, 360, 360 / 5 do
         params.FallingSpeedModifier = -11 - math.random(3)
         angle = i + math.random(20)
         en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * 1)), 0, getAddress(params))
@@ -1138,7 +1132,7 @@ function RPMahalath:check_mouth(en)
     if s:IsFinished("EatBarf") then
       s:Play("Laugh")
     end
-  --ATE BOMB
+    --ATE BOMB
   elseif d.state == 'atebomb' then
     if d.statetime == 0 then
       sfx:Play(SoundEffect.SOUND_MEATY_DEATHS, 1, 0, false, 1)
@@ -1191,14 +1185,14 @@ function RPMahalath:move_me(en)
   if d.move == nil then d.move = 'stay' end
   if d.move == 'stop' then
     mcorrect = .2
-  --stay
+    --stay
   elseif d.move == 'stay' then
     if newmove then
       d.dest = pos
       accel = .3
       mcorrect = .1
     end
-  --avoid
+    --avoid
   elseif d.move == 'avoid' then
     accel = bal.MoveAvoidAccel[d.v]
     mspeed = 5
@@ -1209,14 +1203,14 @@ function RPMahalath:move_me(en)
       local dest = game:GetRoom():GetClampedPosition(ppos + (Vector.FromAngle(avoiddir) * 250), 80)
       d.dest = dest
     end
-  --block middle
+    --block middle
   elseif d.move == 'blockmiddle' then
     accel = .3
     mspeed = 4
     mcorrect = .15
     local rcenter = game:GetRoom():GetCenterPos()
     d.dest = ppos + ((rcenter - ppos):Normalized() * 170)
-  --mouth block middle
+    --mouth block middle
   elseif d.move == 'mouthblockmiddle' then
     accel = .5
     mspeed = 1
@@ -1231,37 +1225,37 @@ function RPMahalath:move_me(en)
       tgt = tgt + (Vector.FromAngle(math.random(360)) * 20)
       d.dest = tgt
     end
-  --align x
+    --align x
   elseif d.move == 'alignx' then
     accel = bal.MoveAlignXAccel[d.v]
     mspeed = 3
     mcorrect = .08
     local clamp = game:GetRoom():GetClampedPosition(pos, 180)
     d.dest = game:GetRoom():GetClampedPosition(Vector(ppos.X, clamp.Y), 80)
-  --slow down
+    --slow down
   elseif d.move == 'slowdown' then
     mcorrect = .02
     d.dest = pos
-  --slow follow
+    --slow follow
   elseif d.move == 'slowfollow' then
     accel = math.min(.4, d.statetime / 50)
     mspeed = bal.MoveSlowFollowSpeed[d.v]
     mcorrect = .06
     d.dest = ppos
-  --chase
+    --chase
   elseif d.move == 'chase' then
     accel = .45
     mspeed = 6.5
     mcorrect = .1
     acorrect = 4
     d.dest = ppos
-  --bouncy chase
+    --bouncy chase
   elseif d.move == 'bouncychase' then
     accel = .45
     mspeed = bal.MoveBouncyChaseSpeed[d.v]
     mcorrect = .08
     d.dest = ppos
-  --ball knocker (pardon the mess)
+    --ball knocker (pardon the mess)
   elseif d.move == 'ballknocker' then
     if barfballs ~= 0 then
       accel = bal.MoveBallKnockerAccel[d.v]
@@ -1276,10 +1270,10 @@ function RPMahalath:move_me(en)
         for i, ball in ipairs(barf.balls) do
           local dist = (ball.Position - pos):Length()
           if (dist < maxdist and
-              (d.tgtball == nil or
-               not d.tgtball:Exists())) or
-             (ball:GetData().lastscore and
-              ball:GetData().lastscore + 60 < ball.FrameCount) then
+            (d.tgtball == nil or
+          not d.tgtball:Exists())) or
+          (ball:GetData().lastscore and
+          ball:GetData().lastscore + 60 < ball.FrameCount) then
 
             d.tgtball = ball
             maxdist = dist
@@ -1301,7 +1295,7 @@ function RPMahalath:move_me(en)
         else
           local angle = (pos - d.ballhit.Position):GetAngleDegrees()
           local bpos = d.tgtball.Position
-          local edge1 = game:GetRoom():GetClampedPosition(Vector(-10000, -10000), d.tgtball:GetData().size)
+          local edge1 = game:GetRoom():GetClampedPosition(Vector(-10000, - 10000), d.tgtball:GetData().size)
           local edge2 = game:GetRoom():GetClampedPosition(Vector(10000, 10000), d.tgtball:GetData().size)
           if not win and math.abs(angle - 90) < 60 then
             local ydif1 = math.abs(bpos.Y - edge1.Y)
@@ -1356,7 +1350,7 @@ function RPMahalath:move_me(en)
         end
       end
     end
-  --baseball
+    --baseball
   elseif d.move == 'baseball' then
     accel = .7
     mspeed = 0
@@ -1364,7 +1358,7 @@ function RPMahalath:move_me(en)
     local mouth = d.mouth.Position
     local reflect = game:GetRoom():GetClampedPosition(mouth + ((mouth - ppos):Normalized() * 150), 60)
     d.dest = reflect
-  --chomp
+    --chomp
   elseif d.move == 'chomp' then
     accel = .8
     mspeed = 0
@@ -1386,7 +1380,7 @@ function RPMahalath:move_me(en)
       if ang3 > 0 then
         en.Velocity = en.Velocity:Rotated(-math.min(ang3, acorrect))
       elseif ang3 < 0 then
-        en.Velocity = en.Velocity:Rotated(-math.max(ang3, -acorrect))
+        en.Velocity = en.Velocity:Rotated(-math.max(ang3, - acorrect))
       end
     end
   end
@@ -1401,7 +1395,7 @@ end
 function RPMahalath:PostUpdate()
   local challenge = Isaac.GetChallenge()
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-     challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
+  challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
 
     return
   end
@@ -1444,11 +1438,11 @@ function RPMahalath:PostUpdate()
         local hometo = (d.tgt - en.Position):Normalized() * 12
         local myspeed = en.Velocity:Length()
         en.Velocity = Lerp(en.Velocity, hometo, d.homerate):Normalized() * myspeed
-      --SPIN
+        --SPIN
       elseif d.behavior == 'spin' then
         local myang = en.Velocity:GetAngleDegrees()
         en.Velocity = Vector.FromAngle(myang - 4) * en.Velocity:Length() * 1.04
-      --BUBBLE POP
+        --BUBBLE POP
       elseif d.behavior == 'pop' then
         en.Velocity = en.Velocity * .88
       end
@@ -1489,7 +1483,7 @@ function RPMahalath:check_balls(en)
     d.lastscore = 0
     s:Play("Idle")
     if en.PositionOffset.Y == 0 then
-      en.PositionOffset = Vector(0, -25)
+      en.PositionOffset = Vector(0, - 25)
     end
 
     d.v = 1
@@ -1505,7 +1499,7 @@ function RPMahalath:check_balls(en)
   en.Scale = d.scaler
   en.Mass = d.startmass * d.scaler
   d.size = en.Size
-  s.Color = Color(1, 1, 1, 1/((d.scaler + .5) / 1.5), 0, 0, 0)
+  s.Color = Color(1, 1, 1, 1 / ((d.scaler + .5) / 1.5), 0, 0, 0)
   --positioning
   local bounce = .9
   if d.hittimer + 30 < en.FrameCount then
@@ -1522,10 +1516,10 @@ function RPMahalath:check_balls(en)
   local repos = pos + en.Velocity
   local bounds = game:GetRoom():GetClampedPosition(repos, d.size)
   if bounds.X ~= repos.X then
-    en.Velocity = Vector(en.Velocity.X * -bounce, en.Velocity.Y)
+    en.Velocity = Vector(en.Velocity.X * - bounce, en.Velocity.Y)
   end
   if bounds.Y ~= repos.Y then
-    en.Velocity = Vector(en.Velocity.X, en.Velocity.Y * -bounce)
+    en.Velocity = Vector(en.Velocity.X, en.Velocity.Y * - bounce)
   end
   en.Position = bounds
 
@@ -1533,7 +1527,7 @@ function RPMahalath:check_balls(en)
     en.Velocity = en.Velocity + ((player.Position - en.Position):Normalized() * .012)
   end
 
-  en.PositionOffset = Lerp(en.PositionOffset, Vector(0, -25), .05)
+  en.PositionOffset = Lerp(en.PositionOffset, Vector(0, - 25), .05)
   --animation
   if s:IsFinished("Pulse") then s:Play("Idle") end
   --DIE
@@ -1575,8 +1569,8 @@ function RPMahalath:check_bomb(en)
     d.launch = false
   end
   if d.launch and
-     (d.girl:HasEntityFlags(EntityFlag.FLAG_FREEZE) or
-      d.girl:HasEntityFlags(EntityFlag.FLAG_MIDAS_FREEZE)) then
+  (d.girl:HasEntityFlags(EntityFlag.FLAG_FREEZE) or
+  d.girl:HasEntityFlags(EntityFlag.FLAG_MIDAS_FREEZE)) then
 
     d.launch = false
   end
@@ -1606,7 +1600,7 @@ function RPMahalath:check_bomb(en)
     params.Color = bal.barfcolor[d.v]
     params.Variant = 4
     local angle
-    for i = 1, 360, 360/5 do
+    for i = 1, 360, 360 / 5 do
       params.FallingSpeedModifier = -12 - math.random(5)
       angle = i + math.random(20)
       en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * .5)), 0, getAddress(params))
@@ -1650,8 +1644,8 @@ function RPMahalath:PostNewRoom()
   end
 
   if gameFrameCount == 0 and
-     challenge == Isaac.GetChallengeIdByName("Mahalath Practice") and
-     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
+  challenge == Isaac.GetChallengeIdByName("Mahalath Practice") and
+  roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
     -- Stop the boss room sound effect
     sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190

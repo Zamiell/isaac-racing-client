@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.14.11* - December 14th
+
+* The macOS version should actually work now.
+* All multiplayer races (past and present) are now considered ranked for the purposes of calculating a leaderboard. There are now 3 multiplayer leaderboards for seeded, unseeded, and diversity. (Thanks SlashSP)
+* Racing+ will now automatically detect and kill and Flaming Hoppers that are softlocking the game. (Thanks SlashSP)
+* Fixed the bug where the diversity leaderboard was not displaying the correct TrueSkill values. The rankings now take into account the Mu and Sigma values correctly, meaning that players who have only played a small number of races will no longer be as high on the leaderboard as they were before. (Thanks Krakenos)
+* Fixed the bug where Jr. Fetus could spawn a bunch of extra bombs under certain conditions. (Thanks CrafterLynx)
+* Fixed the bug where Teratoma and Fistula were not properly killed after It Lives! (Thanks Dea1h)
+* Fixed the bug where the trapdoor would not appear in the Womb 2 I AM ERROR room under certain conditions. (Thanks SapphireHX and BMZ_Loop)
+
 ### *v0.14.11* - December 5th
 
 * Fixed the bug where a bunch of numbers would show as the status for a race in the lobby under certain conditions. (Thanks PassionDrama)

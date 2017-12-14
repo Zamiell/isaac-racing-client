@@ -115,6 +115,40 @@ function RPNPCUpdate:NPC42(npc)
   end
 end
 
+-- EntityType.ENTITY_FLAMINGHOPPER (54)
+function RPNPCUpdate:NPC54(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  -- Prevent Flaming Hopper softlocks
+  if RPGlobals.run.currentHoppers[npc.Index] == nil then
+    RPGlobals.run.currentHoppers[npc.Index] = {
+      npc           = npc,
+      posX          = npc.Position.X,
+      posY          = npc.Position.Y,
+      lastMoveFrame = gameFrameCount,
+    }
+  end
+
+  -- Find out if it moved
+  if RPGlobals.run.currentHoppers[npc.Index].posX ~= npc.Position.X or
+     RPGlobals.run.currentHoppers[npc.Index].posY ~= npc.Position.Y then
+
+    -- Update the position
+    RPGlobals.run.currentHoppers[npc.Index].posX = npc.Position.X
+    RPGlobals.run.currentHoppers[npc.Index].posY = npc.Position.Y
+    RPGlobals.run.currentHoppers[npc.Index].lastMoveFrame = gameFrameCount
+    return
+  end
+
+  -- It hasn't moved since the last time we checked
+  if gameFrameCount - RPGlobals.run.currentHoppers[npc.Index].lastMoveFrame >= 150 then -- 5 seconds
+    npc:Kill()
+    Isaac.DebugString("Hopper " .. tostring(npc.Index) .. " softlock detected; killing it.")
+  end
+end
+
 -- EntityType.ENTITY_MOMS_HAND (213)
 -- EntityType.ENTITY_MOMS_DEAD_HAND (287)
 function RPNPCUpdate:NPC213(npc)

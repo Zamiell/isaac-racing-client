@@ -6,11 +6,9 @@
 --[[
 
 TODO:
-- play with SecondaryActiveItem (can't replace item?)
 - USE QUEUE ITEM FOR CHECKPOINT
 - USE QUEUE ITEM FOR SCHOOLBAG
 - change trinket bans to trinket pool API
-- add better bombs (waiting on him to rewrite)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -78,6 +76,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24,  EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_HOST) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_MOBILE_HOST) -- 204
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_STONEHEAD) -- 42
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC54,  EntityType.ENTITY_FLAMINGHOPPER) -- 54
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_GAPING_MAW) -- 235
@@ -199,7 +198,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,         RPJrFetus.UpdateDrFet
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,    RPJrFetus.DrFetusTakeDamage,
                                                            Isaac.GetEntityTypeByName("Dr Fetus Jr"))
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, RPJrFetus.UpdateMissileTarget)
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,    RPJrFetus.DrFetusEmbryoTakeDamage,
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,   RPJrFetus.DrFetusEmbryoKill,
                                                            Isaac.GetEntityTypeByName("Dr Fetus Boss Embryo"))
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,      RPJrFetus.PostNewRoom)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,  RPJrFetus.PostGameStarted)

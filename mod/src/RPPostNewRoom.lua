@@ -76,6 +76,7 @@ function RPPostNewRoom:NewRoom()
   RPGlobals.run.currentKnights    = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentHoppers    = {} -- Used to prevent softlocks
   RPGlobals.run.naturalTeleport   = false
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.megaSatanDead     = false
