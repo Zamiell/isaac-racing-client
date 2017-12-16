@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.20* - December 16th
+### *v0.14.21* - December 16th
 
 * You can now perform a Schoolbag switch during an item pickup animation, as long as the item is not an active item.
 * Fixed the bug where you could go the wrong way and still complete a multi-character speedrun custom challenge.
