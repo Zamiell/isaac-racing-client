@@ -364,7 +364,7 @@ function RPPostUpdate:CheckDropInput()
   end
 end
 
--- Do race related checks
+-- Do race/speedrun related checks
 -- (some race related checks are also in CheckGridEntities and CheckEntities
 -- so that we don't have to iterate through all of the entities in the room twice)
 function RPPostUpdate:RaceChecks()
@@ -445,6 +445,13 @@ function RPPostUpdate:RaceChecks()
 
     -- Go back to the title screen
     game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
+  end
+
+  -- Check to see if the player just picked up the "Checkpoint" custom item
+  if player.QueuedItem.Item ~= nil then
+    if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_CHECKPOINT then
+      RPSpeedrun:CheckpointTouched()
+    end
   end
 end
 

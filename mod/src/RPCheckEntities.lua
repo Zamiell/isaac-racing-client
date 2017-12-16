@@ -306,12 +306,7 @@ function RPCheckEntities:Entity5_100(pickup)
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
 
-  if pickup.SubType == CollectibleType.COLLECTIBLE_NULL then -- 0
-    if RPSpeedrun.spawnedCheckpoint then
-      RPSpeedrun.spawnedCheckpoint = false
-      RPSpeedrun:CheckpointTouched()
-    end
-  elseif gameFrameCount >= RPGlobals.run.itemReplacementDelay then
+  if gameFrameCount >= RPGlobals.run.itemReplacementDelay then
     -- We need to delay after using a Void (in case the player has consumed a D6)
     RPCheckEntities:ReplacePedestal(pickup)
   end
@@ -325,6 +320,12 @@ function RPCheckEntities:Entity5_340(pickup)
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local challenge = Isaac.GetChallenge()
 
+  -- Check to see if we already determined that we should leave this big chest
+  if pickup.Touched then
+    return
+  end
+
+  Isaac.DebugString("Big Chest detected.")
   RPCheckEntities.bigChestAction = "leave" -- Leave the big chest there by default
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
@@ -360,7 +361,11 @@ function RPCheckEntities:Entity5_340(pickup)
   end
 
   -- Now that we know what to do with the big chest, do it
-  if RPCheckEntities.bigChestAction == "up" then
+  if RPCheckEntities.bigChestAction == "leave" then
+    -- Set a flag so that we leave it alone on the next frame
+    pickup.Touched = true
+
+  elseif RPCheckEntities.bigChestAction == "up" then
     -- Delete the chest and replace it with a beam of light so that we can fast-travel normally
     RPFastTravel:ReplaceHeavenDoor(pickup, -1)
     -- A -1 indicates that we are replacing an entity instead of a grid entity
@@ -644,9 +649,6 @@ end
 function RPCheckEntities:Entity5_370(pickup)
   -- Local variables
   local game = Game()
-  local room = game:GetRoom()
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
-  local challenge = Isaac.GetChallenge()
 
   -- Do nothing if we are not on a custom speedrun challenge
   -- (otherwise we would mess with the normal challenges)
@@ -654,31 +656,11 @@ function RPCheckEntities:Entity5_370(pickup)
     return
   end
 
-  -- Replace the vanilla challenge trophy with either a checkpoint flag or a custom trophy,
-  -- depending on if we are on the last character or not
-  if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-      RPSpeedrun.charNum == 9) or
-     (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-      RPSpeedrun.charNum == 14) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-      RPSpeedrun.charNum == 7) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-      RPSpeedrun.charNum == 7) then
-
-    -- Spawn the "Race Trophy" custom entity
-    game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-               pickup.Position, pickup.Velocity, nil, 0, 0)
-    Isaac.DebugString("Spawned the end of speedrun trophy.")
-
-  else
-    -- Spawn a Checkpoint (a custom item) in the center of the room
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-    RPSpeedrun.spawnedCheckpoint = true
-    Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
-  end
-
-  -- Get rid of the vanilla challenge trophy
+  -- It can be unpredicable whether a big chest or a trophy will spawn;
+  -- so funnel all decision making through the Big Chest code
+  Isaac.DebugString("Vanilla trophy detected; replacing it with a Big Chest.")
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+             pickup.Position, pickup.Velocity, nil, 0, 0)
   pickup:Remove()
 end
 

@@ -26,6 +26,7 @@ globals = {
     "GridRooms",
     "Input",
     "Isaac",
+    "ItemType",
     "Keyboard",
     "LevelCurse",
     "LevelStage",

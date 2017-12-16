@@ -206,8 +206,8 @@ function autoUpdate() {
         return;
     }
 
-    // Don't check for updates on macOS
-    if (process.platform === 'darwin') {
+    // Only check for updates on Windows
+    if (process.platform !== 'win32') { // This will return "win32" even on 64-bit Windows
         return;
     }
 
@@ -222,21 +222,29 @@ function autoUpdate() {
         mainWindow.webContents.send('autoUpdater', 'checking-for-update');
     });
 
-    autoUpdater.on('update-available', () => {
+    autoUpdater.on('update-available', (info) => {
         mainWindow.webContents.send('autoUpdater', 'update-available');
     });
 
-    autoUpdater.on('update-not-available', () => {
+    autoUpdater.on('update-not-available', (info) => {
         mainWindow.webContents.send('autoUpdater', 'update-not-available');
     });
 
     autoUpdater.on('update-downloaded', (info) => {
-        log.info('updated-downloaded:', info);
         mainWindow.webContents.send('autoUpdater', 'update-downloaded');
     });
 
+    // Monkey patch from:
+    // https://github.com/electron-userland/electron-builder/issues/2377
+    const monkeyPatch = autoUpdater.httpExecutor.doRequest;
+    autoUpdater.httpExecutor.doRequest = function monkeyPatchFunction(options, callback) {
+        const req = monkeyPatch.call(this, options, callback);
+        req.on('redirect', () => req.followRedirect());
+        return req;
+    };
+
     log.info('Checking for updates.');
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdatesAndNotify();
 }
 
 function registerKeyboardHotkeys() {

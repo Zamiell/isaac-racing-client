@@ -392,6 +392,12 @@ function RPSpeedrun:CheckpointTouched()
   local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
+  if RPSpeedrun.spawnedCheckpoint then
+    RPSpeedrun.spawnedCheckpoint = false
+  else
+    return
+  end
+
   -- Give them the Checkpoint custom item
   -- (this is used by the AutoSplitter to know when to split)
   player:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)

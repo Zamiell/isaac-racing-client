@@ -241,10 +241,13 @@ function RPSchoolbag:CheckInput()
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
 
+  -- We don't care about detecting inputs if we don't have the Schoolbag,
+  -- we don't have anything in the Schoolbag,
+  -- or we currently have an active item held overhead
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
      RPGlobals.run.schoolbag.item == 0 or
-     player:IsItemQueueEmpty() == false then
-     -- This will allow switches while the use animation is occuring but
+     RPSchoolbag:IsActiveItemQueued() then
+     -- This will allow switches while the use/pickup animation is occuring but
      -- prevent bugs where queued items will override things
 
     return
@@ -267,6 +270,22 @@ function RPSchoolbag:CheckInput()
   RPGlobals.run.schoolbag.item = activeItem
   RPGlobals.run.schoolbag.charges = activeCharge
   RPSchoolbag.sprites.item = nil
+end
+
+function RPSchoolbag:IsActiveItemQueued()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player.QueuedItem.Item == nil then
+    return false
+  end
+
+  if player.QueuedItem.Item.Type == ItemType.ITEM_ACTIVE then -- 3
+    return true
+  else
+    return false
+  end
 end
 
 -- Called from the "RPSchoolbag:CheckInput()" function
