@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.22* - December 17th
+### *v0.14.23* - December 17th
 
 * Fixed the bug where you would get extra bombs, keys, and pickups when the new death mechanic ended. (Thanks BMZ_Loop)
 * Fixed the bug where the trophy would spawn on the 7th character during a season 1 custom challenge. (Thanks Cyber_1)
