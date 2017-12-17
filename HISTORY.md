@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.14.22* - December 16th
+### *v0.14.22* - December 17th
 
 * Isaac is now feeling festive. Merry Christmas! (Thanks to Gromfalloon for this)
 * The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
