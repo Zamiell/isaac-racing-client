@@ -520,7 +520,7 @@ exports.participantAdd = (i) => {
 
     // The racer's starting item
     racerDiv += `<td id="race-participants-table-${racer.name}-item" class="hidden">`;
-    // This will get filled in later in the "participantsSetItem" function
+    // This will get filled in later in the "participantsSetStartingItem" function
     racerDiv += '</td>';
 
     // The racer's time
@@ -540,7 +540,7 @@ exports.participantAdd = (i) => {
     // Update some values in the row
     participantsSetStatus(i, true);
     participantsSetFloor(i);
-    participantsSetItem(i);
+    participantsSetStartingItem(i);
 
     // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
     if (globals.raceList[globals.currentRaceID].racerList.length > 6) { // More than 6 races causes the overflow
@@ -738,29 +738,27 @@ const participantsSetFloor = (i) => {
 };
 exports.participantsSetFloor = participantsSetFloor;
 
-const participantsSetItem = (i) => {
-    // Go through the array and find the starting item
+const participantsSetStartingItem = (i) => {
     const race = globals.raceList[globals.currentRaceID];
     const racer = race.racerList[i];
-    const { name, items } = racer;
-    let startingItem = false;
-    for (let j = 0; j < items.length; j++) {
-        if (items[j].id === 105) {
-            // Skip the D6
-            continue;
-        }
-        startingItem = items[j].id;
-        break;
-    }
+    const {
+        name,
+        startingItem,
+    } = racer;
 
     // Update the starting item column of the row
-    if (startingItem !== false) {
-        $(`#race-participants-table-${name}-item`).html(startingItem);
-    } else {
+    if (startingItem === 0) {
         $(`#race-participants-table-${name}-item`).html('-');
+    } else {
+        const html = `
+            <div class="race-participants-table-starting-item-icon-container">
+                <span class="race-participants-table-starting-item-icon" style="background-image: url(img/items/${startingItem}.png);"></span>
+            </div>
+        `;
+        $(`#race-participants-table-${name}-item`).html(html);
     }
 };
-exports.participantsSetItem = participantsSetItem;
+exports.participantsSetStartingItem = participantsSetStartingItem;
 
 exports.markOnline = () => {
     // TODO
@@ -963,7 +961,8 @@ const start = () => {
 
     // Change the table to have 6 columns instead of 2
     $('#race-participants-table-place').fadeIn(globals.fadeTime);
-    $('#race-participants-table-status').css('width', '7.5em');
+    $('#race-participants-table-status').css('width', '8em');
+    // $('#race-participants-table-status').css('width', '7.5em');
     $('#race-participants-table-floor').fadeIn(globals.fadeTime);
     $('#race-participants-table-item').fadeIn(globals.fadeTime);
     $('#race-participants-table-time').fadeIn(globals.fadeTime);
@@ -1061,6 +1060,9 @@ const checkReadyValid = () => {
     } else if (!globals.gameState.racingPlusModEnabled && race.ruleset.format !== 'custom') {
         valid = false;
         tooltipContent = '<span lang="en">You must having the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
+    } else if (!globals.gameState.fileChecksComplete) {
+        valid = false;
+        tooltipContent = '<span lang="en">The Racing+ client is currently checking to see if your mod is corrupted. Please wait a minute or two.</span>';
     }
 
     if (!valid) {

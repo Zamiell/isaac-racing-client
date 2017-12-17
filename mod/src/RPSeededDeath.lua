@@ -11,7 +11,7 @@ local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_RENDER (2)
 function RPSeededDeath:PostRender()
-  if true then
+  if RPGlobals.debug == false then
     return
   end
 
@@ -54,9 +54,6 @@ function RPSeededDeath:PostRender()
   if RPGlobals.run.seededDeath.state == 2 then
     player.Position = RPGlobals.run.seededDeath.pos
     if playerSprite:IsPlaying("AppearVanilla") == false then
-      -- Fade the player
-      playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
-
       RPGlobals.run.seededDeath.state = 3
       Isaac.DebugString("Seeded death (3/3).")
     end
@@ -80,37 +77,47 @@ function RPSeededDeath:PostNewRoom()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local playerSprite = player:GetSprite()
   local character = player:GetPlayerType()
 
   -- Seeded death (2/3)
-  if RPGlobals.run.seededDeath.state == 1 then
-    -- Set their health to explicitly 1.5 soul hearts
-    player:AddMaxHearts(-24, false)
-    player:AddSoulHearts(-24)
-    if character == PlayerType.PLAYER_KEEPER then -- 14
-      player:AddMaxHearts(2)
-      player:AddHearts(2)
-    else
-      player:AddSoulHearts(3)
-    end
-
-    -- Start the debuff and set the finishing time to be in the future
-    RPSeededDeath:DebuffOn()
-    RPGlobals.run.seededDeath.time = Isaac.GetTime() + RPSeededDeath.DebuffTime * 1000
-
-    -- Play the animation where Isaac lies in the fetal position
-    player:PlayExtraAnimation("AppearVanilla")
-
-    RPGlobals.run.seededDeath.state = 2
-    RPGlobals.run.seededDeath.pos = Vector(player.Position.X, player.Position.Y)
-    Isaac.DebugString("Seeded death (2/3).")
+  if RPGlobals.run.seededDeath.state ~= 1 then
+    return
   end
+
+  -- Set their health to explicitly 1.5 soul hearts
+  player:AddMaxHearts(-24, false)
+  player:AddSoulHearts(-24)
+  if character == PlayerType.PLAYER_KEEPER then -- 14
+    player:AddMaxHearts(2)
+    player:AddHearts(2)
+  else
+    player:AddSoulHearts(3)
+  end
+
+  -- Start the debuff and set the finishing time to be in the future
+  RPSeededDeath:DebuffOn()
+  RPGlobals.run.seededDeath.time = Isaac.GetTime() + RPSeededDeath.DebuffTime * 1000
+
+  -- Play the animation where Isaac lies in the fetal position
+  player:PlayExtraAnimation("AppearVanilla")
+
+  -- Fade the player
+  playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
+
+  RPGlobals.run.seededDeath.state = 2
+  RPGlobals.run.seededDeath.pos = Vector(player.Position.X, player.Position.Y)
+  Isaac.DebugString("Seeded death (2/3).")
 end
 
 function RPSeededDeath:DebuffOn()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+
+  -- Remove any golden bombs and keys
+  player:RemoveGoldenBomb()
+  player:RemoveGoldenKey()
 
   -- Remove the items (and store them for later)
   local backupItems = RPGlobals:TableClone(RPGlobals.run.seededDeath.items)
@@ -122,7 +129,11 @@ function RPSeededDeath:DebuffOn()
       for j = 1, numItems do
         RPGlobals.run.seededDeath.items[#RPGlobals.run.seededDeath.items + 1] = i
         player:RemoveCollectible(i)
-        Isaac.DebugString("Removing collectible " .. tostring(i))
+        local debugString = "Removing collectible " .. tostring(i)
+        if i == CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM then
+          debugString = debugString .. " (Schoolbag)"
+        end
+        Isaac.DebugString(debugString)
         player:TryRemoveCollectibleCostume(i, false)
       end
     end

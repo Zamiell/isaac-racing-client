@@ -482,6 +482,7 @@ exports.init = (username, password, remember) => {
                 place: 0,
                 placeMid: 1,
                 items: [],
+                startingItem: 0,
             });
 
             // Update the race screen
@@ -778,12 +779,24 @@ exports.init = (username, password, remember) => {
         }
 
         // Find the player in the racerList
-        for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
-            if (data.name === globals.raceList[data.id].racerList[i].name) {
+        const race = globals.raceList[data.id];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
+            if (data.name === racer.name) {
                 // Update their place and floor locally
-                globals.raceList[data.id].racerList[i].floorNum = data.floorNum;
-                globals.raceList[data.id].racerList[i].stageType = data.stageType;
-                globals.raceList[data.id].racerList[i].datetimeArrivedFloor = data.datetimeArrivedFloor;
+                racer.floorNum = data.floorNum;
+                racer.stageType = data.stageType;
+                racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
+                if (data.floorNum === 1) {
+                    // Delete their items, since they reset
+                    racer.items = [];
+                    racer.startingItem = 0;
+
+                    // Update the race screen
+                    if (globals.currentScreen === 'race') {
+                        raceScreen.participantsSetStartingItem(i);
+                    }
+                }
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
@@ -813,13 +826,40 @@ exports.init = (username, password, remember) => {
         }
 
         // Find the player in the racerList
-        for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
-            if (data.name === globals.raceList[data.id].racerList[i].name) {
-                globals.raceList[data.id].racerList[i].items.push(data.item);
+        const race = globals.raceList[data.id];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
+            if (data.name === racer.name) {
+                racer.items.push(data.item);
+                break;
+            }
+        }
+    }
+
+    globals.conn.on('racerSetStartingItem', connRacerSetStartingItem);
+    function connRacerSetStartingItem(data) {
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(() => {
+                connRacerAddItem(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+            return;
+        }
+
+        if (data.id !== globals.currentRaceID) {
+            return;
+        }
+
+        // Find the player in the racerList
+        const race = globals.raceList[data.id];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
+            if (data.name === racer.name) {
+                racer.startingItem = data.item.id;
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
-                    raceScreen.participantsSetItem(i);
+                    raceScreen.participantsSetStartingItem(i);
                 }
 
                 break;

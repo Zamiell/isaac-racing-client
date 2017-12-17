@@ -69,12 +69,9 @@ Features to add:
 
 Features to add (low priority):
 - Fix bug where Desktop shortcut gets continually recreated: https://github.com/electron-userland/electron-builder/issues/1095
-- make UI expand horizontally properly
 - add items + date to "Top 10 Unseeded Times" leaderboard
 
 Bugs to fix (low priority):
-- french race tables rows are not confined to 1 line, so they look bad
-- Personnage (french) is too close to character in new-race tooltip
 - horizontal scroll bar appears when resizing smaller
 
 */

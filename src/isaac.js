@@ -12,6 +12,7 @@ const ps = require('ps-node');
 const tasklist = require('tasklist');
 const opn = require('opn');
 const hashFiles = require('hash-files');
+const mkdirp = require('mkdirp');
 const Registry = require('winreg');
 const version = require('./version');
 
@@ -269,7 +270,14 @@ function checkModIntegrity() {
         // Copy it
         if (copyFile) {
             fileSystemValid = false;
+
             try {
+                // Make sure the directory is there
+                const filePathDir = path.dirname(filePath);
+                if (!fs.existsSync(filePathDir)) {
+                    mkdirp.sync(filePathDir);
+                }
+
                 // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
                 // fs.copyFileSync(backupFilePath, filePath);
                 const data = fs.readFileSync(backupFilePath);

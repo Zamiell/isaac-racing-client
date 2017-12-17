@@ -28,6 +28,7 @@ module.exports = {
         inGame: false, // The log will tell us if we are in the menu or in a run
         hardMode: false, // The log will tell us if a run is started on hard mode or Greed mode
         racingPlusModEnabled: false, // The log will tell us if race validation succeeded, which is an indicator that they have successfully downloaded and are running the Racing+ Lua mod
+        fileChecksComplete: false, // This will be set to true when the "isaac.js" subprocess exits
     },
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js

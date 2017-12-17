@@ -7,6 +7,7 @@ const path = nodeRequire('path');
 const fs = nodeRequire('fs');
 const { ipcRenderer } = nodeRequire('electron');
 const globals = nodeRequire('./js/globals');
+const raceScreen = nodeRequire('./js/ui/race');
 const misc = nodeRequire('./js/misc');
 
 // This tells the main process to do file-related check
@@ -102,5 +103,8 @@ ipcRenderer.on('isaac', (event, message) => {
         misc.errorShow(error, false);
     } else if (message === 'File system was repaired, so we need to restart Isaac.') {
         misc.warningShow('Racing+ detected that your mod was corrupted and automatically fixed it. Your game has been restarted to ensure that everything is now loaded correctly. (If a patch just came out, this message is normal, as Steam has likely not had time to download the newest version yet.)');
+    } else if (message === 'exited') {
+        globals.gameState.fileChecksComplete = true;
+        raceScreen.checkReadyValid();
     }
 });

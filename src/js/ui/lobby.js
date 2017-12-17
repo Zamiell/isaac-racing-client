@@ -170,9 +170,11 @@ exports.raceDraw = (race) => {
     }
     raceDiv += '</span>';
 
-    raceDiv += '<span class="lobby-current-races-type-icon">';
-    raceDiv += `<span class="lobby-current-races-${(race.ruleset.ranked ? 'ranked' : 'unranked')}" lang="en"></span></span>`;
-    raceDiv += '<span class="lobby-current-races-spacing"></span>';
+    if (race.ruleset.solo) {
+        raceDiv += '<span class="lobby-current-races-type-icon">';
+        raceDiv += `<span class="lobby-current-races-${(race.ruleset.ranked ? 'ranked' : 'unranked')}" lang="en"></span></span>`;
+        raceDiv += '<span class="lobby-current-races-spacing"></span>';
+    }
 
     raceDiv += '<span class="lobby-current-races-format-icon">';
     raceDiv += `<span class="lobby-current-races-${race.ruleset.format}" lang="en"></span></span>`;

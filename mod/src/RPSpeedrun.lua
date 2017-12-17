@@ -666,6 +666,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 9 characters
           RPGlobals.race.order9 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -691,6 +692,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 14 characters
           RPGlobals.race.order14 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -716,6 +718,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 characters
           RPGlobals.race.order7 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -741,6 +744,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 characters
           RPGlobals.race.order7 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 

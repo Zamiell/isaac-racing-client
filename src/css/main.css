@@ -4431,6 +4431,21 @@
         padding: 0.25em 0.75em;
     }
 
+    .race-participants-table-starting-item-icon-container {
+        position: relative;
+        display: inline-block;
+        bottom: 1.35em;
+        right: 0.25em;
+    }
+
+    .race-participants-table-starting-item-icon {
+        background-repeat: no-repeat;
+        background-position: center center;
+        display: inline-block;
+        height: 2em;
+        width: 3em;
+        position: absolute;
+    }
 
     /*
         Race (chat)

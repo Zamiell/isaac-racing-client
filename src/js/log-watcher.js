@@ -99,6 +99,20 @@ ipcRenderer.on('log-watcher', (event, message) => {
         // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
         globals.gameState.racingPlusModEnabled = true;
         raceScreen.checkReadyValid();
+    } else if (message.startsWith('New order: ')) {
+        const m = message.match(/New order: (.+)/);
+        if (m) {
+            const order = JSON.parse(m[1]);
+            if (order.length === 7) {
+                globals.modLoader.order7 = order;
+            } else if (order.length === 9) {
+                globals.modLoader.order9 = order;
+            } else if (order.length === 14) {
+                globals.modLoader.order14 = order;
+            }
+        } else {
+            misc.errorShow('Failed to parse the speedrun order from the message sent by the log watcher process.');
+        }
     }
 
     /*

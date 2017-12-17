@@ -146,6 +146,13 @@ const parseLine = (line) => {
     } else if (line.startsWith('Lua Debug: Race validation succeeded.')) {
         // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
         process.send('Race validation succeeded.');
+    } else if (line.startsWith('Lua Debug: New order: ')) {
+        const m = line.match(/Lua Debug: New order: {(.+)}/);
+        if (m) {
+            process.send(`New order: [${m[1]}]`);
+        } else {
+            process.send('error: Failed to parse the speedrun order from the log.');
+        }
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         // (send this separately from the seed because race validation messages are checked before parsing the seed)

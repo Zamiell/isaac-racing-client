@@ -1,8 +1,20 @@
 # Racing+ Version History and News
 
+### *v0.14.22* - December 16th
+
+* Isaac is now feeling festive. Merry Christmas! (Thanks to Gromfalloon for this)
+* The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
+* The new death mechanic has been implemented for seeded races, but only if you have "RPGlobals.debug = true" in the "src/RPGlobals.lua" file. Feel free to test it and provide feedback before it is implemented by default.
+* Fixed the bug where the "Items" column in the Racing+ client would show a number instead of the starting item.
+* Fixed the bug where having the client open would mess up the "Change Char Order" custom challenge. (Thanks molfried)
+* Fixed the bug where Racing+ would close your game in the middle of a run on potato computers. (Thanks Krakenos)
+* Fixed the bug where the Racing+ client would fail to fix a corrupted mod when the directory did not exist. (Thanks Astraii)
+* Fixed the bug where the ranked/unranked icon would show up in the lobby for multiplayer races.
+* Fixed the bug on the french version of the client where "En Course" would wrap to a second line.
+
 ### *v0.14.21* - December 16th
 
-* You can now perform a Schoolbag switch during an item pickup animation, as long as the item is not an active item.
+* You can now perform a Schoolbag switch during an item pickup animation, as long as the item that you are holding above your head is not an active item.
 * Fixed the bug where you could go the wrong way and still complete a multi-character speedrun custom challenge.
 * Fixed the bug where the automatic update was not working properly. You may need to manually download and install this version.
 
