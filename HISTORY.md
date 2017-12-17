@@ -2,6 +2,11 @@
 
 ### *v0.14.22* - December 17th
 
+* Fixed the bug where you would get extra bombs, keys, and pickups when the new death mechanic ended. (Thanks BMZ_Loop)
+* Fixed the bug where the trophy would spawn on the 7th character during a season 1 custom challenge. (Thanks Cyber_1)
+
+### *v0.14.22* - December 17th
+
 * Isaac is now feeling festive. Merry Christmas! (Thanks to Gromfalloon for this)
 * The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
 * The new death mechanic has been implemented for seeded races, but only if you have "RPGlobals.debug = true" in the "src/RPGlobals.lua" file. Feel free to test it and provide feedback before it is implemented by default.

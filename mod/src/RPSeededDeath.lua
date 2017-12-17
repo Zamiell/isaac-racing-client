@@ -155,15 +155,42 @@ function RPSeededDeath:DebuffOff()
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
 
-  -- Store the current red hearts and soul/black hearts
+  -- Store the current red hearts, soul/black hearts, bombs, and keys
   local hearts = player:GetHearts()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
   local blackHearts = player:GetBlackHearts()
+  local bombs = player:GetNumBombs()
+  local keys = player:GetNumKeys()
 
   -- Add all of the items from the array
+  local deletePickups = false
   for i = 1, #RPGlobals.run.seededDeath.items do
-    player:AddCollectible(RPGlobals.run.seededDeath.items[i], 0, false)
+    local itemID = RPGlobals.run.seededDeath.items[i]
+    player:AddCollectible(itemID, 0, false)
+    if itemID == CollectibleType.COLLECTIBLE_PHD or -- 75
+       itemID == CollectibleType.COLLECTIBLE_PAGEANT_BOY or -- 141
+       itemID == CollectibleType.COLLECTIBLE_MAGIC_8_BALL or -- 194
+       itemID == CollectibleType.COLLECTIBLE_MOMS_COIN_PURSE or -- 195
+       itemID == CollectibleType.COLLECTIBLE_SQUEEZY or -- 196
+       itemID == CollectibleType.COLLECTIBLE_BOX or -- 198
+       itemID == CollectibleType.COLLECTIBLE_STARTER_DECK or -- 251
+       itemID == CollectibleType.COLLECTIBLE_LITTLE_BAGGY or -- 252
+       itemID == CollectibleType.COLLECTIBLE_CAFFEINE_PILL or -- 340
+       itemID == CollectibleType.COLLECTIBLE_LATCH_KEY or -- 343
+       itemID == CollectibleType.COLLECTIBLE_MATCH_BOOK or -- 344
+       itemID == CollectibleType.COLLECTIBLE_CRACK_JACKS or -- 354
+       itemID == CollectibleType.COLLECTIBLE_MR_DOLLY or -- 370
+       itemID == CollectibleType.COLLECTIBLE_RESTOCK or -- 376
+       itemID == CollectibleType.COLLECTIBLE_CHAOS or -- 402
+       itemID == CollectibleType.COLLECTIBLE_SACK_HEAD or -- 424
+       itemID == CollectibleType.COLLECTIBLE_TAROT_CLOTH or -- 451
+       itemID == CollectibleType.COLLECTIBLE_POLYDACTYLY or -- 454
+       itemID == CollectibleType.COLLECTIBLE_DADS_LOST_COIN or -- 455
+       itemID == CollectibleType.COLLECTIBLE_BELLY_BUTTON then -- 458
+
+      deletePickups = true
+    end
   end
   player:SetActiveCharge(RPGlobals.run.seededDeath.charge)
 
@@ -179,6 +206,23 @@ function RPSeededDeath:DebuffOff()
       player:AddSoulHearts(1)
     else -- Black heart
       player:AddBlackHearts(1)
+    end
+  end
+
+  -- Set the inventory to the way it was before the items were added
+  player:AddBombs(-99)
+  player:AddBombs(bombs)
+  player:AddKeys(-99)
+  player:AddKeys(keys)
+
+  -- Delete all pickups
+  if deletePickups then
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_PICKUP and
+         entity.Variant ~= PickupVariant.PICKUP_COLLECTIBLE then -- 100
+
+        entity:Remove()
+      end
     end
   end
 end

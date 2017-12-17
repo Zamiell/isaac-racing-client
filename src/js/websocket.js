@@ -838,6 +838,9 @@ exports.init = (username, password, remember) => {
 
     globals.conn.on('racerSetStartingItem', connRacerSetStartingItem);
     function connRacerSetStartingItem(data) {
+        // Log the event
+        globals.log.info(`Websocket - racerSetStartingItem - ${JSON.stringify(data)}`);
+
         if (globals.currentScreen === 'transition') {
             // Come back when the current transition finishes
             setTimeout(() => {

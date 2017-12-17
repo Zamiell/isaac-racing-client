@@ -327,35 +327,26 @@ function RPCheckEntities:Entity5_340(pickup)
 
   Isaac.DebugString("Big Chest detected.")
   RPCheckEntities.bigChestAction = "leave" -- Leave the big chest there by default
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
-
-    RPCheckEntities:Entity5_340_S1(pickup)
-
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
+    RPCheckEntities:Entity5_340_S1R9(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
+    RPCheckEntities:Entity5_340_S1R14(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     RPCheckEntities:Entity5_340_S2(pickup)
-
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
-
   elseif RPGlobals.raceVars.finished then
     RPCheckEntities.bigChestAction = "victorylap"
-
   elseif RPGlobals.race.rFormat == "pageant" then
     RPCheckEntities:Entity5_340_Pageant(pickup)
-
   elseif RPGlobals.race.goal == "Blue Baby" then
     RPCheckEntities:Entity5_340_BlueBaby(pickup)
-
   elseif RPGlobals.race.goal == "The Lamb" then
     RPCheckEntities:Entity5_340_TheLamb(pickup)
-
   elseif RPGlobals.race.goal == "Mega Satan" then
     RPCheckEntities:Entity5_340_MegaSatan(pickup)
-
   elseif RPGlobals.race.goal == "Everything" then
     RPCheckEntities:Entity5_340_Everything(pickup)
-
   else
     Isaac.DebugString("Error: Failed to parse the race goal when figuring out what to do with the big chest.")
   end
@@ -404,7 +395,7 @@ function RPCheckEntities:Entity5_340(pickup)
   end
 end
 
-function RPCheckEntities:Entity5_340_S1(pickup)
+function RPCheckEntities:Entity5_340_S1R9(pickup)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -418,7 +409,29 @@ function RPCheckEntities:Entity5_340_S1(pickup)
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
-    if RPSpeedrun.charNum == 7 then
+    if RPSpeedrun.charNum == 9 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_S1R14(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- The Chest
+    if RPSpeedrun.charNum == 14 then
       RPCheckEntities.bigChestAction = "trophy"
     else
       RPCheckEntities.bigChestAction = "checkpoint"

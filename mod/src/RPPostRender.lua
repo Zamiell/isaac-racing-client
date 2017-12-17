@@ -427,7 +427,7 @@ function RPPostRender:Race()
   if (RPGlobals.race.status == "open" or RPGlobals.race.status == "starting") and
      roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
-    if RPGlobals.race.ranked then
+    if RPGlobals.race.ranked or RPGlobals.race.solo == false then
       RPSprites:Init("raceRanked", "ranked")
       RPSprites:Init("raceRankedIcon", "ranked-icon")
     else
