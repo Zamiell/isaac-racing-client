@@ -519,7 +519,7 @@ exports.participantAdd = (i) => {
     racerDiv += '</td>';
 
     // The racer's starting item
-    racerDiv += `<td id="race-participants-table-${racer.name}-item" class="hidden">`;
+    racerDiv += `<td id="race-participants-table-${racer.name}-item" class="hidden race-participants-table-item">`;
     // This will get filled in later in the "participantsSetStartingItem" function
     racerDiv += '</td>';
 

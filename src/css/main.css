@@ -4431,11 +4431,15 @@
         padding: 0.25em 0.75em;
     }
 
+    .race-participants-table-item {
+        text-align: center;
+    }
+
     .race-participants-table-starting-item-icon-container {
         position: relative;
         display: inline-block;
         bottom: 1.35em;
-        right: 0.25em;
+        right: 1.4em;
     }
 
     .race-participants-table-starting-item-icon {

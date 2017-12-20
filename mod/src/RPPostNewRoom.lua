@@ -549,14 +549,12 @@ function RPPostNewRoom:Race()
     end
   end
 
-  -- Check to see if we need to remove More Options in a diversity race or an "Unseeded (Lite)" race
+  -- Check to see if we need to remove More Options (used to give only one double item Treasure Room)
   if roomType == RoomType.ROOM_TREASURE and -- 4
      player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
-     (RPGlobals.race.rFormat == "diversity" or
-      RPGlobals.race.rFormat == "unseeded-lite") and
-     RPGlobals.raceVars.removedMoreOptions == false then
+     RPGlobals.run.removeMoreOptions then
 
-    RPGlobals.raceVars.removedMoreOptions = true
+    RPGlobals.run.removeMoreOptions = false
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 

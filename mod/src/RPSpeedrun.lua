@@ -313,6 +313,15 @@ function RPSpeedrun:Init()
     itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
   end
 
+  -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
+  if RPSpeedrun.charNum == 1 then
+    player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+    Isaac.DebugString("Removing collectible 414 (More Options)")
+    -- We don't need to show this on the item tracker to reduce clutter
+    RPGlobals.run.removeMoreOptions = true
+    -- More Options will be removed upon entering the first Treasure Room
+  end
+
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
      character ~= RPGlobals.race.order9[RPSpeedrun.charNum] then
 

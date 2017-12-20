@@ -241,7 +241,7 @@ function checkModIntegrity() {
     for (let relativePath of Object.keys(checksums)) {
         if (process.platform !== 'win32') {
             // In the file are double backslashes, so they need to be converted to macOS/Linux format
-            relativePath = relativePath.replace('\\', '/');
+            relativePath = relativePath.replace(/\\/g, '/');
         }
         const filePath = path.join(modPath, relativePath);
         const backupFilePath = path.join(backupModPath, relativePath);

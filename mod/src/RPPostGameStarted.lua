@@ -120,7 +120,6 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.raceVars.finished = false
   RPGlobals.raceVars.finishedTime = 0
   RPGlobals.raceVars.fireworks = 0
-  RPGlobals.raceVars.removedMoreOptions = false
   RPGlobals.raceVars.victoryLaps = 0
 
   -- Reset some RNG counters to the floor RNG of Basement 1
@@ -590,6 +589,7 @@ function RPPostGameStarted:Diversity()
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
+  RPGlobals.run.removeMoreOptions = true
   -- More Options will be removed upon entering the first Treasure Room
 
   -- Give the player their five random diversity starting items
@@ -782,6 +782,7 @@ function RPPostGameStarted:UnseededLite()
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
+  RPGlobals.run.removeMoreOptions = true
   -- More Options will be removed upon entering the first Treasure Room
 
   Isaac.DebugString("Added unseeded-lite items.")

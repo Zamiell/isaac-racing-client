@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.14.25* - December 19th
+
+* You will now always get a Treasure Room with two items on the first floor of the first character of a multi-character speedrun custom challenge. (Thanks Cyber_1)
+* Fixed the bug where the client would crash on macOS when repairing a corrupted mod. (Thanks TrumpetZorua)
+
 ### *v0.14.23* - December 17th
 
 * Fixed the bug where you would get extra bombs, keys, and pickups when the new death mechanic ended. (Thanks BMZ_Loop)

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.14.24"
+RPGlobals.version = "v0.14.25"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -45,7 +45,6 @@ RPGlobals.raceVars = {
   finishedTime       = 0,
   showPlaceGraphic   = false,
   fireworks          = 0,
-  removedMoreOptions = false,
   victoryLaps        = 0,
 }
 
@@ -119,10 +118,11 @@ RPGlobals.FadeoutTarget = {
 
 function RPGlobals:InitRun()
   -- Tracking per run
-  RPGlobals.run.startedTime   = 0
-  RPGlobals.run.roomsEntered  = 0
-  RPGlobals.run.movingBoxOpen = true
-  RPGlobals.run.killedLamb    = false -- Used for the "Everything" race goal
+  RPGlobals.run.startedTime       = 0
+  RPGlobals.run.roomsEntered      = 0
+  RPGlobals.run.movingBoxOpen     = true
+  RPGlobals.run.killedLamb        = false -- Used for the "Everything" race goal
+  RPGlobals.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
