@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.14.26* - December 27th
+
+* Isaac is now feeling festive. Happy New Years! (Thanks to Gromfalloon for this)
+* Now that the Rage Creep bug has been fixed in the vanilla game, the pot has been restored to Womb/Utero/Scarred room #202.
+* Fixed a (vanilla) softlock in Womb room #847 by removing the red poop.
+* Fixed the bug where the client would fail to heal a corrupt mod on macOS. (Thanks liam13661)
+
 ### *v0.14.25* - December 19th
 
 * You will now always get a Treasure Room with two items on the first floor of the first character of a multi-character speedrun custom challenge. (Thanks Cyber_1)
@@ -12,7 +19,7 @@
 
 ### *v0.14.22* - December 17th
 
-* Isaac is now feeling festive. Merry Christmas! (Thanks to Gromfalloon for this)
+* Isaac is now feeling festive. Merry Christmas!
 * The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
 * The new death mechanic has been implemented for seeded races, but only if you have "RPGlobals.debug = true" in the "src/RPGlobals.lua" file. Feel free to test it and provide feedback before it is implemented by default.
 * Fixed the bug where the "Items" column in the Racing+ client would show a number instead of the starting item.

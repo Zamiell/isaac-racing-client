@@ -2,14 +2,22 @@
 
 ## Table of Contents
 
-1. [Balance Changes](#balance)
-2. [Bug Fixes](#bug-fixes)
-3. [Miscellaneous](#miscellaneous)
-4. [Rooms That Were Deliberately Not Changed](#rooms-that-were-deliberately-not-changed)
+1. [Balance Changes](#balance-changes)
+2. [Softlock Fixes](#softlock-fixes)
+3. [Unavoidable Damage Fixes](#unavoidable-damage-fixes)
+3. [Bug Fixes](#bug-fixes)
+4. [Miscellaneous Changes](#miscellaneous-changes)
+5. [Rooms That Were Deliberately Not Changed](#rooms-that-were-deliberately-not-changed)
 
-## Balance
+<br />
 
-Firstly, some rooms were purely changed for balance (racing) reasons. Rooms with bug fixes are below in a different section.
+
+
+
+
+## Balance Changes
+
+Firstly, some rooms were purely changed for balance (racing) reasons. Rooms that were changed for other reasons are listed in different sections.
 
 <br />
 
@@ -40,7 +48,7 @@ The changes Angel Rooms are as follows:
 
 ### Treasure Room Fix
 
-The Treasure Room with two pedestals and spikes has been slightly tweaked so that some characters can use a bomb to get the item without spending a soul heart.
+The Treasure Room with two pedestals and spikes has been slightly tweaked so that characters that start with a bomb to get the item without spending a soul heart.
 
 The changed room is as follows:
 * Treasure Room: #21
@@ -60,42 +68,86 @@ The removed room is as follows:
 
 
 
+## Softlock Fixes
 
-## Bug Fixes
+A softlock is a condition where:
+* it is impossible to beat the run
+* the player is forced to save and quit to beat the run
+* the player is forced to stand still for an unreasonable amount of time to beat the run
 
-The Racing+ mod tries to fix as many bugs as possible. Unavoidable damage is classified as a bug, but difficult rooms are not.
+There are several softlocks in the vanilla game.
 
 <br />
 
-### Boss Room Door Fix (Part 1)
+### Low Range Fix
 
-It is not possible for Devil Room doors to spawn on boss rooms that only have one entrance. For this reason, several rooms were adjusted to allow for at least two entrances.
+Low range builds softlock in certain rooms. The rooms are fixed by moving the enemies closer.
 
 The changed rooms are as follows:
-* #2065 (Fistula)
-* #5026 (Dingle)
-* #5044 (The Gate)
-* #5145 (Gurglings)
+* Caves/Flooded: #226
+* Caves/Catacombs/Flooded: #305
+* Depths/Necropolis/Dank: #226, #417
+* Womb/Utero/Scarred: #458, #459
 
 <br />
 
-### Boss Room Door Fix (Part 2)
+### Clustered Gaping Maws Fix
 
-If you have Duality and there is only 2 entrances to a boss room, the Angel Room will not spawn. For this reason, all non-narrow rooms were adjusted to allow for a third door where possible.
+* If a player with flying and base movement speed gets close to 4 Gaping Maws paired together, it becomes impossible to escape. This was fixed in Womb #424 by adding two Broken Gaping Maws, but the developers forgot to also make the change to Utero #424.
+* In both of these rooms, there is no consistent strategy to avoid damage when entering from the bottom-left-hand door. Two pots have been placed to alleviate this.
 
-* #1025, #1027, #1028, #1048, #1049 (Larry Jr.)
-* #1045 (Monstro)
-* #1057 (Chub)
-* #1089, #1095 (Little Horn)
-* #1099 (Dingle 2)
-* #2064 (Fistula)
-* #3264, #3265, #3266 (The Hollow)
-* #3701, #3713, #3714, #3716, #3756, #3760, #3762, #3765, #3766, #3767, #3769, #3807, #3811 (Double Trouble)
-* #4012 (Famine)
-* #4033 (Conquest)
-* #5033 (Mega Maw)
-* #5083 (Dark One)
-* #5106 (Polycephalus)
+The changed rooms are as follows:
+* Womb/Utero/Scarred: #424
+
+<br />
+
+### Pooter Fix
+
+On certain rooms in the Basement/Cellar, some Pooters can fly over rocks, causing a pseudo-softlock.
+
+The changed rooms are as follows:
+* Basement/Burning: #135, #391
+
+<br />
+
+### Boil Fix
+
+In one room, there are Boils behind a Key Block, which can lead to a softlock if you have no keys or bombs. The stacked Boils have been removed.
+
+The changed room is as follows:
+* Womb/Utero/Scarred: #692
+
+<br />
+
+### Stone Grimace Fix
+
+In certain rooms, having very large tears causes a softlock in rooms with Stone Grimaces next to poops. This is because the Stone Grimace hitbox takes priority over the poop.
+
+The changed rooms are as follows:
+* Womb/Utero/Scarred: #705 (moved the Red Poops to the side)
+* Womb: #847 (removed the Red Poop)
+
+<br />
+
+### Bomb Puzzle Room Fix
+
+The bomb puzzle room with four entrances has many problems with it:
+* The random bomb drops (5.40.0) were replaced with set bomb drops (5.40.1) to prevent troll bombs from spawning, which can softlock the room.
+* A rock was also removed to prevent a softlock if the player enters from the left side.
+* On the Dank Depths, any rocks that are randomly replaced with spikes are removed in order to prevent unavoidable damage.
+
+The changed room is as follows:
+* Depths/Necropolis/Dank: #41
+
+<br />
+
+
+
+
+
+## Unavoidable Damage Fixes
+
+Racing+ is somewhat conservative with what it classifies as unavoidable damage. Difficult rooms are not considered unavoidable damage. Many hours have been spent testing the viability of rooms with various builds.
 
 <br />
 
@@ -207,25 +259,6 @@ The changed rooms are as follows:
 
 <br />
 
-### Begotten Fix 2
-
-One room has Begottens that are not close enough to a well, so they immediately despawn upon entering the room, making the room completely pointless.
-
-The deleted rooms are as follows:
-* Depths/Necropolis/Dank: #422
-
-<br />
-
-### Clustered Gaping Maws Fix
-
-* If a player with flying and base movement speed gets close to 4 Gaping Maws paired together, it becomes impossible to escape. This was fixed in Womb #424 by adding two Broken Gaping Maws, but the developers forgot to also make the change to Utero #424.
-* In both of these rooms, there is no consistent strategy to avoid damage when entering from the bottom-left-hand door. Two pots have been placed to alleviate this.
-
-The changed rooms are as follows:
-* Womb/Utero/Scarred: #424
-
-<br />
-
 ### Adversary Fix
 
 If two Adversaries get close to a wall, the Brimstone attack can be unavoidable. This is mitigated by moving the Adversaries closer to the middle of the room.
@@ -258,6 +291,150 @@ The changed rooms are as follows:
 * #3271
 * #3272
 * #3273
+
+<br />
+
+### Close Entity Fix
+
+One room has an enemy close to an entrance. If the player has an allied Charger, it will cause the enemy to spawn inside of the player.
+
+The changed room is as follows:
+* Caves/Flooded: #167 (Attack Fly)
+
+<br />
+
+### Narrow Red Poop Room Fix
+
+On Dr. Fetus builds, the narrow red poop room in The Chest is unavoidable damage. This bug has been fixed by deleting some of the poops to allow for a walkable path.
+
+The changed room is as follows:
+* The Chest: #289
+
+<br />
+
+### Leaper & Pokey Room Fix
+
+On the room with the two Leapers and two Pokeys, certain attack patterns can lead to unavoidable damage. The room has been made slightly more spacious to account for this.
+
+The changed room is as follows:
+* Depths/Dank: #110
+
+<br />
+
+### Red Fire Puzzle Room Removal
+
+The puzzle rooms with the red fires along the sides of the room have no consistent strategy with which to avoid the random shots.
+
+The removed room is as follows:
+* Basement/Cellar/Burning: #771
+
+<br />
+
+### Forsaken Fix
+
+If a Forsaken does a Brimstone attack in the middle of a L-shaped room, it can sometimes be unavoidable. To fix this, Forsakens were replaced with alternate bosses.
+
+The changed rooms are as follows:
+* Chest: #295, #296
+
+<br />
+
+### Nerve Ending Fix
+
+Some rooms in the game have Nerve Endings next to doors. These are unavoidable damage if the Nerve Endings happen to spawn as their champion variant. This bug is fixed by removing or moving some Nerve Endings.
+
+The changed rooms are as follows:
+* Womb/Utero/Scarred: #147, #825
+
+<br />
+
+### Pale Fatty Fix
+
+In some rooms, Edmund placed a rediculous amount of Pale Fatties. The number has been reduced to 8, which is possible to consistently kill without getting hit on a basic build.
+
+The changed rooms are as follows:
+* Caves/Catacombs/Flooded: #843, #854
+
+<br />
+
+### Fire Fix
+
+In one room, fires spawn close to the entrance. If the fire becomes a champion red fire, then the player can take unavoidable damage. This bug has been fixed by replacing the Fire with Fire Places, which are guaranteed to not spawn as red fires.
+
+The changed rooms are as follows:
+* Depths/Necropolis/Dank: #863
+
+<br />
+
+### Hive Fix
+
+In one room, the Drowned Chargers that spawn from a Hive can be unavoidable damage. The Hives have been slightly moved to accommodate for this.
+
+The changed room is as follows:
+* Caves/Flooded: #519
+
+<br />
+
+### I AM ERROR Door/Entrance Fixes
+
+On several I AM ERROR rooms, objects overlap with the doors, which can cause unavoidable damage in certain situations.
+
+The changed rooms are as follows:
+
+* #14 (deleted poops)
+* #15 (added doors)
+* #26 (moved pickups)
+
+<br />
+
+
+
+
+
+## Bug Fixes
+
+The Racing+ mod tries to fix as many bugs as possible.
+
+<br />
+
+### Boss Room Door Fix (Part 1)
+
+It is not possible for Devil Room doors to spawn on boss rooms that only have one entrance. For this reason, several rooms were adjusted to allow for at least two entrances.
+
+The changed rooms are as follows:
+* #2065 (Fistula)
+* #5026 (Dingle)
+* #5044 (The Gate)
+* #5145 (Gurglings)
+
+<br />
+
+### Boss Room Door Fix (Part 2)
+
+If you have Duality and there is only 2 entrances to a boss room, the Angel Room will not spawn. For this reason, all non-narrow rooms were adjusted to allow for a third door where possible.
+
+* #1025, #1027, #1028, #1048, #1049 (Larry Jr.)
+* #1045 (Monstro)
+* #1057 (Chub)
+* #1089, #1095 (Little Horn)
+* #1099 (Dingle 2)
+* #2064 (Fistula)
+* #3264, #3265, #3266 (The Hollow)
+* #3701, #3713, #3714, #3716, #3756, #3760, #3762, #3765, #3766, #3767, #3769, #3807, #3811 (Double Trouble)
+* #4012 (Famine)
+* #4033 (Conquest)
+* #5033 (Mega Maw)
+* #5083 (Dark One)
+* #5106 (Polycephalus)
+
+<br />
+
+### Begotten Fix 2
+
+One room has Begottens that are not close enough to a wall, so they immediately despawn upon entering the room, making the room completely pointless.
+
+The deleted rooms are as follows:
+* Depths/Necropolis/Dank: #422
 
 <br />
 
@@ -299,18 +476,6 @@ The changed room is as follows:
 
 <br />
 
-### Low Range Softlock Fix
-
-Low range builds softlock in certain rooms. The rooms are fixed by moving the enemies closer.
-
-The changed rooms are as follows:
-* Caves/Flooded: #226
-* Caves/Catacombs/Flooded: #305
-* Depths/Necropolis/Dank: #226, #417
-* Womb/Utero/Scarred: #458, #459
-
-<br />
-
 ### Card Room Fix
 
 The rooms with a bugged Magician or Lovers card are fixed to be a random card.
@@ -329,147 +494,6 @@ The room with a bugged High Priestess card is fixed to be a random rune. The roo
 The changed rooms are as follows:
 * Dark Room: #291 (High Priestess)
 * I AM ERROR Room: #23 (Lovers)
-
-<br />
-
-### Close Entity Fix
-
-One room has an enemy close to an entrance. If the player has an allied Charger, it will cause the enemy to spawn inside of the player.
-
-The changed room is as follows:
-* Caves/Flooded: #167 (Attack Fly)
-
-<br />
-
-### Narrow Red Poop Room Fix
-
-On Dr. Fetus builds, the narrow red poop room in The Chest is unavoidable damage. This bug has been fixed by deleting some of the poops to allow for a walkable path.
-
-The changed room is as follows:
-* The Chest: #289
-
-<br />
-
-### Rage Creep & Round Worm Room Fix
-
-One room in the Womb / Utero has two Rage Creeps and four Round Worms in the center. In Afterbirth, the top Rage Creep will hit the player if they stay at the top door. However, this is not unavoidable damage, as it is possible to kill the top Rage Creep before it fires. Alternatively, it is possible to run to the bottom wall before either Rage Creep begins firing. However, the pot in the center of the room messes with the AI of the Round Worms, so the pot has been removed to make traversing this room slightly more consistent.
-
-The changed rooms are as follows:
-* Womb/Utero/Scarred: #202
-
-<br />
-
-### Leaper & Pokey Room Fix
-
-On the room with the two Leapers and two Pokeys, certain attack patterns can lead to unavoidable damage. The room has been made slightly more spacious to account for this.
-
-The changed room is as follows:
-* Depths/Dank: #110
-
-<br />
-
-### Pooter Fix
-
-On certain rooms in the Basement/Cellar, some Pooters can fly over rocks, causing a pseudo-softlock.
-
-The changed rooms are as follows:
-* Basement/Burning: #135, #391
-
-<br />
-
-### Bomb Puzzle Room Fix
-
-The bomb puzzle room with four entrances has many problems with it:
-* The random bomb drops (5.40.0) were replaced with set bomb drops (5.40.1) to prevent troll bombs from spawning.
-* A rock was also removed to prevent a softlock if the player enters from the left side.
-* On the Dank Depths, any rocks that are randomly replaced with spikes are reverted back to rocks in order to prevent unavoidable damage.
-
-The changed room is as follows:
-* Depths/Necropolis/Dank: #41
-
-<br />
-
-### Red Fire Puzzle Room Removal
-
-The puzzle rooms with the red fires along the sides of the room have no consistent strategy with which to avoid the random shots.
-
-The removed room is as follows:
-* Basement/Cellar/Burning: #771
-
-<br />
-
-### Forsaken Fix
-
-If a Forsaken does a Brimstone attack in the middle of a L-shaped room, it can sometimes be unavoidable. To fix this, Forsakens were replaced with alternate bosses.
-
-The changed rooms are as follows:
-* Chest: #295, #296
-
-<br />
-
-### No Doors Fix
-
-One room in the game does not have any doors, which is obviously a mistake.
-
-The changed room is as follows:
-* Caves/Flooded: #208
-
-<br />
-
-### Nerve Ending Fix
-
-Some rooms in the game have Nerve Endings next to doors. These are unavoidable damage if the Nerve Endings happen to spawn as their champion variant. This bug is fixed by removing or moving some Nerve Endings.
-
-The changed rooms are as follows:
-* Womb/Utero/Scarred: #147, #825
-
-<br />
-
-### Pale Fatty Fix
-
-In some rooms, Edmund placed a rediculous amount of Pale Fatties. The number has been reduced to 8, which is possible to consistently kill without getting hit on a basic build.
-
-The changed rooms are as follows:
-* Caves/Catacombs/Flooded: #843, #854
-
-<br />
-
-### Fire Fix
-
-In one room, fires spawn close to the entrance. If the fire becomes a champion red fire, then the player can take unavoidable damage. This bug has been fixed by replacing the Fire with Fire Places, which are guaranteed to not spawn as red fires.
-
-The changed rooms are as follows:
-* Depths/Necropolis/Dank: #863
-
-<br />
-
-### Hive Fix
-
-In one room, the Drowned Chargers that spawn from a Hive can be unavoidable damage. The Hives have been slightly moved to accommodate for this.
-
-The changed room is as follows:
-* Caves/Flooded: #519
-
-<br />
-
-### Boil Softlock Fix
-
-In one room, there are Boils behind a Key Block, which can lead to a softlock if you have no keys or bombs. The stacked Boils have been removed.
-
-The changed room is as follows:
-* Womb/Utero/Scarred: #692
-
-<br />
-
-### I AM ERROR Door/Entrance Fixes
-
-On several I AM ERROR rooms, objects overlap with the doors, which can cause unavoidable damage in certain situations.
-
-The changed rooms are as follows:
-
-* #14 (deleted poops)
-* #15 (added doors)
-* #26 (moved pickups)
 
 <br />
 
@@ -509,7 +533,7 @@ The changed room is as follows:
 
 
 
-## Miscellaneous
+## Miscellaneous Changes
 
 ### Graphics
 

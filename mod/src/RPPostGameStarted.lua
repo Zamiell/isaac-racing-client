@@ -168,7 +168,7 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Make sure that the festive hat shows
-  -- (enabled until Christmas ends)
+  -- (enabled until New Years ends)
   local player = game:GetPlayer(0)
   player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
