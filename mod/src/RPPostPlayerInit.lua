@@ -11,7 +11,6 @@ function RPPostPlayerInit:Main(player)
 
   Isaac.DebugString("MC_POST_PLAYER_INIT")
 
-  -- Return if this is not a co-op babies
   if player.Variant == 0 then
     -- With Eve, Eden, and Keeper, the beginning of the recharge sound will play, which is annoying
     if character == PlayerType.PLAYER_EVE or -- 5
@@ -27,7 +26,12 @@ function RPPostPlayerInit:Main(player)
     return
   end
 
-  -- A co-op baby spawned
+  -- A co-op baby spawned; first, check for the True Co-op mod
+  if InfinityTrueCoopInterface then -- luacheck: ignore
+    return
+  end
+
+  -- Co-op babies are disallowed in Racing+ because of certain exploits (stealing devil deal items and so forth)
   mainPlayer:AnimateSad() -- Play a sound effect to communicate that the player made a mistake
   player:Kill() -- This kills the co-op baby, but the main character will still get their health back for some reason
 

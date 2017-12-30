@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.14.27* - December 29th
+
+* Racing+ will now work with the True Co-op mod. (Thanks BMZ_loop)
+
 ### *v0.14.26* - December 27th
 
 * Isaac is now feeling festive. Happy New Years! (Thanks to Gromfalloon for this)
