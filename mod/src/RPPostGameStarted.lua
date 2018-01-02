@@ -168,9 +168,9 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Make sure that the festive hat shows
-  -- (enabled until New Years ends)
-  local player = game:GetPlayer(0)
-  player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
+  -- (disabled until the next holiday)
+  --local player = game:GetPlayer(0)
+  --player:AddNullCostume(16) -- Corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file
 
   -- Call PostNewLevel manually (they get naturally called out of order)
   RPPostNewLevel:NewLevel()
