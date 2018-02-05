@@ -28,7 +28,7 @@ Lang.prototype.pack.fr = {
         "If you take longer than 30 minutes to complete a race, you will be forced to quit.": "Si vous mettez plus de 30 minutes à compléter la course, vous serez forcé de quitter.",
 
         // Updating screen
-        "Updating": "Mise à jour",
+        "Updating": "Mise à jour en cours",
         "A new version of the client is being downloaded. The program will automatically restart once it is complete.": "Une nouvelle version du client est en train d'être téléchargée. Le programme va redémarrer automatiquement une fois l'opération terminée.",
         "The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!": "L'équipe travaille continuellement pour corriger les bugs et rajouter de nouvelles fonctionnalité. Desolé du désagrément.",
 
@@ -64,7 +64,7 @@ Lang.prototype.pack.fr = {
         "Unseeded": "Non Seeded",
         "Seeded": "Seeded",
         "Diversity": "Diversity",
-        "Unseeded (Lite)": "",
+        "Unseeded (Lite)": "Non Seeded (Simple)",
         "Custom": "Personnalisée",
 
         // Lobby screen (other)
@@ -82,7 +82,7 @@ Lang.prototype.pack.fr = {
         "Ready": "Prêt",
         "Race starting in 10 seconds!": "La course commence dans 10 secondes!",
         "Go": "Partez",
-        "Finish Race": "",
+        "Finish Race": "Terminer la course",
         "Quit Race": "Quitter la Course",
         "left": "restant(s)",
         "Race completed": "Course terminée",
@@ -103,7 +103,7 @@ Lang.prototype.pack.fr = {
 
         // Error modal
         "Error": "Erreur",
-        "Exit and relaunch Racing+": "",
+        "Exit and relaunch Racing+": "Quittez et relancez le Racing+",
 
         // Warning modal
         "Warning": "Attention",
@@ -122,13 +122,13 @@ Lang.prototype.pack.fr = {
         "Please try again and select your Afterbirth+ log file.": "Veuillez réessayer et sélectionner le fichier log d'Afterbirth+.",
 
         // Save file modal
-        "Save File": "",
-        "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.": "",
+        "Save File": "Sauvegarder le fichier",
+        "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.": "Le client Racing+ n'a pas été capable de trouver une sauvegarde où tout est débloqué sur The Binding of Isaac: Afterbirth+. Les courses sont généralement réalisées sur des sauvegardes entièrement débloquées afin que tous les joueurs aient des possibilités égales.",
         "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.": "",
-        "Replace save slot": "",
-        "Do nothing and exit": "",
-        "The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.": "",
-        "If it doesn't work, then you need to go into the game once on that slot, exit the game, and then redo this process.": "",
+        "Replace save slot": "Remplacez le fichier de sauvegarde",
+        "Do nothing and exit": "Ne faites rien et quittez",
+        "The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.": "Le fichier de sauvegarde a été installé. Nous vous prions de fermer et réouvrir The Binding of Isaac, puis cliquez le bouton ci-dessous.",
+        "If it doesn't work, then you need to go into the game once on that slot, exit the game, and then redo this process.": "Si cela ne fonctionne pas, vous devez dans le jeu une fois sur cette même sauvegarde, quitter le jeu, et répéter la procédure indiquée.",
 
         // New race tooltip
         "Race title (optional)": "Nom de la course (facultatif)",
@@ -141,7 +141,7 @@ Lang.prototype.pack.fr = {
         "Season": "Saison",
         "Random": "Aléatoire",
         "Random (all, 1-33)": "Aléatoire (tous, 1-33)",
-        "Random (single items only, 1-26)": "",
+        "Random (single items only, 1-26)": "Aléatoire (items uniques seulement, 1-26)",
         "Random (Treasure Room only, 1-20)": "Aléatoire (Treasure Room seulement, 1-20)",
         "Create": "Créer",
 
@@ -153,7 +153,7 @@ Lang.prototype.pack.fr = {
         "Language": "Langue",
         "Volume": "Volume",
         "Test": "Test",
-        "Enable boss cutscenes (for people used to vanilla; requires game restart)": "",
+        "Enable boss cutscenes (for people used to vanilla; requires game restart)": "Activer les animations de boss (pour les joueurs habitués au vanilla, requiert un relancement du jeu)",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
         "Enable Twitch chat bot": "Activé le bot dans le chat Twitch",
@@ -175,37 +175,37 @@ Lang.prototype.pack.fr = {
         "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.": "Cette URL de stream est déjà utilisée par quelqu'un d'autre. Si vous êtes le véritable propriétaire de ce stream, veuillez contacter un administrateur.",
 
         // chat.js
-        "The format of a private message is": "",
-        "The format of a notice is": "",
-        "The format of a ban is": "",
-        "The format of an unban is": "",
+        "The format of a private message is": "Le format d'un message privé est",
+        "The format of a notice is": "Le format d'une remarque est",
+        "The format of a ban is": "Le format d'un bannissement est",
+        "The format of an unban is": "Le format d'un débannissement est",
 
         // log-watcher.js
         "It appears that you have selected your Rebirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Rebirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
         "It appears that you have selected your Afterbirth \"log.txt\" file, which is different than the Afterbirth+ \"log.txt\" file.": "Il semble que vous avez sélectionner le fichier \"log.txt\" d'Afterbirth, celui ci est différent du fichier \"log.txt\" d'Afterbirth+.",
 
         // race.js
-        "The random items are not revealed until the race begins!": "",
+        "The random items are not revealed until the race begins!": "Les items randomisés ne seront révélés qu'au lancement de la course!",
         "This race will count towards the leaderboards.": "Cette course comptera pour le classement.",
         "This race will not count towards the leaderboards.": "Cette course ne comptera pas pour le classement.",
         "No-one else can join this race.": "Plus personne ne peut se joindre à cette course.",
         "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",
         "You will be playing on an entirely different seed than your opponent(s).": "Vous allez jouer une \"seed\" différente de celles de vos adversaires.",
         "You will play on the same seed as your opponent and start with The Compass.": "Vous allez jouer la même \"seed\" que votre adversaire et commncer avec la boussole (The Compass).",
-        "This is the same as the \"Unseeded\" format, but you will also start with five random items.": "",
-        "All players will start with the same five items.": "",
-        "Extra changes will also be in effect; see the Racing+ website for details.": "",
-        "You make the rules! Make sure that everyone in the race knows what to do before you start.": "",
-        "Defeat Blue Baby (the boss of The Chest)": "",
-        "Defeat The Lamb (the boss of The Dark Room)": "",
-        "Defeat Mega Satan (the boss behind the giant locked door)": "",
-        "and touch the trophy that falls down afterward.": "",
+        "This is the same as the \"Unseeded\" format, but you will also start with five random items.": "C'est identique au format \"Unseeded\", mais vous démarrerez avec cinq items aléatoires.",
+        "All players will start with the same five items.": "Tous les joueurs démarreront avec les cinq mêmes items.",
+        "Extra changes will also be in effect; see the Racing+ website for details.": "D'autres changement prendront aussi effet, référez-vous au site du Racing+ pour davantages de détails.",
+        "You make the rules! Make sure that everyone in the race knows what to do before you start.": "Vous choisissez les règles! Faites attention à ce que chaque joueur dans la course les ait intégrées avant qu'elle commence.",
+        "Defeat Blue Baby (the boss of The Chest)": "Battez Blue Baby (le boss de The Chest)",
+        "Defeat The Lamb (the boss of The Dark Room)": "Battez The Lamb (le boss de la Dark Room)",
+        "Defeat Mega Satan (the boss behind the giant locked door)": "Battez Mega Satan (le boss derrière la géante porte fermée à clé)",
+        "and touch the trophy that falls down afterward.": "et touchez le trophée qui tombe ensuite.",
 
         // Race ready error messages
         "You should wait for someone else to join this race before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
         "You have to start a run before you can mark yourself as ready.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\".",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
-        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
+        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "Vous devez avoir le mod Racing+ actif en jeu avant de pouvoir vous indiquer en tant que prêt.",
 
         // register.js
         "The username field is required.": "Le nom d'utilisateur est requis.",
