@@ -168,6 +168,7 @@ function RPCheckEntities:Entity5(pickup)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local roomData = level:GetCurrentRoomDesc().Data
   local room = game:GetRoom()
   local roomType = room:GetType()
@@ -223,17 +224,33 @@ function RPCheckEntities:Entity5(pickup)
     pickup.Variant = 50
 
     -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
-    if (roomData.StageID == 4 and roomData.Variant == 12) or -- Caves
-       (roomData.StageID == 4 and roomData.Variant == 19) or
-       (roomData.StageID == 4 and roomData.Variant == 244) or
-       (roomData.StageID == 4 and roomData.Variant == 518) or
-       (roomData.StageID == 4 and roomData.Variant == 519) or
-       (roomData.StageID == 5 and roomData.Variant == 19) or -- Catacombs
-       (roomData.StageID == 5 and roomData.Variant == 518) or
-       (roomData.StageID == 10 and roomData.Variant == 458) or -- Womb
-       (roomData.StageID == 10 and roomData.Variant == 489) or
-       (roomData.StageID == 11 and roomData.Variant == 458) or -- Utero
-       (roomData.StageID == 11 and roomData.Variant == 489) then
+    local roomDataVariant = roomData.Variant
+    while roomDataVariant > 10000 do
+      -- The 3 flipped versions of room #1 would be #10001, #20001, and #30001
+      roomDataVariant = roomDataVariant - 10000
+    end
+
+    -- roomData.StageID always returns 0 for some reason, so just use stage and stageType as a workaround
+    if ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 12) or -- Caves
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 19) or
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 125) or
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 244) or
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 518) or
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 519) or
+       ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 19) or -- Catacombs
+       ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 518) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 12) or -- Flooded Caves
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 19) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 125) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 244) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 518) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 519) or
+       ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 458) or -- Womb
+       ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 489) or
+       ((stage == 7 or stage == 8) and stageType == 1 and roomDataVariant == 458) or -- Utero
+       ((stage == 7 or stage == 8) and stageType == 1 and roomDataVariant == 489) or
+       ((stage == 7 or stage == 8) and stageType == 2 and roomDataVariant == 458) or -- Scarred Womb
+       ((stage == 7 or stage == 8) and stageType == 2 and roomDataVariant == 489) then
 
       -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
       pickup:GetSprite():Load("gfx/005.050_chest.anm2", true)

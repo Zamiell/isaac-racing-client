@@ -163,12 +163,35 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.P
 -- Define NPC kill callbacks (68)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPFastClear.PostEntityKill) -- 68
 -- (will get called for all kills)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC45, EntityType.ENTITY_MOM) -- 45
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_MOMS_HEART) -- 78
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC81, EntityType.ENTITY_FALLEN) -- 81
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC271, EntityType.ENTITY_URIEL) -- 271
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC271, EntityType.ENTITY_GABRIEL) -- 272
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.NPC78, EntityType.ENTITY_HUSH) -- 407
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_MONSTRO) -- 20
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_CHUB) -- 28
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_MONSTRO2) -- 43
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity45, EntityType.ENTITY_MOM) -- 45
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_PEEP) -- 68
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity78, EntityType.ENTITY_MOMS_HEART) -- 78
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, -- (to make it faded)
+                                                         EntityType.ENTITY_FALLEN) -- 81
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity81, -- (to handle fast-drops)
+                                                         EntityType.ENTITY_FALLEN) -- 81
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_GURDY_JR) -- 99
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_WIDOW) -- 100
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_MEGA_FATTY) -- 264
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_CAGE) -- 265
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20,
+                                                         EntityType.ENTITY_POLYCEPHALUS) -- 269
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, -- (to make it faded)
+                                                         EntityType.ENTITY_URIEL) -- 271
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity271, -- (to handle fast-drops)
+                                                         EntityType.ENTITY_URIEL) -- 271
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, -- (to make it faded)
+                                                         EntityType.ENTITY_GABRIEL) -- 272
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity271, -- (to handle fast-drops)
+                                                         EntityType.ENTITY_GABRIEL) -- 272
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_STAIN) -- 401
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity78, EntityType.ENTITY_HUSH) -- 407
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20,
+                                                         EntityType.ENTITY_SISTERS_VIS) -- 410
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity20, EntityType.ENTITY_BIG_HORN) -- 411
 
 -- Samael callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D4) -- 284

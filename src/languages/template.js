@@ -15,7 +15,7 @@ Lang.prototype.pack.zz = {
         "Username can only contain alphanumeric characters and '_'. Username should have between 2 and 15 characters.": "",
         "The username provided is in use already.": "",
 
-        // Tutorial screen (currently unsused)
+        // Tutorial screen (currently unused)
         "Get Started": "",
         "Tutorial": "",
         "Start each race at the character selection screen, shown below.": "",

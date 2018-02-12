@@ -11,8 +11,32 @@ local RPSpeedrun = require("src/rpspeedrun")
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
 --
 
+-- EntityType.ENTITY_MONSTRO (20)
+-- EntityType.ENTITY_CHUB (28) (also includes C.H.A.D. and Carrion Queen)
+-- EntityType.ENTITY_MONSTRO2 (43) (also includes Gish)
+-- EntityType.ENTITY_PEEP (68) (also includes The Bloat)
+-- EntityType.ENTITY_GURDY_JR (99)
+-- EntityType.ENTITY_WIDOW (100) (also includes The Wretched)
+-- EntityType.ENTITY_MEGA_FATTY (264)
+-- EntityType.ENTITY_CAGE (265)
+-- EntityType.ENTITY_POLYCEPHALUS (269)
+-- EntityType.ENTITY_STAIN (401)
+-- EntityType.ENTITY_SISTERS_VIS (410)
+-- EntityType.ENTITY_BIG_HORN (411)
+-- Long boss animations can interfere with seeing / picking up the boss item
+-- (Mega Maw is only on the bottom is room 5034 and it doesn't interfere with the item)
+-- (The Gate does not appear on the bottom in any rooms)
+function RPPostEntityKill:Entity20(entity)
+  -- Set the color to have an alpha of 0.4
+  local faded = Color(1, 1, 1, 0.4, 0, 0, 0)
+  entity:SetColor(faded, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
+  -- Priority doesn't matter, but a low duration won't work;
+  -- the longer the duration, the more fade, and a fade of 1000 looks nice
+  Isaac.DebugString("Changed the opacity of a dying Monstro.")
+end
+
 -- EntityType.ENTITY_MOM (45)
-function RPPostEntityKill:NPC45(npc)
+function RPPostEntityKill:Entity45(entity)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -133,7 +157,7 @@ end
 
 -- EntityType.ENTITY_MOMS_HEART (78)
 -- EntityType.ENTITY_HUSH (407)
-function RPPostEntityKill:NPC78(npc)
+function RPPostEntityKill:Entity78(entity)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -250,14 +274,14 @@ end
 -- This slightly speeds up the spawn so that it can not be accidently deleted by leaving the room
 -- Furthermore, it fixes the seeding issue where if you have Gimpy and Krampus drops a heart,
 -- the spawned pedestal to be moved one tile over, and this movement can cause the item to be different
-function RPPostEntityKill:NPC81(npc)
+function RPPostEntityKill:Entity81(entity)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
 
   -- We only care about Krampus (81.1)
-  if npc.Variant ~= 1 then
+  if entity.Variant ~= 1 then
     return
   end
 
@@ -297,7 +321,7 @@ function RPPostEntityKill:NPC81(npc)
   end
 
   -- We have to prevent the bug where the pedestal item can overlap with a grid entity
-  local pos = npc.Position
+  local pos = entity.Position
   local gridIndex = room:GetGridIndex(pos)
   local gridEntity = room:GetGridEntity(gridIndex)
   if gridEntity ~= nil then
@@ -317,7 +341,7 @@ end
 -- EntityType.ENTITY_GABRIEL (272)
 -- We want to manually spawn the key pieces instead of letting the game do it
 -- This slightly speeds up the spawn so that they can not be accidently deleted by leaving the room
-function RPPostEntityKill:NPC271(npc)
+function RPPostEntityKill:Entity271(entity)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
@@ -325,7 +349,7 @@ function RPPostEntityKill:NPC271(npc)
   local player = game:GetPlayer(0)
 
   -- We only want to spawn key pieces from the non-Fallen versions
-  if npc.Variant == 1 then
+  if entity.Variant == 1 then
     return
   end
 
@@ -344,10 +368,10 @@ function RPPostEntityKill:NPC271(npc)
   end
 
   -- We don't want to drop a key piece if there is another alive angel in the room
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    local isDead = entity:IsDead()
-    if (entity.Type == EntityType.ENTITY_URIEL or -- 271
-        entity.Type == EntityType.ENTITY_GABRIEL) and -- 272
+  for i, entity2 in pairs(Isaac.GetRoomEntities()) do
+    local isDead = entity2:IsDead()
+    if (entity2.Type == EntityType.ENTITY_URIEL or -- 271
+        entity2.Type == EntityType.ENTITY_GABRIEL) and -- 272
         isDead == false then
 
       return
@@ -356,14 +380,14 @@ function RPPostEntityKill:NPC271(npc)
 
   -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
   local subType
-  if npc.Type == EntityType.ENTITY_URIEL then -- 271
+  if entity.Type == EntityType.ENTITY_URIEL then -- 271
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
-  elseif npc.Type == EntityType.ENTITY_GABRIEL then -- 272
+  elseif entity.Type == EntityType.ENTITY_GABRIEL then -- 272
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
   end
 
   -- We have to prevent the bug where the pedestal item can overlap with a grid entity
-  local pos = npc.Position
+  local pos = entity.Position
   local gridIndex = room:GetGridIndex(pos)
   local gridEntity = room:GetGridEntity(gridIndex)
   if gridEntity ~= nil then
@@ -378,7 +402,7 @@ function RPPostEntityKill:NPC271(npc)
 end
 
 -- EntityType.ENTITY_HUSH (407)
-function RPPostEntityKill:NPC407(npc)
+function RPPostEntityKill:Entity407(entity)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -395,23 +419,19 @@ end
 -- removal of the natural trapdoor and beam of light after It Lives!
 --- (in the "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions)
 function RPPostEntityKill:KillExtraEnemies()
+  Isaac.DebugString("Checking for extra enemies to kill after a Mom / It Lives! fight.")
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_GLOBIN or -- 24
-       entity.Type == EntityType.ENTITY_BOIL then -- 30
-
-      entity:Kill()
-      Isaac.DebugString("Manually killed a Globin / Sack after Mom / It Lives!")
-    end
-
-    -- Fistula and Teratoma will spawn adds, so they must be removed and not killed
-    if entity.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (also includes Teratoma)
+       entity.Type == EntityType.ENTITY_BOIL or -- 30
+       entity.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (also includes Teratoma)
        entity.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (also includes Teratoma)
-       entity.Type == EntityType.ENTITY_FISTULA_SMALL then -- 73 (also includes Teratoma)
+       entity.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (also includes Teratoma)
+       entity.Type == EntityType.ENTITY_BLISTER then -- 303
 
       -- Removing it just causes it to disappear, which looks buggy, so show a small blood explosion as well
       entity:BloodExplode()
       entity:Remove()
-      Isaac.DebugString("Manually removed a Fistula / Teratoma after Mom / It Lives!")
+      Isaac.DebugString("Manually removed an enemy after Mom / It Lives!")
     end
   end
 end

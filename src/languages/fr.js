@@ -15,7 +15,7 @@ Lang.prototype.pack.fr = {
         "Username can only contain alphanumeric characters and '_'. Username should have between 2 and 15 characters.": "Le nom d'utilisateur doit se composer de lettres, chiffres et '_' seulement. Le nom d'utilisateur doit contenir entre 2 et 15 caractères.",
         "The username provided is in use already.": "Ce nom d'utilisateur est déjà utilisé.",
 
-        // Tutorial screen (currently unsused)
+        // Tutorial screen (currently unused)
         "Get Started": "Commencer",
         "Tutorial": "Tutoriel",
         "Start each race at the character selection screen, shown below.": "Commencez chaque course à l'écran de selection du personnage, voir dessous.",
