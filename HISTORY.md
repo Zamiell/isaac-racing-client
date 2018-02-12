@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.15.0* - February 11th
+
+* The website now has a "Tournaments" section, where you can see the currently scheduled matches for the week in the current Binding of Isaac: Afterbirth+ league, [Isaacs of the Round](http://isaacsoftheround.weebly.com/). In the future, it will show past tournaments. Thanks to sillypears for coding this.
+* Sometimes, a dying boss will cover up an item pedestal, forcing the player to wait until the death animation is over to see what the item is. Any bosses that have the possibility to interfere with seeing what an item pedestal in this way are now faded during their death animation.
+* Fixed the Mimic exception code, as it wasn't working on the latest patch. (Mimics should not be able to spawn in certain rooms with narrow paths, as it causes unavoidable damage.)
+* Added Caves room #125 to the Mimic exemption list. 
+* Added flipped rooms to the Mimic exemption code.
+* Fixed the bug where Blisters were not killed properly after defeating Mom.
+* Added some more French translations. (Thanks Greninja_San)
+
 ### *v0.14.27* - December 29th
 
 * Racing+ will now work with the True Co-op mod. (Thanks BMZ_loop)
