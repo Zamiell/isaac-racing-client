@@ -125,10 +125,6 @@ exports.init = (username, password, remember) => {
         // Log the event
         globals.log.info(`Websocket - settings - ${JSON.stringify(data)}`);
 
-        // Time
-        const now = new Date().getTime();
-        globals.timeOffset = data.time - now;
-
         // Username
         globals.myUsername = data.username;
         globals.Raven.setContext({
@@ -353,7 +349,6 @@ exports.init = (username, password, remember) => {
             lobbyScreen.raceDraw(data[i]);
 
             // Start the callback for the lobby timer
-            globals.raceList[raceID].datetimeStarted -= globals.timeOffset; // Account for the delay
             lobbyScreen.statusTimer(raceID);
 
             // Check to see if we are in any races
@@ -703,11 +698,14 @@ exports.init = (username, password, remember) => {
         }
 
         // Find the player in the racerList
-        for (let i = 0; i < globals.raceList[data.id].racerList.length; i++) {
-            if (data.name === globals.raceList[data.id].racerList[i].name) {
+        const race = globals.raceList[data.id];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
+            if (data.name === racer.name) {
                 // Update their status and place locally
-                globals.raceList[data.id].racerList[i].status = data.status;
-                globals.raceList[data.id].racerList[i].place = data.place;
+                racer.status = data.status;
+                racer.place = data.place;
+                racer.runTime = data.runTime;
 
                 // Update the race screen
                 if (globals.currentScreen === 'race') {
@@ -745,19 +743,20 @@ exports.init = (username, password, remember) => {
         }
 
         // Keep track of when the race starts
-        globals.raceList[globals.currentRaceID].datetimeStarted = data.time;
-
-        // Schedule the countdown, which will start roughly 5 seconds from now
-        // (or 3 seconds from now in a solo race)
+        const race = globals.raceList[globals.currentRaceID];
         const now = new Date().getTime();
-        let timeToStartCountdown = data.time - now - globals.timeOffset - globals.fadeTime;
-        if (globals.raceList[globals.currentRaceID].ruleset.solo) {
-            timeToStartCountdown -= 3000;
+        const millisecondsToWait = data.secondsToWait * 1000;
+        race.datetimeStarted = now + millisecondsToWait;
+
+        // Schedule the countdown
+        if (race.ruleset.solo) {
+            // Solo races start in 3 seconds, so schedule a countdown that starts with 3 immediately
             setTimeout(() => {
                 raceScreen.countdownTick(3);
-            }, timeToStartCountdown);
+            }, 0);
         } else {
-            timeToStartCountdown -= 5000;
+            // Multiplayer races start in 10 seconds, so schedule a countdown that starts with 5 in 5 seconds
+            const timeToStartCountdown = millisecondsToWait - 5000 - globals.fadeTime;
             setTimeout(() => {
                 raceScreen.countdownTick(5);
             }, timeToStartCountdown);

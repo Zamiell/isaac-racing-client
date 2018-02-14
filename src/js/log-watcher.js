@@ -77,7 +77,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
             globals.modLoaderSlot = parseInt(match[1], 10);
             modLoader.send();
         } else {
-            misc.errorShow('Failed to parse the save slot number from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the save slot number from the message sent by the log watcher process:', message);
         }
     } else if (message === 'Title menu initialized.') {
         globals.gameState.inGame = false;
@@ -111,7 +111,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 globals.modLoader.order14 = order;
             }
         } else {
-            misc.errorShow('Failed to parse the speedrun order from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the speedrun order from the message sent by the log watcher process:', message);
         }
     }
 
@@ -149,7 +149,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 seed,
             });
         } else {
-            misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the new seed from the message sent by the log watcher process:', message);
         }
     } else if (message.startsWith('New floor: ')) {
         const match = message.match(/New floor: (\d+)-(\d+)/);
@@ -162,7 +162,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 stageType,
             });
         } else {
-            misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the new floor from the message sent by the log watcher process:', message);
         }
     } else if (message.startsWith('New room: ')) {
         const m = message.match(/New room: (.+)/);
@@ -173,7 +173,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 roomID,
             });
         } else {
-            misc.errorShow('Failed to parse the new room from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the new room from the message sent by the log watcher process:', message);
         }
     } else if (message.startsWith('New item: ')) {
         const m = message.match(/New item: (\d+)/);
@@ -184,7 +184,7 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 itemID,
             });
         } else {
-            misc.errorShow('Failed to parse the new item from the message sent by the log watcher process.');
+            misc.errorShow('Failed to parse the new item from the message sent by the log watcher process:', message);
         }
     } else if (message === 'Finished run: Blue Baby') {
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
@@ -204,9 +204,16 @@ ipcRenderer.on('log-watcher', (event, message) => {
                 id: globals.currentRaceID,
             });
         }
-    } else if (message === 'Finished run: Trophy') {
-        globals.conn.send('raceFinish', {
-            id: globals.currentRaceID,
-        });
+    } else if (message.startsWith('Finished run: Trophy - ')) {
+        const match = message.match(/Finished run: Trophy - (\d+)/);
+        if (match) {
+            const time = parseInt(match[1], 10);
+            globals.conn.send('raceFinish', {
+                id: globals.currentRaceID,
+                time,
+            });
+        } else {
+            misc.errorShow('Failed to parse the run time from the message sent by the log watcher process:', message);
+        }
     }
 });

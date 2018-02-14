@@ -202,7 +202,14 @@ const parseLine = (line) => {
         process.send('Finished run: The Lamb');
     } else if (line === 'playing cutscene 19 (Mega Satan).') {
         process.send('Finished run: Mega Satan');
-    } else if (line === 'Lua Debug: Finished run.') {
-        process.send('Finished run: Trophy');
+    } else if (line.startsWith('Lua Debug: Finished run - ')) {
+        // The trophy was touched
+        const match = line.match(/Lua Debug: Finished run - (\d+)/);
+        if (match) {
+            const time = match[1];
+            process.send(`Finished run: Trophy - ${time}`);
+        } else {
+            process.send('error: Failed to parse the run time from the log.');
+        }
     }
 };

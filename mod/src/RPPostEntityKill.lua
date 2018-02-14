@@ -11,28 +11,30 @@ local RPSpeedrun = require("src/rpspeedrun")
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
 --
 
--- EntityType.ENTITY_MONSTRO (20)
--- EntityType.ENTITY_CHUB (28) (also includes C.H.A.D. and Carrion Queen)
--- EntityType.ENTITY_MONSTRO2 (43) (also includes Gish)
--- EntityType.ENTITY_PEEP (68) (also includes The Bloat)
--- EntityType.ENTITY_GURDY_JR (99)
--- EntityType.ENTITY_WIDOW (100) (also includes The Wretched)
--- EntityType.ENTITY_MEGA_FATTY (264)
--- EntityType.ENTITY_CAGE (265)
--- EntityType.ENTITY_POLYCEPHALUS (269)
--- EntityType.ENTITY_STAIN (401)
--- EntityType.ENTITY_SISTERS_VIS (410)
--- EntityType.ENTITY_BIG_HORN (411)
--- Long boss animations can interfere with seeing / picking up the boss item
--- (Mega Maw is only on the bottom is room 5034 and it doesn't interfere with the item)
--- (The Gate does not appear on the bottom in any rooms)
-function RPPostEntityKill:Entity20(entity)
+-- When beginning a death animation, make bosses faded so that it makes it easier to see
+function RPPostEntityKill:Main(entity)
+  -- We only want to fade bosses
+  local npc = entity:ToNPC()
+  if npc == nil then
+    return
+  end
+  if npc:IsBoss() == false then
+    return
+  end
+
+  -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the segments
+  if entity.Type == EntityType.ENTITY_LARRYJR or -- 19 (and The Hollow)
+     entity.Type == EntityType.ENTITY_PIN or -- 62 (and Scolex / Frail)
+     entity.Type == EntityType.ENTITY_GEMINI then -- 79 (and Steven / Blighted Ovum)
+
+    return
+  end
+
   -- Set the color to have an alpha of 0.4
   local faded = Color(1, 1, 1, 0.4, 0, 0, 0)
   entity:SetColor(faded, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
   -- Priority doesn't matter, but a low duration won't work;
   -- the longer the duration, the more fade, and a fade of 1000 looks nice
-  Isaac.DebugString("Changed the opacity of a dying Monstro.")
 end
 
 -- EntityType.ENTITY_MOM (45)

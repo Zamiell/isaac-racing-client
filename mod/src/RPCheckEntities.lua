@@ -873,9 +873,11 @@ function RPCheckEntities:EntityRaceTrophy(entity)
 
   if challenge == Challenge.CHALLENGE_NULL then -- 0
     -- Finish the race
-    Isaac.DebugString("Finished run.") -- The client looks for this line to know when the goal was achieved
     RPGlobals.raceVars.finished = true
     RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
+
+    -- Tell the client that the goal was achieved (and the race length)
+    Isaac.DebugString("Finished run - " .. tostring(RPGlobals.raceVars.finishedTime))
 
     -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
     local victoryLapPosition = RPGlobals:GridToPos(11, 1)

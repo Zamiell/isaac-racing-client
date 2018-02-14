@@ -599,6 +599,15 @@ const participantsSetStatus = (i, initial = false) => {
         }
     }
 
+    // If someone finished, set their time to their actual final time as reported by the server
+    // (instead of the client-side approximation)
+    if (racer.status === 'finished') {
+        // This code is partially copied from the "raceTimerTick()" function below
+        const raceSeconds = Math.floor(racer.runTime / 1000); // "runTime" is in milliseconds
+        const timeDiv = `${misc.pad(parseInt(raceSeconds / 60, 10))}:${misc.pad(raceSeconds % 60)}`;
+        $(`#race-participants-table-${racer.name}-time`).html(timeDiv);
+    }
+
     // If someone finished, play the sound effect that matches their place
     // (don't play the "1st place" voice for 1 player races)
     if (
@@ -996,8 +1005,8 @@ function raceTimerTick() {
 
     // Get the elapsed time in the race
     const now = new Date().getTime();
-    const raceMilliseconds = now - globals.raceList[globals.currentRaceID].datetimeStarted + globals.timeOffset;
-    const raceSeconds = Math.round(raceMilliseconds / 1000);
+    const raceMilliseconds = now - globals.raceList[globals.currentRaceID].datetimeStarted;
+    const raceSeconds = Math.floor(raceMilliseconds / 1000);
     const timeDiv = `${misc.pad(parseInt(raceSeconds / 60, 10))}:${misc.pad(raceSeconds % 60)}`;
 
     // Update all of the timers

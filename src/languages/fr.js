@@ -124,7 +124,7 @@ Lang.prototype.pack.fr = {
         // Save file modal
         "Save File": "Sauvegarder le fichier",
         "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.": "Le client Racing+ n'a pas été capable de trouver une sauvegarde où tout est débloqué sur The Binding of Isaac: Afterbirth+. Les courses sont généralement réalisées sur des sauvegardes entièrement débloquées afin que tous les joueurs aient des possibilités égales.",
-        "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.": "",
+        "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you arn't sure, make sure to back up your save files before proceeding.": "Si vous le voulez, le client Racing+ peut de lui-même vous installer une sauvegarde entièrement débloquée. Faîtes attention, cela supplantera l'ancienne sauvegarde. Si vous n'êtes pas sûr, réalisez un backup de cette sauvegarde avant d'effectuer la manoeuvre.",
         "Replace save slot": "Remplacez le fichier de sauvegarde",
         "Do nothing and exit": "Ne faites rien et quittez",
         "The save file has been installed. Please close and reopen The Binding of Isaac, and then click the button below.": "Le fichier de sauvegarde a été installé. Nous vous prions de fermer et réouvrir The Binding of Isaac, puis cliquez le bouton ci-dessous.",

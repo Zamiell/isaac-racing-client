@@ -51,7 +51,6 @@ module.exports = {
         placeMid: 0,
         place: 1,
         numEntrants: 1,
-        timeOffset: 0,
         order7: [0], // Speedrun orders are filled in isaac.js
         order9: [0],
         order14: [0],
@@ -84,7 +83,6 @@ module.exports = {
     tabCompleteIndex: 0,
     tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
-    timeOffset: 0,
     trinketList: {}, // Filled in main.js
     websiteURL: `http${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
     websocketURL: `ws${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost

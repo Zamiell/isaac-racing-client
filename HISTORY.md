@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.15.1* - February ?
+
+* All bosses are now faded upon playing their death animation. (This is more consistent than the previous implementation.)
+* The Racing+ timing system now uses in-game time. (Server time, client time, and time offsets are no longer used.) This should fix the bug where the time reported by the Racing+ client was different than the one reported by the mod.
+
 ### *v0.15.0* - February 11th
 
 * The website now has a "Tournaments" section, where you can see the currently scheduled matches for the week in the current Binding of Isaac: Afterbirth+ league, [Isaacs of the Round](http://isaacsoftheround.weebly.com/). In the future, it will show past tournaments. Thanks to sillypears for coding this.
