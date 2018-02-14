@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.15.1* - February ?
+### *v0.15.1* - February 13th
 
 * All bosses are now faded upon playing their death animation. (This is more consistent than the previous implementation.)
 * The Racing+ timing system now uses in-game time. (Server time, client time, and time offsets are no longer used.) This should fix the bug where the time reported by the Racing+ client was different than the one reported by the mod.
