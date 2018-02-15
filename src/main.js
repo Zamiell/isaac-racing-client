@@ -256,14 +256,7 @@ function registerKeyboardHotkeys() {
         log.warn('Alt+B hotkey registration failed.');
     }
 
-    const hotkeyIsaacFocus = globalShortcut.register('Alt+1', () => {
-        if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-            const pathToFocusIsaac = path.join(__dirname, 'programs', 'focusIsaac', 'focusIsaac.exe');
-            execFile(pathToFocusIsaac, (error, stdout, stderr) => {
-                // We have to attach an empty callback to this or it does not work for some reason
-            });
-        }
-    });
+    const hotkeyIsaacFocus = globalShortcut.register('Alt+1', isaacFocus);
     if (!hotkeyIsaacFocus) {
         log.warn('Alt+1 hotkey registration failed.');
     }
@@ -294,6 +287,15 @@ function registerKeyboardHotkeys() {
     });
     if (!hotkeyQuit) {
         log.warn('Alt+Q hotkey registration failed.');
+    }
+}
+
+function isaacFocus() {
+    if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
+        const pathToFocusIsaac = path.join(__dirname, 'programs', 'focusIsaac', 'focusIsaac.exe');
+        execFile(pathToFocusIsaac, (error, stdout, stderr) => {
+            // We have to attach an empty callback to this or it does not work for some reason
+        });
     }
 }
 
@@ -527,6 +529,8 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
         autoUpdater.quitAndInstall();
     } else if (arg1 === 'devTools') {
         mainWindow.webContents.openDevTools();
+    } else if (arg1 === 'isaacFocus') {
+        isaacFocus();
     } else if (arg1 === 'error') {
         errorHappened = true;
     } else if (arg1 === 'steam' && childProcesses.steam === null) {

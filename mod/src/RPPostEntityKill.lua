@@ -25,7 +25,8 @@ function RPPostEntityKill:Main(entity)
   -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the segments
   if entity.Type == EntityType.ENTITY_LARRYJR or -- 19 (and The Hollow)
      entity.Type == EntityType.ENTITY_PIN or -- 62 (and Scolex / Frail)
-     entity.Type == EntityType.ENTITY_GEMINI then -- 79 (and Steven / Blighted Ovum)
+     entity.Type == EntityType.ENTITY_GEMINI or -- 79 (and Steven / Blighted Ovum)
+     entity.Type == EntityType.ENTITY_HEART_OF_INFAMY then -- 98
 
     return
   end

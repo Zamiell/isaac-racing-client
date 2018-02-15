@@ -4,6 +4,7 @@
 
 // Imports
 const { execFile } = nodeRequire('child_process');
+const { ipcRenderer } = nodeRequire('electron');
 const path = nodeRequire('path');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
@@ -841,6 +842,11 @@ const countdownTick = (i) => {
         }, 1000);
     } else {
         return;
+    }
+
+    // If one second is left, automatically focus the game
+    if (i === 1) {
+        ipcRenderer.send('asynchronous-message', 'isaacFocus');
     }
 
     // Update the Lua mod with how many seconds are left until the race starts
