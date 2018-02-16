@@ -56,7 +56,7 @@ function RPPostRender:Main()
   RPSpeedrun:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
 
-  -- Ban Basement 1 Treasure Rooms
+  -- Ban Basement 1 Treasure Rooms (1/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
 
   -- Make Cursed Eye seeded
@@ -120,6 +120,8 @@ function RPPostRender:CheckRestart()
            challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+      command = command .. " " .. RPSpeedrun.charOrder7_4[RPSpeedrun.charNum]
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
     end

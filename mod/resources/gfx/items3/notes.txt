@@ -1,0 +1,1 @@
+These files are used for the glowing indicators at the start of a race.

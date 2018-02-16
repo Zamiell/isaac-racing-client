@@ -83,6 +83,9 @@ function RPPostUpdate:Main()
   RPFastTravel:CheckCrawlspaceExit()
   RPFastTravel:CheckCrawlspaceSoftlock()
 
+  -- Ban Basement 1 Treasure Rooms (2/2)
+  RPPostUpdate:CheckBanB1TreasureRoom()
+
   -- Check all the grid entities in the room
   RPCheckEntities:Grid()
 
@@ -374,9 +377,6 @@ function RPPostUpdate:RaceChecks()
   local gameFrameCount = game:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  -- Ban Basement 1 Treasure Rooms (2/2)
-  RPPostUpdate:CheckBanB1TreasureRoom()
-
   -- Check to see if we need to start the timers
   RPSpeedrun:StartTimer()
   if RPGlobals.run.startedTime == 0 then
@@ -466,10 +466,12 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
   local stage = level:GetStage()
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local challenge = Isaac.GetChallenge()
 
   if stage == 1 and
      roomType ~= RoomType.ROOM_SECRET and -- 7
-     RPGlobals.race.rFormat == "seeded" then
+     (RPGlobals.race.rFormat == "seeded" or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) then
 
     local door
     for i = 0, 7 do

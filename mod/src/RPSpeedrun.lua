@@ -14,21 +14,26 @@ local RPSchoolbag = require("src/rpschoolbag")
 --
 
 RPSpeedrun.buttons = {
-  R9S1  = {X = 1, Y = 5},
-  R14S1 = {X = 4, Y = 5},
-  R7S2  = {X = 8, Y = 5},
-  R7S3  = {X = 11, Y = 5},
+  --R9S1  = {X = 1, Y = 5},
+  --R14S1 = {X = 4, Y = 5},
+  --R7S2  = {X = 8, Y = 5},
+  --R7S3  = {X = 11, Y = 5},
+  R9S1  = {X = 2, Y = 3},
+  R14S1 = {X = 6, Y = 3},
+  R7S2  = {X = 10, Y = 3},
+  R7S3  = {X = 4, Y = 5},
+  R7S4  = {X = 8, Y = 5},
 }
 RPSpeedrun.charPosition9 = { -- The format is character number, X, Y
-  {2, 2, 1},   -- Cain
-  {3, 4, 1},   -- Judas
-  {4, 6, 1},   -- Blue Baby
-  {5, 8, 1},   -- Eve
-  {6, 10, 1},  -- Samson
-  {7, 2, 3},   -- Azazel
-  {8, 4, 3},   -- Lazarus
-  {10, 8, 3},  -- The Lost
-  {14, 10, 3}, -- Keeper
+  {2, 2, 1},  -- Cain
+  {3, 4, 1},  -- Judas
+  {4, 6, 1},  -- Blue Baby
+  {5, 8, 1},  -- Eve
+  {6, 10, 1}, -- Samson
+  {7, 3, 3},  -- Azazel
+  {8, 5, 3},  -- Lazarus
+  {10, 7, 3}, -- The Lost
+  {14, 9, 3}, -- Keeper
 }
 RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
   {0, 1, 1},   -- Isaac
@@ -46,23 +51,48 @@ RPSpeedrun.charPosition14 = { -- The format is character number, X, Y
   {14, 2, 5},  -- Keeper
   {15, 10, 5}, -- Apollyon
 }
-RPSpeedrun.charPosition7_1 = { -- The format is character number, X, Y
-  {0, 2, 1},   -- Isaac
-  {2, 4, 1},   -- Cain
-  {3, 6, 1},   -- Judas
-  {7, 8, 1},   -- Azazel
-  {9, 10, 1},  -- Eden
-  {15, 2, 3},  -- Apollyon
-  {16, 10, 3}, -- Samael
-}
 RPSpeedrun.charPosition7_2 = { -- The format is character number, X, Y
-  {0, 2, 1},   -- Isaac
-  {1, 4, 1},   -- Magdalene
-  {3, 6, 1},   -- Judas
-  {5, 8, 1},   -- Eve
-  {6, 10, 1},  -- Samson
-  {8, 2, 3},   -- Lazarus
-  {10, 10, 3}, -- The Lost
+  {0, 2, 1},  -- Isaac
+  {2, 4, 1},  -- Cain
+  {3, 6, 1},  -- Judas
+  {7, 8, 1},  -- Azazel
+  {9, 10, 1}, -- Eden
+  {15, 5, 3}, -- Apollyon
+  {16, 7, 3}, -- Samael
+}
+RPSpeedrun.charPosition7_3 = { -- The format is character number, X, Y
+  {0, 2, 1},  -- Isaac
+  {1, 4, 1},  -- Magdalene
+  {3, 6, 1},  -- Judas
+  {5, 8, 1},  -- Eve
+  {6, 10, 1}, -- Samson
+  {8, 5, 3},  -- Lazarus
+  {10, 7, 3}, -- The Lost
+}
+RPSpeedrun.charPosition7_4 = { -- The format is item number + 1000, X, Y
+  {114, 1, 1},  -- Mom's Knife
+  {172, 3, 1},  -- Sacrificial Dagger
+  {275, 5, 1},  -- Lil' Brimstone
+  {229, 7, 1},  -- Monstro's Lung
+  {224, 9, 1},  -- Cricket's Body
+  {373, 11, 1}, -- Dead Eye
+  {52, 1, 3},   -- Dr. Fetus
+  {311, 3, 3},  -- Judas' Shadow
+  {69, 5, 3},   -- Chocolate Milk
+  {494, 7, 3},  -- Jacob's Ladder
+  {153, 9, 3},  -- Mutant Spider + The Inner Eye
+  {68, 11, 3},  -- Technology + A Lump of Coal
+  {257, 2, 5},  -- Fire Mind + 13 luck
+  {40, 10, 5},   -- Kamikaze! + Host Hat
+}
+RPSpeedrun.charOrder7_4 = {
+  4,  -- Blue Baby
+  15, -- Apollyon
+  8, -- Lazarus
+  2,  -- Cain
+  3,  -- Judas
+  7,  -- Azazel
+  9,  -- Eden
 }
 
 --
@@ -311,6 +341,46 @@ function RPSpeedrun:Init()
 
     -- Remove the Schoolbag item from all pools
     itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+    Isaac.DebugString("In the R+7 (Season 4) challenge.")
+
+    -- Everyone starts with the Schoolbag in this season
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    RPSchoolbag.sprites.item = nil
+
+    -- Give the additional starting item
+    local itemID = RPGlobals.race.order7[RPSpeedrun.charNum]
+    player:AddCollectible(itemID, 0, false)
+    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
+
+    -- Handle builds with second items
+    local secondItem = nil
+    if itemID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER then -- 153
+      secondItem = CollectibleType.COLLECTIBLE_INNER_EYE -- 2
+    elseif itemID == CollectibleType.COLLECTIBLE_TECHNOLOGY then -- 68
+      secondItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+    elseif itemID == CollectibleType.COLLECTIBLE_FIRE_MIND then -- 257
+      secondItem = CollectibleType.COLLECTIBLE_13_LUCK
+    elseif itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
+      secondItem = CollectibleType.COLLECTIBLE_HOST_HAT -- 375
+    end
+    if secondItem ~= nil then
+      player:AddCollectible(secondItem, 0, false) -- 2
+      itemPool:RemoveCollectible(secondItem)
+    end
+
+    -- Handle builds with an active item that goes into the Schoolbag
+    local schoolbagItem = nil
+    if itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
+      schoolbagItem = CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
+    end
+    if schoolbagItem ~= nil then
+      RPGlobals.run.schoolbag.item = schoolbagItem
+      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+      player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 0, false) -- 105
+    end
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
@@ -353,6 +423,14 @@ function RPSpeedrun:Init()
     Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 3) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") and
+         character ~= RPSpeedrun.charOrder7_4[RPSpeedrun.charNum] then
+
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 4) speedrun." ..
+                      " (" .. tostring(character) .. ")")
+    return
   end
 
   if RPSpeedrun.fastReset then
@@ -366,7 +444,9 @@ function RPSpeedrun:Init()
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
            character ~= RPGlobals.race.order7[1]) or
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-           character ~= RPGlobals.race.order7[1])) then
+           character ~= RPGlobals.race.order7[1]) or
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") and
+           character ~= RPSpeedrun.charOrder7_4[1])) then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
@@ -509,6 +589,8 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
   pos = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S3.X, RPSpeedrun.buttons.R7S3.Y)
   Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
+  pos = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S4.X, RPSpeedrun.buttons.R7S4.Y)
+  Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
   -- Spawn the graphics over the buttons
   RPSpeedrun.sprites.button1 = Sprite()
@@ -523,6 +605,9 @@ function RPSpeedrun:PostNewRoomChangeCharOrder()
   RPSpeedrun.sprites.button4 = Sprite()
   RPSpeedrun.sprites.button4:Load("gfx/speedrun/button4.anm2", true)
   RPSpeedrun.sprites.button4:SetFrame("Default", 0)
+  RPSpeedrun.sprites.button5 = Sprite()
+  RPSpeedrun.sprites.button5:Load("gfx/speedrun/button5.anm2", true)
+  RPSpeedrun.sprites.button5:SetFrame("Default", 0)
 end
 
 -- Called from the PostRender callback
@@ -559,6 +644,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
   local buttonPos2 = RPGlobals:GridToPos(RPSpeedrun.buttons.R14S1.X, RPSpeedrun.buttons.R14S1.Y)
   local buttonPos3 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S2.X, RPSpeedrun.buttons.R7S2.Y)
   local buttonPos4 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S3.X, RPSpeedrun.buttons.R7S3.Y)
+  local buttonPos5 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S4.X, RPSpeedrun.buttons.R7S4.Y)
   if gridEntity:GetSaveState().State == 3 and
      gridEntity.Position.X == buttonPos1.X and
      gridEntity.Position.Y == buttonPos1.Y then
@@ -619,15 +705,15 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
     RPSpeedrun:RemoveAllRoomButtons()
 
     RPSpeedrun.sprites.characters = {}
-    for i = 1, #RPSpeedrun.charPosition7_1 do
+    for i = 1, #RPSpeedrun.charPosition7_2 do
       -- Spawn 7 buttons for the 7 characters
       Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
-                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_1[i][2], RPSpeedrun.charPosition7_1[i][3]), true)
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_2[i][2], RPSpeedrun.charPosition7_2[i][3]), true)
 
       -- Spawn the character selection graphics next to the buttons
       local newIndex = #RPSpeedrun.sprites.characters + 1
       RPSpeedrun.sprites.characters[newIndex] = Sprite()
-      local charNum = RPSpeedrun.charPosition7_1[i][1]
+      local charNum = RPSpeedrun.charPosition7_2[i][1]
       RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
       RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
       RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
@@ -644,20 +730,58 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
     RPSpeedrun:RemoveAllRoomButtons()
 
     RPSpeedrun.sprites.characters = {}
-    for i = 1, #RPSpeedrun.charPosition7_1 do
+    for i = 1, #RPSpeedrun.charPosition7_3 do
       -- Spawn 7 buttons for the 7 characters
       Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
-                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_2[i][2], RPSpeedrun.charPosition7_2[i][3]), true)
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_3[i][2], RPSpeedrun.charPosition7_3[i][3]), true)
 
       -- Spawn the character selection graphics next to the buttons
       local newIndex = #RPSpeedrun.sprites.characters + 1
       RPSpeedrun.sprites.characters[newIndex] = Sprite()
-      local charNum = RPSpeedrun.charPosition7_2[i][1]
+      local charNum = RPSpeedrun.charPosition7_3[i][1]
       RPSpeedrun.sprites.characters[newIndex]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
       RPSpeedrun.sprites.characters[newIndex]:SetFrame("Death", 5) -- The 5th frame is rather interesting
       RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
       -- Fade the character so it looks like a ghost
     end
+
+  elseif gridEntity:GetSaveState().State == 3 and
+         gridEntity.Position.X == buttonPos5.X and
+         gridEntity.Position.Y == buttonPos5.Y then
+
+    RPSpeedrun.chooseType = "R+7 (S4)"
+    Isaac.DebugString("The R+7 (Season 4) button was pressed.")
+
+    RPSpeedrun:RemoveAllRoomButtons()
+
+    -- Make the sprite that shows what character we are choosing for
+    RPSpeedrun.sprites.characters = {}
+    RPSpeedrun.sprites.characters[1] = Sprite()
+    local charNum = RPSpeedrun.charOrder7_4[1]
+    RPSpeedrun.sprites.characters[1]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+    RPSpeedrun.sprites.characters[1]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+    RPSpeedrun.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+    -- Fade the character so it looks like a ghost
+
+    -- Make sprites for all the items
+    RPSpeedrun.sprites.items = {}
+    for i = 1, #RPSpeedrun.charPosition7_4 do
+      -- Spawn X buttons for the all the items
+      Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, -- 20
+                      RPGlobals:GridToPos(RPSpeedrun.charPosition7_4[i][2], RPSpeedrun.charPosition7_4[i][3]), true)
+
+      -- Spawn the item selection graphics next to the buttons
+      local newIndex = #RPSpeedrun.sprites.items + 1
+      RPSpeedrun.sprites.items[newIndex] = Sprite()
+      local itemNum = RPSpeedrun.charPosition7_4[i][1]
+      RPSpeedrun.sprites.items[newIndex]:Load("gfx/items2/collectibles/" .. tostring(itemNum) .. ".anm2", true)
+      RPSpeedrun.sprites.items[newIndex]:SetFrame("Default", 1)
+    end
+
+    -- Not yet (beta)
+    local player = game:GetPlayer(0)
+    player:AnimateSad()
+    player:Kill()
   end
 
   if RPSpeedrun.chooseType == "R+9" then
@@ -713,32 +837,6 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
     end
 
   elseif RPSpeedrun.chooseType == "R+7 (S2)" then
-    for i = 1, #RPSpeedrun.charPosition7_1 do
-      local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition7_1[i][2], RPSpeedrun.charPosition7_1[i][3])
-      if gridEntity:GetSaveState().State == 3 and
-         gridEntity.VarData == 0 and
-         gridEntity.Position.X == posButton.X and
-         gridEntity.Position.Y == posButton.Y then
-
-        -- We have pressed one of the buttons corresponding to the characters
-        gridEntity.VarData = 1 -- Mark that we have pressed this button already
-        RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_1[i][1]
-        if #RPSpeedrun.chooseOrder == 7 then
-          -- We have finished choosing our 7 characters
-          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
-          RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
-          game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
-        end
-
-        -- Change the graphic to that of a number
-        RPSpeedrun.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
-        RPSpeedrun.sprites.characters[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
-        RPSpeedrun.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
-      end
-    end
-
-  elseif RPSpeedrun.chooseType == "R+7 (S3)" then
     for i = 1, #RPSpeedrun.charPosition7_2 do
       local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition7_2[i][2], RPSpeedrun.charPosition7_2[i][3])
       if gridEntity:GetSaveState().State == 3 and
@@ -761,6 +859,64 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         RPSpeedrun.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
         RPSpeedrun.sprites.characters[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
         RPSpeedrun.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
+      end
+    end
+
+  elseif RPSpeedrun.chooseType == "R+7 (S3)" then
+    for i = 1, #RPSpeedrun.charPosition7_3 do
+      local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition7_3[i][2], RPSpeedrun.charPosition7_3[i][3])
+      if gridEntity:GetSaveState().State == 3 and
+         gridEntity.VarData == 0 and
+         gridEntity.Position.X == posButton.X and
+         gridEntity.Position.Y == posButton.Y then
+
+        -- We have pressed one of the buttons corresponding to the characters
+        gridEntity.VarData = 1 -- Mark that we have pressed this button already
+        RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_3[i][1]
+        if #RPSpeedrun.chooseOrder == 7 then
+          -- We have finished choosing our 7 characters
+          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
+          RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+        end
+
+        -- Change the graphic to that of a number
+        RPSpeedrun.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
+        RPSpeedrun.sprites.characters[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
+        RPSpeedrun.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
+      end
+    end
+
+  elseif RPSpeedrun.chooseType == "R+7 (S4)" then
+    for i = 1, #RPSpeedrun.charPosition7_4 do
+      local posButton = RPGlobals:GridToPos(RPSpeedrun.charPosition7_4[i][2], RPSpeedrun.charPosition7_4[i][3])
+      if gridEntity:GetSaveState().State == 3 and
+         gridEntity.VarData == 0 and
+         gridEntity.Position.X == posButton.X and
+         gridEntity.Position.Y == posButton.Y then
+
+        -- We have pressed one of the buttons corresponding to the characters
+        gridEntity.VarData = 1 -- Mark that we have pressed this button already
+        RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_4[i][1]
+        if #RPSpeedrun.chooseOrder == 7 then
+          -- We have finished choosing our 7 items
+          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
+          RPSaveDat:Save()
+          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+        end
+
+        -- Change the graphic to that of a number
+        RPSpeedrun.sprites.items[i]:Load("gfx/timer/timer.anm2", true)
+        RPSpeedrun.sprites.items[i]:SetFrame("Default", #RPSpeedrun.chooseOrder)
+
+        -- Change the player sprite
+        local charNum = RPSpeedrun.charOrder7_4[#RPSpeedrun.chooseOrder + 1]
+        RPSpeedrun.sprites.characters[1]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+        RPSpeedrun.sprites.characters[1]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+        RPSpeedrun.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+        -- Fade the character so it looks like a ghost
       end
     end
   end
@@ -786,6 +942,7 @@ function RPSpeedrun:RemoveAllRoomButtons()
   RPSpeedrun.sprites.button2 = nil
   RPSpeedrun.sprites.button3 = nil
   RPSpeedrun.sprites.button4 = nil
+  RPSpeedrun.sprites.button5 = nil
 end
 
 --
@@ -819,6 +976,11 @@ function RPSpeedrun:DisplayCharSelectRoom()
     local posRender = Isaac.WorldToRenderPosition(posButton4, false)
     RPSpeedrun.sprites.button4:RenderLayer(0, posRender)
   end
+  if RPSpeedrun.sprites.button5 ~= nil then
+    local posButton5 = RPGlobals:GridToPos(RPSpeedrun.buttons.R7S4.X, RPSpeedrun.buttons.R7S4.Y - 1)
+    local posRender = Isaac.WorldToRenderPosition(posButton5, false)
+    RPSpeedrun.sprites.button5:RenderLayer(0, posRender)
+  end
   if RPSpeedrun.sprites.characters ~= nil then
     for i = 1, #RPSpeedrun.sprites.characters do
       local posGame
@@ -827,11 +989,22 @@ function RPSpeedrun:DisplayCharSelectRoom()
       elseif #RPSpeedrun.sprites.characters == 14 then
         posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition14[i][2], RPSpeedrun.charPosition14[i][3] - 1)
       elseif #RPSpeedrun.sprites.characters == 7 then
-        posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition7_1[i][2], RPSpeedrun.charPosition7_1[i][3] - 1)
+        posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition7_2[i][2], RPSpeedrun.charPosition7_2[i][3] - 1)
+      elseif #RPSpeedrun.sprites.characters == 1 then
+        -- The bottom-center of the room
+        posGame = RPGlobals:GridToPos(6, 5)
       end
       local posRender = Isaac.WorldToRenderPosition(posGame, false)
       posRender.Y = posRender.Y + 10
       RPSpeedrun.sprites.characters[i]:Render(posRender, Vector(0, 0), Vector(0, 0))
+    end
+  end
+  if RPSpeedrun.sprites.items ~= nil then
+    for i = 1, #RPSpeedrun.sprites.items do
+      local posGame = RPGlobals:GridToPos(RPSpeedrun.charPosition7_4[i][2], RPSpeedrun.charPosition7_4[i][3] - 1)
+      local posRender = Isaac.WorldToRenderPosition(posGame, false)
+      posRender.Y = posRender.Y
+      RPSpeedrun.sprites.items[i]:Render(posRender, Vector(0, 0), Vector(0, 0))
     end
   end
 end
@@ -855,11 +1028,9 @@ function RPSpeedrun:DisplayCharProgress()
       (RPGlobals.race.order14 == nil or
        #RPGlobals.race.order14 == 0 or
        #RPGlobals.race.order14 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-      (RPGlobals.race.order7 == nil or
-       #RPGlobals.race.order7 == 0 or
-       #RPGlobals.race.order7 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+     ((challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -921,16 +1092,13 @@ function RPSpeedrun:DisplayCharProgress()
     digit1 = 1
     digit2 = RPSpeedrun.charNum - 10
   end
-  local digit3 = 9 -- Assume a 9 character speedrun by default
+  local digit3 = 7 -- Assume a 7 character speedrun by default
   local digit4 = -1
-  if challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
+    digit3 = 9
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     digit3 = 1
     digit4 = 4
-  end
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-
-    digit3 = 7
   end
 
   local posDigit1 = Vector(startingX, startingY)
@@ -1152,7 +1320,8 @@ function RPSpeedrun:InSpeedrun()
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
 
     return true
   else

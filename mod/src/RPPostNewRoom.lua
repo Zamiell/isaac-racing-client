@@ -445,12 +445,8 @@ function RPPostNewRoom:CheckRespawnTrophy()
   end
 
   -- From here on out, handle custom speedrun challenges and races separately
-  if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")) then
-
-    -- All of the custom speedrun challenges end in with Blue Baby or The Lamb
+  if RPSpeedrun:InSpeedrun() then
+    -- All of the custom speedrun challenges end at the Blue Baby room or The Lamb room
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
       return
     end

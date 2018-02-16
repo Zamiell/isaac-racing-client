@@ -352,6 +352,9 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S2(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+    -- Use the same function as Season 3 since they both split between up and down
+    RPCheckEntities:Entity5_340_S3(pickup)
   elseif RPGlobals.raceVars.finished then
     RPCheckEntities.bigChestAction = "victorylap"
   elseif RPGlobals.race.rFormat == "pageant" then
@@ -915,6 +918,7 @@ function RPCheckEntities:ReplacePedestal(entity)
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local challenge = Isaac.GetChallenge()
 
   -- Check to see if this is a pedestal that was already replaced
   for i = 1, #RPGlobals.run.replacedPedestals do
@@ -965,7 +969,8 @@ function RPCheckEntities:ReplacePedestal(entity)
 
   -- Check to see if this is a B1 item room on a seeded race
   local offLimits = false
-  if RPGlobals.race.rFormat == "seeded" and
+  if (RPGlobals.race.rFormat == "seeded" or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      entity.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235

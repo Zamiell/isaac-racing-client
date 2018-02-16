@@ -68,9 +68,10 @@ function RPPostEntityKill:Entity45(entity)
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
 
-    -- Give the player a choice between the photos on the season 2 and season 3 speedrun challenges
+    -- Give the player a choice between the photos on the season 2, season 3, and season 4 speedrun challenges
     situation = 3
 
   elseif player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
@@ -197,7 +198,9 @@ function RPPostEntityKill:Entity78(entity)
     -- Season 1 speedrun challenges always go to the Dark Room
     situation = 2
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+
     -- Season 3 speedrun challenges alternate between The Chest and the Dark Room, starting with The Chest
     situation = RPSpeedrun.charNum % 2
     if situation == 0 then

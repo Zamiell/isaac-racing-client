@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.15.3* - February 15th
+
+* Creep will now instantly fade as soon as the room is cleared.
+
 ### *v0.15.2* - February 14th
 
-* If it is not already, the game will now automatically be focused during the countdown at 1 second left. (Thanks 
+* If it is not already, the game will now automatically be focused during the countdown at 1 second left. (Thanks The_Moep)
 * Fixed the bug where the starting item was not being reported correctly. (Thanks PassionDrama and meepmeep13)
 * Fixed the bug where killing a Heart of Infamy caused the Mask of Infamy to fade. (Thanks Blumpkin Idaho and BMZ_Loop)
 * Changed the ordering of the starting room graphic. (Thanks 910dan)
