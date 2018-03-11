@@ -258,6 +258,17 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
+### R+7 Season 4
+
+* You must complete the game with the following 7 characters:
+  * Cain, Judas, Blue Baby, Azazel, Lazarus, Lilith, and Apollyon
+* The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
+* All characters start with the Schoolbag.
+* Lilith starts with Incubus.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+* Coming soon...
+
 <br />
 
 ## Individual Room Changes

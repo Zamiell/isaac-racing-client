@@ -31,6 +31,19 @@ function RPDebug:Main()
   local player = game:GetPlayer(0)
   local sfx = SFXManager()
 
+  -- Enable debug mode
+  RPGlobals.debug = true
+
+  RPSpeedrun.charPosition7_3 = { -- The format is character number, X, Y
+    {14, 2, 1},  -- Keeper
+    {9, 4, 1},  -- Eden
+    {10, 6, 1},  -- Lost
+    {7, 8, 1},  -- Azazel
+    {0, 10, 1}, -- Isaac
+    {3, 5, 3},  -- Judas
+    {4, 7, 3}, -- Blue Baby
+  }
+
   -- Print out various debug information to Isaac's log.txt
   Isaac.DebugString("+-------------------------+")
   Isaac.DebugString("| Entering test callback. |")

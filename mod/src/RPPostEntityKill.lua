@@ -198,14 +198,16 @@ function RPPostEntityKill:Entity78(entity)
     -- Season 1 speedrun challenges always go to the Dark Room
     situation = 2
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
-
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     -- Season 3 speedrun challenges alternate between The Chest and the Dark Room, starting with The Chest
     situation = RPSpeedrun.charNum % 2
     if situation == 0 then
       situation = 2
     end
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+    -- Season 4 speedrun challenges always go to The Chest
+    situation = 1
 
   elseif RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb go to the Dark Room

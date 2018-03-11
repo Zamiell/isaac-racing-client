@@ -409,7 +409,7 @@ function RPPostNewRoom:CheckEntities()
     RPGlobals.run.teleportSubverted = true
     RPGlobals.run.teleportSubvertScale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
-    -- (we actually move the player on the next PostRender frame)
+    -- (we actually move the player on the next frame in the "RPPostRender:CheckSubvertTeleport()" function)
   end
 end
 
@@ -427,7 +427,6 @@ function RPPostNewRoom:CheckRespawnTrophy()
   end
   local roomType = room:GetType()
   local roomClear = room:IsClear()
-  local challenge = Isaac.GetChallenge()
 
   -- There are only trophies on The Chest or the Dark Room
   if stage ~= 11 then
@@ -515,7 +514,6 @@ function RPPostNewRoom:Race()
   local roomClear = room:IsClear()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local gridSize = room:GetGridSize()
-  local player = game:GetPlayer(0)
   local sfx = SFXManager()
 
   -- Remove the final place graphic if it is showing
@@ -543,15 +541,6 @@ function RPPostNewRoom:Race()
         end
       end
     end
-  end
-
-  -- Check to see if we need to remove More Options (used to give only one double item Treasure Room)
-  if roomType == RoomType.ROOM_TREASURE and -- 4
-     player:HasCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) and -- 414
-     RPGlobals.run.removeMoreOptions then
-
-    RPGlobals.run.removeMoreOptions = false
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 
   -- Check to see if we need to open the Mega Satan Door

@@ -16,7 +16,6 @@ function RPItems:WeNeedToGoDeeper() -- 84
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
-  local room = game:GetRoom()
   local stage = level:GetStage()
   local player = game:GetPlayer(0)
 
@@ -24,13 +23,8 @@ function RPItems:WeNeedToGoDeeper() -- 84
   if RPGlobals.race.goal == "Everything" and
      stage == 8 then
 
-    -- Do a little something fun
+    -- Signal that what they did was illegal
     player:AnimateSad()
-    for i = 1, 5 do
-      local pos = room:FindFreePickupSpawnPosition(player.Position, 50, true)
-      -- Use a value of 50 to spawn them far from the player
-      game:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, Vector(0, 0), nil, 0, 0)
-    end
 
     -- By returning true, it will cancel the original effect
     return true

@@ -113,18 +113,28 @@ function RPPostRender:CheckRestart()
     -- The "restart" command takes an optional argument to specify the character; we might want to specify this
     local command = "restart"
     if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
-      command = command .. " " .. RPGlobals.race.order9[RPSpeedrun.charNum]
+      local char = RPGlobals.race.order9[RPSpeedrun.charNum]
+      if char > 14 then
+        -- Since we store season 4 items in the "order9" variable,
+        -- this has the potential to crash the game if they try to do a season 1 run without setting their order first
+        -- Just default to Isaac in this situation
+        char = 0
+      end
+      command = command .. " " .. char
+
     elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
       command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
+
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
-      command = command .. " " .. RPSpeedrun.charOrder7_4[RPSpeedrun.charNum]
+
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
     end
+
     RPGlobals:ExecuteCommand(command)
     return
   end
@@ -309,6 +319,9 @@ function RPPostRender:CheckSubvertTeleport()
       pos = Vector(80, 280) -- (the default position if you enter the room from the left door)
     elseif level.LeaveDoor == 7 then -- 2x2 bottom right
       pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
+    else
+       -- If we teleported into the room, don't change the player's position
+      return
     end
   else
     -- This will work for Gurdy / Mom's Heart / It Lives!
@@ -320,6 +333,9 @@ function RPPostRender:CheckSubvertTeleport()
       pos = Vector(560, 280) -- (the default position if you enter the room from the right door)
     elseif level.EnterDoor == Direction.DOWN then -- 3
       pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
+    else
+      -- If we teleported into the room, don't change the player's position
+      return
     end
   end
 

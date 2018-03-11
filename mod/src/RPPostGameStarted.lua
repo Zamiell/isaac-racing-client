@@ -204,6 +204,17 @@ function RPPostGameStarted:Character()
   local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
 
+  -- If they have started with the vanilla Schoolbag, it will cause bugs with swapping the active item later on
+  -- (this should be only possible on Eden; we will give Eden the custom Schoolbag below)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+
+    -- Give Sad Onion as a replacement for the passive item
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SAD_ONION, 0, false) -- 1
+    Isaac.DebugString("Eden has started with the vanilla Schoolbag; removing it.")
+    Isaac.DebugString("Removing collectible 534 (Schoolbag)")
+  end
+
   -- Give all characters the D6
   local activeItem = player:GetActiveItem()
   player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
@@ -279,10 +290,7 @@ function RPPostGameStarted:Character()
       player:AddCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM)
       passiveItem = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
     end
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
-      player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
-      Isaac.DebugString("Removing collectible 534 (Schoolbag)")
-    end
+    -- (the Schoolbag was manually fixed earlier)
 
     -- Make sure that the Schoolbag item is fully charged
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then

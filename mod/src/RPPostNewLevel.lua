@@ -40,6 +40,7 @@ function RPPostNewLevel:NewLevel()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_NEW_LEVEL2")
@@ -94,6 +95,12 @@ function RPPostNewLevel:NewLevel()
     itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #1"))
     itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
     itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
+  end
+
+  -- Ensure that the "More Options" buff (for custom challenges) does not persist beyond Basement 1
+  if stage >= 2 and RPGlobals.run.removeMoreOptions == true then
+    RPGlobals.run.removeMoreOptions = false
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)

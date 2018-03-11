@@ -1,8 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.15.4* - March 11th
+
+* Eden will now be given the Sad Onion if they happen to start with the vanilla Schoolbag as the random passive item.
+* 5 Monstros will no longer spawn if you use the Shovel / Ehawaz on Womb 2 during races with a goal of "Everything". (Thanks Gamonymous)
+* Fixed the bug where if Eden starts with the Schoolbag, a pedestal will be created on the ground. (Thanks NorBro86)
+
 ### *v0.15.3* - February 15th
 
-* Creep will now instantly fade as soon as the room is cleared.
+* Creep will now instantly fade as soon as the room is cleared. (Thanks thisguyisbarry)
 
 ### *v0.15.2* - February 14th
 

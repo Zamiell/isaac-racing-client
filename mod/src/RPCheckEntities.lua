@@ -353,8 +353,7 @@ function RPCheckEntities:Entity5_340(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
-    -- Use the same function as Season 3 since they both split between up and down
-    RPCheckEntities:Entity5_340_S3(pickup)
+    RPCheckEntities:Entity5_340_S4(pickup)
   elseif RPGlobals.raceVars.finished then
     RPCheckEntities.bigChestAction = "victorylap"
   elseif RPGlobals.race.rFormat == "pageant" then
@@ -517,6 +516,26 @@ function RPCheckEntities:Entity5_340_S3(pickup)
     -- Thus, we need to handle replacing both the trophy and the big chest
     -- So replace the big chest with either a checkpoint flag or a custom trophy,
     -- depending on if we are on the last character or not
+    if RPSpeedrun.charNum == 7 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_S4(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  if stage == 10 and stageType == 1 then -- Cathedral
+    -- It is not required to take The Polaroid in Season 4
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- The Chest
     if RPSpeedrun.charNum == 7 then
       RPCheckEntities.bigChestAction = "trophy"
     else
