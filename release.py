@@ -138,6 +138,30 @@ if not ARGS.skipmod:
     except Exception as err:
         error('Failed to remove the "' + DISABLE_IT_PATH + '" file:', err)
 
+    # Get the SHA1 hash of every file in the mod directory
+    # From: https://gist.github.com/techtonik/5175896
+    HASHES = {}
+    for root, subdirs, files in os.walk(MOD_DIR):
+        for fpath in [os.path.join(root, f) for f in files]:
+            # We don't care about certain files
+            name = os.path.relpath(fpath, root)
+            if (name == 'metadata.xml' or # This file will be one version number ahead of the one distributed through steam
+                    name == 'save1.dat' or # These are the IPC files, so it doesn't matter if they are different
+                    name == 'save2.dat' or
+                    name == 'save3.dat'):
+
+                continue
+
+            choppedPath = fpath[80:] # Chop off the "C:\\Users\\james\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_dev\\" prefix
+            HASHES[choppedPath] = filehash(fpath)
+
+    # Write the dictionary to a JSON file
+    SHA1_FILE_PATH = os.path.join(MOD_DIR, 'sha1.json')
+    with open(SHA1_FILE_PATH, 'w') as file_pointer:
+        # By default the JSON will be all combined into a single line, so we specify the indent to make it pretty
+        # By default the JSON will be dumped in a random order, so we use "sort_keys" to make it alphabetical
+        json.dump(HASHES, file_pointer, indent=4, sort_keys=True)
+
     # Copy the mod
     MOD_DIR2 = 'mod'
     if os.path.exists(MOD_DIR2):
@@ -151,30 +175,6 @@ if not ARGS.skipmod:
     except Exception as err:
         error('Failed to copy the "' + MOD_DIR + '" directory:', err)
     print('Copied the mod.')
-
-    # Get the SHA1 hash of every file in the mod directory
-    # From: https://gist.github.com/techtonik/5175896
-    HASHES = {}
-    for root, subdirs, files in os.walk(MOD_DIR2):
-        for fpath in [os.path.join(root, f) for f in files]:
-            # We don't care about certain files
-            name = os.path.relpath(fpath, root)
-            if (name == 'metadata.xml' or # This file will be one version number ahead of the one distributed through steam
-                    name == 'save1.dat' or # These are the IPC files, so it doesn't matter if they are different
-                    name == 'save2.dat' or
-                    name == 'save3.dat'):
-
-                continue
-
-            choppedPath = fpath[4:] # Chop off the "mod\" prefix
-            HASHES[choppedPath] = filehash(fpath)
-
-    # Write the dictionary to a JSON file
-    SHA1_FILE_PATH = os.path.join(MOD_DIR2, 'sha1.json')
-    with open(SHA1_FILE_PATH, 'w') as file_pointer:
-        # By default the JSON will be all combined into a single line, so we specify the indent to make it pretty
-        # By default the JSON will be dumped in a random order, so we use "sort_keys" to make it alphabetical
-        json.dump(HASHES, file_pointer, indent=4, sort_keys=True)
 
 # Exit if we are only supposed to be doing work on the mod
 if ARGS.mod:

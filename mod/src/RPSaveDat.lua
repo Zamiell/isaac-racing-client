@@ -40,7 +40,7 @@ function RPSaveDat:Load()
     -- Mark that we have loaded on this frame
     RPGlobals.raceVars.loadOnNextFrame = false
 
-    -- Make a backup in case loading fails
+    -- Make a backup in case loading fails (see below)
     local oldRace = RPGlobals.race
 
     -- The server will write JSON data for us to the "save#.dat" file in the mod subdirectory
@@ -114,6 +114,12 @@ function RPSaveDat:Load()
     if RPGlobals:TableEqual(oldRace.order14, RPGlobals.race.order14) == false then
       Isaac.DebugString("ModData order14 changed.")
       RPSaveDat:ChangedOrder()
+    end
+    if oldRace.hotkeyDrop ~= RPGlobals.race.hotkeyDrop then
+      Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(RPGlobals.race.hotkeyDrop))
+    end
+    if oldRace.hotkeySwitch ~= RPGlobals.race.hotkeySwitch then
+      Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(RPGlobals.race.hotkeySwitch))
     end
   end
 end

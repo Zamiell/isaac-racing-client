@@ -53,6 +53,9 @@ module.exports = {
     // https://blog.javascripting.com/2015/09/07/fine-tuning-airbnbs-eslint-config/
     // (airbnb doesn't include this by default for some reason)
     "quote-props": ["warn", "consistent-as-needed"],
+
+    // This is stupid
+    "prefer-destructuring": ["off"],
   },
   "globals": {
     "Lang": true,

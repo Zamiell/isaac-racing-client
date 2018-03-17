@@ -16,5 +16,7 @@
    "timeOffset":    0,
    "order7":        [0],
    "order9":        [0],
-   "order14":       [0]
+   "order14":       [0],
+   "hotkeyDrop":    0,
+   "hotkeySwitch":  0,
 }

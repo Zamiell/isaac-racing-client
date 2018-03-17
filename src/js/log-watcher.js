@@ -113,6 +113,20 @@ ipcRenderer.on('log-watcher', (event, message) => {
         } else {
             misc.errorShow('Failed to parse the speedrun order from the message sent by the log watcher process:', message);
         }
+    } else if (message.startsWith('New drop hotkey: ')) {
+        const m = message.match(/New drop hotkey: (.+)/);
+        if (m) {
+            globals.modLoader.hotkeyDrop = m[1];
+        } else {
+            misc.errorShow('Failed to parse the new drop hotkey from the message sent by the log watcher process:', message);
+        }
+    } else if (message.startsWith('New switch hotkey: ')) {
+        const m = message.match(/New switch hotkey: (.+)/);
+        if (m) {
+            globals.modLoader.hotkeySwitch = m[1];
+        } else {
+            misc.errorShow('Failed to parse the new switch hotkey from the message sent by the log watcher process:', message);
+        }
     }
 
     /*

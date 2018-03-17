@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.15.4"
+RPGlobals.version = "v0.15.5"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -31,6 +31,8 @@ RPGlobals.race = {
   order7          = {0},         -- The order for a Racing+ 7 character speedrun
   order9          = {0},         -- The order for a Racing+ 9 character speedrun (or items in R+7 S4)
   order14         = {0},         -- The order for a Racing+ 14 character speedrun
+  hotkeyDrop      = 0,           -- A custom key binding for fast-drop, or 0 if not set
+  hotkeySwitch    = 0,           -- A custom key binding for a Schoolbag switch, or 0 if not set
 }
 -- (unofficially, this can also have "timer = false")
 

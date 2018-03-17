@@ -12,7 +12,7 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+\log.txt
 ```
 And send me your Racing+ log file, which is located here:
 ```
-C:\Users\james\AppData\Local\Programs\Racing+ 2017-##-##.log
+C:\Users\james\AppData\Local\Programs\Racing+ 2018-##-##.log
 ```
 And if you are still in the race, send me your `save1.dat` file (for save slot #1), which is located here:
 ```
@@ -482,6 +482,12 @@ app.on('before-quit', () => {
         }
         if (typeof json.order14 === 'undefined') {
             json.order14 = [0];
+        }
+        if (typeof json.hotkeyDrop === 'undefined') {
+            json.hotkeyDrop = 0;
+        }
+        if (typeof json.hotkeySwitch === 'undefined') {
+            json.hotkeySwitch = 0;
         }
         try {
             fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');

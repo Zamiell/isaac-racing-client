@@ -39,17 +39,17 @@ exports.start = () => {
                 return false;
             }
 
-            // We only want to replace our stored orders if they are changed from the default
-            const orders = ['order7', 'order9', 'order14'];
-            for (const order of orders) {
+            // We only want to replace our stored variables if they are changed from the default
+            const props = ['order7', 'order9', 'order14', 'hotkeyDrop', 'hotkeySwitch'];
+            for (const prop of props) {
                 if (
-                    typeof json[order] !== 'undefined' &&
-                    json[order] !== null &&
-                    json[order].toString() !== '0' &&
-                    globals.modLoader[order].toString() === '0'
+                    typeof json[prop] !== 'undefined' &&
+                    json[prop] !== null &&
+                    json[prop].toString() !== '0' &&
+                    globals.modLoader[prop].toString() === '0'
                 ) {
-                    globals.modLoader[order] = json[order];
-                    globals.log.info(`Found property "${order}" on save file ${i}: ${json[order]}`);
+                    globals.modLoader[prop] = json[prop];
+                    globals.log.info(`Found property "${prop}" on save file ${i}: ${json[prop]}`);
                 }
             }
         } else {
