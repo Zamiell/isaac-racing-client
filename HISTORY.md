@@ -4,6 +4,10 @@
 
 * You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag switch. If you do not have a binding set for them, they will continue to work as they have been in the past.
 
+### *v0.15.5* - March 17th
+
+* Fixed the bug where the Racing+ client would complain that the mod was corrupt under certain conditions when it really was not. (Thanks Gamonymous)
+
 ### *v0.15.4* - March 11th
 
 * Eden will now be given the Sad Onion if they happen to start with the vanilla Schoolbag as the random passive item.
