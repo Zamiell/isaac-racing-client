@@ -46,7 +46,7 @@ exports.start = () => {
                     typeof json[prop] !== 'undefined' &&
                     json[prop] !== null &&
                     json[prop].toString() !== '0' &&
-                    globals.modLoader[prop].toString() === '0'
+                    (globals.modLoader[prop] === 0 || globals.modLoader[prop].toString() === '0')
                 ) {
                     globals.modLoader[prop] = json[prop];
                     globals.log.info(`Found property "${prop}" on save file ${i}: ${json[prop]}`);

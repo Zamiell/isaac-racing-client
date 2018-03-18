@@ -8,6 +8,7 @@ local RPGlobals       = require("src/rpglobals")
 local RPSprites       = require("src/rpsprites")
 local RPCheckEntities = require("src/rpcheckentities")
 local RPFastClear     = require("src/rpfastclear")
+local RPFastDrop      = require("src/rpfastdrop")
 local RPSchoolbag     = require("src/rpschoolbag")
 local RPSoulJar       = require("src/rpsouljar")
 local RPFastTravel    = require("src/rpfasttravel")
@@ -105,7 +106,7 @@ function RPPostUpdate:Main()
   end
 
   -- Check for item drop inputs (fast-drop)
-  RPPostUpdate:CheckDropInput()
+  RPFastDrop:CheckDropInput()
 
   -- Check for Schoolbag switch inputs
   -- (and other miscellaneous Schoolbag activities)
@@ -261,107 +262,6 @@ function RPPostUpdate:CheckHauntSpeedup()
 
         Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
                           " on frame: " .. tostring(gameFrameCount))
-      end
-    end
-  end
-end
-
--- Check for item drop inputs (fast-drop)
-function RPPostUpdate:CheckDropInput()
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-  local player = game:GetPlayer(0)
-  local card1 = player:GetCard(0)
-  local card2 = player:GetCard(1)
-  local pill1 = player:GetPill(0)
-  local pill2 = player:GetPill(1)
-  local trinket1 = player:GetTrinket(0)
-  local trinket2 = player:GetTrinket(1)
-
-  -- We don't want to drop items if the player is intending to do a Schoolbag switch
-  -- Furthermore, it isn't possible to drop/delete a player's 2nd card/pill slot
-  -- (we are able to delete the first slot by adding a null card)
-  -- So we have to disable the fast-drop feature if the player has an item that allows a 2nd card/pill slot
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) or
-     player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     player:HasCollectible(CollectibleType.COLLECTIBLE_STARTER_DECK) or -- 251
-     player:HasCollectible(CollectibleType.COLLECTIBLE_LITTLE_BAGGY) or -- 252
-     player:HasCollectible(CollectibleType.COLLECTIBLE_DEEP_POCKETS) or -- 416
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLYDACTYLY) then -- 454
-
-    return
-  end
-
-  -- Check for the input
-  -- (use "IsActionPressed()" instead of "IsActionTriggered()" because
-  -- new players might not know about the fast-drop feature and will just keep the button pressed down)
-  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
-    return
-  end
-
-  local droppedCardPill = false
-  if card1 ~= 0 and card2 == 0 and pill2 == 0 then
-    -- Drop the card
-    droppedCardPill = true
-    player:AddCard(0)
-    Isaac.DebugString("Dropped card " .. tostring(card1) .. ".")
-  elseif pill1 ~= 0 and card2 == 0 and pill2 == 0 then
-    -- Drop the pill
-    droppedCardPill = true
-    player:AddPill(0)
-    Isaac.DebugString("Dropped pill " .. tostring(card1) .. ".")
-  end
-
-  -- Trinkets
-  if trinket1 ~= 0 then
-    -- Drop the first trinket
-    player:DropTrinket(player.Position, false) -- The second argument is ReplaceTick
-
-    -- If it is overlapping with a card or pill, we should find a new square to drop it on
-    if droppedCardPill then
-      -- Search for the dropped trinket
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
-           entity.SubType == trinket1 and
-           entity.Position.X == player.Position.X and
-           entity.Position.Y == player.Position.Y then
-
-          -- We found the dropped trinket
-          entity:Remove()
-
-          -- Find a free location for the first trinket
-          local newPos = room:FindFreePickupSpawnPosition(player.Position, 0, true)
-
-          -- Respawn it
-          game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity,
-                     entity.Parent, entity.SubType, entity.InitSeed)
-        end
-      end
-    end
-  end
-  if trinket2 ~= 0 then
-    -- Drop the second trinket
-    player:DropTrinket(player.Position, false) -- The second argument is ReplaceTick
-
-    -- Search for the dropped trinket
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PICKUP and -- 5
-         entity.Variant == PickupVariant.PICKUP_TRINKET and -- 350
-         entity.SubType == trinket2 and
-         entity.Position.X == player.Position.X and
-         entity.Position.Y == player.Position.Y then
-
-        -- We found the dropped trinket
-        entity:Remove()
-
-        -- Find a free location for the first trinket
-        local newPos = room:FindFreePickupSpawnPosition(player.Position, 0, true)
-
-        -- Respawn it
-        game:Spawn(entity.Type, entity.Variant, newPos, entity.Velocity,
-                   entity.Parent, entity.SubType, entity.InitSeed)
       end
     end
   end

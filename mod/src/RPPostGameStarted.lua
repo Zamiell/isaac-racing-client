@@ -11,6 +11,7 @@ local RPSchoolbag    = require("src/rpschoolbag")
 local RPSoulJar      = require("src/rpsouljar")
 local RPFastClear    = require("src/rpfastclear")
 local RPFastTravel   = require("src/rpfasttravel")
+local RPFastDrop     = require("src/rpfastdrop")
 local RPSpeedrun     = require("src/rpspeedrun")
 local RPTimer        = require("src/rptimer")
 
@@ -110,6 +111,9 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some RNG counters for familiars
   RPFastClear:InitRun()
+
+  -- Reset "Change Keybindings" variables
+  RPFastDrop:PostGameStarted()
 
   -- Reset some race variables that we keep track of per run
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
@@ -435,6 +439,12 @@ function RPPostGameStarted:Race()
       RPPostGameStarted:Diversity()
     end
 
+  elseif RPGlobals.race.ranked and
+         RPGlobals.race.solo and
+         RPGlobals.race.rFormat == "unseeded" then
+
+    RPPostGameStarted:UnseededRankedSolo()
+
   elseif RPGlobals.race.rFormat == "seededMO" then
     RPPostGameStarted:SeededMO()
 
@@ -721,6 +731,15 @@ function RPPostGameStarted:Pageant()
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
 
   Isaac.DebugString("Added pageant items.")
+end
+
+function RPPostGameStarted:UnseededRankedSolo()
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  for i = 1, #RPGlobals.race.startingItems do
+    player:AddCollectible(RPGlobals.race.startingItems[i], 12, true)
+  end
 end
 
 function RPPostGameStarted:SeededMO()

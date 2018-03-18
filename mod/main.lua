@@ -216,7 +216,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPMahalath.take_dmg)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     RPMahalath.PostNewRoom)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPMahalath.PostGameStarted)
 
-
 -- Welcome banner
 local hyphens = ''
 for i = 1, 23 + string.len(RPGlobals.version) do

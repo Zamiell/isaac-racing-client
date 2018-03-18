@@ -34,6 +34,14 @@ const send = () => {
         for (const item of items) {
             json.startingItems.push(parseInt(item, 10)); // The Lua mod expects this to be a number
         }
+    } else if (
+        globals.modLoader.ranked &&
+        globals.modLoader.solo &&
+        globals.modLoader.rFormat === 'unseeded'
+    ) {
+        // The Racing+ Schoolbag has an item ID of 536
+        json.startingItems.push(parseInt(536, 10)); // The Lua mod expects this to be a number
+        // TODO fix when Booster pack 5 is released
     }
 
     // Parse the starting build

@@ -253,13 +253,27 @@ function RPSchoolbag:CheckInput()
     return
   end
 
-  -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
-  -- the latter is not very responsive with fast sequences of inputs
-  if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
-    RPGlobals.run.schoolbag.pressed = false
-    return
-  elseif RPGlobals.run.schoolbag.pressed then
-    return
+  local button = RPGlobals.race.hotkeySwitch
+  if button ~= 0 then
+    -- If they have a custom Schoolbag-switch key bound, then use that
+    -- We use "IsButtonPressed()" instead of "IsButtonTriggered()" because
+    -- the latter is not very responsive with fast sequences of inputs
+    if Input.IsButtonPressed(RPGlobals.race.hotkeySwitch, player.ControllerIndex) == false then
+      RPGlobals.run.schoolbag.pressed = false
+      return
+    elseif RPGlobals.run.schoolbag.pressed then
+      return
+    end
+  else
+    -- If they do not have a custom key bound, then default to the same button that is used for card/pill switching
+    -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
+    -- the latter is not very responsive with fast sequences of inputs
+    if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
+      RPGlobals.run.schoolbag.pressed = false
+      return
+    elseif RPGlobals.run.schoolbag.pressed then
+      return
+    end
   end
   RPGlobals.run.schoolbag.pressed = true
 

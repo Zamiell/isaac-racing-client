@@ -1,41 +1,45 @@
 # Racing+ Version History and News
 
-### *v0.15.7* - Unreleased
+### *v0.16.0* - March 18th, 2018
 
-* You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag switch. If you do not have a binding set for them, they will continue to work as they have been in the past.
+* The Unseeded Ranked Solo Season 1 has concluded. Congradulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the Racing+ client was a little wonky until v0.15.0 (February 11th).
+* Season 2 has now started! In Season 2, Judas will now start with the Schoolbag, but the category is otherwise the same.
+* You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag-switch.
+  * If you do not have a binding set for fast-drop, the fast-drop feature will not function at all.
+  * If you do not have a binding set for the Schoolbag-switch, the game will look for the normal "drop" input (like in vanilla).
 
-### *v0.15.6* - March 18th
+### *v0.15.6* - March 18th, 2018
 
 * Fixed the "Cannot read property 'replace' of undefined" bug. (Thanks AshDown and Greninja_San)
 * Fixed another bug that was causing Racing+ to complain that the mod was corrupt when it really was not. (Thanks Gamonymous and Shigan)
 
-### *v0.15.5* - March 17th
+### *v0.15.5* - March 17th, 2018
 
 * Fixed the bug where the Racing+ client would complain that the mod was corrupt under certain conditions when it really was not. (Thanks Gamonymous)
 
-### *v0.15.4* - March 11th
+### *v0.15.4* - March 11th, 2018
 
 * Eden will now be given the Sad Onion if they happen to start with the vanilla Schoolbag as the random passive item.
 * 5 Monstros will no longer spawn if you use the Shovel / Ehawaz on Womb 2 during races with a goal of "Everything". (Thanks Gamonymous)
 * Fixed the bug where if Eden starts with the Schoolbag, a pedestal will be created on the ground. (Thanks NorBro86)
 
-### *v0.15.3* - February 15th
+### *v0.15.3* - February 15th, 2018
 
 * Creep will now instantly fade as soon as the room is cleared. (Thanks thisguyisbarry)
 
-### *v0.15.2* - February 14th
+### *v0.15.2* - February 14th, 2018
 
 * If it is not already, the game will now automatically be focused during the countdown at 1 second left. (Thanks The_Moep)
 * Fixed the bug where the starting item was not being reported correctly. (Thanks PassionDrama and meepmeep13)
 * Fixed the bug where killing a Heart of Infamy caused the Mask of Infamy to fade. (Thanks Blumpkin Idaho and BMZ_Loop)
 * Changed the ordering of the starting room graphic. (Thanks 910dan)
 
-### *v0.15.1* - February 13th
+### *v0.15.1* - February 13th, 2018
 
 * All bosses are now faded upon playing their death animation. (This is more consistent than the previous implementation.)
 * The Racing+ timing system now uses in-game time. (Server time, client time, and time offsets are no longer used.) This should fix the bug where the time reported by the Racing+ client was different than the one reported by the mod.
 
-### *v0.15.0* - February 11th
+### *v0.15.0* - February 11th, 2018
 
 * The website now has a "Tournaments" section, where you can see the currently scheduled matches for the week in the current Binding of Isaac: Afterbirth+ league, [Isaacs of the Round](http://isaacsoftheround.weebly.com/). In the future, it will show past tournaments. Thanks to sillypears for coding this.
 * Sometimes, a dying boss will cover up an item pedestal, forcing the player to wait until the death animation is over to see what the item is. Any bosses that have the possibility to interfere with seeing what an item pedestal in this way are now faded during their death animation.
@@ -45,28 +49,28 @@
 * Fixed the bug where Blisters were not killed properly after defeating Mom.
 * Added some more French translations. (Thanks Greninja_San)
 
-### *v0.14.27* - December 29th
+### *v0.14.27* - December 29th, 2017
 
 * Racing+ will now work with the True Co-op mod. (Thanks BMZ_loop)
 
-### *v0.14.26* - December 27th
+### *v0.14.26* - December 27th, 2017
 
 * Isaac is now feeling festive. Happy New Years! (Thanks to Gromfalloon for this)
 * Now that the Rage Creep bug has been fixed in the vanilla game, the pot has been restored to Womb/Utero/Scarred room #202.
 * Fixed a (vanilla) softlock in Womb room #847 by removing the red poop.
 * Fixed the bug where the client would fail to heal a corrupt mod on macOS. (Thanks liam13661)
 
-### *v0.14.25* - December 19th
+### *v0.14.25* - December 19th, 2017
 
 * You will now always get a Treasure Room with two items on the first floor of the first character of a multi-character speedrun custom challenge. (Thanks Cyber_1)
 * Fixed the bug where the client would crash on macOS when repairing a corrupted mod. (Thanks TrumpetZorua)
 
-### *v0.14.23* - December 17th
+### *v0.14.23* - December 17th, 2017
 
 * Fixed the bug where you would get extra bombs, keys, and pickups when the new death mechanic ended. (Thanks BMZ_Loop)
 * Fixed the bug where the trophy would spawn on the 7th character during a season 1 custom challenge. (Thanks Cyber_1)
 
-### *v0.14.22* - December 17th
+### *v0.14.22* - December 17th, 2017
 
 * Isaac is now feeling festive. Merry Christmas!
 * The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
@@ -78,13 +82,13 @@
 * Fixed the bug where the ranked/unranked icon would show up in the lobby for multiplayer races.
 * Fixed the bug on the french version of the client where "En Course" would wrap to a second line.
 
-### *v0.14.21* - December 16th
+### *v0.14.21* - December 16th, 2017
 
 * You can now perform a Schoolbag switch during an item pickup animation, as long as the item that you are holding above your head is not an active item.
 * Fixed the bug where you could go the wrong way and still complete a multi-character speedrun custom challenge.
 * Fixed the bug where the automatic update was not working properly. You may need to manually download and install this version.
 
-### *v0.14.14* - December 14th
+### *v0.14.14* - December 14th, 2017
 
 * The macOS version should actually work now.
 * All multiplayer races (past and present) are now considered ranked for the purposes of calculating a leaderboard. There are now 3 multiplayer leaderboards for seeded, unseeded, and diversity. (Thanks SlashSP)
@@ -94,26 +98,26 @@
 * Fixed the bug where Teratoma and Fistula were not properly killed after It Lives! (Thanks Dea1h)
 * Fixed the bug where the trapdoor would not appear in the Womb 2 I AM ERROR room under certain conditions. (Thanks SapphireHX and BMZ_Loop)
 
-### *v0.14.11* - December 5th
+### *v0.14.11* - December 5th, 2017
 
 * Fixed the bug where a bunch of numbers would show as the status for a race in the lobby under certain conditions. (Thanks PassionDrama)
 
-### *v0.14.9* - December 3rd
+### *v0.14.9* - December 3rd, 2017
 
 * Racing+ should now work on macOS.
 * Using the "~" button to open the console will no longer work when you are currently in a race.
 
-### *v0.14.8* - November 28th
+### *v0.14.8* - November 28th, 2017
 
 * The Checkpoint item will no longer have any pedestal delay.
 * Fixed the bug where the run timer would be misaligned if you did not have the Schoolbag.
 
-### *v0.14.7* - November 24th
+### *v0.14.7* - November 24th, 2017
 
 * Adjusted Big Horn's "BigHoleOpen" animation length from 24 frames to 32 frames. (Thanks Krakenos)
 * Fixed the bug where having Dead Cat and Greed's Gullet on Keeper would result in an incorrect amount of coin containers under certain conditions. (Thanks NorBro86)
 
-### *v0.14.6* - November 21st
+### *v0.14.6* - November 21st, 2017
 
 Mod:
 
@@ -129,7 +133,7 @@ Website (coded by sillypears):
 
 * Player's profiles now show more information.
 
-### *v0.14.0* - November 18th
+### *v0.14.0* - November 18th, 2017
 
 News:
 
@@ -166,7 +170,7 @@ Client/server changes:
 * Added a new icon for seeded hard mode races.
 * Fixed the bug where the icon would not show for seeded hard mode races.
 
-### *v0.13.8* - November 13th
+### *v0.13.8* - November 13th, 2017
 
 Mod:
 
@@ -179,34 +183,34 @@ Client:
 * The lobby has been slightly reorganized; there are now 3 icons to represent size, ranked, and format. A tooltip will show everything about the race.
 * You can now see how much time has passed in a race from the lobby.
 
-### *v0.13.7* - November 10th
+### *v0.13.7* - November 10th, 2017
 
 * Fixed the bug where the place graphic would overlap with the R+ graphic in hard mode.
 * Fixed the bug where no hearts would spawn from bosses appear on hard mode.
 * Fixed the bug where Chubber Projectiles (what Fistuloids spawn on death) prevented fast-clear from functioning.
 * Fixed the bug where the Mom teleport subversion wasn't working properly if you entered from certain 2x2 or L rooms.
 
-### *v0.13.6* - November 9th
+### *v0.13.6* - November 9th, 2017
 
 * Added the "Seeded (Hard)" ruleset to the client to faciliate the Lynx Trials tournament. This will only exist for the duration of the tournament.
 * Fixed the bug where angel statues would drop a key piece even if another angel was still alive. (Thanks StoneAgeMarcus)
 
-### *v0.13.5* - November 5th
+### *v0.13.5* - November 5th, 2017
 
 * Maggy now starts with her speed-up pill in the season 3 custom challenge. (Thanks Cyber_1)
 * Fixed the bug where an Attack Fly would spawn every time you re-entered a room with a trapdoor or crawlspace that happened to originally be on top of a Corny Poop. (Thanks Nanahachiyasu)
 
-### *v0.13.2* - November 4th
+### *v0.13.2* - November 4th, 2017
 
 * If you live in China, the client will now automatically use a proxy in Singapore to access the racing server.
 * You can no longer enter a trapdoor or crawlspace when the jump animation is playing. (Thanks NorBro86)
 * Fixed the bug where the Mom teleportation subversion did not work or teleported you to the wrong spot. (Thanks 910dan)
 
-### *v0.13.1* - November 4th
+### *v0.13.1* - November 4th, 2017
 
 * Fixed the bug where Jr. Fetus and Mahalath would spawn if you re-entered a cleared room. (Thanks Dea1h and thereisnofuture)
 
-### *v0.13.0* - November 3rd
+### *v0.13.0* - November 3rd, 2017
 
 News:
 
@@ -236,7 +240,7 @@ Website:
 
 All website work was performed by sillypears, so thanks goes to him.
 
-### *v0.12.9* - October 27th
+### *v0.12.9* - October 27th, 2017
 
 * Isaac is now feeling festive. Happy Halloween! (Thanks to Gromfalloon for this)
 * Custom races now have a time limit of 4 hours. (Normal races still have a 30 minute time limit.) (Thanks Molfried)
@@ -244,7 +248,7 @@ All website work was performed by sillypears, so thanks goes to him.
 * Fixed the bug where the vanilla Schoolbag was not being removed during seeded races. (Thanks thisguyisbarry)
 * Fixed the bug where Apollyon was not starting with Void inside the Schoolbag during seeded races. (Thanks 910dan)
 
-### *v0.12.8* - October 19th
+### *v0.12.8* - October 19th, 2017
 
 Mod:
 
@@ -270,14 +274,14 @@ Item tracker:
 
 * Fixed the bug where the Schoolbag would show as a "?" on the item tracker.
 
-### *v0.12.7* - October 17th
+### *v0.12.7* - October 17th, 2017
 
 * The [unseeded leaderboards](https://isaacracing.net/leaderboards) have been officially released.
 * The vanilla Schoolbag will not work properly with fast-clear, so it has been replaced with the Racing+ version.
 * Fixed the bug where the angel key pieces were not being spawned at the correct time.
 * Fixed the bug where the D6, D100, Diplopia, Void, Crooked Penny, D Infinity, and Moving Box would have buggy behavior if they were used on the same frame as a pedestal item spawned. (Thanks thereisnofuture)
 
-### *v0.12.6* - October 16th
+### *v0.12.6* - October 16th, 2017
 
 * The list of races on the website will now only show multiplayer races. (Thanks thisguyisbarry)
 * Fixed the bug where The Book of Sin and Smelter were mistakenly removed from all pools on all runs. (Thanks 910dan)
@@ -285,19 +289,19 @@ Item tracker:
 * Fixed the bug where trying to create a ranked race would result in an unranked race being created.
 * Fixed the bug that prevented you from clicking ready under certain circumstances. (Thanks Shigan and Ivana)
 
-### *v0.12.5* - October 15th
+### *v0.12.5* - October 15th, 2017
 
 * The LiveSplit AutoSplitter should now work with the latest patch. (Thanks blcd, Sillypears, NorBro86, and Hyphenated)
 * Fixed the bug where the Racing+ mod would not work on the first race if you used save slot 2 or save slot 3. (Thanks 910dan)
 * Fixed the bug where the tenths digit of the timer was inaccurate under certain conditions. (Thanks TheMoonSage and PassionDrama)
 * Fixed the bug where you could not do R+9 / R+14 / R+7 races using the Racing+ client. (Thanks Yama)
 
-### *v0.12.3* - October 15th
+### *v0.12.3* - October 15th, 2017
 
 * Fixed the Schoolbag not working.
 * Fixed the vanilla bug where a Flooded Caves room with a Slot Machine (#976) was incorrectly given 1000 weight. (Thanks Lobsterosity)
 
-### *v0.12.2* - October 14th
+### *v0.12.2* - October 14th, 2017
 
 * The Booster Pack #4 rooms have now been integrated into Racing+ (and flipped).
 * The Booster Pack #4 items will now be included in diversity races.
@@ -307,7 +311,7 @@ Item tracker:
 * Fixed the bug where the Gurdy teleport was not being subverted in three flipped rooms in The Chest. (Thanks Cyber_1)
 * Fixed the bug where you would prematurely finish a race if your internet disconnected and you reconnected under certain conditions. (Thanks Molfried)
 
-### *v0.12.0* - October 10th
+### *v0.12.0* - October 10th, 2017
 
 * Racing+ will now work with the latest patch (Booster Pack #4). The new Booster Pack rooms are not yet integrated. Diversity races won't have the new items yet.
 * Racing+ no longer fixes the champion Scolex, since the bug was fixed in the vanilla game.

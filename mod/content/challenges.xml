@@ -9,5 +9,5 @@
 	<challenge name="Jr. Fetus Practice" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="Mahalath Practice" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" />
-	<challenge name="Change Keybindings" endstage="11" altpath="true" cursefilter="127" />
+	<challenge name="Change Keybindings" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 </challenges>
