@@ -249,6 +249,15 @@ function checkModIntegrity() {
 
         let copyFile = false; // If this gets set to true, the file is missing or corrupt
         if (fs.existsSync(filePath)) {
+            // Make an exception for the "sha1.json" file
+            // (this will not have a valid checksum;
+            // when the release script creates this file, it writes the "old" checksum for the "sha1.json" entry,
+            // and it doesn't go back to update it)
+            if (path.basename(filePath) === 'sha1.json') {
+                continue;
+            }
+
+            // Create a SHA1 hash of the file
             const fileHash = hashFiles.sync({ // This defaults to SHA1
                 files: filePath,
             });
@@ -310,8 +319,6 @@ function checkModIntegrity() {
             path.basename(modFile) === 'save2.dat' ||
             path.basename(modFile) === 'save3.dat' ||
             path.basename(modFile) === 'disable.it' // They might have the mod disabled
-            // path.basename(modFile) === 'sha1.json' // For some reason this file causes bugs and does not match, so just exclude it
-            // (trying the newline fix first before enabling this)
         ) {
             continue;
         }
@@ -361,7 +368,7 @@ function checkIsaacOpen() {
         for (let i = 0; i < output.length; i++) {
             const line = output[i];
             if (line.startsWith(`${processName} `)) {
-                const match = line.match(/^.+? +(\d).+/);
+                const match = line.match(/^.+?(\d+)/);
                 if (match) {
                     IsaacOpen = true;
                     IsaacPID = parseInt(match[1], 10);
@@ -372,7 +379,6 @@ function checkIsaacOpen() {
             }
         }
 
-        // We looped through all of the tasks and did not find the Isaac process
         closeIsaac();
 
         /*

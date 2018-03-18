@@ -54,8 +54,7 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 
 /*
 
-Other notes:
-- Electron 1.7.6 gives error with graceful-fs, so staying on version 1.6.11
+"electron-builder": "19.49.0",
 
 */
 
@@ -234,14 +233,17 @@ function autoUpdate() {
         mainWindow.webContents.send('autoUpdater', 'update-downloaded');
     });
 
+    /*
     // Monkey patch from:
     // https://github.com/electron-userland/electron-builder/issues/2377
+    // (required for electron-builder v19.49.0, commented out for now)
     const monkeyPatch = autoUpdater.httpExecutor.doRequest;
     autoUpdater.httpExecutor.doRequest = function monkeyPatchFunction(options, callback) {
         const req = monkeyPatch.call(this, options, callback);
         req.on('redirect', () => req.followRedirect());
         return req;
     };
+    */
 
     log.info('Checking for updates.');
     autoUpdater.checkForUpdatesAndNotify();

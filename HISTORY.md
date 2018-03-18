@@ -7,6 +7,7 @@
 ### *v0.15.6* - March 18th
 
 * Fixed the "Cannot read property 'replace' of undefined" bug. (Thanks AshDown and Greninja_San)
+* Fixed another bug that was causing Racing+ to complain that the mod was corrupt when it really was not. (Thanks Gamonymous and Shigan)
 
 ### *v0.15.5* - March 17th
 
