@@ -3,13 +3,13 @@
 */
 
 // Imports
+const { execSync } = require('child_process');
 const fs = require('fs');
 const klawSync = require('klaw-sync');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const ps = require('ps-node');
-const tasklist = require('tasklist');
 const opn = require('opn');
 const hashFiles = require('hash-files');
 const mkdirp = require('mkdirp');
@@ -310,6 +310,8 @@ function checkModIntegrity() {
             path.basename(modFile) === 'save2.dat' ||
             path.basename(modFile) === 'save3.dat' ||
             path.basename(modFile) === 'disable.it' // They might have the mod disabled
+            // path.basename(modFile) === 'sha1.json' // For some reason this file causes bugs and does not match, so just exclude it
+            // (trying the newline fix first before enabling this)
         ) {
             continue;
         }
@@ -342,8 +344,40 @@ function checkModIntegrity() {
 function checkIsaacOpen() {
     process.send('Checking to see if Isaac is open.');
     if (process.platform === 'win32') { // This will return "win32" even on 64-bit Windows
-        // On Windows, we use the taskkill module (the ps-node module is very slow)
+        const command = 'tasklist';
         const processName = 'isaac-ng.exe';
+
+        // The "tasklist" module has problems on different languages
+        // The "ps-node" module is very slow
+        // The "process-list" module will not compile for some reason (missing "atlbase.h")
+        // So, just manually run the "tasklist" command and parse the output without using any module
+        let output;
+        try {
+            output = execSync(command).toString().split('\r\n');
+        } catch (err) {
+            process.send(`error: Failed to detect if Isaac is open when running the "${command}" command: ${err}`, processExit);
+            return;
+        }
+        for (let i = 0; i < output.length; i++) {
+            const line = output[i];
+            if (line.startsWith(`${processName} `)) {
+                const match = line.match(/^.+? +(\d).+/);
+                if (match) {
+                    IsaacOpen = true;
+                    IsaacPID = parseInt(match[1], 10);
+                    break;
+                } else {
+                    process.send(`error: Failed to parse the output of the "${command}" command.`, processExit);
+                }
+            }
+        }
+
+        // We looped through all of the tasks and did not find the Isaac process
+        closeIsaac();
+
+        /*
+        // (this is the old way of checking for the tasks, commented out for now)
+        // On Windows, we use the taskkill module (the ps-node module is very slow)
         tasklist({
             filter: [`Imagename eq ${processName}`], // https://technet.microsoft.com/en-us/library/bb491010.aspx
         }).then((data) => {
@@ -362,6 +396,7 @@ function checkIsaacOpen() {
             // https://github.com/sindresorhus/tasklist/issues/11
             process.send(`error: Failed to detect if Isaac is open: ${err}`, processExit);
         });
+        */
     } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
         // On macOS and Linux, we use the ps-node module
         const processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';

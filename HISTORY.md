@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
-### *v0.15.6* - Unreleased
+### *v0.15.7* - Unreleased
 
 * You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag switch. If you do not have a binding set for them, they will continue to work as they have been in the past.
+
+### *v0.15.6* - March 18th
+
+* Fixed the "Cannot read property 'replace' of undefined" bug. (Thanks AshDown and Greninja_San)
 
 ### *v0.15.5* - March 17th
 

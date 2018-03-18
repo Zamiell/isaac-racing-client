@@ -2,7 +2,7 @@
   "name": "RacingPlus",
   "productName": "Racing+",
   "description": "A racing mod for The Binding of Isaac: Afterbirth+",
-  "version": "0.15.5",
+  "version": "0.15.6",
   "author": "Racing+",
   "license": "GPL-3.0",
   "homepage": "https://isaacracing.net",
@@ -48,7 +48,6 @@
     "opn": "^5.1.0",
     "ps-node": "^0.1.6",
     "raven": "^2.3.0",
-    "tasklist": "^3.1.0",
     "teeny-conf": "^1.1.0",
     "tracer": "^0.8.11",
     "winreg": "^1.2.4"
