@@ -65,8 +65,8 @@ const { execFile, fork } = require('child_process');
 const {
     app,
     BrowserWindow,
-    ipcMain,
     globalShortcut,
+    ipcMain,
 } = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
 // The "electron" package is only allowed to be in the devDependencies section
 const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
@@ -150,9 +150,11 @@ function createWindow() {
     }
 
     // Create the browser window
+    const x = windowSettings.x;
+    const y = windowSettings.y;
     mainWindow = new BrowserWindow({
-        x: windowSettings.x,
-        y: windowSettings.y,
+        x,
+        y,
         width,
         height,
         icon: path.resolve(__dirname, 'img', 'favicon.png'),
@@ -161,6 +163,12 @@ function createWindow() {
     });
     if (isDev) {
         mainWindow.webContents.openDevTools();
+    }
+
+    // Check if the window its off-screen
+    // (this can happen if it was put on a second monitor which is currently disconnected, for example)
+    if (!isInBounds([x, y])) {
+        mainWindow.center();
     }
 
     // Figure out if we should use the Singapore proxy or not
@@ -570,3 +578,27 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
         childProcesses.isaac.send(arg2);
     }
 });
+
+/*
+    Miscellaneous subroutines
+*/
+
+// From: https://github.com/saenzramiro/rambox/commit/9dd5380f60d96e0da70bb057192aa67d59efd50f
+function isInBounds(position) {
+    const { screen } = require('electron'); // eslint-disable-line
+
+    let inBounds = false;
+    if (position) {
+        screen.getAllDisplays().forEach((display) => {
+            if (
+                position[0] >= display.workArea.x &&
+                position[0] <= display.workArea.x + display.workArea.width &&
+                position[1] >= display.workArea.y &&
+                position[1] <= display.workArea.y + display.workArea.height
+            ) {
+                inBounds = true;
+            }
+        });
+    }
+    return inBounds;
+}

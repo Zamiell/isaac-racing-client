@@ -5,7 +5,6 @@ local RPPills = {}
 --
 
 local RPGlobals = require("src/rpglobals")
-local RPItems   = require("src/rpitems")
 
 --
 -- Pill functions
@@ -72,18 +71,6 @@ function RPPills:Telepills()
   -- We don't want to display the "use" animation, we just want to instantly teleport
   -- Pills are hard coded to queue the "use" animation, so stop it on the next frame
   RPGlobals.run.usedTelepills = true
-end
-
-function RPPills:Gulp()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-
-  -- This will write to the log which trinket we are gulping
-  RPItems:Smelter()
-
-  -- Do the actual gulping effect
-  player:UseActiveItem(CollectibleType.COLLECTIBLE_SMELTER, false, false, false, false) -- 479
 end
 
 return RPPills

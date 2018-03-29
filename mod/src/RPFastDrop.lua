@@ -31,8 +31,18 @@ function RPFastDrop:CheckDropInput()
   end
 
   -- Check for the input
-  -- (use "IsActionPressed()" instead of "IsActionTriggered()" because it is faster to drop on press than on release)
-  if Input.IsButtonPressed(RPGlobals.race.hotkeyDrop, player.ControllerIndex) == false then -- 11
+  -- (we check all inputs instead of "player.ControllerIndex" because
+  -- a controller player might be using the keyboard to reset)
+  -- (we use "IsActionPressed()" instead of "IsActionTriggered()" because
+  -- it is faster to drop on press than on release)
+  local pressed = false
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsButtonPressed(RPGlobals.race.hotkeyDrop, i) then
+      pressed = true
+      break
+    end
+  end
+  if pressed == false then
     return
   end
 
@@ -106,56 +116,58 @@ function RPFastDrop:PostRender()
     return
   end
 
-  local textColor = {
-    1,
-    1,
-    1,
-    2,
-  }
-  local text1
-  local text2 = ""
+  local text = {}
   if RPFastDrop.challengeState == 0 then
     if RPGlobals.race.hotkeyDrop == 0 then
-      text1 = "The custom fast-drop hotkey is not bound."
+      text[1] = "The custom fast-drop hotkey is not bound."
     else
-      text1 = "The custom fast-drop hotkey is currently bound to:"
-      text2 = RPFastDrop:GetKeyName(RPGlobals.race.hotkeyDrop) ..
-              " (code: " .. tostring(RPGlobals.race.hotkeyDrop) .. ")"
+      text[1] = "The custom fast-drop hotkey is currently bound to:"
+      text[2] = RPFastDrop:GetKeyName(RPGlobals.race.hotkeyDrop) ..
+                " (code: " .. tostring(RPGlobals.race.hotkeyDrop) .. ")"
     end
   elseif RPFastDrop.challengeState == 1 then
     if RPGlobals.race.hotkeySwitch == 0 then
-      text1 = "The custom Schoolbag-switch hotkey is not bound."
+      text[1] = "The custom Schoolbag-switch hotkey is not bound."
     else
-      text1 = "The custom Schoolbag-switch hotkey is currently bound to:"
-      text2 = RPFastDrop:GetKeyName(RPGlobals.race.hotkeySwitch) ..
-              " (code: " .. tostring(RPGlobals.race.hotkeySwitch) .. ")"
+      text[1] = "The custom Schoolbag-switch hotkey is currently bound to:"
+      text[2] = RPFastDrop:GetKeyName(RPGlobals.race.hotkeySwitch) ..
+                " (code: " .. tostring(RPGlobals.race.hotkeySwitch) .. ")"
     end
   end
-  Isaac.RenderText(text1, 100, 90, textColor[1], textColor[2], textColor[3], textColor[4])
-  Isaac.RenderText(text2, 100, 110, textColor[1], textColor[2], textColor[3], textColor[4])
-  Isaac.RenderText("Press the desired key now.", 100, 150, textColor[1], textColor[2], textColor[3], textColor[4])
-  Isaac.RenderText("(Or press F12 to keep the vanilla behavior.)", 100, 170,
-                   textColor[1], textColor[2], textColor[3], textColor[4])
+  if text[2] == nil then
+    text[2] = ""
+  end
+  text[3] = ""
+  text[4] = "Press the desired key now."
+  text[5] = "Or press F12 to keep the vanilla behavior."
+  text[6] = "(For controller players, if you are having problems,"
+  text[7] = "bind keyboard hotkeys and use Joy2Key.)"
+  for i = 1, #text do -- This is 0 indexed
+    local y = 50 + (20 * i)
+    Isaac.RenderText(text[i], 100, y, 1, 1, 1, 2)
+  end
 
-  for k, v in pairs(Keyboard) do
-    if Input.IsButtonPressed(v, 0) then
-      if RPFastDrop.challengeState == 0 then
-        RPGlobals.race.hotkeyDrop = v
-        if v == Keyboard.KEY_F12 then -- 301
-          RPGlobals.race.hotkeyDrop = 0
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    for k, v in pairs(Keyboard) do
+      if Input.IsButtonPressed(v, i) then
+        if RPFastDrop.challengeState == 0 then
+          RPGlobals.race.hotkeyDrop = v
+          if i == 0 and v == Keyboard.KEY_F12 then -- 301
+            RPGlobals.race.hotkeyDrop = 0
+          end
+          Isaac.DebugString("New drop hotkey: " .. tostring(RPGlobals.race.hotkeyDrop))
+          RPFastDrop.challengeState = 1
+        elseif RPFastDrop.challengeState == 1 then
+          RPGlobals.race.hotkeySwitch = v
+          if i == 0 and v == Keyboard.KEY_F12 then -- 301
+            RPGlobals.race.hotkeySwitch = 0
+          end
+          Isaac.DebugString("New switch hotkey: " .. tostring(RPGlobals.race.hotkeySwitch))
+          RPFastDrop.challengeState = 2
         end
-        Isaac.DebugString("New drop hotkey: " .. tostring(RPGlobals.race.hotkeyDrop))
-        RPFastDrop.challengeState = 1
-      elseif RPFastDrop.challengeState == 1 then
-        RPGlobals.race.hotkeySwitch = v
-        if v == Keyboard.KEY_F12 then -- 301
-          RPGlobals.race.hotkeySwitch = 0
-        end
-        Isaac.DebugString("New switch hotkey: " .. tostring(RPGlobals.race.hotkeySwitch))
-        RPFastDrop.challengeState = 2
+        RPSaveDat:Save()
+        RPFastDrop.challengeFramePressed = gameFrameCount
       end
-      RPSaveDat:Save()
-      RPFastDrop.challengeFramePressed = gameFrameCount
     end
   end
 end

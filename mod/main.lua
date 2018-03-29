@@ -82,6 +82,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPC246, EntityType.ENTITY_RAGLING) -- 246
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC213, EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_WIZOOB) -- 219
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC261, EntityType.ENTITY_DINGLE) -- 261
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_RED_GHOST) -- 285
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC273, EntityType.ENTITY_THE_LAMB) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC275, EntityType.ENTITY_MEGA_SATAN_2) -- 273
@@ -156,9 +157,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_JOK
 -- Define pill callbacks (10)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUp,  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills, PillEffect.PILLEFFECT_TELEPILLS) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Gulp,      PillEffect.PILLEFFECT_GULP_LOGGER)
--- This is a callback for a custom "Gulp!" pill; we can't use the original because
--- by the time the callback is reached, the trinkets are already consumed
 
 -- Define NPC kill callbacks (68)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPFastClear.PostEntityKill) -- 68

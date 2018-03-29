@@ -4,7 +4,6 @@ Changes:
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 - Removed the "special" tag from all items
 - Renamed "Betrayal" to "Betrayal (Animation)"
-- Disabled the "Karma" trinket
 
 -->
 
@@ -648,7 +647,7 @@ Changes:
 	<trinket description="Feel lucky?" gfx="trinket_082_GoldenHorseShoe.png" id="82" name="Golden Horse Shoe" />
 	<trinket achievement="249" description="Stores are open" gfx="trinket_083_storekey.png" id="83" name="Store Key" />
 	<trinket achievement="204" description="Feels greedy" gfx="trinket_084_ribofgreed.png" id="84" name="Rib of Greed" />
-	<trinket achievement="0" description="Karma up" gfx="trinket_085_karma.png" id="85" name="Karma" />
+	<trinket achievement="239" description="Karma up" gfx="trinket_085_karma.png" id="85" name="Karma" />
 	<trinket description="The poop is moving..." gfx="Trinket_086_LilLarva.png" id="86" name="Lil Larva" />
 	<trinket description="You feel her love" gfx="Trinket_087_MomsLocket.png" id="87" name="Mom's Locket" />
 	<trinket description="Never again!" gfx="Trinket_088_NO.png" id="88" name="NO!" />

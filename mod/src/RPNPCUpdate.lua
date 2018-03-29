@@ -192,6 +192,16 @@ function RPNPCUpdate:NPC219(npc)
   end
 end
 
+-- EntityType.ENTITY_DINGLE (261)
+function RPNPCUpdate:NPC261(npc)
+  -- We only care about Dangles that are freshly spawned
+  if npc.Variant == 1 and npc.State == NpcState.STATE_INIT then -- 0
+    -- Fix the bug where a Dangle spawned from a Brownie will be faded
+    local faded = Color(1, 1, 1, 1, 0, 0, 0)
+    npc:SetColor(faded, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
+  end
+end
+
 -- EntityType.ENTITY_THE_LAMB (273)
 function RPNPCUpdate:NPC273(npc)
   if npc.Variant == 0 then -- The Lamb (273.0)

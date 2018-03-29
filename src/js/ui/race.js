@@ -1062,7 +1062,7 @@ const checkReadyValid = () => {
 
     if (!race.ruleset.solo && race.racerList.length === 1) {
         valid = false;
-        tooltipContent = '<span lang="en">You should wait for someone else to join this race before marking yourself as ready.</span>';
+        tooltipContent = '<span lang="en">Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.</span>';
     } else if (race.ruleset.format === 'custom') {
         // Do nothing
         // (we want to do no validation for custom rulesets; it's all up to the players to decide when they are ready)

@@ -1,9 +1,24 @@
 # Racing+ Version History and News
 
+### *v0.16.1* - March 28th, 2018
+
+Mod:
+
+* Fixed the bug where controller players could not use the new custom hotkeys. Depending on your controller, you may now be able to directly define hotkeys in the custom challenge without using external software. However, if you have any problems or weird behavior, try binding keyboard hotkeys and then using a program like Joy2Key or DS4Windows. (Thanks AshDown and Lobsterosity)
+* Fixed the bug where Dangles spawned from Brownies would be faded. (Thanks Greninja_San)
+* Fixed the bug where the Schoolbag was not removed from item pools in the solo ranked unseeded race format. (Thanks BMZ_Loop)
+* Fixed the bug where the special characters in the French and Spanish fortunes would not appear. (Thanks AshDown)
+* Fixed the bug where two trinkets would appear on the item tracker after using a Gulp! pill.
+* Caves/Flooded room #55 is now symmetrical.
+
+Client:
+
+* Fixed the bug where the window could get stuck offscreen under certain conditions. (Thanks KingGed)
+
 ### *v0.16.0* - March 18th, 2018
 
 * The Unseeded Ranked Solo Season 1 has concluded. Congradulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the Racing+ client was a little wonky until v0.15.0 (February 11th).
-* Season 2 has now started! In Season 2, Judas will now start with the Schoolbag, but the category is otherwise the same.
+* Season 2 has now started! The leaderboard has been completely reset. In Season 2, Judas will now start with the Schoolbag, but the category is otherwise the same.
 * You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag-switch.
   * If you do not have a binding set for fast-drop, the fast-drop feature will not function at all.
   * If you do not have a binding set for the Schoolbag-switch, the game will look for the normal "drop" input (like in vanilla).

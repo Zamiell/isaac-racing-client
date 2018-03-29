@@ -256,9 +256,17 @@ function RPSchoolbag:CheckInput()
   local button = RPGlobals.race.hotkeySwitch
   if button ~= 0 then
     -- If they have a custom Schoolbag-switch key bound, then use that
-    -- We use "IsButtonPressed()" instead of "IsButtonTriggered()" because
-    -- the latter is not very responsive with fast sequences of inputs
-    if Input.IsButtonPressed(RPGlobals.race.hotkeySwitch, player.ControllerIndex) == false then
+    -- (we use "IsButtonPressed()" instead of "IsButtonTriggered()" because
+    -- the latter is not very responsive with fast sequences of inputs)
+    -- (we check all inputs instead of "player.ControllerIndex" because
+    -- a controller player might be using the keyboard for their custom hotkey)
+    local pressed = false
+    for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+      if Input.IsButtonPressed(RPGlobals.race.hotkeySwitch, i) then
+        pressed = true
+      end
+    end
+    if pressed == false then
       RPGlobals.run.schoolbag.pressed = false
       return
     elseif RPGlobals.run.schoolbag.pressed then

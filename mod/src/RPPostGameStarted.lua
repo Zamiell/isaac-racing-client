@@ -155,6 +155,9 @@ function RPPostGameStarted:Main(saveState)
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
 
+  -- Racing+ removes the Karma trinket from the game
+  itemPool:RemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
+
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()
 
@@ -208,7 +211,7 @@ function RPPostGameStarted:Character()
   local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
 
-  -- If they have started with the vanilla Schoolbag, it will cause bugs with swapping the active item later on
+  -- If they started with the vanilla Schoolbag, it will cause bugs with swapping the active item later on
   -- (this should be only possible on Eden; we will give Eden the custom Schoolbag below)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
@@ -217,6 +220,12 @@ function RPPostGameStarted:Character()
     player:AddCollectible(CollectibleType.COLLECTIBLE_SAD_ONION, 0, false) -- 1
     Isaac.DebugString("Eden has started with the vanilla Schoolbag; removing it.")
     Isaac.DebugString("Removing collectible 534 (Schoolbag)")
+  end
+
+  -- If they started with the Karma trinket, we need to delete it, since it is supposed to be removed from the game
+  -- (this should be only possible on Eden)
+  if player:HasTrinket(TrinketType.TRINKET_KARMA) then -- 85
+    player:TryRemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
   end
 
   -- Give all characters the D6
@@ -736,9 +745,12 @@ end
 function RPPostGameStarted:UnseededRankedSolo()
   local game = Game()
   local player = game:GetPlayer(0)
+  local itemPool = game:GetItemPool()
 
   for i = 1, #RPGlobals.race.startingItems do
-    player:AddCollectible(RPGlobals.race.startingItems[i], 12, true)
+    local itemID = RPGlobals.race.startingItems[i]
+    player:AddCollectible(itemID, 12, true)
+    itemPool:RemoveCollectible(itemID)
   end
 end
 

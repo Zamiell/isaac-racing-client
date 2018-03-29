@@ -202,7 +202,7 @@ Lang.prototype.pack.fr = {
         "and touch the trophy that falls down afterward.": "et touchez le trophée qui tombe ensuite.",
 
         // Race ready error messages
-        "You should wait for someone else to join this race before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
+        "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "Vous devez attendre qu'un autre joueur se joigne à la course pour pouvoir cocher la case \"prêt\".",
         "You have to start a run before you can mark yourself as ready.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\".",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
         "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "Vous devez avoir le mod Racing+ actif en jeu avant de pouvoir vous indiquer en tant que prêt.",

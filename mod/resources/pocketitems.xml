@@ -1,3 +1,10 @@
+<!--
+
+Changes:
+- Removed "Amnesia" and "???"
+
+-->
+
 <pocketitems>
 	<card id="0" name="NULL" />
 	<card description="Where journey begins" hud="00_TheFool" id="1" name="0 - The Fool" />
@@ -100,7 +107,7 @@
 	<pilleffect id="40" name="Something's wrong..." />
 	<pilleffect id="41" name="I'm Drowsy..." />
 	<pilleffect id="42" name="I'm Excited!!!" />
-	<pilleffect achievement="0" id="43" name="Gulp! (No Log)" />
+	<pilleffect achievement="321" id="43" name="Gulp!" />
 	<pilleffect achievement="325" id="44" name="Horf!" />
 	<pilleffect achievement="324" id="45" name="Feels like I'm walking on sunshine!" />
 	<pilleffect achievement="330" id="46" name="Vurp!" />

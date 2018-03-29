@@ -202,7 +202,7 @@ Lang.prototype.pack.zz = {
         "and touch the trophy that falls down afterward.": "",
 
         // Race ready error messages
-        "You should wait for someone else to join this race before marking yourself as ready.": "",
+        "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "",
         "You have to start a run before you can mark yourself as ready.": "",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
         "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
