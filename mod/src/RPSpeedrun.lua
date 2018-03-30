@@ -352,22 +352,22 @@ function RPSpeedrun:Init()
     -- (the item choice is stored in the "order9" variable)
     local itemID = RPGlobals.race.order9[RPSpeedrun.charNum]
     player:AddCollectible(itemID, 0, false)
-    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
+    itemPool:RemoveCollectible(itemID)
 
     -- Handle builds with second items
-    local secondItem = nil
+    local secondItemID = nil
     if itemID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER then -- 153
-      secondItem = CollectibleType.COLLECTIBLE_INNER_EYE -- 2
+      secondItemID = CollectibleType.COLLECTIBLE_INNER_EYE -- 2
     elseif itemID == CollectibleType.COLLECTIBLE_TECHNOLOGY then -- 68
-      secondItem = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
+      secondItemID = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
     elseif itemID == CollectibleType.COLLECTIBLE_FIRE_MIND then -- 257
-      secondItem = CollectibleType.COLLECTIBLE_13_LUCK
+      secondItemID = CollectibleType.COLLECTIBLE_13_LUCK
     elseif itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
-      secondItem = CollectibleType.COLLECTIBLE_HOST_HAT -- 375
+      secondItemID = CollectibleType.COLLECTIBLE_HOST_HAT -- 375
     end
-    if secondItem ~= nil then
-      player:AddCollectible(secondItem, 0, false) -- 2
-      itemPool:RemoveCollectible(secondItem)
+    if secondItemID ~= nil then
+      player:AddCollectible(secondItemID, 0, false) -- 2
+      itemPool:RemoveCollectible(secondItemID)
     end
 
     -- Handle builds with an active item that goes into the Schoolbag

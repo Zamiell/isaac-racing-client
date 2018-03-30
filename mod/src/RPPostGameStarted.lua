@@ -609,7 +609,7 @@ function RPPostGameStarted:Diversity()
 
   -- Give the player extra starting items (for diversity races)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
-    -- Eden and Samael start with the Schoolbag
+    -- Eden and Samael start with the Schoolbag already
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
   end
@@ -699,6 +699,12 @@ function RPPostGameStarted:Diversity()
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D4) -- 284
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D100) -- 283
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 489
+  if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_BLOOD_RIGHTS then -- 186
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_ISAACS_HEART) -- 276
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_ISAACS_HEART) then -- 276
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BLOOD_RIGHTS) -- 186
+  end
 
   -- Initialize the sprites for the starting room
   RPSprites:Init("diversity-active", "diversity-active")

@@ -218,6 +218,13 @@ function checkModIntegrity() {
         return;
     }
 
+    // Skip mod checking on macOS
+    // (there is no automatic update on macOS, so it is likely that the client and mod will be on different versions)
+    if (process.platform === 'darwin') {
+        process.send('macOS detected. Skipping Racing+ mod related checks.', processExit);
+        return;
+    }
+
     process.send('Checking to see if the Racing+ mod is corrupted.');
 
     // Get the checksums

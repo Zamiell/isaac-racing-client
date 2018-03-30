@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.16.2* - March 30th, 2018
+
+* The Racing+ client will now work on macOS again.
+* Fixed the bug where Door Stop and Extension Cord were never selected for diversity races.
+* In diversity races, Blood Rights is now removed from the Treasure Room pool if you start with Isaac's Heart.
+* In diversity races, Isaac's Heart is now removed from the Treasure Room pool if you start with Blood Rights.
+
 ### *v0.16.1* - March 28th, 2018
 
 Mod:
@@ -9,6 +16,7 @@ Mod:
 * Fixed the bug where the Schoolbag was not removed from item pools in the solo ranked unseeded race format. (Thanks BMZ_Loop)
 * Fixed the bug where the special characters in the French and Spanish fortunes would not appear. (Thanks AshDown)
 * Fixed the bug where two trinkets would appear on the item tracker after using a Gulp! pill.
+* Fixed the bug where Karma was not properly removed from the trinket pool. (Thanks Moucheron Quipet)
 * Caves/Flooded room #55 is now symmetrical.
 
 Client:
