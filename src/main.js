@@ -243,7 +243,9 @@ function autoUpdate() {
 
     // Monkey patch from:
     // https://github.com/electron-userland/electron-builder/issues/2377
-    // (required for electron-builder v19.49.0, commented out for now)
+    // (required for electron-builder v19.49.0 and electron-updater v2.17.6)
+    // (do NOT upgrade either electron-builder or electron-updater or else automatic update will break;
+    // the newest versions just don't work for some reason)
     const monkeyPatch = autoUpdater.httpExecutor.doRequest;
     autoUpdater.httpExecutor.doRequest = function monkeyPatchFunction(options, callback) {
         const req = monkeyPatch.call(this, options, callback);
