@@ -197,10 +197,6 @@ if ARGS.github:
     with open(GLOBALS_FILE, 'w', newline='\n') as file:
         file.write(NEW_FILE)
 
-    # Open the mod updater tool from Nicalis
-    UPLOADER_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
-    subprocess.Popen([UPLOADER_PATH], cwd=MOD_DIR) # Popen will run it in the background
-
     # Commit to the client repository
     RETURN_CODE = subprocess.call(['git', 'add', '-A'])
     if RETURN_CODE != 0:
@@ -211,6 +207,11 @@ if ARGS.github:
     RETURN_CODE = subprocess.call(['git', 'push'])
     if RETURN_CODE != 0:
         error('Failed to git push.')
+
+    # Open the mod updater tool from Nicalis
+    if not ARGS.skipmod:
+        UPLOADER_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
+        subprocess.Popen([UPLOADER_PATH], cwd=MOD_DIR) # Popen will run it in the background
 
 # Close the program if it is running
 # (having it open can cause corrupted ASAR archives)

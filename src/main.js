@@ -549,6 +549,7 @@ ipcMain.on('asynchronous-message', (event, arg1, arg2) => {
         isaacFocus();
     } else if (arg1 === 'error') {
         errorHappened = true;
+        log.error(arg2);
     } else if (arg1 === 'steam' && childProcesses.steam === null) {
         // Initialize the Greenworks API in a separate process because otherwise the game will refuse to open if Racing+ is open
         // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
