@@ -22,7 +22,7 @@ RavenMiscError.prototype.constructor = RavenMiscError;
 
 const errorShow = (message, sendToSentry = true, alternateScreen = '') => {
     // Let the main process know to not overwrite the 3 "save.dat" files in case we are in the middle of a race
-    ipcRenderer.send('asynchronous-message', 'error', 'message');
+    ipcRenderer.send('asynchronous-message', 'error', message);
 
     // Come back in a second if we are still in a transition
     if (globals.currentScreen === 'transition') {
