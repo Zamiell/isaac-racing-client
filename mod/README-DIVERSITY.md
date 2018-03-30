@@ -74,4 +74,11 @@ Some items hardly have an effect on the playstyle of the run. Thus, the followin
 * 455 - Dad's Lost Coin
 * 456 - Moldy Bread
 
+## Item-Specific Bans
+
+The following items are only banned if you start with other specific items:
+
+* 186 - Blood Rights (with Isaac's Heart)
+* 276 - Isaac's Heart (with Blood Rights)
+
 <br />

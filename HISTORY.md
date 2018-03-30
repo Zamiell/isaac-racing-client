@@ -2,7 +2,7 @@
 
 ### *v0.16.2* - March 30th, 2018
 
-* The Racing+ client will now work on macOS again.
+* The Racing+ client will now work on macOS again. (Thanks glyndsuresight)
 * Fixed the bug where Door Stop and Extension Cord were never selected for diversity races.
 * In diversity races, Blood Rights is now removed from the Treasure Room pool if you start with Isaac's Heart.
 * In diversity races, Isaac's Heart is now removed from the Treasure Room pool if you start with Blood Rights.

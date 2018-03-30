@@ -73,6 +73,13 @@ While there are thousands of rooms in the game, many players have already seen t
 
 ## List of Minor Changes
 
+### Custom Hotkeys
+
+* Racing+ allows you to bind two new hotkeys via a custom challenge:
+  * a drop button that will immediately drop all trinkets and pocket items
+  * a dedicated Schoolbag switch button
+* Binding these hotkeys is optional. If they are not bound, Racing+ will revert to the vanilla behavior.
+
 ### Gameplay & Quality of Life Changes
 
 * Some items with no effect are removed:
@@ -87,7 +94,6 @@ While there are thousands of rooms in the game, many players have already seen t
   * cards from Sloth, Super Sloth, Pride, and Super Pride
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
-* The "drop" button immediately drops cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
 * Special items are no longer special.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
@@ -148,7 +154,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 
 ### Graphics & Sound Fixes
 
-* Bosses will be faded during their death animation so that they do not interfere with seeing other entities.
+* Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
 * The annoying vanilla in-game timer and score text will no longer appear.
 * Charge bars are no longer obnoxiously big.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
