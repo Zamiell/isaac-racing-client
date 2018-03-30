@@ -254,7 +254,7 @@ function autoUpdate() {
     */
 
     log.info('Checking for updates.');
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
 }
 
 function registerKeyboardHotkeys() {
