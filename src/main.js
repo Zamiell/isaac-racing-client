@@ -241,6 +241,7 @@ function autoUpdate() {
         mainWindow.webContents.send('autoUpdater', 'update-downloaded');
     });
 
+    /*
     // Monkey patch from:
     // https://github.com/electron-userland/electron-builder/issues/2377
     // (required for electron-builder v19.49.0, commented out for now)
@@ -250,6 +251,7 @@ function autoUpdate() {
         req.on('redirect', () => req.followRedirect());
         return req;
     };
+    */
 
     log.info('Checking for updates.');
     autoUpdater.checkForUpdates();
