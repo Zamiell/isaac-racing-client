@@ -13,6 +13,8 @@ const modLoader = nodeRequire('./js/mod-loader');
 const characters = nodeRequire('./data/characters');
 const builds = nodeRequire('./data/builds');
 
+let lastFinishedTime = 0;
+
 /*
     Event handlers
 */
@@ -643,6 +645,12 @@ const participantsSetStatus = (i, initial = false) => {
     if (!initial) {
         if (racer.status === 'finished') {
             misc.playSound('finished');
+
+            // Play the special "NO DUDE" sound effect
+            if (racer.name === globals.myUsername && racer.runTime - lastFinishedTime <= 3000) {
+                const randNum = misc.getRandomNumber(1, 8);
+                misc.playSound(`no/no${randNum}`);
+            }
         } else if (racer.status === 'quit') {
             misc.playSound('quit');
         }

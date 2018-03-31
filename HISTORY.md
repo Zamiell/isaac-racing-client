@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.16.17* - March 31st, 2018
+
+* Something special will now happen if you lose to someone by 3 seconds or less.
+* Fixed the bug where the starting item would be wrong if you saved and continued. (Thanks AshDown, PassionDrama, and StoneAgeMarcus)
+* Fixed the bug where the automatic update feature was not working properly.
+* Fixed the bug where Blank Card + Joker would play the vanilla use animation. (Thanks Gamonymous)
+
 ### *v0.16.2* - March 30th, 2018
 
 * The Racing+ client will now work on macOS again. (Thanks glyndsuresight)
