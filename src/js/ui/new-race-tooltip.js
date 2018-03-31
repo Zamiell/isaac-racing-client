@@ -272,8 +272,8 @@ function newRaceSizeChange(event, fast = false) {
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
         });
 
-        // Multiplayer races must be ranked
-        $('#new-race-ranked-yes').prop('checked', true);
+        // Multiplayer races must be unranked
+        $('#new-race-ranked-no').prop('checked', true);
         newRaceRankedChange(null, true);
     }
 }
