@@ -651,6 +651,8 @@ const participantsSetStatus = (i, initial = false) => {
                 const randNum = misc.getRandomNumber(1, 8);
                 misc.playSound(`no/no${randNum}`);
             }
+
+            lastFinishedTime = racer.runTime;
         } else if (racer.status === 'quit') {
             misc.playSound('quit');
         }

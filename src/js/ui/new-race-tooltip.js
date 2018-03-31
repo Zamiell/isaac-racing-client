@@ -193,7 +193,7 @@ $(document).ready(() => {
 
         // TODO remove this
         if (ranked && format === 'seeded') {
-            misc.warningShow('Solo ranked seeded races are currently disabled. The leaderboards are coming soon!');
+            misc.warningShow('Solo ranked seeded races are currently disabled, as the leaderboards have not been programmed yet.');
             return false;
         }
 
@@ -272,8 +272,8 @@ function newRaceSizeChange(event, fast = false) {
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
         });
 
-        // Multiplayer races must be unranked
-        $('#new-race-ranked-no').prop('checked', true);
+        // Multiplayer races must be ranked
+        $('#new-race-ranked-yes').prop('checked', true);
         newRaceRankedChange(null, true);
     }
 }

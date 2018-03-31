@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.16.18* - Unreleased
+
+* Fixed the bug where multiplayer races would show as unranked in the client. (Thanks thereisnofuture)
+
 ### *v0.16.17* - March 31st, 2018
 
 * Something special will now happen if you lose to someone by 3 seconds or less.
