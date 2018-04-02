@@ -647,6 +647,8 @@ const participantsSetStatus = (i, initial = false) => {
             misc.playSound('finished');
 
             // Play the special "NO DUDE" sound effect
+            globals.log.info("racer.runTime:", racer.runTime);
+            globals.log.info("lastFinishedTime:", lastFinishedTime);
             if (racer.name === globals.myUsername && racer.runTime - lastFinishedTime <= 3000) {
                 const randNum = misc.getRandomNumber(1, 8);
                 misc.playSound(`no/no${randNum}`);
@@ -828,6 +830,9 @@ const startCountdown = () => {
             $('#race-countdown').fadeIn(globals.fadeTime);
         });
     }
+
+    // Reset the "lastFinishedTime" varaible that is used for custom close race sound effects
+    lastFinishedTime = 0;
 };
 exports.startCountdown = startCountdown;
 

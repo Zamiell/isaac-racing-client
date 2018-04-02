@@ -3,6 +3,7 @@
 ### *v0.16.18* - Unreleased
 
 * Fixed the bug where multiplayer races would show as unranked in the client. (Thanks thereisnofuture)
+* Fixed the bug where the new custom sound effects were playing when they shouldn't. (Thanks caesar)
 
 ### *v0.16.17* - March 31st, 2018
 
