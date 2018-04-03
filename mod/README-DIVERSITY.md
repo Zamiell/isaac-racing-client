@@ -74,6 +74,8 @@ Some items hardly have an effect on the playstyle of the run. Thus, the followin
 * 455 - Dad's Lost Coin
 * 456 - Moldy Bread
 
+<br />
+
 ## Item-Specific Bans
 
 The following items are only banned if you start with other specific items:
