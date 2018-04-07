@@ -1,7 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.16.23* - Unreleased
+### *v0.16.24* - April 7th, 2018
 
+* In the "Change Char Order" custom challenge, there are now icons that show what all of the builds are. Thanks to sillypears for this.
+* In R+7 Season 4, Lilith is no longer granted an Incubus and is instead granted an extra familiar. Much like her original familiar, the second one is also tied to her character.
+
+### *v0.16.23* - April 7th, 2018
+
+* The rules for R+7 Season 4 are now documented on the website/readme.
 * In R+7 Season 4, the Jacob's Ladder start will now also grant There's Options.
 * In R+7 Season 4, Lazarus no longer starts with a pill.
 * In R+7 Season 4, the "sad" animation that signifies a Curse Room deletion will only play once per run.

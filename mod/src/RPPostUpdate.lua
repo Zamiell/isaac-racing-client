@@ -353,6 +353,9 @@ function RPPostUpdate:RaceChecks()
       RPSpeedrun:CheckpointTouched()
     end
   end
+
+  -- Check to see if we need to remove Incubus from Lilith on R+7 Season 4
+  RPSpeedrun:CheckRemoveIncubus()
 end
 
 -- Ban Basement 1 Treasure Rooms

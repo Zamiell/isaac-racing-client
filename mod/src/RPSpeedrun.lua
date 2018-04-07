@@ -82,12 +82,12 @@ RPSpeedrun.itemPosition7_4 = { -- The format is item number, X, Y
   {229, 9, 1},  -- Monstro's Lung
   {311, 11, 1}, -- Judas' Shadow
   {69, 1, 3},   -- Chocolate Milk
-  {494, 11, 3},  -- Jacob's Ladder
+  {1005, 11, 3},  -- Jacob's Ladder
 
-  {153, 9, 5},  -- Mutant Spider + The Inner Eye
-  {68, 10, 5},  -- Technology + A Lump of Coal
-  {257, 11, 5}, -- Fire Mind + 13 luck
-  {40, 12, 5},  -- Kamikaze! + Host Hat
+  {1001, 9, 5},  -- Mutant Spider + The Inner Eye
+  {1002, 10, 5},  -- Technology + A Lump of Coal
+  {1003, 11, 5}, -- Fire Mind + 13 luck
+  {1004, 12, 5},  -- Kamikaze! + Host Hat
 
   {114, 0, 5}, -- Mom's Knife
   {395, 1, 5}, -- Tech X
@@ -350,30 +350,52 @@ function RPSpeedrun:Init()
     elseif character == PlayerType.PLAYER_LILITH then -- 13
       player:AddCollectible(CollectibleType.COLLECTIBLE_INCUBUS, 0, false) -- 360
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
+
+      -- Don't show it on the item tracker
+      Isaac.DebugString("Removing collectible 360 (Incubus)")
+
+      -- If we switch characters, we want to remove the extra Incubus
+      RPGlobals.run.extraIncubus = true
     end
 
     -- Give the additional (chosen) starting item/build
     -- (the item choice is stored in the "order9" variable)
     local itemID = RPGlobals.race.order9[RPSpeedrun.charNum]
-    player:AddCollectible(itemID, 0, false)
-    itemPool:RemoveCollectible(itemID)
+    if itemID < 1000 then
+      -- This is a single item build
+      player:AddCollectible(itemID, 0, false)
+      itemPool:RemoveCollectible(itemID)
+    else
+      -- This is a build with two items
+      if itemID == 1001 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+        player:AddCollectible(CollectibleType.COLLECTIBLE_INNER_EYE, 0, false) -- 2
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
 
-    -- Handle builds with second items
-    local secondItemID = nil
-    if itemID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER then -- 153
-      secondItemID = CollectibleType.COLLECTIBLE_INNER_EYE -- 2
-    elseif itemID == CollectibleType.COLLECTIBLE_TECHNOLOGY then -- 68
-      secondItemID = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
-    elseif itemID == CollectibleType.COLLECTIBLE_FIRE_MIND then -- 257
-      secondItemID = CollectibleType.COLLECTIBLE_13_LUCK
-    elseif itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
-      secondItemID = CollectibleType.COLLECTIBLE_HOST_HAT -- 375
-    elseif itemID == CollectibleType.COLLECTIBLE_JACOBS_LADDER then -- 494
-      secondItemID = CollectibleType.COLLECTIBLE_THERES_OPTIONS -- 249
-    end
-    if secondItemID ~= nil then
-      player:AddCollectible(secondItemID, 0, false) -- 2
-      itemPool:RemoveCollectible(secondItemID)
+      elseif itemID == 1002 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY, 0, false) -- 68
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) -- 68
+        player:AddCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL, 0, false) -- 132
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) -- 132
+
+      elseif itemID == 1003 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND, 0, false) -- 257
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) -- 257
+        player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
+
+      elseif itemID == 1004 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE, 0, false) -- 40
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE) -- 40
+        player:AddCollectible(CollectibleType.COLLECTIBLE_HOST_HAT, 0, false) -- 375
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOST_HAT) -- 375
+
+      elseif itemID == 1005 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_JACOBS_LADDER, 0, false) -- 494
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_JACOBS_LADDER) -- 494
+        player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 249
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 249
+      end
     end
 
     -- Handle builds with an active item that goes into the Schoolbag
@@ -505,6 +527,22 @@ function RPSpeedrun:CheckpointTouched()
 
   -- Mark to fade out after the "Checkpoint" text has displayed on the screen for a little bit
   RPSpeedrun.fadeFrame = isaacFrameCount + 30
+end
+
+-- Called from the PostUpdate callback
+function RPSpeedrun:CheckRemoveIncubus()
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+
+  -- We want to remove the extra Incubus if they attempt to switch characters
+  if RPGlobals.run.extraIncubus and
+     character ~= PlayerType.PLAYER_LILITH then -- 13
+
+    RPGlobals.run.extraIncubus = false
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
+    Isaac.DebugString("Removed the extra Incubus (for R+7 Season 4).")
+  end
 end
 
 -- Called from the PostRender callback
@@ -1018,7 +1056,11 @@ function RPSpeedrun:RemoveAllRoomButtons2()
     local newIndex = #RPSpeedrun.sprites.items + 1
     RPSpeedrun.sprites.items[newIndex] = Sprite()
     local itemNum = RPSpeedrun.itemPosition7_4[i][1]
-    RPSpeedrun.sprites.items[newIndex]:Load("gfx/items2/collectibles/" .. tostring(itemNum) .. ".anm2", true)
+    if itemNum < 1000 then
+      RPSpeedrun.sprites.items[newIndex]:Load("gfx/items2/collectibles/" .. tostring(itemNum) .. ".anm2", true)
+    else
+      RPSpeedrun.sprites.items[newIndex]:Load("gfx/items2/combos/" .. tostring(itemNum) .. ".anm2", true)
+    end
     RPSpeedrun.sprites.items[newIndex]:SetFrame("Default", 1)
   end
 

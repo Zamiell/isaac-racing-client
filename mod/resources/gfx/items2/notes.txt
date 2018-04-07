@@ -1,1 +1,1 @@
-These files are used for the Schoolbag custom item.
+These files are used for the Schoolbag custom item and the item sprites in the "Choose Char Order" custom challenge for R+7 Season 4.
