@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.16.21* - April 6th, 2018
+### *v0.16.22* - April 6th, 2018
 
 * R+7 Season 4 is now released for beta testing. Please provide feedback on what you think should be changed or improved upon.
 * Fixed a Technology softlock in Depths room #226.
