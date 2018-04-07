@@ -266,14 +266,28 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ### R+7 Season 4
 
-* You must complete the game with the following 7 characters:
+* You must defeat Blue Baby on the following 7 characters:
   * Cain, Judas, Blue Baby, Azazel, Lazarus, Lilith, and Apollyon
-* The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
 * All characters start with the Schoolbag.
 * Lilith starts with Incubus.
+* Lazarus does not start with a pill.
+* You get to choose a starting item for each character from the following pool of items:
+  * Sacrificial Dagger
+  * Cricket's Body
+  * Dead Eye
+  * Dr. Fetus
+  * Monstro's Lung
+  * Judas' Shadow
+  * Chocolate Milk
+  * Jacob's Ladder + There's Options
+  * Mutant Spider + The Inner Eye
+  * Technology + A Lump of Coal
+  * Fire Mind + 13 luck
+  * Kamikaze! + Host Hat
+* Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
-* Coming soon...
+* The Treasure Room on Basement 1 is permanently barred.
 
 <br />
 

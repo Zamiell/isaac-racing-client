@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.16.23* - Unreleased
+
+* In R+7 Season 4, the Jacob's Ladder start will now also grant There's Options.
+* In R+7 Season 4, Lazarus no longer starts with a pill.
+* In R+7 Season 4, the "sad" animation that signifies a Curse Room deletion will only play once per run.
+* In R+7 Season 4, the "sad" animation that signifies a Curse Room deletion will only play if there are any pickups in the room.
+* In R+7 Season 4, the first character will no longer start with More Options.
+
 ### *v0.16.22* - April 6th, 2018
 
 * R+7 Season 4 is now released for beta testing. Please provide feedback on what you think should be changed or improved upon.

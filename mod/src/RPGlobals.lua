@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.16.22"
+RPGlobals.version = "v0.16.23"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -173,6 +173,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.speedLilHauntsBlack  = false -- Used to speed up The Haunt fight (2/2)
   RPGlobals.run.rechargeItemFrame    = 0 -- Used to recharge the D6 / Void after a failed attempt
   RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
+  RPGlobals.run.deletedCurseRoom     = false -- Used in Racing+ Season 4
 
   -- Boss hearts tracking
   RPGlobals.run.bossHearts = {

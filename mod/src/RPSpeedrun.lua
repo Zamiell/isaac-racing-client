@@ -343,7 +343,11 @@ function RPSpeedrun:Init()
     RPSchoolbag.sprites.item = nil
 
     -- Give extra items to characters for the R+7 speedrun category (Season 3)
-    if character == PlayerType.PLAYER_LILITH then -- 13
+    if character == PlayerType.PLAYER_LAZARUS then -- 8
+      -- Lazarus does not start with a pill to prevent players resetting for a good pill
+      player:SetPill(0, 0)
+
+    elseif character == PlayerType.PLAYER_LILITH then -- 13
       player:AddCollectible(CollectibleType.COLLECTIBLE_INCUBUS, 0, false) -- 360
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
     end
@@ -364,6 +368,8 @@ function RPSpeedrun:Init()
       secondItemID = CollectibleType.COLLECTIBLE_13_LUCK
     elseif itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
       secondItemID = CollectibleType.COLLECTIBLE_HOST_HAT -- 375
+    elseif itemID == CollectibleType.COLLECTIBLE_JACOBS_LADDER then -- 494
+      secondItemID = CollectibleType.COLLECTIBLE_THERES_OPTIONS -- 249
     end
     if secondItemID ~= nil then
       player:AddCollectible(secondItemID, 0, false) -- 2
@@ -383,7 +389,10 @@ function RPSpeedrun:Init()
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  if RPSpeedrun.charNum == 1 then
+  -- (but not on Season 4, since there is no resetting involved)
+  if RPSpeedrun.charNum == 1 and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     Isaac.DebugString("Removing collectible 414 (More Options)")
     -- We don't need to show this on the item tracker to reduce clutter
@@ -769,13 +778,6 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
       RPSpeedrun.sprites.characters[newIndex].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
       -- Fade the character so it looks like a ghost
     end
-
-    -- Not yet (beta) TODO REMOVE
-    --[[
-    local player = game:GetPlayer(0)
-    player:AnimateSad()
-    player:Kill()
-    --]]
   end
 
   if RPSpeedrun.chooseType == "R+9" then
@@ -1430,19 +1432,35 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") and
-     RPSpeedrun.charNum == 1 and
-     stage == 1 and
-     roomType == RoomType.ROOM_CURSE then -- 10
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
+     RPSpeedrun.charNum ~= 1 or
+     stage ~= 1 or
+     roomType ~= RoomType.ROOM_CURSE or -- 10
+     RPGlobals.run.deletedCurseRoom then
 
-    player:AnimateSad()
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PICKUP then -- 5
-        entity:Remove()
-      end
-    end
-    Isaac.DebugString("Preventing the player from resetting for a Curse Room during a R+7 Season 4 run.")
+    return
   end
+
+  -- Check to see if there are any pickups in the room
+  local pickups = false
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_PICKUP then -- 5
+      pickups = true
+      break
+    end
+  end
+  if pickups == false then
+    return
+  end
+
+  RPGlobals.run.deletedCurseRoom = true
+  player:AnimateSad()
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_PICKUP then -- 5
+      entity:Remove()
+    end
+  end
+  Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
 end
 
 -- Don't move to the first character of the speedrun if we die
