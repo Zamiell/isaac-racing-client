@@ -1,6 +1,11 @@
 # Racing+ Version History and News
 
-### *v0.16.18* - Unreleased
+### *v0.16.21* - April 6th, 2018
+
+* R+7 Season 4 is now released for beta testing. Please provide feedback on what you think should be changed or improved upon.
+* Fixed a Technology softlock in Depths room #226.
+
+### *v0.16.18* - April 1st, 2018
 
 * Fixed the bug where multiplayer races would show as unranked in the client. (Thanks thereisnofuture)
 * Fixed the bug where the new custom sound effects were playing when they shouldn't. (Thanks caesar)
