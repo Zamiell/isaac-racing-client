@@ -361,6 +361,7 @@ function RPSpeedrun:Init()
     -- Give the additional (chosen) starting item/build
     -- (the item choice is stored in the "order9" variable)
     local itemID = RPGlobals.race.order9[RPSpeedrun.charNum]
+    local schoolbagItem = nil
     if itemID < 1000 then
       -- This is a single item build
       player:AddCollectible(itemID, 0, false)
@@ -385,8 +386,7 @@ function RPSpeedrun:Init()
         player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
 
       elseif itemID == 1004 then
-        player:AddCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE, 0, false) -- 40
-        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE) -- 40
+        schoolbagItem = CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
         player:AddCollectible(CollectibleType.COLLECTIBLE_HOST_HAT, 0, false) -- 375
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOST_HAT) -- 375
 
@@ -399,10 +399,6 @@ function RPSpeedrun:Init()
     end
 
     -- Handle builds with an active item that goes into the Schoolbag
-    local schoolbagItem = nil
-    if itemID == CollectibleType.COLLECTIBLE_KAMIKAZE then -- 40
-      schoolbagItem = CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
-    end
     if schoolbagItem ~= nil then
       RPGlobals.run.schoolbag.item = schoolbagItem
       RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
