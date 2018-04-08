@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.16.26* - April 8th, 2018
+
+* In R+7 Season 4, Kamikaze is now properly removed from the pools if you start with the Kamikaze build.
+* In R+7 Season 4, Krampus will now always drop Krampus' Head if you start with the Technology build. (Thanks BMZ_Loop)
+
 ### *v0.16.24* - April 7th, 2018
 
 * In the "Change Char Order" custom challenge, there are now icons that show what all of the builds are. Thanks to sillypears for this.
@@ -105,7 +110,7 @@ Client:
 
 ### *v0.14.27* - December 29th, 2017
 
-* Racing+ will now work with the True Co-op mod. (Thanks BMZ_loop)
+* Racing+ will now work with the True Co-op mod. (Thanks BMZ_Loop)
 
 ### *v0.14.26* - December 27th, 2017
 

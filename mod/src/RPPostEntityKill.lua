@@ -287,6 +287,7 @@ function RPPostEntityKill:Entity81(entity)
   local game = Game()
   local room = game:GetRoom()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
 
   -- We only care about Krampus (81.1)
   if entity.Variant ~= 1 then
@@ -302,6 +303,14 @@ function RPPostEntityKill:Entity81(entity)
     elseif RPGlobals.race.startingItems[i] == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
       headBanned = true
     end
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+    coalBanned = true
+  end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) or -- 293
+     RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+
+    headBanned = true
   end
   local subType
   if coalBanned and headBanned then

@@ -402,6 +402,7 @@ function RPSpeedrun:Init()
     if schoolbagItem ~= nil then
       RPGlobals.run.schoolbag.item = schoolbagItem
       RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+      itemPool:RemoveCollectible(schoolbagItem)
       player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     end
   end
