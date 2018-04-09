@@ -83,3 +83,4 @@
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
+* Entering a Curse Room on Basement 1 on the first character will despawn all of the pickups in the room. (This is to prevent resetting for a Curse Room.)
