@@ -214,7 +214,7 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 
 ## Additional Changes for Multi-Character Speedruns (Custom Challenges)
 
-Racing+ has several custom challenges which are [documented on a separate page](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md).
+Racing+ has several custom challenges which are [documented on a separate page](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md).
 
 <br />
 
