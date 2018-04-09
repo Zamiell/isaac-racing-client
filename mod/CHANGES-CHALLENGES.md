@@ -82,5 +82,4 @@
   * Kamikaze! + Host Hat
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
-* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 * The Treasure Room on Basement 1 is permanently barred.
