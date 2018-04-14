@@ -81,12 +81,12 @@ RPSpeedrun.itemPosition7_4 = { -- The format is item number, X, Y
   {52, 7, 1},   -- Dr. Fetus
   {229, 9, 1},  -- Monstro's Lung
   {311, 11, 1}, -- Judas' Shadow
-  {69, 1, 3},   -- Chocolate Milk
-  {1005, 11, 3},  -- Jacob's Ladder
+  {1006, 1, 3},   -- Chocolate Milk + Steven
+  {1005, 11, 3},  -- Jacob's Ladder + There's Options
 
   {1001, 9, 5},  -- Mutant Spider + The Inner Eye
   {1002, 10, 5},  -- Technology + A Lump of Coal
-  {1003, 11, 5}, -- Fire Mind + 13 luck
+  {1003, 11, 5}, -- Fire Mind + 13 luck + The Wafer
   {1004, 12, 5},  -- Kamikaze! + Host Hat
 
   {114, 0, 5}, -- Mom's Knife
@@ -384,6 +384,8 @@ function RPSpeedrun:Init()
         player:AddCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND, 0, false) -- 257
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) -- 257
         player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
+        player:AddCollectible(CollectibleType.COLLECTIBLE_WAFER, 0, false) -- 108
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WAFER) -- 108
 
       elseif itemID == 1004 then
         schoolbagItem = CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
@@ -395,6 +397,12 @@ function RPSpeedrun:Init()
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_JACOBS_LADDER) -- 494
         player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 249
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 249
+
+      elseif itemID == 1006 then
+        player:AddCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, 0, false) -- 69
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) -- 69
+        player:AddCollectible(CollectibleType.COLLECTIBLE_STEVEN, 0, false) -- 50
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_STEVEN) -- 50
       end
     end
 
@@ -1292,6 +1300,7 @@ function RPSpeedrun:PostNewRoom()
   RPSpeedrun:PostNewRoomWomb2Error()
   RPSpeedrun:PostNewRoomReplaceBosses()
   RPSpeedrun:PostNewRoomCheckCurseRoom()
+  RPSpeedrun:PostNewRoomCheckSacrificeRoom()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -1483,7 +1492,9 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   -- Check to see if there are any pickups in the room
   local pickups = false
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP then -- 5
+    if entity.Type == EntityType.ENTITY_PICKUP or -- 5
+       entity.Type == EntityType.ENTITY_SLOT then -- 6
+
       pickups = true
       break
     end
@@ -1500,6 +1511,41 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
     end
   end
   Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
+end
+
+-- Prevent people from resetting for a Sacrifice Room teleport in R+7 Season 4
+function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
+  local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local gridSize = room:GetGridSize()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local challenge = Isaac.GetChallenge()
+  local player = game:GetPlayer(0)
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
+     RPSpeedrun.charNum ~= 1 or
+     stage ~= 1 or
+     roomType ~= RoomType.ROOM_SACRIFICE or -- 13
+     player:HasCollectible(CollectibleType.COLLECTIBLE_WAFER) == false or -- 108
+     player:HasCollectible(CollectibleType.COLLECTIBLE_JUDAS_SHADOW) == false then -- 311
+
+    return
+  end
+
+  player:AnimateSad()
+  for i = 1, gridSize do
+    local gridEntity = room:GetGridEntity(i)
+    if gridEntity ~= nil then
+      local saveState = gridEntity:GetSaveState()
+      if saveState.Type == GridEntityType.GRID_SPIKES then -- 8
+        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+      end
+
+    end
+  end
+  Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a R+7 Season 4 run).")
 end
 
 -- Don't move to the first character of the speedrun if we die

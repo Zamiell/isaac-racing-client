@@ -368,6 +368,7 @@ function RPPostRender:DisplayTopLeftText()
          RPSpeedrun.finished then
 
     Isaac.RenderText("Seed: " .. seedString, x, 10, 2, 2, 2, 2)
+    Isaac.RenderText("Total rooms: " .. RPGlobals.run.roomsEntered, x, 25, 2, 2, 2, 2)
   end
 end
 

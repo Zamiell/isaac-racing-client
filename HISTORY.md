@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.16.27* - April 9th, 2018
+
+* The mod will now show the total number of rooms entered below the seed when a run is completed. (Thanks Ou_J)
+* In R+7 Season 4, the Chocolate Milk start will now also start with Steven.
+* In R+7 Season 4, the Fire Mind start will now also start with The Wafer.
+* In R+7 Season 4, if you start with Judas' Shadow or The Wafer on the first character and enter a Sacrifice Room on Basement 1, the spikes will despawn. (Thanks Greg and NorBro86)
+* In R+7 Season 4, if you enter a Curse Room on the first character, Demon Beggars will now be despawn in addition to pickups. (Thanks Dea1h)
+
 ### *v0.16.26* - April 8th, 2018
 
 * In R+7 Season 4, Kamikaze is now properly removed from the pools if you start with the Kamikaze build.
