@@ -74,13 +74,14 @@
   * Dr. Fetus
   * Monstro's Lung
   * Judas' Shadow
-  * Chocolate Milk
+  * Chocolate Milk + Steven
   * Jacob's Ladder + There's Options
   * Mutant Spider + The Inner Eye
   * Technology + A Lump of Coal
-  * Fire Mind + 13 luck
+  * Fire Mind + The Wafer + 13 luck
   * Kamikaze! + Host Hat
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
 * Entering a Curse Room on Basement 1 on the first character will despawn all of the pickups in the room. (This is to prevent resetting for a Curse Room.)
+* Entering a Sacrifice Room on Basement 1 on the first character will despawn the spikes if you start with Judas' Shadow or The Wafer. (This is to prevent resetting for Sacrifice Room rewards.)
