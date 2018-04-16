@@ -141,7 +141,7 @@ function RPPostUpdate:CheckRoomCleared()
   RPFastClear:IncrementBagFamiliars()
 
   -- Give a charge to the player's Schoolbag item
-  RPSchoolbag.AddCharge()
+  RPSchoolbag:AddCharge()
 end
 
 -- Keep track of our hearts if we are Keeper

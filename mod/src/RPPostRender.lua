@@ -350,7 +350,6 @@ function RPPostRender:DisplayTopLeftText()
   local game = Game()
   local seeds = game:GetSeeds()
   local seedString = seeds:GetStartSeedString()
-  local player = game:GetPlayer(0)
 
   -- We want to place informational text for the player to the right of the heart containers
   -- (which will depend on how many heart containers we have)
@@ -360,13 +359,9 @@ function RPPostRender:DisplayTopLeftText()
     -- Display the number of victory laps
     -- (this should have priority over showing the seed)
     Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, 10, 2, 2, 2, 2)
-
-  elseif RPGlobals.raceVars.finished or
-         RPSpeedrun.spawnedCheckpoint or -- This will turn false as soon as the player touches it
-         player:HasCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT) or
-         -- This is so the seed will show as we fade to black
-         RPSpeedrun.finished then
-
+  elseif RPGlobals.run.endOfRunText then
+    -- Show some run summary information
+    -- (but clear it if they exit the room)
     Isaac.RenderText("Seed: " .. seedString, x, 10, 2, 2, 2, 2)
     Isaac.RenderText("Total rooms: " .. RPGlobals.run.roomsEntered, x, 25, 2, 2, 2, 2)
   end

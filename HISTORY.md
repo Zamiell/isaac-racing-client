@@ -1,6 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.16.27* - April 9th, 2018
+### *v0.16.29* - April 16th, 2018
+
+* The Battery will now work properly with The Schoolbag in that it will properly show the orange bar as well as remember the proper charge. This will be most noticable during seeded races that start with the Mega Blast build.
+* The run summary will now disappear if you leave the room. (Thanks Cyber_1)
+* Deleted Depths/Necropolis/Dank room #639 (a narrow room with Mom's Dead Hand).
+* Isaac is now blindfolded in the "Change Char Order" custom challenge.
+
+### *v0.16.28* - April 14th, 2018
 
 * The mod will now show the total number of rooms entered below the seed when a run is completed. (Thanks Ou_J)
 * In R+7 Season 4, the Chocolate Milk start will now also start with Steven.

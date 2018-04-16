@@ -392,6 +392,7 @@ function RPCheckEntities:Entity5_340(pickup)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, room:GetCenterPos(), Vector(0, 0),
                nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
     RPSpeedrun.spawnedCheckpoint = true
+    RPGlobals.run.endOfRunText = true -- Show the run summary
     Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
     pickup:Remove()
 
@@ -897,6 +898,7 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     -- Finish the race
     RPGlobals.raceVars.finished = true
     RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
+    RPGlobals.run.endOfRunText = true -- Show the run summary
 
     -- Tell the client that the goal was achieved (and the race length)
     Isaac.DebugString("Finished run - " .. tostring(RPGlobals.raceVars.finishedTime))

@@ -157,6 +157,7 @@ While not technically unavoidable, many narrow rooms have near-impossible attack
 
 The changed rooms are as follows:
 * Basement/Burning: #755 (Rag Man) (replaced a pot with a red fire)
+* Depths/Necropolis/Dank: #639 (Mom's Dead Hand) (deleted)
 * Cathedral: #286 (Uriel) (changed to 1x1)
 * Cathedral: #291 (Gabriel) (changed to 1x1)
 * Chest: #262 (Headless Horseman Head x2) (changed to 1x1)

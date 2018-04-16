@@ -6,6 +6,7 @@
 --[[
 
 TODO:
+- better handle The Battery + Schoolbag
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

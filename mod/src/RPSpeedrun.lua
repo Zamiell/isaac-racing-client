@@ -590,6 +590,7 @@ function RPSpeedrun:Finish()
   -- Finish the speedrun
   RPSpeedrun.finished = true
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
+  RPGlobals.run.endOfRunText = true -- Show the run summary
 
   -- Play a sound effect
   sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch

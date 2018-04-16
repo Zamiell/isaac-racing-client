@@ -23,8 +23,23 @@ function RPSchoolbag:AddCharge()
   local player = game:GetPlayer(0)
   local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
 
-  if RPGlobals.run.schoolbag.item == 0 or
-     RPGlobals.run.schoolbag.charges >= maxCharges then
+  -- We don't need to do anything if we don't have a Schoolbag or we don't have an item in the Schoolbag
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+     RPGlobals.run.schoolbag.item == 0 then
+
+    return
+  end
+
+  -- We don't need to do anything if the item is already charged
+  if RPGlobals.run.schoolbag.charges >= maxCharges and
+     player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) == false then -- 63
+
+    return
+  end
+
+  -- We don't need to do anything if the item is already double-charged
+  if RPGlobals.run.schoolbag.chargesBattery >= maxCharges and
+     player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) then -- 63
 
     return
   end
@@ -43,13 +58,18 @@ function RPSchoolbag:AddCharge()
     chargesToAdd = 2
   end
 
-  -- Add the correct amount of charges
+  -- Add the correct amount of charges (accounting for The Battery)
   RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.charges + chargesToAdd
   if RPGlobals.run.schoolbag.charges > maxCharges then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) then -- 63
+      local extraChargesToAdd = RPGlobals.run.schoolbag.charges - maxCharges
+      RPGlobals.run.schoolbag.chargesBattery = RPGlobals.run.schoolbag.chargesBattery + extraChargesToAdd
+      if RPGlobals.run.schoolbag.chargesBattery > maxCharges then
+        RPGlobals.run.schoolbag.chargesBattery = maxCharges
+      end
+    end
     RPGlobals.run.schoolbag.charges = maxCharges
   end
-  -- We deliberately don't track The Battery charges, since the game handles this in a weird way
-  -- (in the future, the Racing+ mod might completely recode The Battery to address this)
 
   -- Also keep track of Eden's Soul
   -- (charges on this specific item are tracked in order to fix vanilla bugs with the item)
@@ -101,6 +121,9 @@ function RPSchoolbag:SpriteDisplay()
     RPSchoolbag.sprites.barMeter = Sprite()
     RPSchoolbag.sprites.barMeter:Load("gfx/ui/ui_chargebar.anm2", true)
     RPSchoolbag.sprites.barMeter:Play("BarFull", true)
+    RPSchoolbag.sprites.barMeterBattery = Sprite()
+    RPSchoolbag.sprites.barMeterBattery:Load("gfx/ui/ui_chargebar_battery.anm2", true)
+    RPSchoolbag.sprites.barMeterBattery:Play("BarFull", true)
     RPSchoolbag.sprites.barLines = Sprite()
     RPSchoolbag.sprites.barLines:Load("gfx/ui/ui_chargebar.anm2", true)
     if maxCharges > 12 then
@@ -120,39 +143,47 @@ function RPSchoolbag:SpriteDisplay()
   RPSchoolbag.sprites.item:Update()
   RPSchoolbag.sprites.item:Render(itemVector, Vector(0, 0), Vector(0, 0))
 
+  -- Draw the charge bar
   if maxCharges ~= 0 then
-    -- Draw the charge bar 1/3 (the background)
+    -- The background
     RPSchoolbag.sprites.barBack:Update()
     RPSchoolbag.sprites.barBack:Render(barVector, Vector(0, 0), Vector(0, 0))
 
-    -- Draw the charge bar 2/3 (the bar itself, clipped appropriately)
+    -- The bar itself, clipped appropriately
     RPSchoolbag.sprites.barMeter:Update()
     local meterMultiplier = 24 / maxCharges
     local meterClip = 26 - (RPGlobals.run.schoolbag.charges * meterMultiplier)
     RPSchoolbag.sprites.barMeter:Render(barVector, Vector(0, meterClip), Vector(0, 0))
 
-    -- Draw the charge bar 3/3 (the segment lines on top)
+    -- The bar for The Battery charges
+    RPSchoolbag.sprites.barMeterBattery:Update()
+    meterClip = 26 - (RPGlobals.run.schoolbag.chargesBattery * meterMultiplier)
+    RPSchoolbag.sprites.barMeterBattery:Render(barVector, Vector(0, meterClip), Vector(0, 0))
+
+    -- The segment lines on top
     RPSchoolbag.sprites.barLines:Update()
     RPSchoolbag.sprites.barLines:Render(barVector, Vector(0, 0), Vector(0, 0))
   end
 end
 
+-- Called from the PostUpdate callback
 function RPSchoolbag:CheckActiveCharges()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local charges = player:GetActiveCharge()
+  local activeCharge = player:GetActiveCharge()
+  local batteryCharge = player:GetBatteryCharge()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
-     player:GetActiveItem() == 0 or
-     charges == RPGlobals.run.schoolbag.lastCharge then
+     player:GetActiveItem() == 0 then
 
     return
   end
 
   -- Store the new active charge
   -- (we need to know how many charges we have if we pick up a second active item)
-  RPGlobals.run.schoolbag.lastCharge = charges
+  RPGlobals.run.schoolbag.lastCharge = activeCharge
+  RPGlobals.run.schoolbag.lastChargeBattery = batteryCharge
 end
 
 -- Called from the PostUpdate callback (the "RPCheckEntities:ReplacePedestal()" function)
@@ -178,10 +209,12 @@ function RPSchoolbag:CheckSecondItem(entity)
     -- Put the item in our Schoolbag and delete the pedestal
     RPGlobals.run.schoolbag.item = entity.SubType
     RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastCharge
+    RPGlobals.run.schoolbag.chargesBattery = RPGlobals.run.schoolbag.lastChargeBattery
     RPSchoolbag.sprites.item = nil
     entity:Remove()
     Isaac.DebugString("Put pedestal " .. tostring(entity.SubType) .. " into the Schoolbag with " ..
-                       tostring(RPGlobals.run.schoolbag.lastCharge) .. " charges.")
+                      tostring(RPGlobals.run.schoolbag.charges) .. " charges (and" ..
+                      tostring(RPGlobals.run.schoolbag.chargesBattery) .. " Battery charges).")
     return true
   else
     return false
@@ -240,6 +273,7 @@ function RPSchoolbag:CheckInput()
   local player = game:GetPlayer(0)
   local activeItem = player:GetActiveItem()
   local activeCharge = player:GetActiveCharge()
+  local batteryCharge = player:GetBatteryCharge()
 
   -- We don't care about detecting inputs if we don't have the Schoolbag,
   -- we don't have anything in the Schoolbag,
@@ -291,7 +325,11 @@ function RPSchoolbag:CheckInput()
   -- Put the old item in the Schoolbag
   RPGlobals.run.schoolbag.item = activeItem
   RPGlobals.run.schoolbag.charges = activeCharge
+  RPGlobals.run.schoolbag.chargesBattery = batteryCharge
   RPSchoolbag.sprites.item = nil
+  Isaac.DebugString("Put item " .. tostring(RPGlobals.run.schoolbag.item) .. " into the Schoolbag with charge: " ..
+                    tostring(RPGlobals.run.schoolbag.charges) .. "-" ..
+                    tostring(RPGlobals.run.schoolbag.chargesBattery))
 end
 
 function RPSchoolbag:IsActiveItemQueued()
@@ -331,7 +369,11 @@ function RPSchoolbag:Switch()
   end
 
   -- Set the new active item
-  player:AddCollectible(RPGlobals.run.schoolbag.item, RPGlobals.run.schoolbag.charges, false)
+  player:AddCollectible(RPGlobals.run.schoolbag.item, 0, false) -- We set the charges manually in the next line
+  player:DischargeActiveItem() -- This is necessary to prevent some bugs with The Battery
+  local totalCharges = RPGlobals.run.schoolbag.charges + RPGlobals.run.schoolbag.chargesBattery
+  player:SetActiveCharge(totalCharges)
+  Isaac.DebugString("Set charges to: " .. tostring(totalCharges))
 
   -- Fix the bug where the charge sound will play if the item is fully charged or partially charged
   if player:GetActiveCharge() == maxCharges and

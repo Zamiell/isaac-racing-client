@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.16.28"
+RPGlobals.version = "v0.16.29"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -147,6 +147,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false
   RPGlobals.run.dopleRoom             = false
+  RPGlobals.run.endOfRunText          = false -- Shown when the run is completed but only for one room
 
   -- Temporary tracking
   RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
@@ -220,14 +221,16 @@ function RPGlobals:InitRun()
 
   -- Schoolbag tracking
   RPGlobals.run.schoolbag = {
-    item            = 0,
-    charges         = 0,
-    pressed         = false, -- Used for keeping track of whether the "Switch" button is held down or not
-    lastCharge      = 0,     -- Used to keep track of the charges when we pick up a second active item
-    lastRoomItem    = 0,     -- Used to prevent bugs with GLowing Hour Glass
-    lastRoomCharges = 0,     -- Used to prevent bugs with GLowing Hour Glass
-    nextRoomCharge  = false, -- Used to prevent bugs with GLowing Hour Glass
-    bossRushActive  = false, -- Used for giving a charge when the Boss Rush starts
+    item              = 0,
+    charges           = 0,
+    chargesBattery    = 0,
+    pressed           = false, -- Used for keeping track of whether the "Switch" button is held down or not
+    lastCharge        = 0,     -- Used to keep track of the charges when we pick up a second active item
+    lastChargeBattery = 0,     -- Used to keep track of the charges when we pick up a second active item
+    lastRoomItem      = 0,     -- Used to prevent bugs with GLowing Hour Glass
+    lastRoomCharges   = 0,     -- Used to prevent bugs with GLowing Hour Glass
+    nextRoomCharge    = false, -- Used to prevent bugs with GLowing Hour Glass
+    bossRushActive    = false, -- Used for giving a charge when the Boss Rush starts
   }
 
   -- Soul Jar tracking

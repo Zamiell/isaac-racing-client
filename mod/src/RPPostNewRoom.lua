@@ -81,6 +81,7 @@ function RPPostNewRoom:NewRoom()
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.megaSatanDead     = false
   RPGlobals.run.dopleRoom         = false
+  RPGlobals.run.endOfRunText      = false -- Shown when the run is completed but only for one room
   RPGlobals.run.teleportSubverted = false
   RPGlobals.run.bossHearts = { -- Copied from RPGlobals
     spawn       = false,
