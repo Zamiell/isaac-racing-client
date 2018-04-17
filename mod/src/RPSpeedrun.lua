@@ -86,7 +86,7 @@ RPSpeedrun.itemPosition7_4 = { -- The format is item number, X, Y
 
   {1001, 9, 5},  -- Mutant Spider + The Inner Eye
   {1002, 10, 5},  -- Technology + A Lump of Coal
-  {1003, 11, 5}, -- Fire Mind + 13 luck + The Wafer
+  {1003, 11, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
   {1004, 12, 5},  -- Kamikaze! + Host Hat
 
   {114, 0, 5}, -- Mom's Knife
@@ -384,8 +384,10 @@ function RPSpeedrun:Init()
         player:AddCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND, 0, false) -- 257
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) -- 257
         player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
-        player:AddCollectible(CollectibleType.COLLECTIBLE_WAFER, 0, false) -- 108
-        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WAFER) -- 108
+        player:AddCollectible(CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID, 0, false) -- 317
+        itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID) -- 317
+        --player:AddCollectible(CollectibleType.COLLECTIBLE_WAFER, 0, false) -- 108
+        --itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WAFER) -- 108
 
       elseif itemID == 1004 then
         schoolbagItem = CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
@@ -1482,7 +1484,6 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   local player = game:GetPlayer(0)
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
-     RPSpeedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
      RPGlobals.run.deletedCurseRoom then
@@ -1526,10 +1527,8 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
   local player = game:GetPlayer(0)
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
-     RPSpeedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_SACRIFICE or -- 13
-     player:HasCollectible(CollectibleType.COLLECTIBLE_WAFER) == false or -- 108
      player:HasCollectible(CollectibleType.COLLECTIBLE_JUDAS_SHADOW) == false then -- 311
 
     return

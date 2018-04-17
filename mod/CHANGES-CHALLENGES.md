@@ -33,7 +33,7 @@
 
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
-* More information on Samael can be found above in the "Other Mods Included" section.
+* More information on Samael can be found [in the main list of changes for the mod](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES.md#other-mods-included).
 * Isaac starts with The Battery (and a double charged D6).
 * Apollyon starts with the Schoolbag. He will start with Void inside the bag.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
@@ -78,10 +78,10 @@
   * Jacob's Ladder + There's Options
   * Mutant Spider + The Inner Eye
   * Technology + A Lump of Coal
-  * Fire Mind + The Wafer + 13 luck
+  * Fire Mind + Mysterious Liquid + 13 luck
   * Kamikaze! + Host Hat
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
-* Entering a Curse Room on Basement 1 on the first character will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
-* Entering a Sacrifice Room on Basement 1 on the first character will despawn the spikes if you start with Judas' Shadow or The Wafer. (This is to prevent resetting for Sacrifice Room rewards.)
+* Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
+* Entering a Sacrifice Room on Basement 1 will despawn the spikes if you start with Judas' Shadow. (This is to prevent resetting for Sacrifice Room rewards.)
