@@ -1,9 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.16.31* - April 19th, 2018
+
+* Fixed the bug where beggars were not properly being deleted from Curse Rooms in R+7 Season 4. (Thanks Shigan)
+
 ### *v0.16.30* - April 17th, 2018
 
-* In R+7 Season 4, the Fire Mind build will now start with Mysterious Liquid instead of The Wafer. (It is a lot better now.)
-* In R+7 Season 4, Basement 1 Curse Rooms and Sacrifice Rooms are now "nerfed" on all characters, not just the first character.
+* In R+7 Season 4, the Fire Mind build will now start with Mysterious Liquid instead of The Wafer. It is a lot better now. (Thanks Cyber_1)
+* In R+7 Season 4, Basement 1 Curse Rooms and Sacrifice Rooms are now "nerfed" on all characters, not just the first character. (Thanks Dea1h)
 
 ### *v0.16.29* - April 16th, 2018
 

@@ -1483,6 +1483,7 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
+  --[[
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
@@ -1490,6 +1491,7 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
 
     return
   end
+  --]]
 
   -- Check to see if there are any pickups in the room
   local pickups = false
@@ -1508,7 +1510,9 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   RPGlobals.run.deletedCurseRoom = true
   player:AnimateSad()
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP then -- 5
+    if entity.Type == EntityType.ENTITY_PICKUP or -- 5
+       entity.Type == EntityType.ENTITY_SLOT then -- 6
+
       entity:Remove()
     end
   end
