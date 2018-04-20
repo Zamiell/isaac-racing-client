@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.16.33* - April 20th, 2018
+
+* Fixed the bug where duplicate pedestals would appear in Basement 1 on diversity races under certain conditions. (Thanks klover48)
+
 ### *v0.16.31* - April 19th, 2018
 
 * Fixed the bug where beggars were not properly being deleted from Curse Rooms in R+7 Season 4. (Thanks Shigan)

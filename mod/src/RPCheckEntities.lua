@@ -1127,7 +1127,6 @@ function RPCheckEntities:ReplacePedestal(pickup)
     -- Make a new copy of this item
     newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pickup.Position,
                              pickup.Velocity, pickup.Parent, pickup.SubType, newSeed)
-    newPedestal = newPedestal:ToPickup()
 
     -- We don't need to make a fart noise because the swap will be completely transparent to the user
     -- (the sprites of the two items will obviously be identical)
@@ -1136,6 +1135,7 @@ function RPCheckEntities:ReplacePedestal(pickup)
     Isaac.DebugString("Made a copied " .. tostring(pickup.SubType) ..
                       " pedestal using seed " .. tostring(newSeed) .. " (on frame " .. tostring(gameFrameCount) .. ").")
   end
+  newPedestal = newPedestal:ToPickup()
 
   -- We don't want to replicate the charge if this is a brand new item
   if specialReroll == 0 then
@@ -1158,7 +1158,7 @@ function RPCheckEntities:ReplacePedestal(pickup)
 
   -- Also reduce the vanilla delay that is imposed upon newly spawned collectible items
   -- (this is commented out because people were accidentally taking items)
-  --newPedestal:ToPickup().Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
+  --newPedestal.Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
 
   -- We never need to worry about players accidentally picking up Checkpoint
   if pickup.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
