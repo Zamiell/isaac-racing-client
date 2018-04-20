@@ -153,9 +153,6 @@ function RPPostNewRoom:NewRoom()
 
   -- Do speedrun related stuff
   RPSpeedrun:PostNewRoom()
-
-  -- TEST
-  RPSpeedrun:PostNewRoomCheckCurseRoom()
 end
 
 -- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)
