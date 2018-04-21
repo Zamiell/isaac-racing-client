@@ -353,7 +353,7 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S2(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     RPCheckEntities:Entity5_340_S3(pickup)
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     RPCheckEntities:Entity5_340_S4(pickup)
   elseif RPGlobals.raceVars.finished then
     RPCheckEntities.bigChestAction = "victorylap"
@@ -991,7 +991,7 @@ function RPCheckEntities:ReplacePedestal(pickup)
   -- Check to see if this is a B1 item room on a seeded race
   local offLimits = false
   if (RPGlobals.race.rFormat == "seeded" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      pickup.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235

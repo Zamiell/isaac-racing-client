@@ -11,10 +11,6 @@ local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_RENDER (2)
 function RPSeededDeath:PostRender()
-  if RPGlobals.debug == false then
-    return
-  end
-
   -- Local variables
   local game = Game()
   local room = game:GetRoom()

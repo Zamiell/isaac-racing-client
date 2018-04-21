@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.17.0* - April 21st, 2018
+
+* Season 3 is considered finished!
+  * Congradulations to Dea1h for the best R+7 time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
+  * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
+  * If you want to beat these times, the R+7 (S3) category will continue to be tracked on speedrun.com, but the official competition will move on to season 4.
+* [Season 4](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-4) has officially begun! The new category is now considered final; there will be no more major balance changes.
+* There is a new death mechanic for seeded races:
+  * Upon dying, you will respawn in the previous room with 1.5 soul hearts.
+  * You will then have a "debuff" effect that removes all of your items. The debuff will last 45 seconds.
+  * This mechanic doesn't apply to deaths from devil deals. (If you die from a devil deal, the normal death screen will appear.)
+
 ### *v0.16.33* - April 20th, 2018
 
 * Fixed the bug where duplicate pedestals would appear in Basement 1 on diversity races under certain conditions. (Thanks klover48)

@@ -334,7 +334,7 @@ function RPSpeedrun:Init()
     -- Remove the Schoolbag item from all pools
     itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     Isaac.DebugString("In the R+7 (Season 4) challenge.")
 
     -- Everyone starts with the Schoolbag in this season
@@ -420,7 +420,7 @@ function RPSpeedrun:Init()
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
   -- (but not on Season 4, since there is no resetting involved)
   if RPSpeedrun.charNum == 1 and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     Isaac.DebugString("Removing collectible 414 (More Options)")
@@ -461,7 +461,7 @@ function RPSpeedrun:Init()
                       " (" .. tostring(character) .. ")")
     return
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
          character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
 
     RPGlobals.run.restartFrame = isaacFrameCount + 1
@@ -482,7 +482,7 @@ function RPSpeedrun:Init()
            character ~= RPGlobals.race.order7[1]) or
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
            character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") and
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
            character ~= RPGlobals.race.order7[1])) then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
@@ -1196,7 +1196,7 @@ function RPSpeedrun:DisplayCharProgress()
        #RPGlobals.race.order14 == 1)) or
      ((challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
        challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) and
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -1483,7 +1483,7 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
      RPGlobals.run.deletedCurseRoom then
@@ -1528,7 +1528,7 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_SACRIFICE or -- 13
      player:HasCollectible(CollectibleType.COLLECTIBLE_JUDAS_SHADOW) == false then -- 311
@@ -1571,7 +1571,7 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
     return true
   else

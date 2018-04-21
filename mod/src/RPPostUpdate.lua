@@ -374,7 +374,7 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
   if stage == 1 and
      roomType ~= RoomType.ROOM_SECRET and -- 7
      (RPGlobals.race.rFormat == "seeded" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) then
 
     local door
     for i = 0, 7 do

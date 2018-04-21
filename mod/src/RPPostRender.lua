@@ -12,7 +12,7 @@ local RPSoulJar     = require("src/rpsouljar")
 local RPPostUpdate  = require("src/rppostupdate")
 local RPItems       = require("src/rpitems")
 local RPFastTravel  = require("src/rpfasttravel")
-local RPFastDrop  = require("src/rpfastdrop")
+local RPFastDrop    = require("src/rpfastdrop")
 local RPTimer       = require("src/rptimer")
 local RPSpeedrun    = require("src/rpspeedrun")
 local RPSeededDeath = require("src/rpseededdeath")
@@ -129,7 +129,7 @@ function RPPostRender:CheckRestart()
 
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
            challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 4 Beta)") then
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
 
