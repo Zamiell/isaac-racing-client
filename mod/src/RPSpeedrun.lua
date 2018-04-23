@@ -1517,7 +1517,7 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
 end
 
--- Prevent people from resetting for a Sacrifice Room teleport in R+7 Season 4
+-- Prevent people from resetting for a Sacrifice Room in R+7 Season 4
 function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
   local game = Game()
   local room = game:GetRoom()
@@ -1548,6 +1548,31 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
     end
   end
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a R+7 Season 4 run).")
+end
+
+-- Prevent people from resetting for a Library in R+7 Season 4
+function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
+  local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local roomSeed = room:GetSpawnSeed()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local challenge = Isaac.GetChallenge()
+  local player = game:GetPlayer(0)
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+     stage ~= 1 or
+     roomType ~= RoomType.ROOM_LIBRARY then -- 12
+
+    return
+  end
+
+  player:AnimateSad()
+  for i = 1, 20 do
+    game:Spawn(EntityType.ENTITY_MONSTRO, 0, room:GetCenterPos(), Vector(0, 0), nil, 0, roomSeed)
+  end
+  Isaac.DebugString("Spawned Monstros in a Library (during a R+7 Season 4 run).")
 end
 
 -- Don't move to the first character of the speedrun if we die

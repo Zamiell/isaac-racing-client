@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.17.1* - April 23rd, 2018
+
+* In R+7 Season 4, going into a Library on Basement 1 will result in bad things happening.
+* Fixed the bug where having the client open would prevent setting new custom fast-drop or Schoolbag switch hotkeys.
+
 ### *v0.17.0* - April 21st, 2018
 
 * Season 3 is considered finished!

@@ -153,6 +153,20 @@ const parseLine = (line) => {
         } else {
             process.send('error: Failed to parse the speedrun order from the log.');
         }
+    } else if (line.startsWith('Lua Debug: New drop hotkey: ')) {
+        const m = line.match(/Lua Debug: New drop hotkey: (.+)/);
+        if (m) {
+            process.send(`New drop hotkey: ${m[1]}`);
+        } else {
+            process.send('error: Failed to parse the drop hotkey from the log.');
+        }
+    } else if (line.startsWith('Lua Debug: New switch hotkey: ')) {
+        const m = line.match(/Lua Debug: New switch hotkey: (.+)/);
+        if (m) {
+            process.send(`New switch hotkey: ${m[1]}`);
+        } else {
+            process.send('error: Failed to parse the switch hotkey from the log.');
+        }
     } else if (line.startsWith('RNG Start Seed: ')) {
         // A new run has begun
         // (send this separately from the seed because race validation messages are checked before parsing the seed)
