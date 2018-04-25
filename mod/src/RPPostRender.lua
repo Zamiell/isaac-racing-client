@@ -133,6 +133,9 @@ function RPPostRender:CheckRestart()
 
       command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
 
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+      command = command .. " 0"
+
     elseif RPGlobals.race.status ~= "none" then
       command = command .. " " .. RPGlobals.race.character
     end

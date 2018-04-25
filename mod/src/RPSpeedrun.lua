@@ -342,7 +342,7 @@ function RPSpeedrun:Init()
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     RPSchoolbag.sprites.item = nil
 
-    -- Give extra items to characters for the R+7 speedrun category (Season 3)
+    -- Give extra items to characters for the R+7 speedrun category (Season 4)
     if character == PlayerType.PLAYER_LAZARUS then -- 8
       -- Lazarus does not start with a pill to prevent players resetting for a good pill
       player:SetPill(0, 0)
@@ -415,6 +415,17 @@ function RPSpeedrun:Init()
       itemPool:RemoveCollectible(schoolbagItem)
       player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     end
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+    Isaac.DebugString("In the R+7 (Season 5) challenge.")
+
+    -- Everyone starts with the Schoolbag in this season
+    player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    RPSchoolbag.sprites.item = nil
+
+    -- Give extra items to characters for the R+7 speedrun category (Season 5)
+    -- TODO
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
@@ -468,22 +479,21 @@ function RPSpeedrun:Init()
     Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 4) speedrun." ..
                       " (" .. tostring(character) .. ")")
     return
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") and
+         character ~= 0 then
+
+    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 5) speedrun." ..
+                      " (" .. tostring(character) .. ")")
+    return
   end
 
   if RPSpeedrun.fastReset then
     RPSpeedrun.fastReset = false
 
   elseif RPSpeedrun.fastReset == false and
-         ((challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-           character ~= RPGlobals.race.order9[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-           character ~= RPGlobals.race.order14[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-           character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-           character ~= RPGlobals.race.order7[1]) or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-           character ~= RPGlobals.race.order7[1])) then
+         RPSpeedrun.charNum ~= 1 then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
@@ -1196,7 +1206,8 @@ function RPSpeedrun:DisplayCharProgress()
        #RPGlobals.race.order14 == 1)) or
      ((challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
        challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) and
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) and
       (RPGlobals.race.order7 == nil or
        #RPGlobals.race.order7 == 0 or
        #RPGlobals.race.order7 == 1)) then
@@ -1304,6 +1315,7 @@ function RPSpeedrun:PostNewRoom()
   RPSpeedrun:PostNewRoomReplaceBosses()
   RPSpeedrun:PostNewRoomCheckCurseRoom()
   RPSpeedrun:PostNewRoomCheckSacrificeRoom()
+  RPSpeedrun:PostNewRoomCheckLibrary()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -1530,8 +1542,7 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      stage ~= 1 or
-     roomType ~= RoomType.ROOM_SACRIFICE or -- 13
-     player:HasCollectible(CollectibleType.COLLECTIBLE_JUDAS_SHADOW) == false then -- 311
+     roomType ~= RoomType.ROOM_SACRIFICE then -- 13
 
     return
   end
@@ -1551,7 +1562,7 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
 end
 
 -- Prevent people from resetting for a Library in R+7 Season 4
-function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
+function RPSpeedrun:PostNewRoomCheckLibrary()
   local game = Game()
   local room = game:GetRoom()
   local roomType = room:GetType()
@@ -1596,7 +1607,8 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
 
     return true
   else

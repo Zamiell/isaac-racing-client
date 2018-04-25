@@ -69,9 +69,10 @@ function RPPostEntityKill:Entity45(entity)
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
 
-    -- Give the player a choice between the photos on the season 2, season 3, and season 4 speedrun challenges
+    -- Give the player a choice between the photos on the season 2, season 3, season 4, and season 5 speedrun challenges
     situation = 3
 
   elseif player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
@@ -207,6 +208,10 @@ function RPPostEntityKill:Entity78(entity)
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     -- Season 4 speedrun challenges always go to The Chest
+    situation = 1
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+    -- Season 5 speedrun challenges always go to The Chest
     situation = 1
 
   elseif RPGlobals.race.goal == "The Lamb" then
