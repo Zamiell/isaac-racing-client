@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.17.3* - April 27th, 2018
+
+* Dying in a Sacrifice Room will no longer trigger the seeded death mechanic. (Thanks AshDown)
+
 ### *v0.17.2* - April 25th, 2018
 
 * In R+7 Season 4, the spikes will now always despawn on Basement 1 instead of only despawning if you have Judas' Shadow. (Thanks thisguyisbarry)

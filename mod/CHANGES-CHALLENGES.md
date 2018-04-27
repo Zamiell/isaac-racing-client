@@ -84,4 +84,5 @@
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
 * Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
-* Entering a Sacrifice Room on Basement 1 will despawn the spikes if you start with Judas' Shadow. (This is to prevent resetting for Sacrifice Room rewards.)
+* Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
+* Entering a Library on Basement 1 will cause bad things to happen. (This is to prevent resetting for a good book.)

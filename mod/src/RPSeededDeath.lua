@@ -35,7 +35,8 @@ function RPSeededDeath:PostRender()
      (playerSprite:IsPlaying("Death") or
       playerSprite:IsPlaying("LostDeath")) and
      playerSprite:GetFrame() >= 54 and
-     player:WillPlayerRevive() == false then
+     player:WillPlayerRevive() == false and
+     roomType ~= RoomType.ROOM_SACRIFICE then -- 13
 
     -- We want to make an exception for deaths from devil deals
     local elapsedTime = Isaac.GetTime() - RPGlobals.run.seededDeath.dealTime

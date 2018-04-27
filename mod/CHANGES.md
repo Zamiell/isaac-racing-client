@@ -175,6 +175,10 @@ Historically, most speedruns and races have been unseeded with the goal of killi
 * All characters start with The Compass and the Schoolbag in addition to their other items.
 * If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
 * The Cain's Eye trinket is removed from the game.
+* There is a custom death mechanic:
+  * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
+  * They will have a "debuff" effect that removes all of your items. The debuff will last 45 seconds.
+  * This mechanic doesn't apply to deaths from devil deals or Sacrifice Rooms.
 
 ### Diversity
 
