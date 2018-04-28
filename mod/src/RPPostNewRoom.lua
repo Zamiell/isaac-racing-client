@@ -522,6 +522,7 @@ function RPPostNewRoom:Race()
 
   -- Check for the special death condition
   RPSeededDeath:PostNewRoom()
+  RPSeededDeath:PostNewRoomCheckSacrificeRoom()
 
   -- Prevent players from skipping a floor by using the I AM ERROR room on Womb 2 on the "Everything" race goal
   if stage == LevelStage.STAGE4_2 and -- 8

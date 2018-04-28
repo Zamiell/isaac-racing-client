@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.17.4* - April 28th, 2018
+
+* The spikes will now despawn in a Sacrifice Room if you enter as a seeded death ghost. (Thanks AshDown)
+
 ### *v0.17.3* - April 27th, 2018
 
 * Dying in a Sacrifice Room will no longer trigger the seeded death mechanic. (Thanks AshDown)

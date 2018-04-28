@@ -31,7 +31,8 @@ function RPSeededDeath:PostRender()
   end
 
   -- Seeded death (1/3)
-  if RPGlobals.race.rFormat == "seeded" and
+  if (RPGlobals.race.rFormat == "seeded" or
+      RPGlobals.race.rFormat == "seeded-mo") and
      (playerSprite:IsPlaying("Death") or
       playerSprite:IsPlaying("LostDeath")) and
      playerSprite:GetFrame() >= 54 and
@@ -105,6 +106,34 @@ function RPSeededDeath:PostNewRoom()
   RPGlobals.run.seededDeath.state = 2
   RPGlobals.run.seededDeath.pos = Vector(player.Position.X, player.Position.Y)
   Isaac.DebugString("Seeded death (2/3).")
+end
+
+-- Prevent people from resetting for a Sacrifice Room in R+7 Season 4
+function RPSeededDeath:PostNewRoomCheckSacrificeRoom()
+  local game = Game()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local gridSize = room:GetGridSize()
+  local player = game:GetPlayer(0)
+
+  if RPGlobals.run.seededDeath.state ~= 3 or
+     roomType ~= RoomType.ROOM_SACRIFICE then -- 13
+
+    return
+  end
+
+  player:AnimateSad()
+  for i = 1, gridSize do
+    local gridEntity = room:GetGridEntity(i)
+    if gridEntity ~= nil then
+      local saveState = gridEntity:GetSaveState()
+      if saveState.Type == GridEntityType.GRID_SPIKES then -- 8
+        room:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+      end
+
+    end
+  end
+  Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a seeded death debuff).")
 end
 
 function RPSeededDeath:DebuffOn()
