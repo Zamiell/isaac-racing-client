@@ -42,20 +42,6 @@ function RPPostUpdate:Main()
   -- it causes a bug where the Womb 2 trapdoor appears for a frame)
   RPFastClear:PostUpdate()
 
-  -- Check for Eden's Soul (to fix the charge bug)
-  if activeItem == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
-    if RPGlobals.run.edensSoulSet and RPGlobals.run.edensSoulCharges ~= activeCharge then
-      RPGlobals.run.edensSoulCharges = activeCharge
-      Isaac.DebugString("Eden's Soul gained a charge, now at: " .. tostring(activeCharge))
-    elseif RPGlobals.run.edensSoulSet == false then
-      RPGlobals.run.edensSoulSet = true
-      player:SetActiveCharge(RPGlobals.run.edensSoulCharges)
-      Isaac.DebugString("Picked up Eden's Soul, setting charges to: " .. tostring(RPGlobals.run.edensSoulCharges))
-    end
-  else
-    RPGlobals.run.edensSoulSet = false
-  end
-
   -- Replace the bugged Scolex champion with the non-champion version (2/2)
   if RPGlobals.run.replaceBuggedScolex ~= 0 and
      RPGlobals.run.replaceBuggedScolex >= gameFrameCount then

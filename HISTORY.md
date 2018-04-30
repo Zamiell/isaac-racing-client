@@ -1,5 +1,21 @@
 # Racing+ Version History and News
 
+### *v0.18.0* - April 28th, 2018
+
+* Racing+ will now work with Booster Pack #5. All of the new items are now included in diversity races.
+* Since Booster Pack #5 includes new achievements, all save files will no longer be 100%. The Racing+ client should automatially help you install a new one upon connecting to the server, if you wish. You should know that some of the new content will not work with Racing+ enabled.
+* All room changes are reverted to vanilla f(or the time being).
+* Removed the custom handling for co-op babies (since "stealing" Devil Room items was fixed in the vanilla game).
+* Removed the custom handling for Knights, Selfless Knights, Floating Knights, and Bone Knights (since it was fixed in the vanilla game).
+* Removed the custom handling for Eden's Soul (since it was fixed in the vanilla game).
+* Removed the custom handling for heart drops from bosses (since it was fixed in the vanilla game).
+* Removed the custom trinket sprites for the Karma and NO! trinkets (since the sprites were updated in the vanilla game).
+* Changed the custom sprite for the Daemon's Tail trinket to have a 1 pixel border instead of a 2 pixel border.
+* Removed the custom sprites for the Chaos card, the Huge Growth card, the Ancient Recall card, the Era Walk card, the Credit Card, the Cards Against Humanity Card, the Get Out of Jail Free card, and the Holy Card (since the sprites were updated in the vanilla game).
+* The Rules card now uses the old Cards Against Humanity sprite.
+* The ? card sprite is updated to the new version from piber20's Unique Card Backs mod.
+* Reverted the new "LightTravel" animation back to the pre-Booster Pack 5 one, since it is unnecessarily slow.
+
 ### *v0.17.4* - April 28th, 2018
 
 * The spikes will now despawn in a Sacrifice Room if you enter as a seeded death ghost. (Thanks AshDown)

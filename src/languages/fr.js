@@ -191,7 +191,7 @@ Lang.prototype.pack.fr = {
         "No-one else can join this race.": "Plus personne ne peut se joindre à cette course.",
         "Reset over and over until you find something good from a Treasure Room.": "Recommencez jusqu'à ce que vous trouviez un bon item dans une salle de trésor.",
         "You will be playing on an entirely different seed than your opponent(s).": "Vous allez jouer une \"seed\" différente de celles de vos adversaires.",
-        "You will play on the same seed as your opponent and start with The Compass.": "Vous allez jouer la même \"seed\" que votre adversaire et commncer avec la boussole (The Compass).",
+        "You will play on the same seed as your opponent and start with The Compass.": "Vous allez jouer la même \"seed\" que votre adversaire et commencer avec la boussole (The Compass).",
         "This is the same as the \"Unseeded\" format, but you will also start with five random items.": "C'est identique au format \"Unseeded\", mais vous démarrerez avec cinq items aléatoires.",
         "All players will start with the same five items.": "Tous les joueurs démarreront avec les cinq mêmes items.",
         "Extra changes will also be in effect; see the Racing+ website for details.": "D'autres changement prendront aussi effet, référez-vous au site du Racing+ pour davantages de détails.",

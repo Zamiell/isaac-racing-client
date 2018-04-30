@@ -50,8 +50,6 @@ function RPPostNewRoom:NewRoom()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local activeCharge = player:GetActiveCharge()
-  local maxHearts = player:GetMaxHearts()
-  local soulHearts = player:GetSoulHearts()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
 
@@ -73,23 +71,14 @@ function RPPostNewRoom:NewRoom()
 
   -- Clear variables that track things per room
   RPGlobals.run.currentGlobins    = {} -- Used for softlock prevention
-  RPGlobals.run.currentKnights    = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHoppers    = {} -- Used to prevent softlocks
   RPGlobals.run.naturalTeleport   = false
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.megaSatanDead     = false
-  RPGlobals.run.dopleRoom         = false
   RPGlobals.run.endOfRunText      = false -- Shown when the run is completed but only for one room
   RPGlobals.run.teleportSubverted = false
-  RPGlobals.run.bossHearts = { -- Copied from RPGlobals
-    spawn       = false,
-    extra       = false,
-    extraIsSoul = false,
-    position    = {},
-    velocity    = {},
-  }
   RPGlobals.run.keeper.usedStrength = false
 
   -- Clear fast-clear variables that track things per room
@@ -111,9 +100,12 @@ function RPPostNewRoom:NewRoom()
 
   -- Check health (to fix the bug where we don't die at 0 hearts)
   -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
+  -- (this code breaks The Forgotton; commenting this out for now until "EntityPlayer:GetBoneHearts()"" is implemented)
+  --[[
   if maxHearts == 0 and soulHearts == 0 then
     player:Kill()
   end
+  --]]
 
   -- Make the Schoolbag work properly with the Glowing Hour Glass
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
@@ -373,11 +365,6 @@ function RPPostNewRoom:CheckEntities()
       -- in vanilla the type of card that drops depends on the order you kill them in)
       game:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity, entity.Parent, entity.SubType, roomSeed)
       entity:Remove()
-
-    elseif entity.Type == EntityType.ENTITY_DOPLE then -- 53
-      -- The "RPCheckEntities:Entity9" function will need this variable
-      -- in order to know when to delete Dople projectiles
-      RPGlobals.run.dopleRoom = true
 
     elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 0 then -- Haunt (260.0)
       -- Speed up the first Lil' Haunt attached to a Haunt (1/3)

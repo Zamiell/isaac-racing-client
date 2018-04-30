@@ -70,15 +70,6 @@ function RPSchoolbag:AddCharge()
     end
     RPGlobals.run.schoolbag.charges = maxCharges
   end
-
-  -- Also keep track of Eden's Soul
-  -- (charges on this specific item are tracked in order to fix vanilla bugs with the item)
-  if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
-    RPGlobals.run.edensSoulCharges = RPGlobals.run.edensSoulCharges + chargesToAdd
-    if RPGlobals.run.edensSoulCharges > 12 then
-      RPGlobals.run.edensSoulCharges = 12
-    end
-  end
 end
 
 function RPSchoolbag:SpriteDisplay()

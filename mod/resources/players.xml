@@ -1,3 +1,13 @@
+<!--
+
+Changes:
+- Removed the starting active items from Isaac, Magdalene, Judas, The Lost, Lilith, and Apollyon
+- Judas no longer starts with 3 coins
+- Judas starts with a bomb and a half soul heart
+- Blue Baby starts with an extra half soul heart
+
+-->
+
 <players root="gfx/characters/costumes/"
          portraitroot="gfx/ui/boss/"
          nameimageroot="gfx/ui/boss/"
@@ -38,7 +48,7 @@
           nameimage="PlayerName_10_Lazarus.png"
           portrait="PlayerPortrait_09_Lazarus.png"
           bigportrait="PlayerPortraitBig_09_Lazarus.png" costume="32" skinColor="-1" /><!-- Lazarus also gets Anemic (214) -->
-	<player id="9" name="Eden" skin="Character_009_Eden.png" costume="12" items="105"
+	<player id="9" name="Eden" skin="Character_009_Eden.png" costume="12"
           nameimage="PlayerName_09_Eden.png"
           portrait="PlayerPortrait_09_Eden.png"
           bigportrait="PlayerPortraitBig_09_Eden.png" skinColor="-1">
@@ -57,7 +67,7 @@
 		<hair gfx="Character_009_EdenHair13.png" />
 		<hair gfx="Character_009_EdenHair14.png" />
 		<hair gfx="Character_009_EdenHair15.png" />
-        <hair gfx="Character_009_EdenHair16.png" />
+		<hair gfx="Character_009_EdenHair16.png" />
 		<hair gfx="Character_009_EdenHair17.png" />
 		<hair gfx="Character_009_EdenHair18.png" />
 		<hair gfx="Character_009_EdenHair19.png" />
@@ -107,4 +117,12 @@
           nameimage="PlayerName_15_Apollyon.png"
           portrait="PlayerPortrait_15_Apollyon.png"
           bigportrait="PlayerPortraitBig_15_Apollyon.png" skinColor="5" />
+	<player id="16" name="The Forgotten" skin="Character_017_TheForgotten.png" costume="44" hp="4" armor="2"
+          nameimage="PlayerName_16_TheForgotten.png"
+          portrait="PlayerPortrait_16_TheForgotten.png"
+          bigportrait="PlayerPortraitBig_16_TheForgotten.png" skinColor="5" />
+	<player id="17" name="The Soul" skin="Character_018_TheSoul.png" armor="2"
+          nameimage="PlayerName_16_TheForgotten.png"
+          portrait="PlayerPortrait_16_TheForgotten.png"
+          bigportrait="PlayerPortraitBig_16_TheForgotten.png" skinColor="2" />
 </players>

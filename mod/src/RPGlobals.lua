@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.17.4"
+RPGlobals.version = "v0.18.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -139,14 +139,12 @@ function RPGlobals:InitRun()
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
   RPGlobals.run.currentGlobins        = {} -- Used for softlock prevention
-  RPGlobals.run.currentKnights        = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHoppers        = {} -- Used to prevent softlocks
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false
-  RPGlobals.run.dopleRoom             = false
   RPGlobals.run.endOfRunText          = false -- Shown when the run is completed but only for one room
 
   -- Temporary tracking
@@ -176,19 +174,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
   RPGlobals.run.deletedCurseRoom     = false -- Used in Racing+ Season 4
-
-  -- Boss hearts tracking
-  RPGlobals.run.bossHearts = {
-    spawn       = false,
-    extra       = false,
-    extraIsSoul = false,
-    position    = {},
-    velocity    = {},
-  }
-
-  -- Eden's Soul tracking
-  RPGlobals.run.edensSoulSet     = false
-  RPGlobals.run.edensSoulCharges = 0
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {

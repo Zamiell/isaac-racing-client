@@ -186,8 +186,8 @@ function checkSaveFile(saveFile) {
             // "saveFileBytes.data" is now an array of bytes
 
             // Achievements are located at 0x20 (32) + achievement number
-            // So we need to check 33 through 371
-            for (let i = 33; i <= 371; i++) {
+            // So we need to check 33 through 407 (since there are 375 achievements)
+            for (let i = 33; i <= 407; i++) {
                 if (saveFileBytes[i] === 1) {
                     fullyUnlockedSaveFileFound = true;
                     break;

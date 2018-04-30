@@ -68,7 +68,6 @@ RPGlobals:InitRun()
 RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" file)
 
 -- Define NPC callbacks (0)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.Main) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPCUpdate) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24,  EntityType.ENTITY_GLOBIN) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_HOST) -- 27

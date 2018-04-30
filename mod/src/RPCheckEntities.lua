@@ -56,9 +56,6 @@ end
 -- (called from the PostUpdate callback)
 function RPCheckEntities:NonGrid()
   -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local sfx = SFXManager()
 
   -- Go through all the entities
@@ -69,15 +66,6 @@ function RPCheckEntities:NonGrid()
 
     elseif entity.Type == EntityType.ENTITY_PICKUP then
       RPCheckEntities:Entity5(entity:ToPickup())
-
-    elseif entity.Type == EntityType.ENTITY_PROJECTILE then -- 9
-      RPCheckEntities:Entity9(entity)
-
-    elseif entity.Type == EntityType.ENTITY_KNIGHT or -- 41
-           entity.Type == EntityType.ENTITY_FLOATING_KNIGHT or -- 254
-           entity.Type == EntityType.ENTITY_BONE_KNIGHT then -- 283
-
-      RPCheckEntities:Entity41(entity:ToNPC())
 
     elseif entity.Type == EntityType.ENTITY_EYE then -- 60
       RPCheckEntities:Entity60(entity:ToNPC())
@@ -93,52 +81,6 @@ function RPCheckEntities:NonGrid()
 
       RPCheckEntities:EntityRaceTrophy(entity)
     end
-  end
-
-  -- Spawn seeded heart drops from bosses
-  if RPGlobals.run.bossHearts.spawn then
-    RPGlobals.run.bossHearts.spawn = false
-
-    -- Random Heart - 5.10.0
-    for i = 1, 2 do
-      if i == 2 and RPGlobals.run.bossHearts.extra == false then
-        break
-      end
-
-      -- Get the position of the heart
-      local position = RPGlobals.run.bossHearts.position[i]
-      if position == nil then
-        position = room:GetCenterPos() -- This should never happen
-        Isaac.DebugString("Error: Not enough entries for position in the bossHearts table. " ..
-                          "(i is " .. tostring(i) .. ")")
-      end
-
-      -- Get the velocity of the heart
-      local velocity = RPGlobals.run.bossHearts.velocity[i]
-      if velocity == nil then
-        velocity = Vector(0, 0)
-        Isaac.DebugString("Error: Not enough entries for velocity in the bossHearts table. " ..
-                          "(i is " .. tostring(i) .. ")")
-      end
-
-      -- Spawn the heart
-      local heartSeed = roomSeed
-      if i == 2 then
-        heartSeed = RPGlobals:IncrementRNG(heartSeed)
-      end
-      if i == 2 and RPGlobals.run.bossHearts.extraIsSoul then
-        -- Heart (soul) - 5.10.3
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, position, velocity, nil, 3, heartSeed)
-        RPGlobals.run.bossHearts.extraIsSoul = false
-        Isaac.DebugString("Spawned an extra boss heart drop (soul heart).")
-      else
-        -- Random Heart - 5.10.0
-        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, position, velocity, nil, 0, heartSeed)
-        Isaac.DebugString("Spawned a boss heart drop.")
-      end
-    end
-
-    -- The bossHearts variables is reset upon entering a new room
   end
 
   -- Make Fireworks quieter
@@ -170,8 +112,6 @@ function RPCheckEntities:Entity5(pickup)
   local stage = level:GetStage()
   local stageType = level:GetStageType()
   local roomData = level:GetCurrentRoomDesc().Data
-  local room = game:GetRoom()
-  local roomType = room:GetType()
 
   -- Keep track of pickups that are touched
   -- (used for moving pickups on top of a trapdoor/crawlspace)
@@ -191,25 +131,8 @@ function RPCheckEntities:Entity5(pickup)
     end
   end
 
-  if pickup.Variant == PickupVariant.PICKUP_HEART then -- 10
-    if RPCheckEntities:IsBossType(pickup.SpawnerType) and
-       roomType == RoomType.ROOM_BOSS and -- 5
-       stage ~= 11 and -- We don't need to seed the heart drops from Blue Baby, The Lamb, or Victory Lap bosses
-       game.Difficulty == 0 then
-       -- Seeding heart drops in hard mode is unsupported, since we need to assume that each boss drops a heart
-
-      -- Delete heart drops in boss rooms so that we can properly seed them
-      RPGlobals.run.bossHearts.spawn = true
-      RPGlobals.run.bossHearts.position[#RPGlobals.run.bossHearts.position + 1] = pickup.Position
-      RPGlobals.run.bossHearts.velocity[#RPGlobals.run.bossHearts.velocity + 1] = pickup.Velocity
-      pickup:Remove()
-      Isaac.DebugString("Removed boss room heart drop #" .. tostring(#RPGlobals.run.bossHearts.position) .. ": " ..
-                    "(" .. tostring(pickup.Position.X) .. "," .. tostring(pickup.Position.Y) .. ") " ..
-                    "(" .. tostring(pickup.Velocity.X) .. "," .. tostring(pickup.Velocity.Y) .. ")")
-    end
-
-  elseif pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
-         pickup.Variant == PickupVariant.PICKUP_MIMICCHEST then -- 54
+  if pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
+     pickup.Variant == PickupVariant.PICKUP_MIMICCHEST then -- 54
 
     -- We can't check for the "Appear" animation because this is not fast enough
     -- to intercept the unavoidable damage when a Mimic spawns on top of the player
@@ -738,52 +661,6 @@ function RPCheckEntities:Entity5_370(pickup)
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
              pickup.Position, pickup.Velocity, nil, 0, 0)
   pickup:Remove()
-end
-
--- EntityType.ENTITY_PROJECTILE (9)
-function RPCheckEntities:Entity9(entity)
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-  local roomFrameCount = room:GetFrameCount()
-
-  if RPGlobals.run.dopleRoom and roomFrameCount <= 1 then
-    entity:Remove()
-    Isaac.DebugString("Removed a bugged Dople projectile.")
-  end
-end
-
--- EntityType.ENTITY_KNIGHT (41)
--- EntityType.ENTITY_FLOATING_KNIGHT (254)
--- EntityType.ENTITY_BONE_KNIGHT (283)
-function RPCheckEntities:Entity41(npc)
-  -- Knights, Selfless Knights, Floating Knights, and Bone Knights
-  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-  if RPGlobals.run.currentKnights[npc.Index] == nil then
-    -- Add their position to the table so that we can keep track of it on future frames
-    RPGlobals.run.currentKnights[npc.Index] = {
-      pos = npc.Position,
-    }
-  end
-
-  if npc.FrameCount == 4 then
-    -- Changing the NPC's state triggers the invulnerability removal in the next frame
-    npc.State = 4
-
-    -- Manually setting visible to true allows us to disable the invulnerability 1 frame earlier
-    -- (this is to compensate for having only post update hooks)
-    npc.Visible = true
-
-  elseif npc.FrameCount >= 5 and
-         npc.FrameCount <= 30 then
-
-    -- Keep the 5th frame of the spawn animation going
-    npc:GetSprite():SetFrame("Down", 0)
-
-    -- Make sure that it stays in place
-    npc.Position = RPGlobals.run.currentKnights[npc.Index].pos
-    npc.Velocity = Vector(0, 0)
-  end
 end
 
 -- EntityType.ENTITY_EYE (60)

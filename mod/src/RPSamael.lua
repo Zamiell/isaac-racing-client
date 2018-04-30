@@ -1761,11 +1761,14 @@ function SamaelMod:knifeUpdate(knife)
   end
 end
 
-function SamaelMod.PostGameStartedReset()
+function SamaelMod:PostGameStartedReset()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
+
+  Isaac.DebugString("Char: " .. tostring(character))
+  Isaac.DebugString("ID: " .. tostring(samaelID))
 
   SamaelMod.SacDaggerAcquired = false
 

@@ -54,15 +54,15 @@ Changes:
 	<card achievement="100" description="Something stinks..." hud="31_CardAgainstHumanity" id="45" name="A Card Against Humanity" />
 	<card achievement="120" description="A true ending?" hud="27_SuicideKing" id="46" name="Suicide King" />
 	<card achievement="225" description="Open Sesame" hud="32_GetOutOfJail" id="47" name="Get Out Of Jail Free Card" />
-	<card description="Double Active" hud="33_MysteryCard" id="48" name="? Card" />
+	<card description="Double active" hud="33_MysteryCard" id="48" name="? Card" />
 	<card description="D6 + D20" hud="34_DiceShard" id="49" name="Dice Shard" />
 	<card description="Help from above" hud="35_EmergencyContact" id="50" name="Emergency Contact" />
 	<card achievement="293" description="You feel protected" hud="40_HolyCard" id="51" name="Holy Card" />
 
 	<!-- Booster Pack #1 -->
-	<card description="Become immense!" hud="52_HugeGrowth" name="Huge Growth" id="52" />
-	<card description="Draw 3 cards" hud="53_AncientRecall" name="Ancient Recall" id="53" />
-	<card description="Savor the moment" hud="54_EraWalk" name="Era Walk" id="54" />
+	<card achievement="361" description="Become immense!" hud="52_HugeGrowth" name="Huge Growth" id="52" />
+	<card achievement="362" description="Draw 3 cards" hud="53_AncientRecall" name="Ancient Recall" id="53" />
+	<card achievement="363" description="Savor the moment" hud="54_EraWalk" name="Era Walk" id="54" />
 
 	<pilleffect id="0" name="Bad Gas" />
 	<pilleffect id="1" name="Bad Trip" />

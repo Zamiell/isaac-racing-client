@@ -334,7 +334,7 @@ function RPPostGameStarted:Character()
     -- (this is given via an achivement and not from the "players.xml file")
     Isaac.DebugString("Removing collectible 349 (Wooden Nickel)")
 
-  elseif character == 16 then -- Samael
+  elseif character == Isaac.GetPlayerTypeByName("Samael") then
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)

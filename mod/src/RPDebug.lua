@@ -12,7 +12,7 @@ local RPSpeedrun = require("src/rpspeedrun")
 -- Variables
 --
 
---local debugVar = 118
+RPDebug.temp = 20
 
 --
 -- Debug functions
@@ -35,13 +35,13 @@ function RPDebug:Main()
   RPGlobals.debug = true
 
   RPSpeedrun.charPosition7_3 = { -- The format is character number, X, Y
-    {14, 2, 1},  -- Keeper
+    {14, 2, 1}, -- Keeper
     {9, 4, 1},  -- Eden
-    {10, 6, 1},  -- Lost
+    {10, 6, 1}, -- Lost
     {7, 8, 1},  -- Azazel
     {0, 10, 1}, -- Isaac
     {3, 5, 3},  -- Judas
-    {4, 7, 3}, -- Blue Baby
+    {4, 7, 3},  -- Blue Baby
   }
 
   -- Print out various debug information to Isaac's log.txt
@@ -100,9 +100,14 @@ function RPDebug:Main()
 
   --RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
   --RPGlobals.raceVars.finished = true
+  --RPSprites:Init("place", 1)
 
   -- New Booster Pack item images testing
-  RPSprites:Init("place", 1)
+  RPDebug.temp = RPDebug.temp + 1
+  Isaac.DebugString("Temp var is now at: " .. tostring(RPDebug.temp))
+  --RPSprites:Init("diversity-item1", RPDebug.temp) -- Collectible
+  RPSprites:Init("diversity-item5", RPDebug.temp) -- Trinket
+
   --RPSprites:Init("diversity-item1", 530) -- Collectible
   --RPSprites:Init("diversity-item2", 531) -- Collectible
   --RPSprites:Init("diversity-item3", 532) -- Collectible

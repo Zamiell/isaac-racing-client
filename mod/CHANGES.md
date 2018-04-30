@@ -67,7 +67,6 @@ While there are thousands of rooms in the game, many players have already seen t
 ## Other Mods Included
 
 * [Samael](http://steamcommunity.com/sharedfiles/filedetails/?id=897795840), a custom character created by [Ghostbroster](http://steamcommunity.com/id/ghostbrosterconnor). He is a melee character that uses his scythe to attack enemies. In Racing+, Samael starts with D6, the Schoolbag, the Wraith Skull, and 1 bomb.
-* [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933), a quality of life / sprite improvement mod by [piber20](https://steamcommunity.com/id/piber20).
 
 <br />
 
@@ -78,7 +77,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Racing+ allows you to bind two new hotkeys via a custom challenge:
   * a drop button that will immediately drop all trinkets and pocket items
   * a dedicated Schoolbag switch button
-* Binding these hotkeys is optional. If they are not bound, Racing+ will revert to the vanilla behavior.
+* Binding these hotkeys is optional. If they are not bound, Racing+ will use to the vanilla behavior.
 
 ### Gameplay & Quality of Life Changes
 
@@ -89,14 +88,13 @@ While there are thousands of rooms in the game, many players have already seen t
 * Some things that are unseeded are now seeded:
   * rerolls on items after being touched or purchased
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
-  * heart drops from multi-segment bosses
   * Krampus items (with Gimpy)
   * cards from Sloth, Super Sloth, Pride, and Super Pride
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
 * Special items are no longer special.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
-* Knights, Selfless Knights, Floating Knights, Bone Knights, Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulernability frames after spawning.
+* Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
@@ -106,7 +104,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear. This prevents bugs where feared Hosts will not properly play animations.
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
-* Spawning a co-op baby will automatically kill the baby, return the heart to you, and delete all item pedestals in the room. (This is to prevent various co-op baby-related exploits.)
+* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
 
 ### Streamlined Path
 
@@ -127,6 +125,7 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
   * the fade when entering a new floor (replaced with a custom animation)
   * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
   * teleporting upwards
+  * traveling upwards in a beam of light
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
   * various animations during the Satan fight
@@ -155,14 +154,11 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 ### Graphics & Sound Fixes
 
 * Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
-* The annoying vanilla in-game timer and score text will no longer appear.
-* Charge bars are no longer obnoxiously big.
+* The annoying vanilla in-game timer and score text will no longer appear. (Hold Tab to see a custom in-game timer.)
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
-* The recharge sound will no longer play at the beginning of a run.
 * The door opening sound will no longer play in crawlspaces.
-* The bottom left hand corner of the title screen will now properly show.
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
-* Daemon's Tail, Error (404), Karma, and No! now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
 
 <br />
 
