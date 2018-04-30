@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.18.0* - April 28th, 2018
+### *v0.18.0* - April 30th, 2018
 
 * Racing+ will now work with Booster Pack #5. All of the new items are now included in diversity races.
 * Since Booster Pack #5 includes new achievements, all save files will no longer be 100%. The Racing+ client should automatially help you install a new one upon connecting to the server, if you wish. You should know that some of the new content will not work with Racing+ enabled.
