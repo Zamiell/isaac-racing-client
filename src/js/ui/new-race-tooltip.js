@@ -29,7 +29,8 @@ const characterArray = [
     'Lilith', // 11
     'Keeper', // 12
     'Apollyon', // 13
-    'Samael', // 14
+    'The Forgotton', // 14
+    'Samael', // 15
 ];
 
 /*

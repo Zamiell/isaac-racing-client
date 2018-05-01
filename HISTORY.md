@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.18.2* - April 30th, 2018
+
+* You can now choose the new character for races in the Racing+ client.
+* Fixed the bug where the "Change Char Order" custom challenge was not working. (The__J0ker)
+
 ### *v0.18.0* - April 30th, 2018
 
 * Racing+ will now work with Booster Pack #5. All of the new items are now included in diversity races.

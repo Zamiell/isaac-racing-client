@@ -160,6 +160,9 @@ function RPSpeedrun:Init()
     RPSpeedrun.charNum = 1
     RPSpeedrun.fastReset = false
 
+    -- Remove the D6
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 106
+
     -- Give Isaac's some speed
     player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
     Isaac.DebugString("Removing collectible 28 (The Belt)")

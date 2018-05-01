@@ -19,5 +19,7 @@ module.exports = {
     'Lilith': 13,
     'Keeper': 14,
     'Apollyon': 15,
-    'Samael': 16,
+    'The Forgotton': 16,
+    'The Soul': 17,
+    'Samael': 18,
 };
