@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.18.4"
+RPGlobals.version = "v0.18.5"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -78,10 +78,6 @@ CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Div
 CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
 CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Debug") + 1
 
--- Pills
-PillEffect.PILLEFFECT_GULP_LOGGER = Isaac.GetPillEffectByName("Gulp!") -- 47
-PillEffect.NUM_PILL_EFFECTS       = Isaac.GetPillEffectByName("Gulp!") + 1
-
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
 SoundEffect.NUM_SOUND_EFFECTS     = Isaac.GetSoundIdByName("Speedrun Finish") + 1
@@ -103,7 +99,7 @@ RPGlobals.RoomTransition = {
   TRANSITION_MISSING_POSTER    = 14,
 }
 
--- Spaded by me
+-- Spaded by Zamiel (@Zamiel_SRL)
 RPGlobals.FadeoutTarget = {
   -- -1 and lower result in a black screen
   FADEOUT_FILE_SELECT     = 0,

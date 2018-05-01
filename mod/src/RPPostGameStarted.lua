@@ -753,6 +753,7 @@ function RPPostGameStarted:UnseededRankedSolo()
   local player = game:GetPlayer(0)
   local itemPool = game:GetItemPool()
 
+  -- The client will populate the starting items for the current season into the "startingItems" variable
   for i = 1, #RPGlobals.race.startingItems do
     local itemID = RPGlobals.race.startingItems[i]
     player:AddCollectible(itemID, 12, true)

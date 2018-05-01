@@ -3,7 +3,8 @@
 Changes:
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 - Removed the "special" tag from all items
-- Renamed "Betrayal" to "Betrayal (Animation)"
+- Renamed "Betrayal" to "Betrayal (Vanilla)"
+- Renamed "Schoolbag" to "Schoolbag (Vanilla)"
 
 -->
 
@@ -401,7 +402,7 @@ Changes:
 	<familiar achievement="200" description="He wants your keys!" gfx="Collectibles_388_KeyBum.png" id="388" name="Key Bum" />
 	<familiar achievement="218" description="Rune generator" gfx="Collectibles_389_RuneBag.png" id="389" name="Rune Bag" />
 	<familiar description="Sworn friend" gfx="Collectibles_390_Seraphim.png" id="390" name="Seraphim" />
-	<passive achievement="182" description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" id="391" name="Betrayal (Animation)" />
+	<passive achievement="182" description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" id="391" name="Betrayal (Vanillla)" />
 	<passive achievement="202" description="The heavens will change you" gfx="Collectibles_392_Zodiac.png" id="392" name="Zodiac" />
 	<passive achievement="220" description="The kiss of death" gfx="Collectibles_393_SerpentsKiss.png" id="393" name="Serpent's Kiss" />
 	<passive description="Directed tears" gfx="Collectibles_394_Marked.png" id="394" name="Marked" cache="firedelay range" />
@@ -559,7 +560,7 @@ Changes:
 	<passive achievement="377" cache="weapon firedelay damage tearcolor" description="I'm seeing red..." gfx="Collectibles_531_Haemolacria.png" name="Haemolacria" id="531" />
 	<passive achievement="378" description="Feed them!" gfx="Collectibles_532_Lachryphagy.png" name="Lachryphagy" id="532" />
 	<passive achievement="380" cache="tearflag" description="Smite thy enemy" gfx="Collectibles_533_Trisagion.png" name="Trisagion" id="533" />
-	<passive achievement="379" description="Extra active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag" id="534" />
+	<passive achievement="379" description="Extra active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag (Vanilla)" id="534" />
 
 	<!-- Booster Pack #5 -->
 	<passive achievement="385" name="Blanket" description="You feel safe" gfx="Collectibles_535_Blanket.png" id="535" hearts="2" soulhearts="2" />
@@ -699,7 +700,7 @@ Changes:
 	<trinket achievement="284" description="Feels lucky..." gfx="trinket_110_silverdollar.png" id="110" name="Silver Dollar" />
 	<trinket achievement="287" description="Drips with blood..." gfx="trinket_111_bloodycrown.png" id="111" name="Bloody Crown" />
 	<trinket description="..." gfx="trinket_112_paytowin.png" id="112" name="Pay To Win" />
-	<trinket achievement="310" description="I bring War" gfx="trinket_113_LocustOfWrath.png" id="113" name="Locust of War" />	
+	<trinket achievement="310" description="I bring War" gfx="trinket_113_LocustOfWrath.png" id="113" name="Locust of War" />
 	<trinket achievement="311" description="I bring Pestilence" gfx="trinket_114_LocustOfPestilence.png" id="114" name="Locust of Pestilence" />
 	<trinket achievement="312" description="I bring Famine" gfx="trinket_115_LocustOfFamine.png" id="115" name="Locust of Famine" />
 	<trinket achievement="313" description="I bring Death" gfx="trinket_116_LocustOfDeath.png" id="116" name="Locust of Death" />

@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.18.5* - May 1st, 2018
+
+* Devil Rooms and Angel Rooms are now rebalanced. See the following spreadsheet for more information: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
+* Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes.
+* In R+7 S4, on the Kamikaze build, Kamikaze will now start in the first slot instead of the D6. (Thanks thisguyisbarry)
+* Fixed the bug where Isaac would start with the Sacrificial Alter instead of the D6 in ranked solo races. Please contact Zamiel if you want a bugged race deleted from the database. (Thanks elgirs)
+
 ### *v0.18.4* - April 30th, 2018
 
 * Fixed the bug where diversity races with the new item would crash the client. (Thanks Gamonymous)
@@ -14,7 +21,7 @@
 
 * Racing+ will now work with Booster Pack #5. All of the new items are now included in diversity races.
 * Since Booster Pack #5 includes new achievements, all save files will no longer be 100%. The Racing+ client should automatially help you install a new one upon connecting to the server, if you wish. You should know that some of the new content will not work with Racing+ enabled.
-* All room changes are reverted to vanilla f(or the time being).
+* All room changes are reverted to vanilla (for the time being).
 * Removed the custom handling for co-op babies (since "stealing" Devil Room items was fixed in the vanilla game).
 * Removed the custom handling for Knights, Selfless Knights, Floating Knights, and Bone Knights (since it was fixed in the vanilla game).
 * Removed the custom handling for Eden's Soul (since it was fixed in the vanilla game).
