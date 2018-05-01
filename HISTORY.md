@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.18.3* - April 30th, 2018
+
+* Fixed the bug where diversity races with the new item would crash the client. (Thanks Gamonymous)
+* Fixed the bug where the Black Rune was not center-leaning after you picked it up. (Thanks Thoday)
+
 ### *v0.18.2* - April 30th, 2018
 
 * You can now choose the new character for races in the Racing+ client.
