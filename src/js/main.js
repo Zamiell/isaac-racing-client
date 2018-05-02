@@ -264,14 +264,6 @@ try {
     globals.initError = `Failed to read the "${itemListLocation}" file: ${err}`;
 }
 
-// Trinket list
-const trinketListLocation = path.join(__dirname, 'data', 'trinkets.json');
-try {
-    globals.trinketList = JSON.parse(fs.readFileSync(trinketListLocation, 'utf8'));
-} catch (err) {
-    globals.initError = `Failed to read the "${trinketListLocation}" file: ${err}`;
-}
-
 // We need to have a list of all of the emotes for the purposes of tab completion
 const emotePath = path.join(__dirname, 'img', 'emotes');
 globals.emoteList = misc.getAllFilesFromFolder(emotePath);

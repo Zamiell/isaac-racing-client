@@ -421,18 +421,22 @@ const show = (raceID) => {
             for (let i = 0; i < items.length; i++) {
                 if (i === 4) {
                     // Item 5 is a trinket
-                    if (!Object.prototype.hasOwnProperty.call(globals.trinketList, items[i])) {
+                    const trinketID = parseInt(items[i], 10) + 2000;
+                    if (!Object.prototype.hasOwnProperty.call(globals.itemList, trinketID)) {
                         misc.errorShow(`Trinket ${items[i]} was not found in the items list.`);
                         return;
                     }
-                    buildTooltipContent += globals.trinketList[items[i]].name;
+
+                    // Trinkets are represented in the "items.json" file as items with IDs past 2000
+                    buildTooltipContent += globals.itemList[trinketID].name;
                 } else {
                     // Items 1-4 are passive and active items
-                    if (!Object.prototype.hasOwnProperty.call(globals.itemList, items[i])) {
+                    const itemID = items[i];
+                    if (!Object.prototype.hasOwnProperty.call(globals.itemList, itemID)) {
                         misc.errorShow(`Item ${items[i]} was not found in the items list.`);
                         return;
                     }
-                    buildTooltipContent += `${globals.itemList[items[i]].name} + `;
+                    buildTooltipContent += `${globals.itemList[itemID].name} + `;
                 }
             }
 

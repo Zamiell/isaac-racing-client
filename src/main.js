@@ -47,10 +47,9 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 // 4) mod/resources/gfx/items3/items/..
 // 5) mod/resources/gfx/items3/trinkets/..
 // 6) data/items.json
-// 7) data/trinkets.json
-// 8) img/items/#.png
-// 9) img/trinkets/#.png
-// 10) website images copy from item tracker
+// 7) img/items/#.png
+// 8) img/trinkets/#.png
+// 9) website images copy from item tracker
 
 /*
 

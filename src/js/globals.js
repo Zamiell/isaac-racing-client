@@ -85,7 +85,6 @@ module.exports = {
     tabCompleteIndex: 0,
     tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
-    trinketList: {}, // Filled in main.js
     websiteURL: `http${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
     websocketURL: `ws${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost
     wordList: null, // Filled in main.js
