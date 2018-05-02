@@ -300,8 +300,8 @@ function RPPostGameStarted:Character()
     -- Manually fix any custom items
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
-      player:AddCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM)
-      passiveItem = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
+      player:AddCollectible(Isaac.GetItemIdByName("Betrayal"))
+      passiveItem = Isaac.GetItemIdByName("Betrayal")
     end
     -- (the Schoolbag was manually fixed earlier)
 
@@ -625,7 +625,7 @@ function RPPostGameStarted:Diversity()
     local itemID = RPGlobals.race.startingItems[i]
     if i ~= 5 then -- We don't want to replace trinkets
       if itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
-        itemID = CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM
+        itemID = Isaac.GetItemIdByName("Betrayal")
       end
     end
 

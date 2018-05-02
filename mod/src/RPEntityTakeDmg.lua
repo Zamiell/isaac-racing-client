@@ -44,7 +44,7 @@ function RPEntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource
     end
 
     -- Betrayal (custom)
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM) then
+    if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then
       for i, entity in pairs(Isaac.GetRoomEntities()) do
         local npc = entity:ToNPC()
         if npc ~= nil and npc:IsVulnerableEnemy() then

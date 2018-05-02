@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.18.9* - May 2nd, 2018
+
+* The Dark Room will now have 4 Golden Chests instead of 4 Red Chests. (Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes.)
+* Fixed some Devil and Angel rooms incorrectly having vanilla weight values instead of 1.0. (Thanks CrafterLynx)
+
 ### *v0.18.8* - May 2nd, 2018
 
 * More Devil Room balance changes:
