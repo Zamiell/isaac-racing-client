@@ -1,5 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.18.6* - May 2nd, 2018
+
+* More Devil Room balance changes:
+  * Moved a pedestal from the Red Chest room (#4) to another 1 item room.
+  * Moved a pedestal from the the Devil Beggar room (#10) to another 1 item room.
+  * Added a Black Rune to a 1 item room (#7).
+  * Added a random card to a 1 item room (#15).
+  * Added 2x Red Chest to a 1 item room (#16).
+* More Angel Room balance changes:
+  * Added an extra statue to a 1 item room (#2).
+* Devil Room and Angel Room changes are reflected in the spreadsheet: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
+* Added 3x Red Poops to Devil Room #18 (as a small reference to the Jud6s mod).
+* Fixed the bug in the client where the Forgotten graphic was not showing up properly.
+
 ### *v0.18.5* - May 1st, 2018
 
 * Devil Rooms and Angel Rooms are now rebalanced. See the following spreadsheet for more information: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
