@@ -298,9 +298,7 @@ function RPPostRender:CheckSubvertTeleport()
   if RPGlobals.run.teleportSubverted == false then
     return
   end
-
   RPGlobals.run.teleportSubverted = false
-  player.SpriteScale = RPGlobals.run.teleportSubvertScale
 
   -- Find the correct position to teleport to, depending on which door we entered from
   local pos
@@ -344,8 +342,18 @@ function RPPostRender:CheckSubvertTeleport()
     end
   end
 
-  -- Teleport them
+  -- Teleport them and make them visible again
   player.Position = pos
+  player.SpriteScale = RPGlobals.run.teleportSubvertScale
+
+  -- Also, teleport all of the familiars (and make them visible again)
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
+      entity.Position = pos
+      entity.Visible = true
+      --entity.SpriteScale = ?
+    end
+  end
 end
 
 function RPPostRender:DisplayTopLeftText()

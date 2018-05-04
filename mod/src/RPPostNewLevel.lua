@@ -41,6 +41,7 @@ function RPPostNewLevel:NewLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
   local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_NEW_LEVEL2")
@@ -101,6 +102,15 @@ function RPPostNewLevel:NewLevel()
   if stage >= 2 and RPGlobals.run.removeMoreOptions == true then
     RPGlobals.run.removeMoreOptions = false
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  end
+
+  -- Fix the Strength card bug that happens wtih Fast-Travel
+  if RPGlobals.run.usedStrength and
+     character ~= PlayerType.PLAYER_KEEPER then -- 14
+
+    RPGlobals.run.usedStrength = false
+    player:AddMaxHearts(-2) -- Remove a heart container
+    Isaac.DebugString("Manually removed the heart container from a Strength card.")
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)

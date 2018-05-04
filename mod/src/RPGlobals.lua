@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.18.9"
+RPGlobals.version = "v0.18.10"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -138,6 +138,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHoppers        = {} -- Used to prevent softlocks
+  RPGlobals.run.usedStrength          = false
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
   RPGlobals.run.megaSatanDead         = false
@@ -155,8 +156,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
   RPGlobals.run.dualityCheckFrame    = 0
   RPGlobals.run.changeFartColor      = false
-  RPGlobals.run.replaceBuggedScolex  = 0
-  -- Equal to the game frame number with which to replace Scolex, or 0 for disabled
   RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
   RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
@@ -192,7 +191,6 @@ function RPGlobals:InitRun()
     baseHearts       = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
     healthUpItems    = {},
     coins            = 50,
-    usedStrength     = false,
     usedHealthUpPill = false,
   }
   for i = 1, #RPGlobals.healthUpItems do

@@ -54,7 +54,7 @@ RPSpeedrun.charPosition7_2 = { -- The format is character number, X, Y
   {7, 8, 1},  -- Azazel
   {9, 10, 1}, -- Eden
   {15, 5, 3}, -- Apollyon
-  {16, 7, 3}, -- Samael
+  {Isaac.GetPlayerTypeByName("Samael"), 7, 3}, -- Samael
 }
 RPSpeedrun.charPosition7_3 = { -- The format is character number, X, Y
   {0, 2, 1},  -- Isaac

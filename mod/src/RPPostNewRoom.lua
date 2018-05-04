@@ -59,10 +59,10 @@ function RPPostNewRoom:NewRoom()
   -- bombing from a room with enemies into an empty room
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
-  -- (this has to be above the resetting of the "RPGlobals.run.keeper.usedStrength" variable)
+  -- (this has to be above the resetting of the "RPGlobals.run.usedStrength" variable)
   if character == PlayerType.PLAYER_KEEPER and -- 14
      RPGlobals.run.keeper.baseHearts == 4 and
-     RPGlobals.run.keeper.usedStrength then
+     RPGlobals.run.usedStrength then
 
     RPGlobals.run.keeper.baseHearts = 2
     player:AddMaxHearts(-2, true) -- Take away a heart container
@@ -74,12 +74,12 @@ function RPPostNewRoom:NewRoom()
   RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
   RPGlobals.run.currentHoppers    = {} -- Used to prevent softlocks
-  RPGlobals.run.naturalTeleport   = false
+  RPGlobals.run.usedStrength      = false
   RPGlobals.run.handsDelay        = 0
+  RPGlobals.run.naturalTeleport   = false
   RPGlobals.run.megaSatanDead     = false
   RPGlobals.run.endOfRunText      = false -- Shown when the run is completed but only for one room
   RPGlobals.run.teleportSubverted = false
-  RPGlobals.run.keeper.usedStrength = false
 
   -- Clear fast-clear variables that track things per room
   RPFastClear.buttonsAllPushed = false
@@ -392,12 +392,22 @@ function RPPostNewRoom:CheckEntities()
      roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
      -- (there are Double Trouble rooms with Gurdy but they don't cause a teleport)
 
+     RPGlobals.run.teleportSubverted = true
+
     -- Make the player invisible or else it will show them on the teleported position for 1 frame
     -- (we can't just move the player here because the teleport occurs after this callback finishes)
-    RPGlobals.run.teleportSubverted = true
     RPGlobals.run.teleportSubvertScale = player.SpriteScale
     player.SpriteScale = Vector(0, 0)
     -- (we actually move the player on the next frame in the "RPPostRender:CheckSubvertTeleport()" function)
+
+    -- Also make the familiars invisible
+    -- (for some reason, we can use the "Visible" property instead of
+    -- resorting to "SpriteScale" like we do for the player)
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
+        entity.Visible = false
+      end
+    end
   end
 end
 

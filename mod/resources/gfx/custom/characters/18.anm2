@@ -2,7 +2,7 @@
 	<Info CreatedBy="robot" CreatedOn="15/10/2015 7:28:27 PM" Version="135" Fps="30"/>
 	<Content>
 		<Spritesheets>
-			<Spritesheet Path="../../characters/costumes/character_017_theforgotten.png" Id="0"/>
+			<Spritesheet Path="../../characters/costumes/character_samael.png" Id="0"/>
 			<Spritesheet Path="../../characters/costumes/ghost.png" Id="1"/>
 		</Spritesheets>
 		<Layers>

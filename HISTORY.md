@@ -1,8 +1,16 @@
 # Racing+ Version History and News
 
+### *v0.18.10* - May 2nd, 2018
+
+* Removed the custom handling for the champion Scolex (since it was fixed in the vanilla game).
+* Fixed the (vanilla) bug where Flat Stone was not in the Treasure Room item pool. (Thanks StoneAgeMarcus)
+* Fixed the bug where Samael would spawn as the Forgotten in R+7 season 2. (Thanks Cyber_1)
+* Fixed the bug where the Strength card would not work properly with fast-travel. (Thanks Blumpkin Idaho)
+* Fixed the bug where familiars and flies are teleported under Gurdy and It Lives! (Thanks Moucheron Quipet)
+
 ### *v0.18.9* - May 2nd, 2018
 
-* The Dark Room will now have 4 Golden Chests instead of 4 Red Chests. (Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes.)
+* The Dark Room will now have 4 Golden Chests instead of 4 Red Chests. Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes. (Thanks Cyber_1)
 * Fixed some Devil and Angel rooms incorrectly having vanilla weight values instead of 1.0. (Thanks CrafterLynx)
 
 ### *v0.18.8* - May 2nd, 2018
