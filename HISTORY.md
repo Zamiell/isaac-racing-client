@@ -1,6 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.18.10* - May 2nd, 2018
+### *v0.18.11* - May 4th, 2018
+
+* Fixed the bug where sometimes bombs would be invisible. (Thanks Moucheron Quipet and thisguyisbarry)
+
+### *v0.18.10* - May 3rd, 2018
 
 * Removed the custom handling for the champion Scolex (since it was fixed in the vanilla game).
 * Fixed the (vanilla) bug where Flat Stone was not in the Treasure Room item pool. (Thanks StoneAgeMarcus)
