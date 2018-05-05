@@ -64,11 +64,8 @@ function RPCheckEntities:NonGrid()
     if entity.Type == EntityType.ENTITY_BOMBDROP then -- 4
       RPCheckEntities:Entity4(entity:ToBomb())
 
-    elseif entity.Type == EntityType.ENTITY_PICKUP then
+    elseif entity.Type == EntityType.ENTITY_PICKUP then -- 5
       RPCheckEntities:Entity5(entity:ToPickup())
-
-    elseif entity.Type == EntityType.ENTITY_EYE then -- 60
-      RPCheckEntities:Entity60(entity:ToNPC())
 
     elseif entity.Type == EntityType.ENTITY_THE_HAUNT then -- 260
       RPCheckEntities:Entity260(entity:ToNPC())
@@ -661,25 +658,6 @@ function RPCheckEntities:Entity5_370(pickup)
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
              pickup.Position, pickup.Velocity, nil, 0, 0)
   pickup:Remove()
-end
-
--- EntityType.ENTITY_EYE (60)
-function RPCheckEntities:Entity60(npc)
-  -- Eyes and Blootshot Eyes
-  -- (this can't be in the NPCUpdate callback because it does not fire during the "Appear" animation)
-  if npc.FrameCount == 4 then
-    npc:GetSprite():SetFrame("Eye Opened", 0)
-    npc.State = 3
-    npc.Visible = true
-  end
-
-  -- Prevent the Eye from shooting for 30 frames
-  if (npc.State == 4 or
-      npc.State == 8) and
-     npc.FrameCount < 31 then
-
-    npc.StateFrame = 0
-  end
 end
 
 -- EntityType.ENTITY_THE_HAUNT (260)

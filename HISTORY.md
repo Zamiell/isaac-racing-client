@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.18.12* - May 4th, 2018
+
+* Removed the custom handling for Eyes and Bloodshot Eyes (since it was fixed in the vanilla game).
+* Fixed the bug where using the Sacrifice Room teleport to the Dark Room would crash the game. (Thanks StoneAgeMarcus)
+* Fixed the bug where the player would become invisible in the Mom or It Lives! fight under conditions. (Thanks Blumpkin Idaho)
+
 ### *v0.18.11* - May 4th, 2018
 
 * Fixed the bug where sometimes bombs would be invisible. (Thanks Moucheron Quipet and thisguyisbarry)

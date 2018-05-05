@@ -323,8 +323,8 @@ function RPPostRender:CheckSubvertTeleport()
     elseif level.LeaveDoor == 7 then -- 2x2 bottom right
       pos = Vector(320, 160) -- (the default position if you enter the room from the top door)
     else
-       -- If we teleported into the room, don't change the player's position
-      return
+       -- If we teleported into the room, use the default position
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
     end
   else
     -- This will work for Gurdy / Mom's Heart / It Lives!
@@ -337,8 +337,8 @@ function RPPostRender:CheckSubvertTeleport()
     elseif level.EnterDoor == Direction.DOWN then -- 3
       pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
     else
-      -- If we teleported into the room, don't change the player's position
-      return
+      -- If we teleported into the room, use the default position
+      pos = Vector(320, 400) -- (the default position if you enter the room from the bottom door)
     end
   end
 
@@ -351,7 +351,6 @@ function RPPostRender:CheckSubvertTeleport()
     if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
       entity.Position = pos
       entity.Visible = true
-      --entity.SpriteScale = ?
     end
   end
 end
