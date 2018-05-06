@@ -568,6 +568,27 @@
             </section>
         </div><!-- save-file-modal -->
 
+        <!-- Password modal -->
+        <div id="password-modal" class="modal hidden selectable">
+            <section class="box">
+                <h3><span lang="en">Password Required</span></h3>
+                <p lang="en">Please enter the race's password to join:</p>
+                <div class="row uniform 50%">
+                    <div class="12u">
+                        <input id="password-input" type="password" placeholder="Race's Password" lang="en"/>
+                    </div>
+                </div>
+                <div class="row uniform 50%">
+                    <div class="2u">
+                        <button id="password-modal-ok-button" class="button small block" lang="en">OK</button>
+                    </div>
+                    <div class="2u">
+                        <button id="password-modal-cancel-button" class="button small block alt" lang="en">Cancel</button>
+                    </div>
+                </div>
+            </section>
+        </div><!-- Password-modal -->
+
         <div id="tooltips" class="hidden">
             <div id="new-race-tooltip">
                 <form id="new-race-form">
@@ -616,25 +637,35 @@
                     </div>
 
                     <div class="padding2"></div>
-                    <div id="new-race-ranked-row-padding" class="padding1"></div>
-                    <div id="new-race-ranked-row" class="row uniform 50%">
-                        <div class="2u">
-                            <p><span lang="en">Ranked</span>:</p>
+
+                    <div class="new-race-toggle-row-container">
+                        <div id="new-race-ranked-row" class="row uniform 50%">
+                            <div class="2u">
+                                <p><span lang="en">Ranked</span>:</p>
+                            </div>
+                            <div class="2u">
+                                <span id="new-race-ranked-icon"></span>
+                            </div>
+                            <div class="3u">
+                                <input type="radio" id="new-race-ranked-no" name="new-race-ranked" value="no" checked></td>
+                                <label for="new-race-ranked-no" class="new-race-radio-label" >
+                                    <span class="new-race-radio-text" lang="en">No</span>
+                                </label>
+                            </div>
+                            <div class="3u">
+                                <input type="radio" id="new-race-ranked-yes" name="new-race-ranked" value="yes">
+                                <label for="new-race-ranked-yes" class="new-race-radio-label">
+                                    <span class="new-race-radio-text" lang="en">Yes</span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="2u">
-                            <span id="new-race-ranked-icon"></span>
-                        </div>
-                        <div class="3u">
-                            <input type="radio" id="new-race-ranked-no" name="new-race-ranked" value="no" checked></td>
-                            <label for="new-race-ranked-no" class="new-race-radio-label" >
-                                <span class="new-race-radio-text" lang="en">No</span>
-                            </label>
-                        </div>
-                        <div class="3u">
-                            <input type="radio" id="new-race-ranked-yes" name="new-race-ranked" value="yes">
-                            <label for="new-race-ranked-yes" class="new-race-radio-label">
-                                <span class="new-race-radio-text" lang="en">Yes</span>
-                            </label>
+                        <div id="new-race-password-row" class="row uniform 50%">
+                            <div class="2u new-race-note">
+                                <p><span lang="en">Password</span>:</p>
+                            </div>
+                            <div class="10u">
+                                <input id="new-race-password" type="password" placeholder="Password (optional)" lang="en"/>
+                            </div>
                         </div>
                     </div>
 

@@ -9,6 +9,7 @@ const path = nodeRequire('path');
 const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
+const crypto = nodeRequire('crypto');
 
 /*
     Event handlers
@@ -32,6 +33,53 @@ $(document).ready(() => {
     $('#warning-modal-button').click(() => {
         // Hide the warning modal
         $('#warning-modal').fadeOut(globals.fadeTime, () => {
+            $('#gui').fadeTo(globals.fadeTime, 1);
+        });
+    });
+
+    /*
+        Password input modal
+    */
+
+    $('#password-input').on('keypress', (e) => {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            $('#password-modal-ok-button').click();
+        } else if (e.keyCode === 27) {
+            e.preventDefault();
+            $('#password-modal-cancel-button').click();
+        }
+    });
+
+    $('#password-modal-ok-button').click(() => {
+        const passwordInput = $('#password-input');
+
+        let password = passwordInput.val();
+        const raceId = passwordInput.data('raceId');
+        const raceTitle = passwordInput.data('raceTitle');
+
+        if (password === '') {
+            return;
+        }
+
+        const passwordHash = crypto.pbkdf2Sync(password, raceTitle, globals.pbkdf2Iterations, globals.pbkdf2Keylen, globals.pbkdf2Digest);
+        password = passwordHash.toString('base64');
+
+        // Hide the password modal
+        $('#password-modal').fadeOut(globals.fadeTime, () => {
+            $('#gui').fadeTo(globals.fadeTime, 1);
+
+            globals.currentScreen = 'waiting-for-server';
+            globals.conn.send('raceJoin', {
+                id: raceId,
+                password,
+            });
+        });
+    });
+
+    $('#password-modal-cancel-button').click(() => {
+        // Hide the password modal
+        $('#password-modal').fadeOut(globals.fadeTime, () => {
             $('#gui').fadeTo(globals.fadeTime, 1);
         });
     });
