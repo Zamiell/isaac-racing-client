@@ -109,6 +109,13 @@ Lang.prototype.pack.zz = {
         "Warning": "",
         "OK": "",
 
+        // Password Modal
+        "Password Required": "",
+        "Please enter the race's password to join:": "",
+        "Race's Password": "",
+        "Failed to join race: wrong password.": "",
+        "Cancel": "",
+
         // Log file modal
         "Log File": "",
         "Success": "",
@@ -137,6 +144,8 @@ Lang.prototype.pack.zz = {
         "Solo": "",
         "Multiplayer": "",
         "Practice": "",
+        "Password": "",
+        "Password (optional)": "",
         "Casual": "",
         "Season": "",
         "Random": "",
@@ -200,6 +209,7 @@ Lang.prototype.pack.zz = {
         "Defeat The Lamb (the boss of The Dark Room)": "",
         "Defeat Mega Satan (the boss behind the giant locked door)": "",
         "and touch the trophy that falls down afterward.": "",
+        "This race is password protected.": "",
 
         // Race ready error messages
         "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "",

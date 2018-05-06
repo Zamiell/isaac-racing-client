@@ -10,6 +10,9 @@ const fadeTime = 300; // In milliseconds
 const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const modNameDev = 'racing+_dev'; // The folder has to be named differently in development or else Steam will automatically delete it
 const chineseProxy = '13.229.79.236:3128'; // This is a Singapore AWS instance running Squid proxy
+const pbkdf2Digest = 'sha512'; // Digest used for password hashing
+const pbkdf2Iterations = 1000; // Number of iterations for password hashing
+const pbkdf2Keylen = 150; // Length of resulting password hash in bits
 
 // The object that contains all of the global variables
 module.exports = {
@@ -63,6 +66,9 @@ module.exports = {
     modPath: null, // Set in main.js
     myUsername: null,
     playingSound: false,
+    pbkdf2Digest,
+    pbkdf2Iterations,
+    pbkdf2Keylen,
     Raven: null, // Raven (Sentry logging) has to be a global or else it won't be initialized in other JavaScript files
     roomList: {},
     raceList: {},

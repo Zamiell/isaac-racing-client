@@ -137,6 +137,11 @@ exports.raceDraw = (race) => {
 
     // Column 1 - Name
     raceDiv += `<td id="lobby-current-races-${race.id}-name" class="lobby-current-races-name selectable">`;
+
+    if (race.isPasswordProtected) {
+        raceDiv += '<i class="fa fa-lock"></i> ';
+    }
+
     if (race.name === '-') {
         raceDiv += `<span lang="en">Race</span> ${race.id}`;
     } else {
@@ -220,10 +225,22 @@ function raceDraw2(race) {
         if (globals.raceList[race.id].status === 'open' && !globals.raceList[race.id].ruleset.solo) {
             $(`#lobby-current-races-${race.id}`).click(() => {
                 if (globals.currentScreen === 'lobby') {
-                    globals.currentScreen = 'waiting-for-server';
-                    globals.conn.send('raceJoin', {
-                        id: race.id,
-                    });
+                    if (race.isPasswordProtected) {
+                        // Show the password modal
+                        $('#gui').fadeTo(globals.fadeTime, 0.1, () => {
+                            const passwordInput = $('#password-input');
+                            passwordInput.val('');
+                            passwordInput.data('raceId', race.id);
+                            passwordInput.data('raceTitle', race.name+'');
+                            $('#password-modal').fadeIn(globals.fadeTime);
+                            passwordInput.focus();
+                        });
+                    } else {
+                        globals.currentScreen = 'waiting-for-server';
+                        globals.conn.send('raceJoin', {
+                            id: race.id,
+                        });
+                    }
                 }
             });
         }
@@ -237,7 +254,9 @@ function raceDraw2(race) {
             content += '<span lang="en">This is a single-player race.</span>';
         } else {
             content += '<span lang="en">Multiplayer</span><br />';
-            content += '<span lang="en">Anyone can join this race.</span>';
+            if (globals.raceList[race.id].isPasswordProtected) {
+                content += '<span lang="en">This race is password protected.</span>';
+            }
         }
         content += '</li>';
 

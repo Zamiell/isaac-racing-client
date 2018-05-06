@@ -117,6 +117,9 @@ exports.init = (username, password, remember) => {
         if (data.message === 'Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.') {
             globals.stream.URL = globals.stream.URLBeforeSubmit;
         }
+        if (data.message === 'Failed to join race: wrong password.') {
+            globals.currentScreen = 'lobby';
+        }
         misc.warningShow(data.message);
     });
 

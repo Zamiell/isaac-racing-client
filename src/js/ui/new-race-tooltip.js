@@ -7,6 +7,7 @@ const settings = nodeRequire('./settings');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const builds = nodeRequire('./data/builds');
+const crypto = nodeRequire('crypto');
 
 /*
     Constants
@@ -149,6 +150,11 @@ $(document).ready(() => {
             settings.set('newRaceTitle', title); // An empty string means to use the random name generator
             settings.saveSync();
         }
+        let password = $('#new-race-password').val().trim();
+        if (password !== settings.get('newRacePassword')) {
+            settings.set('newRacePassword', password);
+            settings.saveSync();
+        }
         const size = $('input[name=new-race-size]:checked').val();
         if (size !== settings.get('newRaceSize')) {
             settings.set('newRaceSize', size);
@@ -228,6 +234,14 @@ $(document).ready(() => {
             title = title.substring(0, maximumLength);
         }
 
+        // Setup password
+        if (solo === true) {
+            password = '';
+        } else if (password !== '') {
+            const passwordHash = crypto.pbkdf2Sync(password, title, globals.pbkdf2Iterations, globals.pbkdf2Keylen, globals.pbkdf2Digest);
+            password = passwordHash.toString('base64');
+        }
+
         // Close the tooltip (and all error tooltips, if present)
         misc.closeAllTooltips();
 
@@ -243,6 +257,7 @@ $(document).ready(() => {
         globals.currentScreen = 'waiting-for-server';
         globals.conn.send('raceCreate', {
             name: title,
+            password,
             ruleset: rulesetObject,
         });
 
@@ -263,6 +278,8 @@ function newRaceSizeChange(event, fast = false) {
         $('#new-race-size-icon-multiplayer').fadeOut((fast ? 0 : globals.fadeTime));
         $('#new-race-ranked-row').fadeIn((fast ? 0 : globals.fadeTime));
         $('#new-race-ranked-row-padding').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#new-race-password-row').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-password-row-padding').fadeOut((fast ? 0 : globals.fadeTime));
         $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
     } else if (newSize === 'multiplayer') {
         $('#new-race-size-icon-solo').fadeOut((fast ? 0 : globals.fadeTime));
@@ -272,6 +289,8 @@ function newRaceSizeChange(event, fast = false) {
             // Unlike the fade in above, the fade out needs to complete before the tooltip is redrawn
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
         });
+        $('#new-race-password-row').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#new-race-password-row-padding').fadeIn((fast ? 0 : globals.fadeTime));
 
         // Multiplayer races must be unranked
         $('#new-race-ranked-no').prop('checked', true);

@@ -2752,6 +2752,14 @@
             opacity: 0.25;
         }
 
+        input[type="submit"].block,
+        input[type="reset"].block,
+        input[type="button"].block,
+        .button.block {
+            display: block;
+            width: 100%;
+        }
+
 /* Header */
 
     #page-wrapper {
@@ -4113,6 +4121,22 @@
 
     .new-race-size-icon-container {
         position: absolute;
+    }
+
+    .new-race-toggle-row-container {
+        position: relative;
+        height: 4.4em;
+    }
+
+    .new-race-toggle-row-container > .row {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .new-race-toggle-row-container > #new-race-ranked-row {
+        padding-top: 1em;
     }
 
     #new-race-size-icon-solo-i {

@@ -109,6 +109,13 @@ Lang.prototype.pack.fr = {
         "Warning": "Attention",
         "OK": "OK",
 
+        // Password Modal
+        "Password Required": "Mot de passe requis",
+        "Please enter the race's password to join:": "Veuillez entrer le mot de passe de la course pour la joindre:",
+        "Race's Password": "Mot de passe de la course",
+        "Failed to join race: wrong password.": "Impossible de joindre la course: mauvais mot de passe.",
+        "Cancel": "Annuler",
+
         // Log file modal
         "Log File": "Fichier log",
         "Success": "Réussi",
@@ -137,6 +144,8 @@ Lang.prototype.pack.fr = {
         "Solo": "Solo",
         "Multiplayer": "Multijoueur",
         "Practice": "Entraînement",
+        "Password": "MdP",
+        "Password (optional)": "Mot de passe (facultatif)",
         "Casual": "Amical",
         "Season": "Saison",
         "Random": "Aléatoire",
@@ -200,6 +209,7 @@ Lang.prototype.pack.fr = {
         "Defeat The Lamb (the boss of The Dark Room)": "Battez The Lamb (le boss de la Dark Room)",
         "Defeat Mega Satan (the boss behind the giant locked door)": "Battez Mega Satan (le boss derrière la géante porte fermée à clé)",
         "and touch the trophy that falls down afterward.": "et touchez le trophée qui tombe ensuite.",
+        "This race is password protected.": "Un mot de passe est requis pour cette course.",
 
         // Race ready error messages
         "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "Étant donné qu'il s'agit d'une course en multijoueur, vous devez attendre qu'un autre joueur rejoigne avant de vous marquer en tant que prêt.",
