@@ -434,6 +434,11 @@ exports.tooltipFunctionReady = () => {
         globals.lastRaceTitle = newRaceTitle;
     }
 
+    const newRacePassword = settings.get('newRacePassword');
+    if (typeof newRacePassword !== 'undefined' && newRacePassword !== null) {
+        $('#new-race-password').val(newRacePassword);
+    }
+
     $(`#new-race-size-${settings.get('newRaceSize')}`).prop('checked', true);
     newRaceSizeChange(null, true);
     $(`#new-race-ranked-${settings.get('newRaceRanked')}`).prop('checked', true);
