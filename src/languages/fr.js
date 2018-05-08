@@ -113,7 +113,7 @@ Lang.prototype.pack.fr = {
         "Password Required": "Mot de passe requis",
         "Please enter the race's password to join:": "Veuillez entrer le mot de passe de la course pour la joindre:",
         "Race's Password": "Mot de passe de la course",
-        "Failed to join race: wrong password.": "Impossible de joindre la course: mauvais mot de passe.",
+        "That is not the correct password.": "Ce n'est pas le bon mot de passe.",
         "Cancel": "Annuler",
 
         // Log file modal

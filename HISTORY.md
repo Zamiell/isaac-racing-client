@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.18.13* - May 6th, 2018
+
+* Racing+ room fixes are now in the game again. (Duality, unavoidable damage, etc.)
+* The client now has the option to password protect a race. Thanks to FineWolf for coding this.
+* Rooms now have a chance to be flipped.
+* Both narrow Pride rooms are removed.
+* Fixed the bug where Book of Sin would spawn a pickup on top of you. (Thanks thisguyisbarry)
+
 ### *v0.18.12* - May 4th, 2018
 
 * Removed the custom handling for Eyes and Bloodshot Eyes (since it was fixed in the vanilla game).

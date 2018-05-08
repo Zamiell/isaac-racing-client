@@ -113,7 +113,7 @@ Lang.prototype.pack.zz = {
         "Password Required": "",
         "Please enter the race's password to join:": "",
         "Race's Password": "",
-        "Failed to join race: wrong password.": "",
+        "That is not the correct password.": "",
         "Cancel": "",
 
         // Log file modal
