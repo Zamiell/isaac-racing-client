@@ -34,6 +34,7 @@ end
 function RPItems:BookOfSin() -- 97
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
   -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune.
@@ -42,44 +43,37 @@ function RPItems:BookOfSin() -- 97
   local bookPickupType = math.random(1, 7)
   RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
 
-  local pos = player.Position
+  local pos = room:FindFreePickupSpawnPosition(player.Position, 0, true)
   local vel = Vector(0, 0)
 
-  -- If heart
   if bookPickupType == 1 then
     -- Random Heart - 5.10.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
                player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If coin
   elseif bookPickupType == 2 then
     -- Random Coin - 5.20.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If bomb
   elseif bookPickupType == 3 then
     -- Random Bomb - 5.40.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If key
   elseif bookPickupType == 4 then
     -- Random Key - 5.30.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If battery
   elseif bookPickupType == 5 then
     -- Lil' Battery - 5.90.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, pos, vel,
                player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If pill
   elseif bookPickupType == 6 then
     -- Random Pill - 5.70.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel, player, 0, RPGlobals.RNGCounter.BookOfSin)
 
-  -- If card/rune
   elseif bookPickupType == 7 then
-    -- Random Card - 5.300.0
+    -- Random Card/Rune - 5.300.0
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
                player, 0, RPGlobals.RNGCounter.BookOfSin)
   end

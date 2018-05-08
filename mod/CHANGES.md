@@ -142,7 +142,6 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * The Book of Sin and Mystery Sack generate actual random pickups.
 * Greed's Gullet works properly on Keeper.
 * Double coins and nickels heal Keeper for their proper amount.
-* Eden's Soul always properly starts at 0 charges.
 * AAA Battery now properly synergizes with The Battery.
 * 9 Volt now properly synergizes with The Battery.
 * You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
