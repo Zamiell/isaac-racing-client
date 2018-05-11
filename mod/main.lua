@@ -6,7 +6,6 @@
 --[[
 
 TODO:
-- better handle The Battery + Schoolbag
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -47,6 +46,7 @@ local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameSt
 local RPPostNewLevel        = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
 local RPPostNewRoom         = require("src/rppostnewroom") -- The PostNewRoom callback (19)
 local RPExecuteCmd          = require("src/rpexecutecmd") -- The ExecuteCmd callback (22)
+local RPPreEntitySpawn      = require("src/rppreentityspawn") -- The PreEntitySpawn callback (24)
 local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callback (27)
 local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
@@ -86,9 +86,73 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC261, EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC219, EntityType.ENTITY_RED_GHOST) -- 285
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC273, EntityType.ENTITY_THE_LAMB) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC275, EntityType.ENTITY_MEGA_SATAN_2) -- 273
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC300, EntityType.ENTITY_MUSHROOM) -- 300
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPC302, EntityType.ENTITY_STONEY) -- 302
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC411, EntityType.ENTITY_BIG_HORN) -- 411
+
+-- MC_PRE_ROOM_ENTITY_SPAWN
+-- We want the player to always be able to take an item in the Basement 1 Treasure Room without spending a bomb
+-- or being forced to walk on spikes
+function RacingPlus:Test(type, variant, subType, gridIndex, seed)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomVariant = roomDesc.Data.Variant
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+
+  if stage ~= 1 then
+    return
+  end
+
+  if roomType ~= RoomType.ROOM_TREASURE then -- 4
+    return
+  end
+
+  if roomVariant == 12 then
+    -- Item surrounded by 3 rocks and 1 spike
+    local rocks = {66, 68, 82}
+    for i, rockIndex in ipairs(rocks) do
+      if rockIndex == gridIndex then
+        return {1930, 0} -- Spikes
+      end
+    end
+
+  elseif roomVariant == 19 then
+    -- Left item surrounded by rocks
+    local rocksReplaced = {49, 63, 65, 79}
+    for i, rockIndex in ipairs(rocksReplaced) do
+      if rockIndex == gridIndex then
+        return {1930, 0} -- Spikes
+      end
+    end
+    local rocksDeleted = {20, 47, 48, 62, 77, 78, 82, 95, 109}
+    for i, rockIndex in ipairs(rocksDeleted) do
+      if rockIndex == gridIndex then
+        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
+      end
+    end
+
+  elseif roomVariant == 21 then
+    -- Left item surrounded by spikes
+    local spikes = {48, 50, 78, 80}
+    for i, spikeIndex in ipairs(spikes) do
+      if spikeIndex == gridIndex then
+        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
+      end
+    end
+
+  elseif roomVariant == 22 then
+    -- Left item surrounded by pots/mushrooms/skulls
+    local pots = {49, 63, 65, 79}
+    for i, potIndex in ipairs(pots) do
+      if potIndex == gridIndex then
+        return {1930, 0} -- Spikes
+      end
+    end
+  end
+end
 
 -- Define miscellaneous callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           RPPostUpdate.Main) -- 1
@@ -102,10 +166,12 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         RPSpeedrun.PostGam
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Main) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main) -- 22
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      RPPreEntitySpawn.Main) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RacingPlus.Test) -- 71
 
 -- Define pre-use item callback (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,

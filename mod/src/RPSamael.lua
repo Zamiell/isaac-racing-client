@@ -1767,9 +1767,6 @@ function SamaelMod:PostGameStartedReset()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
 
-  Isaac.DebugString("Char: " .. tostring(character))
-  Isaac.DebugString("ID: " .. tostring(samaelID))
-
   SamaelMod.SacDaggerAcquired = false
 
   wraithActive = false

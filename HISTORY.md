@@ -1,5 +1,34 @@
 # Racing+ Version History and News
 
+### *v0.19.1* - May 10th, 2018
+
+News:
+
+* While the Devil Room and Angel Room changes introduced last week were seen as an improvement by most of the community, I'm not satisfied until I can make Racing+ the best it can be. Based on community feedback, there is room for some things to be tweaked. Most people were indeed in favor of reducing RNG, but a significant portion liked the "fun" aspect of getting a 4 item devil deal. So, it seems appropriate to strike a compromise between getting fun rooms and getting consistent rewards, so that everyone can get some of what they want.
+* Furthermore, a good chunk of people felt like Devil Rooms needed a slight buff, as Afterbirth+ and the Booster Packs have further diluted the pool value. In the previous change, the overall power level of Devil Rooms remained the same. But adhering to this principle is restrictive in that it forces a specific amount of 1 item deals. Adding a few pedestals is a slight buff to Devil Rooms, but it also has the benefit of helping to reduce RNG. In addition to adding pedestals, I've also done some other nerfs for balance reasons.
+* Angel Rooms look to be in a good spot, so hardly any changes to them seem necessary.
+* The results of the "rock" poll (regarding the Treasure Room change) was 15 to 23 in favor of not changing anything. However, the vast majority of people were for making the change on Basement 1 only, so I've done the work to custom code that, and this should satisfy almost everyone.
+
+Mod Changes:
+
+* Devil Deals have been nerfed:
+  * There are no longer any enemies in Devil Rooms, so it is harder to get your D6 up and backtracking is more important.
+  * There are no longer black hearts and Red Chests in Devil Rooms, which means that in (almost) all cases you will actually need to have health to take an item.
+  * There are more hazards in various Devil Rooms.
+  * It is no longer possible to get rewards from fires in Devil Rooms.
+  * The 2 Red Chests in room #16 have been replaced with 4 bombs.
+  * The random card in room #15 has been removed.
+  * There is a 0.6% chance to get a room with 10 Red Chests. (There is a 10% chance to get an item per Red Chest, so this will yield one or more items 65% of the time.)
+* Devil Deals have been buffed:
+  * There is a 23.5% chance to get a room with 1 item (decreased from 31.6%).
+  * There is a 70.4% chance to get a room with 2 items (increased from 68.4%).
+  * There is a 5% chance to get a room with 3 items (increased from 0%).
+  * There is a 0.6% chance to get a room with 4 items (increased from 0%).
+  * The Red Chest in room #14 has been replaced with a ? card.
+* The Angel Room with 2 items behind key blocks (#7) now has 3 items.
+* You will now always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes. (Thanks Cyber_1)
+* Removed the custom handling for Mushrooms, since the unavoidable damage from skulls was fixed in the vanilla game, and Edmund personally confirmed that he intended for Mushrooms to appear in floors other than 3 and 4.
+
 ### *v0.19.0* - May 8th, 2018
 
 * The client now has the option to password protect a race. Thanks to FineWolf for coding this.

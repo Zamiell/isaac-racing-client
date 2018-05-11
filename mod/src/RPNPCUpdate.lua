@@ -251,29 +251,6 @@ function RPNPCUpdate:NPC275(npc)
   end
 end
 
--- EntityType.ENTITY_MUSHROOM (300)
-function RPNPCUpdate:NPC300(npc)
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-
-  if npc:IsDead() == false and -- This is necessary because the callback will be hit again during the removal
-     stage ~= LevelStage.STAGE2_1 and -- 3 (Caves)
-     stage ~= LevelStage.STAGE2_2 then -- 4
-
-    -- Replace Mushrooms with Hosts on non-Caves floors
-    -- (Mushrooms are incorrectly coded to be champions of Hosts, so they can appear on all floors)
-    -- (to fix the unavoidable damage with Leo / Thunder Thighs when walking over skulls,
-    -- more code is needed in the EntityTakeDamage callback)
-    game:Spawn(EntityType.ENTITY_HOST, 0, npc.Position, npc.Velocity, npc.Parent, 0, 1) -- 27.0
-    -- (presumably the existing InitSeed results in a Mushroom, and an InitSeed of 0 results in a Mushroom,
-    -- so we use an InitSeed of 1)
-    npc:Remove()
-    Isaac.DebugString("Replaced a Mushroom with a Host.")
-  end
-end
-
 -- EntityType.ENTITY_BIG_HORN (411)
 function RPNPCUpdate:NPC411(npc)
   -- Speed up coming out of the ground

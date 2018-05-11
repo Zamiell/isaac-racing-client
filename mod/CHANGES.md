@@ -93,15 +93,15 @@ While there are thousands of rooms in the game, many players have already seen t
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
 * Special items are no longer special.
+* You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
-* Eyes, Bloodshot Eyes, Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
+* Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality now prevents getting a narrow boss room on floors 2 through 7.
 * All Spike Chests will spawn as Mimics instead.
-* Mushrooms can no longer spawn outside of floors 3 and 4. (They will spawn as Hosts instead.) This prevents instantaneous damage when you walk over a skull with Leo or Thunder Thighs.
 * Hosts and Mobile Hosts are now immune to fear. This prevents bugs where feared Hosts will not properly play animations.
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 * There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
