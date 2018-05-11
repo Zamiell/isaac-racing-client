@@ -13,9 +13,9 @@ Mod Changes:
 
 * Devil Deals have been nerfed:
   * There are no longer any enemies in Devil Rooms, so it is harder to get your D6 up and backtracking is more important.
-  * There are no longer black hearts and Red Chests in Devil Rooms, which means that in (almost) all cases you will actually need to have health to take an item.
+  * There are no longer black hearts and Red Chests in Devil Rooms.
+  * It is no longer possible to get heart drops from fires in Devil Rooms.
   * There are more hazards in various Devil Rooms.
-  * It is no longer possible to get rewards from fires in Devil Rooms.
   * The 2 Red Chests in room #16 have been replaced with 4 bombs.
   * The random card in room #15 has been removed.
   * There is a 0.6% chance to get a room with 10 Red Chests. (There is a 10% chance to get an item per Red Chest, so this will yield one or more items 65% of the time.)
