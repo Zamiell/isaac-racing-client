@@ -3590,6 +3590,14 @@
         cursor: pointer;
     }
 
+    .selected-color {
+        font-weight: bolder;
+    }
+
+    .unselected-color {
+        cursor: pointer;
+    }
+
     #title-ajax {
         width: 56px;
         height: 56px;
@@ -3774,6 +3782,11 @@
     }
 
     #register-languages {
+        float: center;
+        margin-bottom: 0;
+    }
+
+    #register-color-mode {
         float: center;
         margin-bottom: 0;
     }
@@ -4298,6 +4311,12 @@
 
     #settings-language {
         width: 9em;
+        background: #f8f8f8;
+    }
+
+    #settings-color-mode {
+        width: 9em;
+        background: #f8f8f8;
     }
 
     #settings-volume-slider-value {
