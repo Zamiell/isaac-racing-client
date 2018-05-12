@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.19.2* - May 12th, 2018
+
+* Removed heart drop pickups in Angel Rooms #2, #7, #13, and #14. (It is still possible to get soul hearts from fires in Angel Rooms.)
+* The Devil Room with 3 items (#2) now has more Pitfalls.
+* Added some Blue Fires to Angel Room #3 to make it unique.
+* Removed adding Flat Stone to the Treasure Room item pool (since it was fixed in the vanilla game).
+* Fixed the bug where flipped rooms were accidently not applied to some floors.
+* Fixed the bug where the Angel Room change from the last patch was not applied.
+
 ### *v0.19.1* - May 10th, 2018
 
 News:
