@@ -433,6 +433,13 @@ Certain rooms in the game were probably meant to be symmetrical, but one entity 
 
 <br />
 
+### Miscellaneous Rooms
+
+* Boss room #9999 was added for the "Choose Char Order" custom challenge.
+* Boss room #9998 was added for the "Jr. Fetus Practice" and the "Mahalath Practice" custom challenges.
+
+<br />
+
 
 
 
