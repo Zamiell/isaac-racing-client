@@ -53,6 +53,12 @@ module.exports = settings;
 
 // If this is the first run (or the settings.json file got corrupted), set default values
 function initDefaults() {
+    // Color mode
+    if (typeof settings.get('colorMode') === 'undefined') {
+        settings.set('colorMode', 'light'); // Default is light mode
+        settings.saveSync();
+    }
+
     // Language
     if (typeof settings.get('language') === 'undefined') {
         settings.set('language', 'en'); // English

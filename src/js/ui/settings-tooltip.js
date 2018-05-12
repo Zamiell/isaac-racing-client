@@ -118,6 +118,30 @@ $(document).ready(() => {
         }
     });
 
+    // Determine if the color mode is switched from light to dark
+    // The setting has to be saved on change, because the page is reloaded when the theme is chosen.
+    $('#settings-color-mode').on('change', function() {
+        if ($(this).val() === 'light') {
+            // Light
+            $('#colorMode')[0].href = 'css/mainLight.css';
+            $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleLight.min.css';
+            $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowLight.min.css';
+
+            // Save light mode setting
+            settings.set('colorMode', 'light');
+            settings.saveSync();
+        } else {
+            // Dark
+            $('#colorMode')[0].href= 'css/mainDark.css';
+            $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleDark.min.css';
+            $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowDark.min.css';
+
+            // Save dark mode setting
+            settings.set('colorMode', 'dark');
+            settings.saveSync();
+        }
+    });
+
     $('#settings-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
@@ -254,6 +278,9 @@ exports.tooltipFunctionReady = () => {
         (this prevents the user having unsaved settings displayed, which is confusing)
     */
 
+    // Color mode
+    $('#settings-color-mode').val(settings.get('colorMode'));
+
     // Username
     $('#settings-username').html(globals.myUsername);
 
@@ -261,7 +288,7 @@ exports.tooltipFunctionReady = () => {
     const shortenedPath = settings.get('logFilePath').substring(0, 24);
     $('#settings-log-file-location').html(`<code>${shortenedPath}...</code>`);
 
-    // Loanguage
+    // Language
     $('#settings-language').val(settings.get('language'));
 
     // Volume

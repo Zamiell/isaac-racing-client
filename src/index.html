@@ -11,9 +11,9 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-        <link rel="stylesheet" href="css/tooltipster.bundle.min.css" />
-        <link rel="stylesheet" href="css/tooltipster-sideTip-shadow.min.css" />
-        <link rel="stylesheet" href="css/main.css" />
+        <link id="colorModeToolBundle" rel="stylesheet" href="css/tooltipster.bundleLight.min.css" />
+        <link id="colorModeToolShadow" rel="stylesheet" href="css/tooltipster-sideTip-shadowLight.min.css" />
+        <link id="colorMode" rel="stylesheet" href="css/mainLight.css" />
         <title>Racing+</title>
 
         <!-- jQuery workaround for Electron -->
@@ -233,6 +233,19 @@
                                 -->
                             </ul>
                         </center>
+
+                        <div class="padding2"></div>
+
+                        <!-- Change the color mode from dark to light using a drop down menu -->
+                        <center>
+                            <ul id="register-color-mode" class="actions">
+                                <li id="register-color-light" class="selected-color">Light</li>
+                                <li>|</li>
+                                <li id="register-color-dark" class="unselected-color">Dark</li>
+                            </ul>
+                        </center>
+
+
                     </section>
                 </div><!-- register -->
 
@@ -810,6 +823,22 @@
                                             <option value="it" class="hidden">Italiano</option><!-- Unhide when the translation is complete -->
                                             <option value="es" class="hidden">Español</option><!-- Unhide when the translation is complete -->
                                             <option value="ru" class="hidden">Русский</option><!-- Unhide when the translation is complete -->
+                                        </select>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row uniform 50%">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li><span lang="en">Color Mode</span>:</li>
+                                <li>
+                                    <div class="select-wrapper">
+                                        <select id="settings-color-mode">
+                                            <option value="light">Light</option>
+                                            <option value="dark">Dark</option>
                                         </select>
                                     </div>
                                 </li>

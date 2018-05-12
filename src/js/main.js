@@ -171,7 +171,19 @@ $(document).ready(() => {
     if (globals.initError !== null) {
         misc.errorShow(globals.initError);
     }
+
+    // Load the color mode the client was last in from settings.json
+    if (settings.get('colorMode') === 'light') {
+        $('#colorMode')[0].href = 'css/mainLight.css';
+        $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleLight.min.css';
+        $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowLight.min.css';
+    } else {
+        $('#colorMode')[0].href = 'css/mainDark.css';
+        $('#colorModeToolBundle')[0].href =  'css/tooltipster.bundleDark.min.css';
+        $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowDark.min.css';
+    }
 });
+
 
 /*
     We can't use the "misc.errorShow()" function yet for the following initialization-related stuff because the document is not ready
