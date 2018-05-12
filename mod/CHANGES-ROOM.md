@@ -23,35 +23,26 @@ Firstly, some rooms were purely changed for balance (racing) reasons. Rooms that
 
 ### Devil Room Rebalancing
 
-* No-item rooms have been changed to have 1 item.
-* All 1 item rooms have an extra reward.
-* The pedestals from the 3 and 4 item rooms have been redistributed to the other rooms.
+* The amount of item pedestals is both more consistent and more numerous.
 * All enemies are removed.
+* There are more hazards.
+* It is no longer possible to get heart drops from fires.
+* All rooms with 1 item pedestal have an additional reward:
+  * #16: 4 bombs
+  * #4: ? card
+  * #7: black rune
+  * #11: Devil Beggar
+* All rooms with 2 item pedestals have no extra rewards.
 * Rooms without 4 exits have been changed to have 4 exits.
-* Rooms without weight of 1.0 have been changed to have weight 1.0.
-
-The changed Devil Rooms are as follows:
-* #5 (3 red chests)
-* #10 (2 items and 1 Devil Beggar)
-* #11 (2 items and 2 Nulls)
-* #13 (1 item and 1 Mom's Hand)
-* #14 (2 black hearts and 1 Imp)
-* #15 (1 item, vertical narrow room)
-* #16 (3 Devil Beggar)
-* #17 (4 items)
-* #18 (5 red chests)
+* Some rooms have custom weight.
 
 ### Angel Room Rebalancing
 
-* No-item rooms have been changed to have 1 item.
-* All 1 item rooms now have 2 statues. Extra statues are removed from the 2 item rooms.
+* The amount of item pedestals is both more consistent and more numerous.
+* All rooms with 1 item pedestal have 2 Angel Statues.
+* All rooms with 2 item pedestals have 1 Angel Statue.
 * Rooms without 4 exits have been changed to have 4 exits.
 * Rooms without weight of 1.0 have been changed to have weight 1.0.
-
-The changes Angel Rooms are as follows:
-* #3 (1 soul heart and 4 eternal hearts)
-* #9 (2 items, vertical narrow room)
-* #14 (2 items and 1 soul heart)
 
 <br />
 
@@ -338,7 +329,6 @@ On one room, [Edmund forgot to implement entity stacking](http://bindingofisaac.
 
 The changed rooms are as follows:
 * Caves/Flooded: #267
-* Super Gluttony: #2112
 
 <br />
 

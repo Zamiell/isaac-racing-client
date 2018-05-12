@@ -210,6 +210,11 @@ function RPPostUpdate:CheckHauntSpeedup()
           Isaac.DebugString("Found the second Lil' Haunt to detach at index: " .. tostring(entity.Index))
         end
         local npc = entity:ToNPC()
+        if npc == nil then
+          Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
+                            " was not able to be converted to an NPC.")
+          return
+        end
         npc.State = NpcState.STATE_MOVE -- 4
         -- (doing this will detach them)
 

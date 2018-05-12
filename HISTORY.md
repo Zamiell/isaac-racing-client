@@ -2,6 +2,7 @@
 
 ### *v0.19.2* - May 12th, 2018
 
+* The Racing+ client now has a "dark mode" theme. You can enable it in the settings. Thanks to SapphireHX for coding this.
 * Removed heart drop pickups in Angel Rooms #2, #7, #13, and #14. (It is still possible to get soul hearts from fires in Angel Rooms.)
 * The Devil Room with 3 items (#2) now has more Pitfalls.
 * Added some Blue Fires to Angel Room #3 to make it unique.

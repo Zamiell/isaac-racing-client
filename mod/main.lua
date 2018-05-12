@@ -25,7 +25,7 @@ POST-FLIP ACTIONS:
     The Chest - #20040, #30040
     Dark Room - #20012, #30012
 4) Un-flip some Mega Maw rooms:
-    The Chest - #20269, #20039, #30269, #30039
+    The Chest - #20039, #30039, #20269, #30269
     Dark Room - #20011, #30011
 
 --]]
@@ -51,6 +51,7 @@ local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callba
 local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
 local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
+local RPPreRoomEntitySpawn  = require("src/rppreroomentityspawn") -- The PreRoomEntitySpawn callback (71)
 local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
 local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
@@ -89,71 +90,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC275, EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPC302, EntityType.ENTITY_STONEY) -- 302
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC411, EntityType.ENTITY_BIG_HORN) -- 411
 
--- MC_PRE_ROOM_ENTITY_SPAWN
--- We want the player to always be able to take an item in the Basement 1 Treasure Room without spending a bomb
--- or being forced to walk on spikes
-function RacingPlus:Test(type, variant, subType, gridIndex, seed)
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local roomDesc = level:GetCurrentRoomDesc()
-  local roomVariant = roomDesc.Data.Variant
-  local room = game:GetRoom()
-  local roomType = room:GetType()
-
-  if stage ~= 1 then
-    return
-  end
-
-  if roomType ~= RoomType.ROOM_TREASURE then -- 4
-    return
-  end
-
-  if roomVariant == 12 then
-    -- Item surrounded by 3 rocks and 1 spike
-    local rocks = {66, 68, 82}
-    for i, rockIndex in ipairs(rocks) do
-      if rockIndex == gridIndex then
-        return {1930, 0} -- Spikes
-      end
-    end
-
-  elseif roomVariant == 19 then
-    -- Left item surrounded by rocks
-    local rocksReplaced = {49, 63, 65, 79}
-    for i, rockIndex in ipairs(rocksReplaced) do
-      if rockIndex == gridIndex then
-        return {1930, 0} -- Spikes
-      end
-    end
-    local rocksDeleted = {20, 47, 48, 62, 77, 78, 82, 95, 109}
-    for i, rockIndex in ipairs(rocksDeleted) do
-      if rockIndex == gridIndex then
-        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
-      end
-    end
-
-  elseif roomVariant == 21 then
-    -- Left item surrounded by spikes
-    local spikes = {48, 50, 78, 80}
-    for i, spikeIndex in ipairs(spikes) do
-      if spikeIndex == gridIndex then
-        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
-      end
-    end
-
-  elseif roomVariant == 22 then
-    -- Left item surrounded by pots/mushrooms/skulls
-    local pots = {49, 63, 65, 79}
-    for i, potIndex in ipairs(pots) do
-      if potIndex == gridIndex then
-        return {1930, 0} -- Spikes
-      end
-    end
-  end
-end
-
 -- Define miscellaneous callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           RPPostUpdate.Main) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           RPPostRender.Main) -- 2
@@ -171,7 +107,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RacingPlus.Test) -- 71
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RPPreRoomEntitySpawn.Main) -- 71
 
 -- Define pre-use item callback (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper,

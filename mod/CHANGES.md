@@ -46,9 +46,9 @@ In terms of what to change about the game, the mod has several goals, and attemp
 
 All curses are automatically disabled.
 
-### 3) Devil Room & Angel Room Changes
+### 3) Devil Room & Angel Room Rebalancing
 
-Devil Rooms and Angel Rooms without item pedestals in them have been removed.
+Since Devil Rooms and Angel Rooms are the most skill-based component of the game, their rewards have been slightly rebalanced.
 
 ### 4) Wrath of the Lamb Style Room Clear
 
