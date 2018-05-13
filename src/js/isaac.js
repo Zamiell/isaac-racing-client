@@ -54,7 +54,7 @@ exports.start = () => {
             }
         } else {
             // Copy over the default file
-            // (this should never occur since fresh save.dat files are delivered with every patch, but handle it just in case)
+            // (this should only occur if they have a freshly downloaded mod and have not run the game yet)
             try {
                 // "fs.copyFileSync" is only in Node 8.5.0 and Electron isn't on that version yet
                 // fs.copyFileSync(defaultSaveDatFile, saveDatFile);

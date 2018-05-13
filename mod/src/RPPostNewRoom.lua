@@ -609,6 +609,7 @@ function RPPostNewRoom:RaceStart()
   end
   local room = game:GetRoom()
   local sfx = SFXManager()
+  local player = game:GetPlayer(0)
 
   -- Set up the "Race Room"
   if gameFrameCount ~= 0 or
@@ -622,10 +623,13 @@ function RPPostNewRoom:RaceStart()
   -- Stop the boss room sound effect
   sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
 
-  -- We want to trap the player in the room,
-  -- but we can't make a room with no doors because then the "goto" command would crash the game,
-  -- so we have one door at the bottom
-  room:RemoveDoor(3) -- The bottom door is always 3
+  -- We want to trap the player in the room, so delete all 4 doors
+  for i = 0, 3 do
+    room:RemoveDoor(i)
+  end
+
+  -- Put the player next to the bottom door
+  player.Position = Vector(320, 400)
 
   -- Spawn two Gaping Maws (235.0)
   game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, RPGlobals:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)

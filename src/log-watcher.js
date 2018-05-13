@@ -146,12 +146,26 @@ const parseLine = (line) => {
     } else if (line.startsWith('Lua Debug: Race validation succeeded.')) {
         // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
         process.send('Race validation succeeded.');
-    } else if (line.startsWith('Lua Debug: New order: ')) {
-        const m = line.match(/Lua Debug: New order: {(.+)}/);
+    } else if (line.startsWith('Lua Debug: New order9: ')) {
+        const m = line.match(/Lua Debug: New order9: {(.+)}/);
         if (m) {
-            process.send(`New order: [${m[1]}]`);
+            process.send(`New order9: [${m[1]}]`);
         } else {
-            process.send('error: Failed to parse the speedrun order from the log.');
+            process.send('error: Failed to parse the speedrun order9 from the log.');
+        }
+    } else if (line.startsWith('Lua Debug: New order14: ')) {
+        const m = line.match(/Lua Debug: New order14: {(.+)}/);
+        if (m) {
+            process.send(`New order14: [${m[1]}]`);
+        } else {
+            process.send('error: Failed to parse the speedrun order14 from the log.');
+        }
+    } else if (line.startsWith('Lua Debug: New order7: ')) {
+        const m = line.match(/Lua Debug: New order7: {(.+)}/);
+        if (m) {
+            process.send(`New order7: [${m[1]}]`);
+        } else {
+            process.send('error: Failed to parse the speedrun order7 from the log.');
         }
     } else if (line.startsWith('Lua Debug: New drop hotkey: ')) {
         const m = line.match(/Lua Debug: New drop hotkey: (.+)/);

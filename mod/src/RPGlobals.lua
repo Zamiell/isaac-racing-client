@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.4"
+RPGlobals.version = "v0.19.5"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -219,11 +219,12 @@ function RPGlobals:InitRun()
   RPGlobals.run.seededDeath = {
     state = 0,
     -- 0 is not dead, 1 is during the death animation, 2 is during the AppearVanilla animation, 3 is during the debuff
-    pos      = Vector(0, 0),
-    time     = 0,
-    items    = {},
-    charge   = 0,
-    dealTime = Isaac.GetTime(),
+    pos             = Vector(0, 0),
+    time            = 0,
+    items           = {},
+    transformations = {},
+    charge          = 0,
+    dealTime        = Isaac.GetTime(),
   }
 end
 

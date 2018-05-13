@@ -116,12 +116,6 @@ if not ARGS.skipmod:
     if ARGS.logo:
         sys.exit()
 
-    # Fill the "save.dat" file with all default values
-    SAVE_DAT_DEFAULTS = os.path.join(MOD_DIR, 'save-defaults.dat')
-    for i in range(1, 4): # This will go from 1 to 3
-        save_dat = os.path.join(MOD_DIR, 'save' + str(i) + '.dat')
-        shutil.copyfile(SAVE_DAT_DEFAULTS, save_dat)
-
     # Check to see if we had any floor STBs in testing mode
     ROOMS_DIR = os.path.join(MOD_DIR, 'resources', 'rooms')
     for file_name in os.listdir(ROOMS_DIR):
@@ -134,7 +128,7 @@ if not ARGS.skipmod:
     DISABLE_IT_PATH = os.path.join(MOD_DIR, 'disable.it')
     try:
         if os.path.exists(DISABLE_IT_PATH):
-            os.unlink(DISABLE_IT_PATH)
+            os.remove(DISABLE_IT_PATH)
     except Exception as err:
         error('Failed to remove the "' + DISABLE_IT_PATH + '" file:', err)
 
@@ -163,6 +157,13 @@ if not ARGS.skipmod:
         # By default, the JSON will be dumped in a random order, so we use "sort_keys" to make it alphabetical
         json.dump(HASHES, file_pointer, indent=4, sort_keys=True)
 
+    # Fill the "save.dat" file with all default values
+    # (we no longer have to bother with this, since the save.dat files are not copied to the official repo)
+    #SAVE_DAT_DEFAULTS = os.path.join(MOD_DIR, 'save-defaults.dat')
+    #for i in range(1, 4): # This will go from 1 to 3
+    #    save_dat = os.path.join(MOD_DIR, 'save' + str(i) + '.dat')
+    #    shutil.copyfile(SAVE_DAT_DEFAULTS, save_dat)
+
     # Copy the mod
     MOD_DIR2 = 'mod'
     if os.path.exists(MOD_DIR2):
@@ -176,6 +177,11 @@ if not ARGS.skipmod:
     except Exception as err:
         error('Failed to copy the "' + MOD_DIR + '" directory:', err)
     print('Copied the mod.')
+
+    # Delete the 3 "save.dat" files, since if they are included, it will overwrite the existing user's settings
+    for i in range(1, 4): # This will go from 1 to 3
+        save_dat = os.path.join(MOD_DIR2, 'save' + str(i) + '.dat')
+        os.remove(save_dat)
 
 # Exit if we are only supposed to be doing work on the mod
 if ARGS.mod:

@@ -179,7 +179,7 @@ $(document).ready(() => {
         $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowLight.min.css';
     } else {
         $('#colorMode')[0].href = 'css/mainDark.css';
-        $('#colorModeToolBundle')[0].href =  'css/tooltipster.bundleDark.min.css';
+        $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleDark.min.css';
         $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowDark.min.css';
     }
 });

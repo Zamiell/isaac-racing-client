@@ -851,7 +851,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 9 characters
           RPGlobals.race.order9 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New order9: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -877,7 +877,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 14 characters
           RPGlobals.race.order14 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New order14: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -903,7 +903,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 characters
           RPGlobals.race.order7 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -929,7 +929,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 characters
           RPGlobals.race.order7 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -955,7 +955,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 characters
           RPGlobals.race.order7 = RPSpeedrun.chooseOrder
           RPSaveDat:Save()
-          Isaac.DebugString("New order: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
           RPSpeedrun:RemoveAllRoomButtons2()
           return
         end
@@ -980,7 +980,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           -- We have finished choosing our 7 items
           RPGlobals.race.order9 = RPSpeedrun.chooseOrder2
           RPSaveDat:Save()
-          Isaac.DebugString("New order2: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder2))
+          Isaac.DebugString("New order9: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder2))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 

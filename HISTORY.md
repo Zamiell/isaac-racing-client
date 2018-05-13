@@ -1,8 +1,16 @@
 # Racing+ Version History and News
 
+### *v0.19.5* - May 13th, 2018
+
+* Racing+ will no longer erase your character order and custom hotkeys after every patch.
+* Fixed the bug where having the client open would mess up the "Choose Char Order" custom challenge.
+* Removed one row of Pitalls on Devil room #2. (Thanks StoneAgeMarcus)
+* Fixed the bug where it was possible to get an empty boss room on Basement 1 or Basement 2. (Thanks AshDown)
+* Fixed the bug where doors would appear in the Pre-Race Room. (Thanks Greninja_San)
+
 ### *v0.19.2* - May 12th, 2018
 
-* The Racing+ client now has a "dark mode" theme. You can enable it in the settings. Thanks to SapphireHX for coding this.
+* The client now has a "dark mode" theme. You can enable it in the settings. Thanks to SapphireHX for coding this.
 * Removed heart drop pickups in Angel Rooms #2, #7, #13, and #14. (It is still possible to get soul hearts from fires in Angel Rooms.)
 * The Devil Room with 3 items (#2) now has more Pitfalls.
 * Added some Blue Fires to Angel Room #3 to make it unique.
@@ -42,7 +50,7 @@ Mod Changes:
 ### *v0.19.0* - May 8th, 2018
 
 * The client now has the option to password protect a race. Thanks to FineWolf for coding this.
-* Racing+ room fixes are now in the game again. (Duality, unavoidable damage, etc.)
+* All of the room fixes are now in the game again. (Duality, unavoidable damage, etc.)
 * Rooms now have a chance to be flipped.
 * Both narrow Pride rooms are removed.
 * Fixed the bug where Book of Sin would spawn a pickup on top of you. (Thanks thisguyisbarry)
@@ -59,7 +67,6 @@ Mod Changes:
 
 ### *v0.18.10* - May 3rd, 2018
 
-* Removed the custom handling for the champion Scolex (since it was fixed in the vanilla game).
 * Fixed the (vanilla) bug where Flat Stone was not in the Treasure Room item pool. (Thanks StoneAgeMarcus)
 * Fixed the bug where Samael would spawn as the Forgotten in R+7 season 2. (Thanks Cyber_1)
 * Fixed the bug where the Strength card would not work properly with fast-travel. (Thanks Blumpkin Idaho)
@@ -67,7 +74,7 @@ Mod Changes:
 
 ### *v0.18.9* - May 2nd, 2018
 
-* The Dark Room will now have 4 Golden Chests instead of 4 Red Chests. Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes. (Thanks Cyber_1)
+* The Dark Room will now have 4 Golden Chests instead of 4 Red Chests. Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the changes. (Thanks Cyber_1)
 * Fixed some Devil and Angel rooms incorrectly having vanilla weight values instead of 1.0. (Thanks CrafterLynx)
 
 ### *v0.18.8* - May 2nd, 2018
@@ -88,7 +95,7 @@ Mod Changes:
 ### *v0.18.5* - May 1st, 2018
 
 * Devil Rooms and Angel Rooms are now rebalanced. See the following spreadsheet for more information: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
-* Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the Racing+ changes.
+* Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the room changes.
 * In R+7 S4, on the Kamikaze build, Kamikaze will now start in the first slot instead of the D6. (Thanks thisguyisbarry)
 * Fixed the bug where Isaac would start with the Sacrificial Alter instead of the D6 in ranked solo races. Please contact Zamiel if you want a bugged race deleted from the database. (Thanks elgirs)
 
@@ -99,7 +106,7 @@ Mod Changes:
 
 ### *v0.18.2* - April 30th, 2018
 
-* You can now choose the new character for races in the Racing+ client.
+* You can now choose the new character for races in the client.
 * Fixed the bug where the "Change Char Order" custom challenge was not working. (The__J0ker)
 
 ### *v0.18.0* - April 30th, 2018
@@ -214,7 +221,7 @@ Mod Changes:
 
 ### *v0.16.2* - March 30th, 2018
 
-* The Racing+ client will now work on macOS again. (Thanks glyndsuresight)
+* The client will now work on macOS again. (Thanks glyndsuresight)
 * Fixed the bug where Door Stop and Extension Cord were never selected for diversity races.
 * In diversity races, Blood Rights is now removed from the Treasure Room pool if you start with Isaac's Heart.
 * In diversity races, Isaac's Heart is now removed from the Treasure Room pool if you start with Blood Rights.
@@ -237,7 +244,7 @@ Client:
 
 ### *v0.16.0* - March 18th, 2018
 
-* The Unseeded Ranked Solo Season 1 has concluded. Congradulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the Racing+ client was a little wonky until v0.15.0 (February 11th).
+* The Unseeded Ranked Solo Season 1 has concluded. Congradulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the client was a little wonky until v0.15.0 (February 11th).
 * Season 2 has now started! The leaderboard has been completely reset. In Season 2, Judas will now start with the Schoolbag, but the category is otherwise the same.
 * You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag-switch.
   * If you do not have a binding set for fast-drop, the fast-drop feature will not function at all.
@@ -246,11 +253,11 @@ Client:
 ### *v0.15.6* - March 18th, 2018
 
 * Fixed the "Cannot read property 'replace' of undefined" bug. (Thanks AshDown and Greninja_San)
-* Fixed another bug that was causing Racing+ to complain that the mod was corrupt when it really was not. (Thanks Gamonymous and Shigan)
+* Fixed another bug that was causing the client to complain that the mod was corrupt when it really was not. (Thanks Gamonymous and Shigan)
 
 ### *v0.15.5* - March 17th, 2018
 
-* Fixed the bug where the Racing+ client would complain that the mod was corrupt under certain conditions when it really was not. (Thanks Gamonymous)
+* Fixed the bug where the client would complain that the mod was corrupt under certain conditions when it really was not. (Thanks Gamonymous)
 
 ### *v0.15.4* - March 11th, 2018
 
@@ -272,7 +279,7 @@ Client:
 ### *v0.15.1* - February 13th, 2018
 
 * All bosses are now faded upon playing their death animation. (This is more consistent than the previous implementation.)
-* The Racing+ timing system now uses in-game time. (Server time, client time, and time offsets are no longer used.) This should fix the bug where the time reported by the Racing+ client was different than the one reported by the mod.
+* The Racing+ timing system now uses in-game time. (Server time, client time, and time offsets are no longer used.) This should fix the bug where the time reported by the client was different than the one reported by the mod.
 
 ### *v0.15.0* - February 11th, 2018
 
@@ -286,7 +293,7 @@ Client:
 
 ### *v0.14.27* - December 29th, 2017
 
-* Racing+ will now work with the True Co-op mod. (Thanks BMZ_Loop)
+* The mod will now work with the True Co-op mod. (Thanks BMZ_Loop)
 
 ### *v0.14.26* - December 27th, 2017
 
@@ -310,10 +317,10 @@ Client:
 * Isaac is now feeling festive. Merry Christmas!
 * The website is currently being rewritten to support the new leaderboards. Currently, it is broken, but eventually there will be 6 different leaderboards.
 * The new death mechanic has been implemented for seeded races, but only if you have "RPGlobals.debug = true" in the "src/RPGlobals.lua" file. Feel free to test it and provide feedback before it is implemented by default.
-* Fixed the bug where the "Items" column in the Racing+ client would show a number instead of the starting item.
+* Fixed the bug where the "Items" column in the client would show a number instead of the starting item.
 * Fixed the bug where having the client open would mess up the "Change Char Order" custom challenge. (Thanks molfried)
-* Fixed the bug where Racing+ would close your game in the middle of a run on potato computers. (Thanks Krakenos)
-* Fixed the bug where the Racing+ client would fail to fix a corrupted mod when the directory did not exist. (Thanks Astraii)
+* Fixed the bug where the client would close your game in the middle of a run on potato computers. (Thanks Krakenos)
+* Fixed the bug where the client would fail to fix a corrupted mod when the directory did not exist. (Thanks Astraii)
 * Fixed the bug where the ranked/unranked icon would show up in the lobby for multiplayer races.
 * Fixed the bug on the french version of the client where "En Course" would wrap to a second line.
 
@@ -327,7 +334,7 @@ Client:
 
 * The macOS version should actually work now.
 * All multiplayer races (past and present) are now considered ranked for the purposes of calculating a leaderboard. There are now 3 multiplayer leaderboards for seeded, unseeded, and diversity. (Thanks SlashSP)
-* Racing+ will now automatically detect and kill and Flaming Hoppers that are softlocking the game. (Thanks SlashSP)
+* The mod will now automatically detect and kill and Flaming Hoppers that are softlocking the game. (Thanks SlashSP)
 * Fixed the bug where the diversity leaderboard was not displaying the correct TrueSkill values. The rankings now take into account the Mu and Sigma values correctly, meaning that players who have only played a small number of races will no longer be as high on the leaderboard as they were before. (Thanks Krakenos)
 * Fixed the bug where Jr. Fetus could spawn a bunch of extra bombs under certain conditions. (Thanks CrafterLynx)
 * Fixed the bug where Teratoma and Fistula were not properly killed after It Lives! (Thanks Dea1h)
@@ -339,7 +346,7 @@ Client:
 
 ### *v0.14.9* - December 3rd, 2017
 
-* Racing+ should now work on macOS.
+* The client should now work on macOS.
 * Using the "~" button to open the console will no longer work when you are currently in a race.
 
 ### *v0.14.8* - November 28th, 2017
@@ -495,7 +502,7 @@ Mod:
 
 Client:
 
-* Fixed the bug where the client would not communicate to the Racing+ mod under certain conditions. (Thanks Lobsterosity, Shigan, and Nanahachiyasu)
+* Fixed the bug where the client would not communicate to the mod under certain conditions. (Thanks Lobsterosity, Shigan, and Nanahachiyasu)
 * Fixed the bug where the Technology Zero build was not being included in the "Random (all)" build selection. (Thanks Shigan)
 
 Website:
@@ -527,9 +534,9 @@ Item tracker:
 ### *v0.12.5* - October 15th, 2017
 
 * The LiveSplit AutoSplitter should now work with the latest patch. (Thanks blcd, Sillypears, NorBro86, and Hyphenated)
-* Fixed the bug where the Racing+ mod would not work on the first race if you used save slot 2 or save slot 3. (Thanks 910dan)
+* Fixed the bug where the mod would not work on the first race if you used save slot 2 or save slot 3. (Thanks 910dan)
 * Fixed the bug where the tenths digit of the timer was inaccurate under certain conditions. (Thanks TheMoonSage and PassionDrama)
-* Fixed the bug where you could not do R+9 / R+14 / R+7 races using the Racing+ client. (Thanks Yama)
+* Fixed the bug where you could not do R+9 / R+14 / R+7 races using the client. (Thanks Yama)
 
 ### *v0.12.3* - October 15th, 2017
 
@@ -549,8 +556,8 @@ Item tracker:
 ### *v0.12.0* - October 10th, 2017
 
 * Racing+ will now work with the latest patch (Booster Pack #4). The new Booster Pack rooms are not yet integrated. Diversity races won't have the new items yet.
-* Racing+ no longer fixes the champion Scolex, since the bug was fixed in the vanilla game.
-* Racing+ no longer has a custom Broken Modem sprite, since they added a good one to the vanilla game.
+* The mod no longer fixes the champion Scolex, since the bug was fixed in the vanilla game.
+* The mod no longer has a custom Broken Modem sprite, since they added a good one to the vanilla game.
 * Fixed the bug where holding R to go back to the first character on a custom speedun challenge would not reset LiveSplit.
 * You will now get a warning if you try to perform an inproperly formatted command on the client.
 * The valid client commands are now listed on the website.
@@ -558,7 +565,7 @@ Item tracker:
 ### *v0.11.11* - October 1st, 2017
 
 * Fixed the bug where the doors would open prematurely with Rag Man's Raglings under certain conditions. (Thanks thereisnofuture and FezzesOrBowties)
-* Fixed the bug where the Racing+ client told you that the mod was corrupt under certain conditions. (Thanks thereisnofuture)
+* Fixed the bug where the client told you that the mod was corrupt under certain conditions. (Thanks thereisnofuture)
 
 ### *v0.11.10* - September 30th, 2017
 
@@ -583,9 +590,9 @@ Gameplay:
 
 Client:
 
-* The Racing+ client now uses a much faster auto update system; instead of having to download everything, you will only have to download the changed files.
-* Fixed the bug where the Racing+ client would think your mod was corrupted if it was disabled. (Thanks thereisnofuture)
-* Fixed the bug where Racing+ would restart the run if your internet died in the middle of a race.
+* The client now uses a much faster auto update system; instead of having to download everything, you will only have to download the changed files.
+* Fixed the bug where the client would think your mod was corrupted if it was disabled. (Thanks thereisnofuture)
+* Fixed the bug where the client would restart the run if your internet died in the middle of a race.
 
 ### *v0.11.4* - September 23rd, 2017
 
@@ -696,7 +703,7 @@ Client/Server:
 
 ### *v0.8.15* - August 3rd, 2017
 
-* The Racing+ client installer will now work on 32-bit systems. (Thanks missingyes)
+* The client installer will now work on 32-bit systems. (Thanks missingyes)
 * Fixed the bug where you could take both The Polaroid and The Negative if both spawned. (Thanks Krakenos and CrafterLynx)
 
 ### *v0.8.14* - August 3rd, 2017
@@ -974,12 +981,12 @@ Changes:
 
 ### *v0.5.25* - May 14th, 2017
 
-* The new Angel Room changes from vanilla are now in Racing+.
+* The new Angel Room changes from vanilla are now itegrated into the mod.
 * The fart-reroll system has been deleted; items will now automatically be removed from pools thanks to new API stuff in the last patch. (In diversity races, Incubus, Crown of Light, and Sacred Heart will still have the special fart-reroll.)
 * You can now pick up items immediately after performing a Schoolbag switch thanks to new API stuff in the last patch.
 * Diversity races will now include Booster Pack #2 items.
-* Racing+ no longer has a custom Crystal Ball since it is now seeded in the base game.
-* Racing+ no longer modifies Portals since they are now seeded in the base game.
+* The mod no longer has a custom Crystal Ball since it is now seeded in the base game.
+* The mod no longer modifies Portals since they are now seeded in the base game.
 * Champions other than Pulsing Green and Light White are no longer on the fast-clear exception list thanks to new API stuff in the last patch.
 * The Schoolbag will now function properly with the Booster Pack #2 items.
 * The 2nd D6 has been replaced with the Moving Box in the Pageant Boy ruleset.
@@ -1233,8 +1240,8 @@ Changes:
 * The racing system was rewritten such that you should never have to go back to the menu in between races anymore (unless you need to change your character). You will now start the race in an isolated room, and all races will start by resetting the game.
 * Seeded races will automatically start you on the correct seed; you do not have to type it in anymore.
 * Pressing the reset key will now instantly reset the game. (This change is experimental.)
-* Racing+ now validates that you are not on a challenge before letting you ready up.
-* Racing+ now has some new pre-race graphics, including showing you the goal. (Thanks stoogebag)
+* The client now validates that you are not on a challenge before letting you ready up.
+* The mod now has some new pre-race graphics, including showing you the goal. (Thanks stoogebag)
 * The long and annoying fade out / fade in animation between floors has been replaced with something better. (Thanks PassionDrama for helping to test.)
 * The Schoolbag will now work properly with the new Booster Pack items. (Thanks meepmeep)
 * Diversity races that start with the new Booster Pack items will now work properly. (Thanks BMZ_Loop)
@@ -1375,7 +1382,7 @@ Changes:
 * The Soul Jar effects are now based on whether you hold the item (instead of being tied to the Magdalene character specifically). (Thanks Cyber_1)
 * The Schoolbag now works the same way as it does in Antibirth when you only have one active item. (Thanks Cyber_1)
 * Fixed the bug where the Schoolbag item would sometimes not appear when first starting a run. (Thanks Cyber_1)
-* The Racing+ mod will now work on Linux. (Thanks mithrandi)
+* The mod will now work on Linux. (Thanks mithrandi)
 * Fixed the bug where the AAA Battery did not work with the Schoolbag. (Thanks Dea1h)
 * Fixed the bug where the race timer would not appear. (Thanks Krakenos)
 * Fixed the bug where the format and goal tooltips in the client were wrong. (Thanks vertopolkaLF)
@@ -1511,7 +1518,7 @@ Changes:
 * Fixed the bug where some items that were supposed to be banned were not being fart-rolled. (Thanks BMZ_Loop)
 * Fixed the bug where the mod tried to load the "save.dat" file on every single frame. Now the mod should run much faster on potato computers.
 * Fixed the bug where PMs weren't working. (InvaderTim fixed this, so thanks to him)
-* Fixed the bug where emotes from Discord would look weird in the Racing+ lobby. (InvaderTim fixed this, so thanks to him)
+* Fixed the bug where emotes from Discord would look weird in the client lobby. (InvaderTim fixed this, so thanks to him)
 
 ### *v0.2.57* - March 2nd, 2017
 
@@ -1593,7 +1600,7 @@ Changes:
 * The new detection also fixes the bug where trying to skip cutscenes would damage you and/or kill you.
 * Solo races now start in 3 seconds instead of 10. If this seems too fast for you, remember that you can use the Alt+R hotkey to ready up while inside the game.
 * Fixed a bug where "Go!" would appear before the numbers in the countdown on potato computers.
-* Fixed a bug where race graphics would stay on the screen after you quit the Racing+ client.
+* Fixed a bug where race graphics would stay on the screen after you quit the client.
 
 ### *v0.2.44* - February 21st, 2017
 
@@ -1639,7 +1646,7 @@ Changes:
 
 ### *v0.2.36* - February 14th, 2017
 
-* Diversity races have been added to the Racing+ platform as the third race format.
+* Diversity races have been added to the Racing+ platform as a third race format.
 
 ### *v0.2.33* - February 13th, 2017
 
