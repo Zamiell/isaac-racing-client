@@ -121,25 +121,12 @@ $(document).ready(() => {
     // Determine if the color mode is switched from light to dark
     // The setting has to be saved on change, because the page is reloaded when the theme is chosen.
     $('#settings-color-mode').on('change', function() {
-        if ($(this).val() === 'light') {
-            // Light
-            $('#colorMode')[0].href = 'css/mainLight.css';
-            $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleLight.min.css';
-            $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowLight.min.css';
+        const colorMode = $(this).val() === 'light' ? 'light' : 'dark';
 
-            // Save light mode setting
-            settings.set('colorMode', 'light');
-            settings.saveSync();
-        } else {
-            // Dark
-            $('#colorMode')[0].href= 'css/mainDark.css';
-            $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleDark.min.css';
-            $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowDark.min.css';
-
-            // Save dark mode setting
-            settings.set('colorMode', 'dark');
-            settings.saveSync();
-        }
+        $('#dark-mode-theme')[0].disabled = (colorMode === 'light');
+        // Save light mode setting
+        settings.set('colorMode', colorMode);
+        settings.saveSync();
     });
 
     $('#settings-form').submit((event) => {
