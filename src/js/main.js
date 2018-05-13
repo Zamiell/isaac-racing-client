@@ -173,15 +173,7 @@ $(document).ready(() => {
     }
 
     // Load the color mode the client was last in from settings.json
-    if (settings.get('colorMode') === 'light') {
-        $('#colorMode')[0].href = 'css/mainLight.css';
-        $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleLight.min.css';
-        $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowLight.min.css';
-    } else {
-        $('#colorMode')[0].href = 'css/mainDark.css';
-        $('#colorModeToolBundle')[0].href = 'css/tooltipster.bundleDark.min.css';
-        $('#colorModeToolShadow')[0].href = 'css/tooltipster-sideTip-shadowDark.min.css';
-    }
+    $('#dark-mode-theme')[0].disabled = settings.get('colorMode') === 'light';
 });
 
 

@@ -1,0 +1,248 @@
+/* main.css overrides */
+
+/*Dark mode is made by using a small 50% transparent black box as the background image*/
+:root {
+    --main-bg-img: url('img/blackBackground.png');
+}
+
+blockquote, q {
+    background-image: var(--main-bg-img);
+}
+
+table {
+    background-image: var(--main-bg-img);
+}
+
+table tbody tr:nth-child(2n + 1) {
+    background-color: #5e5d5d;
+}
+
+table th {
+    color: #fff;
+}
+
+input, textarea {
+    background-image: var(--main-bg-img);
+}
+
+body, input, select, textarea {
+    color: #d3d3d3;
+}
+
+strong, b {
+    color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+}
+
+code {
+    background: #606060;
+}
+
+textarea:focus {
+    border-color: #4682b4;
+    box-shadow: 0 0 0 2px #4682b4;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+    background-image: var(--main-bg-img);
+    background-color: #606060;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #4682b4;
+    box-shadow: 0 0 0 2px #4682b4;
+}
+
+input[type="checkbox"]:focus + label:before,
+input[type="radio"]:focus + label:before {
+    border-color: #e89980;
+}
+
+.box {
+    background-color: transparent;
+    background-image: var(--main-bg-img);
+    box-shadow: none;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+.button {
+    background-image: var(--main-bg-img);
+}
+
+input[type="submit"].alt,
+input[type="reset"].alt,
+input[type="button"].alt,
+.button.alt {
+    color: #ffffff;
+    box-shadow: none;
+}
+
+
+input[type="checkbox"]:focus + label:before,
+input[type="radio"]:focus + label:before {
+    box-shadow: none;
+}
+
+#page-wrapper {
+    background-image: var(--main-bg-img);
+}
+
+body.landing #page-wrapper {
+    background-image: var(--main-bg-img);
+}
+
+#header-top {
+    background: #2e2e2e;
+    color: #ffffff;
+}
+
+#header {
+    background: #2e2e2e;
+    color: #ffffff;
+}
+
+#header input[type="submit"],
+#header input[type="reset"],
+#header input[type="button"],
+#header .button {
+    box-shadow: none;
+}
+
+.dropotron {
+    background: #464646;
+}
+
+#cta ::-webkit-input-placeholder {
+    color: rgba(255, 0, 255, 0.75) !important;
+}
+
+#cta :-moz-placeholder {
+    color: rgba(255, 0, 255, 0.75) !important;
+}
+
+#cta ::-moz-placeholder {
+    color: rgba(255, 0, 255, 0.75) !important;
+}
+
+#cta :-ms-input-placeholder {
+    color: rgba(255, 0, 255, 0.75) !important;
+}
+
+#cta .formerize-placeholder {
+    color: rgba(255, 0, 255, 0.75) !important;
+}
+
+.chat-box {
+    background-image: var(--main-bg-img);
+}
+
+.chat-server {
+    color: aqua;
+}
+
+.chat-discord {
+    color: aqua;
+}
+
+#lobby-current-races-box {
+    background-image: var(--main-bg-img);
+}
+
+#lobby-current-races-table > tbody > tr > td {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#new-race-tooltip {
+    background-color: #606060;
+}
+
+.new-race-radio-text {
+    color: #fff;
+}
+
+#new-race-format {
+    background: #3d3c3c;
+}
+
+#new-race-character {
+    background: #3d3c3c;
+}
+
+#new-race-goal {
+    background: #3d3c3c;
+}
+
+.checkbox-text {
+    color: white;
+}
+
+#settings-tooltip {
+    background-color: #606060;;
+}
+
+#settings-language {
+    background: #3d3c3c;
+}
+
+#settings-color-mode {
+    background: #3d3c3c;
+}
+
+#race-title-table > tbody > tr > td {
+    background-image: var(--main-bg-img);
+}
+
+#race-ready-checkbox-text {
+    color: #ffffff;
+}
+
+#race-participants-table > tbody > tr > td {
+    background-image: var(--main-bg-img);
+}
+
+#race-chat-box {
+    background-image: var(--main-bg-img);
+}
+
+#race-chat-text {
+    color: #ffffff;
+}
+
+/** Tooltipster Dark **/
+.tooltipster-sidetip.tooltipster-bottom .tooltipster-arrow-background {
+    border-bottom-color: #464646;
+}
+
+.tooltipster-sidetip.tooltipster-left .tooltipster-arrow-background {
+    border-left-color: #464646;
+}
+
+.tooltipster-sidetip.tooltipster-right .tooltipster-arrow-background {
+    border-right-color: #464646;
+}
+
+.tooltipster-sidetip.tooltipster-top .tooltipster-arrow-background {
+    border-top-color: #464646;
+}
+
+.tooltipster-sidetip.tooltipster-shadow .tooltipster-box {
+    background: #606060;
+    box-shadow: none;
+}
+
+.tooltipster-sidetip.tooltipster-shadow .tooltipster-content {
+    color: white;
+}
