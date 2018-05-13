@@ -139,7 +139,7 @@ exports.raceDraw = (race) => {
     raceDiv += `<td id="lobby-current-races-${race.id}-name" class="lobby-current-races-name selectable">`;
 
     if (race.isPasswordProtected) {
-        raceDiv += '<i class="fa fa-lock"></i> ';
+        raceDiv += '<i class="fa fa-lock"></i>&ensp;';
     }
 
     if (race.name === '-') {
@@ -256,6 +256,8 @@ function raceDraw2(race) {
             content += '<span lang="en">Multiplayer</span><br />';
             if (globals.raceList[race.id].isPasswordProtected) {
                 content += '<span lang="en">This race is password protected.</span>';
+            } else {
+                content += '<span lang="en">Anyone can join this race.</span>';
             }
         }
         content += '</li>';

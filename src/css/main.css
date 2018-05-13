@@ -4183,6 +4183,13 @@
         justify-content: center;
     }
 
+    #new-race-password-no-password-icon > .fa,
+    #new-race-password-has-password-icon > .fa {
+        position: relative;
+        bottom: -0.3em;
+        left: 0.4em;
+    }
+
     #new-race-ranked-icon {
         -moz-transition: background-image 0.3s ease-in-out;
         -webkit-transition: background-image 0.3s ease-in-out;
