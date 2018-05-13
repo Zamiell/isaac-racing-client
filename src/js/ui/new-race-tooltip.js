@@ -102,6 +102,8 @@ $(document).ready(() => {
     $('#new-race-ranked-no').change(newRaceRankedChange);
     $('#new-race-ranked-yes').change(newRaceRankedChange);
 
+    $('#new-race-password').on('input', newRacePasswordChange);
+
     $('#new-race-format').change(newRaceFormatChange);
 
     // Add the options to the character dropdown
@@ -369,6 +371,17 @@ function newRaceRankedChange(event, fast = false) {
     }
 }
 
+function newRacePasswordChange(event, fast = false) {
+    const password = $('#new-race-password').val();
+    if (password === null || password === '') {
+        $('#new-race-password-no-password-icon').fadeIn((fast ? 0 : globals.fadeTime));
+        $('#new-race-password-has-password-icon').fadeOut((fast ? 0 : globals.fadeTime));
+    } else {
+        $('#new-race-password-no-password-icon').fadeOut((fast ? 0 : globals.fadeTime));
+        $('#new-race-password-has-password-icon').fadeIn((fast ? 0 : globals.fadeTime));
+    }
+}
+
 function newRaceFormatChange(event, fast = false) {
     // Change the displayed icon
     const newFormat = $('#new-race-format').val();
@@ -438,6 +451,7 @@ exports.tooltipFunctionReady = () => {
     if (typeof newRacePassword !== 'undefined' && newRacePassword !== null) {
         $('#new-race-password').val(newRacePassword);
     }
+    newRacePasswordChange(null, true);
 
     $(`#new-race-size-${settings.get('newRaceSize')}`).prop('checked', true);
     newRaceSizeChange(null, true);
