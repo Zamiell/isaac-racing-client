@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.19.6* - May 14th, 2018
+
+* Attempted to fix the bug where you could get an empty boss room. Still unsure as to why it is happening. (Thanks thisguyisbarry)
+* Fixed the client bug where entering the wrong password would prevent you from clicking on anything. (Thanks thereisnofuture and FineWolf)
+
 ### *v0.19.5* - May 13th, 2018
 
 * Racing+ will no longer erase your character order and custom hotkeys after every patch.

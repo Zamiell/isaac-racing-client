@@ -69,3 +69,11 @@ If you are on Ubuntu 17.04:
 * You might have to create a symbolic link for nodejs: `ln -s /usr/bin/nodejs /usr/bin/node`
 
 <br />
+
+
+
+Build (on Windows)
+------------------
+
+* `npm install --global --production windows-build-tools`
+* `C:\Python34\python.exe release.py`

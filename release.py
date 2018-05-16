@@ -165,11 +165,11 @@ if not ARGS.skipmod:
     #    shutil.copyfile(SAVE_DAT_DEFAULTS, save_dat)
 
     # Copy the mod
-    MOD_DIR2 = 'mod'
+    MOD_DIR2 = os.path.join(REPOSITORY_DIR, 'mod')
     if os.path.exists(MOD_DIR2):
         try:
-            # Used to use "shutil.rmtree" here, but it was unreliable
-            subprocess.call(['rm', '-rf', MOD_DIR2])
+            #shutil.rmtree(MOD_DIR2) # Constantly errors out with "The process cannot access to the file because it is being used by another process"
+            subprocess.call(['rm', '-rf', MOD_DIR2]) # Works on Windows if "GnuWinCoreutils-5.3.0.exe" is installed
         except Exception as err:
             error('Failed to remove the "' + MOD_DIR2 + '" directory:', err)
     try:
@@ -217,7 +217,7 @@ if ARGS.github:
     # Open the mod updater tool from Nicalis
     if not ARGS.skipmod:
         UPLOADER_PATH = 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\tools\\ModUploader\\ModUploader.exe'
-        subprocess.Popen([UPLOADER_PATH], cwd=MOD_DIR) # Popen will run it in the background
+        subprocess.Popen([UPLOADER_PATH], cwd=MOD_DIR2) # Popen will run it in the background
 
 # Close the program if it is running
 # (having it open can cause corrupted ASAR archives)

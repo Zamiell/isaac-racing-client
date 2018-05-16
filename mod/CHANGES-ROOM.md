@@ -426,7 +426,7 @@ Certain rooms in the game were probably meant to be symmetrical, but one entity 
 * Basement/Burning: #581
 * Caves/Flooded: #28, #120, #416, #541
 * Flooded: #939
-* Cathedral: #11, #12, #23, #41
+* Cathedral: #11, #12, #23, #41, #60
 * Monstro II: #1051
 * The Gate: #5042
 * Headless Horseman: #4050
