@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.19.8* - July 16th, 2018
+
+* Fixed the bug where some rooms with Rage Creeps had incorrect door assignment. (Thanks leo_ze_tron)
+
 ### *v0.19.7* - July 15th, 2018
 
 Mod changes:
