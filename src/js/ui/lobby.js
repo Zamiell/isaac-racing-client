@@ -231,7 +231,7 @@ function raceDraw2(race) {
                             const passwordInput = $('#password-input');
                             passwordInput.val('');
                             passwordInput.data('raceId', race.id);
-                            passwordInput.data('raceTitle', race.name+'');
+                            passwordInput.data('raceTitle', race.name);
                             $('#password-modal').fadeIn(globals.fadeTime);
                             passwordInput.focus();
                         });

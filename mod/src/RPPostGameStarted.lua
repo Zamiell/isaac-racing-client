@@ -726,26 +726,27 @@ function RPPostGameStarted:Pageant()
   local player = game:GetPlayer(0)
 
   -- Add the extra items
+  -- (the extra luck is handled in the EvaluateCache callback)
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-  RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
-  RPGlobals.run.schoolbag.charges = 6
+  RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_DADS_KEY -- 175
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) -- 175
+  RPGlobals.run.schoolbag.charges = 2
   RPSchoolbag.sprites.item = nil
   player:AddCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD, 0, false) -- 4
-  player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 246
-  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
-  player:AddCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON, 0, false) -- 458
-  -- The extra luck is handled in the EvaluateCache callback
-
-  -- Giving the player these items does not actually remove them from any pools,
-  -- so we have to expliticly add them to the ban list
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
+  player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 246
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 246
+  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  player:AddCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON, 0, false) -- 458
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BELLY_BUTTON) -- 458
+  player:AddCollectible(CollectibleType.COLLECTIBLE_CANCER, 0, false) -- 301
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_CANCER) -- 301
+  player:AddTrinket(TrinketType.TRINKET_CANCER) -- 39
+  itemPool:RemoveTrinket(TrinketType.TRINKET_CANCER) -- 39
 
-  Isaac.DebugString("Added pageant items.")
+  Isaac.DebugString("Added Pageant Boy ruleset items.")
 end
 
 function RPPostGameStarted:UnseededRankedSolo()

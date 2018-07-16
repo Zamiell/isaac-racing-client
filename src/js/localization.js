@@ -30,7 +30,11 @@ $(document).ready(() => {
     });
 
     // If the user is using a non-default language, change all the text on the page
-    localize(settings.get('language')); // We still call this if the language is English so that the links get initialized correctly
+    // (the above initialization is asynchronous, and we don't know when it will finish, so just wait a while before switching the language)
+    setTimeout(() => {
+        // We still call this if the language is English so that the links get initialized correctly
+        localize(settings.get('language'));
+    }, 500);
 });
 
 // Define the function for the languge changing links

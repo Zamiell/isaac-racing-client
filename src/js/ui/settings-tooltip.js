@@ -120,7 +120,7 @@ $(document).ready(() => {
 
     // Determine if the color mode is switched from light to dark
     // The setting has to be saved on change, because the page is reloaded when the theme is chosen.
-    $('#settings-color-mode').on('change', function() {
+    $('#settings-color-mode').on('change', () => {
         const colorMode = $(this).val() === 'light' ? 'light' : 'dark';
 
         $('#dark-mode-theme')[0].disabled = (colorMode === 'light');

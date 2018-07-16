@@ -704,6 +704,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
 
   -- Local variables
   local game = Game()
+  local player = game:GetPlayer(0)
 
   local buttonPos1 = RPGlobals:GridToPos(RPSpeedrun.buttons.R9S1.X, RPSpeedrun.buttons.R9S1.Y)
   local buttonPos2 = RPGlobals:GridToPos(RPSpeedrun.buttons.R14S1.X, RPSpeedrun.buttons.R14S1.Y)
@@ -977,6 +978,25 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder2[#RPSpeedrun.chooseOrder2 + 1] = RPSpeedrun.itemPosition7_4[i][1]
         if #RPSpeedrun.chooseOrder2 == 7 then
+          -- Check to see if they cheated
+          -- (it is possible to push two buttons at once in order to get two "big 4" items)
+          local numBig4Items = 0
+          for j = 1, #RPSpeedrun.chooseOrder2 do
+            local item = RPSpeedrun.chooseOrder2[j]
+            if item == 114 or
+               item == 395 or
+               item == 168 or
+               item == 149 then
+
+              numBig4Items = numBig4Items + 1
+            end
+          end
+          if numBig4Items > 1 then
+            player:Kill()
+            Isaac.DebugString("Cheating detected; killing the player.")
+            return
+          end
+
           -- We have finished choosing our 7 items
           RPGlobals.race.order9 = RPSpeedrun.chooseOrder2
           RPSaveDat:Save()

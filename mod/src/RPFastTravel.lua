@@ -95,7 +95,8 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     debugString = debugString .. "womb "
   end
   debugString = debugString .. "trapdoor in room " .. tostring(roomIndex) .. " at "
-  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. ")"
+  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. ") "
+  debugString = debugString .. "on frame " .. tostring(gameFrameCount)
   Isaac.DebugString(debugString)
 
   -- Remove the original entity
@@ -143,8 +144,10 @@ function RPFastTravel:ReplaceHeavenDoor(entity)
   }
 
   -- Log it
-  Isaac.DebugString("Replaced a beam of light in room " .. tostring(roomIndex) .. " at (" ..
-                    tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
+  local debugString = "Replaced a beam of light in room " .. tostring(roomIndex) .. " "
+  debugString = debugString .. " at (" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") "
+  debugString = debugString .. "on frame " .. tostring(gameFrameCount)
+  Isaac.DebugString(debugString)
 
   -- Remove the original entity
   entity:Remove()

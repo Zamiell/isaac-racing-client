@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.6"
+RPGlobals.version = "v0.19.7"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -156,7 +156,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
   RPGlobals.run.dualityCheckFrame    = 0
   RPGlobals.run.changeFartColor      = false
-  RPGlobals.run.theLambLockedPos     = nil -- Used to prevent unavoidable damage on The Lamb
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
   RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
   RPGlobals.run.spawningKrampusItem  = false -- Used for spawning Krampus items early

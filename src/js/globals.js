@@ -38,7 +38,7 @@ module.exports = {
     lastPM: null,
     lastRaceTitle: '',
     log: null,
-    lang: null, // The language switcher instance
+    lang: null, // The language switcher instance, set in "localization.js"
     modLoader: {
         status: 'none',
         myStatus: 'not ready',

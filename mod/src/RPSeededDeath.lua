@@ -45,6 +45,11 @@ function RPSeededDeath:PostRender()
       RPGlobals:RevivePlayer()
       RPGlobals.run.seededDeath.state = 1
       Isaac.DebugString("Seeded death (1/3).")
+
+      -- Drop all trinkets and pocket items
+      player:DropTrinket(room:FindFreePickupSpawnPosition(player.Position, 0, true), false)
+      player:DropPoketItem(0, room:FindFreePickupSpawnPosition(player.Position, 0, true))
+      player:DropPoketItem(1, room:FindFreePickupSpawnPosition(player.Position, 0, true))
     end
   end
 
@@ -146,8 +151,6 @@ function RPSeededDeath:DebuffOn()
   player:RemoveGoldenKey()
 
   -- Remove the items (and store them for later)
-  local backupItems = RPGlobals:TableClone(RPGlobals.run.seededDeath.items)
-  RPGlobals.run.seededDeath.items = {}
   RPGlobals.run.seededDeath.charge = player:GetActiveCharge()
   for i = 1, CollectibleType.NUM_COLLECTIBLES do
     local numItems = player:GetCollectibleNum(i)
@@ -165,11 +168,6 @@ function RPSeededDeath:DebuffOn()
     end
   end
   player:EvaluateItems()
-
-  -- We need to handle the case where we die a second time before getting our items back
-  if #RPGlobals.run.seededDeath.items == 0 then
-    RPGlobals.run.seededDeath.items = backupItems
-  end
 end
 
 function RPSeededDeath:DebuffOff()
@@ -186,6 +184,7 @@ function RPSeededDeath:DebuffOff()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
   local blackHearts = player:GetBlackHearts()
+  local boneHearts = player:GetBoneHearts()
   local bombs = player:GetNumBombs()
   local keys = player:GetNumKeys()
 
@@ -213,16 +212,25 @@ function RPSeededDeath:DebuffOff()
        itemID == CollectibleType.COLLECTIBLE_TAROT_CLOTH or -- 451
        itemID == CollectibleType.COLLECTIBLE_POLYDACTYLY or -- 454
        itemID == CollectibleType.COLLECTIBLE_DADS_LOST_COIN or -- 455
-       itemID == CollectibleType.COLLECTIBLE_BELLY_BUTTON then -- 458
+       itemID == CollectibleType.COLLECTIBLE_BELLY_BUTTON or -- 458
+       itemID == CollectibleType.COLLECTIBLE_MARBLES or -- 538
+       itemID == CollectibleType.COLLECTIBLE_MARROW or -- 541
+       itemID == CollectibleType.COLLECTIBLE_DIVORCE_PAPERS then -- 547
 
       deletePickups = true
     end
   end
+
+  -- Reset the items in the array
+  RPGlobals.run.seededDeath.items = {}
+
+  -- Set the charge to the way it was before the debuff was applied
   player:SetActiveCharge(RPGlobals.run.seededDeath.charge)
 
   -- Set the health to the way it was before the items were added
   player:AddMaxHearts(-24, true) -- Remove all hearts
   player:AddSoulHearts(-24)
+  player:AddBoneHearts(-24)
   player:AddMaxHearts(maxHearts, true)
   player:AddHearts(hearts)
   for i = 1, soulHearts do
@@ -234,6 +242,7 @@ function RPSeededDeath:DebuffOff()
       player:AddBlackHearts(1)
     end
   end
+  player:AddBoneHearts(boneHearts)
 
   -- Set the inventory to the way it was before the items were added
   player:AddBombs(-99)

@@ -171,10 +171,23 @@ function RPPostEntityKill:Entity78(entity)
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
+  -- For some reason, Mom's Heart / It Lives! will die twice in a row on two subsequent frames
+  -- (this does not happen on Hush)
+  -- We don't want to do anything if this is the first time it died
+  if stage ~= LevelStage.STAGE4_3 and -- 9
+     gameFrameCount - RPGlobals.run.itLivesKillFrame > 1 then
+
+    RPGlobals.run.itLivesKillFrame = gameFrameCount
+    Isaac.DebugString("Killed Mom's Heart / It Lives! / Hush (fake first death) on frame: " ..
+                      tostring(gameFrameCount))
+    return
+  end
+
   -- Record when we killed It Lives! or Hush;
   -- a trapdoor and/or beam of light will spawn 1 frame from now, and we will delete it in the
   -- "RPFastTravel:ReplaceTrapdoor()" and the "RPFastTravel:ReplaceHeavenDoor()" functions
   RPGlobals.run.itLivesKillFrame = gameFrameCount
+  Isaac.DebugString("Killed Mom's Heart / It Lives! / Hush on frame: " .. tostring(gameFrameCount))
 
   -- Define positions for the trapdoor and beam of light (recorded from vanilla)
   local posCenter = Vector(320, 280)
@@ -190,9 +203,11 @@ function RPPostEntityKill:Entity78(entity)
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
   local situation -- 1 for the beam of light, 2 for the trapdoor, 3 for both
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
 
-    -- Season 1 speedrun challenges always go to The Chest
+    -- Season 1, 4, and 5 speedrun challenges always go to The Chest
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
@@ -206,14 +221,6 @@ function RPPostEntityKill:Entity78(entity)
       situation = 2
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
-    -- Season 4 speedrun challenges always go to The Chest
-    situation = 1
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
-    -- Season 5 speedrun challenges always go to The Chest
-    situation = 1
-
   elseif RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb go to the Dark Room
     situation = 2
@@ -222,10 +229,8 @@ function RPPostEntityKill:Entity78(entity)
     -- "Everything" races always go to Cathedral first (and then Sheol after that)
     situation = 1
 
-  elseif RPGlobals.race.rFormat == "pageant" or
-         RPGlobals.race.goal == "Mega Satan" then
-
-    -- On races to Mega Satan (and the Pageant Boy ruleset), we can potentially go in either direction
+  else
+    -- We can potentially go in either direction
     -- So, determine the direction by looking at the photo(s) that we collected
     if player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
       -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
@@ -252,11 +257,6 @@ function RPPostEntityKill:Entity78(entity)
       -- The player does not have either The Polaroid or The Negative, so give them a choice between the directions
       situation = 3
     end
-
-  else
-    -- By default, go to The Chest
-    -- (this applies to races with a goal of "Blue Baby" and all normal runs)
-    situation = 1
   end
 
   -- Do the appropriate action depending on the situation
@@ -421,16 +421,6 @@ function RPPostEntityKill:Entity271(entity)
 
   -- Spawn it with a seed of 0 so that it gets replaced on the next frame
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, Vector(0, 0), nil, subType, 0)
-end
-
--- EntityType.ENTITY_HUSH (407)
-function RPPostEntityKill:Entity407(entity)
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-
-  Isaac.DebugString("Killed Hush on frame: " .. tostring(gameFrameCount))
-  RPGlobals.run.itLivesKillFrame = gameFrameCount
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed

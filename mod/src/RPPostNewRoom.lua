@@ -50,6 +50,9 @@ function RPPostNewRoom:NewRoom()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local activeCharge = player:GetActiveCharge()
+  local maxHearts = player:GetMaxHearts()
+  local soulHearts = player:GetSoulHearts()
+  local boneHearts = player:GetBoneHearts()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2")
 
@@ -66,7 +69,7 @@ function RPPostNewRoom:NewRoom()
 
     RPGlobals.run.keeper.baseHearts = 2
     player:AddMaxHearts(-2, true) -- Take away a heart container
-    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card).")
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (RPPostNewRoom)")
   end
 
   -- Clear variables that track things per room
@@ -100,12 +103,9 @@ function RPPostNewRoom:NewRoom()
 
   -- Check health (to fix the bug where we don't die at 0 hearts)
   -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
-  -- (this code breaks The Forgotton; commenting this out for now until "EntityPlayer:GetBoneHearts()"" is implemented)
-  --[[
-  if maxHearts == 0 and soulHearts == 0 then
+  if maxHearts == 0 and soulHearts == 0 and boneHearts == 0 then
     player:Kill()
   end
-  --]]
 
   -- Make the Schoolbag work properly with the Glowing Hour Glass
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then

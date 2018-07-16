@@ -1,8 +1,35 @@
 # Racing+ Version History and News
 
+### *v0.19.7* - July 15th, 2018
+
+Mod changes:
+
+* Diversity races will no longer grant items that characters naturally start with. (Thanks AshDown)
+* Dying in a seeded race will now drop your trinkets and pocket items next to where you died.
+* Removed the custom handling for The Lamb (since it was fixed in the vanilla game).
+* Removed a fire from the narrow Burning Basement room with a Rag Man.
+* Fixed the bug where Angel Room #6 had 2 doors instead of 4. (Thanks caesar)
+* Fixed the bug where pickups would spawn on the ground when you died in a seeded race and had Marbles, Marrow, or Divorce Papers.
+* Fixed the bug where you would get extra bone hearts if you died in a seeded race and had Marrow, Divorce Papers, or Brittle Bones. (Thanks Moucheron Quipet and thisguyisbarry)
+* Fixed the bug where if you took a pedestal item as a seeded death ghost, you would not get any of your other items back.
+* Fixed the bug where Wall Creeps with negative coordinates could lead to unavoidable damage. (Thanks NotAnElk)
+* Fixed the bug where if Keeper used a Strength card while at 2 coin containers, he would lose a coin container upon leaving the room. (Thanks NorBro86)
+* Fixed the bug where a Host could spawn on top of a trapdoor in Double Trouble room #3762. (Thanks NorBro86)
+* Fixed the bug where under certain specific situations, players would not die when they had no hearts remaining. (Thanks ceehe)
+* Fixed the bug where the "correct" path would not appear after defeating Hush under certain circumstances. (Thanks PassionDrama)
+* Fixed the bug where it was possible to take two "big 4" items in the "Change Char Order" custom challenge. (Thanks olo70009)
+* Fixed the bug where the pentagram was cut off on the character select screen (when selecting Judas).
+* Fixed the bug where it was possible to duplicate chests by pushing them on top of stationary stone enemies. (Thanks leo_ze_tron)
+
+Client changes:
+
+* Fixed the bug where the "Everything" race goal had no tooltip. (Thanks PassionDrama)
+* Fixed the bug where the language would always start in English even if you had set it to French. (Thanks Greninja_San)
+
 ### *v0.19.6* - May 14th, 2018
 
-* Attempted to fix the bug where you could get an empty boss room. Still unsure as to why it is happening. (Thanks thisguyisbarry)
+* The next version after this may not automatically update because due to issues with me upgrading to the latest version of Electron.
+* Attempted to fix the bug where you could get an empty boss room. (I thought I fixed it in the last patch. I am still unsure as to why it is happening.) (Thanks thisguyisbarry)
 * Fixed the client bug where entering the wrong password would prevent you from clicking on anything. (Thanks thereisnofuture and FineWolf)
 
 ### *v0.19.5* - May 13th, 2018
@@ -92,14 +119,14 @@ Mod Changes:
   * Added 2x Red Chest to a 1 item room (#16).
 * More Angel Room balance changes:
   * Added an extra statue to a 1 item room (#2).
-* Devil Room and Angel Room changes are reflected in the spreadsheet: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
+* Devil Room and Angel Room changes are reflected in the spreadsheet: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406
 * Added 3x Red Poops to Devil Room #18 (as a small reference to the Jud6s mod).
 * Fixed the bug where diversity races with the Booster Pack #5 trinkets would crash the client. (Thanks Gamonymous)
 * Fixed the bug in the client where the Forgotten graphic was not showing up properly.
 
 ### *v0.18.5* - May 1st, 2018
 
-* Devil Rooms and Angel Rooms are now rebalanced. See the following spreadsheet for more information: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406 
+* Devil Rooms and Angel Rooms are now rebalanced. See the following spreadsheet for more information: https://docs.google.com/spreadsheets/d/1f47LetK5U9g4uX6UuBPiwciKzFqrTOSwozk0VEC0B4k/edit#gid=1040362406
 * Note that the rest of the rooms are still vanilla, as it will take several days to integrate all of the room changes.
 * In R+7 S4, on the Kamikaze build, Kamikaze will now start in the first slot instead of the D6. (Thanks thisguyisbarry)
 * Fixed the bug where Isaac would start with the Sacrificial Alter instead of the D6 in ranked solo races. Please contact Zamiel if you want a bugged race deleted from the database. (Thanks elgirs)
@@ -291,7 +318,7 @@ Client:
 * The website now has a "Tournaments" section, where you can see the currently scheduled matches for the week in the current Binding of Isaac: Afterbirth+ league, [Isaacs of the Round](http://isaacsoftheround.weebly.com/). In the future, it will show past tournaments. Thanks to sillypears for coding this.
 * Sometimes, a dying boss will cover up an item pedestal, forcing the player to wait until the death animation is over to see what the item is. Any bosses that have the possibility to interfere with seeing what an item pedestal in this way are now faded during their death animation.
 * Fixed the Mimic exception code, as it wasn't working on the latest patch. (Mimics should not be able to spawn in certain rooms with narrow paths, as it causes unavoidable damage.)
-* Added Caves room #125 to the Mimic exemption list. 
+* Added Caves room #125 to the Mimic exemption list.
 * Added flipped rooms to the Mimic exemption code.
 * Fixed the bug where Blisters were not killed properly after defeating Mom.
 * Added some more French translations. (Thanks Greninja_San)
@@ -1665,3 +1692,4 @@ Changes:
 * Added an Alt+F hotkey for finishing. This only works in the new "Custom" format.
 * More countdown sounds have been added (from Mario Kart: Double Dash).
 * In the client, you can now hover over emotes to see what they are.
+

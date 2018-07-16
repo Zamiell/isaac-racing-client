@@ -1,0 +1,56 @@
+# Racing+ Race Formats
+
+## Unseeded
+
+* Historically, most races have been unseeded. This means that both players start with the same character but play on different seeds.
+* Each player is allowed to reset as many times as they want. In most unseeded races, the players will need to reset over and over until they find a good starting item from the Basement 1 Treasure Room.
+* There are no additional changes to the game in the unseeded format.
+
+## Seeded
+
+* In seeded races, both players play on the same seed. (This means that they should get all of the same items, bosses, and so forth.)
+* Resetting is allowed, but it will just take a player back to the beginning of the same seed.
+* Each player will start with a pre-defined starting item that is chosen before the match, such as Cricket's Head or Mom's Knife.
+* The Basement 1 Treasure Room is barred. (This is to prevent players from starting with 2 items instead of 1.)
+* All characters start with The Compass and the Schoolbag in addition to their other items.
+* If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
+* The Cain's Eye trinket is removed from the game.
+* There is a custom death mechanic:
+  * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
+  * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.
+  * This mechanic does not apply to deaths from devil deals or Sacrifice Rooms.
+
+## Diversity
+
+* Diversity races are similar to unseeded races in that each player plays on different seeds and is allowed to reset as much as they want.
+* However, each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
+* For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
+
+## Unseeded (Lite)
+
+* All Treasure Rooms on Basement 1 will have two items.
+* Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.
+* The "fast-reset" feature is disabled.
+* The "fast-clear" feature is disabled.
+* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts are no longer sped up.
+
+## Dark Room
+
+* 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+## Mega Satan
+
+* The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+## Everything
+
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to complete the run.
+* After defeating It Lives!, the beam of light will always spawn to take you to The Cathedral.
+* After defeating Isaac, a trapdoor will spawn to take you to Sheol.
+* After defeating Satan, a beam of light will spawn to take you to The Chest.
+* After defeating Blue Baby, a trapdoor will spawn to take you to the Dark Room.
+* After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
+* Defeat Mega Satan to complete the run.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.

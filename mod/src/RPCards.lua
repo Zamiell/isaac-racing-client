@@ -26,14 +26,16 @@ function RPCards:Strength()
   Isaac.DebugString("Used a Strength card.")
 
   -- Only give Keeper another heart container if he has less than 2 base containers
-  if character == PlayerType.PLAYER_KEEPER and -- 14
-     RPGlobals.run.keeper.baseHearts < 4 then
-
-    -- Add another heart container (temporarily)
-    player:AddMaxHearts(2, true) -- Give 1 heart container
-    player:AddCoins(1) -- This fills in the new heart container
-    RPGlobals.run.keeper.baseHearts = RPGlobals.run.keeper.baseHearts + 2
-    Isaac.DebugString("Gave 1 heart container to Keeper (via a Strength card).")
+  if character == PlayerType.PLAYER_KEEPER then -- 14
+    if RPGlobals.run.keeper.baseHearts < 4 then
+      -- Add another heart container (temporarily)
+      player:AddMaxHearts(2, true) -- Give 1 heart container
+      player:AddCoins(1) -- This fills in the new heart container
+      RPGlobals.run.keeper.baseHearts = RPGlobals.run.keeper.baseHearts + 2
+      Isaac.DebugString("Gave 1 heart container to Keeper (via a Strength card).")
+    else
+      RPGlobals.run.usedStrength = false
+    end
   end
 end
 

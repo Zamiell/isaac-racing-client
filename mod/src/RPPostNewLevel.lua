@@ -110,7 +110,7 @@ function RPPostNewLevel:NewLevel()
 
     RPGlobals.run.usedStrength = false
     player:AddMaxHearts(-2) -- Remove a heart container
-    Isaac.DebugString("Manually removed the heart container from a Strength card.")
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (RPPost0NewLevel)")
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)

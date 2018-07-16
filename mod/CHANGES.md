@@ -38,9 +38,9 @@ In terms of what to change about the game, the mod has several goals, and attemp
   * Judas starts with half a red heart and half a soul heart.
   * Blue Baby starts with an extra half soul heart.
   * Azazel starts with an extra half soul heart.
-* Judas starts with a bomb instead of 3 coins (so that he can get a Treasure Room item without spending a soul heart).
-* Samson no longer starts with the Child's Heart (a quality of life change).
-* Eden starts with the Schoolbag. They will start with their random active item inside the bag. (This is to preserve the active item.))
+* Judas starts with a bomb instead of 3 coins.
+* Samson no longer starts with the Child's Heart. (This is a quality of life change, since the Child's Heart is usually immediately dropped.)
+* Eden starts with the Schoolbag. They will start with their random active item inside the bag. (This is to preserve the active item.)
 
 ### 2) No Curses
 
@@ -48,7 +48,7 @@ All curses are automatically disabled.
 
 ### 3) Devil Room & Angel Room Rebalancing
 
-Since Devil Rooms and Angel Rooms are the most skill-based component of the game, their rewards have been slightly rebalanced.
+Since Devil Rooms and Angel Rooms are the most skill-based component of the game, their rewards have been [slightly rebalanced](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md#devil-room-rebalancing).
 
 ### 4) Wrath of the Lamb Style Room Clear
 
@@ -77,7 +77,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Racing+ allows you to bind two new hotkeys via a custom challenge:
   * a drop button that will immediately drop all trinkets and pocket items
   * a dedicated Schoolbag switch button
-* Binding these hotkeys is optional. If they are not bound, Racing+ will use to the vanilla behavior.
+* Binding these hotkeys is optional. If they are not bound, Racing+ will use the vanilla behavior.
 
 ### Gameplay & Quality of Life Changes
 
@@ -91,8 +91,8 @@ While there are thousands of rooms in the game, many players have already seen t
   * Krampus items (with Gimpy)
   * cards from Sloth, Super Sloth, Pride, and Super Pride
 * Void Portals are automatically deleted.
-* The restart key immediately restarts the game. (To perform a fast-restart on floors 2 and beyond, you need to double tap R.)
-* Special items are no longer special.
+* The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
+* [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
@@ -100,11 +100,10 @@ While there are thousands of rooms in the game, many players have already seen t
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
-* Having Duality now prevents getting a narrow boss room on floors 2 through 7.
+* Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
 * All Spike Chests will spawn as Mimics instead.
-* Hosts and Mobile Hosts are now immune to fear. This prevents bugs where feared Hosts will not properly play animations.
+* Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
-* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
 
 ### Streamlined Path
 
@@ -119,13 +118,13 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 
 ### Cutscene & Animation Removal
 
-* The cutscenes that occur when you launch the game and you finish a run are removed.
+* The cutscenes that occur when you launch the game and when you finish a run are removed.
 * The cutscenes that occur before each boss are removed.
 * Some animations are removed for the purposes of eliminating needless downtime:
   * the fade when entering a new floor (replaced with a custom animation)
   * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
   * teleporting upwards
-  * traveling upwards in a beam of light
+  * traveling upwards in a beam of light (replaced with a faster version)
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
   * various animations during the Satan fight
@@ -138,16 +137,14 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Flaming Hoppers will now automatically die after 5 seconds of being immobile to prevent softlocks.
 * Globins, Sacks, Fistula, and Teratoma will now properly die after defeating Mom, Mom's Heart, or It Lives!
-* Dople's and Evil Twins will no longer shoot tears on the first frame after a room loads. (This is to prevent unavoidable damage, which can happen even if the player is not shooting.)
 * The Book of Sin and Mystery Sack generate actual random pickups.
 * Greed's Gullet works properly on Keeper.
 * Double coins and nickels heal Keeper for their proper amount.
 * AAA Battery now properly synergizes with The Battery.
 * 9 Volt now properly synergizes with The Battery.
 * You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
-* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as Brown Chests instead.)
+* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as normal chests instead.)
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
-* The Lamb can no longer move while he is doing a brimstone attack. (This can cause unavoidable damage in certain situations.)
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 
 ### Graphics & Sound Fixes
@@ -155,70 +152,27 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
 * The annoying vanilla in-game timer and score text will no longer appear. (Hold Tab to see a custom in-game timer.)
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
-* The door opening sound will no longer play in crawlspaces.
+* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* The door opening sound will no longer play in crawlspaces.
 
 <br />
 
 ## Additional Changes for Custom Race Rulesets
 
-Historically, most speedruns and races have been unseeded with the goal of killing Blue Baby. However, there are other rulesets used:
-
-### Seeded
-
-* All characters start with The Compass and the Schoolbag in addition to their other items.
-* If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
-* The Cain's Eye trinket is removed from the game.
-* There is a custom death mechanic:
-  * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
-  * They will have a "debuff" effect that removes all of your items. The debuff will last 45 seconds.
-  * This mechanic doesn't apply to deaths from devil deals or Sacrifice Rooms.
-
-### Diversity
-
-* Each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
-* For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
-
-### Unseeded (Lite)
-
-* All Treasure Rooms on Basement 1 will have two items.
-* Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.
-* The "fast-reset" feature is disabled.
-* The "fast-clear" feature is disabled.
-* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts are no longer sped up.
-
-### Dark Room
-
-* 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
-* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
-
-### Mega Satan
-
-* The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
-* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
-
-### Everything
-
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to complete the run.
-* After defeating It Lives!, the beam of light will always spawn to take you to The Cathedral.
-* After defeating Isaac, a trapdoor will spawn to take you to Sheol.
-* After defeating Satan, a beam of light will spawn to take you to The Chest.
-* After defeating Blue Baby, a trapdoor will spawn to take you to the Dark Room.
-* After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
-* Defeat Mega Satan to complete the run.
-* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+Racing+ allows players to perform [several different types of races]((https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-RACES.md) against each other. Some race types may introduce additional changes.
 
 <br />
 
 ## Additional Changes for Multi-Character Speedruns (Custom Challenges)
 
-Racing+ has several custom challenges which are [documented on a separate page](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md).
+Racing+ has [several custom challenges](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which introduce additional changes to the game.
 
 <br />
 
 ## Individual Room Changes
 
-The technical specifics of all of the individual room changes are listed in a [separate document](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md).
+The technical specifics of all of the individual room changes are listed in a [separate page](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md).
 
 <br />

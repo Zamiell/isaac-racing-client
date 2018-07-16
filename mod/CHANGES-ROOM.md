@@ -23,26 +23,28 @@ Firstly, some rooms were purely changed for balance (racing) reasons. Rooms that
 
 ### Devil Room Rebalancing
 
-* The amount of item pedestals is both more consistent and more numerous.
+* Items per room have been redistributed for consistency. The average item per room is increased from 1.53 to 1.86.
 * All enemies are removed.
-* There are more hazards.
-* It is no longer possible to get heart drops from fires.
-* All rooms with 1 item pedestal have an additional reward:
+* Extra hazards have been added to some rooms.
+* It is no longer possible to get heart drops from fires in Devil Rooms.
+* All rooms with 1 item have an additional reward:
   * #16: 4 bombs
   * #4: ? card
   * #7: black rune
   * #11: Devil Beggar
-* All rooms with 2 item pedestals have no extra rewards.
+* All rooms with 2 or more item pedestals have no extra rewards.
 * Rooms without 4 exits have been changed to have 4 exits.
 * Some rooms have custom weight.
 
+<br />
+
 ### Angel Room Rebalancing
 
-* The amount of item pedestals is both more consistent and more numerous.
+* Items per room have been redistributed for consistency. The average item per room is increased from 1.65 to 1.88.
 * All rooms with 1 item pedestal have 2 Angel Statues.
 * All rooms with 2 item pedestals have 1 Angel Statue.
 * Rooms without 4 exits have been changed to have 4 exits.
-* Rooms without weight of 1.0 have been changed to have weight 1.0.
+* Rooms without a weight of 1.0 have been changed to have weight 1.0.
 
 <br />
 
@@ -140,7 +142,7 @@ Racing+ is somewhat conservative with what it classifies as unavoidable damage. 
 While not technically unavoidable, many narrow rooms have near-impossible attack patterns, especially on Dr. Fetus builds.
 
 The changed rooms are as follows:
-* Burning: #755 (Rag Man) (replaced a pot with a fire)
+* Burning: #755 (Rag Man) (removed a pot)
 * Depths/Necropolis/Dank: #639 (Mom's Dead Hand) (deleted)
 * Cathedral: #286 (Uriel) (changed to 1x1)
 * Cathedral: #291 (Gabriel) (changed to 1x1)
@@ -371,10 +373,10 @@ The removed rooms are as follows:
 * Cathedral/Sheol: #73, #89
 * Chest: #42
 
-One room on the Basement/Cellar has the chance to be empty because of stacked entities.
+Some rooms have the chance to be empty because of stacked entities.
 
 The changed rooms are as follows:
-* Basement/Cellar/Burning: #875
+* Basement/Cellar/Burning: #875 (Portal)
 
 <br />
 
@@ -420,6 +422,17 @@ The changed rooms are as follows:
 
 <br />
 
+### Out of Bounds Fix
+
+Rooms with entities that have negative coordinates (out of bounds) have been placed in-bounds. This does not affect gameplay in any way.
+
+* Caves/Flooded: #203, #303
+* Caves/Catacombs/Flooded: #406, #427, #428, #429
+* Depths/Dank: #457, #460, #463, #471, #472
+* Depths/Necropolis/Dank: #455
+
+<br />
+
 ### Symmetry Fix
 
 Certain rooms in the game were probably meant to be symmetrical, but one entity or tile was incorrectly placed. This is fixed.
@@ -433,8 +446,9 @@ Certain rooms in the game were probably meant to be symmetrical, but one entity 
 
 <br />
 
-### Miscellaneous Rooms
+### Miscellaneous
 
+* Double Trouble room #3762 was changed to move the skulls away from the trapdoor (so that spawned Hosts would not interact with the trapdoor).
 * Boss room #9999 was added for the "Choose Char Order" custom challenge.
 * Boss room #9998 was added for the "Jr. Fetus Practice" and the "Mahalath Practice" custom challenges.
 
