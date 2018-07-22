@@ -56,6 +56,9 @@ module.exports = {
 
     // This is stupid
     "prefer-destructuring": ["off"],
+
+    // Also stupid
+    "operator-linebreak": ["off"],
   },
   "globals": {
     "Lang": true,

@@ -155,6 +155,8 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 * There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* The Distant Admiration and Forever Alone collectibles now match the color of the actual familiars.
+* The Abaddon collectibles is replaced with the pre-Booster Pack 5 version.
 * The door opening sound will no longer play in crawlspaces.
 
 <br />

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.8"
+RPGlobals.version = "v0.19.9"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -223,6 +223,7 @@ function RPGlobals:InitRun()
     items           = {},
     transformations = {},
     charge          = 0,
+    spriteScale     = Vector(0, 0),
     dealTime        = Isaac.GetTime(),
   }
 end
@@ -353,20 +354,31 @@ function RPGlobals:RevivePlayer(item)
   local level = game:GetLevel()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
 
+  if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    -- The "Revive()" function is bugged with The Forgotton;
+    -- he will be revived with one soul heart unless he is given a bone heart first
+    player:AddBoneHearts(1)
+  elseif character == PlayerType.PLAYER_THESOUL then -- 17
+    -- If we died on The Soul, we want to remove all of The Forgotton's bone hearts,
+    -- emulating what happens if you die with Dead Cat
+    player:AddBoneHearts(-24)
+    player:AddBoneHearts(1)
+  end
   player:Revive()
   if item then
-      if type(item) == "table" and item.ID ~= nil then
-          item = item.ID
-      end
-      local d = player:GetData()
-      d.api_HoldingItem = item
-      d.api_HoldingFrame = 0
+    if type(item) == "table" and item.ID ~= nil then
+      item = item.ID
+    end
+    local d = player:GetData()
+    d.api_HoldingItem = item
+    d.api_HoldingFrame = 0
   end
   local enterDoor = level.EnterDoor
   local door = room:GetDoor(enterDoor)
   local direction = door and door.Direction or Direction.NO_DIRECTION
-  game:StartRoomTransition(level:GetPreviousRoomIndex(),direction,0)
+  game:StartRoomTransition(level:GetPreviousRoomIndex(), direction, 0)
   level.LeaveDoor = enterDoor
 end
 

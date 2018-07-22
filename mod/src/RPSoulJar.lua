@@ -53,8 +53,6 @@ function RPSoulJar:SpriteDisplay()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local maxHearts = player:GetMaxHearts()
-  local extraLives = player:GetExtraLives()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
     return
@@ -102,11 +100,12 @@ function RPSoulJar:GetHeartXOffset()
   local player = game:GetPlayer(0)
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
+  local boneHearts = player:GetBoneHearts()
   local extraLives = player:GetExtraLives()
 
   local heartLength = 12 -- This is how long each heart is on the UI in the upper left hand corner
   -- (this is not in pixels, but in draw coordinates; you can see that it is 13 pixels wide in the "ui_hearts.png" file)
-  local combinedHearts = maxHearts + soulHearts
+  local combinedHearts = maxHearts + soulHearts + (boneHearts * 2) -- There are no half bone hearts
   if combinedHearts > 12 then
     combinedHearts = 12 -- After 6 hearts, it wraps to a second row
   end

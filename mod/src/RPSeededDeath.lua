@@ -31,6 +31,7 @@ function RPSeededDeath:PostRender()
   end
 
   -- Seeded death (1/3)
+  -- (they took fatal damage and begin the death animation)
   if (RPGlobals.race.rFormat == "seeded" or
       RPGlobals.race.rFormat == "seeded-mo") and
      (playerSprite:IsPlaying("Death") or
@@ -54,6 +55,7 @@ function RPSeededDeath:PostRender()
   end
 
   -- Seeded death (3/3)
+  -- (they just slid back to the previous room)
   if RPGlobals.run.seededDeath.state == 2 then
     player.Position = RPGlobals.run.seededDeath.pos
     if playerSprite:IsPlaying("AppearVanilla") == false then
@@ -89,24 +91,39 @@ function RPSeededDeath:PostNewRoom()
   end
 
   -- Set their health to explicitly 1.5 soul hearts
+  -- (or custom values for Keeper & The Forgotton)
   player:AddMaxHearts(-24, false)
   player:AddSoulHearts(-24)
   if character == PlayerType.PLAYER_KEEPER then -- 14
     player:AddMaxHearts(2)
     player:AddHearts(2)
+  elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    player:AddMaxHearts(2)
+    player:AddHearts(1)
+  elseif character == PlayerType.PLAYER_THESOUL then -- 17
+    player:AddHearts(1)
   else
     player:AddSoulHearts(3)
   end
 
   -- Start the debuff and set the finishing time to be in the future
   RPSeededDeath:DebuffOn()
-  RPGlobals.run.seededDeath.time = Isaac.GetTime() + RPSeededDeath.DebuffTime * 1000
+  local debuffTimeMilliseconds = RPSeededDeath.DebuffTime * 1000
+  if RPGlobals.debug then
+    debuffTimeMilliseconds = 5 * 1000
+  end
+  RPGlobals.run.seededDeath.time = Isaac.GetTime() + debuffTimeMilliseconds
 
   -- Play the animation where Isaac lies in the fetal position
   player:PlayExtraAnimation("AppearVanilla")
 
   -- Fade the player
   playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
+
+  -- Store their size for later, and then reset it to default
+  -- (in case they had items like Magic Mushroom and so forth)
+  RPGlobals.run.seededDeath.spriteScale = player.SpriteScale
+  player.SpriteScale = Vector(1, 1)
 
   RPGlobals.run.seededDeath.state = 2
   RPGlobals.run.seededDeath.pos = Vector(player.Position.X, player.Position.Y)
@@ -175,9 +192,13 @@ function RPSeededDeath:DebuffOff()
   local game = Game()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
+  local character = player:GetPlayerType()
 
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
+
+  -- Reset their size
+  player.SpriteScale = RPGlobals.run.seededDeath.spriteScale
 
   -- Store the current red hearts, soul/black hearts, bombs, and keys
   local hearts = player:GetHearts()
@@ -232,6 +253,7 @@ function RPSeededDeath:DebuffOff()
   player:AddSoulHearts(-24)
   player:AddBoneHearts(-24)
   player:AddMaxHearts(maxHearts, true)
+  player:AddBoneHearts(boneHearts)
   player:AddHearts(hearts)
   for i = 1, soulHearts do
     local bitPosition = math.floor((i - 1) / 2)
@@ -242,7 +264,15 @@ function RPSeededDeath:DebuffOff()
       player:AddBlackHearts(1)
     end
   end
-  player:AddBoneHearts(boneHearts)
+
+  -- If The Soul is active when the debuff ends, the health will not be handled properly,
+  -- so manually set everything
+  if character == PlayerType.PLAYER_THESOUL then -- 17
+    player:AddBoneHearts(-24)
+    player:AddBoneHearts(1)
+    player:AddHearts(-24)
+    player:AddHearts(1)
+  end
 
   -- Set the inventory to the way it was before the items were added
   player:AddBombs(-99)

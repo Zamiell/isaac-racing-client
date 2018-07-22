@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.19.9* - July 16th, 2018
+
+* The system that handles automatic updates has itself been updated, which should hopefully fix the issues with automatic updating in the last patch.
+* Changed the charge bars back to the custom Racing+ minimialistic pre-BP5 version. Note that the Maw of the Void charge bar is placed lower than the other charge bars; this is a vanilla bug that I cannot control.
+* Changed the color of the Forever Alone collectible from dark blue to light blue (to match the actual color of the familiar).
+* Changed the color of the Distant Admiration collectible from black to red (to match the actual color of the familiar).
+* Changed the 20/20 sprite to make it easier to see.
+* Replaced the Abaddon sprite with the pre-BP5 version.
+* Fixed the bug where The Forgotton would not revive with the correct health in a seeded race. He will now revive with one bone heart that is half filled and 0 soul hearts, meaning that he will be unable to switch to The Soul. (Thanks Moucheron Quipet)
+* Fixed the bug where text in the top-left (i.e. the run seed) would be misaligned if you had any bone hearts.
+* Fixed the bug where dying and reviving in a seeded race would make you the incorrect size under certain situations. (Thanks StoneAgeMarcus)
+
 ### *v0.19.8* - July 16th, 2018
 
 * Fixed the bug where some rooms with Rage Creeps had incorrect door assignment. (Thanks leo_ze_tron)
@@ -13,8 +25,8 @@ Mod changes:
 * Removed the custom handling for The Lamb (since it was fixed in the vanilla game).
 * Removed a fire from the narrow Burning Basement room with a Rag Man.
 * Fixed the bug where Angel Room #6 had 2 doors instead of 4. (Thanks caesar)
-* Fixed the bug where pickups would spawn on the ground when you died in a seeded race and had Marbles, Marrow, or Divorce Papers.
-* Fixed the bug where you would get extra bone hearts if you died in a seeded race and had Marrow, Divorce Papers, or Brittle Bones. (Thanks Moucheron Quipet and thisguyisbarry)
+* Fixed the bug where pickups would spawn on the ground when you revived in a seeded race and had Marbles, Marrow, or Divorce Papers.
+* Fixed the bug where you would get extra bone hearts if you revived in a seeded race and had Marrow, Divorce Papers, or Brittle Bones. (Thanks Moucheron Quipet and thisguyisbarry)
 * Fixed the bug where if you took a pedestal item as a seeded death ghost, you would not get any of your other items back.
 * Fixed the bug where Wall Creeps with negative coordinates could lead to unavoidable damage. (Thanks NotAnElk)
 * Fixed the bug where if Keeper used a Strength card while at 2 coin containers, he would lose a coin container upon leaving the room. (Thanks NorBro86)
