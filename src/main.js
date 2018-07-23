@@ -53,7 +53,8 @@ C:\Users\james\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_8576
 
 /*
 
-"electron-builder": "19.49.0",
+Must use specific old versions of some packages:
+"teeny-conf": "^1.1.0",
 
 */
 

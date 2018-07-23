@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.19.9* - July 17th, 2018
+
+* Fixed the bug where both paths would spawn after It Lives! on races to Blue Baby.
+
 ### *v0.19.9* - July 16th, 2018
 
 * The system that handles automatic updates has itself been updated, which should hopefully fix the issues with automatic updating in the last patch.

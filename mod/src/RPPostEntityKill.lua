@@ -221,6 +221,9 @@ function RPPostEntityKill:Entity78(entity)
       situation = 2
     end
 
+  elseif RPGlobals.race.goal == "Blue Baby" then
+    situation = 1
+
   elseif RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb go to the Dark Room
     situation = 2
@@ -264,18 +267,18 @@ function RPPostEntityKill:Entity78(entity)
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
     -- (it will get replaced with the fast-travel version on this frame)
     game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("It Lives! or Hush killed; situation 1.")
+    Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
 
   elseif situation == 2 then
     -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenter, true) -- 17
-    Isaac.DebugString("It Lives! or Hush killed; situation 2.")
+    Isaac.DebugString("It Lives! or Hush killed; situation 2 - only down.")
 
   elseif situation == 3 then
     -- Spawn both a trapdoor and a beam of light (they will get replaced with the fast-travel versions on this frame)
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
     game:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, Vector(0, 0), nil, 0, 0)
-    Isaac.DebugString("It Lives! or Hush killed; situation 3.")
+    Isaac.DebugString("It Lives! or Hush killed; situation 3 - up and down.")
   end
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
