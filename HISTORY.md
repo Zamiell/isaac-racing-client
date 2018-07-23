@@ -1,10 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.19.9* - July 17th, 2018
+### *v0.19.10* - July 22nd, 2018
 
 * Fixed the bug where both paths would spawn after It Lives! on races to Blue Baby.
 
-### *v0.19.9* - July 16th, 2018
+### *v0.19.9* - July 22nd, 2018
 
 * The system that handles automatic updates has itself been updated, which should hopefully fix the issues with automatic updating in the last patch.
 * Changed the charge bars back to the custom Racing+ minimialistic pre-BP5 version. Note that the Maw of the Void charge bar is placed lower than the other charge bars; this is a vanilla bug that I cannot control.
