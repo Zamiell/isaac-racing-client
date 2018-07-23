@@ -207,28 +207,30 @@ function RPPostEntityKill:Entity78(entity)
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
 
-    -- Season 1, 4, and 5 speedrun challenges always go to The Chest
+    -- Season 1, 4, and 5 speedrun challenges always go to Cathedral / The Chest
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
-    -- Season 1 speedrun challenges always go to the Dark Room
+    -- Season 2 speedrun challenges always go to Sheol / the Dark Room
     situation = 2
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-    -- Season 3 speedrun challenges alternate between The Chest and the Dark Room, starting with The Chest
+    -- Season 3 speedrun challenges alternate between Cathedral / The Chest and Sheol / the Dark Room,
+    -- starting with Cathedral / The Chest
     situation = RPSpeedrun.charNum % 2
     if situation == 0 then
       situation = 2
     end
 
-  elseif RPGlobals.race.goal == "Blue Baby" then
+  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "Blue Baby" then
+    -- Races to Blue Baby go to Cathedral / The Chest
     situation = 1
 
-  elseif RPGlobals.race.goal == "The Lamb" then
-    -- Races to The Lamb go to the Dark Room
+  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "The Lamb" then
+    -- Races to The Lamb go to Sheol / the Dark Room
     situation = 2
 
-  elseif RPGlobals.race.goal == "Everything" then
+  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "Everything" then
     -- "Everything" races always go to Cathedral first (and then Sheol after that)
     situation = 1
 
