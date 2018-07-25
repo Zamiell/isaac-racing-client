@@ -165,9 +165,10 @@ function RPFastTravel:CheckPickupOverHole(pickup)
     roomIndex = level:GetCurrentRoomIndex()
   end
 
-  -- We don't need to move Big Chests and Trophies
+  -- We don't need to move Big Chests, Trophies, or Beds
   if pickup.Variant == PickupVariant.PICKUP_BIGCHEST or -- 340
-     pickup.Variant == PickupVariant.PICKUP_TROPHY then -- 370
+     pickup.Variant == PickupVariant.PICKUP_TROPHY or -- 370
+     pickup.Variant == PickupVariant.PICKUP_BED then -- 380
 
     return
   end

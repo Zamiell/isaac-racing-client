@@ -86,3 +86,8 @@
 * Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
 * Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
 * Entering a Library on Basement 1 will cause bad things to happen. (This is to prevent resetting for a good book.)
+
+## Races
+
+* If you want to do a multiplayer race of one of the above seasons, then you can create a race with a format of "Custom" and a race goal of "Custom".
+* Note that during the run, the place indicators will not be accurate. This is because the server does not know which character you are on; it only knows about your current floor.

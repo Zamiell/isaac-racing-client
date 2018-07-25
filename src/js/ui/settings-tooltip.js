@@ -29,11 +29,13 @@ $(document).ready(() => {
         });
         if (newLogFilePath === undefined) {
             return;
-        } else if (newLogFilePath[0].match(/[/\\]Binding of Isaac Rebirth[/\\]/)) { // Match a forward or backslash
+        }
+        if (newLogFilePath[0].match(/[/\\]Binding of Isaac Rebirth[/\\]/)) { // Match a forward or backslash
             // Check to make sure they don't have an Rebirth log.txt selected
             misc.warningShow('<p lang="en">It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</p><p lang="en">Please try again and select your Afterbirth+ log file.</p><br />');
             return;
-        } else if (newLogFilePath[0].match(/[/\\]Binding of Isaac Afterbirth[/\\]/)) {
+        }
+        if (newLogFilePath[0].match(/[/\\]Binding of Isaac Afterbirth[/\\]/)) {
             // Check to make sure they don't have an Afterbirth log.txt selected
             misc.warningShow('<p lang="en">It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.</p><p lang="en">Please try again and select your Afterbirth+ log file.</p><br />');
             return;
@@ -119,12 +121,10 @@ $(document).ready(() => {
     });
 
     // Determine if the color mode is switched from light to dark
-    // The setting has to be saved on change, because the page is reloaded when the theme is chosen.
-    $('#settings-color-mode').on('change', () => {
+    // The setting has to be saved on change, because the page is reloaded when the theme is chosen
+    $('#settings-color-mode').on('change', function settingsColorModeChange() {
         const colorMode = $(this).val() === 'light' ? 'light' : 'dark';
-
         $('#dark-mode-theme')[0].disabled = (colorMode === 'light');
-        // Save light mode setting
         settings.set('colorMode', colorMode);
         settings.saveSync();
     });

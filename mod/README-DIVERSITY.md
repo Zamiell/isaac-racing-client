@@ -6,8 +6,6 @@ In diversity races, each racer starts with the same 3 random passive items, 1 ra
 
 In general, the extra power level increase from these 5 items is a fun boost at the beginning of a run. However, you don't always start with "good" items! One of the most interesting things about diversity races is that it forces players to use the items in the game that they would not normally pick up. This puts players in unique situations that they would never otherwise be in. For example, in a normal speedrun or race, you would generally never want to take Libra. But on a diversity race that happens to start with Soy Milk, picking up Libra is a very good idea!
 
-Diversity is meant to be a fun mode, and there is no official leaderboard for it. Thus, you can only play it in "Unranked" races.
-
 <br />
 
 ## Reset Time Reduction
@@ -73,6 +71,8 @@ Some items hardly have an effect on the playstyle of the run. Thus, the followin
 * 428 - PJs
 * 455 - Dad's Lost Coin
 * 456 - Moldy Bread
+
+<br />
 
 ## Item-Specific Bans
 

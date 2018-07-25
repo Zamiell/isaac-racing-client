@@ -15,11 +15,12 @@ Description
 
 This is the Lua mod for Racing+, a Binding of Isaac: Afterbirth+ racing platform. Normally a single player game, the Lua mod, client, and server allow players to be able to race each other in real time.
 
-[The list of mod changes](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES.md) are on a separate page.
-
-[The version history](https://github.com/Zamiell/isaac-racing-client/blob/master/HISTORY.md) is also on a separate page.
-
-[The list of known bugs](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/BUGS.md) is also on a separate page.
+See also:
+* [Mod changes](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES.md)
+* [Race formats](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-RACES.md)
+* [Custom challenges](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md) (multi-character speedruns)
+* [Version history](https://github.com/Zamiell/isaac-racing-client/blob/master/HISTORY.md)
+* [Known bugs](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/BUGS.md)
 
 Note that the version number listed in the `metadata.xml` file is created by the Nicalis mod uploader and does not necessarily match the version of the mod listed on the website or on the title screen.
 

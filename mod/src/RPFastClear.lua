@@ -352,10 +352,6 @@ function RPFastClear:ClearRoom()
   end
   local room = game:GetRoom()
   local roomType = room:GetType()
-  local player = game:GetPlayer(0)
-  local activeItem = player:GetActiveItem()
-  local activeCharge = player:GetActiveCharge()
-  local batteryCharge = player:GetBatteryCharge()
   local sfx = SFXManager()
 
   -- Set the room clear to true (so that it gets marked off on the minimap)
@@ -449,31 +445,39 @@ function RPFastClear:ClearRoom()
   end
 
   -- Give a charge to the player's active item
-  if player:NeedsCharge() == true then
-    -- Find out if we are in a 2x2 or L room
-    local chargesToAdd = 1
-    local shape = room:GetRoomShape()
-    if shape >= 8 then
-      -- L rooms and 2x2 rooms should grant 2 charges
-      chargesToAdd = 2
-    elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
-           activeCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
+  -- (and handle co-op players, if present)
+  for i = 1, game:GetNumPlayers() do
+    local player = Isaac.GetPlayer(i - 1)
+    local activeItem = player:GetActiveItem()
+    local activeCharge = player:GetActiveCharge()
+    local batteryCharge = player:GetBatteryCharge()
 
-      -- The AAA Battery grants an extra charge when the active item is one away from being fully charged
-      chargesToAdd = 2
-    elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
-           activeCharge == RPGlobals:GetItemMaxCharges(activeItem) and
-           player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) and -- 63
-           batteryCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
+    if player:NeedsCharge() == true then
+      -- Find out if we are in a 2x2 or L room
+      local chargesToAdd = 1
+      local shape = room:GetRoomShape()
+      if shape >= 8 then
+        -- L rooms and 2x2 rooms should grant 2 charges
+        chargesToAdd = 2
+      elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
+             activeCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
 
-      -- The AAA Battery should grant an extra charge when the active item is one away from being fully charged
-      -- with The Battery (this is bugged in vanilla for The Battery)
-      chargesToAdd = 2
+        -- The AAA Battery grants an extra charge when the active item is one away from being fully charged
+        chargesToAdd = 2
+      elseif player:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
+             activeCharge == RPGlobals:GetItemMaxCharges(activeItem) and
+             player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) and -- 63
+             batteryCharge == RPGlobals:GetItemMaxCharges(activeItem) - 2 then
+
+        -- The AAA Battery should grant an extra charge when the active item is one away from being fully charged
+        -- with The Battery (this is bugged in vanilla for The Battery)
+        chargesToAdd = 2
+      end
+
+      -- Add the correct amount of charges
+      local currentCharge = player:GetActiveCharge()
+      player:SetActiveCharge(currentCharge + chargesToAdd)
     end
-
-    -- Add the correct amount of charges
-    local currentCharge = player:GetActiveCharge()
-    player:SetActiveCharge(currentCharge + chargesToAdd)
   end
 
   -- Play the sound effect for the door opening

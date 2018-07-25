@@ -102,20 +102,24 @@ function RPPostEntityKill:Entity45(entity)
     -- Give the player a choice between the photos on the Pageant Boy ruleset
     situation = 3
 
-  elseif RPGlobals.race.goal == "The Lamb" then
+  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "Blue Baby" then
+    -- Races to Blue Baby need The Polaroid
+    situation = 1
+
+  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "The Lamb" then
     -- Races to The Lamb need The Negative
     situation = 2
 
-  elseif RPGlobals.race.goal == "Mega Satan" or
-         RPGlobals.race.goal == "Everything" then
+  elseif RPGlobals.race.status == "in progress" and
+         (RPGlobals.race.goal == "Mega Satan" or
+          RPGlobals.race.goal == "Everything") then
 
     -- Give the player a choice between the photos for races to Mega Satan
     situation = 3
 
   else
-    -- By default, spawn just The Polaroid
-    -- (this applies to races with a goal of "Blue Baby" and all normal runs)
-    situation = 1
+    -- They are doing a normal non-client run, so by default spawn both photos
+    situation = 3
   end
 
   -- Do the appropriate action depending on the situation

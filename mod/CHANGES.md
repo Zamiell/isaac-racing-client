@@ -12,7 +12,7 @@ If you want to learn more about Racing+, you can visit [the official website](ht
 2. [List of Main Changes](#list-of-main-changes)
 3. [Other Mods Included](#other-mods-included)
 4. [List of Minor Changes](#list-of-minor-changes)
-5. [Additional Changes for Custom Race Rulesets](#additional-changes-for-custom-race-rulesets)
+5. [Additional Changes for Custom Races](#additional-changes-for-custom-races)
 6. [Additional Changes for Multi-Character Speedruns (Custom Challenges)](#additional-changes-for-multi-character-speedruns-custom-challenges)
 7. [Individual Room Changes](#individual-room-changes)
 
@@ -81,6 +81,8 @@ While there are thousands of rooms in the game, many players have already seen t
 
 ### Gameplay & Quality of Life Changes
 
+* The Polaroid or The Negative will be automatically removed depending on your run goal.
+* The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal or which photo you have.
 * Some items with no effect are removed:
   * the Karma trinket (all Donation Machines are removed when curses are disabled)
   * the Amnesia pill (this has no effect when curses are disabled)
@@ -104,17 +106,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * All Spike Chests will spawn as Mimics instead.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
-
-### Streamlined Path
-
-* The Polaroid or The Negative will be automatically removed depending on your run goal. By default, it will remove The Negative.
-* The trapdoor or the beam of light on Womb 2 will be automatically removed depending on your run goal or which photo you have. By default, it will remove the trapdoor.
-
-If you want, you can change the run goal manually in your "save1.dat" file, located in the Racing+ mod folder. By default, this is located at:
-```
-C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\racing+_dev\save1.dat
-```
-(The "save1.dat" file corresponds to save slot #1. If you play on save slot #2 or #3, edit "save2.dat" or "save3.dat" accordingly.)
 
 ### Cutscene & Animation Removal
 
@@ -161,9 +152,9 @@ C:\Users\[YourUsername]\Documents\My Games\Binding of Isaac Afterbirth+ Mods\rac
 
 <br />
 
-## Additional Changes for Custom Race Rulesets
+## Additional Changes for Custom Races
 
-Racing+ allows players to perform [several different types of races]((https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-RACES.md) against each other. Some race types may introduce additional changes.
+Racing+ allows players to perform [several different types of races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-RACES.md) against each other. Some race formats may introduce additional changes.
 
 <br />
 
