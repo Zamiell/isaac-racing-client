@@ -5,7 +5,7 @@
 * Both photos will now spawn if you are doing a normal (i.e. non-race) run.
 * Larry Jr. has been moved away from the doors in rooms #1025 and #1028.
 * Fixed the bug where clean bedroom #24 would glitch out if you bombed the center of the room. (Thanks Hispa)
-* Fixed the bug where the secondary character character would not get a charge on their active item after clearing a room (using the True Co-op mod). (Thanks thisguyisbarry)
+* Fixed the bug where the secondary character would not get a charge on their active item after clearing a room (when using the True Co-op mod). (Thanks thisguyisbarry)
 * Fixed the bug where selecting dark mode would crash the client. (Thanks Gamonymous)
 
 ### *v0.19.10* - July 22nd, 2018
