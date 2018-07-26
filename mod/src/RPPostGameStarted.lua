@@ -614,6 +614,8 @@ function RPPostGameStarted:Diversity()
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
   end
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+  player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
+  -- We don't want the costume to show
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
   RPGlobals.run.removeMoreOptions = true
@@ -824,9 +826,12 @@ function RPPostGameStarted:UnseededLite()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
 
   -- Give the player extra starting items
   player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+  player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
+  -- We don't want the costume to show
   Isaac.DebugString("Removing collectible 414 (More Options)")
   -- We don't need to show this on the item tracker to reduce clutter
   RPGlobals.run.removeMoreOptions = true

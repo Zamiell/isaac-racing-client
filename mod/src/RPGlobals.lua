@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.12"
+RPGlobals.version = "v0.19.13"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -28,9 +28,7 @@ RPGlobals.race = {
   placeMid        = 0,           -- This is either the number of people ready, or the non-fnished place
   place           = 1,           -- This is the final place
   numEntrants     = 1,           -- The number of people in the race
-  order7          = {0},         -- The order for a Racing+ 7 character speedrun
-  order9          = {0},         -- The order for a Racing+ 9 character speedrun (or items in R+7 S4)
-  order14         = {0},         -- The order for a Racing+ 14 character speedrun
+  charOrder       = {0},         -- The order for a multi-character speedrun
   hotkeyDrop      = 0,           -- A custom key binding for fast-drop, or 0 if not set
   hotkeySwitch    = 0,           -- A custom key binding for a Schoolbag switch, or 0 if not set
 }
@@ -316,6 +314,14 @@ end
 -- From: http://lua-users.org/wiki/CopyTable
 function RPGlobals:TableClone(tbl)
   return {table.unpack(tbl)}
+end
+
+-- From: https://stackoverflow.com/questions/1410862/concatenation-of-tables-in-lua
+function RPGlobals:TableConcat(t1, t2)
+  for i = 1, #t2 do
+    t1[#t1 + 1] = t2[i]
+  end
+  return t1
 end
 
 -- Find out how many charges this item has

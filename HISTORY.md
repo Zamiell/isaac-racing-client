@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.19.13* - July 25th, 2018
+
+* You can now only store one multi-character speedrun order at a time. (This simplifies the code.)
+* When More Options is given for only Basement 1, it will no longer show the costume in order to reduce confusion and clutter.
+* Fixed the bug where the mod would infinitately reset if you went into a custom challenge without setting a character order first. (Thanks olo70009)
+
 ### *v0.19.12* - July 25th, 2018
 
 * Both photos will now spawn if you are doing a normal (i.e. non-race) run.

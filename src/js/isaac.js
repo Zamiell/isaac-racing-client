@@ -40,7 +40,7 @@ exports.start = () => {
             }
 
             // We only want to replace our stored variables if they are changed from the default
-            const props = ['order7', 'order9', 'order14', 'hotkeyDrop', 'hotkeySwitch'];
+            const props = ['charOrder', 'hotkeyDrop', 'hotkeySwitch'];
             for (const prop of props) {
                 if (
                     typeof json[prop] !== 'undefined' &&

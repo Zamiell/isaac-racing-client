@@ -484,14 +484,8 @@ app.on('before-quit', () => {
         json.countdown = -1;
         json.placeMid = 0;
         json.place = 1;
-        if (typeof json.order7 === 'undefined') {
-            json.order7 = [0];
-        }
-        if (typeof json.order9 === 'undefined') {
-            json.order9 = [0];
-        }
-        if (typeof json.order14 === 'undefined') {
-            json.order14 = [0];
+        if (typeof json.charOrder === 'undefined') {
+            json.charOrder = [0];
         }
         if (typeof json.hotkeyDrop === 'undefined') {
             json.hotkeyDrop = 0;

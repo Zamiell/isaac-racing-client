@@ -39,7 +39,7 @@ function RPPostRender:Main()
     RPGlobals.raceVars.started = false
   end
 
-  -- Restart the game if Easter Egg or race or speedrun validation failed
+  -- Restart the game if Easter Egg or character validation failed
   RPPostRender:CheckRestart()
 
   -- Reseed the floor if we have Duality and there is a narrow boss room
@@ -88,7 +88,7 @@ function RPPostRender:Main()
   RPSpeedrun:CheckChangeCharOrder()
 end
 
--- Restart the game if Easter Egg or race or speedrun validation failed
+-- Restart the game if Easter Egg or character validation failed
 -- (we can't do this in the "PostGameStarted" callback because
 -- the "restart" command will fail when the game is first loading)
 function RPPostRender:CheckRestart()
@@ -96,53 +96,38 @@ function RPPostRender:CheckRestart()
   local game = Game()
   local seeds = game:GetSeeds()
   local runSeed = seeds:GetStartSeedString()
-  local challenge = Isaac.GetChallenge()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if RPGlobals.run.restartFrame ~= 0 and isaacFrameCount >= RPGlobals.run.restartFrame then
-    RPGlobals.run.restartFrame = 0
-
-    -- Change the seed of the run if need be
-    if runSeed ~= RPGlobals.race.seed and
-       RPGlobals.race.rFormat == "seeded" and
-       RPGlobals.race.status == "in progress" then
-
-      -- Change the seed of the run and restart the game
-      RPGlobals:ExecuteCommand("seed " .. RPGlobals.race.seed)
-      -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
-    end
-
-    -- The "restart" command takes an optional argument to specify the character; we might want to specify this
-    local command = "restart"
-    if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
-      local char = RPGlobals.race.order9[RPSpeedrun.charNum]
-      if char > 14 then
-        -- Since we store season 4 items in the "order9" variable,
-        -- this has the potential to crash the game if they try to do a season 1 run without setting their order first
-        -- Just default to Isaac in this situation
-        char = 0
-      end
-      command = command .. " " .. char
-
-    elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
-      command = command .. " " .. RPGlobals.race.order14[RPSpeedrun.charNum]
-
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
-
-      command = command .. " " .. RPGlobals.race.order7[RPSpeedrun.charNum]
-
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
-      command = command .. " 0"
-
-    elseif RPGlobals.race.status ~= "none" then
-      command = command .. " " .. RPGlobals.race.character
-    end
-
-    RPGlobals:ExecuteCommand(command)
+  if RPGlobals.run.restartFrame == 0 or isaacFrameCount < RPGlobals.run.restartFrame then
     return
   end
+
+  RPGlobals.run.restartFrame = 0
+
+  -- Change the seed of the run if need be
+  if runSeed ~= RPGlobals.race.seed and
+     RPGlobals.race.rFormat == "seeded" and
+     RPGlobals.race.status == "in progress" then
+
+    -- Change the seed of the run and restart the game
+    RPGlobals:ExecuteCommand("seed " .. RPGlobals.race.seed)
+    -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
+  end
+
+  -- The "restart" command takes an optional argument to specify the character; we might want to specify this
+  local command = "restart"
+  if RPSpeedrun:InSpeedrun() then
+    local currentChar = RPSpeedrun:GetCurrentChar()
+    if currentChar == nil or RPSpeedrun:CheckValidCharOrder() == false then
+      -- The character order is not set properly; we will display an error to the user later on
+      return
+    end
+    command = command .. " " .. currentChar
+  elseif RPGlobals.race.status ~= "none" then
+    command = command .. " " .. RPGlobals.race.character
+  end
+
+  RPGlobals:ExecuteCommand(command)
 end
 
 -- Reseed the floor if we have Duality and there is a narrow boss room

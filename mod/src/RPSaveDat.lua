@@ -103,16 +103,8 @@ function RPSaveDat:Load()
       Isaac.DebugString("ModData place changed: " .. tostring(RPGlobals.race.place))
       RPSaveDat:ChangedPlace()
     end
-    if RPGlobals:TableEqual(oldRace.order7, RPGlobals.race.order7) == false then
-      Isaac.DebugString("ModData order7 changed.")
-      RPSaveDat:ChangedOrder()
-    end
-    if RPGlobals:TableEqual(oldRace.order9, RPGlobals.race.order9) == false then
-      Isaac.DebugString("ModData order9 changed.")
-      RPSaveDat:ChangedOrder()
-    end
-    if RPGlobals:TableEqual(oldRace.order14, RPGlobals.race.order14) == false then
-      Isaac.DebugString("ModData order14 changed.")
+    if RPGlobals:TableEqual(oldRace.charOrder, RPGlobals.race.charOrder) == false then
+      Isaac.DebugString("ModData charOrder changed.")
       RPSaveDat:ChangedOrder()
     end
     if oldRace.hotkeyDrop ~= RPGlobals.race.hotkeyDrop then

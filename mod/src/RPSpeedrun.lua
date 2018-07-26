@@ -183,6 +183,12 @@ function RPSpeedrun:Init()
     return
   end
 
+  -- Don't do anything if the player has not submitted a character order
+  -- (we will display an error later on in the PostRender callback)
+  if RPSpeedrun:CheckValidCharOrder() == false then
+    return
+  end
+
   -- Do actions based on the specific challenge
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
     Isaac.DebugString("In the R+9 (Season 1) challenge.")
@@ -362,8 +368,8 @@ function RPSpeedrun:Init()
     end
 
     -- Give the additional (chosen) starting item/build
-    -- (the item choice is stored in the "order9" variable)
-    local itemID = RPGlobals.race.order9[RPSpeedrun.charNum]
+    -- (the item choice is stored in the second half of the "charOrder" variable)
+    local itemID = RPGlobals.race.charOrder[RPSpeedrun.charNum + 8]
     if itemID < 1000 then
       -- This is a single item build
       player:AddCollectible(itemID, 0, false)
@@ -420,8 +426,7 @@ function RPSpeedrun:Init()
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     RPSchoolbag.sprites.item = nil
 
-    -- Give extra items to characters for the R+7 speedrun category (Season 5)
-    -- TODO
+    -- There are no additional items since each co-op baby gets a custom item or ability
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
@@ -430,58 +435,20 @@ function RPSpeedrun:Init()
      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+    player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
+    -- We don't want the costume to show
     Isaac.DebugString("Removing collectible 414 (More Options)")
     -- We don't need to show this on the item tracker to reduce clutter
     RPGlobals.run.removeMoreOptions = true
     -- More Options will be removed upon entering the first Treasure Room
   end
 
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-     character ~= RPGlobals.race.order9[RPSpeedrun.charNum] then
-
+  -- Check to see if we are on the correct character
+  local correctCharacter = RPSpeedrun:GetCurrentChar()
+  if character ~= correctCharacter then
     RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+9 (Season 1) speedrun." ..
-                      " (" .. tostring(character) .. ")")
-    return
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-         character ~= RPGlobals.race.order14[RPSpeedrun.charNum] then
-
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+14 (Season 1) speedrun." ..
-                      " (" .. tostring(character) .. ")")
-    return
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-         character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
-
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 2) speedrun." ..
-                      " (" .. tostring(character) .. ")")
-    return
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-         character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
-
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 3) speedrun." ..
-                      " (" .. tostring(character) .. ")")
-    return
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-         character ~= RPGlobals.race.order7[RPSpeedrun.charNum] then
-
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 4) speedrun." ..
-                      " (" .. tostring(character) .. ")")
-    return
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") and
-         character ~= 0 then
-
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because we are on the wrong character for a R+7 (Season 5) speedrun." ..
-                      " (" .. tostring(character) .. ")")
+    Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
+                      " and we need to be on character " .. tostring(correctCharacter))
     return
   end
 
@@ -570,6 +537,7 @@ function RPSpeedrun:CheckRestart()
     game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_RESTART_RUN) -- 3
     RPSpeedrun.resetFrame = isaacFrameCount + 70 -- 72 restarts as the current character, and we want a frame of leeway
     -- (this is necessary because we don't want the player to be able to reset to skip having to watch the fade out)
+    return
   end
 
   -- The screen is now black, so move us to the next character for the speedrun
@@ -849,10 +817,11 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition9[i][1]
         if #RPSpeedrun.chooseOrder == 9 then
-          -- We have finished choosing our 9 characters
-          RPGlobals.race.order9 = RPSpeedrun.chooseOrder
+          -- We have finished choosing our characters
+          RPGlobals.race.charOrder = RPSpeedrun.chooseOrder
+          table.insert(RPGlobals.race.charOrder, 1, RPSpeedrun.chooseType)
           RPSaveDat:Save()
-          Isaac.DebugString("New order9: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -875,10 +844,11 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition14[i][1]
         if #RPSpeedrun.chooseOrder == 14 then
-          -- We have finished choosing our 14 characters
-          RPGlobals.race.order14 = RPSpeedrun.chooseOrder
+          -- We have finished choosing our characters
+          RPGlobals.race.charOrder = RPSpeedrun.chooseOrder
+          table.insert(RPGlobals.race.charOrder, 1, RPSpeedrun.chooseType)
           RPSaveDat:Save()
-          Isaac.DebugString("New order14: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -901,10 +871,11 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_2[i][1]
         if #RPSpeedrun.chooseOrder == 7 then
-          -- We have finished choosing our 7 characters
-          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
+          -- We have finished choosing our characters
+          RPGlobals.race.charOrder = RPSpeedrun.chooseOrder
+          table.insert(RPGlobals.race.charOrder, 1, RPSpeedrun.chooseType)
           RPSaveDat:Save()
-          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -927,10 +898,11 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_3[i][1]
         if #RPSpeedrun.chooseOrder == 7 then
-          -- We have finished choosing our 7 characters
-          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
+          -- We have finished choosing our characters
+          RPGlobals.race.charOrder = RPSpeedrun.chooseOrder
+          table.insert(RPGlobals.race.charOrder, 1, RPSpeedrun.chooseType)
           RPSaveDat:Save()
-          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -953,10 +925,7 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
         gridEntity.VarData = 1 -- Mark that we have pressed this button already
         RPSpeedrun.chooseOrder[#RPSpeedrun.chooseOrder + 1] = RPSpeedrun.charPosition7_4[i][1]
         if #RPSpeedrun.chooseOrder == 7 then
-          -- We have finished choosing our 7 characters
-          RPGlobals.race.order7 = RPSpeedrun.chooseOrder
-          RPSaveDat:Save()
-          Isaac.DebugString("New order7: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder))
+          -- We have finished choosing our characters
           RPSpeedrun:RemoveAllRoomButtons2()
           return
         end
@@ -998,9 +967,11 @@ function RPSpeedrun:CheckButtonPressed(gridEntity)
           end
 
           -- We have finished choosing our 7 items
-          RPGlobals.race.order9 = RPSpeedrun.chooseOrder2
+          -- Concatentate the character order and the items chosen into one big table
+          RPGlobals.race.charOrder = RPGlobals:TableConcat(RPSpeedrun.chooseOrder, RPSpeedrun.chooseOrder2)
+          table.insert(RPGlobals.race.charOrder, 1, RPSpeedrun.chooseType)
           RPSaveDat:Save()
-          Isaac.DebugString("New order9: " .. RPGlobals:TableToString(RPSpeedrun.chooseOrder2))
+          Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
           game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
 
@@ -1215,23 +1186,8 @@ function RPSpeedrun:DisplayCharProgress()
     return
   end
 
-  -- Check to see if they have a set order
-  if (challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-      (RPGlobals.race.order9 == nil or
-       #RPGlobals.race.order9 == 0 or
-       #RPGlobals.race.order9 == 1)) or
-     (challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-      (RPGlobals.race.order14 == nil or
-       #RPGlobals.race.order14 == 0 or
-       #RPGlobals.race.order14 == 1)) or
-     ((challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) and
-      (RPGlobals.race.order7 == nil or
-       #RPGlobals.race.order7 == 0 or
-       #RPGlobals.race.order7 == 1)) then
-
+  -- Don't show the progress if the player has not set an order yet
+  if RPSpeedrun:CheckValidCharOrder() == false then
     -- Load the sprites
     if RPSpeedrun.sprites.needToSet1 == nil then
       RPSpeedrun.sprites.needToSet1 = Sprite()
@@ -1256,7 +1212,7 @@ function RPSpeedrun:DisplayCharProgress()
     return
   end
 
-  -- Load the sprites
+  -- Load the sprites for the multi-character speedrun progress
   if RPSpeedrun.sprites.slash == nil then
     RPSpeedrun.sprites.digit = {}
     for i = 1, 4 do
@@ -1622,7 +1578,6 @@ end
 
 function RPSpeedrun:InSpeedrun()
   local challenge = Isaac.GetChallenge()
-
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
@@ -1634,6 +1589,60 @@ function RPSpeedrun:InSpeedrun()
   else
     return false
   end
+end
+
+function RPSpeedrun:CheckValidCharOrder()
+  local challenge = Isaac.GetChallenge()
+
+  if RPGlobals.race.charOrder == nil then
+    return false
+  end
+  local charOrderType = RPGlobals.race.charOrder[1]
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
+     (charOrderType ~= "R+9" or
+      #RPGlobals.race.charOrder ~= 10) then
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
+         (charOrderType ~= "R+14" or
+          #RPGlobals.race.charOrder ~= 15) then
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
+         (charOrderType ~= "R+7 (S2)" or
+          #RPGlobals.race.charOrder ~= 8) then
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
+         (charOrderType ~= "R+7 (S3)" or
+          #RPGlobals.race.charOrder ~= 8) then
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+         (charOrderType ~= "R+7 (S4)" or
+          #RPGlobals.race.charOrder ~= 15) then -- 7 characters + 7 starting items
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+    -- There is no character order in season 5
+    return true
+  end
+
+  return true
+end
+
+function RPSpeedrun:GetCurrentChar()
+  local challenge = Isaac.GetChallenge()
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+    return PlayerType.PLAYER_JUDAS --3
+  end
+  return RPGlobals.race.charOrder[RPSpeedrun.charNum + 1]
+  -- We add one since the first element is the type of multi-character speedrun
 end
 
 return RPSpeedrun

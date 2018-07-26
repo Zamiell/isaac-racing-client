@@ -54,9 +54,7 @@ module.exports = {
         placeMid: 0,
         place: 1,
         numEntrants: 1,
-        order7: [0], // Speedrun orders are filled in isaac.js
-        order9: [0],
-        order14: [0],
+        charOrder: [0], // Speedrun orders are filled in isaac.js
         hotkeyDrop: 0,
         hotkeySwitch: 0,
     },

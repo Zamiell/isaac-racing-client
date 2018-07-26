@@ -12,7 +12,7 @@ If you want to learn more about Racing+, you can visit [the official website](ht
 2. [List of Main Changes](#list-of-main-changes)
 3. [Other Mods Included](#other-mods-included)
 4. [List of Minor Changes](#list-of-minor-changes)
-5. [Additional Changes for Custom Races](#additional-changes-for-custom-races)
+5. [Additional Changes for Races](#additional-changes-for-races)
 6. [Additional Changes for Multi-Character Speedruns (Custom Challenges)](#additional-changes-for-multi-character-speedruns-custom-challenges)
 7. [Individual Room Changes](#individual-room-changes)
 
@@ -152,7 +152,7 @@ While there are thousands of rooms in the game, many players have already seen t
 
 <br />
 
-## Additional Changes for Custom Races
+## Additional Changes for Races
 
 Racing+ allows players to perform [several different types of races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-RACES.md) against each other. Some race formats may introduce additional changes.
 
