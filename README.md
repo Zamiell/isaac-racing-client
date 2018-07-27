@@ -1,14 +1,14 @@
 isaac-racing-client
 ===================
 
+<br />
+
 Download & Additional Information
 ---------------------------------
 
 Please visit [the website for Racing+](https://isaacracing.net/).
 
 <br />
-
-
 
 Description
 -----------
@@ -20,8 +20,6 @@ The client is written with [Electron](http://electron.atom.io/) and uses WebSock
 You may also be interested in [the Lua mod](https://github.com/Zamiell/isaac-racing-client/tree/master/mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
 
 <br />
-
-
 
 Run (on Windows)
 ----------------
@@ -35,8 +33,6 @@ Run (on Windows)
 * `npm start`
 
 <br />
-
-
 
 Run (on macOS)
 --------------
@@ -55,8 +51,6 @@ Run (on macOS)
 
 <br />
 
-
-
 Run (on Ubuntu 16.04)
 ---------------------
 
@@ -69,8 +63,6 @@ If you are on Ubuntu 17.04:
 * You might have to create a symbolic link for nodejs: `ln -s /usr/bin/nodejs /usr/bin/node`
 
 <br />
-
-
 
 Build (on Windows)
 ------------------
