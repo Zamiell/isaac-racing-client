@@ -41,6 +41,8 @@
 * Make sure that everyone in the race knows the rules before starting.
 * This option is used for multi-character speedrun races.
 
+<br />
+
 # Racing+ Race Goals
 
 ## Blue Baby
@@ -78,3 +80,20 @@
 * Custom allows people to race with their own custom goals. For example, you could make a race where the goal is to beat Mom as fast as possible.
 * Make sure that everyone in the race knows the goal before starting.
 * This option is used for multi-character speedrun races.
+
+<br />
+
+# Solo Ranked Races
+
+* Any race format or goal can also be done as a solo race. This allows you to practice without any results going towards the leaderboards.
+* Furthermore, you can also perform ranked solo races. There is a seperate leaderboard for this.
+* Currently, the only format in which this is available is unseeded. (In the future, seeded may also be available.)
+
+## Unseeded Solo Ranked
+
+* This has the same basic rules as multiplayer unseeded.
+* On the leaderboard, you are ranked based on the lowest average time of your past 50 runs.
+* You always start as Judas.
+* You also start with the Schoolbag.
+* Season 1 lasted from October 17th, 2017 to March 18th, 2018.
+* Season 2 is currently ongoing.
