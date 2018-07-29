@@ -4,11 +4,12 @@ local RPCheckEntities = {}
 -- Includes
 --
 
-local RPGlobals    = require("src/rpglobals")
-local RPSchoolbag  = require("src/rpschoolbag")
-local RPFastTravel = require("src/rpfasttravel")
-local RPSpeedrun   = require("src/rpspeedrun")
-local SamaelMod    = require("src/rpsamael")
+local RPGlobals         = require("src/rpglobals")
+local RPSchoolbag       = require("src/rpschoolbag")
+local RPFastTravel      = require("src/rpfasttravel")
+local RPSpeedrun        = require("src/rpspeedrun")
+local RPChangeCharOrder = require("src/rpchangecharorder")
+local SamaelMod         = require("src/rpsamael")
 
 --
 -- Variables
@@ -46,7 +47,7 @@ function RPCheckEntities:Grid()
         RPFastTravel:ReplaceCrawlspace(gridEntity, i)
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
-        RPSpeedrun:CheckButtonPressed(gridEntity)
+        RPChangeCharOrder:CheckButtonPressed(gridEntity)
       end
     end
   end

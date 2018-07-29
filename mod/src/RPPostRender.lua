@@ -4,18 +4,19 @@ local RPPostRender = {}
 -- Includes
 --
 
-local RPGlobals     = require("src/rpglobals")
-local RPSaveDat     = require("src/rpsavedat")
-local RPSprites     = require("src/rpsprites")
-local RPSchoolbag   = require("src/rpschoolbag")
-local RPSoulJar     = require("src/rpsouljar")
-local RPPostUpdate  = require("src/rppostupdate")
-local RPItems       = require("src/rpitems")
-local RPFastTravel  = require("src/rpfasttravel")
-local RPFastDrop    = require("src/rpfastdrop")
-local RPTimer       = require("src/rptimer")
-local RPSpeedrun    = require("src/rpspeedrun")
-local RPSeededDeath = require("src/rpseededdeath")
+local RPGlobals         = require("src/rpglobals")
+local RPSaveDat         = require("src/rpsavedat")
+local RPSprites         = require("src/rpsprites")
+local RPSchoolbag       = require("src/rpschoolbag")
+local RPSoulJar         = require("src/rpsouljar")
+local RPPostUpdate      = require("src/rppostupdate")
+local RPItems           = require("src/rpitems")
+local RPFastTravel      = require("src/rpfasttravel")
+local RPFastDrop        = require("src/rpfastdrop")
+local RPTimer           = require("src/rptimer")
+local RPSpeedrun        = require("src/rpspeedrun")
+local RPChangeCharOrder = require("src/rpchangecharorder")
+local RPSeededDeath     = require("src/rpseededdeath")
 
 --
 -- PostRender functions
@@ -54,7 +55,7 @@ function RPPostRender:Main()
   RPTimer:DisplayRun()
   RPTimer:DisplayDebuff()
   RPSpeedrun:DisplayCharProgress()
-  RPSpeedrun:DisplayCharSelectRoom()
+  RPChangeCharOrder:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
   RPFastDrop:PostRender()
 
@@ -85,7 +86,7 @@ function RPPostRender:Main()
 
   -- Do speedrun related checks
   RPSpeedrun:CheckRestart()
-  RPSpeedrun:CheckChangeCharOrder()
+  RPChangeCharOrder:CheckChangeCharOrder()
 end
 
 -- Restart the game if Easter Egg or character validation failed

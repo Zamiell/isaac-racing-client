@@ -162,16 +162,16 @@ function RPPostGameStarted:Main(saveState)
   RPPostGameStarted:Character()
 
   -- Do more run initialization things specifically pertaining to speedruns
-  RPSpeedrun:Init()
+  RPSpeedrun:PostGameStarted()
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()
 
   -- Remove the 3 placeholder items if this is not a diversity race
   if RPPostGameStarted.diversity == false then
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #1"))
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
   end
 
   -- Make sure that the festive hat shows
@@ -275,7 +275,7 @@ function RPPostGameStarted:Character()
   elseif character == PlayerType.PLAYER_EDEN then -- 9
     -- Find out what the passive item is
     local passiveItem
-    for i = 1, CollectibleType.NUM_COLLECTIBLES do
+    for i = 1, RPGlobals:GetTotalItemCount() do
       if player:HasCollectible(i) and
          i ~= activeItem and
          i ~= CollectibleType.COLLECTIBLE_D6 then -- 105

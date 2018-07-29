@@ -163,13 +163,12 @@ function RPSeededDeath:DebuffOn()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  -- Remove any golden bombs and keys
-  player:RemoveGoldenBomb()
-  player:RemoveGoldenKey()
-
-  -- Remove the items (and store them for later)
   RPGlobals.run.seededDeath.charge = player:GetActiveCharge()
-  for i = 1, CollectibleType.NUM_COLLECTIBLES do
+
+  -- We need to remove every item (and store it for later)
+  -- ("player:GetCollectibleNum()" is bugged if you feed it a number higher than the total amount of items and
+  -- can cause the game to crash)
+  for i = 1, RPGlobals:GetTotalItemCount() do
     local numItems = player:GetCollectibleNum(i)
     if numItems > 0 then
       for j = 1, numItems do
@@ -185,6 +184,17 @@ function RPSeededDeath:DebuffOn()
     end
   end
   player:EvaluateItems()
+
+  -- Remove any golden bombs and keys
+  player:RemoveGoldenBomb()
+  player:RemoveGoldenKey()
+
+  -- Remove any Dead Eye multiplier
+  for i = 1, 100 do
+    -- Each time this function is called, it only has a change of working,
+    -- so just call it 100 times to be safe
+    player:ClearDeadEyeCharge()
+  end
 end
 
 function RPSeededDeath:DebuffOff()

@@ -23,16 +23,22 @@ function RPSoulJar:CheckHealth()
   local player = game:GetPlayer(0)
   local soulHearts = player:GetSoulHearts()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) and soulHearts > 0 then
-    RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls + soulHearts
-    player:AddSoulHearts(-1 * soulHearts)
-    Isaac.DebugString("Soul heart collection is now at: " .. tostring(RPGlobals.run.soulJarSouls))
-    while RPGlobals.run.soulJarSouls >= 8 do -- This has to be in a while loop because of items like Abaddon
-      RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls - 8  -- 4 soul hearts
-      player:AddMaxHearts(2)
-      player:AddHearts(2) -- The container starts empty
-      Isaac.DebugString("Converted 4 soul hearts to a heart container.")
-    end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+    return
+  end
+
+  if soulHearts <= 0 then
+    return
+  end
+
+  RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls + soulHearts
+  player:AddSoulHearts(-1 * soulHearts)
+  Isaac.DebugString("Soul heart collection is now at: " .. tostring(RPGlobals.run.soulJarSouls))
+  while RPGlobals.run.soulJarSouls >= 8 do -- This has to be in a while loop because of items like Abaddon
+    RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls - 8  -- 4 soul hearts
+    player:AddMaxHearts(2)
+    player:AddHearts(2) -- The container starts empty
+    Isaac.DebugString("Converted 4 soul hearts to a heart container.")
   end
 end
 
@@ -42,10 +48,12 @@ function RPSoulJar:CheckDamaged()
   local player = game:GetPlayer(0)
 
   -- Do the special Maggy Devil Room mechanic
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) then
-    if RPGlobals.run.levelDamaged == false then
-      game:SetLastDevilRoomStage(0) -- This ensures a 100% deal if no damage was taken
-    end
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+    return
+  end
+
+  if RPGlobals.run.levelDamaged == false then
+    game:SetLastDevilRoomStage(0) -- This ensures a 100% deal if no damage was taken
   end
 end
 

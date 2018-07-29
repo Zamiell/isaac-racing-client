@@ -93,12 +93,14 @@ function RPPostNewLevel:NewLevel()
 
   -- Make sure that the diveristy placeholder items are removed
   if stage >= 2 then
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #1"))
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #2"))
-    itemPool:RemoveCollectible(Isaac.GetItemIdByName("Diversity Placeholder #3"))
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
   end
 
-  -- Ensure that the "More Options" buff (for custom challenges) does not persist beyond Basement 1
+  -- Ensure that the "More Options" buff does not persist beyond Basement 1
+  -- (it is removed as soon as they enter the first Treasure Room,
+  -- but they might have skipped the Basement 1 Treasure Room for some reason)
   if stage >= 2 and RPGlobals.run.removeMoreOptions == true then
     RPGlobals.run.removeMoreOptions = false
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414

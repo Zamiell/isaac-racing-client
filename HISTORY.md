@@ -1,6 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.19.13* - July 25th, 2018
+### *v0.19.14* - July 28th, 2018
+
+* Fixed the bug where the Dead Eye multiplier was not cleared after dying in a seeded race. (Thanks mgln)
+* Fixed the bug where Mega Blast would continue to fire after dying in a seeded race. (It will still look like it is firing an invisible laser, but this is a side-effect of the laser removal.) (Thanks mgln)
+* Fixed the bug where certain items would not be given back to Samael after dying in a seeded race. (Thanks Greninja_San)
+* Fixed the bug where the number shown for the final character was wrong in the "Choose Char Order" custom challenge under certain conditions.
+* Fixed various bugs with the True Co-op Mod. (Thanks thisguyisbarry)
+
+### *v0.19.13* - July 26th, 2018
 
 * You can now only store one multi-character speedrun order at a time. (This simplifies the code.)
 * When More Options is given for only Basement 1, it will no longer show the costume in order to reduce confusion and clutter.
@@ -11,7 +19,7 @@
 * Both photos will now spawn if you are doing a normal (i.e. non-race) run.
 * Larry Jr. has been moved away from the doors in rooms #1025 and #1028.
 * Fixed the bug where clean bedroom #24 would glitch out if you bombed the center of the room. (Thanks Hispa)
-* Fixed the bug where the secondary character would not get a charge on their active item after clearing a room (when using the True Co-op mod). (Thanks thisguyisbarry)
+* Fixed the bug where the secondary character would not get a charge on their active item after clearing a room (when using the True Co-op Mod). (Thanks thisguyisbarry)
 * Fixed the bug where selecting dark mode would crash the client. (Thanks Gamonymous)
 
 ### *v0.19.10* - July 22nd, 2018
@@ -359,7 +367,7 @@ Client:
 
 ### *v0.14.27* - December 29th, 2017
 
-* The mod will now work with the True Co-op mod. (Thanks BMZ_Loop)
+* The mod will now work with the True Co-op Mod. (Thanks BMZ_Loop)
 
 ### *v0.14.26* - December 27th, 2017
 
@@ -1726,4 +1734,3 @@ Changes:
 * Added an Alt+F hotkey for finishing. This only works in the new "Custom" format.
 * More countdown sounds have been added (from Mario Kart: Double Dash).
 * In the client, you can now hover over emotes to see what they are.
-

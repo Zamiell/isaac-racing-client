@@ -281,51 +281,54 @@ function RPFastTravel:CheckTrapdoorEnter(effect, upwards)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
-  local player = game:GetPlayer(0)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Check to see if the player is touching the trapdoor
-  if RPGlobals.run.trapdoor.state == 0 and
-     ((upwards == false and effect.State == 0) or -- The trapdoor is open
-      (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
-      -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
-      -- (we initially spawn it with an InitSeed equal to the room seed)
-      (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
-      -- The extra delay should not apply if they are re-entering the room
-      -- (we respawn beams of light with an InitSeed of 0)
-      (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
-      -- The beam of light opening animation is 16 frames long,
-      -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
-      -- (and the minimum for this is 8 frames, determined from trial and error)
-     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
-     player:IsHoldingItem() == false and
-     player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
-     player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
+  --for i = 1, game:GetNumPlayers() do
+    --local player = Isaac.GetPlayer(i - 1)
+    local player = game:GetPlayer(0)
+    if RPGlobals.run.trapdoor.state == 0 and
+       ((upwards == false and effect.State == 0) or -- The trapdoor is open
+        (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
+        -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
+        -- (we initially spawn it with an InitSeed equal to the room seed)
+        (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
+        -- The extra delay should not apply if they are re-entering the room
+        -- (we respawn beams of light with an InitSeed of 0)
+        (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
+        -- The beam of light opening animation is 16 frames long,
+        -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
+        -- (and the minimum for this is 8 frames, determined from trial and error)
+       RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
+       player:IsHoldingItem() == false and
+       player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
+       player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
 
-    -- State 1 is activated the moment we touch the trapdoor
-    RPGlobals.run.trapdoor.state = 1
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
-    RPGlobals.run.trapdoor.upwards = upwards
-    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
-    player.ControlsEnabled = false
-    player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-    -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-    player.Position = effect.Position -- Teleport the player on top of the trapdoor
-    player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
-    if upwards then
-      -- The vanilla "LightTravel" animation is 28 frames long,
-      -- but we need to delay for longer than that to make it look smooth,
-      -- so we modified it to be 40 frames in the ANM2 file
-      player:PlayExtraAnimation("LightTravel") -- This is modified to be longer than on vanilla;
-    else
-      -- The vanilla "Trapdoor" animation is 16 frames long,
-      -- but we need to delay for longer than that to make it look smooth,
-      -- So we made a custom "TrapDoor2" animation that is 40 frames long)
-      player:PlayExtraAnimation("Trapdoor2")
+      -- State 1 is activated the moment we touch the trapdoor
+      RPGlobals.run.trapdoor.state = 1
+      Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+      RPGlobals.run.trapdoor.upwards = upwards
+      RPGlobals.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
+      player.ControlsEnabled = false
+      player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+      -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+      player.Position = effect.Position -- Teleport the player on top of the trapdoor
+      player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+      if upwards then
+        -- The vanilla "LightTravel" animation is 28 frames long,
+        -- but we need to delay for longer than that to make it look smooth,
+        -- so we modified it to be 40 frames in the ANM2 file
+        player:PlayExtraAnimation("LightTravel") -- This is modified to be longer than on vanilla;
+      else
+        -- The vanilla "Trapdoor" animation is 16 frames long,
+        -- but we need to delay for longer than that to make it look smooth,
+        -- So we made a custom "TrapDoor2" animation that is 40 frames long)
+        player:PlayExtraAnimation("Trapdoor2")
+      end
     end
-  end
+  --end
 end
 
 -- Called from the PostRender callback
@@ -657,34 +660,37 @@ function RPFastTravel:CheckCrawlspaceEnter(effect)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local player = game:GetPlayer(0)
 
   -- Check to see if the player is touching the crawlspace
-  if effect.State == 0 and -- The crawlspace is open
-     RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
-     player:IsHoldingItem() == false and
-     player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
-     player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
+  --for i = 1, game:GetNumPlayers() do
+    --local player = Isaac.GetPlayer(i - 1)
+    local player = game:GetPlayer(0)
+    if effect.State == 0 and -- The crawlspace is open
+       RPGlobals:InsideSquare(player.Position, effect.Position, RPFastTravel.trapdoorTouchDistance) and
+       player:IsHoldingItem() == false and
+       player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
+       player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
 
-    -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
-    if prevRoomIndex < 0 then
-      Isaac.DebugString("Skipped saving the crawlspace previous room since it was negative.")
-    else
-      RPGlobals.run.crawlspace.prevRoom = level:GetPreviousRoomIndex()
-      Isaac.DebugString("Set crawlspace previous room to: " .. tostring(RPGlobals.run.crawlspace.prevRoom))
+      -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
+      if prevRoomIndex < 0 then
+        Isaac.DebugString("Skipped saving the crawlspace previous room since it was negative.")
+      else
+        RPGlobals.run.crawlspace.prevRoom = level:GetPreviousRoomIndex()
+        Isaac.DebugString("Set crawlspace previous room to: " .. tostring(RPGlobals.run.crawlspace.prevRoom))
+      end
+
+      -- If we don't set this, we will return to the center of the room by default
+      level.DungeonReturnPosition = effect.Position
+
+      -- We need to keep track of which room we came from
+      -- (this is needed in case we are in a Boss Rush or other room with a negative room index)
+      level.DungeonReturnRoomIndex = roomIndex
+
+      -- Go to the crawlspace
+      game:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
+                               RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
     end
-
-    -- If we don't set this, we will return to the center of the room by default
-    level.DungeonReturnPosition = effect.Position
-
-    -- We need to keep track of which room we came from
-    -- (this is needed in case we are in a Boss Rush or other room with a negative room index)
-    level.DungeonReturnRoomIndex = roomIndex
-
-    -- Go to the crawlspace
-    game:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
-                             RPGlobals.RoomTransition.TRANSITION_NONE) -- 0
-  end
+  --end
 end
 
 -- Called from the PostUpdate callback

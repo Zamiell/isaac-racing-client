@@ -1,3 +1,13 @@
+<!--
+
+Changes:
+- Deleted the "Appear" animation
+- Deleted the "TeleportUp" animation
+- Added the "Trapdoor2" animation
+- Changed the "LightTravel" animation
+
+-->
+
 <AnimatedActor>
 	<Info CreatedBy="robot" CreatedOn="15/10/2015 7:28:27 PM" Version="135" Fps="30"/>
 	<Content>
@@ -347,43 +357,10 @@
 		</Animation>
 		<Animation Name="TeleportUp" FrameNum="0" Loop="false">
 			<RootAnimation>
-				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="19" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>
 			<LayerAnimations>
-				<LayerAnimation LayerId="0" Visible="true"/>
-				<LayerAnimation LayerId="1" Visible="true"/>
-				<LayerAnimation LayerId="2" Visible="true"/>
-				<LayerAnimation LayerId="3" Visible="true"/>
-				<LayerAnimation LayerId="4" Visible="true"/>
-				<LayerAnimation LayerId="5" Visible="true"/>
-				<LayerAnimation LayerId="6" Visible="true"/>
-				<LayerAnimation LayerId="7" Visible="true"/>
-				<LayerAnimation LayerId="8" Visible="true"/>
-				<LayerAnimation LayerId="9" Visible="true"/>
-				<LayerAnimation LayerId="10" Visible="true"/>
-				<LayerAnimation LayerId="11" Visible="true"/>
-				<LayerAnimation LayerId="12" Visible="true">
-					<Frame XPosition="0" YPosition="9" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="90" YScale="110" Delay="1" Visible="true" RedTint="0" GreenTint="0" BlueTint="0" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="9" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="90" YScale="110" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="-23" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="140" YScale="60" Delay="1" Visible="true" RedTint="0" GreenTint="0" BlueTint="0" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="-23" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="140" YScale="60" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="-23" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="180" YScale="50" Delay="1" Visible="true" RedTint="0" GreenTint="0" BlueTint="0" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="27" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="50" YScale="220" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="27" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="128" XScale="30" YScale="300" Delay="1" Visible="true" RedTint="0" GreenTint="0" BlueTint="0" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="31" XPivot="32" YPivot="128" XCrop="176" YCrop="320" Width="64" Height="128" XScale="20" YScale="400" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-					<Frame XPosition="0" YPosition="73" XPivot="32" YPivot="128" XCrop="112" YCrop="320" Width="64" Height="64" XScale="100" YScale="100" Delay="11" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
-				</LayerAnimation>
-				<LayerAnimation LayerId="13" Visible="true"/>
 			</LayerAnimations>
 			<NullAnimations>
-				<NullAnimation NullId="0" Visible="true"/>
-				<NullAnimation NullId="1" Visible="true"/>
-				<NullAnimation NullId="2" Visible="true"/>
-				<NullAnimation NullId="3" Visible="true"/>
-				<NullAnimation NullId="4" Visible="true"/>
-				<NullAnimation NullId="5" Visible="true"/>
-				<NullAnimation NullId="6" Visible="true"/>
-				<NullAnimation NullId="7" Visible="true"/>
 			</NullAnimations>
 			<Triggers/>
 		</Animation>

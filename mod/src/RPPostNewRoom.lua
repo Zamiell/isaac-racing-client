@@ -4,13 +4,14 @@ local RPPostNewRoom = {}
 -- Includes
 --
 
-local RPGlobals     = require("src/rpglobals")
-local RPFastClear   = require("src/rpfastclear")
-local RPFastTravel  = require("src/rpfasttravel")
-local RPSpeedrun    = require("src/rpspeedrun")
-local RPSprites     = require("src/rpsprites")
-local RPSeededDeath = require("src/rpseededdeath")
-local SamaelMod     = require("src/rpsamael")
+local RPGlobals         = require("src/rpglobals")
+local RPFastClear       = require("src/rpfastclear")
+local RPFastTravel      = require("src/rpfasttravel")
+local RPSpeedrun        = require("src/rpspeedrun")
+local RPChangeCharOrder = require("src/rpchangecharorder")
+local RPSprites         = require("src/rpsprites")
+local RPSeededDeath     = require("src/rpseededdeath")
+local SamaelMod         = require("src/rpsamael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function RPPostNewRoom:Main()
@@ -28,7 +29,7 @@ function RPPostNewRoom:Main()
 
   -- Make an exception for the "Race Start Room" and the "Change Char Order" room
   RPPostNewRoom:RaceStart()
-  RPSpeedrun:PostNewRoomChangeCharOrder()
+  RPChangeCharOrder:PostNewRoom()
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
@@ -46,6 +47,7 @@ function RPPostNewRoom:NewRoom()
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local roomClear = room:IsClear()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
@@ -101,10 +103,20 @@ function RPPostNewRoom:NewRoom()
   -- Check for miscellaneous crawlspace bugs
   RPFastTravel:CheckCrawlspaceMiscBugs()
 
+  -- Remove the "More Options" buff if they have entered a Treasure Room
+  if RPGlobals.run.removeMoreOptions == true and
+     roomType == RoomType.ROOM_TREASURE then -- 4
+
+    RPGlobals.run.removeMoreOptions = false
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  end
+
   -- Check health (to fix the bug where we don't die at 0 hearts)
   -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
-  if maxHearts == 0 and soulHearts == 0 and boneHearts == 0 then
+  if maxHearts == 0 and soulHearts == 0 and boneHearts == 0 and InfinityTrueCoopInterface == nil then
+    -- Make an exception if the True Co-op mod is on
     player:Kill()
+    Isaac.DebugString("Manually killing the player since they are at 0 hearts.")
   end
 
   -- Make the Schoolbag work properly with the Glowing Hour Glass

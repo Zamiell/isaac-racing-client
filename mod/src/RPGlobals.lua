@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.13"
+RPGlobals.version = "v0.19.14"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -70,15 +70,18 @@ CollectibleType.COLLECTIBLE_FINISHED                = Isaac.GetItemIdByName("Fin
 CollectibleType.COLLECTIBLE_OFF_LIMITS              = Isaac.GetItemIdByName("Off Limits")
 CollectibleType.COLLECTIBLE_13_LUCK                 = Isaac.GetItemIdByName("13 Luck")
 CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Checkpoint")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder #1")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder #2")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder #3")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder 1")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder 2")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder 3")
 CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
-CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Debug") + 1
+CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE         = Isaac.GetItemIdByName("Samael Dead Eye")
+CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Samael Chocolate Milk")
+CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS         = Isaac.GetItemIdByName("Samael Dr. Fetus")
+CollectibleType.COLLECTIBLE_SAMAEL_MARKED           = Isaac.GetItemIdByName("Samael Marked")
+CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wraith Skull")
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
-SoundEffect.NUM_SOUND_EFFECTS     = Isaac.GetSoundIdByName("Speedrun Finish") + 1
 
 -- Spaded by ilise rose (@yatboim)
 RPGlobals.RoomTransition = {
@@ -322,6 +325,23 @@ function RPGlobals:TableConcat(t1, t2)
     t1[#t1 + 1] = t2[i]
   end
   return t1
+end
+
+-- From: https://stackoverflow.com/questions/2705793/how-to-get-number-of-entries-in-a-lua-table/2705804
+function RPGlobals:TableLen(t)
+  local count = 0
+  for _ in pairs(t) do
+    count = count + 1
+  end
+  return count
+end
+
+-- Find out how many items are in the game
+function RPGlobals:GetTotalItemCount()
+  -- In vanilla, there are 552 items, but CollectibleType has 554 values
+  -- This is because of the "COLLECTIBLE_NULL" and the "NUM_COLLECTIBLES" keys
+  -- Racing+ adds a bunch of items, but for every item it also adds an entry to CollectibleType above
+  return RPGlobals:TableLen(CollectibleType) - 2
 end
 
 -- Find out how many charges this item has

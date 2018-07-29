@@ -50,13 +50,14 @@ local RPPreEntitySpawn      = require("src/rppreentityspawn") -- The PreEntitySp
 local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callback (27)
 local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
+local RPPostLaserInit       = require("src/rppostlaserinit") -- The PostLaserInit callback (47)
 local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
 local RPPreRoomEntitySpawn  = require("src/rppreroomentityspawn") -- The PreRoomEntitySpawn callback (71)
 local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
 local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPPills               = require("src/rppills") -- Pill callbacks (10)
-local RPFastClear           = require("src/rpfastclear") -- Functions relating to the "Fast-Clear" feature
-local RPSpeedrun            = require("src/rpspeedrun") -- Functions relating to the custom challenges
+local RPFastClear           = require("src/rpfastclear") -- Functions for the "Fast-Clear" feature
+local RPSpeedrun            = require("src/rpspeedrun") -- Functions for custom challenges
 local RPSamael              = require("src/rpsamael") -- Samael functions
 local RPJrFetus             = require("src/rpjrfetus") -- Jr. Fetus functions (2/2)
 local RPMahalath            = require("src/rpmahalath") -- Mahalath functions
@@ -106,6 +107,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      RPPreEntitySpawn.M
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
+RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       RPPostLaserInit.Main) -- 47
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RPPreRoomEntitySpawn.Main) -- 71
 
