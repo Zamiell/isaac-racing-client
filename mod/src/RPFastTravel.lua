@@ -5,7 +5,6 @@ local RPFastTravel = {}
 --
 
 local RPGlobals  = require("src/rpglobals")
-local RPSprites  = require("src/rpsprites")
 
 --
 -- Constants
@@ -421,12 +420,6 @@ function RPFastTravel:CheckTrapdoor()
         break
       end
     end
-
-    -- Hide the stage text
-    -- (it won't be showing if we already finished the race)
-    if RPGlobals.raceVars.finished == false then
-      RPFastTravel.sprites.stage:Play("TextOut", true)
-    end
   end
 
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
@@ -440,8 +433,6 @@ function RPFastTravel:CheckTrapdoor2()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
-  local stage = level:GetStage()
-  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
@@ -468,13 +459,10 @@ function RPFastTravel:CheckTrapdoor2()
     -- Move Isaac to the center of the room
     player.Position = room:GetCenterPos()
 
-    -- Show what the new floor (the game won't show this naturally since we used the console command to get here)
+    -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
     -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
     if RPGlobals.raceVars.finished == false then
-      local spriteName = tostring(stage) .. "-" .. tostring(stageType)
-      RPFastTravel.sprites.stage = Sprite()
-      RPFastTravel.sprites.stage:Load("gfx/stage/" .. spriteName .. ".anm2", true)
-      RPFastTravel.sprites.stage:Play("TextIn", true)
+      level:ShowName(false)
     end
   end
 end
@@ -1025,17 +1013,6 @@ function RPFastTravel:RemoveOverlappingGridEntity(pos, type)
       end
     end
   end
-end
-
-function RPFastTravel:SpriteDisplay()
-  if RPFastTravel.sprites.stage == nil then
-    return
-  end
-
-  local pos = RPSprites:GetScreenCenterPosition()
-  pos.Y = pos.Y - 85 -- Move it below the top door
-  RPFastTravel.sprites.stage:Render(pos, Vector(0, 0), Vector(0, 0))
-  RPFastTravel.sprites.stage:Update()
 end
 
 return RPFastTravel

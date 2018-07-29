@@ -48,7 +48,6 @@ function RPPostRender:Main()
 
   -- Draw graphics
   RPSprites:Display()
-  RPFastTravel:SpriteDisplay()
   RPSchoolbag:SpriteDisplay()
   RPSoulJar:SpriteDisplay()
   RPTimer:Display()

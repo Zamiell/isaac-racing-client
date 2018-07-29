@@ -82,28 +82,10 @@ function RPSeededDeath:PostNewRoom()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
-  local playerSprite = player:GetSprite()
-  local character = player:GetPlayerType()
 
   -- Seeded death (2/3)
   if RPGlobals.run.seededDeath.state ~= 1 then
     return
-  end
-
-  -- Set their health to explicitly 1.5 soul hearts
-  -- (or custom values for Keeper & The Forgotton)
-  player:AddMaxHearts(-24, false)
-  player:AddSoulHearts(-24)
-  if character == PlayerType.PLAYER_KEEPER then -- 14
-    player:AddMaxHearts(2)
-    player:AddHearts(2)
-  elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-    player:AddMaxHearts(2)
-    player:AddHearts(1)
-  elseif character == PlayerType.PLAYER_THESOUL then -- 17
-    player:AddHearts(1)
-  else
-    player:AddSoulHearts(3)
   end
 
   -- Start the debuff and set the finishing time to be in the future
@@ -116,14 +98,6 @@ function RPSeededDeath:PostNewRoom()
 
   -- Play the animation where Isaac lies in the fetal position
   player:PlayExtraAnimation("AppearVanilla")
-
-  -- Fade the player
-  playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
-
-  -- Store their size for later, and then reset it to default
-  -- (in case they had items like Magic Mushroom and so forth)
-  RPGlobals.run.seededDeath.spriteScale = player.SpriteScale
-  player.SpriteScale = Vector(1, 1)
 
   RPGlobals.run.seededDeath.state = 2
   RPGlobals.run.seededDeath.pos = Vector(player.Position.X, player.Position.Y)
@@ -162,8 +136,32 @@ function RPSeededDeath:DebuffOn()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local playerSprite = player:GetSprite()
+  local character = player:GetPlayerType()
 
+  -- Set their health to explicitly 1.5 soul hearts
+  -- (or custom values for Keeper & The Forgotton)
+  player:AddMaxHearts(-24, false)
+  player:AddSoulHearts(-24)
+  if character == PlayerType.PLAYER_KEEPER then -- 14
+    player:AddMaxHearts(2)
+    player:AddHearts(2)
+  elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    player:AddMaxHearts(2)
+    player:AddHearts(1)
+  elseif character == PlayerType.PLAYER_THESOUL then -- 17
+    player:AddHearts(1)
+  else
+    player:AddSoulHearts(3)
+  end
+
+  -- Store their active item charge for later
   RPGlobals.run.seededDeath.charge = player:GetActiveCharge()
+
+  -- Store their size for later, and then reset it to default
+  -- (in case they had items like Magic Mushroom and so forth)
+  RPGlobals.run.seededDeath.spriteScale = player.SpriteScale
+  player.SpriteScale = Vector(1, 1)
 
   -- We need to remove every item (and store it for later)
   -- ("player:GetCollectibleNum()" is bugged if you feed it a number higher than the total amount of items and
@@ -195,6 +193,9 @@ function RPSeededDeath:DebuffOn()
     -- so just call it 100 times to be safe
     player:ClearDeadEyeCharge()
   end
+
+  -- Fade the player
+  playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
 end
 
 function RPSeededDeath:DebuffOff()
@@ -206,9 +207,6 @@ function RPSeededDeath:DebuffOff()
 
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
-
-  -- Reset their size
-  player.SpriteScale = RPGlobals.run.seededDeath.spriteScale
 
   -- Store the current red hearts, soul/black hearts, bombs, and keys
   local hearts = player:GetHearts()
@@ -257,6 +255,9 @@ function RPSeededDeath:DebuffOff()
 
   -- Set the charge to the way it was before the debuff was applied
   player:SetActiveCharge(RPGlobals.run.seededDeath.charge)
+
+  -- Set their size to the way it was before the debuff was applied
+  player.SpriteScale = RPGlobals.run.seededDeath.spriteScale
 
   -- Set the health to the way it was before the items were added
   player:AddMaxHearts(-24, true) -- Remove all hearts

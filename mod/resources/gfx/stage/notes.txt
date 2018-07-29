@@ -1,5 +1,0 @@
-upheaval, 20pt
-
-1) text is centered
-2) 2 up
-3) 9 right
