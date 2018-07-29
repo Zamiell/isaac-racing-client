@@ -1,8 +1,6 @@
 isaac-racing-mod
 ================
 
-<br />
-
 Download & Additional Information
 ---------------------------------
 
