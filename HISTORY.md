@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.19.15* - July 28th, 2018
+
+* Changed the color of the Friend Zone collectible to match the actual color of the familiar.
+* Fixed the bug where the game would occasionally crash when using either Telepills or Blank Card. (Thanks Hispa and HauntedQuest)
+
 ### *v0.19.14* - July 28th, 2018
 
 * Fixed the bug where the Dead Eye multiplier was not cleared after dying in a seeded race. (Thanks mgln)

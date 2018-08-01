@@ -4,9 +4,9 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.19.14"
+RPGlobals.version = "v0.19.15"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
-RPGlobals.debug = true
+RPGlobals.debug = false
 
 -- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "RPGlobals:InitRun()" function)
