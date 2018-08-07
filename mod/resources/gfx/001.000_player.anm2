@@ -396,7 +396,7 @@ Changes:
 				<NullAnimation NullId="6" Visible="true"/>
 				<NullAnimation NullId="7" Visible="true"/>
 			</NullAnimations>
-		<Triggers/>
+			<Triggers/>
 		</Animation>
 		<Animation Name="TeleportDown" FrameNum="19" Loop="false">
 			<RootAnimation>

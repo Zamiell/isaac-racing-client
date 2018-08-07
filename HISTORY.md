@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.20.0* - August 7th, 2018
+
+* Added the "R+15 (Vanilla)" custom challenge. This is not considered an official category.
+* Fixed the vanilla bug where Wiggle Worm granted a delayed tears up (instead of a normal tears up). (Thanks thisguyisbarry)
+* Sped up the fade-in that occurs at the beginning of a run.
+* Changed the color of the Locust of Famine trinket to match the actual color of the flies. (Thanks Hispa)
+* Fixed the bug where Incubus would get an extra Incubus familiar after reviving in a seeded race. (Thanks thereisnofuture)
+
 ### *v0.19.15* - July 28th, 2018
 
 * Changed the color of the Friend Zone collectible to match the actual color of the familiar.

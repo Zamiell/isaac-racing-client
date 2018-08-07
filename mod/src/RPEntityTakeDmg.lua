@@ -15,41 +15,38 @@ function RPEntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource
   local stage = level:GetStage()
   local player = tookDamage:ToPlayer()
 
-  -- Check to see if it was the player that took damage
-  if player ~= nil then
-    -- Make us invincibile while interacting with a trapdoor
-    if RPGlobals.run.trapdoor.state > 0 then
-      return false
+  -- Make us invincibile while interacting with a trapdoor
+  if RPGlobals.run.trapdoor.state > 0 then
+    return false
+  end
+
+  -- Prevent unavoidable damage from Mushrooms (when walking over skulls with Leo / Thunder Thighs)
+  if damageSource.Type == EntityType.ENTITY_MUSHROOM and -- 300
+     stage ~= LevelStage.STAGE2_1 and -- 3
+     stage ~= LevelStage.STAGE2_2 then -- 4
+
+    return false
+  end
+
+  local selfDamage = false
+  for i = 0, 21 do -- There are 21 damage flags
+    local bit = (damageFlag & (1 << i)) >> i
+
+    -- Soul Jar damage tracking
+    if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
+      selfDamage = true
     end
+  end
+  if selfDamage == false then
+    RPGlobals.run.levelDamaged = true
+  end
 
-    -- Prevent unavoidable damage from Mushrooms (when walking over skulls with Leo / Thunder Thighs)
-    if damageSource.Type == EntityType.ENTITY_MUSHROOM and -- 300
-       stage ~= LevelStage.STAGE2_1 and -- 3
-       stage ~= LevelStage.STAGE2_2 then -- 4
-
-      return false
-    end
-
-    local selfDamage = false
-    for i = 0, 21 do -- There are 21 damage flags
-      local bit = (damageFlag & (1 << i)) >> i
-
-      -- Soul Jar damage tracking
-      if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
-        selfDamage = true
-      end
-    end
-    if selfDamage == false then
-      RPGlobals.run.levelDamaged = true
-    end
-
-    -- Betrayal (custom)
-    if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        local npc = entity:ToNPC()
-        if npc ~= nil and npc:IsVulnerableEnemy() then
-          npc:AddCharmed(150) -- 5 seconds
-        end
+  -- Betrayal (custom)
+  if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      local npc = entity:ToNPC()
+      if npc ~= nil and npc:IsVulnerableEnemy() then
+        npc:AddCharmed(150) -- 5 seconds
       end
     end
   end

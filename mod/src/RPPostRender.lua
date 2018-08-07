@@ -46,6 +46,13 @@ function RPPostRender:Main()
   -- Reseed the floor if we have Duality and there is a narrow boss room
   RPPostRender:CheckDualityNarrowRoom()
 
+  -- Get rid of the slow fade-in at the beginning of a run
+  if RPGlobals.run.erasedFadeIn == false then
+    RPGlobals.run.erasedFadeIn = true
+    game:Fadein(0.15) -- This fine is fine tuned from trial and error
+    Isaac.DebugString("Manually ending the beginning of run fade-in.")
+  end
+
   -- Draw graphics
   RPSprites:Display()
   RPSchoolbag:SpriteDisplay()

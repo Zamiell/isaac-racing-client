@@ -96,7 +96,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           RPPostUpdate.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           RPPostRender.Main) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        RPEvaluateCache.Main) -- 8
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      RPPostPlayerInit.Main) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       RPEntityTakeDmg.Main) -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       RPEntityTakeDmg.Main, EntityType.ENTITY_PLAYER) -- 11, 1
 RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          RPInputAction.Main) -- 13
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     RPPostGameStarted.Main) -- 15
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         RPSpeedrun.PostGameEnd) -- 16

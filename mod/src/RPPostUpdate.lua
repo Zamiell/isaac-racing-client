@@ -4,15 +4,16 @@ local RPPostUpdate = {}
 -- Includes
 --
 
-local RPGlobals       = require("src/rpglobals")
-local RPSprites       = require("src/rpsprites")
-local RPCheckEntities = require("src/rpcheckentities")
-local RPFastClear     = require("src/rpfastclear")
-local RPFastDrop      = require("src/rpfastdrop")
-local RPSchoolbag     = require("src/rpschoolbag")
-local RPSoulJar       = require("src/rpsouljar")
-local RPFastTravel    = require("src/rpfasttravel")
-local RPSpeedrun      = require("src/rpspeedrun")
+local RPGlobals         = require("src/rpglobals")
+local RPSprites         = require("src/rpsprites")
+local RPCheckEntities   = require("src/rpcheckentities")
+local RPFastClear       = require("src/rpfastclear")
+local RPFastDrop        = require("src/rpfastdrop")
+local RPSchoolbag       = require("src/rpschoolbag")
+local RPSoulJar         = require("src/rpsouljar")
+local RPFastTravel      = require("src/rpfasttravel")
+local RPSpeedrun        = require("src/rpspeedrun")
+local RPChangeCharOrder = require("src/rpchangecharorder")
 
 --
 -- PostUpdate functions
@@ -85,11 +86,11 @@ function RPPostUpdate:Main()
   RPSchoolbag:CheckBossRush()
   RPSchoolbag:CheckInput()
 
-  -- Do race related checks
+  -- Do race/speedrun related checks
   RPPostUpdate:RaceChecks()
 end
 
--- Keep track of the total amount of rooms cleared on this run thus far
+-- Keep track of the when the room is cleared
 function RPPostUpdate:CheckRoomCleared()
   -- Local variables
   local game = Game()
@@ -331,6 +332,9 @@ function RPPostUpdate:RaceChecks()
 
   -- Check to see if we need to remove Incubus from Lilith on R+7 Season 4
   RPSpeedrun:CheckRemoveIncubus()
+
+  -- Handle things for the "Change Char Order" custom challenge
+  RPChangeCharOrder:PostUpdate()
 end
 
 -- Ban Basement 1 Treasure Rooms

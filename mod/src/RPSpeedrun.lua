@@ -838,6 +838,9 @@ function RPSpeedrun:DisplayCharProgress()
   elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     digit3 = 1
     digit4 = 4
+  elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
+    digit3 = 1
+    digit4 = 5
   end
 
   local posDigit1 = Vector(startingX, startingY)
@@ -871,7 +874,8 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+     challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
     return true
   else
@@ -919,6 +923,12 @@ function RPSpeedrun:CheckValidCharOrder()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
     -- There is no character order in season 5
     return true
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") and
+         (charOrderType ~= "R15S0" or
+          #RPGlobals.race.charOrder ~= 16) then
+
+    return false
   end
 
   return true

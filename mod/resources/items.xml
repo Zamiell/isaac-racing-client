@@ -5,6 +5,7 @@ Changes:
 - Removed the "special" tag from all items
 - Renamed "Betrayal" to "Betrayal (Vanilla)"
 - Renamed "Schoolbag" to "Schoolbag (Vanilla)"
+- Added the "firedelay" cache to Wiggle Worm
 
 -->
 
@@ -593,7 +594,7 @@ Changes:
 	<trinket description="Faith up" gfx="trinket_007_rosarybead.png" id="7" name="Rosary Bead" />
 	<trinket description="I remember these" gfx="trinket_008_cartridge.png" id="8" name="Cartridge" />
 	<trinket cache="tearflag" description="Wub wub!" gfx="trinket_009_pulseworm.png" id="9" name="Pulse Worm" />
-	<trinket cache="tearflag" description="Wiggle waggle!" gfx="trinket_010_wiggleworm.png" id="10" name="Wiggle Worm" />
+	<trinket cache="tearflag firedelay" description="Wiggle waggle!" gfx="trinket_010_wiggleworm.png" id="10" name="Wiggle Worm" />
 	<trinket cache="tearflag" description="Woop woop!" gfx="trinket_011_ringworm.png" id="11" name="Ring Worm" />
 	<trinket cache="tearflag" description="Blub blub!" gfx="trinket_012_flatworm.png" id="12" name="Flat Worm" />
 	<trinket achievement="118" description="YES!" gfx="trinket_013_storecredit.png" id="13" name="Store Credit" />

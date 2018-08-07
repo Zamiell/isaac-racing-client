@@ -168,7 +168,10 @@ function RPSeededDeath:DebuffOn()
   -- can cause the game to crash)
   for i = 1, RPGlobals:GetTotalItemCount() do
     local numItems = player:GetCollectibleNum(i)
-    if numItems > 0 then
+    if numItems > 0 and
+       player:HasCollectible(i) then
+
+      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as Lilith having 1 Incubus
       for j = 1, numItems do
         RPGlobals.run.seededDeath.items[#RPGlobals.run.seededDeath.items + 1] = i
         player:RemoveCollectible(i)

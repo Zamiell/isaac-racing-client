@@ -118,6 +118,7 @@ RPGlobals.FadeoutTarget = {
 function RPGlobals:InitRun()
   -- Tracking per run
   RPGlobals.run.startedTime       = 0
+  RPGlobals.run.erasedFadeIn      = false
   RPGlobals.run.roomsEntered      = 0
   RPGlobals.run.movingBoxOpen     = true
   RPGlobals.run.killedLamb        = false -- Used for the "Everything" race goal

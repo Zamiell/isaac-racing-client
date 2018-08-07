@@ -37,7 +37,7 @@ function RPItems:BookOfSin() -- 97
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune.
+  -- The Book of Sin has an equal chance to spawn a heart, coin, bomb, key, battery, pill, or card/rune
   RPGlobals.RNGCounter.BookOfSin = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BookOfSin)
   math.randomseed(RPGlobals.RNGCounter.BookOfSin)
   local bookPickupType = math.random(1, 7)

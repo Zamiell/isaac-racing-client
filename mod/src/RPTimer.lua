@@ -26,17 +26,11 @@ function RPTimer:Display()
     return
   end
 
+  -- Always show the timer in a speedrun
   -- Don't show the timer if the race has not started yet or they quit in the middle of the race
-  -- (and always show the timer in a custom speedrun challenge)
-  local challenge = Isaac.GetChallenge()
-  if RPGlobals.raceVars.started == false and
-     RPGlobals.raceVars.finished == false and
-     challenge ~= Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  if RPSpeedrun:InSpeedrun() == false and
+     RPGlobals.raceVars.started == false and
+     RPGlobals.raceVars.finished == false then
 
     return
   end
@@ -68,6 +62,7 @@ function RPTimer:Display()
 
   -- Find out how much time has passed since the race started
   -- (or what the race finish time was)
+  local challenge = Isaac.GetChallenge()
   local elapsedTime
   if challenge ~= 0 then
     if RPSpeedrun.finished then

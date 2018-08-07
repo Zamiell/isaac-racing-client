@@ -133,6 +133,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Double coins and nickels heal Keeper for their proper amount.
 * AAA Battery now properly synergizes with The Battery.
 * 9 Volt now properly synergizes with The Battery.
+* Wiggle Worm now properly updates the tear delay cache.
 * You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
 * You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as normal chests instead.)
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
@@ -146,8 +147,10 @@ While there are thousands of rooms in the game, many players have already seen t
 * There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
-* The Distant Admiration and Forever Alone collectibles now match the color of the actual familiars.
-* The Abaddon collectibles is replaced with the pre-Booster Pack 5 version.
+* The Distant Admiration, Forever Alone, and Friend Zone collectibles now match the color of the actual familiars.
+* The Abaddon collectible is replaced with the pre-Booster Pack 5 version.
+* The 20/20 collectible is now easier to see.
+* The Locust of Famine graphic now matches the color of the flies.
 * The door opening sound will no longer play in crawlspaces.
 
 <br />
