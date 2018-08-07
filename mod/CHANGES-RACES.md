@@ -10,7 +10,7 @@
 
 * In seeded races, both players play on the same seed. (This means that they should get all of the same items, bosses, and so forth.)
 * Resetting is allowed, but it will just take a player back to the beginning of the same seed.
-* Each player will start with a [pre-defined starting item](https://github.com/Zamiell/isaac-racing-client/blob/master/src/data/builds.json) that is chosen before the match, such as Cricket's Head or Mom's Knife.
+* Each player will start with a pre-defined starting item that is chosen before the match, such as Cricket's Head or Mom's Knife.
 * The Basement 1 Treasure Room is barred. (This is to prevent players from starting with 2 items instead of 1.)
 * All characters start with The Compass and the Schoolbag in addition to their other items.
 * If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
