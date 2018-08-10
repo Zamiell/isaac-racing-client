@@ -36,7 +36,7 @@ Lang.prototype.pack.fr = {
         "Profile": "Profil",
         "Leaderboards": "Classements",
         "Help": "Aide",
-        "Lobby": "Acceuil",
+        "Lobby": "Accueil",
         "You must finish or quit the current race before returning to the lobby.": "Vous devez finir ou quitter la course avant de revenir dans le lobby.",
         "New Race": "Nouvelle Course",
         "Settings": "Paramètres",
