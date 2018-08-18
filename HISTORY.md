@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.20.1* - August 18th, 2018
+
+* After finishing a run with a character in a custom challenge, it will now show your average time per character.
+* Added a graphic for the "R+15 (V)" button in the "Change Char Order" custom challenge. (Thanks Gromfalloon)
+* Fixed the bug where fart-rerolls were broken in diversity races. (Thanks thereisnofuture)
+
 ### *v0.20.0* - August 7th, 2018
 
 * Added the "R+15 (Vanilla)" custom challenge. This is not considered an official category.
