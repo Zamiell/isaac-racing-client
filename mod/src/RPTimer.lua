@@ -17,6 +17,7 @@ RPTimer.sprites = {}
 -- Timer functions
 --
 
+-- This is the timer that shows how long the race or speedrun has been going on for
 function RPTimer:Display()
   -- Don't show the timer if the user wants it explicitly disabled
   -- (through an additional setting in the "save#.dat" file)
@@ -83,36 +84,7 @@ function RPTimer:Display()
   end
   elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
 
-  -- Calcuate the hours digit
-  local hours = math.floor(elapsedTime / 3600)
-
-  -- Calcuate the minutes digits
-  local minutes = math.floor(elapsedTime / 60)
-  if hours > 0 then
-    minutes = minutes - hours * 60
-  end
-  if minutes < 10 then
-    minutes = "0" .. tostring(minutes)
-  else
-    minutes = tostring(minutes)
-  end
-  local minute1 = string.sub(minutes, 1, 1) -- The first character
-  local minute2 = string.sub(minutes, 2, 2) -- The second character
-
-  -- Calcuate the seconds digits
-  local seconds = math.floor(elapsedTime % 60)
-  if seconds < 10 then
-    seconds = "0" .. tostring(seconds)
-  else
-    seconds = tostring(seconds)
-  end
-  local second1 = string.sub(seconds, 1, 1) -- The first character
-  local second2 = string.sub(seconds, 2, 2) -- The second character
-
-  -- Calculate the tenths digit
-  local rawSeconds = elapsedTime % 60 -- 0.000 to 59.999
-  local decimals = rawSeconds - math.floor(rawSeconds)
-  local tenths = math.floor(decimals * 10)
+  local timeTable = RPGlobals:ConvertTimeToString(elapsedTime)
 
   -- Local variables
   local digitLength = 7.25
@@ -128,12 +100,12 @@ function RPTimer:Display()
   local posClock = Vector(startingX + 34, startingY + 45)
   RPTimer.sprites.clock:RenderLayer(0, posClock)
 
-  if hours > 0 then
+  if timeTable[1] > 0 then
     -- The format is "#:##:##" instead of "##:##"
     hourAdjustment2 = 2
     startingX = startingX + digitLength + hourAdjustment
     local posHours = Vector(startingX - digitLength - hourAdjustment, startingY)
-    RPTimer.sprites.digit[5]:SetFrame("Default", tostring(hours))
+    RPTimer.sprites.digit[5]:SetFrame("Default", tostring(timeTable[1]))
     RPTimer.sprites.digit[5]:RenderLayer(0, posHours)
 
     local posColon2 = Vector(startingX - digitLength + 7, startingY + 19)
@@ -141,30 +113,31 @@ function RPTimer:Display()
   end
 
   local posMinute1 = Vector(startingX, startingY)
-  RPTimer.sprites.digit[1]:SetFrame("Default", minute1)
+  RPTimer.sprites.digit[1]:SetFrame("Default", timeTable[2])
   RPTimer.sprites.digit[1]:RenderLayer(0, posMinute1)
 
   local posMinute2 = Vector(startingX + digitLength, startingY)
-  RPTimer.sprites.digit[2]:SetFrame("Default", minute2)
+  RPTimer.sprites.digit[2]:SetFrame("Default", timeTable[3])
   RPTimer.sprites.digit[2]:RenderLayer(0, posMinute2)
 
   local posColon1 = Vector(startingX + digitLength + 10, startingY + 19)
   RPTimer.sprites.colon[1]:RenderLayer(0, posColon1)
 
   local posSecond1 = Vector(startingX + digitLength + 11, startingY)
-  RPTimer.sprites.digit[3]:SetFrame("Default", second1)
+  RPTimer.sprites.digit[3]:SetFrame("Default", timeTable[4])
   RPTimer.sprites.digit[3]:RenderLayer(0, posSecond1)
 
   local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
-  RPTimer.sprites.digit[4]:SetFrame("Default", second2)
+  RPTimer.sprites.digit[4]:SetFrame("Default", timeTable[5])
   RPTimer.sprites.digit[4]:RenderLayer(0, posSecond2)
 
   local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
                            startingY + 1)
-  RPTimer.sprites.digitMini:SetFrame("Default", tenths)
+  RPTimer.sprites.digitMini:SetFrame("Default", timeTable[6])
   RPTimer.sprites.digitMini:RenderLayer(0, posTenths)
 end
 
+-- This is the custom timer that emulates the in-game run timer
 function RPTimer:DisplayRun()
   -- Don't show the run timer if the user is not pressing tab
   local tabPressed = false
@@ -216,36 +189,7 @@ function RPTimer:DisplayRun()
     elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
   end
 
-  -- Calcuate the hours digit
-  local hours = math.floor(elapsedTime / 3600)
-
-  -- Calcuate the minutes digits
-  local minutes = math.floor(elapsedTime / 60)
-  if hours > 0 then
-    minutes = minutes - hours * 60
-  end
-  if minutes < 10 then
-    minutes = "0" .. tostring(minutes)
-  else
-    minutes = tostring(minutes)
-  end
-  local minute1 = string.sub(minutes, 1, 1) -- The first character
-  local minute2 = string.sub(minutes, 2, 2) -- The second character
-
-  -- Calcuate the seconds digits
-  local seconds = math.floor(elapsedTime % 60)
-  if seconds < 10 then
-    seconds = "0" .. tostring(seconds)
-  else
-    seconds = tostring(seconds)
-  end
-  local second1 = string.sub(seconds, 1, 1) -- The first character
-  local second2 = string.sub(seconds, 2, 2) -- The second character
-
-  -- Calculate the tenths digit
-  local rawSeconds = elapsedTime % 60 -- 0.000 to 59.999
-  local decimals = rawSeconds - math.floor(rawSeconds)
-  local tenths = math.floor(decimals * 10)
+  local timeTable = RPGlobals:ConvertTimeToString(elapsedTime)
 
   -- Local variables
   local digitLength = 7.25
@@ -265,12 +209,12 @@ function RPTimer:DisplayRun()
   local posClock = Vector(startingX + 34, startingY + 45)
   RPTimer.sprites.clock2:RenderLayer(0, posClock)
 
-  if hours > 0 then
+  if timeTable[1] > 0 then
     -- The format is "#:##:##" instead of "##:##"
     hourAdjustment2 = 2
     startingX = startingX + digitLength + hourAdjustment
     local posHours = Vector(startingX - digitLength - hourAdjustment, startingY)
-    RPTimer.sprites.digit2[5]:SetFrame("Default", tostring(hours))
+    RPTimer.sprites.digit2[5]:SetFrame("Default", tostring(timeTable[1]))
     RPTimer.sprites.digit2[5]:RenderLayer(0, posHours)
 
     local posColon2 = Vector(startingX - digitLength + 7, startingY + 19)
@@ -278,30 +222,31 @@ function RPTimer:DisplayRun()
   end
 
   local posMinute1 = Vector(startingX, startingY)
-  RPTimer.sprites.digit2[1]:SetFrame("Default", minute1)
+  RPTimer.sprites.digit2[1]:SetFrame("Default", timeTable[2])
   RPTimer.sprites.digit2[1]:RenderLayer(0, posMinute1)
 
   local posMinute2 = Vector(startingX + digitLength, startingY)
-  RPTimer.sprites.digit2[2]:SetFrame("Default", minute2)
+  RPTimer.sprites.digit2[2]:SetFrame("Default", timeTable[3])
   RPTimer.sprites.digit2[2]:RenderLayer(0, posMinute2)
 
   local posColon1 = Vector(startingX + digitLength + 10, startingY + 19)
   RPTimer.sprites.colon2[1]:RenderLayer(0, posColon1)
 
   local posSecond1 = Vector(startingX + digitLength + 11, startingY)
-  RPTimer.sprites.digit2[3]:SetFrame("Default", second1)
+  RPTimer.sprites.digit2[3]:SetFrame("Default", timeTable[4])
   RPTimer.sprites.digit2[3]:RenderLayer(0, posSecond1)
 
   local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
-  RPTimer.sprites.digit2[4]:SetFrame("Default", second2)
+  RPTimer.sprites.digit2[4]:SetFrame("Default", timeTable[5])
   RPTimer.sprites.digit2[4]:RenderLayer(0, posSecond2)
 
   local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
                            startingY + 1)
-  RPTimer.sprites.digitMini2:SetFrame("Default", tenths)
+  RPTimer.sprites.digitMini2:SetFrame("Default", timeTable[6])
   RPTimer.sprites.digitMini2:RenderLayer(0, posTenths)
 end
 
+-- This is the timer that shows up when the player has died in a seeded race
 function RPTimer:DisplayDebuff()
   if RPGlobals.run.seededDeath.state < 2 then
     return
@@ -339,36 +284,7 @@ function RPTimer:DisplayDebuff()
     return
   end
 
-  -- Calcuate the hours digit
-  local hours = math.floor(elapsedTime / 3600)
-
-  -- Calcuate the minutes digits
-  local minutes = math.floor(elapsedTime / 60)
-  if hours > 0 then
-    minutes = minutes - hours * 60
-  end
-  if minutes < 10 then
-    minutes = "0" .. tostring(minutes)
-  else
-    minutes = tostring(minutes)
-  end
-  local minute1 = string.sub(minutes, 1, 1) -- The first character
-  local minute2 = string.sub(minutes, 2, 2) -- The second character
-
-  -- Calcuate the seconds digits
-  local seconds = math.floor(elapsedTime % 60)
-  if seconds < 10 then
-    seconds = "0" .. tostring(seconds)
-  else
-    seconds = tostring(seconds)
-  end
-  local second1 = string.sub(seconds, 1, 1) -- The first character
-  local second2 = string.sub(seconds, 2, 2) -- The second character
-
-  -- Calculate the tenths digit
-  local rawSeconds = elapsedTime % 60 -- 0.000 to 59.999
-  local decimals = rawSeconds - math.floor(rawSeconds)
-  local tenths = math.floor(decimals * 10)
+  local timeTable = RPGlobals:ConvertTimeToString(elapsedTime)
 
   -- Local variables
   local digitLength = 7.25
@@ -384,12 +300,12 @@ function RPTimer:DisplayDebuff()
   local posClock = Vector(startingX + 34, startingY + 45)
   RPTimer.sprites.clock3:RenderLayer(0, posClock)
 
-  if hours > 0 then
+  if timeTable[1] > 0 then
     -- The format is "#:##:##" instead of "##:##"
     hourAdjustment2 = 2
     startingX = startingX + digitLength + hourAdjustment
     local posHours = Vector(startingX - digitLength - hourAdjustment, startingY)
-    RPTimer.sprites.digit3[5]:SetFrame("Default", tostring(hours))
+    RPTimer.sprites.digit3[5]:SetFrame("Default", tostring(timeTable[1]))
     RPTimer.sprites.digit3[5]:RenderLayer(0, posHours)
 
     local posColon2 = Vector(startingX - digitLength + 7, startingY + 19)
@@ -397,27 +313,27 @@ function RPTimer:DisplayDebuff()
   end
 
   local posMinute1 = Vector(startingX, startingY)
-  RPTimer.sprites.digit3[1]:SetFrame("Default", minute1)
+  RPTimer.sprites.digit3[1]:SetFrame("Default", timeTable[2])
   RPTimer.sprites.digit3[1]:RenderLayer(0, posMinute1)
 
   local posMinute2 = Vector(startingX + digitLength, startingY)
-  RPTimer.sprites.digit3[2]:SetFrame("Default", minute2)
+  RPTimer.sprites.digit3[2]:SetFrame("Default", timeTable[3])
   RPTimer.sprites.digit3[2]:RenderLayer(0, posMinute2)
 
   local posColon1 = Vector(startingX + digitLength + 10, startingY + 19)
   RPTimer.sprites.colon3[1]:RenderLayer(0, posColon1)
 
   local posSecond1 = Vector(startingX + digitLength + 11, startingY)
-  RPTimer.sprites.digit3[3]:SetFrame("Default", second1)
+  RPTimer.sprites.digit3[3]:SetFrame("Default", timeTable[4])
   RPTimer.sprites.digit3[3]:RenderLayer(0, posSecond1)
 
   local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
-  RPTimer.sprites.digit3[4]:SetFrame("Default", second2)
+  RPTimer.sprites.digit3[4]:SetFrame("Default", timeTable[5])
   RPTimer.sprites.digit3[4]:RenderLayer(0, posSecond2)
 
   local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
                            startingY + 1)
-  RPTimer.sprites.digitMini3:SetFrame("Default", tenths)
+  RPTimer.sprites.digitMini3:SetFrame("Default", timeTable[6])
   RPTimer.sprites.digitMini3:RenderLayer(0, posTenths)
 end
 

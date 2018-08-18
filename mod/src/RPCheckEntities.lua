@@ -319,6 +319,16 @@ function RPCheckEntities:Entity5_340(pickup)
                nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
     RPSpeedrun.spawnedCheckpoint = true
     RPGlobals.run.endOfRunText = true -- Show the run summary
+    if RPSpeedrun.averageTime == 0 then
+      -- This will be in milliseconds, so we divide by 1000
+      local elapsedTime = (Isaac.GetTime() - RPSpeedrun.startedTime) / 1000
+      RPSpeedrun.averageTime = elapsedTime
+    else
+      -- This will be in milliseconds, so we divide by 1000
+      local elapsedTime = (Isaac.GetTime() - RPSpeedrun.finishTimeCharacter) / 1000
+      RPSpeedrun.averageTime = (RPSpeedrun.averageTime + elapsedTime) / 2
+    end
+    RPSpeedrun.finishTimeCharacter = Isaac.GetTime()
     Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
     pickup:Remove()
 

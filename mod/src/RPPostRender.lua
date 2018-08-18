@@ -356,16 +356,23 @@ function RPPostRender:DisplayTopLeftText()
   -- We want to place informational text for the player to the right of the heart containers
   -- (which will depend on how many heart containers we have)
   local x = 55 + RPSoulJar:GetHeartXOffset()
+  local y = 10
+  local lineLength = 15
 
   if RPGlobals.raceVars.victoryLaps > 0 then
     -- Display the number of victory laps
     -- (this should have priority over showing the seed)
-    Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, 10, 2, 2, 2, 2)
+    Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, y, 2, 2, 2, 2)
   elseif RPGlobals.run.endOfRunText then
     -- Show some run summary information
     -- (but clear it if they exit the room)
-    Isaac.RenderText("Seed: " .. seedString, x, 10, 2, 2, 2, 2)
-    Isaac.RenderText("Total rooms: " .. RPGlobals.run.roomsEntered, x, 25, 2, 2, 2, 2)
+    Isaac.RenderText("Seed: " .. seedString, x, y, 2, 2, 2, 2)
+    y = y + lineLength
+    Isaac.RenderText("Total rooms: " .. RPGlobals.run.roomsEntered, x, y, 2, 2, 2, 2)
+    if RPSpeedrun:InSpeedrun() then
+      y = y + lineLength
+      Isaac.RenderText("Avg. time per char: " .. RPSpeedrun:GetAverageTimePerCharacter(), x, y, 2, 2, 2, 2)
+    end
   end
 end
 

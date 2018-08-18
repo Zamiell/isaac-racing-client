@@ -15,6 +15,8 @@ local RPSchoolbag       = require("src/rpschoolbag")
 
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
+RPSpeedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
+RPSpeedrun.averageTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finished = false -- Reset at the beginning of every run
 RPSpeedrun.finishedTime = 0 -- Reset at the beginning of every run
 RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
@@ -365,6 +367,8 @@ function RPSpeedrun:PostGameStarted()
 
   if RPSpeedrun.charNum == 1 then
     RPSpeedrun.startedTime = 0
+    RPSpeedrun.finishTimeCharacter = 0
+    RPSpeedrun.averageTime = 0
   end
 end
 
@@ -466,6 +470,10 @@ function RPSpeedrun:Finish()
   RPSpeedrun.finished = true
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
   RPGlobals.run.endOfRunText = true -- Show the run summary
+
+  -- This will be in milliseconds, so we divide by 1000
+  local elapsedTime = (Isaac.GetTime() - RPSpeedrun.finishTimeCharacter) / 1000
+  RPSpeedrun.averageTime = (RPSpeedrun.averageTime + elapsedTime) / 2
 
   -- Play a sound effect
   sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
@@ -941,6 +949,12 @@ function RPSpeedrun:GetCurrentChar()
   end
   return RPGlobals.race.charOrder[RPSpeedrun.charNum + 1]
   -- We add one since the first element is the type of multi-character speedrun
+end
+
+function RPSpeedrun:GetAverageTimePerCharacter()
+  local timeTable = RPGlobals:ConvertTimeToString(RPSpeedrun.averageTime)
+  -- e.g. [minute1][minute2]:[second1][second2]
+  return tostring(timeTable[2]) .. tostring(timeTable[3]) .. ":" .. tostring(timeTable[4]) .. tostring(timeTable[5])
 end
 
 return RPSpeedrun

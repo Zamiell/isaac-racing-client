@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.20.0"
+RPGlobals.version = "v0.20.1"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -407,6 +407,48 @@ function RPGlobals:RevivePlayer(item)
   local direction = door and door.Direction or Direction.NO_DIRECTION
   game:StartRoomTransition(level:GetPreviousRoomIndex(), direction, 0)
   level.LeaveDoor = enterDoor
+end
+
+function RPGlobals:ConvertTimeToString(time)
+  -- Calcuate the hours digit
+  local hours = math.floor(time / 3600)
+
+  -- Calcuate the minutes digits
+  local minutes = math.floor(time / 60)
+  if hours > 0 then
+    minutes = minutes - hours * 60
+  end
+  if minutes < 10 then
+    minutes = "0" .. tostring(minutes)
+  else
+    minutes = tostring(minutes)
+  end
+  local minute1 = string.sub(minutes, 1, 1) -- The first character
+  local minute2 = string.sub(minutes, 2, 2) -- The second character
+
+  -- Calcuate the seconds digits
+  local seconds = math.floor(time % 60)
+  if seconds < 10 then
+    seconds = "0" .. tostring(seconds)
+  else
+    seconds = tostring(seconds)
+  end
+  local second1 = string.sub(seconds, 1, 1) -- The first character
+  local second2 = string.sub(seconds, 2, 2) -- The second character
+
+  -- Calculate the tenths digit
+  local rawSeconds = time % 60 -- 0.000 to 59.999
+  local decimals = rawSeconds - math.floor(rawSeconds)
+  local tenths = math.floor(decimals * 10)
+
+  return {
+    hours,
+    minute1,
+    minute2,
+    second1,
+    second2,
+    tenths,
+  }
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

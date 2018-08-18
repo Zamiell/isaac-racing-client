@@ -437,7 +437,11 @@ exports.init = (username, password, remember) => {
         ) {
             playSound = true;
         }
-        if (playSound && !data.ruleset.solo) { // Don't play sounds for solo races
+        if (data.ruleset.solo || data.isPasswordProtected) {
+            // Don't play sounds for solo races or password-protected races
+            playSound = false;
+        }
+        if (playSound) {
             misc.playSound('race-created');
         }
     }

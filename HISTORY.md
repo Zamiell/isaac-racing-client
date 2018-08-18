@@ -4,6 +4,7 @@
 
 * After finishing a run with a character in a custom challenge, it will now show your average time per character.
 * Added a graphic for the "R+15 (V)" button in the "Change Char Order" custom challenge. (Thanks Gromfalloon)
+* The new race sound effect will no longer play for password-protected races. (Thanks PassionDrama)
 * Fixed the bug where fart-rerolls were broken in diversity races. (Thanks thereisnofuture)
 
 ### *v0.20.0* - August 7th, 2018

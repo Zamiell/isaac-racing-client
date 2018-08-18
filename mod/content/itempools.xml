@@ -1,9 +1,9 @@
 <ItemPools>
 	<Pool Name="treasure">
 		<Item Name="Betrayal" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Diversity Placeholder #1" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Diversity Placeholder #2" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Diversity Placeholder #3" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder 1" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder 2" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Diversity Placeholder 3" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="shop">
 		<Item Name="Schoolbag" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>

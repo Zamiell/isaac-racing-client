@@ -109,7 +109,7 @@ RPChangeCharOrder.seasons = {
     },
     numSClass = 4,
   },
-  R15S0 = {
+  R15V = {
     X = 6,
     Y = 1,
     charPosition = {
