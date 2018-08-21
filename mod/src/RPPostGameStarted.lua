@@ -67,7 +67,7 @@ function RPPostGameStarted:Main(saveState)
      Isaac.GetChallenge() == 0 then
      -- If we don't check for challenges, this can cause an infinite loop when entering Challenge #1, for example
 
-    seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES)
+    seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
     Isaac.DebugString("Added the \"Total Curse Immunity\" easter egg.")
 
     -- We only need to restart the game if there is a curse on B1 already

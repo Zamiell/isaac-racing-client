@@ -933,7 +933,7 @@ function RPSpeedrun:CheckValidCharOrder()
     return true
 
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") and
-         (charOrderType ~= "R15S0" or
+         (charOrderType ~= "R15V" or
           #RPGlobals.race.charOrder ~= 16) then
 
     return false

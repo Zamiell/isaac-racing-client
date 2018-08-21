@@ -49,8 +49,9 @@ function RPPostRender:Main()
   -- Get rid of the slow fade-in at the beginning of a run
   if RPGlobals.run.erasedFadeIn == false then
     RPGlobals.run.erasedFadeIn = true
-    game:Fadein(0.15) -- This fine is fine tuned from trial and error
+    game:Fadein(0.15) -- This fine is fine tuned from trial and error to be a good speed
     Isaac.DebugString("Manually ending the beginning of run fade-in.")
+    return
   end
 
   -- Draw graphics

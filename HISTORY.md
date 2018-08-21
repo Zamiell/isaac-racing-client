@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.20.2* - August 21st, 2018
+
+* Racing+ now supports Spanish as a third official language. (Thanks Hispa)
+* Removed the sliding part of the text animation and shortened it (for the level name, the item name, etc.).
+* Fixed the bug where the "R+15 (Vanilla)" custom challenge would not work. (Thanks CrafterLynx)
+
 ### *v0.20.1* - August 18th, 2018
 
 * After finishing a run with a character in a custom challenge, it will now show your average time per character.
