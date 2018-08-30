@@ -43,14 +43,10 @@ function RPPostRender:Main()
   -- Restart the game if Easter Egg or character validation failed
   RPPostRender:CheckRestart()
 
-  -- Reseed the floor if we have Duality and there is a narrow boss room
-  RPPostRender:CheckDualityNarrowRoom()
-
   -- Get rid of the slow fade-in at the beginning of a run
   if RPGlobals.run.erasedFadeIn == false then
     RPGlobals.run.erasedFadeIn = true
     game:Fadein(0.15) -- This fine is fine tuned from trial and error to be a good speed
-    Isaac.DebugString("Manually ending the beginning of run fade-in.")
     return
   end
 
@@ -136,41 +132,6 @@ function RPPostRender:CheckRestart()
   end
 
   RPGlobals:ExecuteCommand(command)
-end
-
--- Reseed the floor if we have Duality and there is a narrow boss room
-function RPPostRender:CheckDualityNarrowRoom()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local rooms = level:GetRooms()
-  local room = game:GetRoom()
-  local isaacFrameCount = Isaac.GetFrameCount()
-
-  if RPGlobals.run.dualityCheckFrame ~= 0 and isaacFrameCount >= RPGlobals.run.dualityCheckFrame then
-    RPGlobals.run.dualityCheckFrame = 0
-
-    -- Check to see if the boss room is narrow
-    for i = 0, rooms.Size - 1 do -- This is 0 indexed
-      local roomData = rooms:Get(i).Data
-      if roomData.Type == RoomType.ROOM_BOSS then -- 5
-        if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
-           roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
-
-          RPGlobals:ExecuteCommand("reseed")
-          Isaac.DebugString("(narrow boss room detected with Duality)")
-
-          -- Respawn the hole
-          game:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
-                     room:GetCenterPos(), Vector(0,0), nil, 0, 0)
-
-          -- Mark to check for a narrow room again on the next frame, just in case
-          RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
-        end
-        break
-      end
-    end
-  end
 end
 
 -- Make Cursed Eye seeded

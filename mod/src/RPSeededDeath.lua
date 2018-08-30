@@ -163,6 +163,10 @@ function RPSeededDeath:DebuffOn()
   RPGlobals.run.seededDeath.spriteScale = player.SpriteScale
   player.SpriteScale = Vector(1, 1)
 
+  -- Store their golden bomb / key status
+  RPGlobals.run.seededDeath.goldenBomb = player:HasGoldenBomb()
+  RPGlobals.run.seededDeath.goldenKey = player:HasGoldenKey()
+
   -- We need to remove every item (and store it for later)
   -- ("player:GetCollectibleNum()" is bugged if you feed it a number higher than the total amount of items and
   -- can cause the game to crash)
@@ -293,6 +297,14 @@ function RPSeededDeath:DebuffOff()
   player:AddBombs(bombs)
   player:AddKeys(-99)
   player:AddKeys(keys)
+  if RPGlobals.run.seededDeath.goldenBomb then
+    RPGlobals.run.seededDeath.goldenBomb = false
+    player:AddGoldenBomb()
+  end
+  if RPGlobals.run.seededDeath.goldenKey then
+    RPGlobals.run.seededDeath.goldenKey = false
+    player:AddGoldenKey()
+  end
 
   -- Delete all pickups
   if deletePickups then

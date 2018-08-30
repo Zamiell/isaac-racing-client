@@ -10,7 +10,7 @@ const globals = nodeRequire('./js/globals');
 const validLanguages = [
     ['en', 'english', 'English'],
     ['fr', 'french', 'Français'],
-    // ['es', 'spanish', 'Español'],
+    ['es', 'spanish', 'Español'],
     // ['ru', 'russian', 'Русский'],
 ];
 exports.validLanguages = validLanguages;

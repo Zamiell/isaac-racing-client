@@ -4,7 +4,8 @@ local RPFastTravel = {}
 -- Includes
 --
 
-local RPGlobals  = require("src/rpglobals")
+local RPGlobals = require("src/rpglobals")
+local RPSprites = require("src/rpsprites")
 
 --
 -- Constants
@@ -13,12 +14,6 @@ local RPGlobals  = require("src/rpglobals")
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
 RPFastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
 RPFastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"
-
---
--- Variables
---
-
-RPFastTravel.sprites = {}
 
 --
 -- Trapdoor / heaven door functions
@@ -363,6 +358,7 @@ function RPFastTravel:CheckTrapdoor()
     RPGlobals.run.trapdoor.state = 3
     Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
     RPGlobals.run.trapdoor.floor = stage
+    RPSprites:Init("black", "black")
     RPFastTravel:GotoNextFloor(RPGlobals.run.trapdoor.upwards) -- The argument is "upwards"
 
   elseif RPGlobals.run.trapdoor.state == 5 and
@@ -432,6 +428,7 @@ end
 function RPFastTravel:CheckTrapdoor2()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
@@ -440,11 +437,11 @@ function RPFastTravel:CheckTrapdoor2()
   -- (this is just an artifact of the manual reordering)
   if RPGlobals.run.trapdoor.state == 3 then
     RPGlobals.run.trapdoor.state = 4
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
 
   elseif RPGlobals.run.trapdoor.state == 4 then
     RPGlobals.run.trapdoor.state = 5
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state)
+    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
 
     -- Make the player invisible so that we can jump out of the hole
     -- (this has to be in the PostNewRoom callback so that we don't get bugs with the Glowing Hour Glass)
@@ -464,6 +461,9 @@ function RPFastTravel:CheckTrapdoor2()
     if RPGlobals.raceVars.finished == false then
       level:ShowName(false)
     end
+
+    -- Remove the black sprite to reveal the new floor
+    RPSprites:Init("black", 0)
   end
 end
 
@@ -476,8 +476,6 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
   local stageType = level:GetStageType()
   local roomIndexUnsafe = level:GetCurrentRoomIndex()
   local stage = level:GetStage()
-  local player = game:GetPlayer(0)
-  local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Check to see if we need to redirect the player (used for Sacrifice Room teleports)
   if redirect ~= nil then
@@ -545,14 +543,6 @@ function RPFastTravel:GotoNextFloor(upwards, redirect)
       command = command .. "a"
     elseif newStageType == 2 then
       command = command .. "b"
-    end
-
-    -- Mark to check for a narrow boss room (we only care about checking on floors 2 through 7)
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and -- 498
-       nextStage >= 2 and nextStage <= 7 then
-
-      -- It takes a frame to load the new stage
-      RPGlobals.run.dualityCheckFrame = isaacFrameCount + 1
     end
   end
 

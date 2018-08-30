@@ -529,6 +529,18 @@ function RPPostNewRoom:Race()
   -- Remove the final place graphic if it is showing
   RPSprites:Init("place2", 0)
 
+  -- Go to the custom "Race Start" room
+  if (RPGlobals.race.status == "open" or
+      RPGlobals.race.status == "starting") and
+     RPGlobals.run.roomsEntered == 1 then
+
+    Isaac.ExecuteCommand("goto s.boss.9999")
+    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
+    Isaac.DebugString("Going to the race room.")
+    -- We do more things in the "PostNewRoom" callback
+    return
+  end
+
   -- Check for the special death condition
   RPSeededDeath:PostNewRoom()
   RPSeededDeath:PostNewRoomCheckSacrificeRoom()

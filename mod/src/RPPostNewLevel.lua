@@ -18,8 +18,13 @@ function RPPostNewLevel:Main()
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewLevel gets called before the PostGameStarted callbacks)
-  if gameFrameCount == 0 then
+  if gameFrameCount == 0 and
+     RPGlobals.run.reseededFloor == false then
+
     return
+  end
+  if RPGlobals.run.reseededFloor then
+    RPGlobals.run.reseededFloor = false
   end
 
   -- We need to delay if we are doing a "reseed" immediately after a "stage X",
@@ -59,6 +64,16 @@ function RPPostNewLevel:NewLevel()
     Isaac.DebugString("Sacrifice Room teleport detected.")
     RPFastTravel:GotoNextFloor(false, RPGlobals.run.currentFloor)
     -- The first argument is "upwards", the second argument is "redirect"
+    return
+  end
+
+  -- Check for duplicate rooms
+  if RPPostNewLevel:CheckDupeRooms() then
+    return
+  end
+
+  -- Check for Duality restrictions
+  if RPPostNewLevel:CheckDualityNarrowRoom() then
     return
   end
 
@@ -117,6 +132,104 @@ function RPPostNewLevel:NewLevel()
 
   -- Call PostNewRoom manually (they get naturally called out of order)
   RPPostNewRoom:NewRoom()
+end
+
+function RPPostNewLevel:CheckDupeRooms()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local rooms = level:GetRooms()
+
+  -- Reset the room IDs if we are arriving at a level with a new stage type
+  if stage == 3 or
+     stage == 5 or
+     stage == 7 or
+     stage == 9 or
+     stage == 10 or
+     stage == 11 then
+
+    RPGlobals.run.roomIDs = {}
+  end
+
+  local roomIDs = {}
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomData = rooms:Get(i).Data
+    if roomData.Type == RoomType.ROOM_DEFAULT and -- 1
+       roomData.Variant ~= 2 then -- This is the starting room
+
+      -- Normalize the room ID (to account for flipped rooms)
+      local roomID = roomData.Variant
+      while roomID > 10000 do
+        -- The 3 flipped versions of room #1 would be #10001, #20001, and #30001
+        roomID = roomID - 10000
+      end
+
+      -- Check to see if this room ID has appeared on previous floors
+      for j = 1, #RPGlobals.run.roomIDs do
+        if roomID == RPGlobals.run.roomIDs[j] then
+          Isaac.DebugString("Duplicate room found (on previous floor) - reseeding.")
+          RPGlobals.run.reseededFloor = true
+          RPGlobals:ExecuteCommand("reseed")
+          return true
+        end
+      end
+
+      -- Also check to see if this room ID appears multiple times on this floor
+      for j = 1, #roomIDs do
+        if roomID == roomIDs[j] then
+          Isaac.DebugString("Duplicate room found (on same floor) - reseeding.")
+          RPGlobals.run.reseededFloor = true
+          RPGlobals:ExecuteCommand("reseed")
+          return true
+        end
+      end
+
+      -- Keep track of this room ID
+      roomIDs[#roomIDs + 1] = roomID
+    end
+  end
+
+  -- We have gone through all of the rooms and none are duplicated, so permanently store them as rooms already seen
+  for i = 1, #roomIDs do
+    RPGlobals.run.roomIDs[#RPGlobals.run.roomIDs + 1] = roomIDs[i]
+  end
+end
+
+-- Reseed the floor if we have Duality and there is a narrow boss room
+function RPPostNewLevel:CheckDualityNarrowRoom()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local rooms = level:GetRooms()
+  --local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) == false then -- 498
+    return
+  end
+
+  -- It is only possible to get a Devil Deal on floors 2 through 8
+  -- Furthermore, it is not possible to get a narrow room on floor 8
+  if stage < 2 or stage > 7 then
+    return
+  end
+
+  -- Check to see if the boss room is narrow
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomData = rooms:Get(i).Data
+    if roomData.Type == RoomType.ROOM_BOSS then -- 5
+      if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
+         roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
+
+        Isaac.DebugString("Narrow boss room detected with Duality - reseeding.")
+        RPGlobals.run.reseededFloor = true
+        RPGlobals:ExecuteCommand("reseed")
+        return true
+      end
+    end
+  end
 end
 
 return RPPostNewLevel

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.20.2"
+RPGlobals.version = "v0.20.3"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -120,6 +120,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.startedTime       = 0
   RPGlobals.run.erasedFadeIn      = false
   RPGlobals.run.roomsEntered      = 0
+  RPGlobals.run.roomIDs           = {}
+  RPGlobals.run.reseededFloor     = false
   RPGlobals.run.movingBoxOpen     = true
   RPGlobals.run.killedLamb        = false -- Used for the "Everything" race goal
   RPGlobals.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
@@ -226,6 +228,8 @@ function RPGlobals:InitRun()
     transformations = {},
     charge          = 0,
     spriteScale     = Vector(0, 0),
+    goldenBomb      = false,
+    goldenKey       = false,
     dealTime        = Isaac.GetTime(),
   }
 end
@@ -358,8 +362,9 @@ function RPGlobals:GetItemMaxCharges(itemID)
 end
 
 function RPGlobals:ExecuteCommand(command)
+  Isaac.DebugString("Executing command: " .. command)
   Isaac.ExecuteCommand(command)
-  Isaac.DebugString("Executed command: " .. command)
+  Isaac.DebugString("Finished executing command: " .. command)
 end
 
 function RPGlobals:InsideSquare(pos1, pos2, squareSize)

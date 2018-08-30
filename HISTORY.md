@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.20.3* - August 21st, 2018
+
+* Racing+ will now automatically reseed a floor if it contains a duplicate room. (This also takes into account rooms seen on previous floors.)
+* Fixed the bug where golden bombs and keys were not restored upon reviving in a seeded race. (Thanks mgln)
+* Fixed the bug where you could see the skipped floor for a single frame during a narrow boss room Duality reseed.
+* Fixed the bug where the Spanish language was not working properly. (Thanks Hispa)
+
 ### *v0.20.2* - August 21st, 2018
 
 * Racing+ now supports Spanish as a third official language. (Thanks Hispa)

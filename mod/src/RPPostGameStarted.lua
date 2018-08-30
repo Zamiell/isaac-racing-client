@@ -10,7 +10,6 @@ local RPSprites      = require("src/rpsprites")
 local RPSchoolbag    = require("src/rpschoolbag")
 local RPSoulJar      = require("src/rpsouljar")
 local RPFastClear    = require("src/rpfastclear")
-local RPFastTravel   = require("src/rpfasttravel")
 local RPFastDrop     = require("src/rpfastdrop")
 local RPSpeedrun     = require("src/rpspeedrun")
 local RPTimer        = require("src/rptimer")
@@ -80,17 +79,20 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Make sure that all other Easter Eggs are disabled
+  -- (but make an exception for the Single Player Co-op Baby mod)
   local validEasterEggs = true
-  for i = 0, SeedEffect.NUM_SEEDS do
-    if seeds:HasSeedEffect(i) and
-       i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70
-       i ~= SeedEffect.SEED_CHRISTMAS and -- 54
-       -- Make an exception for fun seeds
-       i ~= SeedEffect.SEED_ALL_CHAMPIONS then -- 13
-       -- Make an exception for seeds that have no beneficial effect and are used for testing purposes
+  if SinglePlayerCoopBabies == nil then -- luacheck: ignore
+    for i = 0, SeedEffect.NUM_SEEDS do
+      if seeds:HasSeedEffect(i) and
+         i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70
+         i ~= SeedEffect.SEED_CHRISTMAS and -- 54
+         -- Make an exception for fun seeds
+         i ~= SeedEffect.SEED_ALL_CHAMPIONS then -- 13
+         -- Make an exception for seeds that have no beneficial effect and are used for testing purposes
 
-      validEasterEggs = false
-      break
+        validEasterEggs = false
+        break
+      end
     end
   end
   if validEasterEggs == false then
@@ -104,7 +106,7 @@ function RPPostGameStarted:Main(saveState)
   end
 
   -- Log the run beginning
-  Isaac.DebugString("A new run has begun.")
+  Isaac.DebugString("A new run has begun on seed: " .. seeds:GetStartSeedString())
 
   -- Reset some global variables that we keep track of per run
   RPGlobals:InitRun()
@@ -136,7 +138,6 @@ function RPPostGameStarted:Main(saveState)
   -- will flash on the screen before the room is actually entered)
   -- (it also prevents the bug where if you reset during the stage animation, it will permanently stay on the screen)
   RPSprites.sprites = {}
-  RPFastTravel.sprites = {}
   RPSchoolbag.sprites = {}
   RPSoulJar.sprites = {}
   RPSpeedrun.sprites = {}
@@ -358,7 +359,6 @@ function RPPostGameStarted:Race()
 
   -- If we are not in a race, don't do anything special
   if RPGlobals.race.status == "none" then
-    Isaac.DebugString("Not in a race.")
     return
   end
 
@@ -459,14 +459,6 @@ function RPPostGameStarted:Race()
 
   elseif RPGlobals.race.rFormat == "unseeded-lite" then
     RPPostGameStarted:UnseededLite()
-  end
-
-  -- Go to the custom "Race Start" room
-  if RPGlobals.race.status == "open" or RPGlobals.race.status == "starting" then
-    Isaac.ExecuteCommand("goto s.boss.9999")
-    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
-    Isaac.DebugString("Going to the race room.")
-    -- We do more things in the "PostNewRoom" callback
   end
 end
 

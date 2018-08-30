@@ -69,6 +69,9 @@ RPGlobals:InitRun()
 -- Make a copy of this object so that we can use it elsewhere
 RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" file)
 
+-- Set a global variable so that other mods can access our scoped global variables
+RacingPlusGlobals = RPGlobals -- luacheck: ignore
+
 -- Define NPC callbacks (0)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPCUpdate) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24,  EntityType.ENTITY_GLOBIN) -- 24

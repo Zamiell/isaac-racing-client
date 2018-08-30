@@ -49,6 +49,7 @@ globals = {
   "SoundEffect",
   "Sprite",
   "StageType",
+  "TearFlags",
   "TearVariant",
   "TrinketType",
   "Vector",
