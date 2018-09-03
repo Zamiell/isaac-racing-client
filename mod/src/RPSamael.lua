@@ -148,7 +148,7 @@ function SamaelMod:PostUpdate()
       local sfx = SFXManager()
       sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
     elseif RPGlobals.run.schoolbag.item == wraithItem then
-      RPGlobals.run.schoolbag.charges = math.ceil(wraithCharge)
+      RPGlobals.run.schoolbag.charge = math.ceil(wraithCharge)
     end
 
     if wraithChargeCooldown > 0 then

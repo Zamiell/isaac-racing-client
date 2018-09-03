@@ -130,7 +130,7 @@ function RPPostNewRoom:NewRoom()
     -- Keep track of our last Schoolbag item
     RPGlobals.run.schoolbag.lastRoomItem = RPGlobals.run.schoolbag.item
     RPGlobals.run.schoolbag.lastRoomSlot1Charges = activeCharge
-    RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charges
+    RPGlobals.run.schoolbag.lastRoomSlot2Charges = RPGlobals.run.schoolbag.charge
   end
 
   -- Check for the Satan room

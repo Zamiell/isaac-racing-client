@@ -11,6 +11,7 @@
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 1" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 2" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 3" />
+	<passive description="7 shot" gfx="Mutant_Spider_Inner_Eye.png" name="Mutant Spider's Inner Eye" />
 	<active description="Debug" gfx="Debug.png" maxcharges="0" name="Debug" />
 
 	<!-- Samual Items -->

@@ -38,8 +38,11 @@ local RPGlobals             = require("src/rpglobals") -- Global variables
 local RPNPCUpdate           = require("src/rpnpcupdate") -- The NPCUpdate callback (0)
 local RPPostUpdate          = require("src/rppostupdate") -- The PostUpdate callback (1)
 local RPPostRender          = require("src/rppostrender") -- The PostRender callback (2)
+local RPItems               = require("src/rpitems") -- Collectible item callbacks (3 & 23)
+local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPEvaluateCache       = require("src/rpevaluatecache") -- The EvaluateCache callback (8)
 local RPPostPlayerInit      = require("src/rppostplayerinit") -- The PostPlayerInit callback (9)
+local RPPills               = require("src/rppills") -- Pill callbacks (10)
 local RPEntityTakeDmg       = require("src/rpentitytakedmg") -- The EntityTakeDmg callback (11)
 local RPInputAction         = require("src/rpinputaction") -- The InputAction callback (13)
 local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameStarted callback (15)
@@ -53,10 +56,8 @@ local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPi
 local RPPostLaserInit       = require("src/rppostlaserinit") -- The PostLaserInit callback (47)
 local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
 local RPPreRoomEntitySpawn  = require("src/rppreroomentityspawn") -- The PreRoomEntitySpawn callback (71)
-local RPItems               = require("src/rpitems") -- Collectible item callbacks (23 & 3)
-local RPCards               = require("src/rpcards") -- Card callbacks (5)
-local RPPills               = require("src/rppills") -- Pill callbacks (10)
 local RPFastClear           = require("src/rpfastclear") -- Functions for the "Fast-Clear" feature
+local RPSchoolbag           = require("src/rpschoolbag") -- Functions for the Schoolbag custom item
 local RPSpeedrun            = require("src/rpspeedrun") -- Functions for custom challenges
 local RPSamael              = require("src/rpsamael") -- Samael functions
 local RPJrFetus             = require("src/rpjrfetus") -- Jr. Fetus functions (2/2)
@@ -70,7 +71,8 @@ RPGlobals:InitRun()
 RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" file)
 
 -- Set a global variable so that other mods can access our scoped global variables
-RacingPlusGlobals = RPGlobals -- luacheck: ignore
+RacingPlusGlobals = RPGlobals
+RacingPlusSchoolbag = RPSchoolbag
 
 -- Define NPC callbacks (0)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPCUpdate) -- 0

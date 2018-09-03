@@ -94,10 +94,8 @@ function RPSpeedrun:PostGameStarted()
     if character == PlayerType.PLAYER_KEEPER then -- 14
       -- Add the items
       player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
-      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
-
-      -- Remove them from all the pools
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
+      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
 
       -- Grant an extra coin/heart container
@@ -123,17 +121,13 @@ function RPSpeedrun:PostGameStarted()
     elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
       -- Add the Soul Jar
       player:AddCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR, 0, false)
-      -- (the Soul Jar does not appear in any pools so we don't have to add it to the ban list)
+      -- (the Soul Jar does not appear in any pools)
 
     elseif character == PlayerType.PLAYER_LILITH then -- 13
       -- Lilith starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
-      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-      RPSchoolbag.sprites.item = nil
-      Isaac.DebugString("Adding collectible 357 (Box of Friends)")
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
 
       -- Reorganize the items on the item tracker
       Isaac.DebugString("Removing collectible 412 (Cambion Conception)")
@@ -142,10 +136,8 @@ function RPSpeedrun:PostGameStarted()
     elseif character == PlayerType.PLAYER_KEEPER then -- 14
       -- Add the items
       player:AddCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET, 0, false) -- 501
-      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
-
-      -- Remove them from all the pools
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) -- 501
+      player:AddCollectible(CollectibleType.COLLECTIBLE_DUALITY, 0, false) -- 498
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DUALITY) -- 498
 
       -- Grant an extra coin/heart container
@@ -158,11 +150,7 @@ function RPSpeedrun:PostGameStarted()
       -- Apollyon starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
-      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-      RPSchoolbag.sprites.item = nil
-      Isaac.DebugString("Adding collectible 477 (Void)")
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
     end
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
@@ -182,11 +170,7 @@ function RPSpeedrun:PostGameStarted()
       -- Apollyon starts with the Schoolbag by default
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
       itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
-      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-      RPSchoolbag.sprites.item = nil
-      Isaac.DebugString("Adding collectible 477 (Void)")
-      itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
     end
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
@@ -195,50 +179,23 @@ function RPSpeedrun:PostGameStarted()
     -- Everyone starts with the Schoolbag in this season
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    RPSchoolbag.sprites.item = nil
 
     -- Give extra items to characters for the R+7 speedrun category (Season 3)
     if character == PlayerType.PLAYER_ISAAC then -- 0
-      -- Isaac starts with Moving Box
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
-      Isaac.DebugString("Adding collectible 523 (Moving Box)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_MOVING_BOX, "max") -- 523
     elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
-      -- Magdalene starts with the How to Jump
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_HOW_TO_JUMP -- 282
-      Isaac.DebugString("Adding collectible 282 (How to Jump)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, "max") -- 282
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
-      -- Judas starts with the Book of Belial
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
-      Isaac.DebugString("Adding collectible 34 (Book of Belial)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
     elseif character == PlayerType.PLAYER_EVE then -- 5
-      -- Eve starts with The Candle
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_CANDLE -- 164
-      Isaac.DebugString("Adding collectible 164 (The Candle)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_CANDLE, "max") -- 164
     elseif character == PlayerType.PLAYER_SAMSON then -- 6
-      -- Samsom starts with Mr. ME!
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_MR_ME -- 527
-      Isaac.DebugString("Adding collectible 527 (Mr. ME!)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_MR_ME, "max") -- 527
     elseif character == PlayerType.PLAYER_LAZARUS then -- 8
-      -- Lazarus starts with Ventricle Razor
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VENTRICLE_RAZOR -- 396
-      Isaac.DebugString("Adding collectible 396 (Ventricle Razor)")
-
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_VENTRICLE_RAZOR, "max") -- 396
     elseif character == PlayerType.PLAYER_THELOST then -- 10
-      -- The Lost starts with Glass Cannon
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_GLASS_CANNON -- 352
-      Isaac.DebugString("Adding collectible 352 (Glass Cannon)")
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_GLASS_CANNON, "max") -- 352
     end
-
-    -- Set the Schoolbag item charges
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-
-    -- Remove the Schoolbag item from all pools
-    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     Isaac.DebugString("In the R+7 (Season 4) challenge.")
@@ -246,7 +203,6 @@ function RPSpeedrun:PostGameStarted()
     -- Everyone starts with the Schoolbag in this season
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    RPSchoolbag.sprites.item = nil
 
     -- Give extra items to characters for the R+7 speedrun category (Season 4)
     if character == PlayerType.PLAYER_LAZARUS then -- 8
@@ -296,8 +252,7 @@ function RPSpeedrun:PostGameStarted()
         -- Start with the Kamikaze in the active slot for quality of life purposes
         player:AddCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE, 0, false) -- 40
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE) -- 40
-        RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D6 -- 105
-        RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+        RPSchoolbag:Put(CollectibleType.COLLECTIBLE_D6, "max") -- 105
         player:AddCollectible(CollectibleType.COLLECTIBLE_HOST_HAT, 0, false) -- 375
         itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOST_HAT) -- 375
 
@@ -321,14 +276,15 @@ function RPSpeedrun:PostGameStarted()
     -- Everyone starts with the Schoolbag in this season
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    RPSchoolbag.sprites.item = nil
 
     -- There are no additional items since each co-op baby gets a custom item or ability
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but not on Season 4, since there is no resetting involved)
-  if RPSpeedrun.charNum == 1 and
+  -- (Season 4 never gets it, since there is no resetting involved)
+  -- (Season 5 gets it on all characters)
+  if (RPSpeedrun.charNum == 1 or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) and
      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
@@ -473,7 +429,7 @@ function RPSpeedrun:Finish()
 
   -- This will be in milliseconds, so we divide by 1000
   local elapsedTime = (Isaac.GetTime() - RPSpeedrun.finishTimeCharacter) / 1000
-  RPSpeedrun.averageTime = (RPSpeedrun.averageTime + elapsedTime) / 2
+  RPSpeedrun.averageTime = ((RPSpeedrun.charNum - 1) * RPSpeedrun.averageTime + elapsedTime) / RPSpeedrun.charNum
 
   -- Play a sound effect
   sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
@@ -955,6 +911,30 @@ function RPSpeedrun:GetAverageTimePerCharacter()
   local timeTable = RPGlobals:ConvertTimeToString(RPSpeedrun.averageTime)
   -- e.g. [minute1][minute2]:[second1][second2]
   return tostring(timeTable[2]) .. tostring(timeTable[3]) .. ":" .. tostring(timeTable[4]) .. tostring(timeTable[5])
+end
+
+function RPSpeedrun:CheckSeason5Mod()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+    return
+  end
+
+  if SinglePlayerCoopBabies ~= nil then
+    return
+  end
+
+  local x = 115
+  local y = 70
+  Isaac.RenderText("Error: You must subscribe to and enable Zamiel's", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("Single Player Co-op Babies mod in order for", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("the Racing+ season 5 custom challenge to", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
 end
 
 return RPSpeedrun

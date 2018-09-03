@@ -54,6 +54,11 @@ globals = {
   "TrinketType",
   "Vector",
 
+  -- Racing+ global variables
+  "RacingPlusGlobals",
+  "RacingPlusSchoolbag",
+  "SinglePlayerCoopBabies",
+
   -- This is used in the True Co-op Mod
   "InfinityTrueCoopInterface",
 }

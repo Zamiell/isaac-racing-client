@@ -231,6 +231,7 @@ function RPPostGameStarted:Character()
 
   -- Give all characters the D6
   local activeItem = player:GetActiveItem()
+  local activeCharge = player:GetActiveCharge()
   player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
   sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
@@ -296,7 +297,7 @@ function RPPostGameStarted:Character()
     -- Eden starts with the Schoolbag by default
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    RPGlobals.run.schoolbag.item = activeItem
+    RPSchoolbag:Put(activeItem, activeCharge)
 
     -- Manually fix any custom items
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
@@ -305,14 +306,6 @@ function RPPostGameStarted:Character()
       passiveItem = Isaac.GetItemIdByName("Betrayal")
     end
     -- (the Schoolbag was manually fixed earlier)
-
-    -- Make sure that the Schoolbag item is fully charged
-    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then
-      RPGlobals.run.schoolbag.charges = 0 -- This is the only item that does not start with any charges
-    else
-      RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-    end
-    RPSchoolbag.sprites.item = nil
 
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible " .. activeItem)
@@ -339,9 +332,7 @@ function RPPostGameStarted:Character()
     -- Give him the Schoolbag with the Wraith Skull
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    RPGlobals.run.schoolbag.item = Isaac.GetItemIdByName("Wraith Skull")
-    RPSchoolbag.sprites.item = nil
-    Isaac.DebugString("Adding collectible " .. tostring(Isaac.GetItemIdByName("Wraith Skull")) .. " (Wraith Skull)")
+    RPSchoolbag:Put(Isaac.GetItemIdByName("Wraith Skull"), 0)
   end
 end
 
@@ -351,6 +342,7 @@ function RPPostGameStarted:Race()
   -- (we want to be able to do runs of them without using the R+ client)
   if RPGlobals.race.rFormat == "pageant" then
     RPPostGameStarted:Pageant()
+    return
   end
 
   --
@@ -413,7 +405,9 @@ function RPPostGameStarted:Race()
     -- Validate that we are not on a set seed
     -- (this will be true if we are on a set seed or on a challenge,
     -- but we won't get this far if we are on a challenge)
-    if seeds:IsCustomRun() then
+    if seeds:IsCustomRun() and
+       RPGlobals.debug == false then -- Make an exception if we are trying to debug something on a certain seed
+
       -- If the run started with a set seed, this will change the reset behavior to that of an unseeded run
       seeds:Reset()
 
@@ -510,44 +504,33 @@ function RPPostGameStarted:Seeded()
 
   -- Find out if we replaced the D6
   local newActiveItem = player:GetActiveItem()
+  local newActivecharge = player:GetActiveCharge()
   if newActiveItem ~= CollectibleType.COLLECTIBLE_D6 then -- 105
     -- We replaced the D6 with an active item, so put the D6 back and put this item in the Schoolbag
     replacedD6 = true
     player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
-    RPGlobals.run.schoolbag.item = newActiveItem
+    RPSchoolbag:Put(newActiveItem, newActivecharge)
   end
 
   -- Give the player extra Schoolbag items, depending on the character
   if replacedD6 == false then
     if character == PlayerType.PLAYER_MAGDALENA then -- 1
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_YUM_HEART -- 45
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, "max") -- 45
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
     elseif character == PlayerType.PLAYER_XXX then -- 4
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_POOP -- 36
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_POOP, "max") -- 36
     elseif character == PlayerType.PLAYER_EVE then -- 5
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, "max") -- 126
     elseif character == PlayerType.PLAYER_THELOST then -- 10
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_D4, "max") -- 284
     elseif character == PlayerType.PLAYER_LILITH then -- 13
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
     elseif character == PlayerType.PLAYER_KEEPER then -- 14
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WOODEN_NICKEL -- 349
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_WOODEN_NICKEL, "max") -- 349
     elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-      RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
+      RPSchoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
     end
-  end
-
-  -- Enable the Schoolbag item
-  if RPGlobals.run.schoolbag.item ~= 0 then
-    if RPGlobals.run.schoolbag.item ~= Isaac.GetItemIdByName("Wraith Skull") then
-      Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
-    end
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-    RPSchoolbag.sprites.item = nil
-
-    -- Also make sure that the Schoolbag item is removed from all of the pools
-    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
   end
 
   -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the Schoolbag item
@@ -625,16 +608,10 @@ function RPPostGameStarted:Diversity()
 
     if i == 1 then
       -- Item 1 is the active
-      RPGlobals.run.schoolbag.item = itemID
+      RPSchoolbag:Put(itemID, "max")
       if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
-        RPGlobals.run.schoolbag.charges = 0 -- This is the only item that does not start with any charges
-      else
-        RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+        RPGlobals.run.schoolbag.charge = 0 -- This is the only item that does not start with any charges
       end
-      RPSchoolbag.sprites.item = nil
-
-      -- Remove it from all of the item pools
-      itemPool:RemoveCollectible(itemID)
 
       -- Give them the item so that the player gets any inital pickups (e.g. Remote Detonator)
       player:AddCollectible(itemID, 0, true)
@@ -723,10 +700,7 @@ function RPPostGameStarted:Pageant()
   -- (the extra luck is handled in the EvaluateCache callback)
   player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-  RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_DADS_KEY -- 175
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) -- 175
-  RPGlobals.run.schoolbag.charges = 2
-  RPSchoolbag.sprites.item = nil
+  RPSchoolbag:Put(CollectibleType.COLLECTIBLE_DADS_KEY, "max") -- 175
   player:AddCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD, 0, false) -- 4
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
   player:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 246
@@ -777,31 +751,21 @@ function RPPostGameStarted:SeededMO()
 
   -- Give the player extra Schoolbag items, depending on the character
   if character == PlayerType.PLAYER_MAGDALENA then -- 1
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_YUM_HEART -- 45
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, "max") -- 45
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL -- 34
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
   elseif character == PlayerType.PLAYER_XXX then -- 4
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_POOP -- 36
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_POOP, "max") -- 36
   elseif character == PlayerType.PLAYER_EVE then -- 5
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_RAZOR_BLADE -- 126
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, "max") -- 126
   elseif character == PlayerType.PLAYER_THELOST then -- 10
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_D4 -- 284
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_D4, "max") -- 284
   elseif character == PlayerType.PLAYER_LILITH then -- 13
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS -- 357
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_WOODEN_NICKEL -- 349
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_WOODEN_NICKEL, "max") -- 349
   elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-    RPGlobals.run.schoolbag.item = CollectibleType.COLLECTIBLE_VOID -- 477
-  end
-
-  -- Enable the Schoolbag item
-  if RPGlobals.run.schoolbag.item ~= 0 then
-    Isaac.DebugString("Adding collectible " .. RPGlobals.run.schoolbag.item)
-    RPGlobals.run.schoolbag.charges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
-    RPSchoolbag.sprites.item = nil
-
-    -- Also make sure that the Schoolbag item is removed from all of the pools
-    itemPool:RemoveCollectible(RPGlobals.run.schoolbag.item)
+    RPSchoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
   end
 
   -- Add item bans for seeded mode

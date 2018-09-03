@@ -90,6 +90,7 @@ function RPPostRender:Main()
   -- Do speedrun related checks
   RPSpeedrun:CheckRestart()
   RPChangeCharOrder:CheckChangeCharOrder()
+  RPSpeedrun:CheckSeason5Mod()
 end
 
 -- Restart the game if Easter Egg or character validation failed
@@ -325,6 +326,7 @@ function RPPostRender:DisplayTopLeftText()
     -- Display the number of victory laps
     -- (this should have priority over showing the seed)
     Isaac.RenderText("Victory Lap #" .. tostring(RPGlobals.raceVars.victoryLaps), x, y, 2, 2, 2, 2)
+
   elseif RPGlobals.run.endOfRunText then
     -- Show some run summary information
     -- (but clear it if they exit the room)
@@ -335,6 +337,13 @@ function RPPostRender:DisplayTopLeftText()
       y = y + lineLength
       Isaac.RenderText("Avg. time per char: " .. RPSpeedrun:GetAverageTimePerCharacter(), x, y, 2, 2, 2, 2)
     end
+
+  elseif RPGlobals.race.status == "in progress" and
+         RPGlobals.run.roomsEntered <= 1 and
+         Isaac.GetTime() - RPGlobals.raceVars.startedTime <= 2000 then
+
+    -- Only show it in the first two seconds of the race
+    Isaac.RenderText("Race ID: " .. RPGlobals.race.id, x, y, 2, 2, 2, 2)
   end
 end
 

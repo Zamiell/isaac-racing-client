@@ -110,9 +110,9 @@ function RPItems:GlowingHourGlass() -- 422
     RPGlobals.run.schoolbag.nextRoomCharge = true
     -- If we don't wait until the next room is entered, the slot 1 charge will just apply to the Glowing Hour Glass
     -- and not the item that was in the Schoolbag
-    RPGlobals.run.schoolbag.charges = RPGlobals.run.schoolbag.lastRoomSlot2Charges
+    RPGlobals.run.schoolbag.charge = RPGlobals.run.schoolbag.lastRoomSlot2Charges
     if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then
-       RPGlobals.run.schoolbag.charges = 0 -- Prevent using the Glowing Hour Glass over and over
+       RPGlobals.run.schoolbag.charge = 0 -- Prevent using the Glowing Hour Glass over and over
     end
     RPSchoolbag.sprites.item = nil
   end

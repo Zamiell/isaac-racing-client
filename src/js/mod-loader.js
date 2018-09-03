@@ -81,6 +81,7 @@ const send = () => {
 exports.send = send;
 
 const reset = () => {
+    globals.modLoader.id = 0;
     globals.modLoader.status = 'none';
     globals.modLoader.myStatus = 'not ready';
     globals.modLoader.ranked = false;

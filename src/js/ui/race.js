@@ -78,9 +78,11 @@ $(document).ready(() => {
     $('#race-ready-checkbox').change(function raceReadyCheckboxChange() {
         if (globals.currentScreen !== 'race') {
             return;
-        } else if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
+        }
+        if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
             return;
-        } else if (globals.raceList[globals.currentRaceID].status !== 'open') {
+        }
+        if (globals.raceList[globals.currentRaceID].status !== 'open') {
             return;
         }
 
@@ -111,11 +113,14 @@ $(document).ready(() => {
     $('#race-quit-button').click(() => {
         if (globals.currentScreen !== 'race') {
             return;
-        } else if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
+        }
+        if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
             return;
-        } else if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
+        }
+        if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
             return;
-        } else if (!$('#race-quit-button').is(':visible')) {
+        }
+        if (!$('#race-quit-button').is(':visible')) {
             // Account for the possibility of an "Alt+Q" keystroke after the race has started but before the controls are visible
             return;
         }
@@ -145,14 +150,18 @@ $(document).ready(() => {
     $('#race-finish-button').click(() => {
         if (globals.currentScreen !== 'race') {
             return;
-        } else if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
+        }
+        if (!Object.prototype.hasOwnProperty.call(globals.raceList, globals.currentRaceID)) {
             return;
-        } else if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
+        }
+        if (globals.raceList[globals.currentRaceID].status !== 'in progress') {
             return;
-        } else if (!$('#race-finish-button').is(':visible')) {
+        }
+        if (!$('#race-finish-button').is(':visible')) {
             // Account for the possibility of an "Alt+F" keystroke after the race has started but before the controls are visible
             return;
-        } else if (
+        }
+        if (
             globals.raceList[globals.currentRaceID].ruleset.format !== 'custom' ||
             globals.raceList[globals.currentRaceID].ruleset.goal !== 'custom'
         ) {
@@ -203,7 +212,8 @@ const show = (raceID) => {
             show(raceID);
         }, globals.fadeTime + 5); // 5 milliseconds of leeway
         return;
-    } else if (globals.currentScreen !== 'waiting-for-server' && globals.currentScreen !== 'lobby') {
+    }
+    if (globals.currentScreen !== 'waiting-for-server' && globals.currentScreen !== 'lobby') {
         // currentScreen should be "waiting-for-server" if they created a race or joined a current race
         // currentScreen should be "lobby" if they are rejoining a race after a disconnection
         misc.errorShow(`Failed to enter the race screen since currentScreen is equal to "${globals.currentScreen}".`);
@@ -220,6 +230,7 @@ const show = (raceID) => {
     }
 
     // Tell the Lua mod that we are in a new race
+    globals.modLoader.id = race.id;
     globals.modLoader.status = race.status;
     globals.modLoader.ranked = race.ruleset.ranked;
     globals.modLoader.solo = race.ruleset.solo;

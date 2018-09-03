@@ -26,6 +26,7 @@ function RPPostUpdate:Main()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local activeCharge = player:GetActiveCharge()
   local sfx = SFXManager()
@@ -74,6 +75,16 @@ function RPPostUpdate:Main()
     RPGlobals.run.rechargeItemFrame = 0
     player:FullCharge()
     sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
+  end
+
+  -- Check for Mutant Spider's Inner Eye (a custom item)
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) then
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE)
+    -- This custom item is set to not be shown on the item tracker
+    player:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+    player:AddCollectible(CollectibleType.COLLECTIBLE_INNER_EYE, 0, false) -- 2
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
   end
 
   -- Check for item drop inputs (fast-drop)

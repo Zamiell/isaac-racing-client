@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.20.3"
+RPGlobals.version = "v0.20.4"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -14,6 +14,7 @@ RPGlobals.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 RPGlobals.race = {
+  id              = 0,           -- 0 if a race is not going on
   status          = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked          = false,       -- Can be true or false
@@ -73,6 +74,7 @@ CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Che
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder 1")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder 2")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder 3")
+CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE = Isaac.GetItemIdByName("Mutant Spider's Inner Eye")
 CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
 CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE         = Isaac.GetItemIdByName("Samael Dead Eye")
 CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Samael Chocolate Milk")
@@ -204,8 +206,8 @@ function RPGlobals:InitRun()
   -- Schoolbag tracking
   RPGlobals.run.schoolbag = {
     item              = 0,
-    charges           = 0,
-    chargesBattery    = 0,
+    charge            = 0,
+    chargeBattery     = 0,
     pressed           = false, -- Used for keeping track of whether the "Switch" button is held down or not
     lastCharge        = 0,     -- Used to keep track of the charges when we pick up a second active item
     lastChargeBattery = 0,     -- Used to keep track of the charges when we pick up a second active item

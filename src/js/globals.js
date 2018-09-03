@@ -40,6 +40,7 @@ module.exports = {
     log: null,
     lang: null, // The language switcher instance, set in "localization.js"
     modLoader: {
+        id: 0,
         status: 'none',
         myStatus: 'not ready',
         ranked: false,

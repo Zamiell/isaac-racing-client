@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.20.4* - September 3rd, 2018
+
+* The race ID will now be displayed in the first room of the race (but only during the first two seconds of the race).
+* Fixed the bug where the average time per character was not showing correctly. Thanks to PassionDrama for finding and fixing the bug.
+* Fixed the vanilla bug where players did not take any damage from Jr. Fetus troll bombs. (Thanks AshDown)
+* Fixed the bug where fart-rerolled items were not removed from item pools on sight.
+
 ### *v0.20.3* - August 21st, 2018
 
 * Racing+ will now automatically reseed a floor if it contains a duplicate room. (This also takes into account rooms seen on previous floors.)

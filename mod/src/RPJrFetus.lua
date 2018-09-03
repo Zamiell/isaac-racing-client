@@ -418,7 +418,9 @@ function RPJrFetus:UpdateDrFetus(entity)
                     api.PlaySound(sounds.Whoosh)
                     local direction = target.Position - entity.Position
                     local bomb = Isaac.Spawn(EntityType.ENTITY_BOMBDROP, BombVariant.BOMB_TROLL, 0, entity.Position, direction * 0.1, entity)
-                    bomb:ToBomb().ExplosionDamage = 0
+                    bomb:ToBomb().ExplosionDamage = 1
+                    -- This still makes the troll bomb deal a full heart of damage to the player
+                    -- but mitigates the damage dealt to NPCs (by default it is 60)
                 else
                     sprite:Play("SwimDown", true)
                     ai:RemoveActiveAttack()
