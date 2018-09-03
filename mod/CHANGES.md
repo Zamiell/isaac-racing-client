@@ -103,7 +103,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
-* Duplicate rooms will no longer appear on the same run.
 * All Spike Chests will spawn as Mimics instead.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
