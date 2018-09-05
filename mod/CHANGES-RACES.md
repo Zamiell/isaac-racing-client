@@ -4,7 +4,13 @@
 
 * Historically, most races have been unseeded. This means that both players start with the same character but play on different seeds.
 * Each player is allowed to reset as many times as they want. Typically, each player will reset over and over until they find a good starting item from the Basement 1 Treasure Room.
-* There are no additional changes to the game in this format.
+* In unseeded races, there are additional balance changes:
+  * Each racer starts with More Options. More Options is removed upon entering the first Treasure Room.
+  * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
+    * Mom's Knife --> Incubus
+    * Tech X --> Crown of Light
+    * Epic Fetus --> Sacred Heart
+    * Ipecac --> Mutant Spider + The Inner Eye
 
 ## Seeded
 

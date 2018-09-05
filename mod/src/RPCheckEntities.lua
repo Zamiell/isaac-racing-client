@@ -146,7 +146,10 @@ function RPCheckEntities:Entity5(pickup)
     end
 
     -- roomData.StageID always returns 0 for some reason, so just use stage and stageType as a workaround
-    if ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 12) or -- Caves
+    if ((stage == 1 or stage == 2) and stageType == 0 and roomDataVariant == 716) or -- Basement
+       ((stage == 1 or stage == 2) and stageType == 1 and roomDataVariant == 716) or -- Cellar
+       ((stage == 1 or stage == 2) and stageType == 2 and roomDataVariant == 716) or -- Burning Basement
+       ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 12) or -- Caves
        ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 19) or
        ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 125) or
        ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 244) or
@@ -160,6 +163,7 @@ function RPCheckEntities:Entity5(pickup)
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 244) or
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 518) or
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 519) or
+       ((stage == 5 or stage == 6) and stageType == 1 and roomDataVariant == 973) or -- Necropolis
        ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 458) or -- Womb
        ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 489) or
        ((stage == 7 or stage == 8) and stageType == 1 and roomDataVariant == 458) or -- Utero

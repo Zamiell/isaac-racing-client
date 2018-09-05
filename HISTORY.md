@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.20.5* - September 5th, 2018
+
+* Increased the number of races that count towards the solo ranked unseeded leaderboards from 50 to 100.
+* In unseeded races, there are now additional balance changes:
+  * Each racer starts with More Options. More Options is removed upon entering the first Treasure Room.
+  * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
+    * Mom's Knife --> Incubus
+    * Tech X --> Crown of Light
+    * Epic Fetus --> Sacred Heart
+    * Ipecac --> Mutant Spider + The Inner Eye
+* Added Basement / Cellar / Burning Basement room #716 to the Mimic exemption list (a narrow room with 4 Mulibooms).
+* Added Necropolis room #974 to the Mimic exemption list (a room with 5 Nerve Endings and a Broken Gaping Maw).
+
 ### *v0.20.4* - September 3rd, 2018
 
 * The race ID will now be displayed in the first room of the race (but only during the first two seconds of the race).

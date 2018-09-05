@@ -87,6 +87,19 @@
 * Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
 * Entering a Library on Basement 1 will cause bad things to happen. (This is to prevent resetting for a good book.)
 
+## R+7 Season 5
+
+* You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://asdf.com) mod, which provides a different random baby with a unique ability on each floor.
+* Each baby has the starting stats and health of Judas.
+* Each baby starts with the Schoolbag. (It starts empty by default.)
+* Each baby starts with More Options. More Options is removed upon entering the first Treasure Room.
+* The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
+  * Mom's Knife --> Incubus
+  * Tech X --> Crown of Light
+  * Epic Fetus --> Sacred Heart
+  * Ipecac --> Mutant Spider + The Inner Eye
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
+
 ## Races
 
 * If you want to do a multiplayer race of one of the above seasons, then you can create a race with a format of "Custom" and a race goal of "Custom".
