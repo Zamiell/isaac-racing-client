@@ -121,7 +121,8 @@ function RPPedestals:Replace(pickup)
   local specialReroll = 0
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
-     RPGlobals.race.rFormat == "diversity" then
+     (RPGlobals.race.rFormat == "diversity" and
+      RPGlobals.race.status == "in progress") then
 
     -- Check to see if this is a special Basement 1 diversity reroll
     -- (these custom placeholder items are removed in all non-diveristy runs)
@@ -135,6 +136,9 @@ function RPPedestals:Replace(pickup)
 
   elseif stage == 1 and
          roomType == RoomType.ROOM_TREASURE and -- 4
+         (not (RPGlobals.race.ranked and -- This should not apply to ranked unseeded solo
+               RPGlobals.race.solo and
+               RPGlobals.race.rFormat == "unseeded")) and
          ((RPGlobals.race.rFormat == "unseeded" and
            RPGlobals.race.status == "in progress") or
           challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) then

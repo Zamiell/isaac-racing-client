@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.20.5* - September 5th, 2018
+### *v0.21.0* - September 5th, 2018
 
 * Increased the number of races that count towards the solo ranked unseeded leaderboards from 50 to 100.
 * In unseeded races, there are now additional balance changes:
@@ -10,8 +10,8 @@
     * Tech X --> Crown of Light
     * Epic Fetus --> Sacred Heart
     * Ipecac --> Mutant Spider + The Inner Eye
-* Added Basement / Cellar / Burning Basement room #716 to the Mimic exemption list (a narrow room with 4 Mulibooms).
-* Added Necropolis room #974 to the Mimic exemption list (a room with 5 Nerve Endings and a Broken Gaping Maw).
+* Added Basement / Cellar / Burning Basement room #716 to the Mimic exemption list (a narrow room with 4 Mulibooms). (Thanks thereisnofuture)
+* Added Necropolis room #974 to the Mimic exemption list (a room with 5 Nerve Endings and a Broken Gaping Maw). (Thanks Ibotep and Dea1h)
 
 ### *v0.20.4* - September 3rd, 2018
 
