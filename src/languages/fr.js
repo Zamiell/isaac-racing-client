@@ -30,7 +30,7 @@ Lang.prototype.pack.fr = {
         // Updating screen
         "Updating": "Mise à jour en cours",
         "A new version of the client is being downloaded. The program will automatically restart once it is complete.": "Une nouvelle version du client est en train d'être téléchargée. Le programme va redémarrer automatiquement une fois l'opération terminée.",
-        "The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!": "L'équipe travaille continuellement pour corriger les bugs et rajouter de nouvelles fonctionnalité. Desolé du désagrément.",
+        "The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!": "L'équipe travaille continuellement pour corriger les bugs et rajouter de nouvelles fonctionnalités. Désolé du désagrément.",
 
         // Header
         "Profile": "Profil",
@@ -165,7 +165,7 @@ Lang.prototype.pack.fr = {
         "Enable boss cutscenes (for people used to vanilla; requires game restart)": "Activer les animations de boss (pour les joueurs habitués au vanilla, requiert un relancement du jeu)",
         "Change stream URL": "Changer l'URL du stream",
         "Your stream URL must begin with \"https://www.twitch.tv/\".": "L'URL de votre stream doit commencer par \"https://www.twitch.tv/\".",
-        "Enable Twitch chat bot": "Activé le bot dans le chat Twitch",
+        "Enable Twitch chat bot": "Activer le bot dans le chat Twitch",
         "Make the bot a moderator in your Twitch channel by typing": "Passez le bot modérateur sur votre chaine Twitch en tapant",
         "in your Twitch chat.": "dans votre chat Twitch.",
         "It won't work unelss it is a moderator.": "Il ne fonctionnera pas tant qu'il n'est pas modérateur.",
