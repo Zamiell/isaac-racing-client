@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.21.1* - September 5th, 2018
+
+* Fixed the new unseeded mechanics. (Thanks Greninja_San)
+* Fixed the close Drowned Boom Fly in Flooded Caves room #974.
+* Fixed the close Guts in Utero room #5.
+* Removed Womb/Utero/Scarred narrow room #611 (with Mom's Dead Hand).
+* Removed 1 duplicated room from the (vanilla) Cellar.
+* Removed 28 duplicated rooms from the (vanilla) Caves/Catacombs/Flooded.
+* Removed 36 duplicated rooms from the (vanilla) Depths/Necropolis/Dank.
+* Removed 36 duplicated rooms from the (vanilla) Womb/Utero/Scarred.
+* Moved the "Avg. time per char" text to the 2nd line so that it is not hidden by the Checkpoint item text.
+
 ### *v0.21.0* - September 5th, 2018
 
 * Increased the number of races that count towards the solo ranked unseeded leaderboards from 50 to 100.

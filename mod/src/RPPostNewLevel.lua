@@ -156,7 +156,8 @@ function RPPostNewLevel:CheckDupeRooms()
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomData = rooms:Get(i).Data
     if roomData.Type == RoomType.ROOM_DEFAULT and -- 1
-       roomData.Variant ~= 2 then -- This is the starting room
+       roomData.Variant ~= 2 and -- This is the starting room
+       roomData.Variant ~= 0 then -- This is the starting room on The Chest / Dark Room
 
       -- Normalize the room ID (to account for flipped rooms)
       local roomID = roomData.Variant
@@ -168,7 +169,7 @@ function RPPostNewLevel:CheckDupeRooms()
       -- Check to see if this room ID has appeared on previous floors
       for j = 1, #RPGlobals.run.roomIDs do
         if roomID == RPGlobals.run.roomIDs[j] then
-          Isaac.DebugString("Duplicate room found (on previous floor) - reseeding.")
+          Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding.")
           RPGlobals.run.reseededFloor = true
           RPGlobals:ExecuteCommand("reseed")
           return true
@@ -176,14 +177,16 @@ function RPPostNewLevel:CheckDupeRooms()
       end
 
       -- Also check to see if this room ID appears multiple times on this floor
+      --[[
       for j = 1, #roomIDs do
         if roomID == roomIDs[j] then
-          Isaac.DebugString("Duplicate room found (on same floor) - reseeding.")
+          Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
           RPGlobals.run.reseededFloor = true
           RPGlobals:ExecuteCommand("reseed")
           return true
         end
       end
+      --]]
 
       -- Keep track of this room ID
       roomIDs[#roomIDs + 1] = roomID

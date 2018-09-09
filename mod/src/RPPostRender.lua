@@ -332,11 +332,12 @@ function RPPostRender:DisplayTopLeftText()
     -- (but clear it if they exit the room)
     Isaac.RenderText("Seed: " .. seedString, x, y, 2, 2, 2, 2)
     y = y + lineLength
-    Isaac.RenderText("Total rooms: " .. RPGlobals.run.roomsEntered, x, y, 2, 2, 2, 2)
+    local text = "Total rooms: " .. RPGlobals.run.roomsEntered
     if RPSpeedrun:InSpeedrun() then
-      y = y + lineLength
-      Isaac.RenderText("Avg. time per char: " .. RPSpeedrun:GetAverageTimePerCharacter(), x, y, 2, 2, 2, 2)
+      -- We can't put this on a 3rd line because it is blocked by the Checkpoint item text
+      text = text .. ", avg. time per char: " .. RPSpeedrun:GetAverageTimePerCharacter()
     end
+    Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
   elseif RPGlobals.race.status == "in progress" and
          RPGlobals.run.roomsEntered <= 1 and

@@ -144,6 +144,7 @@ While not technically unavoidable, many narrow rooms have near-impossible attack
 The changed rooms are as follows:
 * Burning: #755 (Rag Man) (removed a pot)
 * Depths/Necropolis/Dank: #639 (Mom's Dead Hand) (deleted)
+* Womb/Utero/Scarred: #611 (Mom's Dead Hand) (deleted)
 * Cathedral: #286 (Uriel) (changed to 1x1)
 * Cathedral: #291 (Gabriel) (changed to 1x1)
 * Chest: #262 (Headless Horseman Head x2) (changed to 1x1)
@@ -216,7 +217,7 @@ The removed room is as follows:
 
 <br />
 
-### Fire Fix
+### Close Fires Fix
 
 In one room, fires spawn close to the entrance. If the fire becomes a champion red fire, then the player can take unavoidable damage. This bug has been fixed by replacing the Fire with Fire Places, which are guaranteed to not spawn as red fires.
 
@@ -231,6 +232,16 @@ In one room, the Drowned Chargers that spawn from a Hive can be unavoidable dama
 
 The changed room is as follows:
 * Caves/Flooded: #519
+
+<br />
+
+### Close Enemies Fix
+
+In some rooms, enemies are unreasonably close to an entrance. This is addressed by moving them slightly further away.
+
+The changed room is as follows:
+* Flooded: #974
+* Utero: #5
 
 <br />
 
@@ -340,6 +351,111 @@ Some rooms are incorrectly duplicated.
 
 The deleted rooms are as follows:
 * Basement/Burning: #968 (duplicated from #883)
+* Cellar: #955 (duplicated from #866)
+* Caves/Catacombs/Flooded: #814 (duplicated from #794)
+* Caves/Catacombs/Flooded: #815 (duplicated from #795)
+* Caves/Catacombs/Flooded: #816 (duplicated from #796)
+* Caves/Catacombs/Flooded: #817 (duplicated from #797)
+* Caves/Catacombs/Flooded: #819 (duplicated from #799)
+* Caves/Catacombs/Flooded: #820 (duplicated from #800)
+* Caves/Catacombs/Flooded: #821 (duplicated from #801)
+* Caves/Catacombs/Flooded: #822 (duplicated from #802)
+* Caves/Catacombs/Flooded: #823 (duplicated from #803)
+* Caves/Catacombs/Flooded: #824 (duplicated from #784)
+* Caves/Catacombs/Flooded: #825 (duplicated from #785)
+* Caves/Catacombs/Flooded: #826 (duplicated from #786)
+* Caves/Catacombs/Flooded: #827 (duplicated from #787)
+* Caves/Catacombs/Flooded: #828 (duplicated from #788)
+* Caves/Catacombs/Flooded: #829 (duplicated from #789)
+* Caves/Catacombs/Flooded: #830 (duplicated from #790)
+* Caves/Catacombs/Flooded: #831 (duplicated from #791)
+* Caves/Catacombs/Flooded: #832 (duplicated from #792)
+* Caves/Catacombs/Flooded: #833 (duplicated from #793)
+* Caves/Catacombs/Flooded: #834 (duplicated from #775)
+* Caves/Catacombs/Flooded: #835 (duplicated from #776)
+* Caves/Catacombs/Flooded: #836 (duplicated from #777)
+* Caves/Catacombs/Flooded: #837 (duplicated from #778)
+* Caves/Catacombs/Flooded: #838 (duplicated from #779)
+* Caves/Catacombs/Flooded: #839 (duplicated from #780)
+* Caves/Catacombs/Flooded: #840 (duplicated from #781)
+* Caves/Catacombs/Flooded: #841 (duplicated from #782)
+* Caves/Catacombs/Flooded: #842 (duplicated from #783)
+* Depths/Necropolis/Dank: #859 (duplicated from #518)
+* Depths/Necropolis/Dank: #858 (duplicated from #775)
+* Depths/Necropolis/Dank: #857 (duplicated from #776)
+* Depths/Necropolis/Dank: #856 (duplicated from #777)
+* Depths/Necropolis/Dank: #855 (duplicated from #778)
+* Depths/Necropolis/Dank: #854 (duplicated from #779)
+* Depths/Necropolis/Dank: #853 (duplicated from #780)
+* Depths/Necropolis/Dank: #852 (duplicated from #781)
+* Depths/Necropolis/Dank: #851 (duplicated from #782)
+* Depths/Necropolis/Dank: #850 (duplicated from #783)
+* Depths/Necropolis/Dank: #849 (duplicated from #784)
+* Depths/Necropolis/Dank: #848 (duplicated from #785)
+* Depths/Necropolis/Dank: #847 (duplicated from #786)
+* Depths/Necropolis/Dank: #846 (duplicated from #519)
+* Depths/Necropolis/Dank: #845 (duplicated from #520)
+* Depths/Necropolis/Dank: #844 (duplicated from #521)
+* Depths/Necropolis/Dank: #843 (duplicated from #522)
+* Depths/Necropolis/Dank: #842 (duplicated from #523)
+* Depths/Necropolis/Dank: #841 (duplicated from #524)
+* Depths/Necropolis/Dank: #840 (duplicated from #525)
+* Depths/Necropolis/Dank: #839 (duplicated from #526)
+* Depths/Necropolis/Dank: #838 (duplicated from #527)
+* Depths/Necropolis/Dank: #837 (duplicated from #692)
+* Depths/Necropolis/Dank: #836 (duplicated from #738)
+* Depths/Necropolis/Dank: #835 (duplicated from #739)
+* Depths/Necropolis/Dank: #834 (duplicated from #740)
+* Depths/Necropolis/Dank: #833 (duplicated from #741)
+* Depths/Necropolis/Dank: #832 (duplicated from #742)
+* Depths/Necropolis/Dank: #831 (duplicated from #743)
+* Depths/Necropolis/Dank: #830 (duplicated from #744)
+* Depths/Necropolis/Dank: #829 (duplicated from #745)
+* Depths/Necropolis/Dank: #828 (duplicated from #746)
+* Depths/Necropolis/Dank: #827 (duplicated from #747)
+* Depths/Necropolis/Dank: #826 (duplicated from #748)
+* Depths/Necropolis/Dank: #825 (duplicated from #749)
+* Depths/Necropolis/Dank: #824 (duplicated from #774)
+* Womb/Utero/Scarred: #822 (duplicated from #797)
+* Womb/Utero/Scarred: #821 (duplicated from #798)
+* Womb/Utero/Scarred: #820 (duplicated from #799)
+* Womb/Utero/Scarred: #819 (duplicated from #800)
+* Womb/Utero/Scarred: #818 (duplicated from #801)
+* Womb/Utero/Scarred: #817 (duplicated from #802)
+* Womb/Utero/Scarred: #816 (duplicated from #803)
+* Womb/Utero/Scarred: #815 (duplicated from #804)
+* Womb/Utero/Scarred: #814 (duplicated from #805)
+* Womb/Utero/Scarred: #813 (duplicated from #806)
+* Womb/Utero/Scarred: #812 (duplicated from #807)
+* Womb/Utero/Scarred: #811 (duplicated from #808)
+* Womb/Utero/Scarred: #810 (duplicated from #809)
+* Womb/Utero/Scarred: #796 (duplicated from #515)
+* Womb/Utero/Scarred: #795 (duplicated from #516)
+* Womb/Utero/Scarred: #794 (duplicated from #517)
+* Womb/Utero/Scarred: #793 (duplicated from #518)
+* Womb/Utero/Scarred: #792 (duplicated from #519)
+* Womb/Utero/Scarred: #791 (duplicated from #520)
+* Womb/Utero/Scarred: #790 (duplicated from #521)
+* Womb/Utero/Scarred: #789 (duplicated from #522)
+* Womb/Utero/Scarred: #788 (duplicated from #523)
+* Womb/Utero/Scarred: #787 (duplicated from #524)
+* Womb/Utero/Scarred: #786 (duplicated from #525)
+* Womb/Utero/Scarred: #785 (duplicated from #526)
+* Womb/Utero/Scarred: #784 (duplicated from #527)
+* Womb/Utero/Scarred: #783 (duplicated from #738)
+* Womb/Utero/Scarred: #782 (duplicated from #739)
+* Womb/Utero/Scarred: #781 (duplicated from #740)
+* Womb/Utero/Scarred: #779 (duplicated from #742)
+* Womb/Utero/Scarred: #778 (duplicated from #743)
+* Womb/Utero/Scarred: #777 (duplicated from #744)
+* Womb/Utero/Scarred: #776 (duplicated from #745)
+* Womb/Utero/Scarred: #775 (duplicated from #746)
+* Womb/Utero/Scarred: #774 (duplicated from #747)
+* Womb/Utero/Scarred: #748 (duplicated from #748)
+
+<br />
+
+
 
 
 

@@ -433,7 +433,12 @@ function RPPostGameStarted:Race()
   Isaac.DebugString("Race validation succeeded.")
 
   -- Give extra items depending on the format
-  if RPGlobals.race.rFormat == "seeded" then
+  if RPGlobals.race.rFormat == "unseeded" and
+     RPGlobals.race.status == "in progress" then
+
+    RPPostGameStarted:Unseeded()
+
+  elseif RPGlobals.race.rFormat == "seeded" then
     RPPostGameStarted:Seeded()
 
   elseif RPGlobals.race.rFormat == "diversity" then
@@ -454,6 +459,22 @@ function RPPostGameStarted:Race()
   elseif RPGlobals.race.rFormat == "unseeded-lite" then
     RPPostGameStarted:UnseededLite()
   end
+end
+
+function RPPostGameStarted:Unseeded()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
+
+  -- Unseeded is like vanilla, but the player will still start with More Options to reduce resetting time
+  player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+  player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
+  -- We don't want the costume to show
+  Isaac.DebugString("Removing collectible 414 (More Options)")
+  -- We don't need to show this on the item tracker to reduce clutter
+  RPGlobals.run.removeMoreOptions = true
+  -- More Options will be removed upon entering the first Treasure Room
 end
 
 function RPPostGameStarted:Seeded()

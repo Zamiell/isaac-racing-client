@@ -668,8 +668,10 @@ const participantsSetStatus = (i, initial = false) => {
 
             // Play the special "NO DUDE" sound effect
             if (racer.name === globals.myUsername && racer.runTime - lastFinishedTime <= 3000) {
-                const randNum = misc.getRandomNumber(1, 8);
-                misc.playSound(`no/no${randNum}`);
+                setTimeout(() => {
+                    const randNum = misc.getRandomNumber(1, 8);
+                    misc.playSound(`no/no${randNum}`);
+                }, 1500);
             }
 
             lastFinishedTime = racer.runTime;
