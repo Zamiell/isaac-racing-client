@@ -1,6 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.21.1* - September 5th, 2018
+### *v0.21.2* - September 10th, 2018
+
+* Fixed the bug where the item tracker would delete all of the items if Racing+ reseeded Basement 1. (Thanks Cyber_1 and Hyphen-ated)
+
+### *v0.21.1* - September 9th, 2018
 
 * Fixed the new unseeded mechanics. (Thanks Greninja_San)
 * Fixed the close Drowned Boom Fly in Flooded Caves room #974.

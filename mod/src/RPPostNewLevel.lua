@@ -177,7 +177,6 @@ function RPPostNewLevel:CheckDupeRooms()
       end
 
       -- Also check to see if this room ID appears multiple times on this floor
-      --[[
       for j = 1, #roomIDs do
         if roomID == roomIDs[j] then
           Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
@@ -186,7 +185,6 @@ function RPPostNewLevel:CheckDupeRooms()
           return true
         end
       end
-      --]]
 
       -- Keep track of this room ID
       roomIDs[#roomIDs + 1] = roomID
