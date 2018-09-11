@@ -433,10 +433,12 @@ function RPPostGameStarted:Race()
   Isaac.DebugString("Race validation succeeded.")
 
   -- Give extra items depending on the format
-  if RPGlobals.race.rFormat == "unseeded" and
-     RPGlobals.race.status == "in progress" then
-
-    RPPostGameStarted:Unseeded()
+  if RPGlobals.race.rFormat == "unseeded" then
+    if RPGlobals.race.ranked and RPGlobals.race.solo then
+      RPPostGameStarted:UnseededRankedSolo()
+    else
+      RPPostGameStarted:Unseeded()
+    end
 
   elseif RPGlobals.race.rFormat == "seeded" then
     RPPostGameStarted:Seeded()
@@ -446,12 +448,6 @@ function RPPostGameStarted:Race()
     if RPGlobals.raceVars.started then
       RPPostGameStarted:Diversity()
     end
-
-  elseif RPGlobals.race.ranked and
-         RPGlobals.race.solo and
-         RPGlobals.race.rFormat == "unseeded" then
-
-    RPPostGameStarted:UnseededRankedSolo()
 
   elseif RPGlobals.race.rFormat == "seededMO" then
     RPPostGameStarted:SeededMO()
@@ -744,6 +740,7 @@ function RPPostGameStarted:UnseededRankedSolo()
   local itemPool = game:GetItemPool()
 
   -- The client will populate the starting items for the current season into the "startingItems" variable
+  Isaac.DebugString("###################################")
   for i = 1, #RPGlobals.race.startingItems do
     local itemID = RPGlobals.race.startingItems[i]
     player:AddCollectible(itemID, 12, true)

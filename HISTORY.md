@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.21.3* - September 11th, 2018
+
+* Fixed the bug where Judas was not starting with the Schoolbag in ranked solo unseeded races. (Thanks Cold90a)
+
 ### *v0.21.2* - September 10th, 2018
 
 * Fixed the bug where the item tracker would delete all of the items if Racing+ reseeded Basement 1. (Thanks Cyber_1 and Hyphen-ated)
