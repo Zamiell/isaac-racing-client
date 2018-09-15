@@ -225,6 +225,21 @@ function RPPostUpdate:CheckHauntSpeedup()
         if npc == nil then
           Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
                             " was not able to be converted to an NPC.")
+          for k, entity2 in pairs(Isaac.GetRoomEntities()) do
+            if entity2.Type == EntityType.ENTITY_THE_HAUNT then
+              local string = "DEBUG: "
+              if entity2.Variant == 10 then
+                string = string .. "Lil' "
+              end
+              string = string .. "Haunt found at index " .. tostring(entity2.Index)
+              if entity2.Parent == nil then
+                string = string .. " with no parent."
+              else
+                string = string .. " with parent index " .. tostring(entity2.Parent.Index)
+              end
+              Isaac.DebugString(string)
+            end
+          end
           return
         end
         npc.State = NpcState.STATE_MOVE -- 4

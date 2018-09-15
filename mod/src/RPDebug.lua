@@ -87,7 +87,6 @@ function RPDebug:Main()
   RPDebug.temp = not RPDebug.temp
   --]]
 
-  --RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
   --RPGlobals.raceVars.finished = true
   --RPSprites:Init("place", 1)
 

@@ -121,7 +121,6 @@ function RPPostGameStarted:Main(saveState)
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
   -- (difficulty and challenge are set in the "RPPostGameStarted:Race()" function)
   -- (character is set in the "RPPostGameStarted:Character()" function)
-  RPGlobals.raceVars.resetEnabled = true
   -- (started and startedTime are handled independently of runs)
   RPGlobals.raceVars.finished = false
   RPGlobals.raceVars.finishedTime = 0

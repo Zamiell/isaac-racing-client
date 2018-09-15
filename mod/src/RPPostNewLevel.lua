@@ -101,11 +101,6 @@ function RPPostNewLevel:NewLevel()
     RPGlobals.RNGCounter.Telepills = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.Telepills)
   end
 
-  -- Start showing the place graphic if we get to Basement 2
-  if stage >= 2 then
-    RPGlobals.raceVars.showPlaceGraphic = true
-  end
-
   -- Make sure that the diveristy placeholder items are removed
   if stage >= 2 then
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
@@ -123,11 +118,11 @@ function RPPostNewLevel:NewLevel()
 
   -- Fix the Strength card bug that happens wtih Fast-Travel
   if RPGlobals.run.usedStrength and
-     character ~= PlayerType.PLAYER_KEEPER then -- 14
+     character == PlayerType.PLAYER_KEEPER then -- 14
 
     RPGlobals.run.usedStrength = false
     player:AddMaxHearts(-2) -- Remove a heart container
-    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (RPPost0NewLevel)")
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (RPPostNewLevel)")
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)

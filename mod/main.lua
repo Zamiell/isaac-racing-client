@@ -181,23 +181,28 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity78, EntityType.ENTITY_HUSH) -- 407
 
 -- Samael callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D4) -- 284
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, CollectibleType.COLLECTIBLE_D100) -- 283
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.activateWraith,
-                                                          Isaac.GetItemIdByName("Wraith Skull"))
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.roomEntitiesLoop)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdate)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate, -- 0
                                                           Isaac.GetEntityTypeByName("Samael Scythe"))
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFunc,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFunc, -- 0
                                                           Isaac.GetEntityTypeByName("Samael Special Animations"))
-RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   RPSamael.hitBoxFunc, FamiliarVariant.SACRIFICIAL_DAGGER) -- 35
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.scytheHits)
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.playerDamage, EntityType.ENTITY_PLAYER) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPSamael.PostPlayerInit)
-RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPSamael.cacheUpdate)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPSamael.PostGameStartedReset)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.roomEntitiesLoop) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdate) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs) -- 1
+--RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       RPSamael.PostRender) -- 2
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, -- 3
+                                                          CollectibleType.COLLECTIBLE_D4) -- 284
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, -- 3
+                                                          CollectibleType.COLLECTIBLE_D100) -- 283
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.activateWraith, -- 3
+                                                          Isaac.GetItemIdByName("Wraith Skull"))
+RacingPlus:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE,   RPSamael.hitBoxFunc, -- 6
+                                                          FamiliarVariant.SACRIFICIAL_DAGGER) -- 35
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,    RPSamael.cacheUpdate) -- 8
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,  RPSamael.PostPlayerInit) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.scytheHits) -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   RPSamael.playerDamage, -- 11
+                                                          EntityType.ENTITY_PLAYER) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, RPSamael.PostGameStartedReset) -- 15
 
 -- Jr. Fetus callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,         RPJrFetus.UpdateDrFetus,

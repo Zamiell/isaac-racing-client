@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.21.4* - September 14th, 2018
+
+* Fast-reset will now be disabled for your current run if you have opened the console at least one time.
+* Fixed the bug where you could use a card/pill while transitioning to the next floor.
+* Fixed the bug where you could use a card/pill during a room transition (which would delete the card/pill).
+* Fixed the bug where Racing+ would not detect that the race was finished after disconnecting and reconnecting. (Thanks Krakenos)
+* Fixed the bug where using a Strength card would kill you upon reaching the next floor with no other hearts. (Thanks Thoday)
+* Fixed the bug where you could reset the game when the countdown is at 3 seconds or lower.
+* Fixed the bug where the forfeit rate on the profile page was 50 instead of 100. (Thanks mgln)
+* Fixed the bug where the "no dude" style sound effects would play at the same time as the "1st place" style sound effects.
+* Fixed the bug where trapdoors would not work properly with the True Co-op Mod. (Thanks thisguyisbarry)
+
 ### *v0.21.3* - September 11th, 2018
 
 * Fixed the bug where Judas was not starting with the Schoolbag in ranked solo unseeded races. (Thanks Cold90a)

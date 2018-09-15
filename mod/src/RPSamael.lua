@@ -123,6 +123,8 @@ local wraithChargePenalty = 0
 local fireDelayPenalty = 0 --Nerfs
 local fireDelayReduced = false
 
+local scytheAnimationEndFrame = 0
+
 function SamaelMod:PostUpdate()
   local player = Isaac.GetPlayer(0)
   if player:GetPlayerType() == samaelID then --If the player is Samael
@@ -627,8 +629,10 @@ function SamaelMod:scytheUpdate(scythe)
     charge = 0 --Reset charge
     if scytheScale >= 1.5 then
       sprite:Play("BigSwing", 1) --Play scythe swing animation
+      -- (this is 11 frames long)
     else
       sprite:Play("Swing", 1) --Play scythe swing animation
+      -- (this is 11 frames long)
     end
 
     --Choose fruit cake effect
@@ -659,6 +663,8 @@ function SamaelMod:scytheUpdate(scythe)
 
     scythe:PlaySound(38, 1.75, 0, false, 1.2) --Play swinging sound
     scytheState = 2 --Set state to 2 (swinging scythe)
+    scytheAnimationEndFrame = Game():GetFrameCount() + 9 -- Both animations are 11 frames long
+    Isaac.DebugString("Set scytheAnimationEndFrame to: " .. tostring(scytheAnimationEndFrame))
     direction = lastDirection --Set render direction to the saved firing direction
   end
 
@@ -719,7 +725,7 @@ function SamaelMod:scytheUpdate(scythe)
 
     sprite.Rotation = 0
     scytheState = 0
-    if swing == 0 then --Switch the swide of the scythe
+    if swing == 0 then --Switch the side of the scythe
       swing = 1
     else
       swing = 0
@@ -1866,5 +1872,47 @@ function SamaelMod:CheckHairpin()
     SamaelMod:CheckRechargeWraithSkull()
   end
 end
+
+--[[
+function SamaelMod:InputActionShoot(buttonAction)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+
+  if character ~= samaelID then
+    return
+  end
+
+  if scytheAnimationEndFrame == 0 then
+    return
+  end
+
+  if gameFrameCount >= scytheAnimationEndFrame then
+    scytheAnimationEndFrame = 0
+    return
+  end
+
+  Isaac.DebugString("Currently swinging in direction: " .. tostring(lastDirection))
+
+  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT and -- 5
+      lastDirection == Direction.LEFT) or -- 0
+     (buttonAction == ButtonAction.ACTION_SHOOTRIGHT and -- 4
+      lastDirection == Direction.RIGHT) or -- 2
+     (buttonAction == ButtonAction.ACTION_SHOOTUP and -- 6
+      lastDirection == Direction.UP) or -- 1
+     (buttonAction == ButtonAction.ACTION_SHOOTDOWN and -- 7
+      lastDirection == Direction.DOWN) then -- 3
+
+    if buttonAction == ButtonAction.ACTION_SHOOTRIGHT then
+      Isaac.DebugString("returning true for ButtonAction: " .. tostring(buttonAction))
+      return true
+    end
+  end
+
+  return
+end
+--]]
 
 return SamaelMod

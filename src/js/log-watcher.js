@@ -51,7 +51,7 @@ exports.start = () => {
 };
 
 // Monitor for notifications from the child process that is doing the log watching
-ipcRenderer.on('log-watcher', (event, message) => {
+const logWatcherEvent = (event, message) => {
     // Don't log everything to reduce spam
     if (
         !message.startsWith('New floor: ') &&
@@ -79,12 +79,16 @@ ipcRenderer.on('log-watcher', (event, message) => {
         } else {
             misc.errorShow('Failed to parse the save slot number from the message sent by the log watcher process:', message);
         }
-    } else if (message === 'Title menu initialized.') {
+        return;
+    }
+    if (message === 'Title menu initialized.') {
         globals.gameState.inGame = false;
         globals.gameState.hardMode = false; // Assume by default that the user is playing on normal mode
         globals.gameState.racingPlusModEnabled = false; // Assume by default that the user does not have the Racing+ mod initialized
         raceScreen.checkReadyValid();
-    } else if (message === 'A new run has begun.') {
+        return;
+    }
+    if (message === 'A new run has begun.') {
         // We detect this through the "RNG Start Seed:" line
         // We could detect this through the "Going to the race room." line but then Racing+ wouldn't work for vanilla / custom mods
         setTimeout(() => {
@@ -92,14 +96,20 @@ ipcRenderer.on('log-watcher', (event, message) => {
             globals.gameState.inGame = true;
             raceScreen.checkReadyValid();
         }, 1000);
-    } else if (message === 'Race error: Wrong mode.') {
+        return;
+    }
+    if (message === 'Race error: Wrong mode.') {
         globals.gameState.hardMode = true;
         raceScreen.checkReadyValid();
-    } else if (message === 'Race validation succeeded.') {
+        return;
+    }
+    if (message === 'Race validation succeeded.') {
         // We look for this message to determine that the user has successfully downloaded and is running the Racing+ Lua mod
         globals.gameState.racingPlusModEnabled = true;
         raceScreen.checkReadyValid();
-    } else if (message.startsWith('New charOrder: ')) {
+        return;
+    }
+    if (message.startsWith('New charOrder: ')) {
         const m = message.match(/New charOrder: (.+)/);
         if (m) {
             const order = JSON.parse(m[1]);
@@ -107,25 +117,38 @@ ipcRenderer.on('log-watcher', (event, message) => {
         } else {
             misc.errorShow('Failed to parse the new charOrder from the message sent by the log watcher process:', message);
         }
-    } else if (message.startsWith('New drop hotkey: ')) {
+        return;
+    }
+    if (message.startsWith('New drop hotkey: ')) {
         const m = message.match(/New drop hotkey: (.+)/);
         if (m) {
             globals.modLoader.hotkeyDrop = parseInt(m[1], 10);
         } else {
             misc.errorShow('Failed to parse the new drop hotkey from the message sent by the log watcher process:', message);
         }
-    } else if (message.startsWith('New switch hotkey: ')) {
+        return;
+    }
+    if (message.startsWith('New switch hotkey: ')) {
         const m = message.match(/New switch hotkey: (.+)/);
         if (m) {
             globals.modLoader.hotkeySwitch = parseInt(m[1], 10);
         } else {
             misc.errorShow('Failed to parse the new switch hotkey from the message sent by the log watcher process:', message);
         }
+        return;
     }
 
     /*
         The rest of the log actions involve sending a message to the server
     */
+
+    // If we are currently in a transition, try again in 0.1 seconds
+    if (globals.currentScreen === 'transition') {
+        setTimeout(() => {
+            logWatcherEvent(event, message);
+        }, 100); // 0.1 seconds
+        return;
+    }
 
     // Don't do anything if we are not in a race
     if (globals.currentScreen !== 'race' || !globals.currentRaceID) {
@@ -195,33 +218,41 @@ ipcRenderer.on('log-watcher', (event, message) => {
             misc.errorShow('Failed to parse the new item from the message sent by the log watcher process:', message);
         }
     } else if (message === 'Finished run: Blue Baby') {
+        // This should only happen after they have already jumped into the big chest
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Blue Baby') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
     } else if (message === 'Finished run: The Lamb') {
+        // This should only happen after they have already jumped into the big chest
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'The Lamb') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
     } else if (message === 'Finished run: Mega Satan') {
+        // This should only happen after they have already jumped into the big chest
+        // (or the big chest did not drop and the cutscene started itself automatically)
         if (globals.raceList[globals.currentRaceID].ruleset.goal === 'Mega Satan') {
             globals.conn.send('raceFinish', {
                 id: globals.currentRaceID,
             });
         }
     } else if (message.startsWith('Finished run: Trophy - ')) {
-        const match = message.match(/Finished run: Trophy - (\d+)/);
+        const match = message.match(/Finished run: Trophy - (\d+) - (\d+)/);
         if (match) {
-            const time = parseInt(match[1], 10);
-            globals.conn.send('raceFinish', {
-                id: globals.currentRaceID,
-                time,
-            });
+            const raceID = parseInt(match[1], 10);
+            const time = parseInt(match[2], 10);
+            if (raceID === globals.currentRaceID) {
+                globals.conn.send('raceFinish', {
+                    id: globals.currentRaceID,
+                    time,
+                });
+            }
         } else {
             misc.errorShow('Failed to parse the run time from the message sent by the log watcher process:', message);
         }
     }
-});
+};
+ipcRenderer.on('log-watcher', logWatcherEvent);

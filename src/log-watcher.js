@@ -45,6 +45,8 @@ process.on('message', (message) => {
     // Before we start to monitor the log file for new lines, we first want to read all of the existing log file to look for the save slot
     // Otherwise, the Racing+ client may not work properly if, for example, the user opens up the game, goes on save file 3,
     // and then opens the client
+    // We also want to look for finishes and pass them along to the client, in case the user disconnected, finished the race,
+    // and then reconnected
     let existingLines;
     try {
         existingLines = fs.readFileSync(logPath, 'utf8').split('\n');
@@ -53,8 +55,8 @@ process.on('message', (message) => {
         return;
     }
     for (const line of existingLines) {
-        // This code is copy-pasted from below (but added the "[INFO] - " prefix)
         if (line.startsWith('[INFO] - Loading PersistentData ')) {
+            // This code is copy-pasted from below (but added the "[INFO] - " prefix)
             // We want to keep track of which save file we are on so that we don't have to write 3 files at a time
             // This line looks like:
             // Loading PersistentData 1 from SteamCloud!
@@ -66,6 +68,17 @@ process.on('message', (message) => {
                 process.send(`Save file slot: ${slot}`);
             } else {
                 process.send('error: Failed to parse the save slot number from the log.');
+            }
+        } else if (line.startsWith('[INFO] - Lua Debug: Finished race ')) {
+            // This code is copy-pasted from below (but added the "[INFO] - " prefix)
+            // The trophy was touched
+            const match = line.match(/Lua Debug: Finished race (\d+) with time: (\d+)/);
+            if (match) {
+                const raceID = match[1];
+                const time = match[2];
+                process.send(`Finished run: Trophy - ${raceID} - ${time}`);
+            } else {
+                process.send('error: Failed to parse the race ID and the run time from the log.');
             }
         }
     }
@@ -211,19 +224,24 @@ const parseLine = (line) => {
             process.send('error: Failed to parse the item number from the log.');
         }
     } else if (line === 'playing cutscene 17 (Chest).') {
+        // This should only happen after they have already jumped into the big chest
         process.send('Finished run: Blue Baby');
     } else if (line === 'playing cutscene 18 (Dark Room).') {
+        // This should only happen after they have already jumped into the big chest
         process.send('Finished run: The Lamb');
     } else if (line === 'playing cutscene 19 (Mega Satan).') {
+        // This should only happen after they have already jumped into the big chest
+        // (or the big chest did not drop and the cutscene started itself automatically)
         process.send('Finished run: Mega Satan');
-    } else if (line.startsWith('Lua Debug: Finished run - ')) {
+    } else if (line.startsWith('Lua Debug: Finished race ')) {
         // The trophy was touched
-        const match = line.match(/Lua Debug: Finished run - (\d+)/);
+        const match = line.match(/Lua Debug: Finished race (\d+) with time: (\d+)/);
         if (match) {
-            const time = match[1];
-            process.send(`Finished run: Trophy - ${time}`);
+            const raceID = match[1];
+            const time = match[2];
+            process.send(`Finished run: Trophy - ${raceID} - ${time}`);
         } else {
-            process.send('error: Failed to parse the run time from the log.');
+            process.send('error: Failed to parse the race ID and the run time from the log.');
         }
     }
 };

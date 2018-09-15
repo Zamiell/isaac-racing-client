@@ -62,6 +62,10 @@ function RPPostRender:Main()
   RPPostRender:DisplayTopLeftText()
   RPFastDrop:PostRender()
 
+  -- Check for inputs
+  RPPostRender:CheckConsoleInput()
+  RPPostRender:CheckResetInput()
+
   -- Ban Basement 1 Treasure Rooms (1/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
 
@@ -77,9 +81,6 @@ function RPPostRender:Main()
 
   -- Check for trapdoor related things
   RPFastTravel:CheckTrapdoor()
-
-  -- Check for reset inputs
-  RPPostRender:CheckResetInput()
 
   -- Check to see if we are subverting a teleport from Gurdy, Mom, Mom's Heart, or It Lives
   RPPostRender:CheckSubvertTeleport()
@@ -135,6 +136,86 @@ function RPPostRender:CheckRestart()
   RPGlobals:ExecuteCommand(command)
 end
 
+-- Keep track that we opened the console on this run so that we can disable the fast-resetting feature
+-- (so that typing an "r" into the console does not cause a fast-reset)
+function RPPostRender:CheckConsoleInput()
+  -- We don't need to perform any additional checks if we have already opened the console on this run
+  if RPGlobals.run.consoleOpened then
+    return
+  end
+
+  -- Check to see if the player is opening the console
+  local pressed = false
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, i) then -- 28
+      pressed = true
+      break
+    end
+  end
+  if pressed then
+    RPGlobals.run.consoleOpened = true
+    Isaac.DebugString("The console was opened for the first time on this run.")
+    return
+  end
+end
+
+-- Check for fast-reset inputs
+function RPPostRender:CheckResetInput()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local isaacFrameCount = Isaac.GetFrameCount()
+
+  -- Disable the fast-reset feature on the "Unseeded (Lite)" ruleset
+  if RPGlobals.race.rFormat == "unseeded-lite" then
+    return
+  end
+
+  -- Disable the fast-reset feature if we have opened the console on this run
+  -- (so that typing an "r" into the console does not cause a fast-reset)
+  if RPGlobals.run.consoleOpened then
+    return
+  end
+
+  -- Don't fast-reset if any modifiers are pressed
+  -- (with the exception of shift, since the speedrunner MasterofPotato uses shift)
+  if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
+     Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) or -- 342
+     Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) or -- 343
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) or -- 345
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) or -- 346
+     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) then -- 347
+
+    return
+  end
+
+  -- Check to see if the player has pressed the restart input
+  -- (we check all inputs instead of "player.ControllerIndex" because
+  -- a controller player might be using the keyboard to reset)
+  local pressed = false
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
+      pressed = true
+      break
+    end
+  end
+  if pressed == false then
+    return
+  end
+
+  if stage == 1 or
+     isaacFrameCount <= RPGlobals.run.fastResetFrame + 60 then
+
+    RPSpeedrun.fastReset = true
+    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
+    RPGlobals:ExecuteCommand("restart")
+  else
+    -- To fast reset on floors 2 and beyond, we need to double tap R
+    RPGlobals.run.fastResetFrame = isaacFrameCount
+  end
+end
+
 -- Make Cursed Eye seeded
 -- (this has to be in the PostRender callback because game frames do not tick when
 -- the teleport animation is happening)
@@ -178,67 +259,6 @@ function RPPostRender:CheckCursedEye()
         RPItems:Teleport()
       end
     end
-  end
-end
-
--- Check for reset inputs
-function RPPostRender:CheckResetInput()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local isaacFrameCount = Isaac.GetFrameCount()
-
-  -- Disable this on the "Unseeded (Lite)" ruleset
-  if RPGlobals.race.rFormat == "unseeded-lite" then
-    return
-  end
-
-  -- Check to see if we are opening the console window
-  -- (ignore challenges in case someone accdiently pushes grave in the middle of their speedrun)
-  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) then -- 96
-    RPGlobals.run.consoleWindowOpen = true
-    return
-  end
-
-  -- Don't fast-reset if any modifiers are pressed
-  -- (with the exception of shift, since MasterofPotato uses shift)
-  if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
-     Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) or -- 342
-     Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) or -- 343
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) or -- 345
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) or -- 346
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) then -- 347
-
-    return
-  end
-
-  -- Check for the "R" input
-  -- (we check all inputs instead of "player.ControllerIndex" because
-  -- a controller player might be using the keyboard to reset)
-  local pressed = false
-  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsActionTriggered(ButtonAction.ACTION_RESTART, i) then -- 16
-      pressed = true
-      break
-    end
-  end
-  if pressed == false then
-    return
-  end
-
-  if (stage == 1 and RPGlobals.run.consoleWindowOpen == false) or
-     isaacFrameCount <= RPGlobals.run.fastResetFrame + 60 then
-
-    RPSpeedrun.fastReset = true
-    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
-    Isaac.DebugString("Fast-restart activated.")
-    RPGlobals:ExecuteCommand("restart")
-  else
-    -- To fast reset on floors 2 and beyond, we need to double tap R
-    -- (or if we brought the console window up this run)
-    RPGlobals.run.fastResetFrame = isaacFrameCount
-    Isaac.DebugString("Set fast-reset frame to: " .. tostring(RPGlobals.run.fastResetFrame))
   end
 end
 
@@ -353,6 +373,7 @@ function RPPostRender:Race()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
@@ -460,9 +481,6 @@ function RPPostRender:Race()
     elseif RPGlobals.race.countdown == 2 then
       RPSprites:Init("top", "2")
 
-      -- Disable resetting to prevent the user from resetting at the same time that we do later on
-      RPGlobals.raceVars.resetEnabled = false
-
     elseif RPGlobals.race.countdown == 1 then
       RPSprites:Init("top", "1")
     end
@@ -477,8 +495,6 @@ function RPPostRender:Race()
     if RPGlobals.raceVars.started == false then
       -- Reset some race-related variables
       RPGlobals.raceVars.started = true
-      RPGlobals.raceVars.resetEnabled = true -- Re-enable holding R to reset
-      RPGlobals.raceVars.showPlaceGraphic = false
       -- We don't want to show the place graphic until we get to the 2nd floor
       RPGlobals.raceVars.startedTime = Isaac.GetTime() -- Mark when the race started
       Isaac.DebugString("Starting the race! (" .. tostring(RPGlobals.race.rFormat) .. ")")
@@ -497,7 +513,7 @@ function RPPostRender:Race()
     end
 
     -- Draw the graphic that shows what place we are in
-    if RPGlobals.raceVars.showPlaceGraphic and -- Don't show it on the first floor
+    if stage >= 2 and -- Our place is irrelevant on the first floor, so don't bother showing it
        RPGlobals.race.solo == false then -- Its irrelevant to show "1st" when there is only one person in the race
 
       RPSprites:Init("place", tostring(RPGlobals.race.placeMid))

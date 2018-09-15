@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.21.3"
+RPGlobals.version = "v0.21.4"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -38,13 +38,10 @@ RPGlobals.race = {
 -- These are things that pertain to the race but are not read from the "save.dat" file
 RPGlobals.raceVars = {
   loadOnNextFrame    = false,
-  challenge          = 0,
-  resetEnabled       = true,
   started            = false,
   startedTime        = 0,
   finished           = false,
   finishedTime       = 0,
-  showPlaceGraphic   = false,
   fireworks          = 0,
   victoryLaps        = 0,
 }
@@ -152,10 +149,10 @@ function RPGlobals:InitRun()
 
   -- Temporary tracking
   RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
+  RPGlobals.run.consoleOpened        = false -- If set, it will disable fast-resetting for this run
   RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
-  RPGlobals.run.consoleWindowOpen    = false -- We don't want to do a fast-reset if the console window is open
   RPGlobals.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
   RPGlobals.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
   RPGlobals.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
@@ -181,7 +178,7 @@ function RPGlobals:InitRun()
     upwards   = false,
     floor     = 0,
     frame     = 0,
-    scale     = Vector(0, 0),
+    scale     = {},
   }
 
   -- Crawlspace tracking

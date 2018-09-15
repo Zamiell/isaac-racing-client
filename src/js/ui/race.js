@@ -631,14 +631,22 @@ const participantsSetStatus = (i, initial = false) => {
         $(`#race-participants-table-${racer.name}-time`).html(timeDiv);
     }
 
-    // If someone finished, play the sound effect that matches their place
-    // (don't play the "1st place" voice for 1 player races)
+    // If someone finished, play a sound effect corresponding to how they did
+    // (don't play sound effects for 1 player races)
     if (
         racer.name === globals.myUsername &&
         racer.status === 'finished' &&
         !globals.raceList[globals.currentRaceID].ruleset.solo
     ) {
-        misc.playSound(`place/${racer.place}`, 1800);
+        if (racer.runTime - lastFinishedTime <= 3000) {
+            // They finished within 3 seconds of the last player that finished
+            // Play the special "NO DUDE" sound effect
+            const randNum = misc.getRandomNumber(1, 8);
+            misc.playSound(`no/no${randNum}`);
+        } else {
+            // Play the sound effect that matches their place
+            misc.playSound(`place/${racer.place}`, 1800);
+        }
     }
 
     // If we finished or quit
@@ -665,15 +673,6 @@ const participantsSetStatus = (i, initial = false) => {
     if (!initial) {
         if (racer.status === 'finished') {
             misc.playSound('finished');
-
-            // Play the special "NO DUDE" sound effect
-            if (racer.name === globals.myUsername && racer.runTime - lastFinishedTime <= 3000) {
-                setTimeout(() => {
-                    const randNum = misc.getRandomNumber(1, 8);
-                    misc.playSound(`no/no${randNum}`);
-                }, 1500);
-            }
-
             lastFinishedTime = racer.runTime;
         } else if (racer.status === 'quit') {
             misc.playSound('quit');
