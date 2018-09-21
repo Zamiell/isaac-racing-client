@@ -1,9 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.21.6* - September 21st, 2018
+
+* Similar to dying in a Sacrifice Room, you will now permanently die in a seeded race if you die in the Boss Rush. (Thanks Hispa)
+
 ### *v0.21.5* - September 20th, 2018
 
 * Added Catacombs room #285 to the Mimic exemption list (a room with 3 Bonies). (Thanks thereisnofuture)
-* Fixed the bug where having Caffeine Pill would messed up a seeded death revival. (Thanks mgln)
+* Fixed the bug where having Caffeine Pill would mess up a seeded death revival. (Thanks mgln)
 * Fixed the bug where dying on seeded revival would sometimes delete pickups. (Thanks caesar)
 * Fixed the bug where fast-reset would be messed up on some controllers. (Thanks Lobsterosity and Gamonymous)
 * Fixed the bug where the tournament page on the website was not working. (Thanks PassionDrama)
