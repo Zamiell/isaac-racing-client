@@ -663,11 +663,10 @@ function SamaelMod:scytheUpdate(scythe)
 
     scythe:PlaySound(38, 1.75, 0, false, 1.2) --Play swinging sound
     scytheState = 2 --Set state to 2 (swinging scythe)
-    scytheAnimationEndFrame = Game():GetFrameCount() + 9 -- Both animations are 11 frames long
+    scytheAnimationEndFrame = Game():GetFrameCount() + 11 -- Both animations are 11 frames long
     Isaac.DebugString("Set scytheAnimationEndFrame to: " .. tostring(scytheAnimationEndFrame))
     direction = lastDirection --Set render direction to the saved firing direction
   end
-
 
   --CURRENTLY SWINGING THE SCYTHE
   if scytheState == 2 then
@@ -1779,6 +1778,7 @@ function SamaelMod:PostGameStartedReset()
   wraithCooldown = 0
   wraithTime = 0
   wraithCharge = 0
+  scytheAnimationEndFrame = 0
 
   numItems = -1
   itemChecks = {}
@@ -1873,8 +1873,7 @@ function SamaelMod:CheckHairpin()
   end
 end
 
---[[
-function SamaelMod:InputActionShoot(buttonAction)
+function SamaelMod:IsActionPressed()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
@@ -1889,13 +1888,42 @@ function SamaelMod:InputActionShoot(buttonAction)
     return
   end
 
-  if gameFrameCount >= scytheAnimationEndFrame then
+  if gameFrameCount >= scytheAnimationEndFrame or -- We have reached the end of the scythe swing animation
+     swingDelay <= 1 then -- The scythe swing animation has not finished, but we are ready to swing again
+
     scytheAnimationEndFrame = 0
     return
   end
 
-  Isaac.DebugString("Currently swinging in direction: " .. tostring(lastDirection))
+  -- Just return true for every button action so that the button will be held down;
+  -- we control the actual direction in the "SamaelMod:GetActionValue()" function
+  -- (this part is necessary or the player will not actually shoot any tears)
+  return true
+end
 
+function SamaelMod:GetActionValue(buttonAction)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+
+  if character ~= samaelID then
+    return
+  end
+
+  if scytheAnimationEndFrame == 0 then
+    return
+  end
+
+  if gameFrameCount >= scytheAnimationEndFrame or -- We have reached the end of the scythe swing animation
+     swingDelay <= 1 then -- The scythe swing animation has not finished, but we are ready to swing again
+
+    scytheAnimationEndFrame = 0
+    return
+  end
+
+  -- We need to tell the game which direction we want to shoot in
   if (buttonAction == ButtonAction.ACTION_SHOOTLEFT and -- 5
       lastDirection == Direction.LEFT) or -- 0
      (buttonAction == ButtonAction.ACTION_SHOOTRIGHT and -- 4
@@ -1905,14 +1933,10 @@ function SamaelMod:InputActionShoot(buttonAction)
      (buttonAction == ButtonAction.ACTION_SHOOTDOWN and -- 7
       lastDirection == Direction.DOWN) then -- 3
 
-    if buttonAction == ButtonAction.ACTION_SHOOTRIGHT then
-      Isaac.DebugString("returning true for ButtonAction: " .. tostring(buttonAction))
-      return true
-    end
+    return 1
   end
 
-  return
+  return 0
 end
---]]
 
 return SamaelMod

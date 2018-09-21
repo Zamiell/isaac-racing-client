@@ -4,8 +4,8 @@ local RPInputAction = {}
 -- Includes
 --
 
-local RPGlobals  = require("src/rpglobals")
---local RPSamael   = require("src/rpsamael")
+local RPGlobals = require("src/rpglobals")
+local RPSamael  = require("src/rpsamael")
 
 -- ModCallbacks.MC_INPUT_ACTION (13)
 function RPInputAction:Main(entity, inputHook, buttonAction)
@@ -14,21 +14,23 @@ function RPInputAction:Main(entity, inputHook, buttonAction)
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
 
-  --[[
-  if (buttonAction == ButtonAction.ACTION_SHOOTDOWN or -- 4
+  -- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys
+  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT or -- 4
       buttonAction == ButtonAction.ACTION_SHOOTRIGHT or -- 5
       buttonAction == ButtonAction.ACTION_SHOOTUP or -- 6
       buttonAction == ButtonAction.ACTION_SHOOTDOWN) and -- 7
      inputHook == InputHook.IS_ACTION_PRESSED then -- 0
-     -- (the inputHook corresponds to the action, determined through trial and error)
-     -- (this button action also triggers with ButtonAction.GET_ACTION_VALUE / 2)
 
-    --return RPSamael:InputActionShoot(buttonAction)
-    if buttonAction == 5 then
-      Isaac.DebugString("RETURNING true")
-      return true
-    end
-  --]]
+    return RPSamael:IsActionPressed()
+  end
+  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT or -- 4
+      buttonAction == ButtonAction.ACTION_SHOOTRIGHT or -- 5
+      buttonAction == ButtonAction.ACTION_SHOOTUP or -- 6
+      buttonAction == ButtonAction.ACTION_SHOOTDOWN) and -- 7
+     inputHook == InputHook.GET_ACTION_VALUE then -- 2
+
+    return RPSamael:GetActionValue(buttonAction)
+  end
 
   if buttonAction == ButtonAction.ACTION_PILLCARD and -- 10
      inputHook == InputHook.IS_ACTION_TRIGGERED then -- 1

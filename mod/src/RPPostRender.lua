@@ -145,17 +145,9 @@ function RPPostRender:CheckConsoleInput()
   end
 
   -- Check to see if the player is opening the console
-  local pressed = false
-  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, i) then -- 28
-      pressed = true
-      break
-    end
-  end
-  if pressed then
+  if Input.IsButtonTriggered(Keyboard.KEY_GRAVE_ACCENT, 0) then -- 28
     RPGlobals.run.consoleOpened = true
     Isaac.DebugString("The console was opened for the first time on this run.")
-    return
   end
 end
 

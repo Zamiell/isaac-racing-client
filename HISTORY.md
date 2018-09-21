@@ -1,6 +1,15 @@
 # Racing+ Version History and News
 
-### *v0.21.4* - September 14th, 2018
+### *v0.21.5* - September 20th, 2018
+
+* Added Catacombs room #285 to the Mimic exemption list (a room with 3 Bonies). (Thanks thereisnofuture)
+* Fixed the bug where having Caffeine Pill would messed up a seeded death revival. (Thanks mgln)
+* Fixed the bug where dying on seeded revival would sometimes delete pickups. (Thanks caesar)
+* Fixed the bug where fast-reset would be messed up on some controllers. (Thanks Lobsterosity and Gamonymous)
+* Fixed the bug where the tournament page on the website was not working. (Thanks PassionDrama)
+* Fixed the bug where Samael's head would jerk around when you pushed the tear fire buttons.
+
+### *v0.21.4* - September 15th, 2018
 
 * Fast-reset will now be disabled for your current run if you have opened the console at least one time.
 * Fixed the bug where you could use a card/pill while transitioning to the next floor.

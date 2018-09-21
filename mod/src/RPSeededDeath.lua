@@ -215,7 +215,7 @@ function RPSeededDeath:DebuffOff()
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
 
-  -- Store the current red hearts, soul/black hearts, bombs, and keys
+  -- Store the current red hearts, soul/black hearts, bombs, keys, and pocket items
   local hearts = player:GetHearts()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
@@ -223,38 +223,13 @@ function RPSeededDeath:DebuffOff()
   local boneHearts = player:GetBoneHearts()
   local bombs = player:GetNumBombs()
   local keys = player:GetNumKeys()
+  local cardSlot0 = player:GetCard(0)
+  local pillSlot0 = player:GetPill(0)
 
   -- Add all of the items from the array
-  local deletePickups = false
   for i = 1, #RPGlobals.run.seededDeath.items do
     local itemID = RPGlobals.run.seededDeath.items[i]
     player:AddCollectible(itemID, 0, false)
-    if itemID == CollectibleType.COLLECTIBLE_PHD or -- 75
-       itemID == CollectibleType.COLLECTIBLE_PAGEANT_BOY or -- 141
-       itemID == CollectibleType.COLLECTIBLE_MAGIC_8_BALL or -- 194
-       itemID == CollectibleType.COLLECTIBLE_MOMS_COIN_PURSE or -- 195
-       itemID == CollectibleType.COLLECTIBLE_SQUEEZY or -- 196
-       itemID == CollectibleType.COLLECTIBLE_BOX or -- 198
-       itemID == CollectibleType.COLLECTIBLE_STARTER_DECK or -- 251
-       itemID == CollectibleType.COLLECTIBLE_LITTLE_BAGGY or -- 252
-       itemID == CollectibleType.COLLECTIBLE_CAFFEINE_PILL or -- 340
-       itemID == CollectibleType.COLLECTIBLE_LATCH_KEY or -- 343
-       itemID == CollectibleType.COLLECTIBLE_MATCH_BOOK or -- 344
-       itemID == CollectibleType.COLLECTIBLE_CRACK_JACKS or -- 354
-       itemID == CollectibleType.COLLECTIBLE_MR_DOLLY or -- 370
-       itemID == CollectibleType.COLLECTIBLE_RESTOCK or -- 376
-       itemID == CollectibleType.COLLECTIBLE_CHAOS or -- 402
-       itemID == CollectibleType.COLLECTIBLE_SACK_HEAD or -- 424
-       itemID == CollectibleType.COLLECTIBLE_TAROT_CLOTH or -- 451
-       itemID == CollectibleType.COLLECTIBLE_POLYDACTYLY or -- 454
-       itemID == CollectibleType.COLLECTIBLE_DADS_LOST_COIN or -- 455
-       itemID == CollectibleType.COLLECTIBLE_BELLY_BUTTON or -- 458
-       itemID == CollectibleType.COLLECTIBLE_MARBLES or -- 538
-       itemID == CollectibleType.COLLECTIBLE_MARROW or -- 541
-       itemID == CollectibleType.COLLECTIBLE_DIVORCE_PAPERS then -- 547
-
-      deletePickups = true
-    end
   end
 
   -- Reset the items in the array
@@ -306,14 +281,21 @@ function RPSeededDeath:DebuffOff()
     player:AddGoldenKey()
   end
 
-  -- Delete all pickups
-  if deletePickups then
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PICKUP and
-         entity.Variant ~= PickupVariant.PICKUP_COLLECTIBLE then -- 100
+  -- We also have to account for Caffeine Pill,
+  -- which is the only item in the game that directly puts a pocket item into your inventory
+  if cardSlot0 ~= 0 then
+    player:SetCard(0, cardSlot0)
+  elseif pillSlot0 ~= 0 then
+    player:SetPill(0, pillSlot0)
+  end
 
-        entity:Remove()
-      end
+  -- Delete all newly-spawned pickups in the room
+  -- (re-giving back some items will cause pickups to spawn)
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_PICKUP and
+       entity.FrameCount == 0 then
+
+      entity:Remove()
     end
   end
 end
