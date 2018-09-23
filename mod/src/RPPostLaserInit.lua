@@ -1,9 +1,6 @@
 local RPPostLaserInit = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_LASER_INIT (47)

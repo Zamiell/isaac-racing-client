@@ -1,9 +1,6 @@
 local RPPedestals = {}
 
---
 -- Includes
---
-
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 
@@ -43,9 +40,22 @@ function RPPedestals:Replace(pickup)
   -- We haven't replaced this pedestal yet,
   -- so start off by assuming that we should set the new pedestal seed to that of the room
   local newSeed = roomSeed
+  if RPGlobals.race.rFormat == "seeded" and
+     RPGlobals.race.status == "in progress" then
+
+    -- For seeded rooms, we don't want to use the room seed as the basis
+    -- (since we are manually seeding the room, different racers might have different room seeds)
+    if roomType == RoomType.ROOM_BOSSRUSH then -- 17
+      newSeed = RPGlobals.RNGCounter.BossRushItem
+    elseif roomType == RoomType.ROOM_DEVIL then -- 14
+      newSeed = RPGlobals.RNGCounter.DevilRoomItem
+    elseif roomType == RoomType.ROOM_ANGEL then -- 15
+      newSeed = RPGlobals.RNGCounter.AngelRoomItem
+    end
+  end
 
   if pickup.Touched then
-    -- If we touched this item, we need to set it back to the last seed that we have for this position
+    -- If we touched this item, we need to set it back to the last seed that we had for this position
     for i = 1, #RPGlobals.run.replacedPedestals do
       if RPGlobals.run.replacedPedestals[i].room == roomIndex and
          RPGlobals:InsideSquare(RPGlobals.run.replacedPedestals[i], pickup.Position, 15) then
@@ -293,11 +303,13 @@ function RPPedestals:Replace(pickup)
     }
 
     --[[
-    Isaac.DebugString("Added to replacedPedestals (" .. tostring(#RPGlobals.run.replacedPedestals) .. "): (" ..
-                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].room) .. "," ..
-                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].X) .. "," ..
-                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].Y) .. "," ..
-                      tostring(RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals].seed) .. ")")
+    local replacedPedestal = RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals]
+    Isaac.DebugString("Added to replacedPedestals #" .. tostring(#RPGlobals.run.replacedPedestals) .. ":")
+    Isaac.DebugString("   Room: " .. tostring(replacedPedestal.room))
+    Isaac.DebugString("   Position: (" .. tostring(replacedPedestal.X) .. ", " .. tostring(replacedPedestal.Y) .. ")")
+    Isaac.DebugString("   Seed: " .. tostring(replacedPedestal.seed))
+    Isaac.DebugString("   Price: " .. tostring(newPedestal.Price))
+    Isaac.DebugString("   ShopItemId: " .. tostring(newPedestal.ShopItemId))
     --]]
   end
 

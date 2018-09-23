@@ -1,9 +1,6 @@
 local RPInputAction = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 local RPSamael  = require("src/rpsamael")
 

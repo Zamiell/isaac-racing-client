@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.21.5"
+RPGlobals.version = "v0.22.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -51,6 +51,9 @@ RPGlobals.RNGCounter = {
   Teleport      = 0, -- Broken Remote also uses this
   Undefined     = 0,
   Telepills     = 0,
+  BossRushItem  = 0,
+  DevilRoomItem = 0,
+  AngelRoomItem = 0,
 }
 
 --
@@ -111,7 +114,7 @@ RPGlobals.FadeoutTarget = {
 }
 
 --
--- Misc. subroutines
+-- Miscellaneous subroutines
 --
 
 function RPGlobals:InitRun()
@@ -120,10 +123,12 @@ function RPGlobals:InitRun()
   RPGlobals.run.erasedFadeIn      = false
   RPGlobals.run.roomsEntered      = 0
   RPGlobals.run.roomIDs           = {}
-  RPGlobals.run.reseededFloor     = false
+  RPGlobals.run.pills             = {} -- We want to track all pills taken for identification purposes
+  RPGlobals.run.metKrampus        = false
   RPGlobals.run.movingBoxOpen     = true
   RPGlobals.run.killedLamb        = false -- Used for the "Everything" race goal
   RPGlobals.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
+  RPGlobals.run.PHDPills          = false -- Used to determine when to change the pill text
 
   -- Tracking per floor
   RPGlobals.run.currentFloor        = 0
@@ -149,6 +154,7 @@ function RPGlobals:InitRun()
 
   -- Temporary tracking
   RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
+  RPGlobals.run.reseededFloor        = false
   RPGlobals.run.consoleOpened        = false -- If set, it will disable fast-resetting for this run
   RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false

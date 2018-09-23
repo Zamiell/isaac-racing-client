@@ -1,9 +1,6 @@
 local RPFastDrop = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 local RPSaveDat = require("src/rpsavedat")
 
@@ -142,7 +139,7 @@ function RPFastDrop:PostRender()
   text[5] = "Or press F12 to keep the vanilla behavior."
   text[6] = "(For controller players, if you are having problems,"
   text[7] = "bind keyboard hotkeys and use Joy2Key.)"
-  for i = 1, #text do -- This is 0 indexed
+  for i = 1, #text do
     local y = 50 + (20 * i)
     Isaac.RenderText(text[i], 100, y, 1, 1, 1, 2)
   end

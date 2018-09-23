@@ -1,9 +1,6 @@
 local RPEntityTakeDmg = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
@@ -45,7 +42,9 @@ function RPEntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource
   if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then
     for i, entity in pairs(Isaac.GetRoomEntities()) do
       local npc = entity:ToNPC()
-      if npc ~= nil and npc:IsVulnerableEnemy() then
+      if npc ~= nil and
+         npc:IsVulnerableEnemy() then -- Returns true for enemies that can be damaged
+
         npc:AddCharmed(150) -- 5 seconds
       end
     end

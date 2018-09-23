@@ -1,16 +1,10 @@
 local RPPostEntityKill = {}
 
---
 -- Includes
---
-
 local RPGlobals  = require("src/rpglobals")
 local RPSpeedrun = require("src/rpspeedrun")
 
---
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
---
-
 -- When beginning a death animation, make bosses faded so that it makes it easier to see
 function RPPostEntityKill:Main(entity)
   -- We only want to fade bosses

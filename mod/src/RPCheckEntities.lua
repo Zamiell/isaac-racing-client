@@ -1,19 +1,12 @@
 local RPCheckEntities = {}
 
---
 -- Includes
---
-
 local RPGlobals         = require("src/rpglobals")
 local RPPedestals       = require("src/rppedestals")
 local RPFastTravel      = require("src/rpfasttravel")
 local RPSpeedrun        = require("src/rpspeedrun")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local SamaelMod         = require("src/rpsamael")
-
---
--- Check entities functions
---
 
 -- Check all the grid entities in the room
 -- (called from the PostUpdate callback)

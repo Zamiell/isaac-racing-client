@@ -1,21 +1,12 @@
 local RPTimer = {}
 
---
 -- Includes
---
-
 local RPGlobals  = require("src/rpglobals")
 local RPSpeedrun = require("src/rpspeedrun")
 
---
 -- Variables
---
-
 RPTimer.sprites = {}
 
---
--- Timer functions
---
 
 -- This is the timer that shows how long the race or speedrun has been going on for
 function RPTimer:Display()
@@ -139,7 +130,7 @@ end
 
 -- This is the custom timer that emulates the in-game run timer
 function RPTimer:DisplayRun()
-  -- Don't show the run timer if the user is not pressing tab
+  -- Only show the run timer if the player is pressing tab
   local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13

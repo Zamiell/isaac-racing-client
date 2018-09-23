@@ -1,20 +1,10 @@
 local RPSchoolbag = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
---
 -- Variables
---
-
 RPSchoolbag.sprites = {}
-
---
--- Schoolbag functions
---
 
 function RPSchoolbag:Put(item, charge)
   -- Local variables

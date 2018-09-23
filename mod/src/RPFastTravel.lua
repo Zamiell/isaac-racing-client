@@ -1,16 +1,10 @@
 local RPFastTravel = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 local RPSprites = require("src/rpsprites")
 
---
 -- Constants
---
-
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
 RPFastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
 RPFastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"

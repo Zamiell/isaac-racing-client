@@ -1,13 +1,7 @@
 local RPSprites = {}
 
---
 -- Variables
---
-
 RPSprites.sprites = {}
---
--- Sprite functions
---
 
 -- Call this once to load the PNG from the anm2 file
 function RPSprites:Init(spriteType, spriteName)

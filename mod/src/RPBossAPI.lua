@@ -1,3 +1,6 @@
+-- The Boss API was originally created by DeadInfinity
+-- (this is needed for Jr. Fetus)
+
 --[[ Here's a blob to use if you want to use this API I guess.
 local START_FUNC = apiStart
 if InfinityBossAPI then START_FUNC()

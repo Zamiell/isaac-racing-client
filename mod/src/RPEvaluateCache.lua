@@ -1,26 +1,21 @@
 local RPEvaluateCache = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function RPEvaluateCache:Main(player, cacheFlag)
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local room = game:GetRoom()
-  local roomType = room:GetType()
+  RPEvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
+  RPEvaluateCache:Race(player, cacheFlag)
+end
+
+function RPEvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
+  -- Local variables
   local character = player:GetPlayerType()
   local maxHearts = player:GetMaxHearts()
   local coins = player:GetNumCoins()
   local coinContainers = 0
 
-  --
-  -- Manage Keeper's heart containers
-  --
 
   if character == PlayerType.PLAYER_KEEPER and -- 14
      player:HasCollectible(CollectibleType.COLLECTIBLE_GREEDS_GULLET) and -- 501
@@ -115,10 +110,16 @@ function RPEvaluateCache:Main(player, cacheFlag)
       end
     end
   end
+end
 
-  --
-  -- Race stuff
-  --
+function RPEvaluateCache:Race(player, cacheFlag)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local character = player:GetPlayerType()
 
   -- Look for the custom start item that gives 13 luck
   if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024

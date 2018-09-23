@@ -1,7 +1,7 @@
 local RPMahalath = {}
 
 -- Mahalath was originally created by melon goodposter
--- It's heavily modified by Zamiel for Racing+
+-- It is heavily modified by Zamiel for Racing+
 -- (and to pass the linter)
 
 local game = Game()

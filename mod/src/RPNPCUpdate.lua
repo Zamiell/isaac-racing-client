@@ -1,14 +1,7 @@
 local RPNPCUpdate = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
-
---
--- Functions
---
 
 -- EntityType.ENTITY_GLOBIN (24)
 function RPNPCUpdate:NPC24(npc)

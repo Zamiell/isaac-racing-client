@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.22.0* - September 22nd, 2018
+
+* As a quality of life change, cards are runes spawn "face up" to avoid annoying card shuffling. This is experimental and may be reverted in a future patch.
+* Holding tab will now show the color of any identified pills on your current run. (If more than 7 pills are identified, only the first 7 will be shown.)
+* During seeded races, the Boss Rush room is now always room #0 and hard-coded to have either 2, 4, or 8 items depending on the seed. (The percentages should be the same as other formats.) (Thanks HauntedQuest)
+* During seeded races, Devil Rooms are now always room #0 and hard-coded to grant rewards in order. This means it is no longer advantageous to intentionally take red heart damage on Basement 2, for example. (Krampus percentages and room rewards should be the same as other formats.)
+* During seeded races, Angel Rooms are now always room #0 and hard-coded to grant rewards in order. (Room rewards should be the same as other formats.)
+* Fixed the bug where Keeper would get blue flies under certain conditions when reviving in a seeded race. (Thanks PassionDrama)
+* Fixed the bug where the Strength card granted a permanent red heart if you changed floors while it was active. (Thanks thereisnofuture)
+
 ### *v0.21.6* - September 21st, 2018
 
 * Similar to dying in a Sacrifice Room, you will now permanently die in a seeded race if you die in the Boss Rush. (Thanks Hispa)

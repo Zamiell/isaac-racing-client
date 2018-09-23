@@ -1,22 +1,12 @@
 local RPSaveDat = {}
 
---
 -- Includes
---
-
 local json      = require("json")
 local RPGlobals = require("src/rpglobals")
 local RPSprites = require("src/rpsprites")
 
---
 -- Variables
---
-
 RPSaveDat.failedCounter = 0
-
---
--- Functions
---
 
 -- Read the "save.dat" file for updates from the Racing+ client
 function RPSaveDat:Load()

@@ -3,10 +3,7 @@ local RPSeededDeath = {}
 -- Variables
 RPSeededDeath.DebuffTime = 45 -- In seconds
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_RENDER (2)
@@ -105,7 +102,7 @@ function RPSeededDeath:PostNewRoom()
   Isaac.DebugString("Seeded death (2/3).")
 end
 
--- Prevent people from resetting for a Sacrifice Room in R+7 Season 4
+-- Prevent people from abusing the death mechanic to use a Sacrifice Room
 function RPSeededDeath:PostNewRoomCheckSacrificeRoom()
   local game = Game()
   local room = game:GetRoom()
@@ -142,13 +139,13 @@ function RPSeededDeath:DebuffOn()
 
   -- Set their health to explicitly 1.5 soul hearts
   -- (or custom values for Keeper & The Forgotton)
-  player:AddMaxHearts(-24, false)
+  player:AddMaxHearts(-24, true)
   player:AddSoulHearts(-24)
   if character == PlayerType.PLAYER_KEEPER then -- 14
-    player:AddMaxHearts(2)
+    player:AddMaxHearts(2, true) -- One coin container
     player:AddHearts(2)
   elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-    player:AddMaxHearts(2)
+    player:AddMaxHearts(2, true)
     player:AddHearts(1)
   elseif character == PlayerType.PLAYER_THESOUL then -- 17
     player:AddHearts(1)
@@ -293,10 +290,21 @@ function RPSeededDeath:DebuffOff()
   -- Delete all newly-spawned pickups in the room
   -- (re-giving back some items will cause pickups to spawn)
   for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP and
+    if entity.Type == EntityType.ENTITY_PICKUP and -- 5
        entity.FrameCount == 0 then
 
       entity:Remove()
+    end
+  end
+
+  -- Keeper will get extra blue flies if he was given any items that grant soul hearts
+  if character == PlayerType.PLAYER_KEEPER then -- 14
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
+         entity.Variant == FamiliarVariant.BLUE_FLY then -- 43
+
+        entity:Remove()
+      end
     end
   end
 end

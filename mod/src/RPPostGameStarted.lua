@@ -1,9 +1,6 @@
 local RPPostGameStarted = {}
 
---
 -- Includes
---
-
 local RPGlobals      = require("src/rpglobals")
 local RPPostNewLevel = require("src/rppostnewlevel")
 local RPSprites      = require("src/rpsprites")
@@ -13,10 +10,6 @@ local RPFastClear    = require("src/rpfastclear")
 local RPFastDrop     = require("src/rpfastdrop")
 local RPSpeedrun     = require("src/rpspeedrun")
 local RPTimer        = require("src/rptimer")
-
---
--- Initialization functions
---
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function RPPostGameStarted:Main(saveState)
@@ -130,6 +123,9 @@ function RPPostGameStarted:Main(saveState)
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
   RPGlobals.RNGCounter.BookOfSin = levelSeed
+  RPGlobals.RNGCounter.BossRushItem = levelSeed
+  RPGlobals.RNGCounter.DevilRoomItem = levelSeed
+  RPGlobals.RNGCounter.AngelRoomItem = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
 
   -- Reset all graphics
@@ -739,7 +735,6 @@ function RPPostGameStarted:UnseededRankedSolo()
   local itemPool = game:GetItemPool()
 
   -- The client will populate the starting items for the current season into the "startingItems" variable
-  Isaac.DebugString("###################################")
   for i = 1, #RPGlobals.race.startingItems do
     local itemID = RPGlobals.race.startingItems[i]
     player:AddCollectible(itemID, 12, true)

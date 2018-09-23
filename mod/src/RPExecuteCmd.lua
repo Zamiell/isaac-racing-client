@@ -1,9 +1,6 @@
 local RPExecuteCmd = {}
 
---
 -- Includes
---
-
 local RPSpeedrun = require("src/rpspeedrun")
 
 -- ModCallbacks.MC_EXECUTE_CMD (22)

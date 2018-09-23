@@ -1,13 +1,18 @@
 local RPPostPickupSelection = {}
 
---
 -- Includes
---
-
-local RPGlobals = require("src/rpglobals")
+local RPGlobals     = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_PICKUP_SELECTION (37)
 function RPPostPickupSelection:Main(pickup, variant, subType)
+  local newTable
+  newTable = RPPostPickupSelection:ManualPhotos(variant, subType)
+  if newTable ~= nil then
+    return newTable
+  end
+end
+
+function RPPostPickupSelection:ManualPhotos(variant, subType)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()

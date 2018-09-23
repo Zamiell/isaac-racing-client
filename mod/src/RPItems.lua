@@ -1,9 +1,6 @@
 local RPItems = {}
 
---
 -- Includes
---
-
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 

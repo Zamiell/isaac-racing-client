@@ -1,9 +1,6 @@
 local RPPostRender = {}
 
---
 -- Includes
---
-
 local RPGlobals         = require("src/rpglobals")
 local RPSaveDat         = require("src/rpsavedat")
 local RPSprites         = require("src/rpsprites")
@@ -11,16 +8,13 @@ local RPSchoolbag       = require("src/rpschoolbag")
 local RPSoulJar         = require("src/rpsouljar")
 local RPPostUpdate      = require("src/rppostupdate")
 local RPItems           = require("src/rpitems")
+local RPPills           = require("src/rppills")
 local RPFastTravel      = require("src/rpfasttravel")
 local RPFastDrop        = require("src/rpfastdrop")
 local RPTimer           = require("src/rptimer")
 local RPSpeedrun        = require("src/rpspeedrun")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local RPSeededDeath     = require("src/rpseededdeath")
-
---
--- PostRender functions
---
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -57,10 +51,11 @@ function RPPostRender:Main()
   RPTimer:Display()
   RPTimer:DisplayRun()
   RPTimer:DisplayDebuff()
+  RPPills:PostRender()
   RPSpeedrun:DisplayCharProgress()
   RPChangeCharOrder:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
-  RPFastDrop:PostRender()
+  RPFastDrop:PostRender() -- Custom challenge related text
 
   -- Check for inputs
   RPPostRender:CheckConsoleInput()

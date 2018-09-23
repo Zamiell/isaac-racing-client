@@ -1,14 +1,11 @@
 local SamaelMod = {}
 
---
 -- Includes
---
-
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 
 -- Samael was originally created by Ghostbroster
--- It's heavily modified by Zamiel for Racing+
+-- It is heavily modified by Zamiel for Racing+
 -- (and to pass the linter)
 
 --References and junk

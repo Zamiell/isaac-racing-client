@@ -1,9 +1,6 @@
 local RPFastClear = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 local RPSoulJar = require("src/rpsouljar")
 
@@ -110,7 +107,7 @@ end
 function RPFastClear:CheckNewNPC(npc)
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
+  --local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
 
@@ -160,12 +157,14 @@ function RPFastClear:CheckNewNPC(npc)
   -- Keep track of the enemies in the room that are alive
   RPFastClear.aliveEnemies[index] = true
   RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount + 1
+  --[[
   Isaac.DebugString("Added NPC " ..
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
                     tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
                     "index " .. tostring(index) .. ", " ..
                     "frame " .. tostring(gameFrameCount) .. ", " ..
                     "total " .. tostring(RPFastClear.aliveEnemiesCount))
+  --]]
 end
 
 function RPFastClear:AttachedNPC(npc)
@@ -200,6 +199,7 @@ function RPFastClear:PostEntityRemove(entity)
   end
 
   -- Local variables
+  --[[
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local index = GetPtrHash(npc)
@@ -209,6 +209,7 @@ function RPFastClear:PostEntityRemove(entity)
                     tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
                     "index " .. tostring(index) .. ", " ..
                     "frame " .. tostring(gameFrameCount))
+  --]]
 
   -- We can't rely on the MC_POST_ENTITY_KILL callback because it is not fired for certain NPCs
   -- (like when Daddy Long Legs does a stomp attack or a Portal despawns)
@@ -263,12 +264,14 @@ function RPFastClear:CheckDeadNPC(npc)
   -- Keep track of the enemies in the room that are alive
   RPFastClear.aliveEnemies[index] = nil
   RPFastClear.aliveEnemiesCount = RPFastClear.aliveEnemiesCount - 1
+  --[[
   Isaac.DebugString("Removed NPC " ..
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
                     tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
                     "index " .. tostring(index) .. ", " ..
                     "frame " .. tostring(gameFrameCount) .. ", " ..
                     "total " .. tostring(RPFastClear.aliveEnemiesCount))
+  --]]
 
   -- We want to delay a frame before opening the doors to give time for splitting enemies to spawn their children
   RPFastClear.delayFrame = gameFrameCount + 1

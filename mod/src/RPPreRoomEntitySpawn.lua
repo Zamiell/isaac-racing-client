@@ -1,9 +1,24 @@
 local RPPreRoomEntitySpawn = {}
 
+-- Includes
+local RPSeededRooms = require("src/rpseededrooms")
+
 -- ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN (71)
 -- We want the player to always be able to take an item in the Basement 1 Treasure Room without spending a bomb
 -- or being forced to walk on spikes
 function RPPreRoomEntitySpawn:Main(type, variant, subType, gridIndex, seed)
+  local newTable
+  newTable = RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
+  if newTable ~= nil then
+    return newTable
+  end
+  newTable = RPSeededRooms:PreEntitySpawn(type, variant, subType, seed)
+  if newTable ~= nil then
+    return newTable
+  end
+end
+
+function RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -12,6 +27,12 @@ function RPPreRoomEntitySpawn:Main(type, variant, subType, gridIndex, seed)
   local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local roomFrameCount = room:GetFrameCount()
+
+  -- We only care about replacing things when the room is first loading
+  if roomFrameCount ~= -1 then
+    return
+  end
 
   if stage ~= 1 then
     return

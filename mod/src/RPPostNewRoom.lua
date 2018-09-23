@@ -1,9 +1,6 @@
 local RPPostNewRoom = {}
 
---
 -- Includes
---
-
 local RPGlobals         = require("src/rpglobals")
 local RPFastClear       = require("src/rpfastclear")
 local RPFastTravel      = require("src/rpfasttravel")
@@ -11,6 +8,7 @@ local RPSpeedrun        = require("src/rpspeedrun")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local RPSprites         = require("src/rpsprites")
 local RPSeededDeath     = require("src/rpseededdeath")
+local RPSeededRooms     = require("src/rpseededrooms")
 local SamaelMod         = require("src/rpsamael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
@@ -544,6 +542,9 @@ function RPPostNewRoom:Race()
   -- Check for the special death condition
   RPSeededDeath:PostNewRoom()
   RPSeededDeath:PostNewRoomCheckSacrificeRoom()
+
+  -- Check for rooms that should be manually seeded during seeded races
+  RPSeededRooms:PostNewRoom()
 
   -- Prevent players from skipping a floor by using the I AM ERROR room on Womb 2 on the "Everything" race goal
   if stage == LevelStage.STAGE4_2 and -- 8

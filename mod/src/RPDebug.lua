@@ -1,24 +1,12 @@
 local RPDebug = {}
 
---
 -- Includes
---
-
 local RPGlobals     = require("src/rpglobals")
 local RPSprites     = require("src/rpsprites")
 local RPSpeedrun    = require("src/rpspeedrun")
---local RPSeededDeath = require("src/rpseededdeath")
 
---
 -- Variables
---
-
 RPDebug.temp = false
-
---
--- Debug functions
---
-
 
 function RPDebug:Main()
   -- Enable debug mode
@@ -78,15 +66,6 @@ function RPDebug:Main()
   -- Test stuff
   --
 
-  --[[
-  if RPDebug.temp then
-    RPSeededDeath:DebuffOff()
-  else
-    RPSeededDeath:DebuffOn()
-  end
-  RPDebug.temp = not RPDebug.temp
-  --]]
-
   --RPGlobals.raceVars.finished = true
   --RPSprites:Init("place", 1)
 
@@ -97,6 +76,20 @@ function RPDebug:Main()
   RPSprites:Init("diversity-item3", 532) -- Collectible
   RPSprites:Init("diversity-item4", 534) -- Collectible
   RPSprites:Init("diversity-item5", 125) -- Trinket
+  --]]
+
+  --[[
+  local game = Game()
+  local cardNum = 1
+  for y = 0, 6 do
+    for x = 0, 12 do
+      if cardNum < 54 then
+        local pos = RPGlobals:GridToPos(x, y)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, Vector(0, 0), nil, cardNum, 0)
+        cardNum = cardNum + 1
+      end
+    end
+  end
   --]]
 
   --

@@ -1,4 +1,8 @@
 local RPJrFetus = {}
+
+-- Jr. Fetus was originally created by DeadInfinity
+-- It has some edits by Zamiel
+
 local core = {}
 local api = require("src/rpbossapi")
 

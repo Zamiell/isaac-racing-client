@@ -1,18 +1,12 @@
 local RPSpeedrun = {}
 
---
 -- Includes
---
-
 local RPGlobals         = require("src/rpglobals")
 local RPSprites         = require("src/rpsprites")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local RPSchoolbag       = require("src/rpschoolbag")
 
---
 -- Variables
---
-
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
@@ -24,10 +18,6 @@ RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and 
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
 RPSpeedrun.liveSplitReset = false
-
---
--- Speedrun functions
---
 
 -- Called from the PostGameStarted callback
 function RPSpeedrun:PostGameStarted()

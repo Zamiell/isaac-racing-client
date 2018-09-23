@@ -1,11 +1,9 @@
 local RPPostUpdate = {}
 
---
 -- Includes
---
-
 local RPGlobals         = require("src/rpglobals")
 local RPSprites         = require("src/rpsprites")
+local RPPills           = require("src/rppills")
 local RPCheckEntities   = require("src/rpcheckentities")
 local RPFastClear       = require("src/rpfastclear")
 local RPFastDrop        = require("src/rpfastdrop")
@@ -14,10 +12,6 @@ local RPSoulJar         = require("src/rpsouljar")
 local RPFastTravel      = require("src/rpfasttravel")
 local RPSpeedrun        = require("src/rpspeedrun")
 local RPChangeCharOrder = require("src/rpchangecharorder")
-
---
--- PostUpdate functions
---
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
@@ -96,6 +90,16 @@ function RPPostUpdate:Main()
   RPSchoolbag:CheckEmptyActive()
   RPSchoolbag:CheckBossRush()
   RPSchoolbag:CheckInput()
+
+  -- Check for the vanilla Schoolbag and convert it to the Racing+ Schoolbag if necessary
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
+    player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+      player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    end
+  end
+
+  RPPills:CheckPHD()
 
   -- Do race/speedrun related checks
   RPPostUpdate:RaceChecks()

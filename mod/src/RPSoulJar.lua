@@ -1,20 +1,10 @@
 local RPSoulJar = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 
---
 -- Variables
---
-
 RPSoulJar.sprites = {}
-
---
--- Soul Jar functions
---
 
 -- Check the player's health for the Soul Jar mechanic
 function RPSoulJar:CheckHealth()
@@ -36,7 +26,7 @@ function RPSoulJar:CheckHealth()
   Isaac.DebugString("Soul heart collection is now at: " .. tostring(RPGlobals.run.soulJarSouls))
   while RPGlobals.run.soulJarSouls >= 8 do -- This has to be in a while loop because of items like Abaddon
     RPGlobals.run.soulJarSouls = RPGlobals.run.soulJarSouls - 8  -- 4 soul hearts
-    player:AddMaxHearts(2)
+    player:AddMaxHearts(2, true)
     player:AddHearts(2) -- The container starts empty
     Isaac.DebugString("Converted 4 soul hearts to a heart container.")
   end

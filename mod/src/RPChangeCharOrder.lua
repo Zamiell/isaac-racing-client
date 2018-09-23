@@ -1,9 +1,6 @@
 local RPChangeCharOrder = {}
 
---
 -- Includes
---
-
 local RPGlobals = require("src/rpglobals")
 local RPSaveDat = require("src/rpsavedat")
 
