@@ -1,12 +1,20 @@
 # Racing+ Version History and News
 
-### *v0.22.0* - September 22nd, 2018
+### *v0.22.1* - September 24th, 2018
+
+* Cards in shops will no longer be face up.
+* In R+7 Season 4, you will no longer be penalized for entering a library on Basement 1.
+* Fixed the bug where multiple items could be taken in Angel Rooms and the Boss Rush in seeded races. (Thanks Shigan)
+* Fixed the bug where items were always the same in Devil Rooms, Angel Rooms, and the Boss Rush in seeded races. (Thanks Gamonymous)
+* Fixed the bug where the sad animation would play if you entered the same Sacrifice Room twice in a R+7 Season 4 on Basement 1 more than one time.
+
+### *v0.22.0* - September 23rd, 2018
 
 * As a quality of life change, cards are runes spawn "face up" to avoid annoying card shuffling. This is experimental and may be reverted in a future patch.
 * Holding tab will now show the color of any identified pills on your current run. (If more than 7 pills are identified, only the first 7 will be shown.)
-* During seeded races, the Boss Rush room is now always room #0 and hard-coded to have either 2, 4, or 8 items depending on the seed. (The percentages should be the same as other formats.) (Thanks HauntedQuest)
 * During seeded races, Devil Rooms are now always room #0 and hard-coded to grant rewards in order. This means it is no longer advantageous to intentionally take red heart damage on Basement 2, for example. (Krampus percentages and room rewards should be the same as other formats.)
 * During seeded races, Angel Rooms are now always room #0 and hard-coded to grant rewards in order. (Room rewards should be the same as other formats.)
+* During seeded races, the Boss Rush room is now always room #0 and hard-coded to have either 2, 4, or 8 items depending on the seed. (The percentages should be the same as other formats.) (Thanks HauntedQuest)
 * Fixed the bug where Keeper would get blue flies under certain conditions when reviving in a seeded race. (Thanks PassionDrama)
 * Fixed the bug where the Strength card granted a permanent red heart if you changed floors while it was active. (Thanks thereisnofuture)
 

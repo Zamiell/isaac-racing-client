@@ -436,7 +436,6 @@ function RPSpeedrun:PostNewRoom()
   RPSpeedrun:PostNewRoomReplaceBosses()
   RPSpeedrun:PostNewRoomCheckCurseRoom()
   RPSpeedrun:PostNewRoomCheckSacrificeRoom()
-  RPSpeedrun:PostNewRoomCheckLibrary()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -614,7 +613,7 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
-     RPGlobals.run.deletedCurseRoom then
+     room:IsFirstVisit() == false then
 
     return
   end
@@ -633,7 +632,6 @@ function RPSpeedrun:PostNewRoomCheckCurseRoom()
     return
   end
 
-  RPGlobals.run.deletedCurseRoom = true
   player:AnimateSad()
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_PICKUP or -- 5
@@ -663,7 +661,11 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
     return
   end
 
-  player:AnimateSad()
+  if room:IsFirstVisit() then
+    -- On the first visit to a Sacrifice Room, give a sign to the player that the spikes were intentionally deleted
+    -- Note that the spikes need to be deleted every time we enter the room, as they will respawn once the player leaves
+    player:AnimateSad()
+  end
   for i = 1, gridSize do
     local gridEntity = room:GetGridEntity(i)
     if gridEntity ~= nil then
@@ -675,31 +677,6 @@ function RPSpeedrun:PostNewRoomCheckSacrificeRoom()
     end
   end
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a R+7 Season 4 run).")
-end
-
--- In R+7 Season 4, prevent people from resetting for a Library
-function RPSpeedrun:PostNewRoomCheckLibrary()
-  local game = Game()
-  local room = game:GetRoom()
-  local roomType = room:GetType()
-  local roomSeed = room:GetSpawnSeed()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local challenge = Isaac.GetChallenge()
-  local player = game:GetPlayer(0)
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     stage ~= 1 or
-     roomType ~= RoomType.ROOM_LIBRARY then -- 12
-
-    return
-  end
-
-  player:AnimateSad()
-  for i = 1, 20 do
-    game:Spawn(EntityType.ENTITY_MONSTRO, 0, room:GetCenterPos(), Vector(0, 0), nil, 0, roomSeed)
-  end
-  Isaac.DebugString("Spawned Monstros in a Library (during a R+7 Season 4 run).")
 end
 
 -- Don't move to the first character of the speedrun if we die

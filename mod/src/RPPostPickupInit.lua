@@ -8,6 +8,11 @@ function RPPostPickupInit:Main(pickup)
     return
   end
 
+  -- We don't want to convert cards that are in shops
+  if pickup.Price ~= 0 then
+    return
+  end
+
   local sprite = pickup:GetSprite()
   if (pickup.SubType >= Card.CARD_FOOL and -- 1
       pickup.SubType <= Card.RUNE_ALGIZ) or -- 39

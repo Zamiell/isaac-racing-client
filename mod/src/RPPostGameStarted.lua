@@ -124,6 +124,7 @@ function RPPostGameStarted:Main(saveState)
   -- (future drops will be based on the RNG from this initial random value)
   RPGlobals.RNGCounter.BookOfSin = levelSeed
   RPGlobals.RNGCounter.BossRushItem = levelSeed
+  Isaac.DebugString("Boss Rush seed is now: " .. tostring(RPGlobals.RNGCounter.BossRushItem))
   RPGlobals.RNGCounter.DevilRoomItem = levelSeed
   RPGlobals.RNGCounter.AngelRoomItem = levelSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
