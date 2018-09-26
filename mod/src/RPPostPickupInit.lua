@@ -1,19 +1,45 @@
 local RPPostPickupInit = {}
 
 -- ModCallbacks.MC_POST_PICKUP_INIT (34)
--- Implement the functionality of the "Unique Card Backs" mod by piber20
 function RPPostPickupInit:Main(pickup)
   -- We only care about cards and runes
   if pickup.Variant ~= PickupVariant.PICKUP_TAROTCARD then -- 300
     return
   end
 
-  -- We don't want to convert cards that are in shops
-  if pickup.Price ~= 0 then
+  -- Change Blank Runes and Black Runes
+  if pickup.SubType == Card.RUNE_BLANK or -- 40
+     pickup.SubType == Card.RUNE_BLACK then -- 41
+
+   -- Give an alternate rune sprite (one that isn't tilted left or right)
+   local sprite = pickup:GetSprite()
+   sprite:ReplaceSpritesheet(0, "gfx/items/pick ups/pickup_unique_generic_rune.png")
+
+   -- The black rune will now glow black; remove this from the blank rune
+   sprite:ReplaceSpritesheet(1, "gfx/items/pick ups/pickup_unique_generic_rune.png")
+
+   sprite:LoadGraphics()
+   return
+ end
+
+ -- Local variables
+ local game = Game()
+ local room = game:GetRoom()
+ local roomType = room:GetType()
+
+
+  -- We don't want to convert cards that are for sale
+  -- However, we can't check for "pickup.Price" because it is set to 0 when the callback fires;
+  -- we need to wait a frame and check it later in the MC_POST_PICKUP_UPDATE callback
+  if roomType == RoomType.ROOM_SHOP then -- 2
     return
   end
 
-  local sprite = pickup:GetSprite()
+  RPPostPickupInit:CardFaceUp(pickup)
+end
+
+function RPPostPickupInit:CardFaceUp(pickup)
+  -- Make all cards and runes face-up
   if (pickup.SubType >= Card.CARD_FOOL and -- 1
       pickup.SubType <= Card.RUNE_ALGIZ) or -- 39
      -- Blank Rune (40) and Black Rune (41) are handled below
@@ -31,19 +57,9 @@ function RPPostPickupInit:Main(pickup)
      (pickup.SubType >= Card.CARD_HUGE_GROWTH and -- 52
       pickup.SubType <= Card.CARD_ERA_WALK) then -- 54
 
+    local sprite = pickup:GetSprite()
     sprite:ReplaceSpritesheet(0, "gfx/cards/" .. tostring(pickup.SubType) .. ".png")
     sprite:LoadGraphics()
-
-  elseif pickup.SubType == Card.RUNE_BLANK or -- 40
-         pickup.SubType == Card.RUNE_BLACK then -- 41
-
-     -- Give an alternate rune sprite (one that isn't tilted left or right)
-     sprite:ReplaceSpritesheet(0, "gfx/items/pick ups/pickup_unique_generic_rune.png")
-
-     -- The black rune will now glow black; remove this from the blank rune
-     sprite:ReplaceSpritesheet(1, "gfx/items/pick ups/pickup_unique_generic_rune.png")
-
-     sprite:LoadGraphics()
    end
 end
 

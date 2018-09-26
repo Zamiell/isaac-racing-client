@@ -52,6 +52,7 @@ local RPExecuteCmd          = require("src/rpexecutecmd") -- The ExecuteCmd call
 local RPPreEntitySpawn      = require("src/rppreentityspawn") -- The PreEntitySpawn callback (24)
 local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callback (27)
 local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
+local RPPostPickupUpdate    = require("src/rppostpickupupdate") -- The PostPickupUpdate callback (35)
 local RPPostPickupSelection = require("src/rppostpickupselection") -- The PostPickupSelection callback (37)
 local RPPostLaserInit       = require("src/rppostlaserinit") -- The PostLaserInit callback (47)
 local RPPostEntityKill      = require("src/rppostentitykill") -- The PostEntityKill callback (68)
@@ -111,6 +112,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      RPPreEntitySpawn.Main) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    RPPostPickupUpdate.Main) -- 35
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       RPPostLaserInit.Main) -- 47
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67

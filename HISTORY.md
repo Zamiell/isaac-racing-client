@@ -1,11 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.22.2* - September 26th, 2018
+
+* Fixed the bug where re-entering a shop would turn a card face-up. (Thanks mgln)
+
 ### *v0.22.1* - September 24th, 2018
 
-* Cards in shops will no longer be face up.
+* Cards in shops will no longer be face up. (Thanks SlashSP)
 * In R+7 Season 4, you will no longer be penalized for entering a library on Basement 1.
 * Fixed the bug where multiple items could be taken in Angel Rooms and the Boss Rush in seeded races. (Thanks Shigan)
-* Fixed the bug where items were always the same in Devil Rooms, Angel Rooms, and the Boss Rush in seeded races. (Thanks Gamonymous)
+* Fixed the bug where items in Devil Rooms, Angel Rooms, and the Boss Rush were the same on every seed in seeded races. (Thanks Gamonymous)
 * Fixed the bug where the sad animation would play if you entered the same Sacrifice Room twice in a R+7 Season 4 on Basement 1 more than one time.
 
 ### *v0.22.0* - September 23rd, 2018
