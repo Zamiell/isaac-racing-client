@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.22.3* - September 27th, 2018
+
+* Fixed the bug where A Lump of Coal, Krampus' Head, Key Piece 1, and Key Piece 2 rerolls were not properly seeded in seeded races. (Thanks AshDown & Moucheron Quipet)
+
 ### *v0.22.2* - September 26th, 2018
 
 * Fixed the bug where re-entering a shop would turn a card face-up. (Thanks mgln)

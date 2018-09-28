@@ -358,8 +358,11 @@ function RPPostEntityKill:Entity81(entity)
     RPGlobals.run.spawningKrampusItem = true
   end
 
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, Vector(0, 0), nil, subType, 0)
+  -- Spawn it with the current Devil Room RNG for seeded races
+  -- (if it is not a seeded race, it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  RPGlobals.RNGCounter.DevilRoomItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.DevilRoomItem)
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+             pos, Vector(0, 0), nil, subType, RPGlobals.RNGCounter.DevilRoomItem)
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -381,7 +384,7 @@ function RPPostEntityKill:Entity271(entity)
   -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
   if roomType ~= RoomType.ROOM_ANGEL and -- 15
      roomType ~= RoomType.ROOM_SUPERSECRET then -- 8
-     -- Key pieces dropping from angels in Super Secret Room #12 was introduced in Booster Pack #4
+     -- Key pieces dropping from angels in non-Angel Rooms was introduced in Booster Pack #4
 
     return
   end
@@ -422,8 +425,11 @@ function RPPostEntityKill:Entity271(entity)
   -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
   RPGlobals.run.spawningKeyPiece = true
 
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, Vector(0, 0), nil, subType, 0)
+  -- Spawn it with the current Angel Room RNG for seeded races
+  -- (if it is not a seeded race, it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  RPGlobals.RNGCounter.AngelRoomItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.AngelRoomItem)
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+             pos, Vector(0, 0), nil, subType, RPGlobals.RNGCounter.AngelRoomItem)
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
