@@ -358,11 +358,9 @@ function RPPostEntityKill:Entity81(entity)
     RPGlobals.run.spawningKrampusItem = true
   end
 
-  -- Spawn it with the current Devil Room RNG for seeded races
-  -- (if it is not a seeded race, it will get replaced on the next frame in the "RPPedestals:Replace()" function)
-  RPGlobals.RNGCounter.DevilRoomItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.DevilRoomItem)
+  -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-             pos, Vector(0, 0), nil, subType, RPGlobals.RNGCounter.DevilRoomItem)
+             pos, Vector(0, 0), nil, subType, 0)
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -425,11 +423,9 @@ function RPPostEntityKill:Entity271(entity)
   -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
   RPGlobals.run.spawningKeyPiece = true
 
-  -- Spawn it with the current Angel Room RNG for seeded races
-  -- (if it is not a seeded race, it will get replaced on the next frame in the "RPPedestals:Replace()" function)
-  RPGlobals.RNGCounter.AngelRoomItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.AngelRoomItem)
+  -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-             pos, Vector(0, 0), nil, subType, RPGlobals.RNGCounter.AngelRoomItem)
+             pos, Vector(0, 0), nil, subType, 0)
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
