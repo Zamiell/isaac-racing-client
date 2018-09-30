@@ -43,7 +43,7 @@ function RPPedestals:Replace(pickup)
   if RPGlobals.race.rFormat == "seeded" and
      RPGlobals.race.status == "in progress" then
 
-    -- For seeded rooms, we don't want to use the room seed as the basis
+    -- For seeded rooms, we don't want to use the room seed as the base
     -- (since we are manually seeding the room, different racers might have different room seeds)
     if roomType == RoomType.ROOM_BOSSRUSH then -- 17
       newSeed = RPGlobals.RNGCounter.BossRushItem
@@ -93,7 +93,7 @@ function RPPedestals:Replace(pickup)
   end
 
   -- Check to see if this is a natural Krampus pedestal
-  -- (we want to remove it because we spawn Krampus items manually to both seed it properly and speed it up)
+  -- (we want to remove it because we spawn Krampus items manually to both seed it properly and to speed it up)
   if pickup.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
      pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
 

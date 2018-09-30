@@ -139,8 +139,9 @@ function RPPostEntityKill:Entity45(entity)
     polaroid:ToPickup().TheresOptionsPickup = true
 
     RPGlobals.run.spawningPhoto = true
+    local newSeed = RPGlobals:IncrementRNG(roomSeed) -- We don't want both of the photos to have the same RNG
     local negative = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-                                posCenterRight, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
+                                posCenterRight, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_NEGATIVE, newSeed)
     negative:ToPickup().TheresOptionsPickup = true
 
     Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
@@ -294,7 +295,8 @@ function RPPostEntityKill:Entity81(entity)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local seeds = game:GetSeeds()
+  local startSeed = seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
   local player = game:GetPlayer(0)
 
   -- We only care about Krampus (81.1)
@@ -334,7 +336,7 @@ function RPPostEntityKill:Entity81(entity)
     subType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
     Isaac.DebugString("Spawned A Lump of Coal since Krampus' Head is banned.")
   else
-    math.randomseed(roomSeed)
+    math.randomseed(startSeed)
     local seededChoice = math.random(1, 2)
     if seededChoice == 1 then
       subType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132

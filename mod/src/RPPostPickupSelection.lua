@@ -1,14 +1,24 @@
 local RPPostPickupSelection = {}
 
 -- Includes
-local RPGlobals     = require("src/rpglobals")
+local RPGlobals = require("src/rpglobals")
 
 -- ModCallbacks.MC_POST_PICKUP_SELECTION (37)
 function RPPostPickupSelection:Main(pickup, variant, subType)
-  local newTable
-  newTable = RPPostPickupSelection:ManualPhotos(variant, subType)
-  if newTable ~= nil then
-    return newTable
+  --[[
+  Isaac.DebugString("MC_POST_PICKUP_SELECTION - " ..
+                    tostring(EntityType.ENTITY_PICKUP) .. "." .. tostring(variant) .. "." .. tostring(subType))
+  --]]
+
+  -- We don't care about non-collectible items
+  if variant ~= PickupVariant.PICKUP_COLLECTIBLE then -- 100
+    return nil
+  end
+
+  if subType == CollectibleType.COLLECTIBLE_POLAROID or -- 327
+     subType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
+
+    return RPPostPickupSelection:ManualPhotos(variant, subType)
   end
 end
 
@@ -25,21 +35,11 @@ function RPPostPickupSelection:ManualPhotos(variant, subType)
     return
   end
 
-  -- We don't care about non-collectible items
-  if variant ~= PickupVariant.PICKUP_COLLECTIBLE then -- 100
-    return nil
-  end
-
-  --[[
-  Isaac.DebugString("MC_POST_PICKUP_SELECTION - " ..
-                    tostring(EntityType.ENTITY_PICKUP) .. "." .. tostring(variant) .. "." .. tostring(subType))
-  --]]
-
   -- We don't want to mess with pedestals that we explicitly spawned with Lua in the "RPPostEntityKill:NPC45()" function
   if RPGlobals.run.spawningPhoto then
     RPGlobals.run.spawningPhoto = false
     Isaac.DebugString("Reset the \"spawningPhoto\" variable.")
-    return nil
+    return
   end
 
   -- We only want to replace The Polaroid and The Negative
@@ -49,13 +49,7 @@ function RPPostPickupSelection:ManualPhotos(variant, subType)
   -- And returning {100, 0} will crash the game
   -- So we just make a custom invisible entity (with no anm2 file) and set the pickup to that
   -- We will spawn The Polaroid and The Negative manually in the MC_POST_NPC_DEATH callback
-  if subType == CollectibleType.COLLECTIBLE_POLAROID then -- 327
-    Isaac.DebugString("Preventing The Polaroid from spawning.")
-    return {500, 0} -- Invisible Pickup (5.500), a custom entity
-  elseif subType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
-    Isaac.DebugString("Preventing The Negative from spawning.")
-    return {500, 0} -- Invisible Pickup (5.500), a custom entity
-  end
+  return {500, 0} -- Invisible Pickup (5.500), a custom entity
 end
 
 return RPPostPickupSelection

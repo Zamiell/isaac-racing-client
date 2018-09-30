@@ -27,7 +27,6 @@ function RPPostPickupInit:Main(pickup)
  local room = game:GetRoom()
  local roomType = room:GetType()
 
-
   -- We don't want to convert cards that are for sale
   -- However, we can't check for "pickup.Price" because it is set to 0 when the callback fires;
   -- we need to wait a frame and check it later in the MC_POST_PICKUP_UPDATE callback

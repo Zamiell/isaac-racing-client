@@ -19,13 +19,13 @@ function RPPostGameStarted:Main(saveState)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local levelSeed = level:GetDungeonPlacementSeed()
   local curses = level:GetCurses()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
   local seeds = game:GetSeeds()
+  local startSeed = seeds:GetStartSeed()
   local isaacFrameCount = Isaac.GetFrameCount()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
@@ -122,11 +122,10 @@ function RPPostGameStarted:Main(saveState)
 
   -- Reset some RNG counters to the floor RNG of Basement 1
   -- (future drops will be based on the RNG from this initial random value)
-  RPGlobals.RNGCounter.BookOfSin = levelSeed
-  RPGlobals.RNGCounter.BossRushItem = levelSeed
-  Isaac.DebugString("Boss Rush seed is now: " .. tostring(RPGlobals.RNGCounter.BossRushItem))
-  RPGlobals.RNGCounter.DevilRoomItem = levelSeed
-  RPGlobals.RNGCounter.AngelRoomItem = levelSeed
+  RPGlobals.RNGCounter.BookOfSin = startSeed
+  RPGlobals.RNGCounter.BossRushItem = startSeed
+  RPGlobals.RNGCounter.DevilRoomItem = startSeed
+  RPGlobals.RNGCounter.AngelRoomItem = startSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
 
   -- Reset all graphics

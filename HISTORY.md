@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.22.5* - September 29th, 2018
+
+* Fixed the bug where Krampus would not drop the same drop on the same seed consistently.
+* Fixed the bug where rolling both photos would give you similar boss items.
+* Fixed the bug where double key pieces would drop in seeded races. (Thanks Moucheron Quipet)
+
 ### *v0.22.3* - September 27th, 2018
 
 * Fixed the bug where A Lump of Coal, Krampus' Head, Key Piece 1, and Key Piece 2 rerolls were not properly seeded in seeded races. (Thanks AshDown & Moucheron Quipet)
