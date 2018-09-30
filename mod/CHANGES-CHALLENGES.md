@@ -100,6 +100,15 @@
   * Ipecac --> Mutant Spider + The Inner Eye
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 
+<br />
+
+## R+15 Vanilla
+
+* You must defeat Blue Baby on all 15 characters. (This does not include Samael.)
+* There are no additional changes to the game.
+
+<br />
+
 ## Races
 
 * If you want to do a multiplayer race of one of the above seasons, then you can create a race with a format of "Custom" and a race goal of "Custom".
