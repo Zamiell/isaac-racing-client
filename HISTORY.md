@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.23.0* - October 12h, 2018
+### *v0.23.0* - October 12th, 2018
 
 * Tarot cards, playing cards, and runes are no longer face up. (The other cards remain face up.)
 * The Chub that spawns after The Matriarch will now be stunned for the first 0.5 seconds to prevent unavoidable damage. (Thanks StoneAgeMarcus)
