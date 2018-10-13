@@ -7,7 +7,6 @@ local RPSpeedrun = require("src/rpspeedrun")
 -- Variables
 RPTimer.sprites = {}
 
-
 -- This is the timer that shows how long the race or speedrun has been going on for
 function RPTimer:Display()
   -- Don't show the timer if the user wants it explicitly disabled
@@ -144,7 +143,12 @@ function RPTimer:DisplayRun()
 
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
+
+  if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then --- 10
+    return
+  end
 
   -- Load the sprites
   if RPTimer.sprites.clock2 == nil then
@@ -240,6 +244,14 @@ end
 -- This is the timer that shows up when the player has died in a seeded race
 function RPTimer:DisplayDebuff()
   if RPGlobals.run.seededDeath.state < 2 then
+    return
+  end
+
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+
+  if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then --- 10
     return
   end
 

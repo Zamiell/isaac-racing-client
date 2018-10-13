@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.23.0* - October 12h, 2018
+
+* Tarot cards, playing cards, and runes are no longer face up. (The other cards remain face up.)
+* The Chub that spawns after The Matriarch will now be stunned for the first 0.5 seconds to prevent unavoidable damage. (Thanks StoneAgeMarcus)
+* Basement 1 is now exempt from the room duplication check. (Thanks AshDown)
+* Replaced the Lil Delirium collectible sprite with one that is easier to distinguish from Delirious. Thanks goes to Gamonymous for making it.
+* Changed Hush Flies to Attack Flies in Depths/Necropolis/Dank room #866 and #894.
+* Removed the lower door in Flooded Caves room #994.
+* Fixed the unavoidable damage caused by champion Gurglings in Scarred Womb room #555. (Thanks CrafterLynx)
+* Fixed the bug where Krampus would not grant a charge during a seeded race.
+* Fixed the bug where Keeper would erroneously lose a coin container after using a Strength card under certain conditions. (Thanks Gamonymous)
+* Fixed the bug where you could touch the trophy while dead in a seeded race. (Thanks Hispa)
+
 ### *v0.22.5* - September 29th, 2018
 
 * Fixed the bug where Krampus would not drop the same drop on the same seed consistently.

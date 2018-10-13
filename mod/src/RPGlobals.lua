@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.22.5"
+RPGlobals.version = "v0.23.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -176,6 +176,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.rechargeItemFrame    = 0 -- Used to recharge the D6 / Void after a failed attempt
   RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
+  RPGlobals.run.matriarchFrame       = 0 -- Used to manually slow down the Chub that comes from The Matriarch
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {

@@ -74,7 +74,7 @@ function RPPostGameStarted:Main(saveState)
   -- Make sure that all other Easter Eggs are disabled
   -- (but make an exception for the Single Player Co-op Baby mod)
   local validEasterEggs = true
-  if SinglePlayerCoopBabies == nil then -- luacheck: ignore
+  if SinglePlayerCoopBabies == nil then
     for i = 0, SeedEffect.NUM_SEEDS do
       if seeds:HasSeedEffect(i) and
          i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70

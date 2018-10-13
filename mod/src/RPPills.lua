@@ -149,6 +149,12 @@ function RPPills:Telepills()
 end
 
 function RPPills:PostRender()
+  -- This feature is disabled if the Single Player Co-op Babies mod is enabled
+  -- (the pills text will overlap with the baby descriptions)
+  if SinglePlayerCoopBabies ~= nil then
+    return
+  end
+
   -- Only show pill identification if the user is pressing tab
   local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3

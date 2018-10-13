@@ -85,11 +85,12 @@
 * The Treasure Room on Basement 1 is permanently barred.
 * Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
 * Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
-* Entering a Library on Basement 1 will cause bad things to happen. (This is to prevent resetting for a good book.)
+
+<br />
 
 ## R+7 Season 5
 
-* You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://asdf.com) mod, which provides a different random baby with a unique ability on each floor.
+* You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no) mod, which provides a different random baby with a unique ability on each floor.
 * Each baby has the starting stats and health of Judas.
 * Each baby starts with the Schoolbag. (It starts empty by default.)
 * Each baby starts with More Options. More Options is removed upon entering the first Treasure Room.

@@ -47,7 +47,7 @@ function RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
     local rocks = {66, 68, 82}
     for i, rockIndex in ipairs(rocks) do
       if rockIndex == gridIndex then
-        return {1930, 0} -- Spikes
+        return {1930, 0, 0} -- Spikes
       end
     end
 
@@ -56,13 +56,13 @@ function RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
     local rocksReplaced = {49, 63, 65, 79}
     for i, rockIndex in ipairs(rocksReplaced) do
       if rockIndex == gridIndex then
-        return {1930, 0} -- Spikes
+        return {1930, 0, 0} -- Spikes
       end
     end
     local rocksDeleted = {20, 47, 48, 62, 77, 78, 82, 95, 109}
     for i, rockIndex in ipairs(rocksDeleted) do
       if rockIndex == gridIndex then
-        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
+        return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
     end
 
@@ -71,7 +71,7 @@ function RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
     local spikes = {48, 50, 78, 80}
     for i, spikeIndex in ipairs(spikes) do
       if spikeIndex == gridIndex then
-        return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
+        return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
     end
 
@@ -80,7 +80,7 @@ function RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
     local pots = {49, 63, 65, 79}
     for i, potIndex in ipairs(pots) do
       if potIndex == gridIndex then
-        return {1930, 0} -- Spikes
+        return {1930, 0, 0} -- Spikes
       end
     end
   end

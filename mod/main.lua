@@ -34,6 +34,7 @@ POST-FLIP ACTIONS:
 local RacingPlus = RegisterMod("Racing+", 1)
 
 -- The Lua code is split up into separate files for organizational purposes
+-- (file names must be in lowercase for Linux compatibility purposes)
 local RPGlobals             = require("src/rpglobals") -- Global variables
 local RPNPCUpdate           = require("src/rpnpcupdate") -- The NPCUpdate callback (0)
 local RPPostUpdate          = require("src/rppostupdate") -- The PostUpdate callback (1)
@@ -74,12 +75,14 @@ RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" 
 -- Set a global variable so that other mods can access our scoped global variables
 RacingPlusGlobals = RPGlobals
 RacingPlusSchoolbag = RPSchoolbag
+RacingPlusSpeedrun = RPSpeedrun
 
 -- Define NPC callbacks (0)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPFastClear.NPCUpdate) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC24,  EntityType.ENTITY_GLOBIN) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_HOST) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityType.ENTITY_MOBILE_HOST) -- 204
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC28,  EntityType.ENTITY_CHUB) -- 28
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_STONEHEAD) -- 42
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC54,  EntityType.ENTITY_FLAMINGHOPPER) -- 54
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
@@ -110,7 +113,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        RPPostNewLevel.Mai
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         RPPostNewRoom.Main) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           RPExecuteCmd.Main) -- 22
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      RPPreEntitySpawn.Main) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.Main) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPFastClear.PostNPCInit) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         RPPostNPCInit.NPC260, -- 27
+                                                              EntityType.ENTITY_THE_HAUNT) -- 260
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      RPPostPickupInit.Main) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    RPPostPickupUpdate.Main) -- 35
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, RPPostPickupSelection.Main) -- 37
@@ -182,6 +187,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity271, -- (to handle fast-drops)
                                                          EntityType.ENTITY_GABRIEL) -- 272
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity78, EntityType.ENTITY_HUSH) -- 407
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity413, EntityType.ENTITY_MATRIARCH) -- 413
 
 -- Samael callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.scytheUpdate, -- 0

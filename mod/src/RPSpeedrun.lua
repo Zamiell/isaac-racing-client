@@ -703,6 +703,14 @@ function RPSpeedrun:DisplayCharProgress()
     return
   end
 
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+
+  if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then --- 10
+    return
+  end
+
   -- Don't show the progress if the player has not set an order yet
   if RPSpeedrun:CheckValidCharOrder() == false then
     -- Load the sprites

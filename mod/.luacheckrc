@@ -60,6 +60,7 @@ globals = {
   -- Racing+ global variables
   "RacingPlusGlobals",
   "RacingPlusSchoolbag",
+  "RacingPlusSpeedrun",
   "SinglePlayerCoopBabies",
 
   -- This is used in the True Co-op Mod

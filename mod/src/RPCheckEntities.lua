@@ -172,6 +172,10 @@ function RPCheckEntities:Entity5(pickup)
       pickup:GetSprite():Play("Appear", false)
       Isaac.DebugString("Replaced a Spiked Chest / Mimic with a normal chest (for an unavoidable damage room).")
 
+      -- Mark it so that other mods are aware of the replacement
+      local data = pickup:GetData()
+      data.unavoidableReplacement = true
+
     else
       -- Changing the variant doesn't actually change the sprite
       -- Furthermore, we need to make it look like a Mimic
@@ -791,6 +795,11 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     return
   end
 
+  -- We should not be able to finish the race while we are in ghost form
+  if RPGlobals.run.seededDeath.state == 3 then
+    return
+  end
+
   -- Check to see if we are touching the trophy
   if RPGlobals:InsideSquare(player.Position, entity.Position, 24) == false then -- 25 is a touch too big
     return
@@ -822,8 +831,9 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
       finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
     end
+    local item2seed = RPGlobals:IncrementRNG(roomSeed)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_FINISHED, roomSeed)
+               nil, CollectibleType.COLLECTIBLE_FINISHED, item2seed)
 
     Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
   else

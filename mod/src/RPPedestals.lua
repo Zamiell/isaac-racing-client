@@ -292,6 +292,18 @@ function RPPedestals:Replace(pickup)
     newPedestal.Wait = 0 -- On vanilla, all pedestals get a 20 frame delay
   end
 
+  if pickup.State == 0 then
+    -- Normally, collectibles always have state 0
+    -- Mark it as state 1 to indicate to other mods that this is a replaced pedestal
+    newPedestal.State = 1
+  else
+    -- Another mod has modified the state of this pedestal; make it persist over to the new pedestal
+    newPedestal.State = pickup.State
+  end
+
+  -- If we don't do this, then mods that manually update the price of items will fail
+  newPedestal.AutoUpdatePrice = pickup.AutoUpdatePrice
+
   -- Add it to the tracking table so that we don't replace it again
   -- (and don't add random items to the index in case a banned item rolls into another banned item)
   if randomItem == false then

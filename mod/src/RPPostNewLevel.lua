@@ -165,23 +165,26 @@ function RPPostNewLevel:CheckDupeRooms()
         roomID = roomID - 10000
       end
 
-      -- Check to see if this room ID has appeared on previous floors
-      for j = 1, #RPGlobals.run.roomIDs do
-        if roomID == RPGlobals.run.roomIDs[j] then
-          Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding.")
-          RPGlobals.run.reseededFloor = true
-          RPGlobals:ExecuteCommand("reseed")
-          return true
+      -- Make basement 1 exempt from duplication checking so that resetting is faster on potato computers
+      if stage ~= 1 then
+        -- Check to see if this room ID has appeared on previous floors
+        for j = 1, #RPGlobals.run.roomIDs do
+          if roomID == RPGlobals.run.roomIDs[j] then
+            Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding.")
+            RPGlobals.run.reseededFloor = true
+            RPGlobals:ExecuteCommand("reseed")
+            return true
+          end
         end
-      end
 
-      -- Also check to see if this room ID appears multiple times on this floor
-      for j = 1, #roomIDs do
-        if roomID == roomIDs[j] then
-          Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
-          RPGlobals.run.reseededFloor = true
-          RPGlobals:ExecuteCommand("reseed")
-          return true
+        -- Also check to see if this room ID appears multiple times on this floor
+        for j = 1, #roomIDs do
+          if roomID == roomIDs[j] then
+            Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
+            RPGlobals.run.reseededFloor = true
+            RPGlobals:ExecuteCommand("reseed")
+            return true
+          end
         end
       end
 

@@ -59,6 +59,7 @@ function RPSeededRooms:DevilRoom()
       RPGlobals.run.metKrampus = true
       game:Spawn(EntityType.ENTITY_FALLEN, 1,
                  room:GetCenterPos(), Vector(0, 0), nil, 0, RPGlobals.RNGCounter.DevilRoomItem)
+      room:SetClear(false) -- If we don't do this, we won't get a charge after Krampus is killed
       return
     end
   end
@@ -398,7 +399,7 @@ function RPSeededRooms:PreEntitySpawn(type, variant, subType, seed)
      roomType == RoomType.ROOM_DEVIL or -- 14
      roomType == RoomType.ROOM_ANGEL then -- 15
 
-    return {999, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
+    return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
   end
 end
 

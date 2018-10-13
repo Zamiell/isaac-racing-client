@@ -12,7 +12,7 @@ local RPSoulJar = require("src/rpsouljar")
 RPFastClear.familiars = {}
 
 -- These are reset in the "RPFastClear:InitRun()" function and
--- the "RPFastClear:CheckNewNPC()" function (upon entering a new room)
+-- the "RPFastClear:PostNPCInit()" function (upon entering a new room)
 RPFastClear.aliveEnemies = {}
 RPFastClear.aliveEnemiesCount = 0
 RPFastClear.roomInitializing = false -- Set to true in the MC_POST_NEW_ROOM callback
@@ -74,7 +74,7 @@ function RPFastClear:NPCUpdate(npc)
 
   -- We can't rely on the MC_POST_NPC_INIT callback because it is not fired for certain NPCs
   -- (like when a Gusher emerges from killing a Gaper)
-  RPFastClear:CheckNewNPC(npc)
+  RPFastClear:PostNPCInit(npc)
 end
 
 -- ModCallbacks.MC_NPC_UPDATE (0)
@@ -104,12 +104,21 @@ function RPFastClear:NPC302(npc)
   end
 end
 
-function RPFastClear:CheckNewNPC(npc)
+-- ModCallbacks.MC_POST_NPC_INIT (27)
+function RPFastClear:PostNPCInit(npc)
   -- Local variables
   local game = Game()
-  --local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
+
+  --[[
+  local index = GetPtrHash(npc)
+  Isaac.DebugString("MC_POST_NPC_INIT - " ..
+                    tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
+                    tostring(npc.SubType) .. "." .. tostring(npc.State) .. ", " ..
+                    "index " .. tostring(index) .. ", " ..
+                    "frame " .. tostring(gameFrameCount))
+  --]]
 
   -- Don't do anything if we are already tracking this NPC
   -- (we can't use npc.Index for this because it is always 0 in the MC_POST_NPC_INIT callback)
@@ -144,7 +153,7 @@ function RPFastClear:CheckNewNPC(npc)
   end
 
   -- If we are entering a new room, flush all of the stuff in the old room
-  -- (we can't use the POST_NEW_ROOM callback to handle this since that callback fires after this one)
+  -- (we can't use the MC_POST_NEW_ROOM callback to handle this since that callback fires after this one)
   -- (roomFrameCount will be at -1 during the initialization phase)
   if roomFrameCount == -1 and RPFastClear.roomInitializing == false then
     RPFastClear.aliveEnemies = {}
@@ -287,9 +296,15 @@ function RPFastClear:PostUpdate()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomClear = room:IsClear()
+  local seeds = game:GetSeeds()
 
   -- Disable this on the "Unseeded (Lite)" ruleset
   if RPGlobals.race.rFormat == "unseeded-lite" then
+    return
+  end
+
+  -- Disable this if we are on the "PAC1F1CM" seed / Easter Egg
+  if seeds:HasSeedEffect(SeedEffect.SEED_PACIFIST) then -- 25
     return
   end
 
@@ -483,7 +498,7 @@ function RPFastClear:ClearRoom()
     end
   end
 
-  -- Play the sound effect for the door opening
+  -- Play the sound effect for the doors opening
   if room:GetType() ~= RoomType.ROOM_DUNGEON then -- 16
     sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
   end

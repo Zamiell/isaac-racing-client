@@ -29,6 +29,11 @@ function RPSchoolbag:Put(item, charge)
   itemPool:RemoveCollectible(item)
 end
 
+function RPSchoolbag:Remove()
+  RPGlobals.run.schoolbag.item = 0
+  RPSchoolbag.sprites.item = nil
+end
+
 function RPSchoolbag:AddCharge()
   -- Local variables
   local game = Game()
@@ -88,6 +93,7 @@ end
 function RPSchoolbag:SpriteDisplay()
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
   local itemX = 45
@@ -96,6 +102,10 @@ function RPSchoolbag:SpriteDisplay()
   local barYOffset = 1
   local itemVector = Vector(itemX, itemY)
   local barVector = Vector(itemX + barXOffset, itemY + barYOffset)
+
+  if seeds:HasSeedEffect(SeedEffect.SEED_NO_HUD) then --- 10
+    return
+  end
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
     return
@@ -403,6 +413,11 @@ function RPSchoolbag:Switch()
   -- Set the item hold cooldown to 0 since this doesn't count as picking up a new item
   -- (this fixes the bug where you can't immediately pick up a new item after performing a Schoolbag switch)
   player.ItemHoldCooldown = 0
+
+  -- Tell The Babies Mod to reload the sprite just in case the new active item has a costume and it messes up the sprite
+  if SinglePlayerCoopBabies ~= nil then
+    SinglePlayerCoopBabies.run.reloadSprite = true
+  end
 end
 
 return RPSchoolbag

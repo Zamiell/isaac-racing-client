@@ -101,6 +101,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
+* Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * Betrayal no longer pauses the game and plays an animation before charming enemies.
@@ -108,6 +109,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
 * All Spike Chests will spawn as Mimics instead.
+* The Chub that spawns after The Matriarch will be stunned for the first 0.5 seconds to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 
@@ -142,6 +144,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as normal chests instead.)
 * You no longer have a chance to be sent to the menu after defeating Mega Satan.
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
+* You can no longer abuse the Pony / White Pony to steal Devil Room items.
 
 ### Graphics & Sound Fixes
 

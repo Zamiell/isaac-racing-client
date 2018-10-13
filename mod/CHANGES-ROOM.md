@@ -235,16 +235,6 @@ The changed room is as follows:
 
 <br />
 
-### Close Enemies Fix
-
-In some rooms, enemies are unreasonably close to an entrance. This is addressed by moving them slightly further away.
-
-The changed room is as follows:
-* Flooded: #974
-* Utero: #5
-
-<br />
-
 
 
 
@@ -496,9 +486,9 @@ The changed rooms are as follows:
 
 <br />
 
-### Close Entities Fix
+### Close Enemies Fix
 
-Due to recent bug fixes in May 2018, enemies that spawn near an entrance are no longer completely unavoidable damage. However, enemies that spawn very close to doors are inconsistent with the rest of the game, and it is more reasonable to have enemies spawn at least 2 squares away from the player.
+Due to recent bug fixes in May 2018, most enemies that spawn near an entrance are no longer completely unavoidable damage. However, enemies that spawn very close to doors are unfair in certain circumstances, and it is more reasonable to have enemies spawn at least 2 squares away from the player.
 
 The changed rooms are as follows:
 * Basement/Burning: #393, #359 (Mulligan)
@@ -513,7 +503,9 @@ The changed rooms are as follows:
 * Caves/Catacombs/Flooded: #46, #440, #518 (Boom Fly)
 * Caves/Catacombs/Flooded: #548 (Drowned Hive)
 * Caves/Catacombs/Flooded: #919 (Maggot)
-* Catacombs #267: (Night Crawler)
+* Catacombs: #267 (Night Crawler)
+* Flooded: #994 (removed bottom door)
+* Flooded: #974 (Boom Fly)
 * Depths/Dank: #11 (Boom Fly)
 * Depths/Dank: #16 (Brain)
 * Womb/Utero/Scarred: #182, #471, #733 (Gurglings)
@@ -522,6 +514,8 @@ The changed rooms are as follows:
 * Womb/Utero/Scarred: #410 (Sucker)
 * Womb/Utero/Scarred: #757 (Guts)
 * Womb/Scarred: #507 (Blastocyst)
+* Womb/Scarred: #555 (Gurglings)
+* Utero: #5 (Guts)
 * Utero: #133 (Gurdy Jr.)
 * Cathedral/Sheol: #30 (Kamikaze Leech)
 * Sheol: #212 (Cage)
@@ -538,10 +532,20 @@ The changed rooms are as follows:
 
 <br />
 
+### Hush Fly Fix
+
+* The Hush Flies that are placed in some rooms are given the same armor scaling that Hush is, so they have been replaced with Attack Flies.
+
+The changed rooms are as follows:
+* Depths/Necropolis/Dank: #866, #894
+
+<br />
+
 ### Out of Bounds Fix
 
 Rooms with entities that have negative coordinates (out of bounds) have been placed in-bounds. This does not affect gameplay in any way.
 
+The changed rooms are as follows:
 * Caves/Flooded: #203, #303
 * Caves/Catacombs/Flooded: #406, #427, #428, #429
 * Depths/Dank: #457, #460, #463, #471, #472
@@ -552,6 +556,8 @@ Rooms with entities that have negative coordinates (out of bounds) have been pla
 ### Symmetry Fix
 
 Certain rooms in the game were probably meant to be symmetrical, but one entity or tile was incorrectly placed. This is fixed.
+
+The changed rooms are as follows:
 * Basement/Burning: #581
 * Caves/Flooded: #28, #120, #416, #541
 * Flooded: #939

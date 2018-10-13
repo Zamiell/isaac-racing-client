@@ -51,6 +51,30 @@ function RPNPCUpdate:NPC27(npc)
   end
 end
 
+-- EntityType.ENTITY_CHUB (28)
+function RPNPCUpdate:NPC28(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local room = game:GetRoom()
+  local roomType = room:GetType()
+  local sfx = SFXManager()
+
+  -- Slow down a Chub spawning from The Matriarch
+  if stage == LevelStage.STAGE4_1 and -- 7
+     roomType == RoomType.ROOM_BOSS and -- 5
+     gameFrameCount <= RPGlobals.run.matriarchFrame + 42 + 15 then -- 0.5 seconds
+     -- Chub will spawn 42 frames after The Matriarch
+
+    npc.State = NpcState.STATE_UNIQUE_DEATH -- 16
+    -- (the state after he eats a bomb)
+    sfx:Stop(SoundEffect.SOUND_MONSTER_ROAR_2) -- 117
+    Isaac.DebugString("Manually slowed a Chub coming from a Matriarch.")
+  end
+end
+
 -- EntityType.ENTITY_STONEHEAD (42; Stone Grimace and Vomit Grimace)
 -- EntityType.ENTITY_CONSTANT_STONE_SHOOTER (202; left, up, right, and down)
 -- EntityType.ENTITY_BRIMSTONE_HEAD (203; left, up, right, and down)
