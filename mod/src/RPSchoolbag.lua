@@ -96,6 +96,7 @@ function RPSchoolbag:SpriteDisplay()
   local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local maxCharges = RPGlobals:GetItemMaxCharges(RPGlobals.run.schoolbag.item)
+  local itemConfig = Isaac.GetItemConfig()
   local itemX = 45
   local itemY = 50
   local barXOffset = 17
@@ -113,21 +114,24 @@ function RPSchoolbag:SpriteDisplay()
 
   -- Load the sprites
   if RPSchoolbag.sprites.item == nil then
-    -- By default, use the item ID as the file name for the ANM2 to load
-    local fileName = RPGlobals.run.schoolbag.item
-    if RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
+    local fileName
+    if RPGlobals.run.schoolbag.item == 0 then
+      -- We don't have anything inside of the Schoolbag, so show a faded Schoolbag sprite
+      fileName = "gfx/items/collectibles/Schoolbag_Empty.png"
+
+    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
        RPGlobals.run.movingBoxOpen then
 
       -- We need custom logic to handle Moving Box, which has two different sprites
       fileName = "523-2"
-    elseif RPGlobals.run.schoolbag.item == CollectibleType.COLLECTIBLE_DEBUG then
-      fileName = "Debug"
-    elseif RPGlobals.run.schoolbag.item == Isaac.GetItemIdByName("Wraith Skull") then
-      fileName = "Wraith_Skull"
+    else
+      fileName = itemConfig:GetCollectible(RPGlobals.run.schoolbag.item).GfxFileName
     end
 
     RPSchoolbag.sprites.item = Sprite()
-    RPSchoolbag.sprites.item:Load("gfx/items2/collectibles/" .. fileName .. ".anm2", true)
+    RPSchoolbag.sprites.item:Load("gfx/schoolbag_item.anm2", false)
+    RPSchoolbag.sprites.item:ReplaceSpritesheet(0, fileName)
+    RPSchoolbag.sprites.item:LoadGraphics()
     RPSchoolbag.sprites.item:Play("Default", true)
     RPSchoolbag.sprites.barBack = Sprite()
     RPSchoolbag.sprites.barBack:Load("gfx/ui/ui_chargebar.anm2", true)

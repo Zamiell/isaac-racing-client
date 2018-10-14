@@ -470,6 +470,7 @@ function RPChangeCharOrder:CreateItemButtons()
   local game = Game()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
 
   -- Make the sprite that shows what character we are choosing for
   RPChangeCharOrder.sprites.characters = {}
@@ -499,12 +500,17 @@ function RPChangeCharOrder:CreateItemButtons()
     -- Spawn the item selection graphics next to the buttons
     local newIndex = #RPChangeCharOrder.sprites.items + 1
     RPChangeCharOrder.sprites.items[newIndex] = Sprite()
+    RPChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
     local itemNum = v.itemPosition[i][1]
     if itemNum < 1000 then
-      RPChangeCharOrder.sprites.items[newIndex]:Load("gfx/items2/collectibles/" .. tostring(itemNum) .. ".anm2", true)
+      -- This is a single item
+      local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
     else
-      RPChangeCharOrder.sprites.items[newIndex]:Load("gfx/items2/combos/" .. tostring(itemNum) .. ".anm2", true)
+      -- This is a build
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
     end
+    RPChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
     RPChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
   end
 

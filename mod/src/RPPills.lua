@@ -67,6 +67,10 @@ function RPPills:Main(pillEffect)
 
   -- See if we have already used this particular pill color on this run
   local pillColor = player:GetPill(0)
+  if pillColor == PillColor.PILL_NULL then -- 0
+    -- A separate mod may have manually used a pill with a null color
+    return
+  end
   for i = 1, #RPGlobals.run.pills do
     if RPGlobals.run.pills[i].color == pillColor then
       return

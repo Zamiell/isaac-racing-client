@@ -36,6 +36,7 @@ globals = {
   "ModCallbacks",
   "NpcState",
   "PickupVariant",
+  "PillColor",
   "PillEffect",
   "PlayerForm",
   "PlayerType",

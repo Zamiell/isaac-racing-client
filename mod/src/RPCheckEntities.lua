@@ -157,6 +157,8 @@ function RPCheckEntities:Entity5(pickup)
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 244) or
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 518) or
        ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 519) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 1008) or
+       ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 1014) or
        ((stage == 5 or stage == 6) and stageType == 1 and roomDataVariant == 973) or -- Necropolis
        ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 458) or -- Womb
        ((stage == 7 or stage == 8) and stageType == 0 and roomDataVariant == 489) or

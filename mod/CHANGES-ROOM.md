@@ -295,23 +295,16 @@ The changed rooms are as follows:
 
 <br />
 
-### Devil Room Maneuverability Fix
+### Boss Room Maneuverability Fix
 
-If the player is out of bombs and a Devil Room spawns in certain orientations of certain rooms, they will either not be able to access it or be forced to take the boss item in order to see the deal. This bug is fixed by moving/deleting the rocks/pits respectively.
+If the player is out of bombs and a Devil Room spawns in certain orientations of certain rooms, they will either not be able to access it or be forced to take the boss item in order to see the deal. Alternatively, a player may be forced to take the boss item in order to exit the floor. This bug is fixed by moving/deleting the rocks/pits respectively.
 
 The changed rooms are as follows:
+* #1066 (Gurdy)
 * #2031 (Loki)
 * #3311 (Lokii)
 * #4041 (Death)
-
-<br />
-
-### Floor Exit Maneuverability Fix
-
-In the Gurdy room filled with pits, the player is forced to take the boss item in order to exit the floor. This bug is fixed by deleting some pits to allow for more maneuverability.
-
-The changed room is as follows:
-* #1066 (Gurdy)
+* #5106 (Polycephalus)
 
 <br />
 
@@ -504,8 +497,13 @@ The changed rooms are as follows:
 * Caves/Catacombs/Flooded: #548 (Drowned Hive)
 * Caves/Catacombs/Flooded: #919 (Maggot)
 * Catacombs: #267 (Night Crawler)
-* Flooded: #994 (removed bottom door)
 * Flooded: #974 (Boom Fly)
+* Flooded: #993 (removed top door)
+* Flooded: #994 (removed bottom door)
+* Flooded: #998, #1017, #1028 (deleted the room)
+* Flooded: #999 (Red Maw)
+* Flooded: #1003, #1010, #1015, #1044 (deleted the left and right doors)
+* Flooded: #1004, #1008, #1013, #1014, #1020, #1027, #1049 (top and bottom doors)
 * Depths/Dank: #11 (Boom Fly)
 * Depths/Dank: #16 (Brain)
 * Womb/Utero/Scarred: #182, #471, #733 (Gurglings)

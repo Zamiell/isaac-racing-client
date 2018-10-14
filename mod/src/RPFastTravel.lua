@@ -201,6 +201,13 @@ function RPFastTravel:MovePickupFromHole(pickup, posHole)
   local room = game:GetRoom()
   local squareSize = RPFastTravel.trapdoorTouchDistance + 2
 
+  -- First, if this is a collectibles that is overlapping with the trapdoor, then move it manually
+  -- (this is rare but possible with a Small Rock)
+  if pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE then -- 100
+    pickup.Position = room:FindFreePickupSpawnPosition(pickup.Position, 1, true)
+    return
+  end
+
   -- Make pickups with velocity "bounce" off of the hole
   if (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0) and
      (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y) then

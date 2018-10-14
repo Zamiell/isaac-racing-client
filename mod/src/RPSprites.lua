@@ -36,10 +36,10 @@ function RPSprites:Init(spriteType, spriteName)
      spriteType == "diversity-item3" or
      spriteType == "diversity-item4" then
 
-    RPSprites.sprites[spriteType].sprite:Load("gfx/items3/collectibles/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/items2/collectibles/" .. spriteName .. ".anm2", true)
 
   elseif spriteType == "diversity-item5" then
-    RPSprites.sprites[spriteType].sprite:Load("gfx/items3/trinkets/" .. spriteName .. ".anm2", true)
+    RPSprites.sprites[spriteType].sprite:Load("gfx/items2/trinkets/" .. spriteName .. ".anm2", true)
 
   elseif spriteType == "ready" or
          spriteType == "readyTotal" then

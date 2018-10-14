@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.23.2* - October 12th, 2018
+
+* Removed 4 pits from Polycephalus room #5106 to fix the bug where There's Options would cause pedestal items to block the bottom door.
+* Changed Flooded Caves rooms #993, #998, #999, #1003, #1004, #1008, #1010, #1013, #1014, #1015, #1017, #1020, #1027, #1028, #1044, and #1049 to ensure that Mr. Mines never spawn too close to a doorway.
+* Fixed the bug where a pedestal item could rarely overlap with a trapdoor or crawlspace.
+
 ### *v0.23.0* - October 12th, 2018
 
 * Tarot cards, playing cards, and runes are no longer face up. (The other cards remain face up.)
