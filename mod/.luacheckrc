@@ -12,6 +12,7 @@ globals = {
   "CollectibleType",
   "Color",
   "DamageFlag",
+  "Difficulty",
   "Direction",
   "DoorSlot",
   "EffectVariant",

@@ -298,6 +298,15 @@ function RPFastClear:PostUpdate()
   local roomClear = room:IsClear()
   local seeds = game:GetSeeds()
 
+  -- Disable this in Greed Mode
+  if game.Difficulty > 1 then
+    -- DIFFICULTY_NORMAL = 0,
+    -- DIFFICULTY_HARD = 1,
+    -- DIFFICULTY_GREED = 2,
+    -- DIFFICULTY_GREEDIER = 3,
+    return
+  end
+
   -- Disable this on the "Unseeded (Lite)" ruleset
   if RPGlobals.race.rFormat == "unseeded-lite" then
     return

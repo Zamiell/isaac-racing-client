@@ -368,13 +368,13 @@ function RPPostGameStarted:Race()
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   if RPGlobals.race.hard and
-     game.Difficulty ~= 1 then
+     game.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
 
     Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(game.Difficulty) .. ").")
     return
 
   elseif RPGlobals.race.hard == false and
-         game.Difficulty ~= 0 and
+         game.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
          RPGlobals.race.rFormat ~= "custom" then
 
     Isaac.DebugString("Race error: Supposed to be on easy mode (currently on " .. tostring(game.Difficulty) .. ").")

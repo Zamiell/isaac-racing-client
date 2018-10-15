@@ -1,6 +1,12 @@
 # Racing+ Version History and News
 
-### *v0.23.2* - October 12th, 2018
+### *v0.23.3* - October 14th, 2018
+
+* Fast-clear is now disabled in Greed Mode. (Thanks BigBess)
+* Fixed the bug where the Moving Box would be invisible inside of the Schoolbag if it was currently open. (Thanks Gamonymous)
+* Fixed the bug where Samael would not shoot properly if he had Brimstone or Cursed Eye. (Thanks Gamonymous)
+
+### *v0.23.2* - October 13th, 2018
 
 * Removed 4 pits from Polycephalus room #5106 to fix the bug where There's Options would cause pedestal items to block the bottom door.
 * Changed Flooded Caves rooms #993, #998, #999, #1003, #1004, #1008, #1010, #1013, #1014, #1015, #1017, #1020, #1027, #1028, #1044, and #1049 to ensure that Mr. Mines never spawn too close to a doorway.

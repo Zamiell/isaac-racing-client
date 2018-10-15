@@ -388,13 +388,13 @@ function RPPostRender:Race()
 
   -- Show warning messages
   if RPGlobals.race.hard and
-     game.Difficulty ~= 1 then
+     game.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
 
     RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return
 
   elseif RPGlobals.race.hard == false and
-         game.Difficulty ~= 0 and
+         game.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
          RPGlobals.race.rFormat ~= "custom" then
 
     RPSprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.

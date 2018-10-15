@@ -161,7 +161,7 @@ function RPSprites:Display()
     elseif k == "place" then -- "1st", "2nd", etc.
       -- Move it next to the "R+" icon
       pos.X = 24
-      if game.Difficulty == 1 then
+      if game.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
         -- The hard mode symbol will interfere, so it needs to be moved to the right
         pos.X = 34
       end

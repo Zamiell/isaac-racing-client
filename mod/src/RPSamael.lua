@@ -1881,6 +1881,12 @@ function SamaelMod:IsActionPressed()
     return
   end
 
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
+
+    return
+  end
+
   if scytheAnimationEndFrame == 0 then
     return
   end

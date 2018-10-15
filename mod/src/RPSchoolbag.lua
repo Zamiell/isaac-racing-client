@@ -123,7 +123,7 @@ function RPSchoolbag:SpriteDisplay()
        RPGlobals.run.movingBoxOpen then
 
       -- We need custom logic to handle Moving Box, which has two different sprites
-      fileName = "523-2"
+      fileName = "gfx/items/collectibles/collectibles_523_movingbox_open.png"
     else
       fileName = itemConfig:GetCollectible(RPGlobals.run.schoolbag.item).GfxFileName
     end
