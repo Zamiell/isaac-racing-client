@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.24.0* - October ?th, 2018
+
+* Racing+ will now reseed the floor if it contains a loop.
+* Moved the Night Crawler away from the door on Catacombs room #267.
+
 ### *v0.23.3* - October 14th, 2018
 
 * Fast-clear is now disabled in Greed Mode. (Thanks BigBess)

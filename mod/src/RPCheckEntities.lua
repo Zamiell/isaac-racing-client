@@ -133,7 +133,7 @@ function RPCheckEntities:Entity5(pickup)
 
     -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
     local roomDataVariant = roomData.Variant
-    while roomDataVariant > 10000 do
+    while roomDataVariant >= 10000 do
       -- The 3 flipped versions of room #1 would be #10001, #20001, and #30001
       roomDataVariant = roomDataVariant - 10000
     end

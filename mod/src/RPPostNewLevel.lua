@@ -4,6 +4,7 @@ local RPPostNewLevel = {}
 local RPGlobals     = require("src/rpglobals")
 local RPPostNewRoom = require("src/rppostnewroom")
 local RPFastTravel  = require("src/rpfasttravel")
+local RPCheckLoop   = require("src/rpcheckloop")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function RPPostNewLevel:Main()
@@ -66,13 +67,14 @@ function RPPostNewLevel:NewLevel()
     return
   end
 
-  -- Check for duplicate rooms
-  if RPPostNewLevel:CheckDupeRooms() then
-    return
-  end
+  if RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
+     RPCheckLoop:Main() or -- Check for looping floors
+     RPPostNewLevel:CheckDupeRooms() then  -- Check for duplicate rooms
+     -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
 
-  -- Check for Duality restrictions
-  if RPPostNewLevel:CheckDualityNarrowRoom() then
+    RPGlobals.run.reseededFloor = true
+    RPGlobals.run.reseedCount = RPGlobals.run.reseedCount + 1
+    RPGlobals:ExecuteCommand("reseed")
     return
   end
 
@@ -88,6 +90,8 @@ function RPPostNewLevel:NewLevel()
   RPGlobals.run.replacedTrapdoors = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
+  Isaac.DebugString("Reseed count: " .. tostring(RPGlobals.run.reseedCount))
+  RPGlobals.run.reseedCount = 0
 
   -- Reset the RNG of some items that should be seeded per floor
   local floorSeed = level:GetDungeonPlacementSeed()
@@ -133,6 +137,7 @@ function RPPostNewLevel:NewLevel()
   RPPostNewRoom:NewRoom()
 end
 
+-- Reseed the floor if there duplicate rooms
 function RPPostNewLevel:CheckDupeRooms()
   -- Local variables
   local game = Game()
@@ -160,7 +165,7 @@ function RPPostNewLevel:CheckDupeRooms()
 
       -- Normalize the room ID (to account for flipped rooms)
       local roomID = roomData.Variant
-      while roomID > 10000 do
+      while roomID >= 10000 do
         -- The 3 flipped versions of room #1 would be #10001, #20001, and #30001
         roomID = roomID - 10000
       end
@@ -171,8 +176,6 @@ function RPPostNewLevel:CheckDupeRooms()
         for j = 1, #RPGlobals.run.roomIDs do
           if roomID == RPGlobals.run.roomIDs[j] then
             Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding.")
-            RPGlobals.run.reseededFloor = true
-            RPGlobals:ExecuteCommand("reseed")
             return true
           end
         end
@@ -181,8 +184,6 @@ function RPPostNewLevel:CheckDupeRooms()
         for j = 1, #roomIDs do
           if roomID == roomIDs[j] then
             Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
-            RPGlobals.run.reseededFloor = true
-            RPGlobals:ExecuteCommand("reseed")
             return true
           end
         end
@@ -197,6 +198,21 @@ function RPPostNewLevel:CheckDupeRooms()
   for i = 1, #roomIDs do
     RPGlobals.run.roomIDs[#RPGlobals.run.roomIDs + 1] = roomIDs[i]
   end
+end
+
+-- Get the grid coordinates on a 13x13 grid
+function RPPostNewLevel:GetXYFromGridIndex(idx)
+  -- 0 --> (0, 0)
+  -- 1 --> (1, 0)
+  -- 13 --> (0, 1)
+  -- 14 --> (1, 1)
+  -- etc.
+  local y = math.floor(idx / 13)
+  local x = idx - (y * 13)
+
+  -- Now, we add 1 to each x and y because the game uses a 0-indexed grid and
+  -- the pathing library expects a 1-indexed grid
+  return x + 1, y + 1
 end
 
 -- Reseed the floor if we have Duality and there is a narrow boss room
@@ -227,8 +243,6 @@ function RPPostNewLevel:CheckDualityNarrowRoom()
          roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
 
         Isaac.DebugString("Narrow boss room detected with Duality - reseeding.")
-        RPGlobals.run.reseededFloor = true
-        RPGlobals:ExecuteCommand("reseed")
         return true
       end
     end

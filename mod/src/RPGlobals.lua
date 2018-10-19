@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.23.3"
+RPGlobals.version = "v0.24.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -139,6 +139,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.replacedTrapdoors   = {}
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
+  RPGlobals.run.reseedCount         = 0
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true

@@ -192,9 +192,9 @@ function RPSeededDeath:DebuffOn()
   player:RemoveGoldenBomb()
   player:RemoveGoldenKey()
 
-  -- Remove any Dead Eye multiplier
+  -- Remove the Dead Eye multiplier, if any
   for i = 1, 100 do
-    -- Each time this function is called, it only has a change of working,
+    -- Each time this function is called, it only has a chance of working,
     -- so just call it 100 times to be safe
     player:ClearDeadEyeCharge()
   end

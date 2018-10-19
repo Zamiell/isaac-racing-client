@@ -101,6 +101,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
+* Looping floors will no longer appear.
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.

@@ -34,7 +34,7 @@ function RPSchoolbag:Remove()
   RPSchoolbag.sprites.item = nil
 end
 
-function RPSchoolbag:AddCharge()
+function RPSchoolbag:AddCharge(singleCharge)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
@@ -74,6 +74,10 @@ function RPSchoolbag:AddCharge()
 
     -- The AAA Battery grants an extra charge when the active item is one away from being fully charged
     chargesToAdd = 2
+  end
+  if singleCharge ~= nil then
+    -- We might only want to add a single charge to the Schoolbag item in certain situations
+    chargesToAdd = 1
   end
 
   -- Add the correct amount of charges (accounting for The Battery)
