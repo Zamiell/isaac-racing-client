@@ -71,33 +71,6 @@ function RPPostGameStarted:Main(saveState)
     end
   end
 
-  -- Make sure that all other Easter Eggs are disabled
-  -- (but make an exception for the Single Player Co-op Baby mod)
-  local validEasterEggs = true
-  if SinglePlayerCoopBabies == nil then
-    for i = 0, SeedEffect.NUM_SEEDS do
-      if seeds:HasSeedEffect(i) and
-         i ~= SeedEffect.SEED_PREVENT_ALL_CURSES and -- 70
-         i ~= SeedEffect.SEED_CHRISTMAS and -- 54
-         -- Make an exception for fun seeds
-         i ~= SeedEffect.SEED_ALL_CHAMPIONS then -- 13
-         -- Make an exception for seeds that have no beneficial effect and are used for testing purposes
-
-        validEasterEggs = false
-        break
-      end
-    end
-  end
-  if validEasterEggs == false then
-    seeds:ClearSeedEffects()
-    seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
-
-    -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
-    Isaac.DebugString("Restarting because the Easter eggs were invalid.")
-    return
-  end
-
   -- Log the run beginning
   Isaac.DebugString("A new run has begun on seed: " .. seeds:GetStartSeedString())
 

@@ -1,6 +1,12 @@
 # Racing+ Version History and News
 
-### *v0.24.0* - October ?th, 2018
+### *v0.24.1* - October 20th, 2018
+
+* Racing+ will no longer automatically remove applied easter eggs.
+* Fixed the big-tear softlock in Necropolis room #936 by deleting a fire.
+* Added Necropolis room #936 to the Mimic exemption list (a narrow room with two Cross Stone Shooters). (Thanks caesar and PassionDrama)
+
+### *v0.24.0* - October 19th, 2018
 
 * Racing+ will now reseed the floor if it contains a loop.
 * Moved the Night Crawler away from the door on Catacombs room #267.

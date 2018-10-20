@@ -145,13 +145,19 @@ function RPPostNewLevel:CheckDupeRooms()
   local stage = level:GetStage()
   local rooms = level:GetRooms()
 
+  -- Don't bother checking on Blue Womb or The Void
+  if stage == LevelStage.STAGE4_3 or -- 9
+     stage == LevelStage.STAGE7 then -- 12
+
+    return false
+  end
+
   -- Reset the room IDs if we are arriving at a level with a new stage type
-  if stage == 3 or
-     stage == 5 or
-     stage == 7 or
-     stage == 9 or
-     stage == 10 or
-     stage == 11 then
+  if stage == LevelStage.STAGE2_1 or -- 3
+     stage == LevelStage.STAGE3_1 or -- 5
+     stage == LevelStage.STAGE4_1 or -- 7
+     stage == LevelStage.STAGE5 or -- 10
+     stage == LevelStage.STAGE6 then -- 11
 
     RPGlobals.run.roomIDs = {}
   end
@@ -170,7 +176,7 @@ function RPPostNewLevel:CheckDupeRooms()
         roomID = roomID - 10000
       end
 
-      -- Make basement 1 exempt from duplication checking so that resetting is faster on potato computers
+      -- Make Basement 1 exempt from duplication checking so that resetting is faster on potato computers
       if stage ~= 1 then
         -- Check to see if this room ID has appeared on previous floors
         for j = 1, #RPGlobals.run.roomIDs do
@@ -198,6 +204,8 @@ function RPPostNewLevel:CheckDupeRooms()
   for i = 1, #roomIDs do
     RPGlobals.run.roomIDs[#RPGlobals.run.roomIDs + 1] = roomIDs[i]
   end
+
+  return false
 end
 
 -- Get the grid coordinates on a 13x13 grid
@@ -231,7 +239,9 @@ function RPPostNewLevel:CheckDualityNarrowRoom()
 
   -- It is only possible to get a Devil Deal on floors 2 through 8
   -- Furthermore, it is not possible to get a narrow room on floor 8
-  if stage < 2 or stage > 7 then
+  if stage <= 1 or
+     stage >= 8 then
+
     return
   end
 
