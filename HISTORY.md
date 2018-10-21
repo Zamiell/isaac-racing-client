@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.24.2* - October 21st, 2018
+
+* Duplicate room checking no longer occurs on The Chest.
+* Floors will no longer be reseeded in seeded races. (This is to troubleshooting seeded floor discrepancies.)
+* Fast-travel is now disabled if you have the Infinite Basement Easter Egg enabled.
+* Crown of Light will no longer grant two soul hearts when taken as a fart-reroll on Basement 1.
+
 ### *v0.24.1* - October 20th, 2018
 
 * Racing+ will no longer automatically remove applied easter eggs.

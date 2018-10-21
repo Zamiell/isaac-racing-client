@@ -306,7 +306,7 @@ end
 
 -- This occurs when first going into the game and after a reset occurs mid-race
 function RPPostGameStarted:Race()
-  -- Do special ruleset related initiailization first
+  -- Do special ruleset related initialization first
   -- (we want to be able to do runs of them without using the R+ client)
   if RPGlobals.race.rFormat == "pageant" then
     RPPostGameStarted:Pageant()
@@ -341,7 +341,8 @@ function RPPostGameStarted:Race()
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   if RPGlobals.race.hard and
-     game.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
+     game.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
+     RPGlobals.race.rFormat ~= "custom" then
 
     Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(game.Difficulty) .. ").")
     return

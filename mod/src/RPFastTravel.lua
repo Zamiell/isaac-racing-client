@@ -19,12 +19,18 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local room = game:GetRoom()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
+  end
+
+  -- There is no way to manually travel to the infiniate basement floors, so just disable the fast-travel feature
+  if seeds:HasSeedEffect(SeedEffect.SEED_INFINITE_BASEMENT) then -- 16
+    return
   end
 
   -- Delete the "natural" trapdoor that spawns one frame after It Lives! (or Hush) is killed

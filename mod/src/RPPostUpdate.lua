@@ -123,6 +123,10 @@ function RPPostUpdate:CheckRoomCleared()
     return
   end
 
+  if RPGlobals.run.fastCleared == false then
+    Isaac.DebugString("Vanilla room clear detected!")
+  end
+
   -- If the room just got changed to a cleared state, increment the variables for the bag familiars
   RPFastClear:IncrementBagFamiliars()
 
@@ -279,9 +283,12 @@ end
 function RPPostUpdate:RaceChecks()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
   local player = game:GetPlayer(0)
   local gameFrameCount = game:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
+  local challenge = Isaac.GetChallenge()
 
   -- Check to see if we need to start the timers
   RPSpeedrun:StartTimer()
@@ -354,10 +361,32 @@ function RPPostUpdate:RaceChecks()
   end
 
   -- Check to see if the player just picked up the "Checkpoint" custom item
-  if player.QueuedItem.Item ~= nil then
-    if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_CHECKPOINT then
-      RPSpeedrun:CheckpointTouched()
-    end
+  if player.QueuedItem.Item ~= nil and
+     player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_CHECKPOINT then
+
+    RPSpeedrun:CheckpointTouched()
+  end
+
+  -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
+  if RPGlobals.run.removedCrownHearts == false and
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     RPGlobals.run.roomsEntered == 1 then -- They are still in the starting room
+
+    -- The player started with Crown of Light, so we don't need to even go into the below code block
+    RPGlobals.run.removedCrownHearts = true
+  end
+  if RPGlobals.run.removedCrownHearts == false and
+     stage == LevelStage.STAGE1_1 and -- 1
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     (((RPGlobals.race.rFormat == "unseeded" or
+        RPGlobals.race.rFormat == "diversity") and
+       RPGlobals.race.status == "in progress" and
+       (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) then
+
+     -- Remove the two soul hearts that the Crown of Light gives
+     RPGlobals.run.removedCrownHearts = true
+     player:AddSoulHearts(-4)
   end
 
   -- Check to see if we need to remove Incubus from Lilith on R+7 Season 4

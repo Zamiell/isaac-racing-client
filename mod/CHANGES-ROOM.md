@@ -107,9 +107,10 @@ The changed room is as follows:
 
 ### Stone Grimace Fix
 
-In certain rooms, having very large tears causes a softlock in rooms with Stone Grimaces next to poops. This is because the Stone Grimace hitbox takes priority over the poop.
+In certain rooms, having very large tears causes a softlock in rooms with Stone Grimaces next to poops and/or fires. This is because the Stone Grimace hitbox takes priority.
 
 The changed rooms are as follows:
+* Necropolis: #936 (deleted the fire)
 * Womb/Utero/Scarred: #705 (moved the Red Poops to the side and added missing spikes)
 * Womb: #847 (removed the Red Poop)
 

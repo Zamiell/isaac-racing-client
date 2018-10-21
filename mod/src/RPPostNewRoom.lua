@@ -73,6 +73,7 @@ function RPPostNewRoom:NewRoom()
   end
 
   -- Clear variables that track things per room
+  RPGlobals.run.fastCleared       = false
   RPGlobals.run.currentGlobins    = {} -- Used for softlock prevention
   RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames

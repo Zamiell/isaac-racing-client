@@ -424,4 +424,10 @@ function RPCheckLoop:HasCycle(node, cameFrom)
   return false
 end
 
+-- A recursive function that does a Breadth First Search (BFS)
+-- to see if there is a cycle (loop) in the node connection list
+function RPCheckLoop:HasCycle2(node, cameFrom)
+
+end
+
 return RPCheckLoop

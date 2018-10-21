@@ -383,6 +383,7 @@ function RPFastClear:ClearRoom()
 
   -- Set the room clear to true (so that it gets marked off on the minimap)
   room:SetClear(true)
+  RPGlobals.run.fastCleared = true -- Keep track that the room was cleared artificially
   Isaac.DebugString("Initiated a fast-clear on frame: " .. tostring(gameFrameCount))
 
   -- Open the doors

@@ -146,9 +146,6 @@ function RPPedestals:Replace(pickup)
 
   elseif stage == 1 and
          roomType == RoomType.ROOM_TREASURE and -- 4
-         --(not (RPGlobals.race.ranked and -- This should not apply to ranked unseeded solo
-          --     RPGlobals.race.solo and
-            --   RPGlobals.race.rFormat == "unseeded")) and
          ((RPGlobals.race.rFormat == "unseeded" and
            RPGlobals.race.status == "in progress" and
            (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or

@@ -67,10 +67,13 @@ function RPPostNewLevel:NewLevel()
     return
   end
 
-  if RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
-     RPCheckLoop:Main() or -- Check for looping floors
-     RPPostNewLevel:CheckDupeRooms() then  -- Check for duplicate rooms
-     -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
+  if (RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
+      RPCheckLoop:Main() or -- Check for looping floors
+      RPPostNewLevel:CheckDupeRooms()) and  -- Check for duplicate rooms
+      -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
+     (RPGlobals.race.rFormat ~= "seeded" or
+      RPGlobals.race.status ~= "in progress") then
+      -- Disable reseeding for seeded races because it might be messing up seeded floors
 
     RPGlobals.run.reseededFloor = true
     RPGlobals.run.reseedCount = RPGlobals.run.reseedCount + 1
@@ -145,8 +148,9 @@ function RPPostNewLevel:CheckDupeRooms()
   local stage = level:GetStage()
   local rooms = level:GetRooms()
 
-  -- Don't bother checking on Blue Womb or The Void
+  -- Don't bother checking on Blue Womb, The Chest / Dark Room, or The Void
   if stage == LevelStage.STAGE4_3 or -- 9
+     stage == LevelStage.STAGE6 or -- 11
      stage == LevelStage.STAGE7 then -- 12
 
     return false

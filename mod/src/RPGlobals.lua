@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.24.1"
+RPGlobals.version = "v0.24.2"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -143,6 +143,7 @@ function RPGlobals:InitRun()
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
+  RPGlobals.run.fastCleared           = false
   RPGlobals.run.currentGlobins        = {} -- Used for softlock prevention
   RPGlobals.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
   RPGlobals.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
@@ -178,6 +179,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
   RPGlobals.run.matriarchFrame       = 0 -- Used to manually slow down the Chub that comes from The Matriarch
+  RPGlobals.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {
