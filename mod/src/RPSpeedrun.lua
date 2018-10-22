@@ -6,6 +6,36 @@ local RPSprites         = require("src/rpsprites")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local RPSchoolbag       = require("src/rpschoolbag")
 
+-- Constants
+RPSpeedrun.itemStarts = {
+  CollectibleType.COLLECTIBLE_MOMS_KNIFE, -- 114
+  CollectibleType.COLLECTIBLE_TECH_X, -- 395
+  CollectibleType.COLLECTIBLE_EPIC_FETUS, -- 168
+  CollectibleType.COLLECTIBLE_IPECAC, -- 149
+  CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER, -- 172
+  CollectibleType.COLLECTIBLE_20_20, -- 245
+  CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE, -- Custom
+  CollectibleType.COLLECTIBLE_PROPTOSIS, -- 261
+  CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT, -- 415
+  CollectibleType.COLLECTIBLE_INCUBUS, -- 360
+  CollectibleType.COLLECTIBLE_LIL_BRIMSTONE, -- 275
+  CollectibleType.COLLECTIBLE_SACRED_HEART, -- 182
+  CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM, -- 12
+  CollectibleType.COLLECTIBLE_TECH_5, -- 244
+  CollectibleType.COLLECTIBLE_POLYPHEMUS, -- 169
+  CollectibleType.COLLECTIBLE_MAXS_HEAD, -- 4
+  CollectibleType.COLLECTIBLE_DEATHS_TOUCH, -- 237
+  CollectibleType.COLLECTIBLE_DEAD_EYE, -- 373
+  CollectibleType.COLLECTIBLE_CRICKETS_BODY, -- 224
+}
+
+RPSpeedrun.big4 = {
+  CollectibleType.COLLECTIBLE_MOMS_KNIFE, -- 114
+  CollectibleType.COLLECTIBLE_TECH_X, -- 395
+  CollectibleType.COLLECTIBLE_EPIC_FETUS, -- 168
+  CollectibleType.COLLECTIBLE_IPECAC, -- 149
+}
+
 -- Variables
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
@@ -18,12 +48,15 @@ RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and 
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
 RPSpeedrun.liveSplitReset = false
+RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
+RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run
 
 -- Called from the PostGameStarted callback
 function RPSpeedrun:PostGameStarted()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
@@ -267,14 +300,58 @@ function RPSpeedrun:PostGameStarted()
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
 
-    -- There are no additional items since each co-op baby gets a custom item or ability
+    -- On the second character and beyond, a start will be randomly assigned
+    if RPSpeedrun.charNum >= 2 then
+      -- First, check to see if a start is already assigned for this character number
+      -- (dying and resetting should not reassign the selected starting item)
+      Isaac.DebugString("CHARNUM: " .. tostring(RPSpeedrun.charNum))
+      Isaac.DebugString("SIZE: " .. tostring(#RPSpeedrun.selectedItemStarts))
+      local startingItem = RPSpeedrun.selectedItemStarts[RPSpeedrun.charNum]
+      if startingItem == nil then
+        -- Check to see if the player has played a run with one of the big 4
+        local big4remaining = 0
+        for i = 1, #RPSpeedrun.big4 do
+          for j = 1, #RPSpeedrun.remainingItemStarts do
+            if RPSpeedrun.remainingItemStarts[j] == RPSpeedrun.big4[i] then
+              big4remaining = big4remaining + 1
+              break
+            end
+          end
+        end
+        local alreadyStartedBig4 = true
+        if big4remaining == 4 then
+          alreadyStartedBig4 = false
+        end
+
+        -- Get a random start
+        math.randomseed(seeds:GetStartSeed())
+        local startingItemIndex
+        if alreadyStartedBig4 then
+          startingItemIndex = math.random(5, #RPSpeedrun.remainingItemStarts)
+        elseif RPSpeedrun.charNum == 7 then
+          -- Guarantee at least one big 4 start
+          startingItemIndex = math.random(1, 4)
+        else
+          startingItemIndex = math.random(1, #RPSpeedrun.remainingItemStarts)
+        end
+        startingItem = RPSpeedrun.remainingItemStarts[startingItemIndex]
+
+        -- Remove it from the starting item pool
+        table.remove(RPSpeedrun.remainingItemStarts, startingItemIndex)
+
+        -- Keep track of what item we are supposed to be starting on this character / run
+        RPSpeedrun.selectedItemStarts[#RPSpeedrun.selectedItemStarts + 1] = startingItem
+      end
+
+      -- Give it to the player and remove it from item pools
+      player:AddCollectible(startingItem, 0, false)
+      itemPool:RemoveCollectible(startingItem)
+    end
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
   -- (Season 4 never gets it, since there is no resetting involved)
-  -- (Season 5 gets it on all characters)
-  if (RPSpeedrun.charNum == 1 or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) and
+  if RPSpeedrun.charNum == 1 and
      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
@@ -315,6 +392,8 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.startedTime = 0
     RPSpeedrun.finishTimeCharacter = 0
     RPSpeedrun.averageTime = 0
+    RPSpeedrun.remainingItemStarts = RPGlobals:TableClone(RPSpeedrun.itemStarts)
+    RPSpeedrun.selectedItemStarts = {}
   end
 end
 
@@ -910,6 +989,29 @@ function RPSpeedrun:CheckSeason5Mod()
   Isaac.RenderText("in order for the Racing+ season 5 custom", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
+end
+
+-- We need to record the starting item on the first character so that we can avoid duplicate starting items later on
+function RPSpeedrun:CheckSeason5Start()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+     #RPGlobals.run.passiveItems ~= 1 or
+     RPSpeedrun.charNum ~= 1 then
+
+    return
+  end
+
+  for i = 1, #RPSpeedrun.remainingItemStarts do
+    if RPSpeedrun.remainingItemStarts[i] == RPGlobals.run.passiveItems[1] then
+      table.remove(RPSpeedrun.remainingItemStarts, i)
+      break
+    end
+  end
+  RPSpeedrun.selectedItemStarts[1] = RPGlobals.run.passiveItems[1]
+  Isaac.DebugString("Starting item " .. tostring(RPSpeedrun.selectedItemStarts[1]) ..
+                    " on the first character of a season 5 run.")
 end
 
 return RPSpeedrun

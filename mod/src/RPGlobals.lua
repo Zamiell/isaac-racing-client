@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.24.4"
+RPGlobals.version = "v0.24.5"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -180,6 +180,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
   RPGlobals.run.matriarchFrame       = 0 -- Used to manually slow down the Chub that comes from The Matriarch
   RPGlobals.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
+  RPGlobals.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
+  RPGlobals.run.queuedItems          = false -- Used to keep track of whether the player is picking up an item
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {

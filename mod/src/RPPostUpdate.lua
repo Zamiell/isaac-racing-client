@@ -63,6 +63,17 @@ function RPPostUpdate:Main()
   -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
   RPPostUpdate:CheckHauntSpeedup()
 
+  -- Keep track of our passive items over the course of the run
+  if player:IsItemQueueEmpty() == false and
+     RPGlobals.run.queuedItems == false then
+
+    RPGlobals.run.queuedItems = true
+    if player.QueuedItem.Item.Type == ItemType.ITEM_PASSIVE then -- 1
+      RPGlobals.run.passiveItems[#RPGlobals.run.passiveItems + 1] = player.QueuedItem.Item.ID
+      RPSpeedrun:CheckSeason5Start()
+    end
+  end
+
   -- Check to see if an item that messes with item pedestals got canceled
   -- (this has to be done a frame later or else it won't work)
   if RPGlobals.run.rechargeItemFrame == gameFrameCount then
@@ -397,9 +408,9 @@ function RPPostUpdate:RaceChecks()
 end
 
 -- Ban Basement 1 Treasure Rooms
--- (this has to be in both PostRender and PostUpdate because
+-- (this has to be in both MC_POST_RENDER and MC_POST_UPDATE because
 -- we want it to already be barred when the seed is fading in and
--- having it only in PostRender makes the door not solid)
+-- having it only in MC_POST_RENDER makes the door not solid)
 function RPPostUpdate:CheckBanB1TreasureRoom()
   -- Local variables
   local game = Game()
@@ -412,7 +423,9 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
   if stage == 1 and
      roomType ~= RoomType.ROOM_SECRET and -- 7
      (RPGlobals.race.rFormat == "seeded" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") and
+       RPSpeedrun.charNum >= 2)) then
 
     local door
     for i = 0, 7 do
