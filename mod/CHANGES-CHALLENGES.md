@@ -100,27 +100,29 @@
   * Ipecac --> Mutant Spider + The Inner Eye
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * On the second character and beyond, each baby will randomly start with one of the following items:
-  * 1) Mom's Knife
-  * 2) Tech X
-  * 3) Epic Fetus
-  * 4) Ipecac
-  * 5) Sacrificial Dagger
-  * 6) 20/20
-  * 7) Mutant Spider's Inner Eye
-  * 8) Proptosis
-  * 9) Crown of Light
-  * 10) Incubus
-  * 11) Lil Brimstone
-  * 12) Sacred Heart
-  * 13) Magic Mushroom
-  * 14) Tech.5
-  * 15) Polyphemus
-  * 16) Cricket's Head
-  * 17) Death's Touch
-  * 18) Dead Eye
-  * 19) Cricket's Body
+  * Mom's Knife
+  * Tech X
+  * Epic Fetus
+  * Ipecac
+  * Sacrificial Dagger
+  * 20/20
+  * Mutant Spider's Inner Eye
+  * Proptosis
+  * Crown of Light
+  * Incubus
+  * Lil Brimstone
+  * Sacred Heart
+  * Magic Mushroom
+  * Tech.5
+  * Polyphemus
+  * Cricket's Head
+  * Death's Touch
+  * Dead Eye
+  * Cricket's Body
 * On the second character and beyond, resetting the game will change the seed, but not change the randomly assigned starting item.
 * Only one big 4 item will be randomly assigned per 7 character run.
+* If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
+* Duplicate starting items will never be given over the course of a 7 character run.
 
 <br />
 

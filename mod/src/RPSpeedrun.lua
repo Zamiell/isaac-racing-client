@@ -304,8 +304,6 @@ function RPSpeedrun:PostGameStarted()
     if RPSpeedrun.charNum >= 2 then
       -- First, check to see if a start is already assigned for this character number
       -- (dying and resetting should not reassign the selected starting item)
-      Isaac.DebugString("CHARNUM: " .. tostring(RPSpeedrun.charNum))
-      Isaac.DebugString("SIZE: " .. tostring(#RPSpeedrun.selectedItemStarts))
       local startingItem = RPSpeedrun.selectedItemStarts[RPSpeedrun.charNum]
       if startingItem == nil then
         -- Check to see if the player has played a run with one of the big 4
@@ -324,23 +322,40 @@ function RPSpeedrun:PostGameStarted()
         end
 
         -- Get a random start
-        math.randomseed(seeds:GetStartSeed())
-        local startingItemIndex
-        if alreadyStartedBig4 then
-          startingItemIndex = math.random(5, #RPSpeedrun.remainingItemStarts)
-        elseif RPSpeedrun.charNum == 7 then
-          -- Guarantee at least one big 4 start
-          startingItemIndex = math.random(1, 4)
-        else
-          startingItemIndex = math.random(1, #RPSpeedrun.remainingItemStarts)
+        local seed = seeds:GetStartSeed()
+        while true do
+          seed = RPGlobals:IncrementRNG(seed)
+          math.randomseed(seed)
+          local startingItemIndex
+          if alreadyStartedBig4 then
+            startingItemIndex = math.random(5, #RPSpeedrun.remainingItemStarts)
+          elseif RPSpeedrun.charNum == 7 then
+            -- Guarantee at least one big 4 start
+            startingItemIndex = math.random(1, 4)
+          else
+            startingItemIndex = math.random(1, #RPSpeedrun.remainingItemStarts)
+          end
+          startingItem = RPSpeedrun.remainingItemStarts[startingItemIndex]
+
+          -- Check to see if we already started this item
+          local alreadyStarted = false
+          for i = 1, #RPSpeedrun.selectedItemStarts do
+            if RPSpeedrun.selectedItemStarts[i] == startingItem then
+              alreadyStarted = true
+              break
+            end
+          end
+          if alreadyStarted == false then
+            -- Remove it from the starting item pool
+            table.remove(RPSpeedrun.remainingItemStarts, startingItemIndex)
+
+            -- Keep track of what item we are supposed to be starting on this character / run
+            RPSpeedrun.selectedItemStarts[#RPSpeedrun.selectedItemStarts + 1] = startingItem
+
+            -- Break out of the infinite loop
+            break
+          end
         end
-        startingItem = RPSpeedrun.remainingItemStarts[startingItemIndex]
-
-        -- Remove it from the starting item pool
-        table.remove(RPSpeedrun.remainingItemStarts, startingItemIndex)
-
-        -- Keep track of what item we are supposed to be starting on this character / run
-        RPSpeedrun.selectedItemStarts[#RPSpeedrun.selectedItemStarts + 1] = startingItem
       end
 
       -- Give it to the player and remove it from item pools
@@ -955,7 +970,11 @@ end
 function RPSpeedrun:GetCurrentChar()
   local challenge = Isaac.GetChallenge()
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
-    return PlayerType.PLAYER_JUDAS --3
+    local randomBabyType = Isaac.GetPlayerTypeByName("Random Baby")
+    if randomBabyType == -1 then
+      return 0
+    end
+    return randomBabyType
   end
   return RPGlobals.race.charOrder[RPSpeedrun.charNum + 1]
   -- We add one since the first element is the type of multi-character speedrun
