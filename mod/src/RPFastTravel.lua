@@ -28,7 +28,8 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     roomIndex = level:GetCurrentRoomIndex()
   end
 
-  -- There is no way to manually travel to the infiniate basement floors, so just disable the fast-travel feature
+  -- There is no way to manually travel to the "Infiniate Basements" Easter Egg floors,
+  -- so just disable the fast-travel feature
   if seeds:HasSeedEffect(SeedEffect.SEED_INFINITE_BASEMENT) then -- 16
     return
   end

@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.24.3* - October 22nd, 2018
+
+* The Babies Mod is now uploaded to the Steam Workshop.
+* R+7 Season 5 is now released for beta testing. You can provide general feedback in the "#b-general" channel. Bug reports should go in the "#bugs" channel.
+* Duplicate room checking is now disabled on runs with the "Infinite Basements" Easter Egg. (Thanks Gamonymous)
+* Looping floor checking is temporarily disabled until it can be rewritten to account for "bunched" floors that are non-looping.
+
 ### *v0.24.2* - October 21st, 2018
 
 * Duplicate room checking no longer occurs on The Chest.

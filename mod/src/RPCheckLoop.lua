@@ -13,6 +13,11 @@ function RPCheckLoop:Main()
   local startingRoomIndex = level:GetStartingRoomIndex()
   local rooms = level:GetRooms()
 
+  -- Temporarily disable this feature
+  if true then
+    return false
+  end
+
   if stage == LevelStage.STAGE1_1 or -- 1 (Basement 1)
      stage == LevelStage.STAGE4_3 or -- 9 (Blue Womb)
      stage == LevelStage.STAGE7 then -- 12 (The Void)
@@ -21,7 +26,7 @@ function RPCheckLoop:Main()
     -- so don't bother checking to make resetting faster on potato computers
     -- There are no loops in the Blue Womb
     -- Don't bother checking for loops in The Void, as the mixing of the floors makes it more complex to detect a loop
-    return
+    return false
   end
 
   -- Make an empty 13x13 grid and initialize all elements to the value that represents an obstacle

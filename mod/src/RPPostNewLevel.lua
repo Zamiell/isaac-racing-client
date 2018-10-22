@@ -144,9 +144,16 @@ end
 function RPPostNewLevel:CheckDupeRooms()
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local rooms = level:GetRooms()
+
+  -- Disable this feature if the "Infinite Basements" Easter Egg is enabled,
+  -- because the player will run out of rooms after around 40-50 floors
+  if seeds:HasSeedEffect(SeedEffect.SEED_INFINITE_BASEMENT) then -- 16
+    return false
+  end
 
   -- Don't bother checking on Blue Womb, The Chest / Dark Room, or The Void
   if stage == LevelStage.STAGE4_3 or -- 9

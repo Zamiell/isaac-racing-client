@@ -902,14 +902,14 @@ function RPSpeedrun:CheckSeason5Mod()
 
   local x = 115
   local y = 70
-  Isaac.RenderText("Error: You must subscribe to and enable Zamiel's", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("Error: You must subscribe to and enable", x, y, 2, 2, 2, 2)
   x = x + 42
   y = y + 10
-  Isaac.RenderText("Single Player Co-op Babies mod in order for", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("\"The Babies Mod\" on the Steam Workshop", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("the Racing+ season 5 custom challenge to", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("in order for the Racing+ season 5 custom", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
 end
 
 return RPSpeedrun
