@@ -93,13 +93,35 @@
 * You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no) mod, which provides a different random baby with a unique ability on each floor.
 * Each baby has the starting stats and health of Judas.
 * Each baby starts with the Schoolbag. (It starts empty by default.)
-* Each baby starts with More Options. More Options is removed upon entering the first Treasure Room.
 * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
   * Mom's Knife --> Incubus
   * Tech X --> Crown of Light
   * Epic Fetus --> Sacred Heart
   * Ipecac --> Mutant Spider + The Inner Eye
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
+* On the second character and beyond, each baby will randomly start with one of the following items:
+  * Mom's Knife
+  * Tech X
+  * Epic Fetus
+  * Ipecac
+  * Sacrificial Dagger
+  * 20/20
+  * Mutant Spider's Inner Eye
+  * Proptosis
+  * Crown of Light
+  * Incubus
+  * Lil' Brimstone
+  * Sacred Heart
+  * Magic Mushroom
+  * Tech.5
+  * Polyphemus
+  * Cricket's Head
+  * Death's Touch
+  * Dead Eye
+  * Cricket's Body
+  * Dr. Fetus
+* On the second character and beyond, resetting the game will change the seed, but not change the randomly assigned starting item.
+* Only one big 4 item will be randomly assigned per 7 character run.
 
 <br />
 

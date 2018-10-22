@@ -1,7 +1,7 @@
 {
     ".luacheckrc": "344224b178527690a05cb80eff9e78f63fca91c2",
     "BUGS.md": "38f0f92ed56f8d85db90532c3b538f4abd26e99e",
-    "CHANGES-CHALLENGES.md": "17f7c52877d4d4d8ff2f904bfe808b44a9fdf3d1",
+    "CHANGES-CHALLENGES.md": "4f82089a6223e0dc52b59d01b025bf6ed791cea3",
     "CHANGES-RACES.md": "3a2db417093cf023552359d159a8fcca9a5805a7",
     "CHANGES-ROOM.md": "59ef8a0e6d987c6dbc220bd974ae5b4403d56c2b",
     "CHANGES.md": "8d952cc856143fb8e77683a6e3e769c779a115e2",
@@ -2023,7 +2023,7 @@
     "resources\\sfx\\mahalath\\muffled_explosion.wav": "879b16457f01e7182f31601127ef9d355d28e4a8",
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "save-defaults.dat": "6d49045396bd03ce69bc541005cc4a4a4b7575fb",
-    "sha1.json": "f459067366695f07ee59bd04531a78b157e1b147",
+    "sha1.json": "93c246d3c9f485fea6ab27735a061f503e2e970f",
     "src\\RPBossAPI.lua": "e2af044d6fdbbfeff8abea29554312d243c27f25",
     "src\\RPCards.lua": "f89432007c705f370d092fbffcc5c0e326b99abb",
     "src\\RPChangeCharOrder.lua": "f85df4bc89311f55bbfe698af74380380178fa47",
