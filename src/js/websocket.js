@@ -35,8 +35,8 @@ exports.init = (username, password, remember) => {
         // Don't log some commands to reduce spam
         if (
             command === 'raceFloor' ||
-            command === 'raceRoom' ||
-            command === 'raceItem'
+            command === 'raceRoom'
+            // command === 'raceItem'
         ) {
             return;
         }

@@ -478,8 +478,12 @@ function RPFastTravel:CheckTrapdoor2()
                room:GetCenterPos(), Vector(0,0), nil, 0, 0)
 
     -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
-    -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
-    if RPGlobals.raceVars.finished == false then
+    if RPGlobals.raceVars.finished == false and
+       -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
+       game:GetPlayer(0):GetPlayerType() ~= Isaac.GetPlayerTypeByName("Random Baby") then
+       -- (the baby descriptions will slightly overlap with the stage text,
+       -- so don't bother showing it if we are playing as "Random Baby")
+
       level:ShowName(false)
     end
 

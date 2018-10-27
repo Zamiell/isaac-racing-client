@@ -71,10 +71,10 @@ function RPDebug:Main()
 
   -- New Booster Pack item images testing
   --[[
-  RPSprites:Init("diversity-item1", 530) -- Collectible
-  RPSprites:Init("diversity-item2", 531) -- Collectible
-  RPSprites:Init("diversity-item3", 532) -- Collectible
-  RPSprites:Init("diversity-item4", 534) -- Collectible
+  RPSprites:Init("diversity-item1", 519) -- Active Item
+  RPSprites:Init("diversity-item2", 531) -- Passive Item
+  RPSprites:Init("diversity-item3", 532) -- Passive Item
+  RPSprites:Init("diversity-item4", 534) -- Passive Item
   RPSprites:Init("diversity-item5", 125) -- Trinket
   --]]
 

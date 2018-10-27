@@ -69,7 +69,7 @@ local RPDebug               = require("src/rpdebug") -- Debug functions
 RPGlobals:InitRun()
 
 -- Make a copy of this object so that we can use it elsewhere
-RPGlobals.RacingPlus = RacingPlus -- (this is needed for loading the "save.dat" file)
+RPGlobals.RacingPlus = RacingPlus -- (this is needed for saving and loading the "save.dat" file)
 
 -- Set a global variable so that other mods can access our scoped global variables
 RacingPlusGlobals = RPGlobals

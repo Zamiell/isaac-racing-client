@@ -3,6 +3,7 @@ local RPPedestals = {}
 -- Includes
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
+local RPSpeedrun  = require("src/rpspeedrun")
 
 -- Fix seed "incrementation" from touching active pedestal items and do other various pedestal fixes
 function RPPedestals:Replace(pickup)
@@ -81,10 +82,12 @@ function RPPedestals:Replace(pickup)
     end
   end
 
-  -- Check to see if this is a B1 item room on a seeded race
+  -- Check to see if this is an item in a Basement 1 Treasure Room and the doors are supposed to be barred
   local offLimits = false
   if (RPGlobals.race.rFormat == "seeded" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") and
+       RPSpeedrun.charNum >= 2)) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      pickup.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235

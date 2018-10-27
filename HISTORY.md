@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.24.7* - October 26th, 2018
+
+* Fixed the bug where you could get an item from a Treasure Room in Basement 1 on the second character and beyond in the R+7 Season 5 custom challenge. (Thanks Dea1h)
+* Fixed the bug where the Lil Delirium sprite was not updated in the starting room of diversity races. (Thanks AshDown)
+* Fixed the bug where Mutant Spider's Inner Eye should not show correctly in the Racing+ client if it was a starting item. (Thanks mgln)
+* Fixed the bug where you could reroll your instant-start item in the the R+7 Season 5 custom challenge under certain circumstances. (Thanks SlashSP)
+
 ### *v0.24.3* - October 22nd, 2018
 
 * The Babies Mod is now uploaded to the Steam Workshop.

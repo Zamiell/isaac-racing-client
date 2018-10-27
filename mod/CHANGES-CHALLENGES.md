@@ -99,30 +99,33 @@
   * Epic Fetus --> Sacred Heart
   * Ipecac --> Mutant Spider + The Inner Eye
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
-* On the second character and beyond, each baby will randomly start with one of the following items:
-  * Mom's Knife
-  * Tech X
-  * Epic Fetus
-  * Ipecac
-  * Sacrificial Dagger
-  * 20/20
-  * Mutant Spider's Inner Eye
-  * Proptosis
-  * Crown of Light
-  * Incubus
-  * Lil Brimstone
-  * Sacred Heart
-  * Magic Mushroom
-  * Tech.5
-  * Polyphemus
-  * Cricket's Head
-  * Death's Touch
-  * Dead Eye
-  * Cricket's Body
-* On the second character and beyond, resetting the game will change the seed, but not change the randomly assigned starting item.
-* Only one big 4 item will be randomly assigned per 7 character run.
-* If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
-* Duplicate starting items will never be given over the course of a 7 character run.
+* The following only applies to the second character and beyond:
+  * Each baby will randomly start with one of the following items:
+    * Mom's Knife
+    * Tech X
+    * Epic Fetus
+    * Ipecac
+    * Sacrificial Dagger
+    * 20/20
+    * Mutant Spider's Inner Eye
+    * Proptosis
+    * Crown of Light
+    * Incubus
+    * Lil Brimstone
+    * Sacred Heart
+    * Magic Mushroom
+    * Tech.5
+    * Polyphemus
+    * Cricket's Head
+    * Death's Touch
+    * Dead Eye
+    * Cricket's Body
+ * The Treasure Room on Basement 1 is permanently barred.
+ * Resetting the game will change the seed, but not change the randomly assigned starting item.
+ * Only one big 4 item will be randomly assigned per 7 character run.
+ * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
+ * Duplicate starting items will never be given over the course of a 7 character run.
+* Note that The Babies Mod removes The Clicker and Guillotine from all item pools.
 
 <br />
 

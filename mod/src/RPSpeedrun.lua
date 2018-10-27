@@ -361,6 +361,11 @@ function RPSpeedrun:PostGameStarted()
       -- Give it to the player and remove it from item pools
       player:AddCollectible(startingItem, 0, false)
       itemPool:RemoveCollectible(startingItem)
+
+      -- Also remove the additional soul hearts from Crown of Light
+      if startingItem == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+        player:AddSoulHearts(-4)
+      end
     end
   end
 
@@ -1017,7 +1022,9 @@ function RPSpeedrun:CheckSeason5Start()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
      #RPGlobals.run.passiveItems ~= 1 or
-     RPSpeedrun.charNum ~= 1 then
+     RPSpeedrun.charNum ~= 1 or
+     RPGlobals.run.roomsEntered < 2 then
+     -- Babies can start with a starting item, so we want to make sure that we enter at least one room
 
     return
   end

@@ -5166,5 +5166,11 @@
       "text": "Chance to gain a bone heart on hit",
       "shown": true,
       "introduced_in": "Booster Pack #5"
+   },
+   "3001": {
+      "name": "Mutant Spider's Inner Eye",
+      "text": "Mutant Spider + The Inner Eye",
+      "shown": true,
+      "introduced_in": "Racing+"
    }
 }

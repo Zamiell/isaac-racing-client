@@ -115,6 +115,7 @@ function RPItems:GlowingHourGlass() -- 422
   end
 end
 
+-- This callback is used naturally by Gulp! pills
 function RPItems:Smelter() -- 479
   -- Local variables
   local game = Game()

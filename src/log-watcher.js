@@ -223,6 +223,8 @@ const parseLine = (line) => {
         } else {
             process.send('error: Failed to parse the item number from the log.');
         }
+    } else if (line === 'Lua Debug: Adding collectible 3001 (Mutant Spider\'s Inner Eye)') {
+        process.send('New item: 3001');
     } else if (line === 'playing cutscene 17 (Chest).') {
         // This should only happen after they have already jumped into the big chest
         process.send('Finished run: Blue Baby');
