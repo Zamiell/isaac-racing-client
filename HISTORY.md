@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.25.0* - November 3rd, 2018
+### *v0.25.1* - November 4th, 2018
 
 * Introducing a new custom challenge and a new way to compete with your fellow speedrunners: R+7 Seeded (Q4 2018)
   * Unlike the other challenges, this challenge will only be available for a limited time.
@@ -10,7 +10,6 @@
 * When completing a race or speedrun, Racing+ will now show you the number of frames that passed. This will let you know how much time you lose to lag. In tournaments, the winner of very close races should be decided by frame count.
 * Fixed the bug where Epic Fetus would not work properly on Samael. (Thanks Shigan)
 * Fixed the bug where the artificial Matriach Chub stun was not working properly.
-* Isaac is feeling spooky. Happy late Halloween.
 
 ### *v0.24.7* - October 26th, 2018
 
