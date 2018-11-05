@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.25.1* - November 4th, 2018
+### *v0.25.0* - November 4th, 2018
 
 * Introducing a new custom challenge and a new way to compete with your fellow speedrunners: R+7 Seeded (Q4 2018)
   * Unlike the other challenges, this challenge will only be available for a limited time.
