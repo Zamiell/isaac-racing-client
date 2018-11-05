@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.24.7"
+RPGlobals.version = "v0.25.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -40,8 +40,10 @@ RPGlobals.raceVars = {
   loadOnNextFrame    = false,
   started            = false,
   startedTime        = 0,
+  startedFrame       = 0,
   finished           = false,
   finishedTime       = 0,
+  finishedFrames     = 0,
   fireworks          = 0,
   victoryLaps        = 0,
 }
@@ -178,7 +180,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.rechargeItemFrame    = 0 -- Used to recharge the D6 / Void after a failed attempt
   RPGlobals.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
-  RPGlobals.run.matriarchFrame       = 0 -- Used to manually slow down the Chub that comes from The Matriarch
   RPGlobals.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
   RPGlobals.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
   RPGlobals.run.queuedItems          = false -- Used to keep track of whether the player is picking up an item
@@ -241,6 +242,12 @@ function RPGlobals:InitRun()
     goldenBomb      = false,
     goldenKey       = false,
     dealTime        = Isaac.GetTime(),
+  }
+
+  -- Matriarch tracking
+  RPGlobals.run.matriarch = {
+    chubIndex = -1,
+    stunFrame = 0,
   }
 end
 

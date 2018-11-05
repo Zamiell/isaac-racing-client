@@ -36,13 +36,38 @@ RPSpeedrun.big4 = {
   CollectibleType.COLLECTIBLE_IPECAC, -- 149
 }
 
+RPSpeedrun.R7SeededName = "R+7 Seeded (Q4 2018)"
+RPSpeedrun.R7SeededCharacters = {
+
+}
+RPSpeedrun.R7SeededSeeds = {
+  "4PME M424",
+  "JFSC 2WW7",
+  "WEFG XQ6F",
+  "4FAH GTDX",
+  "3J46 P8BJ",
+  "9YHG YKXH",
+  "BQ9S MATW",
+}
+RPSpeedrun.R7SeededB1 = { -- These are the floor 1 stage types for the above seeds
+  "b",
+  "",
+  "a",
+  "a",
+  "b",
+  "",
+  "a",
+}
+
 -- Variables
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
+RPSpeedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.averageTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finished = false -- Reset at the beginning of every run
 RPSpeedrun.finishedTime = 0 -- Reset at the beginning of every run
+RPSpeedrun.finishedFrames = 0 -- Reset at the beginning of every run
 RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
 RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
@@ -57,6 +82,7 @@ function RPSpeedrun:PostGameStarted()
   local game = Game()
   local itemPool = game:GetItemPool()
   local seeds = game:GetSeeds()
+  local startSeedString = seeds:GetStartSeedString()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local isaacFrameCount = Isaac.GetFrameCount()
@@ -83,6 +109,7 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.charNum = 1
     RPSpeedrun.finished = false
     RPSpeedrun.finishedTime = 0
+    RPSpeedrun.finishedFrames = 0
     RPSpeedrun.fastReset = false
     RPGlobals.run.restartFrame = isaacFrameCount + 1
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
@@ -293,6 +320,15 @@ function RPSpeedrun:PostGameStarted()
       end
     end
 
+  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
+    Isaac.DebugString("In the R+7 Seeded challenge.")
+
+    -- Everyone starts with the Mind in this custom challenge
+    player:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MIND) -- 333
+    player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MIND)) -- 333
+    -- We don't want the costume to show
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
     Isaac.DebugString("In the R+7 (Season 5) challenge.")
 
@@ -302,7 +338,15 @@ function RPSpeedrun:PostGameStarted()
 
     -- On the second character and beyond, a start will be randomly assigned
     if RPSpeedrun.charNum >= 2 then
-      -- First, check to see if a start is already assigned for this character number
+      -- As a safety measure, check to see if the "selectedItemStarts" table has a value in it for the first character
+      -- (it should contain one item, equal to the item that was started on the first character)
+      if #RPSpeedrun.selectedItemStarts < 1 then
+        -- Just assume that they started the Sad Onion
+        RPSpeedrun.selectedItemStarts[1] = CollectibleType.COLLECTIBLE_SAD_ONION -- 1
+        Isaac.DebugString("Error: No starting item was recorded for the first character.")
+      end
+
+      -- Check to see if a start is already assigned for this character number
       -- (dying and resetting should not reassign the selected starting item)
       local startingItem = RPSpeedrun.selectedItemStarts[RPSpeedrun.charNum]
       if startingItem == nil then
@@ -370,9 +414,10 @@ function RPSpeedrun:PostGameStarted()
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (Season 4 never gets it, since there is no resetting involved)
+  -- (but Season 4 and Seeded never get it, since there is no resetting involved)
   if RPSpeedrun.charNum == 1 and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") then
+     (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+      challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName)) then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
@@ -390,6 +435,13 @@ function RPSpeedrun:PostGameStarted()
     Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
                       " and we need to be on character " .. tostring(correctCharacter))
     return
+  end
+
+  -- Check to see if we are on the correct seed
+  if startSeedString ~= RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum] then
+    seeds:SetStartSeed(RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum])
+    local command = "stage 1" .. RPSpeedrun.R7SeededB1[RPSpeedrun.charNum]
+    RPGlobals:ExecuteCommand(command)
   end
 
   if RPSpeedrun.fastReset then
@@ -410,6 +462,7 @@ function RPSpeedrun:PostGameStarted()
 
   if RPSpeedrun.charNum == 1 then
     RPSpeedrun.startedTime = 0
+    RPSpeedrun.startedFrame = 0
     RPSpeedrun.finishTimeCharacter = 0
     RPSpeedrun.averageTime = 0
     RPSpeedrun.remainingItemStarts = RPGlobals:TableClone(RPSpeedrun.itemStarts)
@@ -429,6 +482,7 @@ function RPSpeedrun:StartTimer()
   -- This is to keep the timing consistent with historical timing of speedruns
   if RPSpeedrun.startedTime == 0 then
     RPSpeedrun.startedTime = Isaac.GetTime()
+    RPSpeedrun.startedFrame = Isaac.GetFrameCount()
   end
 end
 
@@ -514,6 +568,7 @@ function RPSpeedrun:Finish()
   -- Finish the speedrun
   RPSpeedrun.finished = true
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
+  RPSpeedrun.finishedFrames = Isaac.GetFrameCount() - RPSpeedrun.startedFrame
   RPGlobals.run.endOfRunText = true -- Show the run summary
 
   -- This will be in milliseconds, so we divide by 1000
@@ -913,6 +968,7 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+     challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
     return true
@@ -962,6 +1018,12 @@ function RPSpeedrun:CheckValidCharOrder()
     -- There is no character order in season 5
     return true
 
+  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) and
+         (charOrderType ~= "R7SS" or
+          #RPGlobals.race.charOrder ~= 8) then
+
+    return false
+
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") and
          (charOrderType ~= "R15V" or
           #RPGlobals.race.charOrder ~= 16) then
@@ -983,6 +1045,18 @@ function RPSpeedrun:GetCurrentChar()
   end
   return RPGlobals.race.charOrder[RPSpeedrun.charNum + 1]
   -- We add one since the first element is the type of multi-character speedrun
+end
+
+function RPSpeedrun:IsOnFinalCharacter()
+  local challenge = Isaac.GetChallenge()
+  if challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
+    return RPSpeedrun.charNum == 15
+  elseif challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
+    return RPSpeedrun.charNum == 9
+  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
+    return RPSpeedrun.charNum == 14
+  end
+  return RPSpeedrun.charNum == 7
 end
 
 function RPSpeedrun:GetAverageTimePerCharacter()

@@ -661,7 +661,6 @@ function SamaelMod:scytheUpdate(scythe)
     scythe:PlaySound(38, 1.75, 0, false, 1.2) --Play swinging sound
     scytheState = 2 --Set state to 2 (swinging scythe)
     scytheAnimationEndFrame = Game():GetFrameCount() + 11 -- Both animations are 11 frames long
-    Isaac.DebugString("Set scytheAnimationEndFrame to: " .. tostring(scytheAnimationEndFrame))
     direction = lastDirection --Set render direction to the saved firing direction
   end
 
@@ -1882,6 +1881,7 @@ function SamaelMod:IsActionPressed()
   end
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
      player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
 
     return
@@ -1912,6 +1912,13 @@ function SamaelMod:GetActionValue(buttonAction)
   local character = player:GetPlayerType()
 
   if character ~= samaelID then
+    return
+  end
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
+
     return
   end
 

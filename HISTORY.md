@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.25.0* - November 3rd, 2018
+
+* Introducing a new custom challenge and a new way to compete with your fellow speedrunners: R+7 Seeded (Q4 2018)
+  * Unlike the other challenges, this challenge will only be available for a limited time.
+  * More information can be found here: https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-seeded
+* Races can now be started with Random Baby as the character. If using this, make sure that everyone in the race knows to have The Babies Mod downloaded and enabled.
+* When a Chub emerges from The Matriach, all enemies in the room will now be killed (which is similar to the mechanic when Mom / It Lives! is killed).
+* When completing a race or speedrun, Racing+ will now show you the number of frames that passed. This will let you know how much time you lose to lag. In tournaments, the winner of very close races should be decided by frame count.
+* Fixed the bug where Epic Fetus would not work properly on Samael. (Thanks Shigan)
+* Fixed the bug where the artificial Matriach Chub stun was not working properly.
+* Isaac is feeling spooky. Happy late Halloween.
+
 ### *v0.24.7* - October 26th, 2018
 
 * Fixed the bug where you could get an item from a Treasure Room in Basement 1 on the second character and beyond in the R+7 Season 5 custom challenge. (Thanks Dea1h)

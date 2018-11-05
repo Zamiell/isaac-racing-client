@@ -55,6 +55,9 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP then -- 5
       RPCheckEntities:Entity5(entity:ToPickup())
 
+    elseif entity.Type == EntityType.ENTITY_ATTACKFLY then -- 18
+      RPCheckEntities:Entity18(entity:ToNPC())
+
     elseif entity.Type == EntityType.ENTITY_THE_HAUNT then -- 260
       RPCheckEntities:Entity260(entity:ToNPC())
 
@@ -277,6 +280,8 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S4(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
     RPCheckEntities:Entity5_340_S5(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
+    RPCheckEntities:Entity5_340_SS(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
     RPCheckEntities:Entity5_340_S0(pickup)
   elseif RPGlobals.raceVars.finished then
@@ -500,6 +505,28 @@ function RPCheckEntities:Entity5_340_S5(pickup)
   end
 end
 
+function RPCheckEntities:Entity5_340_SS(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+  local player = game:GetPlayer(0)
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- The Chest
+    if RPSpeedrun.charNum == 15 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
 function RPCheckEntities:Entity5_340_S0(pickup)
   -- Local variables
   local game = Game()
@@ -694,6 +721,19 @@ function RPCheckEntities:Entity5_370(pickup)
   pickup:Remove()
 end
 
+-- EntityType.ENTITY_ATTACKFLY (18)
+function RPCheckEntities:Entity18(npc)
+  -- There is a weird bug where an Attack Fly will get set to a null position and
+  -- will appear in the bottom-right hand corner of the room but will not be able to be damaged
+  -- This might be a vanilla bug where the game runs out of memory and cannot create the fly properly
+  -- This has mostly happened on the Blue Baby fight, although it can happen in other places as well
+  -- Attempt to fix this bug in Racing+
+  if npc.Position == nil then
+    npc:Remove()
+    Isaac.DebugString("Error: Manually removed a null position fly.")
+  end
+end
+
 -- EntityType.ENTITY_THE_HAUNT (260)
 function RPCheckEntities:Entity260(npc)
   -- We only care about Lil' Haunts (260.10)
@@ -815,6 +855,7 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     -- Finish the race
     RPGlobals.raceVars.finished = true
     RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
+    RPGlobals.raceVars.finishedFrames = Isaac.GetFrameCount() - RPGlobals.raceVars.startedFrame
     RPGlobals.run.endOfRunText = true -- Show the run summary
 
     -- Tell the client that the goal was achieved (and the race length)

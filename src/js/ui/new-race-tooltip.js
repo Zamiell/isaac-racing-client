@@ -32,6 +32,7 @@ const characterArray = [
     'Apollyon', // 13
     'The Forgotten', // 14
     'Samael', // 15
+    'Random Baby', // 16
 ];
 
 /*

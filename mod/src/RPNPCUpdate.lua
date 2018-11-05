@@ -62,11 +62,39 @@ function RPNPCUpdate:NPC28(npc)
   local roomType = room:GetType()
   local sfx = SFXManager()
 
-  -- Slow down a Chub spawning from The Matriarch
-  if stage == LevelStage.STAGE4_1 and -- 7
-     roomType == RoomType.ROOM_BOSS and -- 5
-     gameFrameCount <= RPGlobals.run.matriarchFrame + 42 + 15 then -- 0.5 seconds
-     -- Chub will spawn 42 frames after The Matriarch
+  -- We only care about Chubs spawned from The Matriarch
+  if stage ~= LevelStage.STAGE4_1 or -- 7
+     roomType ~= RoomType.ROOM_BOSS then -- 5
+
+    return
+  end
+
+  -- When Matriarch is killed, it will morph into a Chub (and the MC_POST_ENTITY_KILL will never fire)
+  -- When this happens, the other segments of Chub will spawn (it is a multi-segment entity)
+  -- The new segments will start at frame 0, but the main segment will retain the FrameCount of the Matriarch entity
+  -- We want to find the index of the main Chub so that we can stun it
+  if RPGlobals.run.matriarch.chubIndex == -1 and
+     npc.FrameCount > 30 then
+     -- This can be any value higher than 1, since the new segments will first appear here on frame 1,
+     -- but use 30 frames to be safe
+
+    RPGlobals.run.matriarch.chubIndex = npc.Index
+    RPGlobals.run.matriarch.stunFrame = gameFrameCount + 15 -- 0.5 seconds
+
+    -- The Matriarch has died, so also nerf the fight slightly by killing everything in the room
+    -- to clear things up a little bit
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+      if entity:ToNPC() ~= nil and
+         entity.Type ~= EntityType.ENTITY_CHUB then -- 28
+
+        entity:Kill()
+      end
+    end
+  end
+
+  -- Stun (slow down) the Chub that spawns from The Matriarch
+  if npc.Index == RPGlobals.run.matriarch.chubIndex and
+     gameFrameCount <= RPGlobals.run.matriarch.stunFrame then
 
     npc.State = NpcState.STATE_UNIQUE_DEATH -- 16
     -- (the state after he eats a bomb)
@@ -271,5 +299,21 @@ function RPNPCUpdate:NPC411(npc)
     npc.StateFrame = 100
   end
 end
+
+-- EntityType.ENTITY_MATRIARCH (413)
+function RPNPCUpdate:NPC413(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  -- Keep track of when the Matriarch dies so that we can manually slow down the Chub
+  if RPGlobals.run.matriarchFrame == 0 and
+     npc:IsDead() then
+
+    RPGlobals.run.matriarchFrame = gameFrameCount
+    Isaac.DebugString("The Matriarch died on frame: " .. tostring(RPGlobals.run.matriarchFrame))
+  end
+end
+
 
 return RPNPCUpdate

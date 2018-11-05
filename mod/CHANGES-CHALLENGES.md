@@ -101,31 +101,29 @@
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The following only applies to the second character and beyond:
   * Each baby will randomly start with one of the following items:
-    * Mom's Knife
-    * Tech X
-    * Epic Fetus
-    * Ipecac
-    * Sacrificial Dagger
-    * 20/20
-    * Mutant Spider's Inner Eye
-    * Proptosis
-    * Crown of Light
-    * Incubus
-    * Lil Brimstone
-    * Sacred Heart
-    * Magic Mushroom
-    * Tech.5
-    * Polyphemus
-    * Cricket's Head
-    * Death's Touch
-    * Dead Eye
-    * Cricket's Body
- * The Treasure Room on Basement 1 is permanently barred.
- * Resetting the game will change the seed, but not change the randomly assigned starting item.
- * Only one big 4 item will be randomly assigned per 7 character run.
- * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
- * Duplicate starting items will never be given over the course of a 7 character run.
-* Note that The Babies Mod removes The Clicker and Guillotine from all item pools.
+    * Mom's Knife, Tech X, Epic Fetus, Ipecac, Sacrificial Dagger, 20/20, Proptosis, Crown of Light, Incubus, Mutant Spider's Inner Eye, Lil Brimstone, Sacred Heart, Magic Mushroom, Tech.5, Polyphemus, Cricket's Head, Death's Touch, Dead Eye, Cricket's Body
+  * The Treasure Room on Basement 1 is permanently barred.
+  * Resetting the game will change the seed, but not change the randomly assigned starting item.
+  * Only one big 4 item will be randomly assigned per 7 character run.
+  * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
+  * Duplicate starting items will never be given over the course of a 7 character run.
+* Note that The Babies Mod removes The Clicker, Guillotine, and Bat Wing from all item/trinket pools.
+
+<br />
+
+## R+7 Seeded
+
+* Unlike the other custom challenges, this challenge is not available forever. A new version will be released approximately every 3 months.
+* You must defeat Blue Baby on the following 7 characters:
+  * Isaac, Magdalene, Lazarus, Eden, The Lost, Apollyon, The Forgotten
+  * These characters were randomly selected before the release of this challenge.
+* Each run is played on the following 7 seeds:
+  * 4PME M424, JFSC 2WW7, WEFG XQ6F, 4FAH GTDX, 3J46 P8BJ, 9YHG YKXH, BQ9S MATW
+  * These seeds were randomly selected before the release of the challenge.
+  * Resetting will not change the current character's seed.
+  * The seeds are given in pre-set order and cannot be customized.
+* All characters start with The Mind in addition to their other items. (This is a quality of life change to avoid having to refer to your notes as you play through each seed.)
+* Runs for this challenge/category should not be uploaded to Speedrun.com until the season is over. (This ensures that everyone can find their own strategies and it keeps the winner a surprise until the very end!)
 
 <br />
 

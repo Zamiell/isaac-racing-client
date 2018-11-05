@@ -430,17 +430,6 @@ function RPPostEntityKill:Entity271(entity)
              pos, Vector(0, 0), nil, subType, 0)
 end
 
--- EntityType.ENTITY_MATRIARCH (413)
-function RPPostEntityKill:Entity413(npc)
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-
-  -- Keep track of when the Matriarch dies so that we can manually slow down the Chub
-  RPGlobals.run.matriarchFrame = gameFrameCount
-  Isaac.DebugString("The Matriarch died on frame: " .. tostring(RPGlobals.run.matriarchFrame))
-end
-
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
 -- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
 -- Blisters also need to be killed twice (to kill the spawned Sacks)

@@ -409,8 +409,20 @@ function RPSchoolbag:Switch()
     sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
   end
 
-  -- Update the cache (in case the old / the new item granted stats, like A Pony)
-  player:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
+  -- Update the cache (in case the new or old item granted stats, like A Pony)
+  -- (we don't want to update the familiar cache because it can cause bugs with Dino Baby and
+  -- cause temporary familiars to despawn)
+  local allCacheFlagsMinusFamiliars = CacheFlag.CACHE_DAMAGE + -- 1
+                                      CacheFlag.CACHE_FIREDELAY + -- 2
+                                      CacheFlag.CACHE_SHOTSPEED + -- 4
+                                      CacheFlag.CACHE_RANGE + -- 8
+                                      CacheFlag.CACHE_SPEED + -- 16
+                                      CacheFlag.CACHE_TEARFLAG + -- 32
+                                      CacheFlag.CACHE_TEARCOLOR + -- 64
+                                      CacheFlag.CACHE_FLYING + -- 128
+                                      CacheFlag.CACHE_WEAPON + -- 256
+                                      CacheFlag.CACHE_LUCK -- 1024
+  player:AddCacheFlags(allCacheFlagsMinusFamiliars)
   player:EvaluateItems()
 
   -- Remove the costume, if any (some items give a costume, like A Pony)

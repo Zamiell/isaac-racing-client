@@ -22,4 +22,5 @@ module.exports = {
     'The Forgotten': 16,
     'The Soul': 17,
     'Samael': 18,
+    'Random Baby': 19,
 };
