@@ -115,7 +115,7 @@
 
 * Unlike the other custom challenges, this challenge is not available forever. A new version will be released approximately every 3 months.
 * You must defeat Blue Baby on the following 7 characters:
-  * Isaac, Magdalene, Lazarus, Eden, The Lost, Apollyon, The Forgotten
+  * Isaac, Magdalene, Azazel, Lazarus, The Lost, Apollyon, The Forgotten
   * These characters were randomly selected before the release of this challenge.
 * Each run is played on the following 7 seeds:
   * 4PME M424, JFSC 2WW7, WEFG XQ6F, 4FAH GTDX, 3J46 P8BJ, 9YHG YKXH, BQ9S MATW

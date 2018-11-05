@@ -1,5 +1,8 @@
 local RPPostPlayerInit = {}
 
+-- Includes
+local RPSpeedrun = require("src/rpspeedrun")
+
 -- ModCallbacks.MC_POST_PLAYER_INIT (9)
 -- (this will get called before the "PostGameStarted" callback)
 function RPPostPlayerInit:Main(player)
@@ -15,6 +18,8 @@ function RPPostPlayerInit:Main(player)
   if player.Variant ~= 0 then
     return
   end
+
+  RPSpeedrun:SetSeed()
 
   -- With Eve, Eden, and Keeper, the beginning of the recharge sound will play, which is annoying
   if character == PlayerType.PLAYER_EVE or -- 5

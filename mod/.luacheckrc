@@ -30,6 +30,7 @@ globals = {
   "Input",
   "InputHook",
   "Isaac",
+  "ItemPoolType",
   "ItemType",
   "Keyboard",
   "LevelCurse",

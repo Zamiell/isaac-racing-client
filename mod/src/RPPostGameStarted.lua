@@ -174,9 +174,11 @@ end
 function RPPostGameStarted:Character()
   -- Local variables
   local game = Game()
+  local itemPool = game:GetItemPool()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
-  local itemPool = game:GetItemPool()
+  local activeItem = player:GetActiveItem()
+  local activeCharge = player:GetActiveCharge()
   local itemConfig = Isaac.GetItemConfig()
   local sfx = SFXManager()
 
@@ -198,8 +200,6 @@ function RPPostGameStarted:Character()
   end
 
   -- Give all characters the D6
-  local activeItem = player:GetActiveItem()
-  local activeCharge = player:GetActiveCharge()
   player:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
   sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
@@ -280,6 +280,9 @@ function RPPostGameStarted:Character()
     Isaac.DebugString("Removing collectible " .. passiveItem)
     Isaac.DebugString("Adding collectible " .. activeItem)
     Isaac.DebugString("Adding collectible " .. passiveItem)
+
+    -- The Eden items might need to be readjusted if we are manually setting the seed
+    RPSpeedrun:FixSeededEdenItems(activeItem, passiveItem)
 
   elseif character == PlayerType.PLAYER_THELOST then -- 10
     -- Make the D6 appear first on the item tracker

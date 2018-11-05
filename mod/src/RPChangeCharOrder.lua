@@ -112,8 +112,8 @@ RPChangeCharOrder.seasons = {
     charPosition = {
       {0, 2, 1},  -- Isaac
       {1, 4, 1},  -- Magdalene
-      {8, 6, 1},  -- Lazarus
-      {9, 8, 1},  -- Eden
+      {7, 6, 1},  -- Azazel
+      {8, 8, 1},  -- Lazarus
       {10, 10, 1}, -- The Lost
       {15, 5, 3},  -- Apollyon
       {16, 7, 3}, -- The Forgotten

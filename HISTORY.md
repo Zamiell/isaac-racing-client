@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.25.2* - November 5th, 2018
+
+* In the R+7 Seeded custom challenge, Eden has been swapped with Azazel. (Thanks Moucheron Quipet)
+* Fixed the bug where the trinkets were not seeded in the R+7 Seeded custom challenge. (Thanks Moucheron Quipet)
+
 ### *v0.25.0* - November 4th, 2018
 
 * Introducing a new custom challenge and a new way to compete with your fellow speedrunners: R+7 Seeded (Q4 2018)
