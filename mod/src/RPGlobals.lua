@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.25.2"
+RPGlobals.version = "v0.25.3"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -157,9 +157,9 @@ function RPGlobals:InitRun()
   RPGlobals.run.endOfRunText          = false -- Shown when the run is completed but only for one room
 
   -- Temporary tracking
-  RPGlobals.run.restartFrame         = 0 -- If set, tells the mod to restart the run on that frame
+  RPGlobals.run.restart              = false -- If set, we restart the run on the next frame
   RPGlobals.run.reseededFloor        = false
-  RPGlobals.run.consoleOpened        = false -- If set, it will disable fast-resetting for this run
+  RPGlobals.run.consoleOpened        = false -- If set, fast-resetting is disabled
   RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy

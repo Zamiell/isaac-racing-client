@@ -55,7 +55,9 @@ function RPTimer:Display()
   -- (or what the race finish time was)
   local challenge = Isaac.GetChallenge()
   local elapsedTime
-  if challenge ~= 0 then
+  if challenge ~= 0 or
+     RPSpeedrun.inSeededSpeedrun then
+
     if RPSpeedrun.finished then
       elapsedTime = RPSpeedrun.finishedTime
     elseif RPSpeedrun.startedTime == 0 then

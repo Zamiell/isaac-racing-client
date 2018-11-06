@@ -120,12 +120,11 @@ function RPSaveDat:ChangedStatus()
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local isaacFrameCount = Isaac.GetFrameCount()
 
   if RPGlobals.race.status == "open" then
     if stage == 1 and roomIndex == level:GetStartingRoomIndex() then
       -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = isaacFrameCount + 1
+      RPGlobals.run.restart = true
     else
       -- We are in the middle of a run, so don't go to the Race Room until a reset occurs
       RPGlobals.raceVars.started = false
@@ -147,7 +146,7 @@ function RPSaveDat:ChangedStatus()
           roomIndex == GridRooms.ROOM_DEBUG_IDX) then -- -3
 
     -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
   end
 end
 
@@ -177,13 +176,10 @@ function RPSaveDat:ChangedMyStatus()
 end
 
 function RPSaveDat:ChangedFormat()
-  -- Local variables
-  local isaacFrameCount = Isaac.GetFrameCount()
-
   if RPGlobals.race.rFormat == "pageant" then
     -- For special rulesets, fix the bug where it is not loaded on the first run
     -- Doing a "restart" won't work since we are just starting a run, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
   end
 end
 
@@ -200,14 +196,13 @@ end
 
 function RPSaveDat:ChangedOrder()
   -- Local variables
-  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Challenge.CHALLENGE_NULL and -- 0
      challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
 
     -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
   end
 end
 

@@ -2,7 +2,6 @@ local RPPostPickupSelection = {}
 
 -- Includes
 local RPGlobals  = require("src/rpglobals")
-local RPSpeedrun = require("src/rpspeedrun")
 
 -- ModCallbacks.MC_POST_PICKUP_SELECTION (37)
 function RPPostPickupSelection:Main(pickup, variant, subType)
@@ -10,10 +9,6 @@ function RPPostPickupSelection:Main(pickup, variant, subType)
   Isaac.DebugString("MC_POST_PICKUP_SELECTION - " ..
                     tostring(EntityType.ENTITY_PICKUP) .. "." .. tostring(variant) .. "." .. tostring(subType))
   --]]
-
-  if variant == PickupVariant.PICKUP_TRINKET then -- 350
-    return RPSpeedrun:GetSeededTrinket()
-  end
 
   -- We don't care about non-collectible items
   if variant ~= PickupVariant.PICKUP_COLLECTIBLE then -- 100

@@ -96,22 +96,28 @@ function RPPostRender:CheckRestart()
   -- Local variables
   local game = Game()
   local seeds = game:GetSeeds()
-  local runSeed = seeds:GetStartSeedString()
-  local isaacFrameCount = Isaac.GetFrameCount()
+  local startSeedString = seeds:GetStartSeedString()
 
-  if RPGlobals.run.restartFrame == 0 or isaacFrameCount < RPGlobals.run.restartFrame then
+  if RPGlobals.run.restart == false then
     return
   end
-
-  RPGlobals.run.restartFrame = 0
+  RPGlobals.run.restart = false
 
   -- Change the seed of the run if need be
-  if runSeed ~= RPGlobals.race.seed and
-     RPGlobals.race.rFormat == "seeded" and
+  local intendedSeed
+  if RPGlobals.race.rFormat == "seeded" and
      RPGlobals.race.status == "in progress" then
 
+    intendedSeed = RPGlobals.race.seed
+
+  elseif RPSpeedrun.inSeededSpeedrun then
+    intendedSeed = RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum]
+  end
+  if intendedSeed ~= nil and
+     startSeedString ~= intendedSeed then
+
     -- Change the seed of the run and restart the game
-    RPGlobals:ExecuteCommand("seed " .. RPGlobals.race.seed)
+    RPGlobals:ExecuteCommand("seed " .. intendedSeed)
     -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
   end
 

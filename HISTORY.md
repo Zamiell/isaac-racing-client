@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.25.3* - November 6th, 2018
+
+* Fixed the bugs where dropped trinkets would morph into something else in the R+7 Seeded custom challenge. (Thanks Gamonymous)
+* Fixed the bug where certain things were not seeded in the R+7 Seeded custom challenge. (Thanks Moucheron Quipet)
+
 ### *v0.25.2* - November 5th, 2018
 
 * In the R+7 Seeded custom challenge, Eden has been swapped with Azazel. (Thanks Moucheron Quipet)

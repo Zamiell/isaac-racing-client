@@ -72,6 +72,7 @@ RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at
 RPSpeedrun.liveSplitReset = false
 RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
 RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run
+RPSpeedrun.inSeededSpeedrun = false -- Reset ???
 RPSpeedrun.trinketPool = {} -- Reset at the beginning of a new run
 RPSpeedrun.trinketPoolNum = 0 -- Reset at the beginning of a new run
 
@@ -79,9 +80,9 @@ RPSpeedrun.trinketPoolNum = 0 -- Reset at the beginning of a new run
 function RPSpeedrun:PostGameStarted()
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
-  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
   local itemConfig = Isaac.GetItemConfig()
 
@@ -108,7 +109,7 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.finishedTime = 0
     RPSpeedrun.finishedFrames = 0
     RPSpeedrun.fastReset = false
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
   end
@@ -120,6 +121,13 @@ function RPSpeedrun:PostGameStarted()
 
     -- Prepare the player for the button room and teleport them there
     RPChangeCharOrder:PostGameStarted()
+    return
+  end
+
+  if challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
+    RPSpeedrun.inSeededSpeedrun = true
+    seeds:SetStartSeed("WBY4 RS81") -- We need to set a seed to activate the "seeded" mode; it can be any seed at all
+    RPGlobals:ExecuteCommand("challenge 0")
     return
   end
 
@@ -136,7 +144,7 @@ function RPSpeedrun:PostGameStarted()
   -- Check to see if we are on the correct character
   local correctCharacter = RPSpeedrun:GetCurrentChar()
   if character ~= correctCharacter then
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
     Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
                       " and we need to be on character " .. tostring(correctCharacter))
     return
@@ -151,7 +159,7 @@ function RPSpeedrun:PostGameStarted()
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
     RPSpeedrun.charNum = 1
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
     Isaac.DebugString("Restarting because we want to start from the first character again.")
 
     -- Tell the LiveSplit AutoSplitter to reset
@@ -182,7 +190,7 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun:StartR7S4()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
     RPSpeedrun:StartR7S5()
-  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
+  elseif RPSpeedrun.inSeededSpeedrun then
     RPSpeedrun:StartR7SS()
   end
 
@@ -517,12 +525,19 @@ function RPSpeedrun:StartR7SS()
   local game = Game()
   local itemPool = game:GetItemPool()
   local seeds = game:GetSeeds()
+  local startSeedString = seeds:GetStartSeedString()
   local player = game:GetPlayer(0)
   local itemConfig = Isaac.GetItemConfig()
 
   Isaac.DebugString("In the R+7 Seeded challenge.")
 
-  -- The seed should already be set from the "RPSpeedrun:SetSeed()" function below
+  -- Make sure that we are on the correct seed
+  if startSeedString ~= RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum] then
+    -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
+    RPGlobals.run.restart = true
+    Isaac.DebugString("Restarting because we were not on the right seed.")
+    return
+  end
 
   -- Everyone starts with the Mind in this custom challenge
   player:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
@@ -638,7 +653,7 @@ function RPSpeedrun:CheckRestart()
     RPSpeedrun.resetFrame = 0
     RPSpeedrun.fastReset = true -- Set this so that we don't go back to the beginning again
     RPSpeedrun.charNum = RPSpeedrun.charNum + 1
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
 
     Isaac.DebugString("Switching to the next character for the speedrun.")
     return
@@ -1059,7 +1074,7 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
-     challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) or
+     RPSpeedrun.inSeededSpeedrun or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
     return true
@@ -1109,7 +1124,7 @@ function RPSpeedrun:CheckValidCharOrder()
     -- There is no character order in season 5
     return true
 
-  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) and
+  elseif RPSpeedrun.inSeededSpeedrun and
          (charOrderType ~= "R7SS" or
           #RPGlobals.race.charOrder ~= 8) then
 
@@ -1203,86 +1218,6 @@ function RPSpeedrun:CheckSeason5Start()
   RPSpeedrun.selectedItemStarts[1] = RPGlobals.run.passiveItems[1]
   Isaac.DebugString("Starting item " .. tostring(RPSpeedrun.selectedItemStarts[1]) ..
                     " on the first character of a season 5 run.")
-end
-
--- Called from the MC_POST_PLAYER_INIT callback
-function RPSpeedrun:SetSeed()
-  -- Local variables
-  local game = Game()
-  local seeds = game:GetSeeds()
-  local startSeedString = seeds:GetStartSeedString()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
-    return
-  end
-
-  if startSeedString ~= RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum] then
-    seeds:SetStartSeed(RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum])
-    Isaac.DebugString("Manually set seed: " .. RPSpeedrun.R7SeededSeeds[RPSpeedrun.charNum])
-  end
-end
-
--- You cannot play a challenge on a set seed
--- Thus, in R+7 seeded, Eden will start with random items, so we need to manually fix this
--- Called from the MC_POST_GAME_STARTED callback
-function RPSpeedrun:FixSeededEdenItems(activeItem, passiveItem)
-  -- Local variables
-  local game = Game()
-  local seeds = game:GetSeeds()
-  local itemPool = game:GetItemPool()
-  local player = game:GetPlayer(0)
-  local itemConfig = Isaac.GetItemConfig()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
-    return
-  end
-
-  -- Remove the existing two items
-  player:RemoveCollectible(passiveItem)
-  Isaac.DebugString("Removing collectible " .. passiveItem)
-  -- We don't need to remove the active item because it is in the Schoolbag,
-  -- but we do need to delete it from the item tracker
-  Isaac.DebugString("Removing collectible " .. activeItem)
-
-  -- Get a new active and passive item based on the starting seed
-  local seed = seeds:GetStartSeed()
-
-  local newActive
-  while true do
-    seed = RPGlobals:IncrementRNG(seed)
-    newActive = itemPool:GetCollectible(ItemPoolType.POOL_TREASURE, true, seed) -- 0
-    if itemConfig:GetCollectible(newActive).Type == ItemType.ITEM_ACTIVE then -- 3
-      break
-    end
-  end
-  RPSchoolbag:Put(newActive, "max")
-  itemPool:RemoveCollectible(newActive)
-
-  local newPassive
-  while true do
-    seed = RPGlobals:IncrementRNG(seed)
-    newPassive = itemPool:GetCollectible(ItemPoolType.POOL_TREASURE, true, seed) -- 0
-    if itemConfig:GetCollectible(newPassive).Type ~= ItemType.ITEM_ACTIVE then -- 3
-      break
-    end
-  end
-  player:AddCollectible(newPassive, 0, false)
-  itemPool:RemoveCollectible(newPassive)
-end
-
-function RPSpeedrun:GetSeededTrinket()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
-    return
-  end
-
-  RPSpeedrun.trinketPoolNum = RPSpeedrun.trinketPoolNum + 1
-  local trinketType = RPSpeedrun.trinketPool[RPSpeedrun.trinketPoolNum]
-  return { PickupVariant.PICKUP_TRINKET, trinketType } -- 350
 end
 
 return RPSpeedrun

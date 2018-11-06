@@ -26,7 +26,6 @@ function RPPostGameStarted:Main(saveState)
   end
   local seeds = game:GetSeeds()
   local startSeed = seeds:GetStartSeed()
-  local isaacFrameCount = Isaac.GetFrameCount()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
@@ -65,7 +64,7 @@ function RPPostGameStarted:Main(saveState)
     -- We only need to restart the game if there is a curse on B1 already
     if curses ~= 0 then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = isaacFrameCount + 1
+      RPGlobals.run.restart = true
       Isaac.DebugString("Restarting because there was a curse on Basement 1.")
       return
     end
@@ -281,9 +280,6 @@ function RPPostGameStarted:Character()
     Isaac.DebugString("Adding collectible " .. activeItem)
     Isaac.DebugString("Adding collectible " .. passiveItem)
 
-    -- The Eden items might need to be readjusted if we are manually setting the seed
-    RPSpeedrun:FixSeededEdenItems(activeItem, passiveItem)
-
   elseif character == PlayerType.PLAYER_THELOST then -- 10
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 313 (Holy Mantle)")
@@ -330,7 +326,6 @@ function RPPostGameStarted:Race()
   local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
-  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- Validate that we are not on a custom challenge
@@ -364,7 +359,7 @@ function RPPostGameStarted:Race()
     -- Validate that we are on the intended seed
     if seeds:GetStartSeedString() ~= RPGlobals.race.seed then
       -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = isaacFrameCount + 1
+      RPGlobals.run.restart = true
       Isaac.DebugString("Restarting because we were not on the right seed.")
       return
     end
@@ -384,7 +379,7 @@ function RPPostGameStarted:Race()
       seeds:Reset()
 
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-      RPGlobals.run.restartFrame = isaacFrameCount + 1
+      RPGlobals.run.restart = true
       Isaac.DebugString("Restarting because we were on a set seed.")
       return
     end
@@ -395,7 +390,7 @@ function RPPostGameStarted:Race()
      RPGlobals.race.rFormat ~= "custom" then
 
     -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
-    RPGlobals.run.restartFrame = isaacFrameCount + 1
+    RPGlobals.run.restart = true
     Isaac.DebugString("Restarting because we were not on the right character.")
     return
   end
