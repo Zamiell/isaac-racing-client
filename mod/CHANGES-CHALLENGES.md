@@ -124,6 +124,7 @@
   * The seeds are given in pre-set order and cannot be customized.
 * All characters start with The Mind in addition to their other items. (This is a quality of life change to avoid having to refer to your notes as you play through each seed.)
 * Runs for this challenge/category should not be uploaded to Speedrun.com until the season is over. (This ensures that everyone can find their own strategies and it keeps the winner a surprise until the very end!)
+* Unlike the other challenges, exiting and going into a normal run will not cancel the speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.
 
 <br />
 

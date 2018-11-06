@@ -6,6 +6,7 @@ local RPSchoolbag = require("src/rpschoolbag")
 
 --
 -- Pre-use collectible item functions
+-- ModCallbacks.MC_PRE_USE_ITEM (23)
 --
 
 -- This callback is used naturally by Ehwaz (Passage) runes
@@ -146,7 +147,7 @@ function RPItems:PreventItemPedestalEffects(itemID)
   -- Car Battery will mess up the D6 and D100 (and possibly others) because
   -- this function will be entered twice on the same frame (and there will be no time to replace the pedestal)
   if player:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then -- 356
-    return nil
+    return
   end
 
   if RPItems:UnreplacedItemsExist() then
@@ -190,6 +191,7 @@ end
 
 --
 -- Post-use collectible item functions
+-- ModCallbacks.MC_USE_ITEM (3)
 --
 
 -- Will get called for all items

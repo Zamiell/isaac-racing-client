@@ -1,7 +1,8 @@
 # Racing+ Version History and News
 
-### *v0.25.3* - November 6th, 2018
+### *v0.25.4* - November 6th, 2018
 
+* Unlike the other challenges, exiting and going into a normal run will not cancel a R+7 Seeded speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.
 * Fixed the bugs where dropped trinkets would morph into something else in the R+7 Seeded custom challenge. (Thanks Gamonymous)
 * Fixed the bug where certain things were not seeded in the R+7 Seeded custom challenge. (Thanks Moucheron Quipet)
 

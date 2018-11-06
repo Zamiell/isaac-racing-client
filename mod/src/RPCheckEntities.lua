@@ -862,7 +862,7 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     Isaac.DebugString("Finished race " .. tostring(RPGlobals.race.id) ..
                       " with time: " .. tostring(RPGlobals.raceVars.finishedTime))
 
-    -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the corner of the room
+    -- Spawn a Victory Lap custom item in the corner of the room (which emulates Forget Me Now)
     local victoryLapPosition = RPGlobals:GridToPos(11, 1)
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
       victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
@@ -870,7 +870,7 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
                nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
 
-    -- Spawn a Finish (a custom item that takes you to the main menu) in the corner of the room
+    -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
     local finishedPosition = RPGlobals:GridToPos(1, 1)
     if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
       finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room

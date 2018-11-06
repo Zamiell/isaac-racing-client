@@ -80,7 +80,6 @@ RPSpeedrun.trinketPoolNum = 0 -- Reset at the beginning of a new run
 function RPSpeedrun:PostGameStarted()
   -- Local variables
   local game = Game()
-  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local challenge = Isaac.GetChallenge()
@@ -126,8 +125,10 @@ function RPSpeedrun:PostGameStarted()
 
   if challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
     RPSpeedrun.inSeededSpeedrun = true
-    seeds:SetStartSeed("WBY4 RS81") -- We need to set a seed to activate the "seeded" mode; it can be any seed at all
     RPGlobals:ExecuteCommand("challenge 0")
+    RPGlobals:ExecuteCommand("seed " .. RPSpeedrun.R7SeededSeeds[1])
+    -- We need to set a seed before restarting the game to enable "seeded mode"
+    RPGlobals.run.restart = true
     return
   end
 
@@ -177,6 +178,21 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.selectedItemStarts = {}
   end
 
+  -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
+  -- (but Season 4 and Seeded never get it, since there is no resetting involved)
+  if RPSpeedrun.charNum == 1 and
+     (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+      challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName)) then
+
+    player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
+    player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
+    -- We don't want the costume to show
+    Isaac.DebugString("Removing collectible 414 (More Options)")
+    -- We don't need to show this on the item tracker to reduce clutter
+    RPGlobals.run.removeMoreOptions = true
+    -- More Options will be removed upon entering the first Treasure Room
+  end
+
   -- Do actions based on the specific challenge
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
     RPSpeedrun:StartR9S1()
@@ -192,21 +208,9 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun:StartR7S5()
   elseif RPSpeedrun.inSeededSpeedrun then
     RPSpeedrun:StartR7SS()
-  end
-
-  -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but Season 4 and Seeded never get it, since there is no resetting involved)
-  if RPSpeedrun.charNum == 1 and
-     (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName)) then
-
-    player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
-    player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
-    -- We don't want the costume to show
-    Isaac.DebugString("Removing collectible 414 (More Options)")
-    -- We don't need to show this on the item tracker to reduce clutter
-    RPGlobals.run.removeMoreOptions = true
-    -- More Options will be removed upon entering the first Treasure Room
+  else
+    Isaac.DebugString("Error: Unknown challenge.")
+    return
   end
 end
 
@@ -574,6 +578,11 @@ function RPSpeedrun:StartR7SS()
     -- Add it to the pool
     RPSpeedrun.trinketPool[i] = trinket
   end
+
+  -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
+  local finishedPosition = RPGlobals:GridToPos(1, 1)
+  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
+             nil, CollectibleType.COLLECTIBLE_FINISHED, 0)
 end
 
 -- Called from the the PostUpdate callback
@@ -1218,6 +1227,28 @@ function RPSpeedrun:CheckSeason5Start()
   RPSpeedrun.selectedItemStarts[1] = RPGlobals.run.passiveItems[1]
   Isaac.DebugString("Starting item " .. tostring(RPSpeedrun.selectedItemStarts[1]) ..
                     " on the first character of a season 5 run.")
+end
+
+-- ModCallbacks.MC_USE_ITEM (23)
+-- CollectibleType.COLLECTIBLE_D6 (105)
+function RPSpeedrun:PreventD6()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local currentIndex = level:GetCurrentRoomIndex()
+  local startingRoomIndex = level:GetStartingRoomIndex()
+
+  -- Prevent re-rolling the "Finished" custom item that is spawned in the first room of the first character
+  if RPSpeedrun.inSeededSpeedrun == false or
+     RPSpeedrun.charNum ~= 1 or
+     stage ~= 1 or
+     currentIndex ~= startingRoomIndex then
+
+    return
+  end
+
+  return true
 end
 
 return RPSpeedrun

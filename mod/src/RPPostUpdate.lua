@@ -370,6 +370,9 @@ function RPPostUpdate:RaceChecks()
     -- so just make the player invisible to compensate
     player.Visible = false
 
+    -- If we are playing "R+7 Seeded", turn it off
+    RPSpeedrun.inSeededSpeedrun = false
+
     -- Go back to the title screen
     game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
   end
