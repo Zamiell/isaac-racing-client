@@ -59,12 +59,10 @@ RPSpeedrun.R7SeededB1 = { -- These are the floor 1 stage types for the above see
 -- Variables
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
-RPSpeedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.averageTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finished = false -- Reset at the beginning of every run
 RPSpeedrun.finishedTime = 0 -- Reset at the beginning of every run
-RPSpeedrun.finishedFrames = 0 -- Reset at the beginning of every run
 RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
 RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
@@ -72,9 +70,7 @@ RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at
 RPSpeedrun.liveSplitReset = false
 RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
 RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run
-RPSpeedrun.inSeededSpeedrun = false -- Reset ???
-RPSpeedrun.trinketPool = {} -- Reset at the beginning of a new run
-RPSpeedrun.trinketPoolNum = 0 -- Reset at the beginning of a new run
+RPSpeedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
 
 -- Called from the PostGameStarted callback
 function RPSpeedrun:PostGameStarted()
@@ -89,8 +85,6 @@ function RPSpeedrun:PostGameStarted()
   RPSpeedrun.spawnedCheckpoint = false
   RPSpeedrun.fadeFrame = 0
   RPSpeedrun.resetFrame = 0
-  RPSpeedrun.trinketPool = {}
-  RPSpeedrun.trinketPoolNum = 0
 
   if RPSpeedrun.liveSplitReset then
     RPSpeedrun.liveSplitReset = false
@@ -106,7 +100,6 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.charNum = 1
     RPSpeedrun.finished = false
     RPSpeedrun.finishedTime = 0
-    RPSpeedrun.finishedFrames = 0
     RPSpeedrun.fastReset = false
     RPGlobals.run.restart = true
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
@@ -171,7 +164,6 @@ function RPSpeedrun:PostGameStarted()
   -- Reset variables for the first character
   if RPSpeedrun.charNum == 1 then
     RPSpeedrun.startedTime = 0
-    RPSpeedrun.startedFrame = 0
     RPSpeedrun.finishTimeCharacter = 0
     RPSpeedrun.averageTime = 0
     RPSpeedrun.remainingItemStarts = RPGlobals:TableClone(RPSpeedrun.itemStarts)
@@ -549,40 +541,12 @@ function RPSpeedrun:StartR7SS()
   player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MIND)) -- 333
   -- We don't want the costume to show
 
-  -- We also need to initialize the seeded trinket pool with 100 trinkets
-  -- (trinkets are bugged with this method of manually setting the seed without restarting the game)
-  -- (if they get more than 100 trinkets in the run, then they will no longer be seeded,
-  -- but that would probably never happen)
-  local seed = seeds:GetStartSeed()
-  for i = 1, 100 do
-    local trinket
-    while true do
-      -- Get a new random trinket
-      seed = RPGlobals:IncrementRNG(seed)
-      math.randomseed(seed)
-      trinket = math.random(1, TrinketType.NUM_TRINKETS - 1)
-
-      -- Check to see if we have this one already
-      local found = false
-      for j = 1, #RPSpeedrun.trinketPool do
-        if RPSpeedrun.trinketPool[j] == trinket then
-          found = true
-          break
-        end
-      end
-      if found == false then
-        break
-      end
-    end
-
-    -- Add it to the pool
-    RPSpeedrun.trinketPool[i] = trinket
+  if RPSpeedrun.charNum == 1 then
+    -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
+    local finishedPosition = RPGlobals:GridToPos(1, 1)
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_FINISHED, 0)
   end
-
-  -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
-  local finishedPosition = RPGlobals:GridToPos(1, 1)
-  game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
-             nil, CollectibleType.COLLECTIBLE_FINISHED, 0)
 end
 
 -- Called from the the PostUpdate callback
@@ -597,7 +561,6 @@ function RPSpeedrun:StartTimer()
   -- This is to keep the timing consistent with historical timing of speedruns
   if RPSpeedrun.startedTime == 0 then
     RPSpeedrun.startedTime = Isaac.GetTime()
-    RPSpeedrun.startedFrame = Isaac.GetFrameCount()
   end
 end
 
@@ -683,7 +646,6 @@ function RPSpeedrun:Finish()
   -- Finish the speedrun
   RPSpeedrun.finished = true
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
-  RPSpeedrun.finishedFrames = Isaac.GetFrameCount() - RPSpeedrun.startedFrame
   RPGlobals.run.endOfRunText = true -- Show the run summary
 
   -- This will be in milliseconds, so we divide by 1000
@@ -1024,6 +986,9 @@ function RPSpeedrun:DisplayCharProgress()
   -- Local variables
   local digitLength = 7.25
   local startingX = 23
+  if RPSpeedrun.inSeededSpeedrun then
+    startingX = startingX + 4 -- We have to shift it to the right because the challenge icon will not appear
+  end
   local startingY = 79
   local adjustment1 = 0
   local adjustment2 = 0

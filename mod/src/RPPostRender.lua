@@ -352,23 +352,6 @@ function RPPostRender:DisplayTopLeftText()
     end
     Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
-    -- Draw a 3rd line to show the total frames
-    if RPSpeedrun:InSpeedrun() == false or
-       RPSpeedrun:IsOnFinalCharacter() then
-
-      local frames
-      if RPSpeedrun:InSpeedrun() then
-        frames = RPSpeedrun.finishedFrames
-      else
-        frames = RPGlobals.raceVars.finishedFrames
-      end
-      local seconds = RPGlobals:Round(frames / 60, 3)
-
-      y = y + lineLength
-      text = "Total frames: " .. tostring(frames) .. " (" .. tostring(seconds) .. "s)"
-      Isaac.RenderText(text, x, y, 2, 2, 2, 2)
-    end
-
   elseif RPGlobals.race.status == "in progress" and
          RPGlobals.run.roomsEntered <= 1 and
          Isaac.GetTime() - RPGlobals.raceVars.startedTime <= 2000 then
@@ -507,7 +490,6 @@ function RPPostRender:Race()
       RPGlobals.raceVars.started = true
       -- We don't want to show the place graphic until we get to the 2nd floor
       RPGlobals.raceVars.startedTime = Isaac.GetTime() -- Mark when the race started
-      RPGlobals.raceVars.startedFrame = Isaac.GetFrameCount() -- Also mark the frame the race started
       Isaac.DebugString("Starting the race! (" .. tostring(RPGlobals.race.rFormat) .. ")")
     end
 

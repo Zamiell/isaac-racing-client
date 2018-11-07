@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.25.5* - November 7th, 2018
+
+* Frame counts will no longer show, since sliding animations will not count towards frames seen. (Thanks thereisnofuture)
+* Fixed the bug where the Checkpoint would not appear in the R+7 Seeded custom challenge. (Thanks AshDown)
+
 ### *v0.25.4* - November 6th, 2018
 
 * Unlike the other challenges, exiting and going into a normal run will not cancel a R+7 Seeded speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.

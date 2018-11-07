@@ -280,7 +280,7 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S4(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
     RPCheckEntities:Entity5_340_S5(pickup)
-  elseif challenge == Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName) then
+  elseif RPSpeedrun.inSeededSpeedrun then
     RPCheckEntities:Entity5_340_SS(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
     RPCheckEntities:Entity5_340_S0(pickup)
@@ -855,7 +855,6 @@ function RPCheckEntities:EntityRaceTrophy(entity)
     -- Finish the race
     RPGlobals.raceVars.finished = true
     RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
-    RPGlobals.raceVars.finishedFrames = Isaac.GetFrameCount() - RPGlobals.raceVars.startedFrame
     RPGlobals.run.endOfRunText = true -- Show the run summary
 
     -- Tell the client that the goal was achieved (and the race length)
