@@ -68,12 +68,7 @@
 * Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar with also disappear.)
 * Lazarus does not start with a pill.
 * You get to choose a starting item for each character from the following pool of items:
-  * Sacrificial Dagger
-  * Cricket's Body
-  * Dead Eye
-  * Dr. Fetus
-  * Monstro's Lung
-  * Judas' Shadow
+  * Mom's Knife, Tech X, Epic Fetus, Ipecac, Sacrificial Dagger, Cricket's Body, Dead Eye, Dr. Fetus, Monstro's Lung Judas' Shadow
   * Chocolate Milk + Steven
   * Jacob's Ladder + There's Options
   * Mutant Spider + The Inner Eye

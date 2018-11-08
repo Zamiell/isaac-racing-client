@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.25.6* - November 8th, 2018
+
+* Frame counts will now show again, since Will pointed out that sliding animations do count towards frames seen.
+* Fixed the bug where the first character started with More Options in the R+7 Seeded custom challenge.
+
 ### *v0.25.5* - November 7th, 2018
 
 * Frame counts will no longer show, since sliding animations will not count towards frames seen. (Thanks thereisnofuture)

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.25.5"
+RPGlobals.version = "v0.25.6"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -40,8 +40,10 @@ RPGlobals.raceVars = {
   loadOnNextFrame    = false,
   started            = false,
   startedTime        = 0,
+  startedFrame       = 0,
   finished           = false,
   finishedTime       = 0,
+  finishedFrames     = 0,
   fireworks          = 0,
   victoryLaps        = 0,
 }

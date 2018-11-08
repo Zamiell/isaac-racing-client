@@ -59,10 +59,12 @@ RPSpeedrun.R7SeededB1 = { -- These are the floor 1 stage types for the above see
 -- Variables
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
+RPSpeedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.averageTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.finished = false -- Reset at the beginning of every run
 RPSpeedrun.finishedTime = 0 -- Reset at the beginning of every run
+RPSpeedrun.finishedFrames = 0 -- Reset at the beginning of every run
 RPSpeedrun.fastReset = false -- Reset expliticly when we detect a fast reset
 RPSpeedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
 RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
@@ -100,6 +102,7 @@ function RPSpeedrun:PostGameStarted()
     RPSpeedrun.charNum = 1
     RPSpeedrun.finished = false
     RPSpeedrun.finishedTime = 0
+    RPSpeedrun.finishedFrames = 0
     RPSpeedrun.fastReset = false
     RPGlobals.run.restart = true
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
@@ -164,6 +167,7 @@ function RPSpeedrun:PostGameStarted()
   -- Reset variables for the first character
   if RPSpeedrun.charNum == 1 then
     RPSpeedrun.startedTime = 0
+    RPSpeedrun.startedFrame = 0
     RPSpeedrun.finishTimeCharacter = 0
     RPSpeedrun.averageTime = 0
     RPSpeedrun.remainingItemStarts = RPGlobals:TableClone(RPSpeedrun.itemStarts)
@@ -174,7 +178,7 @@ function RPSpeedrun:PostGameStarted()
   -- (but Season 4 and Seeded never get it, since there is no resetting involved)
   if RPSpeedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName(RPSpeedrun.R7SeededName)) then
+      RPSpeedrun.inSeededSpeedrun == false) then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
@@ -561,6 +565,7 @@ function RPSpeedrun:StartTimer()
   -- This is to keep the timing consistent with historical timing of speedruns
   if RPSpeedrun.startedTime == 0 then
     RPSpeedrun.startedTime = Isaac.GetTime()
+    RPSpeedrun.startedFrame = Isaac.GetFrameCount()
   end
 end
 
@@ -646,6 +651,7 @@ function RPSpeedrun:Finish()
   -- Finish the speedrun
   RPSpeedrun.finished = true
   RPSpeedrun.finishedTime = Isaac.GetTime() - RPSpeedrun.startedTime
+  RPSpeedrun.finishedFrames = Isaac.GetFrameCount() - RPSpeedrun.startedFrame
   RPGlobals.run.endOfRunText = true -- Show the run summary
 
   -- This will be in milliseconds, so we divide by 1000
