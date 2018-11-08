@@ -519,7 +519,7 @@ function RPCheckEntities:Entity5_340_SS(pickup)
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
-    if RPSpeedrun.charNum == 15 then
+    if RPSpeedrun.charNum == 7 then
       RPCheckEntities.bigChestAction = "trophy"
     else
       RPCheckEntities.bigChestAction = "checkpoint"

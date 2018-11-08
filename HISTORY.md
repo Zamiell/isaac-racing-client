@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.25.7* - November 8th, 2018
+
+* Fixed the bug where the trophy would not appear at the end of a R+7 Seeded custom challenge. (Thanks Moucheron Quipet)
+
 ### *v0.25.6* - November 8th, 2018
 
 * Frame counts will now show again, since Will pointed out that sliding animations do count towards frames seen.
