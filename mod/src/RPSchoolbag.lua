@@ -210,31 +210,40 @@ end
 
 -- Called from the PostUpdate callback (the "RPCheckEntities:ReplacePedestal()" function)
 -- (essentially this code check runs only when the item is first spawned)
-function RPSchoolbag:CheckSecondItem(entity)
+function RPSchoolbag:CheckSecondItem(pickup)
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      RPGlobals.run.schoolbag.item == 0 and
-     entity:ToPickup().Touched then
+     pickup.Touched and
+     itemConfig:GetCollectible(pickup.SubType).Type == ItemType.ITEM_ACTIVE then -- 3
 
     -- We don't want to put the item in the Schoolbag if we dropped it from a Butter! trinket
     if player:HasTrinket(TrinketType.TRINKET_BUTTER) and
-       RPGlobals.run.droppedButterItem == entity.SubType then
+       RPGlobals.run.droppedButterItem == pickup.SubType then
 
       RPGlobals.run.droppedButterItem = 0
-      Isaac.DebugString("Prevented putting item " .. tostring(entity.SubType) .. " in the Schoolbag.")
+      Isaac.DebugString("Prevented putting item " .. tostring(pickup.SubType) .. " in the Schoolbag (from Butter).")
+      return false
+    end
+
+    -- We don't want to put the item in the Schoolbag if we dropped it from a Moving Box
+    if RPGlobals.run.droppedMovingBoxItem == pickup.SubType then
+      RPGlobals.run.droppedMovingBoxItem = 0
+      Isaac.DebugString("Prevented putting item " .. tostring(pickup.SubType) .. " in the Schoolbag (from Moving Box).")
       return false
     end
 
     -- Put the item in our Schoolbag and delete the pedestal
-    RPGlobals.run.schoolbag.item = entity.SubType
+    RPGlobals.run.schoolbag.item = pickup.SubType
     RPGlobals.run.schoolbag.charge = RPGlobals.run.schoolbag.lastCharge
     RPGlobals.run.schoolbag.chargeBattery = RPGlobals.run.schoolbag.lastChargeBattery
     RPSchoolbag.sprites.item = nil
-    entity:Remove()
-    Isaac.DebugString("Put pedestal " .. tostring(entity.SubType) .. " into the Schoolbag with " ..
+    pickup:Remove()
+    Isaac.DebugString("Put pedestal " .. tostring(pickup.SubType) .. " into the Schoolbag with " ..
                       tostring(RPGlobals.run.schoolbag.charge) .. " charges (and" ..
                       tostring(RPGlobals.run.schoolbag.chargeBattery) .. " Battery charges).")
     return true

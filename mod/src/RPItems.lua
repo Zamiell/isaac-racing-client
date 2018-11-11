@@ -342,7 +342,11 @@ function RPItems:MovingBox() -- 523
     -- Check to see if there are any pickups on the ground
     local pickupsPresent = false
     for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PICKUP then
+      if entity.Type == EntityType.ENTITY_PICKUP and
+         entity.Variant ~= PickupVariant.PICKUP_BIGCHEST and -- 340
+         entity.Variant ~= PickupVariant.PICKUP_TROPHY and -- 370
+         entity.Variant ~= PickupVariant.PICKUP_BED then -- 380
+
         pickupsPresent = true
         break
       end

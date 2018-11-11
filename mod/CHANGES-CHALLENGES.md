@@ -86,7 +86,7 @@
 ## R+7 Season 5
 
 * You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no) mod, which provides a different random baby with a unique ability on each floor.
-* Each baby has the starting stats and health of Judas.
+* Each baby starts with the stats of Isaac, one red heart, and one half soul heart.
 * Each baby starts with the Schoolbag. (It starts empty by default.)
 * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
   * Mom's Knife --> Incubus
@@ -117,7 +117,7 @@
   * These seeds were randomly selected before the release of the challenge.
   * Resetting will not change the current character's seed.
   * The seeds are given in pre-set order and cannot be customized.
-* All characters start with The Mind in addition to their other items. (This is a quality of life change to avoid having to refer to your notes as you play through each seed.)
+* All characters start with The Mind in addition to their other vanilla starting items. (This is a quality of life change to avoid having to refer to your notes as you play through each seed.)
 * Runs for this challenge/category should not be uploaded to Speedrun.com until the season is over. (This ensures that everyone can find their own strategies and it keeps the winner a surprise until the very end!)
 * Unlike the other challenges, exiting and going into a normal run will not cancel the speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.
 

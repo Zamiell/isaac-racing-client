@@ -1,6 +1,15 @@
 # Racing+ Version History and News
 
-### *v0.25.7* - November 8th, 2018
+### *v0.25.9* - November 11th, 2018
+
+* Fixed the bug where the starting item would not get properly recorded in the R+7 Season 5 custom challenge.
+
+### *v0.25.8* - November 10th, 2018
+
+* Fixed the bug where active items taken as a ghost would be eaten upon revival in seeded races. (Thanks Gamonymous)
+* Fixed the bug where passive items could go inside the Schoolbag when using the Moving Box. (Thanks Shigan)
+
+### *v0.25.7* - November 9th, 2018
 
 * Fixed the bug where the trophy would not appear at the end of a R+7 Seeded custom challenge. (Thanks Moucheron Quipet)
 

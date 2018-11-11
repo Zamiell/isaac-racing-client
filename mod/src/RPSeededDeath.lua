@@ -4,7 +4,8 @@ local RPSeededDeath = {}
 RPSeededDeath.DebuffTime = 45 -- In seconds
 
 -- Includes
-local RPGlobals = require("src/rpglobals")
+local RPGlobals   = require("src/rpglobals")
+local RPSchoolbag = require("src/rpschoolbag")
 
 -- ModCallbacks.MC_POST_RENDER (2)
 function RPSeededDeath:PostRender()
@@ -206,6 +207,7 @@ end
 function RPSeededDeath:DebuffOff()
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
   local character = player:GetPlayerType()
@@ -213,7 +215,9 @@ function RPSeededDeath:DebuffOff()
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
 
-  -- Store the current red hearts, soul/black hearts, bombs, keys, and pocket items
+  -- Store the current active item, red hearts, soul/black hearts, bombs, keys, and pocket items
+  local activeItem = player:GetActiveItem()
+  local activeCharge = player:GetActiveCharge()
   local hearts = player:GetHearts()
   local maxHearts = player:GetMaxHearts()
   local soulHearts = player:GetSoulHearts()
@@ -235,6 +239,29 @@ function RPSeededDeath:DebuffOff()
 
   -- Set the charge to the way it was before the debuff was applied
   player:SetActiveCharge(RPGlobals.run.seededDeath.charge)
+
+  -- Check to see if the active item changed
+  -- (meaning that the player picked up a new active item during their ghost state)
+  local newActiveItem = player:GetActiveItem()
+  if newActiveItem ~= activeItem then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
+       RPGlobals.run.schoolbag.item == 0 then
+
+      -- There is room in the Schoolbag, so put it in the Schoolbag
+      RPSchoolbag:Put(activeItem, activeCharge)
+      Isaac.DebugString("SeededDeath - Put the ghost active inside the Schoolbag.")
+
+    else
+      -- There is no room in the Schoolbag, so spawn it on the ground
+      local position = room:FindFreePickupSpawnPosition(player.Position, 1, true)
+      local pedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                  position, Vector(0, 0), nil, activeItem, 0):ToPickup()
+      -- (we can use a seed of 0 beacuse it will be replaced on the next frame)
+      pedestal.Charge = activeCharge
+      pedestal.Touched = true
+      Isaac.DebugString("SeededDeath - Put the old active item on the ground since there was no room for it.")
+    end
+end
 
   -- Set their size to the way it was before the debuff was applied
   player.SpriteScale = RPGlobals.run.seededDeath.spriteScale
@@ -291,6 +318,7 @@ function RPSeededDeath:DebuffOff()
   -- (re-giving back some items will cause pickups to spawn)
   for i, entity in pairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_PICKUP and -- 5
+       entity.Variant ~= PickupVariant.PICKUP_COLLECTIBLE and -- 100
        entity.FrameCount == 0 then
 
       entity:Remove()

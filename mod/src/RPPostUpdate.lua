@@ -68,7 +68,7 @@ function RPPostUpdate:Main()
      RPGlobals.run.queuedItems == false then
 
     RPGlobals.run.queuedItems = true
-    if player.QueuedItem.Item.Type == ItemType.ITEM_PASSIVE then -- 1
+    if player.QueuedItem.Item.Type ~= ItemType.ITEM_ACTIVE then -- 3
       RPGlobals.run.passiveItems[#RPGlobals.run.passiveItems + 1] = player.QueuedItem.Item.ID
       if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
         Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
