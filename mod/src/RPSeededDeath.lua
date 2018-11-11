@@ -243,7 +243,9 @@ function RPSeededDeath:DebuffOff()
   -- Check to see if the active item changed
   -- (meaning that the player picked up a new active item during their ghost state)
   local newActiveItem = player:GetActiveItem()
-  if newActiveItem ~= activeItem then
+  if activeItem ~= 0 and
+     newActiveItem ~= activeItem then
+
     if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
        RPGlobals.run.schoolbag.item == 0 then
 

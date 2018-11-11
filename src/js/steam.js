@@ -75,7 +75,7 @@ ipcRenderer.on('steam', (event, message) => {
 // The authentication flow is described here: https://partner.steamgames.com/documentation/auth#client_to_backend_webapi
 // (you have to be logged in for the link to work)
 // The server will validate our session ticket using the Steam web API, and if successful, give us a cookie
-// If our steam ID does not already exist in the database, we will be told to register
+// If our Steam ID does not already exist in the database, we will be told to register
 function login() {
     // Don't login yet if we are still checking for updates
     if (globals.autoUpdateStatus === null) {
@@ -83,9 +83,10 @@ function login() {
             // We won't auto-update in development
         } else {
             // The client has not yet begun to check for an update, so stall
-            // However, sometimes this can be permanently null in production (maybe after an automatic update?), so allow them to procede after 2 seconds
+            // However, sometimes this can be permanently null in production (maybe after an automatic update?),
+            // so allow them to procede after a while
             const now = new Date().getTime();
-            if (now - globals.timeLaunched < 2000) {
+            if (now - globals.timeLaunched < 10000) { // 10 seconds
                 setTimeout(() => {
                     login();
                 }, 250);

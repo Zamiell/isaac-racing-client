@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.25.10* - November 11th, 2018
+
+* Fixed the bug where the client would not wait long enough for an automatic update when logging in.
+* Fixed the bug where a random item would spawn upon revival in a seeded race under certain conditions. (Thanks PassionDrama)
+
 ### *v0.25.9* - November 11th, 2018
 
 * Fixed the bug where the starting item would not get properly recorded in the R+7 Season 5 custom challenge.
