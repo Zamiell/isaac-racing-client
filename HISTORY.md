@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.25.11* - November 12th, 2018
+
+* Fixed the bug where Samael would get softlocked after killing the first phase of the Matriach. (Thanks Greninja_San)
+* Fixed the bug where both photos would spawn in the R+7 Season 5 custom challenge.
+* Fixed the bug where both paths would appear after It Lives! in the R+7 Season 5 custom challenge under certain conditions.
+
 ### *v0.25.10* - November 11th, 2018
 
 * Fixed the bug where the client would not wait long enough for an automatic update when logging in.

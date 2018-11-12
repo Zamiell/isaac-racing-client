@@ -56,9 +56,10 @@ function RPPostEntityKill:Entity45(entity)
   -- Figure out if we need to spawn either The Polaroid, The Negative, or both
   local situation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
+     RPSpeedrun.inSeededSpeedrun then
 
-    -- Season 1 speedrun challenges always go to The Chest
+    -- Season 1 and Seeded speedrun challenges always go to The Chest
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
@@ -204,9 +205,10 @@ function RPPostEntityKill:Entity78(entity)
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+     RPSpeedrun.inSeededSpeedrun then
 
-    -- Season 1, 4, and 5 speedrun challenges always go to Cathedral / The Chest
+    -- Season 1, 4, 5, and seeded speedrun challenges always go to Cathedral / The Chest
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then

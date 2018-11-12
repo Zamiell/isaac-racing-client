@@ -199,7 +199,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        RPSamael.specialAnimFu
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.roomEntitiesLoop) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdate) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       RPSamael.PostUpdateFixBugs) -- 1
---RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       RPSamael.PostRender) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, -- 3
                                                           CollectibleType.COLLECTIBLE_D4) -- 284
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,          RPSamael.postReroll, -- 3

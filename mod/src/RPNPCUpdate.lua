@@ -85,7 +85,8 @@ function RPNPCUpdate:NPC28(npc)
     -- to clear things up a little bit
     for i, entity in pairs(Isaac.GetRoomEntities()) do
       if entity:ToNPC() ~= nil and
-         entity.Type ~= EntityType.ENTITY_CHUB then -- 28
+         entity.Type ~= EntityType.ENTITY_CHUB and -- 28
+         entity.Type ~= Isaac.GetEntityTypeByName("Samael Scythe") then
 
         entity:Kill()
       end
