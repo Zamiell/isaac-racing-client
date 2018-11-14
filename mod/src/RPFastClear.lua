@@ -29,8 +29,10 @@ RPFastClear.buttonsAllPushed = false
 function RPFastClear:InitRun()
   -- Local variables
   local game = Game()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
-  local levelSeed = level:GetDungeonPlacementSeed()
+  local stage = level:GetStage()
+  local stageSeed = seeds:GetStageSeed(stage)
 
   local familiars = {
     "BombBag",
@@ -48,7 +50,7 @@ function RPFastClear:InitRun()
   }
   for i = 1, #familiars do
     RPFastClear.familiars[familiars[i]] = {
-      seed         = levelSeed,
+      seed         = stageSeed,
       roomsCleared = 0,
       incremented  = false,
     }

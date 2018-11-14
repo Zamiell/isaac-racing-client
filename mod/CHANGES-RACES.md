@@ -20,7 +20,11 @@
 * The Basement 1 Treasure Room is barred. (This is to prevent players from starting with 2 items instead of 1.)
 * All characters start with The Compass and the Schoolbag in addition to their other items.
 * If the character is supposed to start with an item that is not the D6, that item will be inside the Schoolbag.
-* The Cain's Eye trinket is removed from the game.
+* The Cain's Eye, Silver Dollar, and Bloody Crown trinkets are removed from the game.
+* Some additional things are guaranteed to be seeded:
+  * Level generation (consistent special rooms)
+  * Devil Room rewards (given in order)
+  * Angel Room rewards (given in order)
 * There is a custom death mechanic:
   * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.

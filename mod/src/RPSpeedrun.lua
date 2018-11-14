@@ -545,6 +545,10 @@ function RPSpeedrun:StartR7SS()
   player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MIND)) -- 333
   -- We don't want the costume to show
 
+  -- Remove certain trinkets from the game that affect floor generation
+  itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
+  itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
+
   if RPSpeedrun.charNum == 1 then
     -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
     local finishedPosition = RPGlobals:GridToPos(1, 1)

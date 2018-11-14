@@ -92,10 +92,11 @@ function RPPostGameStarted:Main(saveState)
   RPGlobals.raceVars.fireworks = 0
   RPGlobals.raceVars.victoryLaps = 0
 
-  -- Reset some RNG counters to the floor RNG of Basement 1
+  -- Reset some RNG counters to the start RNG of the seed
   -- (future drops will be based on the RNG from this initial random value)
+  RPGlobals.run.playerGenPedSeeds = { startSeed }
   RPGlobals.RNGCounter.BookOfSin = startSeed
-  RPGlobals.RNGCounter.BossRushItem = startSeed
+  RPGlobals.RNGCounter.DeadSeaScrolls = startSeed
   RPGlobals.RNGCounter.DevilRoomItem = startSeed
   RPGlobals.RNGCounter.AngelRoomItem = startSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
@@ -531,6 +532,8 @@ function RPPostGameStarted:Seeded()
 
   -- Add item bans for seeded mode
   itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
+  itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
+  itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
 
   -- Initialize the sprites for the starting room
   -- (don't show these graphics until the race starts)

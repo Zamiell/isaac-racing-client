@@ -7,7 +7,7 @@ local RPSprites         = require("src/rpsprites")
 local RPSchoolbag       = require("src/rpschoolbag")
 local RPSoulJar         = require("src/rpsouljar")
 local RPPostUpdate      = require("src/rppostupdate")
-local RPItems           = require("src/rpitems")
+local RPUseItem         = require("src/rpuseitem")
 local RPPills           = require("src/rppills")
 local RPFastTravel      = require("src/rpfasttravel")
 local RPFastDrop        = require("src/rpfastdrop")
@@ -249,7 +249,7 @@ function RPPostRender:CheckCursedEye()
         Isaac.DebugString("Red Chest teleport detected.")
       else
         Isaac.DebugString("Cursed Eye teleport detected.")
-        RPItems:Teleport()
+        RPUseItem:Item44()
       end
     end
   end

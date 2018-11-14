@@ -1,10 +1,29 @@
 # Racing+ Version History and News
 
+### *v0.26.0* - November 14th, 2018
+
+* Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo any research that was previously done.
+* Normally, special room placement is affected by coin count, key count, health amount, and more. This can be a problem for seeded races, as two players can get slightly different floors. This patch contains a new custom system that is turned on in seeded races and the R+7 Seeded custom challenge to provide consistent level generation. Right before you reach the next floor, the custom system will now manually set all of the things that affect level generation in a seeded way, and then swap them back after the floor is generated. The percentages of getting the outcomes are as follows:
+  * Devil Room visited: 0% on B2, 100% otherwise
+  * Book touched: 50% for 0 touched, 50% for 1 touched
+  * Coins: 50% for 0 coins, 50% for 20 coins
+  * Keys: 50% for 0 keys, 50% for 2 keys
+  * Full health: 66% for full health, 33% for damaged health
+  * Critical health: 75% for non-critical health, 25% for critical health
+* Because of the above system, Boss Rushes are no longer manually created in seeded races.
+* Previously, rerolled items from player-created pedetals would be seeded based on the particular room. Now, they are seeded based on the start seed.
+* The "level #" custom command has been added to the console. This command will take you to the particular stage and stage type for the particular seed. If you are in a seeded race or the R+7 Seeded custom challenge, it will also perform the necessary seeded swapping beforehand. Example usage: "level 5"
+* Rooms will no longer be reseeded in the R+7 Seeded custom challenge (for Duality, duplicate rooms, etc.).
+* Silver Dollar and Bloody Crown are now removed from seeded races and the R+7 Seeded custom challenge.
+* Fixed the (vanilla) bug where Dead Sea Scrolls was not seeded.
+* Fixed the bug where Teleports were not being seeded correctly under certain circumstances.
+* Fixed the bug where drops from Bag-style familiars were not being seeded correctly under certain circumstances.
+
 ### *v0.25.11* - November 12th, 2018
 
 * Fixed the bug where Samael would get softlocked after killing the first phase of the Matriach. (Thanks Greninja_San)
-* Fixed the bug where both photos would spawn in the R+7 Season 5 custom challenge.
-* Fixed the bug where both paths would appear after It Lives! in the R+7 Season 5 custom challenge under certain conditions.
+* Fixed the bug where both photos would spawn in the R+7 Seeded custom challenge.
+* Fixed the bug where both paths would appear after It Lives! in the R+7 Seeded custom challenge under certain conditions.
 
 ### *v0.25.10* - November 11th, 2018
 

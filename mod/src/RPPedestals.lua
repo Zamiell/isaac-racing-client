@@ -11,13 +11,14 @@ function RPPedestals:Replace(pickup)
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local itemPool = game:GetItemPool()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local levelSeed = level:GetDungeonPlacementSeed()
+  local stageSeed = seeds:GetStageSeed(stage)
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
@@ -25,8 +26,9 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this is a pedestal that was already replaced
   for i = 1, #RPGlobals.run.replacedPedestals do
-    if RPGlobals.run.replacedPedestals[i].room == roomIndex and
-       RPGlobals.run.replacedPedestals[i].seed == pickup.InitSeed then
+    local pedestal = RPGlobals.run.replacedPedestals[i]
+    if pedestal.room == roomIndex and
+       pedestal.seed == pickup.InitSeed then
 
       -- We have already replaced it, so check to see if we need to delete the delay
       if pickup.Wait > 15 then
@@ -38,17 +40,41 @@ function RPPedestals:Replace(pickup)
     end
   end
 
-  -- We haven't replaced this pedestal yet,
+  -- Check to see if this is a pedestal that was player-generated
+  local playerGen = false
+  if gameFrameCount <= RPGlobals.run.playerGenPedFrame then
+    -- The player just spawned this item a frame ago
+    playerGen = true
+  else
+    -- Check to see if this is a reroll of a player-generated item
+    for i = 1, #RPGlobals.run.replacedPedestals do
+      local pedestal = RPGlobals.run.replacedPedestals[i]
+      if pedestal.room == roomIndex and
+         RPGlobals:InsideSquare(pedestal, pickup.Position, 15) and
+         pedestal.playerGen then
+
+        playerGen = true
+        break
+      end
+    end
+  end
+
+  -- We have not replaced this pedestal yet,
   -- so start off by assuming that we should set the new pedestal seed to that of the room
   local newSeed = roomSeed
-  if RPGlobals.race.rFormat == "seeded" and
-     RPGlobals.race.status == "in progress" then
+  if playerGen then
+    -- This is a player-spawned pedestal, so if we seed it per room then
+    -- it would reroll to something different depending on the room the player generates the pedestal in
+    -- Seed these items based on the start seed, and continually increment as we go
+    newSeed = RPGlobals:IncrementRNG(RPGlobals.run.playerGenPedSeeds[#RPGlobals.run.playerGenPedSeeds])
+    RPGlobals.run.playerGenPedSeeds[#RPGlobals.run.playerGenPedSeeds + 1] = newSeed
+
+  elseif RPGlobals.race.rFormat == "seeded" and
+         RPGlobals.race.status == "in progress" then
 
     -- For seeded rooms, we don't want to use the room seed as the base
     -- (since we are manually seeding the room, different racers might have different room seeds)
-    if roomType == RoomType.ROOM_BOSSRUSH then -- 17
-      newSeed = RPGlobals.RNGCounter.BossRushItem
-    elseif roomType == RoomType.ROOM_DEVIL then -- 14
+    if roomType == RoomType.ROOM_DEVIL then -- 14
       newSeed = RPGlobals.RNGCounter.DevilRoomItem
     elseif roomType == RoomType.ROOM_ANGEL then -- 15
       newSeed = RPGlobals.RNGCounter.AngelRoomItem
@@ -58,25 +84,30 @@ function RPPedestals:Replace(pickup)
   if pickup.Touched then
     -- If we touched this item, we need to set it back to the last seed that we had for this position
     for i = 1, #RPGlobals.run.replacedPedestals do
-      if RPGlobals.run.replacedPedestals[i].room == roomIndex and
-         RPGlobals:InsideSquare(RPGlobals.run.replacedPedestals[i], pickup.Position, 15) then
+      local pedestal = RPGlobals.run.replacedPedestals[i]
+      if pedestal.room == roomIndex and
+         RPGlobals:InsideSquare(pedestal, pickup.Position, 15) then
 
         -- Don't break after this because we want it to be equal to the seed of the last item
-        newSeed = RPGlobals.run.replacedPedestals[i].seed
+        newSeed = pedestal.seed
 
         -- Also reset the position of the pedestal before we replace it
         -- (this is necessary because the player will push the pedestal slightly when they drop the item,
         -- so the replaced pedestal will be slightly off)
-        pickup.Position = Vector(RPGlobals.run.replacedPedestals[i].X, RPGlobals.run.replacedPedestals[i].Y)
+        pickup.Position = Vector(pedestal.X, pedestal.Y)
       end
     end
-  else
+
+  elseif playerGen == false then
     -- This is a new pedestal, so find the new seed that we should set for it,
     -- which will correspond with how many times it has been rolled
     -- (we can't just seed all items with the room seed because
     -- it causes items that are not fully decremented on sight to roll into themselves)
     for i = 1, #RPGlobals.run.replacedPedestals do
-      if RPGlobals.run.replacedPedestals[i].room == roomIndex then
+      local pedestal = RPGlobals.run.replacedPedestals[i]
+      if pedestal.room == roomIndex and
+         pedestal.playerGen == false then
+
         newSeed = RPGlobals:IncrementRNG(newSeed)
       end
     end
@@ -156,7 +187,7 @@ function RPPedestals:Replace(pickup)
 
     -- Check to see if this is a special Basement 1 diversity reroll
     -- (these custom placeholder items are removed in all non-diveristy runs)
-    math.randomseed(levelSeed)
+    math.randomseed(stageSeed)
     local big4rerollChance = math.random(1, 2)
     if big4rerollChance == 2 then
       if pickup.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE then -- 114
@@ -308,10 +339,11 @@ function RPPedestals:Replace(pickup)
   -- (and don't add random items to the index in case a banned item rolls into another banned item)
   if randomItem == false then
     RPGlobals.run.replacedPedestals[#RPGlobals.run.replacedPedestals + 1] = {
-      room = roomIndex,
-      X    = pickup.Position.X,
-      Y    = pickup.Position.Y,
-      seed = newSeed,
+      room      = roomIndex,
+      X         = pickup.Position.X,
+      Y         = pickup.Position.Y,
+      seed      = newSeed,
+      playerGen = playerGen,
     }
 
     --[[

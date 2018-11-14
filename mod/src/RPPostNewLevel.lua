@@ -5,6 +5,7 @@ local RPGlobals     = require("src/rpglobals")
 local RPPostNewRoom = require("src/rppostnewroom")
 local RPFastTravel  = require("src/rpfasttravel")
 local RPCheckLoop   = require("src/rpcheckloop")
+local RPSpeedrun    = require("src/rpspeedrun")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function RPPostNewLevel:Main()
@@ -40,6 +41,7 @@ function RPPostNewLevel:NewLevel()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -67,13 +69,14 @@ function RPPostNewLevel:NewLevel()
     return
   end
 
-  if (RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
+  if (RPGlobals.race.rFormat ~= "seeded" or
+      RPGlobals.race.status ~= "in progress") and
+     RPSpeedrun.inSeededSpeedrun == false and
+     -- Disable reseeding for seeded races because it might be messing up seeded floors
+     (RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
       RPCheckLoop:Main() or -- Check for looping floors
-      RPPostNewLevel:CheckDupeRooms()) and  -- Check for duplicate rooms
+      RPPostNewLevel:CheckDupeRooms()) then -- Check for duplicate rooms
       -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
-     (RPGlobals.race.rFormat ~= "seeded" or
-      RPGlobals.race.status ~= "in progress") then
-      -- Disable reseeding for seeded races because it might be messing up seeded floors
 
     RPGlobals.run.reseededFloor = true
     RPGlobals.run.reseedCount = RPGlobals.run.reseedCount + 1
@@ -97,10 +100,10 @@ function RPPostNewLevel:NewLevel()
   RPGlobals.run.reseedCount = 0
 
   -- Reset the RNG of some items that should be seeded per floor
-  local floorSeed = level:GetDungeonPlacementSeed()
-  RPGlobals.RNGCounter.Teleport = floorSeed
-  RPGlobals.RNGCounter.Undefined = floorSeed
-  RPGlobals.RNGCounter.Telepills = floorSeed
+  local stageSeed = seeds:GetStageSeed(stage)
+  RPGlobals.RNGCounter.Teleport = stageSeed
+  RPGlobals.RNGCounter.Undefined = stageSeed
+  RPGlobals.RNGCounter.Telepills = stageSeed
   for i = 1, 100 do
     -- Increment the RNG 100 times so that players cannot use knowledge of Teleport! teleports
     -- to determine where the Telepills destination will be

@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.25.11"
+RPGlobals.version = "v0.26.1"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -49,13 +49,16 @@ RPGlobals.raceVars = {
 }
 
 RPGlobals.RNGCounter = {
-  BookOfSin     = 0,
-  Teleport      = 0, -- Broken Remote also uses this
-  Undefined     = 0,
-  Telepills     = 0,
-  BossRushItem  = 0,
-  DevilRoomItem = 0,
-  AngelRoomItem = 0,
+  -- Seeded at the beginning of the run
+  BookOfSin      = 0, -- 97
+  DeadSeaScrolls = 0, -- 124
+  DevilRoomItem  = 0, -- Devil Items go in order on seeded races
+  AngelRoomItem  = 0, -- Angel Items go in order on seeded races
+
+  -- Seeded at the beginning of the floor
+  Teleport      = 0, -- 44 (Broken Remote also uses this)
+  Undefined     = 0, -- 324
+  Telepills     = 0, -- 19
 }
 
 --
@@ -174,6 +177,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
   RPGlobals.run.spawningKeyPiece     = false -- Used for spawning Key Piece 1 or Key Piece 2 early
   RPGlobals.run.mysteryGiftFrame     = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
+  RPGlobals.run.playerGenPedSeeds    = {} -- Used so that we properly seed player-generated pedestals (1/2)
+  RPGlobals.run.playerGenPedFrame    = 0 -- Used so that we properly seed player-generated pedestals (2/2)
   RPGlobals.run.itLivesKillFrame     = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
   RPGlobals.run.speedLilHauntsFrame  = 0 -- Used to speed up The Haunt fight (1/2)
   RPGlobals.run.speedLilHauntsBlack  = false -- Used to speed up The Haunt fight (2/2)
@@ -248,6 +253,20 @@ function RPGlobals:InitRun()
   RPGlobals.run.matriarch = {
     chubIndex = -1,
     stunFrame = 0,
+  }
+
+  -- Special room seeding
+  RPGlobals.run.seededSwap = {
+    swapping     = false,
+    devilVisited = false,
+    bookTouched  = false,
+    coins        = 0,
+    keys         = 0,
+    hearts       = 0,
+    maxHearts    = 0,
+    soulHearts   = 0,
+    blackHearts  = 0,
+    boneHearts   = 0,
   }
 end
 

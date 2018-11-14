@@ -26,8 +26,6 @@ function RPSeededRooms:PostNewRoom()
     RPSeededRooms:DevilRoom()
   elseif roomType == RoomType.ROOM_ANGEL then -- 15
     RPSeededRooms:AngelRoom()
-  elseif roomType == RoomType.ROOM_BOSSRUSH then -- 17
-    RPSeededRooms:BossRush()
   end
 end
 
@@ -279,102 +277,6 @@ function RPSeededRooms:SpawnPedestalAngelRoom(x, y)
   entity:ToPickup().TheresOptionsPickup = true
 end
 
-function RPSeededRooms:BossRush()
-  -- Local variables
-  local game = Game()
-  local room = game:GetRoom()
-
-  -- Find out whether we should have 2 pedestals, 4 pedestals, or 8 pedestals
-  RPGlobals.RNGCounter.BossRushItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BossRushItem)
-  Isaac.DebugString("Boss Rush seed is now: " .. tostring(RPGlobals.RNGCounter.BossRushItem))
-  math.randomseed(RPGlobals.RNGCounter.BossRushItem)
-  local bossRushRoll = math.random(1, 51)
-  if bossRushRoll <= 30 then
-    -- 3x 4 pedestals (3 weight)
-    -- (same as room #0)
-    RPSeededRooms:SpawnPedestalBossRush(11, 5)
-    RPSeededRooms:SpawnPedestalBossRush(14, 5)
-    RPSeededRooms:SpawnPedestalBossRush(11, 8)
-    RPSeededRooms:SpawnPedestalBossRush(14, 8)
-  elseif bossRushRoll <= 50 then
-    -- 2x 2 pedestals (2 weight)
-    -- (only top-left and bottom-right)
-    RPSeededRooms:SpawnPedestalBossRush(11, 5)
-    RPSeededRooms:SpawnPedestalBossRush(14, 8)
-  elseif bossRushRoll <= 51 then
-    -- 1x 8 pedestals (0.1 weight)
-    -- (two rows of 4 items each)
-    for x = 11, 14 do
-      RPSeededRooms:SpawnPedestalBossRush(x, 5)
-      RPSeededRooms:SpawnPedestalBossRush(x, 8)
-    end
-  end
-
-  -- Spawn the top-left rocks
-  room:SpawnGridEntity(120, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(121, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(148, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(149, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the top-right rocks
-  room:SpawnGridEntity(130, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(131, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(158, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(159, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the bottom-left rocks
-  room:SpawnGridEntity(288, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(289, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(316, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(317, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the bottom-right rocks
-  room:SpawnGridEntity(298, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(299, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(326, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(327, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the left rocks
-  room:SpawnGridEntity(200, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(228, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the right rocks
-  room:SpawnGridEntity(219, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-  room:SpawnGridEntity(247, GridEntityType.GRID_ROCK, 0, 0, 0) -- 2
-
-  -- Spawn the top-left spikes
-  room:SpawnGridEntity(29, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(30, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(57, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-
-  -- Spawn the top-right spikes
-  room:SpawnGridEntity(53, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(54, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(82, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-
-  -- Spawn the bottom-left spikes
-  room:SpawnGridEntity(365, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(393, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(394, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-
-  -- Spawn the bottom-right spikes
-  room:SpawnGridEntity(390, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(417, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-  room:SpawnGridEntity(418, GridEntityType.GRID_SPIKES, 0, 0, 0) -- 8
-end
-
-function RPSeededRooms:SpawnPedestalBossRush(x, y)
-  -- Local variables
-  local game = Game()
-
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
-  local pos = RPGlobals:GridToPos(x, y)
-  RPGlobals.RNGCounter.BossRushItem = RPGlobals:IncrementRNG(RPGlobals.RNGCounter.BossRushItem)
-  local entity = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 100
-                            pos, Vector(0, 0), nil, 0, RPGlobals.RNGCounter.BossRushItem)
-  entity:ToPickup().TheresOptionsPickup = true
-end
-
 -- ModCallbacks.MC_PRE_ENTITY_SPAWN (24)
 function RPSeededRooms:PreEntitySpawn(type, variant, subType, seed)
   -- We only want to delete things in seeded races
@@ -395,8 +297,7 @@ function RPSeededRooms:PreEntitySpawn(type, variant, subType, seed)
     return
   end
 
-  if roomType == RoomType.ROOM_BOSSRUSH or -- 17
-     roomType == RoomType.ROOM_DEVIL or -- 14
+  if roomType == RoomType.ROOM_DEVIL or -- 14
      roomType == RoomType.ROOM_ANGEL then -- 15
 
     return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing

@@ -112,8 +112,12 @@ function RPPostNewRoom:NewRoom()
 
   -- Check health (to fix the bug where we don't die at 0 hearts)
   -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
-  if maxHearts == 0 and soulHearts == 0 and boneHearts == 0 and InfinityTrueCoopInterface == nil then
-    -- Make an exception if the True Co-op mod is on
+  if maxHearts == 0 and
+     soulHearts == 0 and
+     boneHearts == 0 and
+     RPGlobals.run.seededSwap.swapping == false and -- Make an exception if we are manually swapping health values
+     InfinityTrueCoopInterface == nil then -- Make an exception if the True Co-op mod is on
+
     player:Kill()
     Isaac.DebugString("Manually killing the player since they are at 0 hearts.")
   end

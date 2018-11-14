@@ -1,8 +1,9 @@
 local RPFastTravel = {}
 
 -- Includes
-local RPGlobals = require("src/rpglobals")
-local RPSprites = require("src/rpsprites")
+local RPGlobals      = require("src/rpglobals")
+local RPSprites      = require("src/rpsprites")
+local RPSeededFloors = require("src/rpseededfloors")
 
 -- Constants
 RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
@@ -495,6 +496,17 @@ end
 -- Remove the long fade out / fade in when entering trapdoors
 -- (and redirect Sacrifice Room teleports)
 function RPFastTravel:GotoNextFloor(upwards, redirect)
+  -- Check to see we need to take extra steps to seed the floor consistently by
+  --- performing health and inventory modifications
+  RPSeededFloors:Before()
+
+  RPFastTravel:TravelStage(upwards, redirect)
+
+  -- Revert the health and inventory modifications
+  RPSeededFloors:After()
+end
+
+function RPFastTravel:TravelStage(upwards, redirect)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()

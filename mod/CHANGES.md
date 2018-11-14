@@ -90,10 +90,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Some things that are unseeded are now seeded:
   * rerolls on items after being touched or purchased
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
-  * Boss Rush room selection + items
-  * Devil Room rewards (given in order)
-  * Angel Room rewards (given in order)
-  * Krampus items (with Gimpy)
+  * Dead Sea Scrolls item selection
   * cards from Sloth, Super Sloth, Pride, and Super Pride
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)

@@ -39,17 +39,18 @@ local RPGlobals             = require("src/rpglobals") -- Global variables
 local RPNPCUpdate           = require("src/rpnpcupdate") -- The NPCUpdate callback (0)
 local RPPostUpdate          = require("src/rppostupdate") -- The PostUpdate callback (1)
 local RPPostRender          = require("src/rppostrender") -- The PostRender callback (2)
-local RPItems               = require("src/rpitems") -- Collectible item callbacks (3 & 23)
+local RPUseItem             = require("src/rpuseitem") -- The UseItem callback (3)
 local RPCards               = require("src/rpcards") -- Card callbacks (5)
 local RPEvaluateCache       = require("src/rpevaluatecache") -- The EvaluateCache callback (8)
 local RPPostPlayerInit      = require("src/rppostplayerinit") -- The PostPlayerInit callback (9)
-local RPPills               = require("src/rppills") -- Pill callbacks (10)
+local RPUsePill             = require("src/rpusepill") -- The UsePill callback (10)
 local RPEntityTakeDmg       = require("src/rpentitytakedmg") -- The EntityTakeDmg callback (11)
 local RPInputAction         = require("src/rpinputaction") -- The InputAction callback (13)
 local RPPostGameStarted     = require("src/rppostgamestarted") -- The PostGameStarted callback (15)
 local RPPostNewLevel        = require("src/rppostnewlevel") -- The PostNewLevel callback (18)
 local RPPostNewRoom         = require("src/rppostnewroom") -- The PostNewRoom callback (19)
 local RPExecuteCmd          = require("src/rpexecutecmd") -- The ExecuteCmd callback (22)
+local RPPreUseItem          = require("src/rppreuseitem") -- The PreUseItem callback (23)
 local RPPreEntitySpawn      = require("src/rppreentityspawn") -- The PreEntitySpawn callback (24)
 local RPPostNPCInit         = require("src/rppostnpcinit") -- The NPCInit callback (27)
 local RPPostPickupInit      = require("src/rppostpickupinit") -- The PostPickupInit callback (34)
@@ -122,47 +123,24 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       RPPostLaserInit.Ma
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    RPFastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RPPreRoomEntitySpawn.Main) -- 71
 
--- Define pre-use item callback (23)
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.WeNeedToGoDeeper, -- 23
-                                                     CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.BookOfSin, -- 23
-                                                     CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPSpeedrun.PreventD6, -- 23
-                                                     CollectibleType.COLLECTIBLE_D6) -- 105
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.GlowingHourGlass, -- 23
-                                                     CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.Smelter, -- 23
-                                                     CollectibleType.COLLECTIBLE_SMELTER) -- 479
-
--- Define pre-use item callbacks for items that deal with item pedestals
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_D6) -- 105
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_D100) -- 283
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_DIPLOPIA) -- 347
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_VOID) -- 477
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_CROOKED_PENNY) -- 485
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_DINF) -- 489
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPItems.PreventItemPedestalEffects, -- 23
-                                                     CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
-
 -- Define post-use item callbacks (3)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Main) -- 3; will get called for all items
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Teleport,  CollectibleType.COLLECTIBLE_TELEPORT) -- 44
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Main) -- 3
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item44,  CollectibleType.COLLECTIBLE_TELEPORT) -- 44
 -- (this callback is also used by Broken Remote)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.BlankCard, CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Undefined, CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item286, CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item324, CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item477, CollectibleType.COLLECTIBLE_VOID) -- 477
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item515, CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item523, CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main,      CollectibleType.COLLECTIBLE_DEBUG)
 
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.Void,        CollectibleType.COLLECTIBLE_VOID) -- 477
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MysteryGift, CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPItems.MovingBox,   CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
-
--- Define custom item callbacks (3)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPDebug.Main, CollectibleType.COLLECTIBLE_DEBUG)
+-- Define post-use item callbacks for seeding player-generated pedestals (3)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.PlayerGeneratedPedestal,
+                                                 CollectibleType.COLLECTIBLE_BLUE_BOX) -- 297
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.PlayerGeneratedPedestal,
+                                                 CollectibleType.COLLECTIBLE_EDENS_SOUL) -- 490
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.PlayerGeneratedPedestal,
+                                                 CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
 
 -- Define card callbacks (5)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_FOOL) -- 1
@@ -174,11 +152,41 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_MOO
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, RPCards.Teleport, Card.CARD_JOKER) -- 31
 
 -- Define pill callbacks (10)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Main) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.HealthUp,  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPPills.Telepills, PillEffect.PILLEFFECT_TELEPILLS) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPUsePill.Main) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPUsePill.HealthUp,  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, RPUsePill.Telepills, PillEffect.PILLEFFECT_TELEPILLS) -- 19
 
--- Define NPC kill callbacks (68)
+-- Define pre-use item callbacks (23)
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.Item84, -- 23
+                                                     CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.Item97, -- 23
+                                                     CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPSpeedrun.PreventD6, -- 23
+                                                     CollectibleType.COLLECTIBLE_D6) -- 105
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.Item124, -- 23
+                                                     CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.Item422, -- 23
+                                                     CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.Item479, -- 23
+                                                     CollectibleType.COLLECTIBLE_SMELTER) -- 479
+
+-- Define pre-use item callbacks for preventing item pedestal effects (23)
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_D6) -- 105
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_D100) -- 283
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_DIPLOPIA) -- 347
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_VOID) -- 477
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_CROOKED_PENNY) -- 485
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_DINF) -- 489
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, RPPreUseItem.PreventItemPedestalEffects, -- 23
+                                                     CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
+
+-- Define post-entity-kill callbacks (68)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPFastClear.PostEntityKill) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Main) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, RPPostEntityKill.Entity45, EntityType.ENTITY_MOM) -- 45
