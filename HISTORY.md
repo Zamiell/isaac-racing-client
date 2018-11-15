@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.26.2* - November 15th, 2018
+
+* The "level" console command will now always assume that you are in a seeded race. (Thanks thereisnofuture)
+
 ### *v0.26.0* - November 14th, 2018
 
 * Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo any research that was previously done.

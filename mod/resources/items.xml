@@ -2,6 +2,7 @@
 
 Changes:
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
+	(items that give bone hearts do not count as health up items for Keeper)
 - Removed the "special" tag from all items
 - Renamed "Betrayal" to "Betrayal (Vanilla)"
 - Renamed "Schoolbag" to "Schoolbag (Vanilla)"
