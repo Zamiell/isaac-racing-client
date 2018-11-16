@@ -154,21 +154,36 @@ function RPSeededFloors:SaveHealth()
   local soulHearts = player:GetSoulHearts()
   local boneHearts = player:GetBoneHearts()
   local goldenHearts = player:GetGoldenHearts()
+  local eternalHearts = player:GetEternalHearts()
 
+  -- The Forgotten and The Soul has special health, so we need to account for this
+  local subPlayer
   if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
     -- The Forgotten does not have red heart containers, so account for this
     maxHearts = boneHearts * 2
     boneHearts = 0
 
     -- The Forgotten will always have 0 soul hearts; we need to get the soul heart amount from the sub player
-    local subPlayer = player:GetSubPlayer()
+    subPlayer = player:GetSubPlayer()
     soulHearts = subPlayer:GetSoulHearts()
 
   elseif character == PlayerType.PLAYER_THESOUL then -- 17
     -- The Soul will always have 0 bone hearts; we need to get the bone heart amount from the sub player
-    local subPlayer = player:GetSubPlayer()
+    subPlayer = player:GetSubPlayer()
+    maxHearts = subPlayer:GetBoneHearts() * 2 -- We need to store it as "maxHearts" instead of "boneHearts"
     hearts = subPlayer:GetHearts()
-    boneHearts = subPlayer:GetBoneHearts()
+  end
+
+  -- Eternal Hearts will be lost since we are about to change floors, so convert it to other types of health
+  -- "eternalHearts" will be equal to 1 if we have an Eternal Heart
+  if character == PlayerType.PLAYER_XXX or -- 4
+     character == PlayerType.PLAYER_THESOUL then -- 17
+
+    soulHearts = soulHearts + eternalHearts * 2
+
+  else
+    maxHearts = maxHearts + eternalHearts * 2
+    hearts = hearts + eternalHearts * 2
   end
 
   -- This is the number of individual hearts shown in the HUD, minus heart containers
@@ -179,11 +194,18 @@ function RPSeededFloors:SaveHealth()
   local currentSoulHeart = 0
 
   for i = 0, extraHearts - 1 do
-    if player:IsBoneHeart(i) then
+    local isBoneHeart = player:IsBoneHeart(i)
+    if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+      isBoneHeart = subPlayer:IsBoneHeart(i)
+    end
+    if isBoneHeart then
       heartTypes[#heartTypes + 1] = HeartSubType.HEART_BONE -- 11
     else
+      -- We need to add 1 here because only the second half of a black heart is considered black
       local isBlackHeart = player:IsBlackHeart(currentSoulHeart + 1)
-      -- We add 1 because only the second half of a black heart is considered black
+      if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+        isBlackHeart = subPlayer:IsBlackHeart(currentSoulHeart + 1)
+      end
       if isBlackHeart then
         heartTypes[#heartTypes + 1] = HeartSubType.HEART_BLACK -- 6
       else
@@ -205,20 +227,44 @@ function RPSeededFloors:SaveHealth()
   }
 end
 
+function RPSeededFloors:PrintHealth()
+  local hearts = RPGlobals.run.seededSwap.heartTable
+  Isaac.DebugString("DEBUG - Heart types:")
+  for i, heartType in ipairs(hearts.types) do
+    Isaac.DebugString("DEBUG -   " .. tostring(i) .. ") " .. tostring(heartType))
+  end
+  Isaac.DebugString("DEBUG - maxHearts: " .. tostring(hearts.maxHearts))
+  Isaac.DebugString("DEBUG - hearts: " .. tostring(hearts.hearts))
+  Isaac.DebugString("DEBUG - soulHearts: " .. tostring(hearts.soulHearts))
+  Isaac.DebugString("DEBUG - boneHearts: " .. tostring(hearts.boneHearts))
+  Isaac.DebugString("DEBUG - goldenHearts: " .. tostring(hearts.goldenHearts))
+end
+
 -- Based on the "REVEL.LoadHealth()" function in the Revelations mod
 function RPSeededFloors:LoadHealth()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
   local hearts = RPGlobals.run.seededSwap.heartTable
+
+  RPSeededFloors:PrintHealth()
 
   -- Remove all existing health
   player:AddMaxHearts(-24, true)
   player:AddSoulHearts(-24)
   player:AddBoneHearts(-24)
-  player:AddBoneHearts(-24)
 
-  player:AddMaxHearts(hearts.maxHearts)
+  -- Add the red heart containers
+  if character == PlayerType.PLAYER_THESOUL then -- 17
+    -- Account for The Soul, as adding health to him is a special case
+    local subPlayer = player:GetSubPlayer()
+    subPlayer:AddMaxHearts(hearts.maxHearts)
+  else
+    player:AddMaxHearts(hearts.maxHearts)
+  end
+
+  -- Add the soul / black / bone hearts
   local soulHeartsRemaining = hearts.soulHearts
   for i, heartType in ipairs(hearts.types) do
     local isHalf = (hearts.soulHearts + hearts.boneHearts * 2) < i * 2
@@ -241,6 +287,8 @@ function RPSeededFloors:LoadHealth()
       player:AddBoneHearts(addAmount)
     end
   end
+
+  -- Fill in the red heart containers
   player:AddHearts(hearts.hearts)
   player:AddGoldenHearts(hearts.goldenHearts)
 end
