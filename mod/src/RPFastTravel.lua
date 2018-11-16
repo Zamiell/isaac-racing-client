@@ -6,9 +6,10 @@ local RPSprites      = require("src/rpsprites")
 local RPSeededFloors = require("src/rpseededfloors")
 
 -- Constants
-RPFastTravel.trapdoorOpenDistance = 60 -- This feels about right
+RPFastTravel.trapdoorOpenDistance  = 60 -- This feels about right
 RPFastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
-RPFastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"
+RPFastTravel.reseed                = false -- Used when we need to reseed the next floor
+RPFastTravel.delayNewRoomCallback  = false -- Used when executing a "reseed" immediately after a "stage X"
 
 --
 -- Trapdoor / heaven door functions
@@ -496,94 +497,116 @@ end
 -- Remove the long fade out / fade in when entering trapdoors
 -- (and redirect Sacrifice Room teleports)
 function RPFastTravel:GotoNextFloor(upwards, redirect)
+  -- Local game
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  -- By default, we will not need to reseed the new floor
+  RPFastTravel.reseed = false
+
+  -- Get the number and type of the next floor
+  local nextStage
+  if redirect == nil then
+    nextStage = RPFastTravel:GetNextStage()
+  else
+    -- We are redirecting a Sacrifice Room teleport, so we are going backwards
+    nextStage = redirect
+  end
+  local nextStageType = RPFastTravel:GetNextStageType(nextStage, upwards)
+
+  -- Check for completely custom floor paths
+  if RPGlobals.race.goal == "Everything" then
+    if stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
+      -- Cathedral goes to Sheol
+      nextStage = 10
+      nextStageType = 0
+
+      -- We need to reseed it because by default, Sheol will have the same layout as Cathedral
+      RPFastTravel.reseed = true
+
+    elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
+      -- Sheol goes to The Chest
+      nextStage = 11
+      nextStageType = 1
+
+    elseif stage == 11 and stageType == 1 then -- 11.0 (The Chest)
+      -- The Chest goes to the Dark Room
+      nextStage = 11
+      nextStageType = 0
+
+      -- We need to reseed it because by default, Sheol will have the same layout as Cathedral
+      RPFastTravel.reseed = true
+    end
+  end
+
   -- Check to see we need to take extra steps to seed the floor consistently by
   --- performing health and inventory modifications
-  RPSeededFloors:Before()
+  RPSeededFloors:Before(nextStage)
 
-  RPFastTravel:TravelStage(upwards, redirect)
+  -- Use the console to manually travel to the floor
+  RPFastTravel:TravelStage(nextStage, nextStageType)
 
   -- Revert the health and inventory modifications
   RPSeededFloors:After()
 end
 
-function RPFastTravel:TravelStage(upwards, redirect)
-  -- Local variables
+function RPFastTravel:GetNextStage()
+  -- Local game
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local roomIndexUnsafe = level:GetCurrentRoomIndex()
+
+  local nextStage = stage + 1
+  if stage == 8 and
+     roomIndexUnsafe ~= GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
+
+    -- If we are not in the Womb special room, then we need to skip a floor
+    -- (The Blue Womb is floor 9)
+    nextStage = 10
+
+  elseif stage == 11 then
+    -- The Chest goes to The Chest
+    -- The Dark Room goes to the Dark Room
+    nextStage = 11
+    RPFastTravel.reseed = true
+  end
+
+  return nextStage
+end
+
+function RPFastTravel:GetNextStageType(nextStage, upwards)
+  -- Local game
   local game = Game()
   local level = game:GetLevel()
   local stageType = level:GetStageType()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
-  local stage = level:GetStage()
 
-  -- Check to see if we need to redirect the player (used for Sacrifice Room teleports)
-  if redirect ~= nil then
-    stage = redirect
-  end
+  local nextStageType = RPFastTravel:DetermineStageType(nextStage)
+  if nextStage == 9 then
+    -- Blue Womb does not have any alternate floors
+    nextStageType = 0
 
-  -- The "Everything" race goal requires custom floor paths
-  if RPGlobals.race.goal == "Everything" then
-    if stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
-      RPFastTravel.delayNewRoomCallback = true
-      -- We use the "delayNewRoomCallback" variable to delay firing
-      -- the "CheckTrapdoor2()" function before the reseed happens
-      RPGlobals:ExecuteCommand("stage 10")
-      RPGlobals:ExecuteCommand("reseed")
-      -- We need to reseed it because by default, Sheol will have the same layout as Cathedral
-      return
-
-    elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
-      RPGlobals:ExecuteCommand("stage 11a") -- The Chest
-      return
-
-    elseif stage == 11 and stageType == 1 then -- 11.0 (The Chest)
-      RPFastTravel.delayNewRoomCallback = true
-      -- We use the "delayNewRoomCallback" variable to delay firing
-      -- the "CheckTrapdoor2()" function before the reseed happens
-      RPGlobals:ExecuteCommand("stage 11") -- Dark Room
-      RPGlobals:ExecuteCommand("reseed")
-      -- We need to reseed it because by default, the Dark Room will have the same layout as The Chest
-      return
-    end
-  end
-
-  -- Check to see if we are going to the same floor
-  if (stage == 11 and stageType == 0) or -- The Dark Room goes to the Dark Room
-     (stage == 11 and stageType == 1) then -- The Chest goes to The Chest
-
-    RPGlobals:ExecuteCommand("reseed")
-    -- This automatically takes us to the beginning of the stage (like a Forget Me Now)
-    return
-  end
-
-  -- Build the command that will take us to the next floor
-  local command = "stage "
-  if roomIndexUnsafe == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-    command = command .. "9" -- Blue Womb
-
-  elseif stage == 8 or stage == 9 then -- Account for Womb 2 and Blue Womb
+  elseif nextStage == 10 then
     if upwards then
-      command = command .. "10a" -- Cathedral
+      -- Go to Cathedral (10.1)
+      nextStageType = 1
     else
-      command = command .. "10" -- Sheol
+      -- Go to Sheol (10.0)
+      nextStageType = 0
     end
 
-  elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
-    command = command .. "11" -- Dark Room
-
-  elseif stage == 10 and stageType == 1 then -- 10.1 (Cathedral)
-    command = command .. "11a" -- The Chest
-
-  else
-    local nextStage = stage + 1
-    command = command .. tostring(nextStage) -- By default, we go to the non-alternate version of the floor
-    local newStageType = RPFastTravel:DetermineStageType(nextStage)
-    if newStageType == 1 then
-      command = command .. "a"
-    elseif newStageType == 2 then
-      command = command .. "b"
+  elseif nextStage == 11 then
+    -- By default, go to The Chest (11.1)
+    nextStageType = 1
+    if stageType == 0 then
+      -- Sheol (10.0) goes to the Dark Room (11.0)
+      nextStageType = 0
     end
   end
 
-  RPGlobals:ExecuteCommand(command)
+  return nextStageType
 end
 
 -- This is not named GetStageType to differentiate it from "level:GetStageType"
@@ -593,7 +616,8 @@ function RPFastTravel:DetermineStageType(stage)
   local seeds = game:GetSeeds()
   local stageSeed = seeds:GetStageSeed(stage)
 
-  -- Based on the game's internal code (from Spider)
+  -- The following is the game's internal code to determine the floor type
+  -- (this came directly from Spider)
   --[[
     u32 Seed = g_Game->GetSeeds().GetStageSeed(NextStage);
     if (!g_Game->IsGreedMode()) {
@@ -606,6 +630,8 @@ function RPFastTravel:DetermineStageType(stage)
     if (Seed % 3 == 0 && NextStage < STAGE5)
       StageType = STAGETYPE_AFTERBIRTH;
   --]]
+
+  -- Emulate what the game's internal code does
   local stageType = StageType.STAGETYPE_ORIGINAL -- 0
   if stageSeed & 1 == 0 then -- This is the same as "stageSeed % 2 == 0", but faster
     stageType = StageType.STAGETYPE_WOTL -- 1
@@ -615,6 +641,29 @@ function RPFastTravel:DetermineStageType(stage)
   end
 
   return stageType
+end
+
+function RPFastTravel:TravelStage(stage, stageType)
+  -- Build the command that will take us to the next floor
+  local command = "stage " .. stage
+  if stageType == 1 then
+    command = command .. "a"
+  elseif stageType == 2 then
+    command = command .. "b"
+  end
+
+  RPGlobals:ExecuteCommand(command)
+
+  if RPFastTravel.reseed then
+    RPFastTravel.reseed = false
+
+    -- We use the "delayNewRoomCallback" variable to delay firing
+    -- the "CheckTrapdoor2()" function before the reseed happens
+    RPFastTravel.delayNewRoomCallback = true
+
+    -- Doing a "reseed" immediately after a "stage" command won't mess anything up
+    RPGlobals:ExecuteCommand("reseed")
+  end
 end
 
 --

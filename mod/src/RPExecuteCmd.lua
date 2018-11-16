@@ -26,29 +26,22 @@ function RPExecuteCmd:Main(cmd, params)
   elseif cmd == "level" then
     -- Used to go to the proper floor and stage
     -- (always assumed a seeded race)
-    local command = "stage " .. params
-    local newStageType
-    if params == 10 or params == 11 then
-      newStageType = 1
-    else
-      newStageType = RPFastTravel:DetermineStageType(params)
+    local stage = params
+    local stageType = RPFastTravel:DetermineStageType(stage)
+    if stage == 10 or stage == 11 then
+      stageType = 1
     end
-    if newStageType == 1 then
+
+    local command = "stage " .. stage
+    if stageType == 1 then
       command = command .. "a"
-    elseif newStageType == 2 then
+    elseif stageType == 2 then
       command = command .. "b"
     end
-    local swapBack = false
-    if RPSpeedrun.inSeededSpeedrun == false then
-      swapBack = true
-      RPSpeedrun.inSeededSpeedrun = true
-    end
-    RPSeededFloors:Before()
+
+    RPSeededFloors:Before(stage)
     RPGlobals:ExecuteCommand(command)
     RPSeededFloors:After()
-    if swapBack then
-      RPSpeedrun.inSeededSpeedrun = false
-    end
 
   elseif cmd == "next" then
     -- Used to go to the next character in a multi-character speedrun

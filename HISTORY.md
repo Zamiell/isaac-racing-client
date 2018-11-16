@@ -1,12 +1,31 @@
 # Racing+ Version History and News
 
+### *v0.27.0* - November 16th, 2018
+
+* Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo research that was previously done.
+* There is a new custom system for awarding room clear awards when playing on a set seed. This will prevent situations where one player goes the wrong way and gets an Emperor card in a seeded race, for example. It is exactly the same as the vanilla system except for the following changes:
+  * Instead of being based on the room seed, room drops are based on the starting seed of the run and are awarded in order.
+  * A value of 0 luck is always used to calculate room drops, even if the player does not have 0 luck.
+  * Rib of Greed no longer has a chance to increase coin drops.
+  * Smelter no longer has a chance to increase trinket drops.
+  * Guppy's Tail no longer has a chance to increase chest drops.
+* Lucky Foot is now removed from all pools when playing on a set seed.
+* Lucky Toe, Ace of Spades, Safety Cap, Match Stick, Child's Heart, Rusted Key, Daemon's Tail, and Watch Battery are now removed from the trinket pool when playing on a set seed.
+* Seeded swapping will now always occur when playing on a set seed. (Thanks Fawkeyes)
+* Silver Dollar and Bloody Crown will now always be removed when playing on a set seed. (Thanks Fawkeyes)
+* Fixed the bug where bone hearts would be rearranged upon reaching a new floor when playing on a set seed.
+* Fixed the bug where bone hearts would not be filled upon reaching a new floor when playing on a set seed. (Thanks Moucheron Quipet)
+* Fixed the bug where the seeded swapping would use the seed from the origin floor instead of the destination floor.
+* Fixed the bug where items would disappear from multiple Spiked / Mimic Chests on The Chest / Dark Room. (Thanks NorBro86)
+* Deleted the code that prevents unavoidable damage from Spiked / Mimic Chests during the appearing animation, as the bug was fixed in the vanilla game.
+
 ### *v0.26.2* - November 15th, 2018
 
 * The "level" console command will now always assume that you are in a seeded race. (Thanks thereisnofuture)
 
 ### *v0.26.0* - November 14th, 2018
 
-* Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo any research that was previously done.
+* Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo research that was previously done.
 * Normally, special room placement is affected by coin count, key count, health amount, and more. This can be a problem for seeded races, as two players can get slightly different floors. This patch contains a new custom system that is turned on in seeded races and the R+7 Seeded custom challenge to provide consistent level generation. Right before you reach the next floor, the custom system will now manually set all of the things that affect level generation in a seeded way, and then swap them back after the floor is generated. The percentages of getting the outcomes are as follows:
   * Devil Room visited: 0% on B2, 100% otherwise
   * Book touched: 50% for 0 touched, 50% for 1 touched

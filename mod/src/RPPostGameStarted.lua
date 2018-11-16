@@ -16,6 +16,8 @@ function RPPostGameStarted:Main(saveState)
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
+  local seeds = game:GetSeeds()
+  local startSeed = seeds:GetStartSeed()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -24,8 +26,7 @@ function RPPostGameStarted:Main(saveState)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local seeds = game:GetSeeds()
-  local startSeed = seeds:GetStartSeed()
+  local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
@@ -126,6 +127,25 @@ function RPPostGameStarted:Main(saveState)
 
   -- Racing+ removes the Karma trinket from the game
   itemPool:RemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
+
+  if challenge == 0 and
+     seeds:IsCustomRun() then
+
+    -- Racing+ also removes certain trinkets that mess up floor generation when playing on a set seed
+    itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
+    itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
+
+    -- Racing+ also removes certain items and trinkets that change room drop calculation when playing on a set seed
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_LUCKY_FOOT) -- 46
+    itemPool:RemoveTrinket(TrinketType.TRINKET_DAEMONS_TAIL) -- 22
+    itemPool:RemoveTrinket(TrinketType.TRINKET_CHILDS_HEART) -- 34
+    itemPool:RemoveTrinket(TrinketType.TRINKET_RUSTED_KEY) -- 36
+    itemPool:RemoveTrinket(TrinketType.TRINKET_MATCH_STICK) -- 41
+    itemPool:RemoveTrinket(TrinketType.TRINKET_LUCKY_TOE) -- 42
+    itemPool:RemoveTrinket(TrinketType.TRINKET_SAFETY_CAP) -- 44
+    itemPool:RemoveTrinket(TrinketType.TRINKET_ACE_SPADES) -- 45
+    itemPool:RemoveTrinket(TrinketType.TRINKET_WATCH_BATTERY) -- 72
+  end
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   RPPostGameStarted:Character()
@@ -532,8 +552,6 @@ function RPPostGameStarted:Seeded()
 
   -- Add item bans for seeded mode
   itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
-  itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
-  itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
 
   -- Initialize the sprites for the starting room
   -- (don't show these graphics until the race starts)

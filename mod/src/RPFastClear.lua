@@ -10,6 +10,7 @@ local RPSoulJar = require("src/rpsouljar")
 
 -- These are reset in the "RPFastClear:InitRun()" function
 RPFastClear.familiars = {}
+RPFastClear.roomClearAwardRNG = 0
 
 -- These are reset in the "RPFastClear:InitRun()" function and
 -- the "RPFastClear:PostNPCInit()" function (upon entering a new room)
@@ -29,9 +30,10 @@ RPFastClear.buttonsAllPushed = false
 function RPFastClear:InitRun()
   -- Local variables
   local game = Game()
-  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local seeds = game:GetSeeds()
+  local startSeed = seeds:GetStartSeed()
   local stageSeed = seeds:GetStageSeed(stage)
 
   local familiars = {
@@ -48,6 +50,7 @@ function RPFastClear:InitRun()
     "AcidBaby",
     "SackOfSacks",
   }
+  RPFastClear.familiars = {}
   for i = 1, #familiars do
     RPFastClear.familiars[familiars[i]] = {
       seed         = stageSeed,
@@ -55,6 +58,7 @@ function RPFastClear:InitRun()
       incremented  = false,
     }
   end
+  RPFastClear.roomClearAwardRNG = startSeed
 
   RPFastClear.aliveEnemies = {}
   RPFastClear.aliveEnemiesCount = 0
@@ -372,6 +376,7 @@ function RPFastClear:ClearRoom()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local seeds = game:GetSeeds()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -381,6 +386,7 @@ function RPFastClear:ClearRoom()
   end
   local room = game:GetRoom()
   local roomType = room:GetType()
+  local challenge = Isaac.GetChallenge()
   local sfx = SFXManager()
 
   -- Set the room clear to true (so that it gets marked off on the minimap)
@@ -436,7 +442,7 @@ function RPFastClear:ClearRoom()
   end
 
   -- Check to see if it is a boss room
-  if room:GetType() == RoomType.ROOM_BOSS then
+  if roomType == RoomType.ROOM_BOSS then
     -- Check for the Soul Jar Devil Deal mechanic
     RPSoulJar:CheckDamaged()
 
@@ -469,16 +475,30 @@ function RPFastClear:ClearRoom()
                room:GetCenterPos(), Vector(0, 0), nil, 0, 0)
 
   else
-    -- Spawns the award for clearing the room (the pickup, chest, etc.)
+    -- Spawn the award for clearing the room (the pickup, chest, etc.)
     -- (this also makes the trapdoor appear if we are in a boss room)
-    room:SpawnClearAward() -- This takes into account their luck and so forth
+    if challenge == 0 and
+       seeds:IsCustomRun() and
+       roomType ~= RoomType.ROOM_BOSS and -- 5
+       roomType ~= RoomType.ROOM_DUNGEON then -- 16
+
+      -- If we are on a set seed, then use a custom system to award room drops in order
+      -- (we only care about normal room drops, so ignore Boss Rooms)
+      -- (room drops are not supposed to spawn in crawlspaces)
+      RPFastClear:SpawnClearAward()
+    else
+      -- Use the vanilla function to spawn a room drop, which takes into account the player's luck and so forth
+      -- (room drops are not supposed to spawn in crawlspaces, but this function will internally exit
+      -- if we are in a crawlspace, so we don't need to explicitly check for that)
+      room:SpawnClearAward()
+    end
   end
 
   -- Give a charge to the player's active item
   RPFastClear:AddChange()
 
   -- Play the sound effect for the doors opening
-  if room:GetType() ~= RoomType.ROOM_DUNGEON then -- 16
+  if roomType ~= RoomType.ROOM_DUNGEON then -- 16
     sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
   end
 
@@ -858,6 +878,121 @@ function RPFastClear:IncrementBagFamiliars()
   for k, v in pairs(RPFastClear.familiars) do
     RPFastClear.familiars[k].incremented = false
   end
+end
+
+-- Normally, room drops are based on the room's seed
+-- This is undesirable, since someone can go a wrong way in a seeded race and then
+-- get rewarded with an Emperor card that the other player does not get
+-- Thus, overwrite the game's room drop system with one that manually spawns awards in order
+-- The following code is based on the game's internal logic, documented here:
+-- https://bindingofisaacrebirth.gamepedia.com/Room_Clear_Awards
+-- (it was reverse engineered by Blade / blcd / Will)
+-- However, there is one major difference from vanilla:
+-- we hardcode values of 0 luck, no Lucky Foots, and no Lucky Toes
+-- so that room drops are completely consistent
+-- (otherwise, one player would be able to get a lucky Emperor card by using a Luck Up or Luck Down pill, for example)
+function RPFastClear:SpawnClearAward()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local centerPos = room:GetCenterPos()
+  local player = game:GetPlayer(0)
+
+  -- Get a random value between 0 and 1 that will determine what kind of reward we get
+  RPFastClear.roomClearAwardRNG = RPGlobals:IncrementRNG(RPFastClear.roomClearAwardRNG)
+  local rng = RNG()
+  rng:SetSeed(RPFastClear.roomClearAwardRNG, 35)
+  local pickupPercent = rng:RandomFloat()
+
+  -- Determine the kind of pickup
+  local pickupVariant = PickupVariant.PICKUP_NULL -- 0
+  if pickupPercent > 0.12 then -- 12% chance for nothing to drop
+    if pickupPercent < 0.2 then -- 7% chance
+      if rng:RandomInt(3) == 0 then -- 7% * 33% = 2.3% chance
+        pickupVariant = PickupVariant.PICKUP_TAROTCARD -- 300
+      elseif rng:RandomInt(2) == 0 then -- 7% * 66% * 50% = 2.3% chance
+        pickupVariant = PickupVariant.PICKUP_TRINKET -- 350
+      else -- 7% * 66% * 50% = 2.3% chance
+        pickupVariant = PickupVariant.PICKUP_PILL -- 70
+      end
+
+    elseif pickupPercent <= 0.35 then -- 15%
+      pickupVariant = PickupVariant.PICKUP_COIN -- 20
+
+    elseif pickupPercent < 0.5 then -- 15%
+      pickupVariant = PickupVariant.PICKUP_HEART -- 10
+
+    elseif pickupPercent < 0.7 then -- 20%
+      pickupVariant = PickupVariant.PICKUP_KEY -- 30
+
+    elseif pickupPercent <= 0.85 then -- 15%
+      pickupVariant = PickupVariant.PICKUP_CHEST -- 50
+
+    else -- 15%
+      pickupVariant = PickupVariant.PICKUP_BOMB -- 40
+    end
+
+    if rng:RandomInt(20) == 0 then
+      pickupVariant = PickupVariant.PICKUP_LIL_BATTERY -- 90
+    end
+
+    if (rng:RandomInt(50) == 0) then
+      pickupVariant = PickupVariant.PICKUP_GRAB_BAG -- 69
+    end
+  end
+
+  -- Contract From Below has a chance to increase the amount of pickups that drop or make nothing drop
+  local pickupCount = 1
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_CONTRACT_FROM_BELOW) and -- 241
+     pickupVariant ~= PickupVariant.PICKUP_TRINKET then -- 350
+
+    pickupCount = player:GetCollectibleNum(CollectibleType.COLLECTIBLE_CONTRACT_FROM_BELOW) + 1 -- 241
+
+    -- Nothing chance with:
+    -- 1 contract / 2 pickups: 0.44
+    -- 2 contracts / 3 pickups: 0.44 (base) (would be 0.3 otherwise)
+    -- 3 contracts / 4 pickups: 0.2
+    -- 4 contracts / 5 pickups: 0.13
+    local nothingChance = math.pow(0.666, pickupCount)
+    if nothingChance * 0.5 > rng:NextFloat() then
+      pickupCount = 0
+    end
+  end
+
+  -- Hard mode has a chance to remove a heart drop
+  if game.Difficulty == 1 and
+     pickupVariant == PickupVariant.PICKUP_HEART then -- 10
+
+    if rng:RandomInt(100) >= 35 then
+      pickupVariant = PickupVariant.PICKUP_NULL -- 0
+    end
+  end
+
+  -- Broken Modem has a chance to increase the amount of pickups that drop
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_BROKEN_MODEM) and
+     rng:RandomInt(4) == 0 and
+     pickupCount >= 1 and
+      (pickupVariant == PickupVariant.PICKUP_COIN or -- 20
+       pickupVariant == PickupVariant.PICKUP_HEART or -- 10
+       pickupVariant == PickupVariant.PICKUP_KEY or -- 30
+       pickupVariant == PickupVariant.PICKUP_GRAB_BAG or -- 69
+       pickupVariant == PickupVariant.PICKUP_BOMB) then -- 40
+
+    pickupCount = pickupCount + 1
+  end
+
+  if pickupCount > 0 and
+     pickupVariant ~= PickupVariant.PICKUP_NULL then -- 0
+
+    local subType = 0
+    for i = 1, pickupCount do
+      local position = room:FindFreePickupSpawnPosition(centerPos, 1, true)
+      local pickup = game:Spawn(EntityType.ENTITY_PICKUP, pickupVariant, -- 5
+                     position, Vector(0, 0), nil, subType, rng:Next())
+      subType = pickup.SubType
+    end
+  end
+
 end
 
 return RPFastClear

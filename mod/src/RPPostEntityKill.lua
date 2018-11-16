@@ -59,7 +59,7 @@ function RPPostEntityKill:Entity45(entity)
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      RPSpeedrun.inSeededSpeedrun then
 
-    -- Season 1 and Seeded speedrun challenges always go to The Chest
+    -- Season 1 and Seeded speedrun challenges spawn only The Polaroid
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
@@ -67,41 +67,46 @@ function RPPostEntityKill:Entity45(entity)
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
 
-    -- Give the player a choice between the photos on the season 2, season 3, season 4, and season 5 speedrun challenges
+    -- Most seasons give the player a choice between the two photos
     situation = 3
 
   elseif player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
-    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
-    -- so since it is impossible to determine their actual photo status,
+    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative
+    -- Since it is impossible to determine the player's actual photo status,
     -- just give the player a choice between the photos
     situation = 3
 
   elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
          player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
-    -- The player has both photos already (this can only occur in a diversity race)
-    -- So, spawn a random boss item instead of a photo
+    -- The player has both photos already (which can only occur in a diversity race)
+    -- Spawn a random boss item instead of a photo
     situation = 4
 
   elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-    -- The player has The Polaroid already (this can only occur in a diversity race)
-    -- So, spawn The Negative instead
+    -- The player has The Polaroid already (which can occur in a diversity race or if Eden)
+    -- Spawn The Negative instead
     situation = 2
 
   elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-    -- The player has The Negative already (this can only occur in a diversity race)
-    -- So, spawn The Polaroid instead
+    -- The player has The Negative already (which can occur in a diversity race or if Eden)
+    -- Spawn The Polaroid instead
     situation = 1
 
   elseif RPGlobals.race.rFormat == "pageant" then
     -- Give the player a choice between the photos on the Pageant Boy ruleset
     situation = 3
 
-  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "Blue Baby" then
+  elseif RPGlobals.race.status == "in progress" and
+         RPGlobals.race.goal == "Blue Baby" then
+
     -- Races to Blue Baby need The Polaroid
     situation = 1
 
-  elseif RPGlobals.race.status == "in progress" and RPGlobals.race.goal == "The Lamb" then
+  elseif RPGlobals.race.status == "in progress" and
+         RPGlobals.race.goal == "The Lamb" then
+
+
     -- Races to The Lamb need The Negative
     situation = 2
 

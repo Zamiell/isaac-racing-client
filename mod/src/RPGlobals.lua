@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.26.2"
+RPGlobals.version = "v0.27.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.debug = false
 
@@ -262,11 +262,7 @@ function RPGlobals:InitRun()
     bookTouched  = false,
     coins        = 0,
     keys         = 0,
-    hearts       = 0,
-    maxHearts    = 0,
-    soulHearts   = 0,
-    blackHearts  = 0,
-    boneHearts   = 0,
+    heartTable   = {},
   }
 end
 

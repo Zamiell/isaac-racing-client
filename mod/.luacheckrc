@@ -28,6 +28,7 @@ globals = {
   "GridCollisionClass",
   "GridEntityType",
   "GridRooms",
+  "HeartSubType",
   "Input",
   "InputHook",
   "Isaac",

@@ -5,7 +5,6 @@ local RPGlobals     = require("src/rpglobals")
 local RPPostNewRoom = require("src/rppostnewroom")
 local RPFastTravel  = require("src/rpfasttravel")
 local RPCheckLoop   = require("src/rpcheckloop")
-local RPSpeedrun    = require("src/rpspeedrun")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function RPPostNewLevel:Main()
@@ -69,19 +68,20 @@ function RPPostNewLevel:NewLevel()
     return
   end
 
-  if (RPGlobals.race.rFormat ~= "seeded" or
-      RPGlobals.race.status ~= "in progress") and
-     RPSpeedrun.inSeededSpeedrun == false and
-     -- Disable reseeding for seeded races because it might be messing up seeded floors
-     (RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
-      RPCheckLoop:Main() or -- Check for looping floors
-      RPPostNewLevel:CheckDupeRooms()) then -- Check for duplicate rooms
+  -- Reseed the floor if it has a flaw in it
+  if challenge ~= 0 or
+     seeds:IsCustomRun() == false then -- Disable reseeding for set seeds
+
+    if RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
+       RPCheckLoop:Main() or -- Check for looping floors
+       RPPostNewLevel:CheckDupeRooms() then -- Check for duplicate rooms
       -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
 
-    RPGlobals.run.reseededFloor = true
-    RPGlobals.run.reseedCount = RPGlobals.run.reseedCount + 1
-    RPGlobals:ExecuteCommand("reseed")
-    return
+      RPGlobals.run.reseededFloor = true
+      RPGlobals.run.reseedCount = RPGlobals.run.reseedCount + 1
+      RPGlobals:ExecuteCommand("reseed")
+      return
+    end
   end
 
   -- Set the new floor

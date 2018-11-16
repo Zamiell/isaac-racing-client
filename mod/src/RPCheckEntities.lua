@@ -122,18 +122,6 @@ function RPCheckEntities:Entity5(pickup)
   if pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
      pickup.Variant == PickupVariant.PICKUP_MIMICCHEST then -- 54
 
-    -- We can't check for the "Appear" animation because this is not fast enough
-    -- to intercept the unavoidable damage when a Mimic spawns on top of the player
-    if pickup.TheresOptionsPickup then -- This is used as a replacement counter
-      return
-    end
-
-    -- Change all Mimics and Spiked Chests to normal chests until the appearing animation is complete
-    -- (this also fixes the unavoidable damage when a Mimic spawns where you happen to be standing)
-    -- (Spiked Chests do not have this problem)
-    -- (the unavoidable damage still happens if you spawn the Mimic using the console, but is fixed from room drops)
-    pickup.Variant = 50
-
     -- Check to see if we are in a specific room where a Spiked Chest or Mimic will cause unavoidable damage
     local roomDataVariant = roomData.Variant
     while roomDataVariant >= 10000 do
@@ -171,29 +159,16 @@ function RPCheckEntities:Entity5(pickup)
        ((stage == 7 or stage == 8) and stageType == 2 and roomDataVariant == 458) or -- Scarred Womb
        ((stage == 7 or stage == 8) and stageType == 2 and roomDataVariant == 489) then
 
-      -- Leave it as a normal chest, but changing the variant doesn't actually change the sprite
+      -- Change it to a normal chest
+      pickup.Variant = 50
       pickup:GetSprite():Load("gfx/005.050_chest.anm2", true)
-
-      -- We have to play an animation for the new sprite to actually appear
       pickup:GetSprite():Play("Appear", false)
+      -- (we have to play an animation for the new sprite to actually appear)
       Isaac.DebugString("Replaced a Spiked Chest / Mimic with a normal chest (for an unavoidable damage room).")
 
       -- Mark it so that other mods are aware of the replacement
       local data = pickup:GetData()
       data.unavoidableReplacement = true
-
-    else
-      -- Changing the variant doesn't actually change the sprite
-      -- Furthermore, we need to make it look like a Mimic
-      pickup:GetSprite():Load("gfx/005.054_mimic chest.anm2", true)
-
-      -- We have to play an animation for the new sprite to actually appear
-      pickup:GetSprite():Play("Appear", false)
-
-      -- Use the normally unused "TheresOptionsPickup" varaible to store that this is not a normal chest
-      pickup.TheresOptionsPickup = true
-
-      Isaac.DebugString("Replaced a Spiked Chest / Mimic (1/2).")
     end
 
   elseif pickup.Variant == PickupVariant.PICKUP_CHEST then -- 50
