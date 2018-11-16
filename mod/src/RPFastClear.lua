@@ -906,8 +906,8 @@ function RPFastClear:SpawnClearAward()
 
   -- Determine the kind of pickup
   local pickupVariant = PickupVariant.PICKUP_NULL -- 0
-  if pickupPercent > 0.12 then -- 12% chance for nothing to drop
-    if pickupPercent < 0.2 then -- 7% chance
+  if pickupPercent > 0.22 then -- 22% chance for nothing to drop
+    if pickupPercent < 0.3 then -- 7% chance for a card / trinket / pill
       if rng:RandomInt(3) == 0 then -- 7% * 33% = 2.3% chance
         pickupVariant = PickupVariant.PICKUP_TAROTCARD -- 300
       elseif rng:RandomInt(2) == 0 then -- 7% * 66% * 50% = 2.3% chance
@@ -916,20 +916,20 @@ function RPFastClear:SpawnClearAward()
         pickupVariant = PickupVariant.PICKUP_PILL -- 70
       end
 
-    elseif pickupPercent <= 0.35 then -- 15%
+    elseif pickupPercent < 0.45 then -- 15% for a coin
       pickupVariant = PickupVariant.PICKUP_COIN -- 20
 
-    elseif pickupPercent < 0.5 then -- 15%
+    elseif pickupPercent < 0.6 then -- 15% for a heart
       pickupVariant = PickupVariant.PICKUP_HEART -- 10
 
-    elseif pickupPercent < 0.7 then -- 20%
+    elseif pickupPercent < 0.8 then -- 20% for a key
       pickupVariant = PickupVariant.PICKUP_KEY -- 30
 
-    elseif pickupPercent <= 0.85 then -- 15%
-      pickupVariant = PickupVariant.PICKUP_CHEST -- 50
-
-    else -- 15%
+    elseif pickupPercent < 0.95 then -- 15% for a bomb
       pickupVariant = PickupVariant.PICKUP_BOMB -- 40
+
+    else -- 5% for a chest
+      pickupVariant = PickupVariant.PICKUP_CHEST -- 50
     end
 
     if rng:RandomInt(20) == 0 then

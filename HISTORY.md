@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.27.1* - November 16th, 2018
+
+* Fixed the bug where the "level" command would not work properly. (Thanks thereisnofuture)
+* Fixed the bug where all of the drops in the seeded drop system were off by 10%. (Thanks blcd)
+* Fixed the bug where bombs and chests were swapped in the new seeded drop system. (Thanks blcd)
+
 ### *v0.27.0* - November 16th, 2018
 
 * Note that this patch contains some changes for the R+7 Seeded custom challenge. You may have to redo research that was previously done.

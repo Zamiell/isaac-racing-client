@@ -138,11 +138,10 @@ While there are thousands of rooms in the game, many players have already seen t
 * AAA Battery now properly synergizes with The Battery.
 * 9 Volt now properly synergizes with The Battery.
 * Wiggle Worm now properly updates the tear delay cache.
-* You will no longer take unavoidable damage when Mimics happen to spawn on top of you.
-* You will no longer take unavoidable damage when Spiked Chests or Mimics spawn in rooms that only have a narrow path surrounded by walls or pits. (They will spawn as normal chests instead.)
-* You no longer have a chance to be sent to the menu after defeating Mega Satan.
+* Spiked Chests and Mimics that spawns in rooms that only have a narrow walkable path will spawn as normal chests to prevent unavoidable damage.
+* Defeating Mega Satan no longer has a chance to immediately end the run.
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
-* You can no longer abuse the Pony / White Pony to steal Devil Room items.
+* The Pony / White Pony can no longer be abused to steal Devil Room items.
 
 ### Graphics & Sound Fixes
 

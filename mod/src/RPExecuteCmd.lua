@@ -26,7 +26,7 @@ function RPExecuteCmd:Main(cmd, params)
   elseif cmd == "level" then
     -- Used to go to the proper floor and stage
     -- (always assumed a seeded race)
-    local stage = params
+    local stage = tonumber(params)
     local stageType = RPFastTravel:DetermineStageType(stage)
     if stage == 10 or stage == 11 then
       stageType = 1
