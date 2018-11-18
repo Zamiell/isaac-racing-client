@@ -15,9 +15,19 @@ function RPExecuteCmd:Main(cmd, params)
   local roomFrameCount = room:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  Isaac.DebugString("MC_EXECUTE_CMD - " .. tostring(cmd) .. " " .. tostring(params))
+  local debugString = "MC_EXECUTE_CMD - " .. tostring(cmd)
+  if params ~= "" then
+    debugString = debugString .. " " .. tostring(params)
+  end
+  Isaac.DebugString(debugString)
 
-  if cmd == "getframe" then
+  if cmd == "charnum" then
+    if params == "" then
+      return
+    end
+    RPSpeedrun.charNum = tonumber(params)
+
+  elseif cmd == "getframe" then
     -- Used for debugging
     Isaac.DebugString("Isaac frame count is at: " .. tostring(isaacFrameCount))
     Isaac.DebugString("Game frame count is at: " .. tostring(gameFrameCount))
@@ -26,6 +36,9 @@ function RPExecuteCmd:Main(cmd, params)
   elseif cmd == "level" then
     -- Used to go to the proper floor and stage
     -- (always assumed a seeded race)
+    if params == "" then
+      return
+    end
     local stage = tonumber(params)
     local stageType = RPFastTravel:DetermineStageType(stage)
     if stage == 10 or stage == 11 then
@@ -45,6 +58,15 @@ function RPExecuteCmd:Main(cmd, params)
 
   elseif cmd == "next" then
     -- Used to go to the next character in a multi-character speedrun
+    RPSpeedrun.spawnedCheckpoint = true
+    RPSpeedrun:CheckpointTouched()
+
+  elseif cmd == "previous" then
+    -- Used to go to the previous character in a multi-character speedrun
+    if RPSpeedrun.charNum == 1 then
+      return
+    end
+    RPSpeedrun.charNum = RPSpeedrun.charNum - 2
     RPSpeedrun.spawnedCheckpoint = true
     RPSpeedrun:CheckpointTouched()
   end

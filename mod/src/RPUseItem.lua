@@ -1,7 +1,8 @@
 local RPUseItem = {}
 
 -- Includes
-local RPGlobals   = require("src/rpglobals")
+local RPGlobals      = require("src/rpglobals")
+local RPSeededFloors = require("src/rpseededfloors")
 
 -- ModCallbacks.MC_USE_ITEM (3)
 -- Will get called for all items
@@ -59,7 +60,31 @@ function RPUseItem:Item44()
   -- we have already locked in a room transition
 end
 
--- CollectibleType.COLLECTIBLE_TELEPORT (286)
+-- CollectibleType.COLLECTIBLE_FORGET_ME_NOW (127)
+-- Also called manually when we touch a 5-pip Dice Room
+function RPUseItem:Item127()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local seeds = game:GetSeeds()
+  local customRun = seeds:IsCustomRun()
+  local challenge = Isaac.GetChallenge()
+
+  -- Do nothing if we are not playing on a set seed
+  if challenge ~= 0 or
+     customRun == false then
+
+    return
+  end
+
+  RPSeededFloors:Before(stage)
+  RPGlobals.run.forgetMeNow = true
+  Isaac.DebugString("Forget Me Now / 5-pip Dice Room detected. Seeding the next floor...")
+  -- We will call the "RPSeededFloors:After()" function manually in the MC_POST_NEW_LEVEL callback
+end
+
+-- CollectibleType.COLLECTIBLE_BLANK_CARD (286)
 function RPUseItem:Item286()
   local game = Game()
   local player = game:GetPlayer(0)

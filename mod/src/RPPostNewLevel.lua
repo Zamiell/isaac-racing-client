@@ -1,10 +1,11 @@
 local RPPostNewLevel = {}
 
 -- Includes
-local RPGlobals     = require("src/rpglobals")
-local RPPostNewRoom = require("src/rppostnewroom")
-local RPFastTravel  = require("src/rpfasttravel")
-local RPCheckLoop   = require("src/rpcheckloop")
+local RPGlobals      = require("src/rpglobals")
+local RPPostNewRoom  = require("src/rppostnewroom")
+local RPFastTravel   = require("src/rpfasttravel")
+local RPCheckLoop    = require("src/rpcheckloop")
+local RPSeededFloors = require("src/rpseededfloors")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function RPPostNewLevel:Main()
@@ -41,6 +42,7 @@ function RPPostNewLevel:NewLevel()
   local game = Game()
   local itemPool = game:GetItemPool()
   local seeds = game:GetSeeds()
+  local customRun = seeds:IsCustomRun()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -70,7 +72,7 @@ function RPPostNewLevel:NewLevel()
 
   -- Reseed the floor if it has a flaw in it
   if challenge ~= 0 or
-     seeds:IsCustomRun() == false then -- Disable reseeding for set seeds
+     customRun == false then -- Disable reseeding for set seeds
 
     if RPPostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
        RPCheckLoop:Main() or -- Check for looping floors
@@ -98,6 +100,7 @@ function RPPostNewLevel:NewLevel()
   RPGlobals.run.replacedHeavenDoors = {}
   Isaac.DebugString("Reseed count: " .. tostring(RPGlobals.run.reseedCount))
   RPGlobals.run.reseedCount = 0
+  RPGlobals.run.tempHolyMantle = false
 
   -- Reset the RNG of some items that should be seeded per floor
   local stageSeed = seeds:GetStageSeed(stage)
@@ -137,6 +140,12 @@ function RPPostNewLevel:NewLevel()
       player:AddMaxHearts(-2, true) -- Remove a heart container
       Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (RPPostNewLevel)")
     end
+  end
+
+  -- Seed floors that are generated when a player uses a Forget Me Now or a 5-pip Dice Room
+  if RPGlobals.run.forgetMeNow then
+    RPGlobals.run.forgetMeNow = false
+    RPSeededFloors:After()
   end
 
   -- Call PostNewRoom manually (they get naturally called out of order)

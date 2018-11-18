@@ -1,5 +1,21 @@
 # Racing+ Version History and News
 
+### *v0.28.0* - November 18th, 2018
+
+* The mod will now attempt to check to see if you are on a fully unlocked save file by starting on a specific seed with Eden and looking for certain items. (It will do this once every time the game is opened.)
+* Keeper will now be given the effect of Wooden Cross upon revival in a seeded race. (The effect will be removed upon reaching a new floor.)
+* Fixed the bug where the trophy would not fall at the end of the R+7 seeded challenge. (Thanks thereisnofuture)
+* Fixed the bug where the golden heart breaking sound would play when the seeded floor mechanic adjusted your health. (Thanks Gamonymous)
+* Fixed the bug where it shows that 0 frames passed when finishing a race.
+* Fixed the bug where Contract From Below would result in errors when clearing a room on a set seed. (Thanks mgln)
+* Fixed the bug where Caffeine Pill would give an extra pill during a revival in a seeded race. (Thanks Gamonymous)
+
+### *v0.27.2* - November 17th, 2018
+
+* You can now use the "next" and "previous" console commands to manually move forward and back through characters in a multi-character speedrun. (Thanks thereisnofuture)
+* Fixed the bug where Forget Me Now and 5-pip Dice Rooms did not trigger the seeded floor system when playing on a set seed. (Thanks Moucheron Quipet)
+* Fixed the bug where going into a new challenge would not exit the R+7 seeded challenge.
+
 ### *v0.27.1* - November 16th, 2018
 
 * Fixed the bug where the "level" command would not work properly. (Thanks thereisnofuture)

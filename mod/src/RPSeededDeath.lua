@@ -81,6 +81,14 @@ function RPSeededDeath:PostNewRoom()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
+  local effects = player:GetEffects()
+  local itemConfig = Isaac.GetItemConfig()
+
+  -- Add a temporary Holy Mantle effect for Keeper after a seeded revival
+  if RPGlobals.run.tempHolyMantle then
+    effects:AddCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) -- 313
+    player:AddCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
+  end
 
   -- Seeded death (2/3)
   if RPGlobals.run.seededDeath.state ~= 1 then
@@ -211,6 +219,8 @@ function RPSeededDeath:DebuffOff()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
   local character = player:GetPlayerType()
+  local effects = player:GetEffects()
+  local itemConfig = Isaac.GetItemConfig()
 
   -- Unfade the character
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
@@ -263,7 +273,7 @@ function RPSeededDeath:DebuffOff()
       pedestal.Touched = true
       Isaac.DebugString("SeededDeath - Put the old active item on the ground since there was no room for it.")
     end
-end
+  end
 
   -- Set their size to the way it was before the debuff was applied
   player.SpriteScale = RPGlobals.run.seededDeath.spriteScale
@@ -312,7 +322,7 @@ end
   -- which is the only item in the game that directly puts a pocket item into your inventory
   if cardSlot0 ~= 0 then
     player:SetCard(0, cardSlot0)
-  elseif pillSlot0 ~= 0 then
+  else
     player:SetPill(0, pillSlot0)
   end
 
@@ -327,8 +337,8 @@ end
     end
   end
 
-  -- Keeper will get extra blue flies if he was given any items that grant soul hearts
   if character == PlayerType.PLAYER_KEEPER then -- 14
+    -- Keeper will get extra blue flies if he was given any items that grant soul hearts
     for i, entity in pairs(Isaac.GetRoomEntities()) do
       if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
          entity.Variant == FamiliarVariant.BLUE_FLY then -- 43
@@ -336,6 +346,12 @@ end
         entity:Remove()
       end
     end
+
+    -- Keeper will start with one coin container, which can lead to chain deaths
+    -- Give Keeper a temporary Wooden Cross effect
+    RPGlobals.run.tempHolyMantle = true
+    effects:AddCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) -- 313
+    player:AddCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
   end
 end
 

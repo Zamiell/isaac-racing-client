@@ -377,6 +377,7 @@ function RPFastClear:ClearRoom()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local seeds = game:GetSeeds()
+  local customRun = seeds:IsCustomRun()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -478,7 +479,7 @@ function RPFastClear:ClearRoom()
     -- Spawn the award for clearing the room (the pickup, chest, etc.)
     -- (this also makes the trapdoor appear if we are in a boss room)
     if challenge == 0 and
-       seeds:IsCustomRun() and
+       customRun and
        roomType ~= RoomType.ROOM_BOSS and -- 5
        roomType ~= RoomType.ROOM_DUNGEON then -- 16
 
@@ -887,10 +888,12 @@ end
 -- The following code is based on the game's internal logic, documented here:
 -- https://bindingofisaacrebirth.gamepedia.com/Room_Clear_Awards
 -- (it was reverse engineered by Blade / blcd / Will)
--- However, there is one major difference from vanilla:
--- we hardcode values of 0 luck, no Lucky Foots, and no Lucky Toes
--- so that room drops are completely consistent
+-- However, there is some major difference from vanilla:
+-- we hardcode values of 0 luck so that room drops are completely consistent
 -- (otherwise, one player would be able to get a lucky Emperor card by using a Luck Up or Luck Down pill, for example)
+-- Furthermore, we ignore the following items, since we remove them from pools:
+-- Lucky Foot, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe,
+-- Safety Cap, Ace of Spades, and Watch Battery
 function RPFastClear:SpawnClearAward()
   -- Local variables
   local game = Game()
@@ -953,7 +956,7 @@ function RPFastClear:SpawnClearAward()
     -- 2 contracts / 3 pickups: 0.44 (base) (would be 0.3 otherwise)
     -- 3 contracts / 4 pickups: 0.2
     -- 4 contracts / 5 pickups: 0.13
-    local nothingChance = math.pow(0.666, pickupCount)
+    local nothingChance = 0.666^pickupCount -- "math.pow()" does not exist in Isaac's Lua version
     if nothingChance * 0.5 > rng:NextFloat() then
       pickupCount = 0
     end

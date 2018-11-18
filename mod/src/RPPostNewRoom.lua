@@ -1,15 +1,16 @@
 local RPPostNewRoom = {}
 
 -- Includes
-local RPGlobals         = require("src/rpglobals")
-local RPFastClear       = require("src/rpfastclear")
-local RPFastTravel      = require("src/rpfasttravel")
-local RPSpeedrun        = require("src/rpspeedrun")
-local RPChangeCharOrder = require("src/rpchangecharorder")
-local RPSprites         = require("src/rpsprites")
-local RPSeededDeath     = require("src/rpseededdeath")
-local RPSeededRooms     = require("src/rpseededrooms")
-local SamaelMod         = require("src/rpsamael")
+local RPGlobals             = require("src/rpglobals")
+local RPFastClear           = require("src/rpfastclear")
+local RPFastTravel          = require("src/rpfasttravel")
+local RPSpeedrun            = require("src/rpspeedrun")
+local RPSpeedrunPostNewRoom = require("src/rpspeedrunpostnewroom")
+local RPChangeCharOrder     = require("src/rpchangecharorder")
+local RPSprites             = require("src/rpsprites")
+local RPSeededDeath         = require("src/rpseededdeath")
+local RPSeededRooms         = require("src/rpseededrooms")
+local SamaelMod             = require("src/rpsamael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function RPPostNewRoom:Main()
@@ -81,6 +82,7 @@ function RPPostNewRoom:NewRoom()
   RPGlobals.run.usedStrength      = false
   RPGlobals.run.handsDelay        = 0
   RPGlobals.run.naturalTeleport   = false
+  RPGlobals.run.diceRoomActivated = false
   RPGlobals.run.megaSatanDead     = false
   RPGlobals.run.endOfRunText      = false -- Shown when the run is completed but only for one room
   RPGlobals.run.teleportSubverted = false
@@ -159,7 +161,7 @@ function RPPostNewRoom:NewRoom()
   RPPostNewRoom:Race()
 
   -- Do speedrun related stuff
-  RPSpeedrun:PostNewRoom()
+  RPSpeedrunPostNewRoom:Main()
 end
 
 -- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)

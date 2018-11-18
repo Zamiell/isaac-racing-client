@@ -127,6 +127,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, RPPreRoomEntitySpa
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Main) -- 3
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item44,  CollectibleType.COLLECTIBLE_TELEPORT) -- 44
 -- (this callback is also used by Broken Remote)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item127, CollectibleType.COLLECTIBLE_FORGET_ME_NOW) -- 127
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item286, CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item324, CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, RPUseItem.Item477, CollectibleType.COLLECTIBLE_VOID) -- 477

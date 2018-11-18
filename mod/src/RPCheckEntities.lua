@@ -2,8 +2,10 @@ local RPCheckEntities = {}
 
 -- Includes
 local RPGlobals         = require("src/rpglobals")
+local RPUseItem         = require("src/rpuseitem")
 local RPPedestals       = require("src/rppedestals")
 local RPFastTravel      = require("src/rpfasttravel")
+local RPRace            = require("src/rprace")
 local RPSpeedrun        = require("src/rpspeedrun")
 local RPChangeCharOrder = require("src/rpchangecharorder")
 local SamaelMod         = require("src/rpsamael")
@@ -271,8 +273,6 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_MegaSatan(pickup)
   elseif RPGlobals.race.goal == "Everything" then
     RPCheckEntities:Entity5_340_Everything(pickup)
-  else
-    Isaac.DebugString("Error: Failed to parse the race goal when figuring out what to do with the big chest.")
   end
 
   -- Now that we know what to do with the big chest, do it
@@ -312,12 +312,20 @@ function RPCheckEntities:Entity5_340(pickup)
     pickup:Remove()
 
   elseif RPCheckEntities.bigChestAction == "trophy" then
-    if challenge ~= 0 or RPGlobals.race.status ~= "none" then
+    if challenge ~= 0 or
+       RPSpeedrun.inSeededSpeedrun or
+       RPGlobals.race.status ~= "none" then
+
       -- We only want to spawn a trophy if we are on a custom speedrun challenge or currently in a race
       game:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
                  pickup.Position, pickup.Velocity, nil, 0, 0)
       Isaac.DebugString("Spawned the end of race/speedrun trophy.")
       pickup:Remove()
+
+    else
+      -- Set a flag so that we leave it alone on the next frame
+      pickup.Touched = true
+      Isaac.DebugString("Avoiding spawning the Trophy since we are not in a speedrun or race.")
     end
 
   elseif RPCheckEntities.bigChestAction == "victorylap" then
@@ -765,6 +773,10 @@ end
 
 -- EntityType.ENTITY_EFFECT (1000)
 function RPCheckEntities:Entity1000(effect)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
   if effect.Variant == EffectVariant.FART and -- 34
      RPGlobals.run.changeFartColor == true then
 
@@ -775,6 +787,16 @@ function RPCheckEntities:Entity1000(effect)
 
   elseif effect.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
     RPFastTravel:ReplaceHeavenDoor(effect)
+
+  elseif effect.Variant == EffectVariant.DICE_FLOOR then -- 76
+    -- We need to keep track of when the player uses a 5-pip Dice Room so that we can seed the floor appropriately
+    if RPGlobals.run.diceRoomActivated == false and
+       effect.SubType == 4 and -- 5-pip Dice Room
+       RPGlobals:InsideSquare(player.Position, effect.Position, 75) then -- Determined through trial and error
+
+      RPGlobals.run.diceRoomActivated = true
+      RPUseItem:Item127() -- Forget Me Now
+    end
 
   elseif effect.Variant == EffectVariant.FIREWORKS then -- 104
     -- Check for fireworks so that we can reduce the volume
@@ -799,14 +821,7 @@ end
 function RPCheckEntities:EntityRaceTrophy(entity)
   -- Local variables
   local game = Game()
-  local level = game:GetLevel()
-  local room = game:GetRoom()
   local player = game:GetPlayer(0)
-  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = level:GetCurrentRoomIndex()
-  end
-  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local challenge = Isaac.GetChallenge()
 
   if RPGlobals.raceVars.finished or RPSpeedrun.finished then
@@ -826,34 +841,11 @@ function RPCheckEntities:EntityRaceTrophy(entity)
   entity:Remove()
   player:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")
 
-  if challenge == Challenge.CHALLENGE_NULL then -- 0
-    -- Finish the race
-    RPGlobals.raceVars.finished = true
-    RPGlobals.raceVars.finishedTime = Isaac.GetTime() - RPGlobals.raceVars.startedTime
-    RPGlobals.run.endOfRunText = true -- Show the run summary
+  if challenge == Challenge.CHALLENGE_NULL and -- 0
+     RPSpeedrun.inSeededSpeedrun == false then
 
-    -- Tell the client that the goal was achieved (and the race length)
-    Isaac.DebugString("Finished race " .. tostring(RPGlobals.race.id) ..
-                      " with time: " .. tostring(RPGlobals.raceVars.finishedTime))
+    RPRace:Finish()
 
-    -- Spawn a Victory Lap custom item in the corner of the room (which emulates Forget Me Now)
-    local victoryLapPosition = RPGlobals:GridToPos(11, 1)
-    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-      victoryLapPosition = RPGlobals:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
-    end
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-
-    -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
-    local finishedPosition = RPGlobals:GridToPos(1, 1)
-    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-      finishedPosition = RPGlobals:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
-    end
-    local item2seed = RPGlobals:IncrementRNG(roomSeed)
-    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_FINISHED, item2seed)
-
-    Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
   else
     RPSpeedrun:Finish()
   end

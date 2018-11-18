@@ -56,6 +56,7 @@ function RPPostRender:Main()
   RPChangeCharOrder:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
   RPFastDrop:PostRender() -- Custom challenge related text
+  RPPostRender:DrawInvalidSaveFile()
 
   -- Check for inputs
   RPPostRender:CheckConsoleInput()
@@ -97,11 +98,48 @@ function RPPostRender:CheckRestart()
   local game = Game()
   local seeds = game:GetSeeds()
   local startSeedString = seeds:GetStartSeedString()
+  local customRun = seeds:IsCustomRun()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+  local challenge = Isaac.GetChallenge()
 
   if RPGlobals.run.restart == false then
     return
   end
   RPGlobals.run.restart = false
+
+  -- First, we need to do the fully unlocked save file check
+  if RPGlobals.saveFile.state == 1 then
+    if challenge ~= Challenge.CHALLENGE_NULL then -- 0
+      RPGlobals:ExecuteCommand("challenge " .. tostring(Challenge.CHALLENGE_NULL)) -- 0
+    end
+    if character ~= PlayerType.PLAYER_EDEN then -- 9
+      RPGlobals:ExecuteCommand("restart " .. tostring(PlayerType.PLAYER_EDEN)) -- 9
+    end
+    if startSeedString ~= RPGlobals.saveFile.seed then
+      RPGlobals:ExecuteCommand("seed " .. RPGlobals.saveFile.seed)
+    end
+    return
+
+  elseif RPGlobals.saveFile.state == 2 then
+    if challenge ~= RPGlobals.saveFile.old.challenge then -- 0
+      RPGlobals:ExecuteCommand("challenge " .. tostring(RPGlobals.saveFile.old.challenge))
+    end
+    if character ~= RPGlobals.saveFile.old.character then
+      RPGlobals:ExecuteCommand("restart " .. tostring(RPGlobals.saveFile.old.character))
+    end
+    if customRun ~= RPGlobals.saveFile.old.seededRun then
+      -- This will change the reset behavior to that of an unseeded run
+      seeds:Reset()
+      RPGlobals:ExecuteCommand("restart")
+    end
+    if RPGlobals.saveFile.old.seededRun and
+       startSeedString ~= RPGlobals.saveFile.old.seed then
+
+      RPGlobals:ExecuteCommand("seed " .. RPGlobals.saveFile.old.seed)
+    end
+    return
+  end
 
   -- Change the seed of the run if need be
   local intendedSeed
@@ -544,6 +582,27 @@ function RPPostRender:Race()
     -- The starting position is 320, 380
     player.Position = Vector(320, 380)
   end
+end
+
+function RPPostRender:DrawInvalidSaveFile()
+  if RPGlobals.saveFile.fullyUnlocked then
+    return
+  end
+
+  local x = 115
+  local y = 70
+  Isaac.RenderText("Error: You must use a fully unlocked save file to", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("play the Racing+ mod. This is so that all", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("players will have consistent items in races", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("and speedruns. You can download a fully", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("unlocked save file at:", x, y, 2, 2, 2, 2)
+  y = y + 20
+  Isaac.RenderText("https://www.speedrun.com/afterbirthplus/resources", x, y, 2, 2, 2, 2)
 end
 
 return RPPostRender

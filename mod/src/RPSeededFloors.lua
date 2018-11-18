@@ -13,15 +13,17 @@ function RPSeededFloors:Before(stage)
   local game = Game()
   local seeds = game:GetSeeds()
   local seed = seeds:GetStageSeed(stage)
+  local customRun = seeds:IsCustomRun()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local coins = player:GetNumCoins()
   local keys = player:GetNumKeys()
   local challenge = Isaac.GetChallenge()
+  local sfx = SFXManager()
 
   -- Only swap things if we are playing a specific seed
   if challenge ~= 0 or
-     seeds:IsCustomRun() == false then
+     customRun == false then
 
     return
   end
@@ -79,6 +81,8 @@ function RPSeededFloors:Before(stage)
   seed = RPGlobals:IncrementRNG(seed)
   math.randomseed(seed)
   player:AddMaxHearts(-24, false)
+  sfx:Stop(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY) -- 427
+  -- (the sound for Golden Hearts breaking will play when we remove all red hearts)
   player:AddSoulHearts(-24)
   player:AddBoneHearts(-24)
   player:AddMaxHearts(2, false)
@@ -117,6 +121,7 @@ function RPSeededFloors:After()
   -- Local variables
   local game = Game()
   local seeds = game:GetSeeds()
+  local customRun = seeds:IsCustomRun()
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
   local devilVisited = RPGlobals.run.seededSwap.devilVisited
@@ -126,7 +131,7 @@ function RPSeededFloors:After()
 
   -- Only swap things if we are playing a specific seed
   if challenge ~= 0 or
-     seeds:IsCustomRun() == false then
+     customRun == false then
 
     return
   end
@@ -291,6 +296,7 @@ function RPSeededFloors:LoadHealth()
   -- Fill in the red heart containers
   player:AddHearts(hearts.hearts)
   player:AddGoldenHearts(hearts.goldenHearts)
+  -- (no matter what kind of heart is added, no sounds effects will play)
 end
 
 return RPSeededFloors

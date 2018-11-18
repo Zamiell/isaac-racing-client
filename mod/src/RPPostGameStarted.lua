@@ -1,15 +1,16 @@
 local RPPostGameStarted = {}
 
 -- Includes
-local RPGlobals      = require("src/rpglobals")
-local RPPostNewLevel = require("src/rppostnewlevel")
-local RPSprites      = require("src/rpsprites")
-local RPSchoolbag    = require("src/rpschoolbag")
-local RPSoulJar      = require("src/rpsouljar")
-local RPFastClear    = require("src/rpfastclear")
-local RPFastDrop     = require("src/rpfastdrop")
-local RPSpeedrun     = require("src/rpspeedrun")
-local RPTimer        = require("src/rptimer")
+local RPGlobals                 = require("src/rpglobals")
+local RPPostNewLevel            = require("src/rppostnewlevel")
+local RPSprites                 = require("src/rpsprites")
+local RPSchoolbag               = require("src/rpschoolbag")
+local RPSoulJar                 = require("src/rpsouljar")
+local RPFastClear               = require("src/rpfastclear")
+local RPFastDrop                = require("src/rpfastdrop")
+local RPSpeedrun                = require("src/rpspeedrun")
+local RPSpeedrunPostGameStarted = require("src/rpspeedrunpostgamestarted")
+local RPTimer                   = require("src/rptimer")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function RPPostGameStarted:Main(saveState)
@@ -18,6 +19,7 @@ function RPPostGameStarted:Main(saveState)
   local itemPool = game:GetItemPool()
   local seeds = game:GetSeeds()
   local startSeed = seeds:GetStartSeed()
+  local customRun = seeds:IsCustomRun()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
@@ -31,7 +33,11 @@ function RPPostGameStarted:Main(saveState)
   Isaac.DebugString("MC_POST_GAME_STARTED")
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
-  RPPostGameStarted:CheckCorruptMod()
+  if RPPostGameStarted:CheckCorruptMod() or
+     RPPostGameStarted:CheckFullyUnlockedSave() then
+
+    return
+  end
 
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
@@ -129,7 +135,7 @@ function RPPostGameStarted:Main(saveState)
   itemPool:RemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
 
   if challenge == 0 and
-     seeds:IsCustomRun() then
+     customRun then
 
     -- Racing+ also removes certain trinkets that mess up floor generation when playing on a set seed
     itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
@@ -151,7 +157,7 @@ function RPPostGameStarted:Main(saveState)
   RPPostGameStarted:Character()
 
   -- Do more run initialization things specifically pertaining to speedruns
-  RPSpeedrun:PostGameStarted()
+  RPSpeedrunPostGameStarted:Main()
 
   -- Do more run initialization things specifically pertaining to races
   RPPostGameStarted:Race()
@@ -172,13 +178,14 @@ function RPPostGameStarted:Main(saveState)
   RPPostNewLevel:NewLevel()
 end
 
+-- If Racing+ is turned on from the mod menu and then the user immediately tries to play,
+-- it won't work properly; some things like boss cutscenes will still be enabled
+-- In order to fix this, the game needs to be completely restarted
+-- One way to detect this corrupted state is to get how many frames there are
+-- in the currently loaded boss cutscene animation file (located at "gfx/ui/boss/versusscreen.anm2")
+-- Racing+ removes boss cutscenes, so this value should be 0
+-- This function returns true if the MC_POST_GAME_STARTED callback should halt
 function RPPostGameStarted:CheckCorruptMod()
-  -- If Racing+ is turned on from the mod menu and then the user immediately tries to play,
-  -- it won't work properly; some things like boss cutscenes will still be enabled
-  -- In order to fix this, the game needs to be completely restarted
-  -- One way to detect this corrupted state is to get how many frames there are
-  -- in the currently loaded boss cutscene animation file (located at "gfx/ui/boss/versusscreen.anm2")
-  -- Racing+ removes boss cutscenes, so this value should be 0
   local sprite = Sprite()
   sprite:Load("gfx/ui/boss/versusscreen.anm2", true)
   sprite:SetFrame("Scene", 0)
@@ -187,6 +194,96 @@ function RPPostGameStarted:CheckCorruptMod()
   if lastFrame ~= 0 then
     Isaac.DebugString("Corrupted Racing+ instantiation detected.")
     RPGlobals.corrupted = true
+  end
+  return RPGlobals.corrupted
+end
+
+-- We can verify that the player is playing on a fully unlocked save by file by
+-- going to a specific seed on Eden and checking to see if the items are accurate
+-- This function returns true if the MC_POST_GAME_STARTED callback should halt
+function RPPostGameStarted:CheckFullyUnlockedSave()
+  -- Local variables
+  local game = Game()
+  local seeds = game:GetSeeds()
+  local startSeedString = seeds:GetStartSeedString()
+  local customRun = seeds:IsCustomRun()
+  local player = game:GetPlayer(0)
+  local character = player:GetPlayerType()
+  local activeItem = player:GetActiveItem()
+  local challenge = Isaac.GetChallenge()
+
+  -- Finished checking
+  if RPGlobals.saveFile.state == 3 then
+    return false
+  end
+
+  -- Not checked
+  if RPGlobals.saveFile.state == 0 then
+    -- Store what the old run was like
+    RPGlobals.saveFile.old.challenge = challenge
+    RPGlobals.saveFile.old.character = character
+    if challenge == 0 and
+       customRun then
+
+      RPGlobals.saveFile.old.seededRun = true
+      RPGlobals.saveFile.old.seed = startSeedString
+    end
+
+    RPGlobals.saveFile.state = 1
+  end
+
+  -- Going to the set seed with Eden
+  if RPGlobals.saveFile.state == 1 then
+    local valid = true
+    if challenge ~= Challenge.CHALLENGE_NULL then -- 0
+      valid = false
+    end
+    if character ~= PlayerType.PLAYER_EDEN then -- 9
+      valid = false
+    end
+    if startSeedString ~= RPGlobals.saveFile.seed then
+      valid = false
+    end
+    if not valid then
+      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      RPGlobals.run.restart = true
+      return true
+    end
+
+    -- We are on the specific Eden seed, so check to see if our items are correct
+    if activeItem == RPGlobals.saveFile.activeItem and
+       player:HasCollectible(RPGlobals.saveFile.passiveItem) then
+
+      RPGlobals.saveFile.fullyUnlocked = true
+    end
+
+    RPGlobals.saveFile.state = 2
+  end
+
+  -- Going back to the old challenge/character/seed
+  if RPGlobals.saveFile.state == 2 then
+    local valid = true
+    if challenge ~= RPGlobals.saveFile.old.challenge then
+      valid = false
+    end
+    if character ~= RPGlobals.saveFile.old.character then
+      valid = false
+    end
+    if customRun ~= RPGlobals.saveFile.old.seededRun then
+      valid = false
+    end
+    if RPGlobals.saveFile.old.seededRun and
+       startSeedString ~= RPGlobals.saveFile.old.seed then
+
+      valid = false
+    end
+    if not valid then
+      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      RPGlobals.run.restart = true
+      return true
+    end
+
+    RPGlobals.saveFile.state = 3
   end
 end
 
@@ -345,6 +442,7 @@ function RPPostGameStarted:Race()
   -- Local variables
   local game = Game()
   local seeds = game:GetSeeds()
+  local customRun = seeds:IsCustomRun()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
   local challenge = Isaac.GetChallenge()
@@ -393,7 +491,7 @@ function RPPostGameStarted:Race()
     -- Validate that we are not on a set seed
     -- (this will be true if we are on a set seed or on a challenge,
     -- but we won't get this far if we are on a challenge)
-    if seeds:IsCustomRun() and
+    if customRun and
        RPGlobals.debug == false then -- Make an exception if we are trying to debug something on a certain seed
 
       -- If the run started with a set seed, this will change the reset behavior to that of an unseeded run

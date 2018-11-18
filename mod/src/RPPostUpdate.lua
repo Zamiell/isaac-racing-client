@@ -1,17 +1,18 @@
 local RPPostUpdate = {}
 
 -- Includes
-local RPGlobals         = require("src/rpglobals")
-local RPSprites         = require("src/rpsprites")
-local RPPills           = require("src/rppills")
-local RPCheckEntities   = require("src/rpcheckentities")
-local RPFastClear       = require("src/rpfastclear")
-local RPFastDrop        = require("src/rpfastdrop")
-local RPSchoolbag       = require("src/rpschoolbag")
-local RPSoulJar         = require("src/rpsouljar")
-local RPFastTravel      = require("src/rpfasttravel")
-local RPSpeedrun        = require("src/rpspeedrun")
-local RPChangeCharOrder = require("src/rpchangecharorder")
+local RPGlobals            = require("src/rpglobals")
+local RPPills              = require("src/rppills")
+local RPCheckEntities      = require("src/rpcheckentities")
+local RPFastClear          = require("src/rpfastclear")
+local RPFastDrop           = require("src/rpfastdrop")
+local RPSchoolbag          = require("src/rpschoolbag")
+local RPSoulJar            = require("src/rpsouljar")
+local RPFastTravel         = require("src/rpfasttravel")
+local RPRace               = require("src/rprace")
+local RPSpeedrun           = require("src/rpspeedrun")
+local RPSpeedrunPostUpdate = require("src/rpspeedrunpostupdate")
+local RPChangeCharOrder    = require("src/rpchangecharorder")
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
@@ -63,20 +64,6 @@ function RPPostUpdate:Main()
   -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
   RPPostUpdate:CheckHauntSpeedup()
 
-  -- Keep track of our passive items over the course of the run
-  if player:IsItemQueueEmpty() == false and
-     RPGlobals.run.queuedItems == false then
-
-    RPGlobals.run.queuedItems = true
-    if player.QueuedItem.Item.Type ~= ItemType.ITEM_ACTIVE then -- 3
-      RPGlobals.run.passiveItems[#RPGlobals.run.passiveItems + 1] = player.QueuedItem.Item.ID
-      if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
-        Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
-      end
-      RPSpeedrun:CheckSeason5Start()
-    end
-  end
-
   -- Check to see if an item that messes with item pedestals got canceled
   -- (this has to be done a frame later or else it won't work)
   if RPGlobals.run.rechargeItemFrame == gameFrameCount then
@@ -115,8 +102,8 @@ function RPPostUpdate:Main()
 
   RPPills:CheckPHD()
 
-  -- Do race/speedrun related checks
-  RPPostUpdate:RaceChecks()
+  RPRace:PostUpdate()
+  RPSpeedrunPostUpdate:Main()
 end
 
 -- Keep track of the when the room is cleared
@@ -291,98 +278,13 @@ function RPPostUpdate:CheckHauntSpeedup()
   end
 end
 
--- Do race/speedrun related checks
--- (some race related checks are also in CheckGridEntities and CheckEntities
--- so that we don't have to iterate through all of the entities in the room twice)
 function RPPostUpdate:RaceChecks()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
   local player = game:GetPlayer(0)
-  local gameFrameCount = game:GetFrameCount()
-  local isaacFrameCount = Isaac.GetFrameCount()
   local challenge = Isaac.GetChallenge()
-
-  -- Check to see if we need to start the timers
-  RPSpeedrun:StartTimer()
-  if RPGlobals.run.startedTime == 0 then
-    RPGlobals.run.startedTime = Isaac.GetTime()
-  end
-
-  -- Make race winners get sparklies and fireworks
-  if (RPGlobals.raceVars.finished == true and
-      RPGlobals.race.status == "none" and
-      RPGlobals.race.place == 1 and
-      RPGlobals.race.numEntrants >= 3) or
-     RPSpeedrun.finished then
-
-    -- Give Isaac sparkly feet (1000.103.0)
-    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ULTRA_GREED_BLING, 0,
-                player.Position + RandomVector():__mul(10), Vector(0, 0), nil)
-
-    -- Spawn 30 fireworks (1000.104.0)
-    -- (some can be duds randomly and not spawn any fireworks after the 20 frame countdown)
-    if RPGlobals.raceVars.fireworks < 40 and gameFrameCount % 20 == 0 then
-      for i = 1, 5 do
-        RPGlobals.raceVars.fireworks = RPGlobals.raceVars.fireworks + 1
-        local firework = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.FIREWORKS, 0,
-                                     RPGlobals:GridToPos(math.random(1, 11), math.random(2, 8)),
-                                     Vector(0, 0), nil) -- 0,12  0,8
-        local fireworkEffect = firework:ToEffect()
-        fireworkEffect:SetTimeout(20)
-      end
-    end
-  end
-
-  -- Check to see if the player just picked up the "Victory Lap" custom item
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then
-    -- Remove it so that we don't trigger this behavior again on the next frame
-    player:RemoveCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP)
-
-    -- Remove the final place graphic if it is showing
-    RPSprites:Init("place2", 0)
-
-    -- Make them float upwards
-    -- (the code is loosely copied from the "RPFastTravel:CheckTrapdoorEnter()" function)
-    RPGlobals.run.trapdoor.state = 1
-    Isaac.DebugString("Trapdoor state: " .. RPGlobals.run.trapdoor.state .. " (from Victory Lap)")
-    RPGlobals.run.trapdoor.upwards = true
-    RPGlobals.run.trapdoor.frame = isaacFrameCount + 40
-    player.ControlsEnabled = false
-    player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-    -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-    player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
-    player:PlayExtraAnimation("LightTravel")
-    RPGlobals.run.currentFloor = RPGlobals.run.currentFloor - 1
-    -- This is needed or else state 5 will not correctly trigger
-    -- (because the PostNewRoom callback will occur 3 times instead of 2)
-    RPGlobals.raceVars.victoryLaps = RPGlobals.raceVars.victoryLaps + 1
-  end
-
-  -- Check to see if the player just picked up the "Finish" custom item
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_FINISHED) then
-    -- Remove the final place graphic if it is showing
-    RPSprites:Init("place2", 0)
-
-    -- No animations will advance once the game is fading out,
-    -- and the first frame of the item pickup animation looks very strange,
-    -- so just make the player invisible to compensate
-    player.Visible = false
-
-    -- If we are playing "R+7 Seeded", turn it off
-    RPSpeedrun.inSeededSpeedrun = false
-
-    -- Go back to the title screen
-    game:Fadeout(0.0275, RPGlobals.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
-  end
-
-  -- Check to see if the player just picked up the "Checkpoint" custom item
-  if player.QueuedItem.Item ~= nil and
-     player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_CHECKPOINT then
-
-    RPSpeedrun:CheckpointTouched()
-  end
 
   -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
   if RPGlobals.run.removedCrownHearts == false and
@@ -405,9 +307,6 @@ function RPPostUpdate:RaceChecks()
      RPGlobals.run.removedCrownHearts = true
      player:AddSoulHearts(-4)
   end
-
-  -- Check to see if we need to remove Incubus from Lilith on R+7 Season 4
-  RPSpeedrun:CheckRemoveIncubus()
 
   -- Handle things for the "Change Char Order" custom challenge
   RPChangeCharOrder:PostUpdate()

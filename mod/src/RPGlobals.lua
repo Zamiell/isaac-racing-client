@@ -4,8 +4,25 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.27.2"
+RPGlobals.version = "v0.28.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
+RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
+  state = 0,
+  -- 0 = Not checked
+  -- 1 = Going to the set seed with Eden
+  -- 2 = Going back to the old challenge/character/seed
+  -- 3 = Finished checking
+  fullyUnlocked = false,
+  seed          = "E4M7 Z0H8", -- A randomly chosen seed (it shouldn't matter which seed we use)
+  activeItem    = CollectibleType.COLLECTIBLE_PRAYER_CARD, -- 146
+  passiveItem   = CollectibleType.COLLECTIBLE_FAST_BOMBS, -- 517
+  old           = {
+    challenge = 0,
+    character = 0,
+    seededRun = false,
+    seed      = "",
+  },
+}
 RPGlobals.debug = false
 
 -- These are variables that are reset at the beginning of every run
@@ -145,6 +162,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.replacedCrawlspaces = {}
   RPGlobals.run.replacedHeavenDoors = {}
   RPGlobals.run.reseedCount         = 0
+  RPGlobals.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
 
   -- Tracking per room
   RPGlobals.run.currentRoomClearState = true
@@ -156,12 +174,14 @@ function RPGlobals:InitRun()
   RPGlobals.run.usedStrength          = false
   RPGlobals.run.handsDelay            = 0
   RPGlobals.run.naturalTeleport       = false
+  RPGlobals.run.diceRoomActivated     = false
   RPGlobals.run.megaSatanDead         = false
   RPGlobals.run.endOfRunText          = false -- Shown when the run is completed but only for one room
 
   -- Temporary tracking
   RPGlobals.run.restart              = false -- If set, we restart the run on the next frame
   RPGlobals.run.reseededFloor        = false
+  RPGlobals.run.forgetMeNow          = false
   RPGlobals.run.consoleOpened        = false -- If set, fast-resetting is disabled
   RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false
