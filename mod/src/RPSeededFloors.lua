@@ -77,15 +77,17 @@ function RPSeededFloors:Before(stage)
     player:AddKeys(2)
   end
 
-  -- Modification 5: Full health
-  seed = RPGlobals:IncrementRNG(seed)
-  math.randomseed(seed)
+  -- Remove all health
+  player:AddGoldenHearts(goldenHearts * -1)
+  -- (we have to remove the exact amount of Golden Hearts or else it will bug out)
+  -- (we remove Golden Hearts first so that they don't break)
   player:AddMaxHearts(-24, false)
   player:AddSoulHearts(-24)
   player:AddBoneHearts(-12)
-  player:AddGoldenHearts(goldenHearts * -1)
-  -- (we have to remove the exact amount of Golden Hearts or else it will bug out)
 
+  -- Modification 5: Full health
+  seed = RPGlobals:IncrementRNG(seed)
+  math.randomseed(seed)
   player:AddMaxHearts(2, false)
   player:AddHearts(1)
   local fullHealthMod = math.random(1, 100)
@@ -116,7 +118,6 @@ function RPSeededFloors:Before(stage)
       end
     end
   end
-  --]]
 end
 
 function RPSeededFloors:After()

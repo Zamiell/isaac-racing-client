@@ -1882,7 +1882,8 @@ function SamaelMod:IsActionPressed()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
-     player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) or -- 316
+     player:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) then -- 329
 
     return
   end

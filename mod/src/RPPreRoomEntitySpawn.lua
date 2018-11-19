@@ -8,6 +8,10 @@ local RPSeededRooms = require("src/rpseededrooms")
 -- or being forced to walk on spikes
 function RPPreRoomEntitySpawn:Main(type, variant, subType, gridIndex, seed)
   local newTable
+  newTable = RPPreRoomEntitySpawn:CheckDonationMachine(type, variant)
+  if newTable ~= nil then
+    return newTable
+  end
   newTable = RPPreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   if newTable ~= nil then
     return newTable
@@ -15,6 +19,17 @@ function RPPreRoomEntitySpawn:Main(type, variant, subType, gridIndex, seed)
   newTable = RPSeededRooms:PreEntitySpawn(type, variant, subType, seed)
   if newTable ~= nil then
     return newTable
+  end
+end
+
+-- Because of the save file check on the first run,
+-- it is possible to be inside of a custom challenge and have a Donation Machine spawn
+-- Manually remove all Donation Machines that spawn
+function RPPreRoomEntitySpawn:CheckDonationMachine(type, variant)
+  if type == EntityType.ENTITY_SLOT and -- 6
+     variant == 8 then -- Donation Machine (6.8)
+
+    return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
   end
 end
 
