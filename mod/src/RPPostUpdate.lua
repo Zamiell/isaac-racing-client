@@ -100,10 +100,19 @@ function RPPostUpdate:Main()
     end
   end
 
+  -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
+  RPPostUpdate:CrownOfLight()
+
   RPPills:CheckPHD()
 
+  -- Handle things for races
   RPRace:PostUpdate()
+
+  -- Handle things for multi-character speedruns
   RPSpeedrunPostUpdate:Main()
+
+  -- Handle things for the "Change Char Order" custom challenge
+  RPChangeCharOrder:PostUpdate()
 end
 
 -- Keep track of the when the room is cleared
@@ -278,40 +287,6 @@ function RPPostUpdate:CheckHauntSpeedup()
   end
 end
 
-function RPPostUpdate:RaceChecks()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local stage = level:GetStage()
-  local player = game:GetPlayer(0)
-  local challenge = Isaac.GetChallenge()
-
-  -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
-  if RPGlobals.run.removedCrownHearts == false and
-     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     RPGlobals.run.roomsEntered == 1 then -- They are still in the starting room
-
-    -- The player started with Crown of Light, so we don't need to even go into the below code block
-    RPGlobals.run.removedCrownHearts = true
-  end
-  if RPGlobals.run.removedCrownHearts == false and
-     stage == LevelStage.STAGE1_1 and -- 1
-     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     (((RPGlobals.race.rFormat == "unseeded" or
-        RPGlobals.race.rFormat == "diversity") and
-       RPGlobals.race.status == "in progress" and
-       (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) then
-
-     -- Remove the two soul hearts that the Crown of Light gives
-     RPGlobals.run.removedCrownHearts = true
-     player:AddSoulHearts(-4)
-  end
-
-  -- Handle things for the "Change Char Order" custom challenge
-  RPChangeCharOrder:PostUpdate()
-end
-
 -- Ban Basement 1 Treasure Rooms
 -- (this has to be in both MC_POST_RENDER and MC_POST_UPDATE because
 -- we want it to already be barred when the seed is fading in and
@@ -347,6 +322,37 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
         door.ExtraVisible = false
       end
     end
+  end
+end
+
+-- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
+function RPPostUpdate:CrownOfLight()
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
+
+  if RPGlobals.run.removedCrownHearts == false and
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     RPGlobals.run.roomsEntered == 1 then -- They are still in the starting room
+
+    -- The player started with Crown of Light, so we don't need to even go into the below code block
+    RPGlobals.run.removedCrownHearts = true
+  end
+  if RPGlobals.run.removedCrownHearts == false and
+     stage == LevelStage.STAGE1_1 and -- 1
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     (((RPGlobals.race.rFormat == "unseeded" or
+        RPGlobals.race.rFormat == "diversity") and
+       RPGlobals.race.status == "in progress" and
+       (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) then
+
+     -- Remove the two soul hearts that the Crown of Light gives
+     RPGlobals.run.removedCrownHearts = true
+     player:AddSoulHearts(-4)
   end
 end
 

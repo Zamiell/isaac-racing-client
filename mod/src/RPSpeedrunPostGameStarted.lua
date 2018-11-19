@@ -129,26 +129,25 @@ function RPSpeedrunPostGameStarted:Main()
 
   -- Do actions based on the specific challenge
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
-    RPSpeedrunPostGameStarted:StartR9S1()
+    RPSpeedrunPostGameStarted:R9S1()
   elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
-    RPSpeedrunPostGameStarted:StartR14S1()
+    RPSpeedrunPostGameStarted:R14S1()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
-    RPSpeedrunPostGameStarted:StartR7S2()
+    RPSpeedrunPostGameStarted:R7S2()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-    RPSpeedrunPostGameStarted:StartR7S3()
+    RPSpeedrunPostGameStarted:R7S3()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
-    RPSpeedrunPostGameStarted:StartR7S4()
+    RPSpeedrunPostGameStarted:R7S4()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
-    RPSpeedrunPostGameStarted:StartR7S5()
+    RPSpeedrunPostGameStarted:R7S5()
   elseif RPSpeedrun.inSeededSpeedrun then
-    RPSpeedrunPostGameStarted:StartR7SS()
+    RPSpeedrunPostGameStarted:R7SS()
   else
     Isaac.DebugString("Error: Unknown challenge.")
   end
 end
 
-
-function RPSpeedrun:StartR9S1()
+function RPSpeedrunPostGameStarted:R9S1()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -173,7 +172,7 @@ function RPSpeedrun:StartR9S1()
   end
 end
 
-function RPSpeedrun:StartR14S1()
+function RPSpeedrunPostGameStarted:R14S1()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -229,7 +228,7 @@ function RPSpeedrun:StartR14S1()
   end
 end
 
-function RPSpeedrun:StartR7S2()
+function RPSpeedrunPostGameStarted:R7S2()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -257,7 +256,7 @@ function RPSpeedrun:StartR7S2()
   end
 end
 
-function RPSpeedrun:StartR7S3()
+function RPSpeedrunPostGameStarted:R7S3()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -288,7 +287,7 @@ function RPSpeedrun:StartR7S3()
   end
 end
 
-function RPSpeedrun:StartR7S4()
+function RPSpeedrunPostGameStarted:R7S4()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -368,7 +367,7 @@ function RPSpeedrun:StartR7S4()
   end
 end
 
-function RPSpeedrun:StartR7S5()
+function RPSpeedrunPostGameStarted:R7S5()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()
@@ -458,7 +457,7 @@ function RPSpeedrun:StartR7S5()
   end
 end
 
-function RPSpeedrun:StartR7SS()
+function RPSpeedrunPostGameStarted:R7SS()
   -- Local variables
   local game = Game()
   local itemPool = game:GetItemPool()

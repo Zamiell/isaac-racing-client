@@ -16,10 +16,10 @@ function RPSeededFloors:Before(stage)
   local customRun = seeds:IsCustomRun()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
+  local goldenHearts = player:GetGoldenHearts()
   local coins = player:GetNumCoins()
   local keys = player:GetNumKeys()
   local challenge = Isaac.GetChallenge()
-  local sfx = SFXManager()
 
   -- Only swap things if we are playing a specific seed
   if challenge ~= 0 or
@@ -81,10 +81,11 @@ function RPSeededFloors:Before(stage)
   seed = RPGlobals:IncrementRNG(seed)
   math.randomseed(seed)
   player:AddMaxHearts(-24, false)
-  sfx:Stop(SoundEffect.SOUND_ULTRA_GREED_COIN_DESTROY) -- 427
-  -- (the sound for Golden Hearts breaking will play when we remove all red hearts)
   player:AddSoulHearts(-24)
-  player:AddBoneHearts(-24)
+  player:AddBoneHearts(-12)
+  player:AddGoldenHearts(goldenHearts * -1)
+  -- (we have to remove the exact amount of Golden Hearts or else it will bug out)
+
   player:AddMaxHearts(2, false)
   player:AddHearts(1)
   local fullHealthMod = math.random(1, 100)
@@ -115,6 +116,7 @@ function RPSeededFloors:Before(stage)
       end
     end
   end
+  --]]
 end
 
 function RPSeededFloors:After()
@@ -153,7 +155,7 @@ function RPSeededFloors:SaveHealth()
   local game = Game()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
-  local heartTypes = {}
+  local soulHeartTypes = {}
   local maxHearts = player:GetMaxHearts()
   local hearts = player:GetHearts()
   local soulHearts = player:GetSoulHearts()
@@ -204,7 +206,7 @@ function RPSeededFloors:SaveHealth()
       isBoneHeart = subPlayer:IsBoneHeart(i)
     end
     if isBoneHeart then
-      heartTypes[#heartTypes + 1] = HeartSubType.HEART_BONE -- 11
+      soulHeartTypes[#soulHeartTypes + 1] = HeartSubType.HEART_BONE -- 11
     else
       -- We need to add 1 here because only the second half of a black heart is considered black
       local isBlackHeart = player:IsBlackHeart(currentSoulHeart + 1)
@@ -212,9 +214,9 @@ function RPSeededFloors:SaveHealth()
         isBlackHeart = subPlayer:IsBlackHeart(currentSoulHeart + 1)
       end
       if isBlackHeart then
-        heartTypes[#heartTypes + 1] = HeartSubType.HEART_BLACK -- 6
+        soulHeartTypes[#soulHeartTypes + 1] = HeartSubType.HEART_BLACK -- 6
       else
-        heartTypes[#heartTypes + 1] = HeartSubType.HEART_SOUL -- 3
+        soulHeartTypes[#soulHeartTypes + 1] = HeartSubType.HEART_SOUL -- 3
       end
 
       -- Move to the next heart
@@ -223,20 +225,20 @@ function RPSeededFloors:SaveHealth()
   end
 
   return {
-    types = heartTypes,
-    maxHearts = maxHearts,
-    hearts = hearts,
-    soulHearts = soulHearts,
-    boneHearts = boneHearts,
-    goldenHearts = goldenHearts,
+    soulHeartTypes = soulHeartTypes,
+    maxHearts      = maxHearts,
+    hearts         = hearts,
+    soulHearts     = soulHearts,
+    boneHearts     = boneHearts,
+    goldenHearts   = goldenHearts,
   }
 end
 
 function RPSeededFloors:PrintHealth()
   local hearts = RPGlobals.run.seededSwap.heartTable
-  Isaac.DebugString("DEBUG - Heart types:")
-  for i, heartType in ipairs(hearts.types) do
-    Isaac.DebugString("DEBUG -   " .. tostring(i) .. ") " .. tostring(heartType))
+  Isaac.DebugString("DEBUG - Soul heart types:")
+  for i, soulHeartType in ipairs(hearts.soulHeartTypes) do
+    Isaac.DebugString("DEBUG -   " .. tostring(i) .. ") " .. tostring(soulHeartType))
   end
   Isaac.DebugString("DEBUG - maxHearts: " .. tostring(hearts.maxHearts))
   Isaac.DebugString("DEBUG - hearts: " .. tostring(hearts.hearts))
@@ -271,7 +273,7 @@ function RPSeededFloors:LoadHealth()
 
   -- Add the soul / black / bone hearts
   local soulHeartsRemaining = hearts.soulHearts
-  for i, heartType in ipairs(hearts.types) do
+  for i, heartType in ipairs(hearts.soulHeartTypes) do
     local isHalf = (hearts.soulHearts + hearts.boneHearts * 2) < i * 2
     local addAmount = 2
     if isHalf or
@@ -296,6 +298,7 @@ function RPSeededFloors:LoadHealth()
   -- Fill in the red heart containers
   player:AddHearts(hearts.hearts)
   player:AddGoldenHearts(hearts.goldenHearts)
+  Isaac.DebugString("DEBUG ADDED goldenHearts: " .. tostring(hearts.goldenHearts))
   -- (no matter what kind of heart is added, no sounds effects will play)
 end
 

@@ -1,10 +1,11 @@
 local RPExecuteCmd = {}
 
 -- Includes
-local RPGlobals      = require("src/rpglobals")
-local RPFastTravel   = require("src/rpfasttravel")
-local RPSpeedrun     = require("src/rpspeedrun")
-local RPSeededFloors = require("src/rpseededfloors")
+local RPGlobals            = require("src/rpglobals")
+local RPFastTravel         = require("src/rpfasttravel")
+local RPSpeedrun           = require("src/rpspeedrun")
+local RPSpeedrunPostUpdate = require("src/rpspeedrunpostupdate")
+local RPSeededFloors       = require("src/rpseededfloors")
 
 -- ModCallbacks.MC_EXECUTE_CMD (22)
 function RPExecuteCmd:Main(cmd, params)
@@ -58,8 +59,7 @@ function RPExecuteCmd:Main(cmd, params)
 
   elseif cmd == "next" then
     -- Used to go to the next character in a multi-character speedrun
-    RPSpeedrun.spawnedCheckpoint = true
-    RPSpeedrun:CheckpointTouched()
+    RPSpeedrunPostUpdate:CheckCheckpoint(true)
 
   elseif cmd == "previous" then
     -- Used to go to the previous character in a multi-character speedrun
@@ -67,8 +67,7 @@ function RPExecuteCmd:Main(cmd, params)
       return
     end
     RPSpeedrun.charNum = RPSpeedrun.charNum - 2
-    RPSpeedrun.spawnedCheckpoint = true
-    RPSpeedrun:CheckpointTouched()
+    RPSpeedrunPostUpdate:CheckCheckpoint(true)
   end
 end
 

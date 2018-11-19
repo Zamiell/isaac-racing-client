@@ -251,10 +251,19 @@ function RPPostGameStarted:CheckFullyUnlockedSave()
     end
 
     -- We are on the specific Eden seed, so check to see if our items are correct
-    if activeItem == RPGlobals.saveFile.activeItem and
-       player:HasCollectible(RPGlobals.saveFile.passiveItem) then
+    -- The items will be different depending on whether or not we have The Babies Mod enabled
+    if SinglePlayerCoopBabies == nil then
+      if activeItem == RPGlobals.saveFile.activeItem and
+         player:HasCollectible(RPGlobals.saveFile.passiveItem) then
 
-      RPGlobals.saveFile.fullyUnlocked = true
+        RPGlobals.saveFile.fullyUnlocked = true
+      end
+    else
+      if activeItem == RPGlobals.saveFile.activeItem2 and
+         player:HasCollectible(RPGlobals.saveFile.passiveItem2) then
+
+        RPGlobals.saveFile.fullyUnlocked = true
+      end
     end
 
     RPGlobals.saveFile.state = 2

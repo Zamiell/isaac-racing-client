@@ -1,12 +1,20 @@
 # Racing+ Version History and News
 
+### *v0.28.1* - November 18th, 2018
+
+* Fixed the bug where The Babies Mod would cause the fully unlocked save file check to fail. (Thanks thereisnofuture)
+* Fixed the bug where speedrun initialization was not working. (Thanks mgln)
+* Fixed the bug where the "Change Char Order" custom challenge was not working correctly. (Thanks thereisnofuture)
+* Fixed the bug where the golden heart breaking sound would play when the seeded floor mechanic adjusted your health on The Forgotten specifically. (Thanks Gamonymous)
+* Fixed the bug where the "next" and "previous" console commands were not working correctly.
+
 ### *v0.28.0* - November 18th, 2018
 
-* The mod will now attempt to check to see if you are on a fully unlocked save file by starting on a specific seed with Eden and looking for certain items. (It will do this once every time the game is opened.)
-* Keeper will now be given the effect of Wooden Cross upon revival in a seeded race. (The effect will be removed upon reaching a new floor.)
+* The mod will now attempt to check to see if you are on a fully unlocked save file by starting on a specific seed with Eden and looking for certain items. (It will do this once every time the game is opened.) (Thanks AshDown)
+* Keeper will now be given the Wooden Cross effect upon revival in a seeded race. (The effect will be removed upon reaching a new floor.) (Thanks mgln)
 * Fixed the bug where the trophy would not fall at the end of the R+7 seeded challenge. (Thanks thereisnofuture)
 * Fixed the bug where the golden heart breaking sound would play when the seeded floor mechanic adjusted your health. (Thanks Gamonymous)
-* Fixed the bug where it shows that 0 frames passed when finishing a race.
+* Fixed the bug where it showed that 0 frames passed when finishing a race.
 * Fixed the bug where Contract From Below would result in errors when clearing a room on a set seed. (Thanks mgln)
 * Fixed the bug where Caffeine Pill would give an extra pill during a revival in a seeded race. (Thanks Gamonymous)
 
@@ -341,7 +349,7 @@
 * Changed the color of the Distant Admiration collectible from black to red (to match the actual color of the familiar).
 * Changed the 20/20 sprite to make it easier to see.
 * Replaced the Abaddon sprite with the pre-BP5 version.
-* Fixed the bug where The Forgotton would not revive with the correct health in a seeded race. He will now revive with one bone heart that is half filled and 0 soul hearts, meaning that he will be unable to switch to The Soul. (Thanks Moucheron Quipet)
+* Fixed the bug where The Forgotten would not revive with the correct health in a seeded race. He will now revive with one bone heart that is half filled and 0 soul hearts, meaning that he will be unable to switch to The Soul. (Thanks Moucheron Quipet)
 * Fixed the bug where text in the top-left (i.e. the run seed) would be misaligned if you had any bone hearts.
 * Fixed the bug where dying and reviving in a seeded race would make you the incorrect size under certain situations. (Thanks StoneAgeMarcus)
 
@@ -2036,8 +2044,8 @@ Changes:
 ### *v0.2.29* - February 12th, 2017
 
 * Added a global Alt+B hotkey to launch the game.
-* The "Race completed" sound effect won't play for solo races.
-* Added "Custom" as a new race format. In this format, you can ready up and finish all on your own. This means you can now you can race the vanilla game (or custom mods) on the Racing+ platform.
+* The "Race completed" sound effect will no longer play for solo races.
+* Added "Custom" as a new race format. In this format, you can ready up and finish manually. This means you can now you can race the vanilla game (or custom mods) on the Racing+ platform.
 * Added an Alt+F hotkey for finishing. This only works in the new "Custom" format.
 * More countdown sounds have been added (from Mario Kart: Double Dash).
 * In the client, you can now hover over emotes to see what they are.

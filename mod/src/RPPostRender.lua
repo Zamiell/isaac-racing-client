@@ -601,6 +601,7 @@ function RPPostRender:DrawInvalidSaveFile()
   Isaac.RenderText("and speedruns. You can download a fully", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("unlocked save file at:", x, y, 2, 2, 2, 2)
+  x = x - 42
   y = y + 20
   Isaac.RenderText("https://www.speedrun.com/afterbirthplus/resources", x, y, 2, 2, 2, 2)
 end

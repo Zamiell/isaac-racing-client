@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.28.0"
+RPGlobals.version = "v0.28.1"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -16,6 +16,9 @@ RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   seed          = "E4M7 Z0H8", -- A randomly chosen seed (it shouldn't matter which seed we use)
   activeItem    = CollectibleType.COLLECTIBLE_PRAYER_CARD, -- 146
   passiveItem   = CollectibleType.COLLECTIBLE_FAST_BOMBS, -- 517
+  -- Eden's items will change if we have The Babies Mod enabled
+  activeItem2   = CollectibleType.COLLECTIBLE_BROWN_NUGGET, -- 504
+  passiveItem2  = CollectibleType.COLLECTIBLE_TRACTOR_BEAM, -- 397
   old           = {
     challenge = 0,
     character = 0,

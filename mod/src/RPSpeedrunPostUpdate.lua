@@ -85,21 +85,23 @@ function RPSpeedrunPostUpdate:CheckLilithExtraIncubus()
 end
 
 -- Check to see if the player just picked up the "Checkpoint" custom item
-function RPSpeedrunPostUpdate:CheckCheckpoint()
+-- Pass true to this function to force going to the next character
+function RPSpeedrunPostUpdate:CheckCheckpoint(force)
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if player.QueuedItem.Item == nil or
-     player.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT then
+  if force == nil and
+     (player.QueuedItem.Item == nil or
+      player.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT) then
 
     return
   end
 
   if RPSpeedrun.spawnedCheckpoint then
     RPSpeedrun.spawnedCheckpoint = false
-  else
+  elseif force == nil then
     return
   end
 
