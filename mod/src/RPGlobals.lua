@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.28.2"
+RPGlobals.version = "v0.28.3"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -180,6 +180,12 @@ function RPGlobals:InitRun()
   RPGlobals.run.diceRoomActivated     = false
   RPGlobals.run.megaSatanDead         = false
   RPGlobals.run.endOfRunText          = false -- Shown when the run is completed but only for one room
+  RPGlobals.run.teleportSubverted     = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
+  RPGlobals.run.teleportSubvertScale  = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
+  RPGlobals.run.matriarch             = {
+    chubIndex = -1,
+    stunFrame = 0,
+  }
 
   -- Temporary tracking
   RPGlobals.run.restart              = false -- If set, we restart the run on the next frame
@@ -191,8 +197,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
   RPGlobals.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
   RPGlobals.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
-  RPGlobals.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
-  RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
   RPGlobals.run.dualityCheckFrame    = 0
   RPGlobals.run.changeFartColor      = false
   RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
@@ -261,6 +265,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.seededDeath = {
     state = 0,
     -- 0 is not dead, 1 is during the death animation, 2 is during the AppearVanilla animation, 3 is during the debuff
+    deathFrame      = 0,
     pos             = Vector(0, 0),
     time            = 0,
     items           = {},
@@ -270,12 +275,6 @@ function RPGlobals:InitRun()
     goldenBomb      = false,
     goldenKey       = false,
     dealTime        = Isaac.GetTime(),
-  }
-
-  -- Matriarch tracking
-  RPGlobals.run.matriarch = {
-    chubIndex = -1,
-    stunFrame = 0,
   }
 
   -- Special room seeding
@@ -440,6 +439,7 @@ function RPGlobals:RevivePlayer(item)
   local game = Game()
   local level = game:GetLevel()
   local room = game:GetRoom()
+  local previousRoomIndex = level:GetPreviousRoomIndex()
   local player = game:GetPlayer(0)
   local character = player:GetPlayerType()
 
@@ -454,18 +454,10 @@ function RPGlobals:RevivePlayer(item)
     player:AddBoneHearts(1)
   end
   player:Revive()
-  if item then
-    if type(item) == "table" and item.ID ~= nil then
-      item = item.ID
-    end
-    local d = player:GetData()
-    d.api_HoldingItem = item
-    d.api_HoldingFrame = 0
-  end
   local enterDoor = level.EnterDoor
   local door = room:GetDoor(enterDoor)
   local direction = door and door.Direction or Direction.NO_DIRECTION
-  game:StartRoomTransition(level:GetPreviousRoomIndex(), direction, 0)
+  game:StartRoomTransition(previousRoomIndex, direction, 0)
   level.LeaveDoor = enterDoor
 end
 

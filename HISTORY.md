@@ -1,11 +1,17 @@
 # Racing+ Version History and News
 
-### *v0.28.2* - November 18th, 2018
+### *v0.28.3* - November 19th, 2018
+
+* Isaac is feeling festive. Happy thanksgiving.
+* Fixed the bug where deaths from pitfalls would not revive the player in seeded races. (Thanks Moucheron Quipet)
+* Fixed the bug where the Matriarch nerf would only apply once per run. (Thanks Gamonymous)
+
+### *v0.28.2* - November 19th, 2018
 
 * Fixed the bug where Donation Machines could appear in custom challenges if you were on the first run after you opened the game. (Thanks leo_ze_tron)
 * Fixed the bug where The Ludovico Technique was not working properly with Samael. (Thanks Gamonymous)
 
-### *v0.28.1* - November 18th, 2018
+### *v0.28.1* - November 19th, 2018
 
 * Fixed the bug where The Babies Mod would cause the fully unlocked save file check to fail. (Thanks thereisnofuture)
 * Fixed the bug where speedrun initialization was not working. (Thanks mgln)

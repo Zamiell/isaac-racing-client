@@ -74,18 +74,23 @@ function RPPostNewRoom:NewRoom()
   end
 
   -- Clear variables that track things per room
-  RPGlobals.run.fastCleared       = false
-  RPGlobals.run.currentGlobins    = {} -- Used for softlock prevention
-  RPGlobals.run.currentHaunts     = {} -- Used to speed up Lil' Haunts
-  RPGlobals.run.currentLilHaunts  = {} -- Used to delete invulnerability frames
-  RPGlobals.run.currentHoppers    = {} -- Used to prevent softlocks
-  RPGlobals.run.usedStrength      = false
-  RPGlobals.run.handsDelay        = 0
-  RPGlobals.run.naturalTeleport   = false
-  RPGlobals.run.diceRoomActivated = false
-  RPGlobals.run.megaSatanDead     = false
-  RPGlobals.run.endOfRunText      = false -- Shown when the run is completed but only for one room
-  RPGlobals.run.teleportSubverted = false
+  RPGlobals.run.fastCleared          = false
+  RPGlobals.run.currentGlobins       = {} -- Used for softlock prevention
+  RPGlobals.run.currentHaunts        = {} -- Used to speed up Lil' Haunts
+  RPGlobals.run.currentLilHaunts     = {} -- Used to delete invulnerability frames
+  RPGlobals.run.currentHoppers       = {} -- Used to prevent softlocks
+  RPGlobals.run.usedStrength         = false
+  RPGlobals.run.handsDelay           = 0
+  RPGlobals.run.naturalTeleport      = false
+  RPGlobals.run.diceRoomActivated    = false
+  RPGlobals.run.megaSatanDead        = false
+  RPGlobals.run.endOfRunText         = false -- Shown when the run is completed but only for one room
+  RPGlobals.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
+  RPGlobals.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
+  RPGlobals.run.matriarch            = {
+    chubIndex = -1,
+    stunFrame = 0,
+  }
 
   -- Clear fast-clear variables that track things per room
   RPFastClear.buttonsAllPushed = false

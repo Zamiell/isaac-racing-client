@@ -227,8 +227,7 @@ function RPPreUseItem:UnreplacedItemsExist()
   -- Look for pedestals that have not been replaced yet
   local entities = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
                                     -1, false, false)
-  for i = 1, #entities do
-    local entity = entities[i]
+  for i, entity in pairs(entities) do
     local alreadyReplaced = false
     for j = 1, #RPGlobals.run.replacedPedestals do
       if RPGlobals.run.replacedPedestals[j].room == roomIndex and

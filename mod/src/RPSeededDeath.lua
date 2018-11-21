@@ -11,35 +11,48 @@ local RPSchoolbag = require("src/rpschoolbag")
 function RPSeededDeath:PostRender()
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomType = room:GetType()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
+  local revive = player:WillPlayerRevive()
+  local hearts = player:GetHearts()
+  local soulHearts = player:GetSoulHearts()
+  local boneHearts = player:GetBoneHearts()
 
-  -- Keep track of whenever we take a deal with the devil
+  -- Keep track of whenever we take a deal with the devil to prevent players from being able to take "free" items
   if (roomType == RoomType.ROOM_DEVIL or -- 14
       roomType == RoomType.ROOM_BLACK_MARKET) and -- 22
-     (playerSprite:IsPlaying("Pickup") or
-      playerSprite:IsPlaying("PickupWalkDown") or
-      playerSprite:IsPlaying("PickupWalkLeft") or
-      playerSprite:IsPlaying("PickupWalkUp") or
-      playerSprite:IsPlaying("PickupWalkRight")) then
+     player.QueuedItem.Item ~= nil then
 
     RPGlobals.run.seededDeath.dealTime = Isaac.GetTime()
   end
 
-  -- Seeded death (1/3)
-  -- (they took fatal damage and begin the death animation)
-  if (RPGlobals.race.rFormat == "seeded" or
+  -- Seeded death (1/3) - They took fatal damage and begin the death animation
+  -- (this used to be based on the "Death" and "LostDeath" animation, but this does not work for deaths inside Pitfalls)
+  local totalHealth = hearts + soulHearts + boneHearts
+  if RPGlobals.run.seededDeath.deathFrame == 0 and
+     (RPGlobals.race.rFormat == "seeded" or
       RPGlobals.race.rFormat == "seeded-mo") and
-     (playerSprite:IsPlaying("Death") or
-      playerSprite:IsPlaying("LostDeath")) and
-     playerSprite:GetFrame() >= 54 and
-     player:WillPlayerRevive() == false and
+     totalHealth == 0 and
+     revive == false and
      roomType ~= RoomType.ROOM_SACRIFICE and -- 13
      roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
 
-    -- We want to make an exception for deaths from devil deals and deaths inside the Boss Rush
+    RPGlobals.run.seededDeath.deathFrame = gameFrameCount + 46 -- 56
+    -- The "Death" animation is 57 frames long (when testing, the death screen appears if we wait 57 frames)
+    Isaac.DebugString("Starting seeded death on frame: " .. tostring(RPGlobals.run.seededDeath.deathFrame))
+  end
+
+  if RPGlobals.run.seededDeath.deathFrame ~= 0 and
+     gameFrameCount >= RPGlobals.run.seededDeath.deathFrame then
+
+    -- The death animation is over
+    RPGlobals.run.seededDeath.deathFrame = 0
+
+    -- We want to make an exception for Sacrifice Rooms and the Boss Rush
+    -- to prevent players from being able to take "free" items
     local elapsedTime = Isaac.GetTime() - RPGlobals.run.seededDeath.dealTime
     if elapsedTime > 5000 then
       RPGlobals:RevivePlayer()
@@ -53,8 +66,7 @@ function RPSeededDeath:PostRender()
     end
   end
 
-  -- Seeded death (3/3)
-  -- (they just slid back to the previous room)
+  -- Seeded death (3/3) - The "AppearVanilla animation" is over and the debuff is on
   if RPGlobals.run.seededDeath.state == 2 then
     player.Position = RPGlobals.run.seededDeath.pos
     if playerSprite:IsPlaying("AppearVanilla") == false then
@@ -90,7 +102,7 @@ function RPSeededDeath:PostNewRoom()
     player:AddCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
   end
 
-  -- Seeded death (2/3)
+  -- Seeded death (2/3) - The player is in the fetal position (the "AppearVanilla" animation)
   if RPGlobals.run.seededDeath.state ~= 1 then
     return
   end
