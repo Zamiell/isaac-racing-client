@@ -2,7 +2,7 @@
 
 ### *v0.28.3* - November 19th, 2018
 
-* Isaac is feeling festive. Happy thanksgiving.
+* Isaac is feeling festive. Happy Thanksgiving.
 * Fixed the bug where deaths from pitfalls would not revive the player in seeded races. (Thanks Moucheron Quipet)
 * Fixed the bug where the Matriarch nerf would only apply once per run. (Thanks Gamonymous)
 
