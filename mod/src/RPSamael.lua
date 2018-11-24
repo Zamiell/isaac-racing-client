@@ -1869,6 +1869,7 @@ function SamaelMod:CheckHairpin()
   end
 end
 
+-- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys (1/2)
 function SamaelMod:IsActionPressed()
   -- Local variables
   local game = Game()
@@ -1905,6 +1906,7 @@ function SamaelMod:IsActionPressed()
   return true
 end
 
+-- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys (2/2)
 function SamaelMod:GetActionValue(buttonAction)
   -- Local variables
   local game = Game()

@@ -304,7 +304,7 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
      roomType ~= RoomType.ROOM_SECRET and -- 7
      (RPGlobals.race.rFormat == "seeded" or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") and
+      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
        RPSpeedrun.charNum >= 2)) then
 
     local door
@@ -348,7 +348,7 @@ function RPPostUpdate:CrownOfLight()
         RPGlobals.race.rFormat == "diversity") and
        RPGlobals.race.status == "in progress" and
        (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
 
      -- Remove the two soul hearts that the Crown of Light gives
      RPGlobals.run.removedCrownHearts = true

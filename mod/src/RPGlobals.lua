@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.28.4"
+RPGlobals.version = "v0.29.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -215,6 +215,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
   RPGlobals.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
   RPGlobals.run.queuedItems          = false -- Used to keep track of whether the player is picking up an item
+  RPGlobals.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {

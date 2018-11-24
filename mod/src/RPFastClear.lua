@@ -957,7 +957,7 @@ function RPFastClear:SpawnClearAward()
     -- 3 contracts / 4 pickups: 0.2
     -- 4 contracts / 5 pickups: 0.13
     local nothingChance = 0.666^pickupCount -- "math.pow()" does not exist in Isaac's Lua version
-    if nothingChance * 0.5 > rng:NextFloat() then
+    if nothingChance * 0.5 > rng:RandomFloat() then
       pickupCount = 0
     end
   end
@@ -995,7 +995,6 @@ function RPFastClear:SpawnClearAward()
       subType = pickup.SubType
     end
   end
-
 end
 
 return RPFastClear

@@ -138,7 +138,7 @@ function RPSpeedrunPostGameStarted:Main()
     RPSpeedrunPostGameStarted:R7S3()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     RPSpeedrunPostGameStarted:R7S4()
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     RPSpeedrunPostGameStarted:R7S5()
   elseif RPSpeedrun.inSeededSpeedrun then
     RPSpeedrunPostGameStarted:R7SS()

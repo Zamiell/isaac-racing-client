@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.29.0* - November 19th, 2018
+
+* Season 4 is finished!
+  * Congradulations to Antizoubilamaka for the best R+7 time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
+  * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
+  * If you want to beat these times, the R+7 (S4) category will continue to be tracked on speedrun.com, but the official competition will move on to season 5.
+* [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun! The new category is now considered final; there will be no more major balance changes.
+* Diagonal knife throws will now have a 3-frame window instead of a 1-frame window.
+* Fixed the bug where Contract From Below would result in errors when clearing a room on a set seed. (Thanks mgln)
+
 ### *v0.28.3* - November 19th, 2018
 
 * Isaac is feeling festive. Happy Thanksgiving.
@@ -545,7 +555,7 @@ Mod Changes:
 
 ### *v0.17.0* - April 21st, 2018
 
-* Season 3 is considered finished!
+* Season 3 is finished!
   * Congradulations to Dea1h for the best R+7 time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S3) category will continue to be tracked on speedrun.com, but the official competition will move on to season 4.
@@ -780,7 +790,7 @@ Website (coded by sillypears):
 News:
 
 * Isaac is now feeling festive. Happy Thanksgiving! (Thanks to Gromfalloon for this)
-* Season 2 is considered finished!
+* Season 2 is finished!
   * Congradulations to Dea1h for the best R+7 time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
@@ -1259,7 +1269,7 @@ Client/Server:
 
 News:
 
-* Season 1 is considered finished!
+* Season 1 is finished!
   * Congradulations to Cyber_1 for the best R+9 time of 1:31:02 and Dea1h on the second best time of 1:33:27. I was luckily able to nab third place with 1:33:49.
   * Congradulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
   * The top 10 times will be stored in a hall of fame page on the website in the future.

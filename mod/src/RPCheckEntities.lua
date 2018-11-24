@@ -255,7 +255,7 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S3(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     RPCheckEntities:Entity5_340_S4(pickup)
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     RPCheckEntities:Entity5_340_S5(pickup)
   elseif RPSpeedrun.inSeededSpeedrun then
     RPCheckEntities:Entity5_340_SS(pickup)

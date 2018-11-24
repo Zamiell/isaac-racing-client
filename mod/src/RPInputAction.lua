@@ -11,7 +11,6 @@ function RPInputAction:Main(entity, inputHook, buttonAction)
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
 
-  -- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys
   if (buttonAction == ButtonAction.ACTION_SHOOTLEFT or -- 4
       buttonAction == ButtonAction.ACTION_SHOOTRIGHT or -- 5
       buttonAction == ButtonAction.ACTION_SHOOTUP or -- 6
@@ -26,7 +25,15 @@ function RPInputAction:Main(entity, inputHook, buttonAction)
       buttonAction == ButtonAction.ACTION_SHOOTDOWN) and -- 7
      inputHook == InputHook.GET_ACTION_VALUE then -- 2
 
-    return RPSamael:GetActionValue(buttonAction)
+    local actionValue
+    actionValue = RPInputAction:KnifeDiagonalFix(buttonAction)
+    if actionValue ~= nil then
+      return actionValue
+    end
+    actionValue = RPSamael:GetActionValue(buttonAction)
+    if actionValue ~= nil then
+      return actionValue
+    end
   end
 
   if buttonAction == ButtonAction.ACTION_PILLCARD and -- 10
@@ -51,6 +58,39 @@ function RPInputAction:Main(entity, inputHook, buttonAction)
 
       return false
     end
+  end
+end
+
+-- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (2/2)
+function RPInputAction:KnifeDiagonalFix(buttonAction)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) == false or -- 114
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
+     -- (Epic Fetus is the only thing that overwrites Mom's Knife)
+     #RPGlobals.run.knifeDirection < 1 then
+
+    return
+  end
+
+  local storedDirection = RPGlobals.run.knifeDirection[1]
+  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT and -- 4
+      storedDirection[1] and
+      not storedDirection[2]) or
+     (buttonAction == ButtonAction.ACTION_SHOOTRIGHT and -- 5
+      storedDirection[2] and
+      not storedDirection[1]) or
+     (buttonAction == ButtonAction.ACTION_SHOOTUP and -- 6
+      storedDirection[3] and
+      not storedDirection[4]) or
+     (buttonAction == ButtonAction.ACTION_SHOOTDOWN and -- 7
+      storedDirection[4] and
+      not storedDirection[3]) then
+
+    Isaac.DebugString("HOLDING DOWN BUTTON: " .. tostring(buttonAction))
+    return 1
   end
 end
 

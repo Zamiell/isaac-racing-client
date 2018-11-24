@@ -263,7 +263,7 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      RPSpeedrun.inSeededSpeedrun or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
@@ -310,7 +310,7 @@ function RPSpeedrun:CheckValidCharOrder()
 
     return false
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     -- There is no character order in season 5
     return true
 
@@ -332,7 +332,7 @@ end
 
 function RPSpeedrun:GetCurrentChar()
   local challenge = Isaac.GetChallenge()
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     local randomBabyType = Isaac.GetPlayerTypeByName("Random Baby")
     if randomBabyType == -1 then
       return 0
@@ -366,7 +366,7 @@ function RPSpeedrun:CheckSeason5Mod()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     return
   end
 

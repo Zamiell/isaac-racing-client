@@ -61,6 +61,7 @@ function RPPostRender:Main()
   -- Check for inputs
   RPPostRender:CheckConsoleInput()
   RPPostRender:CheckResetInput()
+  RPPostRender:CheckKnifeDirection()
 
   -- Ban Basement 1 Treasure Rooms (1/2)
   RPPostUpdate:CheckBanB1TreasureRoom()
@@ -244,6 +245,43 @@ function RPPostRender:CheckResetInput()
   else
     -- To fast reset on floors 2 and beyond, we need to double tap R
     RPGlobals.run.fastResetFrame = isaacFrameCount
+  end
+end
+
+-- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (1/2)
+function RPPostRender:CheckKnifeDirection()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) == false or -- 114
+     player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then -- 168
+     -- (Epic Fetus is the only thing that overwrites Mom's Knife)
+
+    return
+  end
+
+  local knifeDirection = {}
+  for i = 1, 4 do -- This corresponds to the "ButtonAction.ACTION_SHOOTX" enum
+    knifeDirection[i] = Input.IsActionPressed(i + 3, 0) -- e.g. ButtonAction.ACTION_SHOOTLEFT is 4
+  end
+  RPGlobals.run.knifeDirection[#RPGlobals.run.knifeDirection + 1] = knifeDirection
+  if #RPGlobals.run.knifeDirection > 3 then
+    table.remove(RPGlobals.run.knifeDirection, 1)
+  end
+
+  Isaac.DebugString("         L R U D")
+  for i, directionTable in ipairs(RPGlobals.run.knifeDirection) do
+    local frame = #RPGlobals.run.knifeDirection - i
+    local debugString = "Frame " .. tostring(frame) .. ": "
+    for j = 1, 4 do
+      if directionTable[j] then
+        debugString = debugString .. "X "
+      else
+        debugString = debugString .. "O "
+      end
+    end
+    Isaac.DebugString(debugString)
   end
 end
 

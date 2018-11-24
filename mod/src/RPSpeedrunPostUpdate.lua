@@ -48,7 +48,7 @@ function RPSpeedrunPostUpdate:CheckSeason5Start()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      #RPGlobals.run.passiveItems ~= 1 or
      RPSpeedrun.charNum ~= 1 or
      RPGlobals.run.roomsEntered < 2 then
