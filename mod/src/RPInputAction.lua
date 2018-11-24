@@ -89,7 +89,6 @@ function RPInputAction:KnifeDiagonalFix(buttonAction)
       storedDirection[4] and
       not storedDirection[3]) then
 
-    Isaac.DebugString("HOLDING DOWN BUTTON: " .. tostring(buttonAction))
     return 1
   end
 end

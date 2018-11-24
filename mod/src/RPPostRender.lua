@@ -270,6 +270,7 @@ function RPPostRender:CheckKnifeDirection()
     table.remove(RPGlobals.run.knifeDirection, 1)
   end
 
+  --[[
   Isaac.DebugString("         L R U D")
   for i, directionTable in ipairs(RPGlobals.run.knifeDirection) do
     local frame = #RPGlobals.run.knifeDirection - i
@@ -283,6 +284,7 @@ function RPPostRender:CheckKnifeDirection()
     end
     Isaac.DebugString(debugString)
   end
+  --]]
 end
 
 -- Make Cursed Eye seeded
