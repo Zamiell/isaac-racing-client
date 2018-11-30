@@ -60,7 +60,7 @@ Hundreds of rooms with unavoidable damage or bugs have been fixed or deleted.
 
 ### 6) Room Flipping
 
-While there are thousands of rooms in the game, many players have already seen them all. To increase run variety, asymmetrical rooms have a chance to be flipped on the X axis, Y axis, or both axises.
+While there are thousands of rooms in the game, many players have already seen them all. To increase run variety, asymmetrical rooms have a chance to be flipped on the X axis, Y axis, or both axes.
 
 <br />
 
@@ -98,7 +98,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
-* Looping floors will no longer appear.
+* Diagonal knife throws have a 3-frame window instead of a 1-frame window.
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
@@ -167,7 +167,7 @@ Racing+ allows players to perform [several different types of races](https://git
 
 ## Additional Changes for Multi-Character Speedruns (Custom Challenges)
 
-Racing+ has [several custom challenges](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which introduce additional changes to the game.
+Racing+ has [several custom challenges](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), each of which introduces additional changes to the game.
 
 <br />
 

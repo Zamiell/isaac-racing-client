@@ -154,7 +154,6 @@ function RPPostEntityKill:Entity45(entity)
 
   elseif situation == 4 then
     -- A situation of 4 means to spawn a random boss item
-    RPGlobals.run.spawningPhoto = true
     game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0), nil, 0, roomSeed)
     -- (a SubType of 0 will make a random item of the pool according to the room type)
     -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)

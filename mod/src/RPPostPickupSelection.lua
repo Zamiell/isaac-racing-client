@@ -25,6 +25,7 @@ end
 function RPPostPickupSelection:ManualPhotos(variant, subType)
   -- Local variables
   local game = Game()
+  local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomFrameCount = room:GetFrameCount()
 
@@ -38,7 +39,7 @@ function RPPostPickupSelection:ManualPhotos(variant, subType)
   -- We don't want to mess with pedestals that we explicitly spawned with Lua in the "RPPostEntityKill:NPC45()" function
   if RPGlobals.run.spawningPhoto then
     RPGlobals.run.spawningPhoto = false
-    Isaac.DebugString("Reset the \"spawningPhoto\" variable.")
+    Isaac.DebugString("Reset the \"spawningPhoto\" variable on frame: " .. tostring(gameFrameCount))
     return
   end
 
@@ -49,6 +50,7 @@ function RPPostPickupSelection:ManualPhotos(variant, subType)
   -- And returning {100, 0} will crash the game
   -- So we just make a custom invisible entity (with no anm2 file) and set the pickup to that
   -- We will spawn The Polaroid and The Negative manually in the MC_POST_NPC_DEATH callback
+  Isaac.DebugString("Preventing a vanilla Polaroid / Negative from spawning on frame: " .. tostring(gameFrameCount))
   return {500, 0} -- Invisible Pickup (5.500), a custom entity
 end
 

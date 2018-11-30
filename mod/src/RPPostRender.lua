@@ -266,7 +266,7 @@ function RPPostRender:CheckKnifeDirection()
     knifeDirection[i] = Input.IsActionPressed(i + 3, 0) -- e.g. ButtonAction.ACTION_SHOOTLEFT is 4
   end
   RPGlobals.run.knifeDirection[#RPGlobals.run.knifeDirection + 1] = knifeDirection
-  if #RPGlobals.run.knifeDirection > 3 then
+  if #RPGlobals.run.knifeDirection > 2 then -- We want there to be a 2-frame window instead of a 1-frame window
     table.remove(RPGlobals.run.knifeDirection, 1)
   end
 
