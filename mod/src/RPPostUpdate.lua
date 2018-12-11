@@ -98,6 +98,7 @@ function RPPostUpdate:Main()
     if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     end
+    itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
   end
 
   -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll

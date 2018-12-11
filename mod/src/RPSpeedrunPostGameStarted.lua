@@ -376,9 +376,7 @@ function RPSpeedrunPostGameStarted:R7S5()
 
   Isaac.DebugString("In the R+7 (Season 5) challenge.")
 
-  -- Everyone starts with the Schoolbag in this season
-  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+  -- (Random Baby automatically starts with the Schoolbag, so we don't have to explicitly give it.)
 
   -- On the second character and beyond, a start will be randomly assigned
   if RPSpeedrun.charNum >= 2 then
