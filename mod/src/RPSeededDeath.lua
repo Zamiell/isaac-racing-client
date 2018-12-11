@@ -154,9 +154,14 @@ end
 function RPSeededDeath:DebuffOn()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
   local character = player:GetPlayerType()
+
+  -- Store the current level
+  RPGlobals.run.seededDeath.stage = stage
 
   -- Set their health to explicitly 1.5 soul hearts
   -- (or custom values for Keeper & The Forgotton)
@@ -227,6 +232,8 @@ end
 function RPSeededDeath:DebuffOff()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local playerSprite = player:GetSprite()
@@ -323,11 +330,15 @@ function RPSeededDeath:DebuffOff()
   player:AddKeys(keys)
   if RPGlobals.run.seededDeath.goldenBomb then
     RPGlobals.run.seededDeath.goldenBomb = false
-    player:AddGoldenBomb()
+    if stage == RPGlobals.run.seededDeath.stage then
+      player:AddGoldenBomb()
+    end
   end
   if RPGlobals.run.seededDeath.goldenKey then
     RPGlobals.run.seededDeath.goldenKey = false
-    player:AddGoldenKey()
+    if stage == RPGlobals.run.seededDeath.stage then
+      player:AddGoldenKey()
+    end
   end
 
   -- We also have to account for Caffeine Pill,

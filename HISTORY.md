@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.29.3* - December ?th, 2018
+
+* Fixed the bug where Golden Bombs and Golden Keys would be awarded upon a seeded revival even if the player changed floors. (Thanks mgln)
+
+### *v0.29.2* - November 30th, 2018
+
+* Reduced the diagonal knife window by a frame.
+
 ### *v0.29.0* - November 19th, 2018
 
 * Season 4 is finished!

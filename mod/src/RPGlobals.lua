@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.29.2"
+RPGlobals.version = "v0.29.3"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -266,11 +266,11 @@ function RPGlobals:InitRun()
   RPGlobals.run.seededDeath = {
     state = 0,
     -- 0 is not dead, 1 is during the death animation, 2 is during the AppearVanilla animation, 3 is during the debuff
+    stage           = 0,
     deathFrame      = 0,
     pos             = Vector(0, 0),
     time            = 0,
     items           = {},
-    transformations = {},
     charge          = 0,
     spriteScale     = Vector(0, 0),
     goldenBomb      = false,
