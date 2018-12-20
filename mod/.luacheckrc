@@ -39,6 +39,7 @@ globals = {
   "LevelStage",
   "ModCallbacks",
   "NpcState",
+  "NullItemID",
   "PickupVariant",
   "PillColor",
   "PillEffect",

@@ -118,7 +118,8 @@ function RPPedestals:Replace(pickup)
   if (RPGlobals.race.rFormat == "seeded" or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-       RPSpeedrun.charNum >= 2)) and
+       RPSpeedrun.charNum >= 2) or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)")) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      pickup.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235

@@ -65,7 +65,8 @@ function RPPostEntityKill:Entity45(entity)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
 
     -- Most seasons give the player a choice between the two photos
     situation = 3
@@ -212,15 +213,17 @@ function RPPostEntityKill:Entity78(entity)
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      RPSpeedrun.inSeededSpeedrun then
 
-    -- Season 1, 4, 5, and seeded speedrun challenges always go to Cathedral / The Chest
+    -- Season 1, 4, and 5 always goes to Cathedral / The Chest
     situation = 1
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
-    -- Season 2 speedrun challenges always go to Sheol / the Dark Room
+    -- Season 2 always goes to Sheol / the Dark Room
     situation = 2
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-    -- Season 3 speedrun challenges alternate between Cathedral / The Chest and Sheol / the Dark Room,
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
+
+    -- Season 3 and 6 alternate between Cathedral / The Chest and Sheol / the Dark Room,
     -- starting with Cathedral / The Chest
     situation = RPSpeedrun.charNum % 2
     if situation == 0 then

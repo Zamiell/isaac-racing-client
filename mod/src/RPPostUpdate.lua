@@ -95,6 +95,7 @@ function RPPostUpdate:Main()
   -- Check for the vanilla Schoolbag and convert it to the Racing+ Schoolbag if necessary
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)")
     if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     end
@@ -306,7 +307,8 @@ function RPPostUpdate:CheckBanB1TreasureRoom()
      (RPGlobals.race.rFormat == "seeded" or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-       RPSpeedrun.charNum >= 2)) then
+       RPSpeedrun.charNum >= 2) or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)")) then
 
     local door
     for i = 0, 7 do

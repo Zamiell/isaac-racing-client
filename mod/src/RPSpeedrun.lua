@@ -1,8 +1,8 @@
 local RPSpeedrun = {}
 
 -- Includes
-local RPGlobals         = require("src/rpglobals")
-local RPSprites         = require("src/rpsprites")
+local RPGlobals = require("src/rpglobals")
+local RPSprites = require("src/rpsprites")
 
 -- Constants
 RPSpeedrun.itemStarts = {
@@ -69,7 +69,7 @@ RPSpeedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the begin
 RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
 RPSpeedrun.liveSplitReset = false
 RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
-RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run
+RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run (for seasons 5 and 6)
 RPSpeedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
 
 -- Called from the PostRender callback
@@ -264,6 +264,7 @@ function RPSpeedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
      RPSpeedrun.inSeededSpeedrun or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
@@ -313,6 +314,13 @@ function RPSpeedrun:CheckValidCharOrder()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     -- There is no character order in season 5
     return true
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") and
+         (charOrderType ~= "R7S6" or
+          #RPGlobals.race.charOrder ~= 15) then -- 7 characters + ? banned items
+
+    -- TODO NUMBER OF BANNED ITEMS
+    return false
 
   elseif RPSpeedrun.inSeededSpeedrun and
          (charOrderType ~= "R7SS" or

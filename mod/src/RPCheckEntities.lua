@@ -257,6 +257,8 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities:Entity5_340_S4(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     RPCheckEntities:Entity5_340_S5(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
+    RPCheckEntities:Entity5_340_S6(pickup)
   elseif RPSpeedrun.inSeededSpeedrun then
     RPCheckEntities:Entity5_340_SS(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
@@ -456,7 +458,7 @@ function RPCheckEntities:Entity5_340_S4(pickup)
   local stageType = level:GetStageType()
 
   if stage == 10 and stageType == 1 then -- Cathedral
-    -- It is not required to take The Polaroid in Season 4
+    -- It is not required to take The Polaroid in this season
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
@@ -476,7 +478,27 @@ function RPCheckEntities:Entity5_340_S5(pickup)
   local stageType = level:GetStageType()
 
   if stage == 10 and stageType == 1 then -- Cathedral
-    -- It is not required to take The Polaroid in Season 5
+    -- It is not required to take The Polaroid in this season
+    RPCheckEntities.bigChestAction = "up"
+
+  elseif stage == 11 and stageType == 1 then -- The Chest
+    if RPSpeedrun.charNum == 7 then
+      RPCheckEntities.bigChestAction = "trophy"
+    else
+      RPCheckEntities.bigChestAction = "checkpoint"
+    end
+  end
+end
+
+function RPCheckEntities:Entity5_340_S6(pickup)
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
+
+  if stage == 10 and stageType == 1 then -- Cathedral
+    -- It is not required to take The Polaroid in this season
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest

@@ -140,6 +140,8 @@ function RPSpeedrunPostGameStarted:Main()
     RPSpeedrunPostGameStarted:R7S4()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     RPSpeedrunPostGameStarted:R7S5()
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
+    RPSpeedrunPostGameStarted:R7S6()
   elseif RPSpeedrun.inSeededSpeedrun then
     RPSpeedrunPostGameStarted:R7SS()
   else
@@ -376,7 +378,7 @@ function RPSpeedrunPostGameStarted:R7S5()
 
   Isaac.DebugString("In the R+7 (Season 5) challenge.")
 
-  -- (Random Baby automatically starts with the Schoolbag, so we don't have to explicitly give it.)
+  -- (Random Baby automatically starts with the Schoolbag)
 
   -- On the second character and beyond, a start will be randomly assigned
   if RPSpeedrun.charNum >= 2 then
@@ -453,6 +455,92 @@ function RPSpeedrunPostGameStarted:R7S5()
       player:AddSoulHearts(-4)
     end
   end
+end
+
+function RPSpeedrunPostGameStarted:R7S6()
+  --[[
+  -- Local variables
+  local game = Game()
+  local itemPool = game:GetItemPool()
+  local seeds = game:GetSeeds()
+  local player = game:GetPlayer(0)
+
+  Isaac.DebugString("In the R+7 (Season 6) challenge.")
+
+  -- Everyone starts with the Schoolbag in this season
+  player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+  itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+
+  -- A starting item will be randomly assigned
+  -- RPSpeedrun.selectedItemStarts
+
+  -- Check to see if a start is already assigned for this character number
+  -- (dying and resetting should not reassign the selected starting item)
+  if RPSpeedrun.charNum >= 2 then
+
+  local startingItem = RPSpeedrun.selectedItemStarts[RPSpeedrun.charNum]
+  if startingItem == nil then
+    -- Check to see if the player has played a run with one of the big 4
+    local big4remaining = 0
+    for i = 1, #RPSpeedrun.big4 do
+      for j = 1, #RPSpeedrun.remainingItemStarts do
+        if RPSpeedrun.remainingItemStarts[j] == RPSpeedrun.big4[i] then
+          big4remaining = big4remaining + 1
+          break
+        end
+      end
+    end
+    local alreadyStartedBig4 = true
+    if big4remaining == 4 then
+      alreadyStartedBig4 = false
+    end
+
+    -- Get a random start
+    local seed = seeds:GetStartSeed()
+    while true do
+      seed = RPGlobals:IncrementRNG(seed)
+      math.randomseed(seed)
+      local startingItemIndex
+      if alreadyStartedBig4 then
+        startingItemIndex = math.random(5, #RPSpeedrun.remainingItemStarts)
+      elseif RPSpeedrun.charNum == 7 then
+        -- Guarantee at least one big 4 start
+        startingItemIndex = math.random(1, 4)
+      else
+        startingItemIndex = math.random(1, #RPSpeedrun.remainingItemStarts)
+      end
+      startingItem = RPSpeedrun.remainingItemStarts[startingItemIndex]
+
+      -- Check to see if we already started this item
+      local alreadyStarted = false
+      for i = 1, #RPSpeedrun.selectedItemStarts do
+        if RPSpeedrun.selectedItemStarts[i] == startingItem then
+          alreadyStarted = true
+          break
+        end
+      end
+      if alreadyStarted == false then
+        -- Remove it from the starting item pool
+        table.remove(RPSpeedrun.remainingItemStarts, startingItemIndex)
+
+        -- Keep track of what item we are supposed to be starting on this character / run
+        RPSpeedrun.selectedItemStarts[#RPSpeedrun.selectedItemStarts + 1] = startingItem
+
+        -- Break out of the infinite loop
+        break
+      end
+    end
+
+    -- Give it to the player and remove it from item pools
+    player:AddCollectible(startingItem, 0, false)
+    itemPool:RemoveCollectible(startingItem)
+
+    -- Also remove the additional soul hearts from Crown of Light
+    if startingItem == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+      player:AddSoulHearts(-4)
+    end
+  end
+  --]]
 end
 
 function RPSpeedrunPostGameStarted:R7SS()
