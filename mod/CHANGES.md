@@ -106,8 +106,8 @@ While there are thousands of rooms in the game, many players have already seen t
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
-* All Spike Chests will spawn as Mimics instead.
-* The Chub that spawns after The Matriarch will be stunned for the first 0.5 seconds to prevent unavoidable damage.
+* All Spike Chests will spawn as Mimics instead. (Since they are so similar, there is little reason for Spike Chests to exist.)
+* The Chub that spawns after The Matriarch will be automatically stunned for a few frames to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 

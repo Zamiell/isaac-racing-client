@@ -380,6 +380,10 @@ function RPSpeedrunPostGameStarted:R7S5()
 
   -- (Random Baby automatically starts with the Schoolbag)
 
+  -- Change the starting health from 3 red hearts to 1 red heart and 1 half soul heart
+  player:AddMaxHearts(-4)
+  player:AddSoulHearts(1)
+
   -- On the second character and beyond, a start will be randomly assigned
   if RPSpeedrun.charNum >= 2 then
     -- As a safety measure, check to see if the "selectedItemStarts" table has a value in it for the first character

@@ -171,7 +171,7 @@ The changed rooms are as follows:
 
 ### TNT Barrel Fix
 
-Some rooms have TNT barrels that will immediately explode if the player is holding Mom's Knife. These rooms have been fixed by replacing the barrels with bomb rocks.
+One room has TNT barrels that will immediately explode if the player is holding Mom's Knife. This has been fixed by replacing the barrels with bomb rocks.
 
 The changed rooms are as follows:
 * Basement/Cellar/Burning: #748

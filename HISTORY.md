@@ -1,12 +1,17 @@
 # Racing+ Version History and News
 
-### *v0.29.3* - December ?th, 2018
+### *v0.29.6* - December 29th, 2018
+
+* Reduced the delay on a Matriarch Chub to 3 frames (from 15 frames).
+* Fixed the bug where Donation Machines could appear from Greed Plates. (Thanks mgln)
+
+### *v0.29.3* - December 10th, 2018
 
 * Fixed the bug where Golden Bombs and Golden Keys would be awarded upon a seeded revival even if the player changed floors. (Thanks mgln)
 
 ### *v0.29.2* - November 30th, 2018
 
-* Reduced the diagonal knife window by a frame.
+* Reduced the diagonal knife window to 2 frames (from 3 frames).
 
 ### *v0.29.0* - November 19th, 2018
 
@@ -103,7 +108,7 @@
 
 ### *v0.25.11* - November 12th, 2018
 
-* Fixed the bug where Samael would get softlocked after killing the first phase of the Matriach. (Thanks Greninja_San)
+* Fixed the bug where Samael would get softlocked after killing the first phase of the Matriarch. (Thanks Greninja_San)
 * Fixed the bug where both photos would spawn in the R+7 Seeded custom challenge.
 * Fixed the bug where both paths would appear after It Lives! in the R+7 Seeded custom challenge under certain conditions.
 
@@ -152,10 +157,10 @@
   * Unlike the other challenges, this challenge will only be available for a limited time.
   * More information can be found here: https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-seeded
 * Races can now be started with Random Baby as the character. If using this, make sure that everyone in the race knows to have The Babies Mod downloaded and enabled.
-* When a Chub emerges from The Matriach, all enemies in the room will now be killed (which is similar to the mechanic when Mom / It Lives! is killed).
+* When a Chub emerges from The Matriarch, all enemies in the room will now be killed (which is similar to the mechanic when Mom / It Lives! is killed).
 * When completing a race or speedrun, Racing+ will now show you the number of frames that passed. This will let you know how much time you lose to lag. In tournaments, the winner of very close races should be decided by frame count.
 * Fixed the bug where Epic Fetus would not work properly on Samael. (Thanks Shigan)
-* Fixed the bug where the artificial Matriach Chub stun was not working properly.
+* Fixed the bug where the artificial Matriarch Chub stun was not working properly.
 
 ### *v0.24.7* - October 26th, 2018
 

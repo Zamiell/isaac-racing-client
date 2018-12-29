@@ -79,7 +79,7 @@ function RPNPCUpdate:NPC28(npc)
      -- but use 30 frames to be safe
 
     RPGlobals.run.matriarch.chubIndex = npc.Index
-    RPGlobals.run.matriarch.stunFrame = gameFrameCount + 15 -- 0.5 seconds
+    RPGlobals.run.matriarch.stunFrame = gameFrameCount + 3 -- Around 1/4 of a second
 
     -- The Matriarch has died, so also nerf the fight slightly by killing everything in the room
     -- to clear things up a little bit

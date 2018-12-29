@@ -57,6 +57,9 @@ function RPCheckEntities:NonGrid()
     elseif entity.Type == EntityType.ENTITY_PICKUP then -- 5
       RPCheckEntities:Entity5(entity:ToPickup())
 
+    elseif entity.Type == EntityType.ENTITY_SLOT then -- 6
+      RPCheckEntities:Entity6(entity) -- There is no "entity:ToSlot()" function
+
     elseif entity.Type == EntityType.ENTITY_ATTACKFLY then -- 18
       RPCheckEntities:Entity18(entity:ToNPC())
 
@@ -724,6 +727,16 @@ function RPCheckEntities:Entity5_370(pickup)
   game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
              pickup.Position, pickup.Velocity, nil, 0, 0)
   pickup:Remove()
+end
+
+-- EntityType.ENTITY_SLOT (6)
+function RPCheckEntities:Entity6(entity)
+  -- Ensure that Donation Machines are removed
+  -- (even with the BLCK CNDL Easter Egg, they can still be created by Greed Plates in certain circumstances
+  -- due to the save file validation code)
+  if entity.Variant == 8 then -- Donation Machine
+    entity:Remove()
+  end
 end
 
 -- EntityType.ENTITY_ATTACKFLY (18)
