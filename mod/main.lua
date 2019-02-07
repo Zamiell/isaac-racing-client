@@ -6,6 +6,8 @@
 --[[
 
 TODO:
+- Rename RPGlobals to RPG
+- Store game, room, level, etc. (re-ask Kil after Repentence release if this is okay to do)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 

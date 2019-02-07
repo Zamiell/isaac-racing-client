@@ -28,10 +28,10 @@ Firstly, some rooms were purely changed for balance (racing) reasons. Rooms that
 * Extra hazards have been added to some rooms.
 * It is no longer possible to get heart drops from fires in Devil Rooms.
 * All rooms with 1 item have an additional reward:
-  * #16: 4 bombs
   * #4: ? card
   * #7: black rune
   * #11: Devil Beggar
+  * #16: 4 bombs
 * All rooms with 2 or more item pedestals have no extra rewards.
 * Rooms without 4 exits have been changed to have 4 exits.
 * Some rooms have custom weight.
@@ -558,7 +558,7 @@ Certain rooms in the game were probably meant to be symmetrical, but one entity 
 
 The changed rooms are as follows:
 * Basement/Burning: #581
-* Caves/Flooded: #28, #120, #416, #541
+* Caves/Flooded: #28, #55, #120, #416, #541
 * Flooded: #939
 * Cathedral: #11, #12, #23, #41, #60
 * Monstro II: #1051

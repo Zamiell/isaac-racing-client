@@ -1,13 +1,18 @@
-unused_args = false
+-- Disable luacheck "setting non-standard global varaible" warnings in this file specifically
+-- luacheck: ignore globals unused_args
 
+-- These are all of the declarations in the "enums.lua" file in the "scripts" subdirectory,
+-- sorted alphabetically
 globals = {
-  -- These are from the "enums.lua" file in the "scripts" subdirectory
+  "ActionTriggers",
+  "BabySubType",
   "BombSubType",
   "BombVariant",
   "ButtonAction",
   "CacheFlag",
   "Card",
   "Challenge",
+  "ChestSubType",
   "CoinSubType",
   "CollectibleType",
   "Color",
@@ -15,9 +20,13 @@ globals = {
   "Difficulty",
   "Direction",
   "DoorSlot",
+  "DoorState",
+  "DoorVariant",
   "EffectVariant",
   "EntityCollisionClass",
   "EntityFlag",
+  "EntityGridCollisionClass",
+  "EntityPartition",
   "EntityPtr",
   "EntityRef",
   "EntityType",
@@ -35,16 +44,26 @@ globals = {
   "ItemPoolType",
   "ItemType",
   "Keyboard",
+  "KeySubType",
+  "LaserOffset",
   "LevelCurse",
   "LevelStage",
+  "LevelStateFlag",
+  "LocustSubtypes",
   "ModCallbacks",
+  "Mouse",
+  "Music",
   "NpcState",
   "NullItemID",
+  "PickupPrice",
   "PickupVariant",
   "PillColor",
   "PillEffect",
   "PlayerForm",
+  "PlayerItemState",
+  "PlayerSpriteLayer",
   "PlayerType",
+  "ProjectileFlags",
   "ProjectileParams",
   "ProjectileVariant",
   "Random",
@@ -55,6 +74,7 @@ globals = {
   "RoomType",
   "SeedEffect",
   "SFXManager",
+  "SortingLayer",
   "SoundEffect",
   "Sprite",
   "StageType",
@@ -62,6 +82,7 @@ globals = {
   "TearVariant",
   "TrinketType",
   "Vector",
+  "WeaponType",
 
   -- Racing+ global variables
   "RacingPlusGlobals",
@@ -72,3 +93,7 @@ globals = {
   -- This is used in the True Co-op Mod
   "InfinityTrueCoopInterface",
 }
+
+-- Luacheck complains about functions in a module declared with a colon if self is unused;
+-- we may want all functions to be declared with a colon for uniformity
+unused_args = false
