@@ -1,23 +1,20 @@
 local RPSpeedrun = {}
 
 -- Includes
-local RPGlobals = require("src/rpglobals")
-local RPSprites = require("src/rpsprites")
+local RPGlobals         = require("src/rpglobals")
+local RPSprites         = require("src/rpsprites")
+local RPChangeCharOrder = require("src/rpchangecharorder")
 
 -- Constants
-RPSpeedrun.itemStarts = {
+RPSpeedrun.itemStartsS5 = {
   CollectibleType.COLLECTIBLE_MOMS_KNIFE, -- 114
   CollectibleType.COLLECTIBLE_TECH_X, -- 395
   CollectibleType.COLLECTIBLE_EPIC_FETUS, -- 168
   CollectibleType.COLLECTIBLE_IPECAC, -- 149
   CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER, -- 172
   CollectibleType.COLLECTIBLE_20_20, -- 245
-  CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE, -- Custom
   CollectibleType.COLLECTIBLE_PROPTOSIS, -- 261
-  CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT, -- 415
-  CollectibleType.COLLECTIBLE_INCUBUS, -- 360
   CollectibleType.COLLECTIBLE_LIL_BRIMSTONE, -- 275
-  CollectibleType.COLLECTIBLE_SACRED_HEART, -- 182
   CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM, -- 12
   CollectibleType.COLLECTIBLE_TECH_5, -- 244
   CollectibleType.COLLECTIBLE_POLYPHEMUS, -- 169
@@ -25,6 +22,56 @@ RPSpeedrun.itemStarts = {
   CollectibleType.COLLECTIBLE_DEATHS_TOUCH, -- 237
   CollectibleType.COLLECTIBLE_DEAD_EYE, -- 373
   CollectibleType.COLLECTIBLE_CRICKETS_BODY, -- 224
+  CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT, -- 415
+  CollectibleType.COLLECTIBLE_INCUBUS, -- 360
+  CollectibleType.COLLECTIBLE_SACRED_HEART, -- 182
+  CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE, -- Custom
+}
+
+RPSpeedrun.itemStartsS6 = {
+  { CollectibleType.COLLECTIBLE_MOMS_KNIFE }, -- 114
+  { CollectibleType.COLLECTIBLE_TECH_X }, -- 395
+  { CollectibleType.COLLECTIBLE_EPIC_FETUS }, -- 168
+  { CollectibleType.COLLECTIBLE_IPECAC }, -- 149
+  { CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER }, -- 172
+  { CollectibleType.COLLECTIBLE_20_20 }, -- 245
+  { CollectibleType.COLLECTIBLE_PROPTOSIS }, -- 261
+  { CollectibleType.COLLECTIBLE_LIL_BRIMSTONE }, -- 275
+  { CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM }, -- 12
+  { CollectibleType.COLLECTIBLE_TECH_5 }, -- 244
+  { CollectibleType.COLLECTIBLE_POLYPHEMUS }, -- 169
+  { CollectibleType.COLLECTIBLE_MAXS_HEAD }, -- 4
+  { CollectibleType.COLLECTIBLE_DEATHS_TOUCH }, -- 237
+  { CollectibleType.COLLECTIBLE_DEAD_EYE }, -- 373
+  { CollectibleType.COLLECTIBLE_CRICKETS_BODY }, -- 224
+  { CollectibleType.COLLECTIBLE_DR_FETUS }, -- 52
+  { CollectibleType.COLLECTIBLE_MONSTROS_LUNG }, -- 229
+  { CollectibleType.COLLECTIBLE_JUDAS_SHADOW }, -- 311
+  {
+    CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, -- 69
+    CollectibleType.COLLECTIBLE_STEVEN, -- 50
+  },
+  {
+    CollectibleType.COLLECTIBLE_JACOBS_LADDER, -- 494
+    CollectibleType.COLLECTIBLE_THERES_OPTIONS, -- 249
+  },
+  { CollectibleType.COLLECTIBLE_BRIMSTONE }, -- 118
+  { CollectibleType.COLLECTIBLE_INCUBUS }, -- 360
+  { CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT }, -- 415
+  { CollectibleType.COLLECTIBLE_SACRED_HEART }, -- 182
+  {
+    CollectibleType.COLLECTIBLE_MUTANT_SPIDER, -- 153
+    CollectibleType.COLLECTIBLE_INNER_EYE, -- 2
+  },
+  {
+    CollectibleType.COLLECTIBLE_TECHNOLOGY, -- 68
+    CollectibleType.COLLECTIBLE_LUMP_OF_COAL, -- 132
+  },
+  {
+    CollectibleType.COLLECTIBLE_FIRE_MIND, -- 257
+    CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID, -- 317
+    CollectibleType.COLLECTIBLE_13_LUCK, -- Custom
+  },
 }
 
 RPSpeedrun.big4 = {
@@ -33,6 +80,12 @@ RPSpeedrun.big4 = {
   CollectibleType.COLLECTIBLE_EPIC_FETUS, -- 168
   CollectibleType.COLLECTIBLE_IPECAC, -- 149
 }
+
+-- In Season 6, this is how long the randomly-selected item start be "locked-in"
+RPSpeedrun.itemLockTime = 60 * 1000 -- 1 minute
+
+-- In Season 6, this is how often the special "item cycle" button can be used
+RPSpeedrun.cycleButtonLength = 5 * 60 * 1000 -- 5 minutes
 
 RPSpeedrun.R7SeededName = "R+7 Seeded (Q4 2018)"
 RPSpeedrun.R7SeededSeeds = {
@@ -71,6 +124,8 @@ RPSpeedrun.liveSplitReset = false
 RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
 RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run (for seasons 5 and 6)
 RPSpeedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
+RPSpeedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
+RPSpeedrun.cycleButtonRefreshTime = 0 -- Used for Season 6
 
 -- Called from the PostRender callback
 function RPSpeedrun:CheckRestart()
@@ -317,9 +372,8 @@ function RPSpeedrun:CheckValidCharOrder()
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") and
          (charOrderType ~= "R7S6" or
-          #RPGlobals.race.charOrder ~= 15) then -- 7 characters + ? banned items
+          #RPGlobals.race.charOrder ~= 1 + 7 + 1 + RPChangeCharOrder.seasons.R7S6.itemBans) then
 
-    -- TODO NUMBER OF BANNED ITEMS
     return false
 
   elseif RPSpeedrun.inSeededSpeedrun and
@@ -392,6 +446,29 @@ function RPSpeedrun:CheckSeason5Mod()
   Isaac.RenderText("in order for the Racing+ season 5 custom", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
+end
+
+-- Called from the PostRender callback
+function RPSpeedrun:DrawItemCycleButtonText()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
+     RPSpeedrun.charNum ~= 1 or
+     RPGlobals.run.roomsEntered ~= 1 or
+     RPSpeedrun.cycleButtonRefreshTime ~= 0 then
+
+    return
+  end
+
+  local posGame = RPGlobals:GridToPos(11, 5)
+
+  local pos = Isaac.WorldToRenderPosition(posGame)
+  local f = Font()
+  f:Load("font/droid.fnt")
+  local color = KColor(1, 1, 1, 1, 0, 0, 0)
+  local string = "Veto"
+  local length = f:GetStringWidthUTF8(string)
+  f:DrawString(string, pos.X - (length / 2), pos.Y, color, 0, true)
 end
 
 -- ModCallbacks.MC_USE_ITEM (23)

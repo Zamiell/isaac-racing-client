@@ -12,7 +12,7 @@ local RPSaveDat = require("src/rpsavedat")
 RPChangeCharOrder.seasons = {
   R9S1 = {
     X = 2,
-    Y = 3,
+    Y = 1,
     charPosition = {
       {2, 2, 1},  -- Cain
       {3, 4, 1},  -- Judas
@@ -27,7 +27,7 @@ RPChangeCharOrder.seasons = {
   },
   R14S1 = {
     X = 6,
-    Y = 3,
+    Y = 1,
     charPosition = {
       {0, 1, 1},   -- Isaac
       {1, 3, 1},   -- Magdalene
@@ -48,7 +48,7 @@ RPChangeCharOrder.seasons = {
   },
   R7S2 = {
     X = 10,
-    Y = 3,
+    Y = 1,
     charPosition = {
       {0, 2, 1},  -- Isaac
       {2, 4, 1},  -- Cain
@@ -60,8 +60,8 @@ RPChangeCharOrder.seasons = {
     },
   },
   R7S3 = {
-    X = 4,
-    Y = 5,
+    X = 2,
+    Y = 3,
     charPosition = {
       {0, 2, 1},  -- Isaac
       {1, 4, 1},  -- Magdalene
@@ -73,8 +73,8 @@ RPChangeCharOrder.seasons = {
     },
   },
   R7S4 = {
-    X = 8,
-    Y = 5,
+    X = 6,
+    Y = 3,
     charPosition = {
       {2, 2, 1},  -- Cain
       {3, 4, 1},  -- Judas
@@ -106,9 +106,58 @@ RPChangeCharOrder.seasons = {
     },
     numSClass = 4,
   },
+  R7S6 = {
+    X = 10,
+    Y = 3,
+    charPosition = {
+      {3, 2, 1},  -- Judas
+      {4, 4, 1},  -- Blue Baby
+      {5, 6, 1},  -- Eve
+      {7, 8, 1},  -- Azazel
+      {9, 10, 1}, -- Eden
+      {10, 5, 3}, -- The Lost
+      {16, 7, 3}, -- The Forgotten
+    },
+    itemPosition1 = {
+      {114, 3, 5}, -- Mom's Knife
+      {395, 5, 5}, -- Tech X
+      {168, 7, 5}, -- Epic Fetus
+      {149, 9, 5}, -- Ipecac
+    },
+    itemBans = 3,
+    itemPosition2 = {
+      {172, 1, 1},  -- Sacrificial Dagger
+      {245, 2, 1},  -- 20/20
+      {261, 3, 1},  -- Proptosis
+      {275, 4, 1},  -- Lil Brimstone
+      {12, 5, 1},   -- Magic Mushroom
+      {244, 6, 1},  -- Tech.5
+      {169, 7, 1},  -- Polyphemus
+      {4, 8, 1},    -- Cricket's Head
+      {237, 9, 1},  -- Death's Touch
+      {373, 10, 1}, -- Dead Eye
+      {224, 11, 1}, -- Cricket's Body
+      {52, 1, 3},   -- Dr. Fetus
+      {229, 2, 3},  -- Monstro's Lung
+      {311, 3, 3},  -- Judas' Shadow
+
+      {1006, 5, 3}, -- Chocolate Milk + Steven
+      {1005, 6, 3}, -- Jacob's Ladder + There's Options
+
+      {118, 8, 3},  -- Brimstone
+      {360, 9, 3},  -- Incubus
+      {415, 10, 3}, -- Crown of Light
+      {182, 11, 3}, -- Sacred Heart
+
+      {1001, 1, 5}, -- Mutant Spider + The Inner Eye
+      {1002, 2, 5}, -- Technology + A Lump of Coal
+      {1003, 3, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
+    },
+  },
+  --[[
   R7SS = { -- R+7 Seeded
-    X = 4,
-    Y = 1,
+    X = 2,
+    Y = 5,
     charPosition = {
       {0, 2, 1},  -- Isaac
       {1, 4, 1},  -- Magdalene
@@ -119,9 +168,10 @@ RPChangeCharOrder.seasons = {
       {16, 7, 3}, -- The Forgotten
     },
   },
+  --]]
   R15V = {
-    X = 8,
-    Y = 1,
+    X = 10,
+    Y = 5,
     charPosition = {
       {0, 1, 1},   -- Isaac
       {1, 3, 1},   -- Magdalene
@@ -166,6 +216,9 @@ function RPChangeCharOrder:PostGameStarted()
 
   -- Remove the D6
   player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 106
+
+  -- Remove the bomb
+  player:AddBombs(-1)
 
   -- Give Isaac's some speed
   player:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
@@ -265,8 +318,16 @@ function RPChangeCharOrder:CheckButtonPressed(gridEntity)
     -- Check to see if the character buttons were pressed
     RPChangeCharOrder:CheckButtonPressed2(gridEntity)
   elseif RPChangeCharOrder.phase == 3 then
-    -- Check to see if the item buttons were pressed
-    RPChangeCharOrder:CheckButtonPressed3(gridEntity)
+    if RPChangeCharOrder.seasonChosen == "R7S4" then
+      -- Check to see if the item buttons were pressed
+      RPChangeCharOrder:CheckButtonPressed3(gridEntity)
+    else
+      -- Check to see if the first item ban buttons were pressed
+      RPChangeCharOrder:CheckButtonPressedBan1(gridEntity)
+    end
+  elseif RPChangeCharOrder.phase == 4 then
+    -- Check to see if the second item ban buttons were pressed
+    RPChangeCharOrder:CheckButtonPressedBan2(gridEntity)
   end
 end
 
@@ -282,7 +343,6 @@ function RPChangeCharOrder:CheckButtonPressed1(gridEntity)
        gridEntity.Position.X == buttonPos.X and
        gridEntity.Position.Y == buttonPos.Y then
 
-      Isaac.DebugString("The " .. tostring(k) .. " button was pressed.")
       RPChangeCharOrder.phase = 2
       RPChangeCharOrder.seasonChosen = k
       RPChangeCharOrder:RemoveAllRoomButtons()
@@ -301,6 +361,8 @@ function RPChangeCharOrder:CheckButtonPressed2(gridEntity)
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
   local season = RPChangeCharOrder.seasons[RPChangeCharOrder.seasonChosen]
 
   for i = 1, #season.charPosition do
@@ -310,7 +372,26 @@ function RPChangeCharOrder:CheckButtonPressed2(gridEntity)
        gridEntity.Position.X == posButton.X and
        gridEntity.Position.Y == posButton.Y then
 
-      Isaac.DebugString("The " .. tostring(season.charPosition[i][1]) .. " character button was pressed.")
+      -- Check to see if we chose Eden first on season 6
+      if RPChangeCharOrder.seasonChosen == "R7S6" and
+         #RPChangeCharOrder.charOrder == 0 then
+
+        if season.charPosition[i][1] == PlayerType.PLAYER_EDEN then -- 9
+          player:Kill()
+          Isaac.DebugString("Killing the player since they chose Eden first.")
+          return
+        end
+
+        -- Break the rocks so that they can choose Eden for the second character and beyond
+        room:RemoveGridEntity(25, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(26, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(27, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(40, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(42, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(55, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(56, 0, false) -- gridEntity:Destroy() does not work
+        room:RemoveGridEntity(57, 0, false) -- gridEntity:Destroy() does not work
+      end
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
@@ -323,8 +404,10 @@ function RPChangeCharOrder:CheckButtonPressed2(gridEntity)
 
       -- Check to see if this is our last character
       if #RPChangeCharOrder.charOrder == #season.charPosition then
-        if RPChangeCharOrder.seasonChosen == "R7S4" then
-          -- In R+7 Season 4, now we have to choose our items
+        if RPChangeCharOrder.seasonChosen == "R7S4" or
+           RPChangeCharOrder.seasonChosen == "R7S6" then
+
+          -- In R+7 Season 4/6, now we have to choose our items
           RPChangeCharOrder.phase = 3
           RPChangeCharOrder:RemoveAllRoomButtons()
 
@@ -361,8 +444,6 @@ function RPChangeCharOrder:CheckButtonPressed3(gridEntity)
        gridEntity.VarData == 0 and
        gridEntity.Position.X == posButton.X and
        gridEntity.Position.Y == posButton.Y then
-
-      Isaac.DebugString("The " .. tostring(season.itemPosition[i][1]) .. " item button was pressed.")
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
@@ -424,6 +505,85 @@ function RPChangeCharOrder:CheckButtonPressed3(gridEntity)
   end
 end
 
+-- Phase 3 corresponds to when the big 4 ban buttons are present
+function RPChangeCharOrder:CheckButtonPressedBan1(gridEntity)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local season = RPChangeCharOrder.seasons[RPChangeCharOrder.seasonChosen]
+
+  for i = 1, #season.itemPosition1 do
+    local posButton = RPGlobals:GridToPos(season.itemPosition1[i][2], season.itemPosition1[i][3])
+    if gridEntity:GetSaveState().State == 3 and
+       gridEntity.VarData == 0 and
+       gridEntity.Position.X == posButton.X and
+       gridEntity.Position.Y == posButton.Y then
+
+      -- Mark that we have pressed this button already
+      gridEntity.VarData = 1
+      RPChangeCharOrder.itemOrder[#RPChangeCharOrder.itemOrder + 1] = season.itemPosition1[i][1]
+
+      if #RPChangeCharOrder.itemOrder == 1 then
+        -- They finished banning a big 4 item
+
+        -- Concatentate the character order and the items chosen into one big table
+        RPGlobals.race.charOrder = RPGlobals:TableConcat(RPChangeCharOrder.charOrder, RPChangeCharOrder.itemOrder)
+
+        -- Reset the items chosen
+        RPChangeCharOrder.itemOrder = {}
+
+        -- Now we have to ban other items
+        RPChangeCharOrder.phase = 4
+        RPChangeCharOrder:RemoveAllRoomButtons()
+
+        -- Mark to create new buttons (for the items) on the next frame
+        RPChangeCharOrder.createButtonsFrame = gameFrameCount + 1
+      end
+    end
+  end
+end
+
+-- Phase 4 corresponds to when the non-big 4 ban buttons are present
+function RPChangeCharOrder:CheckButtonPressedBan2(gridEntity)
+  -- Local variables
+  local game = Game()
+  local season = RPChangeCharOrder.seasons[RPChangeCharOrder.seasonChosen]
+
+  for i = 1, #season.itemPosition2 do
+    local posButton = RPGlobals:GridToPos(season.itemPosition2[i][2], season.itemPosition2[i][3])
+    if gridEntity:GetSaveState().State == 3 and
+       gridEntity.VarData == 0 and
+       gridEntity.Position.X == posButton.X and
+       gridEntity.Position.Y == posButton.Y then
+
+      -- Mark that we have pressed this button already
+      gridEntity.VarData = 1
+      RPChangeCharOrder.itemOrder[#RPChangeCharOrder.itemOrder + 1] = season.itemPosition2[i][1]
+
+      if #RPChangeCharOrder.itemOrder == season.itemBans then
+        -- Concatentate the previous data and the new items chosen into one big table
+        RPGlobals.race.charOrder = RPGlobals:TableConcat(RPChangeCharOrder.charOrder, RPChangeCharOrder.itemOrder)
+
+        -- Insert the type of speedrun as the first element in the table
+        table.insert(RPChangeCharOrder.charOrder, 1, RPChangeCharOrder.seasonChosen)
+
+        -- We are done, so write the changes to the "save.dat" file
+        RPGlobals.race.charOrder = RPChangeCharOrder.charOrder
+        RPSaveDat:Save()
+
+        -- Let the client know about the new order so that it does not overwrite it later
+        Isaac.DebugString("New charOrder: " .. RPGlobals:TableToString(RPGlobals.race.charOrder))
+
+        game:Fadeout(0.05, RPGlobals.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
+      end
+
+      -- Change the graphic to that of a number
+      RPChangeCharOrder.sprites.items[i]:Load("gfx/timer/timer.anm2", true)
+      RPChangeCharOrder.sprites.items[i]:SetFrame("Default", #RPChangeCharOrder.itemOrder)
+    end
+  end
+end
+
 -- Called from the "RPPostUpdate:Main()" function
 function RPChangeCharOrder:PostUpdate()
   local challenge = Isaac.GetChallenge()
@@ -444,7 +604,13 @@ function RPChangeCharOrder:PostUpdate()
     if RPChangeCharOrder.phase == 2 then
       RPChangeCharOrder:CreateCharacterButtons()
     elseif RPChangeCharOrder.phase == 3 then
-      RPChangeCharOrder:CreateItemButtons()
+      if RPChangeCharOrder.seasonChosen == "R7S4" then
+        RPChangeCharOrder:CreateItemButtons()
+      else
+        RPChangeCharOrder:CreateItemBanButtons1()
+      end
+    elseif RPChangeCharOrder.phase == 4 then
+      RPChangeCharOrder:CreateItemBanButtons2()
     else
       Isaac.DebugString("ERROR: The \"RPChangeCharOrder:PostUpdate()\" function was entered with a phase of: " ..
                         tostring(RPChangeCharOrder.phase))
@@ -465,13 +631,24 @@ function RPChangeCharOrder:CreateCharacterButtons()
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
     -- Spawn the character selection graphic next to the button
-    local index = #RPChangeCharOrder.sprites.characters + 1
-    RPChangeCharOrder.sprites.characters[index] = Sprite()
+    RPChangeCharOrder.sprites.characters[i] = Sprite()
     local charNum = season.charPosition[i][1]
-    RPChangeCharOrder.sprites.characters[index]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
-    RPChangeCharOrder.sprites.characters[index]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-    RPChangeCharOrder.sprites.characters[index].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+    RPChangeCharOrder.sprites.characters[i]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
+    RPChangeCharOrder.sprites.characters[i]:SetFrame("Death", 5) -- The 5th frame is rather interesting
+    RPChangeCharOrder.sprites.characters[i].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
     -- Fade the character so it looks like a ghost
+  end
+
+  -- In Season 6, we are not allowed to choose Eden for the first character
+  if RPChangeCharOrder.seasonChosen == "R7S6" then
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(9, 0), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(10, 0), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(11, 0), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(9, 1), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(11, 1), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(9, 2), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(10, 2), true) -- 17
+    Isaac.GridSpawn(GridEntityType.GRID_ROCK, 0, RPGlobals:GridToPos(11, 2), true) -- 17
   end
 
   -- Put the player next to the bottom door
@@ -529,6 +706,78 @@ function RPChangeCharOrder:CreateItemButtons()
 
   -- Move Isaac to the center of the room
   player.Position = room:GetCenterPos()
+end
+
+function RPChangeCharOrder:CreateItemBanButtons1()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
+
+  -- Delete the character sprites
+  RPChangeCharOrder.sprites.characters = {}
+
+  local v = RPChangeCharOrder.seasons[RPChangeCharOrder.seasonChosen]
+  RPChangeCharOrder.sprites.items = {}
+  for i = 1, #v.itemPosition1 do
+    -- Spawn buttons for the all the items
+    local buttonPos = RPGlobals:GridToPos(v.itemPosition1[i][2], v.itemPosition1[i][3])
+    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, buttonPos, true) -- 20
+
+    -- Spawn the item selection graphics next to the buttons
+    local newIndex = #RPChangeCharOrder.sprites.items + 1
+    RPChangeCharOrder.sprites.items[newIndex] = Sprite()
+    RPChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
+    local itemNum = v.itemPosition1[i][1]
+    if itemNum < 1000 then
+      -- This is a single item
+      local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
+    else
+      -- This is a build
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
+    end
+    RPChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
+    RPChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
+  end
+
+  -- Move Isaac to the center of the room
+  player.Position = room:GetCenterPos()
+end
+
+function RPChangeCharOrder:CreateItemBanButtons2()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local itemConfig = Isaac.GetItemConfig()
+
+  local v = RPChangeCharOrder.seasons[RPChangeCharOrder.seasonChosen]
+  RPChangeCharOrder.sprites.items = {}
+  for i = 1, #v.itemPosition2 do
+    -- Spawn buttons for the all the items
+    local buttonPos = RPGlobals:GridToPos(v.itemPosition2[i][2], v.itemPosition2[i][3])
+    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, buttonPos, true) -- 20
+
+    -- Spawn the item selection graphics next to the buttons
+    local newIndex = #RPChangeCharOrder.sprites.items + 1
+    RPChangeCharOrder.sprites.items[newIndex] = Sprite()
+    RPChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
+    local itemNum = v.itemPosition2[i][1]
+    if itemNum < 1000 then
+      -- This is a single item
+      local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
+    else
+      -- This is a build
+      RPChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
+    end
+    RPChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
+    RPChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
+  end
+
+  -- Put the player next to the bottom door
+  player.Position = Vector(320, 400)
 end
 
 function RPChangeCharOrder:RemoveAllRoomButtons()
@@ -624,7 +873,21 @@ function RPChangeCharOrder:DisplayCharSelectRoom()
   -- Render the item sprites
   if RPChangeCharOrder.sprites.items ~= nil then
     for i = 1, #RPChangeCharOrder.sprites.items do
-      local posGame = RPGlobals:GridToPos(v.itemPosition[i][2], v.itemPosition[i][3] - 1)
+      local x, y
+      if RPChangeCharOrder.seasonChosen == "R7S4" then
+        x = v.itemPosition[i][2]
+        y = v.itemPosition[i][3]
+      else
+        if RPChangeCharOrder.phase == 3 then
+          x = v.itemPosition1[i][2]
+          y = v.itemPosition1[i][3]
+        elseif RPChangeCharOrder.phase == 4 then
+          x = v.itemPosition2[i][2]
+          y = v.itemPosition2[i][3]
+        end
+      end
+
+      local posGame = RPGlobals:GridToPos(x, y - 1)
       local posRender = Isaac.WorldToRenderPosition(posGame, false)
       posRender.Y = posRender.Y
       RPChangeCharOrder.sprites.items[i]:Render(posRender, Vector(0, 0), Vector(0, 0))

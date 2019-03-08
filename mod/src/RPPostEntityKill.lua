@@ -16,6 +16,18 @@ function RPPostEntityKill:Main(entity)
     return
   end
 
+  -- In a season 6 speedrun,
+  -- allow the player to reset for a new item if they kill the Basement 2 boss
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local challenge = Isaac.GetChallenge()
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") and
+     stage == 2 then
+
+    RPSpeedrun.timeItemAssigned = 0
+  end
+
   -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the segments
   if entity.Type == EntityType.ENTITY_LARRYJR or -- 19 (and The Hollow)
      entity.Type == EntityType.ENTITY_PIN or -- 62 (and Scolex / Frail)

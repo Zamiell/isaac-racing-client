@@ -7,19 +7,20 @@ RPSeededDeath.DebuffTime = 45 -- In seconds
 local RPGlobals   = require("src/rpglobals")
 local RPSchoolbag = require("src/rpschoolbag")
 
--- ModCallbacks.MC_POST_RENDER (2)
-function RPSeededDeath:PostRender()
+
+-- ModCallbacks.MC_POST_UPDATE (1)
+function RPSeededDeath:PostUpdate()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local room = game:GetRoom()
   local roomType = room:GetType()
   local player = game:GetPlayer(0)
-  local playerSprite = player:GetSprite()
   local revive = player:WillPlayerRevive()
   local hearts = player:GetHearts()
   local soulHearts = player:GetSoulHearts()
   local boneHearts = player:GetBoneHearts()
+  local challenge = Isaac.GetChallenge()
 
   -- Keep track of whenever we take a deal with the devil to prevent players from being able to take "free" items
   if (roomType == RoomType.ROOM_DEVIL or -- 14
@@ -29,30 +30,32 @@ function RPSeededDeath:PostRender()
     RPGlobals.run.seededDeath.dealTime = Isaac.GetTime()
   end
 
-  -- Seeded death (1/3) - They took fatal damage and begin the death animation
+  -- They took fatal damage and the death animation is playing
   -- (this used to be based on the "Death" and "LostDeath" animation, but this does not work for deaths inside Pitfalls)
   local totalHealth = hearts + soulHearts + boneHearts
   if RPGlobals.run.seededDeath.deathFrame == 0 and
      (RPGlobals.race.rFormat == "seeded" or
-      RPGlobals.race.rFormat == "seeded-mo") and
+      RPGlobals.race.rFormat == "seeded-mo" or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)")) and
      totalHealth == 0 and
      revive == false and
+     -- We want to make an exception for Sacrifice Rooms and the Boss Rush
+     -- to prevent players from being able to take "free" items
      roomType ~= RoomType.ROOM_SACRIFICE and -- 13
      roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
 
     RPGlobals.run.seededDeath.deathFrame = gameFrameCount + 46 -- 56
-    -- The "Death" animation is 57 frames long (when testing, the death screen appears if we wait 57 frames)
-    Isaac.DebugString("Starting seeded death on frame: " .. tostring(RPGlobals.run.seededDeath.deathFrame))
+    -- The "Death" animation is 57 frames long
+    -- (when testing, the death screen appears if we wait 57 frames)
   end
 
+  -- Seeded death (1/3) - The death animation is over
   if RPGlobals.run.seededDeath.deathFrame ~= 0 and
      gameFrameCount >= RPGlobals.run.seededDeath.deathFrame then
 
-    -- The death animation is over
     RPGlobals.run.seededDeath.deathFrame = 0
 
-    -- We want to make an exception for Sacrifice Rooms and the Boss Rush
-    -- to prevent players from being able to take "free" items
+    -- Make sure that we don't revive the player if they recently took a devil deal
     local elapsedTime = Isaac.GetTime() - RPGlobals.run.seededDeath.dealTime
     if elapsedTime > 5000 then
       RPGlobals:RevivePlayer()
@@ -66,15 +69,6 @@ function RPSeededDeath:PostRender()
     end
   end
 
-  -- Seeded death (3/3) - The "AppearVanilla animation" is over and the debuff is on
-  if RPGlobals.run.seededDeath.state == 2 then
-    player.Position = RPGlobals.run.seededDeath.pos
-    if playerSprite:IsPlaying("AppearVanilla") == false then
-      RPGlobals.run.seededDeath.state = 3
-      Isaac.DebugString("Seeded death (3/3).")
-    end
-  end
-
   -- Check to see if the debuff is over
   if RPGlobals.run.seededDeath.state == 3 then
     local elapsedTime = RPGlobals.run.seededDeath.time - Isaac.GetTime()
@@ -84,6 +78,25 @@ function RPSeededDeath:PostRender()
       RPSeededDeath:DebuffOff()
       player:AnimateHappy()
       Isaac.DebugString("Seeded death debuff complete.")
+    end
+  end
+end
+
+-- ModCallbacks.MC_POST_RENDER (2)
+function RPSeededDeath:PostRender()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+  local playerSprite = player:GetSprite()
+
+  -- Seeded death (3/3) - The "AppearVanilla animation" is over and the debuff is on
+  if RPGlobals.run.seededDeath.state == 2 then
+    -- Keep the player in place during the "AppearVanilla" animation
+    player.Position = RPGlobals.run.seededDeath.pos
+
+    if playerSprite:IsPlaying("AppearVanilla") == false then
+      RPGlobals.run.seededDeath.state = 3
+      Isaac.DebugString("Seeded death (3/3).")
     end
   end
 end

@@ -1,14 +1,15 @@
 local RPCheckEntities = {}
 
 -- Includes
-local RPGlobals         = require("src/rpglobals")
-local RPUseItem         = require("src/rpuseitem")
-local RPPedestals       = require("src/rppedestals")
-local RPFastTravel      = require("src/rpfasttravel")
-local RPRace            = require("src/rprace")
-local RPSpeedrun        = require("src/rpspeedrun")
-local RPChangeCharOrder = require("src/rpchangecharorder")
-local SamaelMod         = require("src/rpsamael")
+local RPGlobals            = require("src/rpglobals")
+local RPUseItem            = require("src/rpuseitem")
+local RPPedestals          = require("src/rppedestals")
+local RPFastTravel         = require("src/rpfasttravel")
+local RPRace               = require("src/rprace")
+local RPSpeedrun           = require("src/rpspeedrun")
+local RPChangeCharOrder    = require("src/rpchangecharorder")
+local RPSpeedrunPostUpdate = require("src/rpspeedrunpostupdate")
+local SamaelMod            = require("src/rpsamael")
 
 -- Check all the grid entities in the room
 -- (called from the PostUpdate callback)
@@ -37,6 +38,7 @@ function RPCheckEntities:Grid()
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         RPChangeCharOrder:CheckButtonPressed(gridEntity)
+        RPSpeedrunPostUpdate:CheckItemCycleButton(gridEntity)
       end
     end
   end
@@ -421,9 +423,6 @@ function RPCheckEntities:Entity5_340_S3(pickup)
   local direction = RPSpeedrun.charNum % 2 -- 1 is up, 2 is down
   if direction == 0 then
     direction = 2
-    Isaac.DebugString("Going down.")
-  else
-    Isaac.DebugString("Going up.")
   end
 
   if stage == 10 and stageType == 1 and -- Cathedral
@@ -500,11 +499,31 @@ function RPCheckEntities:Entity5_340_S6(pickup)
   local stage = level:GetStage()
   local stageType = level:GetStageType()
 
-  if stage == 10 and stageType == 1 then -- Cathedral
-    -- It is not required to take The Polaroid in this season
+  -- Season 6 runs alternate between directions, so we need to make sure we only handle the intended direction
+  local direction = RPSpeedrun.charNum % 2 -- 1 is up, 2 is down
+  if direction == 0 then
+    direction = 2
+  end
+
+  if stage == 10 and stageType == 1 and -- Cathedral
+     direction == 1 then
+
     RPCheckEntities.bigChestAction = "up"
 
-  elseif stage == 11 and stageType == 1 then -- The Chest
+  elseif stage == 10 and stageType == 0 and -- Sheol
+         direction == 2 then
+
+    RPCheckEntities.bigChestAction = "down"
+
+  elseif (stage == 11 and stageType == 1 and -- The Chest
+          direction == 1) or
+         (stage == 11 and stageType == 0 and -- Dark Room
+          direction == 2) then
+
+    -- Sometimes the vanilla end of challenge trophy does not appear
+    -- Thus, we need to handle replacing both the trophy and the big chest
+    -- So replace the big chest with either a checkpoint flag or a custom trophy,
+    -- depending on if we are on the last character or not
     if RPSpeedrun.charNum == 7 then
       RPCheckEntities.bigChestAction = "trophy"
     else
@@ -736,6 +755,7 @@ function RPCheckEntities:Entity6(entity)
   -- due to the save file validation code)
   if entity.Variant == 8 then -- Donation Machine
     entity:Remove()
+    Isaac.DebugString("Manually removed a Donation Machine (from the PostUpdate callback).")
   end
 end
 

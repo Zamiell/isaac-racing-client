@@ -50,9 +50,8 @@ function RPPostRender:Main()
   RPSoulJar:SpriteDisplay()
   RPTimer:Display()
   RPTimer:DisplayRun()
-  RPTimer:DisplayDebuff()
+  RPTimer:DisplaySecond()
   RPPills:PostRender()
-  RPSpeedrun:DisplayCharProgress()
   RPChangeCharOrder:DisplayCharSelectRoom()
   RPPostRender:DisplayTopLeftText()
   RPFastDrop:PostRender() -- Custom challenge related text
@@ -82,13 +81,19 @@ function RPPostRender:Main()
   -- Check to see if we are subverting a teleport from Gurdy, Mom, Mom's Heart, or It Lives
   RPPostRender:CheckSubvertTeleport()
 
+  -- Check for the seeded death mechanic
+  -- (this is not in the "RPPostRender:Race()" function because it also applies to speedruns)
+  RPSeededDeath:PostRender()
+
   -- Do race specific stuff
   RPPostRender:Race()
 
   -- Do speedrun related checks
   RPSpeedrun:CheckRestart()
-  RPChangeCharOrder:CheckChangeCharOrder()
+  RPSpeedrun:DisplayCharProgress()
+  RPSpeedrun:DrawItemCycleButtonText()
   RPSpeedrun:CheckSeason5Mod()
+  RPChangeCharOrder:CheckChangeCharOrder()
 end
 
 -- Restart the game if Easter Egg or character validation failed
@@ -478,8 +483,6 @@ function RPPostRender:Race()
     end
     return
   end
-
-  RPSeededDeath:PostRender()
 
   --
   -- Race validation stuff

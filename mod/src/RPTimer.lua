@@ -244,8 +244,22 @@ function RPTimer:DisplayRun()
 end
 
 -- This is the timer that shows up when the player has died in a seeded race
-function RPTimer:DisplayDebuff()
-  if RPGlobals.run.seededDeath.state < 2 then
+function RPTimer:DisplaySecond()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  local elapsedTime
+  if RPGlobals.run.seededDeath.state >= 2 then
+    elapsedTime = RPGlobals.run.seededDeath.time - Isaac.GetTime()
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") and
+         RPSpeedrun.charNum == 1 and
+         RPGlobals.run.roomsEntered == 1 then
+
+    local timeReset = RPSpeedrun.timeItemAssigned + RPSpeedrun.itemLockTime
+    elapsedTime = timeReset - Isaac.GetTime()
+  end
+  if elapsedTime == nil then
     return
   end
 
@@ -282,9 +296,8 @@ function RPTimer:DisplayDebuff()
     RPTimer.sprites.digitMini3:SetFrame("Default", 0)
   end
 
-  -- Find out how much time is left for the debuff
-  local elapsedTime = RPGlobals.run.seededDeath.time - Isaac.GetTime()
-  elapsedTime = elapsedTime / 1000 -- This will be in milliseconds, so we divide by 1000
+  -- Convert milliseconds to seconds
+  elapsedTime = elapsedTime / 1000
   if elapsedTime <= 0 then
     return
   end

@@ -38,13 +38,13 @@ function RPSpeedrunPostUpdate:TrackPassives()
       if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
         Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
       end
-      RPSpeedrunPostUpdate:CheckSeason5Start()
+      RPSpeedrunPostUpdate:CheckFirstCharacterStartingItem()
     end
   end
 end
 
 -- We need to record the starting item on the first character so that we can avoid duplicate starting items later on
-function RPSpeedrunPostUpdate:CheckSeason5Start()
+function RPSpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
@@ -52,7 +52,7 @@ function RPSpeedrunPostUpdate:CheckSeason5Start()
      #RPGlobals.run.passiveItems ~= 1 or
      RPSpeedrun.charNum ~= 1 or
      RPGlobals.run.roomsEntered < 2 then
-     -- Babies can start with a starting item, so we want to make sure that we enter at least one room
+     -- Characters can start with a starting item, so we want to make sure that we enter at least one room
 
     return
   end
@@ -65,7 +65,7 @@ function RPSpeedrunPostUpdate:CheckSeason5Start()
   end
   RPSpeedrun.selectedItemStarts[1] = RPGlobals.run.passiveItems[1]
   Isaac.DebugString("Starting item " .. tostring(RPSpeedrun.selectedItemStarts[1]) ..
-                    " on the first character of a season 5 run.")
+                    " on the first character of an insta-start speedrun.")
 end
 
 -- In R+7 Season 4, we want to remove the Lilith's extra Incubus if they attempt to switch characters
@@ -115,6 +115,28 @@ function RPSpeedrunPostUpdate:CheckCheckpoint(force)
 
   -- Mark to fade out after the "Checkpoint" text has displayed on the screen for a little bit
   RPSpeedrun.fadeFrame = isaacFrameCount + 30
+end
+
+-- Called from the "RPCheckEntities:Grid()" function
+function RPSpeedrunPostUpdate:CheckItemCycleButton(gridEntity)
+  local challenge = Isaac.GetChallenge()
+  Isaac.DebugString(tostring(gridEntity:GetSaveState().State))
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
+     RPSpeedrun.charNum ~= 1 or
+     RPGlobals.run.roomsEntered ~= 1 or
+     gridEntity:GetSaveState().State ~= 3 then
+
+    return
+  end
+
+  -- Play a poop sound
+  local sfx = SFXManager()
+  sfx:Play(SoundEffect.SOUND_FART, 1, 0, false, 1) -- 37
+
+  -- Reset the timer and restart the game
+  RPSpeedrun.timeItemAssigned = 0
+  RPGlobals.run.restart = true
+  RPSpeedrun.cycleButtonRefreshTime = Isaac.GetTime() + RPSpeedrun.cycleButtonLength
 end
 
 return RPSpeedrunPostUpdate

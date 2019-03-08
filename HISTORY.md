@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.29.6* - March 4th, 2019
+
+* Fixed the bug where Daddy Longlegs had the incorrect name in the client. (Thanks Gamonymous)
+* Fixed the bug where seeded death mechanics would get messed up if the player had the game paused. (Thanks Gamonymous & ReidMercury)
+* Fixed the bug where having Restock could spawn Restock Machines under certain conditions. (Thanks thereisnofuture & Dea1h)
+
 ### *v0.29.6* - December 29th, 2018
 
 * Reduced the delay on a Matriarch Chub to 3 frames (from 15 frames).

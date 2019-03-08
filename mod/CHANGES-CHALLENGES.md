@@ -43,13 +43,13 @@
 ## R+7 Season 3
 
 * You must complete the game with the following 7 characters:
-  * Isaac, Magadalene, Judas, Eve, Samson, Lazarus, and The Lost
+  * Isaac, Magdalene, Judas, Eve, Samson, Lazarus, and The Lost
 * The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
 * The bosses of Cathedral and Sheol have been replaced with [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762), a custom boss by [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900).
 * The bosses of The Chest and Dark Room have been replaced with [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=960253826), a custom boss by [melon goodposter](http://steamcommunity.com/id/pleasebecareful).
 * All characters start with the Schoolbag.
 * Isaac starts with Moving Box inside the Schoolbag.
-* Magadalene starts with How to Jump inside the Schoolbag.
+* Magdalene starts with How to Jump inside the Schoolbag.
 * Judas starts the Book of Belial inside the Schoolbag.
 * Eve starts with The Candle inside the Schoolbag.
 * Samson starts with Mr. ME! inside the Schoolbag.
@@ -67,14 +67,7 @@
 * All characters start with the Schoolbag. (It starts empty by default.)
 * Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar with also disappear.)
 * Lazarus does not start with a pill.
-* You get to choose a starting item for each character from the following pool of items:
-  * Mom's Knife, Tech X, Epic Fetus, Ipecac, Sacrificial Dagger, Cricket's Body, Dead Eye, Dr. Fetus, Monstro's Lung Judas' Shadow
-  * Chocolate Milk + Steven
-  * Jacob's Ladder + There's Options
-  * Mutant Spider + The Inner Eye
-  * Technology + A Lump of Coal
-  * Fire Mind + Mysterious Liquid + 13 luck
-  * Kamikaze! + Host Hat
+* You get to choose a starting item for each character. (You can find the full list in the "Change Char Order" custom challenge.)
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
@@ -106,9 +99,31 @@
 
 <br />
 
+## R+7 Season 6
+
+* You must complete the game with the following 7 characters:
+  * Judas, Blue Baby, Eve, Azazel, Eden, The Lost, The Forgotten
+  * You cannot choose Eden as the first character.
+* The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
+* All characters start with the Schoolbag. (It starts empty by default.)
+* All characters start with the Compass.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
+* Each character will be randomly assigned a starting item or build. (You can find the full list in the "Change Char Order" custom challenge.)
+* The Treasure Room on Basement 1 is permanently barred.
+* Resetting the game will change the seed, but not change the randomly assigned starting item.
+* Only one big 4 item will be randomly assigned per 7 character run.
+* If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
+* Duplicate starting items will never be given over the course of a 7 character run.
+* After character selection, players must ban one big 4 item and three other items.
+* The randomly selected item for the first character will expire after 1 minute or when a Basement 2 boss dies, whichever happens first.
+* On the first character, players get one item veto per 5 minutes.
+
+<br />
+
+<!--
 ## R+7 Seeded
 
-* Unlike the other custom challenges, this challenge is not available forever. A new version will be released approximately every 3 months.
+* This challenge was only available in Q4 2018. A new version may be released in the future.
 * You must defeat Blue Baby on the following 7 characters:
   * Isaac, Magdalene, Lazarus, Eden, The Lost, Apollyon, The Forgotten
   * These characters were randomly selected before the release of this challenge.
@@ -122,6 +137,7 @@
 * Unlike the other challenges, exiting and going into a normal run will not cancel the speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.
 
 <br />
+-->
 
 ## R+15 Vanilla
 

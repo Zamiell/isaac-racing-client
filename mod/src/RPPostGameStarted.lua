@@ -33,11 +33,14 @@ function RPPostGameStarted:Main(saveState)
   Isaac.DebugString("MC_POST_GAME_STARTED")
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
+  --[[
   if RPPostGameStarted:CheckCorruptMod() or
      RPPostGameStarted:CheckFullyUnlockedSave() then
 
     return
   end
+  --]]
+  RPGlobals.saveFile.fullyUnlocked = true
 
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue

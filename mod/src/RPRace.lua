@@ -1,9 +1,10 @@
 local RPRace = {}
 
 -- Includes
-local RPGlobals  = require("src/rpglobals")
-local RPSpeedrun = require("src/rpspeedrun")
-local RPSprites  = require("src/rpsprites")
+local RPGlobals     = require("src/rpglobals")
+local RPSpeedrun    = require("src/rpspeedrun")
+local RPSprites     = require("src/rpsprites")
+local RPSeededDeath = require("src/rpseededdeath")
 
 function RPRace:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
@@ -17,6 +18,7 @@ function RPRace:PostUpdate()
   RPRace:PostUpdateCheckVictoryLap()
   RPRace:PostUpdateCheckFinished()
   RPRace:PostUpdateCheckKeeperHolyMantle()
+  RPSeededDeath:PostUpdate()
 end
 
 -- Make race winners get sparklies and fireworks

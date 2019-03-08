@@ -186,8 +186,7 @@ function RPPedestals:Replace(pickup)
            (RPGlobals.race.ranked and RPGlobals.race.solo) == false) or
           challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
 
-    -- Check to see if this is a special Basement 1 diversity reroll
-    -- (these custom placeholder items are removed in all non-diveristy runs)
+    -- Check to see if this is a special Big 4 reroll (50% chance to reroll)
     math.randomseed(stageSeed)
     local big4rerollChance = math.random(1, 2)
     if big4rerollChance == 2 then

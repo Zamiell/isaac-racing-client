@@ -176,7 +176,7 @@ function RPSpeedrunPostNewRoom:ReplaceBosses()
     end
 end
 
--- In R+7 Season 4, prevent people from resetting for a Curse Room
+-- In instant-start seasons, prevent people from resetting for a Curse Room
 function RPSpeedrunPostNewRoom:CheckCurseRoom()
   local game = Game()
   local room = game:GetRoom()
@@ -186,7 +186,9 @@ function RPSpeedrunPostNewRoom:CheckCurseRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)")) or
+     RPSpeedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
      room:IsFirstVisit() == false then
@@ -230,7 +232,9 @@ function RPSpeedrunPostNewRoom:CheckSacrificeRoom()
   local challenge = Isaac.GetChallenge()
   local player = game:GetPlayer(0)
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") ) or
+     RPSpeedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_SACRIFICE then -- 13
 
