@@ -1,22 +1,21 @@
 // Imports
 let os;
 let path;
-let isDev;
 let tracer;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
     /* eslint-disable global-require */
     os = require('os');
     path = require('path');
-    isDev = require('electron-is-dev');
     tracer = require('tracer');
 } else {
     // We are in the renderer process
     os = nodeRequire('os');
     path = nodeRequire('path');
-    isDev = nodeRequire('electron-is-dev');
     tracer = nodeRequire('tracer');
 }
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Initialize the logger
 // (this is called in both the main and renderer processes)

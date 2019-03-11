@@ -4,7 +4,6 @@
 
 // Imports
 const { ipcRenderer } = nodeRequire('electron');
-const isDev = nodeRequire('electron-is-dev');
 const golem = nodeRequire('./js/lib/golem');
 const globals = nodeRequire('./js/globals');
 const chat = nodeRequire('./js/chat');
@@ -14,6 +13,8 @@ const registerScreen = nodeRequire('./js/ui/register');
 const lobbyScreen = nodeRequire('./js/ui/lobby');
 const raceScreen = nodeRequire('./js/ui/race');
 const discordEmotes = nodeRequire('./data/discord-emotes');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 exports.init = (username, password, remember) => {
     globals.log.info('Successfully recieved a cookie from the server. Establishing a WebSocket connection to:', globals.websocketURL);

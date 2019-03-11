@@ -80,7 +80,6 @@ Bugs to fix (low priority):
 const path = nodeRequire('path');
 const { execSync } = nodeRequire('child_process');
 const { remote } = nodeRequire('electron');
-const isDev = nodeRequire('electron-is-dev');
 const fs = nodeRequire('fs');
 
 // Import local modules
@@ -99,6 +98,8 @@ nodeRequire('./js/ui/register');
 nodeRequire('./js/ui/lobby');
 nodeRequire('./js/ui/race');
 nodeRequire('./js/ui/modals');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 /*
     Development-only stuff

@@ -9,22 +9,21 @@
 // Imports
 let os;
 let path;
-let isDev;
 let teeny;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
     /* eslint-disable global-require */
     os = require('os');
     path = require('path');
-    isDev = require('electron-is-dev');
     teeny = require('teeny-conf');
 } else {
     // We are in the renderer process
     os = nodeRequire('os');
     path = nodeRequire('path');
-    isDev = nodeRequire('electron-is-dev');
     teeny = nodeRequire('teeny-conf');
 }
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Initialize the settings file
 // (this is called in both the main and renderer processes)

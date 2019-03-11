@@ -71,7 +71,6 @@ const {
 // The "electron" package is only allowed to be in the devDependencies section
 const { autoUpdater } = require('electron-updater'); // Import electron-builder's autoUpdater as opposed to the generic electron autoUpdater
 // See: https://github.com/electron-userland/electron-builder/wiki/Auto-Update
-const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const opn = require('opn');
 const globals = require('./js/globals');
@@ -79,6 +78,8 @@ const version = require('./version');
 const log = require('./log');
 const settings = require('./settings');
 require('./greenworks'); // Including this in the main process is necessary for the macOS version to work for some reason
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Global variables
 let mainWindow;

@@ -4,9 +4,10 @@
 
 // Imports
 const { ipcRenderer } = nodeRequire('electron');
-const isDev = nodeRequire('electron-is-dev');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Monitor for keystrokes inside of the browser window
 $(document).keydown((event) => {

@@ -7,7 +7,6 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const klawSync = require('klaw-sync');
 const path = require('path');
-const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const ps = require('ps-node');
 const opn = require('opn');
@@ -15,6 +14,8 @@ const hashFiles = require('hash-files');
 const mkdirp = require('mkdirp');
 const Registry = require('winreg');
 const version = require('./version');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Handle errors
 process.on('uncaughtException', (err) => {

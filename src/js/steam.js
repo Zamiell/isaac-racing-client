@@ -4,11 +4,12 @@
 
 // Imports
 const { ipcRenderer } = nodeRequire('electron');
-const isDev = nodeRequire('electron-is-dev');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const websocket = nodeRequire('./js/websocket');
 const registerScreen = nodeRequire('./js/ui/register');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Check to see if Steam is running on startup
 $(document).ready(() => {

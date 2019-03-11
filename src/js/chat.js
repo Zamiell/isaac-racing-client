@@ -4,11 +4,12 @@
 
 // Imports
 const { ipcRenderer } = nodeRequire('electron');
-const isDev = nodeRequire('electron-is-dev');
 const linkifyHTML = nodeRequire('linkifyjs/html');
 const globals = nodeRequire('./js/globals');
 const misc = nodeRequire('./js/misc');
 const debug = nodeRequire('./js/debug');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Constants
 const chatIndentSize = '3.2em';
@@ -17,7 +18,8 @@ exports.send = (destination) => {
     // Don't do anything if we are not on the screen corresponding to the chat input form
     if (destination === 'lobby' && globals.currentScreen !== 'lobby') {
         return;
-    } else if (destination === 'race' && globals.currentScreen !== 'race') {
+    }
+    if (destination === 'race' && globals.currentScreen !== 'race') {
         return;
     }
 

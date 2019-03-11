@@ -4,9 +4,10 @@
 
 // Imports
 const fs = require('fs');
-const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const version = require('./version');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Handle errors
 process.on('uncaughtException', (err) => {

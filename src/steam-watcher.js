@@ -3,10 +3,11 @@
 */
 
 // Imports
-const isDev = require('electron-is-dev');
 const Raven = require('raven');
 const Registry = require('winreg');
 const version = require('./version');
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Handle errors
 process.on('uncaughtException', (err) => {

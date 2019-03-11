@@ -1,19 +1,18 @@
 // Imports
 let fs;
 let path;
-let isDev;
 if (typeof nodeRequire === 'undefined') {
     // We are in the main process
     /* eslint-disable global-require */
     fs = require('fs');
     path = require('path');
-    isDev = require('electron-is-dev');
 } else {
     // We are in the renderer process
     fs = nodeRequire('fs');
     path = nodeRequire('path');
-    isDev = nodeRequire('electron-is-dev');
 }
+
+const isDev = process.mainModule.filename.indexOf('app.asar') === -1;
 
 // Get the version of the client (from the "package.json" file)
 let basePath;
