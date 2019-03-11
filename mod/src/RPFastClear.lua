@@ -519,10 +519,19 @@ function RPFastClear:SpawnPhotos()
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
   local room = game:GetRoom()
+  local roomType = room:GetType()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
+
+  if stage ~= 6 or
+     roomType ~= RoomType.ROOM_BOSS then -- 5
+
+    return
+  end
 
   -- Define pedestal positions
   local posCenter = Vector(320, 360)

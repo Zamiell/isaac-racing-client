@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.29.6* - March 11th, 2019
+### *v0.29.8* - March 11th, 2019
 
 * Fixed the bug where Daddy Longlegs had the incorrect name in the client. (Thanks Gamonymous)
 * Fixed the bug where seeded death mechanics would get messed up if the player had the game paused. (Thanks Gamonymous & ReidMercury)
