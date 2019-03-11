@@ -614,7 +614,6 @@ function RPPostGameStarted:Seeded()
         -- Re-heal Judas back to 1 red heart so that they can properly use the Crown of Light
         -- (this should do nothing on all of the other characters)
         player:AddHearts(1)
-        break
       end
     end
   end

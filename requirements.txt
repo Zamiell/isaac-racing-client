@@ -1,0 +1,3 @@
+paramiko
+python-dotenv
+pillow

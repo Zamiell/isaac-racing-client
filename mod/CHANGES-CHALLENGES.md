@@ -116,7 +116,7 @@
 * Duplicate starting items will never be given over the course of a 7 character run.
 * After character selection, players must ban one big 4 item and three other items.
 * The randomly selected item for the first character will expire after 1 minute or when a Basement 2 boss dies, whichever happens first.
-* On the first character, players may immediately "veto" their starting item once every 5 minutes.
+* On the first character, players may also "veto" one starting item every 5 minutes.
 * There is a custom death mechanic:
   * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.

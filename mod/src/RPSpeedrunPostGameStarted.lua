@@ -499,6 +499,11 @@ function RPSpeedrunPostGameStarted:R7S6()
   end
   Isaac.DebugString("Already started a run with the big 4: " .. tostring(alreadyStartedBig4))
 
+  -- Disable starting a big 4 item on the first character
+  if RPSpeedrun.charNum == 1 then
+    alreadyStartedBig4 = true
+  end
+
   -- Check to see if a start is already assigned for this character number
   -- (dying and resetting should not reassign the selected starting item)
   Isaac.DebugString("Number of items that we have already started: " .. tostring(#RPSpeedrun.selectedItemStarts))
@@ -597,16 +602,20 @@ function RPSpeedrunPostGameStarted:R7S6()
     player:AddCollectible(item, 0, false)
     itemPool:RemoveCollectible(item)
 
-    -- Also remove the additional soul hearts from Crown of Light
     if item == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+      -- Also remove the additional soul hearts from Crown of Light
       player:AddSoulHearts(-4)
+
+      -- Re-heal Judas back to 1 red heart so that they can properly use the Crown of Light
+      -- (this should do nothing on all of the other characters)
+      player:AddHearts(1)
     end
   end
 
-  -- Spawn a "cycle" button on the first character
-  if RPSpeedrun.cycleButtonRefreshTime ~= 0 then
-    if Isaac.GetTime() >= RPSpeedrun.cycleButtonRefreshTime then
-      RPSpeedrun.cycleButtonRefreshTime = 0
+  -- Spawn a "Veto" button on the first character
+  if RPSpeedrun.vetoButtonRefreshTime ~= 0 then
+    if Isaac.GetTime() >= RPSpeedrun.vetoButtonRefreshTime then
+      RPSpeedrun.vetoButtonRefreshTime = 0
     else
       return
     end

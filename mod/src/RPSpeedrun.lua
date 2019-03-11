@@ -84,8 +84,8 @@ RPSpeedrun.big4 = {
 -- In Season 6, this is how long the randomly-selected item start be "locked-in"
 RPSpeedrun.itemLockTime = 60 * 1000 -- 1 minute
 
--- In Season 6, this is how often the special "item cycle" button can be used
-RPSpeedrun.cycleButtonLength = 5 * 60 * 1000 -- 5 minutes
+-- In Season 6, this is how often the special "Veto" button can be used
+RPSpeedrun.vetoButtonLength = 5 * 60 * 1000 -- 5 minutes
 
 RPSpeedrun.R7SeededName = "R+7 Seeded (Q4 2018)"
 RPSpeedrun.R7SeededSeeds = {
@@ -125,7 +125,7 @@ RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
 RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run (for seasons 5 and 6)
 RPSpeedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
 RPSpeedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
-RPSpeedrun.cycleButtonRefreshTime = 0 -- Used for Season 6
+RPSpeedrun.vetoButtonRefreshTime = 0 -- Used for Season 6
 
 -- Called from the PostRender callback
 function RPSpeedrun:CheckRestart()
@@ -449,13 +449,13 @@ function RPSpeedrun:CheckSeason5Mod()
 end
 
 -- Called from the PostRender callback
-function RPSpeedrun:DrawItemCycleButtonText()
+function RPSpeedrun:DrawVetoButtonText()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
      RPSpeedrun.charNum ~= 1 or
      RPGlobals.run.roomsEntered ~= 1 or
-     RPSpeedrun.cycleButtonRefreshTime ~= 0 then
+     RPSpeedrun.vetoButtonRefreshTime ~= 0 then
 
     return
   end

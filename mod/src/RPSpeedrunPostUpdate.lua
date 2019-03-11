@@ -118,9 +118,8 @@ function RPSpeedrunPostUpdate:CheckCheckpoint(force)
 end
 
 -- Called from the "RPCheckEntities:Grid()" function
-function RPSpeedrunPostUpdate:CheckItemCycleButton(gridEntity)
+function RPSpeedrunPostUpdate:CheckVetoButton(gridEntity)
   local challenge = Isaac.GetChallenge()
-  Isaac.DebugString(tostring(gridEntity:GetSaveState().State))
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
      RPSpeedrun.charNum ~= 1 or
      RPGlobals.run.roomsEntered ~= 1 or
@@ -136,7 +135,7 @@ function RPSpeedrunPostUpdate:CheckItemCycleButton(gridEntity)
   -- Reset the timer and restart the game
   RPSpeedrun.timeItemAssigned = 0
   RPGlobals.run.restart = true
-  RPSpeedrun.cycleButtonRefreshTime = Isaac.GetTime() + RPSpeedrun.cycleButtonLength
+  RPSpeedrun.vetoButtonRefreshTime = Isaac.GetTime() + RPSpeedrun.vetoButtonLength
 end
 
 return RPSpeedrunPostUpdate

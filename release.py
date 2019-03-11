@@ -1,5 +1,3 @@
-#! C:\Python34\python.exe
-
 """ This is the script that compiles and builds the Racing+ client. """
 
 # Standard imports
@@ -26,9 +24,9 @@ REPOSITORY_DIR = os.path.join('C:\\Repositories\\', REPOSITORY_NAME)
 os.chdir(REPOSITORY_DIR)
 
 # This script is written for Pyhton 3
-if (sys.version_info < (3, 0)):
-     print('This script requires Python 3.')
-     sys.exit(1)
+if sys.version_info < (3, 0):
+    print('This script requires Python 3.')
+    sys.exit(1)
 
 # Subroutines
 def error(message, exception=None):

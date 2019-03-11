@@ -1,6 +1,7 @@
 local RPSpeedrunPostNewRoom = {}
 
 -- Includes
+local RPGlobals = require("src/rpglobals")
 local RPSpeedrun = require("src/rpspeedrun")
 
 function RPSpeedrunPostNewRoom:Main()
@@ -12,6 +13,7 @@ function RPSpeedrunPostNewRoom:Main()
   RPSpeedrunPostNewRoom:ReplaceBosses()
   RPSpeedrunPostNewRoom:CheckCurseRoom()
   RPSpeedrunPostNewRoom:CheckSacrificeRoom()
+  RPSpeedrunPostNewRoom:RemoveVetoButton()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -221,7 +223,7 @@ function RPSpeedrunPostNewRoom:CheckCurseRoom()
   Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
 end
 
--- In R+7 Season 4, prevent people from resetting for a Sacrifice Room
+-- In instant-start seasons, prevent people from resetting for a Sacrifice Room
 function RPSpeedrunPostNewRoom:CheckSacrificeRoom()
   local game = Game()
   local room = game:GetRoom()
@@ -257,6 +259,29 @@ function RPSpeedrunPostNewRoom:CheckSacrificeRoom()
     end
   end
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a R+7 Season 4 run).")
+end
+
+-- In Season 6, delete the veto button if we are re-entering the starting room
+function RPSpeedrunPostNewRoom:RemoveVetoButton()
+  local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local startingRoomIndex = level:GetStartingRoomIndex()
+  local room = game:GetRoom()
+  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = level:GetCurrentRoomIndex()
+  end
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
+     stage ~= 1 or
+     roomIndex ~= startingRoomIndex or
+     RPGlobals.run.roomsEntered == 1 then
+
+    return
+  end
+
+  room:RemoveGridEntity(117, 0, false)
 end
 
 return RPSpeedrunPostNewRoom

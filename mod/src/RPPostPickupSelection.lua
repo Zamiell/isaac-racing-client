@@ -23,29 +23,17 @@ function RPPostPickupSelection:Main(pickup, variant, subType)
 end
 
 function RPPostPickupSelection:ManualPhotos(variant, subType)
+  if RPGlobals.run.photosSpawning == false then
+    return
+  end
+
   -- Local variables
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
-  local room = game:GetRoom()
-  local roomFrameCount = room:GetFrameCount()
 
-  -- We don't care if we are entering a new room (or re-entering an old room)
-  -- (this callback will fire every time you go into a room with a collectible item,
-  -- even if you have visited the room before)
-  if roomFrameCount == -1 then
-    return
-  end
-
-  -- We don't want to mess with pedestals that we explicitly spawned with Lua in the "RPPostEntityKill:NPC45()" function
-  if RPGlobals.run.spawningPhoto then
-    RPGlobals.run.spawningPhoto = false
-    Isaac.DebugString("Reset the \"spawningPhoto\" variable on frame: " .. tostring(gameFrameCount))
-    return
-  end
-
-  -- We only want to replace The Polaroid and The Negative
+  -- We want to delete the photos that are manually spawned by the game after defeating Mom
   -- Returning an array table here will convert the pickup to those values
-  -- We just want to remove the pickup, but returning {0, 0} results in a random pickup being spawned
+  -- However, returning {0, 0} results in a random pickup being spawned
   -- (it will only show up if you reload the room)
   -- And returning {100, 0} will crash the game
   -- So we just make a custom invisible entity (with no anm2 file) and set the pickup to that

@@ -91,7 +91,7 @@ function RPPostRender:Main()
   -- Do speedrun related checks
   RPSpeedrun:CheckRestart()
   RPSpeedrun:DisplayCharProgress()
-  RPSpeedrun:DrawItemCycleButtonText()
+  RPSpeedrun:DrawVetoButtonText()
   RPSpeedrun:CheckSeason5Mod()
   RPChangeCharOrder:CheckChangeCharOrder()
 end

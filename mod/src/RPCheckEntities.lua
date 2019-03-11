@@ -38,7 +38,7 @@ function RPCheckEntities:Grid()
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         RPChangeCharOrder:CheckButtonPressed(gridEntity)
-        RPSpeedrunPostUpdate:CheckItemCycleButton(gridEntity)
+        RPSpeedrunPostUpdate:CheckVetoButton(gridEntity)
       end
     end
   end

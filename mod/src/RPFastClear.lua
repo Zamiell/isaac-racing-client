@@ -1,8 +1,9 @@
 local RPFastClear = {}
 
 -- Includes
-local RPGlobals = require("src/rpglobals")
-local RPSoulJar = require("src/rpsouljar")
+local RPGlobals  = require("src/rpglobals")
+local RPSoulJar  = require("src/rpsouljar")
+local RPSpeedrun = require("src/rpspeedrun")
 
 --
 -- Variables
@@ -491,12 +492,19 @@ function RPFastClear:ClearRoom()
       -- Use the vanilla function to spawn a room drop, which takes into account the player's luck and so forth
       -- (room drops are not supposed to spawn in crawlspaces, but this function will internally exit
       -- if we are in a crawlspace, so we don't need to explicitly check for that)
+      -- We also mark to delete the photos spawned by the game during this step
+      -- (in the MC_POST_PICKUP_SELECTION callback)
+      RPGlobals.run.photosSpawning = true
       room:SpawnClearAward()
+      RPGlobals.run.photosSpawning = false
     end
   end
 
+  -- Manually spawn the appropriate photos, if necessary
+  RPFastClear:SpawnPhotos()
+
   -- Give a charge to the player's active item
-  RPFastClear:AddChange()
+  RPFastClear:AddCharge()
 
   -- Play the sound effect for the doors opening
   if roomType ~= RoomType.ROOM_DUNGEON then -- 16
@@ -507,9 +515,132 @@ function RPFastClear:ClearRoom()
   RPFastClear:CheckBagFamiliars()
 end
 
+function RPFastClear:SpawnPhotos()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local room = game:GetRoom()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
+  local challenge = Isaac.GetChallenge()
+
+  -- Define pedestal positions
+  local posCenter = Vector(320, 360)
+  local posCenterLeft = Vector(280, 360)
+  local posCenterRight = Vector(360, 360)
+
+  -- Figure out if we need to spawn either The Polaroid, The Negative, or both
+  local situation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
+  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
+     RPSpeedrun.inSeededSpeedrun then
+
+    -- Season 1 and Seeded speedrun challenges spawn only The Polaroid
+    situation = 1
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
+
+    -- Most seasons give the player a choice between the two photos
+    situation = 3
+
+  elseif player:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
+    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative
+    -- Since it is impossible to determine the player's actual photo status,
+    -- just give the player a choice between the photos
+    situation = 3
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    -- The player has both photos already (which can only occur in a diversity race)
+    -- Spawn a random boss item instead of a photo
+    situation = 4
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+    -- The player has The Polaroid already (which can occur in a diversity race or if Eden)
+    -- Spawn The Negative instead
+    situation = 2
+
+  elseif player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+    -- The player has The Negative already (which can occur in a diversity race or if Eden)
+    -- Spawn The Polaroid instead
+    situation = 1
+
+  elseif RPGlobals.race.rFormat == "pageant" then
+    -- Give the player a choice between the photos on the Pageant Boy ruleset
+    situation = 3
+
+  elseif RPGlobals.race.status == "in progress" and
+         RPGlobals.race.goal == "Blue Baby" then
+
+    -- Races to Blue Baby need The Polaroid
+    situation = 1
+
+  elseif RPGlobals.race.status == "in progress" and
+         RPGlobals.race.goal == "The Lamb" then
+
+
+    -- Races to The Lamb need The Negative
+    situation = 2
+
+  elseif RPGlobals.race.status == "in progress" and
+         (RPGlobals.race.goal == "Mega Satan" or
+          RPGlobals.race.goal == "Everything") then
+
+    -- Give the player a choice between the photos for races to Mega Satan
+    situation = 3
+
+  else
+    -- They are doing a normal non-client run, so by default spawn both photos
+    situation = 3
+  end
+
+  -- Do the appropriate action depending on the situation
+  if situation == 1 then
+    -- A situation of 1 means to spawn The Polaroid
+    RPGlobals.run.spawningPhoto = true
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
+    Isaac.DebugString("Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
+
+  elseif situation == 2 then
+    -- A situation of 2 means to spawn The Negative
+    RPGlobals.run.spawningPhoto = true
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
+               nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
+    Isaac.DebugString("Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
+
+  elseif situation == 3 then
+    -- A situation of 3 means to spawn both The Polaroid and The Negative
+    RPGlobals.run.spawningPhoto = true
+    local polaroid = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                posCenterLeft, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
+    polaroid:ToPickup().TheresOptionsPickup = true
+
+    RPGlobals.run.spawningPhoto = true
+    local newSeed = RPGlobals:IncrementRNG(roomSeed) -- We don't want both of the photos to have the same RNG
+    local negative = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
+                                posCenterRight, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_NEGATIVE, newSeed)
+    negative:ToPickup().TheresOptionsPickup = true
+
+    Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
+
+  elseif situation == 4 then
+    -- A situation of 4 means to spawn a random boss item
+    game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0), nil, 0, roomSeed)
+    -- (a SubType of 0 will make a random item of the pool according to the room type)
+    -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
+    Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
+  end
+end
+
 -- Give a charge to the player's active item
 -- (and handle co-op players, if present)
-function RPFastClear:AddChange()
+function RPFastClear:AddCharge()
   -- Local variables
   local game = Game()
   local room = game:GetRoom()

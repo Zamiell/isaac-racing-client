@@ -274,14 +274,6 @@ function RPPedestals:Replace(pickup)
     Isaac.DebugString("Rerolled a big 4 item: " .. tostring(pickup.SubType))
 
   else
-    -- Code in the MC_POST_PICKUP_SELECTION callback will prevent The Polaroid or The Negative from spawning,
-    -- so let it know that we are explicitly spawning it using Lua code
-    if pickup.SubType == CollectibleType.COLLECTIBLE_POLAROID or -- 327
-       pickup.SubType == CollectibleType.COLLECTIBLE_NEGATIVE then -- 328
-
-      RPGlobals.run.spawningPhoto = true
-    end
-
     -- Make a new copy of this item
     newPedestal = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pickup.Position,
                              pickup.Velocity, pickup.Parent, pickup.SubType, newSeed)

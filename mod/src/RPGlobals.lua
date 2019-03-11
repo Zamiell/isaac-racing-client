@@ -199,8 +199,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
   RPGlobals.run.dualityCheckFrame    = 0
   RPGlobals.run.changeFartColor      = false
-  RPGlobals.run.spawnedPhotos        = false -- Used when replacing The Polaroid and The Negative (1/2)
-  RPGlobals.run.spawningPhoto        = false -- Used when replacing The Polaroid and The Negative (2/2)
+  RPGlobals.run.momDied              = false -- Used to fix bugs with fast-clear and killing Mom
+  RPGlobals.run.photosSpawning       = false -- Used when replacing The Polaroid and The Negative
   RPGlobals.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
   RPGlobals.run.spawningKeyPiece     = false -- Used for spawning Key Piece 1 or Key Piece 2 early
   RPGlobals.run.mysteryGiftFrame     = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
