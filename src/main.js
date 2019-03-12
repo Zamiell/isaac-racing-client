@@ -175,6 +175,8 @@ function createWindow() {
     // Figure out if we should use the Singapore proxy or not
     // (only Chinese users should use it)
     // https://github.com/electron/electron/blob/master/docs/api/locales.md
+    // (commented out for now since I am not paying for the server anymore)
+    /*
     if (app.getLocale().startsWith('zh')) {
         mainWindow.webContents.session.setProxy({
             proxyRules: globals.chineseProxy,
@@ -184,6 +186,8 @@ function createWindow() {
     } else {
         mainWindow.loadURL(`file://${__dirname}/index.html`);
     }
+    */
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Remove the taskbar flash state
     // (this is not currently used)
