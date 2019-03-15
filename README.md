@@ -39,7 +39,7 @@ Run (on macOS)
 
 * Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
   * `touch ~/.bash_profile`
-  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash`
+  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
   * Close and reopen Terminal.
   * `nvm install node`
 * Install [Yarn](https://yarnpkg.com/en/docs/install):
@@ -51,16 +51,23 @@ Run (on macOS)
 
 <br />
 
-Run (on Ubuntu 16.04)
+Run (on Ubuntu 18.04)
 ---------------------
 
-* `sudo apt install curl git -y`
-* Follow the instructions for macOS above.
-
-If you are on Ubuntu 17.04:
-
-* You might have to do a `apt --fix-broken install` after installing NodeJS.
-* You might have to create a symbolic link for nodejs: `ln -s /usr/bin/nodejs /usr/bin/node`
+* Install [curl](https://curl.haxx.se/) and [Git](https://git-scm.com/):
+  * `sudo apt install curl git -y`
+* Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
+  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
+  * Close and reopen Terminal.
+  * `nvm install node`
+* Install [Yarn](https://yarnpkg.com/en/docs/install):
+  * `curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
+  * `echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
+  * `sudo apt-get update && sudo apt-get install yarn`
+* `git clone https://github.com/Zamiell/isaac-racing-client.git`
+* `cd isaac-racing-client`
+* `yarn install`
+* `npm start`
 
 <br />
 
