@@ -45,7 +45,7 @@ function RPPostUpdate:Main()
   end
 
   -- Check the player's health for the Soul Jar mechanic
-  RPSoulJar:CheckHealth()
+  RPSoulJar:PostUpdate()
 
   -- Check to see if we are leaving a crawlspace (and if we are softlocked in a Boss Rush)
   RPFastTravel:CheckCrawlspaceExit()
@@ -243,24 +243,25 @@ function RPPostUpdate:CheckHauntSpeedup()
         end
         local npc = entity:ToNPC()
         if npc == nil then
-          Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
-                            " was not able to be converted to an NPC.")
+          Isaac.DebugString("Failed to convert Lil Haunt at index " .. tostring(entity.Index) ..
+                            " to an NPC. Getting the next lowest index Lil Haunt.")
+          local hauntIndex = 9999
           for k, entity2 in pairs(Isaac.GetRoomEntities()) do
-            if entity2.Type == EntityType.ENTITY_THE_HAUNT then
-              local string = "DEBUG: "
-              if entity2.Variant == 10 then
-                string = string .. "Lil' "
-              end
-              string = string .. "Haunt found at index " .. tostring(entity2.Index)
-              if entity2.Parent == nil then
-                string = string .. " with no parent."
-              else
-                string = string .. " with parent index " .. tostring(entity2.Parent.Index)
-              end
-              Isaac.DebugString(string)
+            if entity2.Type == EntityType.ENTITY_THE_HAUNT and
+               entity2.Variant == 10 and
+               entity2.Index ~= entity.Index and
+               entity2.Index < hauntIndex and
+               entity2:ToNPC() ~= nil then
+
+              hauntIndex = entity2.Index
+              Isaac.DebugString("Found Lil Haunt to detach at index: " .. tostring(entity2.Index))
+              npc = entity2:ToNPC()
             end
           end
-          return
+          if npc == nil then
+            Isaac.DebugString("Error: Failed to convert all of the Lil Haunts in the room to NPCs.")
+            return
+          end
         end
         npc.State = NpcState.STATE_MOVE -- 4
         -- (doing this will detach them)

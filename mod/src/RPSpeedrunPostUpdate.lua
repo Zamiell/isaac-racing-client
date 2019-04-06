@@ -128,14 +128,34 @@ function RPSpeedrunPostUpdate:CheckVetoButton(gridEntity)
     return
   end
 
+  -- Add the item to the veto list
+  RPSpeedrun.vetoList[#RPSpeedrun.vetoList + 1] = RPSpeedrun.lastItemStart
+  if #RPSpeedrun.vetoList > 5 then
+    table.remove(RPSpeedrun.vetoList, 1)
+  end
+
+  -- Add the sprite to the sprite list
+  local itemConfig = Isaac.GetItemConfig()
+  RPSpeedrun.vetoSprites = {}
+  for i = 1, #RPSpeedrun.vetoList do
+    RPSpeedrun.vetoSprites[i] = Sprite()
+    RPSpeedrun.vetoSprites[i]:Load("gfx/schoolbag_item.anm2", false)
+    local itemNum = RPSpeedrun.vetoList[i]
+    local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
+    RPSpeedrun.vetoSprites[i]:ReplaceSpritesheet(0, fileName)
+    RPSpeedrun.vetoSprites[i]:LoadGraphics()
+    RPSpeedrun.vetoSprites[i]:SetFrame("Default", 1)
+    RPSpeedrun.vetoSprites[i].Scale = Vector(0.75, 0.75)
+  end
+
   -- Play a poop sound
   local sfx = SFXManager()
   sfx:Play(SoundEffect.SOUND_FART, 1, 0, false, 1) -- 37
 
   -- Reset the timer and restart the game
+  RPSpeedrun.vetoTimer = Isaac.GetTime() + 5 * 1000 * 60 -- 5 minutes
   RPSpeedrun.timeItemAssigned = 0
   RPGlobals.run.restart = true
-  RPSpeedrun.vetoButtonRefreshTime = Isaac.GetTime() + RPSpeedrun.vetoButtonLength
 end
 
 return RPSpeedrunPostUpdate

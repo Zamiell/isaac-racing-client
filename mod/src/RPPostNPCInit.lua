@@ -1,5 +1,7 @@
 local RPPostNPCInit = {}
 
+-- In this callback, an NPC's position will not be initialized yet
+
 -- EntityType.ENTITY_THE_HAUNT (260)
 function RPPostNPCInit:NPC260(npc)
   -- Local variables

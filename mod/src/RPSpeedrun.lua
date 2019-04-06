@@ -108,6 +108,7 @@ RPSpeedrun.R7SeededB1 = { -- These are the floor 1 stage types for the above see
 }
 
 -- Variables
+RPSpeedrun.sprites = {} -- Reset at the beginning of a new run (in the PostGameStarted callback)
 RPSpeedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 RPSpeedrun.startedTime = 0 -- Reset expliticly if we are on the first character
 RPSpeedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
@@ -123,9 +124,12 @@ RPSpeedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at
 RPSpeedrun.liveSplitReset = false
 RPSpeedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
 RPSpeedrun.selectedItemStarts = {} -- Reset at the beginning of a new run (for seasons 5 and 6)
+RPSpeedrun.lastItemStart = 0 -- Set when a new item is assigned (for season 6)
 RPSpeedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
 RPSpeedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
-RPSpeedrun.vetoButtonRefreshTime = 0 -- Used for Season 6
+RPSpeedrun.vetoList = {} -- Used for Season 6
+RPSpeedrun.vetoSprites = {} -- Used for Season 6
+RPSpeedrun.vetoTimer = 0
 
 -- Called from the PostRender callback
 function RPSpeedrun:CheckRestart()
@@ -425,9 +429,7 @@ end
 
 -- Called from the PostRender callback
 function RPSpeedrun:CheckSeason5Mod()
-  -- Local variables
   local challenge = Isaac.GetChallenge()
-
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     return
   end
@@ -449,19 +451,41 @@ function RPSpeedrun:CheckSeason5Mod()
 end
 
 -- Called from the PostRender callback
-function RPSpeedrun:DrawVetoButtonText()
+function RPSpeedrun:CheckSeason5ModOther()
   local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
-     RPSpeedrun.charNum ~= 1 or
-     RPGlobals.run.roomsEntered ~= 1 or
-     RPSpeedrun.vetoButtonRefreshTime ~= 0 then
+  if RPSpeedrun:InSpeedrun() == false or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
 
     return
   end
 
-  local posGame = RPGlobals:GridToPos(11, 5)
+  if SinglePlayerCoopBabies == nil then
+    return
+  end
 
+  local x = 115
+  local y = 70
+  Isaac.RenderText("Error: You must disable The Babies Mod", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("in order for this custom challenge to", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
+end
+
+-- Called from the PostRender callback
+function RPSpeedrun:DrawVetoButtonText()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
+     RPSpeedrun.charNum ~= 1 or
+     RPGlobals.run.roomsEntered ~= 1 or
+     RPSpeedrun.vetoTimer ~= 0 then
+
+    return
+  end
+
+  -- Draw the "Veto" text
+  local posGame = RPGlobals:GridToPos(11, 5)
   local pos = Isaac.WorldToRenderPosition(posGame)
   local f = Font()
   f:Load("font/droid.fnt")
@@ -469,6 +493,16 @@ function RPSpeedrun:DrawVetoButtonText()
   local string = "Veto"
   local length = f:GetStringWidthUTF8(string)
   f:DrawString(string, pos.X - (length / 2), pos.Y, color, 0, true)
+
+  -- Draw the sprites that correspond to the items that are currently on the veto list
+  local x = -45
+  for i = 1, #RPSpeedrun.vetoList do
+    local itemPosGame = RPGlobals:GridToPos(11, 7)
+    local itemPos = Isaac.WorldToRenderPosition(itemPosGame)
+    x = x + 15
+    itemPos = Vector(itemPos.X + x, itemPos.Y)
+    RPSpeedrun.vetoSprites[i]:Render(itemPos, Vector(0, 0), Vector(0, 0))
+  end
 end
 
 -- ModCallbacks.MC_USE_ITEM (23)

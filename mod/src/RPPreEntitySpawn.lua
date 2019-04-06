@@ -8,6 +8,11 @@ function RPPreEntitySpawn:Main(type, variant, subType, position, velocity, spawn
   local room = game:GetRoom()
   local roomType = room:GetType()
 
+  -- Replace Cod Worms with Para-Bites
+  if type == EntityType.ENTITY_COD_WORM then -- 221
+    return {EntityType.ENTITY_PARA_BITE, 0, 0, seed} -- 58
+  end
+
   -- Delete hearts in Devil Rooms that spawned from fires
   if type == EntityType.ENTITY_PICKUP and -- 5
      variant == PickupVariant.PICKUP_HEART and -- 10

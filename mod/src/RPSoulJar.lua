@@ -6,8 +6,45 @@ local RPGlobals = require("src/rpglobals")
 -- Variables
 RPSoulJar.sprites = {}
 
+function RPSoulJar:PostNewLevel()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+    return
+  end
+
+  -- This ensures a 100% deal to start with
+  RPGlobals.run.lastDDLevel = game:GetLastDevilRoomStage()
+  game:SetLastDevilRoomStage(0)
+end
+
+function RPSoulJar:EntityTakeDmg(damageFlag)
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+    return
+  end
+
+  local selfDamage = false
+  for i = 0, 21 do -- There are 21 damage flags
+    local bit = (damageFlag & (1 << i)) >> i
+
+    -- Soul Jar damage tracking
+    if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
+      selfDamage = true
+    end
+  end
+  if selfDamage == false then
+    game:SetLastDevilRoomStage(RPGlobals.run.lastDDLevel)
+  end
+end
+
 -- Check the player's health for the Soul Jar mechanic
-function RPSoulJar:CheckHealth()
+function RPSoulJar:PostUpdate()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -29,21 +66,6 @@ function RPSoulJar:CheckHealth()
     player:AddMaxHearts(2, true)
     player:AddHearts(2) -- The container starts empty
     Isaac.DebugString("Converted 4 soul hearts to a heart container.")
-  end
-end
-
-function RPSoulJar:CheckDamaged()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-
-  -- Do the special Maggy Devil Room mechanic
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
-    return
-  end
-
-  if RPGlobals.run.levelDamaged == false then
-    game:SetLastDevilRoomStage(0) -- This ensures a 100% deal if no damage was taken
   end
 end
 

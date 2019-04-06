@@ -213,6 +213,9 @@ if ARGS.github:
     RETURN_CODE = subprocess.call(['git', 'commit', '-m', VERSION])
     if RETURN_CODE != 0:
         error('Failed to git commit.')
+    RETURN_CODE = subprocess.call(['git', 'pull', '--rebase'])
+    if RETURN_CODE != 0:
+        error('Failed to git pull.')
     RETURN_CODE = subprocess.call(['git', 'push'])
     if RETURN_CODE != 0:
         error('Failed to git push.')

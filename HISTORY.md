@@ -1,9 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.30.0* - April 6th, 2019
+
+* As a quality of life change, Death will no longer perform his slow attack.
+* As a quality of life change, Cod Worms will now be replaced with Para-Bites.
+* Added an error message if you try to play a custom challenge other than Season 5 with the Babies Mod enabled. (Thanks sisuka)
+* Fixed the bug where the Soul Jar would not show the correct Devil Room percentages in the Found HUD. (Thanks Gamonymous)
+* Fixed the bug where the Lil Haunts attached to a Haunt would not detach under certain circumstances.
+
 ### *v0.29.8* - March 11th, 2019
 
 * Fixed the bug where Daddy Longlegs had the incorrect name in the client. (Thanks Gamonymous)
-* Fixed the bug where seeded death mechanics would get messed up if the player had the game paused. (Thanks Gamonymous & ReidMercury)
+* Fixed the bug where the seeded death mechanic would get messed up if the player had the game paused. (Thanks Gamonymous & ReidMercury)
 * Fixed the bug where having Restock could spawn Restock Machines under certain conditions. (Thanks thereisnofuture & Dea1h)
 * Fixed the bug where Diplopia would not work on the photos after the Mom fight.
 * Fixed the bug where the photos after the Mom fight would spawn erroneously if The Bible was used with Broken Remote. (Thanks NorBro86)

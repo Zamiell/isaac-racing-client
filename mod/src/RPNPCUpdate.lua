@@ -47,7 +47,6 @@ function RPNPCUpdate:NPC27(npc)
     -- Make them immune to fear
     npc:RemoveStatusEffects()
     Isaac.DebugString("Unfeared a Host / Mobile Host.")
-    RPGlobals.run.levelDamaged = true
   end
 end
 
@@ -189,6 +188,19 @@ function RPNPCUpdate:NPC54(npc)
   if gameFrameCount - RPGlobals.run.currentHoppers[npc.Index].lastMoveFrame >= 150 then -- 5 seconds
     npc:Kill()
     Isaac.DebugString("Hopper " .. tostring(npc.Index) .. " softlock detected; killing it.")
+  end
+end
+
+-- EntityType.ENTITY_DEATH (66)
+function RPNPCUpdate:NPC66(npc)
+  -- We only care about the main Death
+  if npc.Variant ~= 0 then
+    return
+  end
+
+  -- Stop Death from performing his slow attack
+  if npc.State == NpcState.STATE_ATTACK then -- 8
+    npc.State = NpcState.STATE_MOVE -- 4
   end
 end
 

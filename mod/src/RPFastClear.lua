@@ -2,7 +2,6 @@ local RPFastClear = {}
 
 -- Includes
 local RPGlobals  = require("src/rpglobals")
-local RPSoulJar  = require("src/rpsouljar")
 local RPSpeedrun = require("src/rpspeedrun")
 
 --
@@ -445,9 +444,6 @@ function RPFastClear:ClearRoom()
 
   -- Check to see if it is a boss room
   if roomType == RoomType.ROOM_BOSS then
-    -- Check for the Soul Jar Devil Deal mechanic
-    RPSoulJar:CheckDamaged()
-
     -- Try and spawn a Devil Room or Angel Room
     -- (this takes into account their Devil/Angel percentage and so forth)
     room:TrySpawnDevilRoomDoor(true) -- The argument is "Animate"

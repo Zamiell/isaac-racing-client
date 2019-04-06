@@ -6,6 +6,7 @@ local RPPostNewRoom  = require("src/rppostnewroom")
 local RPFastTravel   = require("src/rpfasttravel")
 local RPCheckLoop    = require("src/rpcheckloop")
 local RPSeededFloors = require("src/rpseededfloors")
+local RPSoulJar      = require("src/rpsouljar")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function RPPostNewLevel:Main()
@@ -93,7 +94,6 @@ function RPPostNewLevel:NewLevel()
                     tostring(RPGlobals.run.currentFloorType))
 
   -- Reset some per level flags
-  RPGlobals.run.levelDamaged = false
   RPGlobals.run.replacedPedestals = {}
   RPGlobals.run.replacedTrapdoors = {}
   RPGlobals.run.replacedCrawlspaces = {}
@@ -119,6 +119,9 @@ function RPPostNewLevel:NewLevel()
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
   end
+
+  -- Handle the Soul Jar
+  RPSoulJar:PostNewLevel()
 
   -- Ensure that the "More Options" buff does not persist beyond Basement 1
   -- (it is removed as soon as they enter the first Treasure Room,

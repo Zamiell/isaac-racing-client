@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.29.11"
+RPGlobals.version = "v0.30.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -159,7 +159,6 @@ function RPGlobals:InitRun()
   RPGlobals.run.currentFloor        = 0
   -- (start at 0 so that we can trigger the PostNewRoom callback after the PostNewLevel callback)
   RPGlobals.run.currentFloorType    = 0 -- We need to track this because we can go from Cathedral to Sheol, for example
-  RPGlobals.run.levelDamaged        = false
   RPGlobals.run.replacedPedestals   = {}
   RPGlobals.run.replacedTrapdoors   = {}
   RPGlobals.run.replacedCrawlspaces = {}
@@ -216,6 +215,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
   RPGlobals.run.queuedItems          = false -- Used to keep track of whether the player is picking up an item
   RPGlobals.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
+  RPGlobals.run.lastDDLevel          = 0 -- Used by the Soul Jar
 
   -- Trapdoor tracking
   RPGlobals.run.trapdoor = {

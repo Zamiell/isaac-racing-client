@@ -25,9 +25,11 @@
 	<entity name="Pitfall (Custom)" id="1000" variant="206" anm2path="291.000_Pitfall.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
+
+	<!-- This is for subverting the post-Lamb popup -->
 	<entity name="Room Clear Delay Effect" id="1000" variant="207" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
-	</entity><!-- This is for subverting the post-Lamb popup -->
+	</entity>
 
 	<!-- Other entities take ids past 1000 -->
 	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" shutdoors="false" stageHP="0">
@@ -93,7 +95,7 @@
 	</entity>
 
 	<!-- For testing -->
-	<entity id="231" variant="2" name="Test Enemy" reroll="true" baseHP="1000" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="22" portrait="108" anm2path="231.000_NerveEnding.anm2" bestiary="true" bestiaryTransform="0,0,1" bestiaryAnim="Idle">
+	<entity id="231" variant="2" name="Test Enemy" reroll="true" baseHP="1000" stageHP="0" boss="0" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="22" portrait="108" anm2path="231.000_NerveEnding.anm2">
 		<gibs amount="4" blood="1" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 </entities>

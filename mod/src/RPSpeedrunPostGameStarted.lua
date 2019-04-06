@@ -485,6 +485,7 @@ function RPSpeedrunPostGameStarted:R7S6()
   -- Everyone starts with the Compass in this season
   player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
   itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
+  itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
 
   -- Everyone starts with a random passive item / build
   -- Check to see if the player has played a run with one of the big 4
@@ -527,6 +528,11 @@ function RPSpeedrunPostGameStarted:R7S6()
 
       local valid = true
 
+      -- Check to see if we started this item last time
+      if startingItems[1] == RPSpeedrun.lastItemStart then
+        valid = false
+      end
+
       -- Check to see if we already started this item
       for i = 1, #RPSpeedrun.selectedItemStarts do
         if RPSpeedrun.selectedItemStarts[i] == startingItems[1] then
@@ -558,9 +564,15 @@ function RPSpeedrunPostGameStarted:R7S6()
         end
       end
 
-      -- Check to see if this start synergizes with this character
-      if character == PlayerType.PLAYER_AZAZEL then -- 7
-        if startingItems[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
+      -- Check to see if this start synergizes with this character (character/item bans)
+      if character == PlayerType.PLAYER_EVE then -- 5
+        if startingItems[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+          valid = false
+        end
+
+      elseif character == PlayerType.PLAYER_AZAZEL then -- 7
+        if startingItems[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
+           startingItems[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
            startingItems[1] == CollectibleType.COLLECTIBLE_DEAD_EYE or -- 373
            startingItems[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 331
            startingItems[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
@@ -570,14 +582,29 @@ function RPSpeedrunPostGameStarted:R7S6()
         end
 
       elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-        if startingItems[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
-           startingItems[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE then -- 275
+        if startingItems[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH or -- 237
+           startingItems[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
+           startingItems[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE or -- 275
+           startingItems[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
 
           valid = false
         end
       end
 
+      -- Check to see if we vetoed this item and we are on the first character
+      if RPSpeedrun.charNum == 1 then
+        for i = 1, #RPSpeedrun.vetoList do
+          if RPSpeedrun.vetoList[i] == startingItems[1] then
+            valid = false
+            break
+          end
+        end
+      end
+
       if valid then
+        -- Keep track of what item we start so that we don't get the same two starts in a row
+        RPSpeedrun.lastItemStart = startingItems[1]
+
         -- Remove it from the remaining item pool
         table.remove(RPSpeedrun.remainingItemStarts, startingItemIndex)
 
@@ -613,14 +640,14 @@ function RPSpeedrunPostGameStarted:R7S6()
   end
 
   -- Spawn a "Veto" button on the first character
-  if RPSpeedrun.vetoButtonRefreshTime ~= 0 then
-    if Isaac.GetTime() >= RPSpeedrun.vetoButtonRefreshTime then
-      RPSpeedrun.vetoButtonRefreshTime = 0
-    else
-      return
-    end
+  if RPSpeedrun.vetoTimer ~= 0 and
+     Isaac.GetTime() >= RPSpeedrun.vetoTimer then
+
+      RPSpeedrun.vetoTimer = 0
   end
-  if RPSpeedrun.charNum == 1 then
+  if RPSpeedrun.charNum == 1 and
+     RPSpeedrun.vetoTimer == 0 then
+
     local pos = RPGlobals:GridToPos(11, 6)
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
   end

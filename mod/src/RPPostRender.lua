@@ -93,6 +93,7 @@ function RPPostRender:Main()
   RPSpeedrun:DisplayCharProgress()
   RPSpeedrun:DrawVetoButtonText()
   RPSpeedrun:CheckSeason5Mod()
+  RPSpeedrun:CheckSeason5ModOther()
   RPChangeCharOrder:CheckChangeCharOrder()
 end
 

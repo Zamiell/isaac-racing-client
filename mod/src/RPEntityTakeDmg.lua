@@ -2,6 +2,7 @@ local RPEntityTakeDmg = {}
 
 -- Includes
 local RPGlobals = require("src/rpglobals")
+local RPSoulJar = require("src/rpsouljar")
 
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
 -- (this must return nil or false)
@@ -25,18 +26,8 @@ function RPEntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource
     return false
   end
 
-  local selfDamage = false
-  for i = 0, 21 do -- There are 21 damage flags
-    local bit = (damageFlag & (1 << i)) >> i
-
-    -- Soul Jar damage tracking
-    if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
-      selfDamage = true
-    end
-  end
-  if selfDamage == false then
-    RPGlobals.run.levelDamaged = true
-  end
+  -- Handle the Soul Jar
+  RPSoulJar:EntityTakeDmg(damageFlag)
 
   -- Betrayal (custom)
   if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then

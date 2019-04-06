@@ -87,6 +87,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC27,  EntityTyp
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC28,  EntityType.ENTITY_CHUB) -- 28
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_STONEHEAD) -- 42
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC54,  EntityType.ENTITY_FLAMINGHOPPER) -- 54
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC66,  EntityType.ENTITY_DEATH) -- 66
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, RPNPCUpdate.NPC42,  EntityType.ENTITY_GAPING_MAW) -- 235
