@@ -761,12 +761,12 @@ end
 
 -- EntityType.ENTITY_ATTACKFLY (18)
 function RPCheckEntities:Entity18(npc)
-  -- There is a weird bug where an Attack Fly will get set to a null position and
+  -- There is a weird bug where an Attack Fly will get set to a NaN position and
   -- will appear in the bottom-right hand corner of the room but will not be able to be damaged
   -- This might be a vanilla bug where the game runs out of memory and cannot create the fly properly
   -- This has mostly happened on the Blue Baby fight, although it can happen in other places as well
   -- Attempt to fix this bug in Racing+
-  if npc.Position == nil then
+  if npc.Position.X ~= npc.Position.X then -- Kilburn says that NaN isn't equal to itself
     npc:Remove()
     Isaac.DebugString("Error: Manually removed a null position fly.")
   end

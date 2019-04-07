@@ -151,6 +151,8 @@ function RPSpeedrunPostGameStarted:Main()
     RPSpeedrunPostGameStarted:R7S6()
   elseif RPSpeedrun.inSeededSpeedrun then
     RPSpeedrunPostGameStarted:R7SS()
+  elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
+    return -- Do nothing for the vanilla challenge
   else
     Isaac.DebugString("Error: Unknown challenge.")
   end

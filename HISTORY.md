@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.30.1* - April 7th, 2019
+
+* Fixed the (vanilla) bug where an attack fly would rarely spawn at an invalid position. (Thanks ceehe)
+
 ### *v0.30.0* - April 6th, 2019
 
 * As a quality of life change, Death will no longer perform his slow attack.
