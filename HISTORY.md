@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.30.1* - April 7th, 2019
+### *v0.30.2* - April 7th, 2019
 
 * Fixed the (vanilla) bug where an attack fly would rarely spawn at an invalid position. (Thanks ceehe)
 
