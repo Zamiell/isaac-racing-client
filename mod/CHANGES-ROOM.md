@@ -462,16 +462,25 @@ The removed room is as follows:
 
 ### Empty Room Removal
 
-A small number of rooms in the game do not have anything in them. Some other rooms do not have anything in them except for a few rocks.
+Some rooms in the game do not have anything in them (or just have rocks, pits, etc.). These types of rooms rob the player of interesting gameplay.
 
 The removed rooms are as follows:
-* Basement/Burning: #315
-* Basement/Cellar/Burning: #39
-* Caves/Flooded: #170
+* Basement/Cellar/Burning: #29, #30, #39, #92, #144, #147, #338, #520, #600, #617, #621, #622, #749, #900, #951, #952
+* Basement/Burning: #32, #217, #223, #229, #230, #281, #282, #286, #287, #288, #290, #291, #292, #315, #1039
+* Cellar: #24, #32, #55, #210, #211, #212, #213, #254, #255, #256, #257, #258, #304, #305, #306, #307, #308
+* Caves/Catacombs/Flooded: #310, #311, #312
+* Caves/Flooded: #170, #213, #215, #216, #263, #264
+* Caves: #926
+* Catacombs: #141, #207, #209, #210, #247, #248, #249, #250, #294, #295, #296, #297
+* Flooded: #1068
+* Depths/Necropolis/Dank: #196, #287, #289, #290, #291
 * Depths/Dank: #428
-* Cathedral: #57
+* Dank: #1027
+* Womb/Utero/Scarred: #177, #178, #179, #180, #181, #214, #215, #217, #218, #267, #268, #269
+* Cathedral: #28, #57, #287
+* Sheol: #291
 * Cathedral/Sheol: #73, #89
-* Chest: #42
+* Chest: #29, #42
 
 Some rooms have the chance to be empty because of stacked entities.
 
@@ -482,7 +491,7 @@ The changed rooms are as follows:
 
 ### Close Enemies Fix
 
-Due to recent bug fixes in May 2018, most enemies that spawn near an entrance are no longer completely unavoidable damage. However, enemies that spawn very close to doors are unfair in certain circumstances, and it is more reasonable to have enemies spawn at least 2 squares away from the player.
+Due to bug fixes in May 2018, most enemies that spawn near an entrance are no longer completely unavoidable damage. However, enemies that spawn very close to doors are unfair in certain circumstances, and it is more reasonable to have enemies spawn at least 2 squares away from the player.
 
 The changed rooms are as follows:
 * Basement/Burning: #393, #359 (Mulligan)

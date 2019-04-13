@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.31.0"
+RPGlobals.version = "v0.31.1"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,

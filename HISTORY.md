@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.31.1* - April 13th, 2019
+
+* Fixed the bug where there would be no streak text for unidentified pills. (Thanks mgln)
+
 ### *v0.31.0* - April 12th, 2019
 
 * Changed the "streak" text to be more minimalistic.

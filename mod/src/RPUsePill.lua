@@ -1,11 +1,12 @@
-local RPPills = {}
+local RPUsePill = {}
 
 -- Includes
 local RPGlobals = require("src/rpglobals")
+local RPPills   = require("src/rppills")
 
 -- ModCallbacks.MC_USE_PILL (10)
 -- Will get called for all pills
-function RPPills:Main(pillEffect)
+function RPUsePill:Main(pillEffect)
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -38,9 +39,13 @@ function RPPills:Main(pillEffect)
   pillEntry.sprite:Load("gfx/pills/pill" .. pillColor .. ".anm2", true)
   pillEntry.sprite:SetFrame("Default", 0)
   RPGlobals.run.pills[#RPGlobals.run.pills + 1] = pillEntry
+
+  -- Finally, display the streak text (because Racing+ removes the vanilla streak text)
+  RPGlobals.run.streakText = RPPills.effects[pillEffect]
+  RPGlobals.run.streakFrame = Isaac.GetFrameCount()
 end
 
-function RPPills:HealthUp()
+function RPUsePill:HealthUp()
   -- Local variables
   local game = Game()
   local player = game:GetPlayer(0)
@@ -51,7 +56,7 @@ function RPPills:HealthUp()
   -- We check to see if we are Keeper, have Greed's Gullet, and are at maximum hearts inside this function
 end
 
-function RPPills:Telepills()
+function RPUsePill:Telepills()
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
@@ -102,4 +107,4 @@ function RPPills:Telepills()
   RPGlobals.run.usedTelepills = true
 end
 
-return RPPills
+return RPUsePill
