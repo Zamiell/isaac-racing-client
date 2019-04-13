@@ -239,8 +239,12 @@ end
 function RPCheckEntities:Entity5_340(pickup)
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local room = game:GetRoom()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if we already determined that we should leave this big chest
@@ -250,6 +254,18 @@ function RPCheckEntities:Entity5_340(pickup)
 
   Isaac.DebugString("Big Chest detected.")
   RPCheckEntities.bigChestAction = "leave" -- Leave the big chest there by default
+  if stage == LevelStage.STAGE5 then -- 10
+    if stageType == StageType.STAGETYPE_ORIGINAL and -- 10.0 (Sheol)
+       player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+      RPCheckEntities.bigChestAction = "down"
+
+    elseif stageType == StageType.STAGETYPE_WOTL and -- 10.1 (Cathedral)
+           player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
+      RPCheckEntities.bigChestAction = "up"
+    end
+  end
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
     RPCheckEntities:Entity5_340_S1R9(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
@@ -272,14 +288,20 @@ function RPCheckEntities:Entity5_340(pickup)
     RPCheckEntities.bigChestAction = "victorylap"
   elseif RPGlobals.race.rFormat == "pageant" then
     RPCheckEntities:Entity5_340_Pageant(pickup)
-  elseif RPGlobals.race.goal == "Blue Baby" then
+  elseif RPGlobals.race.goal == "Blue Baby" and RPGlobals.raceVars.started then
     RPCheckEntities:Entity5_340_BlueBaby(pickup)
-  elseif RPGlobals.race.goal == "The Lamb" then
+  elseif RPGlobals.race.goal == "The Lamb" and RPGlobals.raceVars.started  then
     RPCheckEntities:Entity5_340_TheLamb(pickup)
-  elseif RPGlobals.race.goal == "Mega Satan" then
+  elseif RPGlobals.race.goal == "Mega Satan" and RPGlobals.raceVars.started then
     RPCheckEntities:Entity5_340_MegaSatan(pickup)
-  elseif RPGlobals.race.goal == "Everything" then
+  elseif RPGlobals.race.goal == "Everything" and RPGlobals.raceVars.started then
     RPCheckEntities:Entity5_340_Everything(pickup)
+  elseif stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL and -- 10.0 (Sheol)
+         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+    RPCheckEntities.bigChestAction = "down" -- Leave the big chest there by default
+  elseif stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_WOTL and -- 10.1 (Cathedral)
+         player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+    RPCheckEntities.bigChestAction = "up" -- Leave the big chest there by default
   end
 
   -- Now that we know what to do with the big chest, do it
@@ -351,14 +373,8 @@ function RPCheckEntities:Entity5_340_S1R9(pickup)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 then -- The Chest
+  if stage == 11 and stageType == 1 then -- The Chest
     if RPSpeedrun.charNum == 9 then
       RPCheckEntities.bigChestAction = "trophy"
     else
@@ -373,14 +389,8 @@ function RPCheckEntities:Entity5_340_S1R14(pickup)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 then -- The Chest
+  if stage == 11 and stageType == 1 then -- The Chest
     if RPSpeedrun.charNum == 14 then
       RPCheckEntities.bigChestAction = "trophy"
     else
@@ -397,6 +407,7 @@ function RPCheckEntities:Entity5_340_S2(pickup)
   local stageType = level:GetStageType()
 
   if stage == 10 and stageType == 0 then -- Sheol
+    -- The Negative is optional in this season
     RPCheckEntities.bigChestAction = "down"
 
   elseif stage == 11 and stageType == 0 then -- Dark Room
@@ -425,6 +436,7 @@ function RPCheckEntities:Entity5_340_S3(pickup)
     direction = 2
   end
 
+  -- The Polaroid / The Negative is optional in this season
   if stage == 10 and stageType == 1 and -- Cathedral
      direction == 1 then
 
@@ -460,7 +472,7 @@ function RPCheckEntities:Entity5_340_S4(pickup)
   local stageType = level:GetStageType()
 
   if stage == 10 and stageType == 1 then -- Cathedral
-    -- It is not required to take The Polaroid in this season
+    -- The Polaroid / The Negative is optional in this season
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
@@ -480,7 +492,7 @@ function RPCheckEntities:Entity5_340_S5(pickup)
   local stageType = level:GetStageType()
 
   if stage == 10 and stageType == 1 then -- Cathedral
-    -- It is not required to take The Polaroid in this season
+    -- The Polaroid / The Negative is optional in this season
     RPCheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
@@ -505,6 +517,7 @@ function RPCheckEntities:Entity5_340_S6(pickup)
     direction = 2
   end
 
+  -- The Polaroid / The Negative is optional in this season
   if stage == 10 and stageType == 1 and -- Cathedral
      direction == 1 then
 
@@ -538,14 +551,8 @@ function RPCheckEntities:Entity5_340_SS(pickup)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 then -- The Chest
+  if stage == 11 and stageType == 1 then -- The Chest
     if RPSpeedrun.charNum == 7 then
       RPCheckEntities.bigChestAction = "trophy"
     else
@@ -560,14 +567,8 @@ function RPCheckEntities:Entity5_340_S0(pickup)
   local level = game:GetLevel()
   local stage = level:GetStage()
   local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 then -- The Chest
+  if stage == 11 and stageType == 1 then -- The Chest
     if RPSpeedrun.charNum == 15 then
       RPCheckEntities.bigChestAction = "trophy"
     else
@@ -581,21 +582,8 @@ function RPCheckEntities:Entity5_340_Pageant(pickup)
   local game = Game()
   local level = game:GetLevel()
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  -- Pageant Boy races can go in either direction so we need to handle all 4 cases
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 10 and stageType == 0 and -- Sheol
-         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-    RPCheckEntities.bigChestAction = "down"
-
-  elseif stage == 11 then -- The Chest or the Dark Room
+  if stage == 11 then -- The Chest or the Dark Room
     -- We want to delete all big chests on the Pageant Boy ruleset so that
     -- you don't accidently end your run before you can show off your build to the judges
     RPCheckEntities.bigChestAction = "remove"
@@ -612,20 +600,9 @@ function RPCheckEntities:Entity5_340_BlueBaby(pickup)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 and -- The Chest
-         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-
-    RPCheckEntities.bigChestAction = "remove"
-
-  elseif stage == 11 and stageType == 1 and -- The Chest
-         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+  if stage == 11 and stageType == 1 and -- The Chest
+     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
     RPCheckEntities.bigChestAction = "trophy"
   end
@@ -641,20 +618,9 @@ function RPCheckEntities:Entity5_340_TheLamb(pickup)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
-  local player = game:GetPlayer(0)
 
-  if stage == 10 and stageType == 0 and -- Sheol
-     player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-    RPCheckEntities.bigChestAction = "down"
-
-  elseif stage == 11 and stageType == 0 and -- Dark Room
-         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-
-    RPCheckEntities.bigChestAction = "remove"
-
-  elseif stage == 11 and stageType == 0 and -- Dark Room
-         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+  if stage == 11 and stageType == 0 and -- Dark Room
+     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
     RPCheckEntities.bigChestAction = "trophy"
   end
@@ -701,22 +667,9 @@ function RPCheckEntities:Entity5_340_MegaSatan(pickup)
     roomIndex = level:GetCurrentRoomIndex()
   end
   local stage = level:GetStage()
-  local stageType = level:GetStageType()
-  local player = game:GetPlayer(0)
 
-  -- Mega Satan races can go in either direction so we need to handle all 4 cases
-  if stage == 10 and stageType == 1 and -- Cathedral
-     player:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-
-    RPCheckEntities.bigChestAction = "up"
-
-  elseif stage == 10 and stageType == 0 and -- Sheol
-         player:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-    RPCheckEntities.bigChestAction = "down"
-
-  elseif stage == 11 and -- The Chest or the Dark Room
-         roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+  if stage == 11 and -- The Chest or the Dark Room
+     roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
     -- We want to delete the big chest after Blue Baby or The Lamb
     -- to remind the player that they have to go to Mega Satan

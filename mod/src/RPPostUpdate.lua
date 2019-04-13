@@ -33,19 +33,13 @@ function RPPostUpdate:Main()
   -- (to fix the Greed's Gullet bug and the double coin / nickel healing bug)
   RPPostUpdate:CheckKeeperHearts()
 
+  -- Check for item pickups
+  RPPostUpdate:CheckItemPickup()
+
   -- Check on every frame to see if we need to open the doors
   -- (we can't just add this as a new MC_POST_UPDATE callback because
   -- it causes a bug where the Womb 2 trapdoor appears for a frame)
   RPFastClear:PostUpdate()
-
-  -- Fix The Battery + 9 Volt synergy (2/2)
-  if RPGlobals.run.giveExtraCharge then
-    RPGlobals.run.giveExtraCharge = false
-    player:SetActiveCharge(activeCharge + 1)
-  end
-
-  -- Check the player's health for the Soul Jar mechanic
-  RPSoulJar:PostUpdate()
 
   -- Check to see if we are leaving a crawlspace (and if we are softlocked in a Boss Rush)
   RPFastTravel:CheckCrawlspaceExit()
@@ -104,6 +98,15 @@ function RPPostUpdate:Main()
 
   -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
   RPPostUpdate:CrownOfLight()
+
+  -- Check the player's health for the Soul Jar mechanic
+  RPSoulJar:PostUpdate()
+
+  -- Fix The Battery + 9 Volt synergy (2/2)
+  if RPGlobals.run.giveExtraCharge then
+    RPGlobals.run.giveExtraCharge = false
+    player:SetActiveCharge(activeCharge + 1)
+  end
 
   RPPills:CheckPHD()
 
@@ -202,6 +205,36 @@ function RPPostUpdate:CheckKeeperHearts()
 
     -- Set the new coin count (we re-get it since it may have changed)
     RPGlobals.run.keeper.coins = player:GetNumCoins()
+  end
+end
+
+function RPPostUpdate:CheckItemPickup()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
+
+  -- Only run the below code once per item
+  if player:IsItemQueueEmpty() then
+    if RPGlobals.run.pickingUpItem then
+      RPGlobals.run.pickingUpItem = false
+    end
+    return
+  elseif RPGlobals.run.pickingUpItem then
+    return
+  end
+  RPGlobals.run.pickingUpItem = true
+
+  -- Mark to draw the streak text for this item
+  RPGlobals.run.streakText = player.QueuedItem.Item.Name
+  RPGlobals.run.streakFrame = Isaac.GetFrameCount()
+
+  -- Keep track of our passive items over the course of the run
+  if player.QueuedItem.Item.Type ~= ItemType.ITEM_ACTIVE then -- 3
+    RPGlobals.run.passiveItems[#RPGlobals.run.passiveItems + 1] = player.QueuedItem.Item.ID
+    if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
+      Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
+    end
+    RPSpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   end
 end
 

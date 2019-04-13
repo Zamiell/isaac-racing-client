@@ -4,7 +4,7 @@ local RPGlobals  = {}
 -- Global variables
 --
 
-RPGlobals.version = "v0.30.2"
+RPGlobals.version = "v0.31.0"
 RPGlobals.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 RPGlobals.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -191,6 +191,8 @@ function RPGlobals:InitRun()
   RPGlobals.run.reseededFloor        = false
   RPGlobals.run.forgetMeNow          = false
   RPGlobals.run.consoleOpened        = false -- If set, fast-resetting is disabled
+  RPGlobals.run.streakText           = 0
+  RPGlobals.run.streakFrame          = 0
   RPGlobals.run.itemReplacementDelay = 0 -- Set when Void is used
   RPGlobals.run.usedTelepills        = false
   RPGlobals.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
@@ -213,7 +215,7 @@ function RPGlobals:InitRun()
   RPGlobals.run.extraIncubus         = false -- Used in Racing+ Season 4
   RPGlobals.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
   RPGlobals.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
-  RPGlobals.run.queuedItems          = false -- Used to keep track of whether the player is picking up an item
+  RPGlobals.run.pickingUpItem        = false
   RPGlobals.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
   RPGlobals.run.lastDDLevel          = 0 -- Used by the Soul Jar
 

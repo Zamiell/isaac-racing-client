@@ -64,6 +64,7 @@ function RPPostEntityKill:Entity78(entity)
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
   local stage = level:GetStage()
+  local room = game:GetRoom()
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
@@ -184,6 +185,11 @@ function RPPostEntityKill:Entity78(entity)
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   RPPostEntityKill:KillExtraEnemies()
+
+  -- Manually open the Void door if we just killed Hush
+  if entity.Type == EntityType.ENTITY_HUSH then -- 407
+    room:TrySpawnTheVoidDoor()
+  end
 end
 
 -- EntityType.ENTITY_FALLEN (81)

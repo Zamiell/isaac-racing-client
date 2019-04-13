@@ -46,6 +46,7 @@ function RPPostRender:Main()
 
   -- Draw graphics
   RPSprites:Display()
+  RPPostRender:DrawStreakText()
   RPSchoolbag:SpriteDisplay()
   RPSoulJar:SpriteDisplay()
   RPTimer:Display()
@@ -95,6 +96,30 @@ function RPPostRender:Main()
   RPSpeedrun:CheckSeason5Mod()
   RPSpeedrun:CheckSeason5ModOther()
   RPChangeCharOrder:CheckChangeCharOrder()
+end
+
+-- We replace the vanilla streak text because it blocks the map occasionally
+function RPPostRender:DrawStreakText()
+  if RPGlobals.run.streakFrame == 0 then
+    return
+  end
+
+  -- The streak text will slowly fade out
+  local elapsedFrames = Isaac.GetFrameCount() - RPGlobals.run.streakFrame
+  local fade = 1 - (0.008 * elapsedFrames)
+  if fade <= 0 then
+    RPGlobals.run.streakFrame = 0
+    return
+  end
+
+  -- Draw the string
+  local posGame = RPGlobals:GridToPos(6, 0) -- Below the top door
+  local pos = Isaac.WorldToRenderPosition(posGame)
+  local f = Font()
+  f:Load("font/droid.fnt")
+  local color = KColor(1, 1, 1, fade)
+  local length = f:GetStringWidthUTF8(RPGlobals.run.streakText)
+  f:DrawString(RPGlobals.run.streakText, pos.X - (length / 2), pos.Y, color, 0, true)
 end
 
 -- Restart the game if Easter Egg or character validation failed

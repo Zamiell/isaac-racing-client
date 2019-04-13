@@ -478,21 +478,10 @@ function RPSpeedrun:DrawVetoButtonText()
   local challenge = Isaac.GetChallenge()
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") or
      RPSpeedrun.charNum ~= 1 or
-     RPGlobals.run.roomsEntered ~= 1 or
-     RPSpeedrun.vetoTimer ~= 0 then
+     RPGlobals.run.roomsEntered ~= 1 then
 
     return
   end
-
-  -- Draw the "Veto" text
-  local posGame = RPGlobals:GridToPos(11, 5)
-  local pos = Isaac.WorldToRenderPosition(posGame)
-  local f = Font()
-  f:Load("font/droid.fnt")
-  local color = KColor(1, 1, 1, 1, 0, 0, 0)
-  local string = "Veto"
-  local length = f:GetStringWidthUTF8(string)
-  f:DrawString(string, pos.X - (length / 2), pos.Y, color, 0, true)
 
   -- Draw the sprites that correspond to the items that are currently on the veto list
   local x = -45
@@ -502,6 +491,18 @@ function RPSpeedrun:DrawVetoButtonText()
     x = x + 15
     itemPos = Vector(itemPos.X + x, itemPos.Y)
     RPSpeedrun.vetoSprites[i]:Render(itemPos, Vector(0, 0), Vector(0, 0))
+  end
+
+  if RPSpeedrun.vetoTimer == 0 then
+    -- Draw the "Veto" text
+    local posGame = RPGlobals:GridToPos(11, 5)
+    local pos = Isaac.WorldToRenderPosition(posGame)
+    local f = Font()
+    f:Load("font/droid.fnt")
+    local color = KColor(1, 1, 1, 1, 0, 0, 0)
+    local string = "Veto"
+    local length = f:GetStringWidthUTF8(string)
+    f:DrawString(string, pos.X - (length / 2), pos.Y, color, 0, true)
   end
 end
 

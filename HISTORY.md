@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.31.0* - April 12th, 2019
+
+* Changed the "streak" text to be more minimalistic.
+* Changed the vanilla level text that appears when you hold tab.
+* Fixed the bug where The Void portal room would not open after defeating Hush. (Thanks thereisnofuture)
+* Fixed the bug where The Void portal would get replaced by a trapdoor.  (Thanks thereisnofuture)
+* Fixed the bug where the trapdoor would not spawn after Satan under certain conditions.
+
 ### *v0.30.2* - April 7th, 2019
 
 * Fixed the (vanilla) bug where an attack fly would rarely spawn at an invalid position. (Thanks ceehe)

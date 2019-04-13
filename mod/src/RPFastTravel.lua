@@ -36,6 +36,11 @@ function RPFastTravel:ReplaceTrapdoor(entity, i)
     return
   end
 
+  -- Don't replace anything in The Void portal room
+  if roomIndex == GridRooms.ROOM_THE_VOID_IDX then -- -9
+    return
+  end
+
   -- Delete the "natural" trapdoor that spawns one frame after It Lives! (or Hush) is killed
   -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
   if gameFrameCount == RPGlobals.run.itLivesKillFrame + 1 then
@@ -450,6 +455,8 @@ function RPFastTravel:CheckTrapdoor2()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local room = game:GetRoom()
 
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
@@ -486,7 +493,11 @@ function RPFastTravel:CheckTrapdoor2()
        -- (the baby descriptions will slightly overlap with the stage text,
        -- so don't bother showing it if we are playing as "Random Baby")
 
-      level:ShowName(false)
+       RPGlobals.run.streakText = level:GetName(stage, stageType, 0, false)
+       if RPGlobals.run.streakText == "???" then
+        RPGlobals.run.streakText = "Blue Womb"
+       end
+       RPGlobals.run.streakFrame = Isaac.GetFrameCount()
     end
 
     -- Remove the black sprite to reveal the new floor

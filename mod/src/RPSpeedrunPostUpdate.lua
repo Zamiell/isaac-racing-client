@@ -18,32 +18,12 @@ function RPSpeedrunPostUpdate:Main()
     RPSpeedrun.startedFrame = Isaac.GetFrameCount()
   end
 
-  RPSpeedrunPostUpdate:TrackPassives()
   RPSpeedrunPostUpdate:CheckLilithExtraIncubus()
   RPSpeedrunPostUpdate:CheckCheckpoint()
 end
 
--- Keep track of our passive items over the course of the run
-function RPSpeedrunPostUpdate:TrackPassives()
-  -- Local variables
-  local game = Game()
-  local player = game:GetPlayer(0)
-
-  if player:IsItemQueueEmpty() == false and
-     RPGlobals.run.queuedItems == false then
-
-    RPGlobals.run.queuedItems = true
-    if player.QueuedItem.Item.Type ~= ItemType.ITEM_ACTIVE then -- 3
-      RPGlobals.run.passiveItems[#RPGlobals.run.passiveItems + 1] = player.QueuedItem.Item.ID
-      if player.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
-        Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
-      end
-      RPSpeedrunPostUpdate:CheckFirstCharacterStartingItem()
-    end
-  end
-end
-
--- We need to record the starting item on the first character so that we can avoid duplicate starting items later on
+-- For season 5,
+-- we need to record the starting item on the first character so that we can avoid duplicate starting items later on
 function RPSpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   -- Local variables
   local challenge = Isaac.GetChallenge()
