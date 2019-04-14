@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.31.2* - April 13th, 2019
+
+* Slightly changed the streak animation.
+* Fixed the bug where there would be no streak text for transformations. (Thanks AshDown)
+* Fixed the bug where you could not select text on the client. (Thanks antizoubilamakA)
+
 ### *v0.31.1* - April 13th, 2019
 
 * Fixed the bug where there would be no streak text for unidentified pills. (Thanks mgln)
@@ -48,7 +54,7 @@
 ### *v0.29.0* - November 19th, 2018
 
 * Season 4 is finished!
-  * Congradulations to Antizoubilamaka for the best R+7 time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
+  * Congradulations to antizoubilamakA for the best R+7 time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S4) category will continue to be tracked on speedrun.com, but the official competition will move on to season 5.
 * [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun! The new category is now considered final; there will be no more major balance changes.
@@ -1205,13 +1211,13 @@ Client/Server:
 
 ### *v0.8.6* - July 29th, 2017
 
-* It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks Antizoubilamaka)
+* It is no longer possible to skip Cathedral using Undefined on the "Everything" race goal. (Thanks antizoubilamakA)
 * Fixed the bug where the doors would prematurely open in puzzle rooms under certain conditions. (Thanks SlashSP)
 * Fixed the bug where charmed enemies were stopping fast-clear from happening. (Thanks tODDlife)
 * Fixed the bug where fast-clear was not working with Satan.
 * Fixed the bug where Frail was making the doors open early. (Thanks tODDlife)
 * Fixed the bug where a pickup on top of a trapdoor would play a spawning animation instead of just being moved. (Thanks tODDlife)
-* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal. (Thanks Antizoubilamaka)
+* Fixed the bug where the mid-race places were not calculated properly on the later floors of the "Everything" race goal. (Thanks antizoubilamakA)
 
 ### *v0.8.5* - July 29th, 2017
 
@@ -1891,7 +1897,7 @@ Changes:
 * Fixed the bug with The Book of Sin taking away charges when the player had The Battery. (Thanks HauntedQuest)
 * Finally fixed the annoying bug where in big races you couldn't see all the people in the race properly. (Thanks SedNegi and stoogebag)
 * Fixed the bug where if too many races were open, the lobby would mess up and overflow.
-* The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks Antizoubilamaka)
+* The Kamikaze! and Mega Blast builds will now correctly use the Schoolbag to keep the D6. (Thanks antizoubilamakA)
 
 ### *v0.2.64* - March 10th, 2017
 

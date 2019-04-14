@@ -66,18 +66,18 @@ NUMBER_VERSION = DATA['version']
 VERSION = 'v' + DATA['version']
 
 if not ARGS.skipmod:
-    # Put the version in the "RPGlobals.lua" file
+    # Put the version in the "Globals.lua" file
     # http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
-    LUA_FILE = os.path.join(MOD_DIR, 'src', 'RPGlobals.lua')
+    LUA_FILE = os.path.join(MOD_DIR, 'src', 'Globals.lua')
     with open(LUA_FILE, 'r') as file_handle:
         FILE_DATA = file_handle.read()
 
     # Replace the target string
     NEW_FILE = ''
     for line in iter(FILE_DATA.splitlines()):
-        match = re.search(r'RPGlobals.version = ', line)
+        match = re.search(r'g.version = ', line)
         if match:
-            NEW_FILE += 'RPGlobals.version = "' + VERSION + '"\n'
+            NEW_FILE += 'g.version = "' + VERSION + '"\n'
         else:
             NEW_FILE += line + '\n'
 
@@ -85,9 +85,9 @@ if not ARGS.skipmod:
     if ARGS.github:
         NEW_FILE2 = ''
         for line in iter(NEW_FILE.splitlines()):
-            match = re.search(r'RPGlobals.debug = true', line)
+            match = re.search(r'g.debug = true', line)
             if match:
-                NEW_FILE2 += 'RPGlobals.debug = false\n'
+                NEW_FILE2 += 'g.debug = false\n'
             else:
                 NEW_FILE2 += line + '\n'
         NEW_FILE = NEW_FILE2
