@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.31.3* - April 13th, 2019
+
+* The player will now start at the center of the starting room instead of next to the bottom door.
+* Players who do not like the way that the new streak text looks have the option to revert to the vanilla graphics by using the following mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1714310911
+
 ### *v0.31.2* - April 13th, 2019
 
 * Slightly changed the streak animation.

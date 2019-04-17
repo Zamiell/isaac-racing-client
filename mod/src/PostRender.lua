@@ -104,6 +104,11 @@ function PostRender:DrawStreakText()
     return
   end
 
+  -- Players who prefer the vanilla streak text will have a separate mod enabled
+  if VanillaStreakText ~= nil then
+    return
+  end
+
   -- The streak text will slowly fade out
   local elapsedFrames = Isaac.GetFrameCount() - g.run.streakFrame
   local framesBeforeFade = 50
@@ -124,9 +129,12 @@ function PostRender:DrawStreakText()
   local pos = Isaac.WorldToRenderPosition(posGame)
   local f = Font()
   f:Load("font/droid.fnt")
+  --f:Load("font/pftempestasevencondensed.fnt")
   local color = KColor(1, 1, 1, fade)
-  local length = f:GetStringWidthUTF8(g.run.streakText)
-  f:DrawString(g.run.streakText, pos.X - (length / 2), pos.Y, color, 0, true)
+  local scale = 1
+  --local scale = 1.3
+  local length = f:GetStringWidthUTF8(g.run.streakText) * scale
+  f:DrawStringScaled(g.run.streakText, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
 end
 
 -- Restart the game if Easter Egg or character validation failed

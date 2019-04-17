@@ -40,7 +40,7 @@ local RacingPlus = RegisterMod("Racing+", 1)
 -- (file names must be in lowercase for Linux compatibility purposes)
 local g                   = require("src/globals") -- Global variables
 local NPCUpdate           = require("src/npcupdate") -- 0
-local PostUpdate        = require("src/postupdate") -- 1
+local PostUpdate          = require("src/postupdate") -- 1
 local PostRender          = require("src/postrender") -- 2
 local UseItem             = require("src/useitem") -- 3
 local UseCard             = require("src/usecard") -- 5

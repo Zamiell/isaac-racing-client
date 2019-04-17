@@ -28,6 +28,8 @@ function PostGameStarted:Main(saveState)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = level:GetCurrentRoomIndex()
   end
+  local room = game:GetRoom()
+  local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
   Isaac.DebugString("MC_POST_GAME_STARTED")
@@ -155,6 +157,10 @@ function PostGameStarted:Main(saveState)
     itemPool:RemoveTrinket(TrinketType.TRINKET_ACE_SPADES) -- 45
     itemPool:RemoveTrinket(TrinketType.TRINKET_WATCH_BATTERY) -- 72
   end
+
+  -- By default, the player starts near the bottom door
+  -- Instead, put the player in the middle of the room
+  player.Position = room:GetCenterPos()
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
   PostGameStarted:Character()
