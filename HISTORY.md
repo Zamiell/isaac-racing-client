@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.31.4* - April 19th, 2019
+
+* The animations for charge keys have been changed so that it is easier to tell them apart from normal keys. (Thanks Gamonymous)
+
 ### *v0.31.3* - April 13th, 2019
 
 * The player will now start at the center of the starting room instead of next to the bottom door.
