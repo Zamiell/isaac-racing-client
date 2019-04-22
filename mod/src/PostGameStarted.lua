@@ -407,7 +407,7 @@ function PostGameStarted:Character()
     -- Manually fix any custom items
     if player:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
       player:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
-      player:AddCollectible(Isaac.GetItemIdByName("Betrayal"))
+      player:AddCollectible(Isaac.GetItemIdByName("Betrayal"), 0, false)
       passiveItem = Isaac.GetItemIdByName("Betrayal")
     end
     -- (the Schoolbag was manually fixed earlier)

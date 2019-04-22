@@ -267,11 +267,11 @@ function PostUpdate:CheckHauntSpeedup()
   local game = Game()
   local gameFrameCount = game:GetFrameCount()
   local blackChampionHaunt = g.run.speedLilHauntsBlack
-  if gameFrameCount ~= g.run.speedLilHauntsFrame then
+  if g.run.speedLilHauntsFrame == 0 or
+     gameFrameCount < g.run.speedLilHauntsFrame then
+
     return
   end
-  g.run.speedLilHauntsFrame = 0
-  g.run.speedLilHauntsBlack = false
 
   -- Detach the first Lil' Haunt for each Haunt in the room
   for i = 1, #g.run.currentHaunts do
@@ -300,24 +300,8 @@ function PostUpdate:CheckHauntSpeedup()
         local npc = entity:ToNPC()
         if npc == nil then
           Isaac.DebugString("Failed to convert Lil Haunt at index " .. tostring(entity.Index) ..
-                            " to an NPC. Getting the next lowest index Lil Haunt.")
-          local hauntIndex = 9999
-          for k, entity2 in pairs(Isaac.GetRoomEntities()) do
-            if entity2.Type == EntityType.ENTITY_THE_HAUNT and
-               entity2.Variant == 10 and
-               entity2.Index ~= entity.Index and
-               entity2.Index < hauntIndex and
-               entity2:ToNPC() ~= nil then
-
-              hauntIndex = entity2.Index
-              Isaac.DebugString("Found Lil Haunt to detach at index: " .. tostring(entity2.Index))
-              npc = entity2:ToNPC()
-            end
-          end
-          if npc == nil then
-            Isaac.DebugString("Error: Failed to convert all of the Lil Haunts in the room to NPCs.")
-            return
-          end
+                            " to an NPC. Trying again on the next frame...")
+          return
         end
         npc.State = NpcState.STATE_MOVE -- 4
         -- (doing this will detach them)
@@ -337,6 +321,7 @@ function PostUpdate:CheckHauntSpeedup()
         if g.run.currentLilHaunts[index] == nil then
           Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
                             " was not already in the \"currentLilHaunts\" table.")
+          return
         end
 
         Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
@@ -344,6 +329,10 @@ function PostUpdate:CheckHauntSpeedup()
       end
     end
   end
+
+  -- Only reset the variables at the end of the function in case we hit an error above
+  g.run.speedLilHauntsFrame = 0
+  g.run.speedLilHauntsBlack = false
 end
 
 -- Ban Basement 1 Treasure Rooms

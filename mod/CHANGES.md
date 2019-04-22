@@ -147,16 +147,19 @@ While there are thousands of rooms in the game, many players have already seen t
 
 ### Graphics & Sound Fixes
 
-* Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
 * The annoying vanilla in-game timer and score text will no longer appear. (Hold Tab to see a custom in-game timer.)
-* The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
-* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
-* Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
-* Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
 * The Distant Admiration, Forever Alone, and Friend Zone collectibles now match the color of the actual familiars.
 * The Abaddon collectible is replaced with the pre-Booster Pack 5 version.
 * The 20/20 collectible is now easier to see.
+* The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
 * The Locust of Famine graphic now matches the color of the flies.
+* Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
+* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
+* Charge keys have custom animations to help distinguish them from normal keys.
+* Enemy fires are now red instead of yellow (so that players can distinguish between friendly fires).
+* Enemy red creep is changed to green (so that it is easier to see).
+* Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * The door opening sound will no longer play in crawlspaces.
 
 <br />

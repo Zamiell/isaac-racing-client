@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.32.0* - April 22nd, 2019
+
+* The color for detrimental fires is now red (instead of yellow) so that players can easily distinguish them from friendly fires.
+* The color for red creep has been changed to green (so that it is easier to see in various situations). (Thanks Nariom)
+* Fixed the bug where Eden would get messed up if they started with Betrayal. (Thanks mgln)
+* Fixed the bug where the Lil Haunts attached to a Haunt would not detach under certain circumstances.
+* Fixed the bug where The Fallen and the Kamikaze Leeches on the Satan fight would always drop black hearts when killed with Maw of the Void. (Thanks mgln)
+
 ### *v0.31.4* - April 19th, 2019
 
 * The animations for charge keys have been changed so that it is easier to tell them apart from normal keys. (Thanks Gamonymous)

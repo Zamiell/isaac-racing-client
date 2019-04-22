@@ -180,6 +180,7 @@ function PostNewRoom:CheckSatanRoom()
   local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomClear = room:IsClear()
+  local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
   local challenge = Isaac.GetChallenge()
 
   if roomClear then
@@ -195,12 +196,15 @@ function PostNewRoom:CheckSatanRoom()
     return
   end
 
+  local seed = roomSeed
   game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-             g:GridToPos(5, 3), Vector(0, 0), nil, 0, 0)
+             g:GridToPos(5, 3), Vector(0, 0), nil, 0, seed)
+  seed = g:IncrementRNG(seed)
   game:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-             g:GridToPos(7, 3), Vector(0, 0), nil, 0, 0)
+             g:GridToPos(7, 3), Vector(0, 0), nil, 0, seed)
+  seed = g:IncrementRNG(seed)
   game:Spawn(EntityType.ENTITY_FALLEN, 0, -- 81.0 (The Fallen)
-             g:GridToPos(6, 3), Vector(0, 0), nil, 0, 0)
+             g:GridToPos(6, 3), Vector(0, 0), nil, 0, seed)
 
   -- Prime the statue to wake up quicker
   for i, entity in pairs(Isaac.GetRoomEntities()) do
@@ -258,6 +262,7 @@ function PostNewRoom:CheckScolexRoom()
   local room = game:GetRoom()
   local roomClear = room:IsClear()
   local roomSeed = room:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local challenge = Isaac.GetChallenge()
 
   -- We don't need to modify Scolex if the room is already cleared
   if roomClear then
@@ -281,8 +286,10 @@ function PostNewRoom:CheckScolexRoom()
     return
   end
 
-  if g.race.rFormat == "seeded" then
-    -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
+  if g.race.rFormat == "seeded" or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)") then
+
+     -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
     -- (there are 10 Scolex entities)
     for i, entity in pairs(Isaac.GetRoomEntities()) do
       if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 then -- 62.1 (Scolex)
