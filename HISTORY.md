@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.32.1* - April 22nd, 2019
+
+* The color for Cage's gray creep is now also turned to green.
+* Fixed the bug where some specific kinds of creep would not turn to red. (Thanks NorBro86)
+* Fixed the bug where if Lilith was given Incubus in a seeded revival, she would get an additional Incubus. (Thanks Gamonymous)
+
 ### *v0.32.0* - April 22nd, 2019
 
 * The color for detrimental fires is now red (instead of yellow) so that players can easily distinguish them from friendly fires.

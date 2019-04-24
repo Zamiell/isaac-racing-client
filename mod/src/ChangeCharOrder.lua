@@ -839,6 +839,30 @@ function ChangeCharOrder:DisplayCharSelectRoom()
     return
   end
 
+  -- Render the current choosing activity
+  local posActivityGame = g:GridToPos(6, -1)
+  local posActivity = Isaac.WorldToRenderPosition(posActivityGame)
+  posActivity.Y = posActivity.Y - 15
+  local string
+  if ChangeCharOrder.phase == 1 then
+    string = "Choose your season"
+  elseif ChangeCharOrder.phase == 2 then
+    string = "Choose your character order"
+  elseif ChangeCharOrder.phase == 3 then
+    if ChangeCharOrder.seasonChosen == "R7S4" then
+      string = "Choose your starting items"
+    else
+      string = "Choose a Big 4 item to ban"
+    end
+  elseif ChangeCharOrder.phase == 4 then
+    string = "Choose " .. tostring(ChangeCharOrder.seasons.R7S6.itemBans) .. " items to ban from the starting pool"
+  end
+  local f = Font()
+  f:Load("font/droid.fnt")
+  local color = KColor(1, 1, 1, 1, 0, 0, 0)
+  local length = f:GetStringWidthUTF8(string)
+  f:DrawString(string, posActivity.X - (length / 2), posActivity.Y, color, 0, true)
+
   -- Render the button sprites
   if ChangeCharOrder.sprites.buttons ~= nil then
     for k, v in pairs(ChangeCharOrder.sprites.buttons) do
@@ -857,16 +881,15 @@ function ChangeCharOrder:DisplayCharSelectRoom()
   local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   if ChangeCharOrder.sprites.characters ~= nil then
     for i = 1, #ChangeCharOrder.sprites.characters do
-      local posGame
+      local posCharGame
       if #ChangeCharOrder.sprites.characters == 1 then
-        posGame = g:GridToPos(6, 5) -- The bottom-center of the room
+        posCharGame = g:GridToPos(6, 5) -- The bottom-center of the room
       else
-        posGame = g:GridToPos(v.charPosition[i][2], v.charPosition[i][3] - 1)
+        posCharGame = g:GridToPos(v.charPosition[i][2], v.charPosition[i][3] - 1)
       end
-
-      local posRender = Isaac.WorldToRenderPosition(posGame, false)
-      posRender.Y = posRender.Y + 10
-      ChangeCharOrder.sprites.characters[i]:Render(posRender, Vector(0, 0), Vector(0, 0))
+      local posChar = Isaac.WorldToRenderPosition(posCharGame, false)
+      posChar.Y = posChar.Y + 10
+      ChangeCharOrder.sprites.characters[i]:Render(posChar, Vector(0, 0), Vector(0, 0))
     end
   end
 
@@ -887,10 +910,10 @@ function ChangeCharOrder:DisplayCharSelectRoom()
         end
       end
 
-      local posGame = g:GridToPos(x, y - 1)
-      local posRender = Isaac.WorldToRenderPosition(posGame, false)
-      posRender.Y = posRender.Y
-      ChangeCharOrder.sprites.items[i]:Render(posRender, Vector(0, 0), Vector(0, 0))
+      local posItemGame = g:GridToPos(x, y - 1)
+      local posItem = Isaac.WorldToRenderPosition(posItemGame, false)
+      posItem.Y = posItem.Y
+      ChangeCharOrder.sprites.items[i]:Render(posItem, Vector(0, 0), Vector(0, 0))
     end
   end
 end

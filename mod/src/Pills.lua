@@ -88,10 +88,12 @@ function Pills:PostRender()
     pillEntry.sprite:RenderLayer(0, pos)
 
     -- Show the pill effect as text
-    local effectText = Pills.effects[pillEntry.effect]
-    Isaac.RenderText(effectText, x + 17, y - 7, 1, 1, 1, 2)
+    local f = Font()
+    f:Load("font/droid.fnt")
+    local color = KColor(1, 1, 1, 1, 0, 0, 0)
+    local string = Pills.effects[pillEntry.effect]
+    f:DrawString(string, x + 15, y - 9, color, 0, true)
   end
-
 end
 
 function Pills:CheckPHD()

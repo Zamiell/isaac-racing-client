@@ -10,7 +10,7 @@ function PostEffectInit:Main(effect)
     return
   end
 
-  -- Turn enemy red creep into green creep (but only on The Womb)
+  -- Turn enemy red creep into green creep (1/2)
   if effect.Variant == EffectVariant.CREEP_RED then -- 22
     local color = Color(0, 8, 0, 1, 0, 1, 0)
     effect:SetColor(color, 10000, 10000, false, false)

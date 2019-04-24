@@ -60,6 +60,7 @@ local PostPickupInit      = require("src/postpickupinit") -- 34
 local PostPickupSelection = require("src/postpickupselection") -- 37
 local PostLaserInit       = require("src/postlaserinit") -- 47
 local PostEffectInit      = require("src/posteffectinit") -- 54
+local PostEffectUpdate    = require("src/posteffectupdate") -- 55
 local PostBombUpdate      = require("src/postbombupdate") -- 58
 local PostEntityKill      = require("src/postentitykill") -- 68
 local PreRoomEntitySpawn  = require("src/preroomentityspawn") -- 71
@@ -150,6 +151,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      PostPickupInit.Mai
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       PostLaserInit.Main) -- 47
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT,      PostEffectInit.Main) -- 54
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE,    PostEffectUpdate.Main) -- 55
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71

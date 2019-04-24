@@ -372,7 +372,13 @@ function SeededDeath:DebuffOff()
     end
   end
 
-  if character == PlayerType.PLAYER_KEEPER then -- 14
+  -- Fix character-specific bugs
+  if character == PlayerType.PLAYER_LILITH then -- 13
+    -- If Lilith had Incubus, the debuff will grant an extra Incubus, so account for this
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_INCUBUS) then -- 360
+      player:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
+    end
+  elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Keeper will get extra blue flies if he was given any items that grant soul hearts
     for i, entity in pairs(Isaac.GetRoomEntities()) do
       if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
