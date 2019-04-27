@@ -1,8 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.33.1* - April 27th, 2019
+
+* Increased the delay on Pin/Frail/Scolex from 16 frames to 31 frames.
+* Fixed the bug where Pin/Frail/Scolex would gain a lot of velocity in certain circumstances. (Thanks Gamonymous)
+
 ### *v0.33.0* - April 27th, 2019
 
-* Pin/Frail/Scolex will now attack you on the 15th frame instead of the 73rd frame.
+* Pin/Frail/Scolex will now attack you on the 16th frame instead of the 77th frame.
 * Replaced the dirty bedroom icon with a new icon that represents a cobweb. Thanks to BMZ_Loop for creating this.
 * There are now two additional key bindings available in the "Change Keybindings" custom challenge for dropping only trinkets and for dropping only pocket items.
 * Removed the "Jr. Fetus Practice" and "Mahalath Practice" custom challenges.

@@ -202,25 +202,34 @@ function NPCUpdate:NPC62(npc)
   -- Local variables
   local game = Game()
   local level = game:GetLevel()
+  local room = game:GetRoom()
+  local roomShape = room:GetRoomShape()
 
-  -- Normally, Pin/Frail/Scolex first attacks on frame 73
-  -- Reduce this to frame 15
-  if npc.FrameCount == 15 then
+  -- Normally, Pin/Frail/Scolex first attacks on frame 73, so speed this up
+  if npc.FrameCount == 30 then
     -- Changing the state to 3 will cause it to leap at the player on the next frame
     npc.State = 3
-  elseif npc.FrameCount == 16 then
+  elseif npc.FrameCount == 31 then
     -- We also need to adjust the "charge" velocity, or else the first attack will be really wimpy
     if level.EnterDoor == DoorSlot.UP0 or -- 1
        level.EnterDoor == DoorSlot.DOWN0 then -- 3
 
       -- From the bottom/top door, the vanilla V1 velocity (on frame 74) is 6.08
-      -- From the bottom/top door, the frame 16 V1 velocity is 2.75
-      npc.V1 = npc.V1 * 2.21
+      -- From the bottom/top door, the frame 31 V1 velocity is 3.69
+      npc.V1 = npc.V1 * 1.65
 
     else
       -- From the left/right door, the vanilla V1 velocity (on frame 74) is 6.92
-      -- From the left/right door, the frame 16 V1 velocity is 2.06
-      npc.V1 = npc.V1 * 3.36
+      -- From the left/right door, the frame 16 V1 velocity is 2.13
+      npc.V1 = npc.V1 * 3.25
+    end
+    while math.abs(npc.V1.X) > 7 or
+          math.abs(npc.V1.Y) > 7 do
+
+      npc.V1 = npc.V1 * 0.9
+    end
+    if roomShape > 3 then -- 1-3 are 1x1 room types
+      npc.Velocity = npc.Velocity * -1
     end
   end
 end
