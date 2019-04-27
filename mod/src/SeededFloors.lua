@@ -23,7 +23,7 @@ function SeededFloors:Before(stage)
 
   -- Only swap things if we are playing a specific seed
   if challenge ~= 0 or
-     customRun == false then
+     not customRun then
 
     return
   end
@@ -106,15 +106,12 @@ function SeededFloors:Before(stage)
 
     -- Keeper will get 3 Blue Flies from this, so manually remove them
     if character == PlayerType.PLAYER_KEEPER then -- 14
-      local fliesToRemove = 3
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
-           entity.Variant == FamiliarVariant.BLUE_FLY and -- 43
-           fliesToRemove > 0 then
-
-          fliesToRemove = fliesToRemove - 1
-          entity:Remove()
+      local blueFlies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_FLY, -1, false, false) -- 3.43
+      for i, fly in ipairs(blueFlies) do
+        if i > 3 then
+          break
         end
+        fly:Remove()
       end
     end
   end
@@ -134,7 +131,7 @@ function SeededFloors:After()
 
   -- Only swap things if we are playing a specific seed
   if challenge ~= 0 or
-     customRun == false then
+     not customRun then
 
     return
   end

@@ -187,11 +187,11 @@ end
 
 -- Don't move to the first character of the speedrun if we die
 function Speedrun:PostGameEnd(gameOver)
-  if gameOver == false then
+  if not gameOver then
     return
   end
 
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
@@ -205,7 +205,7 @@ function Speedrun:DisplayCharProgress()
   local challenge = Isaac.GetChallenge()
 
   -- Don't show the progress if we are not in the custom challenge
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
@@ -218,7 +218,7 @@ function Speedrun:DisplayCharProgress()
   end
 
   -- Don't show the progress if the player has not set an order yet
-  if Speedrun:CheckValidCharOrder() == false then
+  if not Speedrun:CheckValidCharOrder() then
     -- Load the sprites
     if Speedrun.sprites.needToSet1 == nil then
       Speedrun.sprites.needToSet1 = Sprite()
@@ -453,7 +453,7 @@ end
 -- Called from the PostRender callback
 function Speedrun:CheckSeason5ModOther()
   local challenge = Isaac.GetChallenge()
-  if Speedrun:InSpeedrun() == false or
+  if not Speedrun:InSpeedrun() or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
 
     return
@@ -517,7 +517,7 @@ function Speedrun:PreventD6()
   local startingRoomIndex = level:GetStartingRoomIndex()
 
   -- Prevent re-rolling the "Finished" custom item that is spawned in the first room of the first character
-  if Speedrun.inSeededSpeedrun == false or
+  if not Speedrun.inSeededSpeedrun or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      currentIndex ~= startingRoomIndex then

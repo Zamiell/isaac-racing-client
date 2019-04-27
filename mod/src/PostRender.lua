@@ -1,20 +1,20 @@
 local PostRender = {}
 
 -- Includes
-local g               = require("src/globals")
-local SaveDat         = require("src/savedat")
-local Sprites         = require("src/sprites")
-local Schoolbag       = require("src/schoolbag")
-local SoulJar         = require("src/souljar")
-local PostUpdate      = require("src/postupdate")
-local UseItem         = require("src/useitem")
-local Pills           = require("src/pills")
-local FastTravel      = require("src/fasttravel")
-local FastDrop        = require("src/fastdrop")
-local Timer           = require("src/timer")
-local Speedrun        = require("src/speedrun")
-local ChangeCharOrder = require("src/changecharorder")
-local SeededDeath     = require("src/seededdeath")
+local g                 = require("src/globals")
+local SaveDat           = require("src/savedat")
+local Sprites           = require("src/sprites")
+local Schoolbag         = require("src/schoolbag")
+local SoulJar           = require("src/souljar")
+local PostUpdate        = require("src/postupdate")
+local UseItem           = require("src/useitem")
+local Pills             = require("src/pills")
+local FastTravel        = require("src/fasttravel")
+local ChangeKeybindings = require("src/changekeybindings")
+local Timer             = require("src/timer")
+local Speedrun          = require("src/speedrun")
+local ChangeCharOrder   = require("src/changecharorder")
+local SeededDeath       = require("src/seededdeath")
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -38,7 +38,7 @@ function PostRender:Main()
   PostRender:CheckRestart()
 
   -- Get rid of the slow fade-in at the beginning of a run
-  if g.run.erasedFadeIn == false then
+  if not g.run.erasedFadeIn then
     g.run.erasedFadeIn = true
     game:Fadein(0.15) -- This fine is fine tuned from trial and error to be a good speed
     return
@@ -53,9 +53,9 @@ function PostRender:Main()
   Timer:DisplayRun()
   Timer:DisplaySecond()
   Pills:PostRender()
-  ChangeCharOrder:DisplayCharSelectRoom()
+  ChangeCharOrder:PostRender()
+  ChangeKeybindings:PostRender()
   PostRender:DisplayTopLeftText()
-  FastDrop:PostRender() -- Custom challenge related text
   PostRender:DrawInvalidSaveFile()
 
   -- Check for inputs
@@ -95,7 +95,6 @@ function PostRender:Main()
   Speedrun:DrawVetoButtonText()
   Speedrun:CheckSeason5Mod()
   Speedrun:CheckSeason5ModOther()
-  ChangeCharOrder:CheckChangeCharOrder()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally
@@ -150,7 +149,7 @@ function PostRender:CheckRestart()
   local character = player:GetPlayerType()
   local challenge = Isaac.GetChallenge()
 
-  if g.run.restart == false then
+  if not g.run.restart then
     return
   end
   g.run.restart = false
@@ -210,7 +209,9 @@ function PostRender:CheckRestart()
   local command = "restart"
   if Speedrun:InSpeedrun() then
     local currentChar = Speedrun:GetCurrentChar()
-    if currentChar == nil or Speedrun:CheckValidCharOrder() == false then
+    if currentChar == nil or
+       not Speedrun:CheckValidCharOrder() then
+
       -- The character order is not set properly; we will display an error to the user later on
       return
     end
@@ -278,7 +279,7 @@ function PostRender:CheckResetInput()
       break
     end
   end
-  if pressed == false then
+  if not pressed then
     return
   end
 
@@ -300,7 +301,7 @@ function PostRender:CheckKnifeDirection()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) == false or -- 114
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then -- 168
      -- (Epic Fetus is the only thing that overwrites Mom's Knife)
 
@@ -346,7 +347,7 @@ function PostRender:CheckCursedEye()
 
   if player:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) and -- 316
      playerSprite:IsPlaying("TeleportUp") and
-     g.run.naturalTeleport == false then -- Only catch Cursed Eye teleports
+     not g.run.naturalTeleport then -- Only catch Cursed Eye teleports
 
     -- Account for the Cursed Skull trinket
     if player:HasTrinket(TrinketType.TRINKET_CURSED_SKULL) and -- 43
@@ -357,14 +358,14 @@ function PostRender:CheckCursedEye()
     else
       -- Account for Devil Room teleports from Red Chests
       local touchingRedChest = false
-      for i, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_PICKUP and -- 5
-           entity.Variant == PickupVariant.PICKUP_REDCHEST and -- 360
-           entity.SubType == 0 and -- A subtype of 0 indicates that it is opened, a 1 indicates that it is unopened
-           player.Position.X >= entity.Position.X - 24 and -- 25 is a touch too big
-           player.Position.X <= entity.Position.X + 24 and
-           player.Position.Y >= entity.Position.Y - 24 and
-           player.Position.Y <= entity.Position.Y + 24 then
+      local openedRedChests = Isaac.FindByType(EntityType.ENTITY_PICKUP, -- 5
+                                               PickupVariant.PICKUP_REDCHEST, 0, false, false) -- 360
+      -- (a subtype of 0 indicates that it is opened, a 1 indicates that it is unopened)
+      for _, chest in ipairs(openedRedChests) do
+        if player.Position.X >= chest.Position.X - 24 and -- 25 is a touch too big
+           player.Position.X <= chest.Position.X + 24 and
+           player.Position.Y >= chest.Position.Y - 24 and
+           player.Position.Y <= chest.Position.Y + 24 then
 
           touchingRedChest = true
         end
@@ -387,7 +388,7 @@ function PostRender:CheckSubvertTeleport()
   local stage = level:GetStage()
   local player = game:GetPlayer(0)
 
-  if g.run.teleportSubverted == false then
+  if not g.run.teleportSubverted then
     return
   end
   g.run.teleportSubverted = false
@@ -439,11 +440,10 @@ function PostRender:CheckSubvertTeleport()
   player.SpriteScale = g.run.teleportSubvertScale
 
   -- Also, teleport all of the familiars (and make them visible again)
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
-      entity.Position = pos
-      entity.Visible = true
-    end
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    familiar.Position = pos
+    familiar.Visible = true
   end
 end
 
@@ -477,7 +477,7 @@ function PostRender:DisplayTopLeftText()
     Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
     -- Draw a 3rd line to show the total frames
-    if Speedrun:InSpeedrun() == false or
+    if not Speedrun:InSpeedrun() or
        Speedrun:IsOnFinalCharacter() then
        local frames
       if Speedrun:InSpeedrun() then
@@ -519,7 +519,7 @@ function PostRender:Race()
     Sprites:ClearStartingRoomGraphicsTop()
     Sprites:ClearStartingRoomGraphicsBottom()
     Sprites:ClearPostRaceStartGraphics()
-    if g.raceVars.finished == false then
+    if not g.raceVars.finished then
       Sprites:Init("place", 0) -- Keep the place there at the end of a race
     end
     return
@@ -536,7 +536,7 @@ function PostRender:Race()
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return
 
-  elseif g.race.hard == false and
+  elseif not g.race.hard and
          game.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
          g.race.rFormat ~= "custom" then
 
@@ -572,10 +572,13 @@ function PostRender:Race()
   end
 
   -- Show the graphics for the "Race Start" room (the bottom half)
-  if (g.race.status == "open" or g.race.status == "starting") and
+  if (g.race.status == "open" or
+      g.race.status == "starting") and
      roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
 
-    if g.race.ranked or g.race.solo == false then
+    if g.race.ranked or
+       not g.race.solo then
+
       Sprites:Init("raceRanked", "ranked")
       Sprites:Init("raceRankedIcon", "ranked-icon")
     else
@@ -622,7 +625,7 @@ function PostRender:Race()
 
   if g.race.status == "in progress" then
     -- The client will set countdown equal to 0 and the status equal to "in progress" at the same time
-    if g.raceVars.started == false then
+    if not g.raceVars.started then
       -- Reset some race-related variables
       g.raceVars.started = true
       -- We don't want to show the place graphic until we get to the 2nd floor
@@ -645,7 +648,7 @@ function PostRender:Race()
 
     -- Draw the graphic that shows what place we are in
     if stage >= 2 and -- Our place is irrelevant on the first floor, so don't bother showing it
-       g.race.solo == false then -- Its irrelevant to show "1st" when there is only one person in the race
+       not g.race.solo then -- Its irrelevant to show "1st" when there is only one person in the race
 
       Sprites:Init("place", tostring(g.race.placeMid))
     else
@@ -662,7 +665,8 @@ function PostRender:Race()
   -- Hold the player in place when in the Race Room (to emulate the Gaping Maws effect)
   -- (this looks glitchy and jittery if is done in the PostUpdate callback, so do it here instead)
   if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
-     g.raceVars.started == false then
+     not g.raceVars.started then
+
     -- The starting position is 320, 380
     player.Position = Vector(320, 380)
   end

@@ -23,7 +23,7 @@ function PostPickupSelection:Main(pickup, variant, subType)
 end
 
 function PostPickupSelection:ManualPhotos(variant, subType)
-  if g.run.photosSpawning == false then
+  if not g.run.photosSpawning then
     return
   end
 

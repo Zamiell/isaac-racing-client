@@ -12,7 +12,7 @@ function PostEntityKill:Main(entity)
   if npc == nil then
     return
   end
-  if npc:IsBoss() == false then
+  if not npc:IsBoss() then
     return
   end
 
@@ -213,10 +213,10 @@ function PostEntityKill:Entity81(entity)
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
   local headBanned = false
-  for i = 1, #g.race.startingItems do
-    if g.race.startingItems[i] == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+  for _, itemID in ipairs(g.race.startingItems) do
+    if itemID == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
       coalBanned = true
-    elseif g.race.startingItems[i] == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+    elseif itemID == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
       headBanned = true
     end
   end
@@ -306,7 +306,7 @@ function PostEntityKill:Entity271(entity)
     local isDead = entity2:IsDead()
     if (entity2.Type == EntityType.ENTITY_URIEL or -- 271
         entity2.Type == EntityType.ENTITY_GABRIEL) and -- 272
-        isDead == false then
+        not isDead then
 
       return
     end

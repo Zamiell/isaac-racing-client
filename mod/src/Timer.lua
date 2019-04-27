@@ -12,16 +12,16 @@ function Timer:Display()
   -- Don't show the timer if the user wants it explicitly disabled
   -- (through an additional setting in the "save#.dat" file)
   if g.race.timer ~= nil and
-     g.race.timer == false then
+     not g.race.timer then
 
     return
   end
 
   -- Always show the timer in a speedrun
   -- Don't show the timer if the race has not started yet or they quit in the middle of the race
-  if Speedrun:InSpeedrun() == false and
-     g.raceVars.started == false and
-     g.raceVars.finished == false then
+  if not Speedrun:InSpeedrun() and
+     not g.raceVars.started and
+     not g.raceVars.finished then
 
     return
   end
@@ -139,7 +139,7 @@ function Timer:DisplayRun()
       break
     end
   end
-  if tabPressed == false then
+  if not tabPressed then
     return
   end
 

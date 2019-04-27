@@ -51,8 +51,8 @@ function FastClear:InitRun()
     "SackOfSacks",
   }
   FastClear.familiars = {}
-  for i = 1, #familiars do
-    FastClear.familiars[familiars[i]] = {
+  for _, familiar in ipairs(familiars) do
+    FastClear.familiars[familiar] = {
       seed         = stageSeed,
       roomsCleared = 0,
       incremented  = false,
@@ -134,7 +134,7 @@ function FastClear:PostNPCInit(npc)
   end
 
   -- We don't care if this is a non-battle NPC
-  if npc.CanShutDoors == false then
+  if not npc.CanShutDoors then
     return
   end
 
@@ -161,7 +161,9 @@ function FastClear:PostNPCInit(npc)
   -- If we are entering a new room, flush all of the stuff in the old room
   -- (we can't use the MC_POST_NEW_ROOM callback to handle this since that callback fires after this one)
   -- (roomFrameCount will be at -1 during the initialization phase)
-  if roomFrameCount == -1 and FastClear.roomInitializing == false then
+  if roomFrameCount == -1 and
+     not FastClear.roomInitializing then
+
     FastClear.aliveEnemies = {}
     FastClear.aliveEnemiesCount = 0
     FastClear.roomInitializing = true -- This will get set back to false in the MC_POST_NEW_ROOM callback
@@ -333,7 +335,7 @@ function FastClear:PostUpdate()
   -- Check on every frame to see if we need to open the doors
   if FastClear.aliveEnemiesCount == 0 and
      FastClear.delayFrame == 0 and
-     roomClear == false and
+     not roomClear and
      FastClear:CheckAllPressurePlatesPushed() and
      gameFrameCount > 1 then -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
 
@@ -347,7 +349,7 @@ function FastClear:CheckAllPressurePlatesPushed()
   local room = game:GetRoom()
 
   -- If we are in a puzzle room, check to see if all of the plates have been pressed
-  if room:HasTriggerPressurePlates() == false or
+  if not room:HasTriggerPressurePlates() or
      FastClear.buttonsAllPushed then
 
     return true
@@ -703,252 +705,250 @@ function FastClear:CheckBagFamiliars()
   end
 
   -- Look through all of the player's familiars
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    if familiar.Variant == FamiliarVariant.BOMB_BAG then -- 20
+      -- This drops a bomb based on the formula:
+      -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
+      -- or:
+      -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
+      local newRoomsCleared = FastClear.familiars.BombBag.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Random Bomb - 5.40.0
+        FastClear.familiars.BombBag.seed = g:IncrementRNG(FastClear.familiars.BombBag.seed)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.BombBag.seed)
+      end
 
-      if entity.Variant == FamiliarVariant.BOMB_BAG then -- 20
-        -- This drops a bomb based on the formula:
-        -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
-        -- or:
-        -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
-        local newRoomsCleared = FastClear.familiars.BombBag.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-          -- Random Bomb - 5.40.0
-          FastClear.familiars.BombBag.seed = g:IncrementRNG(FastClear.familiars.BombBag.seed)
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.BombBag.seed)
-        end
+    elseif familiar.Variant == FamiliarVariant.SACK_OF_PENNIES then -- 21
+      -- This drops a penny/nickel/dime/etc. based on the formula:
+      -- cleared > 0 && cleared & 1 == 0
+      -- or:
+      -- cleared > 0 && (cleared & 1 == 0 || rand() % 3 == 0)
+      local newRoomsCleared = FastClear.familiars.SackOfPennies.roomsCleared + 1
+      FastClear.familiars.SackOfPennies.seed = g:IncrementRNG(FastClear.familiars.SackOfPennies.seed)
+      math.randomseed(FastClear.familiars.SackOfPennies.seed)
+      local sackBFFChance = math.random(1, 4294967295)
+      if newRoomsCleared > 0 and
+          (newRoomsCleared & 1 == 0 or
+          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and sackBFFChance % 3 == 0)) then
 
-      elseif entity.Variant == FamiliarVariant.SACK_OF_PENNIES then -- 21
-        -- This drops a penny/nickel/dime/etc. based on the formula:
-        -- cleared > 0 && cleared & 1 == 0
-        -- or:
-        -- cleared > 0 && (cleared & 1 == 0 || rand() % 3 == 0)
-        local newRoomsCleared = FastClear.familiars.SackOfPennies.roomsCleared + 1
+        -- Random Coin - 5.20.0
         FastClear.familiars.SackOfPennies.seed = g:IncrementRNG(FastClear.familiars.SackOfPennies.seed)
-        math.randomseed(FastClear.familiars.SackOfPennies.seed)
-        local sackBFFChance = math.random(1, 4294967295)
-        if newRoomsCleared > 0 and
-           (newRoomsCleared & 1 == 0 or
-            (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and sackBFFChance % 3 == 0)) then
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.SackOfPennies.seed)
+      end
 
-          -- Random Coin - 5.20.0
-          FastClear.familiars.SackOfPennies.seed = g:IncrementRNG(FastClear.familiars.SackOfPennies.seed)
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.SackOfPennies.seed)
+    elseif familiar.Variant == FamiliarVariant.LITTLE_CHAD then -- 22
+      -- This drops a half a red heart based on the formula:
+      -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
+      -- or:
+      -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
+      local newRoomsCleared = FastClear.familiars.LittleCHAD.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Heart (half) - 5.10.2
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+                    player, 2, 0)
+      end
+
+    elseif familiar.Variant == FamiliarVariant.RELIC then -- 23
+      -- This drops a soul heart based on the formula:
+      -- floor(cleared / 1.11) & 3 == 2
+      -- or:
+      -- floor(cleared / 1.15) & 3 == 2
+      local newRoomsCleared = FastClear.familiars.TheRelic.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- Heart (soul) - 5.10.3
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+                    player, 3, 0)
+      end
+
+    elseif familiar.Variant == FamiliarVariant.JUICY_SACK then -- 52
+
+      -- Spawn either 1 or 2 blue spiders (50% chance of each)
+      FastClear.familiars.JuicySack.seed = g:IncrementRNG(FastClear.familiars.JuicySack.seed)
+      math.randomseed(FastClear.familiars.JuicySack.seed)
+      local spiders = math.random(1, 2)
+      player:AddBlueSpider(familiar.Position)
+      if spiders == 2 then
+        player:AddBlueSpider(familiar.Position)
+      end
+
+      -- The BFFs! synergy gives an additional spider
+      if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
+        player:AddBlueSpider(familiar.Position)
+      end
+
+    elseif familiar.Variant == FamiliarVariant.MYSTERY_SACK then -- 57
+      -- This drops a heart, coin, bomb, or key based on the formula:
+      -- floor(cleared / 1.11) & 3 == 2
+      -- or:
+      -- floor(cleared / 1.15) & 3 == 2
+      -- (also, each pickup sub-type has an equal chance of occuring)
+      local newRoomsCleared = FastClear.familiars.MysterySack.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- First, decide whether we get a heart, coin, bomb, or key
+        FastClear.familiars.MysterySack.seed = g:IncrementRNG(FastClear.familiars.MysterySack.seed)
+        math.randomseed(FastClear.familiars.MysterySack.seed)
+        local sackPickupType = math.random(1, 4)
+        FastClear.familiars.MysterySack.seed = g:IncrementRNG(FastClear.familiars.MysterySack.seed)
+        math.randomseed(FastClear.familiars.MysterySack.seed)
+
+        if sackPickupType == 1 then
+          local heartType = math.random(1, 10) -- From Heart (5.10.1) to Blended Heart (5.10.10)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+                      player, heartType, FastClear.familiars.MysterySack.seed)
+
+        elseif sackPickupType == 2 then
+          local coinType = math.random(1, 6) -- From Penny (5.20.1) to Sticky Nickel (5.20.6)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+                      player, coinType, FastClear.familiars.MysterySack.seed)
+
+        elseif sackPickupType == 3 then
+          local keyType = math.random(1, 4) -- From Key (5.30.1) to Charged Key (5.30.4)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, zeroVelocity,
+                      player, keyType, FastClear.familiars.MysterySack.seed)
+
+        elseif sackPickupType == 4 then
+          local bombType = math.random(1, 5) -- From Bomb (5.40.1) to Megatroll Bomb (5.40.5)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+                      player, bombType, FastClear.familiars.MysterySack.seed)
         end
+      end
 
-      elseif entity.Variant == FamiliarVariant.LITTLE_CHAD then -- 22
-        -- This drops a half a red heart based on the formula:
-        -- floor(cleared / 1.1) > 0 && floor(cleared / 1.1) & 1 == 0
-        -- or:
-        -- floor(cleared / 1.2) > 0 && floor(cleared / 1.2) & 1 == 0
-        local newRoomsCleared = FastClear.familiars.LittleCHAD.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-          -- Heart (half) - 5.10.2
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, entity.Position, zeroVelocity,
-                     player, 2, 0)
-        end
+    elseif familiar.Variant == FamiliarVariant.LIL_CHEST then -- 82
+      -- This drops a heart, coin, bomb, or key based on the formula:
+      -- 10% chance for a trinket, if no trinket, 25% chance for a random consumable (based on time)
+      -- Or, with BFFS!, 12.5% chance for a trinket, if no trinket, 31.25% chance for a random consumable
+      -- We don't want it based on time in the Racing+ mod
 
-      elseif entity.Variant == FamiliarVariant.RELIC then -- 23
-        -- This drops a soul heart based on the formula:
-        -- floor(cleared / 1.11) & 3 == 2
-        -- or:
-        -- floor(cleared / 1.15) & 3 == 2
-        local newRoomsCleared = FastClear.familiars.TheRelic.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant2) & 3 == 2 then
-          -- Heart (soul) - 5.10.3
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, entity.Position, zeroVelocity,
-                     player, 3, 0)
-        end
+      -- First, decide whether we get a trinket
+      FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
+      math.randomseed(FastClear.familiars.LilChest.seed)
+      local chestTrinket = math.random(1, 1000)
+      if chestTrinket <= 100 or
+          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
 
-      elseif entity.Variant == FamiliarVariant.JUICY_SACK then -- 52
-
-        -- Spawn either 1 or 2 blue spiders (50% chance of each)
-        FastClear.familiars.JuicySack.seed = g:IncrementRNG(FastClear.familiars.JuicySack.seed)
-        math.randomseed(FastClear.familiars.JuicySack.seed)
-        local spiders = math.random(1, 2)
-        player:AddBlueSpider(entity.Position)
-        if spiders == 2 then
-          player:AddBlueSpider(entity.Position)
-        end
-
-        -- The BFFs! synergy gives an additional spider
-        if player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then
-          player:AddBlueSpider(entity.Position)
-        end
-
-      elseif entity.Variant == FamiliarVariant.MYSTERY_SACK then -- 57
-        -- This drops a heart, coin, bomb, or key based on the formula:
-        -- floor(cleared / 1.11) & 3 == 2
-        -- or:
-        -- floor(cleared / 1.15) & 3 == 2
-        -- (also, each pickup sub-type has an equal chance of occuring)
-        local newRoomsCleared = FastClear.familiars.MysterySack.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant2) & 3 == 2 then
-          -- First, decide whether we get a heart, coin, bomb, or key
-          FastClear.familiars.MysterySack.seed = g:IncrementRNG(FastClear.familiars.MysterySack.seed)
-          math.randomseed(FastClear.familiars.MysterySack.seed)
-          local sackPickupType = math.random(1, 4)
-          FastClear.familiars.MysterySack.seed = g:IncrementRNG(FastClear.familiars.MysterySack.seed)
-          math.randomseed(FastClear.familiars.MysterySack.seed)
-
-          if sackPickupType == 1 then
-            local heartType = math.random(1, 10) -- From Heart (5.10.1) to Blended Heart (5.10.10)
-            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, entity.Position, zeroVelocity,
-                       player, heartType, FastClear.familiars.MysterySack.seed)
-
-          elseif sackPickupType == 2 then
-            local coinType = math.random(1, 6) -- From Penny (5.20.1) to Sticky Nickel (5.20.6)
-            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, entity.Position, zeroVelocity,
-                       player, coinType, FastClear.familiars.MysterySack.seed)
-
-          elseif sackPickupType == 3 then
-            local keyType = math.random(1, 4) -- From Key (5.30.1) to Charged Key (5.30.4)
-            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, entity.Position, zeroVelocity,
-                       player, keyType, FastClear.familiars.MysterySack.seed)
-
-          elseif sackPickupType == 4 then
-            local bombType = math.random(1, 5) -- From Bomb (5.40.1) to Megatroll Bomb (5.40.5)
-            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, entity.Position, zeroVelocity,
-                       player, bombType, FastClear.familiars.MysterySack.seed)
-          end
-        end
-
-      elseif entity.Variant == FamiliarVariant.LIL_CHEST then -- 82
-        -- This drops a heart, coin, bomb, or key based on the formula:
-        -- 10% chance for a trinket, if no trinket, 25% chance for a random consumable (based on time)
-        -- Or, with BFFS!, 12.5% chance for a trinket, if no trinket, 31.25% chance for a random consumable
-        -- We don't want it based on time in the Racing+ mod
-
-        -- First, decide whether we get a trinket
+          -- Random Trinket - 5.350.0
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.LilChest.seed)
+      else
+        -- Second, decide whether it spawns a consumable
         FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
         math.randomseed(FastClear.familiars.LilChest.seed)
-        local chestTrinket = math.random(1, 1000)
-        if chestTrinket <= 100 or
-           (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
+        local chestConsumable = math.random(1, 10000)
+        if chestConsumable <= 2500 or
+            (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 3125) then
 
-           -- Random Trinket - 5.350.0
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.LilChest.seed)
-        else
-          -- Second, decide whether it spawns a consumable
+          -- Third, decide whether we get a heart, coin, bomb, or key
           FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
           math.randomseed(FastClear.familiars.LilChest.seed)
-          local chestConsumable = math.random(1, 10000)
-          if chestConsumable <= 2500 or
-             (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 3125) then
+          local chestPickupType = math.random(1, 4)
+          FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
 
-            -- Third, decide whether we get a heart, coin, bomb, or key
-            FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
-            math.randomseed(FastClear.familiars.LilChest.seed)
-            local chestPickupType = math.random(1, 4)
-            FastClear.familiars.LilChest.seed = g:IncrementRNG(FastClear.familiars.LilChest.seed)
+          -- If heart
+          if chestPickupType == 1 then
+            -- Random Heart - 5.10.0
+            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+                        player, 0, FastClear.familiars.LilChest.seed)
 
-            -- If heart
-            if chestPickupType == 1 then
-              -- Random Heart - 5.10.0
-              game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, entity.Position, zeroVelocity,
-                         player, 0, FastClear.familiars.LilChest.seed)
+          -- If coin
+          elseif chestPickupType == 2 then
+            -- Random Coin - 5.20.0
+            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+                        player, 0, FastClear.familiars.LilChest.seed)
 
-            -- If coin
-            elseif chestPickupType == 2 then
-              -- Random Coin - 5.20.0
-              game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, entity.Position, zeroVelocity,
-                         player, 0, FastClear.familiars.LilChest.seed)
+          -- If bomb
+          elseif chestPickupType == 3 then
+            -- Random Bomb - 5.40.0
+            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+                        player, 0, FastClear.familiars.LilChest.seed)
 
-            -- If bomb
-            elseif chestPickupType == 3 then
-              -- Random Bomb - 5.40.0
-              game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, entity.Position, zeroVelocity,
-                         player, 0, FastClear.familiars.LilChest.seed)
-
-            -- If key
-            elseif chestPickupType == 4 then
-              -- Random Key - 5.30.0
-              game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, entity.Position, zeroVelocity,
-                         player, 0, FastClear.familiars.LilChest.seed)
-            end
+          -- If key
+          elseif chestPickupType == 4 then
+            -- Random Key - 5.30.0
+            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, zeroVelocity,
+                        player, 0, FastClear.familiars.LilChest.seed)
           end
         end
+      end
 
-      elseif entity.Variant == FamiliarVariant.BUMBO and -- 88
-             entity:ToFamiliar().State + 1 == 2 then
-             -- It will be state 0 at level 1, state 1 at level 2, state 2 at level 3, and state 3 at level 4
+    elseif familiar.Variant == FamiliarVariant.BUMBO and -- 88
+           familiar:ToFamiliar().State + 1 == 2 then
+            -- It will be state 0 at level 1, state 1 at level 2, state 2 at level 3, and state 3 at level 4
 
-        -- Level 2 Bumbo has a 32% / 40% chance to drop a random pickup
-        FastClear.familiars.Bumbo.seed = g:IncrementRNG(FastClear.familiars.Bumbo.seed)
-        math.randomseed(FastClear.familiars.Bumbo.seed)
-        local chestTrinket = math.random(1, 100)
-        if chestTrinket <= 32 or
-           (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 40) then
+      -- Level 2 Bumbo has a 32% / 40% chance to drop a random pickup
+      FastClear.familiars.Bumbo.seed = g:IncrementRNG(FastClear.familiars.Bumbo.seed)
+      math.randomseed(FastClear.familiars.Bumbo.seed)
+      local chestTrinket = math.random(1, 100)
+      if chestTrinket <= 32 or
+          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 40) then
 
-          -- Spawn a random pickup
-          game:Spawn(EntityType.ENTITY_PICKUP, 0, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.Bumbo.seed)
-        end
+        -- Spawn a random pickup
+        game:Spawn(EntityType.ENTITY_PICKUP, 0, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.Bumbo.seed)
+      end
 
-      elseif entity.Variant == FamiliarVariant.RUNE_BAG then -- 91
-        -- This drops a random rune based on the formula:
-        -- floor(roomsCleared / 1.11) & 3 == 2
-        local newRoomsCleared = FastClear.familiars.RuneBag.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant2) & 3 == 2 then
-          -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
-          -- So, spawn a random card (5.300.0) over and over until we get a rune
-          while true do
-            FastClear.familiars.RuneBag.seed = g:IncrementRNG(FastClear.familiars.RuneBag.seed)
-            local rune = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, entity.Position,
-                                    zeroVelocity, player, 0, FastClear.familiars.RuneBag.seed)
-            -- Hagalaz is 32 and Black Rune is 41
-            if rune.SubType >= 32 and rune.SubType <= 41 then
-              break
-            end
-            rune:Remove()
+    elseif familiar.Variant == FamiliarVariant.RUNE_BAG then -- 91
+      -- This drops a random rune based on the formula:
+      -- floor(roomsCleared / 1.11) & 3 == 2
+      local newRoomsCleared = FastClear.familiars.RuneBag.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant2) & 3 == 2 then
+        -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
+        -- So, spawn a random card (5.300.0) over and over until we get a rune
+        while true do
+          FastClear.familiars.RuneBag.seed = g:IncrementRNG(FastClear.familiars.RuneBag.seed)
+          local rune = game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, familiar.Position,
+                                  zeroVelocity, player, 0, FastClear.familiars.RuneBag.seed)
+          -- Hagalaz is 32 and Black Rune is 41
+          if rune.SubType >= 32 and rune.SubType <= 41 then
+            break
           end
+          rune:Remove()
         end
+      end
 
-      elseif entity.Variant == FamiliarVariant.SPIDER_MOD then -- 94
-        -- Spider Mod has a 10% or 12.5% chance to drop something
+    elseif familiar.Variant == FamiliarVariant.SPIDER_MOD then -- 94
+      -- Spider Mod has a 10% or 12.5% chance to drop something
+      FastClear.familiars.SpiderMod.seed = g:IncrementRNG(FastClear.familiars.SpiderMod.seed)
+      math.randomseed(FastClear.familiars.SpiderMod.seed)
+      local chestTrinket = math.random(1, 1000)
+      if chestTrinket <= 100 or
+          (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
+
+        -- There is a 1/3 chance to spawn a battery and a 2/3 chance to spawn a blue spider
         FastClear.familiars.SpiderMod.seed = g:IncrementRNG(FastClear.familiars.SpiderMod.seed)
         math.randomseed(FastClear.familiars.SpiderMod.seed)
-        local chestTrinket = math.random(1, 1000)
-        if chestTrinket <= 100 or
-           (player:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
-
-          -- There is a 1/3 chance to spawn a battery and a 2/3 chance to spawn a blue spider
-          FastClear.familiars.SpiderMod.seed = g:IncrementRNG(FastClear.familiars.SpiderMod.seed)
-          math.randomseed(FastClear.familiars.SpiderMod.seed)
-          local spiderModDrop = math.random(1, 3)
-          if spiderModDrop == 1 then
-            -- Lil' Battery (5.90)
-            game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, entity.Position, zeroVelocity,
-                       player, 0, FastClear.familiars.SpiderMod.seed)
-          else
-            player:AddBlueSpider(entity.Position)
-          end
+        local spiderModDrop = math.random(1, 3)
+        if spiderModDrop == 1 then
+          -- Lil' Battery (5.90)
+          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, familiar.Position, zeroVelocity,
+                      player, 0, FastClear.familiars.SpiderMod.seed)
+        else
+          player:AddBlueSpider(familiar.Position)
         end
+      end
 
-      elseif entity.Variant == FamiliarVariant.ACID_BABY then -- 112
-        -- This drops a pill based on the formula:
-        -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-        local newRoomsCleared = FastClear.familiars.AcidBaby.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-          -- Random Pill - 5.70.0
-          FastClear.familiars.AcidBaby.seed = g:IncrementRNG(FastClear.familiars.AcidBaby.seed)
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.AcidBaby.seed)
-        end
+    elseif familiar.Variant == FamiliarVariant.ACID_BABY then -- 112
+      -- This drops a pill based on the formula:
+      -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
+      local newRoomsCleared = FastClear.familiars.AcidBaby.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Random Pill - 5.70.0
+        FastClear.familiars.AcidBaby.seed = g:IncrementRNG(FastClear.familiars.AcidBaby.seed)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.AcidBaby.seed)
+      end
 
-      elseif entity.Variant == FamiliarVariant.SACK_OF_SACKS then -- 114
-        -- This drops a sack based on the formula:
-        -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
-        local newRoomsCleared = FastClear.familiars.SackOfSacks.roomsCleared + 1
-        if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
-          -- Grab Bag - 5.69.0
-          FastClear.familiars.SackOfSacks.seed = g:IncrementRNG(FastClear.familiars.SackOfSacks.seed)
-          game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, entity.Position, zeroVelocity,
-                     player, 0, FastClear.familiars.SackOfSacks.seed)
-        end
+    elseif familiar.Variant == FamiliarVariant.SACK_OF_SACKS then -- 114
+      -- This drops a sack based on the formula:
+      -- floor(roomsCleared / 1.1) > 0 && floor(roomsCleared / 1.1) & 1 == 0
+      local newRoomsCleared = FastClear.familiars.SackOfSacks.roomsCleared + 1
+      if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
+        -- Grab Bag - 5.69.0
+        FastClear.familiars.SackOfSacks.seed = g:IncrementRNG(FastClear.familiars.SackOfSacks.seed)
+        game:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, familiar.Position, zeroVelocity,
+                    player, 0, FastClear.familiars.SackOfSacks.seed)
       end
     end
   end
@@ -956,58 +956,57 @@ end
 
 function FastClear:IncrementBagFamiliars()
   -- Look through all of the player's familiars
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
-      -- We only want to increment the rooms cleared variable once, even if they have multiple of the same familiar
-      if entity.Variant == FamiliarVariant.BOMB_BAG and -- 20
-         FastClear.familiars.BombBag.incremented == false then
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    -- We only want to increment the rooms cleared variable once, even if they have multiple of the same familiar
+    if familiar.Variant == FamiliarVariant.BOMB_BAG and -- 20
+       not FastClear.familiars.BombBag.incremented then
 
-        FastClear.familiars.BombBag.incremented = true
-        FastClear.familiars.BombBag.roomsCleared = FastClear.familiars.BombBag.roomsCleared + 1
+      FastClear.familiars.BombBag.incremented = true
+      FastClear.familiars.BombBag.roomsCleared = FastClear.familiars.BombBag.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.SACK_OF_PENNIES and -- 21
-             FastClear.familiars.SackOfPennies.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.SACK_OF_PENNIES and -- 21
+           not FastClear.familiars.SackOfPennies.incremented then
 
-        FastClear.familiars.SackOfPennies.incremented = true
-        FastClear.familiars.SackOfPennies.roomsCleared = FastClear.familiars.SackOfPennies.roomsCleared + 1
+      FastClear.familiars.SackOfPennies.incremented = true
+      FastClear.familiars.SackOfPennies.roomsCleared = FastClear.familiars.SackOfPennies.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.LITTLE_CHAD and -- 22
-             FastClear.familiars.LittleCHAD.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.LITTLE_CHAD and -- 22
+           not FastClear.familiars.LittleCHAD.incremented then
 
-        FastClear.familiars.LittleCHAD.incremented = true
-        FastClear.familiars.LittleCHAD.roomsCleared = FastClear.familiars.LittleCHAD.roomsCleared + 1
+      FastClear.familiars.LittleCHAD.incremented = true
+      FastClear.familiars.LittleCHAD.roomsCleared = FastClear.familiars.LittleCHAD.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.RELIC and -- 23
-             FastClear.familiars.TheRelic.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.RELIC and -- 23
+           not FastClear.familiars.TheRelic.incremented then
 
-        FastClear.familiars.TheRelic.incremented = true
-        FastClear.familiars.TheRelic.roomsCleared = FastClear.familiars.TheRelic.roomsCleared + 1
-        Isaac.DebugString("The Relic counter increased: " .. tostring(FastClear.familiars.TheRelic.roomsCleared))
+      FastClear.familiars.TheRelic.incremented = true
+      FastClear.familiars.TheRelic.roomsCleared = FastClear.familiars.TheRelic.roomsCleared + 1
+      Isaac.DebugString("The Relic counter increased: " .. tostring(FastClear.familiars.TheRelic.roomsCleared))
 
-      elseif entity.Variant == FamiliarVariant.MYSTERY_SACK and -- 57
-             FastClear.familiars.MysterySack.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.MYSTERY_SACK and -- 57
+           not FastClear.familiars.MysterySack.incremented then
 
-        FastClear.familiars.MysterySack.incremented = true
-        FastClear.familiars.MysterySack.roomsCleared = FastClear.familiars.MysterySack.roomsCleared + 1
+      FastClear.familiars.MysterySack.incremented = true
+      FastClear.familiars.MysterySack.roomsCleared = FastClear.familiars.MysterySack.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.RUNE_BAG and -- 91
-             FastClear.familiars.RuneBag.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.RUNE_BAG and -- 91
+           not FastClear.familiars.RuneBag.incremented then
 
-        FastClear.familiars.RuneBag.incremented = true
-        FastClear.familiars.RuneBag.roomsCleared = FastClear.familiars.RuneBag.roomsCleared + 1
+      FastClear.familiars.RuneBag.incremented = true
+      FastClear.familiars.RuneBag.roomsCleared = FastClear.familiars.RuneBag.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.ACID_BABY and -- 112
-             FastClear.familiars.AcidBaby.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.ACID_BABY and -- 112
+           not FastClear.familiars.AcidBaby.incremented then
 
-        FastClear.familiars.AcidBaby.incremented = true
-        FastClear.familiars.AcidBaby.roomsCleared = FastClear.familiars.AcidBaby.roomsCleared + 1
+      FastClear.familiars.AcidBaby.incremented = true
+      FastClear.familiars.AcidBaby.roomsCleared = FastClear.familiars.AcidBaby.roomsCleared + 1
 
-      elseif entity.Variant == FamiliarVariant.SACK_OF_SACKS and -- 114
-             FastClear.familiars.SackOfSacks.incremented == false then
+    elseif familiar.Variant == FamiliarVariant.SACK_OF_SACKS and -- 114
+           not FastClear.familiars.SackOfSacks.incremented then
 
-        FastClear.familiars.SackOfSacks.incremented = true
-        FastClear.familiars.SackOfSacks.roomsCleared = FastClear.familiars.SackOfSacks.roomsCleared + 1
-      end
+      FastClear.familiars.SackOfSacks.incremented = true
+      FastClear.familiars.SackOfSacks.roomsCleared = FastClear.familiars.SackOfSacks.roomsCleared + 1
     end
   end
 

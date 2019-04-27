@@ -69,7 +69,7 @@ function Pills:PostRender()
       break
     end
   end
-  if tabPressed == false then
+  if not tabPressed then
     return
   end
 
@@ -78,9 +78,7 @@ function Pills:PostRender()
     return
   end
 
-  for i = 1, #g.run.pills do
-    local pillEntry = g.run.pills[i]
-
+  for i, pillEntry in ipairs(g.run.pills) do
     -- Show the pill sprite
     local x = 80
     local y = 77 + (20 * i)
@@ -107,8 +105,8 @@ function Pills:CheckPHD()
   end
 
   -- Check for the PHD / Virgo
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_PHD) == false and -- 75
-     player:HasCollectible(CollectibleType.COLLECTIBLE_VIRGO) == false then -- 303
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_PHD) and -- 75
+     not player:HasCollectible(CollectibleType.COLLECTIBLE_VIRGO) then -- 303
 
     return
   end
@@ -117,8 +115,7 @@ function Pills:CheckPHD()
   Isaac.DebugString("Converting bad pill effects.")
 
   -- Change the text for any identified pills
-  for i = 1, #g.run.pills do
-    local pillEntry = g.run.pills[i]
+  for _, pillEntry in ipairs(g.run.pills) do
     if pillEntry.effect == PillEffect.PILLEFFECT_BAD_TRIP then -- 1
       pillEntry.effect = PillEffect.PILLEFFECT_BALLS_OF_STEEL -- 2
     elseif pillEntry.effect == PillEffect.PILLEFFECT_HEALTH_DOWN then -- 6

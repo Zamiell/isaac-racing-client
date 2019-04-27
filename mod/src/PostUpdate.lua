@@ -78,6 +78,8 @@ function PostUpdate:Main()
 
   -- Check for item drop inputs (fast-drop)
   FastDrop:CheckDropInput()
+  FastDrop:CheckDropInputTrinket()
+  FastDrop:CheckDropInputPocket()
 
   -- Check for Schoolbag switch inputs
   -- (and other miscellaneous Schoolbag activities)
@@ -90,7 +92,7 @@ function PostUpdate:Main()
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
     player:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
     Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)")
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+    if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
       player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     end
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
@@ -134,11 +136,11 @@ function PostUpdate:CheckRoomCleared()
 
   g.run.currentRoomClearState = roomClear
 
-  if roomClear == false then
+  if not roomClear then
     return
   end
 
-  if g.run.fastCleared == false then
+  if not g.run.fastCleared then
     Isaac.DebugString("Vanilla room clear detected!")
   end
 
@@ -254,7 +256,9 @@ function PostUpdate:CheckTransformations()
 
   -- In order to detect the Stompy transformation, we can't use the "player:HasPlayerForm()" function
   local stompyIndex = PlayerForm.NUM_PLAYER_FORMS -- It will always be the final index
-  if player.SpriteScale.X > 1.95 and g.run.transformations[stompyIndex] == false then
+  if player.SpriteScale.X > 1.95 and
+     not g.run.transformations[stompyIndex] then
+
     g.run.transformations[stompyIndex] = true
     g.run.streakText = g.Transformations[stompyIndex + 1]
     g.run.streakFrame = Isaac.GetFrameCount()
@@ -272,67 +276,69 @@ function PostUpdate:CheckHauntSpeedup()
 
     return
   end
-
-  -- Detach the first Lil' Haunt for each Haunt in the room
-  for i = 1, #g.run.currentHaunts do
-    -- Get the index of all the Lil' Haunts attached to this particular haunt and sort them
-    local indexes = {}
-    for j, lilHaunt in pairs(g.run.currentLilHaunts) do
-      if lilHaunt.parentIndex ~= nil and
-         lilHaunt.parentIndex == g.run.currentHaunts[i] then
-
-        indexes[#indexes + 1] = lilHaunt.index
-      end
-    end
-    table.sort(indexes)
-
-    -- Manually detach the first Lil' Haunt
-    -- (or the first and the second Lil' Haunt, if this is a black champion Haunt)
-    for j, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Index == indexes[1] or
-         (entity.Index == indexes[2] and blackChampionHaunt) then
-
-        if entity.Index == indexes[1] then
-          Isaac.DebugString("Found the first Lil' Haunt to detach at index: " .. tostring(entity.Index))
-        elseif entity.Index == indexes[2] and blackChampionHaunt then
-          Isaac.DebugString("Found the second Lil' Haunt to detach at index: " .. tostring(entity.Index))
-        end
-        local npc = entity:ToNPC()
-        if npc == nil then
-          Isaac.DebugString("Failed to convert Lil Haunt at index " .. tostring(entity.Index) ..
-                            " to an NPC. Trying again on the next frame...")
-          return
-        end
-        npc.State = NpcState.STATE_MOVE -- 4
-        -- (doing this will detach them)
-
-        -- We need to manually set them to visible (or else they will be invisible for some reason)
-        npc.Visible = true
-
-        -- We need to manually set the color, or else the Lil' Haunt will remain faded
-        npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
-
-        -- We need to manually set their collision or else tears will pass through them
-        npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-
-        -- Add a check to make sure they are in the tracking table
-        -- (this might be unnecessary; included for debugging purposes)
-        local index = GetPtrHash(npc)
-        if g.run.currentLilHaunts[index] == nil then
-          Isaac.DebugString("Error: Lil Haunt at index " .. tostring(entity.Index) ..
-                            " was not already in the \"currentLilHaunts\" table.")
-          return
-        end
-
-        Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(entity.Index) ..
-                          " on frame: " .. tostring(gameFrameCount))
-      end
-    end
-  end
-
-  -- Only reset the variables at the end of the function in case we hit an error above
   g.run.speedLilHauntsFrame = 0
   g.run.speedLilHauntsBlack = false
+  Isaac.DebugString("Reset Lil' Haunt detach variables.")
+
+  local lilHaunts = Isaac.FindByType(EntityType.ENTITY_THE_HAUNT, 10, 0, false, true) -- 260
+  local hauntCount = Isaac.CountEntities(nil, EntityType.ENTITY_THE_HAUNT, 0, -1) -- 260
+  Isaac.DebugString("Haunt count: " .. tostring(hauntCount))
+
+  -- As a sanity check, don't do anything if there are no Haunts in the room
+  if hauntCount == 0 then
+    return
+  end
+
+  -- If there is more than one Haunt, detach every Lil Haunt, because tracking everything will be too hard
+  if hauntCount > 1 then
+    Isaac.DebugString("Detaching all of the Lil' Haunts in the room.")
+    for _, lilHaunt in ipairs(lilHaunts) do
+      PostUpdate:DetachLilHaunt(lilHaunt:ToNPC())
+    end
+    return
+  end
+
+  if blackChampionHaunt then
+    Isaac.DebugString("Detaching two of the Lil' Haunts in the room.")
+  else
+    Isaac.DebugString("Detaching only one of the Lil' Haunts in the room.")
+  end
+  local lilHauntIndexes = {}
+  for _, lilHaunt in ipairs(lilHaunts) do
+    lilHauntIndexes[#lilHauntIndexes + 1] = lilHaunt.Index
+  end
+  table.sort(lilHauntIndexes)
+  for _, lilHaunt in ipairs(lilHaunts) do
+    if lilHaunt.Index == lilHauntIndexes[1] then
+      PostUpdate:DetachLilHaunt(lilHaunt:ToNPC())
+    end
+    if lilHaunt.Index == lilHauntIndexes[2] and
+       blackChampionHaunt then
+
+      PostUpdate:DetachLilHaunt(lilHaunt:ToNPC())
+    end
+  end
+end
+
+function PostUpdate:DetachLilHaunt(npc)
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+
+  -- Detach them
+  npc.State = NpcState.STATE_MOVE -- 4
+
+  -- We need to manually set them to visible (or else they will be invisible for some reason)
+  npc.Visible = true
+
+  -- We need to manually set the color, or else the Lil' Haunt will remain faded
+  npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
+
+  -- We need to manually set their collision or else tears will pass through them
+  npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+
+  Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(npc.Index) ..
+                    " on frame: " .. tostring(gameFrameCount))
 end
 
 -- Ban Basement 1 Treasure Rooms
@@ -383,20 +389,19 @@ function PostUpdate:CrownOfLight()
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
-  if g.run.removedCrownHearts == false and
+  if not g.run.removedCrownHearts and
      player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
      g.run.roomsEntered == 1 then -- They are still in the starting room
 
     -- The player started with Crown of Light, so we don't need to even go into the below code block
     g.run.removedCrownHearts = true
   end
-  if g.run.removedCrownHearts == false and
+  if not g.run.removedCrownHearts and
      stage == LevelStage.STAGE1_1 and -- 1
      player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
      (((g.race.rFormat == "unseeded" or
         g.race.rFormat == "diversity") and
-       g.race.status == "in progress" and
-       (g.race.ranked and g.race.solo) == false) or
+       g.race.status == "in progress") or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
 
      -- Remove the two soul hearts that the Crown of Light gives

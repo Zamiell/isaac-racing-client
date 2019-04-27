@@ -18,7 +18,7 @@ function SeededRooms:PostNewRoom()
   local roomType = room:GetType()
 
   -- We only want to replace things on the first visit, or else everything will get duplicated
-  if room:IsFirstVisit() == false then
+  if not room:IsFirstVisit() then
     return
   end
 
@@ -41,7 +41,7 @@ function SeededRooms:DevilRoom()
   end
 
   -- First, find out if we should encounter Krampus instead of getting a normal Devil Room
-  if g.run.metKrampus == false then
+  if not g.run.metKrampus then
     local krampusChance
     if game:GetDevilRoomDeals() > 0 then
       krampusChance = 40

@@ -116,14 +116,15 @@ function NPCUpdate:NPC42(npc)
   -- Fix the bug with fast-clear where the "room:SpawnClearAward()" function will
   -- spawn a pickup inside a Stone Grimace and the like
   -- Check to see if there are any pickups/trinkets overlapping with it
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if NPCUpdate:IsValidPickupForMove(entity, npc) then
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
+  for _, pickup in ipairs(pickups) do
+    if NPCUpdate:IsValidPickupForMove(pickup, npc) then
       -- Respawn it in a accessible location
-      local newPosition = room:FindFreePickupSpawnPosition(entity.Position, 0, true)
+      local newPosition = room:FindFreePickupSpawnPosition(pickup.Position, 0, true)
       -- The arguments are Pos, InitialStep, and AvoidActiveEntities
-      game:Spawn(entity.Type, entity.Variant, newPosition, entity.Velocity,
-                 entity.Parent, entity.SubType, entity.InitSeed)
-      entity:Remove()
+      game:Spawn(pickup.Type, pickup.Variant, newPosition, pickup.Velocity,
+                 pickup.Parent, pickup.SubType, pickup.InitSeed)
+      pickup:Remove()
       Isaac.DebugString("Repositioned a pickup that was overlapping with a stationary stone entity.")
     end
   end
@@ -188,6 +189,39 @@ function NPCUpdate:NPC54(npc)
   if gameFrameCount - g.run.currentHoppers[npc.Index].lastMoveFrame >= 150 then -- 5 seconds
     npc:Kill()
     Isaac.DebugString("Hopper " .. tostring(npc.Index) .. " softlock detected; killing it.")
+  end
+end
+
+-- EntityType.ENTITY_PIN (62)
+function NPCUpdate:NPC62(npc)
+  -- We only care about the head
+  if npc.Parent ~= nil then
+    return
+  end
+
+  -- Local variables
+  local game = Game()
+  local level = game:GetLevel()
+
+  -- Normally, Pin/Frail/Scolex first attacks on frame 73
+  -- Reduce this to frame 15
+  if npc.FrameCount == 15 then
+    -- Changing the state to 3 will cause it to leap at the player on the next frame
+    npc.State = 3
+  elseif npc.FrameCount == 16 then
+    -- We also need to adjust the "charge" velocity, or else the first attack will be really wimpy
+    if level.EnterDoor == DoorSlot.UP0 or -- 1
+       level.EnterDoor == DoorSlot.DOWN0 then -- 3
+
+      -- From the bottom/top door, the vanilla V1 velocity (on frame 74) is 6.08
+      -- From the bottom/top door, the frame 16 V1 velocity is 2.75
+      npc.V1 = npc.V1 * 2.21
+
+    else
+      -- From the left/right door, the vanilla V1 velocity (on frame 74) is 6.92
+      -- From the left/right door, the frame 16 V1 velocity is 2.06
+      npc.V1 = npc.V1 * 3.36
+    end
   end
 end
 
@@ -261,7 +295,7 @@ end
 function NPCUpdate:NPC273(npc)
  if npc.Variant == 10 and -- Lamb Body (273.10)
     npc:IsInvincible() and -- It only turns invincible once it is defeated
-    npc:IsDead() == false then -- This is necessary because the callback will be hit again during the removal
+    not npc:IsDead() then -- This is necessary because the callback will be hit again during the removal
 
     -- Remove the body once it is defeated so that it does not interfere with taking the trophy
     npc:Kill() -- This plays the blood and guts animation, but does not actually remove the entity
@@ -276,7 +310,7 @@ function NPCUpdate:NPC275(npc)
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  if g.run.megaSatanDead == false and
+  if not g.run.megaSatanDead and
      npc:GetSprite():IsPlaying("Death") then
 
     -- Stop the room from being cleared, which has a chance to take us back to the menu

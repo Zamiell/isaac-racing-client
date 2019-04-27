@@ -21,7 +21,7 @@ function SaveDat:Load()
      -- Otherwise, only check for updates every half second, since file reads are expensive
 
     -- Check to see if there a "save.dat" file for this save slot
-    if Isaac.HasModData(g.RacingPlus) == false then
+    if not Isaac.HasModData(g.RacingPlus) then
       Isaac.DebugString("The \"save.dat\" file does not exist for this save slot. Writing defaults.")
       SaveDat:Save()
       return
@@ -37,7 +37,7 @@ function SaveDat:Load()
     local function loadJSON()
       g.race = json.decode(Isaac.LoadModData(g.RacingPlus))
     end
-    if pcall(loadJSON) == false then
+    if not pcall(loadJSON) then
       -- Sometimes loading can fail if the file is currently being being written to,
       -- so give up for now and try again on the next frame
       g.raceVars.loadOnNextFrame = true
@@ -80,7 +80,7 @@ function SaveDat:Load()
     if oldRace.seed ~= g.race.seed then
       Isaac.DebugString("ModData seed changed: " .. g.race.seed)
     end
-    if g:TableEqual(oldRace.startingItems, g.race.startingItems) == false then
+    if not g:TableEqual(oldRace.startingItems, g.race.startingItems) then
       Isaac.DebugString("ModData startingItems changed: " .. g:TableToString(g.race.startingItems))
     end
     if oldRace.countdown ~= g.race.countdown then
@@ -93,12 +93,18 @@ function SaveDat:Load()
       Isaac.DebugString("ModData place changed: " .. tostring(g.race.place))
       SaveDat:ChangedPlace()
     end
-    if g:TableEqual(oldRace.charOrder, g.race.charOrder) == false then
+    if not g:TableEqual(oldRace.charOrder, g.race.charOrder) then
       Isaac.DebugString("ModData charOrder changed.")
       SaveDat:ChangedOrder()
     end
     if oldRace.hotkeyDrop ~= g.race.hotkeyDrop then
       Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(g.race.hotkeyDrop))
+    end
+    if oldRace.hotkeyDropTrinket ~= g.race.hotkeyDropTrinket then
+      Isaac.DebugString("ModData hotkeyDropTrinket changed: " .. tostring(g.race.hotkeyDropTrinket))
+    end
+    if oldRace.hotkeyDropPocket ~= g.race.hotkeyDropPocket then
+      Isaac.DebugString("ModData hotkeyDropPocket changed: " .. tostring(g.race.hotkeyDropPocket))
     end
     if oldRace.hotkeySwitch ~= g.race.hotkeySwitch then
       Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(g.race.hotkeySwitch))

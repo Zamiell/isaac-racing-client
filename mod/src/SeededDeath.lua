@@ -37,7 +37,7 @@ function SeededDeath:PostUpdate()
       g.race.rFormat == "seeded-mo" or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 6 Beta)")) and
      totalHealth == 0 and
-     revive == false and
+     not revive and
      -- We want to make an exception for Sacrifice Rooms and the Boss Rush
      -- to prevent players from being able to take "free" items
      roomType ~= RoomType.ROOM_SACRIFICE and -- 13
@@ -93,7 +93,7 @@ function SeededDeath:PostRender()
     -- Keep the player in place during the "AppearVanilla" animation
     player.Position = g.run.seededDeath.pos
 
-    if playerSprite:IsPlaying("AppearVanilla") == false then
+    if not playerSprite:IsPlaying("AppearVanilla") then
       g.run.seededDeath.state = 3
       Isaac.DebugString("Seeded death (3/3).")
     end
@@ -270,8 +270,7 @@ function SeededDeath:DebuffOff()
   local pillSlot0 = player:GetPill(0)
 
   -- Add all of the items from the array
-  for i = 1, #g.run.seededDeath.items do
-    local itemID = g.run.seededDeath.items[i]
+  for _, itemID in ipairs(g.run.seededDeath.items) do
     player:AddCollectible(itemID, 0, false)
   end
 
@@ -363,12 +362,12 @@ function SeededDeath:DebuffOff()
 
   -- Delete all newly-spawned pickups in the room
   -- (re-giving back some items will cause pickups to spawn)
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP and -- 5
-       entity.Variant ~= PickupVariant.PICKUP_COLLECTIBLE and -- 100
-       entity.FrameCount == 0 then
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
+  for _, pickup in ipairs(pickups) do
+    if pickup.Variant ~= PickupVariant.PICKUP_COLLECTIBLE and -- 100
+       pickup.FrameCount == 0 then
 
-      entity:Remove()
+      pickup:Remove()
     end
   end
 
@@ -380,12 +379,9 @@ function SeededDeath:DebuffOff()
     end
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Keeper will get extra blue flies if he was given any items that grant soul hearts
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
-         entity.Variant == FamiliarVariant.BLUE_FLY then -- 43
-
-        entity:Remove()
-      end
+    local blueFlies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_FLY, -1, false, false) -- 3.43
+    for i, fly in ipairs(blueFlies) do
+      fly:Remove()
     end
 
     -- Keeper will start with one coin container, which can lead to chain deaths

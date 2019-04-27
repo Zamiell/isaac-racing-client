@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.32.1"
+g.version = "v0.33.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0,
@@ -34,24 +34,26 @@ g.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 g.race = {
-  id              = 0,           -- 0 if a race is not going on
-  status          = "none",      -- Can be "none", "open", "starting", "in progress"
-  myStatus        = "not ready", -- Can be either "not ready", "ready", or "racing"
-  ranked          = false,       -- Can be true or false
-  solo            = false,       -- Can be true or false
-  rFormat         = "unseeded",  -- Can be "unseeded", "seeded", "diversity", "unseeded-lite", or "custom"
+  id                = 0,           -- 0 if a race is not going on
+  status            = "none",      -- Can be "none", "open", "starting", "in progress"
+  myStatus          = "not ready", -- Can be either "not ready", "ready", or "racing"
+  ranked            = false,       -- Can be true or false
+  solo              = false,       -- Can be true or false
+  rFormat           = "unseeded",  -- Can be "unseeded", "seeded", "diversity", "unseeded-lite", or "custom"
   -- Unofficially this can also be "pageant"
-  character       = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
-  goal            = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", or "Everything"
-  seed            = "-",         -- Corresponds to the seed that is the race goal
-  startingItems   = {},          -- The starting items for this race
-  countdown       = -1,          -- This corresponds to the graphic to draw on the screen
-  placeMid        = 0,           -- This is either the number of people ready, or the non-fnished place
-  place           = 1,           -- This is the final place
-  numEntrants     = 1,           -- The number of people in the race
-  charOrder       = {0},         -- The order for a multi-character speedrun
-  hotkeyDrop      = 0,           -- A custom key binding for fast-drop, or 0 if not set
-  hotkeySwitch    = 0,           -- A custom key binding for a Schoolbag switch, or 0 if not set
+  character         = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
+  goal              = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", or "Everything"
+  seed              = "-",         -- Corresponds to the seed that is the race goal
+  startingItems     = {},          -- The starting items for this race
+  countdown         = -1,          -- This corresponds to the graphic to draw on the screen
+  placeMid          = 0,           -- This is either the number of people ready, or the non-fnished place
+  place             = 1,           -- This is the final place
+  numEntrants       = 1,           -- The number of people in the race
+  charOrder         = {0},         -- The order for a multi-character speedrun
+  hotkeyDrop        = 0,           -- A custom key binding for fast-drop, or 0 if not set
+  hotkeyDropTrinket = 0,           -- A custom key binding for fast-drop (only trinkets), or 0 if not set
+  hotkeyDropPocket  = 0,           -- A custom key binding for fast-drop (only pocket items), or 0 if not set
+  hotkeySwitch      = 0,           -- A custom key binding for a Schoolbag switch, or 0 if not set
 }
 -- (unofficially, this can also have "timer = false")
 
@@ -187,7 +189,6 @@ function g:InitRun()
   g.run.currentRoomClearState = true
   g.run.fastCleared           = false
   g.run.currentGlobins        = {} -- Used for softlock prevention
-  g.run.currentHaunts         = {} -- Used to speed up Lil' Haunts
   g.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
   g.run.currentHoppers        = {} -- Used to prevent softlocks
   g.run.usedStrength          = false
@@ -206,6 +207,7 @@ function g:InitRun()
   -- Temporary tracking
   g.run.restart              = false -- If set, we restart the run on the next frame
   g.run.reseededFloor        = false
+  g.run.goingToDebugRoom     = false
   g.run.forgetMeNow          = false
   g.run.consoleOpened        = false -- If set, fast-resetting is disabled
   g.run.streakText           = 0
@@ -266,8 +268,7 @@ function g:InitRun()
     coins            = 50,
     usedHealthUpPill = false,
   }
-  for i = 1, #g.healthUpItems do
-    local itemID = g.healthUpItems[i]
+  for _, itemID in ipairs(g.healthUpItems) do
     g.run.keeper.healthUpItems[itemID] = 0
   end
 
@@ -393,7 +394,7 @@ end
 
 function g:TableToString(tbl)
   local result, done = {}, {}
-  for k, v in ipairs( tbl ) do
+  for k, v in ipairs(tbl) do
     table.insert(result, g:TableValToStr(v))
     done[k] = true
   end

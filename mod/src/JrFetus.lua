@@ -582,15 +582,4 @@ function JrFetus:PostNewRoom()
   end
 end
 
-function JrFetus:PostGameStarted()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge == Isaac.GetChallengeIdByName("Jr. Fetus Practice") then
-    Isaac.ExecuteCommand("stage 10a")
-    Isaac.ExecuteCommand("goto s.boss.9998")
-    Isaac.DebugString("Going to the \"Jr. Fetus Practice\" room.")
-  end
-end
-
 return JrFetus

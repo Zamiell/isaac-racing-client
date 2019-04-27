@@ -183,27 +183,27 @@ function FastTravel:CheckPickupOverHole(pickup)
 
   -- Check to see if it is overlapping with a trapdoor / beam of light / crawlspace
   local squareSize = FastTravel.trapdoorTouchDistance + 2
-  for i = 1, #g.run.replacedTrapdoors do
-    if roomIndex == g.run.replacedTrapdoors[i].room and
-       g:InsideSquare(pickup.Position, g.run.replacedTrapdoors[i].pos, squareSize) then
+  for _, trapdoor in ipairs(g.run.replacedTrapdoors) do
+    if roomIndex == trapdoor.room and
+       g:InsideSquare(pickup.Position, trapdoor.pos, squareSize) then
 
-      FastTravel:MovePickupFromHole(pickup, g.run.replacedTrapdoors[i].pos)
+      FastTravel:MovePickupFromHole(pickup, trapdoor.pos)
       return
     end
   end
-  for i = 1, #g.run.replacedHeavenDoors do
-    if roomIndex == g.run.replacedHeavenDoors[i].room and
-       g:InsideSquare(pickup.Position, g.run.replacedHeavenDoors[i].pos, squareSize) then
+  for _, heavenDoor in ipairs(g.run.replacedHeavenDoors) do
+    if roomIndex == heavenDoor.room and
+       g:InsideSquare(pickup.Position, heavenDoor.pos, squareSize) then
 
-      FastTravel:MovePickupFromHole(pickup, g.run.replacedHeavenDoors[i].pos)
+      FastTravel:MovePickupFromHole(pickup, heavenDoor.pos)
       return
     end
   end
-  for i = 1, #g.run.replacedCrawlspaces do
-    if roomIndex == g.run.replacedCrawlspaces[i].room and
-       g:InsideSquare(pickup.Position, g.run.replacedCrawlspaces[i].pos, squareSize) then
+  for _, crawlspace in ipairs(g.run.replacedCrawlspaces) do
+    if roomIndex == crawlspace.room and
+       g:InsideSquare(pickup.Position, crawlspace.pos, squareSize) then
 
-      FastTravel:MovePickupFromHole(pickup, g.run.replacedCrawlspaces[i].pos)
+      FastTravel:MovePickupFromHole(pickup, crawlspace.pos)
       return
     end
   end
@@ -247,12 +247,12 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
       -- in which case it will need 2 iterations; but just do 100 iterations to be safe
       newPos.X = newPos.X + reverseVelocity.X
       newPos.Y = newPos.Y + reverseVelocity.Y
-      if g:InsideSquare(newPos, posHole, squareSize) == false then
+      if not g:InsideSquare(newPos, posHole, squareSize) then
         pushedOut = true
         break
       end
     end
-    if pushedOut == false then
+    if not pushedOut then
       Isaac.DebugString("Error: Was not able to move the pickup out of the hole after 100 iterations.")
     end
     pickup.Position = newPos
@@ -268,7 +268,7 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
     if g:InsideSquare(newPos, posHole, squareSize) then
       overlapping = true
     end
-    if overlapping == false then
+    if not overlapping then
       break
     end
   end
@@ -298,7 +298,7 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards)
   for i = 1, game:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
     if g.run.trapdoor.state == 0 and
-       ((upwards == false and effect.State == 0) or -- The trapdoor is open
+       ((not upwards and effect.State == 0) or -- The trapdoor is open
         (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
         -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
         -- (we initially spawn it with an InitSeed equal to the room seed)
@@ -310,9 +310,9 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards)
         -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
         -- (and the minimum for this is 8 frames, determined from trial and error)
        g:InsideSquare(player.Position, effect.Position, FastTravel.trapdoorTouchDistance) and
-       player:IsHoldingItem() == false and
-       player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
-       player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
+       not player:IsHoldingItem() and
+       not player:GetSprite():IsPlaying("Happy") and -- Account for lucky pennies
+       not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
 
       -- State 1 is activated the moment we touch the trapdoor
       g.run.trapdoor.state = 1
@@ -411,13 +411,10 @@ function FastTravel:CheckTrapdoor()
      end
 
      -- Make the hole do the dissapear animation
-     for i, entity in pairs(Isaac.GetRoomEntities()) do
-       if entity.Type == Isaac.GetEntityTypeByName("Pitfall (Custom)") and
-          entity.Variant == Isaac.GetEntityVariantByName("Pitfall (Custom)") then
-
-         entity:GetSprite():Play("Disappear", true)
-         break
-       end
+     local pitfalls = Isaac.FindByType(Isaac.GetEntityTypeByName("Pitfall (Custom)"),
+                                       Isaac.GetEntityVariantByName("Pitfall (Custom)"), -1, false, false) -- 3
+     for _, pitfall in ipairs(pitfalls) do
+       pitfall:GetSprite():Play("Disappear", true)
      end
 
   elseif g.run.trapdoor.state == 7 and
@@ -435,11 +432,10 @@ function FastTravel:CheckTrapdoor()
     end
 
     -- Kill the hole
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == 1001 then
-        entity:Remove()
-        break
-      end
+    local pitfalls = Isaac.FindByType(Isaac.GetEntityTypeByName("Pitfall (Custom)"),
+                                      Isaac.GetEntityVariantByName("Pitfall (Custom)"), -1, false, false) -- 3
+    for _, pitfall in ipairs(pitfalls) do
+      pitfall:Remove()
     end
   end
 
@@ -487,7 +483,7 @@ function FastTravel:CheckTrapdoor2()
                room:GetCenterPos(), Vector(0,0), nil, 0, 0)
 
     -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
-    if g.raceVars.finished == false and
+    if not g.raceVars.finished and
        -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
        game:GetPlayer(0):GetPlayerType() ~= Isaac.GetPlayerTypeByName("Random Baby") then
        -- (the baby descriptions will slightly overlap with the stage text,
@@ -748,9 +744,9 @@ function FastTravel:CheckCrawlspaceEnter(effect)
     local player = Isaac.GetPlayer(i - 1)
     if effect.State == 0 and -- The crawlspace is open
        g:InsideSquare(player.Position, effect.Position, FastTravel.trapdoorTouchDistance) and
-       player:IsHoldingItem() == false and
-       player:GetSprite():IsPlaying("Happy") == false and -- Account for lucky pennies
-       player:GetSprite():IsPlaying("Jump") == false then -- Account for How to Jump
+       not player:IsHoldingItem() and
+       not player:GetSprite():IsPlaying("Happy") and -- Account for lucky pennies
+       not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
 
       -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
       if prevRoomIndex < 0 then
@@ -905,7 +901,7 @@ function FastTravel:CheckCrawlspaceMiscBugs()
   -- we won't spawn on the ladder, so move there manually (this causes no visual hiccups like the above code does)
   if roomIndex == GridRooms.ROOM_DUNGEON_IDX and -- -4
      level.DungeonReturnRoomIndex < 0 and
-     g.run.crawlspace.blackMarket == false then
+     not g.run.crawlspace.blackMarket then
 
     player.Position = Vector(120, 160) -- This is the standard starting location at the top of the ladder
     Isaac.DebugString("Entered crawlspace from a room outside the grid; ladder teleport complete.")
@@ -1007,28 +1003,28 @@ function FastTravel:CheckRoomRespawn()
   end
 
   -- Respawn trapdoors, if necessary
-  for i = 1, #g.run.replacedTrapdoors do
-    if g.run.replacedTrapdoors[i].room == roomIndex then
-      FastTravel:RemoveOverlappingGridEntity(g.run.replacedTrapdoors[i].pos, "trapdoor")
+  for _, trapdoor in ipairs(g.run.replacedTrapdoors) do
+    if trapdoor.room == roomIndex then
+      FastTravel:RemoveOverlappingGridEntity(trapdoor.pos, "trapdoor")
 
       -- Spawn the new custom entity
       local entity
       if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
         entity = game:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
-                            g.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+                            trapdoor.pos, Vector(0,0), nil, 0, 0)
 
       elseif stage == LevelStage.STAGE3_2 or -- 6
              stage == LevelStage.STAGE4_1 then -- 7
 
         entity = game:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
-                            g.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+                            trapdoor.pos, Vector(0,0), nil, 0, 0)
 
       else
         entity = game:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                             Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                            g.run.replacedTrapdoors[i].pos, Vector(0,0), nil, 0, 0)
+                            trapdoor.pos, Vector(0,0), nil, 0, 0)
       end
       entity.DepthOffset = -101 -- This is needed so that the entity will not appear on top of the player
       -- We use -101 instead of -100 to signify that it is a respawned trapdoor
@@ -1057,14 +1053,14 @@ function FastTravel:CheckRoomRespawn()
   end
 
   -- Respawn crawlspaces, if necessary
-  for i = 1, #g.run.replacedCrawlspaces do
-    if g.run.replacedCrawlspaces[i].room == roomIndex then
-      FastTravel:RemoveOverlappingGridEntity(g.run.replacedCrawlspaces[i].pos, "crawlspace")
+  for _, crawlspace in ipairs(g.run.replacedCrawlspaces) do
+    if crawlspace.room == roomIndex then
+      FastTravel:RemoveOverlappingGridEntity(crawlspace.pos, "crawlspace")
 
       -- Spawn the new custom entity
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
                                 Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
-                                g.run.replacedCrawlspaces[i].pos, Vector(0,0), nil, 0, 0)
+                                crawlspace.pos, Vector(0,0), nil, 0, 0)
       entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
       -- Figure out if it should spawn open or closed, depending on if one or more players is close to it
@@ -1092,12 +1088,12 @@ function FastTravel:CheckRoomRespawn()
   end
 
   -- Respawn beams of light, if necessary
-  for i = 1, #g.run.replacedHeavenDoors do
-    if g.run.replacedHeavenDoors[i].room == roomIndex then
+  for _, heavenDoor in ipairs(g.run.replacedHeavenDoors) do
+    if heavenDoor.room == roomIndex then
       -- Spawn the new custom entity
       local entity = game:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                                 Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                                g.run.replacedHeavenDoors[i].pos, Vector(0,0), nil, 0, 0)
+                                heavenDoor.pos, Vector(0,0), nil, 0, 0)
                                 -- Use an InitSeed of 0 to signify that it is respawned
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")
@@ -1124,16 +1120,15 @@ function FastTravel:RemoveOverlappingGridEntity(pos, type)
   Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
                     " that would interfere with the " .. tostring(type) .. ".")
 
-  -- If this was a Corny Poop, it turn the Eternal Fly into an Attack Fly
+  -- If this was a Corny Poop, it will turn the Eternal Fly into an Attack Fly
   local saveState = gridEntity:GetSaveState()
   if saveState.Type == GridEntityType.GRID_POOP and -- 14
      saveState.Variant == 2 then -- Corny Poop
 
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_ETERNALFLY then -- 96
-        entity:Remove()
-        Isaac.DebugString("Removed an Eternal Fly associated with the removed Corny Poop.")
-      end
+    local flies = Isaac.FindByType(EntityType.ENTITY_ETERNALFLY, -1, -1, false, false) -- 96
+    for _, fly in ipairs(flies) do
+      fly:Remove()
+      Isaac.DebugString("Removed an Eternal Fly associated with the removed Corny Poop.")
     end
   end
 end

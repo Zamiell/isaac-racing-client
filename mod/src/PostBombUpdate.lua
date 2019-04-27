@@ -22,7 +22,7 @@ function PostBombUpdate:Main(bomb)
   end
 
   -- Don't do anything if we don't have Sacred Heart
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SACRED_HEART) == false then -- 182
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SACRED_HEART) then -- 182
     return
   end
 

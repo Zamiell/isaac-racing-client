@@ -8,6 +8,7 @@ local FastTravel          = require("src/fasttravel")
 local Speedrun            = require("src/speedrun")
 local SpeedrunPostNewRoom = require("src/speedrunpostnewroom")
 local ChangeCharOrder     = require("src/changecharorder")
+local ChangeKeybindings   = require("src/changekeybindings")
 local Sprites             = require("src/sprites")
 local SeededDeath         = require("src/seededdeath")
 local SeededRooms         = require("src/seededrooms")
@@ -27,17 +28,21 @@ function PostNewRoom:Main()
 
   Isaac.DebugString("MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
 
-  -- Make an exception for the "Race Start Room" and the "Change Char Order" room
-  PostNewRoom:RaceStart()
-  ChangeCharOrder:PostNewRoom()
-
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
   if gameFrameCount == 0 or
      (g.run.currentFloor ~= stage or
       g.run.currentFloorType ~= stageType) then
 
-    return
+    -- Make an exception if we are using the "goto" command to go to a debug room
+    if g.run.goingToDebugRoom and
+       roomStageID == 2 and
+       roomVariant == 0 then
+
+      g.run.goingToDebugRoom = false
+    else
+      return
+    end
   end
 
   PostNewRoom:NewRoom()
@@ -46,6 +51,10 @@ end
 function PostNewRoom:NewRoom()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local roomDesc = level:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
   local room = game:GetRoom()
   local roomType = room:GetType()
   local roomClear = room:IsClear()
@@ -56,7 +65,7 @@ function PostNewRoom:NewRoom()
   local soulHearts = player:GetSoulHearts()
   local boneHearts = player:GetBoneHearts()
 
-  Isaac.DebugString("MC_POST_NEW_ROOM2")
+  Isaac.DebugString("MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
 
   g.run.roomsEntered = g.run.roomsEntered + 1
   g.run.currentRoomClearState = roomClear
@@ -77,7 +86,6 @@ function PostNewRoom:NewRoom()
   -- Clear variables that track things per room
   g.run.fastCleared          = false
   g.run.currentGlobins       = {} -- Used for softlock prevention
-  g.run.currentHaunts        = {} -- Used to speed up Lil' Haunts
   g.run.currentLilHaunts     = {} -- Used to delete invulnerability frames
   g.run.currentHoppers       = {} -- Used to prevent softlocks
   g.run.usedStrength         = false
@@ -123,7 +131,7 @@ function PostNewRoom:NewRoom()
   if maxHearts == 0 and
      soulHearts == 0 and
      boneHearts == 0 and
-     g.run.seededSwap.swapping == false and -- Make an exception if we are manually swapping health values
+     not g.run.seededSwap.swapping and -- Make an exception if we are manually swapping health values
      InfinityTrueCoopInterface == nil then -- Make an exception if the True Co-op mod is on
 
     player:Kill()
@@ -162,6 +170,10 @@ function PostNewRoom:NewRoom()
 
   -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
   PostNewRoom:CheckRespawnTrophy()
+
+  -- Check for the custom challenges
+  ChangeCharOrder:PostNewRoom()
+  ChangeKeybindings:PostNewRoom()
 
   -- Do race related stuff
   PostNewRoom:Race()
@@ -207,10 +219,9 @@ function PostNewRoom:CheckSatanRoom()
              g:GridToPos(6, 3), Vector(0, 0), nil, 0, seed)
 
   -- Prime the statue to wake up quicker
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_SATAN then -- 84
-      entity:ToNPC().I1 = 1
-    end
+  local satans = Isaac.FindByType(EntityType.ENTITY_SATAN, -1, -1, false, false) -- 84
+  for _, satan in ipairs(satans) do
+    satan:ToNPC().I1 = 1
   end
 
   Isaac.DebugString("Spawned the first wave manually and primed the statue.")
@@ -239,7 +250,9 @@ function PostNewRoom:CheckMegaSatanRoom()
   Isaac.DebugString('Entered the Mega Satan room.')
 
   -- Check to see if we are cheating on the "Everything" race goal
-  if g.race.goal == "Everything" and g.run.killedLamb == false then
+  if g.race.goal == "Everything" and
+     not g.run.killedLamb then
+
     -- Do a little something fun
     sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
     for i = 1, 20 do
@@ -291,10 +304,9 @@ function PostNewRoom:CheckScolexRoom()
 
      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
     -- (there are 10 Scolex entities)
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PIN and entity.Variant == 1 then -- 62.1 (Scolex)
-        entity:Remove() -- This takes a game frame to actually get removed
-      end
+    local scolexes = Isaac.FindByType(EntityType.ENTITY_PIN, 1, -1, false, false) -- 62.1 (Scolex)
+    for _, scolex in ipairs(scolexes) do
+      scolex:Remove() -- This takes a game frame to actually get removed
     end
 
     for i = 1, 2 do
@@ -409,16 +421,12 @@ function PostNewRoom:CheckEntities()
       if entity:ToNPC():GetBossColorIdx() == 17 then
         g.run.speedLilHauntsBlack = true
       end
-
-      g.run.currentHaunts[#g.run.currentHaunts + 1] = entity.Index
-      Isaac.DebugString("Added Haunt #" .. tostring(#g.run.currentHaunts) ..
-                        " with index " .. tostring(entity.Index) .. " to the table.")
     end
   end
 
   -- Subvert the disruptive teleportation from Gurdy, Mom, Mom's Heart, and It Lives
   if subvertTeleport and
-     roomClear == false and
+     not roomClear and
      roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
      -- (there are Double Trouble rooms with Gurdy but they don't cause a teleport)
 
@@ -433,10 +441,9 @@ function PostNewRoom:CheckEntities()
     -- Also make the familiars invisible
     -- (for some reason, we can use the "Visible" property instead of
     -- resorting to "SpriteScale" like we do for the player)
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_FAMILIAR then -- 3
-        entity.Visible = false
-      end
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+    for _, familiar in ipairs(familiars) do
+      familiar.Visible = false
     end
   end
 end
@@ -462,7 +469,7 @@ function PostNewRoom:CheckRespawnTrophy()
   end
 
   -- If the room is not clear, we couldn't have already finished the race/speedrun
-  if roomClear == false then
+  if not roomClear then
     return
   end
 
@@ -488,7 +495,7 @@ function PostNewRoom:CheckRespawnTrophy()
       return
     end
 
-  elseif g.raceVars.finished == false and
+  elseif not g.raceVars.finished and
          g.race.status == "in progress" then
 
     -- Check to see if we are in the final room corresponding to the goal
@@ -549,13 +556,15 @@ function PostNewRoom:Race()
 
   -- Go to the custom "Race Start" room
   if (g.race.status == "open" or
-      g.race.status == "starting") and
-     g.run.roomsEntered == 1 then
+      g.race.status == "starting") then
 
-    Isaac.ExecuteCommand("goto s.boss.9999")
-    -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
-    Isaac.DebugString("Going to the race room.")
-    -- We do more things in the "PostNewRoom" callback
+    if g.run.roomsEntered == 1 then
+      Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
+      g.run.goingToDebugRoom = true
+      Isaac.ExecuteCommand("goto d.0") -- We do more things in the next "PostNewRoom" callback
+    elseif g.run.roomsEntered == 2 then
+      PostNewRoom:RaceStartRoom()
+    end
     return
   end
 
@@ -605,7 +614,7 @@ function PostNewRoom:Race()
 
   -- Check to see if we need to spawn Victory Lap bosses
   if g.raceVars.finished and
-     roomClear == false and
+     not roomClear and
      roomStageID == 0 and
      (roomVariant == 3390 or -- Blue Baby
       roomVariant == 3391 or
@@ -643,30 +652,20 @@ function PostNewRoom:Race()
   PostNewRoom:CheckSeededMOTreasure()
 end
 
-function PostNewRoom:RaceStart()
+function PostNewRoom:RaceStartRoom()
   -- Local variables
   local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-  local level = game:GetLevel()
-  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = level:GetCurrentRoomIndex()
-  end
   local room = game:GetRoom()
-  local sfx = SFXManager()
   local player = game:GetPlayer(0)
 
-  -- Set up the "Race Room"
-  if gameFrameCount ~= 0 or
-     roomIndex ~= GridRooms.ROOM_DEBUG_IDX or -- -3
-     (g.race.status ~= "open" and
-      g.race.status ~= "starting") then
-
-    return
+  -- Remove all enemies
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      entity:Remove()
+    end
   end
-
-  -- Stop the boss room sound effect
-  sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+  room:SetClear(true)
 
   -- We want to trap the player in the room, so delete all 4 doors
   for i = 0, 3 do
@@ -674,7 +673,14 @@ function PostNewRoom:RaceStart()
   end
 
   -- Put the player next to the bottom door
-  player.Position = Vector(320, 400)
+  local pos = Vector(320, 400)
+  player.Position = pos
+
+  -- Put familiars next to the bottom door, if any
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    familiar.Position = pos
+  end
 
   -- Spawn two Gaping Maws (235.0)
   game:Spawn(EntityType.ENTITY_GAPING_MAW, 0, g:GridToPos(5, 5), Vector(0, 0), nil, 0, 0)

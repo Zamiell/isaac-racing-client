@@ -128,6 +128,24 @@ const logWatcherEvent = (event, message) => {
         }
         return;
     }
+    if (message.startsWith('New drop trinket hotkey: ')) {
+        const m = message.match(/New drop trinket hotkey: (.+)/);
+        if (m) {
+            globals.modLoader.hotkeyDropTrinket = parseInt(m[1], 10);
+        } else {
+            misc.errorShow('Failed to parse the new drop trinket hotkey from the message sent by the log watcher process:', message);
+        }
+        return;
+    }
+    if (message.startsWith('New drop pocket hotkey: ')) {
+        const m = message.match(/New drop pocket hotkey: (.+)/);
+        if (m) {
+            globals.modLoader.hotkeyDropPocket = parseInt(m[1], 10);
+        } else {
+            misc.errorShow('Failed to parse the new drop pocket hotkey from the message sent by the log watcher process:', message);
+        }
+        return;
+    }
     if (message.startsWith('New switch hotkey: ')) {
         const m = message.match(/New switch hotkey: (.+)/);
         if (m) {

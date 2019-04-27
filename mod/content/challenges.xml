@@ -11,8 +11,6 @@
 	<!--<challenge name="R+7 (Season 6 Beta)" endstage="11" altpath="true" cursefilter="127" />-->
 	<!--<challenge name="R+7 Seeded (Q4 2018)" endstage="11" altpath="true" cursefilter="127" />-->
 	<challenge name="R+15 (Vanilla)" endstage="11" altpath="true" cursefilter="127" />
-	<challenge name="Jr. Fetus Practice" endstage="11" altpath="false" cursefilter="127" />
-	<challenge name="Mahalath Practice" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 	<challenge name="Change Keybindings" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 </challenges>

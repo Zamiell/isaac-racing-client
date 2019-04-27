@@ -1656,15 +1656,4 @@ function Mahalath:PostNewRoom()
   end
 end
 
-function Mahalath:PostGameStarted()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge == Isaac.GetChallengeIdByName("Mahalath Practice") then
-    Isaac.ExecuteCommand("stage 11a")
-    Isaac.ExecuteCommand("goto s.boss.9998")
-    Isaac.DebugString("Going to the \"Mahalath Practice\" room.")
-  end
-end
-
 return Mahalath

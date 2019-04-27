@@ -5,7 +5,7 @@ local g        = require("src/globals")
 local Speedrun = require("src/speedrun")
 
 function SpeedrunPostNewRoom:Main()
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
@@ -69,23 +69,21 @@ function SpeedrunPostNewRoom:Womb2Error()
   end
 
   -- Find any existing beams of light
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_EFFECT and -- 1000
-       entity.Variant == EffectVariant.HEAVEN_LIGHT_DOOR then -- 39
+  local lightDoors = Isaac.FindByType(EntityType.ENTITY_EFFECT, -- 1000
+                                      EffectVariant.HEAVEN_LIGHT_DOOR, -1, false, false) -- 39
+  for _, lightDoor in ipairs(lightDoors) do
+    if direction == 1 then
+      -- If we are going up and there is already a beam of light, we don't need to do anything
+      return
+    elseif direction == 2 then
+      -- We need to remove it since we are going down
+      pos = lightDoor.Position
+      lightDoor:Remove()
 
-      if direction == 1 then
-        -- If we are going up and there is already a beam of light, we don't need to do anything
-        return
-      elseif direction == 2 then
-        -- We need to remove it since we are going down
-        pos = entity.Position
-        entity:Remove()
-
-        -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
-        Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, pos, true) -- 17
-        Isaac.DebugString("Replaced a beam of light with a trapdoor.")
-        return
-      end
+      -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
+      Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, pos, true) -- 17
+      Isaac.DebugString("Replaced a beam of light with a trapdoor.")
+      return
     end
   end
 end
@@ -193,34 +191,24 @@ function SpeedrunPostNewRoom:CheckCurseRoom()
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
-     room:IsFirstVisit() == false then
+     not room:IsFirstVisit() then
 
     return
   end
 
   -- Check to see if there are any pickups in the room
-  local pickups = false
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP or -- 5
-       entity.Type == EntityType.ENTITY_SLOT then -- 6
-
-      pickups = true
-      break
-    end
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
+  for _, pickup in ipairs(pickups) do
+    pickup:Remove()
   end
-  if pickups == false then
-    return
+  local slots = Isaac.FindByType(EntityType.ENTITY_SLOT, -1, -1, false, false) -- 6
+  for _, slot in ipairs(slots) do
+    slot:Remove()
   end
-
-  player:AnimateSad()
-  for i, entity in pairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_PICKUP or -- 5
-       entity.Type == EntityType.ENTITY_SLOT then -- 6
-
-      entity:Remove()
-    end
+  if #pickups > 0 or #slots > 0 then
+    player:AnimateSad()
+    Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
   end
-  Isaac.DebugString("Deleted all of the pickups in a Curse Room (during a R+7 Season 4 run).")
 end
 
 -- In instant-start seasons, prevent people from resetting for a Sacrifice Room

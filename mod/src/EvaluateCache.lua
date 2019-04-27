@@ -35,8 +35,7 @@ function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
     local baseHearts = maxHearts - coinContainers
 
     -- We have to add the range cache to all health up items in "items.xml"
-    for i = 1, #g.healthUpItems do
-      local itemID = g.healthUpItems[i]
+    for _, itemID in ipairs(g.healthUpItems) do
       if (itemID ~= 1000 and player:GetCollectibleNum(itemID) > g.run.keeper.healthUpItems[itemID]) or
          (itemID == 1000 and g.run.keeper.usedHealthUpPill) then
 

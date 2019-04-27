@@ -336,7 +336,7 @@ function SamaelMod:wraithModeHandler()
       roomFrames == 1 or
       dying or
       isaacDying or
-      player:HasCollectible(wraithItem) == false) then
+      not player:HasCollectible(wraithItem)) then
 
     SamaelMod:triggerWraithModeEnd()
   end
@@ -1073,8 +1073,8 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
   end
 
   if cacheFlag == CacheFlag.CACHE_SPEED then
-    if player:HasCollectible(CollectibleType.COLLECTIBLE_PONY) == false and -- 130
-       player:HasCollectible(CollectibleType.COLLECTIBLE_WHITE_PONY) == false then -- 181
+    if not player:HasCollectible(CollectibleType.COLLECTIBLE_PONY) and -- 130
+       not player:HasCollectible(CollectibleType.COLLECTIBLE_WHITE_PONY) then -- 181
 
       player.MoveSpeed = player.MoveSpeed + 0.15
       --Isaac.DebugString("Decreased speed in the speed cache for Samael: " .. tostring(player.MoveSpeed))
@@ -1809,23 +1809,22 @@ function SamaelMod:PostUpdateFixBugs()
   end
 
   -- Sacrificial Dagger bug
-  if SamaelMod.SacDaggerAcquired == false and
+  if not SamaelMod.SacDaggerAcquired and
      player:HasCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER) then -- 172
 
     SamaelMod.SacDaggerAcquired = true
 
     -- Check for an existing Sacrifical Dagger
     local foundSacDag = false
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_FAMILIAR and -- 3
-         entity.Variant == FamiliarVariant.SACRIFICIAL_DAGGER and -- 35
-         entity.SubType ~= hitBoxType then
-
+    local daggers = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -- 3
+                                     FamiliarVariant.SACRIFICIAL_DAGGER, -1, false, false) -- 35
+    for i, dagger in ipairs(daggers) do
+      if dagger.SubType ~= hitBoxType then
         foundSacDag = true
-        Isaac.DebugString("Found Sacrificial Dagger familiar entity: " .. tostring(entity.Index))
+        Isaac.DebugString("Found Sacrificial Dagger familiar entity: " .. tostring(dagger.Index))
       end
     end
-    if foundSacDag == false then
+    if not foundSacDag then
       -- Manually spawn a Sacrificial Dagger familiar (3.35)
       game:Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER,
                  player.Position, Vector(0, 0), player, 0, 0)

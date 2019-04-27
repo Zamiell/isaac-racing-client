@@ -1,6 +1,16 @@
 # Racing+ Version History and News
 
-### *v0.32.1* - April 22nd, 2019
+### *v0.33.0* - April 27th, 2019
+
+* Pin/Frail/Scolex will now attack you on the 15th frame instead of the 73rd frame.
+* Replaced the dirty bedroom icon with a new icon that represents a cobweb. Thanks to BMZ_Loop for creating this.
+* There are now two additional key bindings available in the "Change Keybindings" custom challenge for dropping only trinkets and for dropping only pocket items.
+* Removed the "Jr. Fetus Practice" and "Mahalath Practice" custom challenges.
+* The 50% chance for a big 4 fart-reroll now applies to unseeded solo races.
+* Fixed the bug where the Lil Haunts attached to a Haunt would not detach under certain circumstances.
+* Fixed the bug where familiars would not start in the middle of the room.
+
+### *v0.32.1* - April 24th, 2019
 
 * The color for Cage's gray creep is now also turned to green.
 * Fixed the bug where some specific kinds of creep would not turn to red. (Thanks NorBro86)
@@ -11,7 +21,6 @@
 * The color for detrimental fires is now red (instead of yellow) so that players can easily distinguish them from friendly fires.
 * The color for red creep has been changed to green (so that it is easier to see in various situations). (Thanks Nariom)
 * Fixed the bug where Eden would get messed up if they started with Betrayal. (Thanks mgln)
-* Fixed the bug where the Lil Haunts attached to a Haunt would not detach under certain circumstances.
 * Fixed the bug where The Fallen and the Kamikaze Leeches on the Satan fight would always drop black hearts when killed with Maw of the Void. (Thanks mgln)
 
 ### *v0.31.4* - April 19th, 2019
@@ -51,7 +60,6 @@
 * As a quality of life change, Cod Worms will now be replaced with Para-Bites.
 * Added an error message if you try to play a custom challenge other than Season 5 with the Babies Mod enabled. (Thanks sisuka)
 * Fixed the bug where the Soul Jar would not show the correct Devil Room percentages in the Found HUD. (Thanks Gamonymous)
-* Fixed the bug where the Lil Haunts attached to a Haunt would not detach under certain circumstances.
 
 ### *v0.29.8* - March 11th, 2019
 

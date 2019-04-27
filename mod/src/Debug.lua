@@ -23,9 +23,9 @@ function Debug:Main()
     "raceVars",
   }
 
-  for i = 1, #globalsToPrint do
-    Isaac.DebugString(globalsToPrint[i] .. ":")
-    for k, v in pairs(g[globalsToPrint[i]]) do
+  for _, var in ipairs(globalsToPrint) do
+    Isaac.DebugString(var .. ":")
+    for k, v in pairs(g[var]) do
       if type(v) == "table" then
         Isaac.DebugString("  " .. k .. ': ')
         for k2, v2 in pairs(v) do

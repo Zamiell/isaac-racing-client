@@ -73,7 +73,7 @@ function UseItem:Item127()
 
   -- Do nothing if we are not playing on a set seed
   if challenge ~= 0 or
-     customRun == false then
+     not customRun then
 
     return
   end
@@ -180,11 +180,11 @@ function UseItem:Item523()
   if g.run.movingBoxOpen then
     -- Check to see if there are any pickups on the ground
     local pickupsPresent = false
-    for i, entity in pairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_PICKUP and
-         entity.Variant ~= PickupVariant.PICKUP_BIGCHEST and -- 340
-         entity.Variant ~= PickupVariant.PICKUP_TROPHY and -- 370
-         entity.Variant ~= PickupVariant.PICKUP_BED then -- 380
+    local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
+    for _, pickup in ipairs(pickups) do
+      if pickup.Variant ~= PickupVariant.PICKUP_BIGCHEST and -- 340
+         pickup.Variant ~= PickupVariant.PICKUP_TROPHY and -- 370
+         pickup.Variant ~= PickupVariant.PICKUP_BED then -- 380
 
         pickupsPresent = true
         break

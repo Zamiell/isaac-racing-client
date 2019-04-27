@@ -97,6 +97,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_STONEHEAD) -- 42
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC54,
                                                    EntityType.ENTITY_FLAMINGHOPPER) -- 54
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC62,
+                                                   EntityType.ENTITY_PIN) -- 62
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC66,
                                                    EntityType.ENTITY_DEATH) -- 66
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
@@ -278,7 +280,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, JrFetus.UpdateMissile
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,   JrFetus.DrFetusEmbryoKill,
                                                            Isaac.GetEntityTypeByName("Dr Fetus Boss Embryo"))
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,      JrFetus.PostNewRoom)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,  JrFetus.PostGameStarted)
 
 -- Mahalath callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       Mahalath.PostUpdate)
@@ -291,7 +292,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        Mahalath.check_bomb, I
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        Mahalath.check_del, EntityType.ENTITY_DELIRIUM) -- 412
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   Mahalath.take_dmg)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     Mahalath.PostNewRoom)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Mahalath.PostGameStarted)
 
 -- Welcome banner
 local hyphens = ''

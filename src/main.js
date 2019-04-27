@@ -495,6 +495,12 @@ app.on('before-quit', () => {
         if (typeof json.hotkeyDrop === 'undefined') {
             json.hotkeyDrop = 0;
         }
+        if (typeof json.hotkeyDropTrinket === 'undefined') {
+            json.hotkeyDropTrinket = 0;
+        }
+        if (typeof json.hotkeyDropPocket === 'undefined') {
+            json.hotkeyDropPocket = 0;
+        }
         if (typeof json.hotkeySwitch === 'undefined') {
             json.hotkeySwitch = 0;
         }

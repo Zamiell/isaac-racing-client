@@ -251,7 +251,7 @@ function CheckLoop:Main()
           break
         end
       end
-      if alreadyConnected == false and
+      if not alreadyConnected and
          adjacentRoomID ~= -1 then -- We initialized every square to -1 when we created the grid
 
         connectedRooms[#connectedRooms + 1] = adjacentRoomID

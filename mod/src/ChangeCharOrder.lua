@@ -207,12 +207,46 @@ ChangeCharOrder.sprites = {} -- Reset in the PostGameStarted callback
 -- Functions
 --
 
--- Called from the "Speedrun:PostGameStarted()" function
-function ChangeCharOrder:PostGameStarted()
+-- Called from the "PostNewRoom:Main()" function
+function ChangeCharOrder:PostNewRoom()
   -- Local variables
   local game = Game()
+  local room = game:GetRoom()
+  local seeds = game:GetSeeds()
   local player = game:GetPlayer(0)
   local itemConfig = Isaac.GetItemConfig()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+
+  if g.run.roomsEntered == 1 then
+    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
+    g.run.goingToDebugRoom = true
+    Isaac.ExecuteCommand("goto d.0") -- We do more things in the next "PostNewRoom" callback
+    return
+  end
+  if g.run.roomsEntered ~= 2 then
+    return
+  end
+
+  -- Remove all enemies
+  for i, entity in pairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      entity:Remove()
+    end
+  end
+  room:SetClear(true)
+
+  -- We want to trap the player in the room, so delete all 4 doors
+  for i = 0, 3 do
+    room:RemoveDoor(i)
+  end
+
+  -- Put the player next to the bottom door
+  player.Position = g:GridToPos(6, 5)
 
   -- Remove the D6
   player:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 106
@@ -227,41 +261,8 @@ function ChangeCharOrder:PostGameStarted()
   Isaac.DebugString("Removing collectible 28 (The Belt)")
   player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BELT)) -- 28
 
-  -- Go to the "Change Char Order" room
-  Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
-  Isaac.ExecuteCommand("goto s.boss.9999")
-  -- We can't use an existing boss room because after the boss is removed, a pedestal will spawn
-  Isaac.DebugString("Going to the \"Change Char Order\" room.")
-  -- We do more things in the "PostNewRoom" callback
-end
-
--- Called from the "PostNewRoom:Main()" function
-function ChangeCharOrder:PostNewRoom()
-  -- Local variables
-  local game = Game()
-  local level = game:GetLevel()
-  local roomIndexUnsafe = level:GetCurrentRoomIndex()
-  local room = game:GetRoom()
-  local sfx = SFXManager()
-  local challenge = Isaac.GetChallenge()
-  local player = game:GetPlayer(0)
-
-  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") or
-     roomIndexUnsafe ~= GridRooms.ROOM_DEBUG_IDX then -- -3
-
-    return
-  end
-
-  -- Stop the boss room sound effect
-  sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
-
-  -- We want to trap the player in the room, so delete all 4 doors
-  for i = 0, 3 do
-    room:RemoveDoor(i)
-  end
-
-  -- Put the player next to the bottom door
-  player.Position = Vector(320, 400)
+  -- Get rid of the HUD
+  seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD) -- 10
 
   -- Reset variables relating to the room and the graphics
   ChangeCharOrder.phase = 1
@@ -281,26 +282,6 @@ function ChangeCharOrder:PostNewRoom()
     ChangeCharOrder.sprites.buttons[k] = Sprite()
     ChangeCharOrder.sprites.buttons[k]:Load("gfx/speedrun/button-" .. tostring(k) .. ".anm2", true)
     ChangeCharOrder.sprites.buttons[k]:SetFrame("Default", 0)
-  end
-end
-
--- Called from the "PostRender:Main()" function
-function ChangeCharOrder:CheckChangeCharOrder()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
-    return
-  end
-
-  -- Local variables
-  local game = Game()
-  local gameFrameCount = game:GetFrameCount()
-  local player = game:GetPlayer(0)
-
-  -- Disable the controls or else the player will be able to move around while the screen is still black
-  if gameFrameCount < 1 then
-    player.ControlsEnabled = false
-  else
-    player.ControlsEnabled = true
   end
 end
 
@@ -365,8 +346,8 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
   local player = game:GetPlayer(0)
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
-  for i = 1, #season.charPosition do
-    local posButton = g:GridToPos(season.charPosition[i][2], season.charPosition[i][3])
+  for i, charPos in ipairs(season.charPosition) do
+    local posButton = g:GridToPos(charPos[2], charPos[3])
     if gridEntity:GetSaveState().State == 3 and
        gridEntity.VarData == 0 and
        gridEntity.Position.X == posButton.X and
@@ -376,9 +357,9 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
       if ChangeCharOrder.seasonChosen == "R7S6" and
          #ChangeCharOrder.charOrder == 0 then
 
-        if season.charPosition[i][1] == PlayerType.PLAYER_EDEN then -- 9
+        if charPos[1] == PlayerType.PLAYER_EDEN then -- 9
           player:Kill()
-          Isaac.DebugString("Killing the player since they chose Eden first.")
+          Isaac.DebugString("Cheating detected (attempted to choose Eden first). Killing the player.")
           return
         end
 
@@ -395,7 +376,7 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
-      ChangeCharOrder.charOrder[#ChangeCharOrder.charOrder + 1] = season.charPosition[i][1]
+      ChangeCharOrder.charOrder[#ChangeCharOrder.charOrder + 1] = charPos[1]
 
       -- Change the graphic to that of a number
       ChangeCharOrder.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
@@ -438,8 +419,8 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
   local player = game:GetPlayer(0)
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
-  for i = 1, #season.itemPosition do
-    local posButton = g:GridToPos(season.itemPosition[i][2], season.itemPosition[i][3])
+  for i, itemPos in ipairs(season.itemPosition) do
+    local posButton = g:GridToPos(itemPos[2], itemPos[3])
     if gridEntity:GetSaveState().State == 3 and
        gridEntity.VarData == 0 and
        gridEntity.Position.X == posButton.X and
@@ -447,7 +428,7 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
-      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = season.itemPosition[i][1]
+      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
 
       if #ChangeCharOrder.itemOrder == #season.charPosition then
         -- They finished choosing all the items (one for each character)
@@ -466,7 +447,7 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
         end
         if numBig4Items > 1 then
           player:Kill()
-          Isaac.DebugString("Cheating detected; killing the player.")
+          Isaac.DebugString("Cheating detected (attempt to choose two big 4 items). Killing the player.")
           return
         end
 
@@ -512,8 +493,8 @@ function ChangeCharOrder:CheckButtonPressedBan1(gridEntity)
   local gameFrameCount = game:GetFrameCount()
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
-  for i = 1, #season.itemPosition1 do
-    local posButton = g:GridToPos(season.itemPosition1[i][2], season.itemPosition1[i][3])
+  for _, itemPos in ipairs(season.itemPosition1) do
+    local posButton = g:GridToPos(itemPos[2], itemPos[3])
     if gridEntity:GetSaveState().State == 3 and
        gridEntity.VarData == 0 and
        gridEntity.Position.X == posButton.X and
@@ -521,7 +502,7 @@ function ChangeCharOrder:CheckButtonPressedBan1(gridEntity)
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
-      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = season.itemPosition1[i][1]
+      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
 
       if #ChangeCharOrder.itemOrder == 1 then
         -- They finished banning a big 4 item
@@ -549,8 +530,8 @@ function ChangeCharOrder:CheckButtonPressedBan2(gridEntity)
   local game = Game()
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
-  for i = 1, #season.itemPosition2 do
-    local posButton = g:GridToPos(season.itemPosition2[i][2], season.itemPosition2[i][3])
+  for i, itemPos in ipairs(season.itemPosition2) do
+    local posButton = g:GridToPos(itemPos[2], itemPos[3])
     if gridEntity:GetSaveState().State == 3 and
        gridEntity.VarData == 0 and
        gridEntity.Position.X == posButton.X and
@@ -558,7 +539,7 @@ function ChangeCharOrder:CheckButtonPressedBan2(gridEntity)
 
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
-      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = season.itemPosition2[i][1]
+      ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
 
       if #ChangeCharOrder.itemOrder == season.itemBans then
         -- Concatentate the previous data and the new items chosen into one big table
@@ -625,14 +606,14 @@ function ChangeCharOrder:CreateCharacterButtons()
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
   ChangeCharOrder.sprites.characters = {}
-  for i = 1, #season.charPosition  do
+  for i, charPos in ipairs(season.charPosition) do
     -- Spawn buttons for each characters
-    local pos = g:GridToPos(season.charPosition[i][2], season.charPosition[i][3])
+    local pos = g:GridToPos(charPos[2], charPos[3])
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
     -- Spawn the character selection graphic next to the button
     ChangeCharOrder.sprites.characters[i] = Sprite()
-    local charNum = season.charPosition[i][1]
+    local charNum = charPos[1]
     ChangeCharOrder.sprites.characters[i]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
     ChangeCharOrder.sprites.characters[i]:SetFrame("Death", 5) -- The 5th frame is rather interesting
     ChangeCharOrder.sprites.characters[i].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
@@ -652,7 +633,7 @@ function ChangeCharOrder:CreateCharacterButtons()
   end
 
   -- Put the player next to the bottom door
-  player.Position = Vector(320, 400)
+  player.Position = g:GridToPos(6, 5)
 end
 
 function ChangeCharOrder:CreateItemButtons()
@@ -671,13 +652,13 @@ function ChangeCharOrder:CreateItemButtons()
   ChangeCharOrder.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
   -- Fade the character so that it looks like a ghost
 
-  local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
+  local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   ChangeCharOrder.sprites.items = {}
-  for i = 1, #v.itemPosition do
+  for i, itemPos in ipairs(season.itemPosition) do
     -- Spawn buttons for the all the items
-    local buttonPos = g:GridToPos(v.itemPosition[i][2], v.itemPosition[i][3])
+    local buttonPos = g:GridToPos(itemPos[2], itemPos[3])
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, buttonPos, true) -- 20
-    if i > #v.itemPosition - v.numSClass then -- Big 4
+    if i > #season.itemPosition - season.numSClass then -- Big 4
       -- Spawn creep for the S-Class items
       room:SetClear(false) -- Or else the creep will instantly dissipate
       for j = 1, 10 do
@@ -691,7 +672,7 @@ function ChangeCharOrder:CreateItemButtons()
     local newIndex = #ChangeCharOrder.sprites.items + 1
     ChangeCharOrder.sprites.items[newIndex] = Sprite()
     ChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
-    local itemNum = v.itemPosition[i][1]
+    local itemNum = itemPos[1]
     if itemNum < 1000 then
       -- This is a single item
       local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
@@ -718,18 +699,18 @@ function ChangeCharOrder:CreateItemBanButtons1()
   -- Delete the character sprites
   ChangeCharOrder.sprites.characters = {}
 
-  local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
+  local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   ChangeCharOrder.sprites.items = {}
-  for i = 1, #v.itemPosition1 do
+  for _, itemPos in ipairs(season.itemPosition1) do
     -- Spawn buttons for the all the items
-    local buttonPos = g:GridToPos(v.itemPosition1[i][2], v.itemPosition1[i][3])
+    local buttonPos = g:GridToPos(itemPos[2], itemPos[3])
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, buttonPos, true) -- 20
 
     -- Spawn the item selection graphics next to the buttons
     local newIndex = #ChangeCharOrder.sprites.items + 1
     ChangeCharOrder.sprites.items[newIndex] = Sprite()
     ChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
-    local itemNum = v.itemPosition1[i][1]
+    local itemNum = itemPos[1]
     if itemNum < 1000 then
       -- This is a single item
       local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
@@ -752,18 +733,18 @@ function ChangeCharOrder:CreateItemBanButtons2()
   local player = game:GetPlayer(0)
   local itemConfig = Isaac.GetItemConfig()
 
-  local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
+  local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   ChangeCharOrder.sprites.items = {}
-  for i = 1, #v.itemPosition2 do
+  for _, itemPos in ipairs(season.itemPosition2) do
     -- Spawn buttons for the all the items
-    local buttonPos = g:GridToPos(v.itemPosition2[i][2], v.itemPosition2[i][3])
+    local buttonPos = g:GridToPos(itemPos[2], itemPos[3])
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, buttonPos, true) -- 20
 
     -- Spawn the item selection graphics next to the buttons
     local newIndex = #ChangeCharOrder.sprites.items + 1
     ChangeCharOrder.sprites.items[newIndex] = Sprite()
     ChangeCharOrder.sprites.items[newIndex]:Load("gfx/schoolbag_item.anm2", false)
-    local itemNum = v.itemPosition2[i][1]
+    local itemNum = itemPos[1]
     if itemNum < 1000 then
       -- This is a single item
       local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
@@ -777,7 +758,7 @@ function ChangeCharOrder:CreateItemBanButtons2()
   end
 
   -- Put the player next to the bottom door
-  player.Position = Vector(320, 400)
+  player.Position = g:GridToPos(6, 5)
 end
 
 function ChangeCharOrder:RemoveAllRoomButtons()
@@ -802,7 +783,7 @@ function ChangeCharOrder:RemoveSClassButtons(itemNum)
   -- Local variables
   local game = Game()
   local room = game:GetRoom()
-  local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
+  local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
 
   -- Remove all of the buttons in the room
   local num = room:GetGridSize()
@@ -811,8 +792,8 @@ function ChangeCharOrder:RemoveSClassButtons(itemNum)
     if gridEntity ~= nil then
       local saveState = gridEntity:GetSaveState();
       if saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
-        for j = #v.itemPosition - v.numSClass + 1, #v.itemPosition do -- Big 4
-          local itemPos = g:GridToPos(v.itemPosition[j][2], v.itemPosition[j][3])
+        for j = #season.itemPosition - season.numSClass + 1, #season.itemPosition do -- Big 4
+          local itemPos = g:GridToPos(season.itemPosition[j][2], season.itemPosition[j][3])
           if gridEntity.Position.X == itemPos.X and
              gridEntity.Position.Y == itemPos.Y then
 
@@ -825,22 +806,35 @@ function ChangeCharOrder:RemoveSClassButtons(itemNum)
 
   -- Remove the sprites for the last 4 items
   -- (but leave the one we just chose so that it stays as a number)
-  for i = #v.itemPosition - v.numSClass + 1, #v.itemPosition do -- Big 4
+  for i = #season.itemPosition - season.numSClass + 1, #season.itemPosition do -- Big 4
     if i ~= itemNum then
       ChangeCharOrder.sprites.items[i] = Sprite()
     end
   end
 end
 
--- Called from the PostRender callback
-function ChangeCharOrder:DisplayCharSelectRoom()
+-- Called from the "PostRender:Main()" function
+function ChangeCharOrder:PostRender()
+  -- Local variables
+  local game = Game()
+  local gameFrameCount = game:GetFrameCount()
+  local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
+
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
     return
   end
 
+  -- Disable the controls or else the player will be able to move around while the screen is still black
+  if gameFrameCount < 1 then
+    player.ControlsEnabled = false
+  else
+    player.ControlsEnabled = true
+  end
+
   -- Render the current choosing activity
-  local posActivityGame = g:GridToPos(6, -1)
+  --local posActivityGame = g:GridToPos(6, -1)
+  local posActivityGame = g:GridToPos(6, 6)
   local posActivity = Isaac.WorldToRenderPosition(posActivityGame)
   posActivity.Y = posActivity.Y - 15
   local string
@@ -878,42 +872,42 @@ function ChangeCharOrder:DisplayCharSelectRoom()
   if ChangeCharOrder.seasonChosen == nil then
     return
   end
-  local v = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
+  local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   if ChangeCharOrder.sprites.characters ~= nil then
-    for i = 1, #ChangeCharOrder.sprites.characters do
+    for i, charSprite in ipairs(ChangeCharOrder.sprites.characters) do
       local posCharGame
       if #ChangeCharOrder.sprites.characters == 1 then
         posCharGame = g:GridToPos(6, 5) -- The bottom-center of the room
       else
-        posCharGame = g:GridToPos(v.charPosition[i][2], v.charPosition[i][3] - 1)
+        posCharGame = g:GridToPos(season.charPosition[i][2], season.charPosition[i][3] - 1)
       end
       local posChar = Isaac.WorldToRenderPosition(posCharGame, false)
       posChar.Y = posChar.Y + 10
-      ChangeCharOrder.sprites.characters[i]:Render(posChar, Vector(0, 0), Vector(0, 0))
+      charSprite:Render(posChar, Vector(0, 0), Vector(0, 0))
     end
   end
 
   -- Render the item sprites
   if ChangeCharOrder.sprites.items ~= nil then
-    for i = 1, #ChangeCharOrder.sprites.items do
+    for i, itemSprite in ipairs(ChangeCharOrder.sprites.items) do
       local x, y
       if ChangeCharOrder.seasonChosen == "R7S4" then
-        x = v.itemPosition[i][2]
-        y = v.itemPosition[i][3]
+        x = season.itemPosition[i][2]
+        y = season.itemPosition[i][3]
       else
         if ChangeCharOrder.phase == 3 then
-          x = v.itemPosition1[i][2]
-          y = v.itemPosition1[i][3]
+          x = season.itemPosition1[i][2]
+          y = season.itemPosition1[i][3]
         elseif ChangeCharOrder.phase == 4 then
-          x = v.itemPosition2[i][2]
-          y = v.itemPosition2[i][3]
+          x = season.itemPosition2[i][2]
+          y = season.itemPosition2[i][3]
         end
       end
 
       local posItemGame = g:GridToPos(x, y - 1)
       local posItem = Isaac.WorldToRenderPosition(posItemGame, false)
       posItem.Y = posItem.Y
-      ChangeCharOrder.sprites.items[i]:Render(posItem, Vector(0, 0), Vector(0, 0))
+      itemSprite:Render(posItem, Vector(0, 0), Vector(0, 0))
     end
   end
 end

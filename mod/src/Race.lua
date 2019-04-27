@@ -60,7 +60,7 @@ function Race:PostUpdateCheckVictoryLap()
   local player = game:GetPlayer(0)
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then
     return
   end
 
@@ -93,7 +93,7 @@ function Race:PostUpdateCheckFinished()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_FINISHED) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_FINISHED) then
     return
   end
 
@@ -120,7 +120,7 @@ function Race:PostUpdateCheckKeeperHolyMantle()
   local effects = player:GetEffects()
 
   if g.run.tempHolyMantle and
-     effects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) == false then -- 313
+     not effects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) then -- 313
 
     g.run.tempHolyMantle = false
   end

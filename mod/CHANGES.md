@@ -100,6 +100,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Identified pills (up to 7) will be shown when the player presses Tab.
 * Diagonal knife throws have a 3-frame window instead of a 1-frame window.
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
+* Pin's first attack happens on the 15th frame (instead of the 73rd frame).
 * Cod Worms are replaced with Para-Bites.
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.

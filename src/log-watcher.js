@@ -174,6 +174,20 @@ const parseLine = (line) => {
         } else {
             process.send('error: Failed to parse the drop hotkey from the log.');
         }
+    } else if (line.startsWith('Lua Debug: New drop trinket hotkey: ')) {
+        const m = line.match(/Lua Debug: New drop trinket hotkey: (.+)/);
+        if (m) {
+            process.send(`New drop trinket hotkey: ${m[1]}`);
+        } else {
+            process.send('error: Failed to parse the drop trinket hotkey from the log.');
+        }
+    } else if (line.startsWith('Lua Debug: New drop pocket hotkey: ')) {
+        const m = line.match(/Lua Debug: New drop pocket hotkey: (.+)/);
+        if (m) {
+            process.send(`New drop pocket hotkey: ${m[1]}`);
+        } else {
+            process.send('error: Failed to parse the drop pocket hotkey from the log.');
+        }
     } else if (line.startsWith('Lua Debug: New switch hotkey: ')) {
         const m = line.match(/Lua Debug: New switch hotkey: (.+)/);
         if (m) {

@@ -11,7 +11,7 @@ function SoulJar:PostNewLevel()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) then
     return
   end
 
@@ -25,7 +25,7 @@ function SoulJar:EntityTakeDmg(damageFlag)
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) then
     return
   end
 
@@ -38,7 +38,7 @@ function SoulJar:EntityTakeDmg(damageFlag)
       selfDamage = true
     end
   end
-  if selfDamage == false then
+  if not selfDamage then
     game:SetLastDevilRoomStage(g.run.lastDDLevel)
   end
 end
@@ -50,7 +50,7 @@ function SoulJar:PostUpdate()
   local player = game:GetPlayer(0)
   local soulHearts = player:GetSoulHearts()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) then
     return
   end
 
@@ -74,7 +74,7 @@ function SoulJar:SpriteDisplay()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SOUL_JAR) then
     return
   end
 

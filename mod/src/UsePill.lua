@@ -22,8 +22,8 @@ function UsePill:Main(pillEffect)
     -- A separate mod may have manually used a pill with a null color
     return
   end
-  for i = 1, #g.run.pills do
-    if g.run.pills[i].color == pillColor then
+  for _, pill in ipairs(g.run.pills) do
+    if pill.color == pillColor then
       return
     end
   end

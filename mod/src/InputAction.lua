@@ -54,7 +54,7 @@ function InputAction:Main(entity, inputHook, buttonAction)
 
     -- Prevent opening the console during a race
     if g.race.status == "in progress" and
-       g.debug == false then
+       not g.debug then
 
       return false
     end
@@ -67,7 +67,7 @@ function InputAction:KnifeDiagonalFix(buttonAction)
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) == false or -- 114
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
      -- (Epic Fetus is the only thing that overwrites Mom's Knife)
      #g.run.knifeDirection < 1 then

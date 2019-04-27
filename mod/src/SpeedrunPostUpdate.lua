@@ -5,7 +5,7 @@ local g        = require("src/globals")
 local Speedrun = require("src/speedrun")
 
 function SpeedrunPostUpdate:Main()
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
@@ -37,8 +37,8 @@ function SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
     return
   end
 
-  for i = 1, #Speedrun.remainingItemStarts do
-    if Speedrun.remainingItemStarts[i] == g.run.passiveItems[1] then
+  for i, remainingItem in ipairs(Speedrun.remainingItemStarts) do
+    if remainingItem == g.run.passiveItems[1] then
       table.remove(Speedrun.remainingItemStarts, i)
       break
     end
@@ -117,11 +117,10 @@ function SpeedrunPostUpdate:CheckVetoButton(gridEntity)
   -- Add the sprite to the sprite list
   local itemConfig = Isaac.GetItemConfig()
   Speedrun.vetoSprites = {}
-  for i = 1, #Speedrun.vetoList do
+  for i, veto in ipairs(Speedrun.vetoList) do
     Speedrun.vetoSprites[i] = Sprite()
     Speedrun.vetoSprites[i]:Load("gfx/schoolbag_item.anm2", false)
-    local itemNum = Speedrun.vetoList[i]
-    local fileName = itemConfig:GetCollectible(itemNum).GfxFileName
+    local fileName = itemConfig:GetCollectible(veto).GfxFileName
     Speedrun.vetoSprites[i]:ReplaceSpritesheet(0, fileName)
     Speedrun.vetoSprites[i]:LoadGraphics()
     Speedrun.vetoSprites[i]:SetFrame("Default", 1)

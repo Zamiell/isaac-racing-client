@@ -12,14 +12,17 @@ local SoulJar      = require("src/souljar")
 function PostNewLevel:Main()
   -- Local variables
   local game = Game()
+  local level = game:GetLevel()
+  local stage = level:GetStage()
+  local stageType = level:GetStageType()
   local gameFrameCount = game:GetFrameCount()
 
-  Isaac.DebugString("MC_POST_NEW_LEVEL")
+  Isaac.DebugString("MC_POST_NEW_LEVEL - " .. tostring(stage) .. "." .. tostring(stageType))
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewLevel gets called before the PostGameStarted callbacks)
   if gameFrameCount == 0 and
-     g.run.reseededFloor == false then
+     not g.run.reseededFloor then
 
     return
   end
@@ -53,7 +56,7 @@ function PostNewLevel:NewLevel()
   local boneHearts = player:GetBoneHearts()
   local challenge = Isaac.GetChallenge()
 
-  Isaac.DebugString("MC_POST_NEW_LEVEL2")
+  Isaac.DebugString("MC_POST_NEW_LEVEL2 - " .. tostring(stage) .. "." .. tostring(stageType))
 
   -- Find out if we performed a Sacrifice Room teleport
   if (g.race.goal == "The Lamb" or
@@ -73,7 +76,7 @@ function PostNewLevel:NewLevel()
 
   -- Reseed the floor if it has a flaw in it
   if challenge ~= 0 or
-     customRun == false then -- Disable reseeding for set seeds
+     not customRun then -- Disable reseeding for set seeds
 
     if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
        CheckLoop:Main() or -- Check for looping floors
@@ -227,8 +230,8 @@ function PostNewLevel:CheckDupeRooms()
   end
 
   -- We have gone through all of the rooms and none are duplicated, so permanently store them as rooms already seen
-  for i = 1, #roomIDs do
-    g.run.roomIDs[#g.run.roomIDs + 1] = roomIDs[i]
+  for _, roomID in ipairs(roomIDs) do
+    g.run.roomIDs[#g.run.roomIDs + 1] = roomID
   end
 
   return false
@@ -259,7 +262,7 @@ function PostNewLevel:CheckDualityNarrowRoom()
   --local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) == false then -- 498
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) then -- 498
     return
   end
 

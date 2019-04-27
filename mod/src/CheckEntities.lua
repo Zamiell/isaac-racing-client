@@ -111,7 +111,7 @@ function CheckEntities:Entity5(pickup)
   -- Keep track of pickups that are touched
   -- (used for moving pickups on top of a trapdoor/crawlspace)
   if pickup:GetSprite():IsPlaying("Collect") and
-     pickup.Touched == false then
+     not pickup.Touched then
 
     pickup.Touched = true
     Isaac.DebugString("Touched pickup: " ..
@@ -184,7 +184,7 @@ function CheckEntities:Entity5(pickup)
        pickup:GetSprite():GetFrame() == 21 then -- This is the last frame of the "Appear" animation
 
       -- The "Appear" animation is finished, so now change this back to a Mimic
-      -- (we can't just check for "IsPlaying("Appear") == false" because if the player is touching it,
+      -- (we can't just check for "not IsPlaying("Appear")" because if the player is touching it,
       -- they will get the contents of a normal chest before the swap back occurs)
       pickup.Variant = 54
       Isaac.DebugString("Replaced a Spiked Chest / Mimic (2/2).")
@@ -209,7 +209,7 @@ function CheckEntities:Entity5(pickup)
   end
 
   -- We want to check all pickups
-  if pickup.Touched == false then
+  if not pickup.Touched then
     -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect" animation
     -- So we don't want to move a pickup that is already collected, or it will duplicate it
     -- ("Touched" was manually set to true by the mod earlier)
@@ -689,7 +689,7 @@ function CheckEntities:Entity5_370(pickup)
 
   -- Do nothing if we are not on a custom speedrun challenge
   -- (otherwise we would mess with the normal challenges)
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
@@ -798,7 +798,7 @@ function CheckEntities:Entity1000(effect)
 
   elseif effect.Variant == EffectVariant.DICE_FLOOR then -- 76
     -- We need to keep track of when the player uses a 5-pip Dice Room so that we can seed the floor appropriately
-    if g.run.diceRoomActivated == false and
+    if not g.run.diceRoomActivated and
        effect.SubType == 4 and -- 5-pip Dice Room
        g:InsideSquare(player.Position, effect.Position, 75) then -- Determined through trial and error
 
@@ -842,7 +842,7 @@ function CheckEntities:EntityRaceTrophy(entity)
   end
 
   -- Check to see if we are touching the trophy
-  if g:InsideSquare(player.Position, entity.Position, 24) == false then -- 25 is a touch too big
+  if not g:InsideSquare(player.Position, entity.Position, 24) then -- 25 is a touch too big
     return
   end
 
@@ -850,7 +850,7 @@ function CheckEntities:EntityRaceTrophy(entity)
   player:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")
 
   if challenge == Challenge.CHALLENGE_NULL and -- 0
-     Speedrun.inSeededSpeedrun == false then
+     not Speedrun.inSeededSpeedrun then
 
     Race:Finish()
 

@@ -7,7 +7,6 @@ local Sprites                 = require("src/sprites")
 local Schoolbag               = require("src/schoolbag")
 local SoulJar                 = require("src/souljar")
 local FastClear               = require("src/fastclear")
-local FastDrop                = require("src/fastdrop")
 local Speedrun                = require("src/speedrun")
 local SpeedrunPostGameStarted = require("src/speedrunpostgamestarted")
 local Timer                   = require("src/timer")
@@ -19,6 +18,7 @@ function PostGameStarted:Main(saveState)
   local itemPool = game:GetItemPool()
   local seeds = game:GetSeeds()
   local startSeed = seeds:GetStartSeed()
+  local startSeedString = seeds:GetStartSeedString()
   local customRun = seeds:IsCustomRun()
   local level = game:GetLevel()
   local stage = level:GetStage()
@@ -32,16 +32,14 @@ function PostGameStarted:Main(saveState)
   local player = game:GetPlayer(0)
   local challenge = Isaac.GetChallenge()
 
-  Isaac.DebugString("MC_POST_GAME_STARTED")
+  Isaac.DebugString("MC_POST_GAME_STARTED - " .. tostring(startSeedString))
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
-  --[[
   if PostGameStarted:CheckCorruptMod() or
      PostGameStarted:CheckFullyUnlockedSave() then
 
     return
   end
-  --]]
   g.saveFile.fullyUnlocked = true
 
   if saveState then
@@ -66,7 +64,7 @@ function PostGameStarted:Main(saveState)
   end
 
   -- Make sure that the "Total Curse Immunity" easter egg is on (the "BLCK CNDL" seed)
-  if seeds:HasSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) == false and -- 70
+  if not seeds:HasSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) and -- 70
      Isaac.GetChallenge() == 0 then
      -- If we don't check for challenges, this can cause an infinite loop when entering Challenge #1, for example
 
@@ -90,9 +88,6 @@ function PostGameStarted:Main(saveState)
 
   -- Reset some RNG counters for familiars
   FastClear:InitRun()
-
-  -- Reset "Change Keybindings" variables
-  FastDrop:PostGameStarted()
 
   -- Reset some race variables that we keep track of per run
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)
@@ -162,6 +157,12 @@ function PostGameStarted:Main(saveState)
   -- Instead, put the player in the middle of the room
   player.Position = room:GetCenterPos()
 
+  -- Also, put familiars in the middle of the room, if any
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    familiar.Position = room:GetCenterPos()
+  end
+
   -- Give us custom racing items, depending on the character (mostly just the D6)
   PostGameStarted:Character()
 
@@ -172,17 +173,15 @@ function PostGameStarted:Main(saveState)
   PostGameStarted:Race()
 
   -- Remove the 3 placeholder items if this is not a diversity race
-  if PostGameStarted.diversity == false then
+  if not PostGameStarted.diversity then
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
   end
 
   -- Make sure that the festive hat shows
-  --[[
-  local player = game:GetPlayer(0)
-  player:AddNullCostume(NullItemID.ID_CHRISTMAS) -- 16
-  --]]
+  --local player = game:GetPlayer(0)
+  --player:AddNullCostume(NullItemID.ID_CHRISTMAS) -- 16
   -- (this corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file)
 
   -- Call PostNewLevel manually (they get naturally called out of order)
@@ -484,7 +483,7 @@ function PostGameStarted:Race()
     Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(game.Difficulty) .. ").")
     return
 
-  elseif g.race.hard == false and
+  elseif not g.race.hard and
          game.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
          g.race.rFormat ~= "custom" then
 
@@ -512,7 +511,7 @@ function PostGameStarted:Race()
     -- (this will be true if we are on a set seed or on a challenge,
     -- but we won't get this far if we are on a challenge)
     if customRun and
-       g.debug == false then -- Make an exception if we are trying to debug something on a certain seed
+       not g.debug then -- Make an exception if we are trying to debug something on a certain seed
 
       -- If the run started with a set seed, this will change the reset behavior to that of an unseeded run
       seeds:Reset()
@@ -587,12 +586,12 @@ function PostGameStarted:Seeded()
   local character = player:GetPlayerType()
 
   -- Give the player extra starting items (for seeded races)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) == false then -- 21
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) then -- 21
     -- Eden can start with The Compass
     player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
     -- Eden and Samael start with the Schoolbag
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
@@ -600,8 +599,7 @@ function PostGameStarted:Seeded()
 
   -- Give the player the "Instant Start" item(s)
   local replacedD6 = false
-  for i = 1, #g.race.startingItems do
-    local itemID = g.race.startingItems[i]
+  for _, itemID in ipairs(g.race.startingItems) do
     if itemID == 600 then
       -- The 13 luck is a special case
       player:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
@@ -635,7 +633,7 @@ function PostGameStarted:Seeded()
   end
 
   -- Give the player extra Schoolbag items, depending on the character
-  if replacedD6 == false then
+  if not replacedD6 then
     if character == PlayerType.PLAYER_MAGDALENA then -- 1
       Schoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, "max") -- 45
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
@@ -656,14 +654,14 @@ function PostGameStarted:Seeded()
   end
 
   -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the Schoolbag item
-  for i = 1, #g.race.startingItems do
-    if g.race.startingItems[i] == 600 then
-      local itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
+  for _, itemID in ipairs(g.race.startingItems) do
+    if itemID == 600 then
+      itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
       Isaac.DebugString("Removing collectible " .. itemID .. " (13 Luck)")
       Isaac.DebugString("Adding collectible " .. itemID .. " (13 Luck)")
     else
-      Isaac.DebugString("Removing collectible " .. g.race.startingItems[i])
-      Isaac.DebugString("Adding collectible " .. g.race.startingItems[i])
+      Isaac.DebugString("Removing collectible " .. itemID)
+      Isaac.DebugString("Adding collectible " .. itemID)
     end
   end
 
@@ -705,7 +703,7 @@ function PostGameStarted:Diversity()
   PostGameStarted.diversity = true
 
   -- Give the player extra starting items (for diversity races)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
     -- Eden and Samael start with the Schoolbag already
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
@@ -719,9 +717,8 @@ function PostGameStarted:Diversity()
   -- More Options will be removed upon entering the first Treasure Room
 
   -- Give the player their five random diversity starting items
-  for i = 1, #g.race.startingItems do
+  for i, itemID in ipairs(g.race.startingItems) do
     -- Replace the custom items
-    local itemID = g.race.startingItems[i]
     if i ~= 5 then -- We don't want to replace trinkets
       if itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
         itemID = Isaac.GetItemIdByName("Betrayal")
@@ -845,8 +842,7 @@ function PostGameStarted:UnseededRankedSolo()
   local itemPool = game:GetItemPool()
 
   -- The client will populate the starting items for the current season into the "startingItems" variable
-  for i = 1, #g.race.startingItems do
-    local itemID = g.race.startingItems[i]
+  for _, itemID in ipairs(g.race.startingItems) do
     player:AddCollectible(itemID, 12, true)
     itemPool:RemoveCollectible(itemID)
   end
@@ -860,12 +856,12 @@ function PostGameStarted:SeededMO()
   local character = player:GetPlayerType()
 
   -- Give the player extra starting items (for seeded races)
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) == false then -- 21
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) then -- 21
     -- Eden can start with The Compass
     player:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   end
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
     -- Eden and Samael start with the Schoolbag
     player:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)

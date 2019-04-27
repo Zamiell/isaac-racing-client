@@ -25,8 +25,7 @@ function RPPedestals:Replace(pickup)
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if this is a pedestal that was already replaced
-  for i = 1, #g.run.replacedPedestals do
-    local pedestal = g.run.replacedPedestals[i]
+  for _, pedestal in ipairs(g.run.replacedPedestals) do
     if pedestal.room == roomIndex and
        pedestal.seed == pickup.InitSeed then
 
@@ -47,8 +46,7 @@ function RPPedestals:Replace(pickup)
     playerGen = true
   else
     -- Check to see if this is a reroll of a player-generated item
-    for i = 1, #g.run.replacedPedestals do
-      local pedestal = g.run.replacedPedestals[i]
+    for _, pedestal in ipairs(g.run.replacedPedestals) do
       if pedestal.room == roomIndex and
          g:InsideSquare(pedestal, pickup.Position, 15) and
          pedestal.playerGen then
@@ -83,8 +81,7 @@ function RPPedestals:Replace(pickup)
 
   if pickup.Touched then
     -- If we touched this item, we need to set it back to the last seed that we had for this position
-    for i = 1, #g.run.replacedPedestals do
-      local pedestal = g.run.replacedPedestals[i]
+    for _, pedestal in ipairs(g.run.replacedPedestals) do
       if pedestal.room == roomIndex and
          g:InsideSquare(pedestal, pickup.Position, 15) then
 
@@ -98,15 +95,14 @@ function RPPedestals:Replace(pickup)
       end
     end
 
-  elseif playerGen == false then
+  elseif not playerGen then
     -- This is a new pedestal, so find the new seed that we should set for it,
     -- which will correspond with how many times it has been rolled
     -- (we can't just seed all items with the room seed because
     -- it causes items that are not fully decremented on sight to roll into themselves)
-    for i = 1, #g.run.replacedPedestals do
-      local pedestal = g.run.replacedPedestals[i]
+    for _, pedestal in ipairs(g.run.replacedPedestals) do
       if pedestal.room == roomIndex and
-         pedestal.playerGen == false then
+         not pedestal.playerGen then
 
         newSeed = g:IncrementRNG(newSeed)
       end
@@ -138,7 +134,7 @@ function RPPedestals:Replace(pickup)
       g.run.spawningKrampusItem = false
     elseif gameFrameCount <= g.run.mysteryGiftFrame then
       Isaac.DebugString("A Lump of Coal from Mystery Gift detected; not deleting.")
-    elseif pickup.Touched == false then -- We don't want to delete a head that we are swapping for something else
+    elseif not pickup.Touched then -- We don't want to delete a head that we are swapping for something else
       -- This is a naturally spawned Krampus item
       pickup:Remove()
       Isaac.DebugString("Removed a naturally spawned Krampus item.")
@@ -182,8 +178,7 @@ function RPPedestals:Replace(pickup)
   elseif stage == 1 and
          roomType == RoomType.ROOM_TREASURE and -- 4
          ((g.race.rFormat == "unseeded" and
-           g.race.status == "in progress" and
-           (g.race.ranked and g.race.solo) == false) or
+           g.race.status == "in progress") or
           challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
 
     -- Check to see if this is a special Big 4 reroll (50% chance to reroll)
@@ -329,7 +324,7 @@ function RPPedestals:Replace(pickup)
 
   -- Add it to the tracking table so that we don't replace it again
   -- (and don't add random items to the index in case a banned item rolls into another banned item)
-  if randomItem == false then
+  if not randomItem then
     g.run.replacedPedestals[#g.run.replacedPedestals + 1] = {
       room      = roomIndex,
       X         = pickup.Position.X,

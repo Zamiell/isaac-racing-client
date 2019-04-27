@@ -42,7 +42,7 @@ function Schoolbag:AddCharge(singleCharge)
   local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
 
   -- We don't need to do anything if we don't have a Schoolbag or we don't have an item in the Schoolbag
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 then
 
     return
@@ -50,7 +50,7 @@ function Schoolbag:AddCharge(singleCharge)
 
   -- We don't need to do anything if the item is already charged
   if g.run.schoolbag.charge >= maxCharges and
-     player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) == false then -- 63
+     not player:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) then -- 63
 
     return
   end
@@ -112,7 +112,7 @@ function Schoolbag:SpriteDisplay()
     return
   end
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false then
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
     return
   end
 
@@ -196,7 +196,7 @@ function Schoolbag:CheckActiveCharges()
   local activeCharge = player:GetActiveCharge()
   local batteryCharge = player:GetBatteryCharge()
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      player:GetActiveItem() == 0 then
 
     return
@@ -258,10 +258,10 @@ function Schoolbag:CheckEmptyActive()
   local game = Game()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 or
      player:GetActiveItem() ~= 0 or
-     player:IsItemQueueEmpty() == false then
+     not player:IsItemQueueEmpty() then
 
     return
   end
@@ -283,10 +283,10 @@ function Schoolbag:CheckBossRush()
   local room = game:GetRoom()
   local player = game:GetPlayer(0)
 
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 or
      roomIndexUnsafe ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
-     room:IsAmbushActive() == false or
+     not room:IsAmbushActive() or
      g.run.schoolbag.bossRushActive then
 
     return
@@ -309,7 +309,7 @@ function Schoolbag:CheckInput()
   -- We don't care about detecting inputs if we don't have the Schoolbag,
   -- we don't have anything in the Schoolbag,
   -- or we currently have an active item held overhead
-  if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) == false or
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 or
      Schoolbag:IsActiveItemQueued() then
      -- This will allow switches while the use/pickup animation is occuring but
@@ -319,7 +319,7 @@ function Schoolbag:CheckInput()
   end
 
   local button = g.race.hotkeySwitch
-  if button ~= 0 then
+  if button ~= 0 and button ~= nil then
     -- If they have a custom Schoolbag-switch key bound, then use that
     -- (we use "IsButtonPressed()" instead of "IsButtonTriggered()" because
     -- the latter is not very responsive with fast sequences of inputs)
@@ -331,7 +331,7 @@ function Schoolbag:CheckInput()
         pressed = true
       end
     end
-    if pressed == false then
+    if not pressed then
       g.run.schoolbag.pressed = false
       return
     elseif g.run.schoolbag.pressed then
@@ -341,7 +341,7 @@ function Schoolbag:CheckInput()
     -- If they do not have a custom key bound, then default to the same button that is used for card/pill switching
     -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
     -- the latter is not very responsive with fast sequences of inputs
-    if Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) == false then -- 11
+    if not Input.IsActionPressed(ButtonAction.ACTION_DROP, player.ControllerIndex) then -- 11
       g.run.schoolbag.pressed = false
       return
     elseif g.run.schoolbag.pressed then

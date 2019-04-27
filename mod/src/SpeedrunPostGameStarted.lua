@@ -3,7 +3,6 @@ local SpeedrunPostGameStarted = {}
 -- Includes
 local g               = require("src/globals")
 local Speedrun        = require("src/speedrun")
-local ChangeCharOrder = require("src/changecharorder")
 local Schoolbag       = require("src/schoolbag")
 
 function SpeedrunPostGameStarted:Main()
@@ -40,17 +39,6 @@ function SpeedrunPostGameStarted:Main()
     return
   end
 
-  if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
-    -- Make sure that some speedrun related variables are reset
-    Speedrun.charNum = 1
-    Speedrun.fastReset = false
-    Speedrun.inSeededSpeedrun = false
-
-    -- Prepare the player for the button room and teleport them there
-    ChangeCharOrder:PostGameStarted()
-    return
-  end
-
   if challenge == Isaac.GetChallengeIdByName(Speedrun.R7SeededName) then
     Speedrun.inSeededSpeedrun = true
     g:ExecuteCommand("challenge 0")
@@ -66,13 +54,13 @@ function SpeedrunPostGameStarted:Main()
     Speedrun.inSeededSpeedrun = false
   end
 
-  if Speedrun:InSpeedrun() == false then
+  if not Speedrun:InSpeedrun() then
     return
   end
 
   -- Don't do anything if the player has not submitted a character order
   -- (we will display an error later on in the PostRender callback)
-  if Speedrun:CheckValidCharOrder() == false then
+  if not Speedrun:CheckValidCharOrder() then
     return
   end
 
@@ -89,7 +77,7 @@ function SpeedrunPostGameStarted:Main()
   if Speedrun.fastReset then
     Speedrun.fastReset = false
 
-  elseif Speedrun.fastReset == false and
+  elseif not Speedrun.fastReset and
          Speedrun.charNum ~= 1 then
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
@@ -123,7 +111,7 @@ function SpeedrunPostGameStarted:Main()
   -- (but Season 4 and Seeded never get it, since there is no resetting involved)
   if Speedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      Speedrun.inSeededSpeedrun == false) then
+      not Speedrun.inSeededSpeedrun) then
 
     player:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     player:RemoveCostume(itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
@@ -409,9 +397,9 @@ function SpeedrunPostGameStarted:R7S5()
 
   -- Check to see if the player has played a run with one of the big 4
   local alreadyStartedBig4 = false
-  for i = 1, #Speedrun.big4 do
-    for j = 1, #Speedrun.selectedItemStarts do
-      if Speedrun.selectedItemStarts[j] == Speedrun.big4[i] then
+  for _, big4Item in ipairs(Speedrun.big4) do
+    for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
+      if big4Item == startedItem then
         alreadyStartedBig4 = true
         break
       end
@@ -441,13 +429,13 @@ function SpeedrunPostGameStarted:R7S5()
 
       -- Check to see if we already started this item
       local alreadyStarted = false
-      for i = 1, #Speedrun.selectedItemStarts do
-        if Speedrun.selectedItemStarts[i] == startingItem then
+      for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
+        if startedItem == startingItem then
           alreadyStarted = true
           break
         end
       end
-      if alreadyStarted == false then
+      if not alreadyStarted then
         -- Remove it from the starting item pool
         table.remove(Speedrun.remainingItemStarts, startingItemIndex)
 
@@ -492,9 +480,9 @@ function SpeedrunPostGameStarted:R7S6()
   -- Everyone starts with a random passive item / build
   -- Check to see if the player has played a run with one of the big 4
   local alreadyStartedBig4 = false
-  for i = 1, #Speedrun.selectedItemStarts do
-    for j = 1, #Speedrun.big4 do
-      if Speedrun.selectedItemStarts[i][1] == Speedrun.big4[j] then
+  for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
+    for _, big4Item in ipairs(Speedrun.big4) do
+      if startedItem[1] == big4Item then
         alreadyStartedBig4 = true
         break
       end
@@ -536,8 +524,8 @@ function SpeedrunPostGameStarted:R7S6()
       end
 
       -- Check to see if we already started this item
-      for i = 1, #Speedrun.selectedItemStarts do
-        if Speedrun.selectedItemStarts[i] == startingItems[1] then
+      for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
+        if startedItem == startingItems[1] then
           valid = false
           break
         end
@@ -595,8 +583,8 @@ function SpeedrunPostGameStarted:R7S6()
 
       -- Check to see if we vetoed this item and we are on the first character
       if Speedrun.charNum == 1 then
-        for i = 1, #Speedrun.vetoList do
-          if Speedrun.vetoList[i] == startingItems[1] then
+        for _, veto in ipairs(Speedrun.vetoList) do
+          if veto == startingItems[1] then
             valid = false
             break
           end
@@ -627,7 +615,7 @@ function SpeedrunPostGameStarted:R7S6()
   end
 
   -- Give the items to the player (and remove the items from the pools)
-  for i, item in ipairs(startingItems) do
+  for _, item in ipairs(startingItems) do
     player:AddCollectible(item, 0, false)
     itemPool:RemoveCollectible(item)
 

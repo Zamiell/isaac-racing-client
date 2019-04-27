@@ -157,7 +157,7 @@ function PreUseItem:Item422()
 
   -- Reset the Schoolbag
   if player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-     player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) == false then
+     not player:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then
      -- Broken Remote cancels the Glowing Hour Glass effect
 
     Isaac.DebugString("Rewinding the Schoolbag item.")
@@ -238,7 +238,7 @@ function PreUseItem:UnreplacedItemsExist()
       end
     end
 
-    if alreadyReplaced == false then
+    if not alreadyReplaced then
       return true
     end
   end

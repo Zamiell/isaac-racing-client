@@ -45,7 +45,7 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   if roomVariant == 12 then
     -- Item surrounded by 3 rocks and 1 spike
     local rocks = {66, 68, 82}
-    for i, rockIndex in ipairs(rocks) do
+    for _, rockIndex in ipairs(rocks) do
       if rockIndex == gridIndex then
         return {1930, 0, 0} -- Spikes
       end
@@ -54,13 +54,13 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   elseif roomVariant == 19 then
     -- Left item surrounded by rocks
     local rocksReplaced = {49, 63, 65, 79}
-    for i, rockIndex in ipairs(rocksReplaced) do
+    for _, rockIndex in ipairs(rocksReplaced) do
       if rockIndex == gridIndex then
         return {1930, 0, 0} -- Spikes
       end
     end
     local rocksDeleted = {20, 47, 48, 62, 77, 78, 82, 95, 109}
-    for i, rockIndex in ipairs(rocksDeleted) do
+    for _, rockIndex in ipairs(rocksDeleted) do
       if rockIndex == gridIndex then
         return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
@@ -69,7 +69,7 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   elseif roomVariant == 21 then
     -- Left item surrounded by spikes
     local spikes = {48, 50, 78, 80}
-    for i, spikeIndex in ipairs(spikes) do
+    for _, spikeIndex in ipairs(spikes) do
       if spikeIndex == gridIndex then
         return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
@@ -78,7 +78,7 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   elseif roomVariant == 22 then
     -- Left item surrounded by pots/mushrooms/skulls
     local pots = {49, 63, 65, 79}
-    for i, potIndex in ipairs(pots) do
+    for _, potIndex in ipairs(pots) do
       if potIndex == gridIndex then
         return {1930, 0, 0} -- Spikes
       end
