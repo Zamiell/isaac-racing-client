@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.34.2* - May 2nd, 2019
+
+* Fixed some crashing issues.
+* Fixed the bug where all doors would be enabled in a flipped L room. (Thanks mgln)
+
 ### *v0.34.0* - May 2nd, 2019
 
 * Season 5 is finished!
