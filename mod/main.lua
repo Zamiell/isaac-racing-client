@@ -37,40 +37,42 @@ POST-FLIP ACTIONS:
 local RacingPlus = RegisterMod("Racing+", 1)
 
 -- The Lua code is split up into separate files for organizational purposes
--- (file names must be in lowercase for Linux compatibility purposes)
-local g                   = require("src/globals") -- Global variables
-local NPCUpdate           = require("src/npcupdate") -- 0
-local PostUpdate          = require("src/postupdate") -- 1
-local PostRender          = require("src/postrender") -- 2
-local UseItem             = require("src/useitem") -- 3
-local UseCard             = require("src/usecard") -- 5
-local EvaluateCache       = require("src/evaluatecache") -- 8
-local PostPlayerInit      = require("src/postplayerinit") -- 9
-local UsePill             = require("src/usepill") -- 10
-local EntityTakeDmg       = require("src/entitytakedmg") -- 11
-local InputAction         = require("src/inputaction") -- 13
-local PostGameStarted     = require("src/postgamestarted") -- 15
-local PostNewLevel        = require("src/postnewlevel") -- 18
-local PostNewRoom         = require("src/postnewroom") -- 19
-local ExecuteCmd          = require("src/executecmd") -- 22
-local PreUseItem          = require("src/preuseitem") -- 23
-local PreEntitySpawn      = require("src/preentityspawn") -- 24
-local PostNPCInit         = require("src/postnpcinit") -- 27
-local PostPickupInit      = require("src/postpickupinit") -- 34
-local PostPickupSelection = require("src/postpickupselection") -- 37
-local PostLaserInit       = require("src/postlaserinit") -- 47
-local PostEffectInit      = require("src/posteffectinit") -- 54
-local PostEffectUpdate    = require("src/posteffectupdate") -- 55
-local PostBombUpdate      = require("src/postbombupdate") -- 58
-local PostEntityKill      = require("src/postentitykill") -- 68
-local PreRoomEntitySpawn  = require("src/preroomentityspawn") -- 71
-local FastClear           = require("src/fastclear") -- Functions for the "Fast-Clear" feature
-local Schoolbag           = require("src/schoolbag") -- Functions for the Schoolbag custom item
-local Speedrun            = require("src/speedrun") -- Functions for custom challenges
-local Samael              = require("src/samael") -- Samael functions
-local JrFetus             = require("src/jrfetus") -- Jr. Fetus functions (2/2)
-local Mahalath            = require("src/mahalath") -- Mahalath functions
-local Debug               = require("src/debug") -- Debug functions
+-- (file names must be in a uniquely named directory because no two mods can have the same require path)
+-- (in the code, file names must be in lowercase for Linux compatibility purposes;
+-- the actual files themselves can have capital letters)
+local g                   = require("racing_plus/globals") -- Global variables
+local NPCUpdate           = require("racing_plus/npcupdate") -- 0
+local PostUpdate          = require("racing_plus/postupdate") -- 1
+local PostRender          = require("racing_plus/postrender") -- 2
+local UseItem             = require("racing_plus/useitem") -- 3
+local UseCard             = require("racing_plus/usecard") -- 5
+local EvaluateCache       = require("racing_plus/evaluatecache") -- 8
+local PostPlayerInit      = require("racing_plus/postplayerinit") -- 9
+local UsePill             = require("racing_plus/usepill") -- 10
+local EntityTakeDmg       = require("racing_plus/entitytakedmg") -- 11
+local InputAction         = require("racing_plus/inputaction") -- 13
+local PostGameStarted     = require("racing_plus/postgamestarted") -- 15
+local PostNewLevel        = require("racing_plus/postnewlevel") -- 18
+local PostNewRoom         = require("racing_plus/postnewroom") -- 19
+local ExecuteCmd          = require("racing_plus/executecmd") -- 22
+local PreUseItem          = require("racing_plus/preuseitem") -- 23
+local PreEntitySpawn      = require("racing_plus/preentityspawn") -- 24
+local PostNPCInit         = require("racing_plus/postnpcinit") -- 27
+local PostPickupInit      = require("racing_plus/postpickupinit") -- 34
+local PostPickupSelection = require("racing_plus/postpickupselection") -- 37
+local PostLaserInit       = require("racing_plus/postlaserinit") -- 47
+local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
+local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
+local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
+local PostEntityKill      = require("racing_plus/postentitykill") -- 68
+local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
+local FastClear           = require("racing_plus/fastclear") -- Functions for the "Fast-Clear" feature
+local Schoolbag           = require("racing_plus/schoolbag") -- Functions for the Schoolbag custom item
+local Speedrun            = require("racing_plus/speedrun") -- Functions for custom challenges
+local Samael              = require("racing_plus/samael") -- Samael functions
+local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions (2/2)
+local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions
+local Debug               = require("racing_plus/debug") -- Debug functions
 
 -- Initiailize the "g.run" table
 g:InitRun()
@@ -89,8 +91,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC24,
                                                    EntityType.ENTITY_GLOBIN) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
                                                    EntityType.ENTITY_HOST) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
-                                                   EntityType.ENTITY_MOBILE_HOST) -- 204
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC28,
                                                    EntityType.ENTITY_CHUB) -- 28
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
@@ -105,6 +105,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
+                                                   EntityType.ENTITY_MOBILE_HOST) -- 204
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_GAPING_MAW) -- 235
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
@@ -127,6 +129,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC275,
                                                    EntityType.ENTITY_MEGA_SATAN_2) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC302,
                                                    EntityType.ENTITY_STONEY) -- 302
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
+                                                   EntityType.ENTITY_FORSAKEN) -- 403
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC411,
                                                    EntityType.ENTITY_BIG_HORN) -- 411
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC413,
@@ -279,7 +283,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,    JrFetus.DrFetusTakeDa
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, JrFetus.UpdateMissileTarget)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,   JrFetus.DrFetusEmbryoKill,
                                                            Isaac.GetEntityTypeByName("Dr Fetus Boss Embryo"))
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,      JrFetus.PostNewRoom)
 
 -- Mahalath callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       Mahalath.PostUpdate)
@@ -291,7 +294,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        Mahalath.check_balls,
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        Mahalath.check_bomb, Isaac.GetEntityTypeByName("Barf Bomb"))
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,        Mahalath.check_del, EntityType.ENTITY_DELIRIUM) -- 412
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   Mahalath.take_dmg)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     Mahalath.PostNewRoom)
 
 -- Welcome banner
 local hyphens = ''

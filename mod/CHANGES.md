@@ -112,6 +112,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * All Spike Chests will spawn as Mimics instead. (Since they are so similar, there is little reason for Spike Chests to exist.)
 * The Chub that spawns after The Matriarch will be automatically stunned for a few frames to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
+* The Forsaken is now immune to fear. (This prevents the bug where it will not attack.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 
 ### Cutscene & Animation Removal

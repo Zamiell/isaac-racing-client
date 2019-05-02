@@ -1,6 +1,6 @@
 # Racing+ Mod Custom Challenges
 
-* By pressing "Tab" on the challenges portion of the main menu, you can access custom challenges added by mods. The Racing+ mod uses custom challenges to facilitate multi-character speedruns, in which you must beat the game multiple times in a row on various characters.
+* By pressing "Tab" on the challenges portion of the main menu, you can access custom challenges added by mods. The Racing+ mod uses custom challenges to facilitate multi-character speedruns where you must beat the game multiple times in a row on various characters.
 * These custom challenges will automatically take you to the next character so that you never have to return to the menu. They will also show a timer on the screen and your current character progress.
 * Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
 * You can restart with the current character by tapping R. You can go back to the first character by holding R. (On floors 2 and beyond, you have to double-tap R to restart with the current character.)
@@ -78,7 +78,7 @@
 
 ## R+7 Season 5
 
-* You must defeat Blue Baby 7 times using the [Single Player Co-op Babies](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no) mod, which provides a different random baby with a unique ability on each floor.
+* You must defeat Blue Baby 7 times using the [Babies Mod](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no), which provides a different random baby with a unique ability on each floor.
 * Each baby starts with the stats of Isaac, one red heart, and one half soul heart.
 * Each baby starts with the Schoolbag. (It starts empty by default.)
 * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
@@ -107,7 +107,7 @@
 * The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
 * All characters start with the Schoolbag. (It starts empty by default.)
 * All characters start with the Compass.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest / the Dark Room.
 * Each character will be randomly assigned a starting item or build. (You can find the full list in the "Change Char Order" custom challenge.)
 * The Treasure Room on Basement 1 is permanently barred.
 * Resetting the game will change the seed, but not change the randomly assigned starting item.
@@ -116,13 +116,13 @@
 * Duplicate starting items will never be given over the course of a 7 character run.
 * After character selection, players must ban one big 4 item and three other items.
 * The randomly selected item for the first character will expire after 1 minute or when a Basement 2 boss dies, whichever happens first.
-* On the first character, players may also "veto" one starting item every 5 minutes.
+* On the first character, players may also "veto" a starting item every 5 minutes. They can accumulate up to 5 vetos. Vetoed items only apply to the first character. (It should be more efficient to build up vetos rather to than close and reopen the game over and over.)
 * There is a custom death mechanic:
   * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.
   * This mechanic does not apply to deaths in Devil Rooms or Sacrifice Rooms. (Deaths in those rooms will be permanent.)
 * Scolex is replaced by two Frails (like it is in seeded races).
-* Sacred Heart no longer grants homing bombs.
+* Sacred Heart no longer grants homing bombs (unless you have Dr. Fetus).
 
 <br />
 

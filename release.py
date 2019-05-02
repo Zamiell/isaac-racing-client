@@ -68,7 +68,7 @@ VERSION = 'v' + DATA['version']
 if not ARGS.skipmod:
     # Put the version in the "Globals.lua" file
     # http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
-    LUA_FILE = os.path.join(MOD_DIR, 'src', 'Globals.lua')
+    LUA_FILE = os.path.join(MOD_DIR, 'racing_plus', 'Globals.lua')
     with open(LUA_FILE, 'r') as file_handle:
         FILE_DATA = file_handle.read()
 

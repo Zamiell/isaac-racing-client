@@ -1,8 +1,20 @@
 # Racing+ Version History and News
 
+### *v0.34.0* - May 2nd, 2019
+
+* Season 5 is finished!
+  * Congradulations to Dea1h for the best R+7 time of 1:02:53, Cyber_1 for the second best time of 1:03:26, and CrafterLynx for the third best time of 1:04:17.
+  * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
+  * If you want to beat these times, the R+7 (S5) category will continue to be tracked on speedrun.com, but the official competition will move on to season 6.
+* [Season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-6) has officially begun! The new season will be considered beta for the first 2-3 weeks.
+* Hundreds of API calls have been cached, so the mod should run better on slow computers.
+* Mom will now always immediately stomp upon starting the fight, similar to how it works in vanilla.
+* The Forsaken is now immune to fear. (This prevents the bug where it will not attack for an extended period of time.)
+* Removed some more empty rooms.
+
 ### *v0.33.1* - April 27th, 2019
 
-* Increased the delay on Pin/Frail/Scolex from 16 frames to 31 frames.
+* Increased the delay on Pin/Frail/Scolex from 16 frames to 31 frames. (Thanks mgln)
 * Fixed the bug where Pin/Frail/Scolex would gain a lot of velocity in certain circumstances. (Thanks Gamonymous)
 
 ### *v0.33.0* - April 27th, 2019
