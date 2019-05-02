@@ -35,7 +35,7 @@ end
 -- EntityType.ENTITY_MOBILE_HOST (204)
 -- EntityType.ENTITY_FORSAKEN (403)
 function NPCUpdate:NPC27(npc)
-  if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1<<11
+  if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1 << 11
     -- Make them immune to fear
     npc:RemoveStatusEffects()
     Isaac.DebugString("Unfeared a Host / Mobile Host / Forsaken.")

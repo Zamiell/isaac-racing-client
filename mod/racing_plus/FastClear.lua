@@ -69,7 +69,7 @@ function FastClear:NPCUpdate(npc)
   -- Friendly enemies (from Delirious or Friendly Ball) will be added to the aliveEnemies table because
   -- there are no flags set yet in the MC_POST_NPC_INIT callback
   -- Thus, we have to wait until they are initialized and then remove them from the table
-  if npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then -- 1<<29
+  if npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then -- 1 << 29
     -- Remove it from the list if it is on it
     FastClear:CheckDeadNPC(npc)
     return
