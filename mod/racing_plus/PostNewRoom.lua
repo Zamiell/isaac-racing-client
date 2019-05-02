@@ -16,6 +16,13 @@ local Samael              = require("racing_plus/samael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function PostNewRoom:Main()
+  -- Update some cached API functions to avoid crashing
+  g.l = g.g:GetLevel()
+  g.r = g.g:GetRoom()
+  g.p = g.g:GetPlayer(0)
+  g.seeds = g.g:GetSeeds()
+  g.itemPool = g.g:GetItemPool()
+
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()

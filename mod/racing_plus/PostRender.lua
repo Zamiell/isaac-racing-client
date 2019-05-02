@@ -20,11 +20,12 @@ local SeededDeath       = require("racing_plus/seededdeath")
 -- (this will fire while the floor/room is loading)
 -- ModCallbacks.MC_POST_RENDER (2)
 function PostRender:Main()
-  -- Update some API calls to avoid crashing
-  g.g = Game()
+  -- Update some cached API functions to avoid crashing
   g.l = g.g:GetLevel()
   g.r = g.g:GetRoom()
   g.p = g.g:GetPlayer(0)
+  g.seeds = g.g:GetSeeds()
+  g.itemPool = g.g:GetItemPool()
 
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   SaveDat:Load()
