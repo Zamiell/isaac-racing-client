@@ -321,10 +321,41 @@ function PostUpdate:CheckMomStomp()
     g.run.forceMomStompPos = g.p.Position
     g.p.Position = centerPos
     g.p.Visible = false
+
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+    for _, familiar in ipairs(familiars) do
+      familiar.Visible = false
+    end
+    local knives = Isaac.FindByType(EntityType.ENTITY_KNIFE, -1, -1, false, false) -- 8
+    for _, knife in ipairs(knives) do
+      knife.Visible = false
+    end
+    local scythes = Isaac.FindByType(Isaac.GetEntityTypeByName("Samael Scythe"), -1, -1, false, false) -- 8
+    for _, scythe in ipairs(scythes) do
+      scythe.Visible = false
+    end
+
   elseif roomFrameCount == 20 then
     g.p.Position = g.run.forceMomStompPos
-    g.run.forceMomStomp = false
     g.p.Visible = true
+
+  elseif roomFrameCount == 21 then
+    -- We have to delay a frame before making familiars and knives visible,
+    -- since they lag behind the position of the player by a frame
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+    for _, familiar in ipairs(familiars) do
+      familiar.Visible = true
+    end
+    local knives = Isaac.FindByType(EntityType.ENTITY_KNIFE, -1, -1, false, false) -- 8
+    for _, knife in ipairs(knives) do
+      knife.Visible = true
+    end
+    local scythes = Isaac.FindByType(Isaac.GetEntityTypeByName("Samael Scythe"), -1, -1, false, false) -- 8
+    for _, scythe in ipairs(scythes) do
+      scythe.Visible = true
+    end
+
+    g.run.forceMomStomp = false
   end
 end
 

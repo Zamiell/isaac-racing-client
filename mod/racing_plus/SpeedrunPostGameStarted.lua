@@ -98,16 +98,19 @@ function SpeedrunPostGameStarted:Main()
       Speedrun.selectedItemStarts = {}
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS6)
+      Isaac.DebugString("S6 - Reset remaining item starts.")
       if Isaac.GetTime() - Speedrun.timeItemAssigned >= Speedrun.itemLockTime then
         Speedrun.selectedItemStarts = {}
+        Isaac.DebugString("S6 - Reset selected item starts.")
       end
     end
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but Season 4 and Seeded never get it, since there is no resetting involved)
+  -- (but Season 4, Season 6, and Seeded never get it, since there is no resetting involved)
   if Speedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
       not Speedrun.inSeededSpeedrun) then
 
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
@@ -488,8 +491,11 @@ function SpeedrunPostGameStarted:R7S6()
 
       local valid = true
 
-      -- Check to see if we started this item last time
-      if startingItems[1] == Speedrun.lastItemStart then
+      -- If we are on the first character, we do not want to play a build that we have already played recently
+      if Speedrun.charNum == 1 and
+         (startingItems[1] == Speedrun.lastItemStart or
+          startingItems[1] == Speedrun.lastItemStartFirstCharacter) then
+
         valid = false
       end
 
@@ -564,6 +570,9 @@ function SpeedrunPostGameStarted:R7S6()
       if valid then
         -- Keep track of what item we start so that we don't get the same two starts in a row
         Speedrun.lastItemStart = startingItems[1]
+        if Speedrun.charNum == 1 then
+          Speedrun.lastItemStartFirstCharacter = startingItems[1]
+        end
 
         -- Remove it from the remaining item pool
         table.remove(Speedrun.remainingItemStarts, startingItemIndex)

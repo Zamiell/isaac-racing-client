@@ -192,6 +192,14 @@ function PreUseItem:PreventItemPedestalEffects(itemID)
     g.run.rechargeItemFrame = gameFrameCount + 1
     return true
   end
+
+  local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                       CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
+  if #checkpoints > 0 then
+    Isaac.DebugString("Canceling item " .. tostring(itemID) .. " due to a Checkpoint in the room.")
+    g.run.rechargeItemFrame = gameFrameCount + 1
+    return true
+  end
 end
 
 function PreUseItem:UnreplacedItemsExist()

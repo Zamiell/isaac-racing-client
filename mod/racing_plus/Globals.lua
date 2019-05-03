@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.34.3"
+g.version = "v0.34.4"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -207,6 +207,7 @@ function g:InitRun()
   g.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
   g.run.currentHoppers        = {} -- Used to prevent softlocks
   g.run.usedStrength          = false
+  g.run.usedStrengthChar      = 0
   g.run.handsDelay            = 0 -- Used to speed up Mom's Hands
   g.run.naturalTeleport       = false
   g.run.diceRoomActivated     = false

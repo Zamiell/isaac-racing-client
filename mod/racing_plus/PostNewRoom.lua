@@ -432,6 +432,8 @@ function PostNewRoom:CheckEntities()
     for _, familiar in ipairs(familiars) do
       familiar.Visible = false
     end
+
+    Isaac.DebugString("Subverted a position teleport (1/2).")
   end
 end
 

@@ -1,20 +1,21 @@
 local PostRender = {}
 
 -- Includes
-local g                 = require("racing_plus/globals")
-local SaveDat           = require("racing_plus/savedat")
-local Sprites           = require("racing_plus/sprites")
-local Schoolbag         = require("racing_plus/schoolbag")
-local SoulJar           = require("racing_plus/souljar")
-local PostUpdate        = require("racing_plus/postupdate")
-local UseItem           = require("racing_plus/useitem")
-local Pills             = require("racing_plus/pills")
-local FastTravel        = require("racing_plus/fasttravel")
-local ChangeKeybindings = require("racing_plus/changekeybindings")
-local Timer             = require("racing_plus/timer")
-local Speedrun          = require("racing_plus/speedrun")
-local ChangeCharOrder   = require("racing_plus/changecharorder")
-local SeededDeath       = require("racing_plus/seededdeath")
+local g                  = require("racing_plus/globals")
+local SaveDat            = require("racing_plus/savedat")
+local Sprites            = require("racing_plus/sprites")
+local Schoolbag          = require("racing_plus/schoolbag")
+local SoulJar            = require("racing_plus/souljar")
+local PostUpdate         = require("racing_plus/postupdate")
+local UseItem            = require("racing_plus/useitem")
+local Pills              = require("racing_plus/pills")
+local FastTravel         = require("racing_plus/fasttravel")
+local ChangeKeybindings  = require("racing_plus/changekeybindings")
+local Timer              = require("racing_plus/timer")
+local Speedrun           = require("racing_plus/speedrun")
+local SpeedrunPostRender = require("racing_plus/speedrunpostrender")
+local ChangeCharOrder    = require("racing_plus/changecharorder")
+local SeededDeath        = require("racing_plus/seededdeath")
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -93,11 +94,11 @@ function PostRender:Main()
   PostRender:Race()
 
   -- Do speedrun related checks
-  Speedrun:CheckRestart()
-  Speedrun:DisplayCharProgress()
-  Speedrun:DrawVetoButtonText()
-  Speedrun:CheckSeason5Mod()
-  Speedrun:CheckSeason5ModOther()
+  SpeedrunPostRender:CheckRestart()
+  SpeedrunPostRender:DisplayCharProgress()
+  SpeedrunPostRender:DrawVetoButtonText()
+  SpeedrunPostRender:CheckSeason5Mod()
+  SpeedrunPostRender:CheckSeason5ModOther()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally
@@ -434,6 +435,8 @@ function PostRender:CheckSubvertTeleport()
     familiar.Position = pos
     familiar.Visible = true
   end
+
+  Isaac.DebugString("Subverted a position teleport (2/2).")
 end
 
 function PostRender:DisplayTopLeftText()

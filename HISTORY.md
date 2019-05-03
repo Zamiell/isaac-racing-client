@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.34.4* - May 3rd, 2019
+
+* The logo for season 6 is improved. Thanks to BMZ_Loop for working on this.
+* When performing a multi-character speedrun, there is now a graphic that shows which season you are playing. Thanks to BMZ_Loop for working on this.
+* It is no longer possible to roll or destroy a Checkpoint with the D6, D100, D Infinity, Dice Shard, Void, Black Rune, Crooked Penny, or Moving Box.
+* In season 6, you are now guaranteed to start a new item on your first character (even if you made it to the second character or beyond).
+* Fixed the bug where two heart containers would be removed if you used a Strength card on The Forgotten, swapped forms, and went to the next floor. (Thanks Dea1h)
+* Fixed the bug where familiars, knives, clubs, and scythes would appear in the center of the room during the 19th frame of the Mom fight.
+
 ### *v0.34.2* - May 2nd, 2019
 
 * Fixed some crashing issues.
@@ -776,7 +785,7 @@ Client:
 ### *v0.15.4* - March 11th, 2018
 
 * Eden will now be given the Sad Onion if they happen to start with the vanilla Schoolbag as the random passive item.
-* 5 Monstros will no longer spawn if you use the Shovel / Ehawaz on Womb 2 during races with a goal of "Everything". (Thanks Gamonymous)
+* 5 Monstros will no longer spawn if you use We Need to Go Deeper! or Ehawaz on Womb 2 during races with a goal of "Everything". (Thanks Gamonymous)
 * Fixed the bug where if Eden starts with the Schoolbag, a pedestal will be created on the ground. (Thanks NorBro86)
 
 ### *v0.15.3* - February 15th, 2018

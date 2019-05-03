@@ -198,6 +198,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength, Card.CARD_STR
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_STARS) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_MOON) -- 19
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_JOKER) -- 31
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
 
 -- Define pill callbacks (10)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main) -- 10
@@ -223,6 +224,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item479, -- 23
 -- Define pre-use item callbacks for preventing item pedestal effects (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedestalEffects, -- 23
                                                      CollectibleType.COLLECTIBLE_D6) -- 105
+-- (this callback will also fire for D100, D Infinity when used as a D6/D100, and Dice Shard;
+-- however, we will want to explicitly hook D100 and D Infinity since they be able to use the provided recharge
+-- to get infinite item uses)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedestalEffects, -- 23
                                                      CollectibleType.COLLECTIBLE_D100) -- 283
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedestalEffects, -- 23

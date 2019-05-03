@@ -42,9 +42,6 @@ function PostNewLevel:NewLevel()
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local maxHearts = g.p:GetMaxHearts()
-  local soulHearts = g.p:GetSoulHearts()
-  local boneHearts = g.p:GetBoneHearts()
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()
 
@@ -125,19 +122,7 @@ function PostNewLevel:NewLevel()
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 
-  -- Fix the Strength card bug that happens wtih Fast-Travel
-  if g.run.usedStrength then -- 14
-    g.run.usedStrength = false
-
-    -- Don't actually remove the heart container if that would kill us
-    if maxHearts ~= 2 or
-       soulHearts ~= 0 or
-       boneHearts ~= 0 then
-
-      g.p:AddMaxHearts(-2, true) -- Remove a heart container
-      Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (PostNewLevel)")
-    end
-  end
+  FastTravel:FixStrengthCardBug()
 
   -- Seed floors that are generated when a player uses a Forget Me Now or a 5-pip Dice Room
   if g.run.forgetMeNow then

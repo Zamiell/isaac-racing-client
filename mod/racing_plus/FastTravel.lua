@@ -641,6 +641,45 @@ function FastTravel:TravelStage(stage, stageType)
   end
 end
 
+-- Called from the PostNewLevel callback
+function FastTravel:FixStrengthCardBug()
+  -- If the player uses a Strength card in a room and jumps into a trapdoor,
+  -- then then extra heart container will not get properly removed because
+  -- we manually warp the player away from the room/floor
+  -- So, detect for this condition and manually remove the heart container
+  if not g.run.usedStrength then
+    return
+  end
+  g.run.usedStrength = false
+
+  -- Handle the special case of if we used a Strength card on another form
+  local character = g.p:GetPlayerType()
+  if (g.run.usedStrengthChar == PlayerType.PLAYER_THEFORGOTTEN and -- 16
+      character == PlayerType.PLAYER_THESOUL) or -- 17
+     (g.run.usedStrengthChar == PlayerType.PLAYER_THESOUL and -- 17
+       character == PlayerType.PLAYER_THEFORGOTTEN) then -- 16
+
+    -- The bug will not occur in this special case
+    -- In other words, the game will properly remove the bone heart (if we used the Strength card on The Forgotten)
+    -- or the soul heart (if we used the Strength card on The Soul) for us, so we don't have to do anything here
+    Isaac.DebugString("Strength card swap occurred; doing nothing.")
+    return
+  end
+
+  -- Don't actually remove the heart container if doing so would kill us
+  -- (which is the vanilla behavior)
+  local maxHearts = g.p:GetMaxHearts()
+  local soulHearts = g.p:GetSoulHearts()
+  local boneHearts = g.p:GetBoneHearts()
+  if maxHearts ~= 2 or
+      soulHearts ~= 0 or
+      boneHearts ~= 0 then
+
+    g.p:AddMaxHearts(-2, true) -- Remove a heart container
+    Isaac.DebugString("Took away 1 heart container to fix the Fast-Travel bug with Strength cards.")
+  end
+end
+
 --
 -- Crawlspace functions
 --

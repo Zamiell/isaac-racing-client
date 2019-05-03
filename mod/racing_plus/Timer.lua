@@ -244,6 +244,7 @@ function Timer:DisplaySecond()
   local challenge = Isaac.GetChallenge()
 
   local elapsedTime
+  local moveTimerToBottomRight = false
   if g.run.seededDeath.state >= 2 then
     elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
 
@@ -253,6 +254,7 @@ function Timer:DisplaySecond()
 
     local timeReset = Speedrun.timeItemAssigned + Speedrun.itemLockTime
     elapsedTime = timeReset - Isaac.GetTime()
+    moveTimerToBottomRight = true
   end
   if elapsedTime == nil then
     return
@@ -301,6 +303,13 @@ function Timer:DisplaySecond()
   local hourAdjustment2 = 0
   local startingX = 65
   local startingY = 79
+
+  if moveTimerToBottomRight then
+    local posGame = g:GridToPos(11, 5)
+    local pos = Isaac.WorldToRenderPosition(posGame)
+    startingX = pos.X - 11
+    startingY = pos.Y - 10
+  end
 
   --
   -- Display the sprites
