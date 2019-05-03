@@ -24,7 +24,7 @@ POST-FLIP ACTIONS:
 1) Remove the duplicated start rooms for The Chest / Dark Room
 2) Un-flip Y-flipped Gurdy rooms:
     The Chest - #20018, #30018
-3) Un-flip double Gate rooms
+3) Un-flip double Gate rooms (and enable all of the doors)
     The Chest - #20040, #30040
     Dark Room - #20012, #30012
 4) Un-flip some Mega Maw rooms:

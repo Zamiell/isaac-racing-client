@@ -4,14 +4,23 @@ local SeededDeath = {}
 local g         = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 
+-- Enums
+SeededDeath.state = {
+  DISABLED = 0,
+  CHANGING_ROOMS = 1,
+  FETAL_POSITION = 2,
+  GHOST_FORM = 3,
+}
+
 -- Variables
-SeededDeath.DebuffTime = 45 -- In seconds
+SeededDeath.debuffTime = 45 -- In seconds
 
 -- ModCallbacks.MC_POST_UPDATE (1)
 function SeededDeath:PostUpdate()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
+  local playerSprite = g.p:GetSprite()
   local revive = g.p:WillPlayerRevive()
   local hearts = g.p:GetHearts()
   local soulHearts = g.p:GetSoulHearts()
@@ -26,9 +35,35 @@ function SeededDeath:PostUpdate()
     g.run.seededDeath.dealTime = Isaac.GetTime()
   end
 
+  -- Fix the bug where The Forgotten will not be properly faded
+  -- if he switched from The Soul immediately before the debuff occured
+  if g.run.fadeForgottenFrame ~= 0 and
+     gameFrameCount >= g.run.fadeForgottenFrame then
+
+    g.run.fadeForgottenFrame = 0
+
+    -- Re-fade the player
+    playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
+  end
+
   -- They took fatal damage and the death animation is playing
   -- (this used to be based on the "Death" and "LostDeath" animation, but this does not work for deaths inside Pitfalls)
   local totalHealth = hearts + soulHearts + boneHearts
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) and -- 212
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_ONE_UP) and -- 11
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_CAT) and -- 81
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_ANKH) and -- 161
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_JUDAS_SHADOW) and -- 311
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LAZARUS_RAGS) and -- 332
+     not g.p:HasTrinket(TrinketType.TRINKET_MISSING_POSTER) then -- 23
+     -- (Broken Ankh is already removed from the trinket pool)
+
+    -- Guppy's Collar (and Broken Ankh) are bugged with "player:WillPlayerRevive()" such that
+    -- they will randomly report either true or false,
+    -- but that value won't correspond to whether or not the player will revive
+    -- Thus, always assume that Guppy's Collar will not revive us in order to avoid permadeath
+    revive = false
+  end
   if g.run.seededDeath.deathFrame == 0 and
      (g.race.rFormat == "seeded" or
       g.race.rFormat == "seeded-mo" or
@@ -40,9 +75,10 @@ function SeededDeath:PostUpdate()
      roomType ~= RoomType.ROOM_SACRIFICE and -- 13
      roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
 
-    g.run.seededDeath.deathFrame = gameFrameCount + 46 -- 56
+    g.run.seededDeath.deathFrame = gameFrameCount + 46
     -- The "Death" animation is 57 frames long
-    -- (when testing, the death screen appears if we wait 57 frames)
+    -- (when testing, the death screen appears if we wait 57 frames,
+    -- but we want it to be a bit faster than that)
   end
 
   -- Seeded death (1/3) - The death animation is over
@@ -55,7 +91,7 @@ function SeededDeath:PostUpdate()
     local elapsedTime = Isaac.GetTime() - g.run.seededDeath.dealTime
     if elapsedTime > 5000 then
       g:RevivePlayer()
-      g.run.seededDeath.state = 1
+      g.run.seededDeath.state = SeededDeath.state.CHANGING_ROOMS
       Isaac.DebugString("Seeded death (1/3).")
 
       -- Drop all trinkets and pocket items
@@ -65,14 +101,21 @@ function SeededDeath:PostUpdate()
       g.p:DropPoketItem(0, pos2)
       local pos3 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
       g.p:DropPoketItem(1, pos3)
+
+      -- If we are The Soul, the manual revival will now work properly
+      -- Thus, manually switch to the Forgotten to avoid this
+      local character = g.p:GetPlayerType()
+      if character == PlayerType.PLAYER_THESOUL then -- 17
+        g.run.switchForgotten = true
+      end
     end
   end
 
   -- Check to see if the debuff is over
-  if g.run.seededDeath.state == 3 then
+  if g.run.seededDeath.state == SeededDeath.state.GHOST_FORM then
     local elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
     if elapsedTime <= 0 then
-      g.run.seededDeath.state = 0
+      g.run.seededDeath.state = SeededDeath.state.DISABLED
       g.run.seededDeath.time = 0
       SeededDeath:DebuffOff()
       g.p:AnimateHappy()
@@ -87,12 +130,12 @@ function SeededDeath:PostRender()
   local playerSprite = g.p:GetSprite()
 
   -- Seeded death (3/3) - The "AppearVanilla animation" is over and the debuff is on
-  if g.run.seededDeath.state == 2 then
+  if g.run.seededDeath.state == SeededDeath.state.FETAL_POSITION then
     -- Keep the player in place during the "AppearVanilla" animation
     g.p.Position = g.run.seededDeath.pos
 
     if not playerSprite:IsPlaying("AppearVanilla") then
-      g.run.seededDeath.state = 3
+      g.run.seededDeath.state = SeededDeath.state.GHOST_FORM
       Isaac.DebugString("Seeded death (3/3).")
     end
   end
@@ -109,14 +152,14 @@ function SeededDeath:PostNewRoom()
     g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
   end
 
-  -- Seeded death (2/3) - The player is in the fetal position (the "AppearVanilla" animation)
-  if g.run.seededDeath.state ~= 1 then
+  -- Seeded death (2/3) - Put the player in the fetal position (the "AppearVanilla" animation)
+  if g.run.seededDeath.state ~= SeededDeath.state.CHANGING_ROOMS then
     return
   end
 
   -- Start the debuff and set the finishing time to be in the future
   SeededDeath:DebuffOn()
-  local debuffTimeMilliseconds = SeededDeath.DebuffTime * 1000
+  local debuffTimeMilliseconds = SeededDeath.debuffTime * 1000
   if g.debug then
     debuffTimeMilliseconds = 5 * 1000
   end
@@ -125,7 +168,7 @@ function SeededDeath:PostNewRoom()
   -- Play the animation where Isaac lies in the fetal position
   g.p:PlayExtraAnimation("AppearVanilla")
 
-  g.run.seededDeath.state = 2
+  g.run.seededDeath.state = SeededDeath.state.FETAL_POSITION
   g.run.seededDeath.pos = Vector(g.p.Position.X, g.p.Position.Y)
   Isaac.DebugString("Seeded death (2/3).")
 end
@@ -135,7 +178,7 @@ function SeededDeath:PostNewRoomCheckSacrificeRoom()
   local roomType = g.r:GetType()
   local gridSize = g.r:GetGridSize()
 
-  if g.run.seededDeath.state ~= 3 or
+  if g.run.seededDeath.state ~= SeededDeath.state.GHOST_FORM or
      roomType ~= RoomType.ROOM_SACRIFICE then -- 13
 
     return
@@ -157,6 +200,7 @@ end
 
 function SeededDeath:DebuffOn()
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local playerSprite = g.p:GetSprite()
   local character = g.p:GetPlayerType()
@@ -228,6 +272,12 @@ function SeededDeath:DebuffOn()
 
   -- Fade the player
   playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
+
+  -- The fade will now work if we just switched from The Soul on the last frame,
+  -- so mark to redo the fade a few frames from now
+  if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    g.run.fadeForgottenFrame = gameFrameCount + 6 -- If we wait 5 frames or less, then the fade won't stick
+  end
 end
 
 function SeededDeath:DebuffOff()

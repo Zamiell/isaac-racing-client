@@ -1,8 +1,9 @@
 local Timer = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
-local Speedrun = require("racing_plus/speedrun")
+local g           = require("racing_plus/globals")
+local SeededDeath = require("racing_plus/seededdeath")
+local Speedrun    = require("racing_plus/speedrun")
 
 -- Variables
 Timer.sprites = {}
@@ -244,9 +245,14 @@ function Timer:DisplaySecond()
   local challenge = Isaac.GetChallenge()
 
   local elapsedTime
+  local adjustTimerRight = false
   local moveTimerToBottomRight = false
-  if g.run.seededDeath.state >= 2 then
+  if g.run.seededDeath.state >= SeededDeath.state.FETAL_POSITION then
     elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
+    if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+      -- The timer needs to be moved to the right to account for the "(S6)" icon
+      adjustTimerRight = true
+    end
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
          Speedrun.charNum == 1 and
@@ -304,6 +310,9 @@ function Timer:DisplaySecond()
   local startingX = 65
   local startingY = 79
 
+  if adjustTimerRight then
+    startingX = startingX + 18
+  end
   if moveTimerToBottomRight then
     local posGame = g:GridToPos(11, 5)
     local pos = Isaac.WorldToRenderPosition(posGame)

@@ -124,6 +124,7 @@
 * Scolex is replaced by two Frails (like it is in seeded races).
 * Sacred Heart no longer grants homing bombs (unless you have Dr. Fetus).
 * We Need to Go Deeper! will not work on Womb 2.
+* Cain's Eye and Broken Ankh are removed from the trinket pool.
 
 <br />
 

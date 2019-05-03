@@ -105,7 +105,7 @@ function SpeedrunPostUpdate:CheckVetoButton(gridEntity)
   end
 
   -- Add the item to the veto list
-  Speedrun.vetoList[#Speedrun.vetoList + 1] = Speedrun.lastItemStart
+  Speedrun.vetoList[#Speedrun.vetoList + 1] = Speedrun.lastBuildItem
   if #Speedrun.vetoList > 5 then
     table.remove(Speedrun.vetoList, 1)
   end

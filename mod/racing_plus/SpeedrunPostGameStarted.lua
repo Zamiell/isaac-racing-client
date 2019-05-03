@@ -105,6 +105,15 @@ function SpeedrunPostGameStarted:Main()
       end
     end
   end
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+    Isaac.DebugString("S6 - Selected item starts:")
+    if #Speedrun.selectedItemStarts == 0 then
+      Isaac.DebugString("  - [none]")
+    end
+    for i, item in ipairs(Speedrun.selectedItemStarts) do
+      Isaac.DebugString("  " .. tostring(i) .. " - " .. tostring(item[1]))
+    end
+  end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
   -- (but Season 4, Season 6, and Seeded never get it, since there is no resetting involved)
@@ -450,12 +459,16 @@ function SpeedrunPostGameStarted:R7S6()
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
 
+  -- Since this season has a custom death mechanic, we also want to remove the Broken Ankh
+  -- (since we need the custom revival to always take priority over random revivals)
+  g.itemPool:RemoveTrinket(TrinketType.TRINKET_BROKEN_ANKH) -- 28
+
   -- Everyone starts with a random passive item / build
   -- Check to see if the player has played a run with one of the big 4
   local alreadyStartedBig4 = false
-  for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
+  for _, startedBuild in ipairs(Speedrun.selectedItemStarts) do
     for _, big4Item in ipairs(Speedrun.big4) do
-      if startedItem[1] == big4Item then
+      if startedBuild[1] == big4Item then
         alreadyStartedBig4 = true
         break
       end
@@ -470,38 +483,38 @@ function SpeedrunPostGameStarted:R7S6()
 
   -- Check to see if a start is already assigned for this character number
   -- (dying and resetting should not reassign the selected starting item)
-  Isaac.DebugString("Number of items that we have already started: " .. tostring(#Speedrun.selectedItemStarts))
-  local startingItems = Speedrun.selectedItemStarts[Speedrun.charNum]
-  if startingItems == nil then
+  Isaac.DebugString("Number of builds that we have already started: " .. tostring(#Speedrun.selectedItemStarts))
+  local startingBuild = Speedrun.selectedItemStarts[Speedrun.charNum]
+  if startingBuild == nil then
     -- Get a random start
     local seed = g.seeds:GetStartSeed()
     while true do
       seed = g:IncrementRNG(seed)
       math.randomseed(seed)
-      local startingItemIndex
+      local startingBuildIndex
       if alreadyStartedBig4 then
-        startingItemIndex = math.random(5, #Speedrun.remainingItemStarts)
+        startingBuildIndex = math.random(5, #Speedrun.remainingItemStarts)
       elseif Speedrun.charNum == 7 then
         -- Guarantee at least one big 4 start
-        startingItemIndex = math.random(1, 4)
+        startingBuildIndex = math.random(1, 4)
       else
-        startingItemIndex = math.random(1, #Speedrun.remainingItemStarts)
+        startingBuildIndex = math.random(1, #Speedrun.remainingItemStarts)
       end
-      startingItems = Speedrun.remainingItemStarts[startingItemIndex]
+      startingBuild = Speedrun.remainingItemStarts[startingBuildIndex]
 
       local valid = true
 
       -- If we are on the first character, we do not want to play a build that we have already played recently
       if Speedrun.charNum == 1 and
-         (startingItems[1] == Speedrun.lastItemStart or
-          startingItems[1] == Speedrun.lastItemStartFirstCharacter) then
+         (startingBuild[1] == Speedrun.lastBuildItem or
+          startingBuild[1] == Speedrun.lastBuildItemOnFirstChar) then
 
         valid = false
       end
 
       -- Check to see if we already started this item
-      for _, startedItem in ipairs(Speedrun.selectedItemStarts) do
-        if startedItem == startingItems[1] then
+      for _, startedBuild in ipairs(Speedrun.selectedItemStarts) do
+        if startedBuild[1] == startingBuild[1] then
           valid = false
           break
         end
@@ -524,7 +537,7 @@ function SpeedrunPostGameStarted:R7S6()
           item = CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
         end
 
-        if startingItems[1] == item then
+        if startingBuild[1] == item then
           valid = false
           break
         end
@@ -532,26 +545,26 @@ function SpeedrunPostGameStarted:R7S6()
 
       -- Check to see if this start synergizes with this character (character/item bans)
       if character == PlayerType.PLAYER_EVE then -- 5
-        if startingItems[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+        if startingBuild[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
           valid = false
         end
 
       elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-        if startingItems[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
-           startingItems[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
-           startingItems[1] == CollectibleType.COLLECTIBLE_DEAD_EYE or -- 373
-           startingItems[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 331
-           startingItems[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
-           startingItems[1] == CollectibleType.COLLECTIBLE_JACOBS_LADDER then -- 494
+        if startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
+           startingBuild[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
+           startingBuild[1] == CollectibleType.COLLECTIBLE_DEAD_EYE or -- 373
+           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 331
+           startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
+           startingBuild[1] == CollectibleType.COLLECTIBLE_JACOBS_LADDER then -- 494
 
           valid = false
         end
 
       elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-        if startingItems[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH or -- 237
-           startingItems[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
-           startingItems[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE or -- 275
-           startingItems[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
+        if startingBuild[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH or -- 237
+           startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
+           startingBuild[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE or -- 275
+           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
 
           valid = false
         end
@@ -560,7 +573,7 @@ function SpeedrunPostGameStarted:R7S6()
       -- Check to see if we vetoed this item and we are on the first character
       if Speedrun.charNum == 1 then
         for _, veto in ipairs(Speedrun.vetoList) do
-          if veto == startingItems[1] then
+          if veto == startingBuild[1] then
             valid = false
             break
           end
@@ -569,32 +582,32 @@ function SpeedrunPostGameStarted:R7S6()
 
       if valid then
         -- Keep track of what item we start so that we don't get the same two starts in a row
-        Speedrun.lastItemStart = startingItems[1]
+        Speedrun.lastBuildItem = startingBuild[1]
         if Speedrun.charNum == 1 then
-          Speedrun.lastItemStartFirstCharacter = startingItems[1]
+          Speedrun.lastBuildItemOnFirstChar = startingBuild[1]
         end
 
         -- Remove it from the remaining item pool
-        table.remove(Speedrun.remainingItemStarts, startingItemIndex)
+        table.remove(Speedrun.remainingItemStarts, startingBuildIndex)
 
         -- Keep track of what item we are supposed to be starting on this character / run
-        Speedrun.selectedItemStarts[#Speedrun.selectedItemStarts + 1] = startingItems
+        Speedrun.selectedItemStarts[#Speedrun.selectedItemStarts + 1] = startingBuild
 
         -- Mark down the time that we assigned this item
         Speedrun.timeItemAssigned = Isaac.GetTime()
 
         -- Break out of the infinite loop
-        Isaac.DebugString("Assigned a starting item of: " .. tostring(startingItems[1]))
+        Isaac.DebugString("Assigned a starting item of: " .. tostring(startingBuild[1]))
         break
       end
     end
 
   else
-    Isaac.DebugString("Already assigned an item: " .. tostring(startingItems[1]))
+    Isaac.DebugString("Already assigned an item: " .. tostring(startingBuild[1]))
   end
 
   -- Give the items to the player (and remove the items from the pools)
-  for _, item in ipairs(startingItems) do
+  for _, item in ipairs(startingBuild) do
     g.p:AddCollectible(item, 0, false)
     g.itemPool:RemoveCollectible(item)
 

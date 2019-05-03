@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.34.4"
+g.version = "v0.34.5"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -255,6 +255,8 @@ function g:InitRun()
   g.run.pickingUpItem        = false
   g.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
   g.run.lastDDLevel          = 0 -- Used by the Soul Jar
+  g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul
+  g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
 
   -- Transformations
   g.run.transformations = {}
@@ -265,7 +267,7 @@ function g:InitRun()
 
   -- Trapdoor tracking
   g.run.trapdoor = {
-    state     = 0,
+    state     = 0, -- See FastTravel.state for enum definitions
     upwards   = false,
     floor     = 0,
     frame     = 0,

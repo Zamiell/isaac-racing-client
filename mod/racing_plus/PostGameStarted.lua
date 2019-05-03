@@ -643,6 +643,10 @@ function PostGameStarted:Seeded()
   -- Add item bans for seeded mode
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
 
+  -- Since this race type has a custom death mechanic, we also want to remove the Broken Ankh
+  -- (since we need the custom revival to always take priority over random revivals)
+  g.itemPool:RemoveTrinket(TrinketType.TRINKET_BROKEN_ANKH) -- 28
+
   -- Initialize the sprites for the starting room
   -- (don't show these graphics until the race starts)
   if g.race.status == "in progress" then
@@ -847,6 +851,10 @@ function PostGameStarted:SeededMO()
 
   -- Add item bans for seeded mode
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
+
+  -- Since this race type has a custom death mechanic, we also want to remove the Broken Ankh
+  -- (since we need the custom revival to always take priority over random revivals)
+  g.itemPool:RemoveTrinket(TrinketType.TRINKET_BROKEN_ANKH) -- 28
 
   -- Seeded MO specific things
   g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105

@@ -1,64 +1,112 @@
 local InputAction = {}
 
+-- Different actions occur on different inputHooks and this is not documented
+-- Thus, each action's particular inputHook must be determined through trial and error
+-- Also note that we can't use cached API functions in this callback or else the game will crash
+
 -- Includes
 local g      = require("racing_plus/globals")
 local Samael = require("racing_plus/samael")
 
 -- ModCallbacks.MC_INPUT_ACTION (13)
 function InputAction:Main(entity, inputHook, buttonAction)
-  -- Local variables
-  -- (we can't use cached API functions in this callback or else the game will crash)
-  local game = Game()
-  local room = game:GetRoom()
-  local roomFrameCount = room:GetFrameCount()
+  return InputAction.InputHookFunction[inputHook](buttonAction)
+end
 
-  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT or -- 4
-      buttonAction == ButtonAction.ACTION_SHOOTRIGHT or -- 5
-      buttonAction == ButtonAction.ACTION_SHOOTUP or -- 6
-      buttonAction == ButtonAction.ACTION_SHOOTDOWN) and -- 7
-     inputHook == InputHook.IS_ACTION_PRESSED then -- 0
-
-    return Samael:IsActionPressed()
+-- InputHook.IS_ACTION_PRESSED (0)
+function InputAction.IsActionPressed(buttonAction)
+  if InputAction.IsActionPressedFunction[buttonAction] then
+    return InputAction.IsActionPressedFunction[buttonAction]()
   end
-  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT or -- 4
-      buttonAction == ButtonAction.ACTION_SHOOTRIGHT or -- 5
-      buttonAction == ButtonAction.ACTION_SHOOTUP or -- 6
-      buttonAction == ButtonAction.ACTION_SHOOTDOWN) and -- 7
-     inputHook == InputHook.GET_ACTION_VALUE then -- 2
+end
 
-    local actionValue
-    actionValue = InputAction:KnifeDiagonalFix(buttonAction)
-    if actionValue ~= nil then
-      return actionValue
-    end
-    actionValue = Samael:GetActionValue(buttonAction)
-    if actionValue ~= nil then
-      return actionValue
-    end
+-- InputHook.IS_ACTION_TRIGGERED (1)
+function InputAction.IsActionTriggered(buttonAction)
+  if InputAction.IsActionTriggeredFunction[buttonAction] then
+    return InputAction.IsActionTriggeredFunction[buttonAction]()
   end
+end
 
-  if buttonAction == ButtonAction.ACTION_PILLCARD and -- 10
-     inputHook == InputHook.IS_ACTION_TRIGGERED then -- 1
-     -- (the inputHook corresponds to the action, determined through trial and error)
+-- InputHook.GET_ACTION_VALUE (2)
+function InputAction.GetActionValue(buttonAction)
+  if InputAction.GetActionValueFunction[buttonAction] then
+    return InputAction.GetActionValueFunction[buttonAction](buttonAction)
+    -- (we pass the buttonAction because the child functions need to know what specific button was pressed)
+  end
+end
 
-    -- Disable using cards/pills if we are in the trapdoor animation
-    -- Disable using cards/pills if we are in the room sliding animation
-    if g.run.trapdoor.state > 0 or
-       roomFrameCount == 0 then
+InputAction.InputHookFunction = {
+  [InputHook.IS_ACTION_PRESSED] = InputAction.IsActionPressed, -- 0
+  [InputHook.IS_ACTION_TRIGGERED] = InputAction.IsActionTriggered, -- 1
+  [InputHook.GET_ACTION_VALUE] = InputAction.GetActionValue, -- 2
+}
 
-      return false
-    end
+--
+-- InputHook.IS_ACTION_PRESSED (0)
+--
 
-  elseif buttonAction == ButtonAction.ACTION_CONSOLE and -- 28
-         inputHook == InputHook.IS_ACTION_TRIGGERED then -- 1
-         -- (the inputHook corresponds to the action, determined through trial and error)
+function InputAction.IsActionPressedShoot()
+  return Samael:IsActionPressed()
+end
 
-    -- Prevent opening the console during a race
-    if g.race.status == "in progress" and
-       not g.debug then
+InputAction.IsActionPressedFunction = {
+  [ButtonAction.ACTION_SHOOTLEFT] = InputAction.IsActionPressedShoot, -- 4
+  [ButtonAction.ACTION_SHOOTRIGHT] = InputAction.IsActionPressedShoot, -- 5
+  [ButtonAction.ACTION_SHOOTUP] = InputAction.IsActionPressedShoot, -- 6
+  [ButtonAction.ACTION_SHOOTDOWN] = InputAction.IsActionPressedShoot, -- 7
+}
 
-      return false
-    end
+--
+-- InputHook.IS_ACTION_TRIGGERED (1)
+--
+
+-- Disable using cards/pills if we are in the trapdoor animation
+-- Disable using cards/pills if we are in the room sliding animation
+function InputAction.IsActionTriggeredPillCard()
+  if g.run.trapdoor.state > 0 or
+     Game():GetRoom():GetFrameCount() == 0 then
+      -- (we can't use cached API functions in this callback or else the game will crash)
+
+    return false
+  end
+end
+
+-- Manually switch from The Soul to The Forgotten in specific circumstances
+function InputAction.IsActionTriggeredDrop()
+  if g.run.switchForgotten then
+    g.run.switchForgotten = false
+    return true
+  end
+end
+
+-- Prevent opening the console during a race
+function InputAction.IsActionTriggeredConsole()
+  if g.race.status == "in progress" and
+     not g.debug then
+
+    return false
+  end
+end
+
+InputAction.IsActionTriggeredFunction = {
+  [ButtonAction.ACTION_PILLCARD] = InputAction.IsActionTriggeredPillCard, -- 10
+  [ButtonAction.ACTION_DROP] = InputAction.IsActionTriggeredDrop, -- 11
+  [ButtonAction.ACTION_CONSOLE] = InputAction.IsActionTriggeredConsole, -- 28
+}
+
+--
+-- InputHook.GET_ACTION_VALUE (2)
+--
+
+function InputAction.GetActionValueShoot(buttonAction)
+  local actionValue
+  actionValue = InputAction:KnifeDiagonalFix(buttonAction)
+  if actionValue ~= nil then
+    return actionValue
+  end
+  actionValue = Samael:GetActionValue(buttonAction)
+  if actionValue ~= nil then
+    return actionValue
   end
 end
 
@@ -94,5 +142,12 @@ function InputAction:KnifeDiagonalFix(buttonAction)
     return 1
   end
 end
+
+InputAction.GetActionValueFunction = {
+  [ButtonAction.ACTION_SHOOTLEFT] = InputAction.GetActionValueShoot, -- 4
+  [ButtonAction.ACTION_SHOOTRIGHT] = InputAction.GetActionValueShoot, -- 5
+  [ButtonAction.ACTION_SHOOTUP] = InputAction.GetActionValueShoot, -- 6
+  [ButtonAction.ACTION_SHOOTDOWN] = InputAction.GetActionValueShoot, -- 7
+}
 
 return InputAction

@@ -2,6 +2,7 @@ local Race = {}
 
 -- Includes
 local g           = require("racing_plus/globals")
+local FastTravel  = require("racing_plus/fasttravel")
 local Speedrun    = require("racing_plus/speedrun")
 local Sprites     = require("racing_plus/sprites")
 local SeededDeath = require("racing_plus/seededdeath")
@@ -68,8 +69,7 @@ function Race:PostUpdateCheckVictoryLap()
 
   -- Make them float upwards
   -- (the code is loosely copied from the "FastTravel:CheckTrapdoorEnter()" function)
-  g.run.trapdoor.state = 1
-  Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (from Victory Lap)")
+  g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
   g.run.trapdoor.upwards = true
   g.run.trapdoor.frame = isaacFrameCount + 40
   g.p.ControlsEnabled = false

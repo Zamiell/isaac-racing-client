@@ -6,9 +6,10 @@ local UseItem            = require("racing_plus/useitem")
 local RPPedestals        = require("racing_plus/pedestals")
 local FastTravel         = require("racing_plus/fasttravel")
 local Race               = require("racing_plus/race")
+local SeededDeath        = require("racing_plus/seededdeath")
 local Speedrun           = require("racing_plus/speedrun")
-local ChangeCharOrder    = require("racing_plus/changecharorder")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
+local ChangeCharOrder    = require("racing_plus/changecharorder")
 local Samael             = require("racing_plus/samael")
 
 -- Check all the grid entities in the room
@@ -788,7 +789,7 @@ function CheckEntities:EntityRaceTrophy(entity)
   end
 
   -- We should not be able to finish the race while we are in ghost form
-  if g.run.seededDeath.state == 3 then
+  if g.run.seededDeath.state == SeededDeath.state.GHOST_FORM then
     return
   end
 

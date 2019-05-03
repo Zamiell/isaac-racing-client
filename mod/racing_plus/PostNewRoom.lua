@@ -374,6 +374,7 @@ function PostNewRoom:CheckEntities()
   local roomClear = g.r:IsClear()
   local roomShape = g.r:GetRoomShape()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local character = g.p:GetPlayerType()
 
   local subvertTeleport = false
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
@@ -431,6 +432,13 @@ function PostNewRoom:CheckEntities()
     local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
     for _, familiar in ipairs(familiars) do
       familiar.Visible = false
+    end
+
+    -- If we are The Soul, the Forgotten body will also need to be teleported
+    -- However, if we change its position manually, it will just warp back to the same spot on the next frame
+    -- Thus, just manually switch to the Forgotten to avoid this bug
+    if character == PlayerType.PLAYER_THESOUL then -- 17
+      g.run.switchForgotten = true
     end
 
     Isaac.DebugString("Subverted a position teleport (1/2).")

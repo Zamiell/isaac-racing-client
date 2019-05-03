@@ -129,13 +129,13 @@ Speedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at t
 Speedrun.liveSplitReset = false
 
 -- Season 5 and Season 6 variables
-Speedrun.remainingItemStarts = {} -- Reset at the beginning of a new run
-Speedrun.selectedItemStarts = {} -- Reset at the beginning of a new run
+Speedrun.remainingItemStarts = {} -- Reset at the beginning of a new run on the first character
+Speedrun.selectedItemStarts = {} -- Reset at the beginning of a new run on the first character
 
 -- Season 6 variables
 Speedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
-Speedrun.lastItemStart = 0 -- Set when a new item is assigned
-Speedrun.lastItemStartOnFirstChar = 0 -- Set when a new item is assigned on the first character
+Speedrun.lastBuildItem = 0 -- Set when a new build is assigned
+Speedrun.lastBuildItemOnFirstChar = 0 -- Set when a new build is assigned on the first character
 Speedrun.vetoList = {}
 Speedrun.vetoSprites = {}
 Speedrun.vetoTimer = 0

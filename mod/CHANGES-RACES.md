@@ -35,7 +35,7 @@
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.
   * This mechanic does not apply to deaths in Devil Rooms or Sacrifice Rooms. (Deaths in those rooms will be permanent.)
 * Lucky Foot is removed from all pools.
-* The Cain's Eye, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe, Safety Cap, Ace of Spades, and Watch Battery trinkets are removed from the trinket pool.
+* The Cain's Eye, Broken Ankh, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe, Safety Cap, Ace of Spades, and Watch Battery trinkets are removed from the trinket pool.
 
 ## Diversity
 

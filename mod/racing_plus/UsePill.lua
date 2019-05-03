@@ -7,6 +7,10 @@ local Pills   = require("racing_plus/pills")
 -- ModCallbacks.MC_USE_PILL (10)
 -- Will get called for all pills
 function UsePill:Main(pillEffect)
+  -- Display the streak text (because Racing+ removes the vanilla streak text)
+  g.run.streakText = Pills.effects[pillEffect]
+  g.run.streakFrame = Isaac.GetFrameCount()
+
   -- Don't add any more pills after 7, since it won't display cleanly
   if #g.run.pills >= 7 then
     return
@@ -35,10 +39,6 @@ function UsePill:Main(pillEffect)
   pillEntry.sprite:Load("gfx/pills/pill" .. pillColor .. ".anm2", true)
   pillEntry.sprite:SetFrame("Default", 0)
   g.run.pills[#g.run.pills + 1] = pillEntry
-
-  -- Finally, display the streak text (because Racing+ removes the vanilla streak text)
-  g.run.streakText = Pills.effects[pillEffect]
-  g.run.streakFrame = Isaac.GetFrameCount()
 end
 
 function UsePill:HealthUp()

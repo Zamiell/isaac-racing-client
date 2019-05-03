@@ -8,6 +8,20 @@ local SeededFloors = require("racing_plus/seededfloors")
 -- Constants
 FastTravel.trapdoorOpenDistance  = 60 -- This feels about right
 FastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
+
+-- Enums
+FastTravel.state = {
+  DISABLED = 0,
+  PLAYER_ANIMATION = 1,
+  FADING_TO_BLACK = 2,
+  SCREEN_IS_BLACK = 3,
+  POST_NEW_ROOM_1 = 4,
+  POST_NEW_ROOM_2 = 5,
+  CONTROLS_ENABLED = 6,
+  PLAYER_JUMP = 7,
+}
+
+-- Variables
 FastTravel.reseed                = false -- Used when we need to reseed the next floor
 FastTravel.delayNewRoomCallback  = false -- Used when executing a "reseed" immediately after a "stage X"
 
@@ -271,14 +285,13 @@ end
 -- Called from the "CheckEntities:NonGrid()" function
 function FastTravel:CheckTrapdoorEnter(effect, upwards)
   -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local isaacFrameCount = Isaac.GetFrameCount()
 
   -- Check to see if a player is touching the trapdoor
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
-    if g.run.trapdoor.state == 0 and
+    if g.run.trapdoor.state == FastTravel.state.DISABLED and
        ((not upwards and effect.State == 0) or -- The trapdoor is open
         (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
         -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
@@ -296,10 +309,23 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards)
        not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
 
       -- State 1 is activated the moment we touch the trapdoor
-      g.run.trapdoor.state = 1
-      Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+      g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
       g.run.trapdoor.upwards = upwards
       g.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
+
+      -- If we are The Soul, the Forgotten body will also need to be teleported
+      -- However, if we change its position manually, it will just warp back to the same spot on the next frame
+      -- Thus, just manually switch to the Forgotten to avoid this bug
+      local character = g.p:GetPlayerType()
+      if character == PlayerType.PLAYER_THESOUL then -- 17
+        g.run.switchForgotten = true
+
+        -- Also warp the body to where The Soul is so that The Forgotton won't jump down through a normal floor
+        local forgottenBodies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, 900, -1, false, false) -- 3
+        for _, forgottenBody in ipairs(forgottenBodies) do
+          forgottenBody.Position = g.p.Position
+        end
+      end
 
       player.ControlsEnabled = false
       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
@@ -325,11 +351,10 @@ end
 -- Called from the PostRender callback
 function FastTravel:CheckTrapdoor()
   -- Local varaibles
-  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if g.run.trapdoor.state == 1 and
+  if g.run.trapdoor.state == FastTravel.state.PLAYER_ANIMATION and
      isaacFrameCount >= g.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
@@ -340,38 +365,34 @@ function FastTravel:CheckTrapdoor()
                             g.RoomTransition.TRANSITION_NONE) -- 0
 
     -- Mark to change floors after the screen is black
-    g.run.trapdoor.state = 2
-    Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+    g.run.trapdoor.state = FastTravel.state.FADING_TO_BLACK
     g.run.trapdoor.frame = isaacFrameCount + 8
     -- 9 is too many (you can start to see the same room again)
 
-  elseif g.run.trapdoor.state == 2 and
+  elseif g.run.trapdoor.state == FastTravel.state.FADING_TO_BLACK and
          isaacFrameCount >= g.run.trapdoor.frame then
 
     -- Stage 3 is actiated when the screen is black
-    g.run.trapdoor.state = 3
-    Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+    g.run.trapdoor.state = FastTravel.state.SCREEN_IS_BLACK
     g.run.trapdoor.floor = stage
     Sprites:Init("black", "black")
     FastTravel:GotoNextFloor(g.run.trapdoor.upwards) -- The argument is "upwards"
 
-  elseif g.run.trapdoor.state == 5 and
+  elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_2 and
          g.p.ControlsEnabled then
 
      -- State 6 is activated when the player controls are enabled
      -- (this happens automatically by the game)
      -- (stages 4 and 5 are in the PostNewRoom callback)
-     g.run.trapdoor.state = 6
-     Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+     g.run.trapdoor.state = FastTravel.state.CONTROLS_ENABLED
      g.run.trapdoor.frame = isaacFrameCount + 10 -- Wait a while longer
      g.p.ControlsEnabled = false
 
-  elseif g.run.trapdoor.state == 6 and
+  elseif g.run.trapdoor.state == FastTravel.state.CONTROLS_ENABLED and
          isaacFrameCount >= g.run.trapdoor.frame then
 
      -- State 7 is activated when the the hole is spawned and ready
-     g.run.trapdoor.state = 7
-     Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+     g.run.trapdoor.state = FastTravel.state.PLAYER_JUMP
      g.run.trapdoor.frame = isaacFrameCount + 25
      -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
 
@@ -395,13 +416,11 @@ function FastTravel:CheckTrapdoor()
        pitfall:GetSprite():Play("Disappear", true)
      end
 
-  elseif g.run.trapdoor.state == 7 and
+  elseif g.run.trapdoor.state == FastTravel.state.PLAYER_JUMP and
          isaacFrameCount >= g.run.trapdoor.frame then
 
     -- We are finished when the the player has emerged from the hole
-    g.run.trapdoor.state = 0
-    Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state ..
-                      " (finished) (frame " .. gameFrameCount .. ")")
+    g.run.trapdoor.state = FastTravel.state.DISABLED
 
     -- Enable the controls for all players
     for i = 1, g.g:GetNumPlayers() do
@@ -418,7 +437,7 @@ function FastTravel:CheckTrapdoor()
   end
 
   -- Fix the bug where Dr. Fetus bombs can be shot while jumping
-  if g.run.trapdoor.state > 0 then
+  if g.run.trapdoor.state > FastTravel.state.DISABLED then
     g.p.FireDelay = 1
   end
 end
@@ -426,20 +445,17 @@ end
 -- Called from the PostNewRoom callback
 function FastTravel:CheckTrapdoor2()
   -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
   local character = g.p:GetPlayerType()
 
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
   -- (this is just an artifact of the manual reordering)
-  if g.run.trapdoor.state == 3 then
-    g.run.trapdoor.state = 4
-    Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+  if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK then
+    g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_1
 
-  elseif g.run.trapdoor.state == 4 then
-    g.run.trapdoor.state = 5
-    Isaac.DebugString("Trapdoor state: " .. g.run.trapdoor.state .. " (frame " .. gameFrameCount .. ")")
+  elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_1 then
+    g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_2
 
     for i = 1, g.g:GetNumPlayers() do
       local player = Isaac.GetPlayer(i - 1)
