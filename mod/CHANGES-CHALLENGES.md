@@ -125,6 +125,7 @@
 * Sacred Heart no longer grants homing bombs (unless you have Dr. Fetus).
 * We Need to Go Deeper! will not work on Womb 2.
 * Cain's Eye and Broken Ankh are removed from the trinket pool.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
 

@@ -89,7 +89,7 @@ RacingPlusSpeedrun = Speedrun
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPCUpdate)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC24,
                                                    EntityType.ENTITY_GLOBIN) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                                                    EntityType.ENTITY_HOST) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC28,
                                                    EntityType.ENTITY_CHUB) -- 28
@@ -105,7 +105,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                                                    EntityType.ENTITY_MOBILE_HOST) -- 204
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
                                                    EntityType.ENTITY_GAPING_MAW) -- 235
@@ -129,7 +129,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC275,
                                                    EntityType.ENTITY_MEGA_SATAN_2) -- 273
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC302,
                                                    EntityType.ENTITY_STONEY) -- 302
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC27,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                                                    EntityType.ENTITY_FORSAKEN) -- 403
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC411,
                                                    EntityType.ENTITY_BIG_HORN) -- 411

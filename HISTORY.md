@@ -1,10 +1,16 @@
 # Racing+ Version History and News
 
+### *v0.34.6* - May 4th, 2019
+
+* Removed Sheol narrow rooms #257, #275, and #308 (with Mom's Dead Hand). (Thanks Dea1h)
+* Added the season 3 Sacrifice Room mechanic to season 6. (Thanks thereisnofuture)
+* Fixed the bug where you could manually change from The Forgotten / The Soul when travelling between floors.
+
 ### *v0.34.5* - May 3rd, 2019
 
 * The streak text will now always appear when you use a pill.
 * In a seeded race or a season 6 speedrun, it is no longer possible to become revived from Guppy's Collar (to prevent the vanilla permadeath bug).
-* Removed Broken Ankh from the trinket pool for seeded races and season 6.
+* Removed Broken Ankh from the trinket pool for seeded races and season 6. (Thanks mgln)
 * If The Soul enters a trapdoor or beam of light, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).
 * If The Soul enters a room with Mom, Gurdy, or It Lives!, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).
 * Fixed the bug where The Soul would not switch back to the Forgotten if they died in a seeded race / season 6 speedrun. (Thanks NorBro86)

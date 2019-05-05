@@ -31,17 +31,6 @@ function NPCUpdate:NPC24(npc)
   end
 end
 
--- EntityType.ENTITY_HOST (27)
--- EntityType.ENTITY_MOBILE_HOST (204)
--- EntityType.ENTITY_FORSAKEN (403)
-function NPCUpdate:NPC27(npc)
-  if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1 << 11
-    -- Make them immune to fear
-    npc:RemoveStatusEffects()
-    Isaac.DebugString("Unfeared a Host / Mobile Host / Forsaken.")
-  end
-end
-
 -- EntityType.ENTITY_CHUB (28)
 function NPCUpdate:NPC28(npc)
   -- Local variables
@@ -345,5 +334,12 @@ function NPCUpdate:NPC413(npc)
   end
 end
 
+function NPCUpdate:FearImmunity(npc)
+  if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1 << 11
+    -- Make them immune to fear
+    npc:RemoveStatusEffects()
+    Isaac.DebugString("Unfeared a Host / Mobile Host / Forsaken.")
+  end
+end
 
 return NPCUpdate

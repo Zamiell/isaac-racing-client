@@ -51,7 +51,8 @@ function PostNewLevel:NewLevel()
   if (g.race.goal == "The Lamb" or
       g.race.goal == "Mega Satan" or
       g.race.goal == "Everything" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) and
      stage == 11 and stageType == 0 and -- 11.0 is Dark Room
      (g.run.currentFloor ~= 10 and
       g.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now

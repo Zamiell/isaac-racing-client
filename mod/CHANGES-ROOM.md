@@ -148,6 +148,7 @@ The changed rooms are as follows:
 * Womb/Utero/Scarred: #611 (Mom's Dead Hand) (deleted)
 * Cathedral: #286 (Uriel) (changed to 1x1)
 * Cathedral: #291 (Gabriel) (changed to 1x1)
+* Sheol: #257, #275, #308 (Mom's Dead Hand) (deleted)
 * Chest: #262 (Headless Horseman Head x2) (changed to 1x1)
 * Chest: #269 (Mega Maw) (changed to 1x1)
 * Chest: #264 (Monstro x2) (changed to 1x1)

@@ -77,6 +77,9 @@ function InputAction.IsActionTriggeredDrop()
     g.run.switchForgotten = false
     return true
   end
+  if g.run.trapdoor.state > 0 then
+    return false
+  end
 end
 
 -- Prevent opening the console during a race
