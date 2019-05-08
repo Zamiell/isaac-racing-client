@@ -15,6 +15,12 @@ function SpeedrunPostGameStarted:Main()
   Speedrun.fadeFrame = 0
   Speedrun.resetFrame = 0
 
+  -- Reset the Season 6 veto list if they are changing items
+  if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
+    Speedrun.vetoList = {}
+  end
+
+
   if Speedrun.liveSplitReset then
     Speedrun.liveSplitReset = false
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_OFF_LIMITS, 0, false)
@@ -449,6 +455,14 @@ function SpeedrunPostGameStarted:R7S6()
   local character = g.p:GetPlayerType()
 
   Isaac.DebugString("In the R+7 (Season 6) challenge.")
+
+  -- If Eden starts with The Compass as the random passive item, restart the game
+  if character == PlayerType.PLAYER_EDEN and -- 9
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) then -- 21
+
+    g.run.restart = true
+    return
+  end
 
   -- Everyone starts with the Schoolbag in this season
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)

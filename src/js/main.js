@@ -154,6 +154,9 @@ $(document).ready(() => {
     $('#settings-version').html(globals.version);
 
     // Preload some sounds by playing all of them
+    // (commented out because in the new version of Chrome we get an error:
+    // "play() failed because the user didn't interact with the document first.")
+    /*
     const soundFiles = ['1', '2', '3', 'finished', 'go', 'lets-go', 'quit', 'race-completed'];
     for (const file of soundFiles) {
         const audioPath = path.join('sounds', `${file}.mp3`);
@@ -167,6 +170,7 @@ $(document).ready(() => {
         audio.volume = 0;
         audio.play();
     }
+    */
 
     // Check to see if we got an error during page initialization
     if (globals.initError !== null) {

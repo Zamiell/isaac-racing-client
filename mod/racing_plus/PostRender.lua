@@ -61,6 +61,7 @@ function PostRender:Main()
   ChangeKeybindings:PostRender()
   PostRender:DisplayTopLeftText()
   PostRender:DrawInvalidSaveFile()
+  PostRender:DrawVersion()
 
   -- Check for inputs
   PostRender:CheckConsoleInput()
@@ -132,10 +133,8 @@ function PostRender:DrawStreakText()
   local pos = Isaac.WorldToRenderPosition(posGame)
   local f = Font()
   f:Load("font/droid.fnt")
-  --f:Load("font/pftempestasevencondensed.fnt")
   local color = KColor(1, 1, 1, fade)
   local scale = 1
-  --local scale = 1.3
   local length = f:GetStringWidthUTF8(g.run.streakText) * scale
   f:DrawStringScaled(g.run.streakText, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
 end
@@ -467,17 +466,23 @@ function PostRender:DisplayTopLeftText()
     Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
     -- Draw a 3rd line to show the total frames
+    -- Draw a 4th line to show the Racing+ version
     if not Speedrun:InSpeedrun() or
        Speedrun:IsOnFinalCharacter() then
-       local frames
+
+      local frames
       if Speedrun:InSpeedrun() then
         frames = Speedrun.finishedFrames
       else
         frames = g.raceVars.finishedFrames
       end
       local seconds = g:Round(frames / 60, 3)
-       y = y + lineLength
+      y = y + lineLength
       text = "Total frames: " .. tostring(frames) .. " (" .. tostring(seconds) .. "s)"
+      Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+
+      text = "Racing+ " .. tostring(g.version)
+      y = y + lineLength
       Isaac.RenderText(text, x, y, 2, 2, 2, 2)
     end
 
@@ -679,6 +684,58 @@ function PostRender:DrawInvalidSaveFile()
   x = x - 42
   y = y + 20
   Isaac.RenderText("https://www.speedrun.com/afterbirthplus/resources", x, y, 2, 2, 2, 2)
+end
+
+function PostRender:DrawVersion()
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
+
+  -- Make the version persist for at least 2 seconds after the player presses "v"
+  if Input.IsButtonPressed(Keyboard.KEY_V, 0) then -- 86
+    g.run.showVersionFrame = gameFrameCount + 60
+  end
+
+  if g.run.showVersionFrame == 0 or
+     gameFrameCount > g.run.showVersionFrame then
+
+    return
+  end
+
+  local center = PostRender:GetScreenCenterPosition()
+  local text, x, y
+
+  -- Render the version of the mod
+  text = "Racing+"
+  x = center.X - 3 * #text
+  y = center.Y + 40
+  Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+
+  text = g.version
+  y = y + 15
+  Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+end
+
+-- Taken from Alphabirth: https://steamcommunity.com/sharedfiles/filedetails/?id=848056541
+function PostRender:GetScreenCenterPosition()
+  -- Local variables
+  local shape = g.r:GetRoomShape()
+  local centerOffset = (g.r:GetCenterPos()) - g.r:GetTopLeftPos()
+  local pos = g.r:GetCenterPos()
+
+  if centerOffset.X > 260 then
+      pos.X = pos.X - 260
+  end
+  if shape == RoomShape.ROOMSHAPE_LBL or shape == RoomShape.ROOMSHAPE_LTL then
+      pos.X = pos.X - 260
+  end
+  if centerOffset.Y > 140 then
+      pos.Y = pos.Y - 140
+  end
+  if shape == RoomShape.ROOMSHAPE_LTR or shape == RoomShape.ROOMSHAPE_LTL then
+      pos.Y = pos.Y - 140
+  end
+
+  return Isaac.WorldToRenderPosition(pos, false)
 end
 
 return PostRender

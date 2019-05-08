@@ -1,6 +1,16 @@
 # Racing+ Version History and News
 
-### *v0.34.6* - May 4th, 2019
+### *v0.34.7* - May ??th, 2019
+
+* Racing+ will now report the version when you press the "v" key.
+* A clarification on the Guppy's Collar change in the previous patch: it is still possible for Guppy's Collar to revive the player if they currently have any other revival items. (Thanks Gamonymous)
+* Removed Womb / Scarred Womb room #865 (narrow room with triple Gaping Maws). (Thanks Dea1h)
+* The mod will now automatically reset the run if you are playing as Eden and happen to start with the vanilla Schoolbag (unless it is a seeded run).
+* In season 6, vetos will now be automatically reset if you enter the "Change Char Order" custom challenge. (Thanks NorBro86)
+* In season 6, the mod will now automatically reset the run if you are playing as Eden and happen to start with The Compass. (Thanks thereisnofuture)
+* Fixed the bug where vanilla races and custom races could not be finished.
+
+### *v0.34.6* - May 5th, 2019
 
 * Removed Sheol narrow rooms #257, #275, and #308 (with Mom's Dead Hand). (Thanks Dea1h)
 * Added the season 3 Sacrifice Room mechanic to season 6. (Thanks thereisnofuture)
@@ -9,7 +19,7 @@
 ### *v0.34.5* - May 3rd, 2019
 
 * The streak text will now always appear when you use a pill.
-* In a seeded race or a season 6 speedrun, it is no longer possible to become revived from Guppy's Collar (to prevent the vanilla permadeath bug).
+* In a seeded race or a season 6 speedrun, it is no longer possible to become revived from Guppy's Collar if the player has no other revival items (to prevent the vanilla permadeath bug).
 * Removed Broken Ankh from the trinket pool for seeded races and season 6. (Thanks mgln)
 * If The Soul enters a trapdoor or beam of light, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).
 * If The Soul enters a room with Mom, Gurdy, or It Lives!, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).

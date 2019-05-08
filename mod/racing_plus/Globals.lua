@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.34.6"
+g.version = "v0.34.7"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -257,6 +257,7 @@ function g:InitRun()
   g.run.lastDDLevel          = 0 -- Used by the Soul Jar
   g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul
   g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
+  g.run.showVersionFrame     = 0
 
   -- Transformations
   g.run.transformations = {}
@@ -334,11 +335,6 @@ function g:InitRun()
     keys         = 0,
     heartTable   = {},
   }
-end
-
-function g:InitAPI()
-  -- Cache API function calls for a small performance increase
-  -- TODO
 end
 
 function g:IncrementRNG(seed)

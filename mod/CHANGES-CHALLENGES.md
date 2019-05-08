@@ -95,7 +95,7 @@
   * Only one big 4 item will be randomly assigned per 7 character run.
   * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
   * Duplicate starting items will never be given over the course of a 7 character run.
-* Note that The Babies Mod removes The Clicker, Guillotine, and Bat Wing from all item/trinket pools.
+* Note that The Babies Mod removes Guillotine, Scissors, Clicker, and Bat Wing from all item/trinket pools.
 
 <br />
 

@@ -1,8 +1,8 @@
 local ChangeCharOrder = {}
 
 -- Includes
-local g       = require("racing_plus/globals")
-local SaveDat = require("racing_plus/savedat")
+local g        = require("racing_plus/globals")
+local SaveDat  = require("racing_plus/savedat")
 
 --
 -- Constants

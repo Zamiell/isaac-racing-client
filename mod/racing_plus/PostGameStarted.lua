@@ -303,16 +303,30 @@ function PostGameStarted:Character()
   local character = g.p:GetPlayerType()
   local activeItem = g.p:GetActiveItem()
   local activeCharge = g.p:GetActiveCharge()
+  local customRun = g.seeds:IsCustomRun()
+  local challenge = Isaac.GetChallenge()
 
-  -- If they started with the vanilla Schoolbag, it will cause bugs with swapping the active item later on
-  -- (this should be only possible on Eden; we will give Eden the custom Schoolbag below)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+  -- Since Eden starts with the Schoolbag in Racing+,
+  -- Eden will "miss out" on a passive item if they happen to start with the vanilla Schoolbag
+  -- Reset the game if this is the case
+  if character == PlayerType.PLAYER_EDEN and -- 9
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
 
-    -- Give Sad Onion as a replacement for the passive item
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAD_ONION, 0, false) -- 1
-    Isaac.DebugString("Eden has started with the vanilla Schoolbag; removing it.")
-    Isaac.DebugString("Removing collectible 534 (Schoolbag)")
+    if (challenge == Challenge.CHALLENGE_NULL and -- 0
+        customRun) then
+
+      -- In the unlikely event that they are playing on a specific seed with Eden,
+      -- the below code will cause the game to infinitely restart
+      -- Instead, just take away the vanilla Schoolbag and give them the Sad Onion as a replacement for the passive item
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAD_ONION, 0, false) -- 1
+      Isaac.DebugString("Eden has started with the vanilla Schoolbag; removing it.")
+      Isaac.DebugString("Removing collectible 534 (Schoolbag)")
+
+    else
+      g.run.restart = true
+      return
+    end
   end
 
   -- If they started with the Karma trinket, we need to delete it, since it is supposed to be removed from the game

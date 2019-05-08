@@ -1,6 +1,3 @@
--- Disable luacheck "setting non-standard global varaible" warnings in this file specifically
--- luacheck: ignore globals unused_args
-
 -- These are all of the declarations in the "enums.lua" file in the "scripts" subdirectory,
 -- sorted alphabetically
 globals = {
