@@ -69,6 +69,7 @@ function PostNewLevel:NewLevel()
      not customRun then -- Disable reseeding for set seeds
 
     if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
+       PostNewLevel:CheckForgottenSoftlock() or -- Forgotten can become softlocked in certain rooms
        PostNewLevel:CheckDupeRooms() then -- Check for duplicate rooms
       -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
 
@@ -133,6 +134,107 @@ function PostNewLevel:NewLevel()
 
   -- Call PostNewRoom manually (they get naturally called out of order)
   PostNewRoom:NewRoom()
+end
+
+-- Reseed the floor if we have Duality and there is a narrow boss room
+function PostNewLevel:CheckDualityNarrowRoom()
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) then -- 498
+    return false
+  end
+
+  -- It is only possible to get a Devil Deal on floors 2 through 8
+  -- Furthermore, it is not possible to get a narrow room on floor 8
+  local stage = g.l:GetStage()
+  if stage <= 1 or
+     stage >= 8 then
+
+    return false
+  end
+
+  -- Check to see if the boss room is narrow
+  local rooms = g.l:GetRooms()
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomData = rooms:Get(i).Data
+    if roomData.Type == RoomType.ROOM_BOSS then -- 5
+      if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
+         roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
+
+        Isaac.DebugString("Narrow boss room detected with Duality - reseeding.")
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+-- If the Forgotten has Chocolate Milk or Brimstone, and then spends all of his soul hearts in a devil deal,
+-- then they can become softlocked in certain specific island rooms
+function PostNewLevel:CheckForgottenSoftlock()
+  local character = g.p:GetPlayerType()
+  if character ~= PlayerType.PLAYER_THEFORGOTTEN then -- 17
+    return false
+  end
+
+  local player2 = g.p:GetSubPlayer()
+  local soulHearts = player2:GetSoulHearts()
+  if soulHearts > 0 then
+    return false
+  end
+
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) and -- 69
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) then -- 118
+
+    return false
+  end
+
+  -- Local variables
+  local stage = g.l:GetStage()
+  if stage <= 2 or
+     stage >= 9 then
+
+    return false
+  end
+
+  -- Search through the floor for specific rooms
+  local rooms = g.l:GetRooms()
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomData = rooms:Get(i).Data
+    if roomData.Type == RoomType.ROOM_DEFAULT then -- 1
+      -- Normalize the room ID (to account for flipped rooms)
+      local roomID = roomData.Variant
+      while roomID >= 10000 do
+        -- The 3 flipped versions of room #1 would be #10001, #20001, and #30001
+        roomID = roomID - 10000
+      end
+
+      local stageID = roomData.StageID
+      if ((stageID == 4 or stageID == 6) and roomID == 226) or
+         ((stageID == 4 or stageID == 6) and roomID == 251) or
+         ((stageID == 4 or stageID == 6) and roomID == 303) or
+         ((stageID == 4 or stageID == 6) and roomID == 500) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 305) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 337) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 378) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 450) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 226) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 275) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 390) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 417) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 446) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 455) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 573) or
+         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 458) or
+         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 459) then
+
+        Isaac.DebugString("Island room detected with low-range Forgotten - reseeding.")
+        return true
+      end
+    end
+  end
+
+  return false
 end
 
 -- Reseed the floor if there duplicate rooms
@@ -224,38 +326,6 @@ function PostNewLevel:GetXYFromGridIndex(idx)
   -- Now, we add 1 to each x and y because the game uses a 0-indexed grid and
   -- the pathing library expects a 1-indexed grid
   return x + 1, y + 1
-end
-
--- Reseed the floor if we have Duality and there is a narrow boss room
-function PostNewLevel:CheckDualityNarrowRoom()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local rooms = g.l:GetRooms()
-
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_DUALITY) then -- 498
-    return
-  end
-
-  -- It is only possible to get a Devil Deal on floors 2 through 8
-  -- Furthermore, it is not possible to get a narrow room on floor 8
-  if stage <= 1 or
-     stage >= 8 then
-
-    return
-  end
-
-  -- Check to see if the boss room is narrow
-  for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local roomData = rooms:Get(i).Data
-    if roomData.Type == RoomType.ROOM_BOSS then -- 5
-      if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
-         roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
-
-        Isaac.DebugString("Narrow boss room detected with Duality - reseeding.")
-        return true
-      end
-    end
-  end
 end
 
 return PostNewLevel

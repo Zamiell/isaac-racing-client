@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.35.1* - May 10th, 2019
+
+* Floors with specific island rooms will now be automatically reseeded if you are playing as The Forgotten, have no soul hearts, and have Chocolate Milk or Brimstone. (This prevents softlocks where you cannot reach enemies on an island.) There are likely some island rooms that I missed, so if you report them I can add them to the list. (Thanks Thoday)
+* Fixed the bug where the seeded death mechanic would not work if you died to a Mom's Hand. (Thanks thereisnofuture & Gamonymous)
+
 ### *v0.35.0* - May 9th, 2019
 
 * Caffeine Pill will now drop the pill on the ground (instead of directly inserting it into your inventory) if your inventory is already filled.

@@ -75,10 +75,17 @@ function SeededDeath:PostUpdate()
      roomType ~= RoomType.ROOM_SACRIFICE and -- 13
      roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
 
-    g.run.seededDeath.deathFrame = gameFrameCount + 46
     -- The "Death" animation is 57 frames long
     -- (when testing, the death screen appears if we wait 57 frames,
     -- but we want it to be a bit faster than that)
+    local framesToWait = 46
+    local hands = Isaac.FindByType(EntityType.ENTITY_MOMS_HAND, -1, -1, false, false) -- 213
+    if #hands > 0 then
+      -- If players die getting grabbed by a Mom's Hand, then the game over screen will appear after 27 frames
+      -- (instead of 57 frames) for some reason
+      framesToWait = 26
+    end
+    g.run.seededDeath.deathFrame = gameFrameCount + framesToWait
   end
 
   -- Seeded death (1/3) - The death animation is over
