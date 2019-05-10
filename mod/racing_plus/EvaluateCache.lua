@@ -5,8 +5,20 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function EvaluateCache:Main(player, cacheFlag)
+  EvaluateCache:DadsLostCoin(player, cacheFlag)
   EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
   EvaluateCache:Race(player, cacheFlag)
+end
+
+-- We want to put the lucky penny directly into the inventory
+function EvaluateCache:DadsLostCoin(player, cacheFlag)
+  if not player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) or -- 455
+     cacheFlag ~= CacheFlag.CACHE_LUCK then -- 1024
+
+    return
+  end
+
+  player.Luck = player.Luck + 1
 end
 
 function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)

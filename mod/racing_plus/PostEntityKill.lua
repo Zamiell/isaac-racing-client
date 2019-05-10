@@ -92,41 +92,41 @@ function PostEntityKill:Entity78(entity)
   end
 
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
-  local situation -- 1 for the beam of light, 2 for the trapdoor, 3 for both
+  local situations = {
+    BEAM_OF_LIGHT = 1,
+    TRAPDOOR = 2,
+    BOTH = 3,
+  }
+  local situation
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     Speedrun.inSeededSpeedrun then
+     Speedrun.inSeededSpeedrun or
+     (g.race.status == "in progress" and g.race.goal == "Blue Baby") or
+     (g.race.status == "in progress" and g.race.goal == "Everything") then
 
-    -- Season 1, 4, and 5 always goes to Cathedral / The Chest
-    situation = 1
+    -- Season 1, 4, 5, and Seeded speedruns always go to Cathedral / The Chest
+    -- Races to Blue Baby go to Cathedral / The Chest
+    -- "Everything" races always go to Cathedral first (and then Sheol after that)
+    situation = situations.BEAM_OF_LIGHT
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
-    -- Season 2 always goes to Sheol / the Dark Room
-    situation = 2
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
+         (g.race.status == "in progress" and g.race.goal == "The Lamb") then
+
+    -- Season 2 speedruns always goes to Sheol / the Dark Room
+    -- Races to The Lamb go to Sheol / the Dark Room
+    situation = situations.TRAPDOOR
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
 
-    -- Season 3 and 6 alternate between Cathedral / The Chest and Sheol / the Dark Room,
+    -- Season 3 and 6 speedruns alternate between Cathedral / The Chest and Sheol / the Dark Room,
     -- starting with Cathedral / The Chest
     situation = Speedrun.charNum % 2
     if situation == 0 then
-      situation = 2
+      situation = situations.TRAPDOOR
     end
-
-  elseif g.race.status == "in progress" and g.race.goal == "Blue Baby" then
-    -- Races to Blue Baby go to Cathedral / The Chest
-    situation = 1
-
-  elseif g.race.status == "in progress" and g.race.goal == "The Lamb" then
-    -- Races to The Lamb go to Sheol / the Dark Room
-    situation = 2
-
-  elseif g.race.status == "in progress" and g.race.goal == "Everything" then
-    -- "Everything" races always go to Cathedral first (and then Sheol after that)
-    situation = 1
 
   else
     -- We can potentially go in either direction
@@ -135,26 +135,26 @@ function PostEntityKill:Entity78(entity)
       -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
       -- so since it is impossible to determine their actual photo status,
       -- just give the player a choice between the directions
-      situation = 3
+      situation = situations.BOTH
 
     elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
            g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
       -- The player has both photos (this can only occur in a diversity race)
       -- So, give the player a choice between the directions
-      situation = 3
+      situation = situations.BOTH
 
     elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
       -- The player has The Polaroid, so send them to Cathdral
-      situation = 1
+      situation = situations.BEAM_OF_LIGHT
 
     elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
       -- The player has The Negative, so send them to Sheol
-      situation = 2
+      situation = situations.TRAPDOOR
 
     else
       -- The player does not have either The Polaroid or The Negative, so give them a choice between the directions
-      situation = 3
+      situation = situations.BOTH
     end
   end
 

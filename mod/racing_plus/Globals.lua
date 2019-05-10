@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.34.7"
+g.version = "v0.35.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -252,7 +252,7 @@ function g:InitRun()
   g.run.extraIncubus         = false -- Used in Racing+ Season 4
   g.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
   g.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
-  g.run.pickingUpItem        = false
+  g.run.pickingUpItem        = 0 -- Equal to the ID of the currently queued item
   g.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
   g.run.lastDDLevel          = 0 -- Used by the Soul Jar
   g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul

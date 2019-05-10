@@ -3,6 +3,7 @@
 Changes:
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 	(items that give bone hearts do not count as health up items for Keeper)
+- Added the "luck" cache to Dad's Lost Coin
 - Removed the "special" tag from all items
 - Renamed "Betrayal" to "Betrayal (Vanilla)"
 - Renamed "Schoolbag" to "Schoolbag (Vanilla)"
@@ -470,7 +471,7 @@ Changes:
 	<passive description="I'm leaking..." gfx="Collectibles_452_VaricoseVeins.png" id="452" name="Varicose Veins" />
 	<passive achievement="291" description="Bone tears!" gfx="Collectibles_453_CompoundFracture.png" id="453" name="Compound Fracture" cache="range tearflag" />
 	<passive description="Hold me!" gfx="Collectibles_454_Polydactyly.png" id="454" name="Polydactyly" />
-	<passive achievement="307" description="I remember this..." gfx="Collectibles_455_DadsLostCoin.png" id="455" name="Dad's Lost Coin" cache="range" />
+	<passive achievement="307" description="I remember this..." gfx="Collectibles_455_DadsLostCoin.png" id="455" name="Dad's Lost Coin" cache="range luck" />
 	<passive cache="range" description="Midnight snack!" gfx="Collectibles_456_MoldyBread.png" id="456" name="Moldy Bread" hearts="2" maxhearts="2" />
 	<passive description="Hard headed!" gfx="Collectibles_457_Conehead.png" id="457" name="Cone Head" soulhearts="2" />
 	<passive description="What's in there?" gfx="Collectibles_458_BellyButton.png" id="458" name="Belly Button" />

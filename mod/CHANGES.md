@@ -95,6 +95,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
 * [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
+* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.)
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.

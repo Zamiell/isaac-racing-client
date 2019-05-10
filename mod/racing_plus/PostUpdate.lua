@@ -9,6 +9,7 @@ local FastDrop           = require("racing_plus/fastdrop")
 local Schoolbag          = require("racing_plus/schoolbag")
 local SoulJar            = require("racing_plus/souljar")
 local FastTravel         = require("racing_plus/fasttravel")
+local PostItemPickup     = require("racing_plus/postitempickup")
 local Race               = require("racing_plus/race")
 local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
@@ -208,14 +209,19 @@ end
 function PostUpdate:CheckItemPickup()
   -- Only run the below code once per item
   if g.p:IsItemQueueEmpty() then
-    if g.run.pickingUpItem then
-      g.run.pickingUpItem = false
+    if g.run.pickingUpItem ~= 0 then
+      -- Check to see if we need to do something specific after this item is added to our inventory
+      local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
+      if postItemFunction ~= nil then
+        postItemFunction()
+      end
+      g.run.pickingUpItem = 0
     end
     return
-  elseif g.run.pickingUpItem then
+  elseif g.run.pickingUpItem ~= 0 then
     return
   end
-  g.run.pickingUpItem = true
+  g.run.pickingUpItem = g.p.QueuedItem.Item.ID
 
   -- Mark to draw the streak text for this item
   g.run.streakText = g.p.QueuedItem.Item.Name
@@ -229,6 +235,9 @@ function PostUpdate:CheckItemPickup()
     end
     SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   end
+
+  -- Mark which item we are picking up
+  g.run.postItemPickup = g.p.QueuedItem.Item.ID
 end
 
 function PostUpdate:CheckTransformations()

@@ -300,8 +300,8 @@ function SeededDeath:DebuffOff()
   local boneHearts = g.p:GetBoneHearts()
   local bombs = g.p:GetNumBombs()
   local keys = g.p:GetNumKeys()
-  local cardSlot0 = g.p:GetCard(0)
-  local pillSlot0 = g.p:GetPill(0)
+  local card1 = g.p:GetCard(0)
+  local pill1 = g.p:GetPill(0)
 
   -- Add all of the items from the array
   for _, itemID in ipairs(g.run.seededDeath.items) do
@@ -388,10 +388,10 @@ function SeededDeath:DebuffOff()
 
   -- We also have to account for Caffeine Pill,
   -- which is the only item in the game that directly puts a pocket item into your inventory
-  if cardSlot0 ~= 0 then
-    g.p:SetCard(0, cardSlot0)
+  if card1 ~= 0 then
+    g.p:SetCard(0, card1)
   else
-    g.p:SetPill(0, pillSlot0)
+    g.p:SetPill(0, pill1)
   end
 
   -- Delete all newly-spawned pickups in the room

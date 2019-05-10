@@ -509,13 +509,30 @@ function FastClear:SpawnPhotos()
   local posCenterRight = Vector(360, 360)
 
   -- Figure out if we need to spawn either The Polaroid, The Negative, or both
-  local situation -- 1 for The Polaroid, 2 for The Negative, 3 for both, and 4 for a random boss item
+  local situations = {
+    POLAROID = 1,
+    NEGATIVE = 2,
+    BOTH = 3,
+    RANDOM = 4,
+  }
+  local hasPolaroid = g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID)
+  local hasNegative = g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE)
+  local hasMysteriousPaper = g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER)
+  if hasMysteriousPaper then
+    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative
+    -- Since it is impossible to determine the player's actual photo status,
+    -- assume that they do not have either photo yet, which will almost always be the case
+    -- (unless they are Eden or this is a Diversity race where they started with a photo / photos)
+    hasPolaroid = false
+    hasNegative = false
+  end
+  local situation
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      Speedrun.inSeededSpeedrun then
 
-    -- Season 1 and Seeded speedrun challenges spawn only The Polaroid
-    situation = 1
+    -- Season 1 and Seeded speedruns spawn only The Polaroid
+    situation = situations.POLAROID
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
@@ -524,77 +541,68 @@ function FastClear:SpawnPhotos()
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
 
     -- Most seasons give the player a choice between the two photos
-    situation = 3
+    situation = situations.BOTH
 
-  elseif g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
-    -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative
-    -- Since it is impossible to determine the player's actual photo status,
-    -- just give the player a choice between the photos
-    situation = 3
-
-  elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-         g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+  elseif hasPolaroid and -- 327
+         hasNegative then -- 328
 
     -- The player has both photos already (which can only occur in a diversity race)
     -- Spawn a random boss item instead of a photo
-    situation = 4
+    situation = situations.RANDOM
 
-  elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+  elseif hasPolaroid then -- 327
     -- The player has The Polaroid already (which can occur in a diversity race or if Eden)
     -- Spawn The Negative instead
-    situation = 2
+    situation = situations.NEGATIVE
 
-  elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+  elseif hasNegative then -- 328
     -- The player has The Negative already (which can occur in a diversity race or if Eden)
     -- Spawn The Polaroid instead
-    situation = 1
+    situation = situations.POLAROID
 
   elseif g.race.rFormat == "pageant" then
     -- Give the player a choice between the photos on the Pageant Boy ruleset
-    situation = 3
+    situation = situations.BOTH
 
   elseif g.race.status == "in progress" and
          g.race.goal == "Blue Baby" then
 
     -- Races to Blue Baby need The Polaroid
-    situation = 1
+    situation = situations.POLAROID
 
   elseif g.race.status == "in progress" and
          g.race.goal == "The Lamb" then
 
 
     -- Races to The Lamb need The Negative
-    situation = 2
+    situation = situations.NEGATIVE
 
   elseif g.race.status == "in progress" and
          (g.race.goal == "Mega Satan" or
           g.race.goal == "Everything") then
 
     -- Give the player a choice between the photos for races to Mega Satan
-    situation = 3
+    situation = situations.BOTH
 
   else
     -- They are doing a normal non-client run, so by default spawn both photos
-    situation = 3
+    situation = situations.BOTH
   end
 
   -- Do the appropriate action depending on the situation
-  if situation == 1 then
-    -- A situation of 1 means to spawn The Polaroid
+  if situation == situations.POLAROID then
     g.run.spawningPhoto = true
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
               nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
     Isaac.DebugString("Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif situation == 2 then
-    -- A situation of 2 means to spawn The Negative
+  elseif situation == situations.NEGATIVE then
     g.run.spawningPhoto = true
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
               nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
     Isaac.DebugString("Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif situation == 3 then
-    -- A situation of 3 means to spawn both The Polaroid and The Negative
+  elseif situation == situations.BOTH then
     g.run.spawningPhoto = true
     local polaroid = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
                                posCenterLeft, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
@@ -608,8 +616,7 @@ function FastClear:SpawnPhotos()
 
     Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
-  elseif situation == 4 then
-    -- A situation of 4 means to spawn a random boss item
+  elseif situation == situations.RANDOM then
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0), nil, 0, roomSeed)
     -- (a SubType of 0 will make a random item of the pool according to the room type)
     -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
@@ -1089,9 +1096,9 @@ function FastClear:SpawnClearAward()
 
     local subType = 0
     for i = 1, pickupCount do
-      local position = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
+      local pos = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
       local pickup = g.g:Spawn(EntityType.ENTITY_PICKUP, pickupVariant, -- 5
-                     position, Vector(0, 0), nil, subType, rng:Next())
+                     pos, Vector(0, 0), nil, subType, rng:Next())
       subType = pickup.SubType
     end
   end

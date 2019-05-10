@@ -55,7 +55,7 @@ function NPCUpdate:NPC28(npc)
      -- but use 30 frames to be safe
 
     g.run.matriarch.chubIndex = npc.Index
-    g.run.matriarch.stunFrame = gameFrameCount + 2 -- Around 1/4 of a second
+    g.run.matriarch.stunFrame = gameFrameCount + 1
 
     -- The Matriarch has died, so also nerf the fight slightly by killing everything in the room
     -- to clear things up a little bit

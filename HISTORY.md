@@ -1,6 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.34.7* - May ??th, 2019
+### *v0.35.0* - May 9th, 2019
+
+* Caffeine Pill will now drop the pill on the ground (instead of directly inserting it into your inventory) if your inventory is already filled.
+* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.)
+* Removed Necropolis room #966 (narrow room with triple Gaping Maws). (Thanks Dea1h)
+* Both photos will no longer spawn (after Mom) if you have Mysterious Paper. (Thanks Moucheron Quipet)
+* Both paths will no longer spawn (after It Lives!) if you have Mysterious Paper. (Thanks Moucheron Quipet)
+
+### *v0.34.7* - May 7th, 2019
 
 * Racing+ will now report the version when you press the "v" key.
 * A clarification on the Guppy's Collar change in the previous patch: it is still possible for Guppy's Collar to revive the player if they currently have any other revival items. (Thanks Gamonymous)
