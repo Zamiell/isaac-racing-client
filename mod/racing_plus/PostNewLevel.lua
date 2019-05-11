@@ -52,7 +52,8 @@ function PostNewLevel:NewLevel()
       g.race.goal == "Mega Satan" or
       g.race.goal == "Everything" or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
      stage == 11 and stageType == 0 and -- 11.0 is Dark Room
      (g.run.currentFloor ~= 10 and
       g.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now
@@ -183,7 +184,8 @@ function PostNewLevel:CheckForgottenSoftlock()
   end
 
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) and -- 69
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) then -- 118
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and -- 118
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
 
     return false
   end
@@ -225,6 +227,8 @@ function PostNewLevel:CheckForgottenSoftlock()
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 446) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 455) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 573) or
+         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 344) or
+         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 417) or
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 458) or
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 459) then
 

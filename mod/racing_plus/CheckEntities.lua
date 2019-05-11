@@ -262,13 +262,15 @@ function CheckEntities:Entity5_340(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     CheckEntities:Entity5_340_S2(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-    CheckEntities:Entity5_340_S3(pickup)
+    CheckEntities:Entity5_340_Speedrun_Alternate(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
-    CheckEntities:Entity5_340_S4(pickup)
+    CheckEntities:Entity5_340_Speedrun_Up(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
-    CheckEntities:Entity5_340_S5(pickup)
+    CheckEntities:Entity5_340_Speedrun_Up(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-    CheckEntities:Entity5_340_S6(pickup)
+    CheckEntities:Entity5_340_Speedrun_Alternate(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    CheckEntities:Entity5_340_Speedrun_Alternate(pickup)
   elseif Speedrun.inSeededSpeedrun then
     CheckEntities:Entity5_340_SS(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
@@ -279,7 +281,7 @@ function CheckEntities:Entity5_340(pickup)
     CheckEntities:Entity5_340_Pageant(pickup)
   elseif g.race.goal == "Blue Baby" and g.raceVars.started then
     CheckEntities:Entity5_340_BlueBaby(pickup)
-  elseif g.race.goal == "The Lamb" and g.raceVars.started  then
+  elseif g.race.goal == "The Lamb" and g.raceVars.started then
     CheckEntities:Entity5_340_TheLamb(pickup)
   elseif g.race.goal == "Mega Satan" and g.raceVars.started then
     CheckEntities:Entity5_340_MegaSatan(pickup)
@@ -394,7 +396,7 @@ function CheckEntities:Entity5_340_S2(pickup)
     CheckEntities.bigChestAction = "down"
 
   elseif stage == 11 and stageType == 0 then -- Dark Room
-    -- For custom Dark Room challenges, sometimes the vanilla end of challenge trophy does not appear
+    -- Sometimes the vanilla end of challenge trophy does not appear
     -- Thus, we need to handle replacing both the trophy and the big chest
     -- So replace the big chest with either a checkpoint flag or a custom trophy,
     -- depending on if we are on the last character or not
@@ -406,7 +408,7 @@ function CheckEntities:Entity5_340_S2(pickup)
   end
 end
 
-function CheckEntities:Entity5_340_S3(pickup)
+function CheckEntities:Entity5_340_Speedrun_Alternate(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
@@ -445,7 +447,7 @@ function CheckEntities:Entity5_340_S3(pickup)
   end
 end
 
-function CheckEntities:Entity5_340_S4(pickup)
+function CheckEntities:Entity5_340_Speedrun_Up(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
@@ -455,63 +457,6 @@ function CheckEntities:Entity5_340_S4(pickup)
     CheckEntities.bigChestAction = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
-    if Speedrun.charNum == 7 then
-      CheckEntities.bigChestAction = "trophy"
-    else
-      CheckEntities.bigChestAction = "checkpoint"
-    end
-  end
-end
-
-function CheckEntities:Entity5_340_S5(pickup)
-  -- Local variables
-  local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-
-  if stage == 10 and stageType == 1 then -- Cathedral
-    -- The Polaroid / The Negative is optional in this season
-    CheckEntities.bigChestAction = "up"
-
-  elseif stage == 11 and stageType == 1 then -- The Chest
-    if Speedrun.charNum == 7 then
-      CheckEntities.bigChestAction = "trophy"
-    else
-      CheckEntities.bigChestAction = "checkpoint"
-    end
-  end
-end
-
-function CheckEntities:Entity5_340_S6(pickup)
-  -- Local variables
-  local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-
-  -- Season 6 runs alternate between directions, so we need to make sure we only handle the intended direction
-  local direction = Speedrun.charNum % 2 -- 1 is up, 2 is down
-  if direction == 0 then
-    direction = 2
-  end
-
-  -- The Polaroid / The Negative is optional in this season
-  if stage == 10 and stageType == 1 and -- Cathedral
-     direction == 1 then
-
-    CheckEntities.bigChestAction = "up"
-
-  elseif stage == 10 and stageType == 0 and -- Sheol
-         direction == 2 then
-
-    CheckEntities.bigChestAction = "down"
-
-  elseif (stage == 11 and stageType == 1 and -- The Chest
-          direction == 1) or
-         (stage == 11 and stageType == 0 and -- Dark Room
-          direction == 2) then
-
-    -- Sometimes the vanilla end of challenge trophy does not appear
-    -- Thus, we need to handle replacing both the trophy and the big chest
-    -- So replace the big chest with either a checkpoint flag or a custom trophy,
-    -- depending on if we are on the last character or not
     if Speedrun.charNum == 7 then
       CheckEntities.bigChestAction = "trophy"
     else

@@ -67,7 +67,8 @@ function SeededDeath:PostUpdate()
   if g.run.seededDeath.deathFrame == 0 and
      (g.race.rFormat == "seeded" or
       g.race.rFormat == "seeded-mo" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
      totalHealth == 0 and
      not revive and
      -- We want to make an exception for Sacrifice Rooms and the Boss Rush

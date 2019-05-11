@@ -177,7 +177,8 @@ function SpeedrunPostNewRoom:CheckCurseRoom()
   local challenge = Isaac.GetChallenge()
 
   if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) or
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
@@ -209,7 +210,8 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
   local challenge = Isaac.GetChallenge()
 
   if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") ) or
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_SACRIFICE then -- 13
@@ -234,7 +236,7 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a R+7 Season 4 run).")
 end
 
--- In Season 6, delete the veto button if we are re-entering the starting room
+-- In seasons with the veto button, delete it if we are re-entering the starting room
 function SpeedrunPostNewRoom:RemoveVetoButton()
   local stage = g.l:GetStage()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
@@ -243,7 +245,8 @@ function SpeedrunPostNewRoom:RemoveVetoButton()
     roomIndex = g.l:GetCurrentRoomIndex()
   end
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
      stage ~= 1 or
      roomIndex ~= startingRoomIndex or
      g.run.roomsEntered == 1 then

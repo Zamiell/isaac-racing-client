@@ -1,5 +1,4 @@
 <items gfxroot="gfx/items/" version="1">
-	<passive description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" name="Betrayal" /> <!-- Originally 391 -->
 	<passive description="More active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag" />
 	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />

@@ -17,8 +17,10 @@ function PostBombUpdate:Main(bomb)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  -- This mechanic only applies to Season 6
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+  -- This mechanic only applies to Season 6+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
     return
   end
 

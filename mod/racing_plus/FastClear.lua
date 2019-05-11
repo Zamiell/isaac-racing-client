@@ -538,7 +538,8 @@ function FastClear:SpawnPhotos()
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
 
     -- Most seasons give the player a choice between the two photos
     situation = situations.BOTH

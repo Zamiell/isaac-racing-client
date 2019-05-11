@@ -20,7 +20,8 @@ function PostEntityKill:Main(entity)
   -- reset the starting item timer if they have killed the Basement 2 boss
   local stage = g.l:GetStage()
   local challenge = Isaac.GetChallenge()
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+  if (challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
      stage == 2 then
 
     Speedrun.timeItemAssigned = 0
@@ -119,7 +120,8 @@ function PostEntityKill:Entity78(entity)
     situation = situations.TRAPDOOR
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
 
     -- Season 3 and 6 speedruns alternate between Cathedral / The Chest and Sheol / the Dark Room,
     -- starting with Cathedral / The Chest

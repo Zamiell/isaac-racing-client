@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.35.1"
+g.version = "v0.35.2"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -104,7 +104,6 @@ g.sfx = SFXManager()
 
 -- Collectibles
 -- (unused normal item IDs are: 43, 59, 61, 235, 263)
-CollectibleType.COLLECTIBLE_BETRAYAL_NOANIM         = Isaac.GetItemIdByName("Betrayal") -- Replacing 391
 CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
 CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
 CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")

@@ -83,7 +83,7 @@ Speedrun.big4 = {
   CollectibleType.COLLECTIBLE_IPECAC, -- 149
 }
 
--- Season 6 constants
+-- Season 6 & Season 7 constants
 Speedrun.itemLockTime = 60 * 1000 -- 1 minute
 -- (this is how long the randomly-selected item start be "locked-in")
 Speedrun.vetoButtonLength = 5 * 60 * 1000 -- 5 minutes
@@ -128,11 +128,11 @@ Speedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginni
 Speedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
 Speedrun.liveSplitReset = false
 
--- Season 5 and Season 6 variables
+-- Season 5, 6, & 7 variables
 Speedrun.remainingItemStarts = {} -- Reset at the beginning of a new run on the first character
 Speedrun.selectedItemStarts = {} -- Reset at the beginning of a new run on the first character
 
--- Season 6 variables
+-- Season 6 & 7 variables
 Speedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
 Speedrun.lastBuildItem = 0 -- Set when a new build is assigned
 Speedrun.lastBuildItemOnFirstChar = 0 -- Set when a new build is assigned on the first character
@@ -188,6 +188,7 @@ function Speedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
      Speedrun.inSeededSpeedrun or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
@@ -241,6 +242,12 @@ function Speedrun:CheckValidCharOrder()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
          (charOrderType ~= "R7S6" or
           #g.race.charOrder ~= 1 + 7 + 1 + ChangeCharOrder.seasons.R7S6.itemBans) then
+
+    return false
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+         (charOrderType ~= "R7S7" or
+          #g.race.charOrder ~= 1 + 7 + 1 + ChangeCharOrder.seasons.R7S7.itemBans) then
 
     return false
 

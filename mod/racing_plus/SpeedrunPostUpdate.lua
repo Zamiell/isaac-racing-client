@@ -96,7 +96,8 @@ end
 -- Called from the "CheckEntities:Grid()" function
 function SpeedrunPostUpdate:CheckVetoButton(gridEntity)
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
      Speedrun.charNum ~= 1 or
      g.run.roomsEntered ~= 1 or
      gridEntity:GetSaveState().State ~= 3 then

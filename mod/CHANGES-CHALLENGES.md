@@ -129,6 +129,12 @@
 
 <br />
 
+## R+7 Season 7
+
+* Coming soon!
+
+<br />
+
 <!--
 ## R+7 Seeded
 

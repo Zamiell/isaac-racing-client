@@ -249,12 +249,15 @@ function Timer:DisplaySecond()
   local moveTimerToBottomRight = false
   if g.run.seededDeath.state >= SeededDeath.state.FETAL_POSITION then
     elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
-    if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-      -- The timer needs to be moved to the right to account for the "(S6)" icon
+    if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
+      -- The timer needs to be moved to the right to account for the "(S#)" icon
       adjustTimerRight = true
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+  elseif (challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
          Speedrun.charNum == 1 and
          g.run.roomsEntered == 1 then
 

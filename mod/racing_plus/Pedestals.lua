@@ -110,7 +110,8 @@ function RPPedestals:Replace(pickup)
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
        Speedrun.charNum >= 2) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      pickup.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235

@@ -15,7 +15,7 @@ function SpeedrunPostGameStarted:Main()
   Speedrun.fadeFrame = 0
   Speedrun.resetFrame = 0
 
-  -- Reset the Season 6 veto list if they are changing items
+  -- Reset the veto list if they are changing items
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
     Speedrun.vetoList = {}
   end
@@ -102,7 +102,10 @@ function SpeedrunPostGameStarted:Main()
     if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS5)
       Speedrun.selectedItemStarts = {}
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+           challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS6)
       Isaac.DebugString("S6 - Reset remaining item starts.")
       if Isaac.GetTime() - Speedrun.timeItemAssigned >= Speedrun.itemLockTime then
@@ -111,7 +114,9 @@ function SpeedrunPostGameStarted:Main()
       end
     end
   end
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
     Isaac.DebugString("S6 - Selected item starts:")
     if #Speedrun.selectedItemStarts == 0 then
       Isaac.DebugString("  - [none]")
@@ -122,10 +127,11 @@ function SpeedrunPostGameStarted:Main()
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but Season 4, Season 6, and Seeded never get it, since there is no resetting involved)
+  -- (but Season 4, Season 6, Season 7, and Seeded never get it, since there is no resetting involved)
   if Speedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
       challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
       not Speedrun.inSeededSpeedrun) then
 
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
@@ -152,6 +158,8 @@ function SpeedrunPostGameStarted:Main()
     SpeedrunPostGameStarted:R7S5()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
     SpeedrunPostGameStarted:R7S6()
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    SpeedrunPostGameStarted:R7S7()
   elseif Speedrun.inSeededSpeedrun then
     SpeedrunPostGameStarted:R7SS()
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
@@ -647,6 +655,15 @@ function SpeedrunPostGameStarted:R7S6()
     local pos = g:GridToPos(11, 6)
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
   end
+end
+
+function SpeedrunPostGameStarted:R7S7()
+  -- Local variables
+  -- local character = g.p:GetPlayerType()
+
+  Isaac.DebugString("In the R+7 (Season 7) challenge.")
+
+  -- TODO
 end
 
 function SpeedrunPostGameStarted:R7SS()

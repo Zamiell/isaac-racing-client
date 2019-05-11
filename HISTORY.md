@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.36.0* - May 11th, 2019
+
+* Necronomicon, Monster Manual, Whore of Babylon, Dead Sea Scrolls, Mom's Bra, Mom's Pad, Anarchist Cookbook, The Bible, The Hourglass, D4, D10, Flush!, D100, A Missing Page, Missing Page 2, Spider Butt, Book of Belial, D8, D12, Clicker, and Mama Mega! no longer have "giantbook" animations. (The animations are deliberately kept for Book of Revelations and Satanic Bible.)
+* Sun cards, Death cards, and runes no longer have "giantbook" animations. (The animations are deliberately kept for eternal hearts, black hearts, rainbow poops, sleeping in a bed, and Super Bum.)
+* Runes no longer have "giantbook" animations.
+* Added Cursed Eye to the Forgotten softlock prevention check. (Thanks Gamonymous)
+
 ### *v0.35.1* - May 10th, 2019
 
 * Floors with specific island rooms will now be automatically reseeded if you are playing as The Forgotten, have no soul hearts, and have Chocolate Milk or Brimstone. (This prevents softlocks where you cannot reach enemies on an island.) There are likely some island rooms that I missed, so if you report them I can add them to the list. (Thanks Thoday)

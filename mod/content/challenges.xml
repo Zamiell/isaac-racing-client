@@ -8,6 +8,7 @@
 	<challenge name="R+7 (Season 4)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 (Season 5)" endstage="11" altpath="true" cursefilter="103" /><!-- Curse of the Unknown is left in intentionally -->
 	<challenge name="R+7 (Season 6)" endstage="11" altpath="true" cursefilter="127" />
+	<!--<challenge name="R+7 (Season 7 Beta)" endstage="11" altpath="true" cursefilter="127" />-->
 	<!--<challenge name="R+7 Seeded (Q4 2018)" endstage="11" altpath="true" cursefilter="127" />-->
 	<challenge name="R+15 (Vanilla)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" canshoot="false" />

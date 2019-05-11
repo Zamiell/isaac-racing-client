@@ -9,7 +9,6 @@ local SoulJar = require("racing_plus/souljar")
 function EntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   -- local variables
   local stage = g.l:GetStage()
-  local player = tookDamage:ToPlayer()
 
   -- Make us invincibile while interacting with a trapdoor
   if g.run.trapdoor.state > 0 then
@@ -26,18 +25,6 @@ function EntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource, 
 
   -- Handle the Soul Jar
   SoulJar:EntityTakeDmg(damageFlag)
-
-  -- Betrayal (custom)
-  if player:HasCollectible(Isaac.GetItemIdByName("Betrayal")) then
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-      local npc = entity:ToNPC()
-      if npc ~= nil and
-         npc:IsVulnerableEnemy() then -- Returns true for enemies that can be damaged
-
-        npc:AddCharmed(150) -- 5 seconds
-      end
-    end
-  end
 end
 
 return EntityTakeDmg

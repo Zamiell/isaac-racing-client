@@ -99,6 +99,8 @@ function SpeedrunPostRender:DisplayCharProgress()
       fileName = "S5"
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       fileName = "S6"
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
+      fileName = "S7"
     elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
       fileName = "V"
     end
@@ -177,7 +179,8 @@ end
 
 function SpeedrunPostRender:DrawVetoButtonText()
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
      Speedrun.charNum ~= 1 or
      g.run.roomsEntered ~= 1 then
 

@@ -122,7 +122,6 @@ function PostGameStarted:Main(saveState)
   PostGameStarted.diversity = false
 
   -- Racing+ replaces some vanilla items; remove them from all the pools
-  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
 
   -- Racing+ removes the Karma trinket from the game
@@ -402,14 +401,6 @@ function PostGameStarted:Character()
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
     Schoolbag:Put(activeItem, activeCharge)
-
-    -- Manually fix any custom items
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) then -- 391
-      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_BETRAYAL) -- 391
-      g.p:AddCollectible(Isaac.GetItemIdByName("Betrayal"), 0, false)
-      passiveItem = Isaac.GetItemIdByName("Betrayal")
-    end
-    -- (the Schoolbag was manually fixed earlier)
 
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible " .. activeItem)
@@ -707,13 +698,6 @@ function PostGameStarted:Diversity()
 
   -- Give the player their five random diversity starting items
   for i, itemID in ipairs(g.race.startingItems) do
-    -- Replace the custom items
-    if i ~= 5 then -- We don't want to replace trinkets
-      if itemID == CollectibleType.COLLECTIBLE_BETRAYAL then-- 391
-        itemID = Isaac.GetItemIdByName("Betrayal")
-      end
-    end
-
     if i == 1 then
       -- Item 1 is the active
       Schoolbag:Put(itemID, "max")

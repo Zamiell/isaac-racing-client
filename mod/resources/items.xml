@@ -5,7 +5,6 @@ Changes:
 	(items that give bone hearts do not count as health up items for Keeper)
 - Added the "luck" cache to Dad's Lost Coin
 - Removed the "special" tag from all items
-- Renamed "Betrayal" to "Betrayal (Vanilla)"
 - Renamed "Schoolbag" to "Schoolbag (Vanilla)"
 
 -->
@@ -404,7 +403,7 @@ Changes:
 	<familiar achievement="200" description="He wants your keys!" gfx="Collectibles_388_KeyBum.png" id="388" name="Key Bum" />
 	<familiar achievement="218" description="Rune generator" gfx="Collectibles_389_RuneBag.png" id="389" name="Rune Bag" />
 	<familiar description="Sworn friend" gfx="Collectibles_390_Seraphim.png" id="390" name="Seraphim" />
-	<passive achievement="182" description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" id="391" name="Betrayal (Vanillla)" />
+	<passive achievement="182" description="Turn your enemy" gfx="Collectibles_391_Betrayal.png" id="391" name="Betrayal" />
 	<passive achievement="202" description="The heavens will change you" gfx="Collectibles_392_Zodiac.png" id="392" name="Zodiac" />
 	<passive achievement="220" description="The kiss of death" gfx="Collectibles_393_SerpentsKiss.png" id="393" name="Serpent's Kiss" />
 	<passive description="Directed tears" gfx="Collectibles_394_Marked.png" id="394" name="Marked" cache="firedelay range" />

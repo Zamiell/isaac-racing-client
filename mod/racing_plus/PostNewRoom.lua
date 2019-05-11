@@ -290,7 +290,8 @@ function PostNewRoom:CheckScolexRoom()
   end
 
   if g.race.rFormat == "seeded" or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 
      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
     -- (there are 10 Scolex entities)

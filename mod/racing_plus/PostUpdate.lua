@@ -404,7 +404,8 @@ function PostUpdate:CheckBanB1TreasureRoom()
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
        Speedrun.charNum >= 2) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
 
     local door
     for i = 0, 7 do
