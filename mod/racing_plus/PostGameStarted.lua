@@ -34,7 +34,6 @@ function PostGameStarted:Main(saveState)
 
     return
   end
-  g.saveFile.fullyUnlocked = true
 
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
@@ -252,10 +251,13 @@ function PostGameStarted:CheckFullyUnlockedSave()
     -- We are on the specific Eden seed, so check to see if our items are correct
     -- The items will be different depending on whether or not we have The Babies Mod enabled
     if SinglePlayerCoopBabies == nil then
+      Isaac.DebugString("GETTING HERE")
       if activeItem == g.saveFile.activeItem and
          g.p:HasCollectible(g.saveFile.passiveItem) then
 
         g.saveFile.fullyUnlocked = true
+        Isaac.DebugString("g.saveFile.passiveItem = " .. tostring(g.saveFile.passiveItem))
+        Isaac.DebugString("HAS: " .. tostring(g.p:HasCollectible(g.saveFile.passiveItem)))
       end
     else
       if activeItem == g.saveFile.activeItem2 and

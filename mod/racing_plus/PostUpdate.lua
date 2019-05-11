@@ -249,16 +249,6 @@ function PostUpdate:CheckTransformations()
       g.run.streakFrame = Isaac.GetFrameCount()
     end
   end
-
-  -- In order to detect the Stompy transformation, we can't use the "player:HasPlayerForm()" function
-  local stompyIndex = PlayerForm.NUM_PLAYER_FORMS -- It will always be the final index
-  if g.p.SpriteScale.X > 1.95 and
-     not g.run.transformations[stompyIndex] then
-
-    g.run.transformations[stompyIndex] = true
-    g.run.streakText = g.Transformations[stompyIndex + 1]
-    g.run.streakFrame = Isaac.GetFrameCount()
-  end
 end
 
 -- Speed up the first Lil' Haunt attached to a Haunt (3/3)

@@ -116,12 +116,21 @@ function PreUseItem:Item124()
 
   if effectType == 27 then
     g.p:UsePill(PillEffect.PILLEFFECT_EXPLOSIVE_DIARRHEA, PillColor.PILL_NULL) -- 4, 0
+    g.run.streakText = g.itemConfig:GetPillEffect(PillEffect.PILLEFFECT_EXPLOSIVE_DIARRHEA).Name -- 4
   elseif effectType == 28 then
     g.p:UsePill(PillEffect.PILLEFFECT_LEMON_PARTY, PillColor.PILL_NULL) -- 26, 0
+    g.run.streakText = g.itemConfig:GetPillEffect(PillEffect.PILLEFFECT_LEMON_PARTY).Name -- 26
   else
     g.p:UseActiveItem(effects[effectType], false, false, false, false)
+    g.run.streakText = g.itemConfig:GetCollectible(effects[effectType]).Name
   end
   Isaac.DebugString("Used Dead Sea Scrolls effect: " .. tostring(effectType))
+
+  -- Display the streak text so that they know what item they got
+  g.run.streakFrame = Isaac.GetFrameCount()
+
+  -- When we return from the function below, no animation will play, so we have to explitily perform one
+  g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS, "UseItem", "PlayerPickup") -- 124
 
   -- Cancel the original effect
   return true

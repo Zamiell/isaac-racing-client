@@ -4,17 +4,17 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.35.2"
+g.version = "v0.36.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
-  seed          = "E4M7 Z0H8", -- A randomly chosen seed (it shouldn't matter which seed we use)
-  activeItem    = CollectibleType.COLLECTIBLE_PRAYER_CARD, -- 146
-  passiveItem   = CollectibleType.COLLECTIBLE_FAST_BOMBS, -- 517
+  seed          = "RFR1 SAML", -- A randomly chosen seed (it shouldn't matter which seed we use)
+  activeItem    = CollectibleType.COLLECTIBLE_BLUE_BOX, -- 297
+  passiveItem   = CollectibleType.COLLECTIBLE_JAW_BONE, -- 548
   -- Eden's items will change if we have The Babies Mod enabled
-  activeItem2   = CollectibleType.COLLECTIBLE_BROWN_NUGGET, -- 504
-  passiveItem2  = CollectibleType.COLLECTIBLE_TRACTOR_BEAM, -- 397
+  activeItem2   = CollectibleType.COLLECTIBLE_BLOOD_RIGHTS, -- 186
+  passiveItem2  = CollectibleType.COLLECTIBLE_TRISAGION, -- 533
   old           = {
     challenge = 0,
     character = 0,
@@ -122,9 +122,15 @@ CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Sam
 CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS         = Isaac.GetItemIdByName("Samael Dr. Fetus")
 CollectibleType.COLLECTIBLE_SAMAEL_MARKED           = Isaac.GetItemIdByName("Samael Marked")
 CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wraith Skull")
+CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Wraith Skull") + 1
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
+SoundEffect.NUM_SOUND_EFFECTS = Isaac.GetSoundIdByName("Speedrun Finish") + 1
+
+-- Transformations
+PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
+PlayerForm.NUM_PLAYER_FORMS = PlayerForm.PLAYERFORM_STOMPY + 1
 
 -- Spaded by ilise rose (@yatboim)
 g.RoomTransition = {
@@ -260,8 +266,7 @@ function g:InitRun()
 
   -- Transformations
   g.run.transformations = {}
-  for i = 0, PlayerForm.NUM_PLAYER_FORMS do
-    -- We don't minus 1 from "PlayerForm.NUM_PLAYER_FORMS" because we need an extra element for Stompy
+  for i = 0, PlayerForm.NUM_PLAYER_FORMS - 1 do
     g.run.transformations[i] = false
   end
 

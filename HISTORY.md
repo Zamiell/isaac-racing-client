@@ -1,10 +1,24 @@
 # Racing+ Version History and News
 
-### *v0.36.0* - May 11th, 2019
+### *v0.36.0* - May 12th, 2019
 
-* Necronomicon, Monster Manual, Whore of Babylon, Dead Sea Scrolls, Mom's Bra, Mom's Pad, Anarchist Cookbook, The Bible, The Hourglass, D4, D10, Flush!, D100, A Missing Page, Missing Page 2, Spider Butt, Book of Belial, D8, D12, Clicker, and Mama Mega! no longer have "giantbook" animations. (The animations are deliberately kept for Book of Revelations and Satanic Bible.)
+* Season 5 has been added to the Hall of Fame.
+* The Justice card will now automatically insert the coin, bomb, and key into your inventory. (Thanks BMZ_Loop)
+* Blank Runes will now display the streak text of the randomly chosen effect. (Thanks Dea1h)
+* Dead Sea Scrolls will now display the streak text of the randomly chosen effect.
+* The streak text will now always appear when you use a card.
+* Redesigned Gurglings room #5144 to workaround a bug with There's Options. (Thanks NorBro86)
+* Fixed the bug where the automatic inventory insertion feature would not work correctly if you opened a chest at the same time as getting an item. (Thanks PassionDrama)
+* Fixed the bug where the automatic inventory insertion feature would not work correctly if you were in a shop.
+* Fixed the bug where the Quarter would not work properly with seeded revival. (Thanks InvaderTim)
+* Fixed the bug where the Stompy transformation streak text would not show under certain circumstances.
+* Fixed the bug where Dead Sea Scrolls would not play a use animation.
+* Fixed the bug where the fully unlocked save file check was not working properly.
+
+### *v0.35.2* - May 11th, 2019
+
+* Necronomicon, Monster Manual, Whore of Babylon, Dead Sea Scrolls, Mom's Bra, Mom's Pad, Anarchist Cookbook, The Bible, The Hourglass, D4, D10, Flush!, D100, A Missing Page, Missing Page 2, Spider Butt, Book of Belial, D8, D12, Clicker, Mama Mega!, and Dry Baby no longer have "giantbook" animations. (The animations are deliberately kept for Book of Revelations and Satanic Bible.)
 * Sun cards, Death cards, and runes no longer have "giantbook" animations. (The animations are deliberately kept for eternal hearts, black hearts, rainbow poops, sleeping in a bed, and Super Bum.)
-* Runes no longer have "giantbook" animations.
 * Added Cursed Eye to the Forgotten softlock prevention check. (Thanks Gamonymous)
 
 ### *v0.35.1* - May 10th, 2019

@@ -1,14 +1,13 @@
 local UsePill = {}
 
 -- Includes
-local g       = require("racing_plus/globals")
-local Pills   = require("racing_plus/pills")
+local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_USE_PILL (10)
 -- Will get called for all pills
 function UsePill:Main(pillEffect)
   -- Display the streak text (because Racing+ removes the vanilla streak text)
-  g.run.streakText = Pills.effects[pillEffect]
+  g.run.streakText = g.itemConfig:GetPillEffect(pillEffect).Name
   g.run.streakFrame = Isaac.GetFrameCount()
 
   -- Don't add any more pills after 7, since it won't display cleanly

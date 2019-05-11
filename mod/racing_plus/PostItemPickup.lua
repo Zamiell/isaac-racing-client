@@ -5,14 +5,93 @@ local PostItemPickup = {}
 -- Includes
 local g = require("racing_plus/globals")
 
-function PostItemPickup:InsertCoins()
-  -- Put all of the freshly spawned coins into our inventory
-  local coins = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, -1, false, false) -- 5.20
-  for _, coin in ipairs(coins) do
-    PostItemPickup:InsertCoin(coin)
+function PostItemPickup:InsertNearestCoin()
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+end
+
+function PostItemPickup:InsertNearestPill()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_STARTER_DECK) then -- 251
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_TAROTCARD) -- 300
+  else
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_PILL) -- 70
   end
 end
 
+function PostItemPickup:InsertNearestCard()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LITTLE_BAGGY) then -- 252
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_PILL) -- 70
+  else
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_TAROTCARD) -- 300
+  end
+end
+
+function PostItemPickup:InsertNearestCardPill()
+  -- Prefer to equip cards over pills, since they are almost certainly going to be more useful
+  if not PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_TAROTCARD) then -- 300
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_PILL) -- 70
+  end
+end
+
+function PostItemPickup:InsertNearestTrinket()
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_TRINKET) -- 350
+end
+
+function PostItemPickup:InsertNearestPickup(variant)
+  local nearestPickup = PostItemPickup:FindNearestPickup(variant)
+  if nearestPickup == nil then
+    return false
+  end
+
+  if variant == PickupVariant.PICKUP_COIN then -- 20
+    return PostItemPickup:InsertCoin(nearestPickup)
+  elseif variant == PickupVariant.PICKUP_KEY then -- 30
+    return PostItemPickup:InsertKey(nearestPickup)
+  elseif variant == PickupVariant.PICKUP_BOMB then -- 40
+    return PostItemPickup:InsertBomb(nearestPickup)
+  elseif variant == PickupVariant.PICKUP_PILL then -- 70
+    return PostItemPickup:InsertPill(nearestPickup)
+  elseif variant == PickupVariant.PICKUP_TAROTCARD then -- 300
+    return PostItemPickup:InsertCard(nearestPickup)
+  elseif variant == PickupVariant.PICKUP_TRINKET then -- 350
+    return PostItemPickup:InsertTrinket(nearestPickup)
+  end
+
+  return false
+end
+
+function PostItemPickup:FindNearestPickup(variant)
+  local coins = Isaac.FindByType(EntityType.ENTITY_PICKUP, variant, -1, false, false) -- 5
+  local nearestPickup = nil
+  local nearestPickupDistance = nil
+  for _, entity in ipairs(coins) do
+    local pickup = entity:ToPickup()
+    if pickup.FrameCount == 0 and
+       pickup.SpawnerType == EntityType.ENTITY_PLAYER and -- 1
+       pickup.Touched == false and
+       pickup.Price == 0 and
+       -- Make an exception for some detrimental (or potentially detrimental) trinkets
+       (variant ~= PickupVariant.PICKUP_TRINKET or -- 350
+        (pickup.SubType ~= TrinketType.TRINKET_PURPLE_HEART and -- 5
+         pickup.SubType ~= TrinketType.TRINKET_MOMS_TOENAIL and -- 16
+         pickup.SubType ~= TrinketType.TRINKET_TICK and -- 53
+         pickup.SubType ~= TrinketType.TRINKET_FADED_POLAROID and -- 69
+         pickup.SubType ~= TrinketType.TRINKET_OUROBOROS_WORM)) then -- 96
+
+      local distance = g.p.Position:DistanceSquared(pickup.Position)
+      if nearestPickup == nil then
+        nearestPickup = pickup
+        nearestPickupDistance = distance
+      elseif distance < nearestPickupDistance then
+        nearestPickup = pickup
+        nearestPickupDistance = distance
+      end
+    end
+  end
+
+  return nearestPickup
+end
+
+-- PickupVariant.PICKUP_COIN (20)
 function PostItemPickup:InsertCoin(coin)
   if coin.SubType == CoinSubType.COIN_PENNY then -- 1
     g.p:AddCoins(1)
@@ -26,17 +105,13 @@ function PostItemPickup:InsertCoin(coin)
     g.p:AddCoins(1)
     -- (just ignore the luck component for simplicity)
   end -- (don't put Sticky Nickels in our inventory automatically)
+
   coin:Remove()
+  coin.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+  return true
 end
 
-function PostItemPickup:InsertKeys()
-  -- Put all of the freshly spawned keys into our inventory
-  local keys = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, -1, false, false) -- 5.30
-  for _, key in ipairs(keys) do
-    PostItemPickup:InsertKey(key)
-  end
-end
-
+-- PickupVariant.PICKUP_KEY (30)
 function PostItemPickup:InsertKey(key)
   if key.SubType == KeySubType.KEY_NORMAL then -- 1
     g.p:AddKeys(1)
@@ -48,17 +123,13 @@ function PostItemPickup:InsertKey(key)
     g.p:AddKeys(1)
     g.p:FullCharge()
   end
+
   key:Remove()
+  key.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+  return true
 end
 
-function PostItemPickup:InsertBombs()
-  -- Put all of the freshly spawned bombs into our inventory
-  local bombs = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, -1, false, false) -- 5.40
-  for _, bomb in ipairs(bombs) do
-    PostItemPickup:InsertBomb(bomb)
-  end
-end
-
+-- PickupVariant.PICKUP_BOMB (40)
 function PostItemPickup:InsertBomb(bomb)
   if bomb.SubType == BombSubType.BOMB_NORMAL then -- 1
     g.p:AddBombs(1)
@@ -67,46 +138,34 @@ function PostItemPickup:InsertBomb(bomb)
   elseif bomb.SubType == BombSubType.BOMB_GOLDEN then -- 4
     g.p:AddGoldenBomb()
   end -- (don't do anything if it is a Troll Bomb or a Mega Troll Bomb)
+
   bomb:Remove()
+  bomb.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+  return true
 end
 
-function PostItemPickup:InsertPocketItems()
-  PostItemPickup:InsertPocketItem()
-  PostItemPickup:InsertPocketItem() -- Call it twice in case we have two open pocket item slots
-end
-
--- Put the first pocket item on the ground that is freshly spawned into our inventory
--- (but prefer cards/runes over pills)
-function PostItemPickup:InsertPocketItem()
+-- PickupVariant.PICKUP_PILL (70)
+function PostItemPickup:InsertPill(pill)
   if not PostItemPickup:CheckPocketSlotOpen() then
     return
   end
 
-  local cards = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -1, false, false) -- 300
-  for _, entity in ipairs(cards) do
-    local card = entity:ToPickup()
-    if card.FrameCount == 0 and
-       not card.Touched then
+  g.p:AddPill(pill.SubType)
+  pill:Remove()
+  pill.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+  return true
+end
 
-      g.p:AddCard(card.SubType)
-      card:Remove()
-      card.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
-      return
-    end
+-- PickupVariant.PICKUP_TAROTCARD (300)
+function PostItemPickup:InsertCard(card)
+  if not PostItemPickup:CheckPocketSlotOpen() then
+    return
   end
 
-  local pills = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, -1, false, false) -- 70
-  for _, entity in ipairs(pills) do
-    local pill = entity:ToPickup()
-    if pill.FrameCount == 0 and
-       not pill.Touched then
-
-      g.p:AddPill(pill.SubType)
-      pill:Remove()
-      pill.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
-      return
-    end
-  end
+  g.p:AddCard(card.SubType)
+  card:Remove()
+  card.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+  return true
 end
 
 function PostItemPickup:CheckPocketSlotOpen()
@@ -125,49 +184,17 @@ function PostItemPickup:CheckPocketSlotOpen()
   return true
 end
 
-function PostItemPickup:InsertTrinkets()
-  PostItemPickup:InsertTrinket()
-  PostItemPickup:InsertTrinket() -- Call it twice in case we have two open trinket slots
-end
-
-function PostItemPickup:InsertTrinket()
+-- PickupVariant.PICKUP_TRINKET (350)
+function PostItemPickup:InsertTrinket(trinket)
   if not PostItemPickup:CheckTrinketSlotOpen() then
     return
   end
 
-  -- Put the first trinket on the ground that is freshly spawned into our inventory
-  local trinkets = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -1, false, false) -- 5.350
-  local trinketToInsert = nil
-  for _, entity in ipairs(trinkets) do
-    local trinket = entity:ToPickup()
-    if trinket.FrameCount == 0 and
-       not trinket.Touched and
-       -- Make an exception for some detrimental (or potentially detrimental) trinkets
-       trinket.SubType ~= TrinketType.TRINKET_PURPLE_HEART and -- 5
-       trinket.SubType ~= TrinketType.TRINKET_MOMS_TOENAIL and -- 16
-       trinket.SubType ~= TrinketType.TRINKET_TICK and -- 53
-       trinket.SubType ~= TrinketType.TRINKET_FADED_POLAROID and -- 69
-       trinket.SubType ~= TrinketType.TRINKET_OUROBOROS_WORM then -- 96
-
-      trinketToInsert = trinket
-      break
-    end
-  end
-  if trinketToInsert == nil then
-    return
-  end
-  g.p:AddTrinket(trinketToInsert.SubType)
-  trinketToInsert:Remove()
-  trinketToInsert.Touched = true
+  g.p:AddTrinket(trinket.SubType)
+  trinket:Remove()
+  trinket.Touched = true
   -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
-end
-
-function PostItemPickup:InsertAll()
-  PostItemPickup:InsertCoins()
-  PostItemPickup:InsertKeys()
-  PostItemPickup:InsertBombs()
-  PostItemPickup:InsertPocketItems()
-  PostItemPickup:InsertTrinkets()
+  return true
 end
 
 function PostItemPickup:CheckTrinketSlotOpen()
@@ -184,6 +211,25 @@ function PostItemPickup:CheckTrinketSlotOpen()
   return true
 end
 
+-- CollectibleType.COLLECTIBLE_PAGEANT_BOY (141)
+function PostItemPickup.PageantBoy()
+  for i = 1, 7 do
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_BOX (198)
+function PostItemPickup.Box()
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_KEY) -- 30
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_BOMB) -- 40
+  PostItemPickup:InsertNearestCardPill()
+  PostItemPickup:InsertNearestCardPill()
+  PostItemPickup:InsertNearestTrinket()
+  -- (we ignore the heart)
+end
+
+-- CollectibleType.COLLECTIBLE_CAFFEINE_PILL (340)
 -- Caffeine Pill is unique in that it will already insert the pill into the player's inventory
 -- Change the behavior such that given pill will not replace your current card/pill
 function PostItemPickup.CaffeinePill()
@@ -192,16 +238,9 @@ function PostItemPickup.CaffeinePill()
   local pill1 = g.p:GetPill(0) -- Returns 0 if no pill
 
   -- Find the first pill or card on the ground that is freshly spawned
-  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
-  local droppedPickup
-  for _, pickup in ipairs(pickups) do
-    if (pickup.Variant == PickupVariant.PICKUP_PILL or -- 70
-        pickup.Variant == PickupVariant.PICKUP_TAROTCARD) and -- 300
-       pickup.FrameCount == 0 then
-
-      droppedPickup = pickup
-      break
-    end
+  local droppedPickup = PostItemPickup:FindNearestPickup(PickupVariant.PICKUP_PILL) -- 70
+  if droppedPickup == nil then
+    droppedPickup = PostItemPickup:FindNearestPickup(PickupVariant.PICKUP_TAROTCARD) -- 300
   end
   if droppedPickup == nil then
     return
@@ -226,27 +265,71 @@ function PostItemPickup.CaffeinePill()
   g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, Vector(0, 0), nil, pill1, roomSeed) -- 5.70
 end
 
+-- CollectibleType.COLLECTIBLE_LATCH_KEY (343)
+function PostItemPickup.LatchKey()
+  for i = 1, 2 do
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_KEY) -- 30
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_MATCH_BOOK (344)
+function PostItemPickup.MatchBook()
+  for i = 1, 3 do
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_BOMB) -- 40
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_RESTOCK (376)
+function PostItemPickup.Restock()
+  for i = 1, 3 do
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_KEY) -- 30
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_BOMB) -- 40
+    PostItemPickup:InsertNearestCardPill()
+    PostItemPickup:InsertNearestTrinket()
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_CHAOS (402)
+function PostItemPickup.Chaos()
+  for i = 1, 6 do
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_KEY) -- 30
+    PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_BOMB) -- 40
+    PostItemPickup:InsertNearestCardPill()
+    PostItemPickup:InsertNearestTrinket()
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_MARBLES (538)
+function PostItemPickup.Marbles()
+  -- We might have two trinket slots open
+  for i = 1, 2 do
+    PostItemPickup:InsertNearestTrinket(PickupVariant.PICKUP_TRINKET) -- 350
+  end
+end
+
 PostItemPickup.functions = {
-  [CollectibleType.COLLECTIBLE_PHD] = PostItemPickup.InsertPocketItems, -- 75
-  [CollectibleType.COLLECTIBLE_PAGEANT_BOY] = PostItemPickup.InsertCoins, -- 141
-  [CollectibleType.COLLECTIBLE_MAGIC_8_BALL] = PostItemPickup.InsertPocketItems, -- 194
-  [CollectibleType.COLLECTIBLE_MOMS_COIN_PURSE] = PostItemPickup.InsertPocketItems, -- 195
-  [CollectibleType.COLLECTIBLE_BOX] = PostItemPickup.InsertAll, -- 198
-  [CollectibleType.COLLECTIBLE_STARTER_DECK] = PostItemPickup.InsertPocketItems, -- 251
-  [CollectibleType.COLLECTIBLE_LITTLE_BAGGY] = PostItemPickup.InsertPocketItems, -- 252
+  [CollectibleType.COLLECTIBLE_PHD] = PostItemPickup.InsertNearestPill, -- 75
+  [CollectibleType.COLLECTIBLE_PAGEANT_BOY] = PostItemPickup.PageantBoy, -- 141
+  [CollectibleType.COLLECTIBLE_MAGIC_8_BALL] = PostItemPickup.InsertNearestCard, -- 194
+  [CollectibleType.COLLECTIBLE_MOMS_COIN_PURSE] = PostItemPickup.InsertNearestPill, -- 195
+  [CollectibleType.COLLECTIBLE_BOX] = PostItemPickup.Box, -- 198
+  [CollectibleType.COLLECTIBLE_STARTER_DECK] = PostItemPickup.InsertNearestCard, -- 251
+  [CollectibleType.COLLECTIBLE_LITTLE_BAGGY] = PostItemPickup.InsertNearestPill, -- 252
   [CollectibleType.COLLECTIBLE_CAFFEINE_PILL] = PostItemPickup.CaffeinePill, -- 340
-  [CollectibleType.COLLECTIBLE_LATCH_KEY] = PostItemPickup.InsertKeys, -- 343
-  [CollectibleType.COLLECTIBLE_MATCH_BOOK] = PostItemPickup.InsertBombs, -- 344
-  [CollectibleType.COLLECTIBLE_CRACK_JACKS] = PostItemPickup.InsertTrinkets, -- 354
-  [CollectibleType.COLLECTIBLE_RESTOCK] = PostItemPickup.InsertAll, -- 376
-  [CollectibleType.COLLECTIBLE_CHAOS] = PostItemPickup.InsertAll, -- 402
-  [CollectibleType.COLLECTIBLE_TAROT_CLOTH] = PostItemPickup.InsertPocketItems, -- 451
-  [CollectibleType.COLLECTIBLE_BELLY_BUTTON] = PostItemPickup.InsertTrinkets, -- 458
-  [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.InsertCoins, -- 455
-  [CollectibleType.COLLECTIBLE_POLYDACTYLY] = PostItemPickup.InsertPocketItems, -- 454
-  [CollectibleType.COLLECTIBLE_LIL_SPEWER] = PostItemPickup.InsertPocketItems, -- 537
-  [CollectibleType.COLLECTIBLE_MARBLES] = PostItemPickup.InsertTrinkets, -- 538
-  [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.InsertTrinkets, -- 547
+  [CollectibleType.COLLECTIBLE_LATCH_KEY] = PostItemPickup.LatchKey, -- 343
+  [CollectibleType.COLLECTIBLE_MATCH_BOOK] = PostItemPickup.MatchBook, -- 344
+  [CollectibleType.COLLECTIBLE_CRACK_JACKS] = PostItemPickup.InsertNearestTrinket, -- 354
+  [CollectibleType.COLLECTIBLE_RESTOCK] = PostItemPickup.Restock, -- 376
+  [CollectibleType.COLLECTIBLE_CHAOS] = PostItemPickup.Chaos, -- 402
+  [CollectibleType.COLLECTIBLE_TAROT_CLOTH] = PostItemPickup.InsertNearestCard, -- 451
+  [CollectibleType.COLLECTIBLE_BELLY_BUTTON] = PostItemPickup.InsertNearestTrinket, -- 458
+  [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.InsertNearestCoin, -- 455
+  [CollectibleType.COLLECTIBLE_POLYDACTYLY] = PostItemPickup.InsertNearestCardPill, -- 454
+  [CollectibleType.COLLECTIBLE_LIL_SPEWER] = PostItemPickup.InsertNearestPill, -- 537
+  [CollectibleType.COLLECTIBLE_MARBLES] = PostItemPickup.Marbles, -- 538
+  [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.InsertNearestTrinket, -- 547
 }
 
 return PostItemPickup

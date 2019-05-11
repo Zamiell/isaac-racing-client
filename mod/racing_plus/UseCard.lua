@@ -1,13 +1,26 @@
 local UseCard = {}
 
 -- Includes
-local g = require("racing_plus/globals")
+local g              = require("racing_plus/globals")
+local PostItemPickup = require("racing_plus/postitempickup")
 
-function UseCard:Teleport()
-  -- Mark that this is not a Cursed Eye teleport
-  g.run.naturalTeleport = true
+function UseCard:Main(card)
+  -- Display the streak text (because Racing+ removes the vanilla streak text)
+  if card ~= Card.RUNE_BLANK then -- 40
+    -- We ignore blank runes because we want to show the streak text of the actual random effect
+    g.run.streakText = g.itemConfig:GetCard(card).Name
+    g.run.streakFrame = Isaac.GetFrameCount()
+  end
 end
 
+-- Card.CARD_JUSTICE (9)
+function UseCard:Justice()
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_KEY) -- 30
+  PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_BOMB) -- 40
+end
+
+-- Card.CARD_STRENGTH (12)
 function UseCard:Strength()
   -- Local variables
   local character = g.p:GetPlayerType()
@@ -33,6 +46,7 @@ function UseCard:Strength()
   -- the Strength card will naturally heal Keeper for one heart containers
 end
 
+-- Card.RUNE_BLACK (41)
 function UseCard:BlackRune()
   local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
                                        CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
@@ -41,6 +55,11 @@ function UseCard:BlackRune()
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, checkpoint.Position, checkpoint.Velocity,
               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, checkpoint.InitSeed)
   end
+end
+
+function UseCard:Teleport()
+  -- Mark that this is not a Cursed Eye teleport
+  g.run.naturalTeleport = true
 end
 
 return UseCard

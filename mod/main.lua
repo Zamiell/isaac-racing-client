@@ -163,7 +163,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEnti
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
 
 -- Define post-use item callbacks (3)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Main) -- 3
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item44,
                                                  CollectibleType.COLLECTIBLE_TELEPORT) -- 44
 -- (this callback is also used by Broken Remote)
@@ -191,8 +191,10 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.PlayerGeneratedPedestal
                                                  CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
 
 -- Define card callbacks (5)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_FOOL) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_EMPEROR) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice, Card.CARD_JUSTICE) -- 9
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_HERMIT) -- 10
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength, Card.CARD_STRENGTH) -- 12
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_STARS) -- 18
@@ -201,7 +203,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_JOK
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
 
 -- Define pill callbacks (10)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthUp,
                                                  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Telepills,

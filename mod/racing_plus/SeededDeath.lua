@@ -313,7 +313,10 @@ function SeededDeath:DebuffOff()
 
   -- Add all of the items from the array
   for _, itemID in ipairs(g.run.seededDeath.items) do
-    g.p:AddCollectible(itemID, 0, false)
+    -- Make an exception for The Quarter, since it will just give us an additional 25 cents
+    if itemID ~= CollectibleType.COLLECTIBLE_QUARTER then -- 74
+      g.p:AddCollectible(itemID, 0, false)
+    end
   end
 
   -- Reset the items in the array

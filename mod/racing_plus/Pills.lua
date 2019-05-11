@@ -3,57 +3,6 @@ local Pills = {}
 -- Includes
 local g = require("racing_plus/globals")
 
--- Constants
-Pills.effects = {
-  "Bad Trip",
-  "Balls of Steel",
-  "Bombs Are Key",
-  "Explosive Diarrhea",
-  "Full Health",
-  "Health Down",
-  "Health Up",
-  "I Found Pills",
-  "Puberty",
-  "Pretty Fly",
-  "Range Down",
-  "Range Up",
-  "Speed Down",
-  "Speed Up",
-  "Tears Down",
-  "Tears Up",
-  "Luck Down",
-  "Luck Up",
-  "Telepills",
-  "48 Hour Energy",
-  "Hematemesis",
-  "Paralysis",
-  "I can see forever!",
-  "Pheromones",
-  "Amnesia",
-  "Lemon Party",
-  "R U a Wizard?",
-  "Percs!",
-  "Addicted!",
-  "Re-Lax",
-  "???",
-  "One makes you larger",
-  "One makes you small",
-  "Infested!",
-  "Infested?",
-  "Power Pill!",
-  "Retro Vision",
-  "Friends Till The End!",
-  "X-Lax",
-  "Something's wrong...",
-  "I'm Drowsy...",
-  "I'm Excited!!!",
-  "Gulp!",
-  "Horf!",
-  "Feels like I'm walking on sunshine!",
-  "Vurp!",
-}
-Pills.effects[0] = "Bad Gas" -- Lua tables are 1-indexed
-
 function Pills:PostRender()
   -- This feature is disabled if the Single Player Co-op Babies mod is enabled
   -- (the pills text will overlap with the baby descriptions)
@@ -89,7 +38,7 @@ function Pills:PostRender()
     local f = Font()
     f:Load("font/droid.fnt")
     local color = KColor(1, 1, 1, 1, 0, 0, 0)
-    local string = Pills.effects[pillEntry.effect]
+    local string = g.itemConfig:GetPillEffect(pillEntry.effect).Name
     f:DrawString(string, x + 15, y - 9, color, 0, true)
   end
 end
