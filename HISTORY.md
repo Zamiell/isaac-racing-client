@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.37.2* - May 15th, 2019
+
+* Re-enabled fast-reset with double tapping R. (The first floor check is replaced by a three room check.) (Thanks thereisnofuture)
+
 ### *v0.37.1* - May 15th, 2019
 
 * Fixed the bug where Eden was given no items in Season 6. (Thanks thereisnofuture)

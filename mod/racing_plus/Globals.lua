@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.37.1"
+g.version = "v0.37.2"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -241,6 +241,7 @@ function g:InitRun()
   g.run.usedTelepills        = false
   g.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
   g.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
+  g.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
   g.run.dualityCheckFrame    = 0
   g.run.changeFartColor      = false
   g.run.momDied              = false -- Used to fix bugs with fast-clear and killing Mom

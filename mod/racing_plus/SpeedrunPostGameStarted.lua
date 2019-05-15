@@ -520,7 +520,7 @@ function SpeedrunPostGameStarted:R7S6()
       if alreadyStartedBig4 then
         startingBuildIndex = math.random(5, #Speedrun.remainingItemStarts)
       elseif Speedrun.charNum >= 2 and Speedrun.charNum <= 6 then
-        local startBig4 = math.random(1, 6)
+        local startBig4 = math.random(1, 8 - Speedrun.charNum)
         if startBig4 == 1 then
           startingBuildIndex = math.random(1, 4)
         else

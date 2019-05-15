@@ -253,10 +253,6 @@ function PostRender:CheckResetInput()
     return
   end
 
-  if g.run.roomsEntered > 2 then
-    return
-  end
-
   -- Don't fast-reset if any modifiers are pressed
   -- (with the exception of shift, since the speedrunner MasterofPotato uses shift)
   if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
@@ -283,8 +279,17 @@ function PostRender:CheckResetInput()
     return
   end
 
-  Speedrun.fastReset = true
-  g:ExecuteCommand("restart")
+  local isaacFrameCount = Isaac.GetFrameCount()
+  if g.run.roomsEntered <= 3 or
+     isaacFrameCount <= g.run.fastResetFrame + 60 then
+
+    Speedrun.fastReset = true
+    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
+    g:ExecuteCommand("restart")
+  else
+    -- In speedruns, we want to double tap R to return reset to the same character
+    g.run.fastResetFrame = isaacFrameCount
+  end
 end
 
 -- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (1/2)
