@@ -129,13 +129,11 @@ function PostUpdate:CheckRoomCleared()
   local roomClear = g.r:IsClear()
 
   -- Check the clear status of the room and compare it to what it was a frame ago
-  Isaac.DebugString("ROOMCLEAR: " .. tostring(roomClear))
   if roomClear == g.run.currentRoomClearState then
     return
   end
 
   g.run.currentRoomClearState = roomClear
-  Isaac.DebugString("Room clear status changed: " .. tostring(roomClear))
 
   if not roomClear then
     return

@@ -467,8 +467,8 @@ function SpeedrunPostGameStarted:R7S6()
   -- If Eden starts with The Compass as the random passive item or a banned trinket, restart the game
   if character == PlayerType.PLAYER_EDEN and -- 9
      (g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) or -- 21
-      g.p.HasTrinket(TrinketType.TRINKET_CAINS_EYE) or -- 59
-      g.p.HasTrinket(TrinketType.TRINKET_BROKEN_ANKH)) then -- 28
+      g.p:HasTrinket(TrinketType.TRINKET_CAINS_EYE) or -- 59
+      g.p:HasTrinket(TrinketType.TRINKET_BROKEN_ANKH)) then -- 28
 
     g.run.restart = true
     return

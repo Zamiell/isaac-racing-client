@@ -32,7 +32,7 @@
     "racing_plus\\FastClear.lua": "b5b9c990efb545c6d5d2fc193446fd539ac27a7d",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "6009c5228f69027f8fdaff6f9b0b7def1d62b430",
-    "racing_plus\\Globals.lua": "28d2a05bec22df270a61413c852ca951fe3b3e47",
+    "racing_plus\\Globals.lua": "bbf88cbee23d981aac9f86b4587905fe1c49f1c4",
     "racing_plus\\InputAction.lua": "a4c8813ce300cf05a146914c28eeebab1de18155",
     "racing_plus\\JrFetus.lua": "ea5933c9b81fc21cc46eac359526aed3981e5ace",
     "racing_plus\\Mahalath.lua": "2a5a66a8af97107c4b8fdcff1054c9019a7faf6a",
@@ -52,7 +52,7 @@
     "racing_plus\\PostPickupSelection.lua": "5fdddd4fa0a1ecf8da1a2c30729e637446539c09",
     "racing_plus\\PostPlayerInit.lua": "f158921791138b117c4ac2bf0ba11868b76da3c3",
     "racing_plus\\PostRender.lua": "d6045bc1a22e710e51afffd12a8f85b4fec986e5",
-    "racing_plus\\PostUpdate.lua": "984e042c3ea527b72115318ee2960095cac1d482",
+    "racing_plus\\PostUpdate.lua": "6357a35958b01e59019ece06d7bf3700cbc0b246",
     "racing_plus\\PreEntitySpawn.lua": "b03535fbc00def0908ce8efeef6aa1bf4314635b",
     "racing_plus\\PreRoomEntitySpawn.lua": "524ea4229f83e251f918e0a6e135ac49b3b510c9",
     "racing_plus\\PreUseItem.lua": "e2e9ec9abebf54dda7936a9cae7065db38448dd4",
@@ -65,7 +65,7 @@
     "racing_plus\\SeededRooms.lua": "2647d4a2dd744b8972b2ddf772747b8fc2ef64ae",
     "racing_plus\\SoulJar.lua": "da8310585b0aa3fcac6626877c359101c4838c34",
     "racing_plus\\Speedrun.lua": "00d605db0e60af6d6210860c3be338f27febc8a5",
-    "racing_plus\\SpeedrunPostGameStarted.lua": "c225ef48364121b0c67437da132f6e3911bd2083",
+    "racing_plus\\SpeedrunPostGameStarted.lua": "a82dd4f0d8547bb6bc281c9b8ee63acaf9c1068b",
     "racing_plus\\SpeedrunPostNewRoom.lua": "bb70c575a870c475932830efaf4702cbad6ceed6",
     "racing_plus\\SpeedrunPostRender.lua": "5b260306c65b2e4f2bd5123d5a8e40a808c0f3d7",
     "racing_plus\\SpeedrunPostUpdate.lua": "c8a55d055991ca84b1ef6e502d765e9c04455eb3",
@@ -2054,7 +2054,7 @@
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\splashes_old.png": "cdb9683e5c86f5387e2b1568587f9b008fe5360d",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "2bc540586ba46877e4bb0fdbe6afded67f3e5bd3",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "dca9291f2b7fd6790f93c92641c08615a96a3e98",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "ba20a6cdd338bd19017ac27d169a7ee163ade5e4",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
     "resources\\gfx\\ui\\samael_wraithmeter.png": "cc67cbb0a2e63e33e647f082779007a5cfea47f1",
@@ -2124,5 +2124,5 @@
     "resources\\sfx\\mahalath\\muffled_explosion.wav": "879b16457f01e7182f31601127ef9d355d28e4a8",
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "save-defaults.dat": "6d49045396bd03ce69bc541005cc4a4a4b7575fb",
-    "sha1.json": "112a518ac69cd6e3c8f6eb9ed9a02661b650bf23"
+    "sha1.json": "af9719c66cc2a2775705f72ecb0f3140696cbeab"
 }

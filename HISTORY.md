@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.37.1* - May 15th, 2019
+
+* Fixed the bug where Eden was given no items in Season 6. (Thanks thereisnofuture)
+
 ### *v0.37.0* - May 14th, 2019
 
 * The Racing+ client now supports races to Hush, Delirium, and the Boss Rush. (Thanks Dea1h)
