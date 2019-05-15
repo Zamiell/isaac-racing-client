@@ -182,9 +182,17 @@ function PostEntityKill:Entity78(entity)
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
 
-  -- Manually open the Void door if we just killed Hush
   if entity.Type == EntityType.ENTITY_HUSH then -- 407
+    -- Manually open the Void door if we just killed Hush
     g.r:TrySpawnTheVoidDoor()
+
+    if g.race.status == "in progress" and
+       g.race.goal == "Hush" then
+
+      -- Spawn a big chest (which will get replaced with a trophy on the next frame)
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+      g.r:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+    end
   end
 end
 

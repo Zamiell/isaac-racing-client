@@ -254,4 +254,48 @@ function SpeedrunPostRender:CheckSeason5ModOther()
   Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
 end
 
+function SpeedrunPostRender:CheckSeason7Mod()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    return
+  end
+
+  if RacingPlusRebalanced ~= nil then
+    return
+  end
+
+  local x = 115
+  local y = 70
+  Isaac.RenderText("Error: You must subscribe to and enable the", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("\"Racing+ Rebalanced\" mod on the Steam Workshop", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("in order for the Racing+ season 7 custom", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
+end
+
+function SpeedrunPostRender:CheckSeason7ModOther()
+  local challenge = Isaac.GetChallenge()
+  if not Speedrun:InSpeedrun() or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
+    return
+  end
+
+  if RacingPlusRebalanced == nil then
+    return
+  end
+
+  local x = 115
+  local y = 70
+  Isaac.RenderText("Error: You must disable the Racing+ Rebalanced mod", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("in order for this custom challenge to", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
+end
+
 return SpeedrunPostRender

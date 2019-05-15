@@ -388,6 +388,18 @@ const show = (raceID) => {
             goalTooltipContent += '<strong><span lang="en">Mega Satan</span>:</strong><br />';
             goalTooltipContent += '<span lang="en">Defeat Mega Satan (the boss behind the giant locked door)</span><br />';
             goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
+        } else if (goal === 'Hush') {
+            goalTooltipContent += '<strong><span lang="en">Hush</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Defeat Hush (the boss in the Blue Womb)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
+        } else if (goal === 'Delirium') {
+            goalTooltipContent += '<strong><span lang="en">Delirium</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Defeat Delirium (the boss in The Void)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
+        } else if (goal === 'Boss Rush') {
+            goalTooltipContent += '<strong><span lang="en">Boss Rush</span>:</strong><br />';
+            goalTooltipContent += '<span lang="en">Complete the Boss Rush (after defeating Mom)</span><br />';
+            goalTooltipContent += '<span lang="en">and touch the trophy that falls down afterward.</span>';
         } else if (goal === 'Everything') {
             goalTooltipContent += '<strong><span lang="en">Everything</span>:</strong><br />';
             goalTooltipContent += '<span lang="en">Defeat Blue Baby, The Lamb, and Mega Satan</span><br />';

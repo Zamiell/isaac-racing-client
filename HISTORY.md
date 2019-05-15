@@ -1,5 +1,23 @@
 # Racing+ Version History and News
 
+### *v0.37.0* - May 14th, 2019
+
+* The Racing+ client now supports races to Hush, Delirium, and the Boss Rush. (Thanks Dea1h)
+* All friendly green creep is now changed to red so that it is easier to tell from enemy creep. (Along with the previous change to enemy creep, this should make creep across the entire game completely consistent.)
+* Season 6 item selection is changed to have a 1/6 chance to grant a big 4 item. (Thanks Krakenos)
+* Azazel will no longer randomly start Ipecac in Season 6. (Thanks mgln)
+* Integrated the sprites from the [Consistent Pills](https://steamcommunity.com/sharedfiles/filedetails/?id=1418510121) mod so that pills are easier to identify at a glance.
+* Changed the sprite for spotted red pills to all red so that they are easier to distinguish from other pills.
+* Fast-reset is now disabled if you have entered 3 or more rooms.
+* Enabled both doors in Curse Rooms #10, #18, and #19.
+* Addded Caves / Catacombs / Flooded Caves room #754 to the Forgotten softlock list. (Thanks Gamonymous)
+* Addded Catacombs room #224 to the Forgotten softlock list.
+* Fixed the bug where Sacred Heart would cause bombs to lose special abilities in season 6. (Thanks NorBro86)
+* Fixed the bug where Forgotten would not get soul hearts and black hearts upon seeded revival. (Thanks InvaderTim)
+* Fixed the bug where enemy creep would show as red creep on the first frame after spawning under certain circumstances.
+* Fixed the vanilla spelling of Maw of the Void, Spear of Destiny, and Crown of Light.
+* Fixed the bug where Eden could start with Broken Ankh and Cain's Eye in season 6. (Thanks Moucheron Quipet)
+
 ### *v0.36.0* - May 12th, 2019
 
 * Season 5 has been added to the Hall of Fame.

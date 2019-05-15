@@ -42,6 +42,9 @@ function SeededRooms:DevilRoom()
     else
       krampusChance = 10
     end
+    if RacingPlusRebalanced ~= nil then
+      krampusChance = 0
+    end
 
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     math.randomseed(g.RNGCounter.DevilRoomItem)
@@ -162,7 +165,6 @@ function SeededRooms:DevilRoom()
 end
 
 function SeededRooms:SpawnPedestalDevilRoom(x, y)
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
   local pos = g:GridToPos(x, y)
   g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
   g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_SHOPITEM, -- 5.150.0
@@ -253,7 +255,6 @@ function SeededRooms:AngelRoom()
 end
 
 function SeededRooms:SpawnPedestalAngelRoom(x, y)
-  -- Spawn it with a seed of 0 so that it gets replaced on the next frame
   local pos = g:GridToPos(x, y)
   g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
   local entity = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 100

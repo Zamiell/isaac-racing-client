@@ -15,11 +15,28 @@ function Race:PostUpdate()
     g.run.startedTime = Isaac.GetTime()
   end
 
+  Race:PostUpdateCheckBossRush()
   Race:PostUpdateCheckFireworks()
   Race:PostUpdateCheckVictoryLap()
   Race:PostUpdateCheckFinished()
   Race:PostUpdateCheckKeeperHolyMantle()
   SeededDeath:PostUpdate()
+end
+
+function Race:PostUpdateCheckBossRush()
+  if g.run.finishedBossRush or
+     g.race.status ~= "in progress" or
+     g.race.goal ~= "Boss Rush" or
+     not g.g:GetStateFlag(GameStateFlag.STATE_BOSSRUSH_DONE) then
+
+    return
+  end
+
+  g.run.finishedBossRush = true
+  local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
+  g.g:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
+            pos, Vector(0, 0), nil, 0, 0)
+  Isaac.DebugString("Spawned the end of Boss Rush trophy.")
 end
 
 -- Make race winners get sparklies and fireworks

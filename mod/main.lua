@@ -62,7 +62,6 @@ local PostPickupInit      = require("racing_plus/postpickupinit") -- 34
 local PostPickupSelection = require("racing_plus/postpickupselection") -- 37
 local PostLaserInit       = require("racing_plus/postlaserinit") -- 47
 local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
-local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
 local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
 local PostEntityKill      = require("racing_plus/postentitykill") -- 68
 local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
@@ -141,7 +140,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           PostUpdate.Main) -
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           PostRender.Main) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        EvaluateCache.Main) -- 8
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      PostPlayerInit.Main) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       EntityTakeDmg.Main, -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       EntityTakeDmg.Player, -- 11
                                                               EntityType.ENTITY_PLAYER) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          InputAction.Main) -- 13
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Main) -- 15
@@ -157,7 +156,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      PostPickupInit.Mai
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       PostLaserInit.Main) -- 47
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT,      PostEffectInit.Main) -- 54
-RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE,    PostEffectUpdate.Main) -- 55
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71

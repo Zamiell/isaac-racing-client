@@ -299,12 +299,17 @@ function SeededDeath:DebuffOff()
   playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
 
   -- Store the current active item, red hearts, soul/black hearts, bombs, keys, and pocket items
+  local subPlayer = g.p:GetSubPlayer()
   local activeItem = g.p:GetActiveItem()
   local activeCharge = g.p:GetActiveCharge()
   local hearts = g.p:GetHearts()
   local maxHearts = g.p:GetMaxHearts()
   local soulHearts = g.p:GetSoulHearts()
   local blackHearts = g.p:GetBlackHearts()
+  if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    soulHearts = subPlayer:GetSoulHearts()
+    blackHearts = subPlayer:GetBlackHearts()
+  end
   local boneHearts = g.p:GetBoneHearts()
   local bombs = g.p:GetNumBombs()
   local keys = g.p:GetNumKeys()

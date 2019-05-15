@@ -12,7 +12,6 @@ function SoulJar:PostNewLevel()
   end
 
   -- This ensures a 100% deal to start with
-  g.run.lastDDLevel = g.g:GetLastDevilRoomStage()
   g.g:SetLastDevilRoomStage(0)
 end
 
@@ -21,14 +20,12 @@ function SoulJar:EntityTakeDmg(damageFlag)
     return
   end
 
+  -- Soul Jar damage tracking
   local selfDamage = false
-  for i = 0, 21 do -- There are 21 damage flags
-    local bit = (damageFlag & (1 << i)) >> i
-
-    -- Soul Jar damage tracking
-    if (i == 5 or i == 18) and bit == 1 then -- 5 is DAMAGE_RED_HEARTS, 18 is DAMAGE_IV_BAG
+  local bit1 = (damageFlag & (1 << 5)) >> 5 -- DamageFlag.DAMAGE_RED_HEARTS.
+  local bit2 = (damageFlag & (1 << 18)) >> 18 -- DamageFlag.DAMAGE_IV_BAG
+  if bit1 == 1 or bit2 == 1 then
       selfDamage = true
-    end
   end
   if not selfDamage then
     g.g:SetLastDevilRoomStage(g.run.lastDDLevel)

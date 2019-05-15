@@ -424,11 +424,21 @@ function FastClear:ClearRoom()
   if roomType == RoomType.ROOM_BOSS then
     -- Try and spawn a Devil Room or Angel Room
     -- (this takes into account their Devil/Angel percentage and so forth)
-    g.r:TrySpawnDevilRoomDoor(true) -- The argument is "Animate"
+    if g.r:TrySpawnDevilRoomDoor(true) then -- The argument is "Animate"
+      g.run.lastDDLevel = stage
+    end
 
     -- Try to spawn the Boss Rush door
     if stage == 6 then
       g.r:TrySpawnBossRushDoor(false) -- The argument is "IgnoreTime"
+    end
+
+    -- Try to spawn the Blue Womb door
+    if stage == 8 and
+       g.race.status == "in progress" and
+       g.race.goal == "Hush" then
+
+      g.r:TrySpawnBlueWombDoor(true, true)
     end
   end
 

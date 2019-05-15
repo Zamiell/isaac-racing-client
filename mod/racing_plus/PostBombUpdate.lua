@@ -37,7 +37,8 @@ function PostBombUpdate:Main(bomb)
   end
 
   -- Remove the homing bombs from Sacred Heart
-  bomb.Flags = 0
+  -- (bombs use tear flags for some reason)
+  bomb.Flags = bomb.Flags & ~TearFlags.TEAR_HOMING -- 1 << 2
 end
 
 return PostBombUpdate

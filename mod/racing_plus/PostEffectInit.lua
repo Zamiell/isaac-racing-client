@@ -9,13 +9,6 @@ function PostEffectInit:Main(effect)
     effect:SetColor(color, 10000, 10000, false, false)
     return
   end
-
-  -- Turn enemy red creep into green creep (1/2)
-  if effect.Variant == EffectVariant.CREEP_RED then -- 22
-    local color = Color(0, 8, 0, 1, 0, 1, 0)
-    effect:SetColor(color, 10000, 10000, false, false)
-    return
-  end
 end
 
 return PostEffectInit

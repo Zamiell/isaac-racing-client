@@ -152,21 +152,19 @@ function SeededFloors:SaveHealth()
   local boneHearts = g.p:GetBoneHearts()
   local goldenHearts = g.p:GetGoldenHearts()
   local eternalHearts = g.p:GetEternalHearts()
+  local subPlayer = g.p:GetSubPlayer()
 
   -- The Forgotten and The Soul has special health, so we need to account for this
-  local subPlayer
   if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
     -- The Forgotten does not have red heart containers, so account for this
     maxHearts = boneHearts * 2
     boneHearts = 0
 
     -- The Forgotten will always have 0 soul hearts; we need to get the soul heart amount from the sub player
-    subPlayer = g.p:GetSubPlayer()
     soulHearts = subPlayer:GetSoulHearts()
 
   elseif character == PlayerType.PLAYER_THESOUL then -- 17
     -- The Soul will always have 0 bone hearts; we need to get the bone heart amount from the sub player
-    subPlayer = g.p:GetSubPlayer()
     maxHearts = subPlayer:GetBoneHearts() * 2 -- We need to store it as "maxHearts" instead of "boneHearts"
     hearts = subPlayer:GetHearts()
   end
@@ -286,7 +284,6 @@ function SeededFloors:LoadHealth()
   -- Fill in the red heart containers
   g.p:AddHearts(hearts.hearts)
   g.p:AddGoldenHearts(hearts.goldenHearts)
-  Isaac.DebugString("DEBUG ADDED goldenHearts: " .. tostring(hearts.goldenHearts))
   -- (no matter what kind of heart is added, no sounds effects will play)
 end
 

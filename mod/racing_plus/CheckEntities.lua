@@ -285,6 +285,12 @@ function CheckEntities:Entity5_340(pickup)
     CheckEntities:Entity5_340_TheLamb(pickup)
   elseif g.race.goal == "Mega Satan" and g.raceVars.started then
     CheckEntities:Entity5_340_MegaSatan(pickup)
+  elseif g.race.goal == "Hush" and g.raceVars.started then
+    CheckEntities:Entity5_340_Hush(pickup)
+  elseif g.race.goal == "Delirium" and g.raceVars.started then
+    CheckEntities:Entity5_340_Delirium(pickup)
+  elseif g.race.goal == "Boss Rush" and g.raceVars.started then
+    CheckEntities:Entity5_340_BossRush(pickup)
   elseif g.race.goal == "Everything" and g.raceVars.started then
     CheckEntities:Entity5_340_Everything(pickup)
   elseif stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL and -- 10.0 (Sheol)
@@ -584,6 +590,38 @@ function CheckEntities:Entity5_340_MegaSatan(pickup)
   elseif stage == 11 and -- The Chest or the Dark Room
         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
+    CheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function CheckEntities:Entity5_340_Hush(pickup)
+  -- Local variables
+  local stage = g.l:GetStage()
+  if stage == 9 then
+    CheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function CheckEntities:Entity5_340_Delirium(pickup)
+  -- Local variables
+  local stage = g.l:GetStage()
+  if stage == 14 then
+    CheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function CheckEntities:Entity5_340_Delirium(pickup)
+  -- Local variables
+  local stage = g.l:GetStage()
+  if stage == 12 then
+    CheckEntities.bigChestAction = "trophy"
+  end
+end
+
+function CheckEntities:Entity5_340_BossRush(pickup)
+  -- Local variables
+  local stage = g.l:GetStage()
+  if stage == 6 then
     CheckEntities.bigChestAction = "trophy"
   end
 end

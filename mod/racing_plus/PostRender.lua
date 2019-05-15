@@ -100,6 +100,8 @@ function PostRender:Main()
   SpeedrunPostRender:DrawVetoButtonText()
   SpeedrunPostRender:CheckSeason5Mod()
   SpeedrunPostRender:CheckSeason5ModOther()
+  SpeedrunPostRender:CheckSeason7Mod()
+  SpeedrunPostRender:CheckSeason7ModOther()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally
@@ -240,10 +242,6 @@ end
 
 -- Check for fast-reset inputs
 function PostRender:CheckResetInput()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local isaacFrameCount = Isaac.GetFrameCount()
-
   -- Disable the fast-reset feature on the "Unseeded (Lite)" ruleset
   if g.race.rFormat == "unseeded-lite" then
     return
@@ -252,6 +250,10 @@ function PostRender:CheckResetInput()
   -- Disable the fast-reset feature if we have opened the console on this run
   -- (so that typing an "r" into the console does not cause a fast-reset)
   if g.run.consoleOpened then
+    return
+  end
+
+  if g.run.roomsEntered > 2 then
     return
   end
 
@@ -281,16 +283,8 @@ function PostRender:CheckResetInput()
     return
   end
 
-  if stage == 1 or
-     isaacFrameCount <= g.run.fastResetFrame + 60 then
-
-    Speedrun.fastReset = true
-    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
-    g:ExecuteCommand("restart")
-  else
-    -- To fast reset on floors 2 and beyond, we need to double tap R
-    g.run.fastResetFrame = isaacFrameCount
-  end
+  Speedrun.fastReset = true
+  g:ExecuteCommand("restart")
 end
 
 -- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (1/2)
@@ -666,6 +660,11 @@ end
 
 function PostRender:DrawInvalidSaveFile()
   if g.saveFile.fullyUnlocked then
+    return
+  end
+
+  -- The corrupted mod check takes precedence over the invalid save file check
+  if g.corrupted then
     return
   end
 

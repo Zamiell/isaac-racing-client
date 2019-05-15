@@ -4,7 +4,6 @@ local PreEntitySpawn = {}
 local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_PRE_ENTITY_SPAWN (24)
--- Heart drops from fires in Devil Deals should never spawn
 function PreEntitySpawn:Main(type, variant, subType, position, velocity, spawner, seed)
   -- Local variables
   local roomType = g.r:GetType()
@@ -38,6 +37,20 @@ function PreEntitySpawn:Main(type, variant, subType, position, velocity, spawner
     -- If we return an entity type of 0, the game will crash
     -- Instead, return an effect with a variant of 0, which will just be a non-interacting invisible thing
     return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
+  end
+
+  -- Change enemy red creep to green
+  if type == EntityType.ENTITY_EFFECT and -- 1000
+     variant == EffectVariant.CREEP_RED then -- 22
+
+    return {EntityType.ENTITY_EFFECT, EffectVariant.CREEP_GREEN, subType, seed} -- 1000.23
+  end
+
+  -- Change player green creep to red
+  if type == EntityType.ENTITY_EFFECT and -- 1000
+     variant == EffectVariant.PLAYER_CREEP_GREEN then -- 53
+
+    return {EntityType.ENTITY_EFFECT, EffectVariant. PLAYER_CREEP_RED, subType, seed} -- 1000.46
   end
 end
 

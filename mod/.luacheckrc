@@ -87,9 +87,10 @@ globals = {
   "RacingPlusGlobals",
   "RacingPlusSchoolbag",
   "RacingPlusSpeedrun",
-  "SinglePlayerCoopBabies",
 
   -- Other mods
+  "SinglePlayerCoopBabies",
+  "RacingPlusRebalanced",
   "InfinityTrueCoopInterface", -- The True Co-op Mod
   "VanillaStreakText", -- The Vanilla Streak Text mod
 }

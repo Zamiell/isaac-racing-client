@@ -60,10 +60,10 @@ function PostItemPickup:InsertNearestPickup(variant)
 end
 
 function PostItemPickup:FindNearestPickup(variant)
-  local coins = Isaac.FindByType(EntityType.ENTITY_PICKUP, variant, -1, false, false) -- 5
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, variant, -1, false, false) -- 5
   local nearestPickup = nil
   local nearestPickupDistance = nil
-  for _, entity in ipairs(coins) do
+  for _, entity in ipairs(pickups) do
     local pickup = entity:ToPickup()
     if pickup.FrameCount == 0 and
        pickup.SpawnerType == EntityType.ENTITY_PLAYER and -- 1

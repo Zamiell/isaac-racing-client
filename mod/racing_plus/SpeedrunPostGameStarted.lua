@@ -464,9 +464,11 @@ function SpeedrunPostGameStarted:R7S6()
 
   Isaac.DebugString("In the R+7 (Season 6) challenge.")
 
-  -- If Eden starts with The Compass as the random passive item, restart the game
+  -- If Eden starts with The Compass as the random passive item or a banned trinket, restart the game
   if character == PlayerType.PLAYER_EDEN and -- 9
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) then -- 21
+     (g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) or -- 21
+      g.p.HasTrinket(TrinketType.TRINKET_CAINS_EYE) or -- 59
+      g.p.HasTrinket(TrinketType.TRINKET_BROKEN_ANKH)) then -- 28
 
     g.run.restart = true
     return
@@ -510,12 +512,20 @@ function SpeedrunPostGameStarted:R7S6()
   if startingBuild == nil then
     -- Get a random start
     local seed = g.seeds:GetStartSeed()
+    local randomAttempts = 0
     while true do
       seed = g:IncrementRNG(seed)
       math.randomseed(seed)
       local startingBuildIndex
       if alreadyStartedBig4 then
         startingBuildIndex = math.random(5, #Speedrun.remainingItemStarts)
+      elseif Speedrun.charNum >= 2 and Speedrun.charNum <= 6 then
+        local startBig4 = math.random(1, 6)
+        if startBig4 == 1 then
+          startingBuildIndex = math.random(1, 4)
+        else
+          startingBuildIndex = math.random(5, #Speedrun.remainingItemStarts)
+        end
       elseif Speedrun.charNum == 7 then
         -- Guarantee at least one big 4 start
         startingBuildIndex = math.random(1, 4)
@@ -572,7 +582,8 @@ function SpeedrunPostGameStarted:R7S6()
         end
 
       elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-        if startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
+        if startingBuild[1] == CollectibleType.COLLECTIBLE_IPECAC or -- 149
+           startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
            startingBuild[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
            startingBuild[1] == CollectibleType.COLLECTIBLE_DEAD_EYE or -- 373
            startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 331
@@ -602,6 +613,11 @@ function SpeedrunPostGameStarted:R7S6()
         end
       end
 
+      -- Just in case, prevent the possibility of having an infinite loop here
+      if randomAttempts >= 100 then
+        valid = true
+      end
+
       if valid then
         -- Keep track of what item we start so that we don't get the same two starts in a row
         Speedrun.lastBuildItem = startingBuild[1]
@@ -622,6 +638,8 @@ function SpeedrunPostGameStarted:R7S6()
         Isaac.DebugString("Assigned a starting item of: " .. tostring(startingBuild[1]))
         break
       end
+
+      randomAttempts = randomAttempts + 1
     end
 
   else

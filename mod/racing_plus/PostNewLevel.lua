@@ -177,8 +177,8 @@ function PostNewLevel:CheckForgottenSoftlock()
     return false
   end
 
-  local player2 = g.p:GetSubPlayer()
-  local soulHearts = player2:GetSoulHearts()
+  local subPlayer = g.p:GetSubPlayer()
+  local soulHearts = subPlayer:GetSoulHearts()
   if soulHearts > 0 then
     return false
   end
@@ -211,23 +211,25 @@ function PostNewLevel:CheckForgottenSoftlock()
       end
 
       local stageID = roomData.StageID
-      if ((stageID == 4 or stageID == 6) and roomID == 226) or
+      if ((stageID == 4 or stageID == 6) and roomID == 226) or -- Caves / Flooded Caves
          ((stageID == 4 or stageID == 6) and roomID == 251) or
          ((stageID == 4 or stageID == 6) and roomID == 303) or
          ((stageID == 4 or stageID == 6) and roomID == 500) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 305) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 305) or -- Caves / Catacombs / Flooded Caves
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 337) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 378) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 450) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 226) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 754) or
+         (stageID == 5 and roomID == 224) or -- Catacombs
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 226) or -- Depths / Necropolis / Dank Depths
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 275) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 390) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 417) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 446) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 455) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 573) or
-         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 344) or
+         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 344) or -- Womb / Utero / Scarred Womb
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 417) or
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 458) or
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 459) then

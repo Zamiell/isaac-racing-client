@@ -29,12 +29,6 @@ function PostGameStarted:Main(saveState)
   Isaac.DebugString("MC_POST_GAME_STARTED - " .. tostring(startSeedString))
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
-  if PostGameStarted:CheckCorruptMod() or
-     PostGameStarted:CheckFullyUnlockedSave() then
-
-    return
-  end
-
   if saveState then
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
     g.run.currentFloor = stage
@@ -76,7 +70,7 @@ function PostGameStarted:Main(saveState)
   -- Log the run beginning
   Isaac.DebugString("A new run has begun on seed: " .. g.seeds:GetStartSeedString())
 
-  -- Reset some global variables that we keep track of per run
+  -- Initialize run-based variables
   g:InitRun()
 
   -- Reset some RNG counters for familiars
@@ -110,11 +104,11 @@ function PostGameStarted:Main(saveState)
   SoulJar.sprites = {}
   Speedrun.sprites = {}
   Timer.sprites = {}
-  if g.corrupted then
-    -- We want to check for corruption at the beginning of the MC_POST_GAME_STARTED callback,
-    -- but we have to initialize the sprite after the sprite table is reset
-    Sprites:Init("corrupt1", "corrupt1")
-    Sprites:Init("corrupt2", "corrupt2")
+
+  if PostGameStarted:CheckCorruptMod() or
+     PostGameStarted:CheckFullyUnlockedSave() then
+
+    return
   end
 
   -- Keep track of whether this is a diversity race or not
@@ -193,8 +187,13 @@ function PostGameStarted:CheckCorruptMod()
   sprite:SetLastFrame()
   local lastFrame = sprite:GetFrame()
   if lastFrame ~= 0 then
-    Isaac.DebugString("Corrupted Racing+ instantiation detected.")
+    Isaac.DebugString("Error: Corrupted Racing+ instantiation detected. " ..
+                      "(The last frame of the \"Scene\" animation is frame " .. tostring(lastFrame) .. ".)")
     g.corrupted = true
+
+    -- This must be after the sprite after the sprite table is reset
+    Sprites:Init("corrupt1", "corrupt1")
+    Sprites:Init("corrupt2", "corrupt2")
   end
   return g.corrupted
 end
@@ -250,21 +249,26 @@ function PostGameStarted:CheckFullyUnlockedSave()
 
     -- We are on the specific Eden seed, so check to see if our items are correct
     -- The items will be different depending on whether or not we have The Babies Mod enabled
-    if SinglePlayerCoopBabies == nil then
-      Isaac.DebugString("GETTING HERE")
-      if activeItem == g.saveFile.activeItem and
-         g.p:HasCollectible(g.saveFile.passiveItem) then
+    local neededActiveItem = g.saveFile.activeItem
+    local neededPassiveItem = g.saveFile.passiveItem
+    if SinglePlayerCoopBabies ~= nil then
+      neededActiveItem = g.saveFile.activeItem2
+      neededPassiveItem = g.saveFile.passiveItem2
+    elseif RacingPlusRebalanced ~= nil then
+      neededActiveItem = g.saveFile.activeItem3
+      neededPassiveItem = g.saveFile.passiveItem3
+    end
 
-        g.saveFile.fullyUnlocked = true
-        Isaac.DebugString("g.saveFile.passiveItem = " .. tostring(g.saveFile.passiveItem))
-        Isaac.DebugString("HAS: " .. tostring(g.p:HasCollectible(g.saveFile.passiveItem)))
-      end
+    local string = "Error: On seed \"" .. tostring(g.saveFile.seed) .. "\", Eden needs "
+    if activeItem ~= neededActiveItem then
+      string = string .. "an active item of " .. tostring(g.saveFile.activeItem2) ..
+              " (they have an active item of " .. tostring(activeItem) .. ")."
+      Isaac.DebugString(string)
+    elseif not g.p:HasCollectible(neededPassiveItem) then
+      string = string .. "a passive item of " .. tostring(g.saveFile.passiveItem2) .. "."
+      Isaac.DebugString(string)
     else
-      if activeItem == g.saveFile.activeItem2 and
-         g.p:HasCollectible(g.saveFile.passiveItem2) then
-
-        g.saveFile.fullyUnlocked = true
-      end
+      g.saveFile.fullyUnlocked = true
     end
 
     g.saveFile.state = g.saveFileState.GOING_BACK

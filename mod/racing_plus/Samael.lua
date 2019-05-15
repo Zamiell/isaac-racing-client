@@ -445,7 +445,7 @@ function SamaelMod:scytheUpdate(scythe)
         laser.Variant = 2
         laser.SpriteScale = Vector(0.5, 1)
       end
-      laser.TearFlags = laser.TearFlags | 1<<36
+      laser.TearFlags = laser.TearFlags | 1 << 36
       laser.CollisionDamage = laser.CollisionDamage*0.3
       scythe.Target = laser
       laserRingSpawned = true
@@ -1326,13 +1326,13 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       if luck < 1 then luck = 1
       elseif luck > luckCap then luck = luckCap end
 
-      if threeDollarBillEffect == "fire" or fruitCakeEffect == "fire" or (g.p.TearFlags & 1<<22) ~= 0 then --Burn
+      if threeDollarBillEffect == "fire" or fruitCakeEffect == "fire" or (g.p.TearFlags & 1 << 22) ~= 0 then --Burn
         tookDamage:AddBurn(damageSourceRef, 80, 5)
       end
       if fruitCakeEffect == "poison" or
          threeDollarBillEffect == "poison" or
-         (g.p.TearFlags & 1<<4) ~= 0 or
-         (g.p.TearFlags & 1<<12) ~= 0 or
+         (g.p.TearFlags & 1 << 4) ~= 0 or
+         (g.p.TearFlags & 1 << 12) ~= 0 or
          ((g.p:HasCollectible(103) or
            g.p:HasCollectible(393)) and
           math.random(luckCap+1-luck) == 1) then --Poison
@@ -1340,7 +1340,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         tookDamage:AddPoison(damageSourceRef, 80, 5)
       end
       if fruitCakeEffect == "slow" or
-         (g.p.TearFlags & 1<<3) ~= 0 or
+         (g.p.TearFlags & 1 << 3) ~= 0 or
          ((g.p:HasCollectible(231) or
            g.p:HasCollectible(89) or
            threeDollarBillEffect == "slow") and
@@ -1349,7 +1349,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         tookDamage:AddSlowing(damageSourceRef, 125, 2, Color(0.3,0.3,0.3,1,0,0,0))
       end
       if fruitCakeEffect == "freeze" or
-         (g.p.TearFlags & 1<<5) ~= 0 or
+         (g.p.TearFlags & 1 << 5) ~= 0 or
          ((g.p:HasCollectible(110) or
            threeDollarBillEffect == "freeze") and
           math.random(luckCap+1-luck) == 1) then --Freeze
@@ -1357,14 +1357,14 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         tookDamage:AddFreeze(damageSourceRef, 80)
       end
       if fruitCakeEffect == "charm" or
-         (g.p.TearFlags & 1<<13) ~= 0 or
+         (g.p.TearFlags & 1 << 13) ~= 0 or
          ((g.p:HasCollectible(200) or threeDollarBillEffect == "charm") and
          math.random(luckCap+1-luck) == 1) then --Charm
 
         tookDamage:AddCharmed(80)
       end
       if fruitCakeEffect == "confuse" or
-         (g.p.TearFlags & 1<<14) ~= 0 or
+         (g.p.TearFlags & 1 << 14) ~= 0 or
          ((g.p:HasCollectible(201) or
            threeDollarBillEffect == "confuse") and
           math.random(luckCap+1-luck) == 1) then --Confuse
@@ -1372,13 +1372,13 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
         tookDamage:AddConfusion(damageSourceRef, 80, false)
       end
       if fruitCakeEffect == "shrink" or
-         (g.p.TearFlags & 1<<41) ~= 0 or
+         (g.p.TearFlags & 1 << 41) ~= 0 or
          (g.p:HasCollectible(398) and math.random(luckCap+1-luck) == 1) then --Shrink
 
         tookDamage:AddShrink(damageSourceRef, 80)
       end
       if fruitCakeEffect == "fear" or
-         (g.p.TearFlags & 1<<20) ~= 0 or
+         (g.p.TearFlags & 1 << 20) ~= 0 or
          ((g.p:HasCollectible(228) or
            g.p:HasCollectible(230) or
            g.p:HasCollectible(259) or
@@ -1590,7 +1590,7 @@ function SamaelMod:roomEntitiesLoop()
     elseif entity.Type == EntityType.ENTITY_TEAR  then
       entity = entity:ToTear()
       local sprite = entity:GetSprite()
-      if (entity.TearFlags & 1<<55) ~= 0 and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2" then
+      if (entity.TearFlags & 1 << 55) ~= 0 and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2" then
         --entity:ChangeVariant(8)
         sprite:Load("gfx/samael_scythe_projectile.anm2", true)
         sprite:Play("Idle", true)

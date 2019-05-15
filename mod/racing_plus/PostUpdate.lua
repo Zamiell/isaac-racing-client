@@ -67,8 +67,9 @@ function PostUpdate:Main()
   end
 
   -- Check for Mutant Spider's Inner Eye (a custom item)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) then
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE)
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) and
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
+
     -- This custom item is set to not be shown on the item tracker
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
@@ -128,11 +129,13 @@ function PostUpdate:CheckRoomCleared()
   local roomClear = g.r:IsClear()
 
   -- Check the clear status of the room and compare it to what it was a frame ago
+  Isaac.DebugString("ROOMCLEAR: " .. tostring(roomClear))
   if roomClear == g.run.currentRoomClearState then
     return
   end
 
   g.run.currentRoomClearState = roomClear
+  Isaac.DebugString("Room clear status changed: " .. tostring(roomClear))
 
   if not roomClear then
     return
@@ -221,6 +224,8 @@ function PostUpdate:CheckItemPickup()
   elseif g.run.pickingUpItem ~= 0 then
     return
   end
+
+  -- Mark which item we are picking up
   g.run.pickingUpItem = g.p.QueuedItem.Item.ID
 
   -- Mark to draw the streak text for this item
@@ -235,9 +240,6 @@ function PostUpdate:CheckItemPickup()
     end
     SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   end
-
-  -- Mark which item we are picking up
-  g.run.postItemPickup = g.p.QueuedItem.Item.ID
 end
 
 function PostUpdate:CheckTransformations()

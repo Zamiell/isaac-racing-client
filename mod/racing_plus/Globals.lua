@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.36.0"
+g.version = "v0.37.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -13,13 +13,16 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   activeItem    = CollectibleType.COLLECTIBLE_BLUE_BOX, -- 297
   passiveItem   = CollectibleType.COLLECTIBLE_JAW_BONE, -- 548
   -- Eden's items will change if we have The Babies Mod enabled
-  activeItem2   = CollectibleType.COLLECTIBLE_BLOOD_RIGHTS, -- 186
-  passiveItem2  = CollectibleType.COLLECTIBLE_TRISAGION, -- 533
-  old           = {
-    challenge = 0,
-    character = 0,
-    seededRun = false,
-    seed      = "",
+  activeItem2  = CollectibleType.COLLECTIBLE_BLOOD_RIGHTS, -- 186
+  passiveItem2 = CollectibleType.COLLECTIBLE_TRISAGION, -- 533
+  -- Eden's items will change if we have Racing+ Rebalanced enabled
+  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105
+  passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128
+  old          = {
+    challenge  = 0,
+    character  = 0,
+    seededRun  = false,
+    seed       = "",
   },
 }
 g.saveFileState = {
@@ -44,7 +47,7 @@ g.race = {
   rFormat           = "unseeded",  -- Can be "unseeded", "seeded", "diversity", "unseeded-lite", or "custom"
   -- Unofficially this can also be "pageant"
   character         = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
-  goal              = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", or "Everything"
+  goal              = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
   seed              = "-",         -- Corresponds to the seed that is the race goal
   startingItems     = {},          -- The starting items for this race
   countdown         = -1,          -- This corresponds to the graphic to draw on the screen
@@ -122,11 +125,9 @@ CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Sam
 CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS         = Isaac.GetItemIdByName("Samael Dr. Fetus")
 CollectibleType.COLLECTIBLE_SAMAEL_MARKED           = Isaac.GetItemIdByName("Samael Marked")
 CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wraith Skull")
-CollectibleType.NUM_COLLECTIBLES                    = Isaac.GetItemIdByName("Wraith Skull") + 1
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
-SoundEffect.NUM_SOUND_EFFECTS = Isaac.GetSoundIdByName("Speedrun Finish") + 1
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
@@ -191,6 +192,7 @@ function g:InitRun()
   g.run.metKrampus        = false
   g.run.movingBoxOpen     = true
   g.run.killedLamb        = false -- Used for the "Everything" race goal
+  g.run.finishedBossRush  = false
   g.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
   g.run.PHDPills          = false -- Used to determine when to change the pill text
 
@@ -233,13 +235,12 @@ function g:InitRun()
   g.run.goingToDebugRoom     = false
   g.run.forgetMeNow          = false
   g.run.consoleOpened        = false -- If set, fast-resetting is disabled
-  g.run.streakText           = 0
+  g.run.streakText           = ""
   g.run.streakFrame          = 0
   g.run.itemReplacementDelay = 0 -- Set when Void is used
   g.run.usedTelepills        = false
   g.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
   g.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
-  g.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
   g.run.dualityCheckFrame    = 0
   g.run.changeFartColor      = false
   g.run.momDied              = false -- Used to fix bugs with fast-clear and killing Mom

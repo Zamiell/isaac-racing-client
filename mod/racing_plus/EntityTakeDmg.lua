@@ -6,7 +6,7 @@ local SoulJar = require("racing_plus/souljar")
 
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11), EntityType.ENTITY_PLAYER (1)
 -- (this must return nil or false)
-function EntityTakeDmg:Main(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
+function EntityTakeDmg:Player(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   -- local variables
   local stage = g.l:GetStage()
 
