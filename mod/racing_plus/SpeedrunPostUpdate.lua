@@ -130,6 +130,7 @@ function SpeedrunPostUpdate:CheckVetoButton(gridEntity)
   Speedrun.vetoTimer = Isaac.GetTime() + 5 * 1000 * 60 -- 5 minutes
   Speedrun.timeItemAssigned = 0
   g.run.restart = true
+  Isaac.DebugString("Vetoed item: " .. tostring(Speedrun.lastBuildItem))
 end
 
 return SpeedrunPostUpdate

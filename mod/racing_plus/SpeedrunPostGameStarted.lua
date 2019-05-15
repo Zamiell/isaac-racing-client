@@ -85,6 +85,7 @@ function SpeedrunPostGameStarted:Main()
 
     -- They held R, and they are not on the first character, so they want to restart from the first character
     Speedrun.charNum = 1
+    Speedrun.selectedItemStarts = {}
     g.run.restart = true
     Isaac.DebugString("Restarting because we want to start from the first character again.")
 
@@ -124,6 +125,8 @@ function SpeedrunPostGameStarted:Main()
     for i, item in ipairs(Speedrun.selectedItemStarts) do
       Isaac.DebugString("  " .. tostring(i) .. " - " .. tostring(item[1]))
     end
+    Isaac.DebugString("S6 - Last started build: " .. tostring(Speedrun.lastBuildItem))
+    Isaac.DebugString("S6 - Last started build on first char: " .. tostring(Speedrun.lastBuildItemOnFirstChar))
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
@@ -624,6 +627,7 @@ function SpeedrunPostGameStarted:R7S6()
         if Speedrun.charNum == 1 then
           Speedrun.lastBuildItemOnFirstChar = startingBuild[1]
         end
+        Isaac.DebugString("Set the last starting build to: " .. tostring(Speedrun.lastBuildItem))
 
         -- Remove it from the remaining item pool
         table.remove(Speedrun.remainingItemStarts, startingBuildIndex)
