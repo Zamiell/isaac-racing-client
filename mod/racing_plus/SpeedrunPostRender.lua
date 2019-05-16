@@ -24,7 +24,6 @@ function SpeedrunPostRender:CheckRestart()
     Speedrun.fastReset = true -- Set this so that we don't go back to the beginning again
     Speedrun.charNum = Speedrun.charNum + 1
     g.run.restart = true
-
     Isaac.DebugString("Switching to the next character for the speedrun.")
     return
   end

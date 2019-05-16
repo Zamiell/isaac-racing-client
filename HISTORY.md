@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.37.7* - May 16th, 2019
+
+* Fixed the bug where resetting as Eden could cause the mod to go back to the first character under certain conditions. (Thanks Krakenos)
+
 ### *v0.37.5* - May 16th, 2019
 
 * Added Depths / Necropolis / Dank Depths room #492 to the Forgotten softlock list. (Thanks Gamonymous)

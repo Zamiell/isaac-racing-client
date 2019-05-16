@@ -244,6 +244,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
     if not valid then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
+      Isaac.DebugString("Restarting because we need to go to Eden for the save file check.")
       return true
     end
 
@@ -294,6 +295,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
     if not valid then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
+      Isaac.DebugString("Restarting because we need to go back from the Eden seen to where we came from.")
       return true
     end
 
@@ -330,6 +332,8 @@ function PostGameStarted:Character()
 
     else
       g.run.restart = true
+      Speedrun.fastReset = true
+      Isaac.DebugString("Restarting because we started as Eden and got a vanilla Schoolbag.")
       return
     end
   end

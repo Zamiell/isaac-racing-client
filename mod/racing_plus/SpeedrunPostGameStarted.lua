@@ -48,6 +48,7 @@ function SpeedrunPostGameStarted:Main()
     g:ExecuteCommand("seed " .. Speedrun.R7SeededSeeds[1])
     -- We need to set a seed before restarting the game to enable "seeded mode"
     g.run.restart = true
+    Isaac.DebugString("Restarting to take off the challenge for the seeded speedrun.")
     return
   end
 
@@ -70,7 +71,7 @@ function SpeedrunPostGameStarted:Main()
   -- Check to see if we are on the correct character
   local correctCharacter = Speedrun:GetCurrentChar()
   if character ~= correctCharacter then
-    g.run.restart = true
+    Speedrun.fastReset = true
     Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
                       " and we need to be on character " .. tostring(correctCharacter))
     return
@@ -474,6 +475,8 @@ function SpeedrunPostGameStarted:R7S6()
       g.p:HasTrinket(TrinketType.TRINKET_BROKEN_ANKH)) then -- 28
 
     g.run.restart = true
+    Speedrun.fastReset = true
+    Isaac.DebugString("Restarting because Eden started with either The Compass, Cain's Eye, or Broken Ankh.")
     return
   end
 

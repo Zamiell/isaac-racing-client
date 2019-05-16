@@ -129,6 +129,8 @@ function SaveDat:ChangedStatus()
     if stage == 1 and roomIndex == g.l:GetStartingRoomIndex() then
       -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
       g.run.restart = true
+      Isaac.DebugString("Restarting so that we can go to the race room.")
+      return
     else
       -- We are in the middle of a run, so don't go to the Race Room until a reset occurs
       g.raceVars.started = false
@@ -151,6 +153,8 @@ function SaveDat:ChangedStatus()
 
     -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
     g.run.restart = true
+    Isaac.DebugString("Restarting because we want to exit the race room.")
+    return
   end
 end
 
@@ -182,6 +186,7 @@ function SaveDat:ChangedFormat()
     -- For special rulesets, fix the bug where it is not loaded on the first run
     -- Doing a "restart" won't work since we are just starting a run, so mark to reset on the next frame
     g.run.restart = true
+    Isaac.DebugString("Restarting because the race format was changed to \"pageant\".")
   end
 end
 
@@ -205,6 +210,7 @@ function SaveDat:ChangedOrder()
 
     -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
     g.run.restart = true
+    Isaac.DebugString("Restarting because we detected a new character order.")
   end
 end
 
