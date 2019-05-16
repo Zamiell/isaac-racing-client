@@ -72,6 +72,7 @@ function SpeedrunPostGameStarted:Main()
   local correctCharacter = Speedrun:GetCurrentChar()
   if character ~= correctCharacter then
     Speedrun.fastReset = true
+    g.run.restart = true
     Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
                       " and we need to be on character " .. tostring(correctCharacter))
     return
