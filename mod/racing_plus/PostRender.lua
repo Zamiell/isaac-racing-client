@@ -28,6 +28,10 @@ function PostRender:Main()
   g.seeds = g.g:GetSeeds()
   g.itemPool = g.g:GetItemPool()
 
+  if g.p:GetPlayerType() == PlayerType.PLAYER_THEFORGOTTEN then -- 17
+    Isaac.DebugString("SOULHEARTS: " .. tostring(Game():GetPlayer(0):GetSubPlayer():GetSoulHearts()))
+  end
+
   -- Read the "save.dat" file and do nothing else on this frame if reading failed
   SaveDat:Load()
 

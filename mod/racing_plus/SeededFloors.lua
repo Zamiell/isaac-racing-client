@@ -241,7 +241,7 @@ function SeededFloors:LoadHealth()
   local character = g.p:GetPlayerType()
   local hearts = g.run.seededSwap.heartTable
 
-  SeededFloors:PrintHealth()
+  --SeededFloors:PrintHealth()
 
   -- Remove all existing health
   g.p:AddMaxHearts(-24, true)

@@ -1,8 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.37.5* - May 16th, 2019
+
+* Added Depths / Necropolis / Dank Depths room #492 to the Forgotten softlock list. (Thanks Gamonymous)
+
 ### *v0.37.4* - May 15th, 2019
 
-* Fixed the bug where fast-travel would cause Keeper to die after using a Strength card under certain conditions. (Thanks NorBro86)
+* Fixed the bug where fast-travel would cause Forgotten to die after using a Strength card under certain conditions. (Thanks NorBro86)
 
 ### *v0.37.3* - May 15th, 2019
 

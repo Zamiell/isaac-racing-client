@@ -228,6 +228,7 @@ function PostNewLevel:CheckForgottenSoftlock()
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 417) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 446) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 455) or
+         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 492) or
          ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 573) or
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 344) or -- Womb / Utero / Scarred Womb
          ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 417) or

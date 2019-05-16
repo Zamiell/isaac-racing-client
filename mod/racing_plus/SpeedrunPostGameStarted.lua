@@ -680,12 +680,7 @@ function SpeedrunPostGameStarted:R7S6()
 end
 
 function SpeedrunPostGameStarted:R7S7()
-  -- Local variables
-  -- local character = g.p:GetPlayerType()
-
   Isaac.DebugString("In the R+7 (Season 7) challenge.")
-
-  -- TODO
 end
 
 function SpeedrunPostGameStarted:R7SS()
