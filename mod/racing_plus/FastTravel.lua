@@ -678,7 +678,7 @@ function FastTravel:FixStrengthCardBug()
     -- The bug will not occur in this special case
     -- In other words, the game will properly remove the bone heart (if we used the Strength card on The Forgotten)
     -- or the soul heart (if we used the Strength card on The Soul) for us, so we don't have to do anything here
-    Isaac.DebugString("Strength card swap occurred; doing nothing.")
+    Isaac.DebugString("Strength card character swap occurred; doing nothing.")
     return
   end
 
@@ -687,10 +687,14 @@ function FastTravel:FixStrengthCardBug()
   local maxHearts = g.p:GetMaxHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
-  if maxHearts ~= 2 or
-      soulHearts ~= 0 or
-      boneHearts ~= 0 then
+  if (maxHearts == 2 and
+      soulHearts == 0 and
+      boneHearts == 0) or
+     (character == PlayerType.PLAYER_THEFORGOTTEN and
+      boneHearts == 1) then
 
+    Isaac.DebugString("Deliberately not removing the heart from a Strength card since it would kill us.")
+  else
     g.p:AddMaxHearts(-2, true) -- Remove a heart container
     Isaac.DebugString("Took away 1 heart container to fix the Fast-Travel bug with Strength cards.")
   end

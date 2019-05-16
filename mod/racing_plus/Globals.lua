@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.37.3"
+g.version = "v0.37.4"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below

@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.37.4* - May 15th, 2019
+
+* Fixed the bug where fast-travel would cause Keeper to die after using a Strength card under certain conditions. (Thanks NorBro86)
+
 ### *v0.37.3* - May 15th, 2019
 
 * Fixed the bug in season 6 where the veto button would veto the wrong item under certain conditions. (Thanks thereisnofuture)
