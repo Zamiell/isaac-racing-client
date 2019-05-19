@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.37.8"
+g.version = "v0.37.9"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -128,6 +128,7 @@ CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wra
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
+SoundEffect.SOUND_WALNUT          = Isaac.GetSoundIdByName("Walnut")
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1

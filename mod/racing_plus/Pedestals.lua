@@ -121,8 +121,9 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this is a natural Krampus pedestal
   -- (we want to remove it because we spawn Krampus items manually to both seed it properly and to speed it up)
-  if pickup.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
-     pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+  if (pickup.SubType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
+      pickup.SubType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) and -- 293
+     pickup.Price == 0 then
 
     if g.run.spawningKrampusItem then
       -- This is a manually spawned Krampus item with a seed of 0,

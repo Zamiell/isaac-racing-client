@@ -80,57 +80,6 @@ function NPCUpdate:NPC28(npc)
   end
 end
 
--- EntityType.ENTITY_STONEHEAD (42; Stone Grimace and Vomit Grimace)
--- EntityType.ENTITY_CONSTANT_STONE_SHOOTER (202; left, up, right, and down)
--- EntityType.ENTITY_BRIMSTONE_HEAD (203; left, up, right, and down)
--- EntityType.ENTITY_GAPING_MAW (235)
--- EntityType.ENTITY_BROKEN_GAPING_MAW (236)
-function NPCUpdate:NPC42(npc)
-  -- Fix the bug with fast-clear where the "room:SpawnClearAward()" function will
-  -- spawn a pickup inside a Stone Grimace and the like
-  -- Check to see if there are any pickups/trinkets overlapping with it
-  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
-  for _, pickup in ipairs(pickups) do
-    if NPCUpdate:IsValidPickupForMove(pickup, npc) then
-      -- Respawn it in a accessible location
-      local newPosition = g.r:FindFreePickupSpawnPosition(pickup.Position, 0, true)
-      -- The arguments are Pos, InitialStep, and AvoidActiveEntities
-      g.g:Spawn(pickup.Type, pickup.Variant, newPosition, pickup.Velocity,
-                pickup.Parent, pickup.SubType, pickup.InitSeed)
-      pickup:Remove()
-      Isaac.DebugString("Repositioned a pickup that was overlapping with a stationary stone entity.")
-    end
-  end
-end
-
-function NPCUpdate:IsValidPickupForMove(entity, npc)
-  local pickup = entity:ToPickup()
-  if pickup == nil then
-    return false
-  end
-
-  if not g:InsideSquare(pickup.Position, npc.Position, 15) then
-    return false
-  end
-
-  -- Don't move pickups that are already touched and are in the process of disappearing
-  -- (the "Touched" property is set in the "CheckEntities:Entity5()" function)
-  if pickup.Touched then
-    return false
-  end
-
-  -- Don't move chests that are already opened
-  if entity.Variant <= PickupVariant.PICKUP_CHEST and -- 50
-     entity.Variant >= PickupVariant.PICKUP_LOCKEDCHEST and -- 60
-     entity.SubType == 0 then
-
-    -- A Subtype of 0 indicates that it is already opened
-    return false
-  end
-
-  return true
-end
-
 -- EntityType.ENTITY_FLAMINGHOPPER (54)
 function NPCUpdate:NPC54(npc)
   -- Local variables
@@ -216,49 +165,6 @@ function NPCUpdate:NPC66(npc)
   end
 end
 
--- EntityType.ENTITY_MOMS_HAND (213)
--- EntityType.ENTITY_MOMS_DEAD_HAND (287)
-function NPCUpdate:NPC213(npc)
-  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
-  end
-
-  -- Mom's Hands and Mom's Dead Hands
-  if npc.State == 4 and npc.StateFrame < 25 then
-    -- Speed up their attack patterns
-    -- (StateFrame starts between 0 and a random negative value and ticks upwards)
-    -- (we have to do a small adjustment because if multiple hands fall at the exact same time,
-    -- they can stack on top of each other and cause buggy behavior)
-    npc.StateFrame = 25 + g.run.handsDelay
-    g.run.handsDelay = g.run.handsDelay + 3
-    if g.run.handsDelay == 10 then
-      g.run.handsDelay = 0
-    end
-  end
-end
-
--- EntityType.ENTITY_WIZOOB (219)
--- EntityType.ENTITY_RED_GHOST (285)
-function NPCUpdate:NPC219(npc)
-  -- Wizoobs and Red Ghosts
-  -- Make it so that tears don't pass through them
-  if npc.FrameCount == 0 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
-    -- The ghost is set to ENTCOLL_NONE until the first reappearance
-    npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-  end
-
-  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
-  end
-
-  -- Speed up their attack pattern
-  if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
-    npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead
-  end
-end
-
 -- EntityType.ENTITY_DINGLE (261)
 function NPCUpdate:NPC261(npc)
   -- We only care about Dangles that are freshly spawned
@@ -334,11 +240,119 @@ function NPCUpdate:NPC413(npc)
   end
 end
 
+-- EntityType.ENTITY_HOST (27)
+-- EntityType.ENTITY_MOBILE_HOST (204)
+-- EntityType.ENTITY_FORSAKEN (403)
 function NPCUpdate:FearImmunity(npc)
   if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1 << 11
-    -- Make them immune to fear
+    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FEAR)" because it will not remove the color change
     npc:RemoveStatusEffects()
     Isaac.DebugString("Unfeared a Host / Mobile Host / Forsaken.")
+  end
+end
+
+-- EntityType.ENTITY_BLASTOCYST_BIG (74)
+-- EntityType.ENTITY_BLASTOCYST_MEDIUM (75)
+-- EntityType.ENTITY_BLASTOCYST_SMALL (76)
+function NPCUpdate:FreezeImmunity(npc)
+  if npc:HasEntityFlags(EntityFlag.FLAG_FREEZE) then -- 1 << 5
+    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE)" because it will not remove the color change
+    npc:RemoveStatusEffects()
+    Isaac.DebugString("Unfreezed a Blastocyst.")
+  end
+end
+
+-- EntityType.ENTITY_STONEHEAD (42; Stone Grimace and Vomit Grimace)
+-- EntityType.ENTITY_CONSTANT_STONE_SHOOTER (202; left, up, right, and down)
+-- EntityType.ENTITY_BRIMSTONE_HEAD (203; left, up, right, and down)
+-- EntityType.ENTITY_GAPING_MAW (235)
+-- EntityType.ENTITY_BROKEN_GAPING_MAW (236)
+function NPCUpdate:PreventPickupInside(npc)
+  -- Fix the bug with fast-clear where the "room:SpawnClearAward()" function will
+  -- spawn a pickup inside a Stone Grimace and the like
+  -- Check to see if there are any pickups/trinkets overlapping with it
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, -1, -1, false, false) -- 5
+  for _, pickup in ipairs(pickups) do
+    if NPCUpdate:IsValidPickupForMove(pickup, npc) then
+      -- Respawn it in a accessible location
+      local newPosition = g.r:FindFreePickupSpawnPosition(pickup.Position, 0, true)
+      -- The arguments are Pos, InitialStep, and AvoidActiveEntities
+      g.g:Spawn(pickup.Type, pickup.Variant, newPosition, pickup.Velocity,
+                pickup.Parent, pickup.SubType, pickup.InitSeed)
+      pickup:Remove()
+      Isaac.DebugString("Repositioned a pickup that was overlapping with a stationary stone entity.")
+    end
+  end
+end
+
+function NPCUpdate:IsValidPickupForMove(entity, npc)
+  local pickup = entity:ToPickup()
+  if pickup == nil then
+    return false
+  end
+
+  if not g:InsideSquare(pickup.Position, npc.Position, 15) then
+    return false
+  end
+
+  -- Don't move pickups that are already touched and are in the process of disappearing
+  -- (the "Touched" property is set in the "CheckEntities:Entity5()" function)
+  if pickup.Touched then
+    return false
+  end
+
+  -- Don't move chests that are already opened
+  if entity.Variant <= PickupVariant.PICKUP_CHEST and -- 50
+     entity.Variant >= PickupVariant.PICKUP_LOCKEDCHEST and -- 60
+     entity.SubType == 0 then
+
+    -- A Subtype of 0 indicates that it is already opened
+    return false
+  end
+
+  return true
+end
+
+-- EntityType.ENTITY_MOMS_HAND (213)
+-- EntityType.ENTITY_MOMS_DEAD_HAND (287)
+function NPCUpdate:SpeedupHand(npc)
+  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
+  if g.race.rFormat == "unseeded-lite" then
+    return
+  end
+
+  -- Mom's Hands and Mom's Dead Hands
+  if npc.State == 4 and npc.StateFrame < 25 then
+    -- Speed up their attack patterns
+    -- (StateFrame starts between 0 and a random negative value and ticks upwards)
+    -- (we have to do a small adjustment because if multiple hands fall at the exact same time,
+    -- they can stack on top of each other and cause buggy behavior)
+    npc.StateFrame = 25 + g.run.handsDelay
+    g.run.handsDelay = g.run.handsDelay + 3
+    if g.run.handsDelay == 10 then
+      g.run.handsDelay = 0
+    end
+  end
+end
+
+-- EntityType.ENTITY_WIZOOB (219)
+-- EntityType.ENTITY_RED_GHOST (285)
+function NPCUpdate:SpeedupGhost(npc)
+  -- Wizoobs and Red Ghosts
+  -- Make it so that tears don't pass through them
+  if npc.FrameCount == 0 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
+    -- The ghost is set to ENTCOLL_NONE until the first reappearance
+    npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+  end
+
+  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
+  if g.race.rFormat == "unseeded-lite" then
+    return
+  end
+
+  -- Speed up their attack pattern
+  if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
+    npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead
   end
 end
 

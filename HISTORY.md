@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.37.9* - May 19th, 2019
+
+* Blastocyst is now immune to freeze. (Thanks Xelnas)
+* Getting Spun will now automatically put the pill into your inventory.
+* Taking a Checkpoint while in ghost form will no longer send you to the next character. (Thanks mgln)
+* Fixed the bug where the sprite was wrong for the all-red pill in the effect list HUD. (Thanks mgln)
+* Fixed the bug where it was possible for Eden to naturally start with the selected starting item. (Thanks Gamonymous)
+* Fixed the bug where the character number would not be reset if you entered the "Change Char Order" challenge. (Thanks Gamonymous)
+
 ### *v0.37.7* - May 16th, 2019
 
 * Fixed the bug where resetting as Eden could cause the mod to go back to the first character under certain conditions. (Thanks Krakenos)

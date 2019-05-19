@@ -1,12 +1,18 @@
 local PostEntityKill = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
-local Speedrun = require("racing_plus/speedrun")
+local g         = require("racing_plus/globals")
+local FastClear = require("racing_plus/fastclear")
+local Speedrun  = require("racing_plus/speedrun")
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
 -- When beginning a death animation, make bosses faded so that it makes it easier to see
 function PostEntityKill:Main(entity)
+  FastClear:PostEntityKill(entity) -- Track which enemies are cleared for the purposes of the "fast-clear" feature
+  PostEntityKill:FadeBosses(entity) -- Fade bosses that are killed
+end
+
+function PostEntityKill:FadeBosses(entity)
   -- We only want to fade bosses
   local npc = entity:ToNPC()
   if npc == nil then

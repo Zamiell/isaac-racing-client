@@ -65,7 +65,7 @@ function PostItemPickup:FindNearestPickup(variant)
   local nearestPickupDistance = nil
   for _, entity in ipairs(pickups) do
     local pickup = entity:ToPickup()
-    if pickup.FrameCount == 0 and
+    if pickup.FrameCount <= 1 and
        pickup.SpawnerType == EntityType.ENTITY_PLAYER and -- 1
        pickup.Touched == false and
        pickup.Price == 0 and

@@ -247,6 +247,10 @@ function PostUpdate:CheckTransformations()
       g.run.transformations[i] = hasForm
       g.run.streakText = g.Transformations[i + 1]
       g.run.streakFrame = Isaac.GetFrameCount()
+
+      if i == PlayerForm.PLAYERFORM_DRUGS then -- 5
+        PostItemPickup.InsertNearestPill()
+      end
     end
   end
 end

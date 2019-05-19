@@ -6,8 +6,6 @@
 --[[
 
 TODO:
-- Make text selected in race chat
-- Store game, room, level, etc. (re-ask Kil after Repentence release if this is okay to do)
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -84,15 +82,42 @@ RacingPlusGlobals = g
 RacingPlusSchoolbag = Schoolbag
 RacingPlusSpeedrun = Speedrun
 
+-- Define miscellaneous callbacks
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,            FastClear.NPCUpdate) -- 0
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           PostUpdate.Main) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           PostRender.Main) -- 2
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,              UseItem.Main) -- 3
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD,              UseCard.Main) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        EvaluateCache.Main) -- 8
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      PostPlayerInit.Main) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL,              UsePill.Main) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       EntityTakeDmg.Player, -- 11
+                                                              EntityType.ENTITY_PLAYER) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          InputAction.Main) -- 13
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Main) -- 15
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         Speedrun.PostGameEnd) -- 16
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        PostNewLevel.Main) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         PostNewRoom.Main) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           ExecuteCmd.Main) -- 22
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      PreEntitySpawn.Main) -- 24
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCInit) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      PostPickupInit.Main) -- 34
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
+RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       PostLaserInit.Main) -- 47
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT,      PostEffectInit.Main) -- 54
+RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Main) -- 68
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
+
 -- Define NPC callbacks (0)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPCUpdate)
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC24,
                                                    EntityType.ENTITY_GLOBIN) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                                                    EntityType.ENTITY_HOST) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC28,
                                                    EntityType.ENTITY_CHUB) -- 28
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
                                                    EntityType.ENTITY_STONEHEAD) -- 42
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC54,
                                                    EntityType.ENTITY_FLAMINGHOPPER) -- 54
@@ -100,27 +125,33 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC62,
                                                    EntityType.ENTITY_PIN) -- 62
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC66,
                                                    EntityType.ENTITY_DEATH) -- 66
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
+                                                   EntityType.ENTITY_BLASTOCYST_BIG) -- 74
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
+                                                   EntityType.ENTITY_BLASTOCYST_MEDIUM) -- 75
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
+                                                   EntityType.ENTITY_BLASTOCYST_SMALL) -- 76
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
                                                    EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
                                                    EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                                                    EntityType.ENTITY_MOBILE_HOST) -- 204
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
                                                    EntityType.ENTITY_GAPING_MAW) -- 235
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC42,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
                                                    EntityType.ENTITY_BROKEN_GAPING_MAW) -- 236
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC213,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupHand,
                                                    EntityType.ENTITY_MOMS_HAND) -- 213
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC246,
                                                    EntityType.ENTITY_RAGLING) -- 246
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC213,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupHand,
                                                    EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC219,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupGhost,
                                                    EntityType.ENTITY_WIZOOB) -- 219
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC261,
                                                    EntityType.ENTITY_DINGLE) -- 261
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC219,
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupGhost,
                                                    EntityType.ENTITY_RED_GHOST) -- 285
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC273,
                                                    EntityType.ENTITY_THE_LAMB) -- 273
@@ -135,33 +166,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC411,
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC413,
                                                    EntityType.ENTITY_MATRIARCH) -- 413
 
--- Define miscellaneous callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           PostUpdate.Main) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           PostRender.Main) -- 2
-RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        EvaluateCache.Main) -- 8
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      PostPlayerInit.Main) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,       EntityTakeDmg.Player, -- 11
-                                                              EntityType.ENTITY_PLAYER) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          InputAction.Main) -- 13
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Main) -- 15
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         Speedrun.PostGameEnd) -- 16
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        PostNewLevel.Main) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         PostNewRoom.Main) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           ExecuteCmd.Main) -- 22
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      PreEntitySpawn.Main) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCInit) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         PostNPCInit.NPC260, -- 27
-                                                              EntityType.ENTITY_THE_HAUNT) -- 260
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT,      PostPickupInit.Main) -- 34
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
-RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT,       PostLaserInit.Main) -- 47
-RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT,      PostEffectInit.Main) -- 54
-RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
-
 -- Define post-use item callbacks (3)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item44,
                                                  CollectibleType.COLLECTIBLE_TELEPORT) -- 44
 -- (this callback is also used by Broken Remote)
@@ -189,19 +194,17 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.PlayerGeneratedPedestal
                                                  CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
 
 -- Define card callbacks (5)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Main)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_FOOL) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_EMPEROR) -- 5
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice, Card.CARD_JUSTICE) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_HERMIT) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength, Card.CARD_STRENGTH) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_STARS) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_MOON) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_JOKER) -- 31
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_FOOL) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_EMPEROR) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice,   Card.CARD_JUSTICE) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_HERMIT) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength,  Card.CARD_STRENGTH) -- 12
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_STARS) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_MOON) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_JOKER) -- 31
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
 
 -- Define pill callbacks (10)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthUp,
                                                  PillEffect.PILLEFFECT_HEALTH_UP) -- 7
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Telepills,
@@ -240,9 +243,11 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedes
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedestalEffects, -- 23
                                                      CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
+-- Define post-NPC-initialization callbacks (27)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260,
+                                                      EntityType.ENTITY_THE_HAUNT) -- 260
+
 -- Define post-entity-kill callbacks (68)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, FastClear.PostEntityKill) -- 68
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Main) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity45,
                                                          EntityType.ENTITY_MOM) -- 45
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity78,

@@ -1,9 +1,9 @@
 local SpeedrunPostGameStarted = {}
 
 -- Includes
-local g               = require("racing_plus/globals")
-local Speedrun        = require("racing_plus/speedrun")
-local Schoolbag       = require("racing_plus/schoolbag")
+local g         = require("racing_plus/globals")
+local Speedrun  = require("racing_plus/speedrun")
+local Schoolbag = require("racing_plus/schoolbag")
 
 function SpeedrunPostGameStarted:Main()
   -- Local variables
@@ -15,11 +15,11 @@ function SpeedrunPostGameStarted:Main()
   Speedrun.fadeFrame = 0
   Speedrun.resetFrame = 0
 
-  -- Reset the veto list if they are changing items
+  -- Reset some variables if they are changing characters / items
   if challenge == Isaac.GetChallengeIdByName("Change Char Order") then
+    Speedrun.charNum = 1
     Speedrun.vetoList = {}
   end
-
 
   if Speedrun.liveSplitReset then
     Speedrun.liveSplitReset = false
@@ -656,6 +656,17 @@ function SpeedrunPostGameStarted:R7S6()
 
   -- Give the items to the player (and remove the items from the pools)
   for _, item in ipairs(startingBuild) do
+    -- Eden might have already started with this item, so reset the run if so
+    if character == PlayerType.PLAYER_EDEN and -- 9
+       g.p:HasCollectible(item) then
+
+      g.run.restart = true
+      Speedrun.fastReset = true
+      Isaac.DebugString("Restarting because Eden naturally started with the selected starting item of: " ..
+                        tostring(item))
+      return
+    end
+
     g.p:AddCollectible(item, 0, false)
     g.itemPool:RemoveCollectible(item)
 

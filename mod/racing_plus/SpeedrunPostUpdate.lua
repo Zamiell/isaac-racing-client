@@ -70,7 +70,8 @@ function SpeedrunPostUpdate:CheckCheckpoint(force)
 
   if force == nil and
      (g.p.QueuedItem.Item == nil or
-      g.p.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT) then
+      g.p.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT or
+      g.run.seededDeath.state ~= 0) then
 
     return
   end
