@@ -6,7 +6,6 @@ local SaveDat            = require("racing_plus/savedat")
 local Sprites            = require("racing_plus/sprites")
 local Schoolbag          = require("racing_plus/schoolbag")
 local SoulJar            = require("racing_plus/souljar")
-local PostUpdate         = require("racing_plus/postupdate")
 local UseItem            = require("racing_plus/useitem")
 local Pills              = require("racing_plus/pills")
 local FastTravel         = require("racing_plus/fasttravel")
@@ -68,9 +67,6 @@ function PostRender:Main()
   PostRender:CheckResetInput()
   PostRender:CheckKnifeDirection()
 
-  -- Ban Basement 1 Treasure Rooms (1/2)
-  PostUpdate:CheckBanB1TreasureRoom()
-
   -- Make Cursed Eye seeded
   PostRender:CheckCursedEye()
 
@@ -111,7 +107,9 @@ function PostRender:DrawStreakText()
   end
 
   -- Players who prefer the vanilla streak text will have a separate mod enabled
-  if VanillaStreakText ~= nil then
+  if VanillaStreakText ~= nil and
+     not g.run.streakForce then
+
     return
   end
 
@@ -127,6 +125,7 @@ function PostRender:DrawStreakText()
   end
   if fade <= 0 then
     g.run.streakFrame = 0
+    g.run.streakForce = false
     return
   end
 

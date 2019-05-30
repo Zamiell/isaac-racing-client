@@ -11,7 +11,6 @@ local SoulJar            = require("racing_plus/souljar")
 local FastTravel         = require("racing_plus/fasttravel")
 local PostItemPickup     = require("racing_plus/postitempickup")
 local Race               = require("racing_plus/race")
-local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 
@@ -32,6 +31,7 @@ function PostUpdate:Main()
 
   PostUpdate:CheckItemPickup()
   PostUpdate:CheckTransformations()
+  PostUpdate:CheckCharacter()
 
   -- Check on every frame to see if we need to open the doors
   -- (we can't just add this as a new MC_POST_UPDATE callback because
@@ -41,9 +41,6 @@ function PostUpdate:Main()
   -- Check to see if we are leaving a crawlspace (and if we are softlocked in a Boss Rush)
   FastTravel:CheckCrawlspaceExit()
   FastTravel:CheckCrawlspaceSoftlock()
-
-  -- Ban Basement 1 Treasure Rooms (2/2)
-  PostUpdate:CheckBanB1TreasureRoom()
 
   -- Check all the grid entities in the room
   CheckEntities:Grid()
@@ -255,6 +252,36 @@ function PostUpdate:CheckTransformations()
   end
 end
 
+-- Fix the bug where the player can accidently switch characters and go down a trapdoor
+function PostUpdate:CheckCharacter()
+  local character = g.p:GetPlayerType()
+  if g.run.currentCharacter == character then
+    return
+  end
+  g.run.currentCharacter = character
+
+  if character ~= PlayerType.PLAYER_THEFORGOTTEN and -- 16
+     character ~= PlayerType.PLAYER_THESOUL then -- 17
+
+    return
+  end
+
+  local effects = Isaac.FindByType(EntityType.ENTITY_EFFECT, -1, -1, false, false) -- 1000
+  for _, entity in ipairs(effects) do
+    if (entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") or
+        entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") or
+        entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)") or
+        entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)") or
+        entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")) and
+       g:InsideSquare(g.p.Position, entity.Position, 40) then
+
+      local effect = entity:ToEffect()
+      effect.State = 1
+      effect:GetSprite():Play("Closed", true)
+    end
+  end
+end
+
 -- Speed up the first Lil' Haunt attached to a Haunt (3/3)
 function PostUpdate:CheckHauntSpeedup()
   -- Local variables
@@ -380,43 +407,6 @@ function PostUpdate:DetachLilHaunt(npc)
 
   Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(npc.Index) ..
                     " on frame: " .. tostring(gameFrameCount))
-end
-
--- Ban Basement 1 Treasure Rooms
--- (this has to be in both MC_POST_RENDER and MC_POST_UPDATE because
--- we want it to already be barred when the seed is fading in and
--- having it only in MC_POST_RENDER makes the door not solid)
-function PostUpdate:CheckBanB1TreasureRoom()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomType = g.r:GetType()
-  local challenge = Isaac.GetChallenge()
-
-  if stage == 1 and
-     roomType ~= RoomType.ROOM_SECRET and -- 7
-     (g.race.rFormat == "seeded" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-       Speedrun.charNum >= 2) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
-
-    local door
-    for i = 0, 7 do
-      door = g.r:GetDoor(i)
-      if door ~= nil and
-         door:IsRoomType(RoomType.ROOM_TREASURE) and -- 4
-         roomType ~= RoomType.ROOM_TREASURE then -- 4
-         -- "door:IsOpen()" will always be true because
-         -- the game tries to reopen the door in a cleared room on every frame
-
-        door:Bar()
-
-        -- The bars are buggy and will only appear for the first few frames, so just disable them altogether
-        door.ExtraVisible = false
-      end
-    end
-  end
 end
 
 -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll

@@ -104,7 +104,10 @@ function PostItemPickup:InsertCoin(coin)
   elseif coin.SubType == CoinSubType.COIN_LUCKYPENNY then -- 5
     g.p:AddCoins(1)
     -- (just ignore the luck component for simplicity)
-  end -- (don't put Sticky Nickels in our inventory automatically)
+  else
+    -- Don't put Sticky Nickels in our inventory automatically
+    return
+  end
 
   coin:Remove()
   coin.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
@@ -137,7 +140,10 @@ function PostItemPickup:InsertBomb(bomb)
     g.p:AddBombs(2)
   elseif bomb.SubType == BombSubType.BOMB_GOLDEN then -- 4
     g.p:AddGoldenBomb()
-  end -- (don't do anything if it is a Troll Bomb or a Mega Troll Bomb)
+  else
+    -- Don't do anything if it is a Troll Bomb or a Mega Troll Bomb
+    return
+  end
 
   bomb:Remove()
   bomb.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
@@ -301,14 +307,6 @@ function PostItemPickup.Chaos()
   end
 end
 
--- CollectibleType.COLLECTIBLE_MARBLES (538)
-function PostItemPickup.Marbles()
-  -- We might have two trinket slots open
-  for i = 1, 2 do
-    PostItemPickup:InsertNearestTrinket(PickupVariant.PICKUP_TRINKET) -- 350
-  end
-end
-
 PostItemPickup.functions = {
   [CollectibleType.COLLECTIBLE_PHD] = PostItemPickup.InsertNearestPill, -- 75
   [CollectibleType.COLLECTIBLE_PAGEANT_BOY] = PostItemPickup.PageantBoy, -- 141
@@ -328,7 +326,6 @@ PostItemPickup.functions = {
   [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.InsertNearestCoin, -- 455
   [CollectibleType.COLLECTIBLE_POLYDACTYLY] = PostItemPickup.InsertNearestCardPill, -- 454
   [CollectibleType.COLLECTIBLE_LIL_SPEWER] = PostItemPickup.InsertNearestPill, -- 537
-  [CollectibleType.COLLECTIBLE_MARBLES] = PostItemPickup.Marbles, -- 538
   [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.InsertNearestTrinket, -- 547
 }
 

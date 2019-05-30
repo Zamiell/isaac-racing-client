@@ -571,7 +571,7 @@ The changed rooms are as follows:
 * Caves/Flooded: #28, #55, #120, #416, #541
 * Flooded: #939
 * Cathedral: #11, #12, #23, #41, #60
-* Curse Room: #24
+* Curse Room: #10, #18, #19, #24
 * Monstro II: #1051
 * The Gate: #5042
 * Headless Horseman: #4050

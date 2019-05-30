@@ -604,7 +604,8 @@ function SpeedrunPostGameStarted:R7S6()
         if startingBuild[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH or -- 237
            startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
            startingBuild[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE or -- 275
-           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
+           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 311
+           startingBuild[1] == CollectibleType.COLLECTIBLE_INCUBUS then -- 350
 
           valid = false
         end

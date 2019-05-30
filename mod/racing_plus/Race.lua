@@ -172,4 +172,18 @@ function Race:Finish()
   Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
 end
 
+function Race:CheckBanB1TreasureRoom()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local challenge = Isaac.GetChallenge()
+
+  return stage == 1 and
+         (g.race.rFormat == "seeded" or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
+           Speedrun.charNum >= 2) or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)"))
+end
+
 return Race

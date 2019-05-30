@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.37.10* - May 19th, 2019
+
+* In formats where the Treasure Room is banned on Basement 1, the room will no longer appear on the minimap and the doors will be deleted.
+* In Season 6, Mini-Boss rooms are now emptied on the first character and on the first floor in the same manner as Curse Rooms and Sacrifice Rooms.
+* In Season 6, Forgotten will no longer be randomly given Incubus. (Thanks Gamonymous)
+* Trapdoors will now be automatically closed if you are near one when you switch from The Forgotten to The Soul (or vice versa). (Thanks Xelnas)
+* Marbles will no longer put a trinket into your inventory.
+* Blank runes will now show the effect if you use the Vanilla Streak Text mod. (Thanks Gamonymous)
+* Added Depths / Necropolis / Dank Depths room #227 to the Forgotten softlock list. (Thanks Gamonymous)
+* Fixed the bug where you could take a Checkpoint when in ghost form. (Thanks NorBro86)
+* Fixed the bug where Troll Bombs, Mega Troll Bombs, and Sticky Nickels would get deleted in automatic inventory management. (Thanks Dea1h)
+
 ### *v0.37.9* - May 19th, 2019
 
 * Blastocyst is now immune to freeze. (Thanks Xelnas)

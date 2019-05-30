@@ -160,6 +160,16 @@ function SeededDeath:PostNewRoom()
     g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
   end
 
+  -- Make any Checkpoints not touchable
+  if g.run.seededDeath.state > 0 then
+    local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                         CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
+    for _, checkpoint in ipairs(checkpoints) do
+      checkpoint:ToPickup().Timeout = 10000000
+      Isaac.DebugString("Delayed a Checkpoint due to seeded death.")
+    end
+  end
+
   -- Seeded death (2/3) - Put the player in the fetal position (the "AppearVanilla" animation)
   if g.run.seededDeath.state ~= SeededDeath.state.CHANGING_ROOMS then
     return
@@ -168,9 +178,11 @@ function SeededDeath:PostNewRoom()
   -- Start the debuff and set the finishing time to be in the future
   SeededDeath:DebuffOn()
   local debuffTimeMilliseconds = SeededDeath.debuffTime * 1000
+  --[[
   if g.debug then
     debuffTimeMilliseconds = 5 * 1000
   end
+  --]]
   g.run.seededDeath.time = Isaac.GetTime() + debuffTimeMilliseconds
 
   -- Play the animation where Isaac lies in the fetal position
@@ -439,6 +451,13 @@ function SeededDeath:DebuffOff()
     g.run.tempHolyMantle = true
     effects:AddCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) -- 313
     g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
+  end
+
+  -- Make any Checkpoints touchable again
+  local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                       CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
+  for _, checkpoint in ipairs(checkpoints) do
+    checkpoint:ToPickup().Timeout = -1
   end
 end
 

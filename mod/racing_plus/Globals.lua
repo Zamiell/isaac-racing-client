@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.37.9"
+g.version = "v0.37.10"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -238,6 +238,7 @@ function g:InitRun()
   g.run.consoleOpened        = false -- If set, fast-resetting is disabled
   g.run.streakText           = ""
   g.run.streakFrame          = 0
+  g.run.streakForce          = false
   g.run.itemReplacementDelay = 0 -- Set when Void is used
   g.run.usedTelepills        = false
   g.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
@@ -264,6 +265,7 @@ function g:InitRun()
   g.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
   g.run.lastDDLevel          = 0 -- Used by the Soul Jar
   g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul
+  g.run.currentCharacter     = 0
   g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
   g.run.showVersionFrame     = 0
 
@@ -319,8 +321,7 @@ function g:InitRun()
 
   -- Special death handling for seeded races
   g.run.seededDeath = {
-    state = 0,
-    -- 0 is not dead, 1 is during the death animation, 2 is during the AppearVanilla animation, 3 is during the debuff
+    state           = 0, -- See the "SeededDeath.state" enum
     stage           = 0,
     deathFrame      = 0,
     pos             = Vector(0, 0),

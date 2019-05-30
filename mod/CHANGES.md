@@ -95,7 +95,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
 * [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
-* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.)
+* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.) This effect also applies to the Spun! transformation.
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
@@ -113,6 +113,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The Chub that spawns after The Matriarch will be automatically stunned for a few frames to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The Forsaken is now immune to fear. (This prevents the bug where it will not attack.)
+* Blastocyst is now immmune to freeze. (This prevents delays during the death animation.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 
 ### Cutscene & Animation Removal
@@ -156,13 +157,16 @@ While there are thousands of rooms in the game, many players have already seen t
 * The Abaddon collectible is replaced with the pre-Booster Pack 5 version.
 * The 20/20 collectible is now easier to see.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
+* The red spotted pill sprite has been changed to an all-red sprite so that it is easier to distinguish from other red pills.
+* Pill sprites now have consistent orientations. (Thanks goes to [Nioffe](https://steamcommunity.com/id/nioffe) for creating the sprites in the [Consistent Pills](https://steamcommunity.com/sharedfiles/filedetails/?id=1418510121) mod.)
 * The Locust of Famine graphic now matches the color of the flies.
-* Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.
-* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. Credit for these sprites goes to the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod by [piber20](https://steamcommunity.com/id/piber20).
+* Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.)
+* There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. (Thanks goes to [piber20](https://steamcommunity.com/id/piber20) for creating the sprites in the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod.)
 * Charge keys have custom animations to help distinguish them from normal keys.
 * Enemy fires are now red instead of yellow (so that players can distinguish between friendly fires).
 * Enemy red creep is changed to green (so that it is easier to see).
-* Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for originally doing this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
+* Friendly green creep is changed to red (so that it is easier to distinguish from enemy creep).
+* Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for creating the graphics for this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * The door opening sound will no longer play in crawlspaces.
 
 <br />

@@ -2,6 +2,7 @@ local UseItem = {}
 
 -- Includes
 local g            = require("racing_plus/globals")
+local Race         = require("racing_plus/race")
 local SeededFloors = require("racing_plus/seededfloors")
 
 -- ModCallbacks.MC_USE_ITEM (3)
@@ -117,13 +118,18 @@ function UseItem:Item324()
   -- Find the indexes for all of the room possibilities
   local roomIndexes = {}
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local roomType = rooms:Get(i).Data.Type
-    if roomType == RoomType.ROOM_TREASURE or -- 4
-       roomType == RoomType.ROOM_SECRET or -- 7
+    -- We need to use SafeGridIndex instead of GridIndex because we will crash when teleporting to L rooms otherwise
+    local room = rooms:Get(i)
+    local roomType = room.Data.Type
+    if roomType == RoomType.ROOM_TREASURE and -- 4
+       not Race:CheckBanB1TreasureRoom() then
+
+      roomIndexes[#roomIndexes + 1] = room.SafeGridIndex
+    end
+    if roomType == RoomType.ROOM_SECRET or -- 7
        roomType == RoomType.ROOM_SUPERSECRET then -- 8
 
-      roomIndexes[#roomIndexes + 1] = rooms:Get(i).SafeGridIndex
-      -- We need to use SafeGridIndex instead of GridIndex because we will crash when teleporting to L rooms otherwise
+      roomIndexes[#roomIndexes + 1] = room.SafeGridIndex
     end
   end
   if insertErrorRoom then

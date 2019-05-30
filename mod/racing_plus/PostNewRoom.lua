@@ -3,6 +3,7 @@ local PostNewRoom = {}
 
 -- Includes
 local g                   = require("racing_plus/globals")
+local Race                = require("racing_plus/race")
 local FastClear           = require("racing_plus/fastclear")
 local FastTravel          = require("racing_plus/fasttravel")
 local Speedrun            = require("racing_plus/speedrun")
@@ -171,6 +172,9 @@ function PostNewRoom:NewRoom()
 
   -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
   PostNewRoom:CheckRespawnTrophy()
+
+  -- Certain formats ban the Treasure Room in Basement 1
+  PostNewRoom:BanB1TreasureRoom()
 
   -- Check for the custom challenges
   ChangeCharOrder:PostNewRoom()
@@ -525,6 +529,23 @@ function PostNewRoom:CheckRespawnTrophy()
   g.g:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
             g.r:GetCenterPos(), Vector(0, 0), nil, 0, 0)
   Isaac.DebugString("Respawned the end of race trophy.")
+end
+
+function PostNewRoom:BanB1TreasureRoom()
+  if not Race:CheckBanB1TreasureRoom() then
+    return
+  end
+
+  local treasureIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
+  local door
+  for i = 0, 7 do
+    door = g.r:GetDoor(i)
+    if door ~= nil and
+        door.TargetRoomIndex == treasureIndex then
+
+      g.r:RemoveDoor(i)
+    end
+  end
 end
 
 function PostNewRoom:Race()
