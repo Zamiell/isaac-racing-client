@@ -350,11 +350,8 @@ function PostNewLevel:BanB1TreasureRoom()
   local treasureRoom = g.l:GetRoomByIdx(treasureIndex)
   treasureRoom.DisplayFlags = 0
 
-  -- Setting the display flag will not actually update the map until we enter a new room
-  -- Force a map update by giving the player a Blue Map and then removing it immediately afterwards
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_BLUE_MAP, 0, false) -- 246
-  g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_BLUE_MAP) -- 246
-  Isaac.DebugString("Removing collectible 246 (Blue Map)")
+  -- Setting the display flag will not actually update the map
+  g.l:UpdateVisibility()
 end
 
 return PostNewLevel
