@@ -232,7 +232,9 @@ function PreUseItem:UnreplacedItemsExist()
       end
     end
 
-    if not alreadyReplaced then
+    if not alreadyReplaced and
+       collectible.SubType ~= 0 then
+
       return true
     end
   end

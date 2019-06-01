@@ -2,6 +2,7 @@
 
 ### *v0.37.12* - May 31st, 2019
 
+* Changed the Mysterious Liquid costume and tears effect from green to red in order to match the new creep color. (Thanks Thoday)
 * Added Caves / Catacombs / Flooded Caves room #488 to the Forgotten softlock list. (Thanks AshDown)
 * Fixed the bug where the Basement 1 Treasure Room icon would appear on the map when it was banned when it was attached to the starting room.
 * Fixed the bug where replaced pedestal sprites would not match the original sprite.
