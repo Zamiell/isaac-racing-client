@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.37.12* - May 31st, 2019
+### *v0.37.14* - May 31st, 2019
 
 * Changed the Mysterious Liquid costume and tears effect from green to red in order to match the new creep color. (Thanks Thoday)
 * Added Caves / Catacombs / Flooded Caves room #488 to the Forgotten softlock list. (Thanks AshDown)
