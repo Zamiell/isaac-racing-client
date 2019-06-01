@@ -19,6 +19,11 @@ function RPPedestals:Replace(pickup)
   local stageSeed = g.seeds:GetStageSeed(stage)
   local challenge = Isaac.GetChallenge()
 
+  -- Don't do anything if this is an empty pedestal
+  if pickup.SubType == 0 then
+    return
+  end
+
   -- Check to see if this is a pedestal that was already replaced
   for _, pedestal in ipairs(g.run.replacedPedestals) do
     if pedestal.room == roomIndex and
@@ -298,11 +303,13 @@ function RPPedestals:Replace(pickup)
   -- If we don't do this, you can take both of the pedestals in a double Treasure Room
   newPedestal.TheresOptionsPickup = pickup.TheresOptionsPickup
 
-  -- Also reduce the vanilla delay that is imposed upon newly spawned collectible items
-  -- (this is commented out because people were accidentally taking items)
-  --newPedestal.Wait = 15 -- On vanilla, all pedestals get a 20 frame delay
+  -- The pedestal might be from a chest or machine, so we need to copy the overlay frame
+  if pickup.Price == 0 then
+    local overlayFrame = pickup:GetSprite():GetOverlayFrame()
+    newPedestal:GetSprite():SetOverlayFrame("Alternates", overlayFrame)
+  end
 
-  -- We never need to worry about players accidentally picking up Checkpoint
+  -- Remove the pedestal delay for the Checkpoint, since players will always want to immediately pick it up
   if pickup.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
     newPedestal.Wait = 0 -- On vanilla, all pedestals get a 20 frame delay
   end

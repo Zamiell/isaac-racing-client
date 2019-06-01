@@ -71,14 +71,22 @@ function InputAction.IsActionTriggeredPillCard()
   end
 end
 
--- Manually switch from The Soul to The Forgotten in specific circumstances
 function InputAction.IsActionTriggeredDrop()
+  -- Manually switch from The Soul to The Forgotten in specific circumstances
   if g.run.switchForgotten then
     g.run.switchForgotten = false
     return true
   end
-  if g.run.trapdoor.state > 0 then
-    return false
+
+  local character = Game():GetPlayer(0):GetPlayerType()
+  -- (we can't use cached API functions in this callback or else the game will crash)
+  if character == PlayerType.PLAYER_THEFORGOTTEN or -- 16
+     character == PlayerType.PLAYER_THESOUL then  -- 17
+
+    -- Prevent character switching while entering a trapdoor
+    if g.run.trapdoor.state > 0 then
+      return false
+    end
   end
 end
 
@@ -116,9 +124,8 @@ end
 -- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (2/2)
 function InputAction:KnifeDiagonalFix(buttonAction)
   -- Local variables
+  local player = Game():GetPlayer(0)
   -- (we can't use cached API functions in this callback or else the game will crash)
-  local game = Game()
-  local player = game:GetPlayer(0)
 
   if not player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
      player:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168

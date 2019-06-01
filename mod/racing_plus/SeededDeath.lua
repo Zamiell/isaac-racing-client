@@ -33,6 +33,20 @@ function SeededDeath:PostUpdate()
      g.p.QueuedItem.Item ~= nil then
 
     g.run.seededDeath.dealTime = Isaac.GetTime()
+
+    -- Also delete any empty pedestals that we put in the Schoolbag
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
+      local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                            -1, false, false)
+      for _, entity in ipairs(collectibles) do
+        if entity.FrameCount == 0 and
+          entity.SubType == 0 then
+
+          entity:Remove()
+          Isaac.DebugString("Deleted an empty pedestal that we put in the Schoolbag.")
+        end
+      end
+    end
   end
 
   -- Fix the bug where The Forgotten will not be properly faded

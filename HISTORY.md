@@ -1,6 +1,14 @@
 # Racing+ Version History and News
 
-### *v0.37.11* - May 29th, 2019
+### *v0.37.12* - May 31st, 2019
+
+* Added Caves / Catacombs / Flooded Caves room #488 to the Forgotten softlock list. (Thanks AshDown)
+* Fixed the bug where the Basement 1 Treasure Room icon would appear on the map when it was banned when it was attached to the starting room.
+* Fixed the bug where replaced pedestal sprites would not match the original sprite.
+* Fixed the bug where an empty pedestal was not generated when you put an item in the Schoolbag.
+* Fixed the bug where a trapdoor would close when entering it as The Soul.
+
+### *v0.37.11* - May 30th, 2019
 
 * Updated the sprite for Mysterious Liquid (from green to red).
 * Fixed the bug where the Blue Map would show on floors where the Treasure Room was banned. (Thanks mgln)

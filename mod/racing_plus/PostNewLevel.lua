@@ -2,7 +2,6 @@ local PostNewLevel = {}
 
 -- Includes
 local g            = require("racing_plus/globals")
-local Race         = require("racing_plus/race")
 local PostNewRoom  = require("racing_plus/postnewroom")
 local FastTravel   = require("racing_plus/fasttravel")
 local SeededFloors = require("racing_plus/seededfloors")
@@ -134,9 +133,6 @@ function PostNewLevel:NewLevel()
     SeededFloors:After()
   end
 
-  -- Certain formats ban the Treasure Room in Basement 1
-  PostNewLevel:BanB1TreasureRoom()
-
   -- Call PostNewRoom manually (they get naturally called out of order)
   PostNewRoom:NewRoom()
 end
@@ -223,6 +219,7 @@ function PostNewLevel:CheckForgottenSoftlock()
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 337) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 378) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 450) or
+         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 488) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 754) or
          (stageID == 5 and roomID == 224) or -- Catacombs
@@ -338,20 +335,6 @@ function PostNewLevel:GetXYFromGridIndex(idx)
   -- Now, we add 1 to each x and y because the game uses a 0-indexed grid and
   -- the pathing library expects a 1-indexed grid
   return x + 1, y + 1
-end
-
-function PostNewLevel:BanB1TreasureRoom()
-  if not Race:CheckBanB1TreasureRoom() then
-    return
-  end
-
-  -- Find the Treasure Room
-  local treasureIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
-  local treasureRoom = g.l:GetRoomByIdx(treasureIndex)
-  treasureRoom.DisplayFlags = 0
-
-  -- Setting the display flag will not actually update the map
-  g.l:UpdateVisibility()
 end
 
 return PostNewLevel

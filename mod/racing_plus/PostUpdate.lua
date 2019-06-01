@@ -252,7 +252,6 @@ function PostUpdate:CheckTransformations()
   end
 end
 
--- Fix the bug where the player can accidently switch characters and go down a trapdoor
 function PostUpdate:CheckCharacter()
   local character = g.p:GetPlayerType()
   if g.run.currentCharacter == character then
@@ -266,18 +265,21 @@ function PostUpdate:CheckCharacter()
     return
   end
 
-  local effects = Isaac.FindByType(EntityType.ENTITY_EFFECT, -1, -1, false, false) -- 1000
-  for _, entity in ipairs(effects) do
-    if (entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") or
-        entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") or
-        entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)") or
-        entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)") or
-        entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")) and
-       g:InsideSquare(g.p.Position, entity.Position, 40) then
+  -- Fix the bug where the player can accidently switch characters and go down a trapdoor
+  if g.run.trapdoor.state == 0 then
+    local effects = Isaac.FindByType(EntityType.ENTITY_EFFECT, -1, -1, false, false) -- 1000
+    for _, entity in ipairs(effects) do
+      if (entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") or
+          entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") or
+          entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)") or
+          entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)") or
+          entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")) and
+        g:InsideSquare(g.p.Position, entity.Position, 40) then
 
-      local effect = entity:ToEffect()
-      effect.State = 1
-      effect:GetSprite():Play("Closed", true)
+        local effect = entity:ToEffect()
+        effect.State = 1
+        effect:GetSprite():Play("Closed", true)
+      end
     end
   end
 end

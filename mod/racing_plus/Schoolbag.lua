@@ -218,15 +218,19 @@ function Schoolbag:CheckSecondItem(pickup)
       return false
     end
 
-    -- Put the item in our Schoolbag and delete the pedestal
+    -- Put the item in our Schoolbag
     g.run.schoolbag.item = pickup.SubType
     g.run.schoolbag.charge = g.run.schoolbag.lastCharge
     g.run.schoolbag.chargeBattery = g.run.schoolbag.lastChargeBattery
     Schoolbag.sprites.item = nil
-    pickup:Remove()
     Isaac.DebugString("Put pedestal " .. tostring(pickup.SubType) .. " into the Schoolbag with " ..
-                      tostring(g.run.schoolbag.charge) .. " charges (and" ..
+                      tostring(g.run.schoolbag.charge) .. " charges (and " ..
                       tostring(g.run.schoolbag.chargeBattery) .. " Battery charges).")
+
+    -- Empty the pedestal
+    pickup.SubType = 0
+    pickup:GetSprite():Play("Empty", true)
+
     return true
   else
     return false

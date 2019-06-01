@@ -536,6 +536,8 @@ function PostNewRoom:BanB1TreasureRoom()
     return
   end
 
+  -- Delete the doors to the Basement 1 treasure room, if any
+  -- (this includes the doors in a Secret Room)
   local treasureIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
   local door
   for i = 0, 7 do
@@ -546,6 +548,12 @@ function PostNewRoom:BanB1TreasureRoom()
       g.r:RemoveDoor(i)
     end
   end
+
+  -- Delete the icon on the map
+  -- (this has to be done on every room, because it will reappear)
+  local treasureRoom = g.l:GetRoomByIdx(treasureIndex)
+  treasureRoom.DisplayFlags = 0
+  g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
 end
 
 function PostNewRoom:Race()
