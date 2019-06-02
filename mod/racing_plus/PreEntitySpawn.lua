@@ -50,7 +50,7 @@ function PreEntitySpawn:Main(type, variant, subType, position, velocity, spawner
   if type == EntityType.ENTITY_EFFECT and -- 1000
      variant == EffectVariant.PLAYER_CREEP_GREEN then -- 53
 
-    return {EntityType.ENTITY_EFFECT, EffectVariant. PLAYER_CREEP_RED, subType, seed} -- 1000.46
+    return {EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, subType, seed} -- 1000.46
   end
 end
 

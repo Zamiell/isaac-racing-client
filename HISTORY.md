@@ -2,8 +2,8 @@
 
 ### *v0.38.0* - June 2nd, 2019
 
-* In seeded races, the Chocolate Milk start is now coupled with Steven.
-* In seeded races, the Jacob's Ladder start is now coupled with There's Options.
+* In seeded races, the Chocolate Milk start is now coupled with Steven. (Thanks Shigan)
+* In seeded races, the Jacob's Ladder start is now coupled with There's Options. (Thanks Gamonymous)
 * In seeded races, Mysterious Liquid is now added to the Fire Mind build.
 * Fixed the bug where the "You are not on Hard Mode" text would not appear. (Thanks AshDown)
 * Fixed the bug where the sprite for Mysterious Liquid was green in the "Choose Char Order" custom challenge.
