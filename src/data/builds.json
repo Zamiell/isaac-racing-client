@@ -1,7 +1,6 @@
 [
     [],
     [{ "id": 245, "name": "20/20" }],
-    [{ "id": 69,  "name": "Chocolate Milk" }],
     [{ "id": 224, "name": "Cricket's Body" }],
     [{ "id": 4,   "name": "Cricket's Head" }],
     [{ "id": 373, "name": "Dead Eye" }],
@@ -9,7 +8,6 @@
     [{ "id": 52,  "name": "Dr. Fetus" }],
     [{ "id": 168, "name": "Epic Fetus" }],
     [{ "id": 149, "name": "Ipecac" }],
-    [{ "id": 494, "name": "Jacob's Ladder" }],
     [{ "id": 311, "name": "Judas' Shadow" }],
     [{ "id": 275, "name": "Lil Brimstone" }],
     [{ "id": 12,  "name": "Magic Mushroom" }],
@@ -19,15 +17,21 @@
     [{ "id": 261, "name": "Proptosis" }],
     [{ "id": 172, "name": "Sacrificial Dagger" }],
     [{ "id": 244, "name": "Tech.5" }],
-    [{ "id": 395, "name": "Tech X" }],
+    [{ "id": 395, "name": "Tech X", "spacing": true }],
 
     [{ "id": 118, "name": "Brimstone" }],
     [{ "id": 360, "name": "Incubus" }],
-    [{ "id": 399, "name": "Maw of the Void" }],
+    [{ "id": 399, "name": "Maw of the Void", "spacing": true }],
 
     [{ "id": 415, "name": "Crown of Light" }],
     [{ "id": 331, "name": "Godhead" }],
-    [{ "id": 182, "name": "Sacred Heart" }],
+    [{ "id": 182, "name": "Sacred Heart", "spacing": true }],
+
+    [{ "id": 69,  "name": "Chocolate Milk" },
+     { "id": 50,  "name": "Steven" }],
+
+    [{ "id": 494, "name": "Jacob's Ladder" },
+     { "id": 249, "name": "There's Options" }],
 
     [{ "id": 153, "name": "Mutant Spider" },
      { "id": 2,   "name": "The Inner Eye" }],
@@ -39,7 +43,8 @@
      { "id": 104, "name": "The Parasite" }],
 
     [{ "id": 257, "name": "Fire Mind" },
-     { "id": 600, "name": "13 luck" }],
+     { "id": 317, "name": "Mysterious Liquid" },
+     { "id": 600, "name": "13 Luck" }],
 
      [{ "id": 524, "name": "Technology Zero" },
       { "id": 529, "name": "Pop!" },

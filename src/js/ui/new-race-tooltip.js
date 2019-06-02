@@ -119,6 +119,8 @@ $(document).ready(() => {
 
     // Add the options to the starting build dropdown
     for (let i = 0; i < builds.length; i++) {
+        const build = builds[i];
+
         // The 0th element is an empty array
         if (i === 0) {
             continue;
@@ -126,13 +128,23 @@ $(document).ready(() => {
 
         // Compile the build description string
         let description = '';
-        for (const item of builds[i]) {
+        for (const item of build) {
             description += `${item.name} + `;
         }
         description = description.slice(0, -3); // Chop off the trailing " + "
 
         // Add the option for this build
         $('#new-race-starting-build').append($('<option></option>').val(i).html(description));
+
+        const lastItem = build[build.length - 1];
+        if (
+            Object.prototype.hasOwnProperty.call(lastItem, 'spacing')
+            && lastItem.spacing
+        ) {
+            const spacing = new Option('─────────────────────────', null);
+            spacing.disabled = true;
+            $('#new-race-starting-build').append($(spacing));
+        }
     }
     $('#new-race-starting-build').append($('<option lang="en"></option>').val('0').html('Random'));
 

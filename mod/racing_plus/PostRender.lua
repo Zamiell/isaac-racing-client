@@ -521,14 +521,20 @@ function PostRender:Race()
 
   -- Show warning messages
   if g.race.hard and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
+     g.race.rFormat ~= "custom" then
 
-    Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
+    Sprites:Init("top", "error-not-hard-mode") -- Error: You are not on hard mode.
     return
 
-  elseif not g.race.hard and
-         g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
-         g.race.rFormat ~= "custom" then
+  elseif Sprites.sprites.top ~= nil and
+         Sprites.sprites.top.spriteName == "error-not-hard-mode" then
+
+    Sprites:Init("top", 0)
+  end
+  if not g.race.hard and
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
+     g.race.rFormat ~= "custom" then
 
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return

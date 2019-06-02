@@ -1,10 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.38.0* - June 2nd, 2019
+
+* In seeded races, the Chocolate Milk start is now coupled with Steven.
+* In seeded races, the Jacob's Ladder start is now coupled with There's Options.
+* In seeded races, Mysterious Liquid is now added to the Fire Mind build.
+* Fixed the bug where the "You are not on Hard Mode" text would not appear. (Thanks AshDown)
+* Fixed the bug where the sprite for Mysterious Liquid was green in the "Choose Char Order" custom challenge.
+
 ### *v0.37.14* - May 31st, 2019
 
 * Changed the Mysterious Liquid costume and tears effect from green to red in order to match the new creep color. (Thanks Thoday)
 * Added Caves / Catacombs / Flooded Caves room #488 to the Forgotten softlock list. (Thanks AshDown)
-* Fixed the bug where the Basement 1 Treasure Room icon would appear on the map when it was banned when it was attached to the starting room.
+* Fixed the bug where the Basement 1 Treasure Room icon would appear on the map when it was banned and attached to the starting room.
 * Fixed the bug where replaced pedestal sprites would not match the original sprite.
 * Fixed the bug where an empty pedestal was not generated when you put an item in the Schoolbag.
 * Fixed the bug where a trapdoor would close when entering it as The Soul.

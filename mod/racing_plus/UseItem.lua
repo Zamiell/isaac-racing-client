@@ -52,6 +52,7 @@ function UseItem:Item44()
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(gridIndex, Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT)
   Isaac.DebugString("Teleport! / Broken Remote / Cursed Eye to room: " .. tostring(gridIndex))
+  Isaac.DebugString("Using teleport seed: " .. tostring(g.RNGCounter.Teleport))
 
   -- This will override the existing Teleport! / Broken Remote effect because
   -- we have already locked in a room transition
