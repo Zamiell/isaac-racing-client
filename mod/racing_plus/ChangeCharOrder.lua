@@ -154,9 +154,10 @@ ChangeCharOrder.seasons = {
       {1003, 3, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
     },
   },
+  --[[
   R7S7 = {
-    X = 10,
-    Y = 3,
+    X = 2,
+    Y = 5,
     charPosition = {
       {2, 2, 1},  -- Cain
       {3, 4, 1},  -- Judas
@@ -167,6 +168,7 @@ ChangeCharOrder.seasons = {
       {10, 7, 3}, -- The Lost
     },
   },
+  --]]
   --[[
   R7SS = { -- R+7 Seeded
     X = 2,
