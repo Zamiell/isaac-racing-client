@@ -18,7 +18,6 @@ function SpeedrunPostUpdate:Main()
     Speedrun.startedFrame = Isaac.GetFrameCount()
   end
 
-  SpeedrunPostUpdate:CheckLilithExtraIncubus()
   SpeedrunPostUpdate:CheckCheckpoint()
 end
 
@@ -46,20 +45,6 @@ function SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   Speedrun.selectedItemStarts[1] = g.run.passiveItems[1]
   Isaac.DebugString("Starting item " .. tostring(Speedrun.selectedItemStarts[1]) ..
                     " on the first character of an insta-start speedrun.")
-end
-
--- In R+7 Season 4, we want to remove the Lilith's extra Incubus if they attempt to switch characters
-function SpeedrunPostUpdate:CheckLilithExtraIncubus()
-  -- Local variables
-  local character = g.p:GetPlayerType()
-
-  if g.run.extraIncubus and
-     character ~= PlayerType.PLAYER_LILITH then -- 13
-
-    g.run.extraIncubus = false
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
-    Isaac.DebugString("Removed the extra Incubus (for R+7 Season 4).")
-  end
 end
 
 -- Check to see if the player just picked up the "Checkpoint" custom item

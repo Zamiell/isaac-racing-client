@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.39.0* - June 4th, 2019
+
+* Green player creep is now changed to blue (instead of red). (Thanks Moucheron Quipet)
+* The sprite for Mysterious Liquid has been changed to blue (instead of red). Thanks to Thoday for making the graphics for this.
+* The Lost now shows his health in the UI. Thanks goes to piber20 for creating the graphics for this.
+* Holy Mantle now shows the effect in the UI. Thanks goes to piber20 for creating the graphics for this.
+* Fixed the (vanilla) bug where D Infinity was incorrectly stylized.
+
 ### *v0.38.0* - June 2nd, 2019
 
 * In seeded races, the Chocolate Milk start is now coupled with Steven. (Thanks Shigan)
@@ -10,7 +18,7 @@
 
 ### *v0.37.14* - May 31st, 2019
 
-* Changed the Mysterious Liquid costume and tears effect from green to red in order to match the new creep color. (Thanks Thoday)
+* Changed the Mysterious Liquid costume and tears effect from green to red in order to match the new creep color. Thanks to Thoday for creating the graphics for this.
 * Added Caves / Catacombs / Flooded Caves room #488 to the Forgotten softlock list. (Thanks AshDown)
 * Fixed the bug where the Basement 1 Treasure Room icon would appear on the map when it was banned and attached to the starting room.
 * Fixed the bug where replaced pedestal sprites would not match the original sprite.

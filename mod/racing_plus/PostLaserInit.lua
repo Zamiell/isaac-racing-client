@@ -30,8 +30,8 @@ function PostLaserInit:Main(laser)
 
   -- Even though we make it invisible, it still displays effects when it hits a wall
   -- So, reduce the size of it to mitigate this
-  laser.SpriteScale = Vector(0, 0)
-  laser.SizeMulti = Vector(0, 0)
+  laser.SpriteScale = g.zeroVector
+  laser.SizeMulti = g.zeroVector
 end
 
 return PostLaserInit

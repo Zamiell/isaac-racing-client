@@ -35,7 +35,7 @@ function Race:PostUpdateCheckBossRush()
   g.run.finishedBossRush = true
   local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
   g.g:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-            pos, Vector(0, 0), nil, 0, 0)
+            pos, g.zeroVector, nil, 0, 0)
   Isaac.DebugString("Spawned the end of Boss Rush trophy.")
 end
 
@@ -52,16 +52,16 @@ function Race:PostUpdateCheckFireworks()
 
     -- Give Isaac sparkly feet (1000.103.0)
     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ULTRA_GREED_BLING, 0,
-                g.p.Position + RandomVector():__mul(10), Vector(0, 0), nil)
+                g.p.Position + RandomVector():__mul(10), g.zeroVector, nil)
 
     -- Spawn 30 fireworks (1000.104.0)
     -- (some can be duds randomly and not spawn any fireworks after the 20 frame countdown)
     if g.raceVars.fireworks < 40 and gameFrameCount % 20 == 0 then
       for i = 1, 5 do
         g.raceVars.fireworks = g.raceVars.fireworks + 1
-        local firework = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.FIREWORKS, 0,
+        local firework = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.FIREWORKS, 0, -- 1000.104
                                      g:GridToPos(math.random(1, 11), math.random(2, 8)),
-                                     Vector(0, 0), nil) -- 0,12  0,8
+                                     g.zeroVector, nil)
         local fireworkEffect = firework:ToEffect()
         fireworkEffect:SetTimeout(20)
       end
@@ -92,7 +92,7 @@ function Race:PostUpdateCheckVictoryLap()
   g.p.ControlsEnabled = false
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
-  g.p.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+  g.p.Velocity = g.zeroVector -- Remove all of the player's momentum
   g.p:PlayExtraAnimation("LightTravel")
   g.run.currentFloor = g.run.currentFloor - 1
   -- This is needed or else state 5 will not correctly trigger
@@ -157,7 +157,7 @@ function Race:Finish()
   if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
     victoryLapPosition = g:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
   end
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
+  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, g.zeroVector,
             nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
 
   -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
@@ -166,7 +166,7 @@ function Race:Finish()
     finishedPosition = g:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
   end
   local item2seed = g:IncrementRNG(roomSeed)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
+  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, g.zeroVector,
             nil, CollectibleType.COLLECTIBLE_FINISHED, item2seed)
 
   Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")

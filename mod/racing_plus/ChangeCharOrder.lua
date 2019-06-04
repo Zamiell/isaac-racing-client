@@ -154,6 +154,19 @@ ChangeCharOrder.seasons = {
       {1003, 3, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
     },
   },
+  R7S7 = {
+    X = 10,
+    Y = 3,
+    charPosition = {
+      {2, 2, 1},  -- Cain
+      {3, 4, 1},  -- Judas
+      {8, 6, 1},  -- Lazarus
+      {5, 8, 1},  -- Eve
+      {7, 10, 1}, -- Azazel
+      {9, 5, 3},  -- Eden
+      {10, 7, 3}, -- The Lost
+    },
+  },
   --[[
   R7SS = { -- R+7 Seeded
     X = 2,
@@ -641,7 +654,7 @@ function ChangeCharOrder:CreateItemButtons()
       g.r:SetClear(false) -- Or else the creep will instantly dissipate
       for j = 1, 10 do
         local creep = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_RED,
-                                 buttonPos, Vector(0, 0), nil, 0, 0)
+                                 buttonPos, g.zeroVector, nil, 0, 0)
         creep:ToEffect().Timeout = 1000000
       end
     end
@@ -842,7 +855,7 @@ function ChangeCharOrder:PostRender()
       end
       local posChar = Isaac.WorldToRenderPosition(posCharGame, false)
       posChar.Y = posChar.Y + 10
-      charSprite:Render(posChar, Vector(0, 0), Vector(0, 0))
+      charSprite:Render(posChar, g.zeroVector, g.zeroVector)
     end
   end
 
@@ -866,7 +879,7 @@ function ChangeCharOrder:PostRender()
       local posItemGame = g:GridToPos(x, y - 1)
       local posItem = Isaac.WorldToRenderPosition(posItemGame, false)
       posItem.Y = posItem.Y
-      itemSprite:Render(posItem, Vector(0, 0), Vector(0, 0))
+      itemSprite:Render(posItem, g.zeroVector, g.zeroVector)
     end
   end
 end

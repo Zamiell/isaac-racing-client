@@ -170,7 +170,7 @@ function PostEntityKill:Entity78(entity)
   if situation == 1 then
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
     -- (it will get replaced with the fast-travel version on this frame)
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, Vector(0, 0), nil, 0, 0)
+    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, g.zeroVector, nil, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
 
   elseif situation == 2 then
@@ -181,7 +181,7 @@ function PostEntityKill:Entity78(entity)
   elseif situation == 3 then
     -- Spawn both a trapdoor and a beam of light (they will get replaced with the fast-travel versions on this frame)
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, Vector(0, 0), nil, 0, 0)
+    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, g.zeroVector, nil, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 3 - up and down.")
   end
 
@@ -197,7 +197,7 @@ function PostEntityKill:Entity78(entity)
 
       -- Spawn a big chest (which will get replaced with a trophy on the next frame)
       g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-      g.r:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+      g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
     end
   end
 end
@@ -274,7 +274,7 @@ function PostEntityKill:Entity81(entity)
 
   -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-            pos, Vector(0, 0), nil, subType, 0)
+            pos, g.zeroVector, nil, subType, 0)
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -336,7 +336,7 @@ function PostEntityKill:Entity271(entity)
 
   -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-            pos, Vector(0, 0), nil, subType, 0)
+            pos, g.zeroVector, nil, subType, 0)
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed

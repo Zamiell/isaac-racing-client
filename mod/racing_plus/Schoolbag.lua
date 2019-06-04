@@ -151,28 +151,28 @@ function Schoolbag:SpriteDisplay()
 
   -- Draw the item image
   Schoolbag.sprites.item:Update()
-  Schoolbag.sprites.item:Render(itemVector, Vector(0, 0), Vector(0, 0))
+  Schoolbag.sprites.item:Render(itemVector, g.zeroVector, g.zeroVector)
 
   -- Draw the charge bar
   if maxCharges ~= 0 then
     -- The background
     Schoolbag.sprites.barBack:Update()
-    Schoolbag.sprites.barBack:Render(barVector, Vector(0, 0), Vector(0, 0))
+    Schoolbag.sprites.barBack:Render(barVector, g.zeroVector, g.zeroVector)
 
     -- The bar itself, clipped appropriately
     Schoolbag.sprites.barMeter:Update()
     local meterMultiplier = 24 / maxCharges
     local meterClip = 26 - (g.run.schoolbag.charge * meterMultiplier)
-    Schoolbag.sprites.barMeter:Render(barVector, Vector(0, meterClip), Vector(0, 0))
+    Schoolbag.sprites.barMeter:Render(barVector, Vector(0, meterClip), g.zeroVector)
 
     -- The bar for The Battery charges
     Schoolbag.sprites.barMeterBattery:Update()
     meterClip = 26 - (g.run.schoolbag.chargeBattery * meterMultiplier)
-    Schoolbag.sprites.barMeterBattery:Render(barVector, Vector(0, meterClip), Vector(0, 0))
+    Schoolbag.sprites.barMeterBattery:Render(barVector, Vector(0, meterClip), g.zeroVector)
 
     -- The segment lines on top
     Schoolbag.sprites.barLines:Update()
-    Schoolbag.sprites.barLines:Render(barVector, Vector(0, 0), Vector(0, 0))
+    Schoolbag.sprites.barLines:Render(barVector, g.zeroVector, g.zeroVector)
   end
 end
 

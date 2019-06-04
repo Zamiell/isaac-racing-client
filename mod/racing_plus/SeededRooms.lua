@@ -53,7 +53,7 @@ function SeededRooms:DevilRoom()
       -- Spawn Krampus
       g.run.metKrampus = true
       g.g:Spawn(EntityType.ENTITY_FALLEN, 1,
-                g.r:GetCenterPos(), Vector(0, 0), nil, 0, g.RNGCounter.DevilRoomItem)
+                g.r:GetCenterPos(), g.zeroVector, nil, 0, g.RNGCounter.DevilRoomItem)
       g.r:SetClear(false) -- If we don't do this, we won't get a charge after Krampus is killed
       return
     end
@@ -70,7 +70,7 @@ function SeededRooms:DevilRoom()
         g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
         local pos = g:GridToPos(x, y)
         g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_REDCHEST, -- 5.360
-                  pos, Vector(0, 0), nil, 0, g.RNGCounter.DevilRoomItem)
+                  pos, g.zeroVector, nil, 0, g.RNGCounter.DevilRoomItem)
       end
     end
 
@@ -81,12 +81,12 @@ function SeededRooms:DevilRoom()
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     local pos2 = g:GridToPos(4, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, -- 5.40.2
-              pos2, Vector(0, 0), nil, BombSubType.BOMB_DOUBLEPACK, g.RNGCounter.DevilRoomItem)
+              pos2, g.zeroVector, nil, BombSubType.BOMB_DOUBLEPACK, g.RNGCounter.DevilRoomItem)
 
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     local pos3 = g:GridToPos(8, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, -- 5.40.2
-              pos3, Vector(0, 0), nil, BombSubType.BOMB_DOUBLEPACK, g.RNGCounter.DevilRoomItem)
+              pos3, g.zeroVector, nil, BombSubType.BOMB_DOUBLEPACK, g.RNGCounter.DevilRoomItem)
 
   elseif roomRoll <= 210 then
     -- 1x 1 pedestal + ? card (1 weight)
@@ -95,14 +95,14 @@ function SeededRooms:DevilRoom()
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     local pos = g:GridToPos(7, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300.48
-              pos, Vector(0, 0), nil, Card.CARD_QUESTIONMARK, g.RNGCounter.DevilRoomItem)
+              pos, g.zeroVector, nil, Card.CARD_QUESTIONMARK, g.RNGCounter.DevilRoomItem)
 
   elseif roomRoll <= 310 then
     -- 1x 1 pedestal + black rune (1 weight)
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     local pos = g:GridToPos(5, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300.41
-              pos, Vector(0, 0), nil, Card.RUNE_BLACK, g.RNGCounter.DevilRoomItem)
+              pos, g.zeroVector, nil, Card.RUNE_BLACK, g.RNGCounter.DevilRoomItem)
 
     SeededRooms:SpawnPedestalDevilRoom(7, 4)
 
@@ -113,7 +113,7 @@ function SeededRooms:DevilRoom()
     g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
     local pos2 = g:GridToPos(7, 4)
     g.g:Spawn(EntityType.ENTITY_SLOT, 5, -- 6.5
-              pos2, Vector(0, 0), nil, 0, g.RNGCounter.DevilRoomItem)
+              pos2, g.zeroVector, nil, 0, g.RNGCounter.DevilRoomItem)
 
   elseif roomRoll <= 1610 then
     -- 12x 2 pedestals (12 weight)
@@ -133,7 +133,7 @@ function SeededRooms:DevilRoom()
       for y = 4, 5 do
         if x % 2 ~= 0 then
           local pos = g:GridToPos(x, y)
-          g.g:Spawn(EntityType.ENTITY_PITFALL, 0, pos, Vector(0, 0), nil, 0, 0) -- 291.0
+          g.g:Spawn(EntityType.ENTITY_PITFALL, 0, pos, g.zeroVector, nil, 0, 0) -- 291.0
         end
       end
     end
@@ -156,9 +156,9 @@ function SeededRooms:DevilRoom()
 
   -- Spawn the two fires
   local pos1 = g:GridToPos(3, 1)
-  g.g:Spawn(EntityType.ENTITY_FIREPLACE, 0, pos1, Vector(0, 0), nil, 0, 0) -- 33
+  g.g:Spawn(EntityType.ENTITY_FIREPLACE, 0, pos1, g.zeroVector, nil, 0, 0) -- 33
   local pos2 = g:GridToPos(9, 1)
-  g.g:Spawn(EntityType.ENTITY_FIREPLACE, 0, pos2, Vector(0, 0), nil, 0, 0) -- 33
+  g.g:Spawn(EntityType.ENTITY_FIREPLACE, 0, pos2, g.zeroVector, nil, 0, 0) -- 33
 
   -- Increment the seed a final time before the items are replaced
   g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
@@ -168,7 +168,7 @@ function SeededRooms:SpawnPedestalDevilRoom(x, y)
   local pos = g:GridToPos(x, y)
   g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
   g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_SHOPITEM, -- 5.150.0
-            pos, Vector(0, 0), nil, 0, g.RNGCounter.DevilRoomItem)
+            pos, g.zeroVector, nil, 0, g.RNGCounter.DevilRoomItem)
 end
 
 function SeededRooms:AngelRoom()
@@ -221,12 +221,12 @@ function SeededRooms:AngelRoom()
     g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
     local pos1 = g:GridToPos(4, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_ETERNALCHEST, -- 5.53
-              pos1, Vector(0, 0), nil, 0, g.RNGCounter.AngelRoomItem)
+              pos1, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomItem)
 
     g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
     local pos2 = g:GridToPos(8, 4)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_ETERNALCHEST, -- 5.53
-              pos2, Vector(0, 0), nil, 0, g.RNGCounter.AngelRoomItem)
+              pos2, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomItem)
 
   elseif roomRoll <= 15 then
     -- 1x 1 pedestal + 1 random bomb (1 weight)
@@ -235,7 +235,7 @@ function SeededRooms:AngelRoom()
     -- 1x Random Bomb
     local pos = g:GridToPos(6, 1)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, -- 5.40
-              pos, Vector(0, 0), nil, 0, g.RNGCounter.AngelRoomItem)
+              pos, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomItem)
 
     -- Spawn 2 Angel Statues
     g.r:SpawnGridEntity(50, GridEntityType.GRID_STATUE, 1, 0, 0) -- 21
@@ -258,7 +258,7 @@ function SeededRooms:SpawnPedestalAngelRoom(x, y)
   local pos = g:GridToPos(x, y)
   g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
   local entity = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 100
-                           pos, Vector(0, 0), nil, 0, g.RNGCounter.AngelRoomItem)
+                           pos, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomItem)
   entity:ToPickup().TheresOptionsPickup = true
 end
 

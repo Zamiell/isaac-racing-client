@@ -52,6 +52,8 @@ function PostRender:Main()
   PostRender:DrawStreakText()
   Schoolbag:SpriteDisplay()
   SoulJar:SpriteDisplay()
+  PostRender:TheLostHealth()
+  PostRender:HolyMantle()
   Timer:Display()
   Timer:DisplayRun()
   Timer:DisplaySecond()
@@ -138,6 +140,104 @@ function PostRender:DrawStreakText()
   local scale = 1
   local length = f:GetStringWidthUTF8(g.run.streakText) * scale
   f:DrawStringScaled(g.run.streakText, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
+end
+
+function PostRender:TheLostHealth()
+  local character = g.p:GetPlayerType()
+  if character ~= PlayerType.PLAYER_THELOST then
+    return
+  end
+
+  if Sprites.sprites.lostHealth == nil then
+    Sprites.sprites.lostHealth = Sprite()
+    Sprites.sprites.lostHealth:Load("gfx/ui/p20_lost_health.anm2", true)
+  end
+
+  local hudOffsetX = 0
+  local hudOffsetY = 0
+
+  local offsetX = hudOffsetX + 41
+  if g.p:GetExtraLives() > 0 then
+    offsetX = offsetX + 24
+  end
+
+  local offsetY = hudOffsetY + 2
+
+  local animationToPlay = "Empty_Heart"
+  if g.p:GetSoulHearts() >= 1 then
+    animationToPlay = "Lost_Heart_Half"
+  end
+  Sprites.sprites.lostHealth:Play(animationToPlay, true)
+  Sprites.sprites.lostHealth:Render(Vector(offsetX,offsetY), g.zeroVector, g.zeroVector)
+end
+
+function PostRender:HolyMantle()
+  local effects = g.p:GetEffects()
+  local numMantles = effects:GetCollectibleEffectNum(CollectibleType.COLLECTIBLE_HOLY_MANTLE) -- 313
+  if numMantles < 1 then
+    return
+  end
+
+  if Sprites.sprites.holyMantle == nil then
+    Sprites.sprites.holyMantle = Sprite()
+    Sprites.sprites.holyMantle:Load("gfx/ui/p20_holy_mantle.anm2", true)
+  end
+
+  local hudOffset1Heart = 41
+  local hudOffset2Heart = hudOffset1Heart + 12
+  local hudOffset3Heart = hudOffset2Heart + 12
+  local hudOffset4Heart = hudOffset3Heart + 12
+  local hudOffset5Heart = hudOffset4Heart + 12
+  local hudOffset6Heart = hudOffset5Heart + 12
+
+  local hudOffset1Row = 2
+  local hudOffset2Row = hudOffset1Row + 10
+
+  local Yoffset
+  local Xoffset = hudOffset6Heart
+
+  local visibleHearts = g:GetPlayerVisibleHearts()
+  if visibleHearts > 6 then
+    Yoffset = hudOffset2Row
+  else
+    Yoffset = hudOffset1Row
+  end
+
+  local Xheart = visibleHearts % 6
+  if Xheart == 0 then
+    Xheart = 6
+  end
+
+  if Xheart <= 1 then
+    Xoffset = hudOffset1Heart
+  elseif Xheart == 2 then
+    Xoffset = hudOffset2Heart
+  elseif Xheart == 3 then
+    Xoffset = hudOffset3Heart
+  elseif Xheart == 4 then
+    Xoffset = hudOffset4Heart
+  elseif Xheart == 5 then
+    Xoffset = hudOffset5Heart
+  elseif Xheart >= 6 then
+    Xoffset = hudOffset6Heart
+  end
+
+  local character = g.p:GetPlayerType()
+  if character == PlayerType.PLAYER_THELOST then
+    if g.p:GetExtraLives() > 0 then
+      Xoffset = Xoffset + 24
+    end
+  end
+
+  local animationToPlay
+  if character == PlayerType.PLAYER_KEEPER then
+    animationToPlay = "Keeper_Mantle"
+  else
+    animationToPlay = "Mantle"
+  end
+
+  Sprites.sprites.holyMantle:Play(animationToPlay, true)
+  Sprites.sprites.holyMantle:Render(Vector(Xoffset, Yoffset), g.zeroVector, g.zeroVector)
 end
 
 -- Restart the game if Easter Egg or character validation failed

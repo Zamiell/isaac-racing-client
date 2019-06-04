@@ -168,7 +168,7 @@ function SamaelMod:PostUpdate()
     if g.p:GetSprite():IsPlaying("Death") then --When player dies
       if not dying then
         --Spawn the special animations entity
-        local special = Isaac.Spawn(specialAnim, 0, 0, g.p.Position, Vector(0,0), g.p):ToNPC()
+        local special = Isaac.Spawn(specialAnim, 0, 0, g.p.Position, g.zeroVector, g.p):ToNPC()
         special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
         special:GetSprite():Play("Death", 1) --Play custom death animation
         special.CanShutDoors = false
@@ -201,7 +201,7 @@ function SamaelMod:PostUpdate()
     end
 
     if not spawned then --If scythe is not spawned
-      local scythe = Isaac.Spawn(scytheID, 0, 0, g.p.Position, Vector(0,0), g.p) --Spawn the scythe
+      local scythe = Isaac.Spawn(scytheID, 0, 0, g.p.Position, g.zeroVector, g.p) --Spawn the scythe
       scythe = scythe:ToNPC()
       SamaelMod:getScytheColor()
       scythe:GetSprite().Color = scytheColor
@@ -351,7 +351,7 @@ function SamaelMod:wraithModeHandler()
     wraithCharge = 0
     g.p:GetSprite().Color = Color(0,0,0,0,0,0,0)
     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0,
-                g.p.Position, Vector(0,0), g.p) --Smoke trail
+                g.p.Position, g.zeroVector, g.p) --Smoke trail
     if wraithTime == 0 then --When wraith time is over
       wraithCooldown = 24
       g.p.MoveSpeed = g.p.MoveSpeed - 0.3
@@ -360,7 +360,7 @@ function SamaelMod:wraithModeHandler()
       SamaelMod:playSound(316, 1.8, 1.25)
       --Black poof effect
       local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                               g.p.Position, Vector(0,0), g.p):ToEffect()
+                               g.p.Position, g.zeroVector, g.p):ToEffect()
       poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
       poof:FollowParent(g.p)
     end
@@ -403,7 +403,7 @@ function SamaelMod:scytheUpdate(scythe)
   local hitBox --Local variable to store reference to hitbox entity
   if scythe.Child == nil then --If the scythe has no child (no spawned hitbox)
     hitBox = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER, hitBoxType,
-                         g.p.Position, Vector(0,0), scythe) --Spawn the hitbox
+                         g.p.Position, g.zeroVector, scythe) --Spawn the hitbox
     hitBox:ClearEntityFlags(EntityFlag.FLAG_APPEAR) --Skip appear animations
     hitBox = hitBox:ToFamiliar()
     scythe.Child = hitBox --Set it as the scythe's child
@@ -413,7 +413,7 @@ function SamaelMod:scytheUpdate(scythe)
     --Coins is used to store directions, because the actual direction-related attributes
     --were crashing my game for some reason
     hitBox.Size = 40 --Set its size (how big of a radius)
-    hitBox.Position = Vector(0,0) --Move it off of the screen
+    hitBox.Position = g.zeroVector --Move it off of the screen
     hitBox.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
   else
     hitBox = scythe.Child:ToFamiliar() --If scythe has a child, then the hitbox exists. Set this as a reference to it
@@ -422,7 +422,7 @@ function SamaelMod:scytheUpdate(scythe)
   local headDirection = g.p:GetHeadDirection()
   local fireDirection = g.p:GetFireDirection()
   local direction = -1
-  local projVel = Vector(0,0) --For storing the proper velocity of a projectile (calculated later)
+  local projVel = g.zeroVector --For storing the proper velocity of a projectile (calculated later)
   --local proj = nil --For storing a projectile when fired
 
   --Keep the scythe on the player
@@ -439,7 +439,7 @@ function SamaelMod:scytheUpdate(scythe)
       laserRingSpawned = false
     end
     if not laserRingSpawned and scytheState == 2 then
-      local laser = g.p:FireTechXLaser(g.p.Position, Vector(0,0), 66):ToLaser()
+      local laser = g.p:FireTechXLaser(g.p.Position, g.zeroVector, 66):ToLaser()
       laser.Parent = scythe
       if laser.Variant ~= 2 then
         laser.Variant = 2
@@ -1217,10 +1217,10 @@ function SamaelMod:hitBoxFunc(hitBox)
   elseif hitBox.Coins == Direction.RIGHT then
     hitBox.Position = Vector(g.p.Position.X + 40 * scytheScale, g.p.Position.Y)
   else --If direction is -1, go offscreen
-    hitBox.Position = Vector(0, 0)
+    hitBox.Position = g.zeroVector
   end
 
-  hitBox.Velocity = Vector(0, 0)
+  hitBox.Velocity = g.zeroVector
 
   --Destroy poop
   if hitBox.Coins ~= -1 then
@@ -1302,7 +1302,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       --damageSource = damageSource:ToFamiliar()
       tookDamage = tookDamage:ToNPC()
       --local sprite = damageSource.Parent:GetSprite()
-      Isaac.Spawn(1000, 2, 0, tookDamage.Position, Vector(0, 0), tookDamage) --Blood effect
+      Isaac.Spawn(1000, 2, 0, tookDamage.Position, g.zeroVector, tookDamage) --Blood effect
       tookDamage:PlaySound(77, 0.75, 0, false, 1.8) --Play hit sound
 
       --Get knockback bonus from items
@@ -1399,7 +1399,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_HOLY_LIGHT)) then --Holy Light
 
         Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, 0,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), Vector(0,0), g.p)
+                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, g.p)
       end
       if (threeDollarBillEffect == "creep" or
           fruitCakeEffect == "creep" or
@@ -1407,14 +1407,14 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
          math.random(2) == 1 then --Mysterious Liquid
 
         Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_GREEN, 0,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), Vector(0,0), g.p)
+                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, g.p)
       end
       if (fruitCakeEffect == "keeper" or
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER)) and
           math.random(luckCap+1-luck) == 1 then --Head of the Keepo
 
         Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), Vector(0, 0), nil)
+                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, nil)
       end
 
       --Flies and spiders (guppy, mulligan, parisitoid)
@@ -1485,7 +1485,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
          fruitCakeEffect == "shock" then
 
         if not jacobTriggered then
-          local jacobTear = g.p:FireTear(tookDamage.Position, Vector(0,0):Rotated(math.random(360)),
+          local jacobTear = g.p:FireTear(tookDamage.Position, g.zeroVector:Rotated(math.random(360)),
                                          false, true, true):ToTear() --Fire the tear
           jacobTear.TearFlags = 1 << 53 --Add piercing
           jacobTear.CollisionDamage = 0.0
@@ -1520,7 +1520,7 @@ function SamaelMod:specialAnimFunc(npc)
   if sprite:IsPlaying("Death") and
      sprite:IsEventTriggered("Blood") then
 
-    Isaac.Spawn(1000, 77, 0, npc.Position, Vector(0, 0), npc)
+    Isaac.Spawn(1000, 77, 0, npc.Position, g.zeroVector, npc)
     npc:PlaySound(28, 1, 0, false, 1)
     npc:MakeSplat(5.0)
   elseif sprite:IsPlaying("WraithDown") or
@@ -1653,7 +1653,7 @@ function SamaelMod:activateWraith()
 
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER) then
     local pentagram = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER, 0,
-                                  g.p.Position, Vector(0,0), g.p):ToEffect()
+                                  g.p.Position, g.zeroVector, g.p):ToEffect()
     pentagram.State = 1
     pentagram.Size = 150
     pentagram.SpriteScale = Vector(0.75,0.75)
@@ -1669,14 +1669,14 @@ function SamaelMod:activateWraith()
 
   --Black poof effect
   local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                           g.p.Position, Vector(0, 0), g.p):ToEffect()
+                           g.p.Position, g.zeroVector, g.p):ToEffect()
   poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
   poof:FollowParent(g.p)
 
   --Special animation
   g.p:GetSprite().Color = Color(0, 0, 0, 0, 0, 0, 0)
   local special = Isaac.Spawn(specialAnim, 0, 0,
-                              g.p.Position, Vector(0, 0), g.p):ToNPC() --Spawn the special animations entity
+                              g.p.Position, g.zeroVector, g.p):ToNPC() --Spawn the special animations entity
   special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
   special:GetSprite():Play("WraithDown", 1) --Wraith form animation
   special:GetSprite().Color = Color(0.75,0.25,0.25,0.8,0,0,0)
@@ -1807,7 +1807,7 @@ function SamaelMod:PostUpdateFixBugs()
     if not foundSacDag then
       -- Manually spawn a Sacrificial Dagger familiar (3.35)
       g.g:Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER,
-                g.p.Position, Vector(0, 0), g.p, 0, 0)
+                g.p.Position, g.zeroVector, g.p, 0, 0)
       Isaac.DebugString("Spawned a new Sac Dagger familiar.")
     end
   end

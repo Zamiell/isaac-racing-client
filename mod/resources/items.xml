@@ -18,8 +18,10 @@ Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to Strange Attractor (315)
 - Added the "firedelay" cache to The Wiz (358)
 - Added the "firedelay" cache to Explosivo (401)
+- Added the "firedelay" cache to Glaucoma (460)
 - Added the "firedelay" cache to Pop! (529)
-
+- Added the "damage" cache to Ring Worm (11)
+- Added the "damage" cache to Hook Worm (26)
 -->
 
 <items gfxroot="gfx/items/" version="1">
@@ -488,7 +490,7 @@ Changes for Racing+ Rebalanced:
 	<passive description="Hard headed!" gfx="Collectibles_457_Conehead.png" id="457" name="Cone Head" soulhearts="2" />
 	<passive description="What's in there?" gfx="Collectibles_458_BellyButton.png" id="458" name="Belly Button" />
 	<passive description="Booger tears!" gfx="Collectibles_459_SinusInfection.png" id="459" name="Sinus Infection" />
-	<passive description="Blind tears!" gfx="Collectibles_460_Glaucoma.png" id="460" name="Glaucoma" />
+	<passive cache="firedelay" description="Blind tears!" gfx="Collectibles_460_Glaucoma.png" id="460" name="Glaucoma" />
 	<passive description="Egg tears!" gfx="Collectibles_461_Parasitoid.png" id="461" name="Parasitoid" cache="range" />
 	<passive achievement="299" description="Possessed tears!" gfx="Collectibles_462_EyeOfBelial.png" id="462" name="Eye of Belial" cache="range tearflag" devilprice="2" />
 	<passive description="Acid tears!" gfx="Collectibles_463_SulfuricAcid.png" id="463" name="Sulfuric Acid" cache="damage tearcolor tearflag" />
@@ -518,7 +520,7 @@ Changes for Racing+ Rebalanced:
 	<active achievement="288" description="I feel numb..." gfx="collectibles_486_dullrazor.png" id="486" name="Dull Razor" maxcharges="2" />
 	<active description="A pound of flesh..." gfx="collectibles_487_potatopeeler.png" id="487" name="Potato Peeler" />
 	<active achievement="303" description="Waggles a finger" gfx="collectibles_488_metronome.png" id="488" name="Metronome" maxcharges="2" cache="all" />
-	<active achievement="282" description="Reroll forever" gfx="collectibles_489_dinfinity.png" id="489" name="D infinity" maxcharges="2" />
+	<active achievement="282" description="Reroll forever" gfx="collectibles_489_dinfinity.png" id="489" name="D Infinity" maxcharges="2" />
 	<active achievement="289" description="..." gfx="collectibles_490_edenssoul.png" id="490" name="Eden's Soul" maxcharges="12" discharged="true" />
 	<familiar description="Pills pills pills!" gfx="collectibles_491_acidbaby.png" id="491" name="Acid Baby" />
 	<familiar description="Yo listen!" gfx="collectibles_492_yolisten.png" id="492" name="YO LISTEN!" cache="luck" />
@@ -608,7 +610,7 @@ Changes for Racing+ Rebalanced:
 	<trinket description="I remember these" gfx="trinket_008_cartridge.png" id="8" name="Cartridge" />
 	<trinket cache="tearflag" description="Wub wub!" gfx="trinket_009_pulseworm.png" id="9" name="Pulse Worm" />
 	<trinket cache="tearflag firedelay" description="Wiggle waggle!" gfx="trinket_010_wiggleworm.png" id="10" name="Wiggle Worm" />
-	<trinket cache="tearflag" description="Woop woop!" gfx="trinket_011_ringworm.png" id="11" name="Ring Worm" />
+	<trinket cache="damage tearflag" description="Woop woop!" gfx="trinket_011_ringworm.png" id="11" name="Ring Worm" />
 	<trinket cache="tearflag" description="Blub blub!" gfx="trinket_012_flatworm.png" id="12" name="Flat Worm" />
 	<trinket achievement="118" description="YES!" gfx="trinket_013_storecredit.png" id="13" name="Store Credit" />
 	<trinket description="Your feet feel stronger" gfx="trinket_014_callus.png" id="14" name="Callus" />
@@ -623,7 +625,7 @@ Changes for Racing+ Rebalanced:
 	<trinket achievement="149" description="???" gfx="trinket_023_missingposter.png" id="23" name="Missing Poster" />
 	<trinket description="Wealth of gas" gfx="trinket_024_buttpenny.png" id="24" name="Butt Penny" />
 	<trinket description="Uh-oh!" gfx="trinket_025_mysteriouscandy.png" id="25" name="Mysterious Candy" />
-	<trinket cache="tearflag range" description="Zip zoop!" gfx="trinket_026_hookworm.png" id="26" name="Hook Worm" />
+	<trinket cache="damage tearflag range" description="Zip zoop!" gfx="trinket_026_hookworm.png" id="26" name="Hook Worm" />
 	<trinket cache="shotspeed" description="Wooosh!" gfx="trinket_027_whipworm.png" id="27" name="Whip Worm" />
 	<trinket achievement="117" description="Eternal life?" gfx="trinket_028_brokenankh.png" id="28" name="Broken Ankh" />
 	<trinket description="It stinks" gfx="trinket_029_fishhead.png" id="29" name="Fish Head" />

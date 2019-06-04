@@ -268,7 +268,7 @@ function PostItemPickup.CaffeinePill()
   -- Drop the pill given from Caffeine Pill
   -- (we spawn it instead of using "player:DropPoketItem()" to avoid the complexity of having two slots)
   local pos = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, Vector(0, 0), nil, pill1, roomSeed) -- 5.70
+  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, g.zeroVector, nil, pill1, roomSeed) -- 5.70
 end
 
 -- CollectibleType.COLLECTIBLE_LATCH_KEY (343)

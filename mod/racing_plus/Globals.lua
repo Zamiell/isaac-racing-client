@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.38.1"
+g.version = "v0.39.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -100,6 +100,7 @@ g.seeds = g.g:GetSeeds()
 g.itemPool = g.g:GetItemPool()
 g.itemConfig = Isaac.GetItemConfig()
 g.sfx = SFXManager()
+g.zeroVector = Vector(0, 0)
 
 --
 -- Extra enumerations
@@ -239,6 +240,7 @@ function g:InitRun()
   g.run.streakText           = ""
   g.run.streakFrame          = 0
   g.run.streakForce          = false
+  g.run.streakIgnore         = false
   g.run.itemReplacementDelay = 0 -- Set when Void is used
   g.run.usedTelepills        = false
   g.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
@@ -324,11 +326,11 @@ function g:InitRun()
     state           = 0, -- See the "SeededDeath.state" enum
     stage           = 0,
     deathFrame      = 0,
-    pos             = Vector(0, 0),
+    pos             = g.zeroVector,
     time            = 0,
     items           = {},
     charge          = 0,
-    spriteScale     = Vector(0, 0),
+    spriteScale     = g.zeroVector,
     goldenBomb      = false,
     goldenKey       = false,
     dealTime        = Isaac.GetTime(),
@@ -549,6 +551,16 @@ function g:ConvertTimeToString(time)
     second2,
     tenths,
   }
+end
+
+function g:GetPlayerVisibleHearts()
+  local visibleHearts = g.p:GetEffectiveMaxHearts() + g.p:GetSoulHearts()
+  visibleHearts = visibleHearts / 2
+  visibleHearts = math.ceil(visibleHearts)
+  if visibleHearts < 1 then
+    visibleHearts = 1
+  end
+  return visibleHearts
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

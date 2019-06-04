@@ -55,7 +55,7 @@ function SpeedrunPostNewRoom:Womb2Error()
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
           -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
-          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, Vector(0, 0), nil, 0, 0)
+          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, g.zeroVector, nil, 0, 0)
           Isaac.DebugString("Replaced a trapdoor with a beam of light.")
           return
         elseif direction == 2 then
@@ -163,10 +163,10 @@ function SpeedrunPostNewRoom:ReplaceBosses()
 
     -- Spawn the replacement boss
     if stage == 10 then
-      Isaac.Spawn(838, 0, 0, g.r:GetCenterPos(), Vector(0, 0), nil)
+      Isaac.Spawn(838, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
       Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
     elseif stage == 11 then
-      Isaac.Spawn(777, 0, 0, g.r:GetCenterPos(), Vector(0, 0), nil)
+      Isaac.Spawn(777, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
       Isaac.DebugString("Spawned Mahalath (for season 3).")
     end
 end

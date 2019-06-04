@@ -196,7 +196,7 @@ function NPCUpdate:NPC275(npc)
     g.run.megaSatanDead = true
     g.g:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay NPC"),
               Isaac.GetEntityVariantByName("Room Clear Delay NPC"),
-              g:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
+              g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
 
     -- Give a charge to the player's active item
@@ -207,7 +207,7 @@ function NPCUpdate:NPC275(npc)
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.r:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
 
     -- Set the room status to clear so that the player cannot fight Mega Satan a second time
     -- if they happen to use a Fool card after defeating it

@@ -726,7 +726,7 @@ function SpeedrunPostGameStarted:R7SS()
   if Speedrun.charNum == 1 then
     -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
     local finishedPosition = g:GridToPos(1, 1)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, Vector(0, 0),
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, g.zeroVector,
               nil, CollectibleType.COLLECTIBLE_FINISHED, 0)
   end
 end

@@ -85,7 +85,7 @@ function Debug:Main()
     for x = 0, 12 do
       if cardNum < 54 then
         local pos = g:GridToPos(x, y)
-        g.p:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, Vector(0, 0), nil, cardNum, 0)
+        g.p:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, g.zeroVector, nil, cardNum, 0)
         cardNum = cardNum + 1
       end
     end

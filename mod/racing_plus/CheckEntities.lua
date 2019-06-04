@@ -320,8 +320,8 @@ function CheckEntities:Entity5_340(pickup)
     pickup:Remove()
 
   elseif CheckEntities.bigChestAction == "checkpoint" then
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, g.r:GetCenterPos(), Vector(0, 0),
-               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, g.r:GetCenterPos(), g.zeroVector,
+              nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
     Speedrun.spawnedCheckpoint = true
     g.run.endOfRunText = true -- Show the run summary
     if Speedrun.averageTime == 0 then
@@ -357,7 +357,7 @@ function CheckEntities:Entity5_340(pickup)
   elseif CheckEntities.bigChestAction == "victorylap" then
     -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
     local victoryLapPosition = g.r:GetCenterPos()
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, Vector(0, 0),
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, g.zeroVector,
                nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
     Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
     pickup:Remove()
@@ -716,7 +716,7 @@ function CheckEntities:Entity260(npc)
      npc.FrameCount <= 16 then
 
     npc.Position = g.run.currentLilHaunts[index].pos
-    npc.Velocity = Vector(0, 0)
+    npc.Velocity = g.zeroVector
   end
 end
 

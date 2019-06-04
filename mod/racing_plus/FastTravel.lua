@@ -65,19 +65,19 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
     trapdoor = g.g:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
                          Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
-                         entity.Position, Vector(0, 0), nil, 0, 0)
+                         entity.Position, g.zeroVector, nil, 0, 0)
 
   elseif stage == LevelStage.STAGE3_2 or -- 6
          stage == LevelStage.STAGE4_1 then -- 7
 
     trapdoor = g.g:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                          Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
-                         entity.Position, Vector(0, 0), nil, 0, 0)
+                         entity.Position, g.zeroVector, nil, 0, 0)
 
   else
     trapdoor = g.g:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                          Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                         entity.Position, Vector(0, 0), nil, 0, 0)
+                         entity.Position, g.zeroVector, nil, 0, 0)
   end
   trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
@@ -134,7 +134,7 @@ function FastTravel:ReplaceHeavenDoor(entity)
   -- Spawn a custom entity to emulate the original
   local heaven = g.g:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                            Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                           entity.Position, Vector(0,0), nil, 0, roomSeed)
+                           entity.Position, g.zeroVector, nil, 0, roomSeed)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
@@ -331,7 +331,7 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards)
       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
       -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
       player.Position = effect.Position -- Teleport the player on top of the trapdoor
-      player.Velocity = Vector(0, 0) -- Remove all of the player's momentum
+      player.Velocity = g.zeroVector -- Remove all of the player's momentum
 
       if upwards then
         -- The vanilla "LightTravel" animation is 28 frames long,
@@ -464,7 +464,7 @@ function FastTravel:CheckTrapdoor2()
       -- (this has to be in the PostNewRoom callback so that we don't get bugs with the Glowing Hour Glass)
       -- (we can't use "player.Visible = false" because it won't do anything here)
       g.run.trapdoor.scale[i] = player.SpriteScale
-      player.SpriteScale = Vector(0, 0)
+      player.SpriteScale = g.zeroVector
 
       -- Move the player to the center of the room
       player.Position = g.r:GetCenterPos()
@@ -472,7 +472,7 @@ function FastTravel:CheckTrapdoor2()
 
     -- Spawn a hole
     g.g:Spawn(Isaac.GetEntityTypeByName("Pitfall (Custom)"), Isaac.GetEntityVariantByName("Pitfall (Custom)"),
-              g.r:GetCenterPos(), Vector(0,0), nil, 0, 0)
+              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
 
     -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
     if not g.raceVars.finished and
@@ -715,7 +715,7 @@ function FastTravel:ReplaceCrawlspace(entity, i)
   -- Spawn a custom entity to emulate the original
   local crawlspace = g.g:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
                                Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
-                               entity.Position, Vector(0,0), nil, 0, 0)
+                               entity.Position, g.zeroVector, nil, 0, 0)
   crawlspace.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
   -- The custom entity will not respawn if we leave the room,
@@ -1020,19 +1020,19 @@ function FastTravel:CheckRoomRespawn()
       if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
         entity = g.g:Spawn(Isaac.GetEntityTypeByName("Blue Womb Trapdoor (Fast-Travel)"),
                            Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)"),
-                           trapdoor.pos, Vector(0,0), nil, 0, 0)
+                           trapdoor.pos, g.zeroVector, nil, 0, 0)
 
       elseif stage == LevelStage.STAGE3_2 or -- 6
              stage == LevelStage.STAGE4_1 then -- 7
 
         entity = g.g:Spawn(Isaac.GetEntityTypeByName("Womb Trapdoor (Fast-Travel)"),
                            Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)"),
-                           trapdoor.pos, Vector(0,0), nil, 0, 0)
+                           trapdoor.pos, g.zeroVector, nil, 0, 0)
 
       else
         entity = g.g:Spawn(Isaac.GetEntityTypeByName("Trapdoor (Fast-Travel)"),
                            Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)"),
-                           trapdoor.pos, Vector(0,0), nil, 0, 0)
+                           trapdoor.pos, g.zeroVector, nil, 0, 0)
       end
       entity.DepthOffset = -101 -- This is needed so that the entity will not appear on top of the player
       -- We use -101 instead of -100 to signify that it is a respawned trapdoor
@@ -1068,7 +1068,7 @@ function FastTravel:CheckRoomRespawn()
       -- Spawn the new custom entity
       local entity = g.g:Spawn(Isaac.GetEntityTypeByName("Crawlspace (Fast-Travel)"),
                                Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)"),
-                               crawlspace.pos, Vector(0,0), nil, 0, 0)
+                               crawlspace.pos, g.zeroVector, nil, 0, 0)
       entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
 
       -- Figure out if it should spawn open or closed, depending on if one or more players is close to it
@@ -1101,7 +1101,7 @@ function FastTravel:CheckRoomRespawn()
       -- Spawn the new custom entity
       local entity = g.g:Spawn(Isaac.GetEntityTypeByName("Heaven Door (Fast-Travel)"),
                                Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)"),
-                               heavenDoor.pos, Vector(0,0), nil, 0, 0)
+                               heavenDoor.pos, g.zeroVector, nil, 0, 0)
                                -- Use an InitSeed of 0 to signify that it is respawned
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")

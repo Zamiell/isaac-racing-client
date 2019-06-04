@@ -99,6 +99,9 @@ function PostUpdate:Main()
   -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
   PostUpdate:CrownOfLight()
 
+  -- Handle extra Incubus
+  PostUpdate:CheckLilithExtraIncubus()
+
   -- Check the player's health for the Soul Jar mechanic
   SoulJar:PostUpdate()
 
@@ -435,6 +438,21 @@ function PostUpdate:CrownOfLight()
      -- Remove the two soul hearts that the Crown of Light gives
      g.run.removedCrownHearts = true
      g.p:AddSoulHearts(-4)
+  end
+end
+
+-- In R+7 Season 4 and Racing+ Rebalanced,
+-- we want to remove the Lilith's extra Incubus if they attempt to switch characters
+function PostUpdate:CheckLilithExtraIncubus()
+  -- Local variables
+  local character = g.p:GetPlayerType()
+
+  if g.run.extraIncubus and
+     character ~= PlayerType.PLAYER_LILITH then -- 13
+
+    g.run.extraIncubus = false
+    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
+    Isaac.DebugString("Removed the extra Incubus.")
   end
 end
 

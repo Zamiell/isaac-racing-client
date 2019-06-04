@@ -8,11 +8,12 @@ function UseCard:Main(card)
   -- Display the streak text (because Racing+ removes the vanilla streak text)
   if card == Card.RUNE_BLANK then -- 40
     g.run.streakForce = true
-  else
+  elseif not g.run.streakIgnore then
     -- We ignore blank runes because we want to show the streak text of the actual random effect
     g.run.streakText = g.itemConfig:GetCard(card).Name
     g.run.streakFrame = Isaac.GetFrameCount()
   end
+  g.run.streakIgnore = false
 end
 
 -- Card.CARD_JUSTICE (9)

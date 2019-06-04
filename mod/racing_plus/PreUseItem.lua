@@ -35,38 +35,38 @@ function PreUseItem:Item97()
   local bookPickupType = math.random(1, 7)
   g.RNGCounter.BookOfSin = g:IncrementRNG(g.RNGCounter.BookOfSin)
 
-  local pos = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
-  local vel = Vector(0, 0)
+  local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
+  local velocity = g.zeroVector
 
   if bookPickupType == 1 then
     -- Random Heart - 5.10.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, pos, vel,
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, position, velocity,
               g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 2 then
     -- Random Coin - 5.20.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, pos, vel, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 3 then
     -- Random Bomb - 5.40.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, pos, vel, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 4 then
     -- Random Key - 5.30.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, pos, vel, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 5 then
     -- Lil' Battery - 5.90.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, pos, vel,
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, position, velocity,
               g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 6 then
     -- Random Pill - 5.70.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, vel, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 7 then
     -- Random Card/Rune - 5.300.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, vel,
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, position, velocity,
               g.p, 0, g.RNGCounter.BookOfSin)
   end
 
@@ -220,7 +220,7 @@ function PreUseItem:UnreplacedItemsExist()
 
   -- Look for pedestals that have not been replaced yet
   local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                    -1, false, false)
+                                        -1, false, false)
   for _, collectible in ipairs(collectibles) do
     local alreadyReplaced = false
     for j = 1, #g.run.replacedPedestals do

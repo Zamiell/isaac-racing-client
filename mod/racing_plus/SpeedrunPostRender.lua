@@ -193,7 +193,7 @@ function SpeedrunPostRender:DrawVetoButtonText()
     local itemPos = Isaac.WorldToRenderPosition(itemPosGame)
     x = x + 15
     itemPos = Vector(itemPos.X + x, itemPos.Y)
-    Speedrun.vetoSprites[i]:Render(itemPos, Vector(0, 0), Vector(0, 0))
+    Speedrun.vetoSprites[i]:Render(itemPos, g.zeroVector, g.zeroVector)
   end
 
   if Speedrun.vetoTimer == 0 then

@@ -449,7 +449,7 @@ function FastClear:ClearRoom()
 
     g.g:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay Effect"),
               Isaac.GetEntityVariantByName("Room Clear Delay Effect"),
-               g:GridToPos(0, 0), Vector(0, 0), nil, 0, 0)
+              g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay Effect\" custom entity (for The Lamb).")
     -- This won't work to delay the room clearing if "debug 10" is on
 
@@ -458,7 +458,7 @@ function FastClear:ClearRoom()
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.r:GetCenterPos(), Vector(0, 0), nil, 0, 0)
+              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
 
   else
     -- Spawn the award for clearing the room (the pickup, chest, etc.)
@@ -603,32 +603,32 @@ function FastClear:SpawnPhotos()
   -- Do the appropriate action depending on the situation
   if situation == situations.POLAROID then
     g.run.spawningPhoto = true
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector,
               nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
     Isaac.DebugString("Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.NEGATIVE then
     g.run.spawningPhoto = true
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0),
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector,
               nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
     Isaac.DebugString("Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.BOTH then
     g.run.spawningPhoto = true
     local polaroid = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-                               posCenterLeft, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
+                               posCenterLeft, g.zeroVector, nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
     polaroid:ToPickup().TheresOptionsPickup = true
 
     g.run.spawningPhoto = true
     local newSeed = g:IncrementRNG(roomSeed) -- We don't want both of the photos to have the same RNG
     local negative = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-                               posCenterRight, Vector(0, 0), nil, CollectibleType.COLLECTIBLE_NEGATIVE, newSeed)
+                               posCenterRight, g.zeroVector, nil, CollectibleType.COLLECTIBLE_NEGATIVE, newSeed)
     negative:ToPickup().TheresOptionsPickup = true
 
     Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.RANDOM then
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, Vector(0, 0), nil, 0, roomSeed)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector, nil, 0, roomSeed)
     -- (a SubType of 0 will make a random item of the pool according to the room type)
     -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
     Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
@@ -682,7 +682,6 @@ end
 -- https://bindingofisaacrebirth.gamepedia.com/User:Blcd/RandomTidbits#Pickup_Familiars)
 function FastClear:CheckBagFamiliars()
   -- Local variables
-  local zeroVelocity = Vector(0, 0)
   local constant1 = 1.1 -- For Little C.H.A.D., Bomb Bag, Acid Baby, Sack of Sacks
   local constant2 = 1.11 -- For The Relic, Mystery Sack, Rune Bag
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) then -- 247
@@ -702,7 +701,7 @@ function FastClear:CheckBagFamiliars()
       if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
         -- Random Bomb - 5.40.0
         FastClear.familiars.BombBag.seed = g:IncrementRNG(FastClear.familiars.BombBag.seed)
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.BombBag.seed)
       end
 
@@ -721,7 +720,7 @@ function FastClear:CheckBagFamiliars()
 
         -- Random Coin - 5.20.0
         FastClear.familiars.SackOfPennies.seed = g:IncrementRNG(FastClear.familiars.SackOfPennies.seed)
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.SackOfPennies.seed)
       end
 
@@ -733,7 +732,7 @@ function FastClear:CheckBagFamiliars()
       local newRoomsCleared = FastClear.familiars.LittleCHAD.roomsCleared + 1
       if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
         -- Heart (half) - 5.10.2
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, g.zeroVector,
                   g.p, 2, 0)
       end
 
@@ -745,7 +744,7 @@ function FastClear:CheckBagFamiliars()
       local newRoomsCleared = FastClear.familiars.TheRelic.roomsCleared + 1
       if math.floor(newRoomsCleared / constant2) & 3 == 2 then
         -- Heart (soul) - 5.10.3
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, g.zeroVector,
                   g.p, 3, 0)
       end
 
@@ -782,22 +781,22 @@ function FastClear:CheckBagFamiliars()
 
         if sackPickupType == 1 then
           local heartType = math.random(1, 10) -- From Heart (5.10.1) to Blended Heart (5.10.10)
-          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, g.zeroVector,
                     g.p, heartType, FastClear.familiars.MysterySack.seed)
 
         elseif sackPickupType == 2 then
           local coinType = math.random(1, 6) -- From Penny (5.20.1) to Sticky Nickel (5.20.6)
-          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, g.zeroVector,
                     g.p, coinType, FastClear.familiars.MysterySack.seed)
 
         elseif sackPickupType == 3 then
           local keyType = math.random(1, 4) -- From Key (5.30.1) to Charged Key (5.30.4)
-          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, zeroVelocity,
+          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, g.zeroVector,
                     g.p, keyType, FastClear.familiars.MysterySack.seed)
 
         elseif sackPickupType == 4 then
           local bombType = math.random(1, 5) -- From Bomb (5.40.1) to Megatroll Bomb (5.40.5)
-          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, g.zeroVector,
                     g.p, bombType, FastClear.familiars.MysterySack.seed)
         end
       end
@@ -816,7 +815,7 @@ function FastClear:CheckBagFamiliars()
           (g.p:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 125) then
 
           -- Random Trinket - 5.350.0
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.LilChest.seed)
       else
         -- Second, decide whether it spawns a consumable
@@ -835,25 +834,25 @@ function FastClear:CheckBagFamiliars()
           -- If heart
           if chestPickupType == 1 then
             -- Random Heart - 5.10.0
-            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, zeroVelocity,
+            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, g.zeroVector,
                       g.p, 0, FastClear.familiars.LilChest.seed)
 
           -- If coin
           elseif chestPickupType == 2 then
             -- Random Coin - 5.20.0
-            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, zeroVelocity,
+            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, familiar.Position, g.zeroVector,
                       g.p, 0, FastClear.familiars.LilChest.seed)
 
           -- If bomb
           elseif chestPickupType == 3 then
             -- Random Bomb - 5.40.0
-            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, zeroVelocity,
+            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, g.zeroVector,
                       g.p, 0, FastClear.familiars.LilChest.seed)
 
           -- If key
           elseif chestPickupType == 4 then
             -- Random Key - 5.30.0
-            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, zeroVelocity,
+            g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, familiar.Position, g.zeroVector,
                       g.p, 0, FastClear.familiars.LilChest.seed)
           end
         end
@@ -871,7 +870,7 @@ function FastClear:CheckBagFamiliars()
           (g.p:HasCollectible(CollectibleType.COLLECTIBLE_BFFS) and chestTrinket <= 40) then
 
         -- Spawn a random pickup
-        g.g:Spawn(EntityType.ENTITY_PICKUP, 0, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, 0, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.Bumbo.seed)
       end
 
@@ -885,7 +884,7 @@ function FastClear:CheckBagFamiliars()
         while true do
           FastClear.familiars.RuneBag.seed = g:IncrementRNG(FastClear.familiars.RuneBag.seed)
           local rune = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
-                                 familiar.Position, zeroVelocity, g.p, 0, FastClear.familiars.RuneBag.seed)
+                                 familiar.Position, g.zeroVector, g.p, 0, FastClear.familiars.RuneBag.seed)
           -- Hagalaz is 32 and Black Rune is 41
           if rune.SubType >= 32 and rune.SubType <= 41 then
             break
@@ -908,7 +907,7 @@ function FastClear:CheckBagFamiliars()
         local spiderModDrop = math.random(1, 3)
         if spiderModDrop == 1 then
           -- Lil' Battery (5.90)
-          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, familiar.Position, zeroVelocity,
+          g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, familiar.Position, g.zeroVector,
                     g.p, 0, FastClear.familiars.SpiderMod.seed)
         else
           g.p:AddBlueSpider(familiar.Position)
@@ -922,7 +921,7 @@ function FastClear:CheckBagFamiliars()
       if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
         -- Random Pill - 5.70.0
         FastClear.familiars.AcidBaby.seed = g:IncrementRNG(FastClear.familiars.AcidBaby.seed)
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.AcidBaby.seed)
       end
 
@@ -933,7 +932,7 @@ function FastClear:CheckBagFamiliars()
       if math.floor(newRoomsCleared / constant1) > 0 and math.floor(newRoomsCleared / constant1) & 1 == 0 then
         -- Grab Bag - 5.69.0
         FastClear.familiars.SackOfSacks.seed = g:IncrementRNG(FastClear.familiars.SackOfSacks.seed)
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, familiar.Position, zeroVelocity,
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_GRAB_BAG, familiar.Position, g.zeroVector,
                   g.p, 0, FastClear.familiars.SackOfSacks.seed)
       end
     end
@@ -1109,7 +1108,7 @@ function FastClear:SpawnClearAward()
     for i = 1, pickupCount do
       local pos = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
       local pickup = g.g:Spawn(EntityType.ENTITY_PICKUP, pickupVariant, -- 5
-                     pos, Vector(0, 0), nil, subType, rng:Next())
+                     pos, g.zeroVector, nil, subType, rng:Next())
       subType = pickup.SubType
     end
   end

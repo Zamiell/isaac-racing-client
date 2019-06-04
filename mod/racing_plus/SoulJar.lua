@@ -83,17 +83,17 @@ function SoulJar:SpriteDisplay()
   local barVector = Vector(barX, barY)
 
   -- Draw the charge bar 1/3 (the background)
-  SoulJar.sprites.barBack:Render(barVector, Vector(0, 0), Vector(0, 0))
+  SoulJar.sprites.barBack:Render(barVector, g.zeroVector, g.zeroVector)
   SoulJar.sprites.barBack:Update()
 
   -- Draw the charge bar 2/3 (the bar itself, clipped appropriately)
   local meterMultiplier = 3 -- 3 for a 8 charge item
   local meterClip = 26 - (g.run.soulJarSouls * meterMultiplier)
-  SoulJar.sprites.barMeter:Render(barVector, Vector(0, meterClip), Vector(0, 0))
+  SoulJar.sprites.barMeter:Render(barVector, Vector(0, meterClip), g.zeroVector)
   SoulJar.sprites.barMeter:Update()
 
   -- Draw the charge bar 3/3 (the segment lines on top)
-  SoulJar.sprites.barLines:Render(barVector, Vector(0, 0), Vector(0, 0))
+  SoulJar.sprites.barLines:Render(barVector, g.zeroVector, g.zeroVector)
   SoulJar.sprites.barLines:Update()
 end
 

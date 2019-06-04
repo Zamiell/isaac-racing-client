@@ -59,7 +59,7 @@ function ChangeKeybindings:PostNewRoom()
 
   -- Make the player invisible
   g.p.Position = g.r:GetCenterPos()
-  g.p.SpriteScale = Vector(0, 0)
+  g.p.SpriteScale = g.zeroVector
 
   -- Reset variables used in the challenge
   ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP
@@ -136,8 +136,8 @@ function ChangeKeybindings:PostRender()
   text[3] = ""
   text[4] = "Press the desired key now."
   text[5] = "Or press F12 to keep the vanilla behavior."
-  text[6] = "(For controller players, if you are having problems,"
-  text[7] = "bind keyboard hotkeys and use Joy2Key.)"
+  text[6] = "(For controller players, you must bind these"
+  text[7] = "to a keyboard key and then use Joy2Key.)"
   for i, line in ipairs(text) do
     local f = Font()
     f:Load("font/droid.fnt")
@@ -146,49 +146,47 @@ function ChangeKeybindings:PostRender()
     f:DrawString(line, 100, y, color, 0, true)
   end
 
-  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    for k, v in pairs(Keyboard) do
-      if Input.IsButtonPressed(v, i) then
-        if ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP then
-          g.race.hotkeyDrop = v
-          if i == 0 and v == Keyboard.KEY_F12 then -- 301
-            g.race.hotkeyDrop = 0
-          end
-          Isaac.DebugString("New drop hotkey: " .. tostring(g.race.hotkeyDrop))
-          ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_TRINKET
-          SaveDat:Save()
-          ChangeKeybindings.challengeFramePressed = gameFrameCount
-
-        elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_TRINKET then
-          g.race.hotkeyDropTrinket = v
-          if i == 0 and v == Keyboard.KEY_F12 then -- 301
-            g.race.hotkeyDropTrinket = 0
-          end
-          Isaac.DebugString("New drop trinket hotkey: " .. tostring(g.race.hotkeyDropTrinket))
-          ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_POCKET
-          SaveDat:Save()
-          ChangeKeybindings.challengeFramePressed = gameFrameCount
-
-        elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_POCKET then
-          g.race.hotkeyDropPocket = v
-          if i == 0 and v == Keyboard.KEY_F12 then -- 301
-            g.race.hotkeyDropPocket = 0
-          end
-          Isaac.DebugString("New drop pocket hotkey: " .. tostring(g.race.hotkeyDropPocket))
-          ChangeKeybindings.challengeState = ChangeKeybindings.states.SCHOOLBAG_SWITCH
-          SaveDat:Save()
-          ChangeKeybindings.challengeFramePressed = gameFrameCount
-
-        elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.SCHOOLBAG_SWITCH then
-          g.race.hotkeySwitch = v
-          if i == 0 and v == Keyboard.KEY_F12 then -- 301
-            g.race.hotkeySwitch = 0
-          end
-          Isaac.DebugString("New switch hotkey: " .. tostring(g.race.hotkeySwitch))
-          ChangeKeybindings.challengeState = ChangeKeybindings.states.START_TO_FADE_OUT
-          SaveDat:Save()
-          ChangeKeybindings.challengeFramePressed = gameFrameCount
+  for k, v in pairs(Keyboard) do
+    if Input.IsButtonPressed(v, 0) then
+      if ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP then
+        g.race.hotkeyDrop = v
+        if v == Keyboard.KEY_F12 then -- 301
+          g.race.hotkeyDrop = 0
         end
+        Isaac.DebugString("New drop hotkey: " .. tostring(g.race.hotkeyDrop))
+        ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_TRINKET
+        SaveDat:Save()
+        ChangeKeybindings.challengeFramePressed = gameFrameCount
+
+      elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_TRINKET then
+        g.race.hotkeyDropTrinket = v
+        if v == Keyboard.KEY_F12 then -- 301
+          g.race.hotkeyDropTrinket = 0
+        end
+        Isaac.DebugString("New drop trinket hotkey: " .. tostring(g.race.hotkeyDropTrinket))
+        ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_POCKET
+        SaveDat:Save()
+        ChangeKeybindings.challengeFramePressed = gameFrameCount
+
+      elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_POCKET then
+        g.race.hotkeyDropPocket = v
+        if v == Keyboard.KEY_F12 then -- 301
+          g.race.hotkeyDropPocket = 0
+        end
+        Isaac.DebugString("New drop pocket hotkey: " .. tostring(g.race.hotkeyDropPocket))
+        ChangeKeybindings.challengeState = ChangeKeybindings.states.SCHOOLBAG_SWITCH
+        SaveDat:Save()
+        ChangeKeybindings.challengeFramePressed = gameFrameCount
+
+      elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.SCHOOLBAG_SWITCH then
+        g.race.hotkeySwitch = v
+        if v == Keyboard.KEY_F12 then -- 301
+          g.race.hotkeySwitch = 0
+        end
+        Isaac.DebugString("New switch hotkey: " .. tostring(g.race.hotkeySwitch))
+        ChangeKeybindings.challengeState = ChangeKeybindings.states.START_TO_FADE_OUT
+        SaveDat:Save()
+        ChangeKeybindings.challengeFramePressed = gameFrameCount
       end
     end
   end
