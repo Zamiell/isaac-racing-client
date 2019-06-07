@@ -37,8 +37,8 @@ function PostNewRoom:Main()
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
   if gameFrameCount == 0 or
-     (g.run.currentFloor ~= stage or
-      g.run.currentFloorType ~= stageType) then
+     g.run.currentFloor ~= stage or
+     g.run.currentFloorType ~= stageType then
 
     -- Make an exception if we are using the "goto" command to go to a debug room
     if g.run.goingToDebugRoom and
@@ -194,7 +194,7 @@ function PostNewRoom:CheckSatanRoom()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
 
   if roomClear then
@@ -268,7 +268,7 @@ function PostNewRoom:CheckScolexRoom()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
 
   -- We don't need to modify Scolex if the room is already cleared
@@ -378,7 +378,7 @@ function PostNewRoom:CheckEntities()
   local gameFrameCount = g.g:GetFrameCount()
   local roomClear = g.r:IsClear()
   local roomShape = g.r:GetRoomShape()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local character = g.p:GetPlayerType()
 
   local subvertTeleport = false
@@ -568,7 +568,7 @@ function PostNewRoom:Race()
   local roomVariant = roomDesc.Data.Variant
   local roomType = g.r:GetType()
   local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local gridSize = g.r:GetGridSize()
 
   -- Remove the final place graphic if it is showing
@@ -706,7 +706,7 @@ function PostNewRoom:CheckSeededMOTreasure()
   -- Local variables
   local roomType = g.r:GetType()
   local gridSize = g.r:GetGridSize()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Check to see if we need to make a custom item room for Seeded MO
   if roomType == RoomType.ROOM_TREASURE and -- 4

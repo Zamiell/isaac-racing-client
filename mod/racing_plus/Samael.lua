@@ -23,6 +23,7 @@ local samaelDrFetus = Isaac.GetItemIdByName("Samael Dr. Fetus")
 local samaelMarked = Isaac.GetItemIdByName("Samael Marked") --Replaces marked for Samael
 local wraithItem = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
 local deadEyeCountdown = 3
+local zeroColor = Color(0, 0, 0, 0, 0, 0, 0)
 
 --Wraith meter HUD sprite
 local wraithMeter = Sprite()
@@ -174,10 +175,10 @@ function SamaelMod:PostUpdate()
         special.CanShutDoors = false
         dying = true --Set dying flag
       end
-      g.p:GetSprite().Color = Color(0,0,0,0,0,0,0) --Make the player invisible
+      g.p:GetSprite().Color = zeroColor --Make the player invisible
     elseif dying then --If the player is not dying, and the dying flag is on
       dying = false --Turn the flag off
-      g.p:GetSprite().Color = Color(1,1,1,1,0,0,0)
+      g.p:GetSprite().Color = g.color
     end
 
     --Three Dollar Bill
@@ -311,7 +312,7 @@ function SamaelMod:PostUpdate()
     end
     if not g.p:GetSprite():IsPlaying("Death") and dying then
       dying = false --Turn the flag off
-      g.p:GetSprite().Color = Color(1,1,1,1,0,0,0)
+      g.p:GetSprite().Color = g.color
     end
     if costumeEquipped then
       g.p:TryRemoveNullCostume(cloak)
@@ -349,7 +350,7 @@ function SamaelMod:wraithModeHandler()
   elseif wraithActive then --Full wraith form is active
     wraithTime = wraithTime - 1
     wraithCharge = 0
-    g.p:GetSprite().Color = Color(0,0,0,0,0,0,0)
+    g.p:GetSprite().Color = zeroColor
     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0,
                 g.p.Position, g.zeroVector, g.p) --Smoke trail
     if wraithTime == 0 then --When wraith time is over
@@ -369,7 +370,7 @@ end
 
 function SamaelMod:triggerWraithModeEnd()
   if dying then
-    g.p:SetColor(Color(0, 0, 0, 0, 0, 0, 0), 57, 999, false, false)
+    g.p:SetColor(zeroColor, 57, 999, false, false)
   end
   if wraithCooldown == 0 then
     g.p.MoveSpeed = g.p.MoveSpeed - 0.3
@@ -379,7 +380,7 @@ function SamaelMod:triggerWraithModeEnd()
   wraithActive = false
   wraithCooldown = 0
   wraithTime = 0
-  g.p:GetSprite().Color = Color(1, 1, 1, 1, 0, 0, 0)
+  g.p:GetSprite().Color = g.color
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
   Isaac.DebugString("Ended wraith mode.")
 end
@@ -878,7 +879,7 @@ end
 
 -----------Add colours to the scythe, if certain items are collected-----------
 function SamaelMod:getScytheColor()
-  local color = Color(1,1,1,1,0,0,0)
+  local color = Color(1, 1, 1, 1, 0, 0, 0)
   local red = {
     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BLOOD_MARTYR),
     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHEMICAL_PEEL),
@@ -1491,7 +1492,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
           jacobTear.CollisionDamage = 0.0
           jacobTear.Mass = 0
           jacobTear.Visible = false
-          jacobTear:SetColor(Color(0,0,0,0,0,0,0), 999, 999, false, false)
+          jacobTear:SetColor(zeroColor, 999, 999, false, false)
           jacobTriggered = true
         else
           jacobTriggered = false
@@ -1674,7 +1675,7 @@ function SamaelMod:activateWraith()
   poof:FollowParent(g.p)
 
   --Special animation
-  g.p:GetSprite().Color = Color(0, 0, 0, 0, 0, 0, 0)
+  g.p:GetSprite().Color = zeroColor
   local special = Isaac.Spawn(specialAnim, 0, 0,
                               g.p.Position, g.zeroVector, g.p):ToNPC() --Spawn the special animations entity
   special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)

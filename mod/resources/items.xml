@@ -566,7 +566,7 @@ Changes for Racing+ Rebalanced:
 	<familiar achievement="368" description="You're tearing me apart!" gfx="Collectibles_525_Leprosy.png" name="Leprosy" id="525" />
 
 	<!-- Booster Pack #3 -->
-	<familiar achievement="372" description="Lil harbingers!" gfx="Collectibles_526_7Seals.png" name="7 Seals" devilprice="1" id="526"/>
+	<familiar achievement="372" description="Lil harbingers!" gfx="Collectibles_526_7Seals.png" name="7 Seals" id="526"/>
 	<active achievement="371" description="Caaan do!" gfx="Collectibles_527_Mr_Me.png" maxcharges="4" name="Mr. ME!" id="527" />
 	<familiar achievement="373" description="Eclipsed by the moon" gfx="collectibles_528_angelic prism.png" name="Angelic Prism" id="528" />
 	<passive achievement="374" cache="firedelay tearflag" description="Eyeball tears" gfx="Collectibles_529_Pop.png" name="Pop!" id="529" />

@@ -200,12 +200,9 @@ function SpeedrunPostRender:DrawVetoButtonText()
     -- Draw the "Veto" text
     local posGame = g:GridToPos(11, 5)
     local pos = Isaac.WorldToRenderPosition(posGame)
-    local f = Font()
-    f:Load("font/droid.fnt")
-    local color = KColor(1, 1, 1, 1, 0, 0, 0)
     local string = "Veto"
-    local length = f:GetStringWidthUTF8(string)
-    f:DrawString(string, pos.X - (length / 2), pos.Y, color, 0, true)
+    local length = g.font:GetStringWidthUTF8(string)
+    g.font:DrawString(string, pos.X - (length / 2), pos.Y, g.kcolor, 0, true)
   end
 end
 

@@ -22,7 +22,7 @@ function SpeedrunPostNewRoom:Womb2Error()
   -- Local variables
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local gridSize = g.r:GetGridSize()
 
   if stage ~= LevelStage.STAGE4_2 then -- 8

@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.39.1"
+g.version = "v0.40.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -101,6 +101,10 @@ g.itemPool = g.g:GetItemPool()
 g.itemConfig = Isaac.GetItemConfig()
 g.sfx = SFXManager()
 g.zeroVector = Vector(0, 0)
+g.font = Font()
+g.font:Load("font/droid.fnt")
+g.color = Color(1, 1, 1, 1, 0, 0, 0)
+g.kcolor = KColor(1, 1, 1, 1)
 
 --
 -- Extra enumerations
@@ -130,6 +134,7 @@ CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wra
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
 SoundEffect.SOUND_WALNUT          = Isaac.GetSoundIdByName("Walnut")
+SoundEffect.SOUND_SAD             = Isaac.GetSoundIdByName("Sad")
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
@@ -197,6 +202,8 @@ function g:InitRun()
   g.run.finishedBossRush  = false
   g.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
   g.run.PHDPills          = false -- Used to determine when to change the pill text
+  g.run.haveWishbone      = false
+  g.run.haveWalnut        = false
 
   -- Tracking per floor
   g.run.currentFloor        = 0
@@ -208,6 +215,7 @@ function g:InitRun()
   g.run.replacedHeavenDoors = {}
   g.run.reseedCount         = 0
   g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
+  g.run.playedSad           = false
 
   -- Tracking per room
   g.run.currentRoomClearState = true
@@ -270,6 +278,7 @@ function g:InitRun()
   g.run.currentCharacter     = 0
   g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
   g.run.showVersionFrame     = 0
+  g.run.bombKeyPressed       = false
 
   -- Transformations
   g.run.transformations = {}

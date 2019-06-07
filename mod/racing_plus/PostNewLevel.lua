@@ -95,6 +95,7 @@ function PostNewLevel:NewLevel()
   Isaac.DebugString("Reseed count: " .. tostring(g.run.reseedCount))
   g.run.reseedCount = 0
   g.run.tempHolyMantle = false
+  g.run.playedSad = false
 
   -- Reset the RNG of some items that should be seeded per floor
   local stageSeed = g.seeds:GetStageSeed(stage)

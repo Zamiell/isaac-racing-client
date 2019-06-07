@@ -139,11 +139,8 @@ function ChangeKeybindings:PostRender()
   text[6] = "(For controller players, you must bind these"
   text[7] = "to a keyboard key and then use Joy2Key.)"
   for i, line in ipairs(text) do
-    local f = Font()
-    f:Load("font/droid.fnt")
     local y = 50 + (20 * i)
-    local color = KColor(1, 1, 1, 1, 0, 0, 0)
-    f:DrawString(line, 100, y, color, 0, true)
+    g.font:DrawString(line, 100, y, g.kcolor, 0, true)
   end
 
   for k, v in pairs(Keyboard) do

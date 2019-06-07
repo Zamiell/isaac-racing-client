@@ -35,11 +35,8 @@ function Pills:PostRender()
     pillEntry.sprite:RenderLayer(0, pos)
 
     -- Show the pill effect as text
-    local f = Font()
-    f:Load("font/droid.fnt")
-    local color = KColor(1, 1, 1, 1, 0, 0, 0)
     local string = g.itemConfig:GetPillEffect(pillEntry.effect).Name
-    f:DrawString(string, x + 15, y - 9, color, 0, true)
+    g.font:DrawString(string, x + 15, y - 9, g.kcolor, 0, true)
   end
 end
 

@@ -387,7 +387,7 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
       -- Change the graphic to that of a number
       ChangeCharOrder.sprites.characters[i]:Load("gfx/timer/timer.anm2", true)
       ChangeCharOrder.sprites.characters[i]:SetFrame("Default", #ChangeCharOrder.charOrder)
-      ChangeCharOrder.sprites.characters[i].Color = Color(1, 1, 1, 1, 0, 0, 0) -- Remove the fade
+      ChangeCharOrder.sprites.characters[i].Color = g.color -- Remove the fade
 
       -- Check to see if this is our last character
       if #ChangeCharOrder.charOrder == #season.charPosition then
@@ -825,11 +825,8 @@ function ChangeCharOrder:PostRender()
   elseif ChangeCharOrder.phase == 4 then
     string = "Choose " .. tostring(ChangeCharOrder.seasons.R7S6.itemBans) .. " items to ban from the starting pool"
   end
-  local f = Font()
-  f:Load("font/droid.fnt")
-  local color = KColor(1, 1, 1, 1, 0, 0, 0)
-  local length = f:GetStringWidthUTF8(string)
-  f:DrawString(string, posActivity.X - (length / 2), posActivity.Y, color, 0, true)
+  local length = g.font:GetStringWidthUTF8(string)
+  g.font:DrawString(string, posActivity.X - (length / 2), posActivity.Y, g.kcolor, 0, true)
 
   -- Render the button sprites
   if ChangeCharOrder.sprites.buttons ~= nil then

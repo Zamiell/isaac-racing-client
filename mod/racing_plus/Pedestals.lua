@@ -15,7 +15,7 @@ function RPPedestals:Replace(pickup)
     roomIndex = g.l:GetCurrentRoomIndex()
   end
   local roomType = g.r:GetType()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local stageSeed = g.seeds:GetStageSeed(stage)
   local challenge = Isaac.GetChallenge()
 
@@ -221,8 +221,7 @@ function RPPedestals:Replace(pickup)
   end
 
   -- Check to see if this item should go into a Schoolbag
-  local putInSchoolbag = Schoolbag:CheckSecondItem(pickup)
-  if putInSchoolbag then
+  if Schoolbag:CheckSecondItem(pickup) then
     return
   end
 

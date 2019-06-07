@@ -121,7 +121,7 @@ function FastTravel:ReplaceHeavenDoor(entity)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Delete the "natural" beam of light that spawns one frame after It Lives! (or Hush) is killed
   -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)

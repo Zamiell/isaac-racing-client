@@ -240,7 +240,7 @@ end
 -- Change the behavior such that given pill will not replace your current card/pill
 function PostItemPickup.CaffeinePill()
   -- Local variables
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local pill1 = g.p:GetPill(0) -- Returns 0 if no pill
 
   -- Find the first pill or card on the ground that is freshly spawned

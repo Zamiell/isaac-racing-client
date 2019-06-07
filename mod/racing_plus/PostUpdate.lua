@@ -18,20 +18,21 @@ local ChangeCharOrder    = require("racing_plus/changecharorder")
 -- (this will not fire while the floor/room is loading)
 -- ModCallbacks.MC_POST_UPDATE (1)
 function PostUpdate:Main()
-  -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
-  local activeCharge = g.p:GetActiveCharge()
-
-  -- Keep track of the total amount of rooms cleared on this run thus far
   PostUpdate:CheckRoomCleared()
-
-  -- Keep track of our max hearts if we are Keeper
-  -- (to fix the Greed's Gullet bug and the double coin / nickel healing bug)
   PostUpdate:CheckKeeperHearts()
-
   PostUpdate:CheckItemPickup()
   PostUpdate:CheckTransformations()
   PostUpdate:CheckCharacter()
+  PostUpdate:CheckHauntSpeedup()
+  PostUpdate:CheckMomStomp()
+  PostUpdate:CheckManualRechargeActive()
+  PostUpdate:CheckMutantSpiderInnerEye()
+  PostUpdate:CrownOfLight()
+  PostUpdate:CheckLilithExtraIncubus()
+  PostUpdate:CheckWishbone()
+  PostUpdate:CheckWalnut()
+  PostUpdate:Check0Keys()
+  PostUpdate:Fix9VoltSynergy()
 
   -- Check on every frame to see if we need to open the doors
   -- (we can't just add this as a new MC_POST_UPDATE callback because
@@ -42,37 +43,8 @@ function PostUpdate:Main()
   FastTravel:CheckCrawlspaceExit()
   FastTravel:CheckCrawlspaceSoftlock()
 
-  -- Check all the grid entities in the room
-  CheckEntities:Grid()
-
-  -- Check all the non-grid entities in the room
-  CheckEntities:NonGrid()
-
-  -- Check for a Haunt fight speedup
-  -- (we want to detach the first Lil' Haunt from a Haunt early because the vanilla game takes too long)
-  PostUpdate:CheckHauntSpeedup()
-
-  -- Check for a manual Mom stomp
-  PostUpdate:CheckMomStomp()
-
-  -- Check to see if an item that messes with item pedestals got canceled
-  -- (this has to be done a frame later or else it won't work)
-  if g.run.rechargeItemFrame == gameFrameCount then
-    g.run.rechargeItemFrame = 0
-    g.p:FullCharge()
-    g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
-  end
-
-  -- Check for Mutant Spider's Inner Eye (a custom item)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) and
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
-
-    -- This custom item is set to not be shown on the item tracker
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
-    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_INNER_EYE, 0, false) -- 2
-    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
-  end
+  CheckEntities:Grid() -- Check all the grid entities in the room
+  CheckEntities:NonGrid() -- Check all the non-grid entities in the room
 
   -- Check for item drop inputs (fast-drop)
   FastDrop:CheckDropInput()
@@ -85,31 +57,10 @@ function PostUpdate:Main()
   Schoolbag:CheckEmptyActive()
   Schoolbag:CheckBossRush()
   Schoolbag:CheckInput()
-
-  -- Check for the vanilla Schoolbag and convert it to the Racing+ Schoolbag if necessary
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)")
-    if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
-      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    end
-    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-  end
-
-  -- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
-  PostUpdate:CrownOfLight()
-
-  -- Handle extra Incubus
-  PostUpdate:CheckLilithExtraIncubus()
+  Schoolbag:ConvertVanilla()
 
   -- Check the player's health for the Soul Jar mechanic
   SoulJar:PostUpdate()
-
-  -- Fix The Battery + 9 Volt synergy (2/2)
-  if g.run.giveExtraCharge then
-    g.run.giveExtraCharge = false
-    g.p:SetActiveCharge(activeCharge + 1)
-  end
 
   Pills:CheckPHD()
 
@@ -123,7 +74,7 @@ function PostUpdate:Main()
   ChangeCharOrder:PostUpdate()
 end
 
--- Keep track of the when the room is cleared
+-- Keep track of the when the room is cleared and the total amount of rooms cleared on this run thus far
 function PostUpdate:CheckRoomCleared()
   -- Local variables
   local roomClear = g.r:IsClear()
@@ -394,6 +345,29 @@ function PostUpdate:CheckMomStomp()
   end
 end
 
+-- Check to see if an item that messes with item pedestals got canceled
+-- (this has to be done a frame later or else it won't work)
+function PostUpdate:CheckManualRechargeActive()
+  if g.run.rechargeItemFrame == g.g:GetFrameCount() then
+    g.run.rechargeItemFrame = 0
+    g.p:FullCharge()
+    g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
+  end
+end
+
+-- Check for Mutant Spider's Inner Eye (a custom item)
+function PostUpdate:CheckMutantSpiderInnerEye()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) and
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
+
+    -- This custom item is set to not be shown on the item tracker
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_INNER_EYE, 0, false) -- 2
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
+  end
+end
+
 function PostUpdate:DetachLilHaunt(npc)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
@@ -405,7 +379,7 @@ function PostUpdate:DetachLilHaunt(npc)
   npc.Visible = true
 
   -- We need to manually set the color, or else the Lil' Haunt will remain faded
-  npc:SetColor(Color(1, 1, 1, 1, 0, 0, 0), 0, 0, false, false)
+  npc:SetColor(g.color, 0, 0, false, false)
 
   -- We need to manually set their collision or else tears will pass through them
   npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
@@ -453,6 +427,71 @@ function PostUpdate:CheckLilithExtraIncubus()
     g.run.extraIncubus = false
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
     Isaac.DebugString("Removed the extra Incubus.")
+  end
+end
+
+function PostUpdate:CheckWishbone()
+  if g.run.haveWishbone then
+    if not g.p:HasTrinket(TrinketType.TRINKET_WISH_BONE) then -- 104
+      g.run.haveWishbone = false
+      local wishBones = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
+                                         TrinketType.TRINKET_WISH_BONE, false, false) -- 104
+      if #wishBones == 0 then
+        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+        -- (we reuse the Walnut breaking sound effect for this)
+      end
+    end
+  else
+    if g.p:HasTrinket(TrinketType.TRINKET_WISH_BONE) then -- 104
+      g.run.haveWishbone = true
+    end
+  end
+end
+
+function PostUpdate:CheckWalnut()
+  if g.run.haveWalnut then
+    if not g.p:HasTrinket(TrinketType.TRINKET_WALNUT) then -- 108
+      g.run.haveWalnut = false
+      local walnuts = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
+                                       TrinketType.TRINKET_WALNUT, false, false) -- 108
+      if #walnuts == 0 then
+        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+      end
+    end
+  else
+    if g.p:HasTrinket(TrinketType.TRINKET_WALNUT) then -- 108
+      g.run.haveWalnut = true
+    end
+  end
+end
+
+-- Check to see if the player is mistakenly trying to open a locked door without a key
+function PostUpdate:Check0Keys()
+  if g.run.playedSad or
+     g.p:GetNumKeys() ~= 0 then
+
+    return
+  end
+
+  -- Check for the presence of locked doors
+  local door
+  for i = 0, 7 do
+    door = g.r:GetDoor(i)
+    if door ~= nil and
+       door:IsLocked() and
+       g:InsideSquare(door.Position, g.p.Position, 31) then -- 30 does not work
+
+      g.sfx:Play(SoundEffect.SOUND_SAD, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+      g.run.playedSad = true
+    end
+  end
+end
+
+-- Fix The Battery + 9 Volt synergy (2/2)
+function PostUpdate:Fix9VoltSynergy()
+  if g.run.giveExtraCharge then
+    g.run.giveExtraCharge = false
+    g.p:SetActiveCharge(g.p:GetActiveCharge() + 1)
   end
 end
 

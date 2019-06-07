@@ -29,6 +29,7 @@ function SeededDeath:PostUpdate()
 
   -- Keep track of whenever we take a deal with the devil to prevent players from being able to take "free" items
   if (roomType == RoomType.ROOM_DEVIL or -- 14
+      roomType == RoomType.ROOM_CURSE or -- 10 (in Racing+ Rebalanced, there are DD items in a Curse Room)
       roomType == RoomType.ROOM_BLACK_MARKET) and -- 22
      g.p.QueuedItem.Item ~= nil then
 
@@ -322,7 +323,7 @@ function SeededDeath:DebuffOff()
   local effects = g.p:GetEffects()
 
   -- Unfade the character
-  playerSprite.Color = Color(1, 1, 1, 1, 0, 0, 0)
+  playerSprite.Color = g.color
 
   -- Store the current active item, red hearts, soul/black hearts, bombs, keys, and pocket items
   local subPlayer = g.p:GetSubPlayer()

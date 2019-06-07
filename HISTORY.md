@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.40.0* - June 4th, 2019
+
+* In Season 6, Judas Shadow is now banned on Judas. (Thanks Gamonymous)
+* There is now a custom sound effect when a Wishbone or a Walnut breaks.
+* There is now a custom sound effect when you try to open a locked door while at 0 keys.
+* There is now a custom sound effect when you try to plant a bomb while at 0 bombs.
+
 ### *v0.39.0* - June 4th, 2019
 
 * Green player creep is now changed to blue (instead of red). (Thanks Moucheron Quipet)

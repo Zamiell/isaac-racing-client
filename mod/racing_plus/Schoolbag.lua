@@ -194,6 +194,19 @@ function Schoolbag:CheckActiveCharges()
   g.run.schoolbag.lastChargeBattery = batteryCharge
 end
 
+-- Called from the PostUpdate callback
+-- Check for the vanilla Schoolbag and convert it to the Racing+ Schoolbag if necessary
+function Schoolbag:ConvertVanilla()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
+    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)")
+    if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
+    end
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+  end
+end
+
 -- Called from the PostUpdate callback (the "CheckEntities:ReplacePedestal()" function)
 -- (essentially this code check runs only when the item is first spawned)
 function Schoolbag:CheckSecondItem(pickup)

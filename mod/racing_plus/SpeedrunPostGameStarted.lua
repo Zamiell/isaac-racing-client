@@ -583,7 +583,12 @@ function SpeedrunPostGameStarted:R7S6()
       end
 
       -- Check to see if this start synergizes with this character (character/item bans)
-      if character == PlayerType.PLAYER_EVE then -- 5
+      if character == PlayerType.PLAYER_JUDAS then -- 3
+        if startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
+          valid = false
+        end
+
+      elseif character == PlayerType.PLAYER_EVE then -- 5
         if startingBuild[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
           valid = false
         end

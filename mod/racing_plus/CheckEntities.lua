@@ -233,7 +233,7 @@ function CheckEntities:Entity5_340(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, something like "2496979501"
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if we already determined that we should leave this big chest

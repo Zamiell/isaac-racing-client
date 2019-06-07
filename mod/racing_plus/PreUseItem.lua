@@ -183,6 +183,10 @@ function PreUseItem:Item479()
     Isaac.DebugString("Gulping trinket " .. trinket2)
   end
 
+  -- Mark that the trinkets did not break
+  g.run.haveWishbone = false
+  g.run.haveWalnut = false
+
   -- By returning nothing, it will go on to do the Smelter effect
 end
 
