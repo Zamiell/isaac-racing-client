@@ -391,8 +391,9 @@ function PostRender:CheckResetInput()
 end
 
 function PostRender:CheckBombInput()
-  -- Play the sound effect at most once per floor
-  if g.run.playedSad then
+  if g.run.playedSad or -- Play the sound effect at most once per floor
+     g.run.consoleOpened then -- Don't play the sound effect if we could be typing into the console
+
     return
   end
 

@@ -66,9 +66,9 @@ function PostNewLevel:NewLevel()
   end
 
   -- Reseed the floor if it has a flaw in it
-  if challenge ~= 0 or
-     not customRun then -- Disable reseeding for set seeds
-
+  --if challenge ~= 0 or
+  --   not customRun then -- Disable reseeding for set seeds
+  if true then
     if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
        PostNewLevel:CheckForgottenSoftlock() or -- Forgotten can become softlocked in certain rooms
        PostNewLevel:CheckDupeRooms() then -- Check for duplicate rooms
@@ -212,6 +212,8 @@ function PostNewLevel:CheckForgottenSoftlock()
       end
 
       local stageID = roomData.StageID
+      Isaac.DebugString("stageID: " .. tostring(stageID))
+      Isaac.DebugString("roomID: " .. tostring(roomID))
       if ((stageID == 4 or stageID == 6) and roomID == 226) or -- Caves / Flooded Caves
          ((stageID == 4 or stageID == 6) and roomID == 251) or
          ((stageID == 4 or stageID == 6) and roomID == 303) or
@@ -224,19 +226,19 @@ function PostNewLevel:CheckForgottenSoftlock()
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742) or
          ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 754) or
          (stageID == 5 and roomID == 224) or -- Catacombs
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 226) or -- Depths / Necropolis / Dank Depths
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 227) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 275) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 390) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 417) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 446) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 455) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 492) or
-         ((stageID == 7 and stageID == 8 or stageID == 9) and roomID == 573) or
-         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 344) or -- Womb / Utero / Scarred Womb
-         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 417) or
-         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 458) or
-         ((stageID == 10 and stageID == 11 or stageID == 12) and roomID == 459) then
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 226) or -- Depths / Necropolis / Dank Depths
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 227) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 275) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 390) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 417) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 446) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 455) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 492) or
+         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 573) or
+         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 344) or -- Womb / Utero / Scarred Womb
+         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 417) or
+         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 458) or
+         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 459) then
 
         Isaac.DebugString("Island room detected with low-range Forgotten - reseeding.")
         return true

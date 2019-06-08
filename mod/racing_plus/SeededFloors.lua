@@ -3,12 +3,18 @@ local SeededFloors = {}
 -- Includes
 local g = require("racing_plus/globals")
 
+SeededFloors.enabled = false
+
 -- Different inventory and health conditions can affect special room generation
 -- Different special rooms can also sometimes change the actual room selection of non-special rooms
 -- This is bad for seeded races; we want to ensure consistent floors
 -- Thus, we arbitrarily set inventory and health conditions before going to the next floor, and then swap them back
 -- https://bindingofisaacrebirth.gamepedia.com/Level_Generation
 function SeededFloors:Before(stage)
+  if not SeededFloors.enabled then
+    return
+  end
+
   -- Local variables
   local character = g.p:GetPlayerType()
   local goldenHearts = g.p:GetGoldenHearts()
@@ -115,6 +121,10 @@ function SeededFloors:Before(stage)
 end
 
 function SeededFloors:After()
+  if not SeededFloors.enabled then
+    return
+  end
+
   -- Local variables
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()

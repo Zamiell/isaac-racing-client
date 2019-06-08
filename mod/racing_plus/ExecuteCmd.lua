@@ -66,6 +66,14 @@ function ExecuteCmd:Main(cmd, params)
     end
     Speedrun.charNum = Speedrun.charNum - 2
     SpeedrunPostUpdate:CheckCheckpoint(true)
+
+  elseif cmd == "list" then
+    -- Used to print out all of the entities in the room
+    Isaac.DebugString("Entities in the room:")
+    for i, entity in ipairs(Isaac.GetRoomEntities()) do
+      Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
+                        tostring(entity.SubType))
+    end
   end
 end
 

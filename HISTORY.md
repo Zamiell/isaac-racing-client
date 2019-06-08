@@ -1,6 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.40.0* - June 4th, 2019
+### *v0.40.1* - June 8th, 2019
+
+* Pin, Frail, and Scolex are now only sped up if there is only one of them in the room. (Thanks Dea1h)
+* Reverted the Mini-Boss room nerf in Season 6. (Thanks Dea1h)
+* Fixed the bug where the Forgotten softlock check was not running properly under certain circumstances.
+* Fixed the bug where the sad sound effect would play when typing into the console.
+
+### *v0.40.0* - June 7th, 2019
 
 * In Season 6, Judas Shadow is now banned on Judas. (Thanks Gamonymous)
 * There is now a custom sound effect when a Wishbone or a Walnut breaks.

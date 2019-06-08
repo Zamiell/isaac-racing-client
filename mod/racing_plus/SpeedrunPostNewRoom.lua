@@ -13,7 +13,6 @@ function SpeedrunPostNewRoom:Main()
   SpeedrunPostNewRoom:ReplaceBosses()
   SpeedrunPostNewRoom:CheckCurseRoom()
   SpeedrunPostNewRoom:CheckSacrificeRoom()
-  SpeedrunPostNewRoom:CheckMiniBossRoom()
   SpeedrunPostNewRoom:RemoveVetoButton()
 end
 
@@ -235,36 +234,6 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
     end
   end
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a no-reset run).")
-end
-
--- In instant-start seasons, prevent people from resetting for a Mini-Boss Room
-function SpeedrunPostNewRoom:CheckMiniBossRoom()
-  local stage = g.l:GetStage()
-  local roomType = g.r:GetType()
-  local challenge = Isaac.GetChallenge()
-
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
-     Speedrun.charNum ~= 1 or
-     stage ~= 1 or
-     roomType ~= RoomType.ROOM_MINIBOSS then -- 6
-
-    return
-  end
-
-  if g.r:IsFirstVisit() then
-    -- On the first visit to a Sacrifice Room, give a sign to the player that the spikes were intentionally deleted
-    -- Note that the spikes need to be deleted every time we enter the room, as they will respawn once the player leaves
-    g.p:AnimateSad()
-  end
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if entity:ToNPC() ~= nil then
-      entity:Remove()
-    end
-  end
-  g.r:SetClear(true)
-  Isaac.DebugString("Deleted the mini-boss room (during a no-reset run).")
 end
 
 -- In seasons with the veto button, delete it if we are re-entering the starting room

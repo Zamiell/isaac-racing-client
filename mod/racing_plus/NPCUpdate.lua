@@ -120,6 +120,18 @@ function NPCUpdate:NPC62(npc)
     return
   end
 
+  -- Don't do anything if there is more than one Pin in the room
+  local pins = Isaac.FindByType(EntityType.ENTITY_PIN, -1, -1, false, false) -- 62
+  local numPins = 0
+  for _, pin in ipairs(pins) do
+    if pin.Parent == nil then
+      numPins = numPins + 1
+    end
+  end
+  if numPins > 1 then
+    return
+  end
+
   -- Local variables
   local roomShape = g.r:GetRoomShape()
 
