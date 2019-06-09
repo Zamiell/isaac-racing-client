@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.41.0* - June 9th, 2019
+
+* Reverted the custom sound effect when you try to open a locked door while at 0 keys.
+* Fixed the (vanilla) bug where the babies on the Isaac fight could spawn inside the hitbox of the player.
+* Fixed the (vanilla) bug where the babies on the Isaac fight would spawn in a specific location instead of randomly throughout the room.
+
 ### *v0.40.1* - June 8th, 2019
 
 * Pin, Frail, and Scolex are now only sped up if there is only one of them in the room. (Thanks Dea1h)

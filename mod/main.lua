@@ -246,8 +246,10 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedes
                                                      CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 
 -- Define post-NPC-initialization callbacks (27)
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260,
-                                                      EntityType.ENTITY_THE_HAUNT) -- 260
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC38, -- 27
+                                                      EntityType.ENTITY_BABY) -- 38
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
+                                                      EntityType.ENTITY_THE_HAUNT) -- ?
 
 -- Define post-entity-kill callbacks (68)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity45,

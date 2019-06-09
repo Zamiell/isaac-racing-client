@@ -74,6 +74,30 @@ function ExecuteCmd:Main(cmd, params)
       Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
                         tostring(entity.SubType))
     end
+
+  elseif cmd == "s" then
+    if params == "" then
+      return
+    end
+    local stage = tonumber(params)
+    if stage < 1 or stage > 12 then
+      return
+    end
+    g:ExecuteCommand("stage " .. stage)
+
+  elseif cmd == "boss" then
+    g.run.bossCommand = true
+    g.p:UseCard(Card.CARD_EMPEROR) -- 5
+    g.run.bossCommand = false
+
+  elseif cmd == "shop" then
+    g.p:UseCard(Card.CARD_HERMIT) -- 10
+
+  elseif cmd == "devil" then
+    g.p:UseCard(Card.CARD_JOKER) -- 31
+
+  elseif cmd == "cc" then
+    g.p:AddCard(Card.CARD_CHAOS) -- 42
   end
 end
 

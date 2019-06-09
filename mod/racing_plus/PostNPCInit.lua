@@ -5,6 +5,32 @@ local PostNPCInit = {}
 -- Includes
 local g = require("racing_plus/globals")
 
+-- EntityType.ENTITY_BABY (38)
+function PostNPCInit:NPC38(npc)
+  if g.run.spawningAngel then
+    return
+  end
+
+  local stage = g.l:GetStage()
+  local roomType = g.r:GetType()
+  if stage ~= 10 or
+     roomType ~= RoomType.ROOM_BOSS then -- 5
+
+    return
+  end
+  local position
+  while true do
+    position = Isaac.GetRandomPosition()
+    if not g:InsideSquare(g.p.Position, position, 40) then
+      break
+    end
+  end
+  g.run.spawningAngel = true
+  g.g:Spawn(npc.Type, npc.Variant, position, g.zeroVector, nil, npc.SubType, npc.InitSeed)
+  g.run.spawningAngel = false
+  npc:Remove()
+end
+
 -- EntityType.ENTITY_THE_HAUNT (260)
 function PostNPCInit:NPC260(npc)
   -- Local variables

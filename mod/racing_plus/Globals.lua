@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.40.1"
+g.version = "v0.41.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -279,6 +279,8 @@ function g:InitRun()
   g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
   g.run.showVersionFrame     = 0
   g.run.bombKeyPressed       = false
+  g.run.spawningAngel        = false
+  g.run.bossCommand          = false
 
   -- Transformations
   g.run.transformations = {}

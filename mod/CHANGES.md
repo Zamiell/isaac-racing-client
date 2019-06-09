@@ -148,6 +148,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Defeating Mega Satan no longer has a chance to immediately end the run.
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The Pony / White Pony can no longer be abused to steal Devil Room items.
+* The babies on the Isaac fight can no longer spawn inside the hitbox of the player and will now randomly spawn throughout the room (as originally intended).
 
 ### Graphics & Sound Fixes
 
@@ -168,6 +169,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Friendly green creep is changed to red (so that it is easier to distinguish from enemy creep).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for creating the graphics for this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * The door opening sound will no longer play in crawlspaces.
+* A custom sound effect will play if the player tries to plant a bomb while at 0 bombs.
 
 <br />
 
