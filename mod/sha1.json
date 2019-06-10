@@ -32,7 +32,7 @@
     "racing_plus\\FastClear.lua": "34e587f47e1146bfdc9aa2a281b89d8bd37f7fe1",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "bfceba669b7bf085158f716ae60e3e630132d763",
-    "racing_plus\\Globals.lua": "0c49e8e2249c5b3123544f8ebe7a8a70f1b0d733",
+    "racing_plus\\Globals.lua": "87d672d4f72fc6e799d01b68971a64e99ef11d44",
     "racing_plus\\InputAction.lua": "526e8aa51328a17f35282a08bb0f3f3152394863",
     "racing_plus\\JrFetus.lua": "ea5933c9b81fc21cc46eac359526aed3981e5ace",
     "racing_plus\\Mahalath.lua": "2a5a66a8af97107c4b8fdcff1054c9019a7faf6a",
@@ -52,7 +52,7 @@
     "racing_plus\\PostPickupInit.lua": "d4ccf2d0820daf98b640149c5d8531526e9dea45",
     "racing_plus\\PostPickupSelection.lua": "5fdddd4fa0a1ecf8da1a2c30729e637446539c09",
     "racing_plus\\PostPlayerInit.lua": "f158921791138b117c4ac2bf0ba11868b76da3c3",
-    "racing_plus\\PostRender.lua": "51bf44a10d404a798029cb8758017051a3a4ba71",
+    "racing_plus\\PostRender.lua": "b3b08704d2990ed277bd54b35703ac8c37e25293",
     "racing_plus\\PostUpdate.lua": "af1e97ce17b9029125742bd60d00cbc5f204f0af",
     "racing_plus\\PreEntitySpawn.lua": "8b2dd1b786664ea4731ce3e45f622afea4d95dbf",
     "racing_plus\\PreRoomEntitySpawn.lua": "524ea4229f83e251f918e0a6e135ac49b3b510c9",
@@ -2067,7 +2067,7 @@
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\splashes_old.png": "cdb9683e5c86f5387e2b1568587f9b008fe5360d",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "2bc540586ba46877e4bb0fdbe6afded67f3e5bd3",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "cca095be9b760fe3bce3846f639d5544b8610bcd",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "ba71da38231f66e31d6789eeaf38a7b9456a8204",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
     "resources\\gfx\\ui\\p20_holy_mantle.anm2": "1706496f04822af42a001bb2071e038d84aca072",
@@ -2144,5 +2144,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "6b0fd165bdf36ea9b2d5b22b8adfae4066260344"
+    "sha1.json": "58775e591f59f5ca26b4d17d8b57f8f212292712"
 }

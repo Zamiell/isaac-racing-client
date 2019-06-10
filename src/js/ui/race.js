@@ -235,6 +235,7 @@ const show = (raceID) => {
     globals.modLoader.ranked = race.ruleset.ranked;
     globals.modLoader.solo = race.ruleset.solo;
     globals.modLoader.rFormat = race.ruleset.format;
+    globals.modLoader.difficulty = race.ruleset.difficulty;
     globals.modLoader.character = character;
     globals.modLoader.goal = race.ruleset.goal;
     globals.modLoader.seed = race.ruleset.seed;

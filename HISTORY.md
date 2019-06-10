@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.42.0* - June 10th, 2019
+### *v0.42.1* - June 10th, 2019
 
 * The client will now properly track who is in first place in a multi-character speedrun.
 * The client now has an option for races to be started in hard mode.

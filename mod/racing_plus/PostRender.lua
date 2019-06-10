@@ -665,6 +665,7 @@ function PostRender:Race()
      g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
 
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
+    Isaac.DebugString("XXX " .. tostring(g.g.Difficulty))
     return
 
   elseif Sprites.sprites.top ~= nil and
