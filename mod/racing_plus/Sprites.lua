@@ -168,7 +168,7 @@ function Sprites:Display()
         pos.X = 34
       end
       if challenge ~= 0 then
-        pos.X = 50
+        pos.X = 67
       end
       pos.Y = 79
     elseif k == "place2" then -- The final place graphic

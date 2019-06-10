@@ -300,11 +300,6 @@ function FastClear:PostUpdate()
     return
   end
 
-  -- Disable this on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
-  end
-
   -- Disable this if we are on the "PAC1F1CM" seed / Easter Egg
   if g.seeds:HasSeedEffect(SeedEffect.SEED_PACIFIST) then -- 25
     return

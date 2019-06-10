@@ -474,18 +474,16 @@ function PostGameStarted:Race()
   end
 
   -- Validate the difficulty (hard mode / Greed mode) for races
-  if g.race.hard and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
-     g.race.rFormat ~= "custom" then
-
-    Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(g.g.Difficulty) .. ").")
-    return
-
-  elseif not g.race.hard and
-         g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
-         g.race.rFormat ~= "custom" then
+  if g.race.difficulty == "normal" and
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
 
     Isaac.DebugString("Race error: Supposed to be on easy mode (currently on " .. tostring(g.g.Difficulty) .. ").")
+    return
+
+  elseif g.race.difficulty == "hard" and
+         g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
+
+    Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(g.g.Difficulty) .. ").")
     return
   end
 
@@ -502,7 +500,6 @@ function PostGameStarted:Race()
 
   elseif g.race.rFormat == "unseeded" or
           g.race.rFormat == "diversity" or
-          g.race.rFormat == "unseeded-lite" or
           g.race.rFormat == "pageant" then
 
     -- Validate that we are not on a set seed
@@ -554,9 +551,6 @@ function PostGameStarted:Race()
 
   elseif g.race.rFormat == "seededMO" then
     PostGameStarted:SeededMO()
-
-  elseif g.race.rFormat == "unseeded-lite" then
-    PostGameStarted:UnseededLite()
   end
 end
 
@@ -869,19 +863,6 @@ function PostGameStarted:SeededMO()
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 59
 
   Isaac.DebugString("Added seeded MO items.")
-end
-
-function PostGameStarted:UnseededLite()
-  -- Give the player extra starting items
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
-  g.p:RemoveCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
-  -- We don't want the costume to show
-  Isaac.DebugString("Removing collectible 414 (More Options)")
-  -- We don't need to show this on the item tracker to reduce clutter
-  g.run.removeMoreOptions = true
-  -- More Options will be removed upon entering the first Treasure Room
-
-  Isaac.DebugString("Added unseeded-lite items.")
 end
 
 return PostGameStarted

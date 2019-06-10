@@ -69,6 +69,13 @@ function PostItemPickup:FindNearestPickup(variant)
        pickup.SpawnerType == EntityType.ENTITY_PLAYER and -- 1
        pickup.Touched == false and
        pickup.Price == 0 and
+       -- Make an exception for Sticky Nickels
+       (variant ~= PickupVariant.PICKUP_COIN or -- 20
+        (pickup.SubType ~= CoinSubType.COIN_STICKYNICKEL)) and -- 5
+       -- Make an exception for Troll Bombs / Mega Troll Bombs
+       (variant ~= PickupVariant.PICKUP_BOMB or -- 40
+        (pickup.SubType ~= BombSubType.BOMB_TROLL and -- 3
+         pickup.SubType ~= BombSubType.BOMB_SUPERTROLL)) and -- 5
        -- Make an exception for some detrimental (or potentially detrimental) trinkets
        (variant ~= PickupVariant.PICKUP_TRINKET or -- 350
         (pickup.SubType ~= TrinketType.TRINKET_PURPLE_HEART and -- 5
@@ -134,6 +141,7 @@ end
 
 -- PickupVariant.PICKUP_BOMB (40)
 function PostItemPickup:InsertBomb(bomb)
+  Isaac.DebugString("GETTING HERE: " .. tostring(bomb.SubType))
   if bomb.SubType == BombSubType.BOMB_NORMAL then -- 1
     g.p:AddBombs(1)
   elseif bomb.SubType == BombSubType.BOMB_DOUBLEPACK then -- 2

@@ -109,4 +109,8 @@ function initDefaults() {
         settings.set('newRaceBuild', '1'); // 20/20
         settings.saveSync();
     }
+    if (typeof settings.get('newRaceDifficulty') === 'undefined') {
+        settings.set('newRaceDifficulty', 'normal');
+        settings.saveSync();
+    }
 }

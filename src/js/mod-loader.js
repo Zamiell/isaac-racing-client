@@ -57,12 +57,6 @@ const send = () => {
         json.seed = '-';
     }
 
-    // Convert the custom format
-    if (json.rFormat === 'seeded-hard') {
-        json.rFormat = 'seeded';
-        json.hard = true;
-    }
-
     // Write to it
     try {
         // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
@@ -87,12 +81,14 @@ const reset = () => {
     globals.modLoader.ranked = false;
     globals.modLoader.solo = false;
     globals.modLoader.rFormat = 'unseeded';
-    globals.modLoader.hard = false;
+    globals.modLoader.difficulty = 'normal';
     globals.modLoader.character = 3; // Judas
     globals.modLoader.goal = 'Blue Baby';
     globals.modLoader.seed = '-';
-    globals.modLoader.startingBuild = -1;
+    globals.modLoader.startingBuild = -1; // Converted to "startingItems" later on
     globals.modLoader.countdown = -1;
+    globals.modLoader.placeMid = 0;
+    globals.modLoader.place = 1;
     globals.modLoader.numEntrants = 1;
     send();
     globals.log.info('modLoader - Reset all variables.');

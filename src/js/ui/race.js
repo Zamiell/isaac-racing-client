@@ -357,11 +357,6 @@ const show = (raceID) => {
             formatTooltipContent += '<strong><span lang="en">Diversity</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
             formatTooltipContent += '<span lang="en">All players will start with the same five items.</span>';
-        } else if (format === 'unseeded-lite') {
-            formatTooltipContent += '<strong><span lang="en">Unseeded (Lite)</span>:</strong><br />';
-            formatTooltipContent += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
-            formatTooltipContent += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span><br />';
-            formatTooltipContent += '<span lang="en">Extra changes will also be in effect; see the Racing+ website for details.</span>';
         } else if (format === 'custom') {
             formatTooltipContent += '<strong><span lang="en">Custom</span>:</strong><br />';
             formatTooltipContent += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
@@ -411,8 +406,11 @@ const show = (raceID) => {
         }
         $('#race-title-goal-icon').tooltipster('content', goalTooltipContent);
 
-        // Column 6 - Build (only available for seeded races)
-        if (race.ruleset.format === 'seeded' || race.ruleset.format === 'seeded-hard') {
+        // Column 6 - Hard Mode
+        $('#race-title-hard').html(race.ruleset.hard);
+
+        // Column 7 - Build (only available for seeded races)
+        if (race.ruleset.format === 'seeded') {
             $('#race-title-table-build').fadeIn(0);
             $('#race-title-build').fadeIn(0);
             const build = race.ruleset.startingBuild;
@@ -428,7 +426,7 @@ const show = (raceID) => {
             $('#race-title-build').fadeOut(0);
         }
 
-        // Column 6 - Items (only available for diversity races)
+        // Column 7 - Items (only available for diversity races)
         if (race.ruleset.format === 'diversity') {
             $('#race-title-table-items').fadeIn(0);
             $('#race-title-items').fadeIn(0);
@@ -523,7 +521,11 @@ exports.show = show;
 // Add a row to the table with the race participants on the race screen
 exports.participantAdd = (i) => {
     // Begin building the row
-    const racer = globals.raceList[globals.currentRaceID].racerList[i];
+    const race = globals.raceList[globals.currentRaceID];
+    const racer = race.racerList[i];
+    if (!racer) {
+        globals.log.error(`Failed to get racer #${i} from race #${globals.currentRaceID}. (There are only ${race.racerList.length} racers in the race.)`);
+    }
     let racerDiv = `<tr id="race-participants-table-${racer.name}">`;
 
     // The racer's place

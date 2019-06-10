@@ -3998,16 +3998,6 @@
         position: absolute;
     }
 
-    .lobby-current-races-seeded-hard {
-        background-image: url("../img/formats/seeded-hard.png");
-        background-repeat: no-repeat;
-        background-position: center center;
-        display: inline-block;
-        height: 2.1em;
-        width: 2em;
-        position: absolute;
-    }
-
     .lobby-current-races-diversity {
         background-image: url("../img/formats/diversity.png");
         background-repeat: no-repeat;
@@ -4017,16 +4007,6 @@
         width: 2em;
         position: absolute;
         transform: scale(0.75);
-    }
-
-    .lobby-current-races-unseeded-lite {
-        background-image: url("../img/formats/unseeded-lite.png");
-        background-repeat: no-repeat;
-        background-position: center center;
-        display: inline-block;
-        height: 2.1em;
-        width: 2em;
-        position: absolute;
     }
 
     .lobby-current-races-custom {
@@ -4162,6 +4142,12 @@
         position: relative;
         bottom: 0.2em;
         left: 0.20em;
+    }
+
+    #new-race-difficulty-icon-i {
+        position: relative;
+        bottom: 0.2em;
+        left: 0.35em;
     }
 
     .new-race-radio-label {

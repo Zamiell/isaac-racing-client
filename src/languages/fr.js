@@ -64,8 +64,12 @@ Lang.prototype.pack.fr = {
         "Unseeded": "Non Seeded",
         "Seeded": "Seeded",
         "Diversity": "Diversity",
-        "Unseeded (Lite)": "Non Seeded (Simple)",
         "Custom": "Personnalisée",
+
+        // The kinds of race "Difficulty"
+        "Difficulty": "Difficulté",
+        "Normal": "Ordinaire",
+        "Hard": "Difficile",
 
         // Lobby screen (other)
         "Chat": "Chat",

@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.41.0"
+g.version = "v0.42.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -44,8 +44,9 @@ g.race = {
   myStatus          = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked            = false,       -- Can be true or false
   solo              = false,       -- Can be true or false
-  rFormat           = "unseeded",  -- Can be "unseeded", "seeded", "diversity", "unseeded-lite", or "custom"
+  rFormat           = "unseeded",  -- Can be "unseeded", "seeded", "diversity", or "custom"
   -- Unofficially this can also be "pageant"
+  difficulty        = "normal",    -- Can be "normal" or "hard"
   character         = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
   goal              = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
   seed              = "-",         -- Corresponds to the seed that is the race goal
@@ -54,6 +55,7 @@ g.race = {
   placeMid          = 0,           -- This is either the number of people ready, or the non-fnished place
   place             = 1,           -- This is the final place
   numEntrants       = 1,           -- The number of people in the race
+
   charOrder         = {0},         -- The order for a multi-character speedrun
   hotkeyDrop        = 0,           -- A custom key binding for fast-drop, or 0 if not set
   hotkeyDropTrinket = 0,           -- A custom key binding for fast-drop (only trinkets), or 0 if not set
@@ -461,6 +463,15 @@ function g:TableLen(t)
     count = count + 1
   end
   return count
+end
+
+function g:TableContains(t, v2)
+  for _, v in pairs(t) do
+    if v == v2 then
+      return true
+    end
+  end
+  return false
 end
 
 -- Find out how many items are in the game

@@ -40,22 +40,25 @@ module.exports = {
     log: null,
     lang: null, // The language switcher instance, set in "localization.js"
     modLoader: {
+        // Race values are reset in the "mod-loader.js" file
         id: 0,
         status: 'none',
         myStatus: 'not ready',
         ranked: false,
         solo: false,
         rFormat: 'unseeded',
-        hard: false,
+        difficulty: 'hard',
         character: 3, // Judas
         goal: 'Blue Baby',
         seed: '-',
-        startingBuild: -1,
+        startingBuild: -1, // Converted to "startingItems" later on
         countdown: -1,
         placeMid: 0,
         place: 1,
         numEntrants: 1,
-        charOrder: [0], // Speedrun orders are filled in isaac.js
+
+        // Speedrun orders are filled in isaac.js
+        charOrder: [0],
         hotkeyDrop: 0,
         hotkeyDropTrinket: 0,
         hotkeyDropPocket: 0,

@@ -340,11 +340,6 @@ end
 
 -- Check for fast-reset inputs
 function PostRender:CheckResetInput()
-  -- Disable the fast-reset feature on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
-  end
-
   -- Disable the fast-reset feature if we have opened the console on this run
   -- (so that typing an "r" into the console does not cause a fast-reset)
   if g.run.consoleOpened then
@@ -655,9 +650,8 @@ function PostRender:Race()
   --
 
   -- Show warning messages
-  if g.race.hard and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
-     g.race.rFormat ~= "custom" then
+  if g.race.difficulty == "hard" and
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
 
     Sprites:Init("top", "error-not-hard-mode") -- Error: You are not on hard mode.
     return
@@ -667,9 +661,8 @@ function PostRender:Race()
 
     Sprites:Init("top", 0)
   end
-  if not g.race.hard and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
-     g.race.rFormat ~= "custom" then
+  if g.race.difficulty == "normal" and
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
 
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return

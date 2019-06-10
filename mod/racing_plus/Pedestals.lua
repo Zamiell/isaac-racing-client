@@ -161,14 +161,14 @@ function RPPedestals:Replace(pickup)
     end
   end
 
+  -- Check to see if this is a special Basement 1 diversity reroll
+  -- (these custom placeholder items are removed in all non-diveristy runs)
   local specialReroll = 0
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      (g.race.rFormat == "diversity" and
       g.race.status == "in progress") then
 
-    -- Check to see if this is a special Basement 1 diversity reroll
-    -- (these custom placeholder items are removed in all non-diveristy runs)
     if pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
     elseif pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 then
@@ -205,19 +205,6 @@ function RPPedestals:Replace(pickup)
     -- If the player is on a diversity race and gets a Treasure pool item on basement 1,
     -- then there is a chance that they could get a placeholder item
     pickup.SubType = 0
-  end
-
-  -- Check to see if this is a banned item on the "Unseeded (Lite)" ruleset
-  local big4Reroll = false
-  if stage == 1 and
-     roomType == RoomType.ROOM_TREASURE and -- 4
-     g.race.rFormat == "unseeded-lite" and
-     (pickup.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE or -- 114
-      pickup.SubType == CollectibleType.COLLECTIBLE_IPECAC or -- 149
-      pickup.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS or -- 168
-      pickup.SubType == CollectibleType.COLLECTIBLE_TECH_X) then -- 395
-
-    big4Reroll = true
   end
 
   -- Check to see if this item should go into a Schoolbag
@@ -258,21 +245,18 @@ function RPPedestals:Replace(pickup)
     Isaac.DebugString("Item " .. tostring(pickup.SubType) .. " is special, " ..
                       "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
 
-  elseif big4Reroll then
-    -- Make a new random item pedestal
-    -- (the new random item generated will automatically be decremented from item pools properly on sight)
-    newPedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pickup.Position,
-                            pickup.Velocity, pickup.Parent, 0, newSeed)
-    randomItem = true -- We need to set this so that banned items don't reroll into other banned items
-
-    -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
-    g.g:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
-    Isaac.DebugString("Rerolled a big 4 item: " .. tostring(pickup.SubType))
-
   else
+    -- Fix the bug where Steven can drop on runs where the player started with Steven
+    local subType = pickup.SubType
+    if subType == CollectibleType.COLLECTIBLE_STEVEN and -- 50
+       g.p:HasCollectible(CollectibleType.COLLECTIBLE_STEVEN) then -- 50
+
+      subType = CollectibleType.COLLECTIBLE_LITTLE_STEVEN -- 100
+    end
+
     -- Make a new copy of this item
     newPedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pickup.Position,
-                            pickup.Velocity, pickup.Parent, pickup.SubType, newSeed)
+                            pickup.Velocity, pickup.Parent, subType, newSeed)
 
     -- We don't need to make a fart noise because the swap will be completely transparent to the user
     -- (the sprites of the two items will obviously be identical)

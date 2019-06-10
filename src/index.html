@@ -704,8 +704,6 @@
                                     <option value="unseeded" selected="selected" lang="en">Unseeded</option>
                                     <option value="seeded" lang="en">Seeded</option>
                                     <option id="new-race-format-diversity" value="diversity" lang="en">Diversity</option>
-                                    <option id="new-race-format-unseeded-lite" value="unseeded-lite" lang="en">Unseeded (Lite)</option>
-                                    <option id="new-race-format-seeded-hard" value="seeded-hard" lang="en">Seeded (Hard)</option>
                                     <option id="new-race-format-custom" value="custom" lang="en">Custom</option>
                                 </select>
                             </div>
@@ -770,6 +768,31 @@
                             <button id="new-race-build-randomize" class="button alt small" type="button">
                                 <i class="fa fa-random" aria-hidden="true"></i>
                             </button>
+                        </div>
+                    </div>
+
+                    <div class="padding2"></div>
+
+                    <div id="new-race-difficulty-row" class="row uniform 50%">
+                        <div class="2u">
+                            <p><span lang="en">Difficulty</span>:</p>
+                        </div>
+                        <div class="2u">
+                            <span id="new-race-difficulty-icon" class="new-race-size-icon-container">
+                                <i id="new-race-difficulty-icon-i" class="fa fa-circle fa-2x" aria-hidden="true" style="color: green;"></i>
+                            </span>
+                        </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-difficulty-normal" name="new-race-difficulty" value="normal" checked></td>
+                            <label for="new-race-difficulty-normal" class="new-race-radio-label" >
+                                <span class="new-race-radio-text" lang="en">Normal</span>
+                            </label>
+                        </div>
+                        <div class="3u">
+                            <input type="radio" id="new-race-difficulty-hard" name="new-race-difficulty" value="hard">
+                            <label for="new-race-difficulty-hard" class="new-race-radio-label">
+                                <span class="new-race-radio-text" lang="en">Hard</span>
+                            </label>
                         </div>
                     </div>
 

@@ -327,11 +327,6 @@ end
 -- EntityType.ENTITY_MOMS_HAND (213)
 -- EntityType.ENTITY_MOMS_DEAD_HAND (287)
 function NPCUpdate:SpeedupHand(npc)
-  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
-  end
-
   -- Mom's Hands and Mom's Dead Hands
   if npc.State == 4 and npc.StateFrame < 25 then
     -- Speed up their attack patterns
@@ -354,11 +349,6 @@ function NPCUpdate:SpeedupGhost(npc)
   if npc.FrameCount == 0 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
     -- The ghost is set to ENTCOLL_NONE until the first reappearance
     npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-  end
-
-  -- Disable the speed-up on the "Unseeded (Lite)" ruleset
-  if g.race.rFormat == "unseeded-lite" then
-    return
   end
 
   -- Speed up their attack pattern

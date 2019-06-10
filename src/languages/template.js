@@ -64,8 +64,12 @@ Lang.prototype.pack.zz = {
         "Unseeded": "",
         "Seeded": "",
         "Diversity": "",
-        "Unseeded (Lite)": "",
         "Custom": "",
+
+        // The kinds of race "Difficulty"
+        "Difficulty": "",
+        "Normal": "",
+        "Hard": "",
 
         // Lobby screen (other)
         "Chat": "",

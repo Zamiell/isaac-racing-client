@@ -281,19 +281,10 @@ function raceDraw2(race) {
         } else if (format === 'seeded') {
             content += '<span lang="en">Seeded</span><br />';
             content += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span>';
-        } else if (format === 'seeded-hard') {
-            content += '<span lang="en">Seeded (Hard)</span><br />';
-            content += '<span lang="en">You will play on the same seed as your opponent and start with The Compass.</span><br />';
-            content += '<span lang="en">You will also play on hard mode.</span><br />';
         } else if (format === 'diversity') {
             content += '<span lang="en">Diversity</span><br />';
             content += '<span lang="en">This is the same as the "Unseeded" format, but you will also start with five random items.</span><br />';
             content += '<span lang="en">All players will start with the same five items.</span>';
-        } else if (format === 'unseeded-lite') {
-            content += '<span lang="en">Unseeded (Lite)</span><br />';
-            content += '<span lang="en">Reset over and over until you find something good from a Treasure Room.</span><br />';
-            content += '<span lang="en">You will be playing on an entirely different seed than your opponent(s).</span><br />';
-            content += '<span lang="en">Extra changes will also be in effect; see the Racing+ website for details.</span>';
         } else if (format === 'custom') {
             content += '<li><span lang="en">Custom</span><br />';
             content += '<span lang="en">You make the rules! Make sure that everyone in the race knows what to do before you start.</span>';
@@ -306,7 +297,7 @@ function raceDraw2(race) {
         const { goal } = globals.raceList[race.id].ruleset;
         content += `<li class="lobby-current-races-format-li"><strong><span lang="en">Goal</span>:</strong> ${goal}</li>`;
 
-        if (format === 'seeded' || format === 'seeded-hard') {
+        if (format === 'seeded') {
             const { startingBuild } = globals.raceList[race.id].ruleset;
             content += '<li class="lobby-current-races-format-li"><strong><span lang="en">Starting Build</span>:</strong> ';
             for (const item of builds[startingBuild]) {

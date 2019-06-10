@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.42.0* - June 10th, 2019
+
+* The client will now properly track who is in first place in a multi-character speedrun.
+* The client now has an option for races to be started in hard mode.
+* Removed the "Seeded (Hard)" and the "Unseeded (Lite)" rulesets.
+* Little Steven will now always drop from Steven if the player already has the Steven item. (Thanks Gamonymous)
+* Fixed the bug where automatic inventory management would not insert bombs or coins into your inventory under certain circumstances. (Thanks thereisnofuture)
+* Fixed the bug where the place icon would overlap with the "S#" icon.
+* Fixed the bug where the client displayed the wrong color for Mysterious Liquid.
+
 ### *v0.41.0* - June 9th, 2019
 
 * Reverted the custom sound effect when you try to open a locked door while at 0 keys.

@@ -31,7 +31,6 @@ function PostUpdate:Main()
   PostUpdate:CheckLilithExtraIncubus()
   PostUpdate:CheckWishbone()
   PostUpdate:CheckWalnut()
-  PostUpdate:Check0Keys()
   PostUpdate:Fix9VoltSynergy()
 
   -- Check on every frame to see if we need to open the doors
@@ -461,28 +460,6 @@ function PostUpdate:CheckWalnut()
   else
     if g.p:HasTrinket(TrinketType.TRINKET_WALNUT) then -- 108
       g.run.haveWalnut = true
-    end
-  end
-end
-
--- Check to see if the player is mistakenly trying to open a locked door without a key
-function PostUpdate:Check0Keys()
-  if g.run.playedSad or
-     g.p:GetNumKeys() ~= 0 then
-
-    return
-  end
-
-  -- Check for the presence of locked doors
-  local door
-  for i = 0, 7 do
-    door = g.r:GetDoor(i)
-    if door ~= nil and
-       door:IsLocked() and
-       g:InsideSquare(door.Position, g.p.Position, 31) then -- 30 does not work
-
-      g.sfx:Play(SoundEffect.SOUND_SAD, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
-      g.run.playedSad = true
     end
   end
 end

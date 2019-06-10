@@ -150,6 +150,9 @@ $(document).ready(() => {
 
     $('#new-race-starting-build').change(newRaceStartingBuildChange);
 
+    $('#new-race-difficulty-normal').change(newRaceDifficultyChange);
+    $('#new-race-difficulty-hard').change(newRaceDifficultyChange);
+
     $('#new-race-form').submit((event) => {
         // By default, the form will reload the page, so stop this from happening
         event.preventDefault();
@@ -220,7 +223,7 @@ $(document).ready(() => {
         }
 
         let startingBuild;
-        if (format === 'seeded' || format === 'seeded-hard') {
+        if (format === 'seeded') {
             startingBuild = $('#new-race-starting-build').val();
             if (startingBuild !== settings.get('newRaceBuild')) {
                 settings.set('newRaceBuild', startingBuild);
@@ -231,6 +234,12 @@ $(document).ready(() => {
             startingBuild = Number.parseInt(startingBuild, 10);
         } else {
             startingBuild = -1;
+        }
+
+        const difficulty = $('input[name=new-race-difficulty]:checked').val();
+        if (difficulty !== settings.get('newRaceDifficulty')) {
+            settings.set('newRaceDifficulty', difficulty);
+            settings.saveSync();
         }
 
         // Validate that they are not creating a race with the same title as an existing race
@@ -268,6 +277,7 @@ $(document).ready(() => {
             character,
             goal,
             startingBuild,
+            difficulty,
         };
         globals.currentScreen = 'waiting-for-server';
         globals.conn.send('raceCreate', {
@@ -332,15 +342,13 @@ function newRaceRankedChange(event, fast = false) {
     if (newRanked === 'no') {
         // Show the non-standard formats
         $('#new-race-format-diversity').fadeIn(0);
-        $('#new-race-format-unseeded-lite').fadeIn(0);
-        $('#new-race-format-seeded-hard').fadeIn(0);
         $('#new-race-format-custom').fadeIn(0);
 
         // Show the character and goal dropdowns
         setTimeout(() => {
             $('#new-race-character-container').fadeIn((fast ? 0 : globals.fadeTime));
             $('#new-race-goal-container').fadeIn((fast ? 0 : globals.fadeTime));
-            if (format === 'seeded' || format === 'seeded-hard') {
+            if (format === 'seeded') {
                 $('#new-race-starting-build-container').fadeIn((fast ? 0 : globals.fadeTime));
             }
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
@@ -348,8 +356,6 @@ function newRaceRankedChange(event, fast = false) {
     } else if (newRanked === 'yes') {
         // Hide the non-standard formats
         $('#new-race-format-diversity').fadeOut(0);
-        $('#new-race-format-unseeded-lite').fadeOut(0);
-        $('#new-race-format-seeded-hard').fadeOut(0);
         $('#new-race-format-custom').fadeOut(0);
 
         // Hide the character, goal, and build dropdowns
@@ -402,7 +408,7 @@ function newRaceFormatChange(event, fast = false) {
 
     // Show or hide the starting build row
     const ranked = $('input[name=new-race-ranked]:checked').val();
-    if ((newFormat === 'seeded' || newFormat === 'seeded-hard') && ranked === 'no') {
+    if (newFormat === 'seeded' && ranked === 'no') {
         setTimeout(() => {
             $('#new-race-starting-build-container').fadeIn((fast ? 0 : globals.fadeTime));
             $('#header-new-race').tooltipster('reposition'); // Redraw the tooltip
@@ -433,6 +439,16 @@ function newRaceStartingBuildChange(event, fast = false) {
         $('#new-race-starting-build-icon').css('background-image', 'url("img/builds/random.png")');
     } else {
         $('#new-race-starting-build-icon').css('background-image', `url("img/builds/${newBuild}.png")`);
+    }
+}
+
+function newRaceDifficultyChange(event) {
+    // Change the displayed icon
+    const newDifficulty = $('input[name=new-race-difficulty]:checked').val();
+    if (newDifficulty === 'normal') {
+        $('#new-race-difficulty-icon-i').css('color', 'green');
+    } else {
+        $('#new-race-difficulty-icon-i').css('color', 'red');
     }
 }
 
@@ -478,6 +494,8 @@ exports.tooltipFunctionReady = () => {
     newRaceGoalChange(null, true);
     $('#new-race-starting-build').val(settings.get('newRaceBuild'));
     newRaceStartingBuildChange(null, true);
+    $(`#new-race-difficulty-${settings.get('newRaceDifficulty')}`).prop('checked', true);
+    newRaceDifficultyChange(null, true);
     // (the change functions have to be interspersed here, otherwise the format change would overwrite the character change)
 
     // Focus the race title box
