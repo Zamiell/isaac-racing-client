@@ -500,7 +500,7 @@ end
 
 function JrFetus:UpdateMissileTarget(entity)
     local data = entity:GetData()
-    if entity.Variant == targetVariant and data.BossMissile then
+    if data.BossMissile then
         local sprite = entity:GetSprite()
         local boss = data.Boss
         local target

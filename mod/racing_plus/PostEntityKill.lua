@@ -6,12 +6,12 @@ local FastClear = require("racing_plus/fastclear")
 local Speedrun  = require("racing_plus/speedrun")
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
--- When beginning a death animation, make bosses faded so that it makes it easier to see
 function PostEntityKill:Main(entity)
   FastClear:PostEntityKill(entity) -- Track which enemies are cleared for the purposes of the "fast-clear" feature
   PostEntityKill:FadeBosses(entity) -- Fade bosses that are killed
 end
 
+-- When beginning a death animation, make bosses faded so that it makes it easier to see
 function PostEntityKill:FadeBosses(entity)
   -- We only want to fade bosses
   local npc = entity:ToNPC()
@@ -169,8 +169,9 @@ function PostEntityKill:Entity78(entity)
   -- Do the appropriate action depending on the situation
   if situation == 1 then
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
-    -- (it will get replaced with the fast-travel version on this frame)
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, g.zeroVector, nil, 0, 0)
+    -- It will get replaced with the fast-travel version on this frame
+    -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
+    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, g.zeroVector, g.p, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
 
   elseif situation == 2 then
@@ -179,9 +180,11 @@ function PostEntityKill:Entity78(entity)
     Isaac.DebugString("It Lives! or Hush killed; situation 2 - only down.")
 
   elseif situation == 3 then
-    -- Spawn both a trapdoor and a beam of light (they will get replaced with the fast-travel versions on this frame)
+    -- Spawn both a trapdoor and a beam of light
+    -- They will get replaced with the fast-travel versions on this frame
+    -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, g.zeroVector, nil, 0, 0)
+    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, g.zeroVector, g.p, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 3 - up and down.")
   end
 

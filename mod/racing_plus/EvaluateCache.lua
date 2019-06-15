@@ -5,20 +5,11 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function EvaluateCache:Main(player, cacheFlag)
-  EvaluateCache:DadsLostCoin(player, cacheFlag)
   EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
-  EvaluateCache:Race(player, cacheFlag)
-end
-
--- We want to put the lucky penny directly into the inventory
-function EvaluateCache:DadsLostCoin(player, cacheFlag)
-  if not player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) or -- 455
-     cacheFlag ~= CacheFlag.CACHE_LUCK then -- 1024
-
-    return
-  end
-
-  player.Luck = player.Luck + 1
+  EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
+  EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
+  EvaluateCache:ThirteenLuck(player, cacheFlag)
+  EvaluateCache:PageantBoyRuleset(player, cacheFlag)
 end
 
 function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
@@ -124,37 +115,51 @@ function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
   end
 end
 
-function EvaluateCache:Race(player, cacheFlag)
+-- CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT (415)
+function EvaluateCache:CrownOfLight(player, cacheFlag)
   -- Local variables
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
   local character = player:GetPlayerType()
 
+  -- If Crown of Light is started from a Basement 1 Treasure Room, it should heal for a half heart
+  if cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     stage == 1 and
+     roomType == RoomType.ROOM_TREASURE and -- 4
+     -- (this will still work even if you exit the room with the item held overhead)
+     character == PlayerType.PLAYER_JUDAS then -- 7
+
+    player:AddHearts(1)
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_DADS_LOST_COIN (455)
+function EvaluateCache:DadsLostCoin(player, cacheFlag)
+  -- We want to put the lucky penny directly into the inventory
+  if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
+     player:HasCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) then -- 455
+
+    player.Luck = player.Luck + 1
+  end
+end
+
+-- CollectibleType.CollectibleType.COLLECTIBLE_13_LUCK
+function EvaluateCache:ThirteenLuck(player, cacheFlag)
   -- Look for the custom start item that gives 13 luck
   if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
      player:HasCollectible(CollectibleType.COLLECTIBLE_13_LUCK) then
 
     player.Luck = player.Luck + 13
   end
+end
 
+function EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   -- The Pageant Boy ruleset starts with 7 luck
   if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
      g.race.rFormat == "pageant" then
 
     player.Luck = player.Luck + 7
-  end
-
-  -- In diversity races, Crown of Light should heal for a half heart
-  -- (don't explicitly check for race format in case loading failed)
-  if cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
-     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     stage == 1 and
-     roomType == RoomType.ROOM_TREASURE and -- 4
-     -- (this will still work even if you exit the room with the item held overhead)
-     (character == PlayerType.PLAYER_JUDAS or -- 3
-      character == PlayerType.PLAYER_AZAZEL) then -- 7
-
-    player:AddHearts(1)
   end
 end
 

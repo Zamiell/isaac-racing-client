@@ -120,7 +120,7 @@
 * There is a custom death mechanic:
   * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.
-  * This mechanic does not apply to deaths in Devil Rooms or Sacrifice Rooms. (Deaths in those rooms will be permanent.)
+  * This mechanic does not apply to deaths in Devil Rooms, Sacrifice Rooms, or the Boss Rush. (Deaths in those rooms will be permanent.)
 * Scolex is replaced by two Frails (like it is in seeded races).
 * Sacred Heart no longer grants homing bombs (unless you have Dr. Fetus).
 * We Need to Go Deeper! will not work on Womb 2.

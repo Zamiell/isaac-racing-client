@@ -1,14 +1,11 @@
 local PostLaserInit = {}
 
+-- Note: Position, SpawnerType, SpawnerVariant, and MaxDistance are not initialized yet in this callback
+
 -- Includes
 local g = require("racing_plus/globals")
 
--- ModCallbacks.MC_POST_LASER_INIT (47)
-function PostLaserInit:Main(laser)
-  if laser.Variant ~= 6 then -- "007.006_Giant Red Laser.anm2" in "entities2.xml"
-    return
-  end
-
+function PostLaserInit:Laser6(laser)
   if g.run.seededDeath.time == 0 then
     return
   end

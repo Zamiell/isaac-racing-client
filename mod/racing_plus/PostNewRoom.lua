@@ -98,6 +98,9 @@ function PostNewRoom:NewRoom()
   g.run.endOfRunText         = false -- Shown when the run is completed but only for one room
   g.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
   g.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
+  g.run.spawningLight        = false -- For the custom Crack the Sky effect
+  g.run.spawningExtraLight   = false -- For the custom Crack the Sky effect
+  g.run.lightPositions       = {} -- For the custom Crack the Sky effect
   g.run.matriarch            = {
     chubIndex = -1,
     stunFrame = 0,
@@ -526,8 +529,7 @@ function PostNewRoom:CheckRespawnTrophy()
 
   -- We are re-entering a boss room after we have already spawned the trophy (which is a custom entity),
   -- so we need to respawn it
-  g.g:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-            g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+  g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
   Isaac.DebugString("Respawned the end of race trophy.")
 end
 
@@ -609,7 +611,7 @@ function PostNewRoom:Race()
           -- in the "FastTravel:ReplaceHeavenDoor()" function
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
           g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR,
-                    gridEntity.Position, g.zeroVector, nil, 0, 0)
+                    gridEntity.Position, g.zeroVector, g.p, 0, 0)
           Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
         end
       end

@@ -2,12 +2,8 @@ local PreUseItem = {}
 
 -- Includes
 local g         = require("racing_plus/globals")
+local UseItem   = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
-
---
--- Pre-use collectible item functions
--- ModCallbacks.MC_PRE_USE_ITEM (23)
---
 
 -- CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER (84)
 -- This callback is used naturally by Ehwaz (Passage) runes
@@ -73,6 +69,9 @@ function PreUseItem:Item97()
   -- When we return from the function below, no animation will play, so we have to explitily perform one
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_SIN, "UseItem", "PlayerPickup") -- 97
 
+  -- Since we cancel the original effect, the UseItem callback will never fire, so do it manually
+  UseItem:Main(CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+
   -- By returning true, it will cancel the original effect
   return true
 end
@@ -132,23 +131,15 @@ function PreUseItem:Item124()
   -- When we return from the function below, no animation will play, so we have to explitily perform one
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS, "UseItem", "PlayerPickup") -- 124
 
+  -- Since we cancel the original effect, the UseItem callback will never fire, so do it manually
+  UseItem:Main(CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+
   -- Cancel the original effect
   return true
 end
 
 -- CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS (422)
 function PreUseItem:Item422()
-  -- Local variables
-  local roomDesc = g.l:GetCurrentRoomDesc()
-  local roomVariant = roomDesc.Data.Variant
-
-  -- Prevent the usage of the Glowing Hour Glass in the pre-race room
-  if roomVariant == 9999 then -- Only the pre-race room has this specific ID
-    -- We want to signify to the player that using the Glowing Hour Glass here is forbidden
-    g.p:AnimateSad()
-    return true
-  end
-
   -- Reset the Schoolbag
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      not g.p:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then

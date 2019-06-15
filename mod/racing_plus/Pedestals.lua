@@ -48,7 +48,7 @@ function RPPedestals:Replace(pickup)
     -- Check to see if this is a reroll of a player-generated item
     for _, pedestal in ipairs(g.run.replacedPedestals) do
       if pedestal.room == roomIndex and
-         g:InsideSquare(pedestal, pickup.Position, 15) and
+         Vector(pedestal.X, pedestal.Y):Distance(pickup.Position) <= 15 and
          pedestal.playerGen then
 
         playerGen = true
@@ -83,7 +83,7 @@ function RPPedestals:Replace(pickup)
     -- If we touched this item, we need to set it back to the last seed that we had for this position
     for _, pedestal in ipairs(g.run.replacedPedestals) do
       if pedestal.room == roomIndex and
-         g:InsideSquare(pedestal, pickup.Position, 15) then
+         Vector(pedestal.X, pedestal.Y):Distance(pickup.Position) <= 15 then
 
         -- Don't break after this because we want it to be equal to the seed of the last item
         newSeed = pedestal.seed

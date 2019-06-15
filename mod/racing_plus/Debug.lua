@@ -5,9 +5,7 @@ local g        = require("racing_plus/globals")
 local Sprites  = require("racing_plus/sprites")
 local Speedrun = require("racing_plus/speedrun")
 
--- Variables
-Debug.temp = false
-
+-- ModCallbacks.MC_USE_ITEM (3)
 function Debug:Main()
   -- Enable debug mode
   g.debug = true
@@ -66,7 +64,6 @@ function Debug:Main()
   -- Test stuff
   --
 
-  Isaac.DebugString("RP g.run.handsDelay: " .. tostring(g.run.handsDelay))
   --g.raceVars.finished = true
   --Sprites:Init("place", 1)
 
@@ -83,7 +80,7 @@ function Debug:Main()
   local cardNum = 1
   for y = 0, 6 do
     for x = 0, 12 do
-      if cardNum < 54 then
+      if cardNum < Card.NUM_CARDS then
         local pos = g:GridToPos(x, y)
         g.p:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, pos, g.zeroVector, nil, cardNum, 0)
         cardNum = cardNum + 1

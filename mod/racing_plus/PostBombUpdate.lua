@@ -3,8 +3,11 @@ local PostBombUpdate = {}
 -- Includes
 local g = require("racing_plus/globals")
 
+-- ModCallbacks.MC_POST_BOMB_UPDATE (58)
 function PostBombUpdate:Main(bomb)
-  if bomb.FrameCount ~= 1 then
+  if bomb.SpawnerType ~= EntityType.ENTITY_PLAYER or -- 1
+     bomb.FrameCount ~= 1 then
+
     return
   end
 
@@ -14,10 +17,8 @@ function PostBombUpdate:Main(bomb)
     return
   end
 
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
   -- This mechanic only applies to Season 6+
+  local challenge = Isaac.GetChallenge()
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
 

@@ -11,6 +11,7 @@ function PostNPCInit:NPC38(npc)
     return
   end
 
+  -- We only want to replace Babies on the Isaac fight
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
   if stage ~= 10 or
@@ -18,13 +19,16 @@ function PostNPCInit:NPC38(npc)
 
     return
   end
+
+  -- We want to ensure that we do not spawn a Baby too close to the player
   local position
   while true do
     position = Isaac.GetRandomPosition()
-    if not g:InsideSquare(g.p.Position, position, 40) then
+    if position:Distance(g.p.Position) > 60 then
       break
     end
   end
+
   g.run.spawningAngel = true
   g.g:Spawn(npc.Type, npc.Variant, position, g.zeroVector, nil, npc.SubType, npc.InitSeed)
   g.run.spawningAngel = false

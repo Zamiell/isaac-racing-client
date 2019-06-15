@@ -4,7 +4,6 @@ local UsePill = {}
 local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_USE_PILL (10)
--- Will get called for all pills
 function UsePill:Main(pillEffect)
   -- Display the streak text (because Racing+ removes the vanilla streak text)
   g.run.streakText = g.itemConfig:GetPillEffect(pillEffect).Name

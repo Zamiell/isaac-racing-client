@@ -33,7 +33,7 @@
 * There is a custom death mechanic:
   * Instead of dying, players will respawn in the previous room with 1.5 soul hearts.
   * They will have a "debuff" effect that removes all of the items. The debuff will last 45 seconds.
-  * This mechanic does not apply to deaths in Devil Rooms or Sacrifice Rooms. (Deaths in those rooms will be permanent.)
+  * This mechanic does not apply to deaths in Devil Rooms, Sacrifice Rooms, or the Boss Rush. (Deaths in those rooms will be permanent.)
 * Lucky Foot is removed from all pools.
 * The Cain's Eye, Broken Ankh, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe, Safety Cap, Ace of Spades, and Watch Battery trinkets are removed from the trinket pool.
 
@@ -42,14 +42,6 @@
 * Diversity races are similar to unseeded races in that each player plays on different seeds and is allowed to reset as much as they want.
 * However, each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
 * For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
-
-## Unseeded (Lite)
-
-* All Treasure Rooms on Basement 1 will have two items.
-* Tech X, Mom's Knife, Epic Fetus, and Ipecac are automatically rerolled if you see them in a Basement 1 treasure room.
-* The "fast-reset" feature is disabled.
-* The "fast-clear" feature is disabled.
-* Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts are no longer sped up.
 
 ## Custom
 

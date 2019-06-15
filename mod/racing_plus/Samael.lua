@@ -9,19 +9,10 @@ local Schoolbag = require("racing_plus/schoolbag")
 -- (and to pass the linter)
 
 --References and junk
-local scytheID = Isaac.GetEntityTypeByName("Samael Scythe") --Entity ID of the scythe weapon entity
 local samaelID = Isaac.GetPlayerTypeByName("Samael") --Character ID of Samael
-local projVariant = Isaac.GetEntityVariantByName("Magic Scythe") --Entity variant number of the scythe projectile
-local specialAnim = Isaac.GetEntityTypeByName("Samael Special Animations") --Entity for showing special animations
 local hitBoxType = 617 --Subtype of the scythe's hitbox entity (It is a subtype of a Sacrificial Dagger)
 local hood = Isaac.GetCostumeIdByPath("gfx/characters/samaelhood.anm2") --Hood+horns+bandages costume
 local cloak = Isaac.GetCostumeIdByPath("gfx/characters/samaelcloak.anm2") --Cloak costume
-local samaelDeadEye = Isaac.GetItemIdByName("Samael Dead Eye") --Custom version of deadeye for Samael
-local samaelChocMilk = Isaac.GetItemIdByName("Samael Chocolate Milk") --Replaces chocolate milk for Samael
-local samaelDrFetus = Isaac.GetItemIdByName("Samael Dr. Fetus")
---Replaces Dr. Fetus for Samael if brimstone is also acquired
-local samaelMarked = Isaac.GetItemIdByName("Samael Marked") --Replaces marked for Samael
-local wraithItem = Isaac.GetItemIdByName("Wraith Skull") --Spacebar Wraith Mode Activation
 local deadEyeCountdown = 3
 local zeroColor = Color(0, 0, 0, 0, 0, 0, 0)
 
@@ -142,11 +133,11 @@ function SamaelMod:PostUpdate()
 
     SamaelMod:wraithModeHandler()
 
-    if g.p:HasCollectible(wraithItem) then
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) then
       g.p:SetActiveCharge(math.ceil(wraithCharge))
       -- Mute the annoying sound effect
       g.sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
-    elseif g.run.schoolbag.item == wraithItem then
+    elseif g.run.schoolbag.item == CollectibleType.COLLECTIBLE_WRAITH_SKULL then
       g.run.schoolbag.charge = math.ceil(wraithCharge)
     end
 
@@ -169,7 +160,8 @@ function SamaelMod:PostUpdate()
     if g.p:GetSprite():IsPlaying("Death") then --When player dies
       if not dying then
         --Spawn the special animations entity
-        local special = Isaac.Spawn(specialAnim, 0, 0, g.p.Position, g.zeroVector, g.p):ToNPC()
+        local special = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS, 0, 0,
+                                    g.p.Position, g.zeroVector, g.p):ToNPC()
         special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
         special:GetSprite():Play("Death", 1) --Play custom death animation
         special.CanShutDoors = false
@@ -202,7 +194,7 @@ function SamaelMod:PostUpdate()
     end
 
     if not spawned then --If scythe is not spawned
-      local scythe = Isaac.Spawn(scytheID, 0, 0, g.p.Position, g.zeroVector, g.p) --Spawn the scythe
+      local scythe = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SCYTHE, 0, 0, g.p.Position, g.zeroVector, g.p)
       scythe = scythe:ToNPC()
       SamaelMod:getScytheColor()
       scythe:GetSprite().Color = scytheColor
@@ -226,13 +218,13 @@ function SamaelMod:PostUpdate()
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE)
       Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_DEAD_EYE)
-      g.p:AddCollectible(samaelDeadEye, 0, false)
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE, 0, false)
     end
     --Replace chocolate milk with a custom item for samael
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK)
       Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_CHOCOLATE_MILK)
-      g.p:AddCollectible(samaelChocMilk, 0, false)
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK, 0, false)
     end
     --Replace Dr Fetus with a custom item if brimstone is also aquired
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and
@@ -240,19 +232,20 @@ function SamaelMod:PostUpdate()
 
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DR_FETUS)
       Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_DR_FETUS)
-      g.p:AddCollectible(samaelDrFetus, 0, false)
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS, 0, false)
     elseif not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and
-           g.p:HasCollectible(samaelDrFetus) then
+           g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) then
 
-      g.p:RemoveCollectible(samaelDrFetus)
-      Isaac.DebugString("Removing collectible " .. tostring(samaelDrFetus) .. " (Samael Dr. Fetus)")
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
+      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) ..
+                        " (Samael Dr. Fetus)")
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
     --Marked is awful, replace it
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MARKED) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MARKED)
       Isaac.DebugString("Removing collectible " .. CollectibleType.COLLECTIBLE_MARKED)
-      g.p:AddCollectible(samaelMarked, 0, false)
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED, 0, false)
     end
     --Cursed eye + dr fetus doesnt work, so lets just get rid of the shitty item
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) and
@@ -290,24 +283,28 @@ function SamaelMod:PostUpdate()
     end
   else
     --Make sure custom items do not persist outside of Samael
-    if g.p:HasCollectible(samaelDeadEye) then
-      g.p:RemoveCollectible(samaelDeadEye)
-      Isaac.DebugString("Removing collectible " .. tostring(samaelDeadEye) .. " (Samael Dead Eye)")
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) then
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE)
+      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) ..
+                        " (Samael Dead Eye)")
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE, 0, false)
     end
-    if g.p:HasCollectible(samaelChocMilk) then
-      g.p:RemoveCollectible(samaelChocMilk)
-      Isaac.DebugString("Removing collectible " .. tostring(samaelChocMilk) .. " (Samael Chocolate Milk)")
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) then
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK)
+      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) ..
+                        " (Samael Chocolate Milk)")
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, 0, false)
     end
-    if g.p:HasCollectible(samaelDrFetus) then
-      g.p:RemoveCollectible(samaelDrFetus)
-      Isaac.DebugString("Removing collectible " .. tostring(samaelDrFetus) .. " (Samael Dr. Fetus)")
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) then
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
+      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) ..
+                        " (Samael Dr. Fetus)")
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
-    if g.p:HasCollectible(samaelMarked) then
-      g.p:RemoveCollectible(samaelMarked)
-      Isaac.DebugString("Removing collectible " .. tostring(samaelMarked) .. " (Samael Marked)")
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) then
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED)
+      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) ..
+                        " (Samael Marked)")
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_MARKED, 0, false)
     end
     if not g.p:GetSprite():IsPlaying("Death") and dying then
@@ -334,7 +331,7 @@ function SamaelMod:wraithModeHandler()
       roomFrameCount == 1 or
       dying or
       isaacDying or
-      not g.p:HasCollectible(wraithItem)) then
+      not g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL)) then
 
     SamaelMod:triggerWraithModeEnd()
   end
@@ -458,7 +455,7 @@ function SamaelMod:scytheUpdate(scythe)
     scythe:GetSprite().Color = Color(0,0,0,0,0,0,0)
     swingDelay = 4
   else
-    if g.p:HasCollectible(samaelDeadEye) and
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) and
        not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then --Set redness for deadEye boost
 
       scytheColor.RO = (deadEyeBoost/properDamage)/2
@@ -822,7 +819,7 @@ function SamaelMod:fireScytheProjectile(projVel, angle, XOffset, YOffset)
       if var~=2 and var~=26 and var~=27 and var~=28 and var~=30 and var~=31 and
          not g.p:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
 
-        proj:ChangeVariant(projVariant) --Change to custom scythe projectile
+        proj:ChangeVariant(TearVariant.MAGIC_SCYTHE) --Change to custom scythe projectile
       elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
         proj:SetColor(Color(0,0,0,255,0,0,0), 999,999,false,false)
       else
@@ -833,7 +830,7 @@ function SamaelMod:fireScytheProjectile(projVel, angle, XOffset, YOffset)
       proj.SpriteScale = Vector(proj.Scale,proj.Scale) --Set proper size
     end
     proj.CollisionDamage = proj.CollisionDamage*scytheProjectileDamageMultiplier --Set new tear damage
-    if g.p:HasCollectible(samaelChocMilk) then
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) then
       local chocBoost = math.min(charge/chargeTime, 3)
       proj.CollisionDamage = proj.CollisionDamage*chocBoost
       proj.Scale = math.max(proj.Scale, proj.Scale*chocBoost*(2/3))
@@ -845,7 +842,7 @@ end
 -- Custom deadeye functionality
 -- (increases damage every time a scythe swing hits something; bonus is lost when a swing misses
 function SamaelMod:deadEyeFunc(interrupt)
-  if g.p:HasCollectible(samaelDeadEye) then
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) then
     if hits > 0 then
       if deadEyeBoost < properDamage * 2 then
         deadEyeBoost = deadEyeBoost + properDamage * 0.2
@@ -906,7 +903,7 @@ function SamaelMod:getScytheColor()
     g.p:HasCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND),
     g.p:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_ONION),
     g.p:HasCollectible(CollectibleType.COLLECTIBLE_PARASITE),
-    g.p:HasCollectible(samaelChocMilk),
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK),
   }
   --local purple = {player:HasCollectible(CollectibleType.COLLECTIBLE_SPOON_BENDER)}
   --local pink = {player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYESHADOW)}
@@ -969,7 +966,7 @@ function SamaelMod:getScytheColor()
     color.G = color.G * 0.2
   --Darken less
   elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_DEAD_ONION) or
-         g.p:HasCollectible(samaelChocMilk) or
+         g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) or
          threeDollarBillEffect == "slow" then
 
     color.R = color.R * 0.5
@@ -1033,7 +1030,7 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
   end
 
   if cacheFlag == CacheFlag.CACHE_RANGE then
-    if player:HasCollectible(samaelMarked) then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) then
       player.TearHeight = player.TearHeight - 3.15
     end
   end
@@ -1052,7 +1049,8 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
       end
     end
 
-    if player:HasCollectible(samaelDrFetus) then --damage boost when Brimstone overrides Dr Fetus
+    --damage boost when Brimstone overrides Dr Fetus
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) then
       player.Damage = player.Damage * 1.5
     end
 
@@ -1080,7 +1078,7 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
   end
 
   if cacheFlag == CacheFlag.CACHE_FIREDELAY then
-    if player:HasCollectible(samaelMarked) then
+    if player:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) then
       player.MaxFireDelay = player.MaxFireDelay - math.ceil(player.MaxFireDelay / 8)
     end
     if player:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and
@@ -1568,7 +1566,7 @@ function SamaelMod:roomEntitiesLoop()
       --custom techX stuff
       if entity.Parent == nil then
         entity:Remove()
-      elseif entity.Parent.Type == scytheID then
+      elseif entity.Parent.Type == EntityType.ENTITY_SAMAEL_SCYTHE then
         if scytheState ~= 2 then
           entity:Remove()
         else
@@ -1581,7 +1579,7 @@ function SamaelMod:roomEntitiesLoop()
       end
 
     elseif entity.Type == EntityType.ENTITY_TEAR and
-           entity.Variant == projVariant and
+           entity.Variant == TearVariant.MAGIC_SCYTHE and
            not g.p:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
 
       --Keep the size of the scythe projectiles consistent whenever it might change (proptosis, lump of coal, etc)
@@ -1676,7 +1674,7 @@ function SamaelMod:activateWraith()
 
   --Special animation
   g.p:GetSprite().Color = zeroColor
-  local special = Isaac.Spawn(specialAnim, 0, 0,
+  local special = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS, 0, 0,
                               g.p.Position, g.zeroVector, g.p):ToNPC() --Spawn the special animations entity
   special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
   special:GetSprite():Play("WraithDown", 1) --Wraith form animation
@@ -1776,11 +1774,11 @@ function SamaelMod:PostUpdateFixBugs()
 
   -- Judas Shadow + Wraith Skull bug
   if character ~= samaelID then
-    if g.p:HasCollectible(wraithItem) then
-      g.p:RemoveCollectible(wraithItem)
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) then
+      g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL)
       Isaac.DebugString("Removed the Wraith Skull since we are not on Samael anymore.")
     end
-    if g.run.schoolbag.item == wraithItem then
+    if g.run.schoolbag.item == CollectibleType.COLLECTIBLE_WRAITH_SKULL then
       g.run.schoolbag.item = 0
       Schoolbag.sprites.item = nil
       Isaac.DebugString("Removed the Wraith Skull (from the Schoolbag) since we are not on Samael anymore.")
@@ -1816,7 +1814,7 @@ end
 
 -- Called from the "CheckEntities:NonGrid()" and "SamaelMod:CheckHairpin()" functions
 function SamaelMod:CheckRechargeWraithSkull()
-  if g.p:HasCollectible(wraithItem) and
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) and
      wraithCharge ~= 100 then
 
     wraithCharge = 100
@@ -1829,7 +1827,7 @@ function SamaelMod:CheckHairpin()
   -- Local variables
   local roomType = g.r:GetType()
 
-  if g.p:HasCollectible(Isaac.GetItemIdByName("Wraith Skull")) and
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) and
      -- We don't want to check for "player:NeedsCharge()" because the Hairpin will actually work,
      -- but if the wraithCharge variable is not updated, then it will get uncharged on the next frame
      g.p:HasTrinket(TrinketType.TRINKET_HAIRPIN) and -- 120

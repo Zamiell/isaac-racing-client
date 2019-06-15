@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.43.0* - June 15th, 2019
+
+* Various parts of the Racing+ and Babies Mod are now more optimized, which means the mod should work slightly better on slower computers.
+* Angels on the Isaac fight are now guaranteed to spawn 60 units away (instead of 40).
+* Reverted the custom sound effect when you try to plant a bomb while at 0 bombs.
+* Fixed the (vanilla) bug where beams of light from Conquest and the second phase of Isaac would never actually hit the player. The attack has been recoded and has a new animation. Thanks to piber20 for programming this.
+* Fixed the bug where Book of Sin and Dead Sea Scrolls would not work correctly with the Schoolbag and the Butter! trinket.
+* Fixed the bug where Mushrooms would not deal damage on floors other than Caves.
+* Fixed the bug where seeded floors were disabled.
+
 ### *v0.42.1* - June 10th, 2019
 
 * The client will now properly track who is in first place in a multi-character speedrun.

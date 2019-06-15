@@ -59,9 +59,10 @@ function PostGameStarted:Main(saveState)
     Isaac.DebugString("Added the \"Total Curse Immunity\" easter egg.")
 
     -- We only need to restart the game if there is a curse on B1 already
-    if curses ~= 0 then
+    if curses ~= LevelCurse.CURSE_NONE then -- 0
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
+      g.run.b1HasCurse = true
       Isaac.DebugString("Restarting because there was a curse on Basement 1.")
       return
     end
@@ -437,7 +438,7 @@ function PostGameStarted:Character()
     -- Give him the Schoolbag with the Wraith Skull
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    Schoolbag:Put(Isaac.GetItemIdByName("Wraith Skull"), 0)
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_WRAITH_SKULL, 0)
   end
 end
 
@@ -804,6 +805,12 @@ function PostGameStarted:Pageant()
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_CANCER) -- 301
   g.p:AddTrinket(TrinketType.TRINKET_CANCER) -- 39
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CANCER) -- 39
+
+  -- Delete the trinket that drops from the Belly Button
+  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -1, false, false) -- 5.350
+  for _, pickup in ipairs(pickups) do
+    pickup:Remove()
+  end
 
   Isaac.DebugString("Added Pageant Boy ruleset items.")
 end

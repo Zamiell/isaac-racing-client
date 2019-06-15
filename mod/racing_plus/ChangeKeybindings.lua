@@ -19,54 +19,7 @@ ChangeKeybindings.states = {
 -- The "Change Keybindings" custom challenge
 --
 
-function ChangeKeybindings:PostNewRoom()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("Change Keybindings") then
-    return
-  end
-
-  if g.run.roomsEntered == 1 then
-    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
-    g.run.goingToDebugRoom = true
-    Isaac.ExecuteCommand("goto d.0") -- We do more things in the next "PostNewRoom" callback
-    return
-  end
-  if g.run.roomsEntered ~= 2 then
-    return
-  end
-
-  -- Remove all enemies
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    local npc = entity:ToNPC()
-    if npc ~= nil then
-      entity:Remove()
-    end
-  end
-  g.r:SetClear(true)
-
-  -- We want to trap the player in the room, so delete all 4 doors
-  for i = 0, 3 do
-    g.r:RemoveDoor(i)
-  end
-
-  -- Put the player next to the bottom door
-  g.p.Position = Vector(320, 400)
-
-  -- Get rid of the HUD
-  g.seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD) -- 10
-
-  -- Make the player invisible
-  g.p.Position = g.r:GetCenterPos()
-  g.p.SpriteScale = g.zeroVector
-
-  -- Reset variables used in the challenge
-  ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP
-  ChangeKeybindings.challengeFramePressed = -100
-  Isaac.DebugString("Entered the \"Change Keybindings\" custom challenge.")
-end
-
+-- ModCallbacks.MC_POST_RENDER (2)
 function ChangeKeybindings:PostRender()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
@@ -197,6 +150,55 @@ function ChangeKeybindings:GetKeyName(keyCode)
   end
 
   return "not found"
+end
+
+-- ModCallbacks.MC_POST_NEW_ROOM (19)
+function ChangeKeybindings:PostNewRoom()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("Change Keybindings") then
+    return
+  end
+
+  if g.run.roomsEntered == 1 then
+    Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
+    g.run.goingToDebugRoom = true
+    Isaac.ExecuteCommand("goto d.0") -- We do more things in the next "PostNewRoom" callback
+    return
+  end
+  if g.run.roomsEntered ~= 2 then
+    return
+  end
+
+  -- Remove all enemies
+  for _, entity in ipairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      entity:Remove()
+    end
+  end
+  g.r:SetClear(true)
+
+  -- We want to trap the player in the room, so delete all 4 doors
+  for i = 0, 3 do
+    g.r:RemoveDoor(i)
+  end
+
+  -- Put the player next to the bottom door
+  g.p.Position = Vector(320, 400)
+
+  -- Get rid of the HUD
+  g.seeds:AddSeedEffect(SeedEffect.SEED_NO_HUD) -- 10
+
+  -- Make the player invisible
+  g.p.Position = g.r:GetCenterPos()
+  g.p.SpriteScale = g.zeroVector
+
+  -- Reset variables used in the challenge
+  ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP
+  ChangeKeybindings.challengeFramePressed = -100
+  Isaac.DebugString("Entered the \"Change Keybindings\" custom challenge.")
 end
 
 return ChangeKeybindings

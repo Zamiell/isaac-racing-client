@@ -9,12 +9,6 @@ local SeededDeath = require("racing_plus/seededdeath")
 
 function Race:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
-
-  -- Check to see if we need to start the timers
-  if g.run.startedTime == 0 then
-    g.run.startedTime = Isaac.GetTime()
-  end
-
   Race:PostUpdateCheckBossRush()
   Race:PostUpdateCheckFireworks()
   Race:PostUpdateCheckVictoryLap()
@@ -34,8 +28,7 @@ function Race:PostUpdateCheckBossRush()
 
   g.run.finishedBossRush = true
   local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
-  g.g:Spawn(Isaac.GetEntityTypeByName("Race Trophy"), Isaac.GetEntityVariantByName("Race Trophy"),
-            pos, g.zeroVector, nil, 0, 0)
+  g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, pos, g.zeroVector, nil, 0, 0)
   Isaac.DebugString("Spawned the end of Boss Rush trophy.")
 end
 
@@ -44,6 +37,14 @@ function Race:PostUpdateCheckFireworks()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
 
+  -- Make fireworks quieter
+  if Isaac.CountEntities(nil, EntityType.ENTITY_EFFECT, EffectVariant.FIREWORKS, -1) > 0 and -- 1000.104
+     g.sfx:IsPlaying(SoundEffect.SOUND_BOSS1_EXPLOSIONS) then -- 182
+
+    g.sfx:AdjustVolume(SoundEffect.SOUND_BOSS1_EXPLOSIONS, 0.2)
+  end
+
+  -- Do something special for a first place finish (or a speedrun completion)
   if (g.raceVars.finished == true and
       g.race.status == "none" and
       g.race.place == 1 and

@@ -442,8 +442,7 @@ function FastClear:ClearRoom()
      roomType == RoomType.ROOM_BOSS and -- 5
      roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    g.g:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay Effect"),
-              Isaac.GetEntityVariantByName("Room Clear Delay Effect"),
+    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ROOM_CLEAR_DELAY, -- 10000
               g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay Effect\" custom entity (for The Lamb).")
     -- This won't work to delay the room clearing if "debug 10" is on
@@ -451,7 +450,7 @@ function FastClear:ClearRoom()
     -- Track that we have defeated The Lamb (for the "Everything" race goal)
     g.run.killedLamb = true
 
-    -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
+    -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
               g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
 

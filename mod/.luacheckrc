@@ -89,10 +89,11 @@ globals = {
   "RacingPlusSpeedrun",
 
   -- Other mods
-  "SinglePlayerCoopBabies",
+  "SinglePlayerCoopBabies", -- The Babies Mod
   "RacingPlusRebalanced",
+  "VanillaStreakText",
+  "DisableSadSound",
   "InfinityTrueCoopInterface", -- The True Co-op Mod
-  "VanillaStreakText", -- The Vanilla Streak Text mod
 }
 
 -- Luacheck complains about functions in a module declared with a colon if self is unused;

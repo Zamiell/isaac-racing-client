@@ -3,7 +3,7 @@ local SeededFloors = {}
 -- Includes
 local g = require("racing_plus/globals")
 
-SeededFloors.enabled = false
+SeededFloors.enabled = true -- Set to false when debugging
 
 -- Different inventory and health conditions can affect special room generation
 -- Different special rooms can also sometimes change the actual room selection of non-special rooms

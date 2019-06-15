@@ -1,5 +1,7 @@
 local NPCUpdate = {}
 
+-- Note: This callback only fires on frame 1 and onwards
+
 -- Includes
 local g = require("racing_plus/globals")
 
@@ -62,7 +64,7 @@ function NPCUpdate:NPC28(npc)
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
       if entity:ToNPC() ~= nil and
          entity.Type ~= EntityType.ENTITY_CHUB and -- 28
-         entity.Type ~= Isaac.GetEntityTypeByName("Samael Scythe") then
+         entity.Type ~= EntityType.ENTITY_SAMAEL_SCYTHE then
 
         entity:Kill()
       end
@@ -205,9 +207,7 @@ function NPCUpdate:NPC275(npc)
 
     -- Stop the room from being cleared, which has a chance to take us back to the menu
     g.run.megaSatanDead = true
-    g.g:Spawn(Isaac.GetEntityTypeByName("Room Clear Delay NPC"),
-              Isaac.GetEntityVariantByName("Room Clear Delay NPC"),
-              g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
+    g.g:Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
     Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
 
     -- Give a charge to the player's active item
@@ -216,7 +216,7 @@ function NPCUpdate:NPC275(npc)
       g.p:SetActiveCharge(currentCharge + 1)
     end
 
-    -- Spawn a big chest (which will get replaced with a trophy on the next frame if we happen to be in a race)
+    -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
               g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
 
@@ -302,7 +302,7 @@ function NPCUpdate:IsValidPickupForMove(entity, npc)
     return false
   end
 
-  if not g:InsideSquare(pickup.Position, npc.Position, 15) then
+  if pickup.Position:Distance(npc.Position) > 15 then
     return false
   end
 

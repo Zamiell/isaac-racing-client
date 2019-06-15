@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.42.1"
+g.version = "v0.43.0"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -112,6 +112,25 @@ g.kcolor = KColor(1, 1, 1, 1)
 -- Extra enumerations
 --
 
+-- Entities
+-- TODO
+
+-- Entities
+EntityType.ENTITY_RACE_TROPHY                = Isaac.GetEntityTypeByName("Race Trophy")
+EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC       = Isaac.GetEntityTypeByName("Room Clear Delay NPC")
+EntityType.ENTITY_SAMAEL_SCYTHE              = Isaac.GetEntityTypeByName("Samael Scythe")
+EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS  = Isaac.GetEntityTypeByName("Samael Special Animations")
+TearVariant.MAGIC_SCYTHE                     = Isaac.GetEntityVariantByName("Magic Scythe")
+PickupVariant.INVISIBLE                      = Isaac.GetEntityVariantByName("Invisible Pickup")
+EffectVariant.TRAPDOOR_FAST_TRAVEL           = Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")
+EffectVariant.CRAWLSPACE_FAST_TRAVEL         = Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)")
+EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL      = Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")
+EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL = Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")
+EffectVariant.HEAVEN_DOOR_FAST_TRAVEL        = Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")
+EffectVariant.PITFALL_CUSTOM                 = Isaac.GetEntityVariantByName("Pitfall (Custom)")
+EffectVariant.ROOM_CLEAR_DELAY               = Isaac.GetEntityVariantByName("Room Clear Delay")
+EffectVariant.CRACK_THE_SKY_BASE             = Isaac.GetEntityVariantByName("Crack the Sky Base")
+
 -- Collectibles
 -- (unused normal item IDs are: 43, 59, 61, 235, 263)
 CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
@@ -136,11 +155,22 @@ CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wra
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
 SoundEffect.SOUND_WALNUT          = Isaac.GetSoundIdByName("Walnut")
-SoundEffect.SOUND_SAD             = Isaac.GetSoundIdByName("Sad")
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
 PlayerForm.NUM_PLAYER_FORMS = PlayerForm.PLAYERFORM_STOMPY + 1
+
+g.LaserVariant = {
+  LASER_THICK     = 1, -- Brimstone
+  LASER_THIN      = 2, -- Technology
+  LASER_SHOOP     = 3, -- Shoop Da Whoop!
+  LASER_PRIDE     = 4, -- Pride (looks like a squiggly line)
+  LASER_LIGHT     = 5, -- Angel lasers
+  LASER_GIANT     = 6, -- Mega Blast
+  LASER_TRACTOR   = 7, -- Tractor Beam
+  LASER_LIGHTRING = 8, -- ? (looks like pulsating Angel laser)
+  LASER_BRIMTECH  = 9, -- Brimstone + Technology
+}
 
 -- Spaded by ilise rose (@yatboim)
 g.RoomTransition = {
@@ -159,7 +189,6 @@ g.RoomTransition = {
   TRANSITION_MISSING_POSTER    = 14,
 }
 
--- Spaded by Zamiel
 g.FadeoutTarget = {
   -- -1 and lower result in a black screen
   FADEOUT_FILE_SELECT     = 0,
@@ -236,6 +265,9 @@ function g:InitRun()
   g.run.teleportSubvertScale  = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
   g.run.forceMomStomp         = false
   g.run.forceMomStompPos      = nil
+  g.run.spawningLight         = false -- For the custom Crack the Sky effect
+  g.run.spawningExtraLight    = false -- For the custom Crack the Sky effect
+  g.run.lightPositions        = {} -- For the custom Crack the Sky effect
   g.run.matriarch             = {
     chubIndex = -1,
     stunFrame = 0,
@@ -243,6 +275,7 @@ function g:InitRun()
 
   -- Temporary tracking
   g.run.restart              = false -- If set, we restart the run on the next frame
+  g.run.b1HasCurse           = false
   g.run.reseededFloor        = false
   g.run.goingToDebugRoom     = false
   g.run.forgetMeNow          = false
@@ -474,11 +507,10 @@ function g:TableContains(t, v2)
   return false
 end
 
--- Find out how many items are in the game
 function g:GetTotalItemCount()
   -- In vanilla, there are 552 items, but CollectibleType has 554 values
   -- This is because of the "COLLECTIBLE_NULL" and the "NUM_COLLECTIBLES" keys
-  -- Racing+ adds a bunch of items, but for every item it also adds an entry to CollectibleType above
+  -- Racing+ adds a bunch of items, but for every item it also adds an entry to CollectibleType
   return g:TableLen(CollectibleType) - 2
 end
 
@@ -495,18 +527,6 @@ function g:ExecuteCommand(command)
   Isaac.DebugString("Executing command: " .. command)
   Isaac.ExecuteCommand(command)
   Isaac.DebugString("Finished executing command: " .. command)
-end
-
-function g:InsideSquare(pos1, pos2, squareSize)
-  if pos1.X >= pos2.X - squareSize and
-     pos1.X <= pos2.X + squareSize and
-     pos1.Y >= pos2.Y - squareSize and
-     pos1.Y <= pos2.Y + squareSize then
-
-    return true
-  else
-    return false
-  end
 end
 
 -- From the ProAPI

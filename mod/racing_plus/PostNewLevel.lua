@@ -66,9 +66,9 @@ function PostNewLevel:NewLevel()
   end
 
   -- Reseed the floor if it has a flaw in it
-  --if challenge ~= 0 or
-  --   not customRun then -- Disable reseeding for set seeds
-  if true then
+  if challenge ~= 0 or
+     not customRun then -- Disable reseeding for set seeds
+
     if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
        PostNewLevel:CheckForgottenSoftlock() or -- Forgotten can become softlocked in certain rooms
        PostNewLevel:CheckDupeRooms() then -- Check for duplicate rooms

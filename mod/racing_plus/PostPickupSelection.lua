@@ -4,6 +4,7 @@ local PostPickupSelection = {}
 local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_POST_PICKUP_SELECTION (37)
+-- (you cannot provide a SubType as the third argument to this callback)
 function PostPickupSelection:Main(pickup, variant, subType)
   --[[
   Isaac.DebugString("MC_POST_PICKUP_SELECTION - " ..
@@ -38,7 +39,7 @@ function PostPickupSelection:ManualPhotos(variant, subType)
   -- So we just make a custom invisible entity (with no anm2 file) and set the pickup to that
   -- We will spawn The Polaroid and The Negative manually in the MC_POST_NPC_DEATH callback
   Isaac.DebugString("Preventing a vanilla Polaroid / Negative from spawning on frame: " .. tostring(gameFrameCount))
-  return {500, 0} -- Invisible Pickup (5.500), a custom entity
+  return { PickupVariant.INVISIBLE, 0 } -- Invisible Pickup, a custom entity
 end
 
 return PostPickupSelection

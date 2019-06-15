@@ -67,7 +67,6 @@ function PostRender:Main()
   -- Check for inputs
   PostRender:CheckConsoleInput()
   PostRender:CheckResetInput()
-  PostRender:CheckBombInput()
   PostRender:CheckKnifeDirection()
 
   -- Make Cursed Eye seeded
@@ -284,6 +283,9 @@ function PostRender:CheckRestart()
 
       g:ExecuteCommand("seed " .. g.saveFile.old.seed)
     end
+    if g.run.b1HasCurse then
+      g:ExecuteCommand("restart")
+    end
     return
   end
 
@@ -382,42 +384,6 @@ function PostRender:CheckResetInput()
   else
     -- In speedruns, we want to double tap R to return reset to the same character
     g.run.fastResetFrame = isaacFrameCount
-  end
-end
-
-function PostRender:CheckBombInput()
-  if g.run.playedSad or -- Play the sound effect at most once per floor
-     g.run.consoleOpened then -- Don't play the sound effect if we could be typing into the console
-
-    return
-  end
-
-  -- Check to see if the player has pressed the restart input
-  -- (we check all inputs instead of "player.ControllerIndex" because
-  -- a controller player might be using the keyboard to reset)
-  local pressed = false
-  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsActionTriggered(ButtonAction.ACTION_BOMB, i) then -- 8
-      pressed = true
-      break
-    end
-  end
-  if not pressed then
-    g.run.bombKeyPressed = false
-    return
-  end
-
-  if g.run.bombKeyPressed then
-    return
-  end
-  g.run.bombKeyPressed = true
-
-  local bombs = Isaac.FindByType(EntityType.ENTITY_BOMBDROP, -1, -1, false, false) -- 4
-  if #bombs == 0 and
-     g.p:GetNumBombs() == 0 then
-
-    g.sfx:Play(SoundEffect.SOUND_SAD, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
-    g.run.playedSad = true
   end
 end
 

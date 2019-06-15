@@ -4,6 +4,7 @@ local UseCard = {}
 local g              = require("racing_plus/globals")
 local PostItemPickup = require("racing_plus/postitempickup")
 
+-- ModCallbacks.MC_USE_CARD (5)
 function UseCard:Main(card)
   -- Display the streak text (because Racing+ removes the vanilla streak text)
   if card == Card.RUNE_BLANK then -- 40

@@ -54,7 +54,7 @@ function SpeedrunPostNewRoom:Womb2Error()
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
           -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
-          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, g.zeroVector, nil, 0, 0)
+          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, g.zeroVector, g.p, 0, 0)
           Isaac.DebugString("Replaced a trapdoor with a beam of light.")
           return
         elseif direction == 2 then

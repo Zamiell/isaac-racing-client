@@ -18,6 +18,7 @@ local ChangeCharOrder    = require("racing_plus/changecharorder")
 -- (this will not fire while the floor/room is loading)
 -- ModCallbacks.MC_POST_UPDATE (1)
 function PostUpdate:Main()
+  PostUpdate:CheckStartTime()
   PostUpdate:CheckRoomCleared()
   PostUpdate:CheckKeeperHearts()
   PostUpdate:CheckItemPickup()
@@ -71,6 +72,13 @@ function PostUpdate:Main()
 
   -- Handle things for the "Change Char Order" custom challenge
   ChangeCharOrder:PostUpdate()
+end
+
+-- Check to see if we need to start the timers
+function PostUpdate:CheckStartTime()
+  if g.run.startedTime == 0 then
+    g.run.startedTime = Isaac.GetTime()
+  end
 end
 
 -- Keep track of the when the room is cleared and the total amount of rooms cleared on this run thus far
@@ -222,12 +230,12 @@ function PostUpdate:CheckCharacter()
   if g.run.trapdoor.state == 0 then
     local effects = Isaac.FindByType(EntityType.ENTITY_EFFECT, -1, -1, false, false) -- 1000
     for _, entity in ipairs(effects) do
-      if (entity.Variant == Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)") or
-          entity.Variant == Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)") or
-          entity.Variant == Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)") or
-          entity.Variant == Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)") or
-          entity.Variant == Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")) and
-        g:InsideSquare(g.p.Position, entity.Position, 40) then
+      if (entity.Variant == EffectVariant.TRAPDOOR_FAST_TRAVEL or
+          entity.Variant == EffectVariant.CRAWLSPACE_FAST_TRAVEL or
+          entity.Variant == EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL or
+          entity.Variant == EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL or
+          entity.Variant == EffectVariant.HEAVEN_DOOR_FAST_TRAVEL) and
+         g.p.Position:Distance(entity.Position) <= 40 then
 
         local effect = entity:ToEffect()
         effect.State = 1
@@ -315,7 +323,7 @@ function PostUpdate:CheckMomStomp()
     for _, knife in ipairs(knives) do
       knife.Visible = false
     end
-    local scythes = Isaac.FindByType(Isaac.GetEntityTypeByName("Samael Scythe"), -1, -1, false, false) -- 8
+    local scythes = Isaac.FindByType(EntityType.ENTITY_SAMAEL_SCYTHE, -1, -1, false, false) -- 8
     for _, scythe in ipairs(scythes) do
       scythe.Visible = false
     end
@@ -335,7 +343,7 @@ function PostUpdate:CheckMomStomp()
     for _, knife in ipairs(knives) do
       knife.Visible = true
     end
-    local scythes = Isaac.FindByType(Isaac.GetEntityTypeByName("Samael Scythe"), -1, -1, false, false) -- 8
+    local scythes = Isaac.FindByType(EntityType.ENTITY_SAMAEL_SCYTHE, -1, -1, false, false) -- 8
     for _, scythe in ipairs(scythes) do
       scythe.Visible = true
     end
