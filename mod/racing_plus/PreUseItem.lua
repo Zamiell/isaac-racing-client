@@ -2,7 +2,7 @@ local PreUseItem = {}
 
 -- Includes
 local g         = require("racing_plus/globals")
-local UseItem   = require("racing_plus/globals")
+local UseItem   = require("racing_plus/useitem")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER (84)

@@ -106,6 +106,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * Death will no longer perform his slow attack.
+* The random beams of light from Isaac and Conquest are fixed such that they will now target the player, but give them a chance to dodge.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
@@ -169,7 +170,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * Friendly green creep is changed to red (so that it is easier to distinguish from enemy creep).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for creating the graphics for this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * The door opening sound will no longer play in crawlspaces.
-* A custom sound effect will play if the player tries to plant a bomb while at 0 bombs.
 
 <br />
 

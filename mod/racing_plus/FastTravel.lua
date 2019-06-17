@@ -119,12 +119,16 @@ function FastTravel:ReplaceHeavenDoor(entity)
   end
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
-  -- Delete the "natural" beam of light that spawns one frame after It Lives! (or Hush) is killed
-  -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
+  -- Delete the "natural" beam of light
   if entity.SpawnerType ~= EntityType.ENTITY_PLAYER then -- 1
     entity:Remove()
-    Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
-    return
+
+    if roomIndex ~= GridRooms.ROOM_ERROR_IDX then -- -2
+      -- This is the beam of light that spawns one frame after It Lives! (or Hush) is killed
+      -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
+      Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
+      return
+    end
   end
 
   -- Spawn a custom entity to emulate the original

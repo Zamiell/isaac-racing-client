@@ -141,7 +141,6 @@ end
 
 -- PickupVariant.PICKUP_BOMB (40)
 function PostItemPickup:InsertBomb(bomb)
-  Isaac.DebugString("GETTING HERE: " .. tostring(bomb.SubType))
   if bomb.SubType == BombSubType.BOMB_NORMAL then -- 1
     g.p:AddBombs(1)
   elseif bomb.SubType == BombSubType.BOMB_DOUBLEPACK then -- 2

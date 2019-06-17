@@ -24,7 +24,6 @@ function UseItem:Main(collectibleType)
   end
 
   -- Fix the Schoolbag + Butter! bug
-  Isaac.DebugString("GETTING HERE")
   if g.p:HasTrinket(TrinketType.TRINKET_BUTTER) then -- 122
     g.run.droppedButterItem = collectibleType -- (the pedestal will appear on the next game frame)
     Isaac.DebugString("The Butter! trinket dropped item " .. tostring(collectibleType) ..

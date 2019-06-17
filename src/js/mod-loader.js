@@ -40,7 +40,7 @@ const send = () => {
         globals.modLoader.rFormat === 'unseeded'
     ) {
         // The Racing+ Schoolbag has an item ID of 554
-        json.startingItems.push(parseInt(554, 10)); // The Lua mod expects this to be a number
+        json.startingItems.push(parseInt(553, 10)); // The Lua mod expects this to be a number
     }
 
     // Parse the starting build

@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.43.1* - June 15th, 2019
+
+* Fixed the bug where heaven doors would not spawn in I AM ERROR rooms. (Thanks thereisnofuture)
+* Fixed the bug where Book of Sin would give duplicate pickups. (Thanks caesar)
+* Fixed the bug where ranked unseeded solo races were giving the Soul Jar instead of the Schoolbag. (Thanks caesar)
+
 ### *v0.43.0* - June 15th, 2019
 
 * Various parts of the Racing+ and Babies Mod are now more optimized, which means the mod should work slightly better on slower computers.

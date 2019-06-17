@@ -9,10 +9,6 @@ TODO:
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
-TODO DIFFICULT:
-- Fix Isaac beams never hitting you
-- Fix Conquest beams hitting you
-
 TODO CAN'T FIX:
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered
 - Make fast-clear apply to Challenge rooms and the Boss Rush
