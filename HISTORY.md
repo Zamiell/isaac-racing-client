@@ -2,6 +2,7 @@
 
 ### *v0.43.1* - June 15th, 2019
 
+* Increased the warmup frames on the beam of light attack from 18 to 20.
 * Fixed the bug where heaven doors would not spawn in I AM ERROR rooms. (Thanks thereisnofuture)
 * Fixed the bug where Book of Sin would give duplicate pickups. (Thanks caesar)
 * Fixed the bug where ranked unseeded solo races were giving the Soul Jar instead of the Schoolbag. (Thanks caesar)
