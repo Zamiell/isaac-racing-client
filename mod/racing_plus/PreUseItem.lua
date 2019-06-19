@@ -132,7 +132,7 @@ function PreUseItem:Item124()
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS, "UseItem", "PlayerPickup") -- 124
 
   -- Since we cancel the original effect, the UseItem callback will never fire, so do it manually
-  UseItem:Main(CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
+  UseItem:Main(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
 
   -- Cancel the original effect
   return true

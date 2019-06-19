@@ -57,6 +57,9 @@
 	<entity name="Magic Scythe" anm2path="samael_scythe_projectile.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="8" collisionRadius="30" friction="1" id="2" numGridCollisionPoints="8" shadowSize="0" stageHP="0" variant="617" shutdoors="false"><!-- Tear -->
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
+	<entity name="Scythe Hitbox" anm2path="samael_scythe_hitbox.anm2" baseHP="0" boss="0" champion="0" collisionDamage="15" collisionMass="3" collisionRadius="13" friction="1" id="3" numGridCollisionPoints="12" shadowSize="0" stageHP="0" variant="35" subtype="617" shutdoors="false">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
 
 	<!-- Jr. Fetus -->
 	<entity anm2path="drfetusboss/drfetusjr.anm2" baseHP="2000" boss="1" champion="0" collisionDamage="0" friction="0" id="838" variant="0" name="Dr Fetus Jr" collisionMass="999" collisionRadius="45" numGridCollisionPoints="12" shadowSize="14" stageHP="0">

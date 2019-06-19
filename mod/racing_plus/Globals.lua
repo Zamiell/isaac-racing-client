@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.43.1"
+g.version = "v0.43.2"
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -121,6 +121,8 @@ EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC       = Isaac.GetEntityTypeByName("Room C
 EntityType.ENTITY_SAMAEL_SCYTHE              = Isaac.GetEntityTypeByName("Samael Scythe")
 EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS  = Isaac.GetEntityTypeByName("Samael Special Animations")
 TearVariant.MAGIC_SCYTHE                     = Isaac.GetEntityVariantByName("Magic Scythe")
+FamiliarVariant.SCYTHE_HITBOX                = Isaac.GetEntityVariantByName("Scythe Hitbox")
+PlayerType.PLAYER_SAMAEL                     = Isaac.GetPlayerTypeByName("Samael")
 PickupVariant.INVISIBLE                      = Isaac.GetEntityVariantByName("Invisible Pickup")
 EffectVariant.TRAPDOOR_FAST_TRAVEL           = Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")
 EffectVariant.CRAWLSPACE_FAST_TRAVEL         = Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)")

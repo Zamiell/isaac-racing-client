@@ -56,7 +56,7 @@ ChangeCharOrder.seasons = {
       {7, 8, 1},  -- Azazel
       {9, 10, 1}, -- Eden
       {15, 5, 3}, -- Apollyon
-      {Isaac.GetPlayerTypeByName("Samael"), 7, 3}, -- Samael
+      {PlayerType.PLAYER_SAMAEL, 7, 3}, -- Samael
     },
   },
   R7S3 = {

@@ -246,7 +246,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedes
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC38, -- 27
                        EntityType.ENTITY_BABY) -- 38
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
-                       EntityType.ENTITY_THE_HAUNT) -- ?
+                       EntityType.ENTITY_THE_HAUNT) -- 260
 
 -- Define post pickup init callbacks (34)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.CheckSpikedChestUnavoidable, -- 34

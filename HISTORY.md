@@ -1,6 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.43.1* - June 15th, 2019
+### *v0.43.2* - June 18th, 2019
+
+* Fixed the bug where Samael's attack caused a Sacrifical Dagger to appear for a frame. (Thanks Pingouin23)
+
+### *v0.43.1* - June 17th, 2019
 
 * Increased the warmup frames on the beam of light attack from 18 to 20.
 * Fixed the bug where heaven doors would not spawn in I AM ERROR rooms. (Thanks thereisnofuture)

@@ -9,7 +9,6 @@ local Schoolbag = require("racing_plus/schoolbag")
 -- (and to pass the linter)
 
 --References and junk
-local samaelID = Isaac.GetPlayerTypeByName("Samael") --Character ID of Samael
 local hitBoxType = 617 --Subtype of the scythe's hitbox entity (It is a subtype of a Sacrificial Dagger)
 local hood = Isaac.GetCostumeIdByPath("gfx/characters/samaelhood.anm2") --Hood+horns+bandages costume
 local cloak = Isaac.GetCostumeIdByPath("gfx/characters/samaelcloak.anm2") --Cloak costume
@@ -119,7 +118,7 @@ function SamaelMod:PostUpdate()
   local gameFrameCount = g.g:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if g.p:GetPlayerType() == samaelID then --If the player is Samael
+  if g.p:GetPlayerType() == PlayerType.PLAYER_SAMAEL then --If the player is Samael
     if wraithActivationCooldown > 0 then
       wraithActivationCooldown = wraithActivationCooldown - 1
     end
@@ -390,7 +389,7 @@ function SamaelMod:scytheUpdate(scythe)
 
   scythe = scythe:ToNPC()
 
-  if g.p:GetPlayerType() ~= samaelID then
+  if g.p:GetPlayerType() ~= PlayerType.PLAYER_SAMAEL then
     scythe:Remove()
     return
   end
@@ -984,7 +983,7 @@ end
 
 -----------On player init (start/continue)-----------
 function SamaelMod:PostPlayerInit(player)
-  if player:GetPlayerType() ~= samaelID then --If the player is Samael
+  if player:GetPlayerType() ~= PlayerType.PLAYER_SAMAEL then --If the player is Samael
     return
   end
 
@@ -1005,7 +1004,7 @@ end
 
 -----------Cache update function for handling charge time and some damage stuff-----------
 function SamaelMod:cacheUpdate(player, cacheFlag)
-  if player:GetPlayerType() ~= samaelID then
+  if player:GetPlayerType() ~= PlayerType.PLAYER_SAMAEL then
     return
   end
 
@@ -1197,7 +1196,7 @@ function SamaelMod:hitBoxFunc(hitBox)
   end
 
   if hitBox.Parent == nil or
-     character ~= samaelID or
+     character ~= PlayerType.PLAYER_SAMAEL or
      dying then
 
     hitBox:Remove()
@@ -1253,7 +1252,7 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
 
   if ((damageSourceRef ~= nil and damageSourceRef.Entity ~= nil) or
       (damageSourceRef.Entity == nil and (damageFlags & DamageFlag.DAMAGE_LASER) ~= 0)) and
-     g.p:GetPlayerType() == samaelID and
+     g.p:GetPlayerType() == PlayerType.PLAYER_SAMAEL and
      tookDamage.Type ~= EntityType.ENTITY_PLAYER then
 
     local damageSource
@@ -1549,7 +1548,7 @@ end
 ------The only function that loops through every entity in the room.
 ------I tried to limit this mod to only do this once per update------
 function SamaelMod:roomEntitiesLoop()
-  if g.p:GetPlayerType() ~= samaelID then
+  if g.p:GetPlayerType() ~= PlayerType.PLAYER_SAMAEL then
     return
   end
 
@@ -1625,7 +1624,7 @@ end
 -----------Readd costumes after rerolling-----------
 function SamaelMod:postReroll()
   local character = g.p:GetPlayerType()
-  if character == samaelID then
+  if character == PlayerType.PLAYER_SAMAEL then
     g.p:AddNullCostume(cloak)
     g.p:AddNullCostume(hood)
   end
@@ -1760,7 +1759,7 @@ function SamaelMod:PostGameStartedReset()
   numItems = -1
   itemChecks = {}
 
-  if character == samaelID then
+  if character == PlayerType.PLAYER_SAMAEL then
     g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
     g.p:EvaluateItems()
   end
@@ -1773,7 +1772,7 @@ function SamaelMod:PostUpdateFixBugs()
   local character = g.p:GetPlayerType()
 
   -- Judas Shadow + Wraith Skull bug
-  if character ~= samaelID then
+  if character ~= PlayerType.PLAYER_SAMAEL then
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL)
       Isaac.DebugString("Removed the Wraith Skull since we are not on Samael anymore.")
@@ -1845,7 +1844,7 @@ function SamaelMod:IsActionPressed()
   local gameFrameCount = g.g:GetFrameCount()
   local character = g.p:GetPlayerType()
 
-  if character ~= samaelID then
+  if character ~= PlayerType.PLAYER_SAMAEL then
     return
   end
 
@@ -1880,7 +1879,7 @@ function SamaelMod:GetActionValue(buttonAction)
   local gameFrameCount = g.g:GetFrameCount()
   local character = g.p:GetPlayerType()
 
-  if character ~= samaelID then
+  if character ~= PlayerType.PLAYER_SAMAEL then
     return
   end
 
