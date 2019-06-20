@@ -34,11 +34,8 @@ exports.send = (destination) => {
     // If this is a command
     let isCommand = false;
     let isPM = false;
-    let PMrecipient;
-    let PMmessage;
-    let noticeMessage;
-    let adminRecipient;
-    let adminReason;
+    let chatArg1;
+    let chatArg2;
     if (message.startsWith('/')) {
         isCommand = true;
 
@@ -58,7 +55,7 @@ exports.send = (destination) => {
             // Validate that private messages have a recipient
             const m = message.match(/^\/\w+ (.+?) (.+)/);
             if (m) {
-                [, PMrecipient, PMmessage] = m;
+                [, chatArg1, chatArg2] = m; // recipient, message
             } else {
                 misc.warningShow('<span lang="en">The format of a private message is</span>: <code>/pm Alice hello</code>');
                 return;
@@ -73,9 +70,9 @@ exports.send = (destination) => {
             // Validate that the receipient is online
             let isConnected = false;
             for (let i = 0; i < userList.length; i++) {
-                if (PMrecipient.toLowerCase() === userList[i].toLowerCase()) {
+                if (chatArg1.toLowerCase() === userList[i].toLowerCase()) {
                     isConnected = true;
-                    PMrecipient = userList[i];
+                    chatArg1 = userList[i];
                 }
             }
             if (!isConnected) {
@@ -86,7 +83,7 @@ exports.send = (destination) => {
             // Validate that there is an attached message
             const m = message.match(/^\/\w+ (.+)/);
             if (m) {
-                [, noticeMessage] = m;
+                [, chatArg1] = m;
             } else {
                 misc.warningShow('<span lang="en">The format of a notice is</span>: <code>/notice Hey guys!</code>');
                 return;
@@ -95,7 +92,7 @@ exports.send = (destination) => {
             // Validate that ban commands have a recipient and a reason
             const m = message.match(/^\/ban (.+?) (.+)/);
             if (m) {
-                [, adminRecipient, adminReason] = m;
+                [, chatArg1, chatArg2] = m; // recipient, reason
             } else {
                 misc.warningShow('<span lang="en">The format of a ban is</span>: <code>/ban Krakenos being too Polish</code>');
                 return;
@@ -104,7 +101,7 @@ exports.send = (destination) => {
             // Validate that unban commands have a recipient
             const m = message.match(/^\/unban (.+)/);
             if (m) {
-                [, adminRecipient] = m;
+                [, chatArg1] = m;
             } else {
                 misc.warningShow('<span lang="en">The format of an unban is</span>: <code>/unban Krakenos</code>');
                 return;
@@ -121,10 +118,19 @@ exports.send = (destination) => {
 
             const m = message.match(/^\/r (.+)/);
             if (m) {
-                PMrecipient = globals.lastPM;
-                [, PMmessage] = m;
+                chatArg1 = globals.lastPM;
+                [, chatArg2] = m;
             } else {
                 misc.warningShow('The format of a reply is: <code>/r [message]</code>');
+                return;
+            }
+        } else if (message.match(/^\/floor\b/)) {
+            // Validate that unban commands have a recipient
+            const m = message.match(/^\/floor (\d+)/);
+            if (m) {
+                [, chatArg1] = m;
+            } else {
+                misc.warningShow('<span lang="en">The format of a floor command is</span>: <code>/floor 2</code>');
                 return;
             }
         }
@@ -161,12 +167,12 @@ exports.send = (destination) => {
     } else if (isPM) {
         // If this is a PM (which has many aliases)
         globals.conn.send('privateMessage', {
-            name: PMrecipient,
-            message: PMmessage,
+            name: chatArg1,
+            message: chatArg2,
         });
 
         // We won't get a message back from the server if the sending of the PM was successful, so manually call the draw function now
-        draw('PM-to', PMrecipient, PMmessage);
+        draw('PM-to', chatArg1, chatArg2);
     } else if (message === '/debug1') {
         // /debug1 - Debug command for the client
         globals.log.info('Entering debug function.');
@@ -203,16 +209,27 @@ exports.send = (destination) => {
         globals.conn.send('adminUnshutdown', {});
     } else if (message.startsWith('/notice ')) {
         globals.conn.send('adminMessage', {
-            message: noticeMessage,
+            message: chatArg1,
         });
     } else if (message.startsWith('/ban ')) {
         globals.conn.send('adminBan', {
-            name: adminRecipient,
-            comment: adminReason,
+            name: chatArg1,
+            comment: chatArg2,
         });
     } else if (message.startsWith('/unban ')) {
         globals.conn.send('adminUnban', {
-            name: adminRecipient,
+            name: chatArg1,
+        });
+    } else if (message.startsWith('/floor ')) {
+        globals.conn.send('raceFloor', {
+            id: globals.currentRaceID,
+            floorNum: parseInt(chatArg1, 10),
+            stageType: 0,
+        });
+    } else if (message.startsWith('/checkpoint')) {
+        globals.conn.send('raceItem', {
+            id: globals.currentRaceID,
+            itemID: 560,
         });
     } else {
         // Manually call the draw function

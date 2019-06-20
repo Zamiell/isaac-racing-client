@@ -5,9 +5,6 @@
 	<sound name="Walnut">
 		<sample weight="1" path="walnut.wav" />
 	</sound>
-	<sound name="Sad">
-		<sample weight="1" path="sad.wav" />
-	</sound>
 
 	<!-- Mahalath -->
 	<sound name="Baseball">

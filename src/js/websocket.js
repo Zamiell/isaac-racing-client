@@ -36,8 +36,8 @@ exports.init = (username, password, remember) => {
         // Don't log some commands to reduce spam
         if (
             command === 'raceFloor' ||
-            command === 'raceRoom'
-            // command === 'raceItem'
+            command === 'raceRoom' ||
+            command === 'raceItem'
         ) {
             return;
         }
@@ -486,6 +486,7 @@ exports.init = (username, password, remember) => {
                 placeMid: 1,
                 items: [],
                 startingItem: 0,
+                characterNum: 1,
             });
 
             // Update the race screen
@@ -876,6 +877,36 @@ exports.init = (username, password, remember) => {
             }
         }
     }
+
+    globals.conn.on('racerCharacter', connRacerCharacter);
+    function connRacerCharacter(data) {
+        // Log the event
+        globals.log.info(`Websocket - racerCharacter - ${JSON.stringify(data)}`);
+
+        if (globals.currentScreen === 'transition') {
+            // Come back when the current transition finishes
+            setTimeout(() => {
+                connRacerAddItem(data);
+            }, globals.fadeTime + 5); // 5 milliseconds of leeway
+            return;
+        }
+
+        if (data.id !== globals.currentRaceID) {
+            return;
+        }
+
+        // Find the player in the racerList
+        const race = globals.raceList[data.id];
+        for (let i = 0; i < race.racerList.length; i++) {
+            const racer = race.racerList[i];
+            if (data.name === racer.name) {
+                racer.characterNum = data.characterNum;
+                raceScreen.placeMidRecalculateAll();
+                break;
+            }
+        }
+    }
+
 
     globals.conn.on('achievement', connAchievement);
     function connAchievement(data) {

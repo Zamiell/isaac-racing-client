@@ -106,7 +106,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
 * Mom's Hands, Mom's Dead Hands, Wizoobs, and Red Ghosts have faster attack patterns.
 * Death will no longer perform his slow attack.
-* The random beams of light from Isaac and Conquest are fixed such that they will now target the player, but give them a chance to dodge.
 * The disruptive teleport that occurs when entering a room with Gurdy, Mom, Mom's Heart, or It Lives! no longer occurs.
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
@@ -140,16 +139,17 @@ While there are thousands of rooms in the game, many players have already seen t
 * Flaming Hoppers will now automatically die after 5 seconds of being immobile to prevent softlocks.
 * Globins, Sacks, Fistula, and Teratoma will now properly die after defeating Mom, Mom's Heart, or It Lives!
 * The Book of Sin and Mystery Sack generate actual random pickups.
-* Greed's Gullet works properly on Keeper.
-* Double coins and nickels heal Keeper for their proper amount.
-* AAA Battery now properly synergizes with The Battery.
 * 9 Volt now properly synergizes with The Battery.
-* Wiggle Worm now properly updates the tear delay cache.
+* Greed's Gullet works properly on Keeper.
+* Taking Divorce Papers now causes Mysterious Paper to be removed from the trinket pool.
+* AAA Battery now properly synergizes with The Battery.
+* Double coins and nickels heal Keeper for their proper amount.
 * Spiked Chests and Mimics that spawns in rooms that only have a narrow walkable path will spawn as normal chests to prevent unavoidable damage.
 * Defeating Mega Satan no longer has a chance to immediately end the run.
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The Pony / White Pony can no longer be abused to steal Devil Room items.
 * The babies on the Isaac fight can no longer spawn inside the hitbox of the player and will now randomly spawn throughout the room (as originally intended).
+* The random beams of light from Isaac and Conquest are fixed such that they will now target the player, but give them a chance to dodge.
 
 ### Graphics & Sound Fixes
 

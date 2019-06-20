@@ -151,13 +151,17 @@ function PostGameStarted:Main(saveState)
   end
 
   -- Give us custom racing items, depending on the character (mostly just the D6)
-  PostGameStarted:Character()
+  if PostGameStarted:Character() then
+    return
+  end
 
   -- Do more run initialization things specifically pertaining to speedruns
   SpeedrunPostGameStarted:Main()
 
   -- Do more run initialization things specifically pertaining to races
-  PostGameStarted:Race()
+  if PostGameStarted:Race() then
+    return
+  end
 
   -- Remove the 3 placeholder items if this is not a diversity race
   if not PostGameStarted.diversity then
@@ -245,7 +249,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
     if not valid then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
-      Isaac.DebugString("Restarting because we need to go to Eden for the save file check.")
+      Isaac.DebugString("Going to Eden for the save file check.")
       return true
     end
 
@@ -296,7 +300,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
     if not valid then
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
-      Isaac.DebugString("Restarting because we need to go back from the Eden seen to where we came from.")
+      Isaac.DebugString("Save file check complete; going back to where we came from.")
       return true
     end
 
@@ -335,7 +339,7 @@ function PostGameStarted:Character()
       g.run.restart = true
       Speedrun.fastReset = true
       Isaac.DebugString("Restarting because we started as Eden and got a vanilla Schoolbag.")
-      return
+      return true
     end
   end
 
@@ -496,7 +500,7 @@ function PostGameStarted:Race()
       -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting because we were not on the right seed.")
-      return
+      return true
     end
 
   elseif g.race.rFormat == "unseeded" or
@@ -515,7 +519,7 @@ function PostGameStarted:Race()
       -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting because we were on a set seed.")
-      return
+      return true
     end
   end
 
@@ -526,7 +530,7 @@ function PostGameStarted:Race()
     -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
     g.run.restart = true
     Isaac.DebugString("Restarting because we were not on the right character.")
-    return
+    return true
   end
 
   -- The Racing+ client will look for this message to determine that

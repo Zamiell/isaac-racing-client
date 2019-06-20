@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.43.3* - June 20th, 2019
+
+* Updated the main menu with some sketches / graphic changes from Rebirth.
+* Fixed the (vanilla) bug where Divorce Papers would not cause Mysterious Paper to be removed from the trinket pool. (Thanks Gamonymous)
+* Fixed the bug where Lil' Haunts would not be frozen in place during their "Appear" animation. (Thanks thereisnofuture)
+* Fixed the bug where the Holy Mantle indicator would not show correctly for Blue Baby when he had one or more bone hearts.
+* Fixed the bug where a multi-character run would return to the first character if Eden started with the vanilla schoolbag. (Thanks leo_ze_tron)
+* Fixed the bug where the client would not properly track who is in first place in a multi-character speedrun. (Thanks Krakenos)
+
 ### *v0.43.2* - June 18th, 2019
 
 * Fixed the bug where Samael's attack caused a Sacrifical Dagger to appear for a frame. (Thanks Pingouin23)

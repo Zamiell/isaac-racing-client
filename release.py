@@ -19,7 +19,7 @@ from PIL import Image, ImageFont, ImageDraw
 # Configuration
 REPOSITORY_NAME = 'isaac-racing-client'
 MOD_DIR = 'C:\\Users\\james\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_dev'
-TITLE_SCREEN_PATH = os.path.join(MOD_DIR, 'resources\\gfx\\ui\\main menu')
+TITLE_SCREEN_PATH = os.path.join(MOD_DIR, 'resources', 'gfx', 'ui', 'main menu')
 REPOSITORY_DIR = os.path.join('C:\\Repositories\\', REPOSITORY_NAME)
 os.chdir(REPOSITORY_DIR)
 

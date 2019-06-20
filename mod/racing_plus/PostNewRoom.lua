@@ -396,7 +396,7 @@ function PostNewRoom:CheckEntities()
       end
 
     elseif entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
-       entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
+           entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
 
       -- Replace all Sloths / Super Sloths / Prides / Super Prides with a new one that has an InitSeed equal to the room
       -- (we want the card drop to always be the same if there happens to be more than one in the room;
@@ -404,7 +404,9 @@ function PostNewRoom:CheckEntities()
       g.g:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity, entity.Parent, entity.SubType, roomSeed)
       entity:Remove()
 
-    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and entity.Variant == 0 then -- Haunt (260.0)
+    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and
+           entity.Variant == 0 then -- Haunt (260.0)
+
       -- Speed up the first Lil' Haunt attached to a Haunt (1/3)
       -- Later on this frame, the Lil' Haunts will spawn and have their state altered
       -- in the "PostNPCInit:Main()" function

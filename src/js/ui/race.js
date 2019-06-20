@@ -697,7 +697,7 @@ const participantsSetStatus = (i, initial = false) => {
 exports.participantsSetStatus = participantsSetStatus;
 
 // Recalculate everyone's mid-race places
-function placeMidRecalculateAll() {
+const placeMidRecalculateAll = () => {
     // Local variables
     const race = globals.raceList[globals.currentRaceID];
 
@@ -721,7 +721,12 @@ function placeMidRecalculateAll() {
             if (racer2.status !== 'racing') {
                 continue;
             }
-            if (racer2.floorNum > racer.floorNum) {
+            if (racer2.characterNum < racer.characterNum) {
+                continue;
+            }
+            if (racer2.characterNum > racer.characterNum) {
+                racer.placeMid += 1;
+            } else if (racer2.floorNum > racer.floorNum) {
                 racer.placeMid += 1;
             } else if (
                 racer2.floorNum === racer.floorNum &&
@@ -743,7 +748,8 @@ function placeMidRecalculateAll() {
         const ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $(`#race-participants-table-${racer.name}-place`).html(ordinal);
     }
-}
+};
+exports.placeMidRecalculateAll = placeMidRecalculateAll;
 
 const participantsSetFloor = (i) => {
     const race = globals.raceList[globals.currentRaceID];

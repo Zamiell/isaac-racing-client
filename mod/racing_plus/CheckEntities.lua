@@ -47,7 +47,7 @@ function CheckEntities:NonGrid()
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
     local entityFunc = CheckEntities.functions[entity.Type]
     if entityFunc ~= nil then
-      return entityFunc(entity)
+      entityFunc(entity)
     end
   end
 end

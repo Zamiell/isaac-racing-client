@@ -4,7 +4,8 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.43.2"
+g.version = "v0.43.3"
+g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state = 0, -- See the "g.saveFileState" enum below
@@ -31,7 +32,6 @@ g.saveFileState = {
   GOING_BACK = 2, -- Going back to the old challenge/character/seed
   FINISHED = 3,
 }
-g.debug = false
 
 -- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "g:InitRun()" function)
@@ -597,12 +597,13 @@ function g:ConvertTimeToString(time)
   }
 end
 
+-- From piber20 Helper
+-- https://steamcommunity.com/workshop/filedetails/?id=1553455339
 function g:GetPlayerVisibleHearts()
-  local visibleHearts = g.p:GetEffectiveMaxHearts() + g.p:GetSoulHearts()
-  visibleHearts = visibleHearts / 2
-  visibleHearts = math.ceil(visibleHearts)
+  local maxHearts = math.max(g.p:GetEffectiveMaxHearts(), g.p:GetBoneHearts() * 2)
+  local visibleHearts = math.ceil((maxHearts + g.p:GetSoulHearts()) / 2)
   if visibleHearts < 1 then
-    visibleHearts = 1
+      visibleHearts = 1
   end
   return visibleHearts
 end

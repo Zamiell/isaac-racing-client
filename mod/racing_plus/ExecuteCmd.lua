@@ -20,7 +20,7 @@ function ExecuteCmd:Main(cmd, params)
   end
   Isaac.DebugString(debugString)
 
-  if cmd == "charnum" then
+  if cmd == "char" then
     if params == "" then
       return
     end

@@ -314,6 +314,12 @@ function PostItemPickup.Chaos()
   end
 end
 
+-- CollectibleType.COLLECTIBLE_DIVORCE_PAPERS (547)
+function PostItemPickup.DivorcePapers()
+  g.itemPool:RemoveTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) -- 21
+  PostItemPickup:InsertNearestTrinket()
+end
+
 PostItemPickup.functions = {
   [CollectibleType.COLLECTIBLE_PHD] = PostItemPickup.InsertNearestPill, -- 75
   [CollectibleType.COLLECTIBLE_PAGEANT_BOY] = PostItemPickup.PageantBoy, -- 141
@@ -333,7 +339,7 @@ PostItemPickup.functions = {
   [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.InsertNearestCoin, -- 455
   [CollectibleType.COLLECTIBLE_POLYDACTYLY] = PostItemPickup.InsertNearestCardPill, -- 454
   [CollectibleType.COLLECTIBLE_LIL_SPEWER] = PostItemPickup.InsertNearestPill, -- 537
-  [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.InsertNearestTrinket, -- 547
+  [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.DivorcePapers, -- 547
 }
 
 return PostItemPickup
