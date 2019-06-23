@@ -5,6 +5,16 @@ local PostEffectInit = {}
 -- Includes
 local g = require("racing_plus/globals")
 
+-- EffectVariant.POOF01 (15)
+function PostEffectInit:Effect15(effect)
+  -- Fix the bug where Lilith's familiar poofs will be at the bottom of the screen at the beginning of a run
+  if g.g:GetFrameCount() == 0 then
+    -- Even though we remove it below, it will still appear for a frame, so we need to make it invisible
+    effect.Visible = false
+    effect:Remove()
+  end
+end
+
 -- EffectVariant.FART (34)
 function PostEffectInit:Effect34(effect)
   if g.run.changeFartColor == true then

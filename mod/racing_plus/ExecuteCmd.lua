@@ -93,6 +93,9 @@ function ExecuteCmd:Main(cmd, params)
   elseif cmd == "shop" then
     g.p:UseCard(Card.CARD_HERMIT) -- 10
 
+  elseif cmd == "treasure" then
+    g.p:UseCard(Card.CARD_STARS) -- 18
+
   elseif cmd == "devil" then
     g.p:UseCard(Card.CARD_JOKER) -- 31
 

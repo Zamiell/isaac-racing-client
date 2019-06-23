@@ -20,11 +20,32 @@ function PostNPCInit:NPC38(npc)
     return
   end
 
+  -- Get the position of the boss
+  local isaacs = Isaac.FindByType(EntityType.ENTITY_ISAAC, -1, -1, false, false) -- 102
+  if #isaacs == 0 then
+    return
+  end
+  local isaacPos = isaacs[1].Position
+
   -- We want to ensure that we do not spawn a Baby too close to the player
+  --[[
   local position
   while true do
     position = Isaac.GetRandomPosition()
     if position:Distance(g.p.Position) > 60 then
+      break
+    end
+  end
+  --]]
+
+  local position
+  while true do
+    -- Get a random position on the edge of a circle around Isaac
+    -- (2.5 grid squares = 100)
+    position = isaacPos + (RandomVector():Normalized() * 100)
+
+    -- We want to ensure that we do not spawn a Baby too close to the player
+    if position:Distance(g.p.Position) > 80 then
       break
     end
   end

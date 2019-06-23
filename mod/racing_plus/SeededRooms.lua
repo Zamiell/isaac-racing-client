@@ -62,19 +62,9 @@ function SeededRooms:DevilRoom()
   -- Second, find out how many item pedestals we should spawn
   g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
   math.randomseed(g.RNGCounter.DevilRoomItem)
-  local roomRoll = math.random(1, 1705) -- The total weight of all of the rooms is 17.05
-  if roomRoll <= 10 then
-    -- 1x 10 red chests (0.1 weight)
-    for x = 4, 8 do
-      for y = 3, 4 do
-        g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
-        local pos = g:GridToPos(x, y)
-        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_REDCHEST, -- 5.360
-                  pos, g.zeroVector, nil, 0, g.RNGCounter.DevilRoomItem)
-      end
-    end
-
-  elseif roomRoll <= 110 then
+  local roomRoll = math.random(1, 1695) -- The total weight of all of the rooms is 17.05 - 0.1 = 16.95
+  -- We remove the 1x 10 red chests room (0.1 weight) because it can cause different items to spawn on the same seed
+  if roomRoll <= 110 then
     -- 1x 1 pedestal + 4 bombs (1 weight)
     SeededRooms:SpawnPedestalDevilRoom(6, 4)
 

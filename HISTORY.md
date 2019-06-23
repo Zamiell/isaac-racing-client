@@ -1,11 +1,19 @@
 # Racing+ Version History and News
 
+### *v0.43.4* - June 23rd, 2019
+
+* Babies in the Isaac fight will now randomly spawn on the edge of a circle 100 units away from him instead of randomly throughout the room, which mimics the intended behavior. (Thanks Krakenos)
+* The Devil Room with 10 Red Chests will no longer appear on seeded races to prevent seeding bugs. (Thanks antizoubilamakA)
+* Added Caves / Catacombs / Flooded Caves room #119 to the list of rooms for Spiked Chest replacement.
+* Fixed the bug where the player would spawn in the wrong position in Greed Mode. (Thanks Dea1h)
+* Fixed the bug where Lilith's familiar's poof effects appeared at the bottom of the screen at the beginning of a run.
+
 ### *v0.43.3* - June 20th, 2019
 
 * Updated the main menu with some sketches / graphic changes from Rebirth.
 * Fixed the (vanilla) bug where Divorce Papers would not cause Mysterious Paper to be removed from the trinket pool. (Thanks Gamonymous)
 * Fixed the bug where Lil' Haunts would not be frozen in place during their "Appear" animation. (Thanks thereisnofuture)
-* Fixed the bug where the Holy Mantle indicator would not show correctly for Blue Baby when he had one or more bone hearts.
+* Fixed the bug where the Holy Mantle indicator would not show correctly on Blue Baby when he had one or more bone hearts.
 * Fixed the bug where a multi-character run would return to the first character if Eden started with the vanilla schoolbag. (Thanks leo_ze_tron)
 * Fixed the bug where the client would not properly track who is in first place in a multi-character speedrun. (Thanks Krakenos)
 

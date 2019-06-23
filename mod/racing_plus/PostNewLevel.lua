@@ -212,8 +212,6 @@ function PostNewLevel:CheckForgottenSoftlock()
       end
 
       local stageID = roomData.StageID
-      Isaac.DebugString("stageID: " .. tostring(stageID))
-      Isaac.DebugString("roomID: " .. tostring(roomID))
       if ((stageID == 4 or stageID == 6) and roomID == 226) or -- Caves / Flooded Caves
          ((stageID == 4 or stageID == 6) and roomID == 251) or
          ((stageID == 4 or stageID == 6) and roomID == 303) or

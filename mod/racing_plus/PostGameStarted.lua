@@ -142,7 +142,13 @@ function PostGameStarted:Main(saveState)
 
   -- By default, the player starts near the bottom door
   -- Instead, put the player in the middle of the room
-  g.p.Position = g.r:GetCenterPos()
+  if g.g.Difficulty == Difficulty.DIFFICULTY_NORMAL or -- 0
+     g.g.Difficulty == Difficulty.DIFFICULTY_HARD then -- 1
+
+    -- Don't do this in Greed Mode, since if the player starts at the center of the room,
+    -- they they will immediately touch the trigger button
+    g.p.Position = g.r:GetCenterPos()
+  end
 
   -- Also, put familiars in the middle of the room, if any
   local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
