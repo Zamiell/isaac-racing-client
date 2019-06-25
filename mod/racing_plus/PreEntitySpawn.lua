@@ -13,9 +13,16 @@ end
 
 -- EntityType.ENTITY_PICKUP (5)
 function PreEntitySpawn.Pickup(variant, subType, position, spawner, seed)
+  local preEntityPickupFunction = PreEntitySpawn.pickupFunctions[variant]
+  if preEntityPickupFunction ~= nil then
+    return preEntityPickupFunction(subType, position, spawner, seed)
+  end
+end
+
+-- PickupVariant.PICKUP_HEART (10)
+function PreEntitySpawn.Heart(subType, position, spawner, seed)
   -- Delete hearts in Devil Rooms that spawned from fires
-  if variant == PickupVariant.PICKUP_HEART and -- 10
-     g.r:GetType() == RoomType.ROOM_DEVIL and -- 14
+  if g.r:GetType() == RoomType.ROOM_DEVIL and -- 14
      spawner ~= nil and
      spawner.Type == EntityType.ENTITY_FIREPLACE then -- 33
 
@@ -25,6 +32,29 @@ function PreEntitySpawn.Pickup(variant, subType, position, spawner, seed)
      return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end
 end
+
+-- PickupVariant.PICKUP_COLLECTIBLE (100)
+function PreEntitySpawn.Collectible(subType, position, spawner, seed)
+  if g.run.replacingPedestal then
+    g.run.replacingPedestal = false
+    return
+  end
+
+  -- Racing+ has a feature to spawn key pieces early
+  -- So if a key piece was removed early, then ensure that the vanilla counterpart does not spawn
+  if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
+      subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
+      not g.run.spawningKeyPiece then
+
+    Isaac.DebugString("Removed a naturally spawned Key Piece.")
+    return {EntityType.ENTITY_EFFECT, 0, 0, 0}
+  end
+end
+
+PreEntitySpawn.pickupFunctions = {
+  [PickupVariant.PICKUP_HEART] = PreEntitySpawn.Heart, -- 10
+  [PickupVariant.PICKUP_COLLECTIBLE] = PreEntitySpawn.Collectible, -- 100
+}
 
 -- EntityType.ENTITY_SLOT (6)
 function PreEntitySpawn.Slot(variant, subType, position, spawner, seed)

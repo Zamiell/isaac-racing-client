@@ -27,17 +27,6 @@ function PostNPCInit:NPC38(npc)
   end
   local isaacPos = isaacs[1].Position
 
-  -- We want to ensure that we do not spawn a Baby too close to the player
-  --[[
-  local position
-  while true do
-    position = Isaac.GetRandomPosition()
-    if position:Distance(g.p.Position) > 60 then
-      break
-    end
-  end
-  --]]
-
   local position
   while true do
     -- Get a random position on the edge of a circle around Isaac

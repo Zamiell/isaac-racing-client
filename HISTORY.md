@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.43.5* - June 25th, 2019
+
+* Fixed the bug where Angels in Sacrifice Rooms would not drop key pieces. (Thanks mgln)
+
 ### *v0.43.4* - June 23rd, 2019
 
 * Babies in the Isaac fight will now randomly spawn on the edge of a circle 100 units away from him instead of randomly throughout the room, which mimics the intended behavior. (Thanks Krakenos)

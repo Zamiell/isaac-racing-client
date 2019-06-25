@@ -146,19 +146,13 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this is a natural Key Piece 1 or Key Piece 2
   -- (we want to remove it because we spawn key pieces manually to speed it up)
-  if pickup.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
-     pickup.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_2 then -- 239
+  if g.run.spawningKeyPiece and
+     (pickup.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
+      pickup.SubType == CollectibleType.COLLECTIBLE_KEY_PIECE_2) then -- 239
 
-    if g.run.spawningKeyPiece then
-      -- This is a manually spawned key piece with a seed of 0,
-      -- so proceed with the replacement and change the flag to false
-      g.run.spawningKeyPiece = false
-    else
-      -- This is a naturally spawned Key Piece
-      pickup:Remove()
-      Isaac.DebugString("Removed a naturally spawned Key Piece.")
-      return
-    end
+    -- This is a manually spawned key piece with a seed of 0,
+    -- so proceed with the replacement and change the flag to false
+    g.run.spawningKeyPiece = false
   end
 
   -- Check to see if this is a special Basement 1 diversity reroll
@@ -213,6 +207,7 @@ function RPPedestals:Replace(pickup)
   end
 
   -- Replace the pedestal
+  g.run.replacingPedestal = true
   g.run.usedButterFrame = 0
   -- If we are replacing a pedestal, make sure this is reset to avoid the bug where
   -- it takes two item touches to re-enable the Schoolbag

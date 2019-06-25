@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.43.4"
+g.version = "v0.43.5"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -294,6 +294,7 @@ function g:InitRun()
   g.run.dualityCheckFrame    = 0
   g.run.changeFartColor      = false
   g.run.momDied              = false -- Used to fix bugs with fast-clear and killing Mom
+  g.run.replacingPedestal    = false
   g.run.photosSpawning       = false -- Used when replacing The Polaroid and The Negative
   g.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
   g.run.spawningKeyPiece     = false -- Used for spawning Key Piece 1 or Key Piece 2 early

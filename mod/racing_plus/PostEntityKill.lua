@@ -294,10 +294,11 @@ function PostEntityKill:Entity271(entity)
   end
 
   -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
-  if roomType ~= RoomType.ROOM_ANGEL and -- 15
-     roomType ~= RoomType.ROOM_SUPERSECRET then -- 8
-     -- Key pieces dropping from angels in non-Angel Rooms was introduced in Booster Pack #4
+  if roomType ~= RoomType.ROOM_SUPERSECRET and -- 8
+     roomType ~= RoomType.ROOM_SACRIFICE and -- 13
+     roomType ~= RoomType.ROOM_ANGEL then -- 15
 
+    -- Key pieces dropping from angels in non-Angel Rooms was introduced in Booster Pack #4
     return
   end
 
