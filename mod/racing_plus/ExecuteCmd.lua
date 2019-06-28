@@ -85,6 +85,12 @@ function ExecuteCmd:Main(cmd, params)
     end
     g:ExecuteCommand("stage " .. stage)
 
+  elseif cmd == "speed" then
+    for i = 1, 3 do
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
+    end
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
+
   elseif cmd == "boss" then
     g.run.bossCommand = true
     g.p:UseCard(Card.CARD_EMPEROR) -- 5

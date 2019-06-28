@@ -112,8 +112,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                        EntityType.ENTITY_HOST) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC28,
                        EntityType.ENTITY_CHUB) -- 28
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
-                       EntityType.ENTITY_STONEHEAD) -- 42
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC54,
                        EntityType.ENTITY_FLAMINGHOPPER) -- 54
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC62,
@@ -126,16 +124,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
                        EntityType.ENTITY_BLASTOCYST_MEDIUM) -- 75
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
                        EntityType.ENTITY_BLASTOCYST_SMALL) -- 76
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
-                       EntityType.ENTITY_CONSTANT_STONE_SHOOTER) -- 202
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
-                       EntityType.ENTITY_BRIMSTONE_HEAD) -- 203
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                        EntityType.ENTITY_MOBILE_HOST) -- 204
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
-                       EntityType.ENTITY_GAPING_MAW) -- 235
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.PreventPickupInside,
-                       EntityType.ENTITY_BROKEN_GAPING_MAW) -- 236
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupHand,
                        EntityType.ENTITY_MOMS_HAND) -- 213
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC246,
@@ -189,15 +179,16 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.PlayerGeneratedPedestal
                        CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
 
 -- Define card callbacks (5)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_FOOL) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_EMPEROR) -- 5
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice,   Card.CARD_JUSTICE) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_HERMIT) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength,  Card.CARD_STRENGTH) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_STARS) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_MOON) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,  Card.CARD_JOKER) -- 31
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_FOOL) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_EMPEROR) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice,      Card.CARD_JUSTICE) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_HERMIT) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength,     Card.CARD_STRENGTH) -- 12
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_STARS) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_MOON) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_JOKER) -- 31
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune,    Card.RUNE_BLACK) -- 41
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.QuestionMark, Card.CARD_QUESTIONMARK) -- 48
 
 -- Define pill callbacks (10)
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthUp,

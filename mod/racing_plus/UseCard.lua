@@ -61,6 +61,12 @@ function UseCard:BlackRune()
   end
 end
 
+-- Card.CARD_QUESTIONMARK (48)
+function UseCard:QuestionMark()
+  -- Prevent the bug where using a ? Card while having Tarot Cloth will cause the D6 to get a free charge (1/2)
+  g.run.questionMarkCard = g.g:GetFrameCount()
+end
+
 function UseCard:Teleport()
   -- Mark that this is not a Cursed Eye teleport
   g.run.naturalTeleport = true

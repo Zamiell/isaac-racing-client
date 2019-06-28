@@ -191,6 +191,11 @@ function PreUseItem:PreventItemPedestalEffects(itemID)
     return
   end
 
+  -- Similarly, using a ? Card while having Tarot Cloth will cause the same problem
+  if gameFrameCount == g.run.questionMarkCard then
+    return
+  end
+
   if PreUseItem:UnreplacedItemsExist() then
     Isaac.DebugString("Canceling item " .. tostring(itemID) .. " due to unreplaced items in the room.")
     g.run.rechargeItemFrame = gameFrameCount + 1

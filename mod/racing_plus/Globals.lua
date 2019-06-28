@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.44.0"
+g.version = "v0.44.1"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -320,6 +320,7 @@ function g:InitRun()
   g.run.bombKeyPressed       = false
   g.run.spawningAngel        = false
   g.run.bossCommand          = false
+  g.run.questionMarkCard     = 0 -- Equal to the last game frame that one was used
 
   -- Transformations
   g.run.transformations = {}

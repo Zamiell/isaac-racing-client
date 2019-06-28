@@ -10,6 +10,41 @@ local Speedrun   = require("racing_plus/speedrun")
 -- Variables
 PostPickupInit.bigChestAction = false
 
+-- ModCallbacks.MC_POST_PICKUP_INIT (34)
+function PostPickupInit:Main(pickup)
+  -- Fix the bug with fast-clear where the "SpawnClearAward()" function will
+  -- spawn a pickup inside a Stone Grimace and the like
+  if not g.r:IsClear() then
+    return
+  end
+
+  local move = false
+  for _, entity in ipairs(Isaac.GetRoomEntities()) do
+    if entity.Type == EntityType.ENTITY_STONEHEAD or -- 42 (Stone Grimace and Vomit Grimace)
+       entity.Type == EntityType.ENTITY_CONSTANT_STONE_SHOOTER or -- 202 (left, up, right, and down)
+       entity.Type == EntityType.ENTITY_BRIMSTONE_HEAD or -- 203 (left, up, right, and down)
+       entity.Type == EntityType.ENTITY_GAPING_MAW or -- 235
+       entity.Type == EntityType.ENTITY_BROKEN_GAPING_MAW then -- 236
+
+      if pickup.Position:Distance(entity.Position) <= 30 then
+        move = true
+        break
+      end
+    end
+  end
+
+  if not move then
+    return
+  end
+
+  -- Respawn it in a accessible location
+  local newPosition = g.r:FindFreePickupSpawnPosition(pickup.Position, 1, true)
+  g.g:Spawn(pickup.Type, pickup.Variant, newPosition, pickup.Velocity,
+            pickup.Parent, pickup.SubType, pickup.InitSeed)
+  pickup:Remove()
+  Isaac.DebugString("Repositioned a pickup that was overlapping with a stationary stone entity.")
+end
+
 -- PickupVariant.PICKUP_COIN (20)
 function PostPickupInit:Pickup20(pickup)
   if pickup.SubType ~= CoinSubType.COIN_STICKYNICKEL then --6

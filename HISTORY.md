@@ -1,8 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.44.0* - June 28th, 2019
+### *v0.44.1* - June 28th, 2019
 
 * Scared Hearts and Sticky Nickels now have unique graphics. Thanks goes to piber20 for creating the graphics for this.
+* Fixed the bug where stone entities could cause duplicate pickups to spawn. (Thanks Gamonymous)
+* Fixed the bug where having Tarot Cloth would cause the D6 to recharge when using a ? Card under certain conditions. (Thanks Gamonymous)
 
 ### *v0.43.5* - June 25th, 2019
 
