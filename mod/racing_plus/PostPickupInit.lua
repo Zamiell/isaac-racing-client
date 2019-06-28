@@ -10,6 +10,37 @@ local Speedrun   = require("racing_plus/speedrun")
 -- Variables
 PostPickupInit.bigChestAction = false
 
+-- PickupVariant.PICKUP_COIN (20)
+function PostPickupInit:Pickup20(pickup)
+  if pickup.SubType ~= CoinSubType.COIN_STICKYNICKEL then --6
+    return
+  end
+
+  -- Local variables
+  local sprite = pickup:GetSprite()
+  local data = pickup:GetData()
+
+  -- Spawn the effect
+  local stickyEffect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.STICKY_NICKEL, 0,
+                                   pickup.Position, g.zeroVector, pickup)
+  local stickySprite = stickyEffect:GetSprite()
+  local stickyData = stickyEffect:GetData()
+
+  -- Get what animation to use
+  local animation = "Idle"
+  if sprite:IsPlaying("Appear") then
+    animation = "Appear"
+  end
+  stickySprite:Play(animation, true)
+
+  -- Set up the data
+  data.WasStickyNickel = true
+  stickyData.StickyNickel = pickup
+
+  -- Make it render below most things
+  stickyEffect.RenderZOffset = -10000
+end
+
 -- PickupVariant.PICKUP_TAROTCARD (300)
 function PostPickupInit:Pickup300(pickup)
   if pickup.SubType == Card.RUNE_BLANK or -- 40

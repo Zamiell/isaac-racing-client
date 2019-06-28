@@ -39,7 +39,24 @@ function PostPickupUpdate:Main(pickup)
   end
 end
 
--- PickupVariant.PICKUP_COLLECTIBLE (5.100)
+-- PickupVariant.PICKUP_COIN (20)
+function PostPickupUpdate:Pickup20(pickup)
+  -- Local variables
+  local sprite = pickup:GetSprite()
+  local data = pickup:GetData()
+
+  if pickup.SubType == CoinSubType.COIN_STICKYNICKEL then
+    if sprite:IsPlaying("Touched") then
+      sprite:Play("TouchedStick", true)
+    end
+  elseif data.WasStickyNickel then -- Check for our WasStickyNickel data
+    data.WasStickyNickel = false
+    sprite:Load("gfx/005.022_nickel.anm2", true) -- Revert the nickel sprite to the original sprite
+    sprite:Play("Idle", true)
+  end
+end
+
+-- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PostPickupUpdate:Pickup100(pickup)
   -- We manually manage the seed of all collectible items
   if g.g:GetFrameCount() >= g.run.itemReplacementDelay then

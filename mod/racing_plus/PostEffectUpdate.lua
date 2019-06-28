@@ -88,4 +88,31 @@ function PostEffectUpdate:CrackTheSkyBase(effect)
   end
 end
 
+function PostEffectUpdate:StickyNickel(effect)
+  -- Local variables
+  local sprite = effect:GetSprite()
+  local data = effect:GetData()
+
+  local removeEffect = true
+  if data.StickyNickel then
+    local coin = data.StickyNickel
+    if coin:Exists() then --check if the nickel exists
+      if coin.SubType == CoinSubType.COIN_STICKYNICKEL then
+        effect.Position = coin.Position -- Update our position to the nickel's position (in case it moved)
+        removeEffect = false -- We do not want to remove the effect yet, since the nickel is still sticky
+      end
+    end
+  end
+
+  if removeEffect then
+    if sprite:IsPlaying("Disappear") then
+      if sprite:GetFrame() >= 44 then
+        effect:Remove()
+      end
+    else
+      sprite:Play("Disappear", true)
+    end
+  end
+end
+
 return PostEffectUpdate

@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.44.0* - June 28th, 2019
+
+* Scared Hearts and Sticky Nickels now have unique graphics. Thanks goes to piber20 for creating the graphics for this.
+
 ### *v0.43.5* - June 25th, 2019
 
 * Fixed the bug where Angels in Sacrifice Rooms would not drop key pieces. (Thanks mgln)

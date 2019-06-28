@@ -249,6 +249,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
                        EntityType.ENTITY_THE_HAUNT) -- 260
 
 -- Define post pickup init callbacks (34)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.Pickup20, -- 34
+                       PickupVariant.PICKUP_COIN) -- 20
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.CheckSpikedChestUnavoidable, -- 34
                        PickupVariant.PICKUP_SPIKEDCHEST) -- 52
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.CheckSpikedChestUnavoidable, -- 34
@@ -261,6 +263,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.Pickup37
                        PickupVariant.PICKUP_TROPHY) -- 370
 
 -- Define post pickup update callbacks (35)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup20, -- 35
+                       PickupVariant.PICKUP_COIN) -- 20
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup100, -- 35
                        PickupVariant.PICKUP_COLLECTIBLE) -- 100
 
@@ -297,6 +301,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.Heav
                        EffectVariant.HEAVEN_DOOR_FAST_TRAVEL)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.CrackTheSkyBase, -- 55
                        EffectVariant.CRACK_THE_SKY_BASE)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.StickyNickel, -- 55
+                       EffectVariant.STICKY_NICKEL)
 
 -- Define post bomb init callbacks (57)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, PostBombInit.SetTimer, -- 57

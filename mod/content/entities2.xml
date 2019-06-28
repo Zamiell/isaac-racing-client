@@ -43,6 +43,9 @@
 	<entity anm2path="1000.019_crack the sky_base.anm2" baseHP="0" boss="1" champion="1" collisionDamage="0" collisionMass="0" collisionRadius="30" friction="1" id="1000" name="Crack the Sky Base" numGridCollisionPoints="1" shadowSize="0" stageHP="0" variant="2319">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
+	<entity name="Sticky Nickel Effect" anm2path="items/pick ups/p20_sticky_nickel_effect.anm2" id="1000" variant="3330" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="1" friction="1" numGridCollisionPoints="0" shadowSize="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
 
 	<!-- Samael -->
 	<entity name="Samael Scythe" anm2path="samael_scythe.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="8" friction="1" id="6617" numGridCollisionPoints="0" shadowSize="0" stageHP="0" variant="0" shutdoors="false">
