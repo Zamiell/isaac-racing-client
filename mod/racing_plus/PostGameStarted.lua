@@ -92,8 +92,13 @@ function PostGameStarted:Main(saveState)
   g.run.playerGenPedSeeds = { startSeed }
   g.RNGCounter.BookOfSin = startSeed
   g.RNGCounter.DeadSeaScrolls = startSeed
+  g.RNGCounter.DevilRoomKrampus = startSeed
+  g.RNGCounter.DevilRoomChoice = startSeed
   g.RNGCounter.DevilRoomItem = startSeed
+  g.RNGCounter.DevilRoomBeggar = startSeed
+  g.RNGCounter.AngelRoomChoice = startSeed
   g.RNGCounter.AngelRoomItem = startSeed
+  g.RNGCounter.AngelRoomMisc = startSeed
   -- Skip resetting Teleport, Undefined, and Telepills, because those are seeded per floor
 
   -- Reset all graphics

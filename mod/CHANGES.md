@@ -155,6 +155,7 @@ While there are thousands of rooms in the game, many players have already seen t
 
 * The annoying vanilla in-game timer and score text will no longer appear. (Hold Tab to see a custom in-game timer.)
 * Bosses will be faded during their death animation so that they do not interfere with seeing other items or enemies that happen to be behind them.
+* Scared Hearts and Sticky Nickels now have unique sprites.
 * The Distant Admiration, Forever Alone, and Friend Zone collectibles now match the color of the actual familiars.
 * The Abaddon collectible is replaced with the pre-Booster Pack 5 version.
 * The 20/20 collectible is now easier to see.

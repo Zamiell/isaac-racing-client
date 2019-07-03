@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.44.2* - June 28th, 2019
+
+* The seeded Devil Rooms and Angel Rooms has been rewritten to be more consistent. (Thanks Gamonymous)
+* Fixed the bug where fighting Mom's Heart or It Lives! on The Void would cause extra paths to appear. (Thanks AshDown)
+
 ### *v0.44.1* - June 28th, 2019
 
 * Scared Hearts and Sticky Nickels now have unique graphics. Thanks goes to piber20 for creating the graphics for this.

@@ -69,6 +69,11 @@ function PostEntityKill:Entity78(entity)
   local stage = g.l:GetStage()
   local challenge = Isaac.GetChallenge()
 
+  -- Don't do anything if we are fighting Mom's Heart / It Lives on The Void
+  if stage == LevelStage.STAGE7 then -- 12
+    return
+  end
+
   -- For some reason, Mom's Heart / It Lives! will die twice in a row on two subsequent frames
   -- (this does not happen on Hush)
   -- We don't want to do anything if this is the first time it died
@@ -211,22 +216,24 @@ end
 -- Furthermore, it fixes the seeding issue where if you have Gimpy and Krampus drops a heart,
 -- the spawned pedestal to be moved one tile over, and this movement can cause the item to be different
 function PostEntityKill:Entity81(entity)
-  -- Local variables
-  local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
-
   -- We only care about Krampus (81.1)
   if entity.Variant ~= 1 then
     return
   end
 
+  -- Local variables
+  local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
+
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
   local headBanned = false
-  for _, itemID in ipairs(g.race.startingItems) do
-    if itemID == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
-      coalBanned = true
-    elseif itemID == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
-      headBanned = true
+  if g.race.status == "in progress" then
+    for _, itemID in ipairs(g.race.startingItems) do
+      if itemID == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
+        coalBanned = true
+      elseif itemID == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+        headBanned = true
+      end
     end
   end
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
@@ -240,7 +247,7 @@ function PostEntityKill:Entity81(entity)
   local subType
   if coalBanned and headBanned then
     -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
-    subType = 0
+    subType = g.itemPool:GetCollectible(ItemPoolType.POOL_DEVIL, true, startSeed) -- 3
     Isaac.DebugString("Spawned a random item since both A Lump of Coal and Krampus' Head are banned.")
   elseif coalBanned then
     -- Switch A Lump of Coal to Krampus' Head
@@ -255,10 +262,10 @@ function PostEntityKill:Entity81(entity)
     local seededChoice = math.random(1, 2)
     if seededChoice == 1 then
       subType = CollectibleType.COLLECTIBLE_LUMP_OF_COAL -- 132
-      Isaac.DebugString("Spawned A Lump of Coal (randomly based on the room seed).")
+      Isaac.DebugString("Spawned A Lump of Coal (randomly based on the starting seed).")
     else
       subType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
-      Isaac.DebugString("Spawned Krampus' Head (randomly based on the room seed).")
+      Isaac.DebugString("Spawned Krampus' Head (randomly based on the starting seed).")
     end
   end
 

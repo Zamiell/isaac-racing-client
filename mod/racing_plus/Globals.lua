@@ -4,7 +4,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.44.1"
+g.version = "v0.44.2"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -79,10 +79,16 @@ g.raceVars = {
 
 g.RNGCounter = {
   -- Seeded at the beginning of the run
-  BookOfSin      = 0, -- 97
-  DeadSeaScrolls = 0, -- 124
-  DevilRoomItem  = 0, -- Devil Items go in order on seeded races
-  AngelRoomItem  = 0, -- Angel Items go in order on seeded races
+  BookOfSin       = 0, -- 97
+  DeadSeaScrolls  = 0, -- 124
+  -- Devil Rooms and Angel Rooms go in order on seeded races
+  DevilRoomKrampus = 0,
+  DevilRoomChoice  = 0,
+  DevilRoomItem    = 0,
+  DevilRoomBeggar  = 0,
+  AngelRoomChoice  = 0,
+  AngelRoomItem    = 0,
+  AngelRoomMisc    = 0,
 
   -- Seeded at the beginning of the floor
   Teleport      = 0, -- 44 (Broken Remote also uses this)
@@ -321,6 +327,7 @@ function g:InitRun()
   g.run.spawningAngel        = false
   g.run.bossCommand          = false
   g.run.questionMarkCard     = 0 -- Equal to the last game frame that one was used
+  g.run.gettingCollectible   = false
 
   -- Transformations
   g.run.transformations = {}

@@ -3,6 +3,7 @@ local InputAction = {}
 -- Different actions occur on different inputHooks and this is not documented
 -- Thus, each action's particular inputHook must be determined through trial and error
 -- Also note that we can't use cached API functions in this callback or else the game will crash
+-- ButtonAction.ACTION_MENUCONFIRM (14) is bugged and will never fire
 
 -- Includes
 local g      = require("racing_plus/globals")
@@ -102,6 +103,7 @@ end
 InputAction.IsActionTriggeredFunction = {
   [ButtonAction.ACTION_PILLCARD] = InputAction.IsActionTriggeredPillCard, -- 10
   [ButtonAction.ACTION_DROP] = InputAction.IsActionTriggeredDrop, -- 11
+  [ButtonAction.ACTION_MENUCONFIRM] = InputAction.IsActionTriggeredMenuConfirm, -- 14
   [ButtonAction.ACTION_CONSOLE] = InputAction.IsActionTriggeredConsole, -- 28
 }
 

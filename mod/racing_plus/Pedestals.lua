@@ -66,17 +66,6 @@ function RPPedestals:Replace(pickup)
     -- Seed these items based on the start seed, and continually increment as we go
     newSeed = g:IncrementRNG(g.run.playerGenPedSeeds[#g.run.playerGenPedSeeds])
     g.run.playerGenPedSeeds[#g.run.playerGenPedSeeds + 1] = newSeed
-
-  elseif g.race.rFormat == "seeded" and
-         g.race.status == "in progress" then
-
-    -- For seeded rooms, we don't want to use the room seed as the base
-    -- (since we are manually seeding the room, different racers might have different room seeds)
-    if roomType == RoomType.ROOM_DEVIL then -- 14
-      newSeed = g.RNGCounter.DevilRoomItem
-    elseif roomType == RoomType.ROOM_ANGEL then -- 15
-      newSeed = g.RNGCounter.AngelRoomItem
-    end
   end
 
   if pickup.Touched then

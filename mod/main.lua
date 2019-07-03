@@ -60,6 +60,7 @@ local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
 local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
 local PostBombInit        = require("racing_plus/postbombinit") -- 57
 local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
+local PreGetCollectible   = require("racing_plus/pregetcollectible") -- 62
 local PostEntityKill      = require("racing_plus/postentitykill") -- 68
 local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
 local FastClear           = require("racing_plus/fastclear") -- Functions for the "Fast-Clear" feature
@@ -101,6 +102,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCI
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    PostPickupUpdate.Main) -- 35
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE,   PreGetCollectible.Main) -- 62
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Main) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
