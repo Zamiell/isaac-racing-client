@@ -461,7 +461,6 @@ function FastTravel:CheckTrapdoor2()
 
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_1 then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_2
-    Isaac.DebugString("STATE IS NOW: POST_NEW_ROOM_2")
 
     -- Remove the black sprite to reveal the new floor
     Sprites:Init("black", 0)
@@ -476,7 +475,7 @@ function FastTravel:CheckTrapdoor2()
       -- Additionally, stop the boss room sound effect
       g.sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
 
-    elseif stage == 9 then
+    elseif stage == 9 then -- Blue Womb
       pos = Vector(320, 560)
     end
 
@@ -509,6 +508,15 @@ function FastTravel:CheckTrapdoor2()
         g.run.streakText = "Blue Womb"
        end
        g.run.streakFrame = Isaac.GetFrameCount()
+    end
+
+    -- Open the Hush door to speed things up
+    if stage == 9 then -- Blue Womb
+      local hushDoor = g.r:GetDoor(1)
+      if hushDoor ~= nil then
+        hushDoor:TryUnlock(true)
+      end
+      g.sfx:Stop(SoundEffect.SOUND_BOSS_LITE_ROAR) -- 14
     end
   end
 end

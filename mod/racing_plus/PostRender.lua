@@ -99,6 +99,7 @@ function PostRender:Main()
   SpeedrunPostRender:DrawVetoButtonText()
   SpeedrunPostRender:CheckSeason5Mod()
   SpeedrunPostRender:CheckSeason5ModOther()
+  SpeedrunPostRender:RemoveDiversitySprites()
   --SpeedrunPostRender:CheckSeasonXMod()
   --SpeedrunPostRender:CheckSeasonXModOther()
 end
@@ -598,14 +599,19 @@ function PostRender:Race()
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local challenge = Isaac.GetChallenge()
 
   -- If we are not in a race, do nothing
+  if g.race.status == "none" and
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
+    Sprites:ClearPostRaceStartGraphics()
+  end
   if g.race.status == "none" then
     -- Remove graphics as soon as the race is over
     Sprites:Init("top", 0)
     Sprites:ClearStartingRoomGraphicsTop()
     Sprites:ClearStartingRoomGraphicsBottom()
-    Sprites:ClearPostRaceStartGraphics()
     if not g.raceVars.finished then
       Sprites:Init("place", 0) -- Keep the place there at the end of a race
     end

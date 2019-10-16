@@ -182,7 +182,9 @@ end
 -- EntityType.ENTITY_DINGLE (261)
 function NPCUpdate:NPC261(npc)
   -- We only care about Dangles that are freshly spawned
-  if npc.Variant == 1 and npc.State == NpcState.STATE_INIT then -- 0
+  if npc.Variant == 1 and
+     npc.State == NpcState.STATE_INIT then -- 0
+
     -- Fix the bug where a Dangle spawned from a Brownie will be faded
     npc:SetColor(g.color, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
   end

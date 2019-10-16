@@ -314,8 +314,8 @@ function SpeedrunPostNewRoom:Season7SpawnMahalath()
     end
   end
 
-  -- Spawn Mahalath
-  g.g:Spawn(Isaac.GetEntityTypeByName("Mahalath"), 0, centerPos, g.zeroVector, nil, 0, 0)
+  -- Spawn Mahalath (the second, harder version)
+  g.g:Spawn(Isaac.GetEntityTypeByName("Mahalath"), 1, centerPos, g.zeroVector, nil, 0, 0)
 end
 
 return SpeedrunPostNewRoom

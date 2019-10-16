@@ -96,7 +96,7 @@
 	<entity id="777" variant="0" name="Mahalath" baseHP="1750" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="20" friction="1" numGridCollisionPoints="24" shadowSize="20" portrait="79" anm2path="mahalath_barfgirl.anm2">
 		<gibs amount="25" blood="1" bone="1" eye="1" gut="1" large="1" poop="0" />
 	</entity><!-- Original base HP was 360 -->
-	<entity id="777" variant="1" name="Ruthless Mahalath" baseHP="1750" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="18" friction="1" numGridCollisionPoints="24" shadowSize="18" portrait="79" anm2path="mahalath_barfgirl.anm2">
+	<entity id="777" variant="1" name="Ruthless Mahalath" baseHP="3500" stageHP="0" boss="1" bossID="57" champion="0" collisionDamage="1" collisionMass="50" collisionRadius="18" friction="1" numGridCollisionPoints="24" shadowSize="18" portrait="79" anm2path="mahalath_barfgirl.anm2">
 		<gibs amount="45" blood="1" bone="1" eye="1" gut="1" large="1" poop="0" />
 	</entity>
 	<entity id="778" variant="0" subtype="0" name="Barf Mouth" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="2000" collisionRadius="22" friction="1" numGridCollisionPoints="12" shadowSize="0" portrait="0" anm2path="mahalath_barfmouth.anm2">

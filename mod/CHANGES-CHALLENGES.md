@@ -136,11 +136,11 @@
 * You must complete the following 7 goals:
   * Boss Rush (spawns 3 bosses at a time instead of 2)
   * It Lives!
-  * Hush (there is no phase 1 and damage scaling is removed)
+  * Hush (damage scaling is removed and HP is doubled)
   * Blue Baby
   * The Lamb
   * Mega Satan
-  * Mahalath (replaces Delirium)
+  * Mahalath (Ruthless version; replaces Delirium)
 * You can complete any goal that you wish on any character, but each goal has to be accomplished once.
 * Both The Polaroid and The Negative will spawn after defeating Mom. Unlike previous seasons, the path to The Chest requires The Polaroid and the path to the Dark Room requires The Negative.
 * A portal to The Void will appear next to the Mega Satan door.

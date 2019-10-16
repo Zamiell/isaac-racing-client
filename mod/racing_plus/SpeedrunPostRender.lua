@@ -206,20 +206,23 @@ function SpeedrunPostRender:DrawVetoButtonText()
 end
 
 function SpeedrunPostRender:DrawSeason7Goals()
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
+
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
     return
   end
 
-  -- Only show the remaining goals if the user is pressing tab
-  local tabPressed = false
+  -- Make the baby description persist for at least 2 seconds after the player presses tab
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
-      tabPressed = true
+      g.run.showGoalsFrame = gameFrameCount + 60
       break
     end
   end
-  if not tabPressed then
+
+  if gameFrameCount >= g.run.showGoalsFrame then
     return
   end
 
@@ -277,6 +280,13 @@ function SpeedrunPostRender:CheckSeason5ModOther()
   Isaac.RenderText("in order for this custom challenge to", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
+end
+
+function SpeedrunPostRender:RemoveDiversitySprites()
+  -- Remove the diversity sprites as soon as we enter another room
+  if g.run.roomsEntered > 1 then
+    Sprites:ClearPostRaceStartGraphics()
+  end
 end
 
 function SpeedrunPostRender:CheckSeasonXMod()

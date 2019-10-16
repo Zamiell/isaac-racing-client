@@ -117,6 +117,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Blastocyst is now immmune to freeze. (This prevents delays during the death animation.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 * All pills can now be used to cancel pedestal pickup animations.
+* The door to Hush is now automatically opened.
 
 ### Cutscene & Animation Removal
 

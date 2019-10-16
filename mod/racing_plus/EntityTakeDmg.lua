@@ -32,7 +32,7 @@ function EntityTakeDmg:Hush(tookDamage, damageAmount, damageFlag, damageSource, 
   end
 
   -- Adjust his HP directly to avoid the damage scaling (armor)
-  tookDamage.HitPoints = tookDamage.HitPoints - damageAmount
+  tookDamage.HitPoints = tookDamage.HitPoints - (damageAmount * 0.5)
 
   -- Make him flash
   g.run.dealingExtraDamage = true
