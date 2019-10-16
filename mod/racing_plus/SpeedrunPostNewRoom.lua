@@ -15,6 +15,7 @@ function SpeedrunPostNewRoom:Main()
   SpeedrunPostNewRoom:CheckSacrificeRoom()
   SpeedrunPostNewRoom:RemoveVetoButton()
   SpeedrunPostNewRoom:Season7Stage11()
+  SpeedrunPostNewRoom:Season7Stage12()
   SpeedrunPostNewRoom:Season7SpawnMahalath()
 end
 
@@ -287,6 +288,39 @@ function SpeedrunPostNewRoom:Season7Stage11()
                                g:GridToPos(11, 1), g.zeroVector, nil, 0, 0)
     trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
   end
+end
+
+function SpeedrunPostNewRoom:Season7Stage12()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local rooms = g.l:GetRooms()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    return
+  end
+
+  if stage ~= 12 then
+    return
+  end
+
+  -- Show the boss icon for the Mahalath room and remove of the other ones
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomDesc = rooms:Get(i)
+    local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
+    local roomData = roomDesc.Data
+    local roomType = roomData.Type
+
+    if roomType == RoomType.ROOM_BOSS then -- 5
+      local room = g.l:GetRoomByIdx(roomIndex) -- We have use this function in order to modify the DisplayFlags
+      if roomIndex == g.run.mahalathRoomIndex then
+        room.DisplayFlags = 1 << 2 -- Show the icon
+      else
+        room.DisplayFlags = 1 << -1 -- Remove the icon (in case we have the Compass or The Mind)
+      end
+    end
+  end
+  g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
 end
 
 function SpeedrunPostNewRoom:Season7SpawnMahalath()

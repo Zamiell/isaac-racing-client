@@ -180,18 +180,20 @@ function Speedrun:Finish()
 end
 
 function Speedrun:PostNewLevel()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local rooms = g.l:GetRooms()
   local challenge = Isaac.GetChallenge()
+
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
     return
   end
 
-  local stage = g.l:GetStage()
   if stage ~= 12 then
     return
   end
 
-  -- Put Mahalath in the first 1x1 boss room
-  local rooms = g.l:GetRooms()
+  -- Set Mahalath's room to be the first 1x1 boss room
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
     local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
@@ -199,21 +201,14 @@ function Speedrun:PostNewLevel()
     local roomType = roomData.Type
     local roomShape = roomData.Shape
 
-    if roomType == RoomType.ROOM_BOSS then -- 5
-      local room = g.l:GetRoomByIdx(roomIndex) -- We have use this function in order to modify the DisplayFlags
-      if g.run.mahalathRoomIndex == -1000 and
-         roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
+    if roomType == RoomType.ROOM_BOSS and -- 5
+       roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
 
-        g.run.mahalathRoomIndex = roomIndex
-        Isaac.DebugString("Set the Mahalath room to: " .. tostring(g.run.mahalathRoomIndex))
-        room.DisplayFlags = 1 << 2 -- Show the icon
-
-      else
-        room.DisplayFlags = 1 << -1 -- Remove the icon (in case we have the Compass or The Mind)
-      end
+      g.run.mahalathRoomIndex = roomIndex
+      Isaac.DebugString("Set the Mahalath room to: " .. tostring(g.run.mahalathRoomIndex))
+      break
     end
   end
-  g.l:UpdateVisibility()
 end
 
 function Speedrun:RoomCleared()

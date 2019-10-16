@@ -139,27 +139,29 @@ function Sprites:Display()
       pos.X = pos.X + 45
       pos.Y = pos.Y - 10
     elseif k == "diversity-active" then
-      pos.X = pos.X - 80
-      pos.Y = pos.Y - 40
+      pos.X = pos.X - 90
+      pos.Y = pos.Y - 70
     elseif k == "diversity-passives" then
+      pos.X = pos.X + 90
       pos.Y = pos.Y - 40
     elseif k == "diversity-trinket" then
-      pos.X = pos.X + 80
-      pos.Y = pos.Y - 40
+      pos.X = pos.X - 90
+      pos.Y = pos.Y + 30
     elseif k == "diversity-item1" then -- The active item
-      pos.X = pos.X - 80
-      pos.Y = pos.Y - 10
+      pos.X = pos.X - 90
+      pos.Y = pos.Y - 40
     elseif k == "diversity-item2" then -- The 1st passive item
-      pos.X = pos.X - 30
+      pos.X = pos.X + 60
       pos.Y = pos.Y - 10
     elseif k == "diversity-item3" then -- The 2nd passive item
+      pos.X = pos.X + 90
       pos.Y = pos.Y - 10
     elseif k == "diversity-item4" then -- The 3rd passive item
-      pos.X = pos.X + 30
+      pos.X = pos.X + 120
       pos.Y = pos.Y - 10
     elseif k == "diversity-item5" then -- The trinket
-      pos.X = pos.X + 80
-      pos.Y = pos.Y - 10
+      pos.X = pos.X - 90
+      pos.Y = pos.Y + 60
     elseif k == "place" then -- "1st", "2nd", etc.
       -- Move it next to the "R+" icon
       pos.X = 24

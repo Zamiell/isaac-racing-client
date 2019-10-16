@@ -403,8 +403,6 @@ end
 
 function RacePostGameStarted:Diversity()
   -- Local variables
-  local startSeed = g.seeds:GetStartSeed()
-  local character = g.p:GetPlayerType()
   local trinket1 = g.p:GetTrinket(0) -- This will be 0 if there is no trinket
   local challenge = Isaac.GetChallenge()
 
@@ -431,71 +429,7 @@ function RacePostGameStarted:Diversity()
 
   -- We need to generate the starting items if we are in Season 7
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
-    math.randomseed(startSeed)
-
-    -- Get 1 random active item
-    local activeRandomIndex = math.random(1, #validDiversityActiveItems)
-    local activeItem = validDiversityActiveItems[activeRandomIndex]
-    startingItems[#startingItems + 1] = activeItem
-
-    -- Get 3 random unique passive items
-    for i = 1, 3 do
-      while true do
-        -- Initialize the PRNG and get a random element from the slice
-        -- (if we don't do this, it will use a seed of 1)
-        local randomPassiveIndex = math.random(1, #validDiversityPassiveItems)
-        local passiveItem = validDiversityPassiveItems[randomPassiveIndex]
-
-        -- Do character specific item bans
-        local valid = true
-        if character == PlayerType.PLAYER_CAIN then -- 2
-          if passiveItem == CollectibleType.COLLECTIBLE_LUCKY_FOOT then -- 46
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_EVE then -- 5
-          if passiveItem == CollectibleType.COLLECTIBLE_DEAD_BIRD then -- 117
-            valid = false
-          elseif passiveItem == CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON then -- 122
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_SAMSON then -- 6
-          if passiveItem == CollectibleType.COLLECTIBLE_BLOODY_LUST then -- 157
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_LAZARUS then -- 8
-          if passiveItem == CollectibleType.COLLECTIBLE_ANEMIC then -- 214
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_THELOST then -- 10
-          if passiveItem == CollectibleType.COLLECTIBLE_HOLY_MANTLE then -- 313
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_LILITH then -- 13
-          if passiveItem == CollectibleType.COLLECTIBLE_CAMBION_CONCEPTION then -- 412
-            valid = false
-          end
-        elseif character == PlayerType.PLAYER_KEEPER then -- 14
-          if passiveItem == CollectibleType.COLLECTIBLE_ABADDON then -- 230
-            valid = false
-          end
-        end
-
-        -- Ensure this item is unique
-        if g:TableContains(startingItems, passiveItem) then
-          valid = false
-        end
-
-        if valid then
-          startingItems[#startingItems + 1] = passiveItem
-          break
-        end
-      end
-    end
-
-    -- Get 1 random trinket
-    local trinketRandomIndex = math.random(1, #validDiversityTrinkets)
-    local trinket = validDiversityTrinkets[trinketRandomIndex]
-    startingItems[#startingItems + 1] = trinket
+    startingItems = RacePostGameStarted:GenerateDiversityStarts()
   end
 
   -- Give the player their five random diversity starting items
@@ -590,6 +524,98 @@ function RacePostGameStarted:Diversity()
   Sprites:Init("diversity-item5", tostring(startingItems[5]))
 
   Isaac.DebugString("Added diversity items.")
+end
+
+function RacePostGameStarted:GenerateDiversityStarts()
+  -- Local variables
+  local startSeed = g.seeds:GetStartSeed()
+  local character = g.p:GetPlayerType()
+
+  local startingItems = {}
+  math.randomseed(startSeed)
+
+  -- Get 1 random active item
+  local activeRandomIndex = math.random(1, #validDiversityActiveItems)
+  local activeItem = validDiversityActiveItems[activeRandomIndex]
+  startingItems[#startingItems + 1] = activeItem
+
+  -- Get 3 random unique passive items
+  for i = 1, 3 do
+    while true do
+      -- Initialize the PRNG and get a random element from the slice
+      -- (if we don't do this, it will use a seed of 1)
+      local randomPassiveIndex = math.random(1, #validDiversityPassiveItems)
+      local passiveItem = validDiversityPassiveItems[randomPassiveIndex]
+
+      -- Do character specific item bans
+      local valid = true
+      if character == PlayerType.PLAYER_CAIN then -- 2
+        if passiveItem == CollectibleType.COLLECTIBLE_LUCKY_FOOT then -- 46
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_EVE then -- 5
+        if passiveItem == CollectibleType.COLLECTIBLE_DEAD_BIRD then -- 117
+          valid = false
+        elseif passiveItem == CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON then -- 122
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_SAMSON then -- 6
+        if passiveItem == CollectibleType.COLLECTIBLE_BLOODY_LUST then -- 157
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_LAZARUS then -- 8
+        if passiveItem == CollectibleType.COLLECTIBLE_ANEMIC then -- 214
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_THELOST then -- 10
+        if passiveItem == CollectibleType.COLLECTIBLE_HOLY_MANTLE then -- 313
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_LILITH then -- 13
+        if passiveItem == CollectibleType.COLLECTIBLE_CAMBION_CONCEPTION then -- 412
+          valid = false
+        end
+      elseif character == PlayerType.PLAYER_KEEPER then -- 14
+        if passiveItem == CollectibleType.COLLECTIBLE_ABADDON then -- 230
+          valid = false
+        end
+      end
+
+      -- Do specific item synergy bans
+      if passiveItem == CollectibleType.COLLECTIBLE_ISAACS_HEART and -- 276
+         activeItem == CollectibleType.COLLECTIBLE_BLOOD_RIGHTS then -- 186
+
+        valid = false
+      end
+      if passiveItem == CollectibleType.COLLECTIBLE_LIBRA and -- 304
+         g:TableContains(startingItems, CollectibleType.COLLECTIBLE_SOY_MILK) then -- 330
+
+        valid = false
+      end
+      if passiveItem == CollectibleType.COLLECTIBLE_SOY_MILK and -- 330
+         g:TableContains(startingItems, CollectibleType.COLLECTIBLE_LIBRA) then -- 304
+
+        valid = false
+      end
+
+      -- Ensure this item is unique
+      if g:TableContains(startingItems, passiveItem) then
+        valid = false
+      end
+
+      if valid then
+        startingItems[#startingItems + 1] = passiveItem
+        break
+      end
+    end
+  end
+
+  -- Get 1 random trinket
+  local trinketRandomIndex = math.random(1, #validDiversityTrinkets)
+  local trinket = validDiversityTrinkets[trinketRandomIndex]
+  startingItems[#startingItems + 1] = trinket
+
+  return startingItems
 end
 
 function RacePostGameStarted:Pageant()

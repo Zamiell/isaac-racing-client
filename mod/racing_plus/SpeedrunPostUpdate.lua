@@ -79,10 +79,25 @@ function SpeedrunPostUpdate:CheckCheckpoint(force)
   Speedrun.fadeFrame = isaacFrameCount + 30
 
   -- Perform some additional actions for Season 7 speedruns
-  SpeedrunPostUpdate:Season7RemoveGoal()
+  SpeedrunPostUpdate:Season7()
 end
 
-function SpeedrunPostUpdate:Season7RemoveGoal()
+function SpeedrunPostUpdate:Season7()
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    return
+  end
+
+  -- Show the remaining goals
+  g.run.showGoalsFrame = gameFrameCount + 60
+
+  --
+  -- Remove the goal that we just completed
+  --
+
   local roomType = g.r:GetType()
   if roomType == RoomType.ROOM_BOSSRUSH then -- 17
     g:TableRemove(Speedrun.remainingGoals, "Boss Rush")

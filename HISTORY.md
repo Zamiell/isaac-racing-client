@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.45.3* - October 16th, 2019
+
+* The diversity graphics have been rearranged so that they no longer overlap with the player's starting position. (Thanks PassionDrama)
+* In season 7, it is no longer possible to get Isaac's Heart + Blood Rights from the random starting items. (Thanks thereisnofuture)
+* In season 7, it is no longer possible to get Soy Milk + Libra from the random starting items.
+* In season 7, while on the Void, all bosses except for Mahalath are now removed from the minimap upon entering a new room. This means that you can use mapping items more safely.
+* In season 7, the remaining goals will now display on the screen after you take a Checkpoint. (Thanks Krakenos)
+
 ### *v0.45.2* - October 16th, 2019
 
 * The door to Hush will now automatically open when you arrive on the Blue Womb.
@@ -24,7 +32,7 @@
 * Fixed the bug where using the Glowing Hour Glass would cause a Cursed Eye teleport if you had Cursed Eye.
 * Fixed the bug where the "Remaining Goals" text would appear on runs outside of the Season 7 custom challenge.
 
-### *v0.45.0* - October 16th, 2019
+### *v0.45.0* - October 15th, 2019
 
 * [R+7 Season 7](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-7-the-diversity-season) is now released for beta testing.
 * The bosses in the Boss Rush are now generated in a custom way:
