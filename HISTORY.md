@@ -1,6 +1,22 @@
 # Racing+ Version History and News
 
-### *v0.45.0* - October 12th, 2019
+### *v0.45.1* - October 16th, 2019
+
+* The follow pills now have animations and can be used to cancel pedestal pickup animations:
+  * One makes you larger (32)
+  * One makes you small (33)
+  * Infested! (34)
+  * Infested? (35)
+  * Power Pill (36)
+  * Retro Vision (37)
+  * Horf (44)
+* Gurglings and Turdlings in the Boss Rush will now spawn in triplets (which matches the vanilla behavior).
+* In Season 7, if your only goal remaining is Blue Baby, then only The Polaroid will spawn. (Thanks Dea1h)
+* In Season 7, if your only goal remaining is The Lamb, then only The Negative will spawn. (Thanks Dea1h)
+* Fixed the bug where using Glowing Hour Glass would cause a Cursed Eye teleport if you had Cursed Eye.
+* Fixed the bug where the "Remaining Goals" text would appear on runs outside of the Season 7 custom challenge.
+
+### *v0.45.0* - October 16th, 2019
 
 * [R+7 Season 7](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-7) is now released for beta testing.
 * The bosses in the Boss Rush are now generated in a custom way:

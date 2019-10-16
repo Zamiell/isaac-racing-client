@@ -53,7 +53,7 @@ function PostFireTear:Main(tear)
     if extraTears > 0 then
       for i = 1, extraTears do
         g.run.firingExtraTear = true
-        g.p:FireTear(tear.Position, tear.Velocity, true, false, true)
+        g.p:FireTear(tear.Position, tear.Velocity * 0.5, true, false, true)
         g.run.firingExtraTear = false
       end
     end

@@ -140,6 +140,9 @@ end
 
 -- CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS (422)
 function PreUseItem:Item422()
+  -- Mark that this is not a Cursed Eye teleport
+  g.run.naturalTeleport = true
+
   -- Reset the Schoolbag
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      not g.p:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then

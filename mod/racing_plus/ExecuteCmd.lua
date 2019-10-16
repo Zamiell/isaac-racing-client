@@ -3,6 +3,7 @@ local ExecuteCmd = {}
 -- Includes
 local g                  = require("racing_plus/globals")
 local FastTravel         = require("racing_plus/fasttravel")
+local Schoolbag          = require("racing_plus/schoolbag")
 local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local SeededFloors       = require("racing_plus/seededfloors")
@@ -20,11 +21,22 @@ function ExecuteCmd:Main(cmd, params)
   end
   Isaac.DebugString(debugString)
 
-  if cmd == "char" then
+  if cmd == "boss" then
+    g.run.bossCommand = true
+    g.p:UseCard(Card.CARD_EMPEROR) -- 5
+    g.run.bossCommand = false
+
+  elseif cmd == "cc" then
+    g.run.chaosCardTears = not g.run.chaosCardTears
+
+  elseif cmd == "char" then
     if params == "" then
       return
     end
     Speedrun.charNum = tonumber(params)
+
+  elseif cmd == "devil" then
+    g.p:UseCard(Card.CARD_JOKER) -- 31
 
   elseif cmd == "getframe" then
     -- Used for debugging
@@ -55,6 +67,14 @@ function ExecuteCmd:Main(cmd, params)
     g:ExecuteCommand(command)
     SeededFloors:After()
 
+  elseif cmd == "list" then
+    -- Used to print out all of the entities in the room
+    Isaac.DebugString("Entities in the room:")
+    for i, entity in ipairs(Isaac.GetRoomEntities()) do
+      Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
+                        tostring(entity.SubType))
+    end
+
   elseif cmd == "next" then
     -- Used to go to the next character in a multi-character speedrun
     SpeedrunPostUpdate:CheckCheckpoint(true)
@@ -67,14 +87,6 @@ function ExecuteCmd:Main(cmd, params)
     Speedrun.charNum = Speedrun.charNum - 2
     SpeedrunPostUpdate:CheckCheckpoint(true)
 
-  elseif cmd == "list" then
-    -- Used to print out all of the entities in the room
-    Isaac.DebugString("Entities in the room:")
-    for i, entity in ipairs(Isaac.GetRoomEntities()) do
-      Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
-                        tostring(entity.SubType))
-    end
-
   elseif cmd == "s" then
     if params == "" then
       return
@@ -85,28 +97,31 @@ function ExecuteCmd:Main(cmd, params)
     end
     g:ExecuteCommand("stage " .. stage)
 
+  elseif cmd == "sc" then
+    if params == "" then
+      return
+    end
+    local item = tonumber(params)
+    if item < 0 then
+      return
+    end
+    Schoolbag:Put(item, "max")
+
   elseif cmd == "speed" then
     for i = 1, 3 do
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
     end
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
 
-  elseif cmd == "boss" then
-    g.run.bossCommand = true
-    g.p:UseCard(Card.CARD_EMPEROR) -- 5
-    g.run.bossCommand = false
-
   elseif cmd == "shop" then
     g.p:UseCard(Card.CARD_HERMIT) -- 10
+
+  elseif cmd == "trapdoor" then
+    g.p:UseActiveItem(CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER, true, false, false, false) -- 84
 
   elseif cmd == "treasure" then
     g.p:UseCard(Card.CARD_STARS) -- 18
 
-  elseif cmd == "devil" then
-    g.p:UseCard(Card.CARD_JOKER) -- 31
-
-  elseif cmd == "cc" then
-    g.run.chaosCardTears = not g.run.chaosCardTears
   end
 end
 

@@ -199,6 +199,20 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthUp,
                        PillEffect.PILLEFFECT_HEALTH_UP) -- 7
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Telepills,
                        PillEffect.PILLEFFECT_TELEPILLS) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.OneMakesYouLarger,
+                       PillEffect.PILLEFFECT_LARGER) -- 32
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.OneMakesYouSmaller,
+                       PillEffect.PILLEFFECT_SMALLER) -- 33
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.InfestedExclamation,
+                       PillEffect.PILLEFFECT_INFESTED_EXCLAMATION) -- 34
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.InfestedQuestion,
+                       PillEffect.PILLEFFECT_INFESTED_QUESTION) -- 35
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.PowerPill,
+                       PillEffect.PILLEFFECT_POWER) -- 36
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.RetroVision,
+                       PillEffect.PILLEFFECT_RETRO_VISION) -- 37
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Horf,
+                       PillEffect.PILLEFFECT_HORF) -- 44
 
 -- Define entity damage callbacks (11)
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Player, -- 11

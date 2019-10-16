@@ -557,11 +557,23 @@ function FastClear:SpawnPhotos()
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
          challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
 
     -- Most seasons give the player a choice between the two photos
     situation = situations.BOTH
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    if #Speedrun.remainingGoals == 1 and Speedrun.remainingGoals[1] == "Blue Baby" then
+      -- The only thing left to do is to kill Blue Baby, so they must take The Polaroid
+      situation = situations.POLAROID
+    elseif #Speedrun.remainingGoals == 1 and Speedrun.remainingGoals[1] == "The Lamb" then
+      -- The only thing left to do is to kill The Lamb, so they must take The Negative
+      situation = situations.NEGATIVE
+    else
+      -- Give them a choice between the photos because he player needs the ability
+      -- to choose what goal they want on the fly
+      situation = situations.BOTH
+    end
 
   elseif hasPolaroid and -- 327
          hasNegative then -- 328

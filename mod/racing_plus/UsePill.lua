@@ -39,6 +39,7 @@ function UsePill:Main(pillEffect)
   g.run.pills[#g.run.pills + 1] = pillEntry
 end
 
+-- PillEffect.PILLEFFECT_HEALTH_UP (7)
 function UsePill:HealthUp()
   g.run.keeper.usedHealthUpPill = true
   g.p:AddCacheFlags(CacheFlag.CACHE_RANGE) -- 8
@@ -46,6 +47,7 @@ function UsePill:HealthUp()
   -- We check to see if we are Keeper, have Greed's Gullet, and are at maximum hearts inside this function
 end
 
+-- PillEffect.PILLEFFECT_TELEPILLS (19)
 function UsePill:Telepills()
   -- Local variables
   local stage = g.l:GetStage()
@@ -93,6 +95,48 @@ function UsePill:Telepills()
   -- We don't want to display the "use" animation, we just want to instantly teleport
   -- Pills are hard coded to queue the "use" animation, so stop it on the next frame
   g.run.usedTelepills = true
+end
+
+-- PillEffect.PILLEFFECT_LARGER (32)
+function UsePill:OneMakesYouLarger()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateSad()
+end
+
+-- PillEffect.PILLEFFECT_SMALLER (33)
+function UsePill:OneMakesYouSmaller()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateHappy()
+end
+
+-- PillEffect.PILLEFFECT_INFESTED_EXCLAMATION (34)
+function UsePill:InfestedExclamation()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateHappy()
+end
+
+-- PillEffect.PILLEFFECT_INFESTED_QUESTION (35)
+function UsePill:InfestedQuestion()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateHappy()
+end
+
+-- PillEffect.PILLEFFECT_POWER (36)
+function UsePill:PowerPill()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateHappy()
+end
+
+-- PillEffect.PILLEFFECT_RETRO_VISION (37)
+function UsePill:RetroVision()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateSad()
+end
+
+-- PillEffect.PILLEFFECT_HORF (44)
+function UsePill:Horf()
+  -- Allow this pill to cancel collectible pickup animation
+  g.p:AnimateSad()
 end
 
 return UsePill

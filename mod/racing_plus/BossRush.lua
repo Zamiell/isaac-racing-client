@@ -45,7 +45,7 @@ BossRush.bosses = {
   {100, 1}, -- The Wretched
   {101, 0}, -- Daddy Long Legs
   {101, 1}, -- Triachnid
-  {237, 10}, -- Gurglings
+  {237, 1}, -- Gurglings
   {237, 2}, -- Turdling
   {260, 0}, -- The Haunt
   {261, 0}, -- Dingle
@@ -231,10 +231,21 @@ function BossRush:SpawnWave(bossesPerWave)
       local pos = g.r:FindFreePickupSpawnPosition(startingPos, 1, true)
       Isaac.Spawn(boss[1], boss[2], 0, pos, g.zeroVector, nil)
 
-      -- Only Larry Jr. and The Hollow require multiple segments
-      if boss[1] ~= EntityType.ENTITY_LARRYJR then -- 19
+      -- We want to spawn multiples of some bosses
+      if boss[1] ~= EntityType.ENTITY_LARRYJR and -- 19
+         boss[1] ~= EntityType.ENTITY_GURGLING then -- 237
+
         break
       end
+
+      -- We want 3x Gurgling and Turdling
+      if boss[1] == EntityType.ENTITY_GURGLING and -- 237
+         i == 3 then
+
+        break
+      end
+
+      -- Larry Jr. and The Hollow have 10 segments
     end
   end
 
