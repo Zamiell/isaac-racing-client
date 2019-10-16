@@ -9,27 +9,11 @@ local SeededDeath = require("racing_plus/seededdeath")
 
 function Race:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
-  Race:PostUpdateCheckBossRush()
   Race:PostUpdateCheckFireworks()
   Race:PostUpdateCheckVictoryLap()
   Race:PostUpdateCheckFinished()
   Race:PostUpdateCheckKeeperHolyMantle()
   SeededDeath:PostUpdate()
-end
-
-function Race:PostUpdateCheckBossRush()
-  if g.run.finishedBossRush or
-     g.race.status ~= "in progress" or
-     g.race.goal ~= "Boss Rush" or
-     not g.g:GetStateFlag(GameStateFlag.STATE_BOSSRUSH_DONE) then
-
-    return
-  end
-
-  g.run.finishedBossRush = true
-  local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
-  g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, pos, g.zeroVector, nil, 0, 0)
-  Isaac.DebugString("Spawned the end of Boss Rush trophy.")
 end
 
 -- Make race winners get sparklies and fireworks
@@ -183,8 +167,7 @@ function Race:CheckBanB1TreasureRoom()
           challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
           (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
            Speedrun.charNum >= 2) or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)"))
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)"))
 end
 
 return Race

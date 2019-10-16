@@ -1,6 +1,26 @@
 # Racing+ Version History and News
 
-### *v0.44.2* - June 28th, 2019
+### *v0.45.0* - October 12th, 2019
+
+* [R+7 Season 7](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-7) is now released for beta testing.
+* The bosses in the Boss Rush are now generated in a custom way:
+  * Fast-clear now applies to the Boss Rush.
+  * Schoolbag charges will now work correctly with the Boss Rush.
+  * The Afterbirth+ bosses are added to the boss pool.
+  * All Chapter 4 bosses are added to the boss pool.
+* Fixed the (vanilla) bug where Monstro's Lung does not properly synergize with multi-shot items. 20/20 now grants 2x tears, Inner Eye now grants 3x tears, and Mutant Spider now grants 4x tears (in addition to their normal effects). (This bug will also be fixed in the next vanilla version of the game.)
+* The seeded death mechanic has been rewritten so that it does not actually kill you and just mimics it instead. This fixes the bug where Guppy's Collar would not work properly and the bug where revival would cause you to not be able to save and quit for the remainder of the run. (Thanks StoneAgeMarcus & CrafterLynx)
+* Fixed the bug where a key piece would disappear if you left the room and re-entered it. (Thanks thereisnofuture)
+* Fixed the bug where custom inventory management would still occur even if you changed rooms during the pickup animation. (Thanks Gamonymous)
+* Fixed the bug where the beam of light would not spawn after killing It Lives! / Hush under certain conditions in the R+15 (Vanilla) custom challenge. (Thanks Dea1h)
+* Fixed the bug where Lil Spewer's green creep attack would not work correctly. (Thanks sisuka)
+* Fixed the bug where the camera would glitch out when entering the Blue Womb.
+* Fixed the bug where if you had Halo of Flies and revived with the seeded death mechanic, you would get an additional Pretty Fly. (Thanks Gamonymous)
+* Fixed the bug where if you had A Dollar and revived with the seeded death mechanic, you would get 99 cents.
+* Fixed the bug where an empty pedestal was created after taking an active item from a devil deal that went into a Schoolbag.
+* Added The Matriarch to the Victory Lap boss pool.
+
+### *v0.44.2* - July 3rd, 2019
 
 * The seeded Devil Rooms and Angel Rooms has been rewritten to be more consistent. (Thanks Gamonymous)
 * Fixed the bug where fighting Mom's Heart or It Lives! on The Void would cause extra paths to appear. (Thanks AshDown)

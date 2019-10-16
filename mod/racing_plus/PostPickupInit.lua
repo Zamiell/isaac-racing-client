@@ -9,6 +9,7 @@ local Speedrun   = require("racing_plus/speedrun")
 
 -- Variables
 PostPickupInit.bigChestAction = false
+PostPickupInit.checkpointPos = g.zeroVector
 
 -- ModCallbacks.MC_POST_PICKUP_INIT (34)
 function PostPickupInit:Main(pickup)
@@ -117,6 +118,7 @@ function PostPickupInit:Pickup340(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
+  local centerPos = g.r:GetCenterPos()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
 
@@ -128,15 +130,16 @@ function PostPickupInit:Pickup340(pickup)
 
   -- By default, leave the big chest there
   PostPickupInit.bigChestAction = "leave"
+  PostPickupInit.checkpointPos = centerPos
 
   -- Determine if we should replace the big chest with something else
-  if stage == LevelStage.STAGE5 then -- 10
-    if stageType == StageType.STAGETYPE_ORIGINAL and -- 10.0 (Sheol)
+  if stage == 10 then
+    if stageType == 0 and -- 10.0 (Sheol)
        g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
       PostPickupInit.bigChestAction = "down"
 
-    elseif stageType == StageType.STAGETYPE_WOTL and -- 10.1 (Cathedral)
+    elseif stageType == 1 and -- 10.1 (Cathedral)
            g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
 
       PostPickupInit.bigChestAction = "up"
@@ -144,47 +147,69 @@ function PostPickupInit:Pickup340(pickup)
   end
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
     PostPickupInit:Pickup340_S1R9(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     PostPickupInit:Pickup340_S1R14(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
     PostPickupInit:Pickup340_S2(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
     PostPickupInit:Pickup340_Speedrun_Alternate(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
     PostPickupInit:Pickup340_Speedrun_Up(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     PostPickupInit:Pickup340_Speedrun_Up(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
     PostPickupInit:Pickup340_Speedrun_Alternate(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
-    PostPickupInit:Pickup340_Speedrun_Alternate(pickup)
+    PostPickupInit:Pickup340_S7(pickup)
+
   elseif Speedrun.inSeededSpeedrun then
     PostPickupInit:Pickup340_SS(pickup)
+
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
     PostPickupInit:Pickup340_S0(pickup)
+
   elseif g.raceVars.finished then
-    PostPickupInit.bigChestAction = "victorylap"
+    PostPickupInit.bigChestAction = "victoryLap"
+
   elseif g.race.rFormat == "pageant" then
     PostPickupInit:Pickup340_Pageant(pickup)
+
   elseif g.race.goal == "Blue Baby" and g.raceVars.started then
     PostPickupInit:Pickup340_BlueBaby(pickup)
+
   elseif g.race.goal == "The Lamb" and g.raceVars.started then
     PostPickupInit:Pickup340_TheLamb(pickup)
+
   elseif g.race.goal == "Mega Satan" and g.raceVars.started then
     PostPickupInit:Pickup340_MegaSatan(pickup)
+
   elseif g.race.goal == "Hush" and g.raceVars.started then
     PostPickupInit:Pickup340_Hush(pickup)
+
   elseif g.race.goal == "Delirium" and g.raceVars.started then
     PostPickupInit:Pickup340_Delirium(pickup)
+
   elseif g.race.goal == "Boss Rush" and g.raceVars.started then
     PostPickupInit:Pickup340_BossRush(pickup)
+
   elseif g.race.goal == "Everything" and g.raceVars.started then
     PostPickupInit:Pickup340_Everything(pickup)
-  elseif stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_ORIGINAL and -- 10.0 (Sheol)
+
+  elseif stage == 10 and stageType == 0 and -- 10.0 (Sheol)
          g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
     PostPickupInit.bigChestAction = "down" -- Leave the big chest there by default
-  elseif stage == LevelStage.STAGE5 and stageType == StageType.STAGETYPE_WOTL and -- 10.1 (Cathedral)
+
+  elseif stage == 10 and stageType == 1 and -- 10.1 (Cathedral)
          g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+
     PostPickupInit.bigChestAction = "up" -- Leave the big chest there by default
   end
 
@@ -207,40 +232,34 @@ function PostPickupInit:Pickup340(pickup)
     pickup:Remove()
 
   elseif PostPickupInit.bigChestAction == "checkpoint" then
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, g.r:GetCenterPos(), g.zeroVector,
-              nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+              PostPickupInit.checkpointPos, g.zeroVector, nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
     Speedrun.spawnedCheckpoint = true
-    g.run.endOfRunText = true -- Show the run summary
-    if Speedrun.averageTime == 0 then
-      -- This will be in milliseconds, so we divide by 1000
-      local elapsedTime = (Isaac.GetTime() - Speedrun.startedTime) / 1000
-      Speedrun.averageTime = elapsedTime
-    else
-      -- This will be in milliseconds, so we divide by 1000
-      local elapsedTime = (Isaac.GetTime() - Speedrun.finishTimeCharacter) / 1000
-      Speedrun.averageTime = ((Speedrun.charNum - 1) * Speedrun.averageTime + elapsedTime) / Speedrun.charNum
-    end
-    Speedrun.finishTimeCharacter = Isaac.GetTime()
     Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
     pickup:Remove()
 
-  elseif PostPickupInit.bigChestAction == "trophy" then
-    if challenge ~= 0 or
-       Speedrun.inSeededSpeedrun or
-       g.race.status ~= "none" then
-
-      -- We only want to spawn a trophy if we are on a custom speedrun challenge or currently in a race
-      g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
-      Isaac.DebugString("Spawned the end of race/speedrun trophy.")
-      pickup:Remove()
-
-    else
-      -- Set a flag so that we leave it alone on the next frame
-      pickup.Touched = true
-      Isaac.DebugString("Avoiding spawning the Trophy since we are not in a speedrun or race.")
+    -- Show the run summary
+    if stage ~= 8 then
+      g.run.endOfRunText = true
+      if Speedrun.averageTime == 0 then
+        -- This will be in milliseconds, so we divide by 1000
+        local elapsedTime = (Isaac.GetTime() - Speedrun.startedTime) / 1000
+        Speedrun.averageTime = elapsedTime
+      else
+        -- This will be in milliseconds, so we divide by 1000
+        local elapsedTime = (Isaac.GetTime() - Speedrun.finishTimeCharacter) / 1000
+        Speedrun.averageTime = ((Speedrun.charNum - 1) * Speedrun.averageTime + elapsedTime) / Speedrun.charNum
+      end
+      Speedrun.finishTimeCharacter = Isaac.GetTime()
     end
 
-  elseif PostPickupInit.bigChestAction == "victorylap" then
+  elseif PostPickupInit.bigChestAction == "trophy" then
+    -- Spawn the end of race/speedrun trophy
+    g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+    Isaac.DebugString("Spawned the end of race/speedrun trophy.")
+    pickup:Remove()
+
+  elseif PostPickupInit.bigChestAction == "victoryLap" then
     -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
               g.r:GetCenterPos(), g.zeroVector, nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
@@ -353,6 +372,35 @@ function PostPickupInit:Pickup340_Speedrun_Up(pickup)
     else
       PostPickupInit.bigChestAction = "checkpoint"
     end
+  end
+end
+
+function PostPickupInit:Pickup340_S7(pickup)
+  -- Local variables
+  local stage = g.l:GetStage()
+  local stageType = g.l:GetStageType()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+
+  -- Season 7 runs must complete every goal
+  -- The Polaroid / The Negative are not optional in this season
+  if (stage == 6 and g:TableContains(Speedrun.remainingGoals, "Boss Rush")) or
+     (stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!")) or
+     (stage == 9 and g:TableContains(Speedrun.remainingGoals, "Hush")) or
+     (stage == 11 and roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
+      g:TableContains(Speedrun.remainingGoals, "Mega Satan")) or
+     (stage == 11 and stageType == 1 and g:TableContains(Speedrun.remainingGoals, "Blue Baby")) or
+     (stage == 11 and stageType == 0 and g:TableContains(Speedrun.remainingGoals, "The Lamb")) or
+     (stage == 12 and g:TableContains(Speedrun.remainingGoals, "Mahalath")) then
+
+    if Speedrun.charNum == 7 then
+      PostPickupInit.bigChestAction = "trophy"
+    else
+      PostPickupInit.bigChestAction = "checkpoint"
+    end
+  end
+
+  if stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!") then
+    PostPickupInit.checkpointPos = g:GridToPos(1, 1)
   end
 end
 

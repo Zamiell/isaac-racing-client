@@ -41,7 +41,7 @@ function NPCUpdate:NPC28(npc)
   local roomType = g.r:GetType()
 
   -- We only care about Chubs spawned from The Matriarch
-  if stage ~= LevelStage.STAGE4_1 or -- 7
+  if stage ~= 7 or
      roomType ~= RoomType.ROOM_BOSS then -- 5
 
     return
@@ -218,7 +218,7 @@ function NPCUpdate:NPC275(npc)
 
     -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
 
     -- Set the room status to clear so that the player cannot fight Mega Satan a second time
     -- if they happen to use a Fool card after defeating it

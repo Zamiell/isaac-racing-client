@@ -35,6 +35,9 @@ end
 
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PreEntitySpawn.Collectible(subType, position, spawner, seed)
+  -- Local variables
+  local roomFrameCount = g.r:GetFrameCount()
+
   if g.run.replacingPedestal then
     g.run.replacingPedestal = false
     return
@@ -44,7 +47,8 @@ function PreEntitySpawn.Collectible(subType, position, spawner, seed)
   -- So if a key piece was removed early, then ensure that the vanilla counterpart does not spawn
   if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
       subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
-      not g.run.spawningKeyPiece then
+      not g.run.spawningKeyPiece and
+      roomFrameCount ~= -1 then -- We might be coming back into a room with a key piece
 
     Isaac.DebugString("Removed a naturally spawned Key Piece.")
     return {EntityType.ENTITY_EFFECT, 0, 0, 0}
@@ -182,6 +186,14 @@ end
 
 -- EffectVariant.PLAYER_CREEP_GREEN (53)
 function PreEntitySpawn.PlayerCreepGreen(variant, subType, position, spawner, seed)
+  -- Ignore creep generated from Lil Spewer
+  if spawner ~= nil and
+     spawner.Type == EntityType.ENTITY_FAMILIAR and -- 3
+     spawner.Variant == FamiliarVariant.LIL_SPEWER then -- 125
+
+    return
+  end
+
   -- Change player green creep to blue
   return {EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_HOLYWATER_TRAIL, subType, seed} -- 1000.54
 end

@@ -60,6 +60,7 @@ local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
 local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
 local PostBombInit        = require("racing_plus/postbombinit") -- 57
 local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
+local PostFireTear        = require("racing_plus/postfiretear") -- 61
 local PreGetCollectible   = require("racing_plus/pregetcollectible") -- 62
 local PostEntityKill      = require("racing_plus/postentitykill") -- 68
 local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
@@ -102,6 +103,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCI
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    PostPickupUpdate.Main) -- 35
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
+RacingPlus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR,        PostFireTear.Main) -- 61
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE,   PreGetCollectible.Main) -- 62
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Main) -- 68
@@ -201,6 +203,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Telepills,
 -- Define entity damage callbacks (11)
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Player, -- 11
                        EntityType.ENTITY_PLAYER) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Hush, -- 11
+                       EntityType.ENTITY_HUSH) -- 407
 
 -- Define pre-use item callbacks (23)
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item84, -- 23
@@ -238,6 +242,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedes
 -- Define post-NPC-initialization callbacks (27)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC38, -- 27
                        EntityType.ENTITY_BABY) -- 38
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC102, -- 27
+                       EntityType.ENTITY_ISAAC) -- 102
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
                        EntityType.ENTITY_THE_HAUNT) -- 260
 
@@ -292,6 +298,10 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.Craw
                        EffectVariant.CRAWLSPACE_FAST_TRAVEL)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.HeavenDoor, -- 55
                        EffectVariant.HEAVEN_DOOR_FAST_TRAVEL)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.VoidPortal, -- 55
+                       EffectVariant.VOID_PORTAL_FAST_TRAVEL)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.MegaSatanTrapdoor, -- 55
+                       EffectVariant.MEGA_SATAN_TRAPDOOR)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.CrackTheSkyBase, -- 55
                        EffectVariant.CRACK_THE_SKY_BASE)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.StickyNickel, -- 55

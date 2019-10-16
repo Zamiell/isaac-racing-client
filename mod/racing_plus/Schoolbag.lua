@@ -30,15 +30,15 @@ function Schoolbag:Remove()
 end
 
 function Schoolbag:AddCharge(singleCharge)
-  -- Local variables
-  local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
-
   -- We don't need to do anything if we don't have a Schoolbag or we don't have an item in the Schoolbag
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 then
 
     return
   end
+
+  -- Local variables
+  local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
 
   -- We don't need to do anything if the item is already charged
   if g.run.schoolbag.charge >= maxCharges and
@@ -208,8 +208,11 @@ function Schoolbag:ConvertVanilla()
 end
 
 -- Called from the PostUpdate callback (the "CheckEntities:ReplacePedestal()" function)
--- (essentially this code check runs only when the item is first spawned)
+-- (this code check runs only when the item is first spawned)
 function Schoolbag:CheckSecondItem(pickup)
+  -- Local variables
+  local roomType = g.r:GetType()
+
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      g.run.schoolbag.item == 0 and
      pickup.Touched and
@@ -240,10 +243,19 @@ function Schoolbag:CheckSecondItem(pickup)
                       tostring(g.run.schoolbag.charge) .. " charges (and " ..
                       tostring(g.run.schoolbag.chargeBattery) .. " Battery charges).")
 
-    -- Empty the pedestal
-    pickup.SubType = 0
-    pickup:GetSprite():Play("Empty", true)
+    if roomType == RoomType.ROOM_DEVIL or -- 14
+       roomType == RoomType.ROOM_CURSE or -- 10 (in Racing+ Rebalanced, there are DD items in a Curse Room)
+       roomType == RoomType.ROOM_BLACK_MARKET then -- 22
 
+      -- If we took this item from a devil deal, then we want to delete the pedestal entirely
+      -- (since the item was not on a pedestal to begin with, it would not make any sense to leave an empty pedestal)
+      -- Unfortunately, the empty pedestal will still show for a single frame
+      pickup:Remove()
+    else
+      -- Otherwise, empty the pedestal
+      pickup.SubType = 0
+      pickup:GetSprite():Play("Empty", true)
+    end
     return true
   else
     return false
@@ -251,7 +263,7 @@ function Schoolbag:CheckSecondItem(pickup)
 end
 
 -- Check to see if the Schoolbag item needs to be swapped back in
-function Schoolbag:CheckEmptyActive()
+function Schoolbag:CheckEmptyActiveItem()
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
      g.run.schoolbag.item == 0 or
      g.p:GetActiveItem() ~= 0 or
@@ -267,24 +279,6 @@ function Schoolbag:CheckEmptyActive()
   -- Empty the contents of the Schoolbag
   g.run.schoolbag.item = 0
   Schoolbag.sprites.item = nil
-end
-
-function Schoolbag:CheckBossRush()
-  -- Local variables
-  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     g.run.schoolbag.item == 0 or
-     roomIndexUnsafe ~= GridRooms.ROOM_BOSSRUSH_IDX or -- -5
-     not g.r:IsAmbushActive() or
-     g.run.schoolbag.bossRushActive then
-
-    return
-  end
-
-  -- We started the Boss Rush, so give an extra charge
-  g.run.schoolbag.bossRushActive = true
-  Schoolbag:AddCharge()
 end
 
 -- Check for Schoolbag switch inputs
@@ -363,7 +357,6 @@ function Schoolbag:IsActiveItemQueued()
   end
 end
 
--- Called from the "Schoolbag:CheckInput()" function
 function Schoolbag:Switch()
   -- Local variables
   local activeItem = g.p:GetActiveItem()

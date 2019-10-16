@@ -13,6 +13,7 @@ local ChangeKeybindings   = require("racing_plus/changekeybindings")
 local Sprites             = require("racing_plus/sprites")
 local SeededDeath         = require("racing_plus/seededdeath")
 local SeededRooms         = require("racing_plus/seededrooms")
+local BossRush            = require("racing_plus/bossrush")
 local Samael              = require("racing_plus/samael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
@@ -157,6 +158,9 @@ function PostNewRoom:NewRoom()
     g.run.schoolbag.lastRoomSlot2Charges = g.run.schoolbag.charge
   end
 
+  -- Check for the Boss Rush
+  BossRush:PostNewRoom()
+
   -- Check for the Satan room
   PostNewRoom:CheckSatanRoom()
 
@@ -297,8 +301,7 @@ function PostNewRoom:CheckScolexRoom()
   end
 
   if g.race.rFormat == "seeded" or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
 
      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
     -- (there are 10 Scolex entities)
@@ -335,12 +338,12 @@ function PostNewRoom:CheckDepthsPuzzle()
   local gridSize = g.r:GetGridSize()
 
   -- We only need to check if we are in the Dank Depths
-  if stage ~= LevelStage.STAGE3_1 and -- 5
-     stage ~= LevelStage.STAGE3_2 then -- 6
+  if stage ~= 5 and
+     stage ~= 6 then
 
     return
   end
-  if stageType ~= StageType.STAGETYPE_AFTERBIRTH then -- 2
+  if stageType ~= 2 then
     return
   end
 
@@ -600,7 +603,7 @@ function PostNewRoom:Race()
   SeededRooms:PostNewRoom()
 
   -- Prevent players from skipping a floor by using the I AM ERROR room on Womb 2 on the "Everything" race goal
-  if stage == LevelStage.STAGE4_2 and -- 8
+  if stage == 8 and
      roomType == RoomType.ROOM_ERROR and -- 3
      g.race.goal == "Everything" then
 
@@ -661,7 +664,7 @@ function PostNewRoom:Race()
       randomBossSeed = g:IncrementRNG(randomBossSeed)
       math.randomseed(randomBossSeed)
       local randomBoss = g.bossArray[math.random(1, #g.bossArray)]
-      if randomBoss[1] == 19 then
+      if randomBoss[1] == EntityType.ENTITY_LARRYJR then -- 19
         -- Larry Jr. and The Hollow require multiple segments
         for j = 1, 6 do
           g.g:Spawn(randomBoss[1], randomBoss[2], g.r:GetCenterPos(), g.zeroVector, nil, randomBoss[3], roomSeed)

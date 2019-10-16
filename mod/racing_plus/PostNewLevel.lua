@@ -6,6 +6,7 @@ local PostNewRoom  = require("racing_plus/postnewroom")
 local FastTravel   = require("racing_plus/fasttravel")
 local SeededFloors = require("racing_plus/seededfloors")
 local SoulJar      = require("racing_plus/souljar")
+local Speedrun     = require("racing_plus/speedrun")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function PostNewLevel:Main()
@@ -66,8 +67,8 @@ function PostNewLevel:NewLevel()
   end
 
   -- Reseed the floor if it has a flaw in it
-  if challenge ~= 0 or
-     not customRun then -- Disable reseeding for set seeds
+  if (challenge ~= 0 or not customRun) and -- Disable all reseeding for set seeds
+     stage ~= 12 then -- Disable all reseeding on The Void
 
     if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
        PostNewLevel:CheckForgottenSoftlock() or -- Forgotten can become softlocked in certain rooms
@@ -95,7 +96,6 @@ function PostNewLevel:NewLevel()
   Isaac.DebugString("Reseed count: " .. tostring(g.run.reseedCount))
   g.run.reseedCount = 0
   g.run.tempHolyMantle = false
-  g.run.playedSad = false
 
   -- Reset the RNG of some items that should be seeded per floor
   local stageSeed = g.seeds:GetStageSeed(stage)
@@ -126,7 +126,11 @@ function PostNewLevel:NewLevel()
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 
+  -- Handle Fast Travel
   FastTravel:FixStrengthCardBug()
+
+  -- Hande multi-character speedruns
+  Speedrun:PostNewLevel()
 
   -- Seed floors that are generated when a player uses a Forget Me Now or a 5-pip Dice Room
   if g.run.forgetMeNow then
@@ -260,19 +264,19 @@ function PostNewLevel:CheckDupeRooms()
   end
 
   -- Don't bother checking on Blue Womb, The Chest / Dark Room, or The Void
-  if stage == LevelStage.STAGE4_3 or -- 9
-     stage == LevelStage.STAGE6 or -- 11
-     stage == LevelStage.STAGE7 then -- 12
+  if stage == 9 or
+     stage == 11 or
+     stage == 12 then
 
     return false
   end
 
   -- Reset the room IDs if we are arriving at a level with a new stage type
-  if stage == LevelStage.STAGE2_1 or -- 3
-     stage == LevelStage.STAGE3_1 or -- 5
-     stage == LevelStage.STAGE4_1 or -- 7
-     stage == LevelStage.STAGE5 or -- 10
-     stage == LevelStage.STAGE6 then -- 11
+  if stage == 3 or
+     stage == 5 or
+     stage == 7 or
+     stage == 10 or
+     stage == 11 then
 
     g.run.roomIDs = {}
   end

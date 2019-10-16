@@ -35,6 +35,8 @@ function PostPickupUpdate:Main(pickup)
     -- ("Touched" was manually set to true by the mod above)
     -- Alternatively, we could check for "entity.EntityCollisionClass ~= 0",
     -- but this is bad because the collision is 0 during the long "Appear" animation
+    -- Additionally, we can't use the MC_POST_PICKUP_INIT callback for this because the position
+    -- for newly initialized pickups is always equal to (0, 0)
     FastTravel:CheckPickupOverHole(pickup)
   end
 end

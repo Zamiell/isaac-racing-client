@@ -22,7 +22,7 @@ function SoulJar:EntityTakeDmg(damageFlag)
 
   -- Soul Jar damage tracking
   local selfDamage = false
-  local bit1 = (damageFlag & (1 << 5)) >> 5 -- DamageFlag.DAMAGE_RED_HEARTS.
+  local bit1 = (damageFlag & (1 << 5)) >> 5 -- DamageFlag.DAMAGE_RED_HEARTS
   local bit2 = (damageFlag & (1 << 18)) >> 18 -- DamageFlag.DAMAGE_IV_BAG
   if bit1 == 1 or bit2 == 1 then
       selfDamage = true

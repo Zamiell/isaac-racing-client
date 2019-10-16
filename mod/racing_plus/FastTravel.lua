@@ -22,8 +22,8 @@ FastTravel.state = {
 }
 
 -- Variables
-FastTravel.reseed                = false -- Used when we need to reseed the next floor
-FastTravel.delayNewRoomCallback  = false -- Used when executing a "reseed" immediately after a "stage X"
+FastTravel.reseed               = false -- Used when we need to reseed the next floor
+FastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"
 
 --
 -- Trapdoor / heaven door functions
@@ -66,8 +66,8 @@ function FastTravel:ReplaceTrapdoor(entity, i)
     trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL, -- 1000
                          entity.Position, g.zeroVector, nil, 0, 0)
 
-  elseif stage == LevelStage.STAGE3_2 or -- 6
-         stage == LevelStage.STAGE4_1 then -- 7
+  elseif stage == 6 or
+         stage == 7 then
 
     trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL, -- 1000
                          entity.Position, g.zeroVector, nil, 0, 0)
@@ -155,9 +155,6 @@ function FastTravel:ReplaceHeavenDoor(entity)
   entity:Remove()
 end
 
--- Called from the "CheckEntities:Entity5()" function
--- (we can't use the MC_POST_PICKUP_INIT callback for this because the position
--- for newly initialized pickups is always equal to 0, 0)
 function FastTravel:CheckPickupOverHole(pickup)
   -- Local variables
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
@@ -281,8 +278,7 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
   end
 end
 
--- Called from the "CheckEntities:NonGrid()" function
-function FastTravel:CheckTrapdoorEnter(effect, upwards)
+function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
   -- Local variables
   local stage = g.l:GetStage()
   local isaacFrameCount = Isaac.GetFrameCount()
@@ -311,6 +307,8 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards)
       g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
       g.run.trapdoor.upwards = upwards
       g.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
+      g.run.trapdoor.voidPortal = effect.Variant == EffectVariant.VOID_PORTAL_FAST_TRAVEL
+      g.run.trapdoor.megaSatan = effect.Variant == EffectVariant.MEGA_SATAN_TRAPDOOR
 
       -- If we are The Soul, the Forgotten body will also need to be teleported
       -- However, if we change its position manually, it will just warp back to the same spot on the next frame
@@ -448,6 +446,14 @@ function FastTravel:CheckTrapdoor2()
   local stageType = g.l:GetStageType()
   local character = g.p:GetPlayerType()
 
+  -- We are not travelling to a new level if we went through a Mega Satan trapdoor,
+  -- so bypass the below PostNewRoom check
+  if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK and
+     g.run.trapdoor.megaSatan then
+
+    g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_1
+  end
+
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
   -- (this is just an artifact of the manual reordering)
   if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK then
@@ -455,6 +461,24 @@ function FastTravel:CheckTrapdoor2()
 
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_1 then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_2
+    Isaac.DebugString("STATE IS NOW: POST_NEW_ROOM_2")
+
+    -- Remove the black sprite to reveal the new floor
+    Sprites:Init("black", 0)
+
+    local pos = g.r:GetCenterPos()
+    if g.run.trapdoor.megaSatan then
+      -- The center of the Mega Satan room is near the top
+      -- Causing Isaac to warp to the top causes the game to bug out,
+      -- so adjust the position to be near the bottom entrance
+      pos = Vector(320, 650)
+
+      -- Additionally, stop the boss room sound effect
+      g.sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
+
+    elseif stage == 9 then
+      pos = Vector(320, 560)
+    end
 
     for i = 1, g.g:GetNumPlayers() do
       local player = Isaac.GetPlayer(i - 1)
@@ -466,12 +490,12 @@ function FastTravel:CheckTrapdoor2()
       player.SpriteScale = g.zeroVector
 
       -- Move the player to the center of the room
-      player.Position = g.r:GetCenterPos()
+      player.Position = pos
     end
 
     -- Spawn a hole
     g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PITFALL_CUSTOM, -- 1000
-              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+              pos, g.zeroVector, nil, 0, 0)
 
     -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
     if not g.raceVars.finished and
@@ -486,9 +510,6 @@ function FastTravel:CheckTrapdoor2()
        end
        g.run.streakFrame = Isaac.GetFrameCount()
     end
-
-    -- Remove the black sprite to reveal the new floor
-    Sprites:Init("black", 0)
   end
 end
 
@@ -498,6 +519,12 @@ function FastTravel:GotoNextFloor(upwards, redirect)
   -- Local game
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
+
+  -- Handle custom Mega Satan trapdoors
+  if g.run.trapdoor.megaSatan then
+    g.g:StartRoomTransition(GridRooms.ROOM_MEGA_SATAN_IDX, Direction.UP, g.RoomTransition.TRANSITION_NONE) -- -7, 1, 0
+    return
+  end
 
   -- By default, we will not need to reseed the new floor
   FastTravel.reseed = false
@@ -554,7 +581,10 @@ function FastTravel:GetNextStage()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
 
   local nextStage = stage + 1
-  if stage == 8 and
+  if g.run.trapdoor.voidPortal then
+    nextStage = 12
+
+  elseif stage == 8 and
      roomIndexUnsafe ~= GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
 
     -- If we are not in the Womb special room, then we need to skip a floor
@@ -1019,8 +1049,8 @@ function FastTravel:CheckRoomRespawn()
         entity = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL, -- 1000
                            trapdoor.pos, g.zeroVector, nil, 0, 0)
 
-      elseif stage == LevelStage.STAGE3_2 or -- 6
-             stage == LevelStage.STAGE4_1 then -- 7
+      elseif stage == 6 or
+             stage == 7 then
 
         entity = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL, -- 1000
                            trapdoor.pos, g.zeroVector, nil, 0, 0)

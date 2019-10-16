@@ -5,6 +5,7 @@ local PostNPCInit = {}
 -- Includes
 local g = require("racing_plus/globals")
 
+
 -- EntityType.ENTITY_BABY (38)
 function PostNPCInit:NPC38(npc)
   if g.run.spawningAngel then
@@ -65,6 +66,21 @@ function PostNPCInit:NPC260(npc)
 
     -- Keeping Lil' Haunts in place is next handled in the "CheckEntities:Entity260()" function
     -- Speeding up the first Lil' Haunt is next handled in the "PostUpdate:CheckHauntSpeedup()" function
+  end
+end
+
+-- EntityType.ENTITY_ISAAC (102)
+function PostNPCInit:NPC102(npc)
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  -- In season 7 speedruns, we want to go directly into the second phase of Hush
+  if npc.Variant == 2 and
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+
+    npc:Remove()
+    g.g:Spawn(EntityType.ENTITY_HUSH, 0, Vector(580, 260), g.zeroVector, nil, 0, npc.InitSeed) -- 407
+    -- (the position is copied from vanilla)
   end
 end
 

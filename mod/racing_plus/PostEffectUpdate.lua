@@ -39,6 +39,14 @@ function PostEffectUpdate:HeavenDoor(effect)
   FastTravel:CheckTrapdoorEnter(effect, true) -- The second argument is "upwards"
 end
 
+function PostEffectUpdate:VoidPortal(effect)
+  FastTravel:CheckTrapdoorEnter(effect, false) -- The second argument is "upwards"
+end
+
+function PostEffectUpdate:MegaSatanTrapdoor(effect)
+  FastTravel:CheckTrapdoorEnter(effect, false) -- The second argument is "upwards"
+end
+
 function PostEffectUpdate:TearPoof(effect)
   -- Change the green spash of Mysterious Liquid tears to blue
   -- (changing the color does not work in the PostEffectInit callback)

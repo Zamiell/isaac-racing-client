@@ -13,6 +13,12 @@ local ChangeCharOrder    = require("racing_plus/changecharorder")
 -- (called from the PostUpdate callback)
 function CheckEntities:Grid()
   -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
+  local startingRoomIndex = g.l:GetStartingRoomIndex()
   local gridSize = g.r:GetGridSize()
 
   for i = 1, gridSize do
@@ -20,9 +26,10 @@ function CheckEntities:Grid()
     if gridEntity ~= nil then
       local saveState = gridEntity:GetSaveState()
       if saveState.Type == GridEntityType.GRID_TRAPDOOR and -- 17
-         saveState.VarData == 1 then -- Void Portals have a VarData of 1
+         saveState.VarData == 1 and -- Void Portals have a VarData of 1
+         (stage ~= 11 or roomIndex ~= startingRoomIndex) then
 
-        -- Delete all Void Portals
+        -- Delete all Void Portals (that are not on the starting room of The Chest / Dark Room)
         gridEntity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
         g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 

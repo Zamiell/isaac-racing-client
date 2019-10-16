@@ -58,6 +58,7 @@ function PostRender:Main()
   Timer:DisplayRun()
   Timer:DisplaySecond()
   Pills:PostRender()
+  SpeedrunPostRender:DrawSeason7Goals()
   ChangeCharOrder:PostRender()
   ChangeKeybindings:PostRender()
   PostRender:DisplayTopLeftText()
@@ -98,8 +99,8 @@ function PostRender:Main()
   SpeedrunPostRender:DrawVetoButtonText()
   SpeedrunPostRender:CheckSeason5Mod()
   SpeedrunPostRender:CheckSeason5ModOther()
-  SpeedrunPostRender:CheckSeason7Mod()
-  SpeedrunPostRender:CheckSeason7ModOther()
+  --SpeedrunPostRender:CheckSeasonXMod()
+  --SpeedrunPostRender:CheckSeasonXModOther()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally

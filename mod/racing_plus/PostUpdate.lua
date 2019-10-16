@@ -11,8 +11,10 @@ local SoulJar            = require("racing_plus/souljar")
 local FastTravel         = require("racing_plus/fasttravel")
 local PostItemPickup     = require("racing_plus/postitempickup")
 local Race               = require("racing_plus/race")
+local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
+local BossRush           = require("racing_plus/bossrush")
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
@@ -33,6 +35,7 @@ function PostUpdate:Main()
   PostUpdate:CheckWishbone()
   PostUpdate:CheckWalnut()
   PostUpdate:Fix9VoltSynergy()
+  BossRush:PostUpdate()
 
   -- Check on every frame to see if we need to open the doors
   -- (we can't just add this as a new MC_POST_UPDATE callback because
@@ -54,8 +57,7 @@ function PostUpdate:Main()
   -- Check for Schoolbag switch inputs
   -- (and other miscellaneous Schoolbag activities)
   Schoolbag:CheckActiveCharges()
-  Schoolbag:CheckEmptyActive()
-  Schoolbag:CheckBossRush()
+  Schoolbag:CheckEmptyActiveItem()
   Schoolbag:CheckInput()
   Schoolbag:ConvertVanilla()
 
@@ -106,6 +108,9 @@ function PostUpdate:CheckRoomCleared()
 
   -- Give a charge to the player's Schoolbag item
   Schoolbag:AddCharge()
+
+  -- Handle speedrun tasks
+  Speedrun:RoomCleared()
 end
 
 -- Keep track of our hearts if we are Keeper
@@ -166,12 +171,21 @@ function PostUpdate:CheckKeeperHearts()
 end
 
 function PostUpdate:CheckItemPickup()
+  -- Local variables
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
+
   -- Only run the below code once per item
   if g.p:IsItemQueueEmpty() then
     if g.run.pickingUpItem ~= 0 then
       -- Check to see if we need to do something specific after this item is added to our inventory
       local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
-      if postItemFunction ~= nil then
+      if postItemFunction ~= nil and
+         roomIndex == g.run.pickingUpItemRoom then
+         -- (don't do any custom inventory work if we have changed rooms in the meantime)
+
         postItemFunction()
       end
       g.run.pickingUpItem = 0
@@ -183,6 +197,7 @@ function PostUpdate:CheckItemPickup()
 
   -- Mark which item we are picking up
   g.run.pickingUpItem = g.p.QueuedItem.Item.ID
+  g.run.pickingUpItemRoom = roomIndex
 
   -- Mark to draw the streak text for this item
   g.run.streakText = g.p.QueuedItem.Item.Name
@@ -409,12 +424,12 @@ function PostUpdate:CrownOfLight()
     g.run.removedCrownHearts = true
   end
   if not g.run.removedCrownHearts and
-     stage == LevelStage.STAGE1_1 and -- 1
+     stage == 1 and
      g.p:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
      (((g.race.rFormat == "unseeded" or
         g.race.rFormat == "diversity") and
        g.race.status == "in progress") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
 
      -- Remove the two soul hearts that the Crown of Light gives
      g.run.removedCrownHearts = true

@@ -21,8 +21,8 @@ function SpeedrunPostUpdate:Main()
   SpeedrunPostUpdate:CheckCheckpoint()
 end
 
--- For season 5,
--- we need to record the starting item on the first character so that we can avoid duplicate starting items later on
+-- For season 5, we need to record the starting item on the first character
+-- so that we can avoid duplicate starting items later on
 function SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
   -- Local variables
   local challenge = Isaac.GetChallenge()
@@ -77,13 +77,56 @@ function SpeedrunPostUpdate:CheckCheckpoint(force)
 
   -- Mark to fade out after the "Checkpoint" text has displayed on the screen for a little bit
   Speedrun.fadeFrame = isaacFrameCount + 30
+
+  -- Perform some additional actions for Season 7 speedruns
+  SpeedrunPostUpdate:Season7RemoveGoal()
+end
+
+function SpeedrunPostUpdate:Season7RemoveGoal()
+  local roomType = g.r:GetType()
+  if roomType == RoomType.ROOM_BOSSRUSH then -- 17
+    g:TableRemove(Speedrun.remainingGoals, "Boss Rush")
+    return
+  end
+
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+  if roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
+    g:TableRemove(Speedrun.remainingGoals, "Mega Satan")
+    return
+  end
+
+  local stage = g.l:GetStage()
+  if stage == 8 then
+    g:TableRemove(Speedrun.remainingGoals, "It Lives!")
+    return
+  end
+
+  if stage == 9 then
+    g:TableRemove(Speedrun.remainingGoals, "Hush")
+    return
+  end
+
+  local stageType = g.l:GetStageType()
+  if stage == 11 and stageType == 1 then
+    g:TableRemove(Speedrun.remainingGoals, "Blue Baby")
+    return
+  end
+
+  if stage == 11 and stageType == 0 then
+    g:TableRemove(Speedrun.remainingGoals, "The Lamb")
+    return
+  end
+
+  if stage == 12 then
+    g:TableRemove(Speedrun.remainingGoals, "Mahalath")
+    return
+  end
 end
 
 -- Called from the "CheckEntities:Grid()" function
 function SpeedrunPostUpdate:CheckVetoButton(gridEntity)
   local challenge = Isaac.GetChallenge()
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
      Speedrun.charNum ~= 1 or
      g.run.roomsEntered ~= 1 or
      gridEntity:GetSaveState().State ~= 3 then

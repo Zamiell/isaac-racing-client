@@ -7,7 +7,7 @@
 
 <br />
 
-## R+9 Season 1
+## R+9 Season 1 (The Keeper Season)
 
 * You must defeat Blue Baby on the following 9 characters:
   * Cain, Judas, Blue Baby, Eve, Samson, Azazel, Lazarus, The Lost, and Keeper
@@ -15,7 +15,7 @@
 
 <br />
 
-## R+14 Season 1
+## R+14 Season 1 (The Keeper Season)
 
 * You must defeat Blue Baby on all 14 characters.
 * Isaac starts with The Battery (and a double charged D6).
@@ -29,7 +29,7 @@
 
 <br />
 
-## R+7 Season 2
+## R+7 Season 2 (The Samael Season)
 
 * You must defeat The Lamb on the following 7 characters:
   * Isaac, Cain, Judas, Azazel, Eden, Apollyon, and Samael
@@ -40,7 +40,7 @@
 
 <br />
 
-## R+7 Season 3
+## R+7 Season 3 (The Custom Bosses Season)
 
 * You must complete the game with the following 7 characters:
   * Isaac, Magdalene, Judas, Eve, Samson, Lazarus, and The Lost
@@ -60,12 +60,12 @@
 
 <br />
 
-## R+7 Season 4
+## R+7 Season 4 (The Choose-Your-Start Season)
 
 * You must defeat Blue Baby on the following 7 characters:
   * Cain, Judas, Blue Baby, Azazel, Lazarus, Lilith, and Apollyon
 * All characters start with the Schoolbag. (It starts empty by default.)
-* Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar with also disappear.)
+* Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar will also disappear.)
 * Lazarus does not start with a pill.
 * You get to choose a starting item for each character. (You can find the full list in the "Change Char Order" custom challenge.)
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
@@ -76,7 +76,7 @@
 
 <br />
 
-## R+7 Season 5
+## R+7 Season 5 (The Babies Season)
 
 * You must defeat Blue Baby 7 times using the [Babies Mod](https://bindingofisaacrebirth.gamepedia.com/index.php?title=User:Zamie/Co-op&profile=no), which provides a different random baby with a unique ability on each floor.
 * Each baby starts with the stats of Isaac, one red heart, and one half soul heart.
@@ -99,7 +99,7 @@
 
 <br />
 
-## R+7 Season 6
+## R+7 Season 6 (The Instant Start Season)
 
 * You must complete the game with the following 7 characters:
   * Judas, Blue Baby, Eve, Azazel, Eden, The Lost, The Forgotten
@@ -123,15 +123,46 @@
   * This mechanic does not apply to deaths in Devil Rooms, Sacrifice Rooms, or the Boss Rush. (Deaths in those rooms will be permanent.)
 * Scolex is replaced by two Frails (like it is in seeded races).
 * Sacred Heart no longer grants homing bombs (unless you have Dr. Fetus).
-* We Need to Go Deeper! will not work on Womb 2.
 * Cain's Eye and Broken Ankh are removed from the trinket pool.
+* We Need to Go Deeper! will not work on Womb 2.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
 
-## R+7 Season 7
+## R+7 Season 7 (The Diversity Season)
 
-* Coming soon!
+* You must complete the game with the following 7 characters:
+  * Cain, Judas, Samson, Azazel, Lazarus, The Lost, Lilith
+* You must complete the following 7 goals:
+  * Boss Rush (spawns 3 bosses at a time instead of 2)
+  * It Lives!
+  * Hush (there is no phase 1 and damage scaling is removed)
+  * Blue Baby
+  * The Lamb
+  * Mega Satan
+  * Mahalath (replaces Delirium)
+* You can complete any goal that you wish on any character, but each goal has to be accomplished once.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Unlike previous seasons, the path to The Chest requires The Polaroid and the path to the Dark Room requires The Negative.
+* A portal to The Void will appear next to the Mega Satan door.
+* Mahalath's room will appear on the map once players reach The Void.
+* Mega Satan's door will only be opened on the second character and beyond.
+* Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar will also disappear.)
+* All characters will start with 5 random items, similar to [diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md). (All of the other changes from diversity races are also present.)
+* Additionally, the following items/trinkets are banned from the random diversity pool:
+  * The 26 starting items
+  * Mega Blast
+  * We Need to Go Deeper!
+  * Crystal Ball
+  * The Mind
+  * Tiny Planet
+  * Soy Milk
+  * Ouroboros Worm
+* We Need to Go Deeper! is removed from all pools.
+* Mega Blast is removed from all pools.
+* Ipecac is removed from the Treasure Room pool.
+* Libra is removed from the Treasure Room pool if you start with Soy Milk.
+* Soy Milk is removed from the Treasure Room pool if you start with Libra.
+* Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
 

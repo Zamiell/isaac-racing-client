@@ -1,9 +1,10 @@
 local Debug = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
-local Sprites  = require("racing_plus/sprites")
-local Speedrun = require("racing_plus/speedrun")
+local g         = require("racing_plus/globals")
+local Sprites   = require("racing_plus/sprites")
+local FastClear = require("racing_plus/fastclear")
+local Speedrun  = require("racing_plus/speedrun")
 
 -- ModCallbacks.MC_USE_ITEM (3)
 function Debug:Main()
@@ -41,16 +42,18 @@ function Debug:Main()
       end
     end
   end
-  Isaac.DebugString("speedrun: ")
+
+  Isaac.DebugString("speedrun:")
   for k, v in pairs(Speedrun) do
     if type(v) == "string" or
-    type(v) == "number" or
-    type(v) == "boolean" then
+       type(v) == "number" or
+       type(v) == "boolean" then
 
       Isaac.DebugString("  " .. k .. ": " .. tostring(v))
     end
   end
-  Isaac.DebugString("sprites: ")
+
+  Isaac.DebugString("sprites:")
   for k, v in pairs(Sprites.sprites) do
     for k2, v2 in pairs(v) do
       if k2 == "spriteName" and v2 ~= 0 then
@@ -58,6 +61,11 @@ function Debug:Main()
         Isaac.DebugString("    " .. k2 .. ": " .. tostring(v2))
       end
     end
+  end
+
+  Isaac.DebugString("FastClear.aliveEnemies:")
+  for k, v in pairs(FastClear.aliveEnemies) do
+    Isaac.DebugString("  " .. k .. ": " .. tostring(v))
   end
 
   --

@@ -10,6 +10,13 @@ function Pills:PostRender()
     return
   end
 
+  -- This feature is disabled in season 7 speedruns
+  -- (the pills text will overlap with the remaining goals)
+  local challenge = Isaac.GetChallenge()
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    return
+  end
+
   -- Only show pill identification if the user is pressing tab
   local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3

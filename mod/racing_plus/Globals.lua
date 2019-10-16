@@ -1,10 +1,11 @@
+
 local g  = {}
 
 --
 -- Global variables
 --
 
-g.version = "v0.44.2"
+g.version = "v0.45.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -81,6 +82,7 @@ g.RNGCounter = {
   -- Seeded at the beginning of the run
   BookOfSin       = 0, -- 97
   DeadSeaScrolls  = 0, -- 124
+  GuppysCollar    = 0, -- 212
   -- Devil Rooms and Angel Rooms go in order on seeded races
   DevilRoomKrampus = 0,
   DevilRoomChoice  = 0,
@@ -119,9 +121,6 @@ g.kcolor = KColor(1, 1, 1, 1)
 --
 
 -- Entities
--- TODO
-
--- Entities
 EntityType.ENTITY_RACE_TROPHY                = Isaac.GetEntityTypeByName("Race Trophy")
 EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC       = Isaac.GetEntityTypeByName("Room Clear Delay NPC")
 EntityType.ENTITY_SAMAEL_SCYTHE              = Isaac.GetEntityTypeByName("Samael Scythe")
@@ -135,6 +134,8 @@ EffectVariant.CRAWLSPACE_FAST_TRAVEL         = Isaac.GetEntityVariantByName("Cra
 EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL      = Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")
 EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL = Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")
 EffectVariant.HEAVEN_DOOR_FAST_TRAVEL        = Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")
+EffectVariant.VOID_PORTAL_FAST_TRAVEL        = Isaac.GetEntityVariantByName("Void Portal (Fast-Travel)")
+EffectVariant.MEGA_SATAN_TRAPDOOR            = Isaac.GetEntityVariantByName("Mega Satan Trapdoor")
 EffectVariant.PITFALL_CUSTOM                 = Isaac.GetEntityVariantByName("Pitfall (Custom)")
 EffectVariant.ROOM_CLEAR_DELAY               = Isaac.GetEntityVariantByName("Room Clear Delay")
 EffectVariant.CRACK_THE_SKY_BASE             = Isaac.GetEntityVariantByName("Crack the Sky Base")
@@ -154,6 +155,7 @@ CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Div
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder 2")
 CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder 3")
 CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE = Isaac.GetItemIdByName("Mutant Spider's Inner Eye")
+CollectibleType.COLLECTIBLE_MEGA_SATAN_TELEPORT     = Isaac.GetItemIdByName("Mega Satan Teleport")
 CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
 CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE         = Isaac.GetItemIdByName("Samael Dead Eye")
 CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Samael Chocolate Milk")
@@ -239,7 +241,6 @@ function g:InitRun()
   g.run.metKrampus        = false
   g.run.movingBoxOpen     = true
   g.run.killedLamb        = false -- Used for the "Everything" race goal
-  g.run.finishedBossRush  = false
   g.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
   g.run.PHDPills          = false -- Used to determine when to change the pill text
   g.run.haveWishbone      = false
@@ -255,7 +256,6 @@ function g:InitRun()
   g.run.replacedHeavenDoors = {}
   g.run.reseedCount         = 0
   g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
-  g.run.playedSad           = false
 
   -- Tracking per room
   g.run.currentRoomClearState = true
@@ -284,6 +284,7 @@ function g:InitRun()
 
   -- Temporary tracking
   g.run.restart              = false -- If set, we restart the run on the next frame
+  g.run.diversity            = false -- Whether or not this is a diversity race
   g.run.b1HasCurse           = false
   g.run.reseededFloor        = false
   g.run.goingToDebugRoom     = false
@@ -317,6 +318,7 @@ function g:InitRun()
   g.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
   g.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
   g.run.pickingUpItem        = 0 -- Equal to the ID of the currently queued item
+  g.run.pickingUpItemRoom    = 0 -- Equal to the room that we picked up the currently queued item
   g.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
   g.run.lastDDLevel          = 0 -- Used by the Soul Jar
   g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul
@@ -325,9 +327,13 @@ function g:InitRun()
   g.run.showVersionFrame     = 0
   g.run.bombKeyPressed       = false
   g.run.spawningAngel        = false
-  g.run.bossCommand          = false
+  g.run.bossCommand          = false -- Used in Racing+ Rebalanced
   g.run.questionMarkCard     = 0 -- Equal to the last game frame that one was used
   g.run.gettingCollectible   = false
+  g.run.chaosCardTears       = false -- Used while debugging
+  g.run.dealingExtraDamage   = false -- Used for Hush
+  g.run.firingExtraTear      = false -- Used for Hush
+  g.run.mahalathRoomIndex    = -1000
 
   -- Transformations
   g.run.transformations = {}
@@ -337,11 +343,13 @@ function g:InitRun()
 
   -- Trapdoor tracking
   g.run.trapdoor = {
-    state     = 0, -- See FastTravel.state for enum definitions
-    upwards   = false,
-    floor     = 0,
-    frame     = 0,
-    scale     = {},
+    state      = 0, -- See FastTravel.state for enum definitions
+    upwards    = false,
+    floor      = 0,
+    frame      = 0,
+    scale      = {},
+    voidPortal = false,
+    megaSatan  = false,
   }
 
   -- Crawlspace tracking
@@ -373,7 +381,6 @@ function g:InitRun()
     lastRoomItem      = 0,     -- Used to prevent bugs with GLowing Hour Glass
     lastRoomCharges   = 0,     -- Used to prevent bugs with GLowing Hour Glass
     nextRoomCharge    = false, -- Used to prevent bugs with GLowing Hour Glass
-    bossRushActive    = false, -- Used for giving a charge when the Boss Rush starts
   }
 
   -- Soul Jar tracking
@@ -383,7 +390,8 @@ function g:InitRun()
   g.run.seededDeath = {
     state           = 0, -- See the "SeededDeath.state" enum
     stage           = 0,
-    deathFrame      = 0,
+    reviveFrame     = 0,
+    guppysCollar    = false,
     pos             = g.zeroVector,
     time            = 0,
     items           = {},
@@ -391,7 +399,14 @@ function g:InitRun()
     spriteScale     = g.zeroVector,
     goldenBomb      = false,
     goldenKey       = false,
-    dealTime        = Isaac.GetTime(),
+  }
+
+  -- Custom Boss Rush tracking
+  g.run.bossRush = {
+    started = false,
+    finished = false,
+    currentWave = 0,
+    waves = {},
   }
 
   -- Special room seeding
@@ -519,6 +534,19 @@ function g:TableContains(t, v2)
   return false
 end
 
+function g:TableFind(t, el)
+  for index, value in pairs(t) do
+    if value == el then
+      return index
+    end
+  end
+end
+
+function g:TableRemove(t, el)
+  local index = g:TableFind(t, el)
+  table.remove(t, index)
+end
+
 function g:GetTotalItemCount()
   -- In vanilla, there are 552 items, but CollectibleType has 554 values
   -- This is because of the "COLLECTIBLE_NULL" and the "NUM_COLLECTIBLES" keys
@@ -539,30 +567,6 @@ function g:ExecuteCommand(command)
   Isaac.DebugString("Executing command: " .. command)
   Isaac.ExecuteCommand(command)
   Isaac.DebugString("Finished executing command: " .. command)
-end
-
--- From the ProAPI
-function g:RevivePlayer(item)
-  -- Local variables
-  local previousRoomIndex = g.l:GetPreviousRoomIndex()
-  local character = g.p:GetPlayerType()
-
-  if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-    -- The "Revive()" function is bugged with The Forgotton;
-    -- he will be revived with one soul heart unless he is given a bone heart first
-    g.p:AddBoneHearts(1)
-  elseif character == PlayerType.PLAYER_THESOUL then -- 17
-    -- If we died on The Soul, we want to remove all of The Forgotton's bone hearts,
-    -- emulating what happens if you die with Dead Cat
-    g.p:AddBoneHearts(-24)
-    g.p:AddBoneHearts(1)
-  end
-  g.p:Revive()
-  local enterDoor = g.l.EnterDoor
-  local door = g.r:GetDoor(enterDoor)
-  local direction = door and door.Direction or Direction.NO_DIRECTION
-  g.g:StartRoomTransition(previousRoomIndex, direction, 0)
-  g.l.LeaveDoor = enterDoor
 end
 
 function g:ConvertTimeToString(time)
@@ -647,7 +651,6 @@ g.bossArray = {
   {62, 2, 0}, -- Frail
   {62, 2, 1}, -- Frail (black)
   {63, 0, 0}, -- Famine
-  {63, 0, 1}, -- Famine (blue)
   {63, 0, 1}, -- Famine (blue)
   {64, 0, 0}, -- Pestilence
   {64, 0, 1}, -- Pestilence (white)
@@ -741,6 +744,7 @@ g.bossArray = {
   {409, 0, 0}, -- Rag Mega
   {410, 0, 0}, -- Sisters Vis
   {411, 0, 0}, -- Big Horn
+  {413, 0, 0}, -- The Matriarch
 }
 
 -- Used to fix Greed's Gullet bugs

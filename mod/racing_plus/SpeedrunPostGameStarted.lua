@@ -1,9 +1,10 @@
 local SpeedrunPostGameStarted = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Speedrun  = require("racing_plus/speedrun")
-local Schoolbag = require("racing_plus/schoolbag")
+local g                   = require("racing_plus/globals")
+local RacePostGameStarted = require("racing_plus/racepostgamestarted")
+local Speedrun            = require("racing_plus/speedrun")
+local Schoolbag           = require("racing_plus/schoolbag")
 
 function SpeedrunPostGameStarted:Main()
   -- Local variables
@@ -106,20 +107,20 @@ function SpeedrunPostGameStarted:Main()
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS5)
       Speedrun.selectedItemStarts = {}
 
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-           challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
-
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS6)
       Isaac.DebugString("S6 - Reset remaining item starts.")
       if Isaac.GetTime() - Speedrun.timeItemAssigned >= Speedrun.itemLockTime then
         Speedrun.selectedItemStarts = {}
         Isaac.DebugString("S6 - Reset selected item starts.")
       end
+
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+      Speedrun.remainingGoals = g:TableClone(Speedrun.goalsS7)
+      Speedrun.completedGoals = {}
     end
   end
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
-
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
     Isaac.DebugString("S6 - Selected item starts:")
     if #Speedrun.selectedItemStarts == 0 then
       Isaac.DebugString("  - [none]")
@@ -132,11 +133,10 @@ function SpeedrunPostGameStarted:Main()
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but Season 4, Season 6, Season 7, and Seeded never get it, since there is no resetting involved)
+  -- (but Season 4, Season 6, and Seeded never get it, since there is no resetting involved)
   if Speedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
       challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
       not Speedrun.inSeededSpeedrun) then
 
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
@@ -701,7 +701,30 @@ function SpeedrunPostGameStarted:R7S6()
 end
 
 function SpeedrunPostGameStarted:R7S7()
+  -- Local variables
+  local character = g.p:GetPlayerType()
+
   Isaac.DebugString("In the R+7 (Season 7) challenge.")
+
+  -- Lilith starts with an extra Incubus
+  if character == PlayerType.PLAYER_LILITH then -- 13
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_INCUBUS, 0, false) -- 360
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
+
+    -- Don't show it on the item tracker
+    Isaac.DebugString("Removing collectible 360 (Incubus)")
+
+    -- If we switch characters, we want to remove the extra Incubus
+    g.run.extraIncubus = true
+  end
+
+  -- Give the 5 random diversity items
+  RacePostGameStarted:Diversity()
+
+  -- Remove some powerful items from all pools
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_IPECAC) -- 149
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MEGA_SATANS_BREATH) -- 441
 end
 
 function SpeedrunPostGameStarted:R7SS()

@@ -26,8 +26,7 @@ function PostEntityKill:FadeBosses(entity)
   -- reset the starting item timer if they have killed the Basement 2 boss
   local stage = g.l:GetStage()
   local challenge = Isaac.GetChallenge()
-  if (challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
      stage == 2 then
 
     Speedrun.timeItemAssigned = 0
@@ -70,14 +69,14 @@ function PostEntityKill:Entity78(entity)
   local challenge = Isaac.GetChallenge()
 
   -- Don't do anything if we are fighting Mom's Heart / It Lives on The Void
-  if stage == LevelStage.STAGE7 then -- 12
+  if stage == 12 then
     return
   end
 
   -- For some reason, Mom's Heart / It Lives! will die twice in a row on two subsequent frames
   -- (this does not happen on Hush)
   -- We don't want to do anything if this is the first time it died
-  if stage ~= LevelStage.STAGE4_3 and -- 9
+  if stage ~= 9 and
      gameFrameCount - g.run.itLivesKillFrame > 1 then
 
     g.run.itLivesKillFrame = gameFrameCount
@@ -96,7 +95,7 @@ function PostEntityKill:Entity78(entity)
   local posCenter = Vector(320, 280)
   local posCenterLeft = Vector(280, 280)
   local posCenterRight = Vector(360, 280)
-  if stage == LevelStage.STAGE4_3 then -- 9
+  if stage == 9 then
     -- The positions are different for the Blue Womb; they are more near the top wall
     posCenter = Vector(600, 280)
     posCenterLeft = Vector(560, 280)
@@ -105,6 +104,7 @@ function PostEntityKill:Entity78(entity)
 
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
   local situations = {
+    NEITHER = 0,
     BEAM_OF_LIGHT = 1,
     TRAPDOOR = 2,
     BOTH = 3,
@@ -114,6 +114,7 @@ function PostEntityKill:Entity78(entity)
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
+     challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") or
      Speedrun.inSeededSpeedrun or
      (g.race.status == "in progress" and g.race.goal == "Blue Baby") or
      (g.race.status == "in progress" and g.race.goal == "Everything") then
@@ -131,15 +132,20 @@ function PostEntityKill:Entity78(entity)
     situation = situations.TRAPDOOR
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
 
-    -- Season 3 and 6 speedruns alternate between Cathedral / The Chest and Sheol / the Dark Room,
+    -- Some speedruns alternate between Cathedral / The Chest and Sheol / the Dark Room,
     -- starting with Cathedral / The Chest
     situation = Speedrun.charNum % 2
     if situation == 0 then
       situation = situations.TRAPDOOR
     end
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+         entity.Type == EntityType.ENTITY_HUSH then -- 78
+
+    -- In season 7, Hush is an endpoint
+    situation = situations.NEITHER
 
   else
     -- We can potentially go in either direction
@@ -171,20 +177,44 @@ function PostEntityKill:Entity78(entity)
     end
   end
 
+  -- Handle special things for Season 7
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+     entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78
+
+    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
+    if g:TableContains(Speedrun.remainingGoals, "It Lives!") then
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+                g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    end
+
+    -- Perform some path validation for Season 7
+    if situation ~= situations.NEITHER and
+       not g:TableContains(Speedrun.remainingGoals, "Blue Baby") and
+       not g:TableContains(Speedrun.remainingGoals, "The Lamb") and
+       not g:TableContains(Speedrun.remainingGoals, "Mega Satan") and
+       not g:TableContains(Speedrun.remainingGoals, "Mahalath") then
+
+       situation = situations.NEITHER
+    end
+  end
+
   -- Do the appropriate action depending on the situation
-  if situation == 1 then
+  if situation == situations.NEITHER then
+    Isaac.DebugString("It Lives! or Hush killed; situation 0 - neither up nor down.")
+
+  elseif situation == situations.BEAM_OF_LIGHT then
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
     -- It will get replaced with the fast-travel version on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
     g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, g.zeroVector, g.p, 0, 0)
     Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
 
-  elseif situation == 2 then
+  elseif situation == situations.TRAPDOOR then
     -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenter, true) -- 17
     Isaac.DebugString("It Lives! or Hush killed; situation 2 - only down.")
 
-  elseif situation == 3 then
+  elseif situation == situations.BOTH then
     -- Spawn both a trapdoor and a beam of light
     -- They will get replaced with the fast-travel versions on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
@@ -196,17 +226,28 @@ function PostEntityKill:Entity78(entity)
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
 
-  if entity.Type == EntityType.ENTITY_HUSH then -- 407
-    -- Manually open the Void door if we just killed Hush
-    g.r:TrySpawnTheVoidDoor()
+  -- Finally, perform extra activities if we killed Hush
+  if entity.Type ~= EntityType.ENTITY_HUSH then -- 407
+    return
+  end
 
-    if g.race.status == "in progress" and
-       g.race.goal == "Hush" then
+  -- Season 7 speedruns end at Hush
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    return
+  end
 
-      -- Spawn a big chest (which will get replaced with a trophy on the next frame)
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-      g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
-    end
+  -- Manually open the Void door
+  g.r:TrySpawnTheVoidDoor()
+
+  if g.race.status == "in progress" and
+      g.race.goal == "Hush" then
+
+    -- Spawn a big chest (which will get replaced with a trophy on the next frame)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
   end
 end
 

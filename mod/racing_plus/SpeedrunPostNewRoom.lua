@@ -14,6 +14,8 @@ function SpeedrunPostNewRoom:Main()
   SpeedrunPostNewRoom:CheckCurseRoom()
   SpeedrunPostNewRoom:CheckSacrificeRoom()
   SpeedrunPostNewRoom:RemoveVetoButton()
+  SpeedrunPostNewRoom:Season7Stage11()
+  SpeedrunPostNewRoom:Season7SpawnMahalath()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -24,7 +26,7 @@ function SpeedrunPostNewRoom:Womb2Error()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local gridSize = g.r:GetGridSize()
 
-  if stage ~= LevelStage.STAGE4_2 then -- 8
+  if stage ~= 8 then
     return
   end
 
@@ -177,8 +179,7 @@ function SpeedrunPostNewRoom:CheckCurseRoom()
   local challenge = Isaac.GetChallenge()
 
   if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_CURSE or -- 10
@@ -210,8 +211,7 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
   local challenge = Isaac.GetChallenge()
 
   if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
      roomType ~= RoomType.ROOM_SACRIFICE then -- 13
@@ -245,8 +245,7 @@ function SpeedrunPostNewRoom:RemoveVetoButton()
     roomIndex = g.l:GetCurrentRoomIndex()
   end
   local challenge = Isaac.GetChallenge()
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
      stage ~= 1 or
      roomIndex ~= startingRoomIndex or
      g.run.roomsEntered == 1 then
@@ -255,6 +254,68 @@ function SpeedrunPostNewRoom:RemoveVetoButton()
   end
 
   g.r:RemoveGridEntity(117, 0, false)
+end
+
+function SpeedrunPostNewRoom:Season7Stage11()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+  local startingRoomIndex = g.l:GetStartingRoomIndex()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+     stage ~= 11 or
+     roomIndexUnsafe ~= startingRoomIndex then
+
+    return
+  end
+
+  -- Spawn a Void Portal if we still need to go to Mahalath
+  if g:TableContains(Speedrun.remainingGoals, "Mahalath") then
+    local trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.VOID_PORTAL_FAST_TRAVEL, -- 1000
+                              g:GridToPos(1, 1), g.zeroVector, nil, 0, 0)
+    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+  end
+
+  -- Spawn the Mega Satan trapdoor if we still need to go to Mega Satan
+  -- and we are on the second character or beyond
+  -- (the normal Mega Satan door does not appear on custom challenges that have a goal set to Blue Baby)
+  if g:TableContains(Speedrun.remainingGoals, "Mega Satan") then
+     --Speedrun.charNum >= 2 then
+
+    local trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MEGA_SATAN_TRAPDOOR, -- 1000
+                               g:GridToPos(11, 1), g.zeroVector, nil, 0, 0)
+    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+  end
+end
+
+function SpeedrunPostNewRoom:Season7SpawnMahalath()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+  local centerPos = g.r:GetCenterPos()
+  local isClear = g.r:IsClear()
+  local challenge = Isaac.GetChallenge()
+
+  -- In season 7 speedruns, we replace one of the bosses in The Void with Mahalath
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+     stage ~= 12 or
+     roomIndexUnsafe ~= g.run.mahalathRoomIndex or
+     isClear then
+
+    return
+  end
+
+  -- Remove all enemies
+  for _, entity in ipairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      entity:Remove()
+    end
+  end
+
+  -- Spawn Mahalath
+  g.g:Spawn(Isaac.GetEntityTypeByName("Mahalath"), 0, centerPos, g.zeroVector, nil, 0, 0)
 end
 
 return SpeedrunPostNewRoom

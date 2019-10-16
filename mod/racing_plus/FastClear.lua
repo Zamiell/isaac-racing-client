@@ -16,6 +16,7 @@ FastClear.roomClearAwardRNG = 0
 -- the "FastClear:PostNPCInit()" function (upon entering a new room)
 FastClear.aliveEnemies = {}
 FastClear.aliveEnemiesCount = 0
+FastClear.aliveBossesCount = 0
 FastClear.roomInitializing = false -- Set to true in the MC_POST_NEW_ROOM callback
 FastClear.delayFrame = 0
 
@@ -59,6 +60,7 @@ function FastClear:InitRun()
 
   FastClear.aliveEnemies = {}
   FastClear.aliveEnemiesCount = 0
+  FastClear.aliveBossesCount = 0
   FastClear.buttonsAllPushed = false
   FastClear.roomInitializing = false
   FastClear.delayFrame = 0
@@ -111,6 +113,7 @@ end
 function FastClear:PostNPCInit(npc)
   -- Local variables
   local roomFrameCount = g.r:GetFrameCount()
+  local isBoss = npc:IsBoss()
 
   --[[
   local index = GetPtrHash(npc)
@@ -161,14 +164,19 @@ function FastClear:PostNPCInit(npc)
 
     FastClear.aliveEnemies = {}
     FastClear.aliveEnemiesCount = 0
+    FastClear.aliveBossesCount = 0
     FastClear.roomInitializing = true -- This will get set back to false in the MC_POST_NEW_ROOM callback
     FastClear.delayFrame = 0
     Isaac.DebugString("Reset fast-clear variables.")
   end
 
   -- Keep track of the enemies in the room that are alive
-  FastClear.aliveEnemies[index] = true
+  FastClear.aliveEnemies[index] = isBoss
   FastClear.aliveEnemiesCount = FastClear.aliveEnemiesCount + 1
+  if isBoss then
+    FastClear.aliveBossesCount = FastClear.aliveBossesCount + 1
+  end
+
   --[[
   Isaac.DebugString("Added NPC " ..
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
@@ -271,8 +279,13 @@ function FastClear:CheckDeadNPC(npc)
   end
 
   -- Keep track of the enemies in the room that are alive
+  local isBoss = FastClear.aliveEnemies[index]
   FastClear.aliveEnemies[index] = nil
   FastClear.aliveEnemiesCount = FastClear.aliveEnemiesCount - 1
+  if isBoss then
+    FastClear.aliveBossesCount = FastClear.aliveBossesCount - 1
+  end
+
   --[[
   Isaac.DebugString("Removed NPC " ..
                     tostring(npc.Type) .. "." .. tostring(npc.Variant) .. "." ..
@@ -430,8 +443,9 @@ function FastClear:ClearRoom()
 
     -- Try to spawn the Blue Womb door
     if stage == 8 and
-       g.race.status == "in progress" and
-       g.race.goal == "Hush" then
+       ((g.race.status == "in progress" and g.race.goal == "Hush") or
+        (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+         g:TableContains(Speedrun.remainingGoals, "Hush"))) then
 
       g.r:TrySpawnBlueWombDoor(true, true)
     end
@@ -452,7 +466,7 @@ function FastClear:ClearRoom()
 
     -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
 
   else
     -- Spawn the award for clearing the room (the pickup, chest, etc.)
@@ -501,6 +515,7 @@ function FastClear:SpawnPhotos()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
 
+  -- Only spawn the photos after the boss of Depths 2
   if stage ~= 6 or
      roomType ~= RoomType.ROOM_BOSS then -- 5
 

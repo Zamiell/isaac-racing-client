@@ -76,6 +76,16 @@ Speedrun.itemStartsS6 = {
   },
 }
 
+Speedrun.goalsS7 = {
+  "Boss Rush",
+  "It Lives!",
+  "Hush",
+  "Blue Baby",
+  "The Lamb",
+  "Mega Satan",
+  "Mahalath",
+}
+
 Speedrun.big4 = {
   CollectibleType.COLLECTIBLE_MOMS_KNIFE, -- 114
   CollectibleType.COLLECTIBLE_TECH_X, -- 395
@@ -83,7 +93,7 @@ Speedrun.big4 = {
   CollectibleType.COLLECTIBLE_IPECAC, -- 149
 }
 
--- Season 6 & Season 7 constants
+-- Season 6 constants
 Speedrun.itemLockTime = 60 * 1000 -- 1 minute
 -- (this is how long the randomly-selected item start be "locked-in")
 Speedrun.vetoButtonLength = 5 * 60 * 1000 -- 5 minutes
@@ -132,13 +142,17 @@ Speedrun.liveSplitReset = false
 Speedrun.remainingItemStarts = {} -- Reset at the beginning of a new run on the first character
 Speedrun.selectedItemStarts = {} -- Reset at the beginning of a new run on the first character
 
--- Season 6 & 7 variables
+-- Season 6 variables
 Speedrun.timeItemAssigned = 0 -- Reset when the time limit elapses
 Speedrun.lastBuildItem = 0 -- Set when a new build is assigned
 Speedrun.lastBuildItemOnFirstChar = 0 -- Set when a new build is assigned on the first character
 Speedrun.vetoList = {}
 Speedrun.vetoSprites = {}
 Speedrun.vetoTimer = 0
+
+-- Season 7 variables
+Speedrun.remainingGoals = {} -- Reset at the beginning of a new run on the first character
+Speedrun.completedGoals = {} -- Reset at the beginning of a new run on the first character
 
 -- Seeded season variables
 Speedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
@@ -163,6 +177,67 @@ function Speedrun:Finish()
   g.sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
 
   -- Fireworks will play on the next frame (from the PostUpdate callback)
+end
+
+function Speedrun:PostNewLevel()
+  local challenge = Isaac.GetChallenge()
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    return
+  end
+
+  local stage = g.l:GetStage()
+  if stage ~= 12 then
+    return
+  end
+
+  -- Put Mahalath in the first 1x1 boss room
+  local rooms = g.l:GetRooms()
+  for i = 0, rooms.Size - 1 do -- This is 0 indexed
+    local roomDesc = rooms:Get(i)
+    local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
+    local roomData = roomDesc.Data
+    local roomType = roomData.Type
+    local roomShape = roomData.Shape
+
+    if roomType == RoomType.ROOM_BOSS then -- 5
+      local room = g.l:GetRoomByIdx(roomIndex) -- We have use this function in order to modify the DisplayFlags
+      if g.run.mahalathRoomIndex == -1000 and
+         roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
+
+        g.run.mahalathRoomIndex = roomIndex
+        Isaac.DebugString("Set the Mahalath room to: " .. tostring(g.run.mahalathRoomIndex))
+        room.DisplayFlags = 1 << 2 -- Show the icon
+
+      else
+        room.DisplayFlags = 1 << -1 -- Remove the icon (in case we have the Compass or The Mind)
+      end
+    end
+  end
+  g.l:UpdateVisibility()
+end
+
+function Speedrun:RoomCleared()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+  local challenge = Isaac.GetChallenge()
+
+  -- Check to see if we just defeated Mahalath on a Season 7 speedrun
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+     stage == 12 and
+     roomIndexUnsafe == g.run.mahalathRoomIndex then
+
+    -- Delete the collectible that spawns as a reward
+    local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                          -1, false, false)
+    for _, collectible in ipairs(collectibles) do
+      collectible:Remove()
+    end
+
+    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
+              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+  end
 end
 
 -- Don't move to the first character of the speedrun if we die
@@ -247,7 +322,7 @@ function Speedrun:CheckValidCharOrder()
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
          (charOrderType ~= "R7S7" or
-          #g.race.charOrder ~= 1 + 7 + 1 + ChangeCharOrder.seasons.R7S7.itemBans) then
+          #g.race.charOrder ~= 8) then
 
     return false
 
@@ -303,14 +378,14 @@ end
 function Speedrun:PreventD6()
   -- Local variables
   local stage = g.l:GetStage()
-  local currentIndex = g.l:GetCurrentRoomIndex()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
 
   -- Prevent re-rolling the "Finished" custom item that is spawned in the first room of the first character
   if not Speedrun.inSeededSpeedrun or
      Speedrun.charNum ~= 1 or
      stage ~= 1 or
-     currentIndex ~= startingRoomIndex then
+     roomIndexUnsafe ~= startingRoomIndex then
 
     return
   end

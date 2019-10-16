@@ -256,8 +256,7 @@ function Timer:DisplaySecond()
       adjustTimerRight = true
     end
 
-  elseif (challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
          Speedrun.charNum == 1 and
          g.run.roomsEntered == 1 then
 

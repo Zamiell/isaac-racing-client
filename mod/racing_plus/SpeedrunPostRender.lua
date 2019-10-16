@@ -98,7 +98,7 @@ function SpeedrunPostRender:DisplayCharProgress()
       fileName = "S5"
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       fileName = "S6"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
       fileName = "S7"
     elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
       fileName = "V"
@@ -178,8 +178,7 @@ end
 
 function SpeedrunPostRender:DrawVetoButtonText()
   local challenge = Isaac.GetChallenge()
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
      Speedrun.charNum ~= 1 or
      g.run.roomsEntered ~= 1 then
 
@@ -203,6 +202,31 @@ function SpeedrunPostRender:DrawVetoButtonText()
     local string = "Veto"
     local length = g.font:GetStringWidthUTF8(string)
     g.font:DrawString(string, pos.X - (length / 2), pos.Y, g.kcolor, 0, true)
+  end
+end
+
+function SpeedrunPostRender:DrawSeason7Goals()
+  -- Only show the remaining goals if the user is pressing tab
+  local tabPressed = false
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
+      tabPressed = true
+      break
+    end
+  end
+  if not tabPressed then
+    return
+  end
+
+  -- Draw the remaining goals on the screen for easy-reference
+  local x = 80
+  local y = 75
+  g.font:DrawString("Remaining Goals:", x + 15, y - 9, g.kcolor, 0, true)
+
+  for i, goal in ipairs(Speedrun.remainingGoals) do
+    y = 75 + (20 * i)
+    local string = "- " .. tostring(goal)
+    g.font:DrawString(string, x + 15, y - 9, g.kcolor, 0, true)
   end
 end
 
@@ -250,9 +274,9 @@ function SpeedrunPostRender:CheckSeason5ModOther()
   Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
 end
 
-function SpeedrunPostRender:CheckSeason7Mod()
+function SpeedrunPostRender:CheckSeasonXMod()
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season X Beta)") then
     return
   end
 
@@ -267,15 +291,15 @@ function SpeedrunPostRender:CheckSeason7Mod()
   y = y + 10
   Isaac.RenderText("\"Racing+ Rebalanced\" mod on the Steam Workshop", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("in order for the Racing+ season 7 custom", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("in order for the Racing+ season X custom", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
 end
 
-function SpeedrunPostRender:CheckSeason7ModOther()
+function SpeedrunPostRender:CheckSeasonXModOther()
   local challenge = Isaac.GetChallenge()
   if not Speedrun:InSpeedrun() or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season X Beta)") then
 
     return
   end

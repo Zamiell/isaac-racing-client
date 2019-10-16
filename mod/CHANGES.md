@@ -101,6 +101,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Identified pills (up to 7) will be shown when the player presses Tab.
 * Diagonal knife throws have a 3-frame window instead of a 1-frame window.
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
+* The Boss Rush is modified to include the Afterbirth+ bosses and Chapter 4 bosses.
 * Pin's first attack happens on the 15th frame (instead of the 73rd frame).
 * Cod Worms are replaced with Para-Bites.
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
@@ -189,5 +190,3 @@ Racing+ has [several custom challenges](https://github.com/Zamiell/isaac-racing-
 ## Individual Room Changes
 
 The technical specifics of all of the individual room changes are listed in a [separate page](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-ROOM.md).
-
-<br />

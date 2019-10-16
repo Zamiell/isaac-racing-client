@@ -1,5 +1,9 @@
 # Racing+ Race Formats
 
+On Racing+, players have the option to choose from different kinds of races.
+
+<br />
+
 ## Unseeded
 
 * Historically, most races have been unseeded. This means that both players start with the same character but play on different seeds.
@@ -11,6 +15,8 @@
     * Tech X --> Crown of Light
     * Epic Fetus --> Sacred Heart
     * Ipecac --> Mutant Spider + The Inner Eye
+
+<br />
 
 ## Seeded
 
@@ -37,11 +43,15 @@
 * Lucky Foot is removed from all pools.
 * The Cain's Eye, Broken Ankh, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe, Safety Cap, Ace of Spades, and Watch Battery trinkets are removed from the trinket pool.
 
+<br />
+
 ## Diversity
 
 * Diversity races are similar to unseeded races in that each player plays on different seeds and is allowed to reset as much as they want.
 * However, each racer starts with the same five random items. (This is in addition to the character's original passive items and resources.)
 * For additional information, see [the documentation for diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md).
+
+<br />
 
 ## Custom
 
@@ -50,24 +60,36 @@
 * Make sure that everyone in the race knows the rules before starting.
 * This option is used for multi-character speedrun races.
 
+<br />
+
 # Racing+ Race Goals
+
+On Racing+, players have the option for races to end at different places.
+
+<br />
 
 ## Blue Baby
 
 * Historically, most races have had the goal of killing Blue Baby, the boss at the end of The Chest.
 * There are no additional changes to the game for this goal.
 
+<br />
+
 ## The Lamb
 
 * The Lamb is the boss at the end of the Dark Room.
-* 4 gold chests will now spawn at the beginning of the Dark Room (instead of red chests).
+* In Racing+, 4 gold chests will always spawn at the beginning of the Dark Room (instead of 4 red chests).
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+<br />
 
 ## Mega Satan
 
 * Mega Satan is the boss behind the giant locked door. Players are allowed to take either path to get to Mega Satan.
 * The door to Mega Satan will automatically open upon reaching The Chest or the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+<br />
 
 ## Everything
 
@@ -80,6 +102,8 @@
 * After defeating The Lamb, backtrack to the starting room and the Mega Satan door will automatically open.
 * Defeat Mega Satan to complete the run.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
+
+<br />
 
 ## Custom
 

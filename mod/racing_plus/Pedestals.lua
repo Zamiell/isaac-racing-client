@@ -104,8 +104,7 @@ function RPPedestals:Replace(pickup)
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
        Speedrun.charNum >= 2) or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")) and
      stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      pickup.SubType ~= CollectibleType.COLLECTIBLE_OFF_LIMITS then -- 235
@@ -149,8 +148,8 @@ function RPPedestals:Replace(pickup)
   local specialReroll = 0
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
-     (g.race.rFormat == "diversity" and
-      g.race.status == "in progress") then
+     ((g.race.rFormat == "diversity" and g.race.status == "in progress") or
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
 
     if pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
@@ -192,6 +191,7 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this item should go into a Schoolbag
   if Schoolbag:CheckSecondItem(pickup) then
+    Isaac.DebugString("Schoolbag:CheckSecondItem XXX")
     return
   end
 

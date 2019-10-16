@@ -106,7 +106,7 @@ function ExecuteCmd:Main(cmd, params)
     g.p:UseCard(Card.CARD_JOKER) -- 31
 
   elseif cmd == "cc" then
-    g.p:AddCard(Card.CARD_CHAOS) -- 42
+    g.run.chaosCardTears = not g.run.chaosCardTears
   end
 end
 

@@ -1,6 +1,6 @@
 local PostItemPickup = {}
 
--- These functions are mostly used to deposit items directly in the player's inventory, if there is room
+-- These functions are used to deposit items directly in the player's inventory, if there is room
 
 -- Includes
 local g = require("racing_plus/globals")
