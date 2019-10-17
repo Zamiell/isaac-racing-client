@@ -753,9 +753,10 @@ function SpeedrunPostGameStarted:R7SS()
 
   if Speedrun.charNum == 1 then
     -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
+    -- (we do not care about the seed because it should not be possible to roll this item)
     local finishedPosition = g:GridToPos(1, 1)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, g.zeroVector,
-              nil, CollectibleType.COLLECTIBLE_FINISHED, 0)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_FINISHED,
+                finishedPosition, g.zeroVector, nil)
   end
 end
 

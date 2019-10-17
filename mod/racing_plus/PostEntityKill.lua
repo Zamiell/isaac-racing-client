@@ -183,8 +183,8 @@ function PostEntityKill:Entity78(entity)
 
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     if g:TableContains(Speedrun.remainingGoals, "It Lives!") then
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-                g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+      Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                  g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
     end
 
     -- Perform some path validation for Season 7
@@ -192,7 +192,7 @@ function PostEntityKill:Entity78(entity)
        not g:TableContains(Speedrun.remainingGoals, "Blue Baby") and
        not g:TableContains(Speedrun.remainingGoals, "The Lamb") and
        not g:TableContains(Speedrun.remainingGoals, "Mega Satan") and
-       not g:TableContains(Speedrun.remainingGoals, "Mahalath") then
+       not g:TableContains(Speedrun.remainingGoals, "Ultra Greed") then
 
        situation = situations.NEITHER
     end
@@ -206,7 +206,8 @@ function PostEntityKill:Entity78(entity)
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
     -- It will get replaced with the fast-travel version on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenter, g.zeroVector, g.p, 0, 0)
+    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
+                posCenter, g.zeroVector, g.p)
     Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
 
   elseif situation == situations.TRAPDOOR then
@@ -219,7 +220,8 @@ function PostEntityKill:Entity78(entity)
     -- They will get replaced with the fast-travel versions on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, posCenterRight, g.zeroVector, g.p, 0, 0)
+    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
+                posCenterRight, g.zeroVector, g.p)
     Isaac.DebugString("It Lives! or Hush killed; situation 3 - up and down.")
   end
 
@@ -234,8 +236,8 @@ function PostEntityKill:Entity78(entity)
   -- Season 7 speedruns end at Hush
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
     return
   end
 
@@ -246,8 +248,8 @@ function PostEntityKill:Entity78(entity)
       g.race.goal == "Hush" then
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
   end
 end
 
@@ -323,9 +325,9 @@ function PostEntityKill:Entity81(entity)
     g.run.spawningKrampusItem = true
   end
 
-  -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-            pos, g.zeroVector, nil, subType, 0)
+  -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
+              pos, g.zeroVector, nil)
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -386,9 +388,9 @@ function PostEntityKill:Entity271(entity)
   -- We have to let the "ReplacePedestal()" function know that this is not a natural key piece pedestal
   g.run.spawningKeyPiece = true
 
-  -- Spawn it with a seed of 0 (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-            pos, g.zeroVector, nil, subType, 0)
+  -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
+              pos, g.zeroVector, nil)
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed

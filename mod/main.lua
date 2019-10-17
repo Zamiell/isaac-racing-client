@@ -217,7 +217,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Horf,
 -- Define entity damage callbacks (11)
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Player, -- 11
                        EntityType.ENTITY_PLAYER) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Hush, -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.RemoveArmor, -- 11
+                       EntityType.ENTITY_ULTRA_GREED) -- 406
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.RemoveArmor, -- 11
                        EntityType.ENTITY_HUSH) -- 407
 
 -- Define pre-use item callbacks (23)

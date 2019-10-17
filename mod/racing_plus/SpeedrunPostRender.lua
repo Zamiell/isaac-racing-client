@@ -210,7 +210,9 @@ function SpeedrunPostRender:DrawSeason7Goals()
   local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+     Speedrun.finished then
+
     return
   end
 

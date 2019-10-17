@@ -155,6 +155,7 @@ local validDiversityTrinkets = {
 }
 
 local extraTrinketBansS7 = {
+  TrinketType.TRINKET_BROKEN_REMOTE, -- 4
   TrinketType.TRINKET_OUROBOROS_WORM, -- 96
 }
 

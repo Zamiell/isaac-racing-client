@@ -557,29 +557,4 @@ function JrFetus:UpdateMissileTarget(entity)
     end
 end
 
-function JrFetus:PostNewRoom()
-  -- Local variables
-  local gameFrameCount = game:GetFrameCount()
-  local room = game:GetRoom()
-  local level = game:GetLevel()
-  local roomIndex = level:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = level:GetCurrentRoomIndex()
-  end
-  local challenge = Isaac.GetChallenge()
-  local sfx = SFXManager()
-
-  if gameFrameCount == 0 and
-     challenge == Isaac.GetChallengeIdByName("Jr. Fetus Practice") and
-     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
-
-    -- Stop the boss room sound effect
-    sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
-
-    -- Spawn her
-    Isaac.Spawn(drFetusType, 0, 0, room:GetCenterPos(), Vector(0, 0), nil)
-    Isaac.DebugString("Spawned Mahalath (for the practice challenge).")
-  end
-end
-
 return JrFetus

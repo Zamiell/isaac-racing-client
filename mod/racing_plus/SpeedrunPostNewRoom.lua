@@ -16,7 +16,7 @@ function SpeedrunPostNewRoom:Main()
   SpeedrunPostNewRoom:RemoveVetoButton()
   SpeedrunPostNewRoom:Season7Stage11()
   SpeedrunPostNewRoom:Season7Stage12()
-  SpeedrunPostNewRoom:Season7SpawnMahalath()
+  SpeedrunPostNewRoom:Season7SpawnStage12CustomBoss()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -57,7 +57,8 @@ function SpeedrunPostNewRoom:Womb2Error()
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
           -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
-          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, pos, g.zeroVector, g.p, 0, 0)
+          -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
+          Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, pos, g.zeroVector, g.p)
           Isaac.DebugString("Replaced a trapdoor with a beam of light.")
           return
         elseif direction == 2 then
@@ -271,21 +272,21 @@ function SpeedrunPostNewRoom:Season7Stage11()
     return
   end
 
-  -- Spawn a Void Portal if we still need to go to Mahalath
-  if g:TableContains(Speedrun.remainingGoals, "Mahalath") then
-    local trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.VOID_PORTAL_FAST_TRAVEL, -- 1000
-                              g:GridToPos(1, 1), g.zeroVector, nil, 0, 0)
+  -- Spawn a Void Portal if we still need to go to The Void
+  if g:TableContains(Speedrun.remainingGoals, "Ultra Greed") then
+    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.VOID_PORTAL_FAST_TRAVEL, 0, -- 1000
+                                 g:GridToPos(1, 1), g.zeroVector, nil)
     trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
   end
 
   -- Spawn the Mega Satan trapdoor if we still need to go to Mega Satan
   -- and we are on the second character or beyond
   -- (the normal Mega Satan door does not appear on custom challenges that have a goal set to Blue Baby)
-  if g:TableContains(Speedrun.remainingGoals, "Mega Satan") then
-     --Speedrun.charNum >= 2 then
+  if g:TableContains(Speedrun.remainingGoals, "Mega Satan") and
+     Speedrun.charNum >= 2 then
 
-    local trapdoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MEGA_SATAN_TRAPDOOR, -- 1000
-                               g:GridToPos(11, 1), g.zeroVector, nil, 0, 0)
+    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MEGA_SATAN_TRAPDOOR, 0, -- 1000
+                                 g:GridToPos(11, 1), g.zeroVector, nil)
     trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
   end
 end
@@ -293,7 +294,11 @@ end
 function SpeedrunPostNewRoom:Season7Stage12()
   -- Local variables
   local stage = g.l:GetStage()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local rooms = g.l:GetRooms()
+  local centerPos = g.r:GetCenterPos()
+  local isClear = g.r:IsClear()
+
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
@@ -304,7 +309,7 @@ function SpeedrunPostNewRoom:Season7Stage12()
     return
   end
 
-  -- Show the boss icon for the Mahalath room and remove of the other ones
+  -- Show the boss icon for the custom boss room and remove of the other ones
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
     local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
@@ -313,7 +318,7 @@ function SpeedrunPostNewRoom:Season7Stage12()
 
     if roomType == RoomType.ROOM_BOSS then -- 5
       local room = g.l:GetRoomByIdx(roomIndex) -- We have use this function in order to modify the DisplayFlags
-      if roomIndex == g.run.mahalathRoomIndex then
+      if roomIndex == g.run.customBossRoomIndex then
         room.DisplayFlags = 1 << 2 -- Show the icon
       else
         room.DisplayFlags = 1 << -1 -- Remove the icon (in case we have the Compass or The Mind)
@@ -321,35 +326,23 @@ function SpeedrunPostNewRoom:Season7Stage12()
     end
   end
   g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
-end
 
-function SpeedrunPostNewRoom:Season7SpawnMahalath()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-  local centerPos = g.r:GetCenterPos()
-  local isClear = g.r:IsClear()
-  local challenge = Isaac.GetChallenge()
+  -- Spawn the custom boss
+  if roomIndexUnsafe == g.run.customBossRoomIndex and
+     not isClear then
 
-  -- In season 7 speedruns, we replace one of the bosses in The Void with Mahalath
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
-     stage ~= 12 or
-     roomIndexUnsafe ~= g.run.mahalathRoomIndex or
-     isClear then
-
-    return
-  end
-
-  -- Remove all enemies
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    local npc = entity:ToNPC()
-    if npc ~= nil then
-      entity:Remove()
+    -- Remove all enemies
+    for _, entity in ipairs(Isaac.GetRoomEntities()) do
+      local npc = entity:ToNPC()
+      if npc ~= nil then
+        entity:Remove()
+      end
     end
-  end
 
-  -- Spawn Mahalath (the second, harder version)
-  g.g:Spawn(Isaac.GetEntityTypeByName("Mahalath"), 1, centerPos, g.zeroVector, nil, 0, 0)
+    -- Spawn Ultra Greed
+    Isaac.Spawn(EntityType.ENTITY_ULTRA_GREED, 0, 0, centerPos, g.zeroVector, nil) -- 406
+    --Isaac.Spawn(Isaac.GetEntityTypeByName("Mahalath"), 1, 0, centerPos, g.zeroVector, nil)
+  end
 end
 
 return SpeedrunPostNewRoom

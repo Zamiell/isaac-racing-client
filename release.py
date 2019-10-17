@@ -1,3 +1,4 @@
+
 """ This is the script that compiles and builds the Racing+ client. """
 
 # Standard imports
@@ -160,18 +161,10 @@ if not ARGS.skipmod:
         # By default, the JSON will be dumped in a random order, so we use "sort_keys" to make it alphabetical
         json.dump(HASHES, file_pointer, indent=4, sort_keys=True)
 
-    # Fill the "save.dat" file with all default values
-    # (we no longer have to bother with this, since the save.dat files are not copied to the official repo)
-    #SAVE_DAT_DEFAULTS = os.path.join(MOD_DIR, 'save-defaults.dat')
-    #for i in range(1, 4): # This will go from 1 to 3
-    #    save_dat = os.path.join(MOD_DIR, 'save' + str(i) + '.dat')
-    #    shutil.copyfile(SAVE_DAT_DEFAULTS, save_dat)
-
     # Copy the mod
     MOD_DIR2 = os.path.join(REPOSITORY_DIR, 'mod')
     if os.path.exists(MOD_DIR2):
         try:
-            #shutil.rmtree(MOD_DIR2) # Constantly errors out with "The process cannot access to the file because it is being used by another process"
             subprocess.call(['rm', '-rf', MOD_DIR2]) # Works on Windows if "GnuWinCoreutils-5.3.0.exe" is installed
         except Exception as err:
             error('Failed to remove the "' + MOD_DIR2 + '" directory:', err)
@@ -185,6 +178,16 @@ if not ARGS.skipmod:
     for i in range(1, 4): # This will go from 1 to 3
         save_dat = os.path.join(MOD_DIR2, 'save' + str(i) + '.dat')
         os.remove(save_dat)
+
+    # Delete any XML files in the rooms subdirectory
+    ROOMS_DIR = os.path.join(MOD_DIR2, 'resources', 'rooms')
+    for file_name in os.listdir(ROOMS_DIR):
+        if file_name.endswith('.xml'):
+            os.remove(os.path.join(ROOMS_DIR, file_name))
+    ROOMS_DIR2 = os.path.join(ROOMS_DIR, 'pre-flipping')
+    for file_name in os.listdir(ROOMS_DIR2):
+        if file_name.endswith('.xml'):
+            os.remove(os.path.join(ROOMS_DIR2, file_name))
 
 # Exit if we are only supposed to be doing work on the mod
 if ARGS.mod:

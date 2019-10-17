@@ -255,7 +255,7 @@ function PostPickupInit:Pickup340(pickup)
 
   elseif PostPickupInit.bigChestAction == "trophy" then
     -- Spawn the end of race/speedrun trophy
-    g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+    Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
     Isaac.DebugString("Spawned the end of race/speedrun trophy.")
     pickup:Remove()
 
@@ -390,7 +390,7 @@ function PostPickupInit:Pickup340_S7(pickup)
       g:TableContains(Speedrun.remainingGoals, "Mega Satan")) or
      (stage == 11 and stageType == 1 and g:TableContains(Speedrun.remainingGoals, "Blue Baby")) or
      (stage == 11 and stageType == 0 and g:TableContains(Speedrun.remainingGoals, "The Lamb")) or
-     (stage == 12 and g:TableContains(Speedrun.remainingGoals, "Mahalath")) then
+     (stage == 12 and g:TableContains(Speedrun.remainingGoals, "Ultra Greed")) then
 
     if Speedrun.charNum == 7 then
       PostPickupInit.bigChestAction = "trophy"
@@ -562,8 +562,8 @@ function PostPickupInit:Pickup370(pickup)
   -- It can be unpredicable whether a big chest or a trophy will spawn;
   -- so funnel all decision making through the Big Chest code
   Isaac.DebugString("Vanilla trophy detected; replacing it with a Big Chest.")
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-            g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+              g.r:GetCenterPos(), g.zeroVector, nil)
   pickup:Remove()
 end
 

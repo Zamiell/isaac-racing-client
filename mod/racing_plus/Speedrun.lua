@@ -83,7 +83,7 @@ Speedrun.goalsS7 = {
   "Blue Baby",
   "The Lamb",
   "Mega Satan",
-  "Mahalath",
+  "Ultra Greed",
 }
 
 Speedrun.big4 = {
@@ -193,7 +193,7 @@ function Speedrun:PostNewLevel()
     return
   end
 
-  -- Set Mahalath's room to be the first 1x1 boss room
+  -- Set the custom boss room to be the first 1x1 boss room
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
     local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
@@ -204,8 +204,8 @@ function Speedrun:PostNewLevel()
     if roomType == RoomType.ROOM_BOSS and -- 5
        roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
 
-      g.run.mahalathRoomIndex = roomIndex
-      Isaac.DebugString("Set the Mahalath room to: " .. tostring(g.run.mahalathRoomIndex))
+      g.run.customBossRoomIndex = roomIndex
+      Isaac.DebugString("Set the custom boss room to: " .. tostring(g.run.customBossRoomIndex))
       break
     end
   end
@@ -217,10 +217,10 @@ function Speedrun:RoomCleared()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local challenge = Isaac.GetChallenge()
 
-  -- Check to see if we just defeated Mahalath on a Season 7 speedrun
+  -- Check to see if we just defeated the custom boss on a Season 7 speedrun
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
      stage == 12 and
-     roomIndexUnsafe == g.run.mahalathRoomIndex then
+     roomIndexUnsafe == g.run.customBossRoomIndex then
 
     -- Delete the collectible that spawns as a reward
     local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
@@ -230,8 +230,8 @@ function Speedrun:RoomCleared()
     end
 
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
   end
 end
 

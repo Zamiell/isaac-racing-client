@@ -150,11 +150,12 @@ function PreEntitySpawn.CrackTheSky(variant, subType, position, spawner, seed)
     end
   end
 
-  -- Spawn an extra light effect so isaac spawns 4 lights instead of 2, makes things more interesting
+  -- Spawn an extra light effect (so that Isaac spawns 4 lights instead of 2, which makes things more interesting)
   if isaacSpawn and not g.run.spawningExtraLight then
     g.run.spawningExtraLight = true
+    local newSeed = g:IncrementRNG(seed)
     g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, -- 1000.19
-              newPosition, g.zeroVector, spawner, subType, seed + 1)
+              newPosition, g.zeroVector, spawner, subType, newSeed)
     g.run.spawningExtraLight = false
   end
 

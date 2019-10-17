@@ -36,34 +36,38 @@ function PreUseItem:Item97()
 
   if bookPickupType == 1 then
     -- Random Heart - 5.10.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, position, velocity,
-              g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 2 then
     -- Random Coin - 5.20.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 3 then
     -- Random Bomb - 5.40.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 4 then
     -- Random Key - 5.30.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_KEY,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 5 then
     -- Lil' Battery - 5.90.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY, position, velocity,
-              g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_LIL_BATTERY,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 6 then
     -- Random Pill - 5.70.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
 
   elseif bookPickupType == 7 then
     -- Random Card/Rune - 5.300.0
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, position, velocity,
-              g.p, 0, g.RNGCounter.BookOfSin)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
+              position, velocity, g.p, 0, g.RNGCounter.BookOfSin)
   end
 
   -- When we return from the function below, no animation will play, so we have to explitily perform one

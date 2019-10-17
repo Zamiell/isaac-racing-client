@@ -582,8 +582,6 @@ The changed rooms are as follows:
 
 * Donation Machines in shops were replaced with Random Props A.
 * Double Trouble room #3762 was changed to move the skulls away from the trapdoor (so that spawned Hosts would not interact with the trapdoor).
-* Boss room #9999 was added for the "Choose Char Order" custom challenge.
-* Boss room #9998 was added for the "Jr. Fetus Practice" and the "Mahalath Practice" custom challenges.
 
 <br />
 

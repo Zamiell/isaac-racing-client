@@ -149,8 +149,9 @@ end
 function SeededRooms:SpawnPedestalDevilRoom(x, y)
   -- The collectible will be manually chosen in the PreGetCollectible callback
   local pos = g:GridToPos(x, y)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_SHOPITEM, -- 5.150.0
-            pos, g.zeroVector, nil, 0, 0)
+  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_SHOPITEM, 0, -- 5.150.0
+              pos, g.zeroVector, nil)
+  -- (we do not care about the seed because it will be replaced on the next frame)
 end
 
 function SeededRooms:AngelRoom()
@@ -232,8 +233,9 @@ end
 function SeededRooms:SpawnPedestalAngelRoom(x, y)
   -- The collectible will be manually chosen in the PreGetCollectible callback
   local pos = g:GridToPos(x, y)
-  local entity = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100.0
-                           pos, g.zeroVector, nil, 0, 0)
+  local entity = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, -- 5.100.0
+                             pos, g.zeroVector, nil)
+  -- (we do not care about the seed because it will be replaced on the next frame)
   entity:ToPickup().TheresOptionsPickup = true
 end
 

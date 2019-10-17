@@ -218,14 +218,12 @@ function PostNewRoom:CheckSatanRoom()
   end
 
   local seed = roomSeed
-  g.g:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-            g:GridToPos(5, 3), g.zeroVector, nil, 0, seed)
   seed = g:IncrementRNG(seed)
-  g.g:Spawn(EntityType.ENTITY_LEECH, 1, -- 55.1 (Kamikaze Leech)
-            g:GridToPos(7, 3), g.zeroVector, nil, 0, seed)
+  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(5, 3), g.zeroVector, nil, 0, seed) -- 55.1 (Kamikaze Leech)
   seed = g:IncrementRNG(seed)
-  g.g:Spawn(EntityType.ENTITY_FALLEN, 0, -- 81.0 (The Fallen)
-            g:GridToPos(6, 3), g.zeroVector, nil, 0, seed)
+  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(7, 3), g.zeroVector, nil, 0, seed) -- 55.1 (Kamikaze Leech)
+  seed = g:IncrementRNG(seed)
+  g.g:Spawn(EntityType.ENTITY_FALLEN, 0, g:GridToPos(6, 3), g.zeroVector, nil, 0, seed) -- 81.0 (The Fallen)
 
   -- Prime the statue to wake up quicker
   local satans = Isaac.FindByType(EntityType.ENTITY_SATAN, -1, -1, false, false) -- 84
@@ -262,7 +260,7 @@ function PostNewRoom:CheckMegaSatanRoom()
     for i = 1, 20 do
       local pos = g.r:FindFreePickupSpawnPosition(g.p.Position, 50, true)
       -- Use a value of 50 to spawn them far from the player
-      local monstro = g.g:Spawn(EntityType.ENTITY_MONSTRO, 0, pos, g.zeroVector, nil, 0, 0)
+      local monstro = Isaac.Spawn(EntityType.ENTITY_MONSTRO, 0, 0, pos, g.zeroVector, nil)
       monstro.MaxHitPoints = 1000000
       monstro.HitPoints = 1000000
     end
@@ -310,6 +308,7 @@ function PostNewRoom:CheckScolexRoom()
       scolex:Remove() -- This takes a game frame to actually get removed
     end
 
+    local seed = roomSeed
     for i = 1, 2 do
       -- We don't want to spawn both of them on top of each other since that would make them behave a little glitchy
       local pos = g.r:GetCenterPos()
@@ -320,11 +319,12 @@ function PostNewRoom:CheckScolexRoom()
       end
       -- Note that pos.X += 200 causes the hitbox to appear too close to the left/right side,
       -- causing damage if the player moves into the room too quickly
-      local frail = g.g:Spawn(EntityType.ENTITY_PIN, 2, pos, g.zeroVector, nil, 0, roomSeed)
+      seed = g:IncrementRNG(seed)
+      local frail = g.g:Spawn(EntityType.ENTITY_PIN, 2, pos, g.zeroVector, nil, 0, seed)
       frail.Visible = false -- It will show the head on the first frame after spawning unless we do this
       -- The game will automatically make the entity visible later on
     end
-    Isaac.DebugString("Spawned 2 replacement Frails for Scolex with seed: " .. tostring(roomSeed))
+    Isaac.DebugString("Spawned 2 replacement Frails for Scolex.")
   end
 end
 
@@ -534,7 +534,7 @@ function PostNewRoom:CheckRespawnTrophy()
 
   -- We are re-entering a boss room after we have already spawned the trophy (which is a custom entity),
   -- so we need to respawn it
-  g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, g.r:GetCenterPos(), g.zeroVector, nil, 0, 0)
+  Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
   Isaac.DebugString("Respawned the end of race trophy.")
 end
 
@@ -614,9 +614,10 @@ function PostNewRoom:Race()
         if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
           -- Remove the crawlspace and spawn a Heaven Door (1000.39), which will get replaced on the next frame
           -- in the "FastTravel:ReplaceHeavenDoor()" function
+          -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-          g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR,
-                    gridEntity.Position, g.zeroVector, g.p, 0, 0)
+          Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
+                      gridEntity.Position, g.zeroVector, g.p)
           Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
         end
       end
@@ -667,10 +668,10 @@ function PostNewRoom:Race()
       if randomBoss[1] == EntityType.ENTITY_LARRYJR then -- 19
         -- Larry Jr. and The Hollow require multiple segments
         for j = 1, 6 do
-          g.g:Spawn(randomBoss[1], randomBoss[2], g.r:GetCenterPos(), g.zeroVector, nil, randomBoss[3], roomSeed)
+          Isaac.Spawn(randomBoss[1], randomBoss[2], randomBoss[3], g.r:GetCenterPos(), g.zeroVector, nil)
         end
       else
-        g.g:Spawn(randomBoss[1], randomBoss[2], g.r:GetCenterPos(), g.zeroVector, nil, randomBoss[3], roomSeed)
+        Isaac.Spawn(randomBoss[1], randomBoss[2], randomBoss[3], g.r:GetCenterPos(), g.zeroVector, nil)
       end
     end
     Isaac.DebugString("Replaced Blue Baby / The Lamb with " .. tostring(numBosses) .. " random bosses.")
@@ -705,8 +706,8 @@ function PostNewRoom:RaceStartRoom()
   end
 
   -- Spawn two Gaping Maws (235.0)
-  g.g:Spawn(EntityType.ENTITY_GAPING_MAW, 0, g:GridToPos(5, 5), g.zeroVector, nil, 0, 0)
-  g.g:Spawn(EntityType.ENTITY_GAPING_MAW, 0, g:GridToPos(7, 5), g.zeroVector, nil, 0, 0)
+  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
+  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
 end
 
 function PostNewRoom:CheckSeededMOTreasure()
@@ -788,9 +789,9 @@ function PostNewRoom:CheckSeededMOTreasure()
       local X = itemPos[#itemTiers[chosenTier]][i].X
       local Y = itemPos[#itemTiers[chosenTier]][i].Y
       local itemID = itemTiers[chosenTier][i]
-      local itemPedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-                                     g:GridToPos(X, Y), g.zeroVector, nil, itemID, 0)
-      -- The seed can be 0 since the pedestal will be replaced on the next frame
+      local itemPedestal = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemID,
+                                       g:GridToPos(X, Y), g.zeroVector, nil)
+      -- (we don't care about the seed since the pedestal will be replaced on the next frame)
       itemPedestal:ToPickup().TheresOptionsPickup = true
     end
   end

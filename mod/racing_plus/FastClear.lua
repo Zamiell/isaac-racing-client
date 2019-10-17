@@ -456,8 +456,8 @@ function FastClear:ClearRoom()
      roomType == RoomType.ROOM_BOSS and -- 5
      roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ROOM_CLEAR_DELAY, -- 10000
-              g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
+    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.ROOM_CLEAR_DELAY, 0, -- 1000
+                g:GridToPos(0, 0), g.zeroVector, nil)
     Isaac.DebugString("Spawned the \"Room Clear Delay Effect\" custom entity (for The Lamb).")
     -- This won't work to delay the room clearing if "debug 10" is on
 
@@ -465,8 +465,8 @@ function FastClear:ClearRoom()
     g.run.killedLamb = true
 
     -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
 
   else
     -- Spawn the award for clearing the room (the pickup, chest, etc.)
@@ -1129,7 +1129,7 @@ function FastClear:SpawnClearAward()
     for i = 1, pickupCount do
       local pos = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
       local pickup = g.g:Spawn(EntityType.ENTITY_PICKUP, pickupVariant, -- 5
-                     pos, g.zeroVector, nil, subType, rng:Next())
+                               pos, g.zeroVector, nil, subType, rng:Next())
       subType = pickup.SubType
     end
   end

@@ -308,7 +308,7 @@ function ChangeCharOrder:CreateItemButtons()
       -- Spawn creep for the S-Class items
       g.r:SetClear(false) -- Or else the creep will instantly dissipate
       for j = 1, 10 do
-        local creep = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_RED,
+        local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_RED, 0, -- 1000.22
                                  buttonPos, g.zeroVector, nil, 0, 0)
         creep:ToEffect().Timeout = 1000000
       end

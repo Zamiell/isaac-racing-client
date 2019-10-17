@@ -42,8 +42,8 @@ function PostGameStarted:Main(saveState)
        (g.race.status == "open" or g.race.status == "starting") then
 
       -- Spawn two Gaping Maws (235.0)
-      g.g:Spawn(EntityType.ENTITY_GAPING_MAW, 0, g:GridToPos(5, 5), g.zeroVector, nil, 0, 0)
-      g.g:Spawn(EntityType.ENTITY_GAPING_MAW, 0, g:GridToPos(7, 5), g.zeroVector, nil, 0, 0)
+      Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
+      Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
       Isaac.DebugString("Respawned 2 Gaping Maws.")
     end
 

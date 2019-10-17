@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.45.4* - October 17th, 2019
+
+* Bosses in the Boss Rush will now always spawn at least 120 units away from the player. (Thanks Dea1h)
+* Boss Rush waves will now spawn after a 20 frame delay. (Thanks Cyber_1)
+* In season 7, Mahalath has been replaced with Ultra Greed. (His damage scaling has been removed.)
+* In season 7, the Broken Remote is now banned from the pool of random starting trinkets. (Thanks CrafterLynx)
+* In season 7, if you have completed the speedrun, the goals will no longer show if you press tab.
+* Fixed the bug where the trapdoor in the I AM ERROR room on The Void would take you to the 13th floor. (Thanks Gamonymous)
+
 ### *v0.45.3* - October 16th, 2019
 
 * The diversity graphics have been rearranged so that they no longer overlap with the player's starting position. (Thanks PassionDrama)

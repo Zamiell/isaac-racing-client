@@ -1804,8 +1804,8 @@ function SamaelMod:PostUpdateFixBugs()
     end
     if not foundSacDag then
       -- Manually spawn a Sacrificial Dagger familiar (3.35)
-      g.g:Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER,
-                g.p.Position, g.zeroVector, g.p, 0, 0)
+      Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER, 0,
+                  g.p.Position, g.zeroVector, g.p)
       Isaac.DebugString("Spawned a new Sac Dagger familiar.")
     end
   end

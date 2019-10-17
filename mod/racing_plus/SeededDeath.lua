@@ -420,9 +420,9 @@ function SeededDeath:DebuffOff()
     else
       -- There is no room in the Schoolbag, so spawn it on the ground
       local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-      local pedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE,
-                                 position, g.zeroVector, nil, activeItem, 0):ToPickup()
-      -- (we can use a seed of 0 beacuse it will be replaced on the next frame)
+      local pedestal = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, activeItem, -- 5.100
+                                   position, g.zeroVector, nil):ToPickup()
+      -- (we do not care about the seed beacuse it will be replaced on the next frame)
       pedestal.Charge = activeCharge
       pedestal.Touched = true
       Isaac.DebugString("SeededDeath - Put the old active item on the ground since there was no room for it.")

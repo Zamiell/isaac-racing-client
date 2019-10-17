@@ -20,8 +20,7 @@ function EntityTakeDmg:Player(tookDamage, damageAmount, damageFlag, damageSource
   return SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
 end
 
--- EntityType.ENTITY_HUSH (407)
-function EntityTakeDmg:Hush(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
+function EntityTakeDmg:RemoveArmor(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
   if g.run.dealingExtraDamage then
     return
   end
@@ -31,7 +30,7 @@ function EntityTakeDmg:Hush(tookDamage, damageAmount, damageFlag, damageSource, 
     return
   end
 
-  -- Adjust his HP directly to avoid the damage scaling (armor)
+  -- Adjust their HP directly to avoid the damage scaling (armor)
   tookDamage.HitPoints = tookDamage.HitPoints - (damageAmount * 0.5)
 
   -- Make him flash

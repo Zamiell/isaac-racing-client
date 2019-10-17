@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.45.3"
+g.version = "v0.45.4"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -333,7 +333,7 @@ function g:InitRun()
   g.run.chaosCardTears       = false -- Used while debugging
   g.run.dealingExtraDamage   = false -- Used for Hush
   g.run.firingExtraTear      = false -- Used for Hush
-  g.run.mahalathRoomIndex    = -1000 -- Used in Season 7
+  g.run.customBossRoomIndex  = -1000 -- Used in Season 7
   g.run.showGoalsFrame       = 0 -- Used in Season 7
 
   -- Transformations
@@ -404,10 +404,11 @@ function g:InitRun()
 
   -- Custom Boss Rush tracking
   g.run.bossRush = {
-    started = false,
-    finished = false,
-    currentWave = 0,
-    waves = {},
+    started        = false,
+    finished       = false,
+    waves          = {},
+    currentWave    = 0,
+    spawnWaveFrame = 0,
   }
 
   -- Special room seeding

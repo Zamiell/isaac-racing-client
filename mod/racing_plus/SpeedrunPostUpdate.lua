@@ -133,7 +133,7 @@ function SpeedrunPostUpdate:Season7()
   end
 
   if stage == 12 then
-    g:TableRemove(Speedrun.remainingGoals, "Mahalath")
+    g:TableRemove(Speedrun.remainingGoals, "Ultra Greed")
     return
   end
 end

@@ -1393,13 +1393,6 @@ end
 
 -- Update entity inventories
 function Mahalath:PostUpdate()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-  challenge ~= Isaac.GetChallengeIdByName("Mahalath Practice") then
-
-    return
-  end
-
   barfballs = 0
   for i, en in ipairs(barf.balls) do
     if en:Exists() and not en:IsDead() then

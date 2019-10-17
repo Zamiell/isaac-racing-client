@@ -72,8 +72,9 @@ BossRush.bosses = {
   {413, 0}, -- The Matriarch
 }
 
--- In vanilla, it spawns 2 bosses at a time for 15 waves
-BossRush.totalBosses = 30
+-- Other constants
+BossRush.totalBosses = 30 -- In vanilla, it spawns 2 bosses at a time for 15 waves
+BossRush.delay = 20 -- The amount of frames to wait before spawning the next wave
 
 -- ModCallbacks.MC_POST_UPDATE (1)
 function BossRush:PostUpdate()
@@ -102,7 +103,7 @@ function BossRush:Start()
   -- We spawn an invisible boss in the center of the room that has no collision;
   -- this will prevent the normal Boss Rush waves from spawning
   -- (this has to be above the below finish check)
-  g.g:Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, g:GridToPos(0, 0), g.zeroVector, nil, 0, 0)
+  Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
 
   -- Prevent the bug where the door will erroneously close if the player completes the custom Boss Rush,
   -- exits the room, re-enters the room, and takes an item
@@ -156,7 +157,23 @@ function BossRush:CheckSpawnNewWave()
   end
 
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
+  local bossesPerWave = 2
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    bossesPerWave = 3
+  end
+
+  if g.run.bossRush.spawnWaveFrame ~= 0 then
+    if gameFrameCount >= g.run.bossRush.spawnWaveFrame then
+      -- The short delay has elapsed, so spawn the next wave
+      g.run.bossRush.spawnWaveFrame = 0
+      BossRush:SpawnWave(bossesPerWave)
+    end
+
+    -- All of the bosses are dead, but we are waiting for a short delay before spawning the next wave
+    return
+  end
 
   -- All of the bosses for this wave have been defeated, so give a charge to the active item(s)
   -- (unless we are just starting the Boss Rush)
@@ -168,20 +185,17 @@ function BossRush:CheckSpawnNewWave()
   end
 
   -- Find out if the Boss Rush is over
-  local bossesPerWave = 2
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
-    bossesPerWave = 3
-  end
   local totalBossesDefeated = g.run.bossRush.currentWave * bossesPerWave
   Isaac.DebugString("Total bosses defeated: " .. tostring(totalBossesDefeated))
   if totalBossesDefeated >= BossRush.totalBosses then
     BossRush:Finish()
-    return
+  else
+    -- Spawn the next wave after a short delay
+    g.run.bossRush.spawnWaveFrame = gameFrameCount + BossRush.delay
+    g.run.bossRush.currentWave = g.run.bossRush.currentWave + 1
+    Isaac.DebugString("Bosses defeated on frame: " .. tostring(gameFrameCount))
+    Isaac.DebugString("Marking to spawn the next wave on frame: " .. tostring(g.run.bossRush.spawnWaveFrame))
   end
-
-  -- Spawn the next wave
-  g.run.bossRush.currentWave = g.run.bossRush.currentWave + 1
-  BossRush:SpawnWave(bossesPerWave)
 end
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
@@ -197,6 +211,8 @@ function BossRush:PostNewRoom()
   -- Reset the Boss Rush status
   -- (so that we can reset the waves to the beginning if they exit the room, save and quit, etc.)
   g.run.bossRush.started = false
+  g.run.bossRush.currentWave = 0
+  g.run.bossRush.spawnWaveFrame = 0
 
   -- Check to see the player already started the Boss Rush
   local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
@@ -211,48 +227,60 @@ function BossRush:PostNewRoom()
 end
 
 function BossRush:SpawnWave(bossesPerWave)
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
+
   local bossPos = {
     g:GridToPos(7, 6), -- Left of the items
     g:GridToPos(18, 7), -- Right of the items
     g:GridToPos(12, 2), -- Above the items
-    --g:GridToPos(13, 11), -- Below the items (current unused)
+    --g:GridToPos(13, 11), -- Below the items (currently unused)
   }
 
   for i = 1, bossesPerWave do
+    -- Get the boss to spawn
     local bossIndex = g.run.bossRush.currentWave * bossesPerWave - bossesPerWave + i
     local boss = g.run.bossRush.bosses[bossIndex]
-    local startingPos = bossPos[i]
-    if boss[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
-      -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
-      startingPos = g:GridToPos(12, 0)
+
+    -- Find out how many to spawn
+    local numToSpawn = 1
+    if boss[1] == EntityType.ENTITY_LARRYJR then -- 19
+      -- Larry Jr. and The Hollow have 10 segments
+      numToSpawn = 10
+    elseif boss[1] == EntityType.ENTITY_GURGLING then -- 237
+      -- Gurglings and Turdlings spawn in sets of 3
+      -- (this is how it is in the vanilla Boss Rush)
+      numToSpawn = 3
     end
 
-    for j = 1, 10 do
-      local pos = g.r:FindFreePickupSpawnPosition(startingPos, 1, true)
-      Isaac.Spawn(boss[1], boss[2], 0, pos, g.zeroVector, nil)
+    for j = 1, numToSpawn do
+      local position
+      for k = 1, 100 do
+        -- If this is the first boss, spawn it to the left of the items
+        -- If this is the second boss, spawn it to the right of the items
+        -- If this is the third boss, spawn it above the items
+        position = g.r:FindFreePickupSpawnPosition(bossPos[i], k, true)
 
-      -- We want to spawn multiples of some bosses
-      if boss[1] ~= EntityType.ENTITY_LARRYJR and -- 19
-         boss[1] ~= EntityType.ENTITY_GURGLING then -- 237
-
-        break
+        -- However, ensure that we do not spawn a boss too close to the player
+        if position:Distance(g.p.Position) > 120 then
+          break
+        end
       end
 
-      -- We want 3x Gurgling and Turdling
-      if boss[1] == EntityType.ENTITY_GURGLING and -- 237
-         i == 3 then
-
-        break
+      if boss[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
+        -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
+        position = g:GridToPos(12, 0)
       end
 
-      -- Larry Jr. and The Hollow have 10 segments
+      Isaac.Spawn(boss[1], boss[2], 0, position, g.zeroVector, nil)
     end
   end
 
   -- Play the summon sound
   g.sfx:Play(SoundEffect.SOUND_SUMMONSOUND, 1, 0, false, 1) -- 265
 
-  Isaac.DebugString("Spawned wave: " .. tostring(g.run.bossRush.currentWave))
+  Isaac.DebugString("Spawned wave " .. tostring(g.run.bossRush.currentWave) ..
+                    " on frame: " .. tostring(gameFrameCount))
 end
 
 function BossRush:Finish()
@@ -268,14 +296,14 @@ function BossRush:Finish()
   local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, -- 5.340
-              g.zeroVector, g.zeroVector, nil, 0, 0) -- It does not matter where we spawn it
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
 
   elseif g.race.status == "in progress" and
          g.race.goal == "Boss Rush" then
 
     -- Spawn a trophy
-    g.g:Spawn(EntityType.ENTITY_RACE_TROPHY, 0, pos, g.zeroVector, nil, 0, 0)
+    Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, pos, g.zeroVector, nil)
     Isaac.DebugString("Spawned the end of Boss Rush trophy.")
 
   else

@@ -247,7 +247,6 @@ end
 -- Change the behavior such that given pill will not replace your current card/pill
 function PostItemPickup.CaffeinePill()
   -- Local variables
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local pill1 = g.p:GetPill(0) -- Returns 0 if no pill
 
   -- Find the first pill or card on the ground that is freshly spawned
@@ -275,7 +274,7 @@ function PostItemPickup.CaffeinePill()
   -- Drop the pill given from Caffeine Pill
   -- (we spawn it instead of using "player:DropPoketItem()" to avoid the complexity of having two slots)
   local pos = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pos, g.zeroVector, nil, pill1, roomSeed) -- 5.70
+  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pill1, pos, g.zeroVector, g.p) -- 5.70
 end
 
 -- CollectibleType.COLLECTIBLE_LATCH_KEY (343)

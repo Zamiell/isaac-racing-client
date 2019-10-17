@@ -131,21 +131,10 @@
 
 ## R+7 Season 7 (The Diversity Season)
 
+### Characters & Starting Items
+
 * You must complete the game with the following 7 characters:
   * Cain, Judas, Samson, Azazel, Lazarus, The Lost, Lilith
-* You must complete the following 7 goals:
-  * Boss Rush (spawns 3 bosses at a time instead of 2)
-  * It Lives!
-  * Hush (damage scaling is removed and HP is doubled)
-  * Blue Baby
-  * The Lamb
-  * Mega Satan
-  * Mahalath (Ruthless version; replaces Delirium)
-* You can complete any goal that you wish on any character, but each goal has to be accomplished once.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Unlike previous seasons, the path to The Chest requires The Polaroid and the path to the Dark Room requires The Negative.
-* A portal to The Void will appear next to the Mega Satan door.
-* Mahalath's room will appear on the map once players reach The Void.
-* Mega Satan's door will only be opened on the second character and beyond.
 * Lilith starts with an extra Incubus familiar. (If you switch to a different character, the extra familiar will also disappear.)
 * All characters will start with 5 random items, similar to [diversity races](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/README-DIVERSITY.md). (All of the other changes from diversity races are also present.)
 * Additionally, the following items/trinkets are banned from the random diversity pool:
@@ -162,6 +151,21 @@
 * Ipecac is removed from the Treasure Room pool.
 * Libra is removed from the Treasure Room pool if you start with Soy Milk.
 * Soy Milk is removed from the Treasure Room pool if you start with Libra.
+
+### Goals
+
+* You must complete the following 7 goals:
+  * Boss Rush (spawns 3 bosses at a time instead of 2)
+  * It Lives!
+  * Hush (damage scaling is removed)
+  * Blue Baby
+  * The Lamb
+  * Mega Satan
+  * Ultra Greed (replaces Delirium)
+* You can complete any goal that you wish on any character, but each goal has to be accomplished once.
+* Both The Polaroid and The Negative will spawn after defeating Mom. Unlike previous seasons, the path to The Chest requires The Polaroid and the path to the Dark Room requires The Negative.
+* A portal to The Void will appear on the first room of The Chest / Dark Room. Ultra Greed's room will appear on the map once players reach The Void.
+* A trapdoor to Mega Satan's room will appear on the first room of The Chest / Dark Room, but only on the second character and beyond.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
