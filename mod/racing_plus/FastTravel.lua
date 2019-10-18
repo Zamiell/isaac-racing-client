@@ -117,6 +117,7 @@ function FastTravel:ReplaceHeavenDoor(entity)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Delete the "natural" beam of light
   if entity.SpawnerType ~= EntityType.ENTITY_PLAYER then -- 1
@@ -131,8 +132,9 @@ function FastTravel:ReplaceHeavenDoor(entity)
   end
 
   -- Spawn a custom entity to emulate the original
-  local heaven = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, 0, -- 1000
-                             entity.Position, g.zeroVector, nil)
+  -- (we use an InitSeed of the room seed instead of a random seed to indicate that this is a freshly spawned entity)
+  local heaven = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
+                           entity.Position, g.zeroVector, nil, 0, roomSeed)
   heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
@@ -142,8 +144,8 @@ function FastTravel:ReplaceHeavenDoor(entity)
     pos  = entity.Position,
   }
 
-  -- Log it
   --[[
+  -- Log it
   local debugString = "Replaced a beam of light in room " .. tostring(roomIndex) .. " "
   debugString = debugString .. " at (" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") "
   debugString = debugString .. "on frame " .. tostring(gameFrameCount)
@@ -1135,9 +1137,9 @@ function FastTravel:CheckRoomRespawn()
   for _, heavenDoor in ipairs(g.run.replacedHeavenDoors) do
     if heavenDoor.room == roomIndex then
       -- Spawn the new custom entity
-      -- (use an InitSeed of 0 to signify that it is respawned)
-      local entity = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, 0, -- 1000
-                                 heavenDoor.pos, g.zeroVector, nil)
+      -- (we use an InitSeed of 0 instead of a random seed to signify that it is a respawned entity)
+      local entity = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
+                               heavenDoor.pos, g.zeroVector, nil, 0, 0)
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")
     end

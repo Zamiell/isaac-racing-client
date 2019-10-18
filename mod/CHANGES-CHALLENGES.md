@@ -145,6 +145,7 @@
   * The Mind
   * Tiny Planet
   * Soy Milk
+  * Isaac's Heart (if you start with Blood Rights)
   * Ouroboros Worm
 * We Need to Go Deeper! is removed from all pools.
 * Mega Blast is removed from all pools.

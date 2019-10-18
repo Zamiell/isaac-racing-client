@@ -1,7 +1,7 @@
 {
     ".luacheckrc": "a7dcc85825f35c5640b7f111821c376e80654276",
     "BUGS.md": "38f0f92ed56f8d85db90532c3b538f4abd26e99e",
-    "CHANGES-CHALLENGES.md": "30559dcc683b277512cfe762ebe8f83d6f298cf2",
+    "CHANGES-CHALLENGES.md": "cff7e972d2609ebe0929717759e6c9e817ee037e",
     "CHANGES-RACES.md": "dbdaba6bfd202038595b2c5700c064160a5cb35c",
     "CHANGES-ROOM.md": "15b1543c67b6aa2026684ed027363ca31735baff",
     "CHANGES.md": "c21c548590efde744f43e63739985a9724569665",
@@ -32,8 +32,8 @@
     "racing_plus\\ExecuteCmd.lua": "96e97785e32e59610927da220f3686e27305f61e",
     "racing_plus\\FastClear.lua": "93fd1beabf3c6c80b3b8ac9c47601c9cd921d22b",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
-    "racing_plus\\FastTravel.lua": "c9281e8fda66927cb2685f4ad33647a9f61363ba",
-    "racing_plus\\Globals.lua": "a9abf32f8a907e076af2a88c8e71fc560db88da6",
+    "racing_plus\\FastTravel.lua": "8772141010918415105c6dd79dccba7a514f6c87",
+    "racing_plus\\Globals.lua": "9e7dc119a5760817055af2a9937fd7b8c3643217",
     "racing_plus\\InputAction.lua": "e121cfb395f32aa564041b1087453f875fae3c46",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -52,7 +52,7 @@
     "racing_plus\\PostNPCInit.lua": "8ecf17cf7d6d2ad6743757d15af68a8fe84d8100",
     "racing_plus\\PostNewLevel.lua": "f47942e376d22508e22bf490a3d6dd6e03a9d9eb",
     "racing_plus\\PostNewRoom.lua": "23166dfabf4af404de69c5651ea001c7d8ae55a9",
-    "racing_plus\\PostPickupInit.lua": "50a2f9d7c61e14470c77d31d233cf7a6d925d196",
+    "racing_plus\\PostPickupInit.lua": "ca5d80d0e3f881ebff8422fe1e902805e7a1f8fd",
     "racing_plus\\PostPickupSelection.lua": "3f2c55fdf00304ab090374ebbff73b4a0b25595c",
     "racing_plus\\PostPickupUpdate.lua": "01da06ce5ebfa711cc6b3f98118d05c4c431af2a",
     "racing_plus\\PostPlayerInit.lua": "f158921791138b117c4ac2bf0ba11868b76da3c3",
@@ -73,7 +73,7 @@
     "racing_plus\\SoulJar.lua": "8a52cef8b71e9002bf2ebcf6cc54d1e0531bc452",
     "racing_plus\\Speedrun.lua": "2694c6bdec0af4cf3b2d4bfdcd2914f3351d219c",
     "racing_plus\\SpeedrunPostGameStarted.lua": "20abdee5743f778c80e6f74190cb0bf035bc0eff",
-    "racing_plus\\SpeedrunPostNewRoom.lua": "c54039fee33e150221b6bd150541b9e5cac41ce4",
+    "racing_plus\\SpeedrunPostNewRoom.lua": "f595197060d77ff4b50b0106f9a4e983ec406d0c",
     "racing_plus\\SpeedrunPostRender.lua": "991604a348a6f89a69aa212f7013d6d9a7baf741",
     "racing_plus\\SpeedrunPostUpdate.lua": "ff567e24eff826e25685c4e39ca8ec7b17c5140e",
     "racing_plus\\Sprites.lua": "905b01fc0602d3e42c532c95ecb10e8b683c9134",
@@ -2089,7 +2089,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "4349cb8bf49fbfdc9de62d8e85ff31f5d2d6e922",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "13dfc6e9b8b26815b5dc871a3caed056efc693c0",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2167,5 +2167,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "0fe7b582d2d57bbdd7700b93611b4374d529402b"
+    "sha1.json": "7884784974945deec6993dceb97d3598a065908f"
 }

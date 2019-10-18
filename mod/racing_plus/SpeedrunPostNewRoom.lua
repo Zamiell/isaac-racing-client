@@ -16,7 +16,6 @@ function SpeedrunPostNewRoom:Main()
   SpeedrunPostNewRoom:RemoveVetoButton()
   SpeedrunPostNewRoom:Season7Stage11()
   SpeedrunPostNewRoom:Season7Stage12()
-  SpeedrunPostNewRoom:Season7SpawnStage12CustomBoss()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)

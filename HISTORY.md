@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.45.5* - October 18th, 2019
+
+* Reduced the HP of Ultra Greed Coin (Bomb) from 50 to 25. (Thanks Gamonymous)
+* Fixed the bug where it was possible for the Boss Rush checkpoint to spawn in an inaccessible location. (Thanks CrafterLynx)
+* Fixed the bug where the trigger for beams of light was delayed slightly in certain circumstances.
+
 ### *v0.45.4* - October 17th, 2019
 
 * Bosses in the Boss Rush will now always spawn at least 120 units away from the player. (Thanks Dea1h)

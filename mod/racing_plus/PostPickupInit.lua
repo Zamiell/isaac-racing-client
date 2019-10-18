@@ -130,7 +130,7 @@ function PostPickupInit:Pickup340(pickup)
 
   -- By default, leave the big chest there
   PostPickupInit.bigChestAction = "leave"
-  PostPickupInit.checkpointPos = centerPos
+  PostPickupInit.checkpointPos = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
 
   -- Determine if we should replace the big chest with something else
   if stage == 10 then
@@ -399,7 +399,10 @@ function PostPickupInit:Pickup340_S7(pickup)
     end
   end
 
-  if stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!") then
+  if stage == 6 and g:TableContains(Speedrun.remainingGoals, "Boss Rush") then
+    -- Prevent the bug where the Checkpoint can spawn over a bit
+    PostPickupInit.checkpointPos = g.r:FindFreePickupSpawnPosition(PostPickupInit.checkpointPos, 0, true)
+  elseif stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!") then
     PostPickupInit.checkpointPos = g:GridToPos(1, 1)
   end
 end
