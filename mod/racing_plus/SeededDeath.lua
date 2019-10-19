@@ -153,7 +153,6 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   local hearts = g.p:GetHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
-  local totalHealth = hearts + soulHearts + boneHearts
   local extraLives = g.p:GetExtraLives()
   local challenge = Isaac.GetChallenge()
 
@@ -173,7 +172,18 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   end
 
   -- Check to see if this is fatal damage
+  local totalHealth = hearts + soulHearts + boneHearts
   if damageAmount < totalHealth then
+    return
+  end
+
+  -- Furthermore, this will not be fatal damage if we have two different kinds of hearts
+  -- e.g. a bomb explosion deals 2 damage, but if the player has one half soul heart and one half red heart,
+  -- the game will only remove the soul heart
+  if (hearts > 0 and soulHearts > 0) or
+     (hearts > 0 and boneHearts > 0) or
+     (soulHearts > 0 and boneHearts > 0) then
+
     return
   end
 

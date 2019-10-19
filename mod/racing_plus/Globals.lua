@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.45.5"
+g.version = "v0.45.6"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -550,10 +550,19 @@ function g:TableRemove(t, el)
 end
 
 function g:GetTotalItemCount()
-  -- In vanilla, there are 552 items, but CollectibleType has 554 values
-  -- This is because of the "COLLECTIBLE_NULL" and the "NUM_COLLECTIBLES" keys
-  -- Racing+ adds a bunch of items, but for every item it also adds an entry to CollectibleType
-  return g:TableLen(CollectibleType) - 2
+  -- Racing+ adds a bunch of items
+  -- Furthermore, we need to account for if the user has other items added from other mods
+  -- Start with the highest vanilla item ID and iterate upwards
+  local i = CollectibleType.NUM_COLLECTIBLES - 1
+  local totalItems = i
+  while true do
+    i = i + 1
+    if g.itemConfig:GetCollectible(i) ~= nil then
+      totalItems = i
+    else
+      return totalItems
+    end
+  end
 end
 
 -- Find out how many charges this item has

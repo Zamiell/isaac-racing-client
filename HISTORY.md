@@ -1,10 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.45.6* - October 19th, 2019
+
+* Fixed the bug where the seeded death mechanic would occasionally cause the game to crash. (Thanks Greg)
+* Fixed the bug where the seeded death mechanic would erroneously activate if the player had two different kinds of hearts. (Thanks mgln)
+
 ### *v0.45.5* - October 18th, 2019
 
 * Reduced the HP of Ultra Greed Coin (Bomb) from 50 to 25. (Thanks Gamonymous)
 * Fixed the bug where it was possible for the Boss Rush checkpoint to spawn in an inaccessible location. (Thanks CrafterLynx)
-* Fixed the bug where the trigger for beams of light was delayed slightly in certain circumstances.
+* Fixed the bug where the trigger for beams of light was delayed slightly in certain circumstances. (Thanks mgln)
 
 ### *v0.45.4* - October 17th, 2019
 

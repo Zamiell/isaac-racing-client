@@ -1,5 +1,5 @@
 {
-    ".luacheckrc": "a7dcc85825f35c5640b7f111821c376e80654276",
+    ".luacheckrc": "1a44c198aed11269e3187b2fda8a120ee01c65a7",
     "BUGS.md": "38f0f92ed56f8d85db90532c3b538f4abd26e99e",
     "CHANGES-CHALLENGES.md": "cff7e972d2609ebe0929717759e6c9e817ee037e",
     "CHANGES-RACES.md": "dbdaba6bfd202038595b2c5700c064160a5cb35c",
@@ -33,7 +33,7 @@
     "racing_plus\\FastClear.lua": "93fd1beabf3c6c80b3b8ac9c47601c9cd921d22b",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "8772141010918415105c6dd79dccba7a514f6c87",
-    "racing_plus\\Globals.lua": "9e7dc119a5760817055af2a9937fd7b8c3643217",
+    "racing_plus\\Globals.lua": "2803eea52084e110805feaa02c7fca29a31604bc",
     "racing_plus\\InputAction.lua": "e121cfb395f32aa564041b1087453f875fae3c46",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -55,7 +55,7 @@
     "racing_plus\\PostPickupInit.lua": "ca5d80d0e3f881ebff8422fe1e902805e7a1f8fd",
     "racing_plus\\PostPickupSelection.lua": "3f2c55fdf00304ab090374ebbff73b4a0b25595c",
     "racing_plus\\PostPickupUpdate.lua": "01da06ce5ebfa711cc6b3f98118d05c4c431af2a",
-    "racing_plus\\PostPlayerInit.lua": "f158921791138b117c4ac2bf0ba11868b76da3c3",
+    "racing_plus\\PostPlayerInit.lua": "cb1302b34caaab6ba53a34ddb073c3281d491285",
     "racing_plus\\PostRender.lua": "39218e828dae6d56f826a6f8aad05b7bdb6190d9",
     "racing_plus\\PostUpdate.lua": "e64498651516576a502046a7c833624b19cbff91",
     "racing_plus\\PreEntitySpawn.lua": "1ddd7337e2497b0333a0a35d16937fa5cac31efe",
@@ -67,7 +67,7 @@
     "racing_plus\\Samael.lua": "09ca9630057f54e9a469736cf14083432b3ef698",
     "racing_plus\\SaveDat.lua": "31afbc6adbd30dd3bbe17568568cb3c588367169",
     "racing_plus\\Schoolbag.lua": "cad4917e0791b55133a399e34fc6a9b2113c0d10",
-    "racing_plus\\SeededDeath.lua": "4e55606c3d21f53625e7ae8e3c8fe7d7185884ac",
+    "racing_plus\\SeededDeath.lua": "b86bb91a04a3a36066922696d8761b9ff8f82f13",
     "racing_plus\\SeededFloors.lua": "6587e8f1393a992732971dc898ed59d09fdd3103",
     "racing_plus\\SeededRooms.lua": "b65b63dc698d6ac3385d4f7a1c2de5c7567f8db7",
     "racing_plus\\SoulJar.lua": "8a52cef8b71e9002bf2ebcf6cc54d1e0531bc452",
@@ -2089,7 +2089,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "13dfc6e9b8b26815b5dc871a3caed056efc693c0",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "8ba8b6e02ad1effe28e4c24884d4e70c5365b78f",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2167,5 +2167,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "7884784974945deec6993dceb97d3598a065908f"
+    "sha1.json": "1afb3199daff48048a461fd5873f02eb69725e50"
 }
