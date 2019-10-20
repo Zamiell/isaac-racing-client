@@ -66,7 +66,7 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 ## Known Bugs with Installing or Automatic Updating the Client
 
 * Sometimes, auto-update will not work properly. If this happens, just download the latest version automatically. (Reported by caesar)
-* Sometimes, when installing the Racing+ client, you will get the error message: "Your internet connection seems to be not permitted or dropped out!" This can happen if your internet connection sucks or you are in a certain country (China, Russia, etc.). To fix this, manually download all of the files from [the latest release](https://github.com/Zamiell/isaac-racing-client/releases). Then, put them all into the same directory, and run "WebSetup.exe".
+* Sometimes, when installing the Racing+ client, you will get the error message: "Your internet connection seems to be not permitted or dropped out!" This can happen if your internet connection sucks or you are in a certain country (China, Russia, etc.). To fix this, manually download all of the files from [the latest release](https://github.com/Zamiell/isaac-racing-client/releases) and put them all into the same directory. Then, run "WebSetup.exe".
 
 <br />
 
