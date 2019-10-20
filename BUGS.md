@@ -2,6 +2,18 @@
 
 <br />
 
+## Table of Contents
+
+1. [Known Bugs with the Racing+ Mod (e.g. gameplay)](#known-bugs-with-the-racing-mod-eg-gameplay)
+2. [Known Bugs with Samael (the new character)](#known-bugs-with-samael-the-new-character)
+3. [Known Bugs with the Seeded Death Mechanic](#known-bugs-with-the-seeded-death-mechanic)
+4. [Known Bugs with the Cient & Server (e.g. the application)](#known-bugs-with-the-cient--server-eg-the-application)
+5. [Known Bugs with Installing or Automatic Updating the Client](#known-bugs-with-installing-or-automatic-updating-the-client)
+6. [Known Bugs with the Website](#known-bugs-with-the-website)
+7. [Known Bugs with the Twitch Bot](#known-bugs-with-the-twitch-bot)
+
+<br />
+
 ## Known Bugs with the Racing+ Mod (e.g. gameplay)
 
 Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
