@@ -1,5 +1,7 @@
 # Racing+ Known Bugs
 
+<br />
+
 ## Known Bugs with the Racing+ Mod (gameplay)
 
 Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
@@ -21,6 +23,8 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 * If there are multiple The Haunts in a room, all of the Lil Haunts will be detached at once, because tracking the individual ones is too difficult. (Reported by thereisnofuture)
 * Teleports can be canceled if you trigger them on the frame before going into a new room. For example, trying to use Cursed Eye when going in or coming out of a Cursed Room will not work.
 
+<br />
+
 ## Known Bugs with Samael (the new character)
 
 * Picking up a 2nd Sacrificial Dagger will do nothing. Saving and quitting fixes this.
@@ -31,6 +35,8 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 * When you have two Wraith Skulls (from using a Diplopia on your initial Wraith Skull), they won't work properly. (Found by Moucheron Quipet)
 * Lasers from Jacob's Ladder will only deal 0.1 damage from melee attacks. (Found by Moucheron Quipet)
 
+<br />
+
 ## Known Bugs with the Seeded Death Mechanic
 
 * It does not add or remove transformations. (Reported by Moucheron Quipet)
@@ -40,6 +46,8 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 * It can grant the Stompy transformation if you revive with Magic Mushroom.
 * Reviving with Magic Mushroom bugs out the screen. (Reported by thisguyisbarry)
 * Being a ghost will prevent Brimstone-style lasers from firing. (Reported by Xelnas)
+
+<br />
 
 ## Known Bugs with the Cient & Server (application)
 
@@ -53,15 +61,21 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 * The client will not properly detect/install a fully unlocked save like it is supposed to.
 * Auto-update sometimes doesn't work properly. (Reported by caesar)
 
+<br />
+
 ## Known Bugs with Installing or Automatic Updating the Client
 
 * Sometimes, auto-update will not work properly. If this happens, just download the latest version automatically. (Reported by caesar)
 * Sometimes, when installing the Racing+ client, you will get the error message: "Your internet connection seems to be not permitted or dropped out!" This can happen if your internet connection sucks or you are in a certain country (China, Russia, etc.). To fix this, manually download all of the files from [the latest release](https://github.com/Zamiell/isaac-racing-client/releases). Then, put them all into the same directory, and run "WebSetup.exe".
 
+<br />
+
 ## Known Bugs with the Website
 
 * The Unseeded leaderboard is missing some info, such as mgln. (Reported by mgln)
 * The 2nd page of race listing is missing. (Reported by mgln)
+
+<br />
 
 ## Known Bugs with the Twitch Bot:
 
