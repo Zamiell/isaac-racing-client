@@ -128,13 +128,22 @@ if not ARGS.skipmod:
             new_file_name = match.group(1) + '.stb'
             os.rename(os.path.join(ROOMS_DIR, file_name), os.path.join(ROOMS_DIR, new_file_name))
 
-    # Remove the "disable.it" file, if present
+    # Delete the "disable.it" file, if present
     DISABLE_IT_PATH = os.path.join(MOD_DIR, 'disable.it')
     try:
         if os.path.exists(DISABLE_IT_PATH):
             os.remove(DISABLE_IT_PATH)
     except Exception as err:
         error('Failed to remove the "' + DISABLE_IT_PATH + '" file:', err)
+
+    # Delete any XML files in the rooms subdirectory, if present
+    for file_name in os.listdir(ROOMS_DIR):
+        if file_name.endswith('.xml'):
+            os.remove(os.path.join(ROOMS_DIR, file_name))
+    ROOMS_DIR2 = os.path.join(ROOMS_DIR, 'pre-flipping')
+    for file_name in os.listdir(ROOMS_DIR2):
+        if file_name.endswith('.xml'):
+            os.remove(os.path.join(ROOMS_DIR2, file_name))
 
     # Get the SHA1 hash of every file in the mod directory
     # From: https://gist.github.com/techtonik/5175896
@@ -178,16 +187,6 @@ if not ARGS.skipmod:
     for i in range(1, 4): # This will go from 1 to 3
         save_dat = os.path.join(MOD_DIR2, 'save' + str(i) + '.dat')
         os.remove(save_dat)
-
-    # Delete any XML files in the rooms subdirectory
-    ROOMS_DIR = os.path.join(MOD_DIR2, 'resources', 'rooms')
-    for file_name in os.listdir(ROOMS_DIR):
-        if file_name.endswith('.xml'):
-            os.remove(os.path.join(ROOMS_DIR, file_name))
-    ROOMS_DIR2 = os.path.join(ROOMS_DIR, 'pre-flipping')
-    for file_name in os.listdir(ROOMS_DIR2):
-        if file_name.endswith('.xml'):
-            os.remove(os.path.join(ROOMS_DIR2, file_name))
 
 # Exit if we are only supposed to be doing work on the mod
 if ARGS.mod:
