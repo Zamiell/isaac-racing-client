@@ -2,7 +2,7 @@
 
 <br />
 
-## Known Bugs with the Racing+ Mod (gameplay)
+## Known Bugs with the Racing+ Mod (e.g. gameplay)
 
 Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 
@@ -49,7 +49,7 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 
 <br />
 
-## Known Bugs with the Cient & Server (application)
+## Known Bugs with the Cient & Server (e.g. the application)
 
 * In very close races, a racer may have a better placing with a higher time. This is because the timing system is based on local time, not server time. What this means is that each person will start the race at a slightly different time (depending on their internet connection), and the client reports the total amount of time taken once the race is completed.  However, the Racing+ server uses "first past the post" to determine placing, NOT the local time. Otherwise, a 1st place finish could change to a 2nd place finish afterwards, which would be quite confusing. No-one will likely have a ping of more than 1000ms to the server, so placings will be accurate to that margin of error. For 1v1 tournaments, it is recommended that referees use whoever has the lowest local time to determine the winner instead of who the Racing+ server says the winner is.
 * The client will interfere with setting the order for custom challenges. If you are doing offline custom challenges, then don't have the Racing+ client open.
@@ -77,6 +77,6 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 
 <br />
 
-## Known Bugs with the Twitch Bot:
+## Known Bugs with the Twitch Bot
 
 * If you finish a race and start a new race before all the people in the first race has completed, you will continue to get messages about the people in the first race. (Reported by thereisnofuture)
