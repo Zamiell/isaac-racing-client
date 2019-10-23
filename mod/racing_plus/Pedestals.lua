@@ -277,8 +277,12 @@ function RPPedestals:Replace(pickup)
   end
 
   -- Remove the pedestal delay for the Checkpoint, since players will always want to immediately pick it up
-  if pickup.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
-    newPedestal.Wait = 0 -- On vanilla, all pedestals get a 20 frame delay
+  if pickup.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT and
+     stage ~= 8 then
+
+    -- On vanilla, all pedestals get a 20 frame delay
+    -- Don't apply this to Checkpoints that spawn after It Lives!, since the player may not want to take them
+    newPedestal.Wait = 0
   end
 
   if pickup.State == 0 then

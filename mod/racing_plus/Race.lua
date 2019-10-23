@@ -121,6 +121,7 @@ end
 -- Called from the PostUpdate callback (the "CheckEntities:EntityRaceTrophy()" function)
 function Race:Finish()
   -- Local variables
+  local stage = g.l:GetStage()
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
@@ -137,22 +138,24 @@ function Race:Finish()
   Isaac.DebugString("Finished race " .. tostring(g.race.id) ..
                     " with time: " .. tostring(g.raceVars.finishedTime))
 
-  -- Spawn a Victory Lap custom item in the corner of the room (which emulates Forget Me Now)
-  local victoryLapPosition = g:GridToPos(11, 1)
-  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-    victoryLapPosition = g:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
-  end
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, g.zeroVector,
-            nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
+  if stage == 11 then
+    -- Spawn a Victory Lap custom item in the corner of the room (which emulates Forget Me Now)
+    local victoryLapPosition = g:GridToPos(11, 1)
+    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+      victoryLapPosition = g:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+    end
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, victoryLapPosition, g.zeroVector,
+              nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
 
-  -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
-  local finishedPosition = g:GridToPos(1, 1)
-  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-    finishedPosition = g:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+    -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
+    local finishedPosition = g:GridToPos(1, 1)
+    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
+      finishedPosition = g:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
+    end
+    local item2seed = g:IncrementRNG(roomSeed)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, g.zeroVector,
+              nil, CollectibleType.COLLECTIBLE_FINISHED, item2seed)
   end
-  local item2seed = g:IncrementRNG(roomSeed)
-  g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, finishedPosition, g.zeroVector,
-            nil, CollectibleType.COLLECTIBLE_FINISHED, item2seed)
 
   Isaac.DebugString("Spawned a Victory Lap / Finished in the corners of the room.")
 end

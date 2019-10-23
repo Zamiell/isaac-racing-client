@@ -28,6 +28,14 @@ function ExecuteCmd:Main(cmd, params)
 
   elseif cmd == "cc" then
     g.run.chaosCardTears = not g.run.chaosCardTears
+    local string
+    if g.run.chaosCardTears then
+      string = "Enabled"
+    else
+      string = "Disabled"
+    end
+    string = string .. " chaos card tears."
+    Isaac.ConsoleOutput(string)
 
   elseif cmd == "char" then
     if params == "" then

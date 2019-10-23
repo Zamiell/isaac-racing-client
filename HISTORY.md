@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.45.8* - October 22nd, 2019
+
+* In season 7, the Checkpoint item that spawns after It Lives! will no longer have its pedestal delay manually removed. (Thanks Dea1h)
+* In season 7, the goals will no longer stick to the screen for 2 seconds when you press tab. (Thanks Dea1h)
+* In season 7, the Womb trapdoor will no longer spawn if your only goal left is the Boss Rush.
+* The Womb trapdoor will no longer spawn in races to the Boss Rush.
+* Fixed the bug where the Checkpoint item would not spawn in the center of the room under certain conditions. (Thanks thereisnofuture)
+* Fixed the bug where the seeded death mechanic would erroneously activate if the player had an eternal heart. (Thanks mgln)
+* Fixed the bug where the trophy would not spawn after defeating Delirium on races to Delirium.
+* The Finish item, the Victory Lap item, the beam of light, and the trapdoor will no longer spawn after defeating Hush on races to Hush.
+* The Finish item, the Victory Lap item, the beam of light, and the trapdoor will no longer spawn after defeating Delirium on races to Delirium.
+* Fixed the bug where the client could not find the "00.special rooms.xml" file. (Thanks T1biriy)
+
 ### *v0.45.6* - October 19th, 2019
 
 * Fixed the bug where the seeded death mechanic would occasionally cause the game to crash. (Thanks Greg)
@@ -34,7 +47,7 @@
 * In season 7, graphics for the random starting items will now show in the first room of the run.
 * In season 7, Mahalath has been replaced with Ruthless Mahalath. (Ruthless Mahalath has a new sprite, twice the HP, and faster attack sequences.)
 * In season 7, Hush's HP has been doubled.
-* In season 7, the goals will now persist on the screen for 2 seconds after you press tab.
+* In season 7, the goals will now persist on the screen for 2 seconds after you press tab. (Thanks Thoday)
 
 ### *v0.45.1* - October 16th, 2019
 

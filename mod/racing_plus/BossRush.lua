@@ -302,9 +302,9 @@ function BossRush:Finish()
   elseif g.race.status == "in progress" and
          g.race.goal == "Boss Rush" then
 
-    -- Spawn a trophy
-    Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, pos, g.zeroVector, nil)
-    Isaac.DebugString("Spawned the end of Boss Rush trophy.")
+    -- Spawn a big chest (which will get replaced with a trophy on the next frame)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
+                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
 
   else
     -- Spawn a random item

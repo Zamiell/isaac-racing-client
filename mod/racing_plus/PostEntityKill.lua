@@ -141,10 +141,12 @@ function PostEntityKill:Entity78(entity)
       situation = situations.TRAPDOOR
     end
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+  elseif ((g.race.status == "in progress" and g.race.goal == "Hush") or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
          entity.Type == EntityType.ENTITY_HUSH then -- 78
 
-    -- In season 7, Hush is an endpoint
+    -- Hush is the goal
+    -- Don't spawn any paths in case the player would accidently walk into them
     situation = situations.NEITHER
 
   else

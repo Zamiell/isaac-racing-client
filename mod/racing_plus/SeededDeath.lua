@@ -151,6 +151,7 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
   local hearts = g.p:GetHearts()
+  local eternalHearts = g.p:GetEternalHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
   local extraLives = g.p:GetExtraLives()
@@ -172,7 +173,7 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   end
 
   -- Check to see if this is fatal damage
-  local totalHealth = hearts + soulHearts + boneHearts
+  local totalHealth = hearts + eternalHearts + soulHearts + boneHearts
   if damageAmount < totalHealth then
     return
   end

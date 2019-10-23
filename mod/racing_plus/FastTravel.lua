@@ -4,6 +4,7 @@ local FastTravel = {}
 local g            = require("racing_plus/globals")
 local Sprites      = require("racing_plus/sprites")
 local SeededFloors = require("racing_plus/seededfloors")
+local Speedrun     = require("racing_plus/speedrun")
 
 -- Constants
 FastTravel.trapdoorOpenDistance  = 60 -- This feels about right
@@ -39,6 +40,7 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local challenge = Isaac.GetChallenge()
 
   -- There is no way to manually travel to the "Infiniate Basements" Easter Egg floors,
   -- so just disable the fast-travel feature
@@ -51,12 +53,28 @@ function FastTravel:ReplaceTrapdoor(entity, i)
     return
   end
 
+  local deleteAndDontReplace = false
+
+  -- Delete the Womb trapdoor that spawns after Mom if the goal of the run is the Boss Rush
+  if (g.race.status == "in progress" and g.race.goal == "Boss Rush") or
+     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+      g:TableContains(Speedrun.remainingGoals, "Boss Rush") and
+      #Speedrun.remainingGoals == 1) then
+
+    deleteAndDontReplace = true
+    Isaac.DebugString("Deleted the natural trapdoor after Mom.")
+  end
+
   -- Delete the "natural" trapdoor that spawns one frame after It Lives! (or Hush) is killed
   -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
   if gameFrameCount == g.run.itLivesKillFrame + 1 then
+    deleteAndDontReplace = true
+    Isaac.DebugString("Deleted the natural trapdoor after It Lives! (or Hush).")
+  end
+
+  if deleteAndDontReplace then
     entity.Sprite = Sprite() -- If we don't do this, it will still show for a frame
     g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-    Isaac.DebugString("Deleted the natural trapdoor after It Lives! (or Hush).")
     return
   end
 

@@ -130,7 +130,7 @@ function PostPickupInit:Pickup340(pickup)
 
   -- By default, leave the big chest there
   PostPickupInit.bigChestAction = "leave"
-  PostPickupInit.checkpointPos = g.r:FindFreePickupSpawnPosition(centerPos, 1, true)
+  PostPickupInit.checkpointPos = centerPos
 
   -- Determine if we should replace the big chest with something else
   if stage == 10 then
@@ -255,7 +255,11 @@ function PostPickupInit:Pickup340(pickup)
 
   elseif PostPickupInit.bigChestAction == "trophy" then
     -- Spawn the end of race/speedrun trophy
-    Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
+    local position = g.r:GetCenterPos()
+    if stage == 6 then
+      position = g.r:FindFreePickupSpawnPosition(position, 0, true)
+    end
+    Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, position, g.zeroVector, nil)
     Isaac.DebugString("Spawned the end of race/speedrun trophy.")
     pickup:Remove()
 
@@ -399,10 +403,11 @@ function PostPickupInit:Pickup340_S7(pickup)
     end
   end
 
-  if stage == 6 and g:TableContains(Speedrun.remainingGoals, "Boss Rush") then
-    -- Prevent the bug where the Checkpoint can spawn over a bit
+  if stage == 6 then
+    -- Prevent the bug where the Checkpoint can spawn over a pit
     PostPickupInit.checkpointPos = g.r:FindFreePickupSpawnPosition(PostPickupInit.checkpointPos, 0, true)
-  elseif stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!") then
+  elseif stage == 8 then
+    -- Put the Checkpoint in the corner of the room so that it does not interfere with the path to the next floor
     PostPickupInit.checkpointPos = g:GridToPos(1, 1)
   end
 end
@@ -541,7 +546,7 @@ end
 function PostPickupInit:Pickup340_Delirium(pickup)
   -- Local variables
   local stage = g.l:GetStage()
-  if stage == 14 then
+  if stage == 12 then
     PostPickupInit.bigChestAction = "trophy"
   end
 end

@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.45.7"
+g.version = "v0.45.8"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -334,7 +334,6 @@ function g:InitRun()
   g.run.dealingExtraDamage   = false -- Used for Hush
   g.run.firingExtraTear      = false -- Used for Hush
   g.run.customBossRoomIndex  = -1000 -- Used in Season 7
-  g.run.showGoalsFrame       = 0 -- Used in Season 7
 
   -- Transformations
   g.run.transformations = {}

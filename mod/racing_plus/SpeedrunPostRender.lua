@@ -207,7 +207,6 @@ end
 
 function SpeedrunPostRender:DrawSeason7Goals()
   -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
@@ -217,14 +216,14 @@ function SpeedrunPostRender:DrawSeason7Goals()
   end
 
   -- Make the baby description persist for at least 2 seconds after the player presses tab
+  local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
-      g.run.showGoalsFrame = gameFrameCount + 60
+      tabPressed = true
       break
     end
   end
-
-  if gameFrameCount >= g.run.showGoalsFrame then
+  if not tabPressed then
     return
   end
 
