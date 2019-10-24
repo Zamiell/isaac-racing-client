@@ -10,10 +10,11 @@ function SpeedrunPostNewRoom:Main()
   end
 
   SpeedrunPostNewRoom:Womb2Error()
-  SpeedrunPostNewRoom:ReplaceBosses()
+  SpeedrunPostNewRoom:Season3ReplaceBosses()
   SpeedrunPostNewRoom:CheckCurseRoom()
   SpeedrunPostNewRoom:CheckSacrificeRoom()
-  SpeedrunPostNewRoom:RemoveVetoButton()
+  SpeedrunPostNewRoom:Season6RemoveVetoButton()
+  SpeedrunPostNewRoom:Season7Stage9()
   SpeedrunPostNewRoom:Season7Stage11()
   SpeedrunPostNewRoom:Season7Stage12()
 end
@@ -89,7 +90,7 @@ function SpeedrunPostNewRoom:Womb2Error()
 end
 
 -- In R+7 Season 3, replace the two final bosses
-function SpeedrunPostNewRoom:ReplaceBosses()
+function SpeedrunPostNewRoom:Season3ReplaceBosses()
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
@@ -238,7 +239,7 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
 end
 
 -- In seasons with the veto button, delete it if we are re-entering the starting room
-function SpeedrunPostNewRoom:RemoveVetoButton()
+function SpeedrunPostNewRoom:Season6RemoveVetoButton()
   local stage = g.l:GetStage()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
@@ -255,6 +256,25 @@ function SpeedrunPostNewRoom:RemoveVetoButton()
   end
 
   g.r:RemoveGridEntity(117, 0, false)
+end
+
+function SpeedrunPostNewRoom:Season7Stage9()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomType = g.r:GetType()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+     stage ~= 9 or
+     roomType ~= RoomType.ROOM_BOSS then -- 5
+
+    return
+  end
+
+  -- Remove The Void door if it is open
+  -- (closing it does not work because it will automatically reopen)
+  g.r:RemoveGridEntity(20, 0, false) -- gridEntity:Destroy() does not work
+  Isaac.DebugString("Manually deleted The Void door.")
 end
 
 function SpeedrunPostNewRoom:Season7Stage11()

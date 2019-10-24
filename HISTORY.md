@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.45.9* - October 24th, 2019
+
+* Fixed the bug where bone hearts would not be deleted during seeded revival.
+* Fixed the bug where the Void door would be open if you exited and re-entered the Hush room after defeating Hush in the season 7 custom challenge. (Thanks mgln)
+* Fixed the bug where Mysterious Paper would cause the seeded death mechanic to fail under certain conditions. (Thanks mgln)
+
 ### *v0.45.8* - October 22nd, 2019
 
 * In season 7, the Checkpoint item that spawns after It Lives! will no longer have its pedestal delay manually removed. (Thanks Dea1h)

@@ -15,7 +15,6 @@ SeededDeath.state = {
 
 -- Variables
 SeededDeath.debuffTime = 45 -- In seconds
-SeededDeath.debuffTime2 = 60 -- In seconds
 
 -- ModCallbacks.MC_POST_UPDATE (1)
 function SeededDeath:PostUpdate()
@@ -137,6 +136,9 @@ function SeededDeath:PostNewRoom()
     -- Start the debuff and set the finishing time to be in the future
     SeededDeath:DebuffOn()
     local debuffTimeMilliseconds = SeededDeath.debuffTime * 1000
+    if g.debug then
+      debuffTimeMilliseconds = 5000
+    end
     g.run.seededDeath.time = Isaac.GetTime() + debuffTimeMilliseconds
 
     -- Play the animation where Isaac lies in the fetal position
@@ -189,12 +191,15 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   end
 
   -- Check to see if they have a revival item
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then -- 212
     -- Having Guppy's Collar causes the extra lives to always be set to 1
     -- We handle Guppy's Collar manually
     extraLives = extraLives - 1
   end
-  if g.p:HasTrinket(TrinketType.TRINKET_MISSING_POSTER) then
+  if g.p:HasTrinket(TrinketType.TRINKET_MISSING_POSTER) and -- 23
+     not g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
+     -- (Mysterious Paper has a chance to give Missing Poster on every frame)
+
     -- Having Missing Poster does not affect the extra lives variable, so manually account for this
     extraLives = extraLives + 1
   end
@@ -295,6 +300,7 @@ function SeededDeath:DebuffOn()
   -- (or custom values for Keeper & The Forgotton)
   g.p:AddMaxHearts(-24, true)
   g.p:AddSoulHearts(-24)
+  g.p:AddBoneHearts(-12)
   if character == PlayerType.PLAYER_KEEPER then -- 14
     g.p:AddMaxHearts(2, true) -- One coin container
     g.p:AddHearts(2)
