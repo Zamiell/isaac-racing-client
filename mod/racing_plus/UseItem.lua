@@ -100,10 +100,10 @@ function UseItem:Item324()
   local stage = g.l:GetStage()
   local rooms = g.l:GetRooms()
 
-  -- It is not possible to teleport to I AM ERROR rooms and Black Markets on The Chest / Dark Room
+  -- It is not possible to teleport to I AM ERROR rooms and Black Markets on The Chest / Dark Room / The Void
   local insertErrorRoom = false
   local insertBlackMarket = false
-  if stage ~= 11 then
+  if stage ~= 11 and stage ~= 12 then
     insertErrorRoom = true
 
     -- There is a 1% chance have a Black Market inserted into the list of possibilities (according to blcd)

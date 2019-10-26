@@ -340,6 +340,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity27
                        EntityType.ENTITY_URIEL) -- 271
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity271, -- (to handle fast-drops)
                        EntityType.ENTITY_GABRIEL) -- 272
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity406,
+                       EntityType.ENTITY_ULTRA_GREED) -- 406
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity78,
                        EntityType.ENTITY_HUSH) -- 407
 

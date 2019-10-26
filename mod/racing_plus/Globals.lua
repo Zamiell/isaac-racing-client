@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.45.9"
+g.version = "v0.45.10"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -245,6 +245,9 @@ function g:InitRun()
   g.run.PHDPills          = false -- Used to determine when to change the pill text
   g.run.haveWishbone      = false
   g.run.haveWalnut        = false
+  g.run.debugDamage       = false
+  g.run.debugTears        = false
+  g.run.debugSpeed        = false
 
   -- Tracking per floor
   g.run.currentFloor        = 0

@@ -449,7 +449,7 @@ function RacePostGameStarted:Diversity()
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false)
 
       -- Update the cache (in case we had an active item that granted stats, like A Pony)
-      g.p:AddCacheFlags(CacheFlag.CACHE_ALL)
+      g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
       g.p:EvaluateItems()
 
       -- Remove the costume, if any (some items give a costume, like A Pony)

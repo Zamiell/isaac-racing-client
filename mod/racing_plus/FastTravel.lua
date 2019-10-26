@@ -48,6 +48,8 @@ function FastTravel:ReplaceTrapdoor(entity, i)
     return
   end
 
+  Isaac.DebugString("GETTING HERE!!!!!!!!!")
+
   -- Don't replace anything in The Void portal room
   if roomIndex == GridRooms.ROOM_THE_VOID_IDX then -- -9
     return
@@ -56,10 +58,11 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   local deleteAndDontReplace = false
 
   -- Delete the Womb trapdoor that spawns after Mom if the goal of the run is the Boss Rush
-  if (g.race.status == "in progress" and g.race.goal == "Boss Rush") or
-     (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
-      g:TableContains(Speedrun.remainingGoals, "Boss Rush") and
-      #Speedrun.remainingGoals == 1) then
+  if stage == 6 and
+     ((g.race.status == "in progress" and g.race.goal == "Boss Rush") or
+      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+       g:TableContains(Speedrun.remainingGoals, "Boss Rush") and
+       #Speedrun.remainingGoals == 1)) then
 
     deleteAndDontReplace = true
     Isaac.DebugString("Deleted the natural trapdoor after Mom.")

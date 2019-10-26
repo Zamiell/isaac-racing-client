@@ -61,7 +61,7 @@ function PostNewLevel:NewLevel()
 
     -- We arrived at the Dark Room without going through Sheol
     Isaac.DebugString("Sacrifice Room teleport detected.")
-    FastTravel:GotoNextFloor(false, g.run.currentFloor)
+    FastTravel:GotoNextFloor(false, g.run.currentFloor + 1)
     -- The first argument is "upwards", the second argument is "redirect"
     return
   end

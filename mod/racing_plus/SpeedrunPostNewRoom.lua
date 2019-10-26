@@ -9,7 +9,7 @@ function SpeedrunPostNewRoom:Main()
     return
   end
 
-  SpeedrunPostNewRoom:Womb2Error()
+  SpeedrunPostNewRoom:Stage8IAMERROR()
   SpeedrunPostNewRoom:Season3ReplaceBosses()
   SpeedrunPostNewRoom:CheckCurseRoom()
   SpeedrunPostNewRoom:CheckSacrificeRoom()
@@ -20,18 +20,16 @@ function SpeedrunPostNewRoom:Main()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
-function SpeedrunPostNewRoom:Womb2Error()
+function SpeedrunPostNewRoom:Stage8IAMERROR()
   -- Local variables
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local gridSize = g.r:GetGridSize()
 
-  if stage ~= 8 then
-    return
-  end
+  if stage ~= 8 or
+     roomType ~= RoomType.ROOM_ERROR then -- 3
 
-  if roomType ~= RoomType.ROOM_ERROR then -- 3
     return
   end
 

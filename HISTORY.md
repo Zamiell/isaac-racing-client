@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.45.10* - October 26th, 2019
+
+* It is no longer possible to teleport to the I AM ERROR room using Undefined on The Void. (Thanks Pingouin23 & Karolmo)
+* Removed Ultra Greed's death animation. (This prevents the bug where the Checkpoint is inaccessible behind the body.) (Thanks thereisnofuture)
+* Fixed the bug where the trapdoor on basement 1 did not appear on season 7 under certain conditions. (Thanks Shigan)
+* Fixed the bug where the Sacrifice Room would not take you to the next floor under certain conditions. (Thanks Dea1h)
+
 ### *v0.45.9* - October 24th, 2019
 
 * Fixed the bug where bone hearts would not be deleted during seeded revival.

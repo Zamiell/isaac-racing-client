@@ -8,10 +8,18 @@ function PostFireTear:Main(tear)
     return
   end
 
+  if g.run.debugDamage then
+    tear.Scale = 5
+  end
+
   if g.run.chaosCardTears then
     tear:ChangeVariant(TearVariant.CHAOS_CARD) -- 9
   end
 
+  PostFireTear:FixMonstrosLungSynergy(tear)
+end
+
+function PostFireTear:FixMonstrosLungSynergy(tear)
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) and -- 229
      not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) and -- 68
      not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114

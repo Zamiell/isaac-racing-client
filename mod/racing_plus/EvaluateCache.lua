@@ -10,6 +10,7 @@ function EvaluateCache:Main(player, cacheFlag)
   EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
   EvaluateCache:ThirteenLuck(player, cacheFlag)
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
+  EvaluateCache:DebugStats(player, cacheFlag)
 end
 
 function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
@@ -160,6 +161,26 @@ function EvaluateCache:PageantBoyRuleset(player, cacheFlag)
      g.race.rFormat == "pageant" then
 
     player.Luck = player.Luck + 7
+  end
+end
+
+function EvaluateCache:DebugStats(player, cacheFlag)
+  if g.run.debugDamage and
+     cacheFlag == CacheFlag.CACHE_DAMAGE then -- 1
+
+    player.Damage = 1000
+  end
+
+  if g.run.debugTears and
+     cacheFlag == CacheFlag.CACHE_FIREDELAY then -- 2
+
+    player.MaxFireDelay = 3
+  end
+
+  if g.run.debugSpeed and
+     cacheFlag == CacheFlag.CACHE_SPEED then -- 16
+
+    player.MoveSpeed = 2
   end
 end
 

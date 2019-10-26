@@ -43,6 +43,11 @@ function ExecuteCmd:Main(cmd, params)
     end
     Speedrun.charNum = tonumber(params)
 
+  elseif cmd == "damage" then
+    g.run.debugDamage = true
+    g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
+    g.p:EvaluateItems()
+
   elseif cmd == "devil" then
     g.p:UseCard(Card.CARD_JOKER) -- 31
 
@@ -116,13 +121,17 @@ function ExecuteCmd:Main(cmd, params)
     Schoolbag:Put(item, "max")
 
   elseif cmd == "speed" then
-    for i = 1, 3 do
-      g.p:AddCollectible(CollectibleType.COLLECTIBLE_BELT, 0, false) -- 28
-    end
+    g.run.debugSpeed = true
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
+    -- (since we added Lord of the Pit, it will update the speed stat)
 
   elseif cmd == "shop" then
     g.p:UseCard(Card.CARD_HERMIT) -- 10
+
+  elseif cmd == "tears" then
+    g.run.debugTears = true
+    g.p:AddCacheFlags(CacheFlag.CACHE_FIREDELAY) -- 2
+    g.p:EvaluateItems()
 
   elseif cmd == "trapdoor" then
     g.p:UseActiveItem(CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER, true, false, false, false) -- 84
@@ -130,6 +139,8 @@ function ExecuteCmd:Main(cmd, params)
   elseif cmd == "treasure" then
     g.p:UseCard(Card.CARD_STARS) -- 18
 
+  else
+    Isaac.DebugString("Unknown command.")
   end
 end
 

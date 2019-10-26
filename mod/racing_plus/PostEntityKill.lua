@@ -395,6 +395,11 @@ function PostEntityKill:Entity271(entity)
               pos, g.zeroVector, nil)
 end
 
+-- EntityType.ENTITY_ULTRA_GREED (406)
+function PostEntityKill:Entity406(entity)
+  entity:Remove()
+end
+
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
 -- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
 -- Blisters also need to be killed twice (to kill the spawned Sacks)
