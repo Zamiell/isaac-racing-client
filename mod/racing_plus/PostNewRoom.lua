@@ -87,25 +87,7 @@ function PostNewRoom:NewRoom()
   end
 
   -- Clear variables that track things per room
-  g.run.fastCleared          = false
-  g.run.currentGlobins       = {} -- Used for softlock prevention
-  g.run.currentLilHaunts     = {} -- Used to delete invulnerability frames
-  g.run.currentHoppers       = {} -- Used to prevent softlocks
-  g.run.usedStrength         = false
-  g.run.handsDelay           = 0
-  g.run.naturalTeleport      = false
-  g.run.diceRoomActivated    = false
-  g.run.megaSatanDead        = false
-  g.run.endOfRunText         = false -- Shown when the run is completed but only for one room
-  g.run.teleportSubverted    = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
-  g.run.teleportSubvertScale = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
-  g.run.spawningLight        = false -- For the custom Crack the Sky effect
-  g.run.spawningExtraLight   = false -- For the custom Crack the Sky effect
-  g.run.lightPositions       = {} -- For the custom Crack the Sky effect
-  g.run.matriarch            = {
-    chubIndex = -1,
-    stunFrame = 0,
-  }
+  g:InitRoom()
 
   -- Clear fast-clear variables that track things per room
   FastClear.buttonsAllPushed = false

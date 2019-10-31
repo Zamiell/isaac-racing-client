@@ -37,13 +37,9 @@ end
 function NPCUpdate:NPC28(npc)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
-  local stage = g.l:GetStage()
-  local roomType = g.r:GetType()
 
   -- We only care about Chubs spawned from The Matriarch
-  if stage ~= 7 or
-     roomType ~= RoomType.ROOM_BOSS then -- 5
-
+  if not g.run.matriarch.spawned then
     return
   end
 
@@ -243,6 +239,9 @@ end
 function NPCUpdate:NPC413(npc)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
+
+  -- Mark that we are fighting a Matriarch so that we can slow down the Chub later
+  g.run.matriarch.spawned = true
 
   -- Keep track of when the Matriarch dies so that we can manually slow down the Chub
   if g.run.matriarchFrame == 0 and

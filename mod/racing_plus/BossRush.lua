@@ -151,17 +151,29 @@ function BossRush:CheckSpawnNewWave()
     return
   end
 
-  -- When the boss rush is active, the "Room Clear Delay NPC" boss will always be present
-  if FastClear.aliveBossesCount > 1 then
-    return
-  end
-
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
   local bossesPerWave = 2
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
     bossesPerWave = 3
+  end
+  local totalBossesDefeated = g.run.bossRush.currentWave * bossesPerWave
+
+  -- Find out whether it is time to spawn the next wave
+  -- If this is the final wave, then we only want to proceed if every enemy is killed (not just the bosses)
+  -- When the boss rush is active, the "Room Clear Delay NPC" boss will always be present,
+  -- which is why we check for equal to 1
+  local spawnNextWave = false
+  if totalBossesDefeated >= BossRush.totalBosses then
+    if FastClear.aliveEnemiesCount == 1 then
+      spawnNextWave = true
+    end
+  elseif FastClear.aliveBossesCount == 1 then
+    spawnNextWave = true
+  end
+  if not spawnNextWave then
+    return
   end
 
   if g.run.bossRush.spawnWaveFrame ~= 0 then
@@ -185,7 +197,6 @@ function BossRush:CheckSpawnNewWave()
   end
 
   -- Find out if the Boss Rush is over
-  local totalBossesDefeated = g.run.bossRush.currentWave * bossesPerWave
   Isaac.DebugString("Total bosses defeated: " .. tostring(totalBossesDefeated))
   if totalBossesDefeated >= BossRush.totalBosses then
     BossRush:Finish()

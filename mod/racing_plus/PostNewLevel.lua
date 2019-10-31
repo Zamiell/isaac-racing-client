@@ -88,14 +88,9 @@ function PostNewLevel:NewLevel()
   Isaac.DebugString("New floor: " .. tostring(g.run.currentFloor) .. "-" ..
                     tostring(g.run.currentFloorType))
 
-  -- Reset some per level flags
-  g.run.replacedPedestals = {}
-  g.run.replacedTrapdoors = {}
-  g.run.replacedCrawlspaces = {}
-  g.run.replacedHeavenDoors = {}
+  -- Clear variables that track things per level
+  g:InitLevel()
   Isaac.DebugString("Reseed count: " .. tostring(g.run.reseedCount))
-  g.run.reseedCount = 0
-  g.run.tempHolyMantle = false
 
   -- Reset the RNG of some items that should be seeded per floor
   local stageSeed = g.seeds:GetStageSeed(stage)

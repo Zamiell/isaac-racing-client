@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.45.11* - October 31st, 2019
+
+* Fixed the bug where the Boss Rush would complete upon killing all the bosses instead of all the enemies. (Thanks mgln)
+* Fixed the bug where the Chub from the Matriarch was not slowed down in the Boss Rush. (Thanks NorBro86)
+
 ### *v0.45.10* - October 26th, 2019
 
 * It is no longer possible to teleport to the I AM ERROR room using Undefined on The Void. (Thanks Pingouin23 & Karolmo)

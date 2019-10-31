@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.45.10"
+g.version = "v0.45.11"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -249,94 +249,69 @@ function g:InitRun()
   g.run.debugTears        = false
   g.run.debugSpeed        = false
 
-  -- Tracking per floor
+  -- Tracking per level
   g.run.currentFloor        = 0
   -- (start at 0 so that we can trigger the PostNewRoom callback after the PostNewLevel callback)
   g.run.currentFloorType    = 0 -- We need to track this because we can go from Cathedral to Sheol, for example
-  g.run.replacedPedestals   = {}
-  g.run.replacedTrapdoors   = {}
-  g.run.replacedCrawlspaces = {}
-  g.run.replacedHeavenDoors = {}
-  g.run.reseedCount         = 0
-  g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
+  g:InitLevel()
 
   -- Tracking per room
-  g.run.currentRoomClearState = true
-  g.run.fastCleared           = false
-  g.run.currentGlobins        = {} -- Used for softlock prevention
-  g.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
-  g.run.currentHoppers        = {} -- Used to prevent softlocks
-  g.run.usedStrength          = false
-  g.run.usedStrengthChar      = 0
-  g.run.handsDelay            = 0 -- Used to speed up Mom's Hands
-  g.run.naturalTeleport       = false
-  g.run.diceRoomActivated     = false
-  g.run.megaSatanDead         = false
-  g.run.endOfRunText          = false -- Shown when the run is completed but only for one room
-  g.run.teleportSubverted     = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
-  g.run.teleportSubvertScale  = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
-  g.run.forceMomStomp         = false
-  g.run.forceMomStompPos      = nil
-  g.run.spawningLight         = false -- For the custom Crack the Sky effect
-  g.run.spawningExtraLight    = false -- For the custom Crack the Sky effect
-  g.run.lightPositions        = {} -- For the custom Crack the Sky effect
-  g.run.matriarch             = {
-    chubIndex = -1,
-    stunFrame = 0,
-  }
+  g:InitRoom()
 
   -- Temporary tracking
-  g.run.restart              = false -- If set, we restart the run on the next frame
-  g.run.diversity            = false -- Whether or not this is a diversity race
-  g.run.b1HasCurse           = false
-  g.run.reseededFloor        = false
-  g.run.goingToDebugRoom     = false
-  g.run.forgetMeNow          = false
-  g.run.consoleOpened        = false -- If set, fast-resetting is disabled
-  g.run.streakText           = ""
-  g.run.streakFrame          = 0
-  g.run.streakForce          = false
-  g.run.streakIgnore         = false
-  g.run.itemReplacementDelay = 0 -- Set when Void is used
-  g.run.usedTelepills        = false
-  g.run.giveExtraCharge      = false -- Used to fix The Battery + 9 Volt synergy
-  g.run.droppedButterItem    = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
-  g.run.fastResetFrame       = 0 -- Set when the user presses the reset button on the keyboard
-  g.run.dualityCheckFrame    = 0
-  g.run.changeFartColor      = false
-  g.run.momDied              = false -- Used to fix bugs with fast-clear and killing Mom
-  g.run.replacingPedestal    = false
-  g.run.photosSpawning       = false -- Used when replacing The Polaroid and The Negative
-  g.run.spawningKrampusItem  = false -- Used for spawning Krampus items early
-  g.run.spawningKeyPiece     = false -- Used for spawning Key Piece 1 or Key Piece 2 early
-  g.run.mysteryGiftFrame     = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
-  g.run.playerGenPedSeeds    = {} -- Used so that we properly seed player-generated pedestals (1/2)
-  g.run.playerGenPedFrame    = 0 -- Used so that we properly seed player-generated pedestals (2/2)
-  g.run.itLivesKillFrame     = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
-  g.run.speedLilHauntsFrame  = 0 -- Used to speed up The Haunt fight (1/2)
-  g.run.speedLilHauntsBlack  = false -- Used to speed up The Haunt fight (2/2)
-  g.run.rechargeItemFrame    = 0 -- Used to recharge the D6 / Void after a failed attempt
-  g.run.killAttackFly        = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
-  g.run.extraIncubus         = false -- Used in Racing+ Season 4
-  g.run.removedCrownHearts   = false -- Used to remove health after taking Crown of Light from a fart-reroll
-  g.run.passiveItems         = {} -- Used to keep track of the currently collected passive items
-  g.run.pickingUpItem        = 0 -- Equal to the ID of the currently queued item
-  g.run.pickingUpItemRoom    = 0 -- Equal to the room that we picked up the currently queued item
-  g.run.knifeDirection       = {} -- A 2-dimensional array that stores the directions held on past frames
-  g.run.lastDDLevel          = 0 -- Used by the Soul Jar
-  g.run.switchForgotten      = false -- Used to manually switch the player between The Forgotten and The Soul
-  g.run.currentCharacter     = 0
-  g.run.fadeForgottenFrame   = 0 -- Used to fix a bug with seeded death
-  g.run.showVersionFrame     = 0
-  g.run.bombKeyPressed       = false
-  g.run.spawningAngel        = false
-  g.run.bossCommand          = false -- Used in Racing+ Rebalanced
-  g.run.questionMarkCard     = 0 -- Equal to the last game frame that one was used
-  g.run.gettingCollectible   = false
-  g.run.chaosCardTears       = false -- Used while debugging
-  g.run.dealingExtraDamage   = false -- Used for Hush
-  g.run.firingExtraTear      = false -- Used for Hush
-  g.run.customBossRoomIndex  = -1000 -- Used in Season 7
+  g.run.restart               = false -- If set, we restart the run on the next frame
+  g.run.currentRoomClearState = true
+  g.run.diversity             = false -- Whether or not this is a diversity race
+  g.run.b1HasCurse            = false
+  g.run.reseededFloor         = false
+  g.run.usedStrengthChar      = 0
+  g.run.goingToDebugRoom      = false
+  g.run.forgetMeNow           = false
+  g.run.consoleOpened         = false -- If set, fast-resetting is disabled
+  g.run.streakText            = ""
+  g.run.streakFrame           = 0
+  g.run.streakForce           = false
+  g.run.streakIgnore          = false
+  g.run.itemReplacementDelay  = 0 -- Set when Void is used
+  g.run.usedTelepills         = false
+  g.run.giveExtraCharge       = false -- Used to fix The Battery + 9 Volt synergy
+  g.run.droppedButterItem     = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
+  g.run.fastResetFrame        = 0 -- Set when the user presses the reset button on the keyboard
+  g.run.dualityCheckFrame     = 0
+  g.run.changeFartColor       = false
+  g.run.momDied               = false -- Used to fix bugs with fast-clear and killing Mom
+  g.run.replacingPedestal     = false
+  g.run.photosSpawning        = false -- Used when replacing The Polaroid and The Negative
+  g.run.spawningKrampusItem   = false -- Used for spawning Krampus items early
+  g.run.spawningKeyPiece      = false -- Used for spawning Key Piece 1 or Key Piece 2 early
+  g.run.mysteryGiftFrame      = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
+  g.run.playerGenPedSeeds     = {} -- Used so that we properly seed player-generated pedestals (1/2)
+  g.run.playerGenPedFrame     = 0 -- Used so that we properly seed player-generated pedestals (2/2)
+  g.run.itLivesKillFrame      = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
+  g.run.speedLilHauntsFrame   = 0 -- Used to speed up The Haunt fight (1/2)
+  g.run.speedLilHauntsBlack   = false -- Used to speed up The Haunt fight (2/2)
+  g.run.rechargeItemFrame     = 0 -- Used to recharge the D6 / Void after a failed attempt
+  g.run.killAttackFly         = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
+  g.run.extraIncubus          = false -- Used in Racing+ Season 4
+  g.run.removedCrownHearts    = false -- Used to remove health after taking Crown of Light from a fart-reroll
+  g.run.passiveItems          = {} -- Used to keep track of the currently collected passive items
+  g.run.pickingUpItem         = 0 -- Equal to the ID of the currently queued item
+  g.run.pickingUpItemRoom     = 0 -- Equal to the room that we picked up the currently queued item
+  g.run.knifeDirection        = {} -- A 2-dimensional array that stores the directions held on past frames
+  g.run.lastDDLevel           = 0 -- Used by the Soul Jar
+  g.run.switchForgotten       = false -- Used to manually switch the player between The Forgotten and The Soul
+  g.run.currentCharacter      = 0
+  g.run.fadeForgottenFrame    = 0 -- Used to fix a bug with seeded death
+  g.run.showVersionFrame      = 0
+  g.run.bombKeyPressed        = false
+  g.run.spawningAngel         = false
+  g.run.bossCommand           = false -- Used in Racing+ Rebalanced
+  g.run.questionMarkCard      = 0 -- Equal to the last game frame that one was used
+  g.run.gettingCollectible    = false
+  g.run.chaosCardTears        = false -- Used while debugging
+  g.run.dealingExtraDamage    = false -- Used for Hush
+  g.run.firingExtraTear       = false -- Used for Hush
+  g.run.customBossRoomIndex   = -1000 -- Used in Season 7
 
   -- Transformations
   g.run.transformations = {}
@@ -421,6 +396,42 @@ function g:InitRun()
     coins        = 0,
     keys         = 0,
     heartTable   = {},
+  }
+end
+
+function g:InitLevel()
+  -- Tracking per floor
+  g.run.replacedPedestals   = {}
+  g.run.replacedTrapdoors   = {}
+  g.run.replacedCrawlspaces = {}
+  g.run.replacedHeavenDoors = {}
+  g.run.reseedCount         = 0
+  g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
+end
+
+function g:InitRoom()
+  -- Tracking per room
+  g.run.fastCleared           = false
+  g.run.currentGlobins        = {} -- Used for softlock prevention
+  g.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
+  g.run.currentHoppers        = {} -- Used to prevent softlocks
+  g.run.usedStrength          = false
+  g.run.handsDelay            = 0 -- Used to speed up Mom's Hands
+  g.run.naturalTeleport       = false
+  g.run.diceRoomActivated     = false
+  g.run.megaSatanDead         = false
+  g.run.endOfRunText          = false -- Shown when the run is completed but only for one room
+  g.run.teleportSubverted     = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
+  g.run.teleportSubvertScale  = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
+  g.run.forceMomStomp         = false
+  g.run.forceMomStompPos      = nil
+  g.run.spawningLight         = false -- For the custom Crack the Sky effect
+  g.run.spawningExtraLight    = false -- For the custom Crack the Sky effect
+  g.run.lightPositions        = {} -- For the custom Crack the Sky effect
+  g.run.matriarch             = {
+    spawned   = false,
+    chubIndex = -1,
+    stunFrame = 0,
   }
 end
 
