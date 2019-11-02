@@ -175,7 +175,7 @@ function PostGameStarted:Main(saveState)
 
   -- Remove the 3 placeholder items if this is not a diversity race
   if not g.run.diversity and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)

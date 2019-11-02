@@ -603,7 +603,7 @@ function PostRender:Race()
 
   -- If we are not in a race, do nothing
   if g.race.status == "none" and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 
     Sprites:ClearPostRaceStartGraphics()
   end

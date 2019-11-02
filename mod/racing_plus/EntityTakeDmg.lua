@@ -26,7 +26,7 @@ function EntityTakeDmg:RemoveArmor(tookDamage, damageAmount, damageFlag, damageS
   end
 
   local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     return
   end
 

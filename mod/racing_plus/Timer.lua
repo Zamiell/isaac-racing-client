@@ -250,7 +250,7 @@ function Timer:DisplaySecond()
   if g.run.seededDeath.state >= SeededDeath.state.FETAL_POSITION then
     elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
     if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+       challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 
       -- The timer needs to be moved to the right to account for the "(S#)" icon
       adjustTimerRight = true

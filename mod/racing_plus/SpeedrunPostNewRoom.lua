@@ -262,7 +262,7 @@ function SpeedrunPostNewRoom:Season7Stage9()
   local roomType = g.r:GetType()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
      stage ~= 9 or
      roomType ~= RoomType.ROOM_BOSS then -- 5
 
@@ -282,7 +282,7 @@ function SpeedrunPostNewRoom:Season7Stage11()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
      stage ~= 11 or
      roomIndexUnsafe ~= startingRoomIndex then
 
@@ -318,7 +318,7 @@ function SpeedrunPostNewRoom:Season7Stage12()
 
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     return
   end
 

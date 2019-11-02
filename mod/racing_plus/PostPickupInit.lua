@@ -166,7 +166,7 @@ function PostPickupInit:Pickup340(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
     PostPickupInit:Pickup340_Speedrun_Alternate(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     PostPickupInit:Pickup340_S7(pickup)
 
   elseif Speedrun.inSeededSpeedrun then

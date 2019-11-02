@@ -444,7 +444,7 @@ function FastClear:ClearRoom()
     -- Try to spawn the Blue Womb door
     if stage == 8 and
        ((g.race.status == "in progress" and g.race.goal == "Hush") or
-        (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+        (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
          g:TableContains(Speedrun.remainingGoals, "Hush"))) then
 
       g.r:TrySpawnBlueWombDoor(true, true)
@@ -562,7 +562,7 @@ function FastClear:SpawnPhotos()
     -- Most seasons give the player a choice between the two photos
     situation = situations.BOTH
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     if #Speedrun.remainingGoals == 1 and Speedrun.remainingGoals[1] == "Blue Baby" then
       -- The only thing left to do is to kill Blue Baby, so they must take The Polaroid
       situation = situations.POLAROID

@@ -429,7 +429,7 @@ function RacePostGameStarted:Diversity()
   local startingItems = g.race.startingItems
 
   -- We need to generate the starting items if we are in Season 7
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     startingItems = RacePostGameStarted:GenerateDiversityStarts()
   end
 
@@ -505,7 +505,7 @@ function RacePostGameStarted:Diversity()
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_ISAACS_HEART) then -- 276
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BLOOD_RIGHTS) -- 186
   end
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SOY_MILK) then -- 330
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_LIBRA) -- 304
     end

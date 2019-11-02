@@ -155,7 +155,7 @@ function BossRush:CheckSpawnNewWave()
   local gameFrameCount = g.g:GetFrameCount()
   local challenge = Isaac.GetChallenge()
   local bossesPerWave = 2
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     bossesPerWave = 3
   end
   local totalBossesDefeated = g.run.bossRush.currentWave * bossesPerWave
@@ -230,7 +230,7 @@ function BossRush:PostNewRoom()
                                         -1, false, false)
   if not g.run.bossRush.finished and
      #collectibles == 0 and
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
      g:TableContains(Speedrun.remainingGoals, "Boss Rush") then
 
     BossRush:Start()
@@ -305,7 +305,7 @@ function BossRush:Finish()
   Isaac.DebugString("Custom Boss Rush finished.")
 
   local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
                 g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced

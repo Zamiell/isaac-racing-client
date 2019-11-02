@@ -185,7 +185,7 @@ function Speedrun:PostNewLevel()
   local rooms = g.l:GetRooms()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     return
   end
 
@@ -218,7 +218,7 @@ function Speedrun:RoomCleared()
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if we just defeated the custom boss on a Season 7 speedrun
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
      stage == 12 and
      roomIndexUnsafe == g.run.customBossRoomIndex then
 
@@ -258,7 +258,7 @@ function Speedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") or
      Speedrun.inSeededSpeedrun or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
@@ -315,7 +315,7 @@ function Speedrun:CheckValidCharOrder()
 
     return false
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
          (charOrderType ~= "R7S7" or
           #g.race.charOrder ~= 8) then
 

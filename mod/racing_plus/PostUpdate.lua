@@ -429,7 +429,7 @@ function PostUpdate:CrownOfLight()
      (((g.race.rFormat == "unseeded" or
         g.race.rFormat == "diversity") and
        g.race.status == "in progress") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) then
 
      -- Remove the two soul hearts that the Crown of Light gives
      g.run.removedCrownHearts = true

@@ -149,7 +149,7 @@ function RPPedestals:Replace(pickup)
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      ((g.race.rFormat == "diversity" and g.race.status == "in progress") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) then
+      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) then
 
     if pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360

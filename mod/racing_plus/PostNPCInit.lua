@@ -76,7 +76,7 @@ function PostNPCInit:NPC102(npc)
 
   -- In season 7 speedruns, we want to go directly into the second phase of Hush
   if npc.Variant == 2 and
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 
     npc:Remove()
     g.g:Spawn(EntityType.ENTITY_HUSH, 0, Vector(580, 260), g.zeroVector, nil, 0, npc.InitSeed) -- 407

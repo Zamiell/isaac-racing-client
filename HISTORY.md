@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.46.0* - November 2nd, 2019
+
+* Season 6 is finished!
+  * Congradulations to Shigan_ for the best time of 44:04, thereisnofuture for the second best time of 45:54, and Greg570 for the third best time of 46:30.
+  * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
+  * If you want to beat these times, the R+7 (S6) category will continue to be tracked on speedrun.com, but the official competition will move on to season 7.
+* [Season 7](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-7-the-diversity-season) has officially begun!
+
 ### *v0.45.11* - October 31st, 2019
 
 * Fixed the bug where the Boss Rush would complete upon killing all the bosses instead of all the enemies. (Thanks mgln)
@@ -358,7 +366,7 @@
 ### *v0.34.0* - May 2nd, 2019
 
 * Season 5 is finished!
-  * Congradulations to Dea1h for the best R+7 time of 1:02:53, Cyber_1 for the second best time of 1:03:26, and CrafterLynx for the third best time of 1:04:17.
+  * Congradulations to Dea1h for the best time of 1:02:53, Cyber_1 for the second best time of 1:03:26, and CrafterLynx for the third best time of 1:04:17.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S5) category will continue to be tracked on speedrun.com, but the official competition will move on to season 6.
 * [Season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-6) has officially begun! The new season will be considered beta for the first 2-3 weeks.
@@ -457,7 +465,7 @@
 ### *v0.29.0* - November 19th, 2018
 
 * Season 4 is finished!
-  * Congradulations to antizoubilamakA for the best R+7 time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
+  * Congradulations to antizoubilamakA for the best time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S4) category will continue to be tracked on speedrun.com, but the official competition will move on to season 5.
 * [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun! The new category is now considered final; there will be no more major balance changes.
@@ -1010,7 +1018,7 @@ Mod Changes:
 ### *v0.17.0* - April 21st, 2018
 
 * Season 3 is finished!
-  * Congradulations to Dea1h for the best R+7 time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
+  * Congradulations to Dea1h for the best time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S3) category will continue to be tracked on speedrun.com, but the official competition will move on to season 4.
 * [Season 4](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-4) has officially begun! The new category is now considered final; there will be no more major balance changes.
@@ -1245,7 +1253,7 @@ News:
 
 * Isaac is now feeling festive. Happy Thanksgiving! (Thanks to Gromfalloon for this)
 * Season 2 is finished!
-  * Congradulations to Dea1h for the best R+7 time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
+  * Congradulations to Dea1h for the best time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
   * If you tried out Season 2 and did not like it, Samael is being heavily buffed in this patch with the goal of making him more fun to play (see below).

@@ -142,7 +142,7 @@ function PostEntityKill:Entity78(entity)
     end
 
   elseif ((g.race.status == "in progress" and g.race.goal == "Hush") or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)")) and
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) and
          entity.Type == EntityType.ENTITY_HUSH then -- 78
 
     -- Hush is the goal
@@ -180,7 +180,7 @@ function PostEntityKill:Entity78(entity)
   end
 
   -- Handle special things for Season 7
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") and
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
      entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78
 
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
@@ -236,7 +236,7 @@ function PostEntityKill:Entity78(entity)
   end
 
   -- Season 7 speedruns end at Hush
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
                 g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced

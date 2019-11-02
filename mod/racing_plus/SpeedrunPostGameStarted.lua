@@ -115,7 +115,7 @@ function SpeedrunPostGameStarted:Main()
         Isaac.DebugString("S6 - Reset selected item starts.")
       end
 
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
       Speedrun.remainingGoals = g:TableClone(Speedrun.goalsS7)
       Speedrun.completedGoals = {}
     end
@@ -163,7 +163,7 @@ function SpeedrunPostGameStarted:Main()
     SpeedrunPostGameStarted:R7S5()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
     SpeedrunPostGameStarted:R7S6()
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     SpeedrunPostGameStarted:R7S7()
   elseif Speedrun.inSeededSpeedrun then
     SpeedrunPostGameStarted:R7SS()

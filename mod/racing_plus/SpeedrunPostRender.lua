@@ -98,7 +98,7 @@ function SpeedrunPostRender:DisplayCharProgress()
       fileName = "S5"
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       fileName = "S6"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
       fileName = "S7"
     elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
       fileName = "V"
@@ -209,7 +209,7 @@ function SpeedrunPostRender:DrawSeason7Goals()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
      Speedrun.finished then
 
     return
