@@ -33,7 +33,7 @@
 	</entity>
 
 	<!-- This is for subverting the post-Lamb popup -->
-	<entity name="Room Clear Delay" id="1000" variant="207" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+	<entity name="Room Clear Delay" id="1000" variant="207" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
@@ -41,7 +41,7 @@
 	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
-	<entity name="Room Clear Delay NPC" id="1002" variant="0" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+	<entity name="Room Clear Delay NPC" id="1002" variant="0" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 	<!--

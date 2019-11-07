@@ -61,9 +61,9 @@ InputAction.IsActionPressedFunction = {
 -- InputHook.IS_ACTION_TRIGGERED (1)
 --
 
--- Disable using cards/pills if we are in the trapdoor animation
--- Disable using cards/pills if we are in the room sliding animation
 function InputAction.IsActionTriggeredPillCard()
+  -- Disable using cards/pills if we are in the trapdoor animation
+  -- Disable using cards/pills if we are in the room sliding animation
   if g.run.trapdoor.state > 0 or
      Game():GetRoom():GetFrameCount() == 0 then
       -- (we can't use cached API functions in this callback or else the game will crash)

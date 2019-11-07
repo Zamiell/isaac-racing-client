@@ -60,6 +60,7 @@ function NPCUpdate:NPC28(npc)
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
       if entity:ToNPC() ~= nil and
          entity.Type ~= EntityType.ENTITY_CHUB and -- 28
+         entity.Type ~= EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC and
          entity.Type ~= EntityType.ENTITY_SAMAEL_SCYTHE then
 
         entity:Kill()
@@ -237,19 +238,8 @@ end
 
 -- EntityType.ENTITY_MATRIARCH (413)
 function NPCUpdate:NPC413(npc)
-  -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
-
   -- Mark that we are fighting a Matriarch so that we can slow down the Chub later
   g.run.matriarch.spawned = true
-
-  -- Keep track of when the Matriarch dies so that we can manually slow down the Chub
-  if g.run.matriarchFrame == 0 and
-     npc:IsDead() then
-
-    g.run.matriarchFrame = gameFrameCount
-    Isaac.DebugString("The Matriarch died on frame: " .. tostring(g.run.matriarchFrame))
-  end
 end
 
 -- EntityType.ENTITY_HOST (27)

@@ -235,7 +235,9 @@ function PostPickupInit:Pickup340(pickup)
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
               PostPickupInit.checkpointPos, g.zeroVector, nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
     Speedrun.spawnedCheckpoint = true
-    Isaac.DebugString("Spawned a Checkpoint in the center of the room.")
+    Isaac.DebugString("Spawned a Checkpoint at (" ..
+                      tostring(PostPickupInit.checkpointPos.X) .. ", " ..
+                      tostring(PostPickupInit.checkpointPos.Y) .. ")")
     pickup:Remove()
 
     -- Show the run summary

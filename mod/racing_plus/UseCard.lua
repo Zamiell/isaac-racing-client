@@ -52,12 +52,22 @@ end
 
 -- Card.RUNE_BLACK (41)
 function UseCard:BlackRune()
+  -- Local variables
+  local stage = g.l:GetStage()
+
   local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
                                        CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
   for _, checkpoint in ipairs(checkpoints) do
     -- The Checkpoint custom item is about to be deleted, so spawn another one
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, checkpoint.Position, checkpoint.Velocity,
               nil, CollectibleType.COLLECTIBLE_CHECKPOINT, checkpoint.InitSeed)
+    Isaac.DebugString("A black rune deleted a Checkpoint - spawning another one.")
+  end
+
+  -- Kill the player if they are trying to cheat on the season 7 custom challenge
+  if stage == 8 then
+    g.p:AnimateSad()
+    g.p:Kill()
   end
 end
 

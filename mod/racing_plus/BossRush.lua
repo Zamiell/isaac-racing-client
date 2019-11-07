@@ -202,9 +202,11 @@ function BossRush:CheckSpawnNewWave()
     BossRush:Finish()
   else
     -- Spawn the next wave after a short delay
+    if g.run.bossRush.currentWave > 0 then
+      Isaac.DebugString("Bosses defeated on frame: " .. tostring(gameFrameCount))
+    end
     g.run.bossRush.spawnWaveFrame = gameFrameCount + BossRush.delay
     g.run.bossRush.currentWave = g.run.bossRush.currentWave + 1
-    Isaac.DebugString("Bosses defeated on frame: " .. tostring(gameFrameCount))
     Isaac.DebugString("Marking to spawn the next wave on frame: " .. tostring(g.run.bossRush.spawnWaveFrame))
   end
 end

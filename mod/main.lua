@@ -344,6 +344,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity40
                        EntityType.ENTITY_ULTRA_GREED) -- 406
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity78,
                        EntityType.ENTITY_HUSH) -- 407
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.RoomClearDelayNPC,
+                       EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC)
 
 -- Samael callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Samael.scytheUpdate, -- 0

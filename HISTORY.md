@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.46.1* - November 7th, 2019
+
+* The pause and unpause animations have been removed.
+* Fixed the bug where you could not pause the game while jumping into a trapdoor. (Thanks Dea1h)
+* Fixed the bug where the Boss Rush would spawn extra bosses under certain conditions. (Thanks Gamonymous)
+* You will now be killed if you try to get extra stats by using a black rune on a Checkpoint in season 7. (Thanks Pingouin23)
+
 ### *v0.46.0* - November 2nd, 2019
 
 * Season 6 is finished!

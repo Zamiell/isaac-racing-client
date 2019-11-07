@@ -400,6 +400,13 @@ function PostEntityKill:Entity406(entity)
   entity:Remove()
 end
 
+function PostEntityKill:RoomClearDelayNPC(entity)
+  -- The room clear delay NPC may accidentally die if Lua code kills all NPCs in a room
+  -- If this occurs, just spawn a new one
+  Isaac.DebugString("Room Clear Delay NPC death detected - spawning a new one.")
+  Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
+end
+
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
 -- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
 -- Blisters also need to be killed twice (to kill the spawned Sacks)

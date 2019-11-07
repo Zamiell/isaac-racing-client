@@ -127,6 +127,7 @@ While there are thousands of rooms in the game, many players have already seen t
   * the fade when entering a new floor (replaced with a custom animation)
   * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
   * all "giantbook" animations (with the exception of Book of Revelations, Satanic Bible, eternal hearts, and black hearts)
+  * the pause and unpause animations
   * teleporting upwards
   * traveling upwards in a beam of light (replaced with a faster version)
   * the use animation for Telepills

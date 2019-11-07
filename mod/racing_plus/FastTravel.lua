@@ -301,7 +301,7 @@ end
 function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
   -- Local variables
   local stage = g.l:GetStage()
-  local isaacFrameCount = Isaac.GetFrameCount()
+  local gameFrameCount = g.g:GetFrameCount()
 
   -- Check to see if a player is touching the trapdoor
   for i = 1, g.g:GetNumPlayers() do
@@ -326,7 +326,8 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
       -- State 1 is activated the moment we touch the trapdoor
       g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
       g.run.trapdoor.upwards = upwards
-      g.run.trapdoor.frame = isaacFrameCount + 40 -- Custom animations are 40 frames; see below
+      g.run.trapdoor.frame = gameFrameCount + 16
+      -- (custom animations are 40 frames, which is translated to 20 game frames; see below)
       g.run.trapdoor.voidPortal = effect.Variant == EffectVariant.VOID_PORTAL_FAST_TRAVEL
       g.run.trapdoor.megaSatan = effect.Variant == EffectVariant.MEGA_SATAN_TRAPDOOR
 
@@ -369,10 +370,11 @@ end
 function FastTravel:CheckTrapdoor()
   -- Local varaibles
   local stage = g.l:GetStage()
+  local gameFrameCount = g.g:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
 
   if g.run.trapdoor.state == FastTravel.state.PLAYER_ANIMATION and
-     isaacFrameCount >= g.run.trapdoor.frame then
+     gameFrameCount >= g.run.trapdoor.frame then
 
     -- State 2 is activated when the "Trapdoor" animation is completed
     g.p.Visible = false
@@ -383,8 +385,9 @@ function FastTravel:CheckTrapdoor()
 
     -- Mark to change floors after the screen is black
     g.run.trapdoor.state = FastTravel.state.FADING_TO_BLACK
-    g.run.trapdoor.frame = isaacFrameCount + 8
-    -- 9 is too many (you can start to see the same room again)
+    g.run.trapdoor.frame = isaacFrameCount + 9 -- 10 is too many (you can start to see the same room again)
+    -- (we must use Isaac frames instead of game frames for this part because
+    -- game frames do not pass during a room transition)
 
   elseif g.run.trapdoor.state == FastTravel.state.FADING_TO_BLACK and
          isaacFrameCount >= g.run.trapdoor.frame then
@@ -402,28 +405,28 @@ function FastTravel:CheckTrapdoor()
      -- (this happens automatically by the game)
      -- (stages 4 and 5 are in the PostNewRoom callback)
      g.run.trapdoor.state = FastTravel.state.CONTROLS_ENABLED
-     g.run.trapdoor.frame = isaacFrameCount + 10 -- Wait a while longer
+     g.run.trapdoor.frame = gameFrameCount + 5 -- Wait a while longer
      g.p.ControlsEnabled = false
 
   elseif g.run.trapdoor.state == FastTravel.state.CONTROLS_ENABLED and
-         isaacFrameCount >= g.run.trapdoor.frame then
+         gameFrameCount >= g.run.trapdoor.frame then
 
      -- State 7 is activated when the the hole is spawned and ready
      g.run.trapdoor.state = FastTravel.state.PLAYER_JUMP
-     g.run.trapdoor.frame = isaacFrameCount + 25
-     -- The "JumpOut" animation is 15 frames long, so give a bit of leeway
+     g.run.trapdoor.frame = gameFrameCount + 14
+     -- 14 frames is just long enough so that Isaac lands from his jump
 
      for i = 1, g.g:GetNumPlayers() do
-       local player2 = Isaac.GetPlayer(i - 1)
+       local player = Isaac.GetPlayer(i - 1)
 
        -- Make the player(s) visable again
-       player2.SpriteScale = g.run.trapdoor.scale[i]
+       player.SpriteScale = g.run.trapdoor.scale[i]
 
        -- Give the player(s) the collision that we removed earlier
-       player2.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
+       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
        -- Play the jumping out of the hole animation
-       player2:PlayExtraAnimation("Jump")
+       player:PlayExtraAnimation("Jump")
      end
 
      -- Make the hole do the dissapear animation
@@ -434,15 +437,15 @@ function FastTravel:CheckTrapdoor()
      end
 
   elseif g.run.trapdoor.state == FastTravel.state.PLAYER_JUMP and
-         isaacFrameCount >= g.run.trapdoor.frame then
+         gameFrameCount >= g.run.trapdoor.frame then
 
     -- We are finished when the the player has emerged from the hole
     g.run.trapdoor.state = FastTravel.state.DISABLED
 
     -- Enable the controls for all players
     for i = 1, g.g:GetNumPlayers() do
-      local player2 = Isaac.GetPlayer(i - 1)
-      player2.ControlsEnabled = true
+      local player = Isaac.GetPlayer(i - 1)
+      player.ControlsEnabled = true
     end
 
     -- Kill the hole
