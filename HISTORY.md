@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.46.2* - November 9th, 2019
+
+* Hush's appear animation has been removed.
+* Scolex will no longer appear in the Boss Rush. (Thanks SlashSP)
+* It is no longer possible to get The Haunt or Mama Gurdy in the Boss Rush room that has rocks along the top wall. (Thanks SlashSP)
+* Fixed the bug where using a black rune would kill you under specific circumstances. (Thanks CrafterLynx)
+
 ### *v0.46.1* - November 7th, 2019
 
 * The pause and unpause animations have been removed.

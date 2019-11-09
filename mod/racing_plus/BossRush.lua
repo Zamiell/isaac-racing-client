@@ -18,7 +18,6 @@ BossRush.bosses = {
   {43, 0}, -- Monstro II
   {43, 1}, -- Gish
   {62, 0}, -- Pin
-  {62, 1}, -- Scolex
   {62, 2}, -- Frail
   {63, 0}, -- Famine
   {64, 0}, -- Pestilence
@@ -100,6 +99,12 @@ function BossRush:CheckStart()
 end
 
 function BossRush:Start()
+  -- Local variables
+  local roomDescriptor = g.l:GetCurrentRoomDesc()
+  local roomData = roomDescriptor.Data
+  local roomVariant = roomData.Variant
+  local startSeed = g.seeds:GetStartSeed()
+
   -- We spawn an invisible boss in the center of the room that has no collision;
   -- this will prevent the normal Boss Rush waves from spawning
   -- (this has to be above the below finish check)
@@ -115,9 +120,6 @@ function BossRush:Start()
   g.run.bossRush.started = true
   g.run.bossRush.currentWave = 0
   Isaac.DebugString("Started the Boss Rush.")
-
-  -- Local variables
-  local startSeed = g.seeds:GetStartSeed()
 
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}
@@ -138,6 +140,14 @@ function BossRush:Start()
         valid = false
         break
       end
+    end
+
+    -- Check to see if the boss would be blocked by rocks at the top of the screen
+    if roomVariant == 3 and
+       (boss[1] == EntityType.ENTITY_THE_HAUNT or -- 260
+        boss[1] == EntityType.ENTITY_MAMA_GURDY) then -- 266
+
+      valid = false
     end
 
     if valid then

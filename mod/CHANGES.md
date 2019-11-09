@@ -136,6 +136,8 @@ While there are thousands of rooms in the game, many players have already seen t
   * various animations during the Mega Satan fight
   * various animations during The Haunt fight
   * various animations during the Big Horn fight
+  * Hush's appear animation
+  * Greed's death animation
 
 ### Bug Fixes
 
