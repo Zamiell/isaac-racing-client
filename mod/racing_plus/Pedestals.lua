@@ -26,7 +26,10 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this is a pedestal that was already replaced
   for _, pedestal in ipairs(g.run.replacedPedestals) do
+    -- We can't check to see if the X and Y are exactly equivalent since players can push pedestals around a little bit
+    local pedestalPosition = Vector(pedestal.X, pedestal.Y)
     if pedestal.room == roomIndex and
+       pedestalPosition:Distance(pickup.Position) <= 15 and -- A litte less than half a square
        pedestal.seed == pickup.InitSeed then
 
       -- We have already replaced it, so check to see if we need to delete the delay
@@ -191,7 +194,6 @@ function RPPedestals:Replace(pickup)
 
   -- Check to see if this item should go into a Schoolbag
   if Schoolbag:CheckSecondItem(pickup) then
-    Isaac.DebugString("Schoolbag:CheckSecondItem XXX")
     return
   end
 
@@ -238,16 +240,32 @@ function RPPedestals:Replace(pickup)
       subType = CollectibleType.COLLECTIBLE_LITTLE_STEVEN -- 100
     end
 
+    -- Check to see if we already know about a pedestal that is near to where this one spawned
+    -- If so, adjust the position of the pedestal to the old one
+    -- This prevents the bug where players can "push" pedestals by swapping an active item
+    local position = pickup.Position
+    for _, pedestal in ipairs(g.run.replacedPedestals) do
+      local oldPedestalPosition = Vector(pedestal.X, pedestal.Y)
+      if pedestal.room == roomIndex and
+         pickup.Position:Distance(oldPedestalPosition) > 6 then
+
+        position = oldPedestalPosition
+        Isaac.DebugString("Pushed pedestal detected - using the old position of: " ..
+                          tostring(oldPedestalPosition.X) .. ", " .. tostring(oldPedestalPosition.Y) .. ")")
+      end
+    end
+
     -- Make a new copy of this item
-    newPedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pickup.Position,
+    newPedestal = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, position,
                             pickup.Velocity, pickup.Parent, subType, newSeed)
 
     -- We don't need to make a fart noise because the swap will be completely transparent to the user
     -- (the sprites of the two items will obviously be identical)
     -- We don't need to add this item to the ban list because since it already existed, it was properly
     -- decremented from the pools on sight
-    Isaac.DebugString("Made a copied " .. tostring(pickup.SubType) ..
-                      " pedestal using seed " .. tostring(newSeed) .. " (on frame " .. tostring(gameFrameCount) .. ").")
+    Isaac.DebugString("Made a copied pedestal with item " .. tostring(pickup.SubType) ..
+                      " at (" .. tostring(position.X) .. ", " .. tostring(position.Y) .. ") " ..
+                      "using seed " .. tostring(newSeed) .. " on frame " .. tostring(gameFrameCount) .. ".")
   end
   newPedestal = newPedestal:ToPickup()
 

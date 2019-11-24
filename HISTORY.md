@@ -1,5 +1,17 @@
 # Racing+ Version History and News
 
+### *v0.47.0* - November 24th, 2019
+
+* Lead Pencil now grants a charge bar similar to Maw of the Void.
+* Reduced the delay when jumping out of a hole on a new floor by 7 frames.
+* It is no longer possible to get Mega Maw or the Gate in the Boss Rush room that has rocks along the top wall. (Thanks NorBro86)
+* Added Caves / Catacombs / Flooded Caves room #90 to the list of rooms for Spiked Chest replacement. (Thanks SlashSP)
+* Fixed the bug where you could push pedestals by swapping an active item over and over.
+* Fixed the bug where extra items spawned from a Diplopia were not properly seeded.
+* Fixed the bug where heaven doors would not appear in a Black Market. (Thanks Cyber_1)
+* Fixed the bug where killing a splitting enemy as the last boss in the Boss Rush would cause it to end early. (Thanks NorBro86)
+* Fixed the bug where Victory Laps were not working properly. (Thanks Gamonymous)
+
 ### *v0.46.2* - November 9th, 2019
 
 * Hush's appear animation has been removed.

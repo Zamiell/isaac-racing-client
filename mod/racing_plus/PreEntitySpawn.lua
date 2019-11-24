@@ -4,8 +4,8 @@ local PreEntitySpawn = {}
 local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_PRE_ENTITY_SPAWN (24)
-function PreEntitySpawn:Main(type, variant, subType, position, velocity, spawner, seed)
-  local preEntityFunction = PreEntitySpawn.functions[type]
+function PreEntitySpawn:Main(entityType, variant, subType, position, velocity, spawner, seed)
+  local preEntityFunction = PreEntitySpawn.functions[entityType]
   if preEntityFunction ~= nil then
     return preEntityFunction(variant, subType, position, spawner, seed)
   end

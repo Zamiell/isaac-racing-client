@@ -4,10 +4,6 @@ local PostFireTear = {}
 local g = require("racing_plus/globals")
 
 function PostFireTear:Main(tear)
-  if g.run.firingExtraTear then
-    return
-  end
-
   if g.run.debugDamage then
     tear.Scale = 5
   end
@@ -16,10 +12,21 @@ function PostFireTear:Main(tear)
     tear:ChangeVariant(TearVariant.CHAOS_CARD) -- 9
   end
 
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) then -- 444
+    g.run.pencilCounter = g.run.pencilCounter + 1
+    if g.run.pencilCounter == 15 then
+      g.run.pencilCounter = 0
+    end
+  end
+
   PostFireTear:FixMonstrosLungSynergy(tear)
 end
 
 function PostFireTear:FixMonstrosLungSynergy(tear)
+  if g.run.firingExtraTear then
+    return
+  end
+
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) and -- 229
      not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) and -- 68
      not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114

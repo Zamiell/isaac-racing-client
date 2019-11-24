@@ -54,6 +54,7 @@ function PostRender:Main()
   SoulJar:SpriteDisplay()
   PostRender:TheLostHealth()
   PostRender:HolyMantle()
+  PostRender:PencilChargeBar()
   Timer:Display()
   Timer:DisplayRun()
   Timer:DisplaySecond()
@@ -238,6 +239,48 @@ function PostRender:HolyMantle()
 
   Sprites.sprites.holyMantle:Play(animationToPlay, true)
   Sprites.sprites.holyMantle:Render(Vector(Xoffset, Yoffset), g.zeroVector, g.zeroVector)
+end
+
+function PostRender:PencilChargeBar()
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) or -- 444
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or -- 52
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) or -- 68
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) then -- 395
+
+   return
+  end
+
+  -- Initialize the sprite
+  if PostRender.pencilSprite == nil then
+    PostRender.pencilSprite = Sprite()
+    PostRender.pencilSprite:Load("gfx/chargebar_pencil.anm2", true)
+  end
+
+  -- Adjust the position slightly so that it appears properly centered on the player,
+  -- taking into account the size of the player sprite and if there are any existing charge bars
+  local adjustX = 18.5 * g.p.SpriteScale.X
+  local adjustY = 15 + (54 * g.p.SpriteScale.Y)
+  local chargeBarHeight = 4.5
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) or -- 69
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
+
+    adjustY = adjustY + chargeBarHeight
+  end
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MAW_OF_VOID) then -- 399
+    adjustY = adjustY + chargeBarHeight
+  end
+  local adjustedPosition = Vector(g.p.Position.X + adjustX, g.p.Position.Y - adjustY)
+
+  -- Render it
+  -- (there are 101 frames in the "Charging animation" and it takes 15 shots to fire a pencil barrage)
+  local barFrame = g.run.pencilCounter * (101 / 15)
+  barFrame = g:Round(barFrame, 0)
+  PostRender.pencilSprite:SetFrame("Charging", barFrame)
+  PostRender.pencilSprite:Render(g.r:WorldToScreenPosition(adjustedPosition), g.zeroVector, g.zeroVector)
 end
 
 -- Restart the game if Easter Egg or character validation failed

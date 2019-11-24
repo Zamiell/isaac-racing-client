@@ -70,6 +70,17 @@ BossRush.bosses = {
   {411, 0}, -- Big Horn
   {413, 0}, -- The Matriarch
 }
+BossRush.splittingBosses = {
+  EntityType.ENTITY_LARRYJR, -- 19
+  EntityType.ENTITY_FISTULA_BIG, -- 71
+  EntityType.ENTITY_FISTULA_MEDIUM, -- 72
+  EntityType.ENTITY_FISTULA_SMALL, -- 73
+  EntityType.ENTITY_BLASTOCYST_BIG, -- 74
+  EntityType.ENTITY_BLASTOCYST_MEDIUM, -- 75
+  EntityType.ENTITY_BLASTOCYST_SMALL, -- 76
+  EntityType.ENTITY_FALLEN, -- 81
+  EntityType.ENTITY_BROWNIE, -- 402
+}
 
 -- Other constants
 BossRush.totalBosses = 30 -- In vanilla, it spawns 2 bosses at a time for 15 waves
@@ -100,6 +111,7 @@ end
 
 function BossRush:Start()
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local roomDescriptor = g.l:GetCurrentRoomDesc()
   local roomData = roomDescriptor.Data
   local roomVariant = roomData.Variant
@@ -119,7 +131,7 @@ function BossRush:Start()
 
   g.run.bossRush.started = true
   g.run.bossRush.currentWave = 0
-  Isaac.DebugString("Started the Boss Rush.")
+  Isaac.DebugString("Started the Boss Rush on frame: " .. tostring(gameFrameCount))
 
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}
@@ -145,7 +157,9 @@ function BossRush:Start()
     -- Check to see if the boss would be blocked by rocks at the top of the screen
     if roomVariant == 3 and
        (boss[1] == EntityType.ENTITY_THE_HAUNT or -- 260
-        boss[1] == EntityType.ENTITY_MAMA_GURDY) then -- 266
+        boss[1] == EntityType.ENTITY_MAMA_GURDY or -- 266
+        boss[1] == EntityType.ENTITY_MEGA_MAW or -- 262
+        boss[1] == EntityType.ENTITY_GATE) then -- 263
 
       valid = false
     end
@@ -168,32 +182,50 @@ function BossRush:CheckSpawnNewWave()
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     bossesPerWave = 3
   end
-  local totalBossesDefeated = g.run.bossRush.currentWave * bossesPerWave
+  local totalBossesDefeatedIfWaveIsClear = g.run.bossRush.currentWave * bossesPerWave
+
+  -- Don't do anything if we are in the short delay between waves
+  if g.run.bossRush.spawnWaveFrame ~= 0 then
+    if gameFrameCount >= g.run.bossRush.spawnWaveFrame then
+      g.run.bossRush.spawnWaveFrame = 0
+      BossRush:SpawnWave(bossesPerWave)
+    end
+    return
+  end
 
   -- Find out whether it is time to spawn the next wave
   -- If this is the final wave, then we only want to proceed if every enemy is killed (not just the bosses)
   -- When the boss rush is active, the "Room Clear Delay NPC" boss will always be present,
   -- which is why we check for equal to 1
   local spawnNextWave = false
-  if totalBossesDefeated >= BossRush.totalBosses then
+  if totalBossesDefeatedIfWaveIsClear >= BossRush.totalBosses then
     if FastClear.aliveEnemiesCount == 1 then
+      -- Every enemy is dead, but also check to see if there are any splitting enemies alive
+      local splittingEnemiesAlive = false
+      for _, entity in ipairs(Isaac.GetRoomEntities()) do
+        for _, splittingEntity in ipairs(BossRush.splittingBosses) do
+          if entity.Type == splittingEntity then
+            splittingEnemiesAlive = true
+            break
+          end
+        end
+        if splittingEnemiesAlive then
+          break
+        end
+      end
+      if splittingEnemiesAlive then
+        return
+      end
+
+      -- No splitting enemies are alive, so consider the Boss Rush finished
       spawnNextWave = true
+      Isaac.DebugString("All bosses killed on frame: " .. tostring(gameFrameCount))
     end
   elseif FastClear.aliveBossesCount == 1 then
     spawnNextWave = true
+    Isaac.DebugString("Bosses for this wave were defeated on frame: " .. tostring(gameFrameCount))
   end
   if not spawnNextWave then
-    return
-  end
-
-  if g.run.bossRush.spawnWaveFrame ~= 0 then
-    if gameFrameCount >= g.run.bossRush.spawnWaveFrame then
-      -- The short delay has elapsed, so spawn the next wave
-      g.run.bossRush.spawnWaveFrame = 0
-      BossRush:SpawnWave(bossesPerWave)
-    end
-
-    -- All of the bosses are dead, but we are waiting for a short delay before spawning the next wave
     return
   end
 
@@ -207,8 +239,8 @@ function BossRush:CheckSpawnNewWave()
   end
 
   -- Find out if the Boss Rush is over
-  Isaac.DebugString("Total bosses defeated: " .. tostring(totalBossesDefeated))
-  if totalBossesDefeated >= BossRush.totalBosses then
+  Isaac.DebugString("Total bosses defeated so far: " .. tostring(totalBossesDefeatedIfWaveIsClear))
+  if totalBossesDefeatedIfWaveIsClear >= BossRush.totalBosses then
     BossRush:Finish()
   else
     -- Spawn the next wave after a short delay

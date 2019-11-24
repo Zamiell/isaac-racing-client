@@ -142,7 +142,9 @@ function FastTravel:ReplaceHeavenDoor(entity)
   if entity.SpawnerType ~= EntityType.ENTITY_PLAYER then -- 1
     entity:Remove()
 
-    if roomIndex ~= GridRooms.ROOM_ERROR_IDX then -- -2
+    if roomIndex ~= GridRooms.ROOM_ERROR_IDX and -- -2
+       roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX then -- 6
+
       -- This is the beam of light that spawns one frame after It Lives! (or Hush) is killed
       -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
       Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
@@ -413,8 +415,7 @@ function FastTravel:CheckTrapdoor()
 
      -- State 7 is activated when the the hole is spawned and ready
      g.run.trapdoor.state = FastTravel.state.PLAYER_JUMP
-     g.run.trapdoor.frame = gameFrameCount + 14
-     -- 14 frames is just long enough so that Isaac lands from his jump
+     g.run.trapdoor.frame = gameFrameCount + 7
 
      for i = 1, g.g:GetNumPlayers() do
        local player = Isaac.GetPlayer(i - 1)
@@ -1170,7 +1171,7 @@ end
 
 -- Remove any grid entities that will overlap with the custom trapdoor/crawlspace
 -- (this is needed because rocks/poop will respawn in the room after reentering)
-function FastTravel:RemoveOverlappingGridEntity(pos, type)
+function FastTravel:RemoveOverlappingGridEntity(pos, entityType)
   -- Check for the existance of an overlapping grid entity
   local gridIndex = g.r:GetGridIndex(pos)
   local gridEntity = g.r:GetGridEntity(gridIndex)
@@ -1181,7 +1182,7 @@ function FastTravel:RemoveOverlappingGridEntity(pos, type)
   -- Remove it
   g.r:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() will only work on destroyable entities like TNT
   Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
-                    " that would interfere with the " .. tostring(type) .. ".")
+                    " that would interfere with the " .. tostring(entityType) .. ".")
 
   -- If this was a Corny Poop, it will turn the Eternal Fly into an Attack Fly
   local saveState = gridEntity:GetSaveState()

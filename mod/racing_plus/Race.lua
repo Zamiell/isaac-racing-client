@@ -57,7 +57,7 @@ end
 -- Check to see if the player just picked up the "Victory Lap" custom item
 function Race:PostUpdateCheckVictoryLap()
   -- Local variables
-  local isaacFrameCount = Isaac.GetFrameCount()
+  local gameFrameCount = g.g:GetFrameCount()
 
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_VICTORY_LAP) then
     return
@@ -73,7 +73,7 @@ function Race:PostUpdateCheckVictoryLap()
   -- (the code is loosely copied from the "FastTravel:CheckTrapdoorEnter()" function)
   g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
   g.run.trapdoor.upwards = true
-  g.run.trapdoor.frame = isaacFrameCount + 40
+  g.run.trapdoor.frame = gameFrameCount + 16
   g.p.ControlsEnabled = false
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)

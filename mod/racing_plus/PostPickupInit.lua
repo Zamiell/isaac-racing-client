@@ -596,17 +596,20 @@ function PostPickupInit:CheckSpikedChestUnavoidable(pickup)
      ((stage == 1 or stage == 2) and stageType == 2 and roomDataVariant == 716) or -- Burning Basement
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 12) or -- Caves
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 19) or
+     ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 90) or
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 119) or
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 125) or
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 244) or
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 518) or
      ((stage == 3 or stage == 4) and stageType == 0 and roomDataVariant == 519) or
      ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 19) or -- Catacombs
+     ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 90) or
      ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 119) or
      ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 285) or
      ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 518) or
      ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 12) or -- Flooded Caves
      ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 19) or
+     ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 90) or
      ((stage == 3 or stage == 4) and stageType == 1 and roomDataVariant == 119) or
      ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 125) or
      ((stage == 3 or stage == 4) and stageType == 2 and roomDataVariant == 244) or

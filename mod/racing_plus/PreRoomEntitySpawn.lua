@@ -7,13 +7,13 @@ local SeededRooms = require("racing_plus/seededrooms")
 -- ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN (71)
 -- We want the player to always be able to take an item in the Basement 1 Treasure Room without spending a bomb
 -- or being forced to walk on spikes
-function PreRoomEntitySpawn:Main(type, variant, subType, gridIndex, seed)
+function PreRoomEntitySpawn:Main(entityType, variant, subType, gridIndex, seed)
   local newTable
   newTable = PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   if newTable ~= nil then
     return newTable
   end
-  newTable = SeededRooms:PreEntitySpawn(type, variant, subType, seed)
+  newTable = SeededRooms:PreEntitySpawn(entityType, variant, subType, seed)
   if newTable ~= nil then
     return newTable
   end

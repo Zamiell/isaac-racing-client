@@ -240,7 +240,7 @@ function SeededRooms:SpawnPedestalAngelRoom(x, y)
 end
 
 -- ModCallbacks.MC_PRE_ENTITY_SPAWN (24)
-function SeededRooms:PreEntitySpawn(type, variant, subType, seed)
+function SeededRooms:PreEntitySpawn(entityType, variant, subType, seed)
   -- We only want to delete things in seeded races
   if g.race.rFormat ~= "seeded" or
      g.race.status ~= "in progress" then
