@@ -33,12 +33,12 @@
     "racing_plus\\FastClear.lua": "45b95f6c10c3412573c9941cace77d19e4218c3e",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "b80c51edd82fd546831f89623a789976771449df",
-    "racing_plus\\Globals.lua": "908a4c49f3d3fa9471cca7fc3fd6e2a2ce992c21",
+    "racing_plus\\Globals.lua": "fd16a872c603ac49f73b13d480fa4763e9b8e2da",
     "racing_plus\\InputAction.lua": "5811eb54aca79405e10b73a315619d93447ffb84",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
     "racing_plus\\NPCUpdate.lua": "b23a1c4a1e621c86acfa27dacd5b94de0bcada25",
-    "racing_plus\\Pedestals.lua": "7d3cf9b81293ac8f4a737e6eec828901e1173f0d",
+    "racing_plus\\Pedestals.lua": "e5ddc97dbd35fc32d6a822c18561fd053a5ed5bd",
     "racing_plus\\Pills.lua": "550b35403ec8d438379904c91dd1c5fa43929f73",
     "racing_plus\\PostBombInit.lua": "18f6787ae7ea57a4aa01218f5d76e2917c7800e4",
     "racing_plus\\PostBombUpdate.lua": "de67f2b966585e1365bfafc9739f815656f9de2c",
@@ -2092,7 +2092,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "6f4c0db3fc69f6ddbd0488de859dea405019cf62",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "3d7ae16c37d7aab8fd2d136732d47047ad2bb513",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2170,5 +2170,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "3be3193091c0bdfcdea76e975cfe5e7e5e317159"
+    "sha1.json": "9e1789b6c69f4cd2d5b36073bd06cb048f3510f9"
 }

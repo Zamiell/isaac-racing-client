@@ -247,11 +247,12 @@ function RPPedestals:Replace(pickup)
     for _, pedestal in ipairs(g.run.replacedPedestals) do
       local oldPedestalPosition = Vector(pedestal.X, pedestal.Y)
       if pedestal.room == roomIndex and
-         pickup.Position:Distance(oldPedestalPosition) > 6 then
+         pickup.Position:Distance(oldPedestalPosition) <= 20 then
 
         position = oldPedestalPosition
         Isaac.DebugString("Pushed pedestal detected - using the old position of: " ..
                           tostring(oldPedestalPosition.X) .. ", " .. tostring(oldPedestalPosition.Y) .. ")")
+        break
       end
     end
 
