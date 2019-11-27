@@ -1,5 +1,8 @@
 local PreEntitySpawn = {}
 
+-- If we want to prevent entities from spawning, we cannot return an entity type of 0, since the game will crash
+-- Instead, we can return an effect with a variant of 0, which will just be a non-interacting invisible thing
+
 -- Includes
 local g = require("racing_plus/globals")
 
@@ -26,8 +29,6 @@ function PreEntitySpawn.Heart(subType, position, spawner, seed)
      spawner ~= nil and
      spawner.Type == EntityType.ENTITY_FIREPLACE then -- 33
 
-     -- If we return an entity type of 0, the game will crash
-     -- Instead, return an effect with a variant of 0, which will just be a non-interacting invisible thing
      Isaac.DebugString("Deleting a heart from a fire in a Devil Room.")
      return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end
@@ -36,7 +37,10 @@ end
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PreEntitySpawn.Collectible(subType, position, spawner, seed)
   -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local roomFrameCount = g.r:GetFrameCount()
+  local challenge = Isaac.GetChallenge()
 
   if g.run.replacingPedestal then
     g.run.replacingPedestal = false
@@ -51,7 +55,17 @@ function PreEntitySpawn.Collectible(subType, position, spawner, seed)
       roomFrameCount ~= -1 then -- We might be coming back into a room with a key piece
 
     Isaac.DebugString("Removed a naturally spawned Key Piece.")
-    return {EntityType.ENTITY_EFFECT, 0, 0, 0}
+    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
+  end
+
+  -- Prevent the boss item from spawning in The Void after defeating Ultra Greed
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
+     subType ~= CollectibleType.COLLECTIBLE_CHECKPOINT and
+     stage == 12 and
+     roomIndexUnsafe == g.run.customBossRoomIndex then
+
+    Isaac.DebugString("Removed a naturally spawned boss item after Ultra Greed.")
+    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end
 end
 
@@ -68,8 +82,6 @@ function PreEntitySpawn.Slot(variant, subType, position, spawner, seed)
   -- However, because of the save file check on the first run,
   -- it is possible for Donation Machines to spawn, so we have to explicitly check for them
   if variant == 8 then -- Donation Machine (6.8)
-    -- If we return an entity type of 0, the game will crash
-    -- Instead, return an effect with a variant of 0, which will just be a non-interacting invisible thing
     Isaac.DebugString("Deleted a Donation Machine.")
     return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end

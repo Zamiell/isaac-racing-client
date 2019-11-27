@@ -242,7 +242,11 @@ function PostRender:HolyMantle()
 end
 
 function PostRender:PencilChargeBar()
+  local character = g.p:GetPlayerType()
+
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) or -- 444
+     character == PlayerType.PLAYER_LILITH or -- 13
+     character == PlayerType.PLAYER_THEFORGOTTEN or -- 16
      g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or -- 52
      g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) or -- 68
      g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114

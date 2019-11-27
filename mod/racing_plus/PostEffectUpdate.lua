@@ -7,6 +7,30 @@ local g          = require("racing_plus/globals")
 local UseItem    = require("racing_plus/useitem")
 local FastTravel = require("racing_plus/fasttravel")
 
+-- EffectVariant.DEVIL (6)
+function PostEffectUpdate:Effect6(effect)
+  -- Fade the statue if there are any collectibles in range
+  -- Squares (5, 2), (6, 2), (7, 2), (5, 3), (6, 3), and (7, 3) are not allowed
+  local collectibleIsClose = false
+  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                        -1, false, false)
+  for _, collectible in ipairs(collectibles) do
+    if collectible.Position.X >= 260 and
+       collectible.Position.X <= 380 and
+       collectible.Position.Y >= 180 and
+       collectible.Position.Y <= 260 then
+
+      collectibleIsClose = true
+      break
+    end
+  end
+
+  if collectibleIsClose then
+    local faded = Color(1, 1, 1, 0.3, 0, 0, 0)
+    effect:SetColor(faded, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
+  end
+end
+
 -- EffectVariant.HEAVEN_LIGHT_DOOR (39)
 function PostEffectUpdate:Effect39(effect)
   -- We cannot put this in the PostEffectInit callback because the position of the effect is not initialized yet

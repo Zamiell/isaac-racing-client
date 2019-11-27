@@ -296,6 +296,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, PostEffectInit.Effect51
                        EffectVariant.HOT_BOMB_FIRE) -- 51
 
 -- Define post effect update callbacks (55)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.Effect6, -- 55
+                       EffectVariant.DEVIL) -- 6
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.TearPoof, -- 55
                        EffectVariant.TEAR_POOF_A) -- 12
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, PostEffectUpdate.TearPoof, -- 55

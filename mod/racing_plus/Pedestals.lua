@@ -240,10 +240,12 @@ function RPPedestals:Replace(pickup)
       subType = CollectibleType.COLLECTIBLE_LITTLE_STEVEN -- 100
     end
 
+    -- By default, put the new pedestal in the exact same place as the one we are replacing
+    local position = pickup.Position
+
     -- Check to see if we already know about a pedestal that is near to where this one spawned
     -- If so, adjust the position of the pedestal to the old one
     -- This prevents the bug where players can "push" pedestals by swapping an active item
-    local position = pickup.Position
     for _, pedestal in ipairs(g.run.replacedPedestals) do
       local oldPedestalPosition = Vector(pedestal.X, pedestal.Y)
       if pedestal.room == roomIndex and

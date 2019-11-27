@@ -222,13 +222,6 @@ function Speedrun:RoomCleared()
      stage == 12 and
      roomIndexUnsafe == g.run.customBossRoomIndex then
 
-    -- Delete the collectible that spawns as a reward
-    local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                          -1, false, false)
-    for _, collectible in ipairs(collectibles) do
-      collectible:Remove()
-    end
-
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
                 g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced

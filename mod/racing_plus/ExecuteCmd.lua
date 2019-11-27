@@ -64,6 +64,10 @@ ExecuteCmd.functions["damage"] = function(params)
   g.p:EvaluateItems()
 end
 
+ExecuteCmd.functions["dd"] = function(params)
+  g.p:UseCard(Card.CARD_JOKER) -- 31
+end
+
 ExecuteCmd.functions["devil"] = function(params)
   g.p:UseCard(Card.CARD_JOKER) -- 31
 end
@@ -113,7 +117,7 @@ ExecuteCmd.functions["next"] = function(params)
   SpeedrunPostUpdate:CheckCheckpoint(true)
 end
 
-ExecuteCmd.functions["playerpos"] = function(params)
+ExecuteCmd.functions["pos"] = function(params)
   Isaac.DebugString("Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y))
 end
 
