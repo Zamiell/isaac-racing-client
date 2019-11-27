@@ -37,22 +37,28 @@ end
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PreEntitySpawn.Collectible(subType, position, spawner, seed)
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  if g.run.replacingPedestal then
-    g.run.replacingPedestal = false
-    return
+  -- Racing+ spawns Krampus items early
+  -- So we need to delete the vanilla Krampus items
+  -- They drop exactly 29 frames after Krampus is killed
+  if (subType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
+      subType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) and -- 293
+     gameFrameCount == g.run.krampusKillFrame + 29 then
+
+    Isaac.DebugString("Removed a naturally spawned Krampus item.")
+    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end
 
-  -- Racing+ has a feature to spawn key pieces early
-  -- So if a key piece was removed early, then ensure that the vanilla counterpart does not spawn
+  -- Racing+ spawns key pieces from angels early
+  -- So we need to delete the vanilla key pieces
+  -- They drop exactly 24 frames after an angel is killed
   if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
       subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
-      not g.run.spawningKeyPiece and
-      roomFrameCount ~= -1 then -- We might be coming back into a room with a key piece
+     gameFrameCount == g.run.angelKillFrame + 24 then
 
     Isaac.DebugString("Removed a naturally spawned Key Piece.")
     return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000

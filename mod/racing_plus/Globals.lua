@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.3"
+g.version = "v0.47.4"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -280,11 +280,7 @@ function g:InitRun()
   g.run.dualityCheckFrame     = 0
   g.run.changeFartColor       = false
   g.run.momDied               = false -- Used to fix bugs with fast-clear and killing Mom
-  g.run.replacingPedestal     = false
   g.run.photosSpawning        = false -- Used when replacing The Polaroid and The Negative
-  g.run.spawningKrampusItem   = false -- Used for spawning Krampus items early
-  g.run.spawningKeyPiece      = false -- Used for spawning Key Piece 1 or Key Piece 2 early
-  g.run.mysteryGiftFrame      = 0 -- Used so that we don't delete A Lump of Coal from a Mystery Gift
   g.run.playerGenPedSeeds     = {} -- Used so that we properly seed player-generated pedestals (1/2)
   g.run.playerGenPedFrame     = 0 -- Used so that we properly seed player-generated pedestals (2/2)
   g.run.itLivesKillFrame      = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
@@ -312,7 +308,9 @@ function g:InitRun()
   g.run.dealingExtraDamage    = false -- Used for Hush
   g.run.firingExtraTear       = false -- Used for Hush
   g.run.customBossRoomIndex   = -1000 -- Used in Season 7
-  g.run.pencilCounter         = 0
+  g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
+  g.run.krampusKillFrame      = 0 -- Used to delete vanilla Krampus items
+  g.run.angelKillFrame        = 0 -- Used to delete vanilla key pieces
 
   -- Transformations
   g.run.transformations = {}

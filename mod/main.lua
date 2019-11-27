@@ -167,8 +167,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item324,
                        CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item477,
                        CollectibleType.COLLECTIBLE_VOID) -- 477
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item515,
-                       CollectibleType.COLLECTIBLE_MYSTERY_GIFT) -- 515
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item523,
                        CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, Debug.Main,

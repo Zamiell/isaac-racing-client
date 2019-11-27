@@ -267,7 +267,11 @@ function PostEntityKill:Entity81(entity)
   end
 
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
+
+  -- Mark the frame that Krampus was killed on so that we can remove the vanilla item later
+  g.run.krampusKillFrame = gameFrameCount
 
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
@@ -322,14 +326,10 @@ function PostEntityKill:Entity81(entity)
     pos = g.r:FindFreePickupSpawnPosition(pos, 1, false)
   end
 
-  -- We have to let the "ReplacePedestal()" function know that this is not a natural Krampus pedestal
-  if subType ~= 0 then
-    g.run.spawningKrampusItem = true
-  end
-
   -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
               pos, g.zeroVector, nil)
+  Isaac.DebugString("SPAWNED ON FRAME: " .. tostring(g.g:GetFrameCount()))
 end
 
 -- EntityType.ENTITY_URIEL (271)
@@ -338,6 +338,7 @@ end
 -- This slightly speeds up the spawn so that they can not be accidently deleted by leaving the room
 function PostEntityKill:Entity271(entity)
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
 
   -- We only want to spawn key pieces from the non-Fallen versions
@@ -371,6 +372,9 @@ function PostEntityKill:Entity271(entity)
     end
   end
 
+  -- Mark the frame that the angel was killed on so that we can remove the vanilla key piece later
+  g.run.angelKillFrame = gameFrameCount
+
   -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
   local subType
   if entity.Type == EntityType.ENTITY_URIEL then -- 271
@@ -386,9 +390,6 @@ function PostEntityKill:Entity271(entity)
   if gridEntity ~= nil then
     pos = g.r:FindFreePickupSpawnPosition(pos, 1, false)
   end
-
-  -- We have to let the "ReplacePedestal()" function know that this is not a natural key piece pedestal
-  g.run.spawningKeyPiece = true
 
   -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100

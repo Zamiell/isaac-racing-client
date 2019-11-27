@@ -160,12 +160,6 @@ function UseItem:Item477()
   g.run.itemReplacementDelay = gameFrameCount + 5 -- Stall for 5 frames
 end
 
--- CollectibleType.COLLECTIBLE_MYSTERY_GIFT (515)
-function UseItem:Item515()
-  local gameFrameCount = g.g:GetFrameCount()
-  g.run.mysteryGiftFrame = gameFrameCount + 1
-end
-
 -- CollectibleType.COLLECTIBLE_MOVING_BOX (523)
 function UseItem:Item523()
   Isaac.DebugString("Moving Box activated.")

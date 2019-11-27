@@ -26,6 +26,11 @@ function ExecuteCmd:Main(cmd, params)
   end
 end
 
+ExecuteCmd.functions["angel"] = function(params)
+  g.p:AddCollectible(CollectibleType.COLLECTIBLE_EUCHARIST, 0, false) -- 499
+  g.p:UseCard(Card.CARD_JOKER) -- 31
+end
+
 ExecuteCmd.functions["boss"] = function(params)
   g.run.bossCommand = true
   g.p:UseCard(Card.CARD_EMPEROR) -- 5

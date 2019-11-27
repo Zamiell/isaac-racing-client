@@ -5,7 +5,7 @@ local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Speedrun   = require("racing_plus/speedrun")
 
-BigChest.bigChestAction = "leave"
+BigChest.action = "leave"
 BigChest.checkpointPos = g.zeroVector
 
 function BigChest:PostPickupInit(pickup)
@@ -23,7 +23,7 @@ function BigChest:PostPickupInit(pickup)
   pickup.Position = g.r:GetCenterPos()
 
   -- By default, leave the big chest there
-  BigChest.bigChestAction = "leave"
+  BigChest.action = "leave"
   BigChest.checkpointPos = centerPos
 
   -- Determine if we should replace the big chest with something else
@@ -31,12 +31,12 @@ function BigChest:PostPickupInit(pickup)
     if stageType == 0 and -- 10.0 (Sheol)
         g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
-      BigChest.bigChestAction = "down"
+      BigChest.action = "down"
 
     elseif stageType == 1 and -- 10.1 (Cathedral)
             g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
 
-      BigChest.bigChestAction = "up"
+      BigChest.action = "up"
     end
   end
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
@@ -70,7 +70,7 @@ function BigChest:PostPickupInit(pickup)
     BigChest:S0(pickup)
 
   elseif g.raceVars.finished then
-    BigChest.bigChestAction = "victoryLap"
+    BigChest.action = "victoryLap"
 
   elseif g.race.rFormat == "pageant" then
     BigChest:Pageant(pickup)
@@ -99,36 +99,36 @@ function BigChest:PostPickupInit(pickup)
   elseif stage == 10 and stageType == 0 and -- 10.0 (Sheol)
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 
-    BigChest.bigChestAction = "down" -- Leave the big chest there by default
+    BigChest.action = "down" -- Leave the big chest there by default
 
   elseif stage == 10 and stageType == 1 and -- 10.1 (Cathedral)
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
 
-    BigChest.bigChestAction = "up" -- Leave the big chest there by default
+    BigChest.action = "up" -- Leave the big chest there by default
   end
 
   -- Now that we know what to do with the big chest, do it
-  if BigChest.bigChestAction == "leave" then
+  if BigChest.action == "leave" then
     -- Set a flag so that we leave it alone on the next frame
     pickup.Touched = true
 
-  elseif BigChest.bigChestAction == "up" then
+  elseif BigChest.action == "up" then
     -- Delete the chest and replace it with a beam of light so that we can fast-travel normally
     pickup.SpawnerType = EntityType.ENTITY_PLAYER -- 1
     FastTravel:ReplaceHeavenDoor(pickup)
 
-  elseif BigChest.bigChestAction == "down" then
+  elseif BigChest.action == "down" then
     -- Delete the chest and replace it with a trapdoor so that we can fast-travel normally
     FastTravel:ReplaceTrapdoor(pickup, -1)
     -- A -1 indicates that we are replacing an entity instead of a grid entity
 
-  elseif BigChest.bigChestAction == "remove" then
+  elseif BigChest.action == "remove" then
     pickup:Remove()
 
-  elseif BigChest.bigChestAction == "checkpoint" then
+  elseif BigChest.action == "checkpoint" then
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
               BigChest.checkpointPos, g.zeroVector, nil, CollectibleType.COLLECTIBLE_CHECKPOINT, roomSeed)
-    BigChest.spawnedCheckpoint = true
+    Speedrun.spawnedCheckpoint = true
     Isaac.DebugString("Spawned a Checkpoint at (" ..
                       tostring(BigChest.checkpointPos.X) .. ", " ..
                       tostring(BigChest.checkpointPos.Y) .. ")")
@@ -149,7 +149,7 @@ function BigChest:PostPickupInit(pickup)
       Speedrun.finishTimeCharacter = Isaac.GetTime()
     end
 
-  elseif BigChest.bigChestAction == "trophy" then
+  elseif BigChest.action == "trophy" then
     -- Spawn the end of race/speedrun trophy
     local position = g.r:GetCenterPos()
     if stage == 6 then
@@ -159,7 +159,7 @@ function BigChest:PostPickupInit(pickup)
     Isaac.DebugString("Spawned the end of race/speedrun trophy.")
     pickup:Remove()
 
-  elseif BigChest.bigChestAction == "victoryLap" then
+  elseif BigChest.action == "victoryLap" then
     -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
               g.r:GetCenterPos(), g.zeroVector, nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
@@ -175,9 +175,9 @@ function BigChest:S1R9(pickup)
 
   if stage == 11 and stageType == 1 then -- The Chest
     if Speedrun.charNum == 9 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -189,9 +189,9 @@ function BigChest:S1R14(pickup)
 
   if stage == 11 and stageType == 1 then -- The Chest
     if Speedrun.charNum == 14 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -203,7 +203,7 @@ function BigChest:S2(pickup)
 
   if stage == 10 and stageType == 0 then -- Sheol
     -- The Negative is optional in this season
-    BigChest.bigChestAction = "down"
+    BigChest.action = "down"
 
   elseif stage == 11 and stageType == 0 then -- Dark Room
     -- Sometimes the vanilla end of challenge trophy does not appear
@@ -211,9 +211,9 @@ function BigChest:S2(pickup)
     -- So replace the big chest with either a checkpoint flag or a custom trophy,
     -- depending on if we are on the last character or not
     if Speedrun.charNum == 7 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -233,12 +233,12 @@ function BigChest:SpeedrunAlternate(pickup)
   if stage == 10 and stageType == 1 and -- Cathedral
       direction == 1 then
 
-    BigChest.bigChestAction = "up"
+    BigChest.action = "up"
 
   elseif stage == 10 and stageType == 0 and -- Sheol
           direction == 2 then
 
-    BigChest.bigChestAction = "down"
+    BigChest.action = "down"
 
   elseif (stage == 11 and stageType == 1 and -- The Chest
           direction == 1) or
@@ -250,9 +250,9 @@ function BigChest:SpeedrunAlternate(pickup)
     -- So replace the big chest with either a checkpoint flag or a custom trophy,
     -- depending on if we are on the last character or not
     if Speedrun.charNum == 7 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -264,13 +264,13 @@ function BigChest:SpeedrunUp(pickup)
 
   if stage == 10 and stageType == 1 then -- Cathedral
     -- The Polaroid / The Negative is optional in this season
-    BigChest.bigChestAction = "up"
+    BigChest.action = "up"
 
   elseif stage == 11 and stageType == 1 then -- The Chest
     if Speedrun.charNum == 7 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -295,9 +295,9 @@ function BigChest:S7(pickup)
       (stage == 12 and g:TableContains(Speedrun.remainingGoals, "Ultra Greed")) then
 
     if Speedrun.charNum == 7 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 
@@ -317,9 +317,9 @@ function BigChest:SS(pickup)
 
   if stage == 11 and stageType == 1 then -- The Chest
     if Speedrun.charNum == 7 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -331,9 +331,9 @@ function BigChest:S0(pickup)
 
   if stage == 11 and stageType == 1 then -- The Chest
     if Speedrun.charNum == 15 then
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     else
-      BigChest.bigChestAction = "checkpoint"
+      BigChest.action = "checkpoint"
     end
   end
 end
@@ -345,7 +345,7 @@ function BigChest:Pageant(pickup)
   if stage == 11 then -- The Chest or the Dark Room
     -- We want to delete all big chests on the Pageant Boy ruleset so that
     -- you don't accidently end your run before you can show off your build to the judges
-    BigChest.bigChestAction = "remove"
+    BigChest.action = "remove"
   end
 end
 
@@ -361,7 +361,7 @@ function BigChest:BlueBaby(pickup)
   if stage == 11 and stageType == 1 and -- The Chest
       roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 
@@ -377,7 +377,7 @@ function BigChest:TheLamb(pickup)
   if stage == 11 and stageType == 0 and -- Dark Room
       roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 
@@ -392,21 +392,21 @@ function BigChest:Everything(pickup)
 
   if stage == 10 and stageType == 1 then
     -- Cathedral goes to Sheol
-    BigChest.bigChestAction = "down"
+    BigChest.action = "down"
 
   elseif stage == 10 and stageType == 0 then
     -- Sheol goes to The Chest
-    BigChest.bigChestAction = "up"
+    BigChest.action = "up"
 
   elseif stage == 11 and stageType == 1 then -- 7
     -- The Chest goes to the Dark Room
-    BigChest.bigChestAction = "down"
+    BigChest.action = "down"
 
   elseif stage == 11 and stageType == 0 then
     if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-      BigChest.bigChestAction = "remove"
+      BigChest.action = "remove"
     else
-      BigChest.bigChestAction = "trophy"
+      BigChest.action = "trophy"
     end
   end
 end
@@ -424,12 +424,12 @@ function BigChest:MegaSatan(pickup)
 
     -- We want to delete the big chest after Blue Baby or The Lamb
     -- to remind the player that they have to go to Mega Satan
-    BigChest.bigChestAction = "remove"
+    BigChest.action = "remove"
 
   elseif stage == 11 and -- The Chest or the Dark Room
         roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
 
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 
@@ -437,7 +437,7 @@ function BigChest:Hush(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   if stage == 9 then
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 
@@ -445,7 +445,7 @@ function BigChest:Delirium(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   if stage == 12 then
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 
@@ -453,7 +453,7 @@ function BigChest:BossRush(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   if stage == 6 then
-    BigChest.bigChestAction = "trophy"
+    BigChest.action = "trophy"
   end
 end
 

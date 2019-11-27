@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.47.3* - November 27th, 2019
+
+* Fixed the bug where the Checkpoint was not working properly. (Thanks Pingouin23)
+* Fixed the bug where a Lump of Coal would get deleted under certain circumstances. (Thanks Anidalife)
+
 ### *v0.47.3* - November 26th, 2019
 
 * The Lead Pencil charge bar will no longer show up on Lilith and Forgotten. (Thanks Pingouin23 & Fawkeyes)
