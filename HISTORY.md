@@ -1,10 +1,11 @@
 # Racing+ Version History and News
 
-### *v0.47.2* - November 26th, 2019
+### *v0.47.3* - November 26th, 2019
 
 * The Lead Pencil charge bar will no longer show up on Lilith and Forgotten. (Thanks Pingouin23 & Fawkeyes)
 * The devil statue will be faded if there is an item pedestal hiding behind it. (Thanks mgln)
 * Fixed the bug where the boss item after Ultra Greed would show up for a frame. (Thanks NorBro86)
+* Fixed the bug where the Lead Pencil charge bar would be wrong if you picked it up in the middle of a run. (Thanks Pingouin23)
 
 ### *v0.47.0* - November 24th, 2019
 

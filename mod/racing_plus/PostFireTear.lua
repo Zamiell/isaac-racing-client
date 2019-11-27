@@ -12,11 +12,10 @@ function PostFireTear:Main(tear)
     tear:ChangeVariant(TearVariant.CHAOS_CARD) -- 9
   end
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) then -- 444
-    g.run.pencilCounter = g.run.pencilCounter + 1
-    if g.run.pencilCounter == 15 then
-      g.run.pencilCounter = 0
-    end
+  -- The vanilla Lead Pencil counter accumulates even if the player does not have the item
+  g.run.pencilCounter = g.run.pencilCounter + 1
+  if g.run.pencilCounter == 15 then
+    g.run.pencilCounter = 0
   end
 
   PostFireTear:FixMonstrosLungSynergy(tear)
