@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.5"
+g.version = "v0.47.6"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -311,6 +311,15 @@ function g:InitRun()
   g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
   g.run.krampusKillFrame      = 0 -- Used to delete vanilla Krampus items
   g.run.angelKillFrame        = 0 -- Used to delete vanilla key pieces
+  g.run.spamButtons           = false -- Used to spam Blood Rights
+
+  -- Trophy
+  g.run.trophy = { -- Used to know when to respawn the trophy
+    spawned   = false,
+    stage     = 0,
+    roomIndex = 0,
+    position  = g.zeroVector,
+  }
 
   -- Transformations
   g.run.transformations = {}
@@ -369,7 +378,7 @@ function g:InitRun()
     stage           = 0,
     reviveFrame     = 0,
     guppysCollar    = false,
-    pos             = g.zeroVector,
+    position        = g.zeroVector,
     time            = 0,
     items           = {},
     charge          = 0,

@@ -37,6 +37,10 @@ ExecuteCmd.functions["boss"] = function(params)
   g.run.bossCommand = false
 end
 
+ExecuteCmd.functions["bossrush"] = function(params)
+  g.run.bossRush.currentWave = 15
+end
+
 ExecuteCmd.functions["bm"] = function(params)
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
@@ -67,6 +71,15 @@ ExecuteCmd.functions["damage"] = function(params)
   g.run.debugDamage = true
   g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
   g.p:EvaluateItems()
+end
+
+ExecuteCmd.functions["db"] = function(params)
+  Isaac.ExecuteCommand("debug 3")
+  Isaac.ExecuteCommand("damage")
+  Isaac.ExecuteCommand("speed")
+  Isaac.ExecuteCommand("debug 8")
+  Isaac.ExecuteCommand("debug 10")
+  g.p:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
 end
 
 ExecuteCmd.functions["dd"] = function(params)
@@ -173,14 +186,18 @@ ExecuteCmd.functions["schoolbag"] = function(params)
   Schoolbag:Put(item, "max")
 end
 
+ExecuteCmd.functions["shop"] = function(params)
+  g.p:UseCard(Card.CARD_HERMIT) -- 10
+end
+
+ExecuteCmd.functions["spam"] = function(params)
+  g.run.spamButtons = not g.run.spamButtons
+end
+
 ExecuteCmd.functions["speed"] = function(params)
   g.run.debugSpeed = true
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
   -- (since we added Lord of the Pit, it will update the speed stat)
-end
-
-ExecuteCmd.functions["shop"] = function(params)
-  g.p:UseCard(Card.CARD_HERMIT) -- 10
 end
 
 ExecuteCmd.functions["tears"] = function(params)

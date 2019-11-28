@@ -117,11 +117,6 @@ function BossRush:Start()
   local roomVariant = roomData.Variant
   local startSeed = g.seeds:GetStartSeed()
 
-  -- We spawn an invisible boss in the center of the room that has no collision;
-  -- this will prevent the normal Boss Rush waves from spawning
-  -- (this has to be above the below finish check)
-  Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
-
   -- Prevent the bug where the door will erroneously close if the player completes the custom Boss Rush,
   -- exits the room, re-enters the room, and takes an item
   if g.run.bossRush.finished then
@@ -132,6 +127,12 @@ function BossRush:Start()
   g.run.bossRush.started = true
   g.run.bossRush.currentWave = 0
   Isaac.DebugString("Started the Boss Rush on frame: " .. tostring(gameFrameCount))
+
+  -- We spawn an invisible boss in the center of the room that has no collision;
+  -- this will prevent the normal Boss Rush waves from spawning
+  -- (this has to be above the below finish check)
+  Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
+  Isaac.DebugString("Spawned the room clear delay NPC (for the Boss Rush).")
 
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}

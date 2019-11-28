@@ -444,84 +444,28 @@ end
 function PostNewRoom:CheckRespawnTrophy()
   -- Local variables
   local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
-  local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
 
-  -- Trophies only spawn on certain stages
-  if stage ~= 6 and
-     stage ~= 8 and
-     stage ~= 9 and
-     stage ~= 11 and
-     stage ~= 12 then
+  if g.run.trophy.spawned == false or
+     g.run.trophy.stage ~= stage or
+     g.run.trophy.roomIndex ~= roomIndex then
 
     return
   end
 
-  -- If the room is not clear, we couldn't have already finished the race/speedrun
-  if not roomClear then
+  -- Don't respawn the trophy if we already touched it and finished a race or speedrun
+  if g.raceVars.finished or
+     Speedrun.finished then
+
     return
   end
 
-  -- All trophies spawn in some sort of boss room
-  if roomType ~= RoomType.ROOM_BOSS then -- 5
-    return
-  end
-
-  -- From here on out, handle custom speedrun challenges and races separately
-  if Speedrun:InSpeedrun() then
-    -- All of the custom speedrun challenges end at the Blue Baby room or The Lamb room
-    if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-      return
-    end
-
-     -- Don't respawn the trophy if the player just finished a R+9/14 speedrun
-    if Speedrun.finished then
-      return
-    end
-
-    -- Don't respawn the trophy if the player is in the middle of a R+9/14 speedrun
-    if Speedrun.spawnedCheckpoint then
-      return
-    end
-
-  elseif not g.raceVars.finished and
-         g.race.status == "in progress" then
-
-    -- Check to see if we are in the final room corresponding to the goal
-    if g.race.goal == "Blue Baby" then
-      if stageType == 0 or roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-        return
-      end
-
-    elseif g.race.goal == "The Lamb" then
-      if stageType == 1 or roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then
-        return
-      end
-
-    elseif g.race.goal == "Mega Satan" then
-      if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then
-        return
-      end
-
-    elseif g.race.goal == "Everything" then
-      if stageType == 1 or roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then
-        return
-      end
-    end
-
-  else
-    -- We are not in a custom speedrun challenge and not in a race
-    return
-  end
-
-  -- We are re-entering a boss room after we have already spawned the trophy
-  -- (which is a custom entity), so we need to respawn it
-  Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
+  -- We are re-entering a room where a trophy spawned (which is a custom entity),
+  -- so we need to respawn it
+  Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.run.trophy.position, g.zeroVector, nil)
   Isaac.DebugString("Respawned the end of race / speedrun trophy.")
 end
 

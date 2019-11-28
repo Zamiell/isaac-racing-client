@@ -93,7 +93,7 @@ function SeededDeath:PostRender()
 
   if g.run.seededDeath.state == SeededDeath.state.FETAL_POSITION then
     -- Keep the player in place during the "AppearVanilla" animation
-    g.p.Position = g.run.seededDeath.pos
+    g.p.Position = g.run.seededDeath.position
 
     if not playerSprite:IsPlaying("AppearVanilla") then
       g.run.seededDeath.state = SeededDeath.state.GHOST_FORM
@@ -144,7 +144,7 @@ function SeededDeath:PostNewRoom()
     -- Play the animation where Isaac lies in the fetal position
     g.p:PlayExtraAnimation("AppearVanilla")
 
-    g.run.seededDeath.pos = Vector(g.p.Position.X, g.p.Position.Y)
+    g.run.seededDeath.position = Vector(g.p.Position.X, g.p.Position.Y)
   end
 end
 

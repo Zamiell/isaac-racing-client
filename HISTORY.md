@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.47.6* - November 28th, 2019
+
+* Isaac is now feeling festive. Happy Thanksgiving!
+* Fixed the bug where the end-of-speedrun trophies would spawn under certain conditions. (Thanks NorBro86)
+* Fixed the bug where extra invisible NPCs would be spawned upon clearing the Boss Rush.
+
 ### *v0.47.5* - November 27th, 2019
 
 * The end-of-run text has been reorganized.

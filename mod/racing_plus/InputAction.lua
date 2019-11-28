@@ -100,7 +100,14 @@ function InputAction.IsActionTriggeredConsole()
   end
 end
 
+function InputAction.IsActionTriggeredItem()
+  if g.run.spamButtons then
+    return true
+  end
+end
+
 InputAction.IsActionTriggeredFunction = {
+  [ButtonAction.ACTION_ITEM] = InputAction.IsActionTriggeredItem, -- 9
   [ButtonAction.ACTION_PILLCARD] = InputAction.IsActionTriggeredPillCard, -- 10
   [ButtonAction.ACTION_DROP] = InputAction.IsActionTriggeredDrop, -- 11
   [ButtonAction.ACTION_MENUCONFIRM] = InputAction.IsActionTriggeredMenuConfirm, -- 14

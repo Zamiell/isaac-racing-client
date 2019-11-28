@@ -12,6 +12,11 @@ function BigChest:PostPickupInit(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
+  local roomType = g.r:GetType()
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
   local centerPos = g.r:GetCenterPos()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
   local challenge = Isaac.GetChallenge()
@@ -137,12 +142,19 @@ function BigChest:PostPickupInit(pickup)
   elseif BigChest.action == "trophy" then
     -- Spawn the end of race/speedrun trophy
     local position = g.r:GetCenterPos()
-    if stage == 6 then
-      position = g.r:FindFreePickupSpawnPosition(position, 0, true)
+    if roomType == RoomType.ROOM_BOSSRUSH then -- 17
+      -- In some Boss Rush rooms, the center of the room will be covered by rocks or pits
+      position = g.r:FindFreePickupSpawnPosition(position, 1, true)
     end
     Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, position, g.zeroVector, nil)
     Isaac.DebugString("Spawned the end of race/speedrun trophy.")
     pickup:Remove()
+
+    -- Keep track that we spawned it so that we can respawn it if the player re-enters the room
+    g.run.trophy.spawned = true
+    g.run.trophy.stage = stage
+    g.run.trophy.roomIndex = roomIndex
+    g.run.trophy.position = position
 
   elseif BigChest.action == "victoryLap" then
     -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
