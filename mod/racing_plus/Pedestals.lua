@@ -20,8 +20,18 @@ function Pedestals:Replace(pickup)
   local stageSeed = g.seeds:GetStageSeed(stage)
   local challenge = Isaac.GetChallenge()
 
+  -- Don't do anything if this pedestal is not freshly spawned
+  if pickup.FrameCount ~= 1 then
+    return
+  end
+
   -- Don't do anything if this is an empty pedestal
   if pickup.SubType == 0 then
+    return
+  end
+
+  -- Don't replace anything if this is a few frames after using a Void (in case the player has consumed a D6)
+  if g.run.itemReplacementDelay >= gameFrameCount then
     return
   end
 
@@ -130,10 +140,6 @@ function Pedestals:Replace(pickup)
   end
 
   -- Replace the pedestal
-  g.run.usedButterFrame = 0
-  -- If we are replacing a pedestal, make sure this is reset to avoid the bug where
-  -- it takes two item touches to re-enable the Schoolbag
-  local randomItem = false
   local newPedestal
   if offLimits then
     -- Change the item to Off Limits (5.100.235)
@@ -251,25 +257,23 @@ function Pedestals:Replace(pickup)
 
   -- Add it to the tracking table so that we don't replace it again
   -- (and don't add random items to the index in case a banned item rolls into another banned item)
-  if not randomItem then
-    g.run.replacedPedestals[#g.run.replacedPedestals + 1] = {
-      room      = roomIndex,
-      X         = pickup.Position.X,
-      Y         = pickup.Position.Y,
-      seed      = newSeed,
-      playerGen = playerGen,
-    }
+  g.run.replacedPedestals[#g.run.replacedPedestals + 1] = {
+    room      = roomIndex,
+    X         = pickup.Position.X,
+    Y         = pickup.Position.Y,
+    seed      = newSeed,
+    playerGen = playerGen,
+  }
 
-    --[[
-    local replacedPedestal = g.run.replacedPedestals[#g.run.replacedPedestals]
-    Isaac.DebugString("Added to replacedPedestals #" .. tostring(#g.run.replacedPedestals) .. ":")
-    Isaac.DebugString("   Room: " .. tostring(replacedPedestal.room))
-    Isaac.DebugString("   Position: (" .. tostring(replacedPedestal.X) .. ", " .. tostring(replacedPedestal.Y) .. ")")
-    Isaac.DebugString("   Seed: " .. tostring(replacedPedestal.seed))
-    Isaac.DebugString("   Price: " .. tostring(newPedestal.Price))
-    Isaac.DebugString("   ShopItemId: " .. tostring(newPedestal.ShopItemId))
-    --]]
-  end
+  --[[
+  local replacedPedestal = g.run.replacedPedestals[#g.run.replacedPedestals]
+  Isaac.DebugString("Added to replacedPedestals #" .. tostring(#g.run.replacedPedestals) .. ":")
+  Isaac.DebugString("   Room: " .. tostring(replacedPedestal.room))
+  Isaac.DebugString("   Position: (" .. tostring(replacedPedestal.X) .. ", " .. tostring(replacedPedestal.Y) .. ")")
+  Isaac.DebugString("   Seed: " .. tostring(replacedPedestal.seed))
+  Isaac.DebugString("   Price: " .. tostring(newPedestal.Price))
+  Isaac.DebugString("   ShopItemId: " .. tostring(newPedestal.ShopItemId))
+  --]]
 
   -- Now that we have created a new pedestal, we can delete the old one
   pickup:Remove()
@@ -288,14 +292,20 @@ function Pedestals:GetSeed(pickup, playerGen)
     -- If we touched this item, we need to set it back to the last seed that we had for this position
     local newSeed = 0
     for _, pedestal in ipairs(g.run.replacedPedestals) do
+      local pedestalPosition = Vector(pedestal.X, pedestal.Y)
       if pedestal.room == roomIndex and
-         Vector(pedestal.X, pedestal.Y):Distance(pickup.Position) <= 15 then
+         pedestalPosition:Distance(pickup.Position) <= 15 then -- A litte less than half a square
 
         -- Don't break after this because we want it to be equal to the seed of the last item
         newSeed = pedestal.seed
       end
     end
-    return newSeed
+
+    -- The Butter trinket can cause new touched pedestals to spawn that we have not seen previously
+    -- If this is the case, we continue into the below code block and use the room seed as a base
+    if newSeed ~= 0 then
+      return newSeed
+    end
   end
 
   if playerGen then

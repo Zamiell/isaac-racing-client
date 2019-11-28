@@ -156,8 +156,7 @@ end
 -- CollectibleType.COLLECTIBLE_VOID (477)
 function UseItem:Item477()
   -- We need to delay item replacement after using a Void (in case the player has consumed a D6)
-  local gameFrameCount = g.g:GetFrameCount()
-  g.run.itemReplacementDelay = gameFrameCount + 5 -- Stall for 5 frames
+  g.run.itemReplacementDelay = g.g:GetFrameCount() + 5 -- Stall for 5 frames
 end
 
 -- CollectibleType.COLLECTIBLE_MOVING_BOX (523)

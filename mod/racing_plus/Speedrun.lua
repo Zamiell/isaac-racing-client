@@ -127,8 +127,8 @@ Speedrun.sprites = {} -- Reset at the beginning of a new run (in the PostGameSta
 Speedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 Speedrun.startedTime = 0 -- Reset expliticly if we are on the first character
 Speedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
-Speedrun.finishTimeCharacter = 0 -- Reset expliticly if we are on the first character
-Speedrun.averageTime = 0 -- Reset expliticly if we are on the first character
+Speedrun.startedCharTime = 0 -- Reset expliticly if we are on the first character and when we touch a Checkpoint
+Speedrun.charRunTimes = {} -- Reset expliticly if we are on the first character
 Speedrun.finished = false -- Reset at the beginning of every run
 Speedrun.finishedTime = 0 -- Reset at the beginning of every run
 Speedrun.finishedFrames = 0 -- Reset at the beginning of every run
@@ -163,15 +163,17 @@ function Speedrun:Finish()
   -- (this is used by the AutoSplitter to know when to split)
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
 
+  -- Record how long this run took
+  local elapsedTime = Isaac.GetTime() - Speedrun.startedCharTime
+  Speedrun.charRunTimes[#Speedrun.charRunTimes + 1] = elapsedTime
+
+  -- Show the run summary (including the average time per character)
+  g.run.endOfRunText = true
+
   -- Finish the speedrun
   Speedrun.finished = true
   Speedrun.finishedTime = Isaac.GetTime() - Speedrun.startedTime
   Speedrun.finishedFrames = Isaac.GetFrameCount() - Speedrun.startedFrame
-  g.run.endOfRunText = true -- Show the run summary
-
-  -- This will be in milliseconds, so we divide by 1000
-  local elapsedTime = (Isaac.GetTime() - Speedrun.finishTimeCharacter) / 1000
-  Speedrun.averageTime = ((Speedrun.charNum - 1) * Speedrun.averageTime + elapsedTime) / Speedrun.charNum
 
   -- Play a sound effect
   g.sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
@@ -356,7 +358,14 @@ function Speedrun:IsOnFinalCharacter()
 end
 
 function Speedrun:GetAverageTimePerCharacter()
-  local timeTable = g:ConvertTimeToString(Speedrun.averageTime)
+  local totalMilliseconds = 0
+  for _, milliseconds in ipairs(Speedrun.charRunTimes) do
+    totalMilliseconds = totalMilliseconds + milliseconds
+  end
+  local averageMilliseconds = totalMilliseconds / #Speedrun.charRunTimes
+  local averageSeconds = averageMilliseconds / 1000
+  local timeTable = g:ConvertTimeToString(averageSeconds)
+
   -- e.g. [minute1][minute2]:[second1][second2]
   return tostring(timeTable[2]) .. tostring(timeTable[3]) .. ":" .. tostring(timeTable[4]) .. tostring(timeTable[5])
 end

@@ -452,8 +452,13 @@ function PostNewRoom:CheckRespawnTrophy()
   local roomType = g.r:GetType()
   local roomClear = g.r:IsClear()
 
-  -- There are only trophies on The Chest or the Dark Room
-  if stage ~= 11 then
+  -- Trophies only spawn on certain stages
+  if stage ~= 6 and
+     stage ~= 8 and
+     stage ~= 9 and
+     stage ~= 11 and
+     stage ~= 12 then
+
     return
   end
 
@@ -462,7 +467,7 @@ function PostNewRoom:CheckRespawnTrophy()
     return
   end
 
-  -- All races finish in some sort of boss room
+  -- All trophies spawn in some sort of boss room
   if roomType ~= RoomType.ROOM_BOSS then -- 5
     return
   end
@@ -514,10 +519,10 @@ function PostNewRoom:CheckRespawnTrophy()
     return
   end
 
-  -- We are re-entering a boss room after we have already spawned the trophy (which is a custom entity),
-  -- so we need to respawn it
+  -- We are re-entering a boss room after we have already spawned the trophy
+  -- (which is a custom entity), so we need to respawn it
   Isaac.Spawn(EntityType.ENTITY_RACE_TROPHY, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
-  Isaac.DebugString("Respawned the end of race trophy.")
+  Isaac.DebugString("Respawned the end of race / speedrun trophy.")
 end
 
 function PostNewRoom:BanB1TreasureRoom()

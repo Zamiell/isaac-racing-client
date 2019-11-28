@@ -1,6 +1,13 @@
 # Racing+ Version History and News
 
-### *v0.47.3* - November 27th, 2019
+### *v0.47.5* - November 27th, 2019
+
+* The end-of-run text has been reorganized.
+* Fixed the bug where the average time per character was incorrect under certain circumstances. (Thanks 910dan)
+* Fixed the bug where items would not go into the Schoolbag under certain conditions. (Thanks Dea1h)
+* Fixed the bug where the speedrun trophy would get deleted if you leave the room under certain conditions. (Thanks juan3299)
+
+### *v0.47.4* - November 27th, 2019
 
 * Fixed the bug where the Checkpoint was not working properly. (Thanks Pingouin23)
 * Fixed the bug where a Lump of Coal would get deleted under certain circumstances. (Thanks Anidalife)

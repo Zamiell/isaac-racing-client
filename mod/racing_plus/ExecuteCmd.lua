@@ -22,7 +22,7 @@ function ExecuteCmd:Main(cmd, params)
   if executeCmdFunc ~= nil then
     executeCmdFunc(params)
   else
-    Isaac.DebugString("Unknown command.")
+    Isaac.ConsoleOutput("Unknown command.")
   end
 end
 
@@ -58,7 +58,7 @@ end
 
 ExecuteCmd.functions["char"] = function(params)
   if params == "" then
-    Isaac.DebugString("You must specify a character number.")
+    Isaac.ConsoleOutput("You must specify a character number.")
   end
   Speedrun.charNum = tonumber(params)
 end
@@ -79,15 +79,16 @@ end
 
 ExecuteCmd.functions["getframe"] = function(params)
   -- Used for debugging
-  Isaac.DebugString("Isaac frame count is at: " .. tostring(Isaac.GetFrameCount()))
-  Isaac.DebugString("Game frame count is at: " .. tostring(g.g:GetFrameCount()))
-  Isaac.DebugString("Room frame count is at: " .. tostring(g.r:GetFrameCount()))
+  Isaac.ConsoleOutput("Isaac frame count is at: " .. tostring(Isaac.GetFrameCount()))
+  Isaac.ConsoleOutput("Game frame count is at: " .. tostring(g.g:GetFrameCount()))
+  Isaac.ConsoleOutput("Room frame count is at: " .. tostring(g.r:GetFrameCount()))
 end
 
 ExecuteCmd.functions["level"] = function(params)
   -- Used to go to the proper floor and stage
   -- (always assumed a seeded race)
   if params == "" then
+    Isaac.ConsoleOutput("You must specify a level number.")
     return
   end
   local stage = tonumber(params)
@@ -115,6 +116,7 @@ ExecuteCmd.functions["list"] = function(params)
     Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
                       tostring(entity.SubType))
   end
+  Isaac.ConsoleOutput("Logged the entities in the room to the \"log.txt\" file.")
 end
 
 ExecuteCmd.functions["next"] = function(params)
@@ -123,7 +125,7 @@ ExecuteCmd.functions["next"] = function(params)
 end
 
 ExecuteCmd.functions["pos"] = function(params)
-  Isaac.DebugString("Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y))
+  Isaac.ConsoleOutput("Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y))
 end
 
 ExecuteCmd.functions["previous"] = function(params)
@@ -137,7 +139,7 @@ end
 
 ExecuteCmd.functions["s"] = function(params)
   if params == "" then
-    Isaac.DebugString("You must specify a stage number.")
+    Isaac.ConsoleOutput("You must specify a stage number.")
     return
   end
   local stage = tonumber(params)
@@ -147,9 +149,21 @@ ExecuteCmd.functions["s"] = function(params)
   g:ExecuteCommand("stage " .. stage)
 end
 
+ExecuteCmd.functions["sb"] = function(params)
+  if params == "" then
+    Isaac.ConsoleOutput("You must specify a Schoolbag item.")
+    return
+  end
+  local item = tonumber(params)
+  if item < 0 then
+    return
+  end
+  Schoolbag:Put(item, "max")
+end
+
 ExecuteCmd.functions["schoolbag"] = function(params)
   if params == "" then
-    Isaac.DebugString("You must specify a Schoolbag item.")
+    Isaac.ConsoleOutput("You must specify a Schoolbag item.")
     return
   end
   local item = tonumber(params)

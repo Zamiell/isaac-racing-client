@@ -3,7 +3,6 @@ local PostPickupUpdate = {}
 -- Note: This callback only fires on frame 1 and onwards
 
 -- Includes
-local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Samael     = require("racing_plus/samael")
 local Pedestals  = require("racing_plus/pedestals")
@@ -61,10 +60,7 @@ end
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PostPickupUpdate:Pickup100(pickup)
   -- We manually manage the seed of all collectible items
-  if g.g:GetFrameCount() >= g.run.itemReplacementDelay then
-    -- We need to delay after using a Void (in case the player has consumed a D6)
-    Pedestals:Replace(pickup)
-  end
+  Pedestals:Replace(pickup)
 end
 
 return PostPickupUpdate

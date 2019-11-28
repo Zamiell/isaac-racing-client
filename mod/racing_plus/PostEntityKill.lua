@@ -329,7 +329,6 @@ function PostEntityKill:Entity81(entity)
   -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
   Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
               pos, g.zeroVector, nil)
-  Isaac.DebugString("SPAWNED ON FRAME: " .. tostring(g.g:GetFrameCount()))
 end
 
 -- EntityType.ENTITY_URIEL (271)

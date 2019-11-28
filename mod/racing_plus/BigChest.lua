@@ -134,21 +134,6 @@ function BigChest:PostPickupInit(pickup)
                       tostring(BigChest.checkpointPos.Y) .. ")")
     pickup:Remove()
 
-    -- Show the run summary
-    if stage ~= 8 then
-      g.run.endOfRunText = true
-      if Speedrun.averageTime == 0 then
-        -- This will be in milliseconds, so we divide by 1000
-        local elapsedTime = (Isaac.GetTime() - Speedrun.startedTime) / 1000
-        Speedrun.averageTime = elapsedTime
-      else
-        -- This will be in milliseconds, so we divide by 1000
-        local elapsedTime = (Isaac.GetTime() - Speedrun.finishTimeCharacter) / 1000
-        Speedrun.averageTime = ((Speedrun.charNum - 1) * Speedrun.averageTime + elapsedTime) / Speedrun.charNum
-      end
-      Speedrun.finishTimeCharacter = Isaac.GetTime()
-    end
-
   elseif BigChest.action == "trophy" then
     -- Spawn the end of race/speedrun trophy
     local position = g.r:GetCenterPos()

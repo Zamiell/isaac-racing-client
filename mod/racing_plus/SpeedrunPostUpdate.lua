@@ -16,6 +16,7 @@ function SpeedrunPostUpdate:Main()
     -- This is to keep the timing consistent with historical timing of speedruns
     Speedrun.startedTime = Isaac.GetTime()
     Speedrun.startedFrame = Isaac.GetFrameCount()
+    Speedrun.startedCharTime = Isaac.GetTime()
   end
 
   SpeedrunPostUpdate:CheckCheckpoint()
@@ -77,6 +78,16 @@ function SpeedrunPostUpdate:CheckCheckpoint(force)
 
   -- Mark to fade out after the "Checkpoint" text has displayed on the screen for a little bit
   Speedrun.fadeFrame = isaacFrameCount + 30
+
+  -- Record how long this run took
+  local elapsedTime = Isaac.GetTime() - Speedrun.startedCharTime
+  Speedrun.charRunTimes[#Speedrun.charRunTimes + 1] = elapsedTime
+
+  -- Mark our current time as the starting time for the next character
+  Speedrun.startedCharTime = Isaac.GetTime()
+
+  -- Show the run summary (including the average time per character for the run so far)
+  g.run.endOfRunText = true
 
   -- Perform some additional actions for Season 7 speedruns
   SpeedrunPostUpdate:Season7()

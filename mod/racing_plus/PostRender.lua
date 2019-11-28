@@ -599,17 +599,19 @@ function PostRender:DisplayTopLeftText()
   elseif g.run.endOfRunText then
     -- Show some run summary information
     -- (it will be removed if they exit the room)
-    Isaac.RenderText("Seed: " .. seedString, x, y, 2, 2, 2, 2)
+    local firstLine = "R+ " .. g.version .. " - " .. seedString
+    Isaac.RenderText(firstLine, x, y, 2, 2, 2, 2)
     y = y + lineLength
-    local text = "Total rooms: " .. g.run.roomsEntered
+    local secondLine
     if Speedrun:InSpeedrun() then
       -- We can't put average time on a 3rd line because it will be blocked by the Checkpoint item text
-      text = text .. ", avg. time per char: " .. Speedrun:GetAverageTimePerCharacter()
+      secondLine = "Avg. time per char: " .. Speedrun:GetAverageTimePerCharacter()
+    else
+      secondLine = "Total rooms: " .. tostring(g.run.roomsEntered)
     end
-    Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+    Isaac.RenderText(secondLine, x, y, 2, 2, 2, 2)
 
     -- Draw a 3rd line to show the total frames
-    -- Draw a 4th line to show the Racing+ version
     if not Speedrun:InSpeedrun() or
        Speedrun:IsOnFinalCharacter() then
 
@@ -619,14 +621,10 @@ function PostRender:DisplayTopLeftText()
       else
         frames = g.raceVars.finishedFrames
       end
-      local seconds = g:Round(frames / 60, 3)
+      local seconds = g:Round(frames / 60, 1)
       y = y + lineLength
-      text = "Total frames: " .. tostring(frames) .. " (" .. tostring(seconds) .. "s)"
-      Isaac.RenderText(text, x, y, 2, 2, 2, 2)
-
-      text = "Racing+ " .. tostring(g.version)
-      y = y + lineLength
-      Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+      local thirdLine = tostring(frames) .. " frames (" .. tostring(seconds) .. "s)"
+      Isaac.RenderText(thirdLine, x, y, 2, 2, 2, 2)
     end
 
   elseif g.race.status == "in progress" and

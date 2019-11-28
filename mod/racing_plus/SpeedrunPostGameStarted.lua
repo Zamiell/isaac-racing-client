@@ -101,8 +101,8 @@ function SpeedrunPostGameStarted:Main()
   if Speedrun.charNum == 1 then
     Speedrun.startedTime = 0
     Speedrun.startedFrame = 0
-    Speedrun.finishTimeCharacter = 0
-    Speedrun.averageTime = 0
+    Speedrun.startedCharTime = 0
+    Speedrun.charRunTimes = {}
     if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS5)
       Speedrun.selectedItemStarts = {}
