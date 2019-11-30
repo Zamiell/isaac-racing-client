@@ -217,11 +217,19 @@ function NPCUpdate:NPC275(npc)
 
     -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                g.r:GetCenterPos(), g.zeroVector, nil)
 
     -- Set the room status to clear so that the player cannot fight Mega Satan a second time
     -- if they happen to use a Fool card after defeating it
     g.r:SetClear(true)
+  end
+end
+
+-- EntityType.ENTITY_ULTRA_GREED (406)
+function NPCUpdate:NPC406(npc)
+  if npc.State == NpcState.STATE_APPEAR_CUSTOM then -- 2
+    npc.State = 3
+    Isaac.DebugString("Sped up the appear animation of Ultra Greed.")
   end
 end
 

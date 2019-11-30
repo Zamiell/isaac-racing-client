@@ -217,6 +217,7 @@ function Speedrun:RoomCleared()
   -- Local variables
   local stage = g.l:GetStage()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
+  local centerPos = g.r:GetCenterPos()
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if we just defeated the custom boss on a Season 7 speedrun
@@ -226,7 +227,7 @@ function Speedrun:RoomCleared()
 
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
   end
 end
 

@@ -373,6 +373,7 @@ function FastClear:ClearRoom()
     roomIndex = g.l:GetCurrentRoomIndex()
   end
   local roomType = g.r:GetType()
+  local centerPos = g.r:GetCenterPos()
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()
 
@@ -466,7 +467,7 @@ function FastClear:ClearRoom()
 
     -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
 
   else
     -- Spawn the award for clearing the room (the pickup, chest, etc.)

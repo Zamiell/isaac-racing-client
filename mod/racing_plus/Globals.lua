@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.6"
+g.version = "v0.47.7"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -358,15 +358,23 @@ function g:InitRun()
 
   -- Schoolbag tracking
   g.run.schoolbag = {
-    item              = 0,
-    charge            = 0,
-    chargeBattery     = 0,
-    pressed           = false, -- Used for keeping track of whether the "Switch" button is held down or not
-    lastCharge        = 0,     -- Used to keep track of the charges when we pick up a second active item
-    lastChargeBattery = 0,     -- Used to keep track of the charges when we pick up a second active item
-    lastRoomItem      = 0,     -- Used to prevent bugs with GLowing Hour Glass
-    lastRoomCharges   = 0,     -- Used to prevent bugs with GLowing Hour Glass
-    nextRoomCharge    = false, -- Used to prevent bugs with GLowing Hour Glass
+    item                 = 0,
+    charge               = 0,
+    chargeBattery        = 0,
+    pressed              = false, -- Used for keeping track of whether the "Switch" button is held down or not
+    usedGlowingHourGlass = 0, -- 0 is not used, 1 is just used, 2 is entered the next room
+    last                 = { -- Used for handling the Glowing Hour Glass
+      active = {
+        item = 0,
+        charge = 0,
+        chargeBattery = 0,
+      },
+      schoolbag = {
+        item = 0,
+        charge = 0,
+        chargeBattery = 0,
+      },
+    },
   }
 
   -- Soul Jar tracking

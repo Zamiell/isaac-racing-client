@@ -66,6 +66,7 @@ function PostEntityKill:Entity78(entity)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
+  local centerPos = g.r:GetCenterPos()
   local challenge = Isaac.GetChallenge()
 
   -- Don't do anything if we are fighting Mom's Heart / It Lives on The Void
@@ -186,7 +187,7 @@ function PostEntityKill:Entity78(entity)
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     if g:TableContains(Speedrun.remainingGoals, "It Lives!") then
       Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                  g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                  centerPos, g.zeroVector, nil)
     end
 
     -- Perform some path validation for Season 7
@@ -239,7 +240,7 @@ function PostEntityKill:Entity78(entity)
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
     return
   end
 
@@ -251,7 +252,7 @@ function PostEntityKill:Entity78(entity)
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
   end
 end
 
@@ -358,17 +359,6 @@ function PostEntityKill:Entity271(entity)
   -- (we could spawn a SubType 0 collectible, but then we wouldn't know how to remove the naturally dropped random item)
   if g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
     return
-  end
-
-  -- We don't want to drop a key piece if there is another alive angel in the room
-  for _, entity2 in ipairs(Isaac.GetRoomEntities()) do
-    local isDead = entity2:IsDead()
-    if (entity2.Type == EntityType.ENTITY_URIEL or -- 271
-        entity2.Type == EntityType.ENTITY_GABRIEL) and -- 272
-        not isDead then
-
-      return
-    end
   end
 
   -- Mark the frame that the angel was killed on so that we can remove the vanilla key piece later

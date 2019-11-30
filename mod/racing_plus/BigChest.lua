@@ -116,6 +116,7 @@ function BigChest:PostPickupInit(pickup)
   if BigChest.action == "leave" then
     -- Set a flag so that we leave it alone on the next frame
     pickup.Touched = true
+    Isaac.DebugString("Leaving the Big Chest there.")
 
   elseif BigChest.action == "up" then
     -- Delete the chest and replace it with a beam of light so that we can fast-travel normally
@@ -129,6 +130,7 @@ function BigChest:PostPickupInit(pickup)
 
   elseif BigChest.action == "remove" then
     pickup:Remove()
+    Isaac.DebugString("Removed the Big Chest.")
 
   elseif BigChest.action == "checkpoint" then
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100

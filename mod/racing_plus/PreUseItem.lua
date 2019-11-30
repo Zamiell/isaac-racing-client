@@ -1,9 +1,8 @@
 local PreUseItem = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local UseItem   = require("racing_plus/useitem")
-local Schoolbag = require("racing_plus/schoolbag")
+local g       = require("racing_plus/globals")
+local UseItem = require("racing_plus/useitem")
 
 -- CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER (84)
 -- This callback is used naturally by Ehwaz (Passage) runes
@@ -144,24 +143,11 @@ end
 
 -- CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS (422)
 function PreUseItem:Item422()
-  -- Mark that this is not a Cursed Eye teleport
-  g.run.naturalTeleport = true
-
-  -- Reset the Schoolbag
+  -- Mark to reset the active item + the Schoolbag item
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-     not g.p:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then
-     -- Broken Remote cancels the Glowing Hour Glass effect
+     not g.p:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then -- Broken Remote cancels the Glowing Hour Glass effect
 
-    Isaac.DebugString("Rewinding the Schoolbag item.")
-    g.run.schoolbag.item = g.run.schoolbag.lastRoomItem
-    g.run.schoolbag.nextRoomCharge = true
-    -- If we don't wait until the next room is entered, the slot 1 charge will just apply to the Glowing Hour Glass
-    -- and not the item that was in the Schoolbag
-    g.run.schoolbag.charge = g.run.schoolbag.lastRoomSlot2Charges
-    if g.run.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then
-       g.run.schoolbag.charge = 0 -- Prevent using the Glowing Hour Glass over and over
-    end
-    Schoolbag.sprites.item = nil
+    g.run.schoolbag.usedGlowingHourGlass = 1
   end
 end
 

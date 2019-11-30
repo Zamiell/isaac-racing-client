@@ -150,6 +150,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC302,
                        EntityType.ENTITY_STONEY) -- 302
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
                        EntityType.ENTITY_FORSAKEN) -- 403
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC406,
+                       EntityType.ENTITY_ULTRA_GREED) -- 406
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC411,
                        EntityType.ENTITY_BIG_HORN) -- 411
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC413,
@@ -165,6 +167,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item286,
                        CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item324,
                        CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item419,
+                       CollectibleType.COLLECTIBLE_TELEPORT_2) -- 419
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item477,
                        CollectibleType.COLLECTIBLE_VOID) -- 477
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item523,

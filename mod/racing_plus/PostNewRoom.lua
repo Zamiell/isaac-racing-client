@@ -1,4 +1,3 @@
-
 local PostNewRoom = {}
 
 -- Includes
@@ -63,7 +62,9 @@ function PostNewRoom:NewRoom()
   local roomType = g.r:GetType()
   local roomClear = g.r:IsClear()
   local character = g.p:GetPlayerType()
+  local activeItem = g.p:GetActiveItem()
   local activeCharge = g.p:GetActiveCharge()
+  local activeChargeBattery = g.p:GetBatteryCharge()
   local maxHearts = g.p:GetMaxHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
@@ -92,7 +93,8 @@ function PostNewRoom:NewRoom()
   -- Clear fast-clear variables that track things per room
   FastClear.buttonsAllPushed = false
   FastClear.roomInitializing = false
-  -- (this is set to true when the room frame count is -1 and set to false here, where the frame count is 0)
+  -- (this is set to true when the room frame count is -1 and set to false here,
+  -- where the frame count is 0)
 
   -- Check to see if we need to fix the Wraith Skull + Hairpin bug
   Samael:CheckHairpin()
@@ -115,7 +117,8 @@ function PostNewRoom:NewRoom()
   end
 
   -- Check health (to fix the bug where we don't die at 0 hearts)
-  -- (this happens if Keeper uses Guppy's Paw or when Magdalene takes a devil deal that grants soul/black hearts)
+  -- (this happens if Keeper uses Guppy's Paw or
+  -- when Magdalene takes a devil deal that grants soul/black hearts)
   if maxHearts == 0 and
      soulHearts == 0 and
      boneHearts == 0 and
@@ -126,18 +129,24 @@ function PostNewRoom:NewRoom()
     Isaac.DebugString("Manually killing the player since they are at 0 hearts.")
   end
 
-  -- Make the Schoolbag work properly with the Glowing Hour Glass
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
-    -- Recharge our active item if we used the Glowing Hour Glass
-    if g.run.schoolbag.nextRoomCharge then
-      g.run.schoolbag.nextRoomCharge = false
-      g.p:SetActiveCharge(g.run.schoolbag.lastRoomSlot1Charges)
-    end
-
-    -- Keep track of our last Schoolbag item
-    g.run.schoolbag.lastRoomItem = g.run.schoolbag.item
-    g.run.schoolbag.lastRoomSlot1Charges = activeCharge
-    g.run.schoolbag.lastRoomSlot2Charges = g.run.schoolbag.charge
+  if g.run.schoolbag.usedGlowingHourGlass == 0 then
+    -- Record the state of the active item + the Schoolbag item in case we use a Glowing Hour Glass
+    g.run.schoolbag.last = {
+      active = {
+        item = activeItem,
+        charge = activeCharge,
+        chargeBattery = activeChargeBattery,
+      },
+      schoolbag = {
+        item = g.run.schoolbag.item,
+        charge = g.run.schoolbag.charge,
+        chargeBattery = g.run.schoolbag.chargeBattery,
+      },
+    }
+  elseif g.run.schoolbag.usedGlowingHourGlass == 1 then
+    -- We just used a Glowing Hour Glass,
+    -- so mark to reset the active item + the Schoolbag item on the next render frame
+    g.run.schoolbag.usedGlowingHourGlass = 2
   end
 
   -- Check for the Boss Rush

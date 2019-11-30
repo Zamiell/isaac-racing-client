@@ -138,10 +138,11 @@ While there are thousands of rooms in the game, many players have already seen t
   * various animations during The Haunt fight
   * various animations during the Big Horn fight
   * Hush's appear animation
-  * Greed's death animation
+  * Ultra Greed's appear and death animation
 
 ### Bug Fixes
 
+* Angels will drop key pieces even if another angel is still alive in the room.
 * Globins will permanently die upon the 5th regeneration to prevent Epic Fetus softlocks.
 * Flaming Hoppers will now automatically die after 5 seconds of being immobile to prevent softlocks.
 * Globins, Sacks, Fistula, and Teratoma will now properly die after defeating Mom, Mom's Heart, or It Lives!
@@ -156,7 +157,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Returning from a crawlspace in a Boss Rush or Devil Deal will no longer send you to the wrong room.
 * The Pony / White Pony can no longer be abused to steal Devil Room items.
 * The babies on the Isaac fight can no longer spawn inside the hitbox of the player and will now randomly spawn throughout the room (as originally intended).
-* The random beams of light from Isaac and Conquest are fixed such that they will now target the player, but give them a chance to dodge.
+* The random beams of light from Isaac and Conquest are fixed such that they will now target the player.
 
 ### Graphics & Sound Fixes
 
