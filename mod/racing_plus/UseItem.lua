@@ -153,6 +153,12 @@ function UseItem:Item324()
   -- This will override the existing Undefined effect because we have already locked in a room transition
 end
 
+-- CollectibleType.COLLECTIBLE_TELEPORT_2 (419)
+function UseItem:Item419()
+  -- Mark that this is not a Cursed Eye teleport
+  g.run.naturalTeleport = true
+end
+
 -- CollectibleType.COLLECTIBLE_VOID (477)
 function UseItem:Item477()
   -- We need to delay item replacement after using a Void (in case the player has consumed a D6)

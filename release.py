@@ -66,6 +66,17 @@ NUMBER_VERSION = DATA['version']
 VERSION = 'v' + DATA['version']
 
 if not ARGS.skipmod:
+    # Search for debug print statements
+    output = ''
+    try:
+        output = subprocess.check_output(['grep', '-rni', 'getting here', MOD_DIR]).strip()
+    except subprocess.CalledProcessError:
+        # We except a return value of 1 since it should not find any results
+        pass
+    if output != '':
+        print('Found leftover debug statements.')
+        sys.exit(1)
+
     # Put the version in the "Globals.lua" file
     # http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
     LUA_FILE = os.path.join(MOD_DIR, 'racing_plus', 'Globals.lua')

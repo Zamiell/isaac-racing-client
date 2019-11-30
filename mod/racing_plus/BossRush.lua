@@ -342,6 +342,7 @@ end
 function BossRush:Finish()
   -- Local variables
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local centerPos = g.r:GetCenterPos()
   local challenge = Isaac.GetChallenge()
 
   g.run.bossRush.started = false
@@ -353,14 +354,14 @@ function BossRush:Finish()
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
 
   elseif g.race.status == "in progress" and
          g.race.goal == "Boss Rush" then
 
     -- Spawn a big chest (which will get replaced with a trophy on the next frame)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.zeroVector, g.zeroVector, nil) -- It does not matter where we spawn it since it will be replaced
+                centerPos, g.zeroVector, nil)
 
   else
     -- Spawn a random item

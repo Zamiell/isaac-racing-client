@@ -121,7 +121,7 @@ end
 -- PickupVariant.PICKUP_TROPHY (370)
 function PostPickupInit:Pickup370(pickup)
   -- Do nothing if we are not on a custom speedrun challenge
-  -- (otherwise we would mess with the normal challenges)
+  -- (otherwise we would be deleting the trophy in a normal challenge)
   if not Speedrun:InSpeedrun() then
     return
   end

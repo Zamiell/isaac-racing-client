@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.47.7* - November 28th, 2019
+
+* Deleted Ultra Greed's "Appear" animation.
+* The Lead Pencil charge bar no longer appears if you are Azazel. (Thanks NorBro86)
+* Fixed the (vanilla) bug where angels would not drop key pieces if another angel was alive.
+* Fixed the bug where the Glowing Hour Glass would not work correctly with the Schoolbag if you had the Butter! trinket. (Thanks mgln)
+* Fixed the bug where Teleport 2.0 would not work correctly if you had Cursed Eye. (Thanks Greg)
+* Fixed the bug where the Big Chest would spawn out of bounds after killing The Lamb.
+* Fixed the bug where the Big Chest would spawn out of bounds after killing Mega Satan.
+
 ### *v0.47.6* - November 28th, 2019
 
 * Isaac is now feeling festive. Happy Thanksgiving!

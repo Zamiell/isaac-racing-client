@@ -54,7 +54,8 @@ function PostRender:Main()
   SoulJar:SpriteDisplay()
   PostRender:TheLostHealth()
   PostRender:HolyMantle()
-  PostRender:PencilChargeBar()
+  PostRender:LeadPencilChargeBar()
+  PostRender:SchoolbagGlowingHourGlass()
   Timer:Display()
   Timer:DisplayRun()
   Timer:DisplaySecond()
@@ -241,10 +242,12 @@ function PostRender:HolyMantle()
   Sprites.sprites.holyMantle:Render(Vector(Xoffset, Yoffset), g.zeroVector, g.zeroVector)
 end
 
-function PostRender:PencilChargeBar()
+-- Make an additional charge bar for the Lead Pencil
+function PostRender:LeadPencilChargeBar()
   local character = g.p:GetPlayerType()
 
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) or -- 444
+     character == PlayerType.PLAYER_AZAZEL or -- 7
      character == PlayerType.PLAYER_LILITH or -- 13
      character == PlayerType.PLAYER_THEFORGOTTEN or -- 16
      g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or -- 52
@@ -869,6 +872,38 @@ function PostRender:DrawVersion()
   text = g.version
   y = y + 15
   Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+end
+
+-- Make the Schoolbag work properly with the Glowing Hour Glass
+-- (this has to be in the POST_RENDER callback instead of the POST_NEW_ROOM callback since
+-- the game decrements the charge from the Glowing Hour Glass on the first render frame after the room is loaded)
+function PostRender:SchoolbagGlowingHourGlass()
+  if g.run.schoolbag.usedGlowingHourGlass ~= 2 then
+    return
+  end
+
+  -- Decrement the charges on the Glowing Hour Glass
+  if g.run.schoolbag.last.active.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
+    g.run.schoolbag.last.active.charge =g.run.schoolbag.last.active.charge - 2
+  end
+  if g.run.schoolbag.last.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
+    g.run.schoolbag.last.schoolbag.charge = g.run.schoolbag.last.schoolbag.chargeBattery
+  end
+
+  -- Rewind the charges on the active item and the Schoolbag item
+  g.run.schoolbag.usedGlowingHourGlass = 0
+  local totalActiveCharge = g.run.schoolbag.last.active.charge + g.run.schoolbag.last.active.chargeBattery
+  g.p:AddCollectible(g.run.schoolbag.last.active.item, totalActiveCharge, true)
+  Schoolbag:Put(g.run.schoolbag.last.schoolbag.item, g.run.schoolbag.last.schoolbag.charge)
+  g.run.schoolbag.chargeBattery = g.run.schoolbag.last.schoolbag.chargeBattery
+  Isaac.DebugString("Glowing Hour Glass used - manually restored the active item: " ..
+                    tostring(g.run.schoolbag.last.active.item) .. " - " ..
+                    tostring(g.run.schoolbag.last.active.charge) .. " - " ..
+                    tostring(g.run.schoolbag.last.active.chargeBattery))
+  Isaac.DebugString("Glowing Hour Glass used - manually restored the Schoolbag item: " ..
+                    tostring(g.run.schoolbag.last.schoolbag.item) .. " - " ..
+                    tostring(g.run.schoolbag.last.schoolbag.charge) .. " - " ..
+                    tostring(g.run.schoolbag.last.schoolbag.chargeBattery))
 end
 
 -- Taken from Alphabirth: https://steamcommunity.com/sharedfiles/filedetails/?id=848056541
