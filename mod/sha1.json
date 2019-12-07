@@ -34,7 +34,7 @@
     "racing_plus\\FastClear.lua": "e0fda598dc332a6ed8b6ab0b8ebf8925265cf59e",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "b80c51edd82fd546831f89623a789976771449df",
-    "racing_plus\\Globals.lua": "f7e6410183af3fa5871d2fa22b24b28e33c5f0e9",
+    "racing_plus\\Globals.lua": "b0f49965e64798197cdcc8af2b432adb09555065",
     "racing_plus\\InputAction.lua": "b33b9b80951bacacbcabddee4c8248e5c4a72a58",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -47,7 +47,7 @@
     "racing_plus\\PostEffectUpdate.lua": "8b6f83c4b8ecb3bef35d3406ee85d87e620207d6",
     "racing_plus\\PostEntityKill.lua": "d7fcf8ac433e668b6052f5d0b6e580bf741a6eff",
     "racing_plus\\PostFireTear.lua": "bb4de2eecaff111672cd34aa07b5a4c7eb43ea73",
-    "racing_plus\\PostGameStarted.lua": "3619ea8d15e88c487de9cdea225b28de47d5c35e",
+    "racing_plus\\PostGameStarted.lua": "efcdb8e68868c4ebc85ce846027c963c677d4df7",
     "racing_plus\\PostItemPickup.lua": "cd936309b9d6b45f638c4e9b4b37df5bf3bafe62",
     "racing_plus\\PostLaserInit.lua": "edc080ef83e584694c8f2e020d078837a1a9c929",
     "racing_plus\\PostNPCInit.lua": "6af70ee4c811fc971f1025615a3273af6beddd3e",
@@ -190,7 +190,7 @@
     "resources\\gfx\\characters\\costumes\\costume_317_mysteriousliquid_face_red.png": "04fce0aa957fd76b81156b1b893f613336e863f7",
     "resources\\gfx\\characters\\costumes\\costume_317_mysteriousliquid_face_white.png": "4c1d500c8d484f6b884f03d0fdcd8d3f5199a0bb",
     "resources\\gfx\\characters\\costumes\\costume_317_mysteriousliquid_glow.png": "3c7e91f9d98d8ce78f6c01096c232fd901d9f79d",
-    "resources\\gfx\\characters\\costumes\\costume_christmashat.png": "0c80dfb2a6cb677367a771d47cfa4d3c53917c88",
+    "resources\\gfx\\characters\\costumes\\costume_christmashat.png": "745679138125ae02ddf3cc0f3556f36a74b25a03",
     "resources\\gfx\\characters\\costumes\\costume_christmashat_christmas.png": "745679138125ae02ddf3cc0f3556f36a74b25a03",
     "resources\\gfx\\characters\\costumes\\costume_christmashat_halloween.png": "f286b3b4bcdeea51b2843d49edf133e08a380d29",
     "resources\\gfx\\characters\\costumes\\costume_christmashat_newyears.png": "5244065d51c0a94cfddb13d107c48c326b025fe6",
@@ -2094,7 +2094,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "62fb9c8f1ea533c7db726f25880ff3ce88d87d12",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "839dee10fbe8c5984629b16c6404f9f454792ba0",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2172,5 +2172,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "2b5e6836e6bbf4435bc2d46769ab74b4f4537037"
+    "sha1.json": "0465c334e0d7f4da7ac5e48408bae93b8e26948a"
 }
