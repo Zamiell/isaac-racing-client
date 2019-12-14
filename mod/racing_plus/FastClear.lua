@@ -11,6 +11,7 @@ local Speedrun = require("racing_plus/speedrun")
 -- These are reset in the "FastClear:InitRun()" function
 FastClear.familiars = {}
 FastClear.roomClearAwardRNG = 0
+FastClear.roomClearAwardRNG2 = 0 -- Used for Devil Rooms and Angel Rooms
 
 -- These are reset in the "FastClear:InitRun()" function and
 -- the "FastClear:PostNPCInit()" function (upon entering a new room)
@@ -57,6 +58,12 @@ function FastClear:InitRun()
     }
   end
   FastClear.roomClearAwardRNG = startSeed
+  FastClear.roomClearAwardRNG2 = startSeed
+  for i = 1, 500 do
+    -- We want to insure that the second RNG counter does not overlap with the first one
+    -- (around 175 rooms are cleared in an average speedrun, so 500 is a reasonable upper limit)
+    FastClear.roomClearAwardRNG2 = g:IncrementRNG(FastClear.roomClearAwardRNG2)
+  end
 
   FastClear.aliveEnemies = {}
   FastClear.aliveEnemiesCount = 0
@@ -1034,16 +1041,29 @@ end
 -- we hardcode values of 0 luck so that room drops are completely consistent
 -- (otherwise, one player would be able to get a lucky Emperor card by using a Luck Up or Luck Down pill, for example)
 -- Furthermore, we ignore the following items, since we remove them from pools:
--- Lucky Foot, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick, Lucky Toe,
--- Safety Cap, Ace of Spades, and Watch Battery
+-- Lucky Foot, Silver Dollar, Bloody Crown, Daemon's Tail, Child's Heart, Rusted Key, Match Stick,
+-- Lucky Toe, Safety Cap, Ace of Spades, and Watch Battery
 function FastClear:SpawnClearAward()
   -- Local variables
+  local roomType = g.r:GetType()
   local centerPos = g.r:GetCenterPos()
 
+  -- Find out whic seed we should use
+  -- (Devil Rooms and Angel Rooms use a separate RNG counter so that players cannot get a lucky battery)
+  local seed
+  if roomType == RoomType.ROOM_DEVIL or -- 14
+     roomType == RoomType.ROOM_ANGEL then -- 15
+
+    FastClear.roomClearAwardRNG2 = g:IncrementRNG(FastClear.roomClearAwardRNG2)
+    seed = FastClear.roomClearAwardRNG2
+  else
+    FastClear.roomClearAwardRNG = g:IncrementRNG(FastClear.roomClearAwardRNG)
+    seed = FastClear.roomClearAwardRNG
+  end
+
   -- Get a random value between 0 and 1 that will determine what kind of reward we get
-  FastClear.roomClearAwardRNG = g:IncrementRNG(FastClear.roomClearAwardRNG)
   local rng = RNG()
-  rng:SetSeed(FastClear.roomClearAwardRNG, 35)
+  rng:SetSeed(seed, 35)
   local pickupPercent = rng:RandomFloat()
 
   -- Determine the kind of pickup

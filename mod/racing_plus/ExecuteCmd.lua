@@ -68,10 +68,13 @@ ExecuteCmd.functions["char"] = function(params)
   if params == "" then
     Isaac.ConsoleOutput("You must specify a character number.")
   end
+
   local num = ExecuteCmd:ValidateNumber(params)
-  if num ~= nil then
-    Speedrun.charNum = num
+  if num == nil then
+    return
   end
+
+  Speedrun.charNum = num
 end
 
 ExecuteCmd.functions["commands"] = function(params)
@@ -89,12 +92,16 @@ ExecuteCmd.functions["commands"] = function(params)
 end
 
 ExecuteCmd.functions["damage"] = function(params)
-  g.run.debugDamage = true
+  g.run.debugDamage = not g.run.debugDamage
   g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
   g.p:EvaluateItems()
 end
 
 ExecuteCmd.functions["db"] = function(params)
+  ExecuteCmd:Debug()
+end
+
+function ExecuteCmd:Debug()
   Isaac.ExecuteCommand("debug 3")
   Isaac.ExecuteCommand("damage")
   Isaac.ExecuteCommand("speed")
@@ -102,13 +109,17 @@ ExecuteCmd.functions["db"] = function(params)
   Isaac.ExecuteCommand("debug 10")
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION, 0, false) -- 76
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
-  g.p:AddCoin(99)
-  g.p:AddBomb(99)
-  g.p:AddKey(99)
+  g.p:AddCoins(99)
+  g.p:AddBombs(99)
+  g.p:AddKeys(99)
 end
 
 ExecuteCmd.functions["dd"] = function(params)
   g.p:UseCard(Card.CARD_JOKER) -- 31
+end
+
+ExecuteCmd.functions["debug"] = function(params)
+  ExecuteCmd:Debug()
 end
 
 ExecuteCmd.functions["devil"] = function(params)
@@ -122,9 +133,13 @@ ExecuteCmd.functions["getframe"] = function(params)
   Isaac.ConsoleOutput("Room frame count is at: " .. tostring(g.r:GetFrameCount()))
 end
 
+ExecuteCmd.functions["getroom"] = function(params)
+  Isaac.ConsoleOutput("Room index is: " .. g.l:GetCurrentRoomIndex())
+end
+
 ExecuteCmd.functions["level"] = function(params)
   -- Used to go to the proper floor and stage
-  -- (always assumed a seeded race)
+  -- (always assume a seeded race)
   if params == "" then
     Isaac.ConsoleOutput("You must specify a level number.")
     return
@@ -175,20 +190,44 @@ ExecuteCmd.functions["previous"] = function(params)
   SpeedrunPostUpdate:CheckCheckpoint(true)
 end
 
+ExecuteCmd.functions["removeall"] = function(params)
+  -- Copied from the "SeededDeath:DebuffOn()" function
+  for i = 1, g:GetTotalItemCount() do
+    local numItems = g.p:GetCollectibleNum(i)
+    if numItems > 0 and
+       g.p:HasCollectible(i) then
+
+      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as Lilith having 1 Incubus
+      for j = 1, numItems do
+        g.p:RemoveCollectible(i)
+        local debugString = "Removing collectible " .. tostring(i)
+        if i == CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM then
+          debugString = debugString .. " (Schoolbag)"
+        end
+        Isaac.DebugString(debugString)
+        g.p:TryRemoveCollectibleCostume(i, false)
+      end
+    end
+  end
+end
+
 -- "s" is a crash-safe wrapper for the vanilla "stage" command
 ExecuteCmd.functions["s"] = function(params)
   if params == "" then
     Isaac.ConsoleOutput("You must specify a stage number.")
     return
   end
+
   local stage = ExecuteCmd:ValidateNumber(params)
   if stage == nil then
     return
   end
+
   if stage < 1 or stage > 12 then
     Isaac.ConsoleOutput("Invalid stage number; must be between 1 and 12.")
     return
   end
+
   g:ExecuteCommand("stage " .. stage)
 end
 
@@ -205,18 +244,20 @@ function ExecuteCmd:Schoolbag(params)
     Isaac.ConsoleOutput("You must specify a Schoolbag item.")
     return
   end
+
   local item = ExecuteCmd:ValidateNumber(params)
   if item == nil then
     return
   end
+
   local totalItems = g:GetTotalItemCount()
   if item < 0 or item > g:GetTotalItemCount() then
     Isaac.ConsoleOutput("Invalid item number; must be between 0 and " .. tostring(totalItems) .. ".")
     return
   end
+
   Schoolbag:Put(item, "max")
 end
-
 
 ExecuteCmd.functions["shop"] = function(params)
   g.p:UseCard(Card.CARD_HERMIT) -- 10
@@ -233,9 +274,24 @@ ExecuteCmd.functions["speed"] = function(params)
 end
 
 ExecuteCmd.functions["tears"] = function(params)
-  g.run.debugTears = true
+  g.run.debugTears = not g.run.debugTears
   g.p:AddCacheFlags(CacheFlag.CACHE_FIREDELAY) -- 2
   g.p:EvaluateItems()
+end
+
+ExecuteCmd.functions["teleport"] = function(params)
+  if params == "" then
+    Isaac.ConsoleOutput("You must specify a room index number.")
+    return
+  end
+
+  local roomIndex = ExecuteCmd:ValidateNumber(params)
+  if roomIndex == nil then
+    return
+  end
+
+  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
+  g.l:ChangeRoom(roomIndex)
 end
 
 ExecuteCmd.functions["trapdoor"] = function(params)

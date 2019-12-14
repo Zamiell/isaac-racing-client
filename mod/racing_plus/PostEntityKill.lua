@@ -387,6 +387,9 @@ end
 
 -- EntityType.ENTITY_ULTRA_GREED (406)
 function PostEntityKill:Entity406(entity)
+  -- In vanilla, he will turn into a gold statue and block movement, which can block access to the Checkpoint
+  -- Instead, simply remove Ultra Greed as soon as he dies
+  -- (this also has the benefit of not forcing the player to watch the long death animation)
   entity:Remove()
 end
 

@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.47.9* - December 14th, 2019
+
+* In seeded races, room drops for Devil Rooms and Angel Rooms will now use a separate seed counter than the one used for normal room drops. (Thanks mgln)
+* Fixed the bug where beating Delirium would count as beating Ultra Green in season 7. (Thanks olo70009)
+* Fixed the bug where using Void with the Schoolbag would not cause it to get properly seeded. (Thanks mgln)
+
 ### *v0.47.7* - November 30th, 2019
 
 * Deleted Ultra Greed's "Appear" animation.

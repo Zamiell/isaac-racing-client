@@ -32,7 +32,15 @@ function Pedestals:Replace(pickup)
 
   -- Don't replace anything if this is a few frames after using a Void (in case the player has consumed a D6)
   if g.run.itemReplacementDelay >= gameFrameCount then
-    return
+    if g.p:HasTrinket(TrinketType.TRINKET_BUTTER) and -- 122
+       pickup.SubType == CollectibleType.COLLECTIBLE_VOID then -- 477
+
+      Isaac.DebugString("Void dropped from a Butter! trinket. Explicitly replacing this pedestal.")
+      -- (this pedestal will not be rolled, even if the player has consumed a D6)
+    else
+      Isaac.DebugString("Leaving pedestal with item " .. tostring(pickup.SubType) .. " due to Void usage.")
+      return
+    end
   end
 
   -- Check to see if this is a pedestal that was already replaced

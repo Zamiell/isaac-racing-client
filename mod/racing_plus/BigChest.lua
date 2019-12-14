@@ -291,7 +291,8 @@ function BigChest:S7(pickup)
        stageType == 1 and g:TableContains(Speedrun.remainingGoals, "Blue Baby")) or
       (stage == 11 and roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
        stageType == 0 and g:TableContains(Speedrun.remainingGoals, "The Lamb")) or
-      (stage == 12 and g:TableContains(Speedrun.remainingGoals, "Ultra Greed")) then
+      (stage == 12 and roomIndexUnsafe == g.run.customBossRoomIndex and
+       g:TableContains(Speedrun.remainingGoals, "Ultra Greed")) then
 
     if Speedrun.charNum == 7 then
       BigChest.action = "trophy"
