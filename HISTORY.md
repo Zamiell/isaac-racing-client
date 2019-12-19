@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.47.10* - December 19th, 2019
+
+* Isaac is now feeling festive. Merry Christmas!
+* Fixed the (vanilla) bug where multi-segment bosses would drop more than one black heart when killed with Maw of the Void or Athame.
+* The end of run text now says "Rooms entered" instead of "Total rooms" so that it is more clear what the number means.
+
 ### *v0.47.9* - December 14th, 2019
 
 * In seeded races, room drops for Devil Rooms and Angel Rooms will now use a separate seed counter than the one used for normal room drops. (Thanks mgln)

@@ -463,7 +463,7 @@ The removed room is as follows:
 
 ### Empty Room Removal
 
-Some rooms in the game do not have anything in them (or just have rocks, pits, etc.). These types of rooms rob the player of interesting gameplay.
+Some rooms in the game do not have anything in them (or just have a few rocks, pits, etc.). These types of rooms rob the player of interesting gameplay.
 
 The removed rooms are as follows:
 * Basement/Cellar/Burning: #29, #30, #39, #92, #144, #147, #338, #520, #600, #617, #621, #622, #749, #900, #951, #952

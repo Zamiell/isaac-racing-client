@@ -84,7 +84,7 @@ RacingPlusSchoolbag = Schoolbag
 RacingPlusSpeedrun = Speedrun
 
 -- Define miscellaneous callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,            FastClear.NPCUpdate) -- 0
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,            NPCUpdate.Main) -- 0
 RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           PostUpdate.Main) -- 1
 RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           PostRender.Main) -- 2
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,              UseItem.Main) -- 3
@@ -280,6 +280,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.Pickup37
                        PickupVariant.PICKUP_TROPHY) -- 370
 
 -- Define post pickup update callbacks (35)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup10, -- 35
+                       PickupVariant.PICKUP_HEART) -- 10
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup20, -- 35
                        PickupVariant.PICKUP_COIN) -- 20
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup100, -- 35

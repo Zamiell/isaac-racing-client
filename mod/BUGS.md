@@ -22,3 +22,15 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * If you have Ipecac and Death's Touch, the thrown scythe will become invisible. (Reported by Nariom)
 * If you have Mom's Knife, you can bypass the throw charge with proper timing to infinitely throw the scythe at close range. (Found by TaKer093)
 * You can keep the Scythe shot fully charged without pressing any attack button by charging the scythe and release all attack buttons in a slide transition. Once you press any attack button, the Scythe charge will be released and the bug is fixed. (Found by TaKer093)
+
+# Bugs with Seeded Death
+
+* The following pills will cause the player to become unfaded:
+  * Health Up (7)
+  * Range Up (12)
+  * Speed Up (14)
+  * Tears Up (16)
+  * Luck Up (18)
+  * Paralysis (22)
+  * Power Pill (36)
+  * Feels like I'm walking on sunshine! (45)

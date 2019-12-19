@@ -3,6 +3,7 @@ local PostPickupUpdate = {}
 -- Note: This callback only fires on frame 1 and onwards
 
 -- Includes
+local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Samael     = require("racing_plus/samael")
 local Pedestals  = require("racing_plus/pedestals")
@@ -37,6 +38,42 @@ function PostPickupUpdate:Main(pickup)
     -- Additionally, we can't use the MC_POST_PICKUP_INIT callback for this because the position
     -- for newly initialized pickups is always equal to (0, 0)
     FastTravel:CheckPickupOverHole(pickup)
+  end
+end
+
+-- PickupVariant.PICKUP_HEART (10)
+function PostPickupUpdate:Pickup10(pickup)
+  -- We only care about freshly spawned black hearts
+  if pickup.FrameCount ~= 1 or
+     pickup.SubType ~= HeartSubType.HEART_BLACK then -- 6
+
+    return
+  end
+
+  -- If this black heart is in the same position as a dead NPC,
+  -- assume that it was spawned from a Maw of the Void or Athame
+  local parentNPC
+  for index, entry in pairs(g.run.blackHeartNPCs) do
+    if entry.position.X == pickup.Position.X and
+       entry.position.Y == pickup.Position.Y then
+
+      parentNPC = entry
+      break
+    end
+  end
+  if parentNPC == nil then
+    -- It must be a black heart from something else, e.g. a room drop
+    return
+  end
+
+  -- We only allow 1 black heart drop from a particular init seed
+  if g.run.blackHeartCount[parentNPC.initSeed] == nil then
+    g.run.blackHeartCount[parentNPC.initSeed] = 0
+  end
+  g.run.blackHeartCount[parentNPC.initSeed] = g.run.blackHeartCount[parentNPC.initSeed] + 1
+  if g.run.blackHeartCount[parentNPC.initSeed] >= 2 then
+    pickup:Remove()
+    Isaac.DebugString("Removed a bugged black heart from a multi-segment enemy.")
   end
 end
 

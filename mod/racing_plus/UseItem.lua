@@ -40,6 +40,9 @@ function UseItem:Item44()
   local rooms = g.l:GetRooms()
 
   -- Get a random room index
+  -- We could adjust this so that our current room is exempt from the list of available rooms,
+  -- but this would cause problems in seeded races, so seeded races would have to be exempt from this exemption
+  -- Thus, don't bother with this in order to keep the behavior consistent through the different types of races
   g.RNGCounter.Teleport = g:IncrementRNG(g.RNGCounter.Teleport)
   math.randomseed(g.RNGCounter.Teleport)
   local roomNum = math.random(0, rooms.Size - 1)

@@ -3,7 +3,27 @@ local NPCUpdate = {}
 -- Note: This callback only fires on frame 1 and onwards
 
 -- Includes
-local g = require("racing_plus/globals")
+local g         = require("racing_plus/globals")
+local FastClear = require("racing_plus/fastclear")
+
+-- ModCallbacks.MC_NPC_UPDATE (0)
+function NPCUpdate:Main(npc)
+  -- Check for dying enemies so that we can fix the bug where multi-segment enemies drop multiple black hearts
+  -- We need to track enemy positions as a workaround because black hearts will not have a Parent or SpawnerEntity
+  if npc:IsDead() then
+    if g.run.blackHeartNPCs[npc.Index] == nil then
+      -- An enemy has died for the first time (and begun its death animation on this frame)
+      -- Make an entry in the blackHeartNPCs table
+      g.run.blackHeartNPCs[npc.Index] = {
+        initSeed = npc.InitSeed,
+        position = Vector(npc.Position.X, npc.Position.Y),
+      }
+    end
+  end
+
+  -- Track all NPCs for the purposes of opening the doors early
+  FastClear:NPCUpdate(npc)
+end
 
 -- EntityType.ENTITY_GLOBIN (24)
 function NPCUpdate:NPC24(npc)

@@ -610,7 +610,7 @@ function PostRender:DisplayTopLeftText()
       -- We can't put average time on a 3rd line because it will be blocked by the Checkpoint item text
       secondLine = "Avg. time per char: " .. Speedrun:GetAverageTimePerCharacter()
     else
-      secondLine = "Total rooms: " .. tostring(g.run.roomsEntered)
+      secondLine = "Rooms entered: " .. tostring(g.run.roomsEntered)
     end
     Isaac.RenderText(secondLine, x, y, 2, 2, 2, 2)
 

@@ -444,7 +444,10 @@ function g:InitRoom()
   g.run.spawningLight         = false -- For the custom Crack the Sky effect
   g.run.spawningExtraLight    = false -- For the custom Crack the Sky effect
   g.run.lightPositions        = {} -- For the custom Crack the Sky effect
-  g.run.matriarch             = {
+  -- Used to fix the bug where multiple black hearts can drop from the same multi-segment enemy
+  g.run.blackHeartNPCs  = {} -- Indexed by NPC index
+  g.run.blackHeartCount = {} -- Indexed by NPC init seed
+  g.run.matriarch       = { -- Used to rebalance The Matriarch
     spawned   = false,
     chubIndex = -1,
     stunFrame = 0,

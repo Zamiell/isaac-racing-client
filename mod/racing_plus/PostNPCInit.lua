@@ -5,7 +5,6 @@ local PostNPCInit = {}
 -- Includes
 local g = require("racing_plus/globals")
 
-
 -- EntityType.ENTITY_BABY (38)
 function PostNPCInit:NPC38(npc)
   if g.run.spawningAngel then

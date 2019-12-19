@@ -166,8 +166,14 @@ ExecuteCmd.functions["list"] = function(params)
   -- Used to print out all of the entities in the room
   Isaac.DebugString("Entities in the room:")
   for i, entity in ipairs(Isaac.GetRoomEntities()) do
-    Isaac.DebugString(tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
-                      tostring(entity.SubType))
+    local debugString = tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
+                        tostring(entity.SubType)
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      debugString = debugString .. "." .. npc.State
+    end
+    debugString = debugString .. " (InitSeed: " .. tostring(entity.InitSeed) .. ")"
+    Isaac.DebugString(debugString)
   end
   Isaac.ConsoleOutput("Logged the entities in the room to the \"log.txt\" file.")
 end

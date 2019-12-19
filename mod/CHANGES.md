@@ -100,8 +100,9 @@ While there are thousands of rooms in the game, many players have already seen t
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
 * Diagonal knife throws have a 3-frame window instead of a 1-frame window.
-* Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt.)
+* Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt. All floors on set seeds are exempt.)
 * The Boss Rush is modified to include the Afterbirth+ bosses and Chapter 4 bosses.
+* Teleport, Broken Remote, and Cursed Eye no longer have a chance to teleport you to the same room that you are in.
 * Pin's first attack happens on the 15th frame (instead of the 73rd frame).
 * Cod Worms are replaced with Para-Bites.
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
@@ -158,6 +159,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The Pony / White Pony can no longer be abused to steal Devil Room items.
 * The babies on the Isaac fight can no longer spawn inside the hitbox of the player and will now randomly spawn throughout the room (as originally intended).
 * The random beams of light from Isaac and Conquest are fixed such that they will now target the player.
+* Multi-segment bosses will no longer drop more than one black heart when killed with Maw of the Void or Athame.
 
 ### Graphics & Sound Fixes
 
