@@ -34,7 +34,7 @@
     "racing_plus\\FastClear.lua": "f797204c6282eb9008f55ce207ffa054495732ef",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
     "racing_plus\\FastTravel.lua": "b80c51edd82fd546831f89623a789976771449df",
-    "racing_plus\\Globals.lua": "2828a87fc5848d93b783f966287834e58ec0a179",
+    "racing_plus\\Globals.lua": "d1fa4e547fec3a9323270eae3ff42cef5d15e25e",
     "racing_plus\\InputAction.lua": "b33b9b80951bacacbcabddee4c8248e5c4a72a58",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -2094,7 +2094,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "9834e7e170e4fd09d5a9d73fa2b81d827e577061",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "58ffa70c808d66452d49aaf117d9171a42586936",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2172,5 +2172,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "cca477b756e262a78d9f3f8492fb9a6f593452af"
+    "sha1.json": "8a62dc07e3917b1e63218f5ea2ef1ccf4a460255"
 }
