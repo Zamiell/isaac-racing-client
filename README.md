@@ -21,8 +21,8 @@ You may also be interested in [the Lua mod](https://github.com/Zamiell/isaac-rac
 
 <br />
 
-Run (on Windows)
-----------------
+Run from Source (on Windows)
+----------------------------
 
 * Install [node.js](https://nodejs.org/en/download/).
 * Install [Yarn](https://yarnpkg.com/en/docs/install).
@@ -34,8 +34,8 @@ Run (on Windows)
 
 <br />
 
-Run (on macOS)
---------------
+Run from Source (on macOS)
+--------------------------
 
 * Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
   * `touch ~/.bash_profile`
@@ -51,8 +51,8 @@ Run (on macOS)
 
 <br />
 
-Run (on Ubuntu 18.04)
----------------------
+Run from Source (on Ubuntu 18.04)
+---------------------------------
 
 * Install [curl](https://curl.haxx.se/) and [Git](https://git-scm.com/):
   * `sudo apt install curl git -y`
