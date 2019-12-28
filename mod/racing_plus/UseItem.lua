@@ -89,7 +89,8 @@ function UseItem:Item286()
      card == Card.CARD_HERMIT or -- 10
      card == Card.CARD_STARS or -- 18
      card == Card.CARD_MOON or -- 19
-     card == Card.CARD_JOKER then -- 31
+     card == Card.CARD_JOKER then -- 48
+     -- (checking for "? Card" is not necessary)
 
     -- We don't want to display the "use" animation, we just want to instantly teleport
     -- Blank Card is hard coded to queue the "use" animation, so stop it on the next frame

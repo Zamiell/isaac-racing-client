@@ -142,6 +142,17 @@ function Pedestals:Replace(pickup)
     pickup.SubType = 0
   end
 
+  -- Account for the Butter Bean "surprise" mechanic
+  -- (this is 10% according to Kilburn)
+  if pickup.SubType == CollectibleType.COLLECTIBLE_BUTTER_BEAN then -- 294
+    g.RNGCounter.ButterBean = g:IncrementRNG(g.RNGCounter.ButterBean)
+    math.randomseed(g.RNGCounter.ButterBean)
+    local surpriseChance = math.random(1, 10)
+    if surpriseChance == 1 then
+      pickup.SubType = CollectibleType.COLLECTIBLE_WAIT_WHAT -- 484
+    end
+  end
+
   -- Check to see if this item should go into a Schoolbag
   if Schoolbag:CheckSecondItem(pickup) then
     return

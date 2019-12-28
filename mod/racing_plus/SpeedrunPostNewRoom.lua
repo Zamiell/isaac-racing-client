@@ -36,9 +36,9 @@ function SpeedrunPostNewRoom:Stage8IAMERROR()
   -- Find out whether we should spawn a passage up or down, depending on the room seed
   math.randomseed(roomSeed)
   local direction = math.random(1, 2)
-  if direction == 1 then
+  if direction == 1 then -- Up
     Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be up.")
-  elseif direction == 2 then
+  elseif direction == 2 then -- Down
     Isaac.DebugString("Randomly decided that the I AM ERROR room direction should be down.")
   end
 
@@ -314,7 +314,7 @@ function SpeedrunPostNewRoom:Season7Stage12()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local rooms = g.l:GetRooms()
   local centerPos = g.r:GetCenterPos()
-  local isClear = g.r:IsClear()
+  local roomClear = g.r:IsClear()
 
   local challenge = Isaac.GetChallenge()
 
@@ -346,7 +346,7 @@ function SpeedrunPostNewRoom:Season7Stage12()
 
   -- Spawn the custom boss
   if roomIndexUnsafe == g.run.customBossRoomIndex and
-     not isClear then
+     not roomClear then
 
     -- Remove all enemies
     for _, entity in ipairs(Isaac.GetRoomEntities()) do

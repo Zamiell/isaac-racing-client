@@ -3,6 +3,11 @@
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
+	<!-- "12545" is the subtype arbitrarily chosen by StageAPI, so we will keep it for consistency -->
+	<entity id="1000" name="Floor Effect Creep" variant="46" subtype="12545" anm2path="none.anm2" collisionRadius="0" numGridCollisionPoints="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+
 	<!-- Custom effects take variants past 200 -->
 	<!-- All of these are used for fast-travel -->
 	<!-- (we want them as effects because we don't want the smoke to appear when they are spawned) -->
@@ -33,7 +38,7 @@
 	</entity>
 
 	<!-- This is for subverting the post-Lamb popup -->
-	<entity name="Room Clear Delay" id="1000" variant="207" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+	<entity name="Room Clear Delay" id="1000" variant="209" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 

@@ -408,6 +408,7 @@ function FastClear:ClearRoom()
 
   -- Manually kill Death's Heads, Flesh Death's Heads, and any type of creep
   -- (by default, they will only die after the death animations are completed)
+  -- Additionally, open any closed heaven doors
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_DEATHS_HEAD and entity.Variant == 0 then -- 212.0
       -- Activate its death state
@@ -420,18 +421,22 @@ function FastClear:ClearRoom()
                                 entity.Parent, entity.SubType, entity.InitSeed)
       newHead:ToNPC().State = 18
     elseif entity.Type == EntityType.ENTITY_EFFECT then -- 1000
-      if entity.Variant >= 22 and entity.Variant <= 26 then
-        -- EffectVariant.CREEP_RED (22)
-        -- EffectVariant.CREEP_GREEN (23)
-        -- EffectVariant.CREEP_YELLOW (24)
-        -- EffectVariant.CREEP_WHITE (25)
-        -- EffectVariant.CREEP_BLACK (26)
-        entity:Kill()
-
-      elseif entity.Type == EffectVariant.CREEP_BROWN or -- 56
-             entity.Type == EffectVariant.CREEP_SLIPPERY_BROWN then -- 94
+      if entity.Variant == EffectVariant.CREEP_RED or -- 22
+         entity.Variant == EffectVariant.CREEP_GREEN or -- 23
+         entity.Variant == EffectVariant.CREEP_YELLOW or -- 24
+         entity.Variant == EffectVariant.CREEP_WHITE or -- 25
+         entity.Variant == EffectVariant.CREEP_BLACK or -- 26
+         entity.Variant == EffectVariant.CREEP_BROWN or -- 56
+         entity.Variant == EffectVariant.CREEP_SLIPPERY_BROWN then -- 94
 
         entity:Kill()
+
+      elseif entity.Variant == EffectVariant.HEAVEN_DOOR_FAST_TRAVEL then
+        local effect = entity:ToEffect()
+        if effect.State == 1 then
+          effect.State = 0
+          effect:GetSprite():Play("Appear", true)
+        end
       end
     end
   end

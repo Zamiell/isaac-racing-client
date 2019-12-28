@@ -149,6 +149,9 @@ function PostNewRoom:NewRoom()
     g.run.schoolbag.usedGlowingHourGlass = 2
   end
 
+  -- Draw the starting room graphic
+  PostNewRoom:CheckStartingRoom()
+
   -- Check for the Boss Rush
   BossRush:PostNewRoom()
 
@@ -183,6 +186,42 @@ function PostNewRoom:NewRoom()
 
   -- Do speedrun related stuff
   SpeedrunPostNewRoom:Main()
+end
+
+-- Racing+ re-implements the starting room graphic so that it will not interfere with other kinds of graphics
+-- (some code is borrowed from Revelations / StageAPI)
+function PostNewRoom:CheckStartingRoom()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local stageType = g.l:GetStageType()
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
+  local centerPos = g.r:GetCenterPos()
+
+  -- Only draw the graphic in the starting room of the first floor
+  -- (and ignore Greed Mode, even though on vanilla the sprite will display in Greed Mode)
+  if g.run.startingRoomGraphics or
+     g.g.Difficulty >= Difficulty.DIFFICULTY_GREED or -- 2
+     stage ~= 1 or
+     roomIndex ~= g.l:GetStartingRoomIndex() then
+
+    return
+  end
+
+  -- Spawn the custom "Floor Effect Creep" entity (1000.46.12545)
+  local controlsEffect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 12545,
+                                     centerPos, g.zeroVector, nil)
+  controlsEffect:ToEffect().Timeout = 1000000
+  local controlsSprite = controlsEffect:GetSprite()
+  controlsSprite:Load("gfx/backdrop/controls.anm2", true)
+  controlsSprite:Play("Idle")
+
+  -- On vanilla, the sprite is a slightly different color on the Burning Basement
+  if stageType == StageType.STAGETYPE_AFTERBIRTH then
+      controlsSprite.Color = Color(0.5, 0.5, 0.5, 1, 0, 0, 0)
+  end
 end
 
 -- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)

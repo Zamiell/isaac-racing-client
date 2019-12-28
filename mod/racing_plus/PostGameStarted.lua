@@ -94,6 +94,7 @@ function PostGameStarted:Main(saveState)
   g.RNGCounter.BookOfSin = startSeed
   g.RNGCounter.DeadSeaScrolls = startSeed
   g.RNGCounter.GuppysCollar = startSeed
+  g.RNGCounter.ButterBean = startSeed
   g.RNGCounter.DevilRoomKrampus = startSeed
   g.RNGCounter.DevilRoomChoice = startSeed
   g.RNGCounter.DevilRoomItem = startSeed

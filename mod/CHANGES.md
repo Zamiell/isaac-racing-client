@@ -160,6 +160,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The babies on the Isaac fight can no longer spawn inside the hitbox of the player and will now randomly spawn throughout the room (as originally intended).
 * The random beams of light from Isaac and Conquest are fixed such that they will now target the player.
 * Multi-segment bosses will no longer drop more than one black heart when killed with Maw of the Void or Athame.
+* The trapdoor / beam of light in I AM ERROR rooms will no longer be accessible if the room is not cleared.
 
 ### Graphics & Sound Fixes
 

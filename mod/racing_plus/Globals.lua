@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.10"
+g.version = "v0.47.11"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -83,6 +83,7 @@ g.RNGCounter = {
   BookOfSin       = 0, -- 97
   DeadSeaScrolls  = 0, -- 124
   GuppysCollar    = 0, -- 212
+  ButterBean      = 0, -- 294
   -- Devil Rooms and Angel Rooms go in order on seeded races
   DevilRoomKrampus = 0,
   DevilRoomChoice  = 0,
@@ -169,7 +170,7 @@ SoundEffect.SOUND_WALNUT          = Isaac.GetSoundIdByName("Walnut")
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
-PlayerForm.NUM_PLAYER_FORMS = PlayerForm.PLAYERFORM_STOMPY + 1
+PlayerForm.NUM_PLAYER_FORMS  = PlayerForm.PLAYERFORM_STOMPY + 1
 
 g.LaserVariant = {
   LASER_THICK     = 1, -- Brimstone
@@ -312,6 +313,7 @@ function g:InitRun()
   g.run.krampusKillFrame      = 0 -- Used to delete vanilla Krampus items
   g.run.angelKillFrame        = 0 -- Used to delete vanilla key pieces
   g.run.spamButtons           = false -- Used to spam Blood Rights
+  g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy

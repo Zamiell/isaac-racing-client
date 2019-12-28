@@ -35,6 +35,17 @@ ExecuteCmd.functions["angel"] = function(params)
   g.p:UseCard(Card.CARD_JOKER) -- 31
 end
 
+ExecuteCmd.functions["blackmarket"] = function(params)
+  ExecuteCmd:BlackMarket()
+end
+
+function ExecuteCmd:BlackMarket()
+  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
+  g.g:StartRoomTransition(GridRooms.ROOM_BLACK_MARKET_IDX, -- 6
+                          Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
+end
+
 ExecuteCmd.functions["boss"] = function(params)
   g.run.bossCommand = true
   g.p:UseCard(Card.CARD_EMPEROR) -- 5
@@ -46,10 +57,7 @@ ExecuteCmd.functions["bossrush"] = function(params)
 end
 
 ExecuteCmd.functions["bm"] = function(params)
-  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
-  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-  g.g:StartRoomTransition(GridRooms.ROOM_BLACK_MARKET_IDX, -- 6
-                          Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
+  ExecuteCmd:BlackMarket()
 end
 
 ExecuteCmd.functions["cc"] = function(params)
@@ -126,6 +134,17 @@ ExecuteCmd.functions["devil"] = function(params)
   g.p:UseCard(Card.CARD_JOKER) -- 31
 end
 
+ExecuteCmd.functions["error"] = function(params)
+  ExecuteCmd:IAMERROR()
+end
+
+function ExecuteCmd:IAMERROR()
+  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
+  g.g:StartRoomTransition(GridRooms.ROOM_ERROR_IDX, -- 2
+                          Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
+end
+
 ExecuteCmd.functions["getframe"] = function(params)
   -- Used for debugging
   Isaac.ConsoleOutput("Isaac frame count is at: " .. tostring(Isaac.GetFrameCount()))
@@ -135,6 +154,10 @@ end
 
 ExecuteCmd.functions["getroom"] = function(params)
   Isaac.ConsoleOutput("Room index is: " .. g.l:GetCurrentRoomIndex())
+end
+
+ExecuteCmd.functions["iamerror"] = function(params)
+  ExecuteCmd:IAMERROR()
 end
 
 ExecuteCmd.functions["level"] = function(params)

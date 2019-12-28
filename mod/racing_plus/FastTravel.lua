@@ -40,6 +40,7 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local roomType = g.r:GetType()
   local challenge = Isaac.GetChallenge()
 
   -- There is no way to manually travel to the "Infiniate Basements" Easter Egg floors,
@@ -104,9 +105,16 @@ function FastTravel:ReplaceTrapdoor(entity, i)
     pos  = entity.Position,
   }
 
-  -- Always spawn the trapdoor closed, unless it is after Satan in Sheol
-  -- (or after a boss in the "Everything" race goal)
-  if stage ~= 10 and stage ~= 11 then
+  -- Spawn the trapdoor closed by default
+  local closed = true
+  if (stage == 10 or -- After Satan, there is no reason to remain in Sheol
+      stage == 11) and -- After Blue Baby in an "Everything" race, there is no reason to remain on The Chest
+     roomType == RoomType.ROOM_BOSS then -- 5
+     -- (it looks buggy if the trapdoor snaps open in I AM ERROR rooms)
+
+    closed = false
+  end
+  if closed then
     trapdoor:ToEffect().State = 1
     trapdoor:GetSprite():Play("Closed", true)
   end
@@ -136,6 +144,8 @@ function FastTravel:ReplaceHeavenDoor(entity)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local roomType = g.r:GetType()
+  local roomClear = g.r:IsClear()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Delete the "natural" beam of light
@@ -164,6 +174,18 @@ function FastTravel:ReplaceHeavenDoor(entity)
     room = roomIndex,
     pos  = entity.Position,
   }
+
+  -- Spawn the heaven door open by default
+  local closed = false
+  if roomType == RoomType.ROOM_ERROR and -- 3
+     not roomClear then
+
+      closed = true
+  end
+  if closed then
+    heaven:ToEffect().State = 1
+    heaven:GetSprite():Play("Disappear", true)
+  end
 
   --[[
   -- Log it
@@ -305,18 +327,18 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
   local stage = g.l:GetStage()
   local gameFrameCount = g.g:GetFrameCount()
 
-  -- Check to see if a player is touching the trapdoor
+  -- Check to see if a player is touching the trapdoor / heaven door
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
     if g.run.trapdoor.state == FastTravel.state.DISABLED and
        ((not upwards and effect.State == 0) or -- The trapdoor is open
-        (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
+        (upwards and effect.State == 0 and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
         -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
         -- (we initially spawn it with an InitSeed equal to the room seed)
-        (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
+        (upwards and effect.State == 0 and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
         -- The extra delay should not apply if they are re-entering the room
         -- (we respawn beams of light with an InitSeed of 0)
-        (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
+        (upwards and effect.State == 0 and stage ~= 8 and effect.FrameCount >= 8)) and
         -- The beam of light opening animation is 16 frames long,
         -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
         -- (and the minimum for this is 8 frames, determined from trial and error)
@@ -464,6 +486,7 @@ function FastTravel:CheckTrapdoor()
 end
 
 -- Called from the PostNewRoom callback
+-- (for the Mega Satan trapdoor)
 function FastTravel:CheckTrapdoor2()
   -- Local variables
   local stage = g.l:GetStage()
@@ -490,9 +513,18 @@ function FastTravel:CheckTrapdoor2()
     Sprites:Init("black", 0)
 
     local pos = g.r:GetCenterPos()
-    if g.run.trapdoor.megaSatan then
+    if g.g.Difficulty >= Difficulty.DIFFICULTY_GREED and -- 2
+       stage ~= 7 then
+
+      -- The center of the room in Greed Mode will be on top of the trigger switch
+      -- On vanilla, the player appears near the top of the room (at 320, 280)
+      -- However, if we adjust the position to this, it will cause the camera to bug out
+      -- Thus, make the player appear near the bottom
+      pos = Vector(320, 560)
+
+    elseif g.run.trapdoor.megaSatan then
       -- The center of the Mega Satan room is near the top
-      -- Causing Isaac to warp to the top causes the game to bug out,
+      -- Causing Isaac to warp to the top causes the camera to bug out,
       -- so adjust the position to be near the bottom entrance
       pos = Vector(320, 650)
 
@@ -500,6 +532,7 @@ function FastTravel:CheckTrapdoor2()
       g.sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
 
     elseif stage == 9 then -- Blue Womb
+      -- Emulate the vanilla starting position
       pos = Vector(320, 560)
     end
 
@@ -1024,9 +1057,17 @@ end
 function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   -- Local variables
   local roomType = g.r:GetType()
+  local roomClear = g.r:IsClear()
 
   -- Don't do anything if the trapdoor / crawlspace is already open
   if effect.State == 0 then
+    return
+  end
+
+  -- Don't do anything if we are in an uncleared I AM ERROR room
+  if roomType == RoomType.ROOM_ERROR and -- 3
+     not roomClear then
+
     return
   end
 

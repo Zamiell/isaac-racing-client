@@ -397,6 +397,7 @@ function RacePostGameStarted:Seeded()
       Sprites:Init("seeded-item4", tostring(g.race.startingItems[1])) -- This will be to the left of 2
       Sprites:Init("seeded-item5", tostring(g.race.startingItems[4])) -- This will be to the right of 3
     end
+    g.run.startingRoomGraphics = true
   end
 
   Isaac.DebugString("Added seeded items.")
@@ -523,6 +524,7 @@ function RacePostGameStarted:Diversity()
   Sprites:Init("diversity-item3", tostring(startingItems[3]))
   Sprites:Init("diversity-item4", tostring(startingItems[4]))
   Sprites:Init("diversity-item5", tostring(startingItems[5]))
+  g.run.startingRoomGraphics = true
 
   Isaac.DebugString("Added diversity items.")
 end

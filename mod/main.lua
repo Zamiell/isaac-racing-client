@@ -233,6 +233,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, Speedrun.PreventD6, -- 23
                        CollectibleType.COLLECTIBLE_D6) -- 105
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item124, -- 23
                        CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item286, -- 23
+                       CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item422, -- 23
                        CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS) -- 422
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item479, -- 23

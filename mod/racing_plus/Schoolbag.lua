@@ -212,11 +212,18 @@ end
 function Schoolbag:CheckSecondItem(pickup)
   -- Local variables
   local roomType = g.r:GetType()
+  local roomFrameCount = g.r:GetFrameCount()
 
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      g.run.schoolbag.item == 0 and
      pickup.Touched and
      g.itemConfig:GetCollectible(pickup.SubType).Type == ItemType.ITEM_ACTIVE then -- 3
+
+    -- We don't want to put the item in the Schoolbag if we just entered the room and
+    -- there is a touched item sitting on the ground for whatever reason
+    if roomFrameCount == 1 then
+      return false
+    end
 
     -- We don't want to put the item in the Schoolbag if we dropped it from a Butter! trinket
     if g.p:HasTrinket(TrinketType.TRINKET_BUTTER) and

@@ -141,8 +141,21 @@ function PreUseItem:Item124()
   return true
 end
 
+-- CollectibleType.COLLECTIBLE_BLANK_CARD (286)
+function PreUseItem:Item286()
+  local card = g.p:GetCard(0)
+  if card == Card.CARD_QUESTIONMARK then -- 48
+    -- Blank Card + ? Card will teleport the player to the I AM ERROR room
+    -- Mark that this is not a Cursed Eye teleport
+    g.run.naturalTeleport = true
+  end
+end
+
 -- CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS (422)
 function PreUseItem:Item422()
+  -- Mark that this is not a Cursed Eye teleport
+  g.run.naturalTeleport = true
+
   -- Mark to reset the active item + the Schoolbag item
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      not g.p:HasTrinket(TrinketType.TRINKET_BROKEN_REMOTE) then -- Broken Remote cancels the Glowing Hour Glass effect
