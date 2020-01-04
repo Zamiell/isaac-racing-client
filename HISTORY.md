@@ -4,7 +4,7 @@
 
 News:
 
-* StoneAgeMarcus will be performing a R+7 Season 7 run live at Awesome Games Done Quick 2020 on Sunday, January 5th.
+* StoneAgeMarcus will be performing a R+7 Season 6 run live at Awesome Games Done Quick 2020 on Sunday, January 5th.
 
 Mod changes:
 
@@ -12,9 +12,9 @@ Mod changes:
 * The "controls" starting room graphic will no longer show in seeded or diversity races.
 * Fixed the (vanilla) bug where the trapdoor/ beam of light was accessible in I AM ERROR rooms before the room was cleared.
 * Fixed the bug where going to the next floor on Greed Mode would automatically start the next wave.
-* Fixed the bug where the Butter Bean "surprise" mechanic was not working properly. (It is supposed to be a 10% chance per swap.) (Thanks Greg)
+* Fixed the bug where the Butter Bean "morph" mechanic was not working properly. (It is supposed to be a 10% chance per swap.) (Thanks Greg)
 * Fixed the bug where Blank Card + ? Card would not work correctly if you had Cursed Eye. (Thanks Greg)
-* Fixed the bug where the Glowing Hour Glass wuld not work correctly if you had Cursed Eye. (Thanks mgln)
+* Fixed the bug where the Glowing Hour Glass would not work correctly if you had Cursed Eye. (Thanks mgln)
 * Fixed the bug where brown creep would not be cleared immediately when the room was cleared.
 * Fixed the bug where pedestal items could go into an empty Schoolbag upon entering a room under certain conditions. (Thanks Gamonymous)
 
