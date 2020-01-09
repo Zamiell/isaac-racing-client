@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.12"
+g.version = "v0.47.13"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -360,6 +360,7 @@ function g:InitRun()
 
   -- Schoolbag tracking
   g.run.schoolbag = {
+    present              = false, -- Corresponds to whether or not they have the Schoolbag collectible
     item                 = 0,
     charge               = 0,
     chargeBattery        = 0,

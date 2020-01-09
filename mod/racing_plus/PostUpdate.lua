@@ -60,6 +60,7 @@ function PostUpdate:Main()
   Schoolbag:CheckEmptyActiveItem()
   Schoolbag:CheckInput()
   Schoolbag:ConvertVanilla()
+  Schoolbag:CheckRemoved()
 
   -- Check the player's health for the Soul Jar mechanic
   SoulJar:PostUpdate()

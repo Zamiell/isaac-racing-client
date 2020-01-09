@@ -144,8 +144,6 @@ function FastTravel:ReplaceHeavenDoor(entity)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
-  local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
   local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Delete the "natural" beam of light
@@ -175,14 +173,9 @@ function FastTravel:ReplaceHeavenDoor(entity)
     pos  = entity.Position,
   }
 
-  -- Spawn the heaven door open by default
-  local closed = false
-  if roomType == RoomType.ROOM_ERROR and -- 3
-     not roomClear then
-
-      closed = true
-  end
-  if closed then
+  -- If the room is not cleared yet, spawn the heaven door and close it
+  -- Otherwise, spawn it open
+  if not FastTravel:IsRoomClear() then
     heaven:ToEffect().State = 1
     heaven:GetSprite():Play("Disappear", true)
   end
@@ -327,18 +320,27 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
   local stage = g.l:GetStage()
   local gameFrameCount = g.g:GetFrameCount()
 
+  -- Do nothing if we are already travelling to the next floor
+  if g.run.trapdoor.state ~= FastTravel.state.DISABLED then
+    return
+  end
+
+  -- Do nothing if the trapdoor is not open
+  if effect.State ~= 0 then
+    return
+  end
+
   -- Check to see if a player is touching the trapdoor / heaven door
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
-    if g.run.trapdoor.state == FastTravel.state.DISABLED and
-       ((not upwards and effect.State == 0) or -- The trapdoor is open
-        (upwards and effect.State == 0 and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
+    if (not upwards or -- The trapdoor is open
+        (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
         -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
         -- (we initially spawn it with an InitSeed equal to the room seed)
-        (upwards and effect.State == 0 and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
+        (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
         -- The extra delay should not apply if they are re-entering the room
         -- (we respawn beams of light with an InitSeed of 0)
-        (upwards and effect.State == 0 and stage ~= 8 and effect.FrameCount >= 8)) and
+        (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
         -- The beam of light opening animation is 16 frames long,
         -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
         -- (and the minimum for this is 8 frames, determined from trial and error)
@@ -829,7 +831,8 @@ function FastTravel:ReplaceCrawlspace(entity, i)
                     tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
   --]]
 
-  -- Figure out if it should spawn open or closed, depending if there are one or more players close to it
+  -- Figure out if it should spawn open or closed,
+  -- depending if there are one or more players close to it or if the room is not yet cleared
   local playerClose = false
   for j = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(j - 1)
@@ -838,10 +841,14 @@ function FastTravel:ReplaceCrawlspace(entity, i)
       break
     end
   end
-  if playerClose then
+
+  if playerClose or
+     not FastTravel:IsRoomClear() then
+
     crawlspace:ToEffect().State = 1
     crawlspace:GetSprite():Play("Closed", true)
     Isaac.DebugString("Spawned crawlspace (closed, state 1).")
+
   else
     crawlspace:GetSprite():Play("Open Animation", true)
     Isaac.DebugString("Spawned crawlspace (opened, state 0).")
@@ -861,11 +868,15 @@ function FastTravel:CheckCrawlspaceEnter(effect)
     roomIndex = g.l:GetCurrentRoomIndex()
   end
 
+  -- Do nothing if the trapdoor is closed
+  if effect.State ~= 0 then
+    return
+  end
+
   -- Check to see if a player is touching the crawlspace
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
-    if effect.State == 0 and -- The crawlspace is open
-       player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance and
+    if player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance and
        not player:IsHoldingItem() and
        not player:GetSprite():IsPlaying("Happy") and -- Account for lucky pennies
        not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
@@ -1057,17 +1068,14 @@ end
 function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   -- Local variables
   local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
 
   -- Don't do anything if the trapdoor / crawlspace is already open
   if effect.State == 0 then
     return
   end
 
-  -- Don't do anything if we are in an uncleared I AM ERROR room
-  if roomType == RoomType.ROOM_ERROR and -- 3
-     not roomClear then
-
+  -- Don't do anything if we are in an uncleared room
+  if not FastTravel:IsRoomClear() then
     return
   end
 
@@ -1105,6 +1113,23 @@ function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   effect.State = 0
   effect:GetSprite():Play("Open Animation", true)
   --Isaac.DebugString("Opened trap door (player moved away).")
+end
+
+-- Called from the "CheckEntities:NonGrid()" function
+function FastTravel:CheckTrapdoorCrawlspaceClose(effect)
+  -- Don't do anything if the trapdoor / crawlspace is already closed
+  if effect.State == 1 then
+    return
+  end
+
+  -- Don't do anything if we are in an cleared room
+  if FastTravel:IsRoomClear() then
+    return
+  end
+
+  -- Close it
+  effect.State = 1
+  effect:GetSprite():Play("Closed", true)
 end
 
 -- Called from the PostNewRoom callback
@@ -1149,7 +1174,8 @@ function FastTravel:CheckRoomRespawn()
           break
         end
       end
-      if playerClose or
+      if not FastTravel:IsRoomClear() or
+         playerClose or
          roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
          -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
 
@@ -1182,7 +1208,9 @@ function FastTravel:CheckRoomRespawn()
           break
         end
       end
-      if playerClose or
+
+      if not FastTravel:IsRoomClear() or
+         playerClose or
          roomIndex < 0 then
          -- (always spawn crawlspaces closed in rooms outside the grid to prevent specific bugs;
          -- e.g. if we need to teleport back to a crawlspace and it is open, the player can softlock)
@@ -1235,6 +1263,21 @@ function FastTravel:RemoveOverlappingGridEntity(pos, entityType)
       fly:Remove()
       Isaac.DebugString("Removed an Eternal Fly associated with the removed Corny Poop.")
     end
+  end
+end
+
+function FastTravel:IsRoomClear()
+  local roomType = g.r:GetType()
+  if roomType == RoomType.ROOM_CHALLENGE then -- 11
+    return not g.r:IsAmbushActive()
+  elseif roomType == RoomType.ROOM_BOSSRUSH then -- 17
+    if g.run.bossRush.started then
+      return g.run.bossRush.finished
+    else
+      return true
+    end
+  else
+    return g.r:IsClear()
   end
 end
 

@@ -212,11 +212,15 @@ function PostNewRoom:CheckStartingRoom()
 
   -- Spawn the custom "Floor Effect Creep" entity (1000.46.12545)
   local controlsEffect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 12545,
-                                     centerPos, g.zeroVector, nil)
-  controlsEffect:ToEffect().Timeout = 1000000
+                                     centerPos, g.zeroVector, nil):ToEffect()
+  controlsEffect.Timeout = 1000000
   local controlsSprite = controlsEffect:GetSprite()
   controlsSprite:Load("gfx/backdrop/controls.anm2", true)
   controlsSprite:Play("Idle")
+
+  -- Always set the scale to 1 in case the player has an item like Lost Cork
+  -- (otherwise, it will have a scale of 1.75)
+  controlsEffect.Scale = 1
 
   -- On vanilla, the sprite is a slightly different color on the Burning Basement
   if stageType == StageType.STAGETYPE_AFTERBIRTH then

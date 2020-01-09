@@ -429,4 +429,28 @@ function Schoolbag:Switch()
   end
 end
 
+function Schoolbag:CheckRemoved()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
+     not g.run.schoolbag.present then
+
+    -- We just got the Schoolbag for the first time
+    g.run.schoolbag.present = true
+  end
+
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
+     g.run.schoolbag.present then
+
+    -- We had the Schoolbag collectible at some point in the past and now it is gone
+    g.run.schoolbag.present = false
+    if g.run.schoolbag.item ~= 0 then
+      -- Drop the item that was in the Schoolbag on the ground
+      -- (spawn it with an InitSeed of 0 so that it will be replaced on the next frame)
+      local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                position, g.zeroVector, nil, g.run.schoolbag.item, 0)
+      g.run.schoolbag.item = 0
+    end
+  end
+end
+
 return Schoolbag

@@ -335,6 +335,11 @@ function BossRush:SpawnWave(bossesPerWave)
   -- Play the summon sound
   g.sfx:Play(SoundEffect.SOUND_SUMMONSOUND, 1, 0, false, 1) -- 265
 
+  -- Display the wave number as streak text
+  local totalWaves = math.floor(BossRush.totalBosses / bossesPerWave)
+  g.run.streakText = "Wave " .. tostring(g.run.bossRush.currentWave) .. " / " .. tostring(totalWaves)
+  g.run.streakFrame = Isaac.GetFrameCount()
+
   Isaac.DebugString("Spawned wave " .. tostring(g.run.bossRush.currentWave) ..
                     " on frame: " .. tostring(gameFrameCount))
 end
@@ -373,6 +378,10 @@ function BossRush:Finish()
 
   -- Play the sound effect for the doors opening
   g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
+
+  -- Announce the completion via streak text
+  g.run.streakText = "Complete!"
+  g.run.streakFrame = Isaac.GetFrameCount()
 end
 
 function BossRush:OpenDoor()

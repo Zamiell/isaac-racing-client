@@ -53,7 +53,9 @@ ExecuteCmd.functions["boss"] = function(params)
 end
 
 ExecuteCmd.functions["bossrush"] = function(params)
-  g.run.bossRush.currentWave = 15
+  local wave = 15
+  g.run.bossRush.currentWave = wave
+  Isaac.ConsoleOutput("Set the Boss Rush current wave to: " .. tostring(wave))
 end
 
 ExecuteCmd.functions["bm"] = function(params)

@@ -51,11 +51,13 @@ end
 
 function PostEffectUpdate:Trapdoor(effect)
   FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
+  FastTravel:CheckTrapdoorCrawlspaceClose(effect)
   FastTravel:CheckTrapdoorEnter(effect, false) -- The second argument is "upwards"
 end
 
 function PostEffectUpdate:Crawlspace(effect)
   FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
+  FastTravel:CheckTrapdoorCrawlspaceClose(effect)
   FastTravel:CheckCrawlspaceEnter(effect)
 end
 

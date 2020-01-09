@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.47.13* - January 9th, 2020
+
+* The Boss Rush will now display the current wave as streak text.
+* Trapdoors and crawlspaces will now be closed if the current room is not cleared. (This is how it works in Greed Mode. The old behavior is considered a bug in vanilla and is fixed in Repentance. Racing+ will now match the behavior of Greed Mode and Repentance.)
+* Fixed the bug where having the Lost Cork would make the "controls" graphic appear incorrectly. (Thanks Gamonymous)
+* Fixed the bug where losing the Schoolbag with an active item inside the Schoolbag would make it disappear instead of dropping on the ground.
+
 ### *v0.47.11* - December 28th, 2019
 
 News:
