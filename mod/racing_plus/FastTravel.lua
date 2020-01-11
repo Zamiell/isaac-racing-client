@@ -41,6 +41,7 @@ function FastTravel:ReplaceTrapdoor(entity, i)
     roomIndex = g.l:GetCurrentRoomIndex()
   end
   local roomType = g.r:GetType()
+  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- There is no way to manually travel to the "Infiniate Basements" Easter Egg floors,
@@ -97,6 +98,10 @@ function FastTravel:ReplaceTrapdoor(entity, i)
                            entity.Position, g.zeroVector, nil)
   end
   trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+  if roomFrameCount > 1 then
+    local data = trapdoor:GetData()
+    data.fresh = true -- Mark that it should be open even if the room is not cleared
+  end
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
@@ -162,9 +167,9 @@ function FastTravel:ReplaceHeavenDoor(entity)
 
   -- Spawn a custom entity to emulate the original
   -- (we use an InitSeed of the room seed instead of a random seed to indicate that this is a freshly spawned entity)
-  local heaven = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
-                           entity.Position, g.zeroVector, nil, 0, roomSeed)
-  heaven.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
+  local heavenDoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
+                               entity.Position, g.zeroVector, nil, 0, roomSeed)
+  heavenDoor.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
@@ -175,9 +180,11 @@ function FastTravel:ReplaceHeavenDoor(entity)
 
   -- If the room is not cleared yet, spawn the heaven door and close it
   -- Otherwise, spawn it open
+  -- (we do not have to bother checking to see if it is fresh,
+  -- because there is no way for players to create heaven doors)
   if not FastTravel:IsRoomClear() then
-    heaven:ToEffect().State = 1
-    heaven:GetSprite():Play("Disappear", true)
+    heavenDoor:ToEffect().State = 1
+    heavenDoor:GetSprite():Play("Disappear", true)
   end
 
   --[[
@@ -812,11 +819,16 @@ function FastTravel:ReplaceCrawlspace(entity, i)
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
+  local roomFrameCount = g.r:GetFrameCount()
 
   -- Spawn a custom entity to emulate the original
   local crawlspace = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRAWLSPACE_FAST_TRAVEL, 0, -- 1000
                                  entity.Position, g.zeroVector, nil)
   crawlspace.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+  if roomFrameCount > 1 then
+    local data = crawlspace:GetData()
+    data.fresh = true -- Mark that it should be open even if the room is not cleared
+  end
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
@@ -842,13 +854,10 @@ function FastTravel:ReplaceCrawlspace(entity, i)
     end
   end
 
-  if playerClose or
-     not FastTravel:IsRoomClear() then
-
+  if playerClose then
     crawlspace:ToEffect().State = 1
     crawlspace:GetSprite():Play("Closed", true)
     Isaac.DebugString("Spawned crawlspace (closed, state 1).")
-
   else
     crawlspace:GetSprite():Play("Open Animation", true)
     Isaac.DebugString("Spawned crawlspace (opened, state 0).")
@@ -1075,7 +1084,7 @@ function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   end
 
   -- Don't do anything if we are in an uncleared room
-  if not FastTravel:IsRoomClear() then
+  if not FastTravel:IsRoomClear(effect) then
     return
   end
 
@@ -1123,7 +1132,7 @@ function FastTravel:CheckTrapdoorCrawlspaceClose(effect)
   end
 
   -- Don't do anything if we are in an cleared room
-  if FastTravel:IsRoomClear() then
+  if FastTravel:IsRoomClear(effect) then
     return
   end
 
@@ -1266,7 +1275,17 @@ function FastTravel:RemoveOverlappingGridEntity(pos, entityType)
   end
 end
 
-function FastTravel:IsRoomClear()
+function FastTravel:IsRoomClear(entity)
+  -- Racing+ will use mgln's custom mechanic until the release of Repentance
+  -- This means that freshly spawned trapdoors will always be open,
+  -- regardless of whether the room is clear or not
+  if entity ~= nil then
+    local data = entity:GetData()
+    if data.fresh then
+      return true
+    end
+  end
+
   local roomType = g.r:GetType()
   if roomType == RoomType.ROOM_CHALLENGE then -- 11
     return not g.r:IsAmbushActive()

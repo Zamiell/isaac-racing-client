@@ -30,11 +30,11 @@
     "racing_plus\\Debug.lua": "b1716335d617a1a6d5aa4416c7e973f2571bb46f",
     "racing_plus\\EntityTakeDmg.lua": "0c304945b54ad9284e77cacd1bd5d622e367e8a2",
     "racing_plus\\EvaluateCache.lua": "8480b0aefc708f4d024ff47007dc651e08c81138",
-    "racing_plus\\ExecuteCmd.lua": "ddd38417e3d4f025f12bd847100252fec5f80fc5",
+    "racing_plus\\ExecuteCmd.lua": "f61f3a27e3a701b1c00f099da3e3e2cbe0c1118e",
     "racing_plus\\FastClear.lua": "be35154d33dca78bfa5d3b8fa939a509c1f4bbd4",
     "racing_plus\\FastDrop.lua": "f5c2c82528e5824a2f775b10eadd4d2f1b8c31f8",
-    "racing_plus\\FastTravel.lua": "df8155a6d3b002f5ddd4b6bdb23d5cf384a6e85e",
-    "racing_plus\\Globals.lua": "a1f1da9e496eddd8b34322364a1c97b79f96ad7e",
+    "racing_plus\\FastTravel.lua": "b184999da3a0206ca79ecac8dcf46a7572280b92",
+    "racing_plus\\Globals.lua": "d644da89c4262039f2981a82aaac93ac5bdefbb3",
     "racing_plus\\InputAction.lua": "b33b9b80951bacacbcabddee4c8248e5c4a72a58",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -2097,7 +2097,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "75ff29f39b7ac47efa29ff64b2c5a42c76990c1f",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "55243f4e9d6e3f6caa9fb13c35dcc02de6761a9f",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2175,5 +2175,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "7362fc32b2369f0186791c985c84904de6a05be6",
-    "sha1.json": "1b60a0df55704abac9da44d85edca9f7b6324665"
+    "sha1.json": "c0a56c8e4756626b2359814b9901ee10e8ad7137"
 }

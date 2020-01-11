@@ -31,7 +31,9 @@ end
 --
 
 ExecuteCmd.functions["angel"] = function(params)
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_EUCHARIST, 0, false) -- 499
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EUCHARIST) then -- 499
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_EUCHARIST, 0, false) -- 499
+  end
   g.p:UseCard(Card.CARD_JOKER) -- 31
 end
 
@@ -117,8 +119,12 @@ function ExecuteCmd:Debug()
   Isaac.ExecuteCommand("speed")
   Isaac.ExecuteCommand("debug 8")
   Isaac.ExecuteCommand("debug 10")
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION, 0, false) -- 76
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION) then -- 76
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION, 0, false) -- 76
+  end
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MIND) then -- 333
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
+  end
   g.p:AddCoins(99)
   g.p:AddBombs(99)
   g.p:AddKeys(99)
@@ -300,8 +306,11 @@ end
 
 ExecuteCmd.functions["speed"] = function(params)
   g.run.debugSpeed = true
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
-  -- (since we added Lord of the Pit, it will update the speed stat)
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT) then -- 82
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT, 0, false) -- 82
+  end
+  g.p:AddCacheFlags(CacheFlag.CACHE_SPEED) -- 16
+  g.p:EvaluateItems()
 end
 
 ExecuteCmd.functions["tears"] = function(params)

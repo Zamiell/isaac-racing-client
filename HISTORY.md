@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.47.14* - January 11th, 2020
+
+* A new custom mechanic is added where freshly made trapdoors and crawlspaces are always open, regardless of whether the room is clear or not. (This effectively makes the shovel as powerful as it was before.) This mechanic will be reverted upon the release of Repentance. (Thanks mgln)
+
 ### *v0.47.13* - January 9th, 2020
 
 * The Boss Rush will now display the current wave as streak text.
