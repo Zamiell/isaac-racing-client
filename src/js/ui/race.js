@@ -527,7 +527,12 @@ exports.participantAdd = (i) => {
     if (!racer) {
         globals.log.error(`Failed to get racer #${i} from race #${globals.currentRaceID}. (There are only ${race.racerList.length} racers in the race.)`);
     }
-    let racerDiv = `<tr id="race-participants-table-${racer.name}">`;
+    let racerDiv;
+    if (racer.name === globals.myUsername) {
+        racerDiv = `<tr id="race-participants-table-${racer.name}" class="race-participants-table-self-row">`;
+    } else {
+        racerDiv = `<tr id="race-participants-table-${racer.name}">`;
+    }
 
     // The racer's place
     racerDiv += `<td id="race-participants-table-${racer.name}-place" class="hidden">`;
@@ -696,6 +701,24 @@ const participantsSetStatus = (i, initial = false) => {
 };
 exports.participantsSetStatus = participantsSetStatus;
 
+const sortTableByPositions = () => {
+    const tbody = $('#race-participants-table-body');
+
+    tbody.find('tr').sort((a, b) => {
+        const pos1 = parseInt($('td:first', a).text(), 10);
+        const pos2 = parseInt($('td:first', b).text(), 10);
+        if (!Number.isNaN(pos1) && !Number.isNaN(pos2)) {
+            return pos1 > pos2;
+        } if (Number.isNaN(pos1) && Number.isNaN(pos2)) {
+            return 0;
+        } if (Number.isNaN(pos1)) {
+            return 1;
+        }
+        return -1;
+    }).appendTo(tbody);
+};
+exports.sortTableByPositions = sortTableByPositions;
+
 // Recalculate everyone's mid-race places
 const placeMidRecalculateAll = () => {
     // Local variables
@@ -748,6 +771,7 @@ const placeMidRecalculateAll = () => {
         const ordinal = misc.ordinal_suffix_of(racer.placeMid);
         $(`#race-participants-table-${racer.name}-place`).html(ordinal);
     }
+    sortTableByPositions();
 };
 exports.placeMidRecalculateAll = placeMidRecalculateAll;
 

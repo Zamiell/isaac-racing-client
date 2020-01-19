@@ -4487,6 +4487,11 @@
         position: absolute;
     }
 
+    .race-participants-table-self-row {
+      background-color: grey !important;
+      color: white !important;
+    }
+
     /*
         Race (chat)
     */
