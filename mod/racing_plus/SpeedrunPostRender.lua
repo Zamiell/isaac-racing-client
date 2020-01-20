@@ -185,6 +185,11 @@ function SpeedrunPostRender:DrawVetoButtonText()
     return
   end
 
+  -- Don't draw the Veto text if there is not a valid order set
+  if not Speedrun:CheckValidCharOrder() then
+    return
+  end
+
   -- Draw the sprites that correspond to the items that are currently on the veto list
   local x = -45
   for i = 1, #Speedrun.vetoList do

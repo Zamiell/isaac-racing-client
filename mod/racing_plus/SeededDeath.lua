@@ -316,6 +316,17 @@ function SeededDeath:DebuffOn()
   -- Store their active item charge for later
   g.run.seededDeath.charge = g.p:GetActiveCharge()
 
+  -- Store their Schoolbag item and remove it
+  -- (we need to check to see if it is equal to 0 in case they die twice in a row)
+  if g.run.schoolbag.item ~= 0 then
+    g.run.seededDeath.sbItem = g.run.schoolbag.item
+    g.run.seededDeath.sbCharge = g.run.schoolbag.charge
+    g.run.seededDeath.sbChargeBattery = g.run.schoolbag.chargeBattery
+    g.run.schoolbag.item = 0
+    g.run.schoolbag.charge = 0
+    g.run.schoolbag.chargeBattery = 0
+  end
+
   -- Store their size for later, and then reset it to default
   -- (in case they had items like Magic Mushroom and so forth)
   g.run.seededDeath.spriteScale = g.p.SpriteScale
@@ -420,6 +431,14 @@ function SeededDeath:DebuffOff()
 
   -- Set the charge to the way it was before the debuff was applied
   g.p:SetActiveCharge(g.run.seededDeath.charge)
+
+  -- Restore the Schoolbag item, if any
+  g.run.schoolbag.item = g.run.seededDeath.sbItem
+  g.run.schoolbag.charge = g.run.seededDeath.sbCharge
+  g.run.schoolbag.chargeBattery = g.run.seededDeath.sbChargeBattery
+  g.run.seededDeath.sbItem = 0
+  g.run.seededDeath.sbCharge = 0
+  g.run.seededDeath.sbChargeBattery = 0
 
   -- Check to see if the active item changed
   -- (meaning that the player picked up a new active item during their ghost state)

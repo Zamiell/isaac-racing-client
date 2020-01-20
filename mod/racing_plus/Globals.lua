@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.47.14"
+g.version = "v0.47.15"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -396,6 +396,9 @@ function g:InitRun()
     spriteScale     = g.zeroVector,
     goldenBomb      = false,
     goldenKey       = false,
+    sbItem          = 0,
+    sbCharge        = 0,
+    sbChargeBattery = 0,
   }
 
   -- Custom Boss Rush tracking

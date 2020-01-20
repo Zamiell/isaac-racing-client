@@ -90,6 +90,10 @@ ExecuteCmd.functions["char"] = function(params)
 end
 
 ExecuteCmd.functions["commands"] = function(params)
+  ExecuteCmd:Commands()
+end
+
+function ExecuteCmd:Commands()
   -- Compile a list of the commands and sort them
   local commands = {}
   for commandName, _ in pairs(ExecuteCmd.functions) do
@@ -162,6 +166,10 @@ end
 
 ExecuteCmd.functions["getroom"] = function(params)
   Isaac.ConsoleOutput("Room index is: " .. g.l:GetCurrentRoomIndex())
+end
+
+ExecuteCmd.functions["help"] = function(params)
+  ExecuteCmd:Commands()
 end
 
 ExecuteCmd.functions["iamerror"] = function(params)

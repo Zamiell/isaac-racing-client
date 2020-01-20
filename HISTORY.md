@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.47.15* - January 20th, 2020
+
+* Fixed the bug where the Schoolbag item would drop on the ground after a seeded death. (Thanks Darkdragon)
+* Fixed the bug where the "Veto" text would be drawn when there was not a valid character order.
+
 ### *v0.47.14* - January 11th, 2020
 
 * A new custom mechanic is added where freshly made trapdoors and crawlspaces are always open, regardless of whether the room is clear or not. (This effectively makes the shovel as powerful as it was before.) This mechanic will be reverted upon the release of Repentance. (Thanks mgln)
