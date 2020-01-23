@@ -39,7 +39,7 @@ function PostPickupSelection:ManualPhotos(variant, subType)
   -- So we just make a custom invisible entity (with no anm2 file) and set the pickup to that
   -- We will spawn The Polaroid and The Negative manually in the MC_POST_NPC_DEATH callback
   Isaac.DebugString("Preventing a vanilla Polaroid / Negative from spawning on frame: " .. tostring(gameFrameCount))
-  return { PickupVariant.INVISIBLE, 0 } -- Invisible Pickup, a custom entity
+  return { PickupVariant.INVISIBLE_PICKUP, 0 } -- Invisible Pickup, a custom entity
 end
 
 return PostPickupSelection

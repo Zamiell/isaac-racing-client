@@ -132,6 +132,7 @@ function ExecuteCmd:Debug()
   g.p:AddCoins(99)
   g.p:AddBombs(99)
   g.p:AddKeys(99)
+  Isaac.ConsoleOutput("Added various debug flags and items.")
 end
 
 ExecuteCmd.functions["dd"] = function(params)

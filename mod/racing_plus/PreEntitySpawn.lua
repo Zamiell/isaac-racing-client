@@ -71,7 +71,7 @@ function PreEntitySpawn.Collectible(subType, position, spawner, seed)
      roomIndexUnsafe == g.run.customBossRoomIndex then
 
     Isaac.DebugString("Removed a naturally spawned boss item after Ultra Greed.")
-    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
+    return {EntityType.ENTITY_PICKUP, PickupVariant.INVISIBLE_PICKUP, 0, 0} -- Invisible Pickup, a custom entity
   end
 end
 

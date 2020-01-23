@@ -93,8 +93,12 @@ end
 
 -- Prevent opening the console during a race
 function InputAction.IsActionTriggeredConsole()
+  if g.debug == true then
+    return
+  end
+
   if g.race.status == "in progress" and
-     not g.debug then
+     g.race.rFormat ~= "custom" then -- Allow usage of the console in custom races
 
     return false
   end

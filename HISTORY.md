@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.48.0* - January 23rd, 2020
+
+* The client will now show your row in blue so that you can easily distinguish it from the other racers. Thanks to InvaderTim for programming this.
+* The client will now sort the racers based on their current place. Thanks to InvaderTim for programming this.
+* You can now use the console in a race with a custom format.
+* Fixed the bug where There's Options would cause a crash after killing Ultra Greed in season 7. (Thanks mgln)
+
 ### *v0.47.15* - January 20th, 2020
 
 * Fixed the bug where the Schoolbag item would drop on the ground after a seeded death. (Thanks Darkdragon)
