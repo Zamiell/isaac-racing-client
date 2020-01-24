@@ -1,14 +1,14 @@
-Isaac Post
+# Common Complaints from Non-Speedrunners
 
-[originally posted on Reddit after AGDQ, with some edits]
+[This was originally posted on Reddit after AGDQ 2020. Some additional edits have been made.]
 
-Whenever an Isaac mod is shown to the general public, the same sort of complaints seem to surface over and over in the Twitch chat. "Using powerful builds takes no skill!" "Using a mod instead of the vanilla game is stupid." And so forth. I actually meant to talk about this at length during the AGDQ run, but there is really so much to explain and cover that I didn't get around to it. (And even if I did, I probably would not have done a very good job because this is complicated material that is hard to condense.) However, I'll try to address some of these complaints more thoroughly now. So let's talk about The Binding of Isaac.
+Whenever an Isaac mod is shown to the general public, the same sort of complaints seem to surface over and over in the Twitch chat. "Using powerful builds takes no skill!" "Using a mod instead of the vanilla game is stupid." And so forth. Since I was on the couch at the time, I actually meant to talk about this at length during the AGDQ 2020 run, but there is really so much to explain and cover that I didn't get around to it. (And even if I did, I probably would not have done a very good job because this is complicated material that is hard to condense.) However, I'll try to address some of these complaints more thoroughly now. So let's talk about The Binding of Isaac.
 
 Preface: In this post, I use the word "casual" to describe gameplay that is not speedrunning. This is generally how the word is used in the speedrunning world. Note that this is not intended to be pejorative in any way. "Casual player" is simply a shorter way to write the words "non-speedrunning player".
 
 
 
-# Complaint #1 - Speedrunning Isaac is not the real way to play the game.
+## Complaint #1 - Speedrunning Isaac is not the real way to play the game.
 
 While a lot of seeds in Isaac can be beaten easily, a good portion of seeds are really difficult. Thus, in order to consistently beat the game with a really high win rate, players typically need to "squeeze" the most that they can out of any particular seed from the get go, just in case the second half of the run is extremely difficult (e.g. you randomly get the hardest bosses and randomly get no useful items later on).
 
@@ -18,7 +18,7 @@ But it is important to realize that this kind of careful, plodding gameplay is n
 
 
 
-# Complaint #2 - Speedrunning Isaac takes no skill.
+## Complaint #2 - Speedrunning Isaac takes no skill.
 
 A typical speedrun involves a player resetting over and over until they get one of the most powerful items in the game from the first floor Treasure Room. And from then on, they avoid damage and "get" all of their devil deals, becoming even more powerful. Often times, the build can snowball into something insane that many casual players rarely get to play or see.
 
@@ -38,7 +38,7 @@ From a non-speedrunning perspective, level 4 movement is very difficult to appre
 
 
 
-# Complaint #3 - Speedrunning Isaac takes no strategy.
+## Complaint #3 - Speedrunning Isaac takes no strategy.
 
 One beautiful thing about The Binding of Isaac is that it is filled with strategies that reward clever players who want to squeeze the most out of a run. For example, players like [Larsfest](https://www.twitch.tv/larsfest) will always visit a shop first before entering a Treasure Room in case the shop happens to have More Options in it. As another example, players can use the invulnerability frames from a Ventricle Razor to give "free" donations to a Blood Donation Machine over and over. As experienced players will know, more and more of these kinds of strategies will accumulate in your brain the more and more you play the game. In fact, much of the "skill" in Isaac can be said to be simply accumulating more and more of these tricks and strategies.
 
@@ -52,7 +52,7 @@ In fact, one of the defining elements that makes the best speedrunners in the wo
 
 
 
-# Complaint #4 - Using a mod is cheating and/or alienating. Why play with a mod at all?
+## Complaint #4 - Using a mod is cheating and/or alienating. Why play with a mod at all?
 
 An important part of any competitive game is consistency. For the best players to be able to consistently win tournaments, they need to be able to complete a game without any major curveballs being thrown at them that are out of their control.
 
@@ -70,7 +70,7 @@ So, hopefully that is a convincing explanation on why the Isaac speedrunning com
 
 
 
-# Complaint #5 - Using a mod to make the game easier is lame. Powerful builds that result from a mod are stupid.  
+## Complaint #5 - Using a mod to make the game easier is lame. Powerful builds that result from a mod are stupid.  
 
 With respect to balance, let's be clear about what exactly the Racing+ mod does.
 
@@ -102,7 +102,7 @@ These are the 3 changes - that's it. Notably, the mod does not change the item p
 
 
 
-# Complaint #6 - Having the mod "give" you at starting item at the beginning is cheating.
+## Complaint #6 - Having the mod "give" you at starting item at the beginning is cheating.
 
 This mechanic only applies to [season 5 and season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which are optional custom challenges that changes the normal rules a bit and, well, give speedrunners a unique challenge. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
 
@@ -110,7 +110,7 @@ Getting a "free" powerful item at the beginning of a run may seem a little bit l
 
 
 
-# Complaint #7 - Having the mod make you a ghost for 45 seconds instead of killing you is cheating.
+## Complaint #7 - Having the mod make you a ghost for 45 seconds instead of killing you is cheating.
 
 This mechanic only applies to [season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which is an optional custom challenges that changes the normal rules a bit and, well, give speedrunners a unique challenge. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
 
