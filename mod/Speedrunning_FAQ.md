@@ -6,9 +6,9 @@ Whenever an Isaac mod is shown to the general public, the same sort of complaint
 
 Preface: In this post, I use the word "casual" to describe gameplay that is not speedrunning. This is generally how the word is used in the speedrunning world. Note that this is not intended to be pejorative in any way. "Casual player" is simply a shorter way to write the words "non-speedrunning player".
 
+<br />
 
-
-## Complaint #1 - Speedrunning Isaac is not the real way to play the game.
+### Complaint #1 - Speedrunning Isaac is not the real way to play the game.
 
 While a lot of seeds in Isaac can be beaten easily, a good portion of seeds are really difficult. Thus, in order to consistently beat the game with a really high win rate, players typically need to "squeeze" the most that they can out of any particular seed from the get go, just in case the second half of the run is extremely difficult (e.g. you randomly get the hardest bosses and randomly get no useful items later on).
 
