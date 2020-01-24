@@ -16,9 +16,9 @@ Squeezing the most out of every run tends to lead to slow, methodical gameplay, 
 
 But it is important to realize that this kind of careful, plodding gameplay is not really conducive to a speedrun setting. Speedrunners do not have time to backtrack and squeeze the most out of every seed - they are trying to beat the game as fast as possible. Subsequently, the main strategy is to progress to the next floor as soon as possible. The type of gameplay that you will see on Larsfest's Twitch channel is diametrically different from the action-packed, fast-paced, every-second-matters gameplay that you saw in today's AGDQ run. Both ways of playing the game can be valid - it would be incorrect to label one or the other as the "true" way to play the game.
 
+<br />
 
-
-## Complaint #2 - Speedrunning Isaac takes no skill.
+### Complaint #2 - Speedrunning Isaac takes no skill.
 
 A typical speedrun involves a player resetting over and over until they get one of the most powerful items in the game from the first floor Treasure Room. And from then on, they avoid damage and "get" all of their devil deals, becoming even more powerful. Often times, the build can snowball into something insane that many casual players rarely get to play or see.
 
@@ -36,9 +36,9 @@ Merely going from level 1 to level 2 can take hundreds of hours of gameplay. But
 
 From a non-speedrunning perspective, level 4 movement is very difficult to appreciate, because your focus is going to be on the build - huge tears, homing lasers, big ass missiles, and so forth. But take a step back and notice how a player finishes a room right next to the exit door, notice how the player is effectively weaves in and out between enemies to use their orbitals for maximum damage, notice how the player cancels pickup animations (e.g. by using a pill in a boss room) in order to shave off a mere second or two. Once you are familiar with speedrunning, you may come around to the opinion that it takes more precise inputs, more practice, and more raw skill to be the best speedrunner than it takes to be the best Eden Streaker (or any other way to play the game).
 
+<br />
 
-
-## Complaint #3 - Speedrunning Isaac takes no strategy.
+### Complaint #3 - Speedrunning Isaac takes no strategy.
 
 One beautiful thing about The Binding of Isaac is that it is filled with strategies that reward clever players who want to squeeze the most out of a run. For example, players like [Larsfest](https://www.twitch.tv/larsfest) will always visit a shop first before entering a Treasure Room in case the shop happens to have More Options in it. As another example, players can use the invulnerability frames from a Ventricle Razor to give "free" donations to a Blood Donation Machine over and over. As experienced players will know, more and more of these kinds of strategies will accumulate in your brain the more and more you play the game. In fact, much of the "skill" in Isaac can be said to be simply accumulating more and more of these tricks and strategies.
 
@@ -50,9 +50,9 @@ Additionally, consider that some decisions in particular are trivially easy for 
 
 In fact, one of the defining elements that makes the best speedrunners in the world stand out from the mid-tier players is that they are smarter. Newer players will often be surprised at some of the decisions made by top players - they seem to have an uncanny ability to stumble upon powerful synergies more often than other people. And with over 100 tournament results to look through, we can definitively say that it is not not due to luck.
 
+<br />
 
-
-## Complaint #4 - Using a mod is cheating and/or alienating. Why play with a mod at all?
+### Complaint #4 - Using a mod is cheating and/or alienating. Why play with a mod at all?
 
 An important part of any competitive game is consistency. For the best players to be able to consistently win tournaments, they need to be able to complete a game without any major curveballs being thrown at them that are out of their control.
 
@@ -68,9 +68,9 @@ So do speedrunners have to grit their teeth and just accept that a certain perce
 
 So, hopefully that is a convincing explanation on why the Isaac speedrunning community uses a mod to play the game. Obviously, it is not strictly necessary to speedrun the game with a mod. But the game itself was definitely not designed with competitive play in mind, and with a few tweaks here and there, we can really make the game perfect for speedrunning.
 
+<br />
 
-
-## Complaint #5 - Using a mod to make the game easier is lame. Powerful builds that result from a mod are stupid.  
+### Complaint #5 - Using a mod to make the game easier is lame. Powerful builds that result from a mod are stupid.  
 
 With respect to balance, let's be clear about what exactly the Racing+ mod does.
 
@@ -100,17 +100,17 @@ These are the 3 changes - that's it. Notably, the mod does not change the item p
 
 (As if you think that more generally, playing Isaac with powerful items is cheap, then I direct you to the Complaint #2 section.)
 
+<br />
 
-
-## Complaint #6 - Having the mod "give" you at starting item at the beginning is cheating.
+### Complaint #6 - Having the mod "give" you at starting item at the beginning is cheating.
 
 This mechanic only applies to [season 5 and season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which are optional custom challenges that changes the normal rules a bit and, well, give speedrunners a unique challenge. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
 
 Getting a "free" powerful item at the beginning of a run may seem a little bit like cheating. But what is the alternative? Consider that if the player was playing a "normal" run, you would see them reset the game over and over, going into all of the Treasure Rooms until they found a starting item like Magic Mushroom of Mom's Knife. And after that, they would continue on with the run. Notice that, for all intents and purposes, this is exactly the same as just starting with a random item from the get-go. The only difference is that it just saves the runner and the viewers the monotony of having to sit through the boring resetting section.
 
+<br />
 
-
-## Complaint #7 - Having the mod make you a ghost for 45 seconds instead of killing you is cheating.
+### Complaint #7 - Having the mod make you a ghost for 45 seconds instead of killing you is cheating.
 
 This mechanic only applies to [season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), which is an optional custom challenges that changes the normal rules a bit and, well, give speedrunners a unique challenge. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
 
