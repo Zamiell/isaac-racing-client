@@ -112,6 +112,6 @@ Getting a "free" powerful item at the beginning of a run may seem a little bit l
 
 ### Complaint #7 - Having the mod make you a ghost for 45 seconds instead of killing you is cheating.
 
-This mechanic only applies to [season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md), so it is important to remember that in most speedruns and races, speedrunners are not "saved" by this mechanic. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
+This mechanic only applies to [season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md) and seeded races. Thus, it is important to remember that in most speedruns and races, speedrunners are not "saved" by this mechanic. (StoneAgeMarcus was doing the season 6 category for his run at AGDQ.)
 
 With respect to the AGDQ run, if the custom death mechanic was turned off, then Marcus would have to play a bit more carefully, and the gameplay would more closely match the non-modded game. However, note that the run would not be very marathon-safe - if Marcus accidentally died on a character near the end of the run, he would have to start all the way over from the beginning, potentially losing up to 10 minutes. This is why season 6 was the best category choice for AGDQ.
