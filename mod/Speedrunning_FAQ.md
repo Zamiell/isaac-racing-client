@@ -1,6 +1,6 @@
 # Common Complaints from Non-Speedrunners
 
-[This was originally posted on Reddit after AGDQ 2020. Some additional edits have been made.]
+*[This was originally posted on Reddit after AGDQ 2020. Some additional edits have been made.]*
 
 Whenever an Isaac mod is shown to the general public, the same sort of complaints seem to surface over and over in the Twitch chat. "Using powerful builds takes no skill!" "Using a mod instead of the vanilla game is stupid." And so forth. Since I was on the couch at the time, I actually meant to talk about this at length during the AGDQ 2020 run, but there is really so much to explain and cover that I didn't get around to it. (And even if I did, I probably would not have done a very good job because this is complicated material that is hard to condense.) However, I'll try to address some of these complaints more thoroughly now. So let's talk about The Binding of Isaac.
 
