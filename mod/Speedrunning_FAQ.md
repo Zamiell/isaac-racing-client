@@ -74,7 +74,7 @@ So, hopefully that is a convincing explanation on why the Isaac speedrunning com
 
 With respect to balance, let's be clear about what exactly the Racing+ mod does.
 
-1) The D6
+#### 1) The D6
 
 The mod gives all characters the D6.
 
@@ -84,13 +84,13 @@ Without modding, that is likely still the way that things would be. But variety 
 
 Certainly, having the D6 makes the game easier, but there is a pretty good reason for it.
 
-2) No Curses
+#### 2) No Curses
 
 The mod removes all curses.
 
 At first glance, turning curses off clearly makes the game easier. But when we go into the nitty-gritty details and examine each curse, none of them actually make the game more skill-based or improve gameplay. One example of a potentially-well-designed curse would be something like a Curse of Double Damage - skilled players would be able to adjust and play more defensively in order to mitigate the effects. But none of the curses in the game really function in this way. Rather, they largely rob the player of autonomy and decision making. While Isaac is generally considered extremely well-designed, we feel that the curse system is one of Edmund's major blunders, especially when viewing the game in a competitive context.
 
-3) Devil Deals and Angel Deals
+#### 3) Devil Deals and Angel Deals
 
 The average expected pedestals from a devil deal is increased from 1.53 to 1.86 and the average expected pedestals from an angel deal is increased from 1.65 to 1.88.
 
