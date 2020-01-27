@@ -57,6 +57,7 @@ Some bugs are not fixable due to the limitations of the Afterbirth+ Lua API.
 * It can cause you to get a 2nd Small Rock from a tinted rock. (Reported by Moucheron Quipet)
 * It can grant the Stompy transformation if you revive with Magic Mushroom.
 * Reviving with Magic Mushroom bugs out the screen. (Reported by thisguyisbarry)
+* Being a ghost while Mega Blast is active will show the animation playing but the blast itself will be removed.
 * Being a ghost will prevent Brimstone-style lasers from firing. (Reported by Xelnas)
 
 <br />
