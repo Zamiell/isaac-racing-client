@@ -762,9 +762,17 @@ const placeMidRecalculateAll = () => {
                 // Those are considered ahead of Cathedral and The Chest
                 racer.placeMid += 1;
             } else if (
+                race.ruleset.goal === 'Everything' &&
                 racer2.floorNum === racer.floorNum &&
+                racer2.floorNum >= 10 &&
                 racer2.stageType === racer.stageType &&
                 racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor
+            ) {
+                racer.placeMid += 1;
+            } else if (
+                racer2.floorNum === racer.floorNum &&
+                racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor &&
+                (race.ruleset.goal !== 'Everything' || racer2.floorNum < 10)
             ) {
                 racer.placeMid += 1;
             }

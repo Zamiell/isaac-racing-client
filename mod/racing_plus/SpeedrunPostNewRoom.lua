@@ -9,6 +9,10 @@ function SpeedrunPostNewRoom:Main()
     return
   end
 
+  if RacingPlusData == nil then
+    return
+  end
+
   SpeedrunPostNewRoom:Stage8IAMERROR()
   SpeedrunPostNewRoom:Season3ReplaceBosses()
   SpeedrunPostNewRoom:CheckCurseRoom()

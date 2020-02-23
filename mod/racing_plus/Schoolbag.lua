@@ -307,7 +307,10 @@ function Schoolbag:CheckInput()
     return
   end
 
-  local hotkeySwitch = RacingPlusData:Get("hotkeySwitch")
+  local hotkeySwitch
+  if RacingPlusData ~= nil then
+    hotkeySwitch = RacingPlusData:Get("hotkeySwitch")
+  end
   if hotkeySwitch ~= nil and
      hotkeySwitch ~= 0 then
 

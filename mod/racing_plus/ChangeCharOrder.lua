@@ -225,6 +225,7 @@ function ChangeCharOrder:PostUpdate()
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
     return
   end
+
   if RacingPlusData == nil then
     return
   end
@@ -704,6 +705,7 @@ function ChangeCharOrder:PostRender()
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
     return
   end
+
   if RacingPlusData == nil then
     return
   end

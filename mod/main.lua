@@ -5,14 +5,16 @@
 
 --[[
 
+Directory: racing+_857628390
+Steam Workshop URL: https://steamcommunity.com/sharedfiles/filedetails/?id=857628390
+
 TODO:
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
 TODO CAN'T FIX:
 - Make a 3rd color hue on the map for rooms that are not cleared but you have entered
-- Make fast-clear apply to Challenge rooms and the Boss Rush
-  ("room:SetAmbushDone()" doesn't do anything)
+- Make fast-clear apply to Challenge rooms ("room:SetAmbushDone()" doesn't do anything)
 
 POST-FLIP ACTIONS:
 1) Remove the duplicated start rooms for The Chest / Dark Room
@@ -72,7 +74,7 @@ local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus function
 local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions
 local Debug               = require("racing_plus/debug") -- Debug functions
 
--- Initiailize the "g.run" table
+-- Initialize the "g.run" table
 g:InitRun()
 
 -- Make a copy of this object so that we can use it elsewhere

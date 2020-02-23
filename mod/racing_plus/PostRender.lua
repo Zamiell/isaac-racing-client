@@ -103,11 +103,8 @@ function PostRender:Main()
   -- Do race specific stuff
   PostRender:Race()
 
-  -- Do speedrun related checks
-  SpeedrunPostRender:CheckRestart()
-  SpeedrunPostRender:DisplayCharProgress()
-  SpeedrunPostRender:DrawVetoButtonText()
-  SpeedrunPostRender:RemoveDiversitySprites()
+  -- Handle things for multi-character speedruns
+  SpeedrunPostRender:Main()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally

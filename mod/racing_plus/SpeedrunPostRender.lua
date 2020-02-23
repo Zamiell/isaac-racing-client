@@ -5,6 +5,21 @@ local g        = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
 local Sprites  = require("racing_plus/sprites")
 
+function SpeedrunPostRender:Main()
+  if not Speedrun:InSpeedrun() then
+    return
+  end
+
+  if RacingPlusData == nil then
+    return
+  end
+
+  SpeedrunPostRender:CheckRestart()
+  SpeedrunPostRender:DisplayCharProgress()
+  SpeedrunPostRender:DrawVetoButtonText()
+  SpeedrunPostRender:RemoveDiversitySprites()
+end
+
 function SpeedrunPostRender:CheckRestart()
   -- Local variables
   local isaacFrameCount = Isaac.GetFrameCount()

@@ -63,6 +63,10 @@ function SpeedrunPostGameStarted:Main()
     return
   end
 
+  if RacingPlusData == nil then
+    return
+  end
+
   -- Don't do anything if the player has not submitted a character order
   -- (we will display an error later on in the PostRender callback)
   if not Speedrun:CheckValidCharOrder() then

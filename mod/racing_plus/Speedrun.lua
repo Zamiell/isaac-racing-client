@@ -286,6 +286,7 @@ function Speedrun:CheckValidCharOrder()
     return true
   end
 
+  -- Otherwise, we get the character order from the Racing+ Data mod's "save#.dat" file
   if RacingPlusData == nil then
     return false
   end

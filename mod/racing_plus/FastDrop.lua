@@ -10,7 +10,10 @@ local g = require("racing_plus/globals")
 -- Check for fast-drop inputs
 function FastDrop:CheckDropInput()
   -- If they do not have a hotkey bound, do nothing
-  local hotkeyDrop = RacingPlusData:Get("hotkeyDrop")
+  local hotkeyDrop
+  if RacingPlusData ~= nil then
+    hotkeyDrop = RacingPlusData:Get("hotkeyDrop")
+  end
   if hotkeyDrop == nil or
      hotkeyDrop == 0 then
 
@@ -49,7 +52,10 @@ end
 -- Check for fast-drop inputs (trinket-only)
 function FastDrop:CheckDropInputTrinket()
   -- If they do not have a hotkey bound, do nothing
-  local hotkeyDropTrinket = RacingPlusData:Get("hotkeyDropTrinket")
+  local hotkeyDropTrinket
+  if RacingPlusData ~= nil then
+    hotkeyDropTrinket = RacingPlusData:Get("hotkeyDropTrinket")
+  end
   if hotkeyDropTrinket == nil or
      hotkeyDropTrinket == 0 then
 
@@ -83,7 +89,10 @@ end
 -- Check for fast-drop inputs (pocket-item-only)
 function FastDrop:CheckDropInputPocket()
   -- If they do not have a hotkey bound, do nothing
-  local hotkeyDropPocket = RacingPlusData:Get("hotkeyDropPocket")
+  local hotkeyDropPocket
+  if RacingPlusData ~= nil then
+    hotkeyDropPocket = RacingPlusData:Get("hotkeyDropPocket")
+  end
   if hotkeyDropPocket == nil or
      hotkeyDropPocket == 0 then
 

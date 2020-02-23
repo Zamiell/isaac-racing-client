@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.49.1* - February 23rd, 2020
+
+* Fixed the bug where client race placings were wrong under certain conditions. (Thanks mgln)
+* Fixed the bug where switching Schoolbag items would not work when the Racing+ Data mod was disabled. (Thanks Cyber_1)
+
 ### *v0.49.0* - February 22nd, 2020
 
 * If you play custom challenges, you must now subscribe to the [Racing+ Data mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809) on the Steam Workshop. Your character order will no longer reset after every patch. Furthermore, you are no longer limited to having one character order stored at a time, meaning that you can store orders for each season.

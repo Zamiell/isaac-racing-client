@@ -9,6 +9,10 @@ function SpeedrunPostUpdate:Main()
     return
   end
 
+  if RacingPlusData == nil then
+    return
+  end
+
   -- Check to see if we need to start the timers
   if Speedrun.startedTime == 0 then
     -- We want to start the timer on the first game frame (as opposed to when the screen is fading in)
