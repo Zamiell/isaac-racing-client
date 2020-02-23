@@ -26,8 +26,11 @@ function PostGameStarted:Main(saveState)
   local startSeedString = g.seeds:GetStartSeedString()
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()
+  local isaacFrameCount = Isaac.GetFrameCount()
 
-  Isaac.DebugString("MC_POST_GAME_STARTED - " .. tostring(startSeedString))
+  Isaac.DebugString("MC_POST_GAME_STARTED - " ..
+                    "Seed: " .. tostring(startSeedString) .. " - " ..
+                    "Frame: " .. tostring(isaacFrameCount))
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
   if saveState then
@@ -39,7 +42,8 @@ function PostGameStarted:Main(saveState)
 
     -- Fix the bug where the Gaping Maws will not respawn in the "Race Room"
     if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
-       (g.race.status == "open" or g.race.status == "starting") then
+       (g.race.status == "open" or
+        g.race.status == "starting") then
 
       -- Spawn two Gaping Maws (235.0)
       Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
@@ -61,7 +65,7 @@ function PostGameStarted:Main(saveState)
 
     -- We only need to restart the game if there is a curse on B1 already
     if curses ~= LevelCurse.CURSE_NONE then -- 0
-      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
       g.run.restart = true
       g.run.b1HasCurse = true
       Isaac.DebugString("Restarting because there was a curse on Basement 1.")
@@ -208,10 +212,6 @@ function PostGameStarted:CheckCorruptMod()
     Isaac.DebugString("Error: Corrupted Racing+ instantiation detected. " ..
                       "(The last frame of the \"Scene\" animation is frame " .. tostring(lastFrame) .. ".)")
     g.corrupted = true
-
-    -- This must be after the sprite after the sprite table is reset
-    Sprites:Init("corrupt1", "corrupt1")
-    Sprites:Init("corrupt2", "corrupt2")
   end
   return g.corrupted
 end
@@ -260,7 +260,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
       valid = false
     end
     if not valid then
-      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Going to Eden for the save file check.")
       return true
@@ -311,7 +311,7 @@ function PostGameStarted:CheckFullyUnlockedSave()
       valid = false
     end
     if not valid then
-      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Save file check complete; going back to where we came from.")
       return true

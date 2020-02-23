@@ -60,6 +60,12 @@ function UseItem:Item44()
   -- we have already locked in a room transition
 end
 
+-- CollectibleType.COLLECTIBLE_D6 (105)
+function UseItem:Item105()
+  -- Used to prevent bugs with The Void + D6
+  g.run.usedD6Frame = g.g:GetFrameCount()
+end
+
 -- CollectibleType.COLLECTIBLE_FORGET_ME_NOW (127)
 -- Also called manually when we touch a 5-pip Dice Room
 function UseItem:Item127()
@@ -165,8 +171,8 @@ end
 
 -- CollectibleType.COLLECTIBLE_VOID (477)
 function UseItem:Item477()
-  -- We need to delay item replacement after using a Void (in case the player has consumed a D6)
-  g.run.itemReplacementDelay = g.g:GetFrameCount() + 5 -- Stall for 5 frames
+  -- Used to prevent bugs with The Void + D6
+  g.run.usedVoidFrame = g.g:GetFrameCount()
 end
 
 -- CollectibleType.COLLECTIBLE_MOVING_BOX (523)

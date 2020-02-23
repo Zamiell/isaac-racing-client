@@ -8,7 +8,7 @@ function PostFireTear:Main(tear)
     tear.Scale = 5
   end
 
-  if g.run.chaosCardTears then
+  if g.run.debugChaosCard then
     tear:ChangeVariant(TearVariant.CHAOS_CARD) -- 9
   end
 

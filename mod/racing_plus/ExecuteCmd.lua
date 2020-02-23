@@ -64,16 +64,176 @@ ExecuteCmd.functions["bm"] = function(params)
   ExecuteCmd:BlackMarket()
 end
 
+ExecuteCmd.functions["card"] = function(params)
+  if params == "" then
+    Isaac.ConsoleOutput("You must specify a card name.")
+    return
+  end
+
+  local cardMap = {}
+  cardMap["fool"] = 1
+  cardMap["magician"] = 2
+  cardMap["magi"] = 2
+  cardMap["high priestess"] = 3
+  cardMap["highpriestess"] = 3
+  cardMap["priestess"] = 3
+  cardMap["priest"] = 3
+  cardMap["empress"] = 4
+  cardMap["emperor"] = 5
+  cardMap["emp"] = 5
+  cardMap["hierophant"] = 6
+  cardMap["hiero"] = 6
+  cardMap["lovers"] = 7
+  cardMap["chariot"] = 8
+  cardMap["justice"] = 9
+  cardMap["hermit"] = 10
+  cardMap["wheel of fortune"] = 11
+  cardMap["wheeloffortune"] = 11
+  cardMap["wheel"] = 11
+  cardMap["fortune"] = 11
+  cardMap["strength"] = 12
+  cardMap["hanged man"] = 13
+  cardMap["hangedman"] = 13
+  cardMap["hanged"] = 13
+  cardMap["death"] = 14
+  cardMap["temperance"] = 15
+  cardMap["devil"] = 16
+  cardMap["tower"] = 17
+  cardMap["stars"] = 18
+  cardMap["moon"] = 19
+  cardMap["sun"] = 20
+  cardMap["judgement"] = 21
+  cardMap["judge"] = 21
+  cardMap["world"] = 22
+  cardMap["2 of clubs"] = 23
+  cardMap["2ofclubs"] = 23
+  cardMap["2clubs"] = 23
+  cardMap["2 of diamonds"] = 24
+  cardMap["2ofdiamonds"] = 24
+  cardMap["2diamonds"] = 24
+  cardMap["2 of spades"] = 25
+  cardMap["2ofspades"] = 25
+  cardMap["2spades"] = 25
+  cardMap["2 of hearts"] = 26
+  cardMap["2ofhearts"] = 26
+  cardMap["2hearts"] = 26
+  cardMap["ace of clubs"] = 27
+  cardMap["aceofclubs"] = 27
+  cardMap["aceclubs"] = 27
+  cardMap["ace of diamonds"] = 28
+  cardMap["aceofdiamonds"] = 28
+  cardMap["acediamonds"] = 28
+  cardMap["ace of spades"] = 29
+  cardMap["aceofspades"] = 29
+  cardMap["acespades"] = 29
+  cardMap["ace of hearts"] = 30
+  cardMap["aceofhearts"] = 30
+  cardMap["acehearts"] = 30
+  cardMap["joker"] = 31
+  cardMap["hagalaz"] = 32
+  cardMap["destruction"] = 32
+  cardMap["jera"] = 33
+  cardMap["abundance"] = 33
+  cardMap["ehwaz"] = 34
+  cardMap["passage"] = 34
+  cardMap["dagaz"] = 35
+  cardMap["purity"] = 35
+  cardMap["ansuz"] = 36
+  cardMap["vision"] = 36
+  cardMap["perthro"] = 37
+  cardMap["change"] = 37
+  cardMap["berkano"] = 38
+  cardMap["companionship"] = 38
+  cardMap["algiz"] = 39
+  cardMap["resistance"] = 39
+  cardMap["shield"] = 39
+  cardMap["blank"] = 40
+  cardMap["black"] = 41
+  cardMap["chaos"] = 42
+  cardMap["credit"] = 43
+  cardMap["rules"] = 44
+  cardMap["against humanity"] = 45
+  cardMap["againsthumanity"] = 45
+  cardMap["humanity"] = 45
+  cardMap["suicide king"] = 46
+  cardMap["suicideking"] = 46
+  cardMap["suicide"] = 46
+  cardMap["get out of jail free"] = 47
+  cardMap["getoutofjailfree"] = 47
+  cardMap["get out of jail"] = 47
+  cardMap["getoutofjail"] = 47
+  cardMap["get out"] = 47
+  cardMap["getout"] = 47
+  cardMap["jail"] = 47
+  cardMap["?"] = 48
+  cardMap["dice shard"] = 49
+  cardMap["diceshard"] = 49
+  cardMap["dice"] = 49
+  cardMap["shard"] = 49
+  cardMap["emergency contact"] = 50
+  cardMap["emergencycontact"] = 50
+  cardMap["emergency"] = 50
+  cardMap["contact"] = 50
+  cardMap["holy"] = 51
+  cardMap["huge growth"] = 52
+  cardMap["hugegrowth"] = 52
+  cardMap["growth"] = 52
+  cardMap["ancient recall"] = 53
+  cardMap["ancientrecall"] = 53
+  cardMap["ancient"] = 53
+  cardMap["recall"] = 53
+  cardMap["era walk"] = 54
+  cardMap["erawalk"] = 54
+  cardMap["era"] = 54
+  cardMap["walk"] = 54
+
+  local giveCardNum = 0
+  for word, cardNum in pairs(cardMap) do
+    if params == word then
+      giveCardNum = cardNum
+      break
+    end
+  end
+
+  if giveCardNum == 0 then
+    Isaac.ConsoleOutput("Unknown card.")
+    return
+  end
+  Isaac.ExecuteCommand("g k" .. tostring(giveCardNum))
+  Isaac.ConsoleOutput("Gave card #" .. tostring(giveCardNum) .. ".")
+end
+
+ExecuteCmd.functions["cards"] = function(params)
+  local cardNum = 1
+  for y = 0, 6 do
+    for x = 0, 12 do
+      if cardNum < Card.NUM_CARDS then
+        local pos = g:GridToPos(x, y)
+        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, cardNum, pos, g.zeroVector, nil) -- 5.300
+        cardNum = cardNum + 1
+      end
+    end
+  end
+end
+
 ExecuteCmd.functions["cc"] = function(params)
-  g.run.chaosCardTears = not g.run.chaosCardTears
+  ExecuteCmd:ChaosCardTears()
+end
+
+function ExecuteCmd:ChaosCardTears()
+  g.run.debugChaosCard = not g.run.debugChaosCard
   local string
-  if g.run.chaosCardTears then
+  if g.run.debugChaosCard then
     string = "Enabled"
   else
     string = "Disabled"
   end
-  string = string .. " chaos card tears."
+  string = string .. " Chaos Card tears."
   Isaac.ConsoleOutput(string)
+end
+
+ExecuteCmd.functions["chaos"] = function(params)
+  ExecuteCmd:ChaosCardTears()
 end
 
 ExecuteCmd.functions["char"] = function(params)
@@ -119,10 +279,10 @@ end
 
 function ExecuteCmd:Debug()
   Isaac.ExecuteCommand("debug 3")
-  Isaac.ExecuteCommand("damage")
-  Isaac.ExecuteCommand("speed")
   Isaac.ExecuteCommand("debug 8")
   Isaac.ExecuteCommand("debug 10")
+  Isaac.ExecuteCommand("damage")
+  Isaac.ExecuteCommand("speed")
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION) then -- 76
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_XRAY_VISION, 0, false) -- 76
   end
@@ -132,7 +292,8 @@ function ExecuteCmd:Debug()
   g.p:AddCoins(99)
   g.p:AddBombs(99)
   g.p:AddKeys(99)
-  Isaac.ConsoleOutput("Added various debug flags and items.")
+  Isaac.ConsoleOutput("Added \"debug 3\", \"debug 8\", \"debug 10\", \"damage\", \"speed\", " ..
+                      "X-Ray Vision, The Mind, 99 coins, 99 bombs, and 99 keys.")
 end
 
 ExecuteCmd.functions["dd"] = function(params)

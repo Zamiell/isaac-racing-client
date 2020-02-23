@@ -1,8 +1,7 @@
 local ChangeKeybindings = {}
 
 -- Includes
-local g       = require("racing_plus/globals")
-local SaveDat = require("racing_plus/savedat")
+local g = require("racing_plus/globals")
 
 ChangeKeybindings.challengeState = 1
 ChangeKeybindings.challengeFramePressed = 0
@@ -29,6 +28,10 @@ function ChangeKeybindings:PostRender()
     return
   end
 
+  if RacingPlusData == nil then
+    return
+  end
+
   -- Wait a moment just in case they were mashing stuff while it was loading
   if g.g:GetFrameCount() < 1 then
     return
@@ -46,41 +49,46 @@ function ChangeKeybindings:PostRender()
     return
   end
 
+  local hotkeyDrop        = RacingPlusData:Get("hotkeyDrop")
+  local hotkeyDropTrinket = RacingPlusData:Get("hotkeyDropTrinket")
+  local hotkeyDropPocket  = RacingPlusData:Get("hotkeyDropPocket")
+  local hotkeySwitch      = RacingPlusData:Get("hotkeySwitch")
+
   local text = {}
   if ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP then
-    if g.race.hotkeyDrop == 0 then
+    if hotkeyDrop == 0 then
       text[1] = "The fast-drop hotkey is not bound."
     else
       text[1] = "The fast-drop hotkey is currently bound to:"
-      text[2] = ChangeKeybindings:GetKeyName(g.race.hotkeyDrop) ..
-                " (code: " .. tostring(g.race.hotkeyDrop) .. ")"
+      text[2] = ChangeKeybindings:GetKeyName(hotkeyDrop) ..
+                " (code: " .. tostring(hotkeyDrop) .. ")"
     end
 
   elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_TRINKET then
-    if g.race.hotkeyDropTrinket == 0 then
+    if hotkeyDropTrinket == 0 then
       text[1] = "The fast-drop (trinket-only) hotkey is not bound."
     else
       text[1] = "The fast-drop (trinket-only) hotkey is currently bound to:"
-      text[2] = ChangeKeybindings:GetKeyName(g.race.hotkeyDropTrinket) ..
-                " (code: " .. tostring(g.race.hotkeyDropTrinket) .. ")"
+      text[2] = ChangeKeybindings:GetKeyName(hotkeyDropTrinket) ..
+                " (code: " .. tostring(hotkeyDropTrinket) .. ")"
     end
 
   elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_POCKET then
-    if g.race.hotkeyDropPocket == 0 then
+    if hotkeyDropPocket == 0 then
       text[1] = "The fast-drop (pocket-item-only) hotkey is not bound."
     else
       text[1] = "The fast-drop (pocket-item-only) hotkey is currently bound to:"
-      text[2] = ChangeKeybindings:GetKeyName(g.race.hotkeyDropPocket) ..
-                " (code: " .. tostring(g.race.hotkeyDropPocket) .. ")"
+      text[2] = ChangeKeybindings:GetKeyName(hotkeyDropPocket) ..
+                " (code: " .. tostring(hotkeyDropPocket) .. ")"
     end
 
   elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.SCHOOLBAG_SWITCH then
-    if g.race.hotkeySwitch == 0 then
+    if hotkeySwitch == 0 then
       text[1] = "The Schoolbag-switch hotkey is not bound."
     else
       text[1] = "The Schoolbag-switch hotkey is currently bound to:"
-      text[2] = ChangeKeybindings:GetKeyName(g.race.hotkeySwitch) ..
-                " (code: " .. tostring(g.race.hotkeySwitch) .. ")"
+      text[2] = ChangeKeybindings:GetKeyName(hotkeySwitch) ..
+                " (code: " .. tostring(hotkeySwitch) .. ")"
     end
   end
   if text[2] == nil then
@@ -99,43 +107,39 @@ function ChangeKeybindings:PostRender()
   for k, v in pairs(Keyboard) do
     if Input.IsButtonPressed(v, 0) then
       if ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP then
-        g.race.hotkeyDrop = v
         if v == Keyboard.KEY_F12 then -- 301
-          g.race.hotkeyDrop = 0
+          v = 0
         end
-        Isaac.DebugString("New drop hotkey: " .. tostring(g.race.hotkeyDrop))
+        RacingPlusData:Set("hotkeyDrop", v)
+
         ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_TRINKET
-        SaveDat:Save()
         ChangeKeybindings.challengeFramePressed = gameFrameCount
 
       elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_TRINKET then
-        g.race.hotkeyDropTrinket = v
         if v == Keyboard.KEY_F12 then -- 301
-          g.race.hotkeyDropTrinket = 0
+          v = 0
         end
-        Isaac.DebugString("New drop trinket hotkey: " .. tostring(g.race.hotkeyDropTrinket))
+        RacingPlusData:Set("hotkeyDropTrinket", v)
+
         ChangeKeybindings.challengeState = ChangeKeybindings.states.FAST_DROP_POCKET
-        SaveDat:Save()
         ChangeKeybindings.challengeFramePressed = gameFrameCount
 
       elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.FAST_DROP_POCKET then
-        g.race.hotkeyDropPocket = v
         if v == Keyboard.KEY_F12 then -- 301
-          g.race.hotkeyDropPocket = 0
+          v = 0
         end
-        Isaac.DebugString("New drop pocket hotkey: " .. tostring(g.race.hotkeyDropPocket))
+        RacingPlusData:Set("hotkeyDropPocket", v)
+
         ChangeKeybindings.challengeState = ChangeKeybindings.states.SCHOOLBAG_SWITCH
-        SaveDat:Save()
         ChangeKeybindings.challengeFramePressed = gameFrameCount
 
       elseif ChangeKeybindings.challengeState == ChangeKeybindings.states.SCHOOLBAG_SWITCH then
-        g.race.hotkeySwitch = v
         if v == Keyboard.KEY_F12 then -- 301
-          g.race.hotkeySwitch = 0
+          v = 0
         end
-        Isaac.DebugString("New switch hotkey: " .. tostring(g.race.hotkeySwitch))
+        RacingPlusData:Set("hotkeySwitch", v)
+
         ChangeKeybindings.challengeState = ChangeKeybindings.states.START_TO_FADE_OUT
-        SaveDat:Save()
         ChangeKeybindings.challengeFramePressed = gameFrameCount
       end
     end
@@ -158,6 +162,10 @@ function ChangeKeybindings:PostNewRoom()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("Change Keybindings") then
+    return
+  end
+
+  if RacingPlusData == nil then
     return
   end
 

@@ -9,31 +9,56 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_PRE_GET_COLLECTIBLE (62)
 function PreGetCollectible:Main(poolType, decrease, seed)
+  -- Manually generate random items for specific item pools in seeded races
   if g.run.gettingCollectible or
      g.race.rFormat ~= "seeded" or
-     g.race.status ~= "in progress" then
+     g.race.status ~= "in progress" or
+     (poolType ~= ItemPoolType.POOL_DEVIL and -- 3
+      poolType ~= ItemPoolType.POOL_ANGEL and -- 4
+      poolType ~= ItemPoolType.POOL_DEMON_BEGGAR) then -- 11
 
     return
   end
 
-  if poolType == ItemPoolType.POOL_DEVIL then -- 3
+  -- We need to account for the NO! trinket;
+  -- if the player has it, we need to temporarily remove it,
+  -- otherwise the random items selected will not be consistent
+  local hasTrinket = g.p:HasTrinket(TrinketType.TRINKET_NO) -- 88
+  if hasTrinket then
+    g.p:TryRemoveTrinket(TrinketType.TRINKET_NO) -- 88
+  end
+
+  for i = 1, 100 do -- Only attempt to find a valid item for 100 iterations in case something goes wrong
+    local subType
     g.run.gettingCollectible = true
-    g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
-    local subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.DevilRoomItem)
+    if poolType == ItemPoolType.POOL_DEVIL then -- 3
+      g.RNGCounter.DevilRoomItem = g:IncrementRNG(g.RNGCounter.DevilRoomItem)
+      subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.DevilRoomItem)
+    elseif poolType == ItemPoolType.POOL_ANGEL then -- 4
+      g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
+      subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.AngelRoomItem)
+    elseif poolType == ItemPoolType.POOL_DEMON_BEGGAR then -- 11
+      g.RNGCounter.DevilRoomBeggar = g:IncrementRNG(g.RNGCounter.DevilRoomBeggar)
+      subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.DevilRoomBeggar)
+    end
     g.run.gettingCollectible = false
-    return subType
-  elseif poolType == ItemPoolType.POOL_ANGEL then -- 4
-    g.run.gettingCollectible = true
-    g.RNGCounter.AngelRoomItem = g:IncrementRNG(g.RNGCounter.AngelRoomItem)
-    local subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.AngelRoomItem)
-    g.run.gettingCollectible = false
-    return subType
-  elseif poolType == ItemPoolType.POOL_DEMON_BEGGAR then -- 11
-    g.run.gettingCollectible = true
-    g.RNGCounter.DevilRoomBeggar = g:IncrementRNG(g.RNGCounter.DevilRoomBeggar)
-    local subType = g.itemPool:GetCollectible(poolType, true, g.RNGCounter.DevilRoomBeggar)
-    g.run.gettingCollectible = false
-    return subType
+
+    -- Simply return the new subtype if we do not have the NO! trinket
+    if not hasTrinket then
+      return subType
+    end
+
+    -- Otherwise, check to see if this is an active item
+    local item = g.itemConfig:GetCollectible(subType)
+    if item.Type ~= ItemType.ITEM_ACTIVE then -- 3
+      -- It is not an active item
+      -- Give the NO! trinket back and return the new subtype
+      g.p:AddTrinket(TrinketType.TRINKET_NO) -- 88
+      return subType
+    end
+
+    -- It is an active item, so let the RNG increment and generate another random item
+    Isaac.DebugString("Skipping over item " .. tostring(subType) .. " since we have the NO! trinket.")
   end
 end
 

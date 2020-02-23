@@ -233,7 +233,7 @@ function RacePostGameStarted:Main()
       -- If the run started with a set seed, this will change the reset behavior to that of an unseeded run
       g.seeds:Reset()
 
-      -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting because we were on a set seed.")
       return true
@@ -244,7 +244,7 @@ function RacePostGameStarted:Main()
   if character ~= g.race.character and
      g.race.rFormat ~= "custom" then
 
-    -- Doing a "restart" here does not work for some reason, so mark to reset on the next frame
+    -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
     g.run.restart = true
     Isaac.DebugString("Restarting because we were not on the right character.")
     return true
@@ -464,7 +464,7 @@ function RacePostGameStarted:Diversity()
       -- Remove it from all of the item pools
       -- (make an exception for items that you can normally get duplicates of)
       if itemID ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
-          itemID ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
+         itemID ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
 
         g.itemPool:RemoveCollectible(itemID)
         if itemID == CollectibleType.COLLECTIBLE_INCUBUS then -- 360

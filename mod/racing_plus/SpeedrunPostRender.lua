@@ -43,32 +43,6 @@ function SpeedrunPostRender:DisplayCharProgress()
     return
   end
 
-  -- Don't show the progress if the player has not set an order yet
-  if not Speedrun:CheckValidCharOrder() then
-    -- Load the sprites
-    if Speedrun.sprites.needToSet1 == nil then
-      Speedrun.sprites.needToSet1 = Sprite()
-      Speedrun.sprites.needToSet1:Load("gfx/speedrun/need-to-set1.anm2", true)
-      Speedrun.sprites.needToSet1:SetFrame("Default", 0)
-      Speedrun.sprites.needToSet2 = Sprite()
-      Speedrun.sprites.needToSet2:Load("gfx/speedrun/need-to-set2.anm2", true)
-      Speedrun.sprites.needToSet2:SetFrame("Default", 0)
-      Speedrun.sprites.needToSet3 = Sprite()
-      Speedrun.sprites.needToSet3:Load("gfx/speedrun/need-to-set3.anm2", true)
-      Speedrun.sprites.needToSet3:SetFrame("Default", 0)
-    end
-
-    -- Display the sprites
-    local pos = Sprites:GetScreenCenterPosition()
-    pos.Y = pos.Y - 80
-    Speedrun.sprites.needToSet1:RenderLayer(0, pos)
-    pos.Y = pos.Y + 30
-    Speedrun.sprites.needToSet2:RenderLayer(0, pos)
-    pos.Y = pos.Y + 40
-    Speedrun.sprites.needToSet3:RenderLayer(0, pos)
-    return
-  end
-
   -- Load the sprites for the multi-character speedrun progress
   if Speedrun.sprites.slash == nil then
     Speedrun.sprites.digit = {}
@@ -244,99 +218,11 @@ function SpeedrunPostRender:DrawSeason7Goals()
   end
 end
 
-function SpeedrunPostRender:CheckSeason5Mod()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") then
-    return
-  end
-
-  if SinglePlayerCoopBabies ~= nil then
-    return
-  end
-
-  local x = 115
-  local y = 70
-  Isaac.RenderText("Error: You must subscribe to and enable", x, y, 2, 2, 2, 2)
-  x = x + 42
-  y = y + 10
-  Isaac.RenderText("\"The Babies Mod\" on the Steam Workshop", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("in order for the Racing+ season 5 custom", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
-end
-
-function SpeedrunPostRender:CheckSeason5ModOther()
-  local challenge = Isaac.GetChallenge()
-  if not Speedrun:InSpeedrun() or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
-
-    return
-  end
-
-  if SinglePlayerCoopBabies == nil then
-    return
-  end
-
-  local x = 115
-  local y = 70
-  Isaac.RenderText("Error: You must disable The Babies Mod", x, y, 2, 2, 2, 2)
-  x = x + 42
-  y = y + 10
-  Isaac.RenderText("in order for this custom challenge to", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
-end
-
 function SpeedrunPostRender:RemoveDiversitySprites()
   -- Remove the diversity sprites as soon as we enter another room
   if g.run.roomsEntered > 1 then
     Sprites:ClearPostRaceStartGraphics()
   end
-end
-
-function SpeedrunPostRender:CheckSeasonXMod()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season X Beta)") then
-    return
-  end
-
-  if RacingPlusRebalanced ~= nil then
-    return
-  end
-
-  local x = 115
-  local y = 70
-  Isaac.RenderText("Error: You must subscribe to and enable the", x, y, 2, 2, 2, 2)
-  x = x + 42
-  y = y + 10
-  Isaac.RenderText("\"Racing+ Rebalanced\" mod on the Steam Workshop", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("in order for the Racing+ season X custom", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
-end
-
-function SpeedrunPostRender:CheckSeasonXModOther()
-  local challenge = Isaac.GetChallenge()
-  if not Speedrun:InSpeedrun() or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season X Beta)") then
-
-    return
-  end
-
-  if RacingPlusRebalanced == nil then
-    return
-  end
-
-  local x = 115
-  local y = 70
-  Isaac.RenderText("Error: You must disable the Racing+ Rebalanced mod", x, y, 2, 2, 2, 2)
-  x = x + 42
-  y = y + 10
-  Isaac.RenderText("in order for this custom challenge to", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("work correctly.", x, y, 2, 2, 2, 2)
 end
 
 return SpeedrunPostRender

@@ -328,7 +328,7 @@ function SpeedrunPostGameStarted:R7S4()
 
   -- Give the additional (chosen) starting item/build
   -- (the item choice is stored in the second half of the "charOrder" variable)
-  local itemID = g.race.charOrder[Speedrun.charNum + 8]
+  local itemID = RacingPlusData:Get("charOrder-R7S4")[Speedrun.charNum + 7]
   if itemID < 1000 then
     -- This is a single item build
     g.p:AddCollectible(itemID, 0, false)
@@ -560,8 +560,9 @@ function SpeedrunPostGameStarted:R7S6()
       end
 
       -- Check to see if we banned this item
-      for i = 9, #g.race.charOrder do
-        local item = g.race.charOrder[i]
+      local charOrder = RacingPlusData:Get("charOrder-R7S6")
+      for i = 8, #charOrder do
+        local item = charOrder[i]
 
         -- Convert builds to the primary item
         if item == 1006 then

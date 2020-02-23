@@ -14,11 +14,11 @@ function SaveDat:Load()
   local isaacFrameCount = Isaac.GetFrameCount()
 
   if g.raceVars.loadOnNextFrame or -- We need to check on the first frame of the run
-     (g.race.status == "starting" and isaacFrameCount & 1 == 0) or
-     -- (this is the same as "isaacFrameCount % 2 == 0", but runs 20% faster)
+     (g.race.status == "starting" and
      -- We want to check for updates on every other frame if the race is starting so that the countdown is smooth
-     isaacFrameCount % 30 == 0 then
+     isaacFrameCount & 1 == 0) or -- (this is the same as "isaacFrameCount % 2 == 0", but runs 20% faster)
      -- Otherwise, only check for updates every half second, since file reads are expensive
+     isaacFrameCount % 30 == 0 then
 
     -- Check to see if there a "save.dat" file for this save slot
     if not Isaac.HasModData(g.RacingPlus) then
@@ -92,22 +92,6 @@ function SaveDat:Load()
     if oldRace.place ~= g.race.place then
       Isaac.DebugString("ModData place changed: " .. tostring(g.race.place))
       SaveDat:ChangedPlace()
-    end
-    if not g:TableEqual(oldRace.charOrder, g.race.charOrder) then
-      Isaac.DebugString("ModData charOrder changed.")
-      SaveDat:ChangedOrder()
-    end
-    if oldRace.hotkeyDrop ~= g.race.hotkeyDrop then
-      Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(g.race.hotkeyDrop))
-    end
-    if oldRace.hotkeyDropTrinket ~= g.race.hotkeyDropTrinket then
-      Isaac.DebugString("ModData hotkeyDropTrinket changed: " .. tostring(g.race.hotkeyDropTrinket))
-    end
-    if oldRace.hotkeyDropPocket ~= g.race.hotkeyDropPocket then
-      Isaac.DebugString("ModData hotkeyDropPocket changed: " .. tostring(g.race.hotkeyDropPocket))
-    end
-    if oldRace.hotkeySwitch ~= g.race.hotkeySwitch then
-      Isaac.DebugString("ModData hotkeyDrop changed: " .. tostring(g.race.hotkeySwitch))
     end
   end
 end
@@ -198,19 +182,6 @@ function SaveDat:ChangedPlace()
 
     -- Also, update the place graphic on the left by the R+ icon with our final place
     Sprites:Init("place", tostring(g.race.place))
-  end
-end
-
-function SaveDat:ChangedOrder()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Challenge.CHALLENGE_NULL and -- 0
-     challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
-
-    -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
-    g.run.restart = true
-    Isaac.DebugString("Restarting because we detected a new character order.")
   end
 end
 

@@ -3,6 +3,7 @@ local PostRender = {}
 -- Includes
 local g                  = require("racing_plus/globals")
 local SaveDat            = require("racing_plus/savedat")
+local Errors             = require("racing_plus/errors")
 local Sprites            = require("racing_plus/sprites")
 local Schoolbag          = require("racing_plus/schoolbag")
 local SoulJar            = require("racing_plus/souljar")
@@ -27,13 +28,15 @@ function PostRender:Main()
   g.seeds = g.g:GetSeeds()
   g.itemPool = g.g:GetItemPool()
 
-  -- Read the "save.dat" file and do nothing else on this frame if reading failed
+  -- Read the "save.dat" file
   SaveDat:Load()
 
   -- Keep track of whether the race is finished or not
   -- (we need to check for "open" because it is possible to quit at the main menu and
   -- then join another race before starting the game)
-  if g.race.status == "none" or g.race.status == "open" then
+  if g.race.status == "none" or
+     g.race.status == "open" then
+
     g.raceVars.started = false
   end
 
@@ -43,7 +46,13 @@ function PostRender:Main()
   -- Get rid of the slow fade-in at the beginning of a run
   if not g.run.erasedFadeIn then
     g.run.erasedFadeIn = true
-    g.g:Fadein(0.15) -- This fine is fine tuned from trial and error to be a good speed
+    g.g:Fadein(0.15) -- This is fine tuned from trial and error to be a good speed
+    return
+  end
+
+  -- Draw any error messages
+  -- If there are any errors, we can skip the remainder of this function
+  if Errors:Draw() then
     return
   end
 
@@ -58,13 +67,12 @@ function PostRender:Main()
   PostRender:SchoolbagGlowingHourGlass()
   Timer:Display()
   Timer:DisplayRun()
-  Timer:DisplaySecond()
+  Timer:DisplaySeededDeath()
   Pills:PostRender()
   SpeedrunPostRender:DrawSeason7Goals()
   ChangeCharOrder:PostRender()
   ChangeKeybindings:PostRender()
   PostRender:DisplayTopLeftText()
-  PostRender:DrawInvalidSaveFile()
   PostRender:DrawVersion()
 
   -- Check for inputs
@@ -99,11 +107,7 @@ function PostRender:Main()
   SpeedrunPostRender:CheckRestart()
   SpeedrunPostRender:DisplayCharProgress()
   SpeedrunPostRender:DrawVetoButtonText()
-  SpeedrunPostRender:CheckSeason5Mod()
-  SpeedrunPostRender:CheckSeason5ModOther()
   SpeedrunPostRender:RemoveDiversitySprites()
-  --SpeedrunPostRender:CheckSeasonXMod()
-  --SpeedrunPostRender:CheckSeasonXModOther()
 end
 
 -- We replace the vanilla streak text because it blocks the map occasionally
@@ -686,7 +690,6 @@ function PostRender:Race()
      g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
 
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
-    Isaac.DebugString("XXX " .. tostring(g.g.Difficulty))
     return
 
   elseif Sprites.sprites.top ~= nil and
@@ -816,33 +819,6 @@ function PostRender:Race()
     -- The starting position is 320, 380
     g.p.Position = Vector(320, 380)
   end
-end
-
-function PostRender:DrawInvalidSaveFile()
-  if g.saveFile.fullyUnlocked then
-    return
-  end
-
-  -- The corrupted mod check takes precedence over the invalid save file check
-  if g.corrupted then
-    return
-  end
-
-  local x = 115
-  local y = 70
-  Isaac.RenderText("Error: You must use a fully unlocked save file to", x, y, 2, 2, 2, 2)
-  x = x + 42
-  y = y + 10
-  Isaac.RenderText("play the Racing+ mod. This is so that all", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("players will have consistent items in races", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("and speedruns. You can download a fully", x, y, 2, 2, 2, 2)
-  y = y + 10
-  Isaac.RenderText("unlocked save file at:", x, y, 2, 2, 2, 2)
-  x = x - 42
-  y = y + 20
-  Isaac.RenderText("https://www.speedrun.com/afterbirthplus/resources", x, y, 2, 2, 2, 2)
 end
 
 function PostRender:DrawVersion()

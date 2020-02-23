@@ -11,10 +11,10 @@ On Racing+, players have the option to choose from different kinds of races.
 * In unseeded races, there are additional balance changes:
   * Each racer starts with More Options. More Options is removed upon entering the first Treasure Room.
   * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
-    * Mom's Knife --> Incubus
+    * Mom's Knife --> Mutant Spider + The Inner Eye
     * Tech X --> Crown of Light
     * Epic Fetus --> Sacred Heart
-    * Ipecac --> Mutant Spider + The Inner Eye
+    * Ipecac --> Incubus
 
 <br />
 

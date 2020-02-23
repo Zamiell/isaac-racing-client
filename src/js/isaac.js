@@ -17,12 +17,12 @@ exports.start = () => {
     ipcRenderer.send('asynchronous-message', 'isaac', globals.modPath);
 
     // Check to see if the mod path exists
-    // (this may not exist if they are just using Racing+ to race vanilla or some other custom mod)
+    // (this may not exist if they are just using the client to race vanilla or some other custom mod)
     if (!fs.existsSync(globals.modPath)) {
         return true;
     }
 
-    // Store what their R+7/9/14 character order is
+    // Make sure that the "save1.dat" file, the "save2.dat" file, and the "save3.dat" file exist
     const defaultSaveDatFile = path.join(globals.modPath, 'save-defaults.dat');
     if (!fs.existsSync(globals.modPath)) {
         misc.errorShow(`Failed to find the "${defaultSaveDatFile}" file. Is your Racing+ mod corrupted?`);
@@ -30,35 +30,7 @@ exports.start = () => {
     }
     for (let i = 1; i <= 3; i++) {
         const saveDatFile = path.join(globals.modPath, `save${i}.dat`);
-        if (fs.existsSync(saveDatFile)) {
-            let json;
-            try {
-                json = JSON.parse(fs.readFileSync(saveDatFile, 'utf8'));
-            } catch (err) {
-                misc.errorShow(`Error while reading the "save${i}.dat" file: ${err}`);
-                return false;
-            }
-
-            // We only want to replace our stored variables if they are changed from the default
-            const props = [
-                'charOrder',
-                'hotkeyDrop',
-                'hotkeyDropTrinket',
-                'hotkeyDropPocket',
-                'hotkeySwitch',
-            ];
-            for (const prop of props) {
-                if (
-                    typeof json[prop] !== 'undefined' &&
-                    json[prop] !== null &&
-                    json[prop].toString() !== '0' &&
-                    (globals.modLoader[prop] === 0 || globals.modLoader[prop].toString() === '0')
-                ) {
-                    globals.modLoader[prop] = json[prop];
-                    globals.log.info(`Found property "${prop}" on save file ${i}: ${json[prop]}`);
-                }
-            }
-        } else {
+        if (!fs.existsSync(saveDatFile)) {
             // Copy over the default file
             // (this should only occur if they have a freshly downloaded mod and have not run the game yet)
             try {

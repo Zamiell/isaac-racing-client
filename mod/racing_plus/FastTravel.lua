@@ -23,8 +23,7 @@ FastTravel.state = {
 }
 
 -- Variables
-FastTravel.reseed               = false -- Used when we need to reseed the next floor
-FastTravel.delayNewRoomCallback = false -- Used when executing a "reseed" immediately after a "stage X"
+FastTravel.reseed = false -- Used when we need to reseed the next floor
 
 --
 -- Trapdoor / heaven door functions
@@ -412,7 +411,8 @@ function FastTravel:CheckTrapdoor()
     -- State 2 is activated when the "Trapdoor" animation is completed
     g.p.Visible = false
 
-    -- Make the screen fade to black (we can go to any room for this, so we just use the starting room)
+    -- Make the screen fade to black
+    -- (we can go to any room for this, so we just use the starting room)
     g.g:StartRoomTransition(g.l:GetStartingRoomIndex(), Direction.NO_DIRECTION, -- -1
                             g.RoomTransition.TRANSITION_NONE) -- 0
 
@@ -429,7 +429,7 @@ function FastTravel:CheckTrapdoor()
     g.run.trapdoor.state = FastTravel.state.SCREEN_IS_BLACK
     g.run.trapdoor.floor = stage
     Sprites:Init("black", "black")
-    FastTravel:GotoNextFloor(g.run.trapdoor.upwards) -- The argument is "upwards"
+    FastTravel:GotoNextFloor(g.run.trapdoor.upwards)
 
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_2 and
          g.p.ControlsEnabled then
@@ -495,8 +495,7 @@ function FastTravel:CheckTrapdoor()
 end
 
 -- Called from the PostNewRoom callback
--- (for the Mega Satan trapdoor)
-function FastTravel:CheckTrapdoor2()
+function FastTravel:CheckNewFloor()
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
@@ -511,12 +510,14 @@ function FastTravel:CheckTrapdoor2()
   end
 
   -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
-  -- (this is just an artifact of the manual reordering)
+  -- (this is only because of the manual callback reordering)
   if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_1
+    Isaac.DebugString("Set trapdoor state to POST_NEW_ROOM_1.")
 
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_1 then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_2
+    Isaac.DebugString("Set trapdoor state to POST_NEW_ROOM_2.")
 
     -- Remove the black sprite to reveal the new floor
     Sprites:Init("black", 0)
@@ -755,10 +756,6 @@ function FastTravel:TravelStage(stage, stageType)
 
   if FastTravel.reseed then
     FastTravel.reseed = false
-
-    -- We use the "delayNewRoomCallback" variable to delay firing
-    -- the "CheckTrapdoor2()" function before the reseed happens
-    FastTravel.delayNewRoomCallback = true
 
     -- Doing a "reseed" immediately after a "stage" command won't mess anything up
     g:ExecuteCommand("reseed")

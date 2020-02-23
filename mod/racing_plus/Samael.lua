@@ -667,10 +667,22 @@ function SamaelMod:scytheUpdate(scythe)
   if scytheState == 2 and sprite:GetFrame() >= 1 and sprite:GetFrame() <= 5 then
      --On the first hit frame, send the attack direction to the hitBox entity and set its collision damage
     if sprite:GetFrame() == 1 then
+      -- Adding this to buff 20/20 / The Inner Eye / Mutant Spider
+      local modifiedMult = scytheDamageMultiplier
+      if g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then -- 245
+        modifiedMult = modifiedMult * 2
+      end
+      if g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) then -- 2
+        modifiedMult = modifiedMult * 3
+      end
+      if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
+        modifiedMult = modifiedMult * 4
+      end
+
        --I'm using Coins to store this value because the actual Direction attributes for familiars
        --was crashing the game. Oh well!
       hitBox.Coins = lastDirection
-      hitBox.CollisionDamage = g.p.Damage*scytheDamageMultiplier
+      hitBox.CollisionDamage = g.p.Damage*modifiedMult
       if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LOST_CONTACT) then
         hitBox.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
       end

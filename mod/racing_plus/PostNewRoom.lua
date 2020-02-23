@@ -51,6 +51,12 @@ function PostNewRoom:Main()
     end
   end
 
+  -- Don't enter the callback if we are planning on immediately reseeding the floor
+  if FastTravel.reseed then
+    Isaac.DebugString("Not entering the NewRoom() function due to an imminent reseed.")
+    return
+  end
+
   PostNewRoom:NewRoom()
 end
 
@@ -77,7 +83,7 @@ function PostNewRoom:NewRoom()
   -- bombing from a room with enemies into an empty room
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
-  -- (this has to be above the resetting of the "g.run.usedStrength" variable)
+  -- (this has to be done before the resetting of the "g.run.usedStrength" variable)
   if character == PlayerType.PLAYER_KEEPER and -- 14
      g.run.keeper.baseHearts == 4 and
      g.run.usedStrength then
@@ -103,7 +109,7 @@ function PostNewRoom:NewRoom()
   FastTravel:CheckRoomRespawn()
 
   -- Check if we are just arriving on a new floor
-  FastTravel:CheckTrapdoor2()
+  FastTravel:CheckNewFloor()
 
   -- Check for miscellaneous crawlspace bugs
   FastTravel:CheckCrawlspaceMiscBugs()
@@ -549,6 +555,7 @@ end
 function PostNewRoom:Race()
   -- Local variables
   local stage = g.l:GetStage()
+  local stageType = g.l:GetStageType()
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
@@ -585,24 +592,57 @@ function PostNewRoom:Race()
   -- Check for rooms that should be manually seeded during seeded races
   SeededRooms:PostNewRoom()
 
-  -- Prevent players from skipping a floor by using the I AM ERROR room on Womb 2 on the "Everything" race goal
-  if stage == 8 and
-     roomType == RoomType.ROOM_ERROR and -- 3
-     g.race.goal == "Everything" then
+  -- Prevent players from skipping a floor on the "Everything" race goal
+  if g.race.goal == "Everything" and
+     (roomType == RoomType.ROOM_ERROR or -- 3
+      roomType == RoomType.ROOM_BLACK_MARKET) then -- 22
 
-    for i = 1, gridSize do
-      local gridEntity = g.r:GetGridEntity(i)
-      if gridEntity ~= nil then
-        local saveState = gridEntity:GetSaveState()
-        if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
-          -- Remove the crawlspace and spawn a Heaven Door (1000.39), which will get replaced on the next frame
-          -- in the "FastTravel:ReplaceHeavenDoor()" function
-          -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
-          g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-          Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
-                      gridEntity.Position, g.zeroVector, g.p)
-          Isaac.DebugString("Stopped the player from skipping Cathedral from the I AM ERROR room.")
+    local convertTrapdoorsToBeamsOfLight = false
+    local convertBeamsOfLightToTrapdoors = false
+    if stage == 8 then
+      convertTrapdoorsToBeamsOfLight = true
+
+    elseif stage == 10 and
+           stageType == 1 then -- Cathedral
+
+      convertBeamsOfLightToTrapdoors = true
+
+    elseif stage == 10 and
+           stageType == 0 then -- Sheol
+
+      convertTrapdoorsToBeamsOfLight = true
+    end
+    -- (it is impossible to get a I AM ERROR room or a Black Market on The Chest or the Dark Room)
+
+    if convertTrapdoorsToBeamsOfLight then
+      -- Replace all trapdoors with beams of light
+      for i = 1, gridSize do
+        local gridEntity = g.r:GetGridEntity(i)
+        if gridEntity ~= nil then
+          local saveState = gridEntity:GetSaveState()
+          if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
+            -- Remove the crawlspace and spawn a Heaven Door (1000.39), which will get replaced on the next frame
+            -- in the "FastTravel:ReplaceHeavenDoor()" function
+            -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
+            g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
+            Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
+                        gridEntity.Position, g.zeroVector, g.p)
+            Isaac.DebugString("Replaced a trapdoor with a heaven door for an Everything race.")
+          end
         end
+      end
+    end
+
+    if convertBeamsOfLightToTrapdoors then
+      -- Replace all beams of light with trapdoors
+      local heavenDoors = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, -- 1000.39
+                                           -1, false, false)
+      for _, heavenDoor in ipairs(heavenDoors) do
+        heavenDoor:Remove()
+
+        -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
+        Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, heavenDoor.Position, true) -- 17
+        Isaac.DebugString("Replaced a heaven door with a trapdoor for an Everything race.")
       end
     end
   end

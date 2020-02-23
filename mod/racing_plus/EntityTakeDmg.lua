@@ -33,7 +33,7 @@ function EntityTakeDmg:RemoveArmor(tookDamage, damageAmount, damageFlag, damageS
   -- Adjust their HP directly to avoid the damage scaling (armor)
   tookDamage.HitPoints = tookDamage.HitPoints - (damageAmount * 0.5)
 
-  -- Make him flash
+  -- Make the NPC flash
   g.run.dealingExtraDamage = true
   tookDamage:TakeDamage(0, 0, damageSource, damageCountdownFrames)
   g.run.dealingExtraDamage = false

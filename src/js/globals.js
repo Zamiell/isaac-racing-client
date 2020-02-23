@@ -56,13 +56,6 @@ module.exports = {
         placeMid: 0,
         place: 1,
         numEntrants: 1,
-
-        // Speedrun orders are filled in isaac.js
-        charOrder: [0],
-        hotkeyDrop: 0,
-        hotkeyDropTrinket: 0,
-        hotkeyDropPocket: 0,
-        hotkeySwitch: 0,
     },
     modLoaderSlot: 1,
     modName,

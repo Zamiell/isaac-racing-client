@@ -30,15 +30,22 @@ function Pedestals:Replace(pickup)
     return
   end
 
-  -- Don't replace anything if this is a few frames after using a Void (in case the player has consumed a D6)
-  if g.run.itemReplacementDelay >= gameFrameCount then
+  -- If the player uses a Void on a D6, then the pedestal replacement code will cause the pedestal to get duplicated
+  -- (instead of getting consumed/deleted)
+  -- Thus, explicitly check for this
+  if gameFrameCount == g.run.usedD6Frame + 1 and
+     gameFrameCount == g.run.usedVoidFrame + 1 then
+
+    -- Account for the Butter trinket
     if g.p:HasTrinket(TrinketType.TRINKET_BUTTER) and -- 122
        pickup.SubType == CollectibleType.COLLECTIBLE_VOID then -- 477
 
-      Isaac.DebugString("Void dropped from a Butter! trinket. Explicitly replacing this pedestal.")
+      Isaac.DebugString("Void dropped from a Butter! trinket. Explicitly not deleting this pedestal. " ..
+                        "(It will get replaced like any other normal pedestal.)")
       -- (this pedestal will not be rolled, even if the player has consumed a D6)
     else
-      Isaac.DebugString("Leaving pedestal with item " .. tostring(pickup.SubType) .. " due to Void usage.")
+      Isaac.DebugString("Not replacing pedestal with item " .. tostring(pickup.SubType) .. " due to " ..
+                        "Void + D6 usage. (It should be naturally consumed/deleted on the next frame.")
       return
     end
   end
@@ -123,13 +130,13 @@ function Pedestals:Replace(pickup)
     local big4rerollChance = math.random(1, 2)
     if big4rerollChance == 2 then
       if pickup.SubType == CollectibleType.COLLECTIBLE_MOMS_KNIFE then -- 114
-        specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
+        specialReroll = CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE
       elseif pickup.SubType == CollectibleType.COLLECTIBLE_TECH_X then -- 395
         specialReroll = CollectibleType.COLLECTIBLE_SACRED_HEART -- 182
       elseif pickup.SubType == CollectibleType.COLLECTIBLE_EPIC_FETUS then -- 168
         specialReroll = CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT -- 415
       elseif pickup.SubType == CollectibleType.COLLECTIBLE_IPECAC then -- 149
-        specialReroll = CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE
+        specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
       end
     end
 
@@ -274,15 +281,33 @@ function Pedestals:Replace(pickup)
   -- If we don't do this, then mods that manually update the price of items will fail
   newPedestal.AutoUpdatePrice = pickup.AutoUpdatePrice
 
+  -- We probably need to add this item to the tracking table,
+  -- but first check to see if it is already there
+  -- This is necessary to prevent the bug where touching an item will cause the next seed to get "skipped"
+  local alreadyInTable = false
+  for _, pedestal in ipairs(g.run.replacedPedestals) do
+    local pedestalPosition = Vector(pedestal.X, pedestal.Y)
+    if pedestal.room == roomIndex and
+       pedestalPosition:Distance(pickup.Position) <= 15 and -- A litte less than half a square
+       pedestal.seed == newSeed and
+       pedestal.playerGen == playerGen then
+
+      alreadyInTable = true
+      break
+    end
+  end
+
   -- Add it to the tracking table so that we don't replace it again
-  -- (and don't add random items to the index in case a banned item rolls into another banned item)
-  g.run.replacedPedestals[#g.run.replacedPedestals + 1] = {
-    room      = roomIndex,
-    X         = pickup.Position.X,
-    Y         = pickup.Position.Y,
-    seed      = newSeed,
-    playerGen = playerGen,
-  }
+  -- (we don't want to add subtype 0 items to the index in case a banned item rolls into another banned item)
+  if not alreadyInTable then
+    g.run.replacedPedestals[#g.run.replacedPedestals + 1] = {
+      room      = roomIndex,
+      X         = pickup.Position.X,
+      Y         = pickup.Position.Y,
+      seed      = newSeed,
+      playerGen = playerGen,
+    }
+  end
 
   --[[
   local replacedPedestal = g.run.replacedPedestals[#g.run.replacedPedestals]

@@ -5,13 +5,13 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.48.0"
+g.version = "v0.49.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
-  state = 0, -- See the "g.saveFileState" enum below
+  state         = 0, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
-  seed          = "RFR1 SAML", -- A randomly chosen seed (it shouldn't matter which seed we use)
+  seed          = "RFR1 SAML", -- A randomly chosen seed that contains a BP5 item
   activeItem    = CollectibleType.COLLECTIBLE_BLUE_BOX, -- 297
   passiveItem   = CollectibleType.COLLECTIBLE_JAW_BONE, -- 548
   -- Eden's items will change if we have The Babies Mod enabled
@@ -20,18 +20,18 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   -- Eden's items will change if we have Racing+ Rebalanced enabled
   activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105
   passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128
-  old          = {
-    challenge  = 0,
-    character  = 0,
-    seededRun  = false,
-    seed       = "",
+  old = {
+    challenge = 0,
+    character = 0,
+    seededRun = false,
+    seed      = "",
   },
 }
 g.saveFileState = {
-  NOT_CHECKED = 0,
+  NOT_CHECKED   = 0,
   GOING_TO_EDEN = 1, -- Going to the set seed with Eden
-  GOING_BACK = 2, -- Going back to the old challenge/character/seed
-  FINISHED = 3,
+  GOING_BACK    = 2, -- Going back to the old challenge/character/seed
+  FINISHED      = 3,
 }
 
 -- These are variables that are reset at the beginning of every run
@@ -56,12 +56,6 @@ g.race = {
   placeMid          = 0,           -- This is either the number of people ready, or the non-fnished place
   place             = 1,           -- This is the final place
   numEntrants       = 1,           -- The number of people in the race
-
-  charOrder         = {0},         -- The order for a multi-character speedrun
-  hotkeyDrop        = 0,           -- A custom key binding for fast-drop, or 0 if not set
-  hotkeyDropTrinket = 0,           -- A custom key binding for fast-drop (only trinkets), or 0 if not set
-  hotkeyDropPocket  = 0,           -- A custom key binding for fast-drop (only pocket items), or 0 if not set
-  hotkeySwitch      = 0,           -- A custom key binding for a Schoolbag switch, or 0 if not set
 }
 -- (unofficially, this can also have "timer = false")
 
@@ -98,6 +92,9 @@ g.RNGCounter = {
   Undefined     = 0, -- 324
   Telepills     = 0, -- 19
 }
+
+-- The contents of the "Racing+ Data" mod save.dat file is cached in memory
+g.saveData = {}
 
 --
 -- Cached API functions
@@ -249,6 +246,7 @@ function g:InitRun()
   g.run.debugDamage       = false
   g.run.debugTears        = false
   g.run.debugSpeed        = false
+  g.run.debugChaosCard    = false
 
   -- Tracking per level
   g.run.currentFloor        = 0
@@ -273,7 +271,8 @@ function g:InitRun()
   g.run.streakFrame           = 0
   g.run.streakForce           = false
   g.run.streakIgnore          = false
-  g.run.itemReplacementDelay  = 0 -- Set when Void is used
+  g.run.usedD6Frame           = 0 -- Set when the D6 is used; used to prevent bugs with The Void + D6
+  g.run.usedVoidFrame         = 0 -- Set when Void is used; used to prevent bugs with The Void + D6
   g.run.usedTelepills         = false
   g.run.giveExtraCharge       = false -- Used to fix The Battery + 9 Volt synergy
   g.run.droppedButterItem     = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
@@ -305,13 +304,10 @@ function g:InitRun()
   g.run.bossCommand           = false -- Used in Racing+ Rebalanced
   g.run.questionMarkCard      = 0 -- Equal to the last game frame that one was used
   g.run.gettingCollectible    = false
-  g.run.chaosCardTears        = false -- Used while debugging
   g.run.dealingExtraDamage    = false -- Used for Hush
   g.run.firingExtraTear       = false -- Used for Hush
   g.run.customBossRoomIndex   = -1000 -- Used in Season 7
   g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
-  g.run.krampusKillFrame      = 0 -- Used to delete vanilla Krampus items
-  g.run.angelKillFrame        = 0 -- Used to delete vanilla key pieces
   g.run.spamButtons           = false -- Used to spam Blood Rights
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
 
@@ -335,9 +331,10 @@ function g:InitRun()
     upwards    = false,
     floor      = 0,
     frame      = 0,
-    scale      = {},
+    scale      = {}, -- Needs to be a table in order to handle multiple players
     voidPortal = false,
     megaSatan  = false,
+    reseeding  = false, -- True if we will reseed the floor after getting there
   }
 
   -- Crawlspace tracking
@@ -390,7 +387,8 @@ function g:InitRun()
     reviveFrame     = 0,
     guppysCollar    = false,
     position        = g.zeroVector,
-    time            = 0,
+    debuffEndTime   = 0,
+    frameOfLastDD   = 0,
     items           = {},
     charge          = 0,
     spriteScale     = g.zeroVector,

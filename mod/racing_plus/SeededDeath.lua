@@ -21,8 +21,17 @@ function SeededDeath:PostUpdate()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local previousRoomIndex = g.l:GetPreviousRoomIndex()
+  local roomType = g.r:GetType()
   local character = g.p:GetPlayerType()
   local playerSprite = g.p:GetSprite()
+
+  -- Check to see if the player is taking a devil deal
+  if not g.p:IsItemQueueEmpty() and
+     (roomType == RoomType.ROOM_DEVIL or -- 14
+      roomType == RoomType.ROOM_BLACK_MARKET) then -- 22
+
+    g.run.seededDeath.frameOfLastDD = gameFrameCount
+  end
 
   -- Fix the bug where The Forgotten will not be properly faded
   -- if he switched from The Soul immediately before the debuff occured
@@ -75,10 +84,10 @@ function SeededDeath:PostUpdate()
 
   -- Check to see if the debuff is over
   if g.run.seededDeath.state == SeededDeath.state.GHOST_FORM then
-    local elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
-    if elapsedTime <= 0 then
+    local remainingTime = g.run.seededDeath.debuffEndTime - Isaac.GetTime()
+    if remainingTime <= 0 then
       g.run.seededDeath.state = SeededDeath.state.DISABLED
-      g.run.seededDeath.time = 0
+      g.run.seededDeath.debuffEndTime = 0
       SeededDeath:DebuffOff()
       g.p:AnimateHappy()
       Isaac.DebugString("Seeded death debuff complete.")
@@ -139,7 +148,7 @@ function SeededDeath:PostNewRoom()
     if g.debug then
       debuffTimeMilliseconds = 5000
     end
-    g.run.seededDeath.time = Isaac.GetTime() + debuffTimeMilliseconds
+    g.run.seededDeath.debuffEndTime = Isaac.GetTime() + debuffTimeMilliseconds
 
     -- Play the animation where Isaac lies in the fetal position
     g.p:PlayExtraAnimation("AppearVanilla")
@@ -207,9 +216,11 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
     return
   end
 
-  -- Do not revive the player if they are killing themselves via taking a devil deal
-  local bit = (damageFlag & (1 << 10)) >> 10 -- DamageFlag.DAMAGE_DEVIL
-  if bit == 1 then
+  -- Do not revive the player if they took a devil deal within the past 5 seconds (150 game frames)
+  -- (we cannot use the "DamageFlag.DAMAGE_DEVIL" to determine this because the player could have
+  -- taken a devil deal and then died to a fire / spikes / etc.)
+  if gameFrameCount <= g.run.seededDeath.frameOfLastDD + 150 then
+    Isaac.DebugString("Not invoking seeded death since we are within 5 seconds of a devil deal.")
     return
   end
 
@@ -557,6 +568,32 @@ function SeededDeath:DebuffOff()
   for _, checkpoint in ipairs(checkpoints) do
     checkpoint:ToPickup().Timeout = -1
   end
+end
+
+function SeededDeath:DeleteMegaBlastLaser(laser)
+  if g.run.seededDeath.debuffEndTime == 0 then
+    return
+  end
+
+  local remainingDebuffTime = g.run.seededDeath.debuffEndTime - Isaac.GetTime()
+  if remainingDebuffTime <= 0 then
+    return
+  end
+
+  -- There is no way to stop a Mega Blast while it is currently going with the API
+  -- It will keep firing, so we need to delete it on every frame
+  laser:Remove()
+
+  -- Even though we delete it, it will still show up for a frame
+  -- Thus, the Mega Blast laser will look like it is intermittently shooting, even though it deals no damage
+  -- Make it invisible to fix this
+  laser.Visible = false
+  -- (this also has the side effect of muting the sound effects)
+
+  -- Even though we make it invisible, it still displays effects when it hits a wall
+  -- So, reduce the size of it to mitigate this
+  laser.SpriteScale = g.zeroVector
+  laser.SizeMulti = g.zeroVector
 end
 
 return SeededDeath

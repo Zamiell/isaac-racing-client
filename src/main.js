@@ -469,7 +469,7 @@ app.on('before-quit', () => {
             continue;
         }
 
-        // Read it and set all non-speedrun order variables to defaults
+        // Read it and set all variables to defaults
         let json;
         try {
             json = JSON.parse(fs.readFileSync(saveDat, 'utf8'));
@@ -489,21 +489,6 @@ app.on('before-quit', () => {
         json.countdown = -1;
         json.placeMid = 0;
         json.place = 1;
-        if (typeof json.charOrder === 'undefined') {
-            json.charOrder = [0];
-        }
-        if (typeof json.hotkeyDrop === 'undefined') {
-            json.hotkeyDrop = 0;
-        }
-        if (typeof json.hotkeyDropTrinket === 'undefined') {
-            json.hotkeyDropTrinket = 0;
-        }
-        if (typeof json.hotkeyDropPocket === 'undefined') {
-            json.hotkeyDropPocket = 0;
-        }
-        if (typeof json.hotkeySwitch === 'undefined') {
-            json.hotkeySwitch = 0;
-        }
         try {
             fs.writeFileSync(saveDat, JSON.stringify(json), 'utf8');
             log.info(`Wrote default values to "save${i}.dat".`);

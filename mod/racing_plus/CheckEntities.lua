@@ -77,6 +77,22 @@ CheckEntities.functions[18] = function(entity)
   end
 end
 
+-- EntityType.ENTITY_FALLEN (81)
+CheckEntities.functions[81] = function(entity)
+  -- We want to delete Krampus on the frame before he drops the vanilla item
+  -- This cannot be in the NPCUpdate callback because that does not fire when an NPC is in the death animation
+  local data = entity:GetData()
+  if data.killedFrame == nil then
+    -- He is not dead yet
+    return
+  end
+  local gameFrameCount = g.g:GetFrameCount()
+  if gameFrameCount >= data.killedFrame + 28 then -- He disappears after 29 frames
+    entity:Remove()
+    Isaac.DebugString("Manually removed Krampus one frame before his natural removal.")
+  end
+end
+
 -- EntityType.ENTITY_THE_HAUNT (260)
 CheckEntities.functions[260] = function(entity)
   -- We only care about Lil' Haunts (260.10)
@@ -132,6 +148,25 @@ CheckEntities.functions[260] = function(entity)
   end
 end
 
+-- EntityType.ENTITY_URIEL (271)
+-- EntityType.ENTITY_GABRIEL (272)
+function CheckEntities.Angel(entity)
+  -- We want to delete angels on the frame before they drop the vanilla item
+  -- This cannot be in the NPCUpdate callback because that does not fire when an NPC is in the death animation
+  local data = entity:GetData()
+  if data.killedFrame == nil then
+    -- It is not dead yet
+    return
+  end
+  local gameFrameCount = g.g:GetFrameCount()
+  if gameFrameCount >= data.killedFrame + 23 then -- It disappears after 24 frames
+    entity:Remove()
+    Isaac.DebugString("Manually removed an angel one frame before its natural removal.")
+  end
+end
+CheckEntities.functions[271] = CheckEntities.Angel
+CheckEntities.functions[272] = CheckEntities.Angel
+
 -- EntityType.ENTITY_RACE_TROPHY
 CheckEntities.functions[EntityType.ENTITY_RACE_TROPHY] = function(entity)
   -- We can't check in the NPC_UPDATE callback since it will not fire during the "Appear" animation
@@ -163,3 +198,5 @@ CheckEntities.functions[EntityType.ENTITY_RACE_TROPHY] = function(entity)
 end
 
 return CheckEntities
+
+

@@ -1,8 +1,7 @@
 local ChangeCharOrder = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
-local SaveDat  = require("racing_plus/savedat")
+local g = require("racing_plus/globals")
 
 --
 -- Constants
@@ -224,6 +223,9 @@ ChangeCharOrder.sprites = {} -- Reset in the PostGameStarted callback
 function ChangeCharOrder:PostUpdate()
   local challenge = Isaac.GetChallenge()
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+  if RacingPlusData == nil then
     return
   end
 
@@ -548,15 +550,8 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
           -- Mark to create new buttons (for the items) on the next frame
           ChangeCharOrder.createButtonsFrame = gameFrameCount + 1
         else
-          -- Insert the type of speedrun as the first element in the table
-          table.insert(ChangeCharOrder.charOrder, 1, ChangeCharOrder.seasonChosen)
-
-          -- We are done, so write the changes to the "save.dat" file
-          g.race.charOrder = ChangeCharOrder.charOrder
-          SaveDat:Save()
-
-          -- Let the client know about the new order so that it does not overwrite it later
-          Isaac.DebugString("New charOrder: " .. g:TableToString(g.race.charOrder))
+          -- We are done, so write the changes to the Racing+ Data mod's "save#.dat" file
+          RacingPlusData:Set("charOrder-" .. ChangeCharOrder.seasonChosen, ChangeCharOrder.charOrder)
 
           g.g:Fadeout(0.05, g.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
@@ -603,17 +598,10 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
         end
 
         -- Concatentate the character order and the items chosen into one big table
-        g.race.charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
+        local charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
 
-        -- Insert the type of speedrun as the first element in the table
-        table.insert(ChangeCharOrder.charOrder, 1, ChangeCharOrder.seasonChosen)
-
-        -- We are done, so write the changes to the "save.dat" file
-        g.race.charOrder = ChangeCharOrder.charOrder
-        SaveDat:Save()
-
-        -- Let the client know about the new order so that it does not overwrite it later
-        Isaac.DebugString("New charOrder: " .. g:TableToString(g.race.charOrder))
+        -- We are done, so write the changes to the Racing+ Data mod's "save#.dat" file
+        RacingPlusData:Set("charOrder-" .. ChangeCharOrder.seasonChosen, charOrder)
 
         g.g:Fadeout(0.05, g.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
       end
@@ -658,7 +646,7 @@ function ChangeCharOrder:CheckButtonPressedBan1(gridEntity)
         -- They finished banning a big 4 item
 
         -- Concatentate the character order and the items chosen into one big table
-        g.race.charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
+        ChangeCharOrder.charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
 
         -- Reset the items chosen
         ChangeCharOrder.itemOrder = {}
@@ -692,17 +680,10 @@ function ChangeCharOrder:CheckButtonPressedBan2(gridEntity)
 
       if #ChangeCharOrder.itemOrder == season.itemBans then
         -- Concatentate the previous data and the new items chosen into one big table
-        g.race.charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
+        local charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
 
-        -- Insert the type of speedrun as the first element in the table
-        table.insert(ChangeCharOrder.charOrder, 1, ChangeCharOrder.seasonChosen)
-
-        -- We are done, so write the changes to the "save.dat" file
-        g.race.charOrder = ChangeCharOrder.charOrder
-        SaveDat:Save()
-
-        -- Let the client know about the new order so that it does not overwrite it later
-        Isaac.DebugString("New charOrder: " .. g:TableToString(g.race.charOrder))
+        -- We are done, so write the changes to the Racing+ Data mod's "save#.dat" file
+        RacingPlusData:Set("charOrder-" .. ChangeCharOrder.seasonChosen, charOrder)
 
         g.g:Fadeout(0.05, g.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
       end
@@ -721,6 +702,9 @@ function ChangeCharOrder:PostRender()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+  if RacingPlusData == nil then
     return
   end
 
@@ -814,6 +798,9 @@ function ChangeCharOrder:PostNewRoom()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("Change Char Order") then
+    return
+  end
+  if RacingPlusData == nil then
     return
   end
 

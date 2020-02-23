@@ -193,7 +193,11 @@ function PreUseItem:PreventItemPedestalEffects(itemID)
 
   -- Car Battery will mess up the D6 and D100 (and possibly others) because
   -- this function will be entered twice on the same frame (and there will be no time to replace the pedestal)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) then -- 356
+  -- The same thing is true for Blank Card + Perthro rune + Tarot Cloth
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CAR_BATTERY) or -- 356
+     (g.p:HasCollectible(CollectibleType.COLLECTIBLE_BLANK_CARD) and -- 451
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_TAROT_CLOTH)) then -- 286
+
     return
   end
 

@@ -1,7 +1,13 @@
 local PreEntitySpawn = {}
 
--- If we want to prevent entities from spawning, we cannot return an entity type of 0, since the game will crash
--- Instead, we can return an effect with a variant of 0, which will just be a non-interacting invisible thing
+-- Note that:
+-- 1) For this callback, you cannot specify an entity type as a second parameter
+--    (e.g. "RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, PreEntitySpawn.Pickup, EntityType.ENTITY_PICKUP)")
+-- 2) If we want to prevent entities from spawning, we cannot return an entity type of 0, since the game will crash
+--    Instead, in most cases we can return an effect with a variant of 0
+--    which is a non-interacting invisible thing
+-- 3) Sometimes if you return something other than the type (e.g. replacing a pickup with an effect),
+--    the game will crash, so you need to replace a pickup with a blank pickup (as opposed to a blank effect)
 
 -- Includes
 local g = require("racing_plus/globals")
@@ -37,32 +43,9 @@ end
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
 function PreEntitySpawn.Collectible(subType, position, spawner, seed)
   -- Local variables
-  local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local challenge = Isaac.GetChallenge()
-
-  -- Racing+ spawns Krampus items early
-  -- So we need to delete the vanilla Krampus items
-  -- They drop exactly 29 frames after Krampus is killed
-  if (subType == CollectibleType.COLLECTIBLE_LUMP_OF_COAL or -- 132
-      subType == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) and -- 293
-     gameFrameCount == g.run.krampusKillFrame + 29 then
-
-    Isaac.DebugString("Removed a naturally spawned Krampus item.")
-    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
-  end
-
-  -- Racing+ spawns key pieces from angels early
-  -- So we need to delete the vanilla key pieces
-  -- They drop exactly 24 frames after an angel is killed
-  if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 or -- 238
-      subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
-     gameFrameCount == g.run.angelKillFrame + 24 then
-
-    Isaac.DebugString("Removed a naturally spawned Key Piece.")
-    return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
-  end
 
   -- Prevent the boss item from spawning in The Void after defeating Ultra Greed
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and

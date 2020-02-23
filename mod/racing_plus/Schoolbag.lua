@@ -307,17 +307,20 @@ function Schoolbag:CheckInput()
     return
   end
 
-  local button = g.race.hotkeySwitch
-  if button ~= 0 and button ~= nil then
-    -- If they have a custom Schoolbag-switch key bound, then use that
+  local hotkeySwitch = RacingPlusData:Get("hotkeySwitch")
+  if hotkeySwitch ~= nil and
+     hotkeySwitch ~= 0 then
+
+    -- They have a custom Schoolbag-switch hotkey bound, so we need check for that input
     -- (we use "IsButtonPressed()" instead of "IsButtonTriggered()" because
     -- the latter is not very responsive with fast sequences of inputs)
     -- (we check all inputs instead of "player.ControllerIndex" because
     -- a controller player might be using the keyboard for their custom hotkey)
     local pressed = false
     for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-      if Input.IsButtonPressed(g.race.hotkeySwitch, i) then
+      if Input.IsButtonPressed(hotkeySwitch, i) then
         pressed = true
+        break
       end
     end
     if not pressed then
@@ -327,9 +330,11 @@ function Schoolbag:CheckInput()
       return
     end
   else
-    -- If they do not have a custom key bound, then default to the same button that is used for card/pill switching
-    -- We use "IsActionPressed()" instead of "IsActionTriggered()" because
-    -- the latter is not very responsive with fast sequences of inputs
+    -- They do not have a Schoolbag-switch hotkey bound
+    -- Default to using the same button that is used for the vanilla Schoolbag
+    -- (e.g. card/pill switch)
+    -- (we use "IsActionPressed()" instead of "IsActionTriggered()" because
+    -- the latter is not very responsive with fast sequences of inputs)
     if not Input.IsActionPressed(ButtonAction.ACTION_DROP, g.p.ControllerIndex) then -- 11
       g.run.schoolbag.pressed = false
       return
@@ -414,8 +419,14 @@ function Schoolbag:Switch()
   g.p:AddCacheFlags(allCacheFlagsMinusFamiliars)
   g.p:EvaluateItems()
 
-  -- Remove the costume, if any (some items give a costume, like A Pony)
-  if activeItem ~= 0 then
+  -- If the old active item granted a non-temporary costume, we need to remove it
+  -- Only certain specific items grant permanent costumes;
+  -- this list was determined by testing all active items through trial and error
+  if activeItem == CollectibleType.COLLECTIBLE_KAMIKAZE or -- 40
+     activeItem == CollectibleType.COLLECTIBLE_MONSTROS_TOOTH or -- 86
+     activeItem == CollectibleType.COLLECTIBLE_PONY or -- 130
+     activeItem == CollectibleType.COLLECTIBLE_WHITE_PONY then -- 181
+
     g.p:RemoveCostume(g.itemConfig:GetCollectible(activeItem))
   end
 

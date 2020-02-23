@@ -1,5 +1,23 @@
 # Racing+ Version History and News
 
+### *v0.49.0* - February 22nd, 2020
+
+* If you play custom challenges, you must now subscribe to the [Racing+ Data mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809) on the Steam Workshop. Your character order will no longer reset after every patch. Furthermore, you are no longer limited to having one character order stored at a time, meaning that you can store orders for each season.
+* If you use the extra keybindings provided by Racing+, you must now subscribe to the [Racing+ Data mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809) on the Steam Workshop. Your settings will no longer reset after every patch.
+* Samael now gains double damage with 20/20, triple damage with The Inner Eye, and quadrule damage when picking up Mutant Spider. (This only applies to melee attacks. These effects can stack.)
+* In unseeded races and season 5, Mom's Knife now fart-rerolls into Mutant Spider's Inner Eye and Ipecac now fart-rerolls into Incubus. (Thanks antizoubilamakA)
+* Fixed the bug where an item would not drop from an angel if you had the Filigree Feather under certain conditions. (Thanks mgln)
+* Fixed the bug where the Schoolbag would incorrectly remove some costumes/shields when swapping an item under certain conditions. (Thanks mgln)
+* Fixed the bug where Maggy's Faith would give you an extra heart container if the floor was reseeded. (Thanks Gamonymous)
+* Fixed the bug where Blank Card + Perthro rune + Tarot Cloth would give you unlimited rolls. (Thanks Mr. Oca)
+* Fixed the bug where touching items would cause them to reroll into something else under certain conditions. (Thanks mgln)
+* Fixed the bug where the NO! trinket would cause players to get different items in seeded races under certain conditions. (Thanks mgln)
+* Fixed the bug where you would not permanently die after taking a devil deal in a seeded race under certain conditions. (Thanks mgln)
+* Fixed the bug where places would not show correctly in Everything races under certain conditions.
+* Fixed the bug where you would not consistently appear at the center of the screen after a floor transition during Everything races and after taking a Victory Lap.
+* Fixed the bug where you could skip a floor through the Black Market in an Everything race. (Thanks thereisnofuture)
+* Fixed the bug where using the Void could prevent items from being rolled under certain conditions. (Thanks Hispa)
+
 ### *v0.48.0* - January 23rd, 2020
 
 * The client will now show your row in blue so that you can easily distinguish it from the other racers. Thanks to InvaderTim for programming this.
@@ -232,7 +250,7 @@ Mod changes:
 
 ### *v0.44.1* - June 28th, 2019
 
-* Scared Hearts and Sticky Nickels now have unique graphics. Thanks goes to piber20 for creating the graphics for this.
+* Scared Hearts and Sticky Nickels now have unique graphics. Thanks goes to [piber20](https://steamcommunity.com/id/piber20) for creating the graphics for this.
 * Fixed the bug where stone entities could cause duplicate pickups to spawn. (Thanks Gamonymous)
 * Fixed the bug where having Tarot Cloth would cause the D6 to recharge when using a ? Card under certain conditions. (Thanks Gamonymous)
 
@@ -273,7 +291,7 @@ Mod changes:
 * Various parts of the Racing+ and Babies Mod are now more optimized, which means the mod should work slightly better on slower computers.
 * Angels on the Isaac fight are now guaranteed to spawn 60 units away (instead of 40).
 * Reverted the custom sound effect when you try to plant a bomb while at 0 bombs.
-* Fixed the (vanilla) bug where beams of light from Conquest and the second phase of Isaac would never actually hit the player. The attack has been recoded and has a new animation. Thanks to piber20 for programming this.
+* Fixed the (vanilla) bug where beams of light from Conquest and the second phase of Isaac would never actually hit the player. The attack has been recoded and has a new animation. Thanks to [piber20](https://steamcommunity.com/id/piber20) for programming this.
 * Fixed the bug where Book of Sin and Dead Sea Scrolls would not work correctly with the Schoolbag and the Butter! trinket.
 * Fixed the bug where Mushrooms would not deal damage on floors other than Caves.
 * Fixed the bug where seeded floors were disabled.
@@ -312,8 +330,8 @@ Mod changes:
 
 * Green player creep is now changed to blue (instead of red). (Thanks Moucheron Quipet)
 * The sprite for Mysterious Liquid has been changed to blue (instead of red). Thanks to Thoday for making the graphics for this.
-* The Lost now shows his health in the UI. Thanks goes to piber20 for creating the graphics for this.
-* Holy Mantle now shows the effect in the UI. Thanks goes to piber20 for creating the graphics for this.
+* The Lost now shows his health in the UI. Thanks goes to [piber20](https://steamcommunity.com/id/piber20) for creating the graphics for this.
+* Holy Mantle now shows the effect in the UI. Thanks goes to [piber20](https://steamcommunity.com/id/piber20) for creating the graphics for this.
 * Fixed the (vanilla) bug where D Infinity was incorrectly stylized.
 
 ### *v0.38.0* - June 2nd, 2019
@@ -1108,7 +1126,7 @@ Mod Changes:
 * Changed the custom sprite for the Daemon's Tail trinket to have a 1 pixel border instead of a 2 pixel border.
 * Removed the custom sprites for the Chaos card, the Huge Growth card, the Ancient Recall card, the Era Walk card, the Credit Card, the Cards Against Humanity Card, the Get Out of Jail Free card, and the Holy Card (since the sprites were updated in the vanilla game).
 * The Rules card now uses the old Cards Against Humanity sprite.
-* The ? card sprite is updated to the new version from piber20's Unique Card Backs mod.
+* The ? card sprite is updated to the new version from the Unique Card Backs mod by [piber20](https://steamcommunity.com/id/piber20).
 * Reverted the new "LightTravel" animation back to the pre-Booster Pack 5 one, since it is unnecessarily slow.
 
 ### *v0.17.4* - April 28th, 2018

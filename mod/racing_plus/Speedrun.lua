@@ -1,12 +1,25 @@
 local Speedrun = {}
 
 -- Includes
-local g               = require("racing_plus/globals")
-local ChangeCharOrder = require("racing_plus/changecharorder")
+local g = require("racing_plus/globals")
 
 --
 -- Constants
 --
+
+-- The challenge table maps challenge names to abbreviations and
+-- the number of elements in the "character order" table
+Speedrun.challengeTable = {
+  [Isaac.GetChallengeIdByName("R+9 (Season 1)")]  = {"R9S1",  9},
+  [Isaac.GetChallengeIdByName("R+14 (Season 1)")] = {"R14S1", 14},
+  [Isaac.GetChallengeIdByName("R+7 (Season 2)")]  = {"R7S2",  7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 3)")]  = {"R7S3",  7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 4)")]  = {"R7S4",  14}, -- (7 characters + 7 starting items)
+  -- (there is no character order for season 5)
+  [Isaac.GetChallengeIdByName("R+7 (Season 6)")]  = {"R7S6",  11}, -- (7 characters + 3 item bans + 1 big 4 item ban)
+  [Isaac.GetChallengeIdByName("R+7 (Season 7)")]  = {"R7S7",  7},
+  [Isaac.GetChallengeIdByName("R+15 (Vanilla)")]  = {"R15V",  15},
+}
 
 Speedrun.itemStartsS5 = {
   CollectibleType.COLLECTIBLE_MOMS_KNIFE, -- 114
@@ -265,68 +278,31 @@ function Speedrun:InSpeedrun()
 end
 
 function Speedrun:CheckValidCharOrder()
+  -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if g.race.charOrder == nil then
+  -- There is no character order for season 5
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
+    return true
+  end
+
+  if RacingPlusData == nil then
     return false
   end
-  local charOrderType = g.race.charOrder[1]
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") and
-     (charOrderType ~= "R9S1" or
-      #g.race.charOrder ~= 10) then
-
+  local abbreviation = Speedrun.challengeTable[challenge][1]
+  local numElements = Speedrun.challengeTable[challenge][2]
+  if abbreviation == nil then
+    Isaac.DebugString("Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable.")
     return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") and
-         (charOrderType ~= "R14S1" or
-          #g.race.charOrder ~= 15) then
-
+  end
+  local charOrder = RacingPlusData:Get("charOrder-" .. abbreviation)
+  if charOrder == nil then
     return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") and
-         (charOrderType ~= "R7S2" or
-          #g.race.charOrder ~= 8) then
-
+  end
+  if type(charOrder) ~= "table" then
     return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") and
-         (charOrderType ~= "R7S3" or
-          #g.race.charOrder ~= 8) then
-
-    return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-         (charOrderType ~= "R7S4" or
-          #g.race.charOrder ~= 15) then -- 7 characters + 7 starting items
-
-    return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
-    -- There is no character order in season 5
-    return true
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-         (charOrderType ~= "R7S6" or
-          #g.race.charOrder ~= 1 + 7 + 1 + ChangeCharOrder.seasons.R7S6.itemBans) then
-
-    return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-         (charOrderType ~= "R7S7" or
-          #g.race.charOrder ~= 8) then
-
-    return false
-
-  elseif Speedrun.inSeededSpeedrun and
-         (charOrderType ~= "R7SS" or
-          #g.race.charOrder ~= 8) then
-
-    return false
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") and
-         (charOrderType ~= "R15V" or
-          #g.race.charOrder ~= 16) then
-
+  end
+  if #charOrder ~= numElements then
     return false
   end
 
@@ -334,7 +310,10 @@ function Speedrun:CheckValidCharOrder()
 end
 
 function Speedrun:GetCurrentChar()
+  -- Local variables
   local challenge = Isaac.GetChallenge()
+
+  -- In season 5, we always return the character ID of "Random Baby"
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
     local randomBabyType = Isaac.GetPlayerTypeByName("Random Baby")
     if randomBabyType == -1 then
@@ -342,8 +321,28 @@ function Speedrun:GetCurrentChar()
     end
     return randomBabyType
   end
-  return g.race.charOrder[Speedrun.charNum + 1]
-  -- We add one since the first element is the type of multi-character speedrun
+
+  -- Otherwise, we get the value from the Racing+ Data mod's "save#.dat" file
+  if RacingPlusData == nil then
+    return 0
+  end
+  local abbreviation = Speedrun.challengeTable[challenge][1]
+  if abbreviation == nil then
+    Isaac.DebugString("Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable.")
+    return false
+  end
+  local charOrder = RacingPlusData:Get("charOrder-" .. abbreviation)
+  if charOrder == nil then
+    return 0
+  end
+  if type(charOrder) ~= "table" then
+    return 0
+  end
+  local charNum = charOrder[Speedrun.charNum]
+  if charNum == nil then
+    return 0
+  end
+  return charNum
 end
 
 function Speedrun:IsOnFinalCharacter()

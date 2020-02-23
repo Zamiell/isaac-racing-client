@@ -240,15 +240,17 @@ function Timer:DisplayRun()
 end
 
 -- This is the timer that shows up when the player has died in a seeded race
-function Timer:DisplaySecond()
+function Timer:DisplaySeededDeath()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
   local elapsedTime
+  -- (this is actually the remaining debuff time,
+  -- but we name it elapsedTime to keep it consistent with the above code block)
   local adjustTimerRight = false
   local moveTimerToBottomRight = false
   if g.run.seededDeath.state >= SeededDeath.state.FETAL_POSITION then
-    elapsedTime = g.run.seededDeath.time - Isaac.GetTime()
+    elapsedTime = g.run.seededDeath.debuffEndTime - Isaac.GetTime()
     if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
        challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
 

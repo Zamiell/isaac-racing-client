@@ -82,10 +82,10 @@
 * Each baby starts with the stats of Isaac, one red heart, and one half soul heart.
 * Each baby starts with the Schoolbag. (It starts empty by default.)
 * The following items have a 50% chance to be rerolled into something else if found in a Basement 1 Treasure Room:
-  * Mom's Knife --> Incubus
+  * Mom's Knife --> Mutant Spider + The Inner Eye
   * Tech X --> Crown of Light
   * Epic Fetus --> Sacred Heart
-  * Ipecac --> Mutant Spider + The Inner Eye
+  * Ipecac --> Incubus
 * Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The following only applies to the second character and beyond:
   * Each baby will randomly start with one of the following items:

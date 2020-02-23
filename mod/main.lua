@@ -161,6 +161,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC413,
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item44,
                        CollectibleType.COLLECTIBLE_TELEPORT) -- 44
 -- (this callback is also used by Broken Remote)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item105,
+                       CollectibleType.COLLECTIBLE_D6) -- 105
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item127,
                        CollectibleType.COLLECTIBLE_FORGET_ME_NOW) -- 127
 RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item286,

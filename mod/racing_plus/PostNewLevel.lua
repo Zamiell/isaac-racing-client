@@ -28,11 +28,9 @@ function PostNewLevel:Main()
     g.run.reseededFloor = false
   end
 
-  -- We need to delay if we are doing a "reseed" immediately after a "stage X",
-  -- because the "PostNewRoom:CheckTrapdoor2()" function will fire before the reseed happens
-  if FastTravel.delayNewRoomCallback then
-    FastTravel.delayNewRoomCallback = false
-    Isaac.DebugString("Delaying before loading the room due to an imminent reseed.")
+  -- Don't enter the callback if we are planning on immediately reseeding the floor
+  if FastTravel.reseed then
+    Isaac.DebugString("Not entering the NewLevel() function due to an imminent reseed.")
     return
   end
 
@@ -77,6 +75,10 @@ function PostNewLevel:NewLevel()
 
       g.run.reseededFloor = true
       g.run.reseedCount = g.run.reseedCount + 1
+      if g.p:GetEternalHearts() == 1 then
+        -- Prevent the bug where Maggy's Faith will give an extra red heart container if we reseed a floor
+        g.p:AddEternalHearts(-1)
+      end
       g:ExecuteCommand("reseed")
       return
     end

@@ -10,7 +10,10 @@ local g = require("racing_plus/globals")
 -- Check for fast-drop inputs
 function FastDrop:CheckDropInput()
   -- If they do not have a hotkey bound, do nothing
-  if g.race.hotkeyDrop == 0 or g.race.hotkeyDrop == nil then
+  local hotkeyDrop = RacingPlusData:Get("hotkeyDrop")
+  if hotkeyDrop == nil or
+     hotkeyDrop == 0 then
+
     return
   end
 
@@ -21,7 +24,7 @@ function FastDrop:CheckDropInput()
   -- it is faster to drop on press than on release)
   local pressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsButtonPressed(g.race.hotkeyDrop, i) then
+    if Input.IsButtonPressed(hotkeyDrop, i) then
       pressed = true
       break
     end
@@ -46,7 +49,10 @@ end
 -- Check for fast-drop inputs (trinket-only)
 function FastDrop:CheckDropInputTrinket()
   -- If they do not have a hotkey bound, do nothing
-  if g.race.hotkeyDropTrinket == 0 or g.race.hotkeyDropTrinket == nil then
+  local hotkeyDropTrinket = RacingPlusData:Get("hotkeyDropTrinket")
+  if hotkeyDropTrinket == nil or
+     hotkeyDropTrinket == 0 then
+
     return
   end
 
@@ -57,7 +63,7 @@ function FastDrop:CheckDropInputTrinket()
   -- it is faster to drop on press than on release)
   local pressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsButtonPressed(g.race.hotkeyDropTrinket, i) then
+    if Input.IsButtonPressed(hotkeyDropTrinket, i) then
       pressed = true
       break
     end
@@ -66,7 +72,8 @@ function FastDrop:CheckDropInputTrinket()
     return
   end
 
-  -- Trinkets (this does handle the Tick properly)
+  -- Trinkets
+  -- (this code does handle the Tick properly)
   local pos1 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
   g.p:DropTrinket(pos1, false)
   local pos2 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
@@ -76,7 +83,10 @@ end
 -- Check for fast-drop inputs (pocket-item-only)
 function FastDrop:CheckDropInputPocket()
   -- If they do not have a hotkey bound, do nothing
-  if g.race.hotkeyDropPocket == 0 or g.race.hotkeyDropPocket == nil then
+  local hotkeyDropPocket = RacingPlusData:Get("hotkeyDropPocket")
+  if hotkeyDropPocket == nil or
+     hotkeyDropPocket == 0 then
+
     return
   end
 
@@ -87,7 +97,7 @@ function FastDrop:CheckDropInputPocket()
   -- it is faster to drop on press than on release)
   local pressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsButtonPressed(g.race.hotkeyDropPocket, i) then
+    if Input.IsButtonPressed(hotkeyDropPocket, i) then
       pressed = true
       break
     end

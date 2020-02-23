@@ -105,10 +105,10 @@ function PostEntityKill:Entity78(entity)
 
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
   local situations = {
-    NEITHER = 0,
+    NEITHER       = 0,
     BEAM_OF_LIGHT = 1,
-    TRAPDOOR = 2,
-    BOTH = 3,
+    TRAPDOOR      = 2,
+    BOTH          = 3,
   }
   local situation
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
@@ -262,7 +262,7 @@ end
 -- Furthermore, it fixes the seeding issue where if you have Gimpy and Krampus drops a heart,
 -- the spawned pedestal to be moved one tile over, and this movement can cause the item to be different
 function PostEntityKill:Entity81(entity)
-  -- We only care about Krampus (81.1)
+  -- The Fallen does not drop items
   if entity.Variant ~= 1 then
     return
   end
@@ -271,8 +271,10 @@ function PostEntityKill:Entity81(entity)
   local gameFrameCount = g.g:GetFrameCount()
   local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
 
-  -- Mark the frame that Krampus was killed on so that we can remove the vanilla item later
-  g.run.krampusKillFrame = gameFrameCount
+  -- Mark the frame that Krampus was killed so that we can manually
+  -- despawn it one frame before it drops the vanilla item
+  local data = entity:GetData()
+  data.killedFrame = gameFrameCount
 
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
@@ -327,7 +329,8 @@ function PostEntityKill:Entity81(entity)
     pos = g.r:FindFreePickupSpawnPosition(pos, 1, false)
   end
 
-  -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  -- Spawn the item
+  -- (it will get replaced on the next frame in the "Pedestals:Replace()" function)
   Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
               pos, g.zeroVector, nil)
 end
@@ -341,10 +344,15 @@ function PostEntityKill:Entity271(entity)
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
 
-  -- We only want to spawn key pieces from the non-Fallen versions
-  if entity.Variant == 1 then
+  -- Fallen Angels do not drop items
+  if entity.Variant ~= 0 then
     return
   end
+
+  -- Mark the frame that the angel was killed on so that we can manually
+  -- despawn it one frame before it drops the vanilla item
+  local data = entity:GetData()
+  data.killedFrame = gameFrameCount
 
   -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
   if roomType ~= RoomType.ROOM_SUPERSECRET and -- 8
@@ -355,18 +363,11 @@ function PostEntityKill:Entity271(entity)
     return
   end
 
-  -- We don't want to drop key pieces from angels if the player has the Filigree Feather
-  -- (we could spawn a SubType 0 collectible, but then we wouldn't know how to remove the naturally dropped random item)
-  if g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
-    return
-  end
-
-  -- Mark the frame that the angel was killed on so that we can remove the vanilla key piece later
-  g.run.angelKillFrame = gameFrameCount
-
-  -- Figure out whether we should spawn the Key Piece 1 or Key Piece 2
+  -- Figure out what item to spawn
   local subType
-  if entity.Type == EntityType.ENTITY_URIEL then -- 271
+  if g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
+    subType = 0 -- A random item
+  elseif entity.Type == EntityType.ENTITY_URIEL then -- 271
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
   elseif entity.Type == EntityType.ENTITY_GABRIEL then -- 272
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
@@ -380,7 +381,8 @@ function PostEntityKill:Entity271(entity)
     pos = g.r:FindFreePickupSpawnPosition(pos, 1, false)
   end
 
-  -- Spawn the item (it will get replaced on the next frame in the "RPPedestals:Replace()" function)
+  -- Spawn the item
+  -- (it will get replaced on the next frame in the "Pedestals:Replace()" function)
   Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
               pos, g.zeroVector, nil)
 end

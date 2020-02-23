@@ -1,10 +1,11 @@
 <!--
 
 Changes:
+- Removed the "special" tag from all items
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 	(items that give bone hearts do not count as health up items for Keeper)
-- Added the "luck" cache to Dad's Lost Coin (455)
-- Removed the "special" tag from all items
+- Added the "luck" cache to Dad's Lost Coin (455) (for the inventory change)
+- Added the "damage" cache to 20/20 (245) (for Samael)
 - Renamed "Schoolbag" (534) to "Schoolbag (Vanilla)"
 - Renamed "Maw Of The Void" (399) to "Maw of the Void"
 - Renamed "Spear Of Destiny" (400) to "Spear of Destiny"
@@ -270,7 +271,7 @@ Changes for Racing+ Rebalanced:
 	<passive description="Damage reduction" gfx="collectibles_242_infamy.png" id="242" name="Infamy" />
 	<passive cache="weapon" description="You feel guarded" gfx="collectibles_243_trinityshield.png" id="243" name="Trinity Shield" />
 	<passive achievement="104" description="It's still being tested..." gfx="collectibles_244_techpointfive.png" id="244" name="Tech.5" />
-	<passive description="Double shot" gfx="collectibles_245_2020.png" id="245" name="20/20" />
+	<passive cache="damage" description="Double shot" gfx="collectibles_245_2020.png" id="245" name="20/20" />
 	<passive achievement="134" description="Secrets" gfx="collectibles_246_bluemap.png" id="246" name="Blue Map" />
 	<passive description="Your friends rule" gfx="collectibles_247_bffs.png" id="247" name="BFFS!" />
 	<passive description="Giant spiders and flies" gfx="collectibles_248_hivemind.png" id="248" name="Hive Mind" />

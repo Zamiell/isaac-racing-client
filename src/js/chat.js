@@ -126,11 +126,11 @@ exports.send = (destination) => {
             }
         } else if (message.match(/^\/floor\b/)) {
             // Validate that unban commands have a recipient
-            const m = message.match(/^\/floor (\d+)/);
+            const m = message.match(/^\/floor (\d+) (\d+)/);
             if (m) {
-                [, chatArg1] = m;
+                [, chatArg1, chatArg2] = m; // stage, stage type
             } else {
-                misc.warningShow('<span lang="en">The format of a floor command is</span>: <code>/floor 2</code>');
+                misc.warningShow('<span lang="en">The format of a floor command is</span>: <code>/floor [stage] [stagetype]</code>');
                 return;
             }
         }
@@ -224,7 +224,7 @@ exports.send = (destination) => {
         globals.conn.send('raceFloor', {
             id: globals.currentRaceID,
             floorNum: parseInt(chatArg1, 10),
-            stageType: 0,
+            stageType: parseInt(chatArg2, 10),
         });
     } else if (message.startsWith('/checkpoint')) {
         globals.conn.send('raceItem', {

@@ -88,12 +88,12 @@ globals = {
   "RacingPlusGlobals",
   "RacingPlusSchoolbag",
   "RacingPlusSpeedrun",
+  "RacingPlusData",
 
   -- Other mods
   "SinglePlayerCoopBabies", -- The Babies Mod
   "RacingPlusRebalanced",
   "VanillaStreakText",
-  "DisableSadSound",
   "InfinityTrueCoopInterface", -- The True Co-op Mod
 }
 

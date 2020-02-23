@@ -162,7 +162,7 @@ if not ARGS.skipmod:
         for fpath in [os.path.join(root, f) for f in files]:
             # We don't care about certain files
             name = os.path.relpath(fpath, root)
-            if (name == 'metadata.xml' or # This file will be one version number ahead of the one distributed through steam
+            if (name == 'metadata.xml' or # This file will be one version number ahead of the one distributed through Steam
                     name == 'save1.dat' or # These are the IPC files, so it doesn't matter if they are different
                     name == 'save2.dat' or
                     name == 'save3.dat'):
