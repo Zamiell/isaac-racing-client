@@ -7,6 +7,13 @@
 
 <br />
 
+## R+15 Vanilla
+
+* You must defeat Blue Baby on all 15 normal characters.
+* There are no additional changes to the game.
+
+<br />
+
 ## R+9 Season 1 (The Keeper Season)
 
 * You must defeat Blue Baby on the following 9 characters:
@@ -171,29 +178,54 @@
 
 <br />
 
-<!--
-## R+7 Seeded
+## R+7 Season 8 (The Shared Item Pool Season)
 
-* This challenge was only available in Q4 2018. A new version may be released in the future.
+### Characters & Starting Items
+
 * You must defeat Blue Baby on the following 7 characters:
-  * Isaac, Magdalene, Lazarus, Eden, The Lost, Apollyon, The Forgotten
-  * These characters were randomly selected before the release of this challenge.
-* Each run is played on the following 7 seeds:
-  * 4PME M424, JFSC 2WW7, WEFG XQ6F, 4FAH GTDX, 3J46 P8BJ, 9YHG YKXH, BQ9S MATW
-  * These seeds were randomly selected before the release of the challenge.
-  * Resetting will not change the current character's seed.
-  * The seeds are given in pre-set order and cannot be customized.
-* All characters start with The Mind in addition to their other vanilla starting items. (This is a quality of life change to avoid having to refer to your notes as you play through each seed.)
-* Runs for this challenge/category should not be uploaded to Speedrun.com until the season is over. (This ensures that everyone can find their own strategies and it keeps the winner a surprise until the very end!)
-* Unlike the other challenges, exiting and going into a normal run will not cancel the speedrun (due to technical reasons). To set the game back to normal, use the "Finished" item that spawns in the starting room of the first character.
+  * Isaac, Cain, Judas, Eve, Lazarus II, Black Judas, Apollyon
+* All characters start with the Schoolbag.
+* Isaac starts with a 2nd D6 inside the Schoolbag.
+* Cain starts with More Options.
+* Judas starts with Book of Belial inside the Schoolbag.
+* Eve starts with Razor Blade inside the Schoolbag.
+* Lazarus II starts with There's Options.
+* Lazarus II starts with one half red heart and one half soul heart.
+* Black Judas starts with three and a half black hearts.
+* Apollyon starts with Void inside the Schoolbag.
 
-<br />
--->
+### Shared Item Pools and Cards
 
-## R+15 Vanilla
+* When a pedestal item is touched, it is removed from item pools on subsequent runs.
+  * This mechanic also applies to all "set" items (e.g. The Polaroid, A Lump of Coal, Cube of Meat, The Virus, etc.).
+* When a trinket is picked up, it is removed from the trinket pool on subsequent runs.
+* When a card is used, it will no longer drop for the rest of the run or on subsequent runs.
+* The starting items for all 7 characters are removed from all pools (for all characters).
+* Judas' Shadow and Lazarus Rags are removed from all pools.
+* Mega Blast is removed from all pools on the first character.
 
-* You must defeat Blue Baby on all 15 characters. (This does not include Samael.)
-* There are no additional changes to the game.
+### Shared Pills
+
+* The pill pool is shared between all 7 characters (meaning that a pill identified on the first character will stay identified on subsequent characters).
+* The pill effect pool is reduced to the following effects:
+  * Balls of Steel (2)
+  * Bombs are Key (3)
+  * Explosive Diarrhea (4)
+  * Health Down (6)
+  * Health Up (7)
+  * Pretty Fly (10)
+  * Speed Down (13)
+  * Speed Up (14)
+  * Tears Down (15)
+  * Tears Up (16)
+  * Telepills (19)
+  * 48 Hour Energy (20)
+  * I can see forever! (23)
+  * Lemon Party (26)
+  * Percs (28)
+  * Power Pill! (36)
+  * I'm Drowsy... (41)
+  * Gulp! (43)
 
 <br />
 
