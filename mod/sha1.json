@@ -20,11 +20,11 @@
     "content\\items.xml": "28e3bc2348f3cd284646fd87da3687bb782a7d74",
     "content\\players.xml": "320de3797c279aea57f5eb4229e722196909d40a",
     "content\\sounds.xml": "3eead3f332ad0d7d046453c47038f2ace6675110",
-    "main.lua": "0ba09c4fecf96ff34df8653badf68960874eb5d3",
+    "main.lua": "9c91d7ba908658d2a1e8bf89e4e130e0313930e7",
     "racing_plus\\BigChest.lua": "ed6d75b28dad43bfc4b5aec56d942d2fd011f53e",
     "racing_plus\\BossAPI.lua": "e2af044d6fdbbfeff8abea29554312d243c27f25",
     "racing_plus\\BossRush.lua": "597dc9211b4652a867b6717279085602fbd07d80",
-    "racing_plus\\ChangeCharOrder.lua": "94d966182fd860f3427621d5a3b96e5c8e8ccee3",
+    "racing_plus\\ChangeCharOrder.lua": "dbc7b4141ce19a1e34624e717559faa614de0d29",
     "racing_plus\\ChangeKeybindings.lua": "42c968281d0527afcf9a57546777936f4f4c95d1",
     "racing_plus\\CheckEntities.lua": "77cfea9495fbda8c15b514f26b5d98a297ebcfe1",
     "racing_plus\\Debug.lua": "13c1ee6b96184053a3f9db7cf31c3af714949f3b",
@@ -37,7 +37,7 @@
     "racing_plus\\FastTravel.lua": "eb2b13b5b21f8f2f95a344616288c7254a1aa173",
     "racing_plus\\GetCard.lua": "988ff85518ec872300d452caf8b75a7591dfb16a",
     "racing_plus\\GetPillEffect.lua": "1fd3908b33a7238e17364ced41bce2685d82f390",
-    "racing_plus\\Globals.lua": "d1a27653f447eb5e704e07ea18133c04ab40e5eb",
+    "racing_plus\\Globals.lua": "c0ed4b32a9ee49c34386f6f75ee0ee0a604247a3",
     "racing_plus\\InputAction.lua": "4cfc96c3fa01637f341b4cd6ab04f08df16879a2",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -2089,7 +2089,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "44a9724eb4cd7f648d791a02de00faf7ad84babb",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "07977605794d75a0be5492cf09e80d6c8d1fb317",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2167,5 +2167,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "71b49eb259f0834d5339f97e9bb1e85ece506002",
-    "sha1.json": "e3b98e205993df76118a501eab527c0b122c9eec"
+    "sha1.json": "d3f5457b427b111dcf47513cf455cd6d337c8de2"
 }

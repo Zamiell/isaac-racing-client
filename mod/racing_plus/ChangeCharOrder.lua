@@ -199,6 +199,7 @@ ChangeCharOrder.seasons = {
       {12, 5, 3},  -- Black Judas
       {15, 7, 3},  -- Apollyon
     },
+    hidden = true,
   },
 }
 
@@ -858,12 +859,14 @@ function ChangeCharOrder:PostNewRoom()
   -- (and a graphic over each button)
   ChangeCharOrder.sprites.buttons = {}
   for k, v in pairs(ChangeCharOrder.seasons) do
-    local pos = g:GridToPos(v.X, v.Y)
-    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
+    if v.hidden == nil then
+      local pos = g:GridToPos(v.X, v.Y)
+      Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
-    ChangeCharOrder.sprites.buttons[k] = Sprite()
-    ChangeCharOrder.sprites.buttons[k]:Load("gfx/speedrun/button-" .. tostring(k) .. ".anm2", true)
-    ChangeCharOrder.sprites.buttons[k]:SetFrame("Default", 0)
+      ChangeCharOrder.sprites.buttons[k] = Sprite()
+      ChangeCharOrder.sprites.buttons[k]:Load("gfx/speedrun/button-" .. tostring(k) .. ".anm2", true)
+      ChangeCharOrder.sprites.buttons[k]:SetFrame("Default", 0)
+    end
   end
 end
 
