@@ -20,7 +20,7 @@
     "content\\items.xml": "28e3bc2348f3cd284646fd87da3687bb782a7d74",
     "content\\players.xml": "320de3797c279aea57f5eb4229e722196909d40a",
     "content\\sounds.xml": "3eead3f332ad0d7d046453c47038f2ace6675110",
-    "main.lua": "78989505c920d036c1fe932a3288e7882df11179",
+    "main.lua": "0ba09c4fecf96ff34df8653badf68960874eb5d3",
     "racing_plus\\BigChest.lua": "ed6d75b28dad43bfc4b5aec56d942d2fd011f53e",
     "racing_plus\\BossAPI.lua": "e2af044d6fdbbfeff8abea29554312d243c27f25",
     "racing_plus\\BossRush.lua": "597dc9211b4652a867b6717279085602fbd07d80",
@@ -50,7 +50,7 @@
     "racing_plus\\PostEffectUpdate.lua": "091697b7e850805b9e7351c4edc6d28d037d4d92",
     "racing_plus\\PostEntityKill.lua": "b5d29f8f080c07e630cd238932b874449ecdde77",
     "racing_plus\\PostFireTear.lua": "61ebd922c8779c099be6c707c90ec5c7e5bcf2b9",
-    "racing_plus\\PostGameStarted.lua": "71fb4d67253a3c4153d7e6c5809ae8423ef669da",
+    "racing_plus\\PostGameStarted.lua": "58ba92ccef6031fff126617703fd972bcb1db8fb",
     "racing_plus\\PostItemPickup.lua": "fd026a164eedfc9ae6447bdeb8c28c9804d6c1d6",
     "racing_plus\\PostLaserInit.lua": "bd7ac465202dc4e4e9823ce732c560ecf6270837",
     "racing_plus\\PostNPCInit.lua": "474c05b7f81e9f650b1119d8b76b0ea40609c087",
@@ -2167,5 +2167,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "71b49eb259f0834d5339f97e9bb1e85ece506002",
-    "sha1.json": "770da63b3b2a91b05535a0c3645cafb27f9d0324"
+    "sha1.json": "e3b98e205993df76118a501eab527c0b122c9eec"
 }

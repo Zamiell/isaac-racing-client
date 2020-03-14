@@ -381,6 +381,7 @@ function PostGameStarted:Character()
     -- Mute the sound effects
     g.sfx:Stop(SoundEffect.SOUND_POWERUP_SPEWER) -- 132
     g.sfx:Stop(SoundEffect.SOUND_THUMBSUP) -- 268
+    g.sfx:Stop(SoundEffect.SOUND_SPEED_UP) -- 364
 
     -- Delete the starting pill
     g.p:SetPill(0, PillColor.PILL_NULL) -- 0
