@@ -497,8 +497,8 @@ function FastClear:ClearRoom()
       -- Use the vanilla function to spawn a room drop, which takes into account the player's luck and so forth
       -- (room drops are not supposed to spawn in crawlspaces, but this function will internally exit
       -- if we are in a crawlspace, so we don't need to explicitly check for that)
-      -- We also mark to delete the photos spawned by the game during this step
-      -- (in the MC_POST_PICKUP_SELECTION callback)
+      -- Just in case we just killed Mom, we also mark to delete the photos spawned by the game during this step
+      -- (in the MC_PRE_ENTITY_SPAWN callback)
       g.run.photosSpawning = true
       g.r:SpawnClearAward()
       g.run.photosSpawning = false
@@ -560,10 +560,9 @@ function FastClear:SpawnPhotos()
   end
   local situation
   if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
-     Speedrun.inSeededSpeedrun then
+     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
 
-    -- Season 1 and Seeded speedruns spawn only The Polaroid
+    -- Season 1 speedruns spawn only The Polaroid
     situation = situations.POLAROID
 
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
@@ -585,6 +584,22 @@ function FastClear:SpawnPhotos()
     else
       -- Give them a choice between the photos because he player needs the ability
       -- to choose what goal they want on the fly
+      situation = situations.BOTH
+    end
+
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+       g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+      situation = situations.RANDOM
+
+    elseif g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+      situation = situations.NEGATIVE
+
+    elseif g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 327
+      situation = situations.POLAROID
+
+    else
       situation = situations.BOTH
     end
 
@@ -639,13 +654,13 @@ function FastClear:SpawnPhotos()
     g.run.spawningPhoto = true
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector,
               nil, CollectibleType.COLLECTIBLE_POLAROID, roomSeed)
-    Isaac.DebugString("Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
+    Isaac.DebugString("FastClear:SpawnPhotos() - Spawned The Polaroid (on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.NEGATIVE then
     g.run.spawningPhoto = true
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector,
               nil, CollectibleType.COLLECTIBLE_NEGATIVE, roomSeed)
-    Isaac.DebugString("Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
+    Isaac.DebugString("FastClear:SpawnPhotos() - Spawned The Negative (on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.BOTH then
     g.run.spawningPhoto = true
@@ -659,13 +674,15 @@ function FastClear:SpawnPhotos()
                                posCenterRight, g.zeroVector, nil, CollectibleType.COLLECTIBLE_NEGATIVE, newSeed)
     negative:ToPickup().TheresOptionsPickup = true
 
-    Isaac.DebugString("Spawned both The Polaroid and The Negative (on frame " .. tostring(gameFrameCount) .. ").")
+    Isaac.DebugString("FastClear:SpawnPhotos() - Spawned both The Polaroid and The Negative " ..
+                      "(on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.RANDOM then
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector, nil, 0, roomSeed)
     -- (a SubType of 0 will make a random item of the pool according to the room type)
     -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
-    Isaac.DebugString("Spawned a random boss item instead of a photo (on frame " .. tostring(gameFrameCount) .. ").")
+    Isaac.DebugString("FastClear:SpawnPhotos() - Spawned a random boss item instead of a photo " ..
+                      "(on frame " .. tostring(gameFrameCount) .. ").")
   end
 end
 
@@ -914,17 +931,11 @@ function FastClear:CheckBagFamiliars()
       local newRoomsCleared = FastClear.familiars.RuneBag.roomsCleared + 1
       if math.floor(newRoomsCleared / constant2) & 3 == 2 then
         -- For some reason you cannot spawn the normal "Random Rune" entity (5.301.0)
-        -- So, spawn a random card (5.300.0) over and over until we get a rune
-        while true do
-          FastClear.familiars.RuneBag.seed = g:IncrementRNG(FastClear.familiars.RuneBag.seed)
-          local rune = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
-                                 familiar.Position, g.zeroVector, familiar, 0, FastClear.familiars.RuneBag.seed)
-          -- Hagalaz is 32 and Black Rune is 41
-          if rune.SubType >= 32 and rune.SubType <= 41 then
-            break
-          end
-          rune:Remove()
-        end
+        -- So, use the GetCard() function
+        FastClear.familiars.RuneBag.seed = g:IncrementRNG(FastClear.familiars.RuneBag.seed)
+        local subType = g.itemPool:GetCard(FastClear.familiars.RuneBag.seed, false, true, true)
+        g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD,
+                  familiar.Position, g.zeroVector, familiar, subType, FastClear.familiars.RuneBag.seed)
       end
 
     elseif familiar.Variant == FamiliarVariant.SPIDER_MOD then -- 94

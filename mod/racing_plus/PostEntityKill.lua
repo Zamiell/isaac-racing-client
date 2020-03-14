@@ -111,16 +111,16 @@ function PostEntityKill:Entity78(entity)
     BOTH          = 3,
   }
   local situation
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
+  if challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") or
+     challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") or
-     Speedrun.inSeededSpeedrun or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") or
      (g.race.status == "in progress" and g.race.goal == "Blue Baby") or
      (g.race.status == "in progress" and g.race.goal == "Everything") then
 
-    -- Season 1, 4, 5, and Seeded speedruns always go to Cathedral / The Chest
+    -- Seasons 1, 4, and 5 always go to Cathedral / The Chest
     -- Races to Blue Baby go to Cathedral / The Chest
     -- "Everything" races always go to Cathedral first (and then Sheol after that)
     situation = situations.BEAM_OF_LIGHT
@@ -270,6 +270,7 @@ function PostEntityKill:Entity81(entity)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
+  local challenge = Isaac.GetChallenge()
 
   -- Mark the frame that Krampus was killed so that we can manually
   -- despawn it one frame before it drops the vanilla item
@@ -279,6 +280,14 @@ function PostEntityKill:Entity81(entity)
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
   local headBanned = false
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+    coalBanned = true
+  end
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) or -- 293
+     g.run.schoolbag.item == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
+
+    headBanned = true
+  end
   if g.race.status == "in progress" then
     for _, itemID in ipairs(g.race.startingItems) do
       if itemID == CollectibleType.COLLECTIBLE_LUMP_OF_COAL then -- 132
@@ -288,13 +297,13 @@ function PostEntityKill:Entity81(entity)
       end
     end
   end
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
-    coalBanned = true
-  end
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) or -- 293
-     g.run.schoolbag.item == CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS then -- 293
-
-    headBanned = true
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+      coalBanned = true
+    end
+    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
+      headBanned = true
+    end
   end
   local subType
   if coalBanned and headBanned then
@@ -343,6 +352,7 @@ function PostEntityKill:Entity271(entity)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
+  local challenge = Isaac.GetChallenge()
 
   -- Fallen Angels do not drop items
   if entity.Variant ~= 0 then
@@ -366,6 +376,8 @@ function PostEntityKill:Entity271(entity)
   -- Figure out what item to spawn
   local subType
   if g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
+    -- Even if the player has both key pieces,
+    -- Filigree Feather will still make an angel drop a random item (on vanilla and in R+)
     subType = 0 -- A random item
   elseif entity.Type == EntityType.ENTITY_URIEL then -- 271
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
@@ -373,13 +385,28 @@ function PostEntityKill:Entity271(entity)
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
   end
 
-  -- We have to prevent the bug where the pedestal item can overlap with a grid entity
-  local pos = entity.Position
-  local gridIndex = g.r:GetGridIndex(pos)
-  local gridEntity = g.r:GetGridEntity(gridIndex)
-  if gridEntity ~= nil then
-    pos = g.r:FindFreePickupSpawnPosition(pos, 1, false)
+  -- Don't spawn duplicate keys
+  -- (this matches the behavior of vanilla)
+  if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 and -- 238
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1)) or -- 238
+     (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2 and -- 239
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2)) then -- 239
+
+    return
   end
+
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") and
+     subType ~= 0 then
+
+    -- If we already got this key piece on a previous run, then change it to a random Angel Room item
+    if g:TableContains(Speedrun.S8TouchedItems, subType) then
+      subType = 0
+    end
+  end
+
+  -- We don't want to spawn it exactly where the angel died
+  -- in case it overlaps with another pedestal or a grid entity
+  local pos = g.r:FindFreePickupSpawnPosition(entity.Position, 1, false)
 
   -- Spawn the item
   -- (it will get replaced on the next frame in the "Pedestals:Replace()" function)

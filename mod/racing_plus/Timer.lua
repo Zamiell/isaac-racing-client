@@ -56,9 +56,7 @@ function Timer:Display()
   -- (or what the race finish time was)
   local challenge = Isaac.GetChallenge()
   local elapsedTime
-  if challenge ~= 0 or
-     Speedrun.inSeededSpeedrun then
-
+  if challenge ~= 0 then
     if Speedrun.finished then
       elapsedTime = Speedrun.finishedTime
     elseif Speedrun.startedTime == 0 then

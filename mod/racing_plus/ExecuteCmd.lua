@@ -70,6 +70,22 @@ ExecuteCmd.functions["card"] = function(params)
     return
   end
 
+  local num = tonumber(params)
+  if num ~= nil then
+    -- Validate the card ID
+    if num < 1 or
+       num >= Card.NUM_CARDS then
+
+      Isaac.ConsoleOutput("That is an invalid card ID.")
+      return
+    end
+
+    -- They entered a number instead of a name, so just give the card corresponding to this number
+    Isaac.ExecuteCommand("g k" .. tostring(num))
+    Isaac.ConsoleOutput("Gave card #" .. tostring(num) .. ".")
+    return
+  end
+
   local cardMap = {}
   cardMap["fool"] = 1
   cardMap["magician"] = 2
@@ -381,7 +397,20 @@ end
 
 ExecuteCmd.functions["next"] = function(params)
   -- Used to go to the next character in a multi-character speedrun
-  SpeedrunPostUpdate:CheckCheckpoint(true)
+  SpeedrunPostUpdate:CheckCheckpointTouched(true)
+end
+
+ExecuteCmd.functions["pills"] = function(params)
+  local pillNum = 1
+  for y = 0, 6 do
+    for x = 0, 12 do
+      if pillNum < PillColor.NUM_PILLS then
+        local pos = g:GridToPos(x, y)
+        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pillNum, pos, g.zeroVector, nil) -- 5.70
+        pillNum = pillNum + 1
+      end
+    end
+  end
 end
 
 ExecuteCmd.functions["pos"] = function(params)
@@ -394,7 +423,7 @@ ExecuteCmd.functions["previous"] = function(params)
     return
   end
   Speedrun.charNum = Speedrun.charNum - 2
-  SpeedrunPostUpdate:CheckCheckpoint(true)
+  SpeedrunPostUpdate:CheckCheckpointTouched(true)
 end
 
 ExecuteCmd.functions["removeall"] = function(params)
@@ -425,7 +454,21 @@ ExecuteCmd.functions["s"] = function(params)
     return
   end
 
-  local stage = ExecuteCmd:ValidateNumber(params)
+  local finalCharacter = string.sub(params, -1)
+  local stageNum
+  local stageType
+  if finalCharacter == "a" or
+     finalCharacter == "b" then
+
+    -- e.g. "s 11a" for going to The Chest
+    stageNum = string.sub(1, #params - 1)
+    stageType = finalCharacter
+  else
+    -- e.g. "s 11" for going to the Dark Room
+    stageNum = params
+    stageType = ""
+  end
+  local stage = ExecuteCmd:ValidateNumber(stageNum)
   if stage == nil then
     return
   end
@@ -435,7 +478,7 @@ ExecuteCmd.functions["s"] = function(params)
     return
   end
 
-  g:ExecuteCommand("stage " .. stage)
+  g:ExecuteCommand("stage " .. stage .. stageType)
 end
 
 ExecuteCmd.functions["sb"] = function(params)

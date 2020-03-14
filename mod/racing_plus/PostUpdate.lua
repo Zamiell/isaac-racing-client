@@ -182,14 +182,19 @@ function PostUpdate:CheckItemPickup()
   if g.p:IsItemQueueEmpty() then
     if g.run.pickingUpItem ~= 0 then
       -- Check to see if we need to do something specific after this item is added to our inventory
-      local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
-      if postItemFunction ~= nil and
-         roomIndex == g.run.pickingUpItemRoom then
-         -- (don't do any custom inventory work if we have changed rooms in the meantime)
+      if g.run.pickingUpItemType ~= ItemType.ITEM_TRINKET then -- 2
+        local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
+        if postItemFunction ~= nil and
+          roomIndex == g.run.pickingUpItemRoom then
+          -- (don't do any custom inventory work if we have changed rooms in the meantime)
 
-        postItemFunction()
+          postItemFunction()
+        end
       end
+
       g.run.pickingUpItem = 0
+      g.run.pickingUpItemRoom = 0
+      g.run.pickingUpItemType = 0
     end
     return
   elseif g.run.pickingUpItem ~= 0 then
@@ -199,13 +204,16 @@ function PostUpdate:CheckItemPickup()
   -- Mark which item we are picking up
   g.run.pickingUpItem = g.p.QueuedItem.Item.ID
   g.run.pickingUpItemRoom = roomIndex
+  g.run.pickingUpItemType = g.p.QueuedItem.Item.Type
 
   -- Mark to draw the streak text for this item
   g.run.streakText = g.p.QueuedItem.Item.Name
   g.run.streakFrame = Isaac.GetFrameCount()
 
   -- Keep track of our passive items over the course of the run
-  if g.p.QueuedItem.Item.Type ~= ItemType.ITEM_ACTIVE then -- 3
+  if g.p.QueuedItem.Item.Type == ItemType.ITEM_PASSIVE or -- 1
+     g.p.QueuedItem.Item.Type == ItemType.ITEM_FAMILIAR then -- 4
+
     g.run.passiveItems[#g.run.passiveItems + 1] = g.p.QueuedItem.Item.ID
     if g.p.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
       Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")

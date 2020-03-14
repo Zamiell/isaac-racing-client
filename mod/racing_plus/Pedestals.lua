@@ -103,14 +103,15 @@ function Pedestals:Replace(pickup)
     offLimits = true
   end
 
-  -- Check to see if this is a special Basement 1 diversity reroll
-  -- (these custom placeholder items are removed in all non-diveristy runs)
+  -- Check for special rerolls
   local specialReroll = 0
   if stage == 1 and
      roomType == RoomType.ROOM_TREASURE and -- 4
      ((g.race.rFormat == "diversity" and g.race.status == "in progress") or
       challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) then
 
+    -- This is a special Basement 1 diversity reroll
+    -- (these custom placeholder items are removed in all non-diveristy runs)
     if pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 then
       specialReroll = CollectibleType.COLLECTIBLE_INCUBUS -- 360
     elseif pickup.SubType == CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 then
@@ -125,7 +126,7 @@ function Pedestals:Replace(pickup)
            g.race.status == "in progress") or
           challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")) then
 
-    -- Check to see if this is a special Big 4 reroll (50% chance to reroll)
+    -- This is a special Big 4 reroll for unseeded races (50% chance to reroll)
     math.randomseed(stageSeed)
     local big4rerollChance = math.random(1, 2)
     if big4rerollChance == 2 then
@@ -163,6 +164,34 @@ function Pedestals:Replace(pickup)
   -- Check to see if this item should go into a Schoolbag
   if Schoolbag:CheckSecondItem(pickup) then
     return
+  end
+
+  -- In season 8, prevent "set drops" from Lust, Gish, and so forth
+  -- (if they have already been touched)
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") and
+     g:TableContains(Speedrun.S8TouchedItems, pickup.SubType) and
+     not pickup.Touched then
+
+    local itemName = g.itemConfig:GetCollectible(pickup.SubType).Name
+    if pickup.SubType == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
+       not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) and -- 73
+       not g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) then -- 207
+
+      pickup.SubType = CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
+      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" " ..
+                        "with Ball of Bandages (special case).")
+
+    elseif pickup.SubType == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES and -- 207
+           not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) and -- 207
+           not g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) then -- 73
+
+      pickup.SubType = CollectibleType.COLLECTIBLE_CUBE_OF_MEAT -- 73
+      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" with Cube of Meat (special case).")
+
+    else
+      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" with a random item.")
+      pickup.SubType = 0
+    end
   end
 
   -- Replace the pedestal
@@ -229,7 +258,13 @@ function Pedestals:Replace(pickup)
     -- (the sprites of the two items will obviously be identical)
     -- We don't need to add this item to the ban list because since it already existed, it was properly
     -- decremented from the pools on sight
-    Isaac.DebugString("Made a copied pedestal with item " .. tostring(pickup.SubType) ..
+    local itemName
+    if subType == 0 then
+      itemName = "[random]"
+    else
+      itemName = g.itemConfig:GetCollectible(subType).Name
+    end
+    Isaac.DebugString("Made a copied pedestal of \"" .. itemName .. "\" " ..
                       " at (" .. tostring(position.X) .. ", " .. tostring(position.Y) .. ") " ..
                       "using seed " .. tostring(newSeed) .. " on frame " .. tostring(gameFrameCount) .. ".")
   end

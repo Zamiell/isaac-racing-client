@@ -9,6 +9,7 @@ Directory: racing+_857628390
 Steam Workshop URL: https://steamcommunity.com/sharedfiles/filedetails/?id=857628390
 
 TODO:
+- In Rep, give judas half heart, give Cain+Eve+Apollyon half soul
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
 
@@ -50,13 +51,13 @@ local InputAction         = require("racing_plus/inputaction") -- 13
 local PostGameStarted     = require("racing_plus/postgamestarted") -- 15
 local PostNewLevel        = require("racing_plus/postnewlevel") -- 18
 local PostNewRoom         = require("racing_plus/postnewroom") -- 19
+local GetCard             = require("racing_plus/getcard") -- 20
 local ExecuteCmd          = require("racing_plus/executecmd") -- 22
 local PreUseItem          = require("racing_plus/preuseitem") -- 23
 local PreEntitySpawn      = require("racing_plus/preentityspawn") -- 24
 local PostNPCInit         = require("racing_plus/postnpcinit") -- 27
 local PostPickupInit      = require("racing_plus/postpickupinit") -- 34
 local PostPickupUpdate    = require("racing_plus/postpickupupdate") -- 35
-local PostPickupSelection = require("racing_plus/postpickupselection") -- 37
 local PostLaserInit       = require("racing_plus/postlaserinit") -- 47
 local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
 local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
@@ -64,6 +65,7 @@ local PostBombInit        = require("racing_plus/postbombinit") -- 57
 local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
 local PostFireTear        = require("racing_plus/postfiretear") -- 61
 local PreGetCollectible   = require("racing_plus/pregetcollectible") -- 62
+local GetPillEffect       = require("racing_plus/getpilleffect") -- 65
 local PostEntityKill      = require("racing_plus/postentitykill") -- 68
 local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
 local FastClear           = require("racing_plus/fastclear") -- Functions for the "Fast-Clear" feature
@@ -99,14 +101,15 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Ma
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         Speedrun.PostGameEnd) -- 16
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        PostNewLevel.Main) -- 18
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         PostNewRoom.Main) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_GET_CARD,              GetCard.Main) -- 20
 RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           ExecuteCmd.Main) -- 22
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      PreEntitySpawn.Main) -- 24
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCInit) -- 27
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    PostPickupUpdate.Main) -- 35
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_SELECTION, PostPickupSelection.Main) -- 37
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
 RacingPlus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR,        PostFireTear.Main) -- 61
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE,   PreGetCollectible.Main) -- 62
+RacingPlus:AddCallback(ModCallbacks.MC_GET_PILL_EFFECT,       GetPillEffect.Main) -- 65
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Main) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
@@ -233,8 +236,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item84, -- 23
                        CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item97, -- 23
                        CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, Speedrun.PreventD6, -- 23
-                       CollectibleType.COLLECTIBLE_D6) -- 105
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item124, -- 23
                        CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item286, -- 23
@@ -405,6 +406,42 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Mahalath.check_bomb,
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Mahalath.check_del,
                        EntityType.ENTITY_DELIRIUM) -- 412
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mahalath.take_dmg)
+
+-- MinimapAPI init
+local customIcons = Sprite()
+customIcons:Load("gfx/pills/custom_icons.anm2", true)
+-- Getting rid of the ugly white pixel
+MinimapAPI:AddIcon("PillOrangeOrange", customIcons, "CustomIconPillOrangeOrange", 0) -- 3
+-- Red dots / red --> full red
+MinimapAPI:AddIcon("PillReddotsRed", customIcons, "CustomIconPillReddotsRed", 0) -- 5
+-- Pink red / red --> white / red
+MinimapAPI:AddIcon("PillPinkRed", customIcons, "CustomIconPillPinkRed", 0) -- 6
+-- Getting rid of the ugly white pixel
+MinimapAPI:AddIcon("PillYellowOrange", customIcons, "CustomIconPillYellowOrange", 0) -- 8
+-- White dots / white --> full white dots
+MinimapAPI:AddIcon("PillOrangedotsWhite", customIcons, "CustomIconPillOrangedotsWhite", 0) -- 9
+-- Cleaner sprite for Emergency Contact
+MinimapAPI:AddIcon("MomsContract", customIcons, "CustomIconMomsContract", 0) -- 50
+-- New sprite for Blank Rune
+MinimapAPI:AddIcon("BlankRune", customIcons, "CustomIconBlankRune", 0) -- 40
+MinimapAPI:AddPickup("BlankRune", "BlankRune",
+                     EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.RUNE_BLANK, -- 5.300.40
+                     MinimapAPI.PickupNotCollected, "runes", 1200)
+-- New sprite for Rules Card
+MinimapAPI:AddIcon("Rules", customIcons, "CustomIconRules", 0) -- 44
+MinimapAPI:AddPickup("Rules", "Rules",
+                     EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.CARD_RULES, -- 5.300.44
+                     MinimapAPI.PickupNotCollected, "cards", 1200)
+-- New sprite for Suicide King
+MinimapAPI:AddIcon("SuicideKing", customIcons, "CustomIconSuicideKing", 0) -- 46
+MinimapAPI:AddPickup("SuicideKing", "SuicideKing",
+                     EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.CARD_SUICIDE_KING, -- 5.300.46
+                     MinimapAPI.PickupNotCollected, "cards", 1200)
+-- New sprite for ? Card
+MinimapAPI:AddIcon("QuestionMark", customIcons, "CustomIconQuestionMark", 0) -- 48
+MinimapAPI:AddPickup("QuestionMark", "QuestionMark",
+                     EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.CARD_QUESTIONMARK, -- 5.300.48
+                     MinimapAPI.PickupNotCollected, "cards", 1200)
 
 -- Welcome banner
 local hyphens = ''

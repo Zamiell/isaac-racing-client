@@ -1,16 +1,17 @@
 <challenges version="1">
 	<!-- We can't make the names too long or it will overflow off of the end of the note -->
 	<!-- 127 disables all curses: https://pastebin.com/SM0vSvcU -->
+	<challenge name="R+15 (Vanilla)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+9 (Season 1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+14 (Season 1)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 (Season 2)" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="R+7 (Season 3)" endstage="11" altpath="false" cursefilter="127" />
 	<challenge name="R+7 (Season 4)" endstage="11" altpath="true" cursefilter="127" />
-	<challenge name="R+7 (Season 5)" endstage="11" altpath="true" cursefilter="103" /><!-- Curse of the Unknown is left in intentionally -->
+	<challenge name="R+7 (Season 5)" endstage="11" altpath="true" cursefilter="103" />
+	<!-- (Curse of the Unknown is left in intentionally) -->
 	<challenge name="R+7 (Season 6)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 (Season 7)" endstage="11" altpath="true" cursefilter="127" />
-	<!--<challenge name="R+7 Seeded (Q4 2018)" endstage="11" altpath="true" cursefilter="127" />-->
-	<challenge name="R+15 (Vanilla)" endstage="11" altpath="true" cursefilter="127" />
+	<!--<challenge name="R+7 (Season 8 Beta)" endstage="11" altpath="true" cursefilter="127" />-->
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 	<challenge name="Change Keybindings" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 </challenges>

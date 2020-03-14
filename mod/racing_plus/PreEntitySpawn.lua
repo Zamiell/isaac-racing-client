@@ -35,8 +35,8 @@ function PreEntitySpawn.Heart(subType, position, spawner, seed)
      spawner ~= nil and
      spawner.Type == EntityType.ENTITY_FIREPLACE then -- 33
 
-     Isaac.DebugString("Deleting a heart from a fire in a Devil Room.")
-     return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
+     Isaac.DebugString("Preventing a heart from spawning from a fire in a Devil Room.")
+     return {EntityType.ENTITY_PICKUP, PickupVariant.INVISIBLE_PICKUP, 0, 0} -- Invisible Pickup, a custom entity
   end
 end
 
@@ -47,13 +47,30 @@ function PreEntitySpawn.Collectible(subType, position, spawner, seed)
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local challenge = Isaac.GetChallenge()
 
-  -- Prevent the boss item from spawning in The Void after defeating Ultra Greed
+  -- Prevent the vanilla Polaroid and Negative from spawning
+  -- (Racing+ spawns those manually to speed up the Mom fight)
+  if g.run.photosSpawning and
+     (subType == CollectibleType.COLLECTIBLE_POLAROID or -- 327
+      subType == CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+    local debugString = "Preventing a vanilla "
+    if subType == CollectibleType.COLLECTIBLE_POLAROID then
+      debugString = debugString .. "Polaroid"
+    elseif subType == CollectibleType.COLLECTIBLE_NEGATIVE then
+      debugString = debugString .. "Negative"
+    end
+    debugString = debugString .. " from spawning."
+    Isaac.DebugString(debugString)
+    return {EntityType.ENTITY_PICKUP, PickupVariant.INVISIBLE_PICKUP, 0, 0} -- Invisible Pickup, a custom entity
+  end
+
+  -- In season 7, prevent the boss item from spawning in The Void after defeating Ultra Greed
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
      subType ~= CollectibleType.COLLECTIBLE_CHECKPOINT and
      stage == 12 and
      roomIndexUnsafe == g.run.customBossRoomIndex then
 
-    Isaac.DebugString("Removed a naturally spawned boss item after Ultra Greed.")
+    Isaac.DebugString("Prevented a boss item from spawning after Ultra Greed.")
     return {EntityType.ENTITY_PICKUP, PickupVariant.INVISIBLE_PICKUP, 0, 0} -- Invisible Pickup, a custom entity
   end
 end
@@ -71,7 +88,7 @@ function PreEntitySpawn.Slot(variant, subType, position, spawner, seed)
   -- However, because of the save file check on the first run,
   -- it is possible for Donation Machines to spawn, so we have to explicitly check for them
   if variant == 8 then -- Donation Machine (6.8)
-    Isaac.DebugString("Deleted a Donation Machine.")
+    Isaac.DebugString("Prevented a Donation Machine from spawning.")
     return {EntityType.ENTITY_EFFECT, 0, 0, 0} -- 1000
   end
 end

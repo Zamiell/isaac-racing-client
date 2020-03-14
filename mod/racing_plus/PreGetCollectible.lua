@@ -4,14 +4,19 @@ local PreGetCollectible = {}
 local g = require("racing_plus/globals")
 
 -- This callback is called when the game needs to get a new random item from an item pool
--- It is undocumented, but you can return an integer from this callback in order to change the returned item pool type
+-- It is undocumented, but you can return an integer from this callback in order to change the returned item subtype
 -- It is not called for "set" drops (like Mr. Boom from Wrath) and manually spawned items (like the Checkpoint)
 
 -- ModCallbacks.MC_PRE_GET_COLLECTIBLE (62)
 function PreGetCollectible:Main(poolType, decrease, seed)
+  --Isaac.DebugString("MC_PRE_GET_COLLECTIBLE - " .. tostring(poolType))
+
+  if g.run.gettingCollectible then
+    return
+  end
+
   -- Manually generate random items for specific item pools in seeded races
-  if g.run.gettingCollectible or
-     g.race.rFormat ~= "seeded" or
+  if g.race.rFormat ~= "seeded" or
      g.race.status ~= "in progress" or
      (poolType ~= ItemPoolType.POOL_DEVIL and -- 3
       poolType ~= ItemPoolType.POOL_ANGEL and -- 4

@@ -62,11 +62,16 @@ InputAction.IsActionPressedFunction = {
 --
 
 function InputAction.IsActionTriggeredPillCard()
+  -- Local variables
+  local game = Game()
+  local room = game:GetRoom()
+  -- (we can't use cached API functions in this callback or else the game will crash)
+  local roomFrameCount = room:GetFrameCount()
+
   -- Disable using cards/pills if we are in the trapdoor animation
   -- Disable using cards/pills if we are in the room sliding animation
   if g.run.trapdoor.state > 0 or
-     Game():GetRoom():GetFrameCount() == 0 then
-      -- (we can't use cached API functions in this callback or else the game will crash)
+     roomFrameCount == 0 then
 
     return false
   end
@@ -79,8 +84,12 @@ function InputAction.IsActionTriggeredDrop()
     return true
   end
 
-  local character = Game():GetPlayer(0):GetPlayerType()
+  -- Local variables
+  local game = Game()
+  local player = game:GetPlayer(0)
   -- (we can't use cached API functions in this callback or else the game will crash)
+  local character = player:GetPlayerType()
+
   if character == PlayerType.PLAYER_THEFORGOTTEN or -- 16
      character == PlayerType.PLAYER_THESOUL then  -- 17
 

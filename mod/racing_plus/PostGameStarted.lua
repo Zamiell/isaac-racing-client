@@ -188,6 +188,7 @@ function PostGameStarted:Main(saveState)
   end
 
   -- Make sure that the festive hat shows
+  -- (this is commented out if it is not currently a holiday)
   --g.p:AddNullCostume(NullItemID.ID_CHRISTMAS) -- 16
   -- (this corresponds to "n016_Christmas.anm2" in the "costumes2.xml" file)
 
@@ -368,7 +369,23 @@ function PostGameStarted:Character()
   g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
 
   -- Do character-specific actions
-  if character == PlayerType.PLAYER_CAIN then -- 2
+  if character == PlayerType.PLAYER_MAGDALENA then -- 1
+    -- Automatically use Maggy's Speed Up pill
+    local pillColor = g.p:GetPill(0)
+    g.p:UsePill(PillEffect.PILLEFFECT_SPEED_UP, pillColor) -- 14
+
+    -- We also have to update the speed cache
+    g.p:AddCacheFlags(CacheFlag.CACHE_SPEED) -- 16
+    g.p:EvaluateItems()
+
+    -- Mute the sound effects
+    g.sfx:Stop(SoundEffect.SOUND_POWERUP_SPEWER) -- 132
+    g.sfx:Stop(SoundEffect.SOUND_THUMBSUP) -- 268
+
+    -- Delete the starting pill
+    g.p:SetPill(0, PillColor.PILL_NULL) -- 0
+
+  elseif character == PlayerType.PLAYER_CAIN then -- 2
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 46 (Lucky Foot)")
     Isaac.DebugString("Adding collectible 46 (Lucky Foot)")

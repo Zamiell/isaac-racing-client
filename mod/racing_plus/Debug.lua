@@ -84,6 +84,10 @@ function Debug:Main()
   Sprites:Init("diversity-item5", 125) -- Trinket
   --]]
 
+  for i = 1, 100 do
+    Speedrun.S8TouchedItems[#Speedrun.S8TouchedItems + 1] = 1
+  end
+
   --
   -- End test stuff
   --

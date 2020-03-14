@@ -194,7 +194,8 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- the game will only remove the soul heart
   if (hearts > 0 and soulHearts > 0) or
      (hearts > 0 and boneHearts > 0) or
-     (soulHearts > 0 and boneHearts > 0) then
+     (soulHearts > 0 and boneHearts > 0) or
+     boneHearts >= 2 then -- Two bone hearts and nothing else should not result in a death
 
     return
   end

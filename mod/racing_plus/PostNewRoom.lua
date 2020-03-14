@@ -534,22 +534,30 @@ function PostNewRoom:BanB1TreasureRoom()
 
   -- Delete the doors to the Basement 1 treasure room, if any
   -- (this includes the doors in a Secret Room)
+  -- (we must delete the door before changing the minimap, or else the icon will remain)
   local treasureIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
-  local door
   for i = 0, 7 do
-    door = g.r:GetDoor(i)
+    local door = g.r:GetDoor(i)
     if door ~= nil and
-        door.TargetRoomIndex == treasureIndex then
+       door.TargetRoomIndex == treasureIndex then
 
       g.r:RemoveDoor(i)
     end
   end
 
-  -- Delete the icon on the map
+  -- Delete the icon on the minimap
   -- (this has to be done on every room, because it will reappear)
-  local treasureRoom = g.l:GetRoomByIdx(treasureIndex)
-  treasureRoom.DisplayFlags = 0
-  g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
+  local treasureRoom
+  if MinimapAPI == nil then
+    treasureRoom = g.l:GetRoomByIdx(treasureIndex)
+    treasureRoom.DisplayFlags = 0
+    g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
+  else
+    treasureRoom = MinimapAPI:GetRoomByIdx(treasureIndex)
+    if treasureRoom ~= nil then
+      treasureRoom:Remove()
+    end
+  end
 end
 
 function PostNewRoom:Race()
@@ -699,8 +707,6 @@ function PostNewRoom:Race()
     end
     Isaac.DebugString("Replaced Blue Baby / The Lamb with " .. tostring(numBosses) .. " random bosses.")
   end
-
-  PostNewRoom:CheckSeededMOTreasure()
 end
 
 function PostNewRoom:RaceStartRoom()
@@ -731,93 +737,6 @@ function PostNewRoom:RaceStartRoom()
   -- Spawn two Gaping Maws (235.0)
   Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
   Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
-end
-
-function PostNewRoom:CheckSeededMOTreasure()
-  -- Local variables
-  local roomType = g.r:GetType()
-  local gridSize = g.r:GetGridSize()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
-
-  -- Check to see if we need to make a custom item room for Seeded MO
-  if roomType == RoomType.ROOM_TREASURE and -- 4
-     g.race.rFormat == "seededMO" then
-
-    -- Delete everything in the room
-    for i = 1, gridSize do
-      local gridEntity = g.r:GetGridEntity(i)
-      if gridEntity ~= nil then
-        if gridEntity:GetSaveState().Type ~= GridEntityType.GRID_WALL and -- 15
-           gridEntity:GetSaveState().Type ~= GridEntityType.GRID_DOOR then -- 16
-
-          g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-        end
-      end
-    end
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-      if entity.Type ~= EntityType.ENTITY_PLAYER then -- 1
-        entity:Remove()
-      end
-    end
-
-    -- Define the item pedestal positions
-    local itemPos = {
-      {
-        {X = 6, Y = 3},
-      },
-      {
-        {X = 5, Y = 3},
-        {X = 7, Y = 3},
-      },
-      {
-        {X = 4, Y = 3},
-        {X = 6, Y = 3},
-        {X = 8, Y = 3},
-      },
-      {
-        {X = 5, Y = 2},
-        {X = 7, Y = 2},
-        {X = 5, Y = 4},
-        {X = 7, Y = 4},
-      },
-      {
-        {X = 5, Y = 2},
-        {X = 7, Y = 2},
-        {X = 4, Y = 4},
-        {X = 6, Y = 4},
-        {X = 8, Y = 4},
-      },
-      {
-        {X = 4, Y = 2},
-        {X = 6, Y = 2},
-        {X = 8, Y = 2},
-        {X = 4, Y = 4},
-        {X = 6, Y = 4},
-        {X = 8, Y = 4},
-      },
-    }
-
-    -- Define the various item tiers
-    local itemTiers = {
-      {1, 2, 3, 4, 5},
-      {6, 7, 8, 9, 10},
-    }
-
-    -- Find out which tier we need
-    math.randomseed(roomSeed)
-    local chosenTier = math.random(1, #itemTiers)
-
-    -- Place the item pedestals (5.100)
-    for i = 1, #itemTiers[chosenTier] do
-      local X = itemPos[#itemTiers[chosenTier]][i].X
-      local Y = itemPos[#itemTiers[chosenTier]][i].Y
-      local itemID = itemTiers[chosenTier][i]
-      local itemPedestal = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, itemID,
-                                       g:GridToPos(X, Y), g.zeroVector, nil)
-      -- (we don't care about the seed since the pedestal will be replaced on the next frame)
-      itemPedestal:ToPickup().TheresOptionsPickup = true
-    end
-  end
 end
 
 return PostNewRoom

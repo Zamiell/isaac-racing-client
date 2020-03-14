@@ -4,6 +4,7 @@ local SpeedrunPostGameStarted = {}
 local g                   = require("racing_plus/globals")
 local RacePostGameStarted = require("racing_plus/racepostgamestarted")
 local Speedrun            = require("racing_plus/speedrun")
+local Season8             = require("racing_plus/season8")
 local Schoolbag           = require("racing_plus/schoolbag")
 
 function SpeedrunPostGameStarted:Main()
@@ -41,22 +42,6 @@ function SpeedrunPostGameStarted:Main()
     g.run.restart = true
     Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
     return
-  end
-
-  if challenge == Isaac.GetChallengeIdByName(Speedrun.R7SeededName) then
-    Speedrun.inSeededSpeedrun = true
-    g:ExecuteCommand("challenge 0")
-    g:ExecuteCommand("seed " .. Speedrun.R7SeededSeeds[1])
-    -- We need to set a seed before restarting the game to enable "seeded mode"
-    g.run.restart = true
-    Isaac.DebugString("Restarting to take off the challenge for the seeded speedrun.")
-    return
-  end
-
-  if Speedrun.inSeededSpeedrun and
-     challenge ~= Challenge.CHALLENGE_NULL then -- 0
-
-    Speedrun.inSeededSpeedrun = false
   end
 
   if not Speedrun:InSpeedrun() then
@@ -113,15 +98,43 @@ function SpeedrunPostGameStarted:Main()
 
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       Speedrun.remainingItemStarts = g:TableClone(Speedrun.itemStartsS6)
-      Isaac.DebugString("S6 - Reset remaining item starts.")
       if Isaac.GetTime() - Speedrun.timeItemAssigned >= Speedrun.itemLockTime then
         Speedrun.selectedItemStarts = {}
-        Isaac.DebugString("S6 - Reset selected item starts.")
       end
 
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
       Speedrun.remainingGoals = g:TableClone(Speedrun.goalsS7)
       Speedrun.completedGoals = {}
+
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+      Speedrun.S8TouchedItems = {}
+      Speedrun.S8TouchedTrinkets = {}
+      Speedrun.S8RemainingCards = {}
+      Speedrun.S8RunPillEffects = {}
+      Speedrun.S8IdentifiedPills = {}
+
+      -- Fill the card pool with all of the possible cards
+      for i = 1, Card.NUM_CARDS - 1 do -- 55
+        Speedrun.S8RemainingCards[#Speedrun.S8RemainingCards + 1] = i
+      end
+
+      -- Fill the pill pool with all of the possible pill effects
+      -- (for all 7 characters)
+      local seed = g.seeds:GetStartSeed()
+      local chosenEffects = {}
+      for i = 1, 13 do
+        local randomEffectIndex
+        while true do
+          seed = g:IncrementRNG(seed)
+          math.randomseed(seed)
+          randomEffectIndex = math.random(1, #Speedrun.S8PillEffects)
+          if not g:TableContains(chosenEffects, randomEffectIndex) then
+            chosenEffects[#chosenEffects + 1] = randomEffectIndex
+            break
+          end
+        end
+        Speedrun.S8RunPillEffects[i] = Speedrun.S8PillEffects[randomEffectIndex]
+      end
     end
   end
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
@@ -137,11 +150,10 @@ function SpeedrunPostGameStarted:Main()
   end
 
   -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
-  -- (but Season 4, Season 6, and Seeded never get it, since there is no resetting involved)
+  -- (but Season 4 and Season 6 never get it, since there is no resetting involved)
   if Speedrun.charNum == 1 and
      (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-      not Speedrun.inSeededSpeedrun) then
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) then
 
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     g.p:RemoveCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
@@ -153,7 +165,9 @@ function SpeedrunPostGameStarted:Main()
   end
 
   -- Do actions based on the specific challenge
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
+  if challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
+    return -- Do nothing for the vanilla challenge
+  elseif challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") then
     SpeedrunPostGameStarted:R9S1()
   elseif challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
     SpeedrunPostGameStarted:R14S1()
@@ -169,10 +183,8 @@ function SpeedrunPostGameStarted:Main()
     SpeedrunPostGameStarted:R7S6()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     SpeedrunPostGameStarted:R7S7()
-  elseif Speedrun.inSeededSpeedrun then
-    SpeedrunPostGameStarted:R7SS()
-  elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
-    return -- Do nothing for the vanilla challenge
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    Season8:PostGameStarted()
   else
     Isaac.DebugString("Error: Unknown challenge.")
   end
@@ -225,7 +237,8 @@ function SpeedrunPostGameStarted:R14S1()
     -- Lilith starts with the Schoolbag by default
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, 4) -- 357
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
 
     -- Reorganize the items on the item tracker
     Isaac.DebugString("Removing collectible 412 (Cambion Conception)")
@@ -248,7 +261,8 @@ function SpeedrunPostGameStarted:R14S1()
     -- Apollyon starts with the Schoolbag by default
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, 6) -- 477
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
   end
 end
 
@@ -272,7 +286,8 @@ function SpeedrunPostGameStarted:R7S2()
     -- Apollyon starts with the Schoolbag by default
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, 6) -- 477
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
   end
 end
 
@@ -288,19 +303,26 @@ function SpeedrunPostGameStarted:R7S3()
 
   -- Give extra items to characters for the R+7 speedrun category (Season 3)
   if character == PlayerType.PLAYER_ISAAC then -- 0
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_MOVING_BOX, "max") -- 523
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_MOVING_BOX, 4) -- 523
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
   elseif character == PlayerType.PLAYER_MAGDALENA then -- 1
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, "max") -- 282
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, 0) -- 282
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOW_TO_JUMP) -- 282
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) -- 34
   elseif character == PlayerType.PLAYER_EVE then -- 5
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_CANDLE, "max") -- 164
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_CANDLE, 110) -- 164
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_CANDLE) -- 164
   elseif character == PlayerType.PLAYER_SAMSON then -- 6
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_MR_ME, "max") -- 527
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_MR_ME, 4) -- 527
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MR_ME) -- 527
   elseif character == PlayerType.PLAYER_LAZARUS then -- 8
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_VENTRICLE_RAZOR, "max") -- 396
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_VENTRICLE_RAZOR, 0) -- 396
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VENTRICLE_RAZOR) -- 396
   elseif character == PlayerType.PLAYER_THELOST then -- 10
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_GLASS_CANNON, "max") -- 352
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_GLASS_CANNON, 110) -- 352
+    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_GLASS_CANNON) -- 352
   end
 end
 
@@ -362,7 +384,7 @@ function SpeedrunPostGameStarted:R7S4()
       -- Start with the Kamikaze in the active slot for quality of life purposes
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE, 0, false) -- 40
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE) -- 40
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_D6, "max") -- 105
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_D6, 6) -- 105
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_HOST_HAT, 0, false) -- 375
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOST_HAT) -- 375
 
@@ -730,39 +752,6 @@ function SpeedrunPostGameStarted:R7S7()
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER) -- 84
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_IPECAC) -- 149
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MEGA_SATANS_BREATH) -- 441
-end
-
-function SpeedrunPostGameStarted:R7SS()
-  -- Local variables
-  local startSeedString = g.seeds:GetStartSeedString()
-
-  Isaac.DebugString("In the R+7 Seeded challenge.")
-
-  -- Make sure that we are on the correct seed
-  if startSeedString ~= Speedrun.R7SeededSeeds[Speedrun.charNum] then
-    -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
-    g.run.restart = true
-    Isaac.DebugString("Restarting because we were not on the right seed.")
-    return
-  end
-
-  -- Everyone starts with the Mind in this custom challenge
-  g.p:AddCollectible(CollectibleType.COLLECTIBLE_MIND, 0, false) -- 333
-  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MIND) -- 333
-  g.p:RemoveCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MIND)) -- 333
-  -- We don't want the costume to show
-
-  -- Remove certain trinkets from the game that affect floor generation
-  g.itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
-  g.itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
-
-  if Speedrun.charNum == 1 then
-    -- Spawn a "Finished" custom item in the corner of the room (which takes you to the main menu)
-    -- (we do not care about the seed because it should not be possible to roll this item)
-    local finishedPosition = g:GridToPos(1, 1)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_FINISHED,
-                finishedPosition, g.zeroVector, nil)
-  end
 end
 
 return SpeedrunPostGameStarted

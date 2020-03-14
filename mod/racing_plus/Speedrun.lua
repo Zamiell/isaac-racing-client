@@ -18,6 +18,7 @@ Speedrun.challengeTable = {
   -- (there is no character order for season 5)
   [Isaac.GetChallengeIdByName("R+7 (Season 6)")]  = {"R7S6",  11}, -- (7 characters + 3 item bans + 1 big 4 item ban)
   [Isaac.GetChallengeIdByName("R+7 (Season 7)")]  = {"R7S7",  7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)")]  = {"R7S8",  7},
   [Isaac.GetChallengeIdByName("R+15 (Vanilla)")]  = {"R15V",  15},
 }
 
@@ -112,24 +113,26 @@ Speedrun.itemLockTime = 60 * 1000 -- 1 minute
 Speedrun.vetoButtonLength = 5 * 60 * 1000 -- 5 minutes
 -- (this is how often the special "Veto" button can be used)
 
-Speedrun.R7SeededName = "R+7 Seeded (Q4 2018)"
-Speedrun.R7SeededSeeds = {
-  "4PME M424",
-  "JFSC 2WW7",
-  "WEFG XQ6F",
-  "4FAH GTDX",
-  "3J46 P8BJ",
-  "9YHG YKXH",
-  "BQ9S MATW",
-}
-Speedrun.R7SeededB1 = { -- These are the floor 1 stage types for the above seeds
-  "b",
-  "",
-  "a",
-  "a",
-  "b",
-  "",
-  "a",
+-- Season 8 constants
+Speedrun.S8PillEffects = {
+  PillEffect.PILLEFFECT_BALLS_OF_STEEL, -- 2
+  PillEffect.PILLEFFECT_BOMBS_ARE_KEYS, -- 3
+  PillEffect.PILLEFFECT_EXPLOSIVE_DIARRHEA, -- 4,
+  PillEffect.PILLEFFECT_HEALTH_DOWN, -- 6
+  PillEffect.PILLEFFECT_HEALTH_UP, -- 7
+  PillEffect.PILLEFFECT_PRETTY_FLY, -- 10
+  PillEffect.PILLEFFECT_SPEED_DOWN, -- 13
+  PillEffect.PILLEFFECT_SPEED_UP, -- 14
+  PillEffect.PILLEFFECT_TEARS_DOWN, -- 15
+  PillEffect.PILLEFFECT_TEARS_UP, -- 16
+  PillEffect.PILLEFFECT_TELEPILLS, -- 19
+  PillEffect.PILLEFFECT_48HOUR_ENERGY, -- 20
+  PillEffect.PILLEFFECT_SEE_FOREVER, -- 23
+  PillEffect.PILLEFFECT_LEMON_PARTY, -- 26
+  PillEffect.PILLEFFECT_PERCS, -- 28
+  PillEffect.PILLEFFECT_POWER, -- 36
+  PillEffect.PILLEFFECT_IM_DROWSY, -- 41
+  PillEffect.PILLEFFECT_GULP, -- 43
 }
 
 --
@@ -167,8 +170,12 @@ Speedrun.vetoTimer = 0
 Speedrun.remainingGoals = {} -- Reset at the beginning of a new run on the first character
 Speedrun.completedGoals = {} -- Reset at the beginning of a new run on the first character
 
--- Seeded season variables
-Speedrun.inSeededSpeedrun = false -- Reset when the "Finished" custom item is touched
+-- Season 8 variables
+Speedrun.S8TouchedItems = {} -- Reset at the beginning of a new run on the first character
+Speedrun.S8TouchedTrinkets = {} -- Reset at the beginning of a new run on the first character
+Speedrun.S8RemainingCards = {} -- Reset at the beginning of a new run on the first character
+Speedrun.S8RunPillEffects = {} -- Reset at the beginning of a new run on the first character
+Speedrun.S8IdentifiedPills = {} -- Reset at the beginning of a new run on the first character
 
 -- Called from the PostUpdate callback (the "CheckEntities:NonGrid()" function)
 function Speedrun:Finish()
@@ -268,7 +275,7 @@ function Speedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     Speedrun.inSeededSpeedrun or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
     return true
@@ -369,26 +376,6 @@ function Speedrun:GetAverageTimePerCharacter()
 
   -- e.g. [minute1][minute2]:[second1][second2]
   return tostring(timeTable[2]) .. tostring(timeTable[3]) .. ":" .. tostring(timeTable[4]) .. tostring(timeTable[5])
-end
-
--- ModCallbacks.MC_USE_ITEM (23)
--- CollectibleType.COLLECTIBLE_D6 (105)
-function Speedrun:PreventD6()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-  local startingRoomIndex = g.l:GetStartingRoomIndex()
-
-  -- Prevent re-rolling the "Finished" custom item that is spawned in the first room of the first character
-  if not Speedrun.inSeededSpeedrun or
-     Speedrun.charNum ~= 1 or
-     stage ~= 1 or
-     roomIndexUnsafe ~= startingRoomIndex then
-
-    return
-  end
-
-  return true
 end
 
 return Speedrun

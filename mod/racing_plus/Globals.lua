@@ -5,21 +5,21 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.49.1"
+g.version = "v0.49.2"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state         = 0, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
-  seed          = "RFR1 SAML", -- A randomly chosen seed that contains a BP5 item
-  activeItem    = CollectibleType.COLLECTIBLE_BLUE_BOX, -- 297
-  passiveItem   = CollectibleType.COLLECTIBLE_JAW_BONE, -- 548
+  seed          = "P8Q3 MRKZ", -- A randomly chosen seed that contains a BP5 item
+  activeItem    = CollectibleType.COLLECTIBLE_BOOK_OF_THE_DEAD, -- 545
+  passiveItem   = CollectibleType.COLLECTIBLE_MYSTERY_EGG, -- 539
   -- Eden's items will change if we have The Babies Mod enabled
-  activeItem2  = CollectibleType.COLLECTIBLE_BLOOD_RIGHTS, -- 186
-  passiveItem2 = CollectibleType.COLLECTIBLE_TRISAGION, -- 533
+  activeItem2  = CollectibleType.COLLECTIBLE_MYSTERY_GIFT, -- 515
+  passiveItem2 = CollectibleType.COLLECTIBLE_ABEL, -- 188
   -- Eden's items will change if we have Racing+ Rebalanced enabled
-  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105
-  passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128
+  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105 TODO
+  passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128 TODO
   old = {
     challenge = 0,
     character = 0,
@@ -140,7 +140,6 @@ EffectVariant.CRACK_THE_SKY_BASE             = Isaac.GetEntityVariantByName("Cra
 EffectVariant.STICKY_NICKEL                  = Isaac.GetEntityVariantByName("Sticky Nickel Effect")
 
 -- Collectibles
--- (unused normal item IDs are: 43, 59, 61, 235, 263)
 CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
 CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
 CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
@@ -267,7 +266,8 @@ function g:InitRun()
   g.run.goingToDebugRoom      = false
   g.run.forgetMeNow           = false
   g.run.consoleOpened         = false -- If set, fast-resetting is disabled
-  g.run.streakText            = ""
+  g.run.streakText            = "" -- Text that appears after players touch an item, reach a new level, etc.
+  g.run.streakText2           = "" -- Secondary streak text that will only show if there is no primary streak text
   g.run.streakFrame           = 0
   g.run.streakForce           = false
   g.run.streakIgnore          = false
@@ -293,6 +293,7 @@ function g:InitRun()
   g.run.passiveItems          = {} -- Used to keep track of the currently collected passive items
   g.run.pickingUpItem         = 0 -- Equal to the ID of the currently queued item
   g.run.pickingUpItemRoom     = 0 -- Equal to the room that we picked up the currently queued item
+  g.run.pickingUpItemType     = 0 -- Equal to the "QueuedItem.Item.Type" (the "ItemType" enum)
   g.run.knifeDirection        = {} -- A 2-dimensional array that stores the directions held on past frames
   g.run.lastDDLevel           = 0 -- Used by the Soul Jar
   g.run.switchForgotten       = false -- Used to manually switch the player between The Forgotten and The Soul
@@ -310,6 +311,8 @@ function g:InitRun()
   g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
   g.run.spamButtons           = false -- Used to spam Blood Rights
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
+  g.run.spawnedUltraGreed     = false -- Used in Season 7
+  g.run.usingBlankRune        = false -- Used in Season 8
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy
@@ -667,6 +670,16 @@ function g:GetPlayerVisibleHearts()
       visibleHearts = 1
   end
   return visibleHearts
+end
+
+-- Kilburn's function (pinned in the Isaac Discord server)
+function g:GetScreenSize()
+  local pos = g.r:WorldToScreenPosition(g.zeroVector) - g.r:GetRenderScrollOffset() - g.g.ScreenShakeOffset
+
+  local rx = pos.X + 60 * 26 / 40
+  local ry = pos.Y + 140 * (26 / 40)
+
+  return { rx * 2 + 13 * 26, ry * 2 + 7 * 26 }
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

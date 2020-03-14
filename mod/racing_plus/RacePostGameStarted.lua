@@ -271,9 +271,6 @@ function RacePostGameStarted:Main()
       g.run.diversity = true -- Mark to not remove the 3 placeholder items later on
       RacePostGameStarted:Diversity()
     end
-
-  elseif g.race.rFormat == "seededMO" then
-    RacePostGameStarted:SeededMO()
   end
 end
 
@@ -342,21 +339,29 @@ function RacePostGameStarted:Seeded()
   -- Give the player extra Schoolbag items, depending on the character
   if not replacedD6 then
     if character == PlayerType.PLAYER_MAGDALENA then -- 1
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, "max") -- 45
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, 4) -- 45
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_YUM_HEART) -- 45
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) -- 34
     elseif character == PlayerType.PLAYER_XXX then -- 4
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_POOP, "max") -- 36
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_POOP, 1) -- 36
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_POOP) -- 36
     elseif character == PlayerType.PLAYER_EVE then -- 5
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, "max") -- 126
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, 0) -- 126
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_RAZOR_BLADE) -- 125
     elseif character == PlayerType.PLAYER_THELOST then -- 10
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_D4, "max") -- 284
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_D4, 6) -- 284
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_D4) -- 284
     elseif character == PlayerType.PLAYER_LILITH then -- 13
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, 4) -- 357
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS) -- 357
     elseif character == PlayerType.PLAYER_KEEPER then -- 14
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_WOODEN_NICKEL, "max") -- 349
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_WOODEN_NICKEL, 1) -- 349
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_WOODEN_NICKEL) -- 349
     elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-      Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
+      Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, 6) -- 477
+      g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
     end
   end
 
@@ -372,7 +377,7 @@ function RacePostGameStarted:Seeded()
     end
   end
 
-  -- Add item bans for seeded mode
+  -- Remove Cain's Eye since we start with the Compass
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
 
   -- Since this race type has a custom death mechanic, we also want to remove the Broken Ankh
@@ -442,6 +447,7 @@ function RacePostGameStarted:Diversity()
       if g.run.schoolbag.item == CollectibleType.COLLECTIBLE_EDENS_SOUL then -- 490
         g.run.schoolbag.charge = 0 -- This is the only item that does not start with any charges
       end
+      g.itemPool:RemoveCollectible(itemID)
 
       -- Give them the item so that the player gets any inital pickups (e.g. Remote Detonator)
       g.p:AddCollectible(itemID, 0, true)
@@ -626,7 +632,8 @@ function RacePostGameStarted:Pageant()
   -- (the extra luck is handled in the EvaluateCache callback)
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-  Schoolbag:Put(CollectibleType.COLLECTIBLE_DADS_KEY, "max") -- 175
+  Schoolbag:Put(CollectibleType.COLLECTIBLE_DADS_KEY, 2) -- 175
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DADS_KEY) -- 175
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD, 0, false) -- 4
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MAXS_HEAD) -- 4
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 246
@@ -655,55 +662,6 @@ function RacePostGameStarted:UnseededRankedSolo()
     g.p:AddCollectible(itemID, 12, true)
     g.itemPool:RemoveCollectible(itemID)
   end
-end
-
-function RacePostGameStarted:SeededMO()
-  -- Local variables
-  local character = g.p:GetPlayerType()
-
-  -- Give the player extra starting items (for seeded races)
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) then -- 21
-    -- Eden can start with The Compass
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_COMPASS, 0, false) -- 21
-    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
-  end
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
-    -- Eden and Samael start with the Schoolbag
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
-    g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-  end
-
-  -- Give the player extra Schoolbag items, depending on the character
-  if character == PlayerType.PLAYER_MAGDALENA then -- 1
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, "max") -- 45
-  elseif character == PlayerType.PLAYER_JUDAS then -- 3
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, "max") -- 34
-  elseif character == PlayerType.PLAYER_XXX then -- 4
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_POOP, "max") -- 36
-  elseif character == PlayerType.PLAYER_EVE then -- 5
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, "max") -- 126
-  elseif character == PlayerType.PLAYER_THELOST then -- 10
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_D4, "max") -- 284
-  elseif character == PlayerType.PLAYER_LILITH then -- 13
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_BOX_OF_FRIENDS, "max") -- 357
-  elseif character == PlayerType.PLAYER_KEEPER then -- 14
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_WOODEN_NICKEL, "max") -- 349
-  elseif character == PlayerType.PLAYER_APOLLYON then -- 15
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, "max") -- 477
-  end
-
-  -- Add item bans for seeded mode
-  g.itemPool:RemoveTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
-
-  -- Since this race type has a custom death mechanic, we also want to remove the Broken Ankh
-  -- (since we need the custom revival to always take priority over random revivals)
-  g.itemPool:RemoveTrinket(TrinketType.TRINKET_BROKEN_ANKH) -- 28
-
-  -- Seeded MO specific things
-  g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_D6) -- 105
-  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DINF) -- 59
-
-  Isaac.DebugString("Added seeded MO items.")
 end
 
 return RacePostGameStarted

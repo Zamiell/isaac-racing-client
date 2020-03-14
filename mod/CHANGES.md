@@ -171,8 +171,10 @@ While there are thousands of rooms in the game, many players have already seen t
 * The Abaddon collectible is replaced with the pre-Booster Pack 5 version.
 * The 20/20 collectible is now easier to see.
 * The colors of some Purity auras have been changed to make them easier to see. Speed is now green and range is now yellow.
-* The red spotted pill sprite has been changed to an all-red sprite so that it is easier to distinguish from other red pills.
 * Pill sprites now have consistent orientations. (Thanks goes to [Nioffe](https://steamcommunity.com/id/nioffe) for creating the sprites in the [Consistent Pills](https://steamcommunity.com/sharedfiles/filedetails/?id=1418510121) mod.)
+* The red spotted pill sprite has been changed to an all-red sprite so that it is easier to see.
+* The white spotted pill sprite has been changed to an all-spotted sprite so that it is easier to distinguish from the white pill.
+* The white has been changed on the red-white pill sprite so that it is easier to see.
 * The Locust of Famine graphic now matches the color of the flies.
 * Daemon's Tail and Error now have outlines. (Thanks goes to [O_o](http://steamcommunity.com/profiles/76561197993627005) for creating the sprites in the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod.)
 * There are now unique card backs for Rules, Suicide King, ?, Blank Rune, and Black Rune. (Thanks goes to [piber20](https://steamcommunity.com/id/piber20) for creating the sprites in the [Unique Card Backs](https://steamcommunity.com/sharedfiles/filedetails/?id=1120999933) mod.)

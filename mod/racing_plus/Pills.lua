@@ -43,6 +43,9 @@ function Pills:PostRender()
 
     -- Show the pill effect as text
     local string = g.itemConfig:GetPillEffect(pillEntry.effect).Name
+    if string == "Feels like I'm walking on sunshine!" then
+      string = "Walking on sunshine!"
+    end
     g.font:DrawString(string, x + 15, y - 9, g.kcolor, 0, true)
   end
 end

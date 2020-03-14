@@ -36,6 +36,11 @@ function FastDrop:CheckDropInput()
     return
   end
 
+  -- Fast-drop is disabled during when the player is holding an item above their head
+  if not g.p:IsItemQueueEmpty() then
+    return
+  end
+
   -- Trinkets (this does handle the Tick properly)
   local pos3 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
   g.p:DropTrinket(pos3, false)
@@ -78,6 +83,11 @@ function FastDrop:CheckDropInputTrinket()
     return
   end
 
+  -- Fast-drop is disabled during when the player is holding an item above their head
+  if not g.p:IsItemQueueEmpty() then
+    return
+  end
+
   -- Trinkets
   -- (this code does handle the Tick properly)
   local pos1 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
@@ -112,6 +122,11 @@ function FastDrop:CheckDropInputPocket()
     end
   end
   if not pressed then
+    return
+  end
+
+  -- Fast-drop is disabled during when the player is holding an item above their head
+  if not g.p:IsItemQueueEmpty() then
     return
   end
 

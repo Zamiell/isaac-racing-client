@@ -68,11 +68,11 @@ function BigChest:PostPickupInit(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     BigChest:S7(pickup)
 
-  elseif Speedrun.inSeededSpeedrun then
-    BigChest:SS(pickup)
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    BigChest:SpeedrunUp(pickup)
 
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
-    BigChest:S0(pickup)
+    BigChest:SVanilla(pickup)
 
   elseif g.raceVars.finished then
     BigChest.action = "victoryLap"
@@ -310,21 +310,7 @@ function BigChest:S7(pickup)
   end
 end
 
-function BigChest:SS(pickup)
-  -- Local variables
-  local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-
-  if stage == 11 and stageType == 1 then -- The Chest
-    if Speedrun.charNum == 7 then
-      BigChest.action = "trophy"
-    else
-      BigChest.action = "checkpoint"
-    end
-  end
-end
-
-function BigChest:S0(pickup)
+function BigChest:SVanilla(pickup)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()

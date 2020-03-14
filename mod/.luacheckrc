@@ -95,6 +95,7 @@ globals = {
   "RacingPlusRebalanced",
   "VanillaStreakText",
   "InfinityTrueCoopInterface", -- The True Co-op Mod
+  "MinimapAPI",
 }
 
 -- Luacheck complains about functions in a module declared with a colon if self is unused;

@@ -1,5 +1,18 @@
 # Racing+ Version History and News
 
+### *v0.49.2* - March 14th, 2020
+
+* Magdalene will now automatically use her Speed Up pill at the beginning of a run.
+* There is now custom streak text to display the floor name when you hold tab.
+* Fixed the bug in the seeded death mechanic where you would incorrectly die with two bone hearts. (Thanks CrafterLynx & ReidMercury)
+* Fixed the bug where fast-drop would cancel the item pickup animation. (Thanks Pingouin23)
+* Fixed the bug in season 7 where icons to boss rooms other than Ultra Greed would show up on the minimap under certain conditions.
+* Fixed the bug in season 7 where doors to boss rooms other than Ultra Greed would be accessible.
+* Fixed the bug in season 7 where a Greed Door would overlap with an open door. (Thanks mgln)
+* Fixed the bug where items dropped from angels could overlap with other entities under certain conditions. (Thanks Toooschi)
+* Fixed the bug where Angels would drop key pieces after you already had them.
+* Fixed the (vanilla) bug where Forever Alone was inproperly stylized.
+
 ### *v0.49.1* - February 23rd, 2020
 
 * Fixed the bug where client race placings were wrong under certain conditions. (Thanks mgln)

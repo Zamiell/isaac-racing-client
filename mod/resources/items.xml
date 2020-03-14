@@ -1,15 +1,18 @@
 <!--
 
+Unused item IDs:
+- 43, 59, 61, 235, 263
+
 Changes:
 - Removed the "special" tag from all items
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 	(items that give bone hearts do not count as health up items for Keeper)
 - Added the "luck" cache to Dad's Lost Coin (455) (for the inventory change)
-- Added the "damage" cache to 20/20 (245) (for Samael)
-- Renamed "Schoolbag" (534) to "Schoolbag (Vanilla)"
+- Renamed "Forever alone" (128) to "Forever Alone"
 - Renamed "Maw Of The Void" (399) to "Maw of the Void"
 - Renamed "Spear Of Destiny" (400) to "Spear of Destiny"
 - Renamed "Crown Of Light" (415) to "Crown of Light"
+- Renamed "Schoolbag" (534) to "Schoolbag (Vanilla)"
 
 Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to My Reflection (5)
@@ -153,7 +156,7 @@ Changes for Racing+ Rebalanced:
 	<passive bombs="5" description="Homing bombs" gfx="Collectibles_125_BobbyBomb.png" id="125" name="Bobby-Bomb" />
 	<active achievement="44" cache="damage" description="Feel my pain" gfx="Collectibles_126_RazorBlade.png" id="126" maxcharges="0" name="Razor Blade" />
 	<active achievement="48" description="I don't remember..." gfx="Collectibles_127_ForgetMeNow.png" id="127" maxcharges="0" name="Forget Me Now" />
-	<familiar description="Attack fly" gfx="Collectibles_128_ForeverAlone.png" id="128" name="Forever alone" />
+	<familiar description="Attack fly" gfx="Collectibles_128_ForeverAlone.png" id="128" name="Forever Alone" />
 	<passive cache="speed range" description="HP up" gfx="Collectibles_129_BucketofLard.png" hearts="1" id="129" maxhearts="4" name="Bucket of Lard" />
 	<active cache="flying speed" description="Flight + dash attack" gfx="Collectibles_130_APony.png" id="130" maxcharges="4" name="A Pony" />
 	<familiar achievement="46" description="Gives bombs" gfx="Collectibles_131_BombBag.png" id="131" name="Bomb Bag" />
@@ -271,7 +274,7 @@ Changes for Racing+ Rebalanced:
 	<passive description="Damage reduction" gfx="collectibles_242_infamy.png" id="242" name="Infamy" />
 	<passive cache="weapon" description="You feel guarded" gfx="collectibles_243_trinityshield.png" id="243" name="Trinity Shield" />
 	<passive achievement="104" description="It's still being tested..." gfx="collectibles_244_techpointfive.png" id="244" name="Tech.5" />
-	<passive cache="damage" description="Double shot" gfx="collectibles_245_2020.png" id="245" name="20/20" />
+	<passive description="Double shot" gfx="collectibles_245_2020.png" id="245" name="20/20" />
 	<passive achievement="134" description="Secrets" gfx="collectibles_246_bluemap.png" id="246" name="Blue Map" />
 	<passive description="Your friends rule" gfx="collectibles_247_bffs.png" id="247" name="BFFS!" />
 	<passive description="Giant spiders and flies" gfx="collectibles_248_hivemind.png" id="248" name="Hive Mind" />

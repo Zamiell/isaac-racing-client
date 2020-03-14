@@ -7,6 +7,7 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * Various bugs will happen if you alternate between playing two different runs on two different save files.
 * Fast-clear does not apply to Challenge Rooms.
 * When returning to the Boss Rush from a crawlspace, the camera will jerk from the door to the location of the crawlspace.
+* Rules cards will sometimes show vanilla seeds instead of tournament winners.
 
 ## Bugs with the Schoolbag
 

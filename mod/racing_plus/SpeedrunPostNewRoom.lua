@@ -330,7 +330,19 @@ function SpeedrunPostNewRoom:Season7Stage12()
     return
   end
 
-  -- Show the boss icon for the custom boss room and remove of the other ones
+  -- Delete the door to a non-Ultra Greed boss room, if any
+  -- (we must delete the door before changing the minimap, or else the icon will remain)
+  for i = 0, 7 do
+    local door = g.r:GetDoor(i)
+    if door ~= nil and
+       door.TargetRoomType == RoomType.ROOM_BOSS and -- 5
+       door.TargetRoomIndex ~= g.run.customBossRoomIndex then
+
+      g.r:RemoveDoor(i)
+    end
+  end
+
+  -- Show the boss icon for the custom boss room and remove all of the other ones
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
     local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
@@ -338,11 +350,24 @@ function SpeedrunPostNewRoom:Season7Stage12()
     local roomType = roomData.Type
 
     if roomType == RoomType.ROOM_BOSS then -- 5
-      local room = g.l:GetRoomByIdx(roomIndex) -- We have use this function in order to modify the DisplayFlags
-      if roomIndex == g.run.customBossRoomIndex then
-        room.DisplayFlags = 1 << 2 -- Show the icon
+      local room
+      if MinimapAPI == nil then
+        -- For whatever reason, we can't modify the DisplayFlags on the roomDesc that we already have,
+        -- so we have to re-get the room using the following function
+        room = g.l:GetRoomByIdx(roomIndex)
       else
-        room.DisplayFlags = 1 << -1 -- Remove the icon (in case we have the Compass or The Mind)
+        room = MinimapAPI:GetRoomByIdx(roomIndex)
+      end
+      if roomIndex == g.run.customBossRoomIndex then
+        -- Make the Ultra Greed room visible and show the icon
+        room.DisplayFlags = 5
+      else
+        -- Remove the boss room icon (in case we have the Compass or The Mind)
+        if MinimapAPI == nil then
+          room.DisplayFlags = 0
+        elseif room ~= nil then
+          room:Remove()
+        end
       end
     end
   end
@@ -362,7 +387,10 @@ function SpeedrunPostNewRoom:Season7Stage12()
 
     -- Spawn Ultra Greed
     Isaac.Spawn(EntityType.ENTITY_ULTRA_GREED, 0, 0, centerPos, g.zeroVector, nil) -- 406
-    --Isaac.Spawn(Isaac.GetEntityTypeByName("Mahalath"), 1, 0, centerPos, g.zeroVector, nil)
+
+    -- Mark to potentially delete one of the Ultra Greed Doors on the next frame
+    -- (the Ultra Greed Doors take a frame to spawn after Ultra Greed spawns)
+    g.run.spawnedUltraGreed = true
   end
 end
 

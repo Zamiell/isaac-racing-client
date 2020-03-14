@@ -184,6 +184,10 @@
 
 * You must defeat Blue Baby on the following 7 characters:
   * Isaac, Cain, Judas, Eve, Lazarus II, Black Judas, Apollyon
+<<<<<<< HEAD
+=======
+* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
+>>>>>>> v0.49.2
 * All characters start with the Schoolbag.
 * Isaac starts with a 2nd D6 inside the Schoolbag.
 * Cain starts with More Options.
@@ -202,7 +206,11 @@
 * When a card is used, it will no longer drop for the rest of the run or on subsequent runs.
 * The starting items for all 7 characters are removed from all pools (for all characters).
 * Judas' Shadow and Lazarus Rags are removed from all pools.
+<<<<<<< HEAD
 * Mega Blast is removed from all pools on the first character.
+=======
+* Mega Blast is removed from all pools on Apollyon.
+>>>>>>> v0.49.2
 
 ### Shared Pills
 

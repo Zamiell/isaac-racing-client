@@ -3,6 +3,7 @@ local SpeedrunPostRender = {}
 -- Includes
 local g        = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
+local Season8  = require("racing_plus/season8")
 local Sprites  = require("racing_plus/sprites")
 
 function SpeedrunPostRender:Main()
@@ -17,7 +18,9 @@ function SpeedrunPostRender:Main()
   SpeedrunPostRender:CheckRestart()
   SpeedrunPostRender:DisplayCharProgress()
   SpeedrunPostRender:DrawVetoButtonText()
+  SpeedrunPostRender:DrawSeason7Goals()
   SpeedrunPostRender:RemoveDiversitySprites()
+  Season8:PostRender()
 end
 
 function SpeedrunPostRender:CheckRestart()
@@ -73,25 +76,9 @@ function SpeedrunPostRender:DisplayCharProgress()
     Speedrun.sprites.slash:Load("gfx/timer/slash.anm2", true)
     Speedrun.sprites.slash:SetFrame("Default", 0)
 
-    local fileName = "S1"
-    if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-       challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") then
-      fileName = "S1"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") then
-      fileName = "S2"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-      fileName = "S3"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") then
-      fileName = "S4"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") then
-      fileName = "S5"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-      fileName = "S6"
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-      fileName = "S7"
-    elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
-      fileName = "V"
-    end
+    -- Get the abbreviation for the challenge that we are currently in
+    local fileName = Speedrun.challengeTable[challenge][1]
+
     Speedrun.sprites.season = Sprite()
     Speedrun.sprites.season:Load("gfx/speedrun/" .. fileName .. ".anm2", true)
     Speedrun.sprites.season:SetFrame("Default", 0)
@@ -100,9 +87,6 @@ function SpeedrunPostRender:DisplayCharProgress()
   -- Local variables
   local digitLength = 7.25
   local startingX = 23
-  if Speedrun.inSeededSpeedrun then
-    startingX = startingX + 4 -- We have to shift it to the right because the challenge icon will not appear
-  end
   local startingY = 79
   local adjustment1 = 0
   local adjustment2 = 0
@@ -209,7 +193,7 @@ function SpeedrunPostRender:DrawSeason7Goals()
     return
   end
 
-  -- Make the baby description persist for at least 2 seconds after the player presses tab
+  -- Make the text persist for at least 2 seconds after the player presses tab
   local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
@@ -222,14 +206,14 @@ function SpeedrunPostRender:DrawSeason7Goals()
   end
 
   -- Draw the remaining goals on the screen for easy-reference
-  local x = 80
-  local y = 75
-  g.font:DrawString("Remaining Goals:", x + 15, y - 9, g.kcolor, 0, true)
+  local x = 95
+  local baseY = 66
+  g.font:DrawString("Remaining Goals:", x, baseY, g.kcolor, 0, true)
 
   for i, goal in ipairs(Speedrun.remainingGoals) do
-    y = 75 + (20 * i)
+    local y = baseY + (20 * i)
     local string = "- " .. tostring(goal)
-    g.font:DrawString(string, x + 15, y - 9, g.kcolor, 0, true)
+    g.font:DrawString(string, x, y, g.kcolor, 0, true)
   end
 end
 

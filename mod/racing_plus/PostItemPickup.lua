@@ -3,7 +3,8 @@ local PostItemPickup = {}
 -- These functions are used to deposit items directly in the player's inventory, if there is room
 
 -- Includes
-local g = require("racing_plus/globals")
+local g       = require("racing_plus/globals")
+local Season8 = require("racing_plus/season8")
 
 function PostItemPickup:InsertNearestCoin()
   PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_COIN) -- 20
@@ -207,6 +208,9 @@ function PostItemPickup:InsertTrinket(trinket)
   trinket:Remove()
   trinket.Touched = true
   -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  Season8:RemoveTrinket(trinket.SubType)
+
   return true
 end
 

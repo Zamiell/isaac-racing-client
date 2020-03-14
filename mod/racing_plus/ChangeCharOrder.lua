@@ -9,8 +9,29 @@ local g = require("racing_plus/globals")
 
 -- The format of "charPosition" is character number, X, Y
 ChangeCharOrder.seasons = {
+  R15V = {
+    X = 0,
+    Y = 1,
+    charPosition = {
+      {0, 1, 1},   -- Isaac
+      {1, 3, 1},   -- Magdalene
+      {2, 5, 1},   -- Cain
+      {3, 7, 1},   -- Judas
+      {4, 9, 1},   -- Blue Baby
+      {5, 11, 1},  -- Eve
+      {6, 1, 3},   -- Samson
+      {7, 3, 3},   -- Azazel
+      {8, 5, 3},   -- Lazarus
+      {9, 7, 3},   -- Eden
+      {10, 9, 3},  -- The Lost
+      {13, 11, 3}, -- Lilith
+      {14, 1, 5},  -- Keeper
+      {15, 3, 5},  -- Apollyon
+      {16, 11, 5}, -- The Forgotton
+    },
+  },
   R9S1 = {
-    X = 2,
+    X = 4,
     Y = 1,
     charPosition = {
       {2, 2, 1},  -- Cain
@@ -25,7 +46,7 @@ ChangeCharOrder.seasons = {
     },
   },
   R14S1 = {
-    X = 6,
+    X = 8,
     Y = 1,
     charPosition = {
       {0, 1, 1},   -- Isaac
@@ -46,7 +67,7 @@ ChangeCharOrder.seasons = {
     },
   },
   R7S2 = {
-    X = 10,
+    X = 12,
     Y = 1,
     charPosition = {
       {0, 2, 1},  -- Isaac
@@ -59,7 +80,7 @@ ChangeCharOrder.seasons = {
     },
   },
   R7S3 = {
-    X = 2,
+    X = 0,
     Y = 3,
     charPosition = {
       {0, 2, 1},  -- Isaac
@@ -72,7 +93,7 @@ ChangeCharOrder.seasons = {
     },
   },
   R7S4 = {
-    X = 6,
+    X = 4,
     Y = 3,
     charPosition = {
       {2, 2, 1},  -- Cain
@@ -106,7 +127,7 @@ ChangeCharOrder.seasons = {
     numSClass = 4,
   },
   R7S6 = {
-    X = 10,
+    X = 8,
     Y = 3,
     charPosition = {
       {3, 2, 1},  -- Judas
@@ -154,52 +175,29 @@ ChangeCharOrder.seasons = {
     },
   },
   R7S7 = {
-    X = 2,
-    Y = 5,
+    X = 12,
+    Y = 3,
     charPosition = {
       {2, 2, 1},  -- Cain
       {3, 4, 1},  -- Judas
       {6, 6, 1},  -- Samson
       {7, 8, 1},  -- Azazel
       {8, 10, 1}, -- Lazarus
-      {10, 5, 3},  -- The Lost
+      {10, 5, 3}, -- The Lost
       {13, 7, 3}, -- Lilith
     },
   },
-  --[[
-  R7SS = { -- R+7 Seeded
+  R7S8 = {
     X = 2,
     Y = 5,
     charPosition = {
-      {0, 2, 1},  -- Isaac
-      {1, 4, 1},  -- Magdalene
-      {8, 6, 1},  -- Lazarus
-      {9, 8, 1},  -- Eden
-      {10, 10, 1}, -- The Lost
-      {15, 5, 3},  -- Apollyon
-      {16, 7, 3}, -- The Forgotten
-    },
-  },
-  --]]
-  R15V = {
-    X = 10,
-    Y = 5,
-    charPosition = {
-      {0, 1, 1},   -- Isaac
-      {1, 3, 1},   -- Magdalene
-      {2, 5, 1},   -- Cain
-      {3, 7, 1},   -- Judas
-      {4, 9, 1},   -- Blue Baby
-      {5, 11, 1},  -- Eve
-      {6, 1, 3},   -- Samson
-      {7, 3, 3},   -- Azazel
-      {8, 5, 3},   -- Lazarus
-      {9, 7, 3},   -- Eden
-      {10, 9, 3},  -- The Lost
-      {13, 11, 3}, -- Lilith
-      {14, 1, 5},  -- Keeper
-      {15, 3, 5},  -- Apollyon
-      {16, 11, 5}, -- The Forgotton
+      {0, 2, 1},   -- Isaac
+      {2, 4, 1},   -- Cain
+      {3, 6, 1},   -- Judas
+      {5, 8, 1},   -- Eve
+      {11, 10, 1}, -- Lazarus II
+      {12, 5, 3},  -- Black Judas
+      {15, 7, 3},  -- Apollyon
     },
   },
 }
@@ -718,7 +716,6 @@ function ChangeCharOrder:PostRender()
   end
 
   -- Render the current choosing activity
-  --local posActivityGame = g:GridToPos(6, -1)
   local posActivityGame = g:GridToPos(6, 6)
   local posActivity = Isaac.WorldToRenderPosition(posActivityGame)
   posActivity.Y = posActivity.Y - 15

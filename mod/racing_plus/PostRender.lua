@@ -68,8 +68,8 @@ function PostRender:Main()
   Timer:Display()
   Timer:DisplayRun()
   Timer:DisplaySeededDeath()
+  PostRender:DisplayFloorName()
   Pills:PostRender()
-  SpeedrunPostRender:DrawSeason7Goals()
   ChangeCharOrder:PostRender()
   ChangeKeybindings:PostRender()
   PostRender:DisplayTopLeftText()
@@ -110,6 +110,16 @@ end
 -- We replace the vanilla streak text because it blocks the map occasionally
 function PostRender:DrawStreakText()
   if g.run.streakFrame == 0 then
+    -- Only draw the secondary streak text if there is no normal streak text showing
+    if g.run.streakText2 ~= "" then
+      -- Draw the string
+      local posGame = g:GridToPos(6, 0) -- Below the top door
+      local pos = Isaac.WorldToRenderPosition(posGame)
+      local color = KColor(1, 1, 1, 1)
+      local scale = 1
+      local length = g.font:GetStringWidthUTF8(g.run.streakText2) * scale
+      g.font:DrawStringScaled(g.run.streakText2, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
+    end
     return
   end
 
@@ -348,9 +358,6 @@ function PostRender:CheckRestart()
      g.race.status == "in progress" then
 
     intendedSeed = g.race.seed
-
-  elseif Speedrun.inSeededSpeedrun then
-    intendedSeed = Speedrun.R7SeededSeeds[Speedrun.charNum]
   end
   if intendedSeed ~= nil and
      startSeedString ~= intendedSeed then
@@ -877,6 +884,32 @@ function PostRender:SchoolbagGlowingHourGlass()
                     tostring(g.run.schoolbag.last.schoolbag.item) .. " - " ..
                     tostring(g.run.schoolbag.last.schoolbag.charge) .. " - " ..
                     tostring(g.run.schoolbag.last.schoolbag.chargeBattery))
+end
+
+function PostRender:DisplayFloorName()
+  -- Players who prefer the vanilla streak text will have a separate mod enabled
+  if VanillaStreakText ~= nil then
+   return
+ end
+
+  -- Only show the floor name if the user is pressing tab
+  local tabPressed = false
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
+      tabPressed = true
+      break
+    end
+  end
+  if not tabPressed then
+    g.run.streakText2 = ""
+    return
+  end
+
+  -- Local variables
+  local stage = g.l:GetStage()
+  local stageType = g.l:GetStageType()
+
+  g.run.streakText2 = g.l:GetName(stage, stageType, 0, false)
 end
 
 -- Taken from Alphabirth: https://steamcommunity.com/sharedfiles/filedetails/?id=848056541

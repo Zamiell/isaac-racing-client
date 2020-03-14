@@ -99,9 +99,6 @@ function Race:PostUpdateCheckFinished()
   -- so just make the player invisible to compensate
   g.p.Visible = false
 
-  -- If we are playing "R+7 Seeded", turn it off
-  Speedrun.inSeededSpeedrun = false
-
   -- Go back to the title screen
   g.g:Fadeout(0.0275, g.FadeoutTarget.FADEOUT_TITLE_SCREEN) -- 2
 end

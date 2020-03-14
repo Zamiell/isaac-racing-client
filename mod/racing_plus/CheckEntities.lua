@@ -41,7 +41,7 @@ function CheckEntities:Grid()
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         ChangeCharOrder:CheckButtonPressed(gridEntity)
-        SpeedrunPostUpdate:CheckVetoButton(gridEntity)
+        SpeedrunPostUpdate:Season6CheckVetoButton(gridEntity)
       end
     end
   end
@@ -187,11 +187,8 @@ CheckEntities.functions[EntityType.ENTITY_RACE_TROPHY] = function(entity)
   entity:Remove()
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")
 
-  if Isaac.GetChallenge() == Challenge.CHALLENGE_NULL and -- 0
-     not Speedrun.inSeededSpeedrun then
-
+  if Isaac.GetChallenge() == Challenge.CHALLENGE_NULL then -- 0
     Race:Finish()
-
   else
     Speedrun:Finish()
   end

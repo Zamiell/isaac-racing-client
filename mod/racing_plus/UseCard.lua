@@ -3,9 +3,12 @@ local UseCard = {}
 -- Includes
 local g              = require("racing_plus/globals")
 local PostItemPickup = require("racing_plus/postitempickup")
+local Season8        = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_CARD (5)
 function UseCard:Main(card)
+  --Isaac.DebugString("MC_USE_CARD - " .. tostring(card))
+
   -- Display the streak text (because Racing+ removes the vanilla streak text)
   if card == Card.RUNE_BLANK then -- 40
     g.run.streakForce = true
@@ -15,6 +18,8 @@ function UseCard:Main(card)
     g.run.streakFrame = Isaac.GetFrameCount()
   end
   g.run.streakIgnore = false
+
+  Season8:UseCard(card)
 end
 
 -- Card.CARD_JUSTICE (9)
