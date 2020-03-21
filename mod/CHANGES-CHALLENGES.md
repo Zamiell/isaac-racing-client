@@ -5,6 +5,11 @@
 * Before starting a speedrun, you must define a character order by using the "Change Char Order" custom challenge.
 * You can restart with the current character by tapping R. You can go back to the first character by holding R. (On floors 2 and beyond, you have to double-tap R to restart with the current character.)
 
+### Shared Speedrun Mechanics
+
+* In all seasons other than season 4 and season 6, the first character will get More Options to speed up the process of finding an item and getting a run going (if the character does not already have it). After the Treasure Room is entered, More Options will be removed.
+* In all seasons other than season 1 and season 7, both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest / the Dark Room. This is to increase strategy and decision making.
+
 <br />
 
 ## R+15 Vanilla
@@ -43,7 +48,6 @@
 * More information on Samael can be found [in the main list of changes for the mod](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES.md#other-mods-included).
 * Isaac starts with The Battery (and a double charged D6).
 * Apollyon starts with the Schoolbag. He will start with Void inside the bag.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to the Dark Room.
 
 <br />
 
@@ -62,7 +66,6 @@
 * Samson starts with Mr. ME! inside the Schoolbag.
 * Lazarus starts with Ventricle Razor inside the Schoolbag.
 * The Lost starts with Glass Cannon inside the Schoolbag.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest / the Dark Room.
 * Teleporting to the Dark Room via a Sacrifice Room on floors 1 through 8 will send you to the next floor instead.
 
 <br />
@@ -76,7 +79,6 @@
 * Lazarus does not start with a pill.
 * You get to choose a starting item for each character. (You can find the full list in the "Change Char Order" custom challenge.)
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The Treasure Room on Basement 1 is permanently barred.
 * Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
 * Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
@@ -93,7 +95,6 @@
   * Tech X --> Crown of Light
   * Epic Fetus --> Sacred Heart
   * Ipecac --> Incubus
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * The following only applies to the second character and beyond:
   * Each baby will randomly start with one of the following items:
     * Mom's Knife, Tech X, Epic Fetus, Ipecac, Sacrificial Dagger, 20/20, Proptosis, Crown of Light, Incubus, Mutant Spider's Inner Eye, Lil Brimstone, Sacred Heart, Magic Mushroom, Tech.5, Polyphemus, Cricket's Head, Death's Touch, Dead Eye, Cricket's Body
@@ -114,7 +115,6 @@
 * The 1st, 3rd, 5th, and 7th runs will go to The Chest. The 2nd, 4th, and 6th runs will go to the Dark Room.
 * All characters start with the Schoolbag. (It starts empty by default.)
 * All characters start with the Compass.
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest / the Dark Room.
 * Each character will be randomly assigned a starting item or build. (You can find the full list in the "Change Char Order" custom challenge.)
 * The Treasure Room on Basement 1 is permanently barred.
 * Resetting the game will change the seed, but not change the randomly assigned starting item.
@@ -184,16 +184,18 @@
 
 * You must defeat Blue Baby on the following 7 characters:
   * Isaac, Cain, Judas, Eve, Lazarus II, Black Judas, Apollyon
-* Both The Polaroid and The Negative will spawn after defeating Mom. Neither are required to travel to The Chest.
 * All characters start with the Schoolbag.
 * Isaac starts with a 2nd D6 inside the Schoolbag.
 * Cain starts with More Options.
+* Cain starts with an extra half soul heart.
 * Judas starts with Book of Belial inside the Schoolbag.
 * Eve starts with Razor Blade inside the Schoolbag.
+* Eve starts with an extra half soul heart.
 * Lazarus II starts with There's Options.
 * Lazarus II starts with one half red heart and one half soul heart.
 * Black Judas starts with three and a half black hearts.
 * Apollyon starts with Void inside the Schoolbag.
+* Apollyon starts with an extra half soul heart.
 
 ### Shared Item Pools and Cards
 
@@ -211,7 +213,6 @@
 * The pill effect pool is reduced to the following effects:
   * Balls of Steel (2)
   * Bombs are Key (3)
-  * Explosive Diarrhea (4)
   * Health Down (6)
   * Health Up (7)
   * Pretty Fly (10)
@@ -222,11 +223,10 @@
   * Telepills (19)
   * 48 Hour Energy (20)
   * I can see forever! (23)
-  * Lemon Party (26)
-  * Percs (28)
   * Power Pill! (36)
   * I'm Drowsy... (41)
   * Gulp! (43)
+* Health Down will never be converted to a Health Up pill, regardless of how much health you have.
 
 <br />
 
