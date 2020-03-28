@@ -4,6 +4,7 @@ local Pedestals = {}
 local g         = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 local Speedrun  = require("racing_plus/speedrun")
+local Season8   = require("racing_plus/season8")
 
 -- Racing+ replaces all item pedestals with custom seeds
 -- This is in order to fix seed "incrementation" from touching active pedestal items over and over
@@ -168,31 +169,7 @@ function Pedestals:Replace(pickup)
 
   -- In season 8, prevent "set drops" from Lust, Gish, and so forth
   -- (if they have already been touched)
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") and
-     g:TableContains(Speedrun.S8TouchedItems, pickup.SubType) and
-     not pickup.Touched then
-
-    local itemName = g.itemConfig:GetCollectible(pickup.SubType).Name
-    if pickup.SubType == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
-       not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) and -- 73
-       not g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) then -- 207
-
-      pickup.SubType = CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
-      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" " ..
-                        "with Ball of Bandages (special case).")
-
-    elseif pickup.SubType == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES and -- 207
-           not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) and -- 207
-           not g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) then -- 73
-
-      pickup.SubType = CollectibleType.COLLECTIBLE_CUBE_OF_MEAT -- 73
-      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" with Cube of Meat (special case).")
-
-    else
-      Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" with a random item.")
-      pickup.SubType = 0
-    end
-  end
+  pickup.SubType = Season8:Pedestals(pickup)
 
   -- Replace the pedestal
   local newPedestal

@@ -68,19 +68,4 @@ function PostNPCInit:NPC260(npc)
   end
 end
 
--- EntityType.ENTITY_ISAAC (102)
-function PostNPCInit:NPC102(npc)
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  -- In season 7 speedruns, we want to go directly into the second phase of Hush
-  if npc.Variant == 2 and
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-
-    npc:Remove()
-    g.g:Spawn(EntityType.ENTITY_HUSH, 0, Vector(580, 260), g.zeroVector, nil, 0, npc.InitSeed) -- 407
-    -- (the position is copied from vanilla)
-  end
-end
-
 return PostNPCInit

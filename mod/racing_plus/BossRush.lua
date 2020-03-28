@@ -1,10 +1,11 @@
 local BossRush = {}
 
+-- Racing+ replaces the vanilla Boss Rush with a custom version
+
 -- Includes
 local g = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
 local Schoolbag = require("racing_plus/schoolbag")
-local Speedrun = require("racing_plus/speedrun")
 
 -- This is the pool to pull random bosses from
 BossRush.bosses = {
@@ -97,16 +98,16 @@ function BossRush:PostUpdate()
 
   BossRush:CheckStart()
   BossRush:CheckSpawnNewWave()
+  BossRush:CheckOpenDoors()
 end
 
 function BossRush:CheckStart()
-  if g.run.bossRush.started or
-     not g.r:IsAmbushActive() then
+  if g.r:IsAmbushActive() and
+     not g.run.bossRush.started and
+     not g.run.bossRush.finished then
 
-    return
+    BossRush:Start()
   end
-
-  BossRush:Start()
 end
 
 function BossRush:Start()
@@ -117,22 +118,10 @@ function BossRush:Start()
   local roomVariant = roomData.Variant
   local startSeed = g.seeds:GetStartSeed()
 
-  -- Prevent the bug where the door will erroneously close if the player completes the custom Boss Rush,
-  -- exits the room, re-enters the room, and takes an item
-  if g.run.bossRush.finished then
-    BossRush:OpenDoor()
-    return
-  end
-
+  -- The "ambush" is active and we have not started the Boss Rush yet, so start spawning mobs
   g.run.bossRush.started = true
   g.run.bossRush.currentWave = 0
   Isaac.DebugString("Started the Boss Rush on frame: " .. tostring(gameFrameCount))
-
-  -- We spawn an invisible boss in the center of the room that has no collision;
-  -- this will prevent the normal Boss Rush waves from spawning
-  -- (this has to be above the below finish check)
-  Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
-  Isaac.DebugString("Spawned the room clear delay NPC (for the Boss Rush).")
 
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}
@@ -254,30 +243,40 @@ function BossRush:CheckSpawnNewWave()
   end
 end
 
+function BossRush:CheckOpenDoors()
+  -- The doors should always be open if the Boss Rush has not started yet or
+  -- if it has already been completed
+  if not g.run.bossRush.started or
+     g.run.bossRush.finished then
+
+    BossRush:OpenDoor()
+  end
+end
+
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function BossRush:PostNewRoom()
   -- Local variables
   local roomType = g.r:GetType()
-  local challenge = Isaac.GetChallenge()
 
   if roomType ~= RoomType.ROOM_BOSSRUSH then
     return
   end
 
-  -- Reset the Boss Rush status
-  -- (so that we can reset the waves to the beginning if they exit the room, save and quit, etc.)
-  g.run.bossRush.started = false
-  g.run.bossRush.currentWave = 0
-  g.run.bossRush.spawnWaveFrame = 0
+  -- We spawn an invisible boss that has no collision;
+  -- this will prevent the normal Boss Rush waves from spawning
+  -- We also need to remove the "Appear" flag so that the "Poof" animation does not appear
+  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
+                                        Vector(-1000, -1000), g.zeroVector, nil)
+  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+  Isaac.DebugString("Spawned the room clear delay NPC (for the Boss Rush).")
 
-  -- Check to see the player already started the Boss Rush
-  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                        -1, false, false)
-  if not g.run.bossRush.finished and
-     #collectibles == 0 and
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-     g:TableContains(Speedrun.remainingGoals, "Boss Rush") then
+  -- If we already started the Boss Rush and did not finish it,
+  -- and are now returning to the room, then start spawning the waves again from the beginning
+  if g.run.bossRush.started and
+     not g.run.bossRush.finished then
 
+    g.run.bossRush.currentWave = 0
+    g.run.bossRush.spawnWaveFrame = 0
     BossRush:Start()
   end
 end
@@ -389,8 +388,8 @@ function BossRush:OpenDoor()
   for i = 1, num do
     local gridEntity = g.r:GetGridEntity(i)
     if gridEntity ~= nil then
-      if gridEntity:ToDoor() ~= nil then
-        local door = gridEntity:ToDoor()
+      local door = gridEntity:ToDoor()
+      if door ~= nil then
         door:Open()
       end
     end

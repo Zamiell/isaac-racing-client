@@ -177,7 +177,6 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   if (g.run.seededDeath.state == SeededDeath.state.DISABLED or
       g.run.seededDeath.state == SeededDeath.state.GHOST_FORM) and
      (g.race.rFormat ~= "seeded" and
-      g.race.rFormat ~= "seeded-mo" and
       challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) then -- 10
 
     return

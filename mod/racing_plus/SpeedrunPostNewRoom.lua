@@ -3,6 +3,9 @@ local SpeedrunPostNewRoom = {}
 -- Includes
 local g        = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
+local Season3  = require("racing_plus/season3")
+local Season6  = require("racing_plus/season6")
+local Season7  = require("racing_plus/season7")
 
 function SpeedrunPostNewRoom:Main()
   if not Speedrun:InSpeedrun() then
@@ -14,13 +17,11 @@ function SpeedrunPostNewRoom:Main()
   end
 
   SpeedrunPostNewRoom:Stage8IAMERROR()
-  SpeedrunPostNewRoom:Season3ReplaceBosses()
-  SpeedrunPostNewRoom:CheckCurseRoom()
-  SpeedrunPostNewRoom:CheckSacrificeRoom()
-  SpeedrunPostNewRoom:Season6RemoveVetoButton()
-  SpeedrunPostNewRoom:Season7Stage9()
-  SpeedrunPostNewRoom:Season7Stage11()
-  SpeedrunPostNewRoom:Season7Stage12()
+  Season3:PostNewRoom()
+  SpeedrunPostNewRoom:CheckCurseRoom() -- Season 4 and 6
+  SpeedrunPostNewRoom:CheckSacrificeRoom() -- Season 4 and 6
+  Season6:PostNewRoom()
+  Season7:PostNewRoom()
 end
 
 -- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
@@ -91,91 +92,6 @@ function SpeedrunPostNewRoom:Stage8IAMERROR()
   end
 end
 
--- In R+7 Season 3, replace the two final bosses
-function SpeedrunPostNewRoom:Season3ReplaceBosses()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
-  local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 3)") then
-    return
-  end
-
-  if stage ~= 10 and
-     stage ~= 11 then
-
-    return
-  end
-
-  if roomType ~= RoomType.ROOM_BOSS then -- 5
-    return
-  end
-
-  if roomIndex == GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
-    return
-  end
-
-  if roomClear then
-    return
-  end
-
-  -- Don't do anything if we have somehow gone the wrong direction
-  -- (via We Need to Go Deeper!, Undefined, etc.)
-  local direction = Speedrun.charNum % 2 -- 1 is up, 2 is down
-  if direction == 0 then
-    direction = 2
-  end
-  if stageType == 1 and -- Cathedral or The Chest
-     direction == 2 then
-
-    return
-  end
-  if stageType == 0 and -- Sheol or Dark Room
-     direction == 1 then
-
-    return
-  end
-
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if stageType == 1 and -- Cathedral
-       entity.Type == EntityType.ENTITY_ISAAC then -- 273
-
-      entity:Remove()
-
-    elseif stageType == 0 and -- Sheol
-           entity.Type == EntityType.ENTITY_SATAN then -- 84
-
-        entity:Remove()
-
-    elseif stageType == 1 and -- The Chest
-           entity.Type == EntityType.ENTITY_ISAAC then -- 102
-
-        entity:Remove()
-
-      elseif stageType == 0 and -- Dark Room
-             entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
-
-        entity:Remove()
-      end
-    end
-
-    -- Spawn the replacement boss
-    if stage == 10 then
-      Isaac.Spawn(838, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
-      Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
-    elseif stage == 11 then
-      Isaac.Spawn(777, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
-      Isaac.DebugString("Spawned Mahalath (for season 3).")
-    end
-end
-
 -- In instant-start seasons, prevent people from resetting for a Curse Room
 function SpeedrunPostNewRoom:CheckCurseRoom()
   local stage = g.l:GetStage()
@@ -238,160 +154,6 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
     end
   end
   Isaac.DebugString("Deleted the spikes in a Sacrifice Room (during a no-reset run).")
-end
-
--- In seasons with the veto button, delete it if we are re-entering the starting room
-function SpeedrunPostNewRoom:Season6RemoveVetoButton()
-  local stage = g.l:GetStage()
-  local startingRoomIndex = g.l:GetStartingRoomIndex()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     stage ~= 1 or
-     roomIndex ~= startingRoomIndex or
-     g.run.roomsEntered == 1 then
-
-    return
-  end
-
-  g.r:RemoveGridEntity(117, 0, false)
-end
-
-function SpeedrunPostNewRoom:Season7Stage9()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomType = g.r:GetType()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     stage ~= 9 or
-     roomType ~= RoomType.ROOM_BOSS then -- 5
-
-    return
-  end
-
-  -- Remove The Void door if it is open
-  -- (closing it does not work because it will automatically reopen)
-  g.r:RemoveGridEntity(20, 0, false) -- gridEntity:Destroy() does not work
-  Isaac.DebugString("Manually deleted The Void door.")
-end
-
-function SpeedrunPostNewRoom:Season7Stage11()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-  local startingRoomIndex = g.l:GetStartingRoomIndex()
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     stage ~= 11 or
-     roomIndexUnsafe ~= startingRoomIndex then
-
-    return
-  end
-
-  -- Spawn a Void Portal if we still need to go to The Void
-  if g:TableContains(Speedrun.remainingGoals, "Ultra Greed") then
-    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.VOID_PORTAL_FAST_TRAVEL, 0, -- 1000
-                                 g:GridToPos(1, 1), g.zeroVector, nil)
-    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
-  end
-
-  -- Spawn the Mega Satan trapdoor if we still need to go to Mega Satan
-  -- and we are on the second character or beyond
-  -- (the normal Mega Satan door does not appear on custom challenges that have a goal set to Blue Baby)
-  if g:TableContains(Speedrun.remainingGoals, "Mega Satan") and
-     Speedrun.charNum >= 2 then
-
-    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MEGA_SATAN_TRAPDOOR, 0, -- 1000
-                                 g:GridToPos(11, 1), g.zeroVector, nil)
-    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
-  end
-end
-
-function SpeedrunPostNewRoom:Season7Stage12()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
-  local rooms = g.l:GetRooms()
-  local centerPos = g.r:GetCenterPos()
-  local roomClear = g.r:IsClear()
-
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-    return
-  end
-
-  if stage ~= 12 then
-    return
-  end
-
-  -- Delete the door to a non-Ultra Greed boss room, if any
-  -- (we must delete the door before changing the minimap, or else the icon will remain)
-  for i = 0, 7 do
-    local door = g.r:GetDoor(i)
-    if door ~= nil and
-       door.TargetRoomType == RoomType.ROOM_BOSS and -- 5
-       door.TargetRoomIndex ~= g.run.customBossRoomIndex then
-
-      g.r:RemoveDoor(i)
-    end
-  end
-
-  -- Show the boss icon for the custom boss room and remove all of the other ones
-  for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local roomDesc = rooms:Get(i)
-    local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
-    local roomData = roomDesc.Data
-    local roomType = roomData.Type
-
-    if roomType == RoomType.ROOM_BOSS then -- 5
-      local room
-      if MinimapAPI == nil then
-        -- For whatever reason, we can't modify the DisplayFlags on the roomDesc that we already have,
-        -- so we have to re-get the room using the following function
-        room = g.l:GetRoomByIdx(roomIndex)
-      else
-        room = MinimapAPI:GetRoomByIdx(roomIndex)
-      end
-      if roomIndex == g.run.customBossRoomIndex then
-        -- Make the Ultra Greed room visible and show the icon
-        room.DisplayFlags = 5
-      else
-        -- Remove the boss room icon (in case we have the Compass or The Mind)
-        if MinimapAPI == nil then
-          room.DisplayFlags = 0
-        elseif room ~= nil then
-          room:Remove()
-        end
-      end
-    end
-  end
-  g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
-
-  -- Spawn the custom boss
-  if roomIndexUnsafe == g.run.customBossRoomIndex and
-     not roomClear then
-
-    -- Remove all enemies
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-      local npc = entity:ToNPC()
-      if npc ~= nil then
-        entity:Remove()
-      end
-    end
-
-    -- Spawn Ultra Greed
-    Isaac.Spawn(EntityType.ENTITY_ULTRA_GREED, 0, 0, centerPos, g.zeroVector, nil) -- 406
-
-    -- Mark to potentially delete one of the Ultra Greed Doors on the next frame
-    -- (the Ultra Greed Doors take a frame to spawn after Ultra Greed spawns)
-    g.run.spawnedUltraGreed = true
-  end
 end
 
 return SpeedrunPostNewRoom

@@ -146,15 +146,13 @@ function PreUseItem:Item286()
   local card = g.p:GetCard(0)
   if card == Card.CARD_QUESTIONMARK then -- 48
     -- Blank Card + ? Card will teleport the player to the I AM ERROR room
-    -- Mark that this is not a Cursed Eye teleport
-    g.run.naturalTeleport = true
+    g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
   end
 end
 
 -- CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS (422)
 function PreUseItem:Item422()
-  -- Mark that this is not a Cursed Eye teleport
-  g.run.naturalTeleport = true
+  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
 
   -- Mark to reset the active item + the Schoolbag item
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and

@@ -43,6 +43,7 @@ end
 
 function ExecuteCmd:BlackMarket()
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(GridRooms.ROOM_BLACK_MARKET_IDX, -- 6
                           Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
@@ -324,12 +325,24 @@ ExecuteCmd.functions["devil"] = function(params)
   g.p:UseCard(Card.CARD_JOKER) -- 31
 end
 
+ExecuteCmd.functions["doors"] = function(params)
+  -- Print out all the doors in the room
+  for i = 0, 7 do
+    local door = g.r:GetDoor(i)
+    if door ~= nil then
+      Isaac.ConsoleOutput("Door " .. tostring(i) .. " - " ..
+                          "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")\n")
+    end
+  end
+end
+
 ExecuteCmd.functions["error"] = function(params)
   ExecuteCmd:IAMERROR()
 end
 
 function ExecuteCmd:IAMERROR()
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(GridRooms.ROOM_ERROR_IDX, -- 2
                           Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3

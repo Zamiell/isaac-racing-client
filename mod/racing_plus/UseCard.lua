@@ -7,7 +7,7 @@ local Season8        = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_CARD (5)
 function UseCard:Main(card)
-  --Isaac.DebugString("MC_USE_CARD - " .. tostring(card))
+  -- Isaac.DebugString("MC_USE_CARD - " .. tostring(card))
 
   -- Display the streak text (because Racing+ removes the vanilla streak text)
   if card == Card.RUNE_BLANK then -- 40
@@ -83,8 +83,7 @@ function UseCard:QuestionMark()
 end
 
 function UseCard:Teleport()
-  -- Mark that this is not a Cursed Eye teleport
-  g.run.naturalTeleport = true
+  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
 end
 
 return UseCard

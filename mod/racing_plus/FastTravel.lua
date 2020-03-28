@@ -4,7 +4,7 @@ local FastTravel = {}
 local g            = require("racing_plus/globals")
 local Sprites      = require("racing_plus/sprites")
 local SeededFloors = require("racing_plus/seededfloors")
-local Speedrun     = require("racing_plus/speedrun")
+local Season7      = require("racing_plus/season7")
 
 -- Constants
 FastTravel.trapdoorOpenDistance  = 60 -- This feels about right
@@ -60,8 +60,8 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   if stage == 6 and
      ((g.race.status == "in progress" and g.race.goal == "Boss Rush") or
       (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-       g:TableContains(Speedrun.remainingGoals, "Boss Rush") and
-       #Speedrun.remainingGoals == 1)) then
+       g:TableContains(Season7.remainingGoals, "Boss Rush") and
+       #Season7.remainingGoals == 1)) then
 
     deleteAndDontReplace = true
     Isaac.DebugString("Deleted the natural trapdoor after Mom.")
@@ -905,6 +905,15 @@ function FastTravel:CheckCrawlspaceEnter(effect)
       -- Go to the crawlspace
       g.g:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
                               g.RoomTransition.TRANSITION_NONE) -- 0
+
+      -- There is a custom mechanic in vanilla where going into a crawlspace will "finish" the Boss Rush
+      -- Emulate this mechanic with the Racing+ custom version of the Boss Rush
+      if g.run.bossRush.started then
+        g.run.bossRush.started = false
+        g.run.bossRush.finished = true
+        g.g:SetStateFlag(GameStateFlag.STATE_BOSSRUSH_DONE, true)
+        Isaac.DebugString("Custom Boss Rush finished (via entering a crawlspace).")
+      end
     end
   end
 end
@@ -1118,7 +1127,7 @@ function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
   -- Open it
   effect.State = 0
   effect:GetSprite():Play("Open Animation", true)
-  --Isaac.DebugString("Opened trap door (player moved away).")
+  -- Isaac.DebugString("Opened trap door (player moved away).")
 end
 
 -- Called from the "CheckEntities:NonGrid()" function

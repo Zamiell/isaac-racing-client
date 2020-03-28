@@ -103,6 +103,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt. All floors on set seeds are exempt.)
 * The Boss Rush is modified to include the Afterbirth+ bosses and Chapter 4 bosses.
 * Teleport, Broken Remote, and Cursed Eye no longer have a chance to teleport you to the same room that you are in.
+* Maggy will automatically use her Speed Up pill at the beginning of the run.
 * Pin's first attack happens on the 15th frame (instead of the 73rd frame).
 * Cod Worms are replaced with Para-Bites.
 * Wizoobs, Red Ghosts, and Lil' Haunts no longer have invulnerability frames after spawning.
@@ -128,7 +129,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Some animations are removed for the purposes of eliminating needless downtime:
   * the fade when entering a new floor (replaced with a custom animation)
   * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
-  * all "giantbook" animations (with the exception of Book of Revelations, Satanic Bible, eternal hearts, and black hearts)
+  * all "giantbook" animations (with the exception of Book of Revelations, Satanic Bible, eternal hearts, black hearts, and rainbow poop)
   * the pause and unpause animations
   * teleporting upwards
   * traveling upwards in a beam of light (replaced with a faster version)

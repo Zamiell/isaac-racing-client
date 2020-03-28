@@ -2,7 +2,8 @@ local FastClear = {}
 
 -- Includes
 local g        = require("racing_plus/globals")
-local Speedrun = require("racing_plus/speedrun")
+local Season7  = require("racing_plus/season7")
+local Season8  = require("racing_plus/season8")
 
 --
 -- Variables
@@ -279,6 +280,7 @@ function FastClear:CheckDeadNPC(npc)
   if npc:GetChampionColorIdx() == 12 and -- Dark Red champion (collapses into a flesh pile upon death)
      npc:GetSprite():GetFilename() ~= "gfx/024.000_Globin.anm2" then
      -- The filename will be set to this if it is in the flesh pile state
+     -- TODO: This does not work with Red Champion Gapers
 
     -- This callback will be triggered when the champion changes into the flesh pile
     -- We don't want to open the doors yet until the flesh pile is actually killed
@@ -458,7 +460,7 @@ function FastClear:ClearRoom()
     if stage == 8 and
        ((g.race.status == "in progress" and g.race.goal == "Hush") or
         (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-         g:TableContains(Speedrun.remainingGoals, "Hush"))) then
+         g:TableContains(Season7.remainingGoals, "Hush"))) then
 
       g.r:TrySpawnBlueWombDoor(true, true)
     end
@@ -574,11 +576,47 @@ function FastClear:SpawnPhotos()
     -- Most seasons give the player a choice between the two photos
     situation = situations.BOTH
 
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_POLAROID) and -- 327
+       g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
+
+      situation = situations.RANDOM
+
+    elseif g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_POLAROID) then -- 327
+      situation = situations.NEGATIVE
+
+    elseif g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 327
+      situation = situations.POLAROID
+
+    else
+      situation = situations.BOTH
+    end
+
+  elseif hasPolaroid and
+         hasNegative then
+
+    -- The player has both photos already (which can only occur in a diversity race)
+    -- Spawn a random boss item instead of a photo
+    situation = situations.RANDOM
+
+  elseif hasPolaroid then
+    -- The player has The Polaroid already (which can occur in a diversity race or if Eden)
+    -- Spawn The Negative instead
+    situation = situations.NEGATIVE
+
+  elseif hasNegative then
+    -- The player has The Negative already (which can occur in a diversity race or if Eden)
+    -- Spawn The Polaroid instead
+    situation = situations.POLAROID
+
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-    if #Speedrun.remainingGoals == 1 and Speedrun.remainingGoals[1] == "Blue Baby" then
+    -- We need the Season 7 logic to be below the Polaroid and Negative checks above,
+    -- because it is possible to start with either The Polaroid or The Negative as one of the
+    -- three starting passive items
+    if #Season7.remainingGoals == 1 and Season7.remainingGoals[1] == "Blue Baby" then
       -- The only thing left to do is to kill Blue Baby, so they must take The Polaroid
       situation = situations.POLAROID
-    elseif #Speedrun.remainingGoals == 1 and Speedrun.remainingGoals[1] == "The Lamb" then
+    elseif #Season7.remainingGoals == 1 and Season7.remainingGoals[1] == "The Lamb" then
       -- The only thing left to do is to kill The Lamb, so they must take The Negative
       situation = situations.NEGATIVE
     else
@@ -586,39 +624,6 @@ function FastClear:SpawnPhotos()
       -- to choose what goal they want on the fly
       situation = situations.BOTH
     end
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
-    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-       g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
-      situation = situations.RANDOM
-
-    elseif g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_POLAROID) then -- 327
-      situation = situations.NEGATIVE
-
-    elseif g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 327
-      situation = situations.POLAROID
-
-    else
-      situation = situations.BOTH
-    end
-
-  elseif hasPolaroid and -- 327
-         hasNegative then -- 328
-
-    -- The player has both photos already (which can only occur in a diversity race)
-    -- Spawn a random boss item instead of a photo
-    situation = situations.RANDOM
-
-  elseif hasPolaroid then -- 327
-    -- The player has The Polaroid already (which can occur in a diversity race or if Eden)
-    -- Spawn The Negative instead
-    situation = situations.NEGATIVE
-
-  elseif hasNegative then -- 328
-    -- The player has The Negative already (which can occur in a diversity race or if Eden)
-    -- Spawn The Polaroid instead
-    situation = situations.POLAROID
 
   elseif g.race.rFormat == "pageant" then
     -- Give the player a choice between the photos on the Pageant Boy ruleset

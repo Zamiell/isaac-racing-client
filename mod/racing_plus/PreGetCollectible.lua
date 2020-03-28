@@ -9,12 +9,16 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_PRE_GET_COLLECTIBLE (62)
 function PreGetCollectible:Main(poolType, decrease, seed)
-  --Isaac.DebugString("MC_PRE_GET_COLLECTIBLE - " .. tostring(poolType))
+  -- Isaac.DebugString("MC_PRE_GET_COLLECTIBLE - " .. tostring(poolType))
 
   if g.run.gettingCollectible then
     return
   end
 
+  return PreGetCollectible:SeededRace(poolType, decrease, seed)
+end
+
+function PreGetCollectible:SeededRace(poolType, decrease, seed)
   -- Manually generate random items for specific item pools in seeded races
   if g.race.rFormat ~= "seeded" or
      g.race.status ~= "in progress" or

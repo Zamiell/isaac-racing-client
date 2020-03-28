@@ -34,15 +34,24 @@ function Pills:PostRender()
     return
   end
 
+  local x = 80
+  local baseY = 97
+  for i = 9, 12 do -- Avoid overflow on the bottom if we identify a lot of pills
+    if #g.run.pills >= i then
+      baseY = baseY - 20
+    end
+  end
+  local string = "Pills identified: " .. tostring(#g.run.pills) .. " / 13"
+  g.font:DrawString(string, x - 10, baseY - 9 + 20, g.kcolor, 0, true)
+  baseY = baseY + 20
   for i, pillEntry in ipairs(g.run.pills) do
     -- Show the pill sprite
-    local x = 80
-    local y = 77 + (20 * i)
+    local y = baseY + (20 * i)
     local pos = Vector(x, y)
     pillEntry.sprite:RenderLayer(0, pos)
 
     -- Show the pill effect as text
-    local string = g.itemConfig:GetPillEffect(pillEntry.effect).Name
+    string = g.itemConfig:GetPillEffect(pillEntry.effect).Name
     if string == "Feels like I'm walking on sunshine!" then
       string = "Walking on sunshine!"
     end

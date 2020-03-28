@@ -30,7 +30,7 @@ function PostGameStarted:Main(saveState)
 
   Isaac.DebugString("MC_POST_GAME_STARTED - " ..
                     "Seed: " .. tostring(startSeedString) .. " - " ..
-                    "Frame: " .. tostring(isaacFrameCount))
+                    "IsaacFrame: " .. tostring(isaacFrameCount))
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
   if saveState then

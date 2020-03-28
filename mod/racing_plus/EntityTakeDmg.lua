@@ -20,23 +20,4 @@ function EntityTakeDmg:Player(tookDamage, damageAmount, damageFlag, damageSource
   return SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
 end
 
-function EntityTakeDmg:RemoveArmor(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
-  if g.run.dealingExtraDamage then
-    return
-  end
-
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-    return
-  end
-
-  -- Adjust their HP directly to avoid the damage scaling (armor)
-  tookDamage.HitPoints = tookDamage.HitPoints - (damageAmount * 0.5)
-
-  -- Make the NPC flash
-  g.run.dealingExtraDamage = true
-  tookDamage:TakeDamage(0, 0, damageSource, damageCountdownFrames)
-  g.run.dealingExtraDamage = false
-end
-
 return EntityTakeDmg

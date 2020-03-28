@@ -197,13 +197,15 @@ function RacePostGameStarted:Main()
 
   -- Validate the difficulty (hard mode / Greed mode) for races
   if g.race.difficulty == "normal" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
+     g.race.rFormat ~= "custom" then
 
     Isaac.DebugString("Race error: Supposed to be on easy mode (currently on " .. tostring(g.g.Difficulty) .. ").")
     return
 
   elseif g.race.difficulty == "hard" and
-         g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
+         g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
+         g.race.rFormat ~= "custom" then
 
     Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(g.g.Difficulty) .. ").")
     return

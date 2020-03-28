@@ -10,6 +10,7 @@ local SpeedrunPostNewRoom = require("racing_plus/speedrunpostnewroom")
 local ChangeCharOrder     = require("racing_plus/changecharorder")
 local ChangeKeybindings   = require("racing_plus/changekeybindings")
 local Sprites             = require("racing_plus/sprites")
+local Schoolbag           = require("racing_plus/schoolbag")
 local SeededDeath         = require("racing_plus/seededdeath")
 local SeededRooms         = require("racing_plus/seededrooms")
 local BossRush            = require("racing_plus/bossrush")
@@ -65,33 +66,21 @@ function PostNewRoom:NewRoom()
   local roomDesc = g.l:GetCurrentRoomDesc()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
-  local roomType = g.r:GetType()
   local roomClear = g.r:IsClear()
-  local character = g.p:GetPlayerType()
-  local activeItem = g.p:GetActiveItem()
-  local activeCharge = g.p:GetActiveCharge()
-  local activeChargeBattery = g.p:GetBatteryCharge()
-  local maxHearts = g.p:GetMaxHearts()
-  local soulHearts = g.p:GetSoulHearts()
-  local boneHearts = g.p:GetBoneHearts()
 
   Isaac.DebugString("MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
 
+  -- Keep track of how many rooms we enter over the course of the run
   g.run.roomsEntered = g.run.roomsEntered + 1
+
+  -- Reset the state of whether the room is clear or not
+  -- (this is needed so that we don't get credit for clearing a room when
+  -- bombing from a room with enemies into an empty room)
   g.run.currentRoomClearState = roomClear
-  -- This is needed so that we don't get credit for clearing a room when
-  -- bombing from a room with enemies into an empty room
 
   -- Check to see if we need to remove the heart container from a Strength card on Keeper
   -- (this has to be done before the resetting of the "g.run.usedStrength" variable)
-  if character == PlayerType.PLAYER_KEEPER and -- 14
-     g.run.keeper.baseHearts == 4 and
-     g.run.usedStrength then
-
-    g.run.keeper.baseHearts = 2
-    g.p:AddMaxHearts(-2, true) -- Take away a heart container
-    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (PostNewRoom)")
-  end
+  PostNewRoom:CheckRemoveKeeperHeartContainerFromStrength()
 
   -- Clear variables that track things per room
   g:InitRoom()
@@ -102,29 +91,69 @@ function PostNewRoom:NewRoom()
   -- (this is set to true when the room frame count is -1 and set to false here,
   -- where the frame count is 0)
 
-  -- Check to see if we need to fix the Wraith Skull + Hairpin bug
-  Samael:CheckHairpin()
+  Samael:CheckHairpin() -- Check to see if we need to fix the Wraith Skull + Hairpin bug
+  Schoolbag:PostNewRoom() -- Handle the Glowing Hour Glass mechanics relating to the Schoolbag
+  BossRush:PostNewRoom() -- Check for the Boss Rush
+  FastTravel:CheckRoomRespawn() -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
+  FastTravel:CheckNewFloor() -- Check if we are just arriving on a new floor
+  FastTravel:CheckCrawlspaceMiscBugs() -- Check for miscellaneous crawlspace bugs
 
-  -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
-  FastTravel:CheckRoomRespawn()
+  PostNewRoom:CheckRemoveMoreOptions() -- Remove the "More Options" buff if they have entered a Treasure Room
+  PostNewRoom:CheckZeroHealth() -- Fix the bug where we don't die at 0 hearts
+  PostNewRoom:CheckStartingRoom() -- Draw the starting room graphic
+  PostNewRoom:CheckUndefined() -- Check if the player teleports to a a non-existent entrance
+  PostNewRoom:CheckSatanRoom() -- Check for the Satan room
+  PostNewRoom:CheckMegaSatanRoom() -- Check for Mega Satan on "Everything" races
+  PostNewRoom:CheckScolexRoom() -- Check for all of the Scolex boss rooms
+  PostNewRoom:CheckDepthsPuzzle() -- Check for the unavoidable puzzle room in the Dank Depths
+  PostNewRoom:CheckEntities() -- Check for various NPCs
+  PostNewRoom:CheckRespawnTrophy() -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
+  PostNewRoom:BanB1TreasureRoom() -- Certain formats ban the Treasure Room in Basement 1
 
-  -- Check if we are just arriving on a new floor
-  FastTravel:CheckNewFloor()
+  ChangeCharOrder:PostNewRoom() -- The "Change Char Order" custom challenge
+  ChangeKeybindings:PostNewRoom() -- The "Change Keybindings" custom challenge
+  PostNewRoom:Race() -- Do race related stuff
+  SpeedrunPostNewRoom:Main() -- Do speedrun related stuff
+end
 
-  -- Check for miscellaneous crawlspace bugs
-  FastTravel:CheckCrawlspaceMiscBugs()
+-- Check to see if we need to remove the heart container from a Strength card on Keeper
+-- (this has to be done before the resetting of the "g.run.usedStrength" variable)
+function PostNewRoom:CheckRemoveKeeperHeartContainerFromStrength()
+  -- Local variables
+  local character = g.p:GetPlayerType()
 
-  -- Remove the "More Options" buff if they have entered a Treasure Room
+  if character == PlayerType.PLAYER_KEEPER and -- 14
+     g.run.keeper.baseHearts == 4 and
+     g.run.usedStrength then
+
+    g.run.keeper.baseHearts = 2
+    g.p:AddMaxHearts(-2, true) -- Take away a heart container
+    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (PostNewRoom)")
+  end
+end
+
+-- Remove the "More Options" buff if they have entered a Treasure Room
+function PostNewRoom:CheckRemoveMoreOptions()
+  -- Local variables
+  local roomType = g.r:GetType()
+
   if g.run.removeMoreOptions == true and
      roomType == RoomType.ROOM_TREASURE then -- 4
 
     g.run.removeMoreOptions = false
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
+end
 
-  -- Check health (to fix the bug where we don't die at 0 hearts)
-  -- (this happens if Keeper uses Guppy's Paw or
-  -- when Magdalene takes a devil deal that grants soul/black hearts)
+-- Check health (to fix the bug where we don't die at 0 hearts)
+-- (this happens if Keeper uses Guppy's Paw or
+-- when Magdalene takes a devil deal that grants soul/black hearts)
+function PostNewRoom:CheckZeroHealth()
+  -- Local variables
+  local maxHearts = g.p:GetMaxHearts()
+  local soulHearts = g.p:GetSoulHearts()
+  local boneHearts = g.p:GetBoneHearts()
+
   if maxHearts == 0 and
      soulHearts == 0 and
      boneHearts == 0 and
@@ -134,64 +163,6 @@ function PostNewRoom:NewRoom()
     g.p:Kill()
     Isaac.DebugString("Manually killing the player since they are at 0 hearts.")
   end
-
-  if g.run.schoolbag.usedGlowingHourGlass == 0 then
-    -- Record the state of the active item + the Schoolbag item in case we use a Glowing Hour Glass
-    g.run.schoolbag.last = {
-      active = {
-        item = activeItem,
-        charge = activeCharge,
-        chargeBattery = activeChargeBattery,
-      },
-      schoolbag = {
-        item = g.run.schoolbag.item,
-        charge = g.run.schoolbag.charge,
-        chargeBattery = g.run.schoolbag.chargeBattery,
-      },
-    }
-  elseif g.run.schoolbag.usedGlowingHourGlass == 1 then
-    -- We just used a Glowing Hour Glass,
-    -- so mark to reset the active item + the Schoolbag item on the next render frame
-    g.run.schoolbag.usedGlowingHourGlass = 2
-  end
-
-  -- Draw the starting room graphic
-  PostNewRoom:CheckStartingRoom()
-
-  -- Check for the Boss Rush
-  BossRush:PostNewRoom()
-
-  -- Check for the Satan room
-  PostNewRoom:CheckSatanRoom()
-
-  -- Check to see if we are entering the Mega Satan room so we can update the floor tracker and
-  -- prevent cheating on the "Everything" race goal
-  PostNewRoom:CheckMegaSatanRoom()
-
-  -- Check for all of the Scolex boss rooms
-  PostNewRoom:CheckScolexRoom()
-
-  -- Check for the unavoidable puzzle room in the Dank Depths
-  PostNewRoom:CheckDepthsPuzzle()
-
-  -- Check for various NPCs
-  PostNewRoom:CheckEntities()
-
-  -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
-  PostNewRoom:CheckRespawnTrophy()
-
-  -- Certain formats ban the Treasure Room in Basement 1
-  PostNewRoom:BanB1TreasureRoom()
-
-  -- Check for the custom challenges
-  ChangeCharOrder:PostNewRoom()
-  ChangeKeybindings:PostNewRoom()
-
-  -- Do race related stuff
-  PostNewRoom:Race()
-
-  -- Do speedrun related stuff
-  SpeedrunPostNewRoom:Main()
 end
 
 -- Racing+ re-implements the starting room graphic so that it will not interfere with other kinds of graphics
@@ -231,6 +202,68 @@ function PostNewRoom:CheckStartingRoom()
   -- On vanilla, the sprite is a slightly different color on the Burning Basement
   if stageType == StageType.STAGETYPE_AFTERBIRTH then
       controlsSprite.Color = Color(0.5, 0.5, 0.5, 1, 0, 0, 0)
+  end
+end
+
+-- Check if the player teleports to a a non-existent entrance
+function PostNewRoom:CheckUndefined()
+  if not g.run.usedTeleport then
+    return
+  end
+  g.run.usedTeleport = false
+
+  -- Check to see if they are at an entrance
+  local nextToADoor = false
+  local firstDoorSlot
+  local firstDoorPosition
+  for i = 0, 7 do
+    local door = g.r:GetDoor(i)
+    if door ~= nil and
+       door.TargetRoomType ~= RoomType.ROOM_SECRET and -- 7
+       door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET then -- 8
+
+      if firstDoorSlot == nil then
+        firstDoorSlot = i
+        firstDoorPosition = Vector(door.Position.X, door.Position.Y)
+      end
+      if door.Position:Distance(g.p.Position) < 60 then
+        nextToADoor = true
+        break
+      end
+    end
+  end
+  if not nextToADoor and
+     firstDoorSlot ~= nil then -- Some rooms have no doors, like I AM ERROR rooms
+
+    -- They teleported to a non-existent entrance,
+    -- so manually move the player next to the first door in the room
+    -- We can't move them directly to the door position or they would just enter the loading zone
+    -- Players always appear 40 units away from the door when entering a room,
+    -- so calculate the offset based on the door slot
+    local x = firstDoorPosition.X
+    local y = firstDoorPosition.Y
+    if firstDoorSlot == DoorSlot.LEFT0 or -- 0
+       firstDoorSlot == DoorSlot.LEFT1 then -- 4
+
+      x = x + 40
+
+    elseif firstDoorSlot == DoorSlot.UP0 or -- 1
+           firstDoorSlot == DoorSlot.UP1 then -- 5
+
+      y = y + 40
+
+    elseif firstDoorSlot == DoorSlot.RIGHT0 or -- 2
+           firstDoorSlot == DoorSlot.RIGHT1 then -- 6
+
+      x = x - 40
+
+    elseif firstDoorSlot == DoorSlot.DOWN0 or -- 3
+           firstDoorSlot == DoorSlot.DOWN1 then -- 7
+
+      y = y - 40
+    end
+    g.p.Position = Vector(x, y)
+    Isaac.DebugString("Manually moved a player to a door after an Undefined teleport.")
   end
 end
 

@@ -11,7 +11,8 @@ local SoulJar            = require("racing_plus/souljar")
 local FastTravel         = require("racing_plus/fasttravel")
 local PostItemPickup     = require("racing_plus/postitempickup")
 local Race               = require("racing_plus/race")
-local Speedrun           = require("racing_plus/speedrun")
+local Season5            = require("racing_plus/season5")
+local Season7            = require("racing_plus/season7")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 local BossRush           = require("racing_plus/bossrush")
@@ -111,7 +112,7 @@ function PostUpdate:CheckRoomCleared()
   Schoolbag:AddCharge()
 
   -- Handle speedrun tasks
-  Speedrun:RoomCleared()
+  Season7:RoomCleared()
 end
 
 -- Keep track of our hearts if we are Keeper
@@ -218,7 +219,7 @@ function PostUpdate:CheckItemPickup()
     if g.p.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
       Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
     end
-    SpeedrunPostUpdate:CheckFirstCharacterStartingItem()
+    Season5:PostItemPickup()
   end
 end
 

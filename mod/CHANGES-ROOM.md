@@ -52,7 +52,7 @@ Firstly, some rooms were purely changed for balance (racing) reasons. Rooms that
 
 On Sheol, there exists a room with a trapdoor that takes you directly to the Dark Room without having to fight Satan. This puts too much of an extreme lower bound on the clear time of the floor.
 
-The removed room is as follows:
+The deleted room is as follows:
 * Sheol: #290
 
 <br />
@@ -214,7 +214,7 @@ The changed room is as follows:
 
 The puzzle rooms with the red fires along the sides of the room have no consistent strategy with which to avoid the random shots.
 
-The removed room is as follows:
+The deleted room is as follows:
 * Basement/Cellar/Burning: #771
 
 <br />
@@ -234,6 +234,15 @@ In one room, the Drowned Chargers that spawn from a Hive can be unavoidable dama
 
 The changed room is as follows:
 * Caves/Flooded: #519
+
+<br />
+
+### Spikes Fix
+
+In one room, a Slide causes unavoidable damage.
+
+The deleted room is as follows:
+* Depths/Necropolis/Dank: #709
 
 <br />
 
@@ -456,7 +465,7 @@ Props were removed from the starting room for better visibility.
 
 One room in the Necropolis has a donation machine in it. Since removing curses also removes donation machines from the game, this room is largely useless.
 
-The removed room is as follows:
+The deleted room is as follows:
 * Necropolis: #469
 
 <br />

@@ -3,8 +3,9 @@ local SpeedrunPostRender = {}
 -- Includes
 local g        = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
+local Season6  = require("racing_plus/season6")
+local Season7  = require("racing_plus/season7")
 local Season8  = require("racing_plus/season8")
-local Sprites  = require("racing_plus/sprites")
 
 function SpeedrunPostRender:Main()
   if not Speedrun:InSpeedrun() then
@@ -17,9 +18,8 @@ function SpeedrunPostRender:Main()
 
   SpeedrunPostRender:CheckRestart()
   SpeedrunPostRender:DisplayCharProgress()
-  SpeedrunPostRender:DrawVetoButtonText()
-  SpeedrunPostRender:DrawSeason7Goals()
-  SpeedrunPostRender:RemoveDiversitySprites()
+  Season6:PostRender()
+  Season7:PostRender()
   Season8:PostRender()
 end
 
@@ -147,81 +147,6 @@ function SpeedrunPostRender:DisplayCharProgress()
   end
   Speedrun.sprites.season:SetFrame("Default", 0)
   Speedrun.sprites.season:RenderLayer(0, posSeason)
-end
-
-function SpeedrunPostRender:DrawVetoButtonText()
-  local challenge = Isaac.GetChallenge()
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     Speedrun.charNum ~= 1 or
-     g.run.roomsEntered ~= 1 then
-
-    return
-  end
-
-  -- Don't draw the Veto text if there is not a valid order set
-  if not Speedrun:CheckValidCharOrder() then
-    return
-  end
-
-  -- Draw the sprites that correspond to the items that are currently on the veto list
-  local x = -45
-  for i = 1, #Speedrun.vetoList do
-    local itemPosGame = g:GridToPos(11, 7)
-    local itemPos = Isaac.WorldToRenderPosition(itemPosGame)
-    x = x + 15
-    itemPos = Vector(itemPos.X + x, itemPos.Y)
-    Speedrun.vetoSprites[i]:Render(itemPos, g.zeroVector, g.zeroVector)
-  end
-
-  if Speedrun.vetoTimer == 0 then
-    -- Draw the "Veto" text
-    local posGame = g:GridToPos(11, 5)
-    local pos = Isaac.WorldToRenderPosition(posGame)
-    local string = "Veto"
-    local length = g.font:GetStringWidthUTF8(string)
-    g.font:DrawString(string, pos.X - (length / 2), pos.Y, g.kcolor, 0, true)
-  end
-end
-
-function SpeedrunPostRender:DrawSeason7Goals()
-  -- Local variables
-  local challenge = Isaac.GetChallenge()
-
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     Speedrun.finished then
-
-    return
-  end
-
-  -- Make the text persist for at least 2 seconds after the player presses tab
-  local tabPressed = false
-  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
-    if Input.IsActionPressed(ButtonAction.ACTION_MAP, i) then -- 13
-      tabPressed = true
-      break
-    end
-  end
-  if not tabPressed then
-    return
-  end
-
-  -- Draw the remaining goals on the screen for easy-reference
-  local x = 95
-  local baseY = 66
-  g.font:DrawString("Remaining Goals:", x, baseY, g.kcolor, 0, true)
-
-  for i, goal in ipairs(Speedrun.remainingGoals) do
-    local y = baseY + (20 * i)
-    local string = "- " .. tostring(goal)
-    g.font:DrawString(string, x, y, g.kcolor, 0, true)
-  end
-end
-
-function SpeedrunPostRender:RemoveDiversitySprites()
-  -- Remove the diversity sprites as soon as we enter another room
-  if g.run.roomsEntered > 1 then
-    Sprites:ClearPostRaceStartGraphics()
-  end
 end
 
 return SpeedrunPostRender

@@ -6,7 +6,7 @@ local PostNewRoom  = require("racing_plus/postnewroom")
 local FastTravel   = require("racing_plus/fasttravel")
 local SeededFloors = require("racing_plus/seededfloors")
 local SoulJar      = require("racing_plus/souljar")
-local Speedrun     = require("racing_plus/speedrun")
+local Season7      = require("racing_plus/season7")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function PostNewLevel:Main()
@@ -127,7 +127,7 @@ function PostNewLevel:NewLevel()
   FastTravel:FixStrengthCardBug()
 
   -- Hande multi-character speedruns
-  Speedrun:PostNewLevel()
+  Season7:PostNewLevel()
 
   -- Seed floors that are generated when a player uses a Forget Me Now or a 5-pip Dice Room
   if g.run.forgetMeNow then

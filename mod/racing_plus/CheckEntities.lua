@@ -6,7 +6,7 @@ local FastTravel         = require("racing_plus/fasttravel")
 local Race               = require("racing_plus/race")
 local SeededDeath        = require("racing_plus/seededdeath")
 local Speedrun           = require("racing_plus/speedrun")
-local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
+local Season6            = require("racing_plus/season6")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 
 -- Check all the grid entities in the room
@@ -41,7 +41,7 @@ function CheckEntities:Grid()
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         ChangeCharOrder:CheckButtonPressed(gridEntity)
-        SpeedrunPostUpdate:Season6CheckVetoButton(gridEntity)
+        Season6:CheckVetoButton(gridEntity)
       end
     end
   end
@@ -170,7 +170,21 @@ CheckEntities.functions[272] = CheckEntities.Angel
 -- EntityType.ENTITY_RACE_TROPHY
 CheckEntities.functions[EntityType.ENTITY_RACE_TROPHY] = function(entity)
   -- We can't check in the NPC_UPDATE callback since it will not fire during the "Appear" animation
-  if g.raceVars.finished or Speedrun.finished then
+
+  -- Don't check anything if we have already finished the race / speedrun
+  if g.raceVars.finished or
+     Speedrun.finished then
+
+    return
+  end
+
+  -- Check to see if we are touching the trophy
+  if g.p.Position:Distance(entity.Position) > 24 then -- 25 is a touch too big
+    return
+  end
+
+  -- We should not be able to finish the race if we died at the same time as defeating the end boss
+  if g.p:IsDead() then
     return
   end
 
@@ -179,10 +193,6 @@ CheckEntities.functions[EntityType.ENTITY_RACE_TROPHY] = function(entity)
     return
   end
 
-  -- Check to see if we are touching the trophy
-  if g.p.Position:Distance(entity.Position) > 24 then -- 25 is a touch too big
-    return
-  end
 
   entity:Remove()
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_TROPHY, "Pickup", "PlayerPickupSparkle2")

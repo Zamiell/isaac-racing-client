@@ -4,6 +4,7 @@ local BigChest = {}
 local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Speedrun   = require("racing_plus/speedrun")
+local Season7    = require("racing_plus/season7")
 
 BigChest.action = "leave"
 BigChest.checkpointPos = g.zeroVector
@@ -282,17 +283,17 @@ function BigChest:S7(pickup)
 
   -- Season 7 runs must complete every goal
   -- The Polaroid / The Negative are not optional in this season
-  if (stage == 6 and g:TableContains(Speedrun.remainingGoals, "Boss Rush")) or
-      (stage == 8 and g:TableContains(Speedrun.remainingGoals, "It Lives!")) or
-      (stage == 9 and g:TableContains(Speedrun.remainingGoals, "Hush")) or
+  if (stage == 6 and g:TableContains(Season7.remainingGoals, "Boss Rush")) or
+      (stage == 8 and g:TableContains(Season7.remainingGoals, "It Lives!")) or
+      (stage == 9 and g:TableContains(Season7.remainingGoals, "Hush")) or
       (stage == 11 and roomIndexUnsafe == GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
-       g:TableContains(Speedrun.remainingGoals, "Mega Satan")) or
+       g:TableContains(Season7.remainingGoals, "Mega Satan")) or
       (stage == 11 and roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
-       stageType == 1 and g:TableContains(Speedrun.remainingGoals, "Blue Baby")) or
+       stageType == 1 and g:TableContains(Season7.remainingGoals, "Blue Baby")) or
       (stage == 11 and roomIndexUnsafe ~= GridRooms.ROOM_MEGA_SATAN_IDX and -- -7
-       stageType == 0 and g:TableContains(Speedrun.remainingGoals, "The Lamb")) or
+       stageType == 0 and g:TableContains(Season7.remainingGoals, "The Lamb")) or
       (stage == 12 and roomIndexUnsafe == g.run.customBossRoomIndex and
-       g:TableContains(Speedrun.remainingGoals, "Ultra Greed")) then
+       g:TableContains(Season7.remainingGoals, "Ultra Greed")) then
 
     if Speedrun.charNum == 7 then
       BigChest.action = "trophy"

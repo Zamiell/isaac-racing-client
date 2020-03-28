@@ -51,10 +51,10 @@ function UseItem:Item44()
 
   -- Teleport
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(gridIndex, Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT)
   Isaac.DebugString("Teleport! / Broken Remote / Cursed Eye to room: " .. tostring(gridIndex))
-  Isaac.DebugString("Using teleport seed: " .. tostring(g.RNGCounter.Teleport))
 
   -- This will override the existing Teleport! / Broken Remote effect because
   -- we have already locked in a room transition
@@ -156,6 +156,7 @@ function UseItem:Item324()
 
   -- Teleport
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(gridIndex, Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT)
   Isaac.DebugString("Undefined to room: " .. tostring(gridIndex))
@@ -165,8 +166,7 @@ end
 
 -- CollectibleType.COLLECTIBLE_TELEPORT_2 (419)
 function UseItem:Item419()
-  -- Mark that this is not a Cursed Eye teleport
-  g.run.naturalTeleport = true
+  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
 end
 
 -- CollectibleType.COLLECTIBLE_VOID (477)

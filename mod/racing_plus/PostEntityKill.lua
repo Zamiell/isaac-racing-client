@@ -4,11 +4,15 @@ local PostEntityKill = {}
 local g         = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
 local Speedrun  = require("racing_plus/speedrun")
+local Season6   = require("racing_plus/season6")
+local Season7   = require("racing_plus/season7")
+local Season8   = require("racing_plus/season8")
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
 function PostEntityKill:Main(entity)
   FastClear:PostEntityKill(entity) -- Track which enemies are cleared for the purposes of the "fast-clear" feature
   PostEntityKill:FadeBosses(entity) -- Fade bosses that are killed
+  Season6:PostEntityKill(entity)
 end
 
 -- When beginning a death animation, make bosses faded so that it makes it easier to see
@@ -20,16 +24,6 @@ function PostEntityKill:FadeBosses(entity)
   end
   if not npc:IsBoss() then
     return
-  end
-
-  -- In a season 6 speedrun,
-  -- reset the starting item timer if they have killed the Basement 2 boss
-  local stage = g.l:GetStage()
-  local challenge = Isaac.GetChallenge()
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-     stage == 2 then
-
-    Speedrun.timeItemAssigned = 0
   end
 
   -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the segments
@@ -185,17 +179,17 @@ function PostEntityKill:Entity78(entity)
      entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78
 
     -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    if g:TableContains(Speedrun.remainingGoals, "It Lives!") then
+    if g:TableContains(Season7.remainingGoals, "It Lives!") then
       Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
                   centerPos, g.zeroVector, nil)
     end
 
     -- Perform some path validation for Season 7
     if situation ~= situations.NEITHER and
-       not g:TableContains(Speedrun.remainingGoals, "Blue Baby") and
-       not g:TableContains(Speedrun.remainingGoals, "The Lamb") and
-       not g:TableContains(Speedrun.remainingGoals, "Mega Satan") and
-       not g:TableContains(Speedrun.remainingGoals, "Ultra Greed") then
+       not g:TableContains(Season7.remainingGoals, "Blue Baby") and
+       not g:TableContains(Season7.remainingGoals, "The Lamb") and
+       not g:TableContains(Season7.remainingGoals, "Mega Satan") and
+       not g:TableContains(Season7.remainingGoals, "Ultra Greed") then
 
        situation = situations.NEITHER
     end
@@ -298,10 +292,10 @@ function PostEntityKill:Entity81(entity)
     end
   end
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
-    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
+    if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
       coalBanned = true
     end
-    if g:TableContains(Speedrun.S8TouchedItems, CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
+    if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
       headBanned = true
     end
   end
@@ -399,7 +393,7 @@ function PostEntityKill:Entity271(entity)
      subType ~= 0 then
 
     -- If we already got this key piece on a previous run, then change it to a random Angel Room item
-    if g:TableContains(Speedrun.S8TouchedItems, subType) then
+    if g:TableContains(Season8.touchedItems, subType) then
       subType = 0
     end
   end

@@ -9,11 +9,6 @@ function UsePill:Main(pillEffect)
   g.run.streakText = g.itemConfig:GetPillEffect(pillEffect).Name
   g.run.streakFrame = Isaac.GetFrameCount()
 
-  -- Don't add any more pills after 7, since it won't display cleanly
-  if #g.run.pills >= 7 then
-    return
-  end
-
   -- See if we have already used this particular pill color on this run
   local pillColor = g.p:GetPill(0)
   if pillColor == PillColor.PILL_NULL then -- 0
@@ -37,6 +32,24 @@ function UsePill:Main(pillEffect)
   pillEntry.sprite:Load("gfx/pills/pill" .. pillColor .. ".anm2", true)
   pillEntry.sprite:SetFrame("Default", 0)
   g.run.pills[#g.run.pills + 1] = pillEntry
+end
+
+-- PillEffect.PILLEFFECT_HEALTH_DOWN (6)
+function UsePill:HealthDown()
+  -- Local variables
+  local hearts = g.p:GetHearts()
+  local soulHearts = g.p:GetSoulHearts()
+  local blackHearts = g.p:GetBlackHearts()
+  local boneHearts = g.p:GetBoneHearts()
+
+  -- Fix the bug where using a Health Down pill in season 8 will not kill you
+  if hearts == 0 and
+     soulHearts == 0 and
+     blackHearts == 0 and
+     boneHearts == 0 then
+
+    g.p:Kill()
+  end
 end
 
 -- PillEffect.PILLEFFECT_HEALTH_UP (7)
@@ -89,6 +102,7 @@ function UsePill:Telepills()
 
   -- Teleport
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
   g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
   g.g:StartRoomTransition(gridIndex, Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT)
 

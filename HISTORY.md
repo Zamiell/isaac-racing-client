@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.49.4* - March 28th, 2020
+
+* Removed Depths/Necropolis/Dank room #709. (Thanks Gamonymous)
+* The pills UI will no longer cut off identified pills over 7.
+* Fixed the (vanilla) bug where you would not always appear at a valid entrance when teleporting to a new room.
+* Fixed the (vanilla) bug where Ticking Spiders would not display the correct frame during their "Appear" animation. (Thanks bobita60)
+* Fixed the bug where you could finish a race while dead. (Thanks Pingouin23)
+* Fixed the bug in season 7 where the correct photo would not spawn if you started with either The Polaroid or The Negative. (Thanks Gamonymous)
+* Fixed the bug where custom races would force you to play as the chosen character under certain conditions.
+
 ### *v0.49.2* - March 14th, 2020
 
 * Magdalene will now automatically use her Speed Up pill at the beginning of a run.

@@ -115,6 +115,7 @@ end
 
 function InputAction.IsActionTriggeredItem()
   if g.run.spamButtons then
+    g.sfx:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT) -- 55
     return true
   end
 end

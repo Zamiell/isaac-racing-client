@@ -4,20 +4,13 @@ local Timer = {}
 local g           = require("racing_plus/globals")
 local SeededDeath = require("racing_plus/seededdeath")
 local Speedrun    = require("racing_plus/speedrun")
+local Season6     = require("racing_plus/season6")
 
 -- Variables
 Timer.sprites = {}
 
 -- This is the timer that shows how long the race or speedrun has been going on for
 function Timer:Display()
-  -- Don't show the timer if the user wants it explicitly disabled
-  -- (through an additional setting in the "save#.dat" file)
-  if g.race.timer ~= nil and
-     not g.race.timer then
-
-    return
-  end
-
   -- Always show the timer in a speedrun
   -- Don't show the timer if the race has not started yet or they quit in the middle of the race
   if not Speedrun:InSpeedrun() and
@@ -146,6 +139,11 @@ function Timer:DisplayRun()
     return
   end
 
+  -- Don't show it if we have identified a lot of pills, since it will overlap with the pill UI
+  if #g.run.pills >= 11 then
+    return
+  end
+
   -- Load the sprites
   if Timer.sprites.clock2 == nil then
     Timer.sprites.clock2 = Sprite()
@@ -249,9 +247,7 @@ function Timer:DisplaySeededDeath()
   local moveTimerToBottomRight = false
   if g.run.seededDeath.state >= SeededDeath.state.FETAL_POSITION then
     elapsedTime = g.run.seededDeath.debuffEndTime - Isaac.GetTime()
-    if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-       challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-
+    if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
       -- The timer needs to be moved to the right to account for the "(S#)" icon
       adjustTimerRight = true
     end
@@ -260,7 +256,7 @@ function Timer:DisplaySeededDeath()
          Speedrun.charNum == 1 and
          g.run.roomsEntered == 1 then
 
-    local timeReset = Speedrun.timeItemAssigned + Speedrun.itemLockTime
+    local timeReset = Season6.timeItemAssigned + Season6.itemLockTime
     elapsedTime = timeReset - Isaac.GetTime()
     moveTimerToBottomRight = true
   end

@@ -14,7 +14,6 @@ TODO:
 - Opponent's shadows
 
 TODO CAN'T FIX:
-- Make a 3rd color hue on the map for rooms that are not cleared but you have entered
 - Make fast-clear apply to Challenge rooms ("room:SetAmbushDone()" doesn't do anything)
 
 POST-FLIP ACTIONS:
@@ -71,6 +70,7 @@ local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
 local FastClear           = require("racing_plus/fastclear") -- Functions for the "Fast-Clear" feature
 local Schoolbag           = require("racing_plus/schoolbag") -- Functions for the Schoolbag custom item
 local Speedrun            = require("racing_plus/speedrun") -- Functions for custom challenges
+local Season7             = require("racing_plus/season7") -- Functions for R+7 Season 7
 local Samael              = require("racing_plus/samael") -- Samael functions
 local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions (2/2)
 local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions
@@ -204,6 +204,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune,    Card.RUNE
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.QuestionMark, Card.CARD_QUESTIONMARK) -- 48
 
 -- Define pill callbacks (10)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthDown,
+                       PillEffect.PILLEFFECT_HEALTH_DOWN) -- 6
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.HealthUp,
                        PillEffect.PILLEFFECT_HEALTH_UP) -- 7
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Telepills,
@@ -226,9 +228,9 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Horf,
 -- Define entity damage callbacks (11)
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.Player, -- 11
                        EntityType.ENTITY_PLAYER) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.RemoveArmor, -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Season7.EntityTakeDmgRemoveArmor, -- 11
                        EntityType.ENTITY_ULTRA_GREED) -- 406
-RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, EntityTakeDmg.RemoveArmor, -- 11
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Season7.EntityTakeDmgRemoveArmor, -- 11
                        EntityType.ENTITY_HUSH) -- 407
 
 -- Define pre-use item callbacks (23)
@@ -267,7 +269,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.PreventItemPedes
 -- Define post-NPC-initialization callbacks (27)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC38, -- 27
                        EntityType.ENTITY_BABY) -- 38
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC102, -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Season7.PostNPCInitIsaac, -- 27
                        EntityType.ENTITY_ISAAC) -- 102
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
                        EntityType.ENTITY_THE_HAUNT) -- 260

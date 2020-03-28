@@ -443,6 +443,7 @@ function Schoolbag:Switch()
   end
 end
 
+-- Called from the MC_POST_UPDATE callback
 function Schoolbag:CheckRemoved()
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
      not g.run.schoolbag.present then
@@ -464,6 +465,33 @@ function Schoolbag:CheckRemoved()
                 position, g.zeroVector, nil, g.run.schoolbag.item, 0)
       g.run.schoolbag.item = 0
     end
+  end
+end
+
+function Schoolbag:PostNewRoom()
+  -- Local variables
+  local activeItem = g.p:GetActiveItem()
+  local activeCharge = g.p:GetActiveCharge()
+  local activeChargeBattery = g.p:GetBatteryCharge()
+
+  if g.run.schoolbag.usedGlowingHourGlass == 0 then
+    -- Record the state of the active item + the Schoolbag item in case we use a Glowing Hour Glass
+    g.run.schoolbag.last = {
+      active = {
+        item = activeItem,
+        charge = activeCharge,
+        chargeBattery = activeChargeBattery,
+      },
+      schoolbag = {
+        item = g.run.schoolbag.item,
+        charge = g.run.schoolbag.charge,
+        chargeBattery = g.run.schoolbag.chargeBattery,
+      },
+    }
+  elseif g.run.schoolbag.usedGlowingHourGlass == 1 then
+    -- We just used a Glowing Hour Glass,
+    -- so mark to reset the active item + the Schoolbag item on the next render frame
+    g.run.schoolbag.usedGlowingHourGlass = 2
   end
 end
 

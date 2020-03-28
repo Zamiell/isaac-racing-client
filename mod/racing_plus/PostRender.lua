@@ -378,7 +378,10 @@ function PostRender:CheckRestart()
       return
     end
     command = command .. " " .. currentChar
-  elseif g.race.status ~= "none" then
+
+  elseif g.race.status ~= "none" and
+         g.race.rFormat ~= "custom" then -- Custom races might switch between characters
+
     command = command .. " " .. g.race.character
   end
 
@@ -508,11 +511,7 @@ function PostRender:CheckCursedEye()
                                                PickupVariant.PICKUP_REDCHEST, 0, false, false) -- 360
       -- (a subtype of 0 indicates that it is opened, a 1 indicates that it is unopened)
       for _, chest in ipairs(openedRedChests) do
-        if g.p.Position.X >= chest.Position.X - 24 and -- 25 is a touch too big
-           g.p.Position.X <= chest.Position.X + 24 and
-           g.p.Position.Y >= chest.Position.Y - 24 and
-           g.p.Position.Y <= chest.Position.Y + 24 then
-
+        if g.p.Position:Distance(chest.Position.X) <= 24 then -- 25 is a touch too big
           touchingRedChest = true
         end
       end
@@ -680,7 +679,8 @@ function PostRender:Race()
 
   -- Show warning messages
   if g.race.difficulty == "hard" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD then -- 1
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
+     g.race.rFormat ~= "custom" then
 
     Sprites:Init("top", "error-not-hard-mode") -- Error: You are not on hard mode.
     return
@@ -691,7 +691,8 @@ function PostRender:Race()
     Sprites:Init("top", 0)
   end
   if g.race.difficulty == "normal" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL then -- 0
+     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
+     g.race.rFormat ~= "custom" then
 
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return

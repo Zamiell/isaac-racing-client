@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.49.3"
+g.version = "v0.49.4"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -18,8 +18,8 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   activeItem2  = CollectibleType.COLLECTIBLE_MYSTERY_GIFT, -- 515
   passiveItem2 = CollectibleType.COLLECTIBLE_ABEL, -- 188
   -- Eden's items will change if we have Racing+ Rebalanced enabled
-  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105 TODO
-  passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128 TODO
+  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105
+  passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128
   old = {
     challenge = 0,
     character = 0,
@@ -57,7 +57,6 @@ g.race = {
   place             = 1,           -- This is the final place
   numEntrants       = 1,           -- The number of people in the race
 }
--- (unofficially, this can also have "timer = false")
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
 g.raceVars = {
@@ -311,6 +310,7 @@ function g:InitRun()
   g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
   g.run.spamButtons           = false -- Used to spam Blood Rights
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
+  g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
   g.run.usingBlankRune        = false -- Used in Season 8
 
