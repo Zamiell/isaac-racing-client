@@ -102,7 +102,6 @@ While there are thousands of rooms in the game, many players have already seen t
 * Diagonal knife throws have a 3-frame window instead of a 1-frame window.
 * Duplicate rooms will no longer appear on the same run. (Basement 1 is exempt. All floors on set seeds are exempt.)
 * The Boss Rush is modified to include the Afterbirth+ bosses and Chapter 4 bosses.
-* Teleport, Broken Remote, and Cursed Eye no longer have a chance to teleport you to the same room that you are in.
 * Maggy will automatically use her Speed Up pill at the beginning of the run.
 * Pin's first attack happens on the 15th frame (instead of the 73rd frame).
 * Cod Worms are replaced with Para-Bites.
@@ -162,6 +161,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The random beams of light from Isaac and Conquest are fixed such that they will now target the player.
 * Multi-segment bosses will no longer drop more than one black heart when killed with Maw of the Void, Athame, or Serpent's Kiss.
 * The trapdoor / beam of light in I AM ERROR rooms will no longer be accessible if the room is not cleared.
+* All forms of teleport will no longer send you to an invalid entrance.
 
 ### Graphics & Sound Fixes
 
@@ -185,6 +185,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Friendly green creep is changed to red (so that it is easier to distinguish from enemy creep).
 * Fog is removed for the purposes of lag reduction. (Thanks goes to [Dan](https://moddingofisaac.com/user/255) for creating the graphics for this in the [Fogless!](https://moddingofisaac.com/mod/950/fogless) mod.)
 * The door opening sound will no longer play in crawlspaces.
+* Ticking Spiders will now display the correct frame during the "Appear" animation.
 
 <br />
 

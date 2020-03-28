@@ -461,6 +461,8 @@ function Season8:PostGameStarted()
       g.itemPool:IdentifyPill(pill.color)
     end
   end
+
+  g.g:ShowHallucination()
 end
 
 -- ModCallbacks.MC_GET_CARD (20)

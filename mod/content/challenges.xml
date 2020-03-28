@@ -11,7 +11,7 @@
 	<!-- (Curse of the Unknown is left in intentionally) -->
 	<challenge name="R+7 (Season 6)" endstage="11" altpath="true" cursefilter="127" />
 	<challenge name="R+7 (Season 7)" endstage="11" altpath="true" cursefilter="127" />
-	<challenge name="R+7 (Season 8 Beta)" endstage="11" altpath="true" cursefilter="127" />
+	<!--<challenge name="R+7 (Season 8 Beta)" endstage="11" altpath="true" cursefilter="127" />-->
 	<challenge name="Change Char Order" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 	<challenge name="Change Keybindings" endstage="11" altpath="true" cursefilter="127" canshoot="false" />
 </challenges>
