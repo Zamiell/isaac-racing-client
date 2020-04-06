@@ -94,11 +94,11 @@ At first glance, turning curses off clearly makes the game easier. But when we g
 
 The average expected pedestals from a devil deal is increased from 1.53 to 1.86 and the average expected pedestals from an angel deal is increased from 1.65 to 1.88.
 
-This is the only "behind the scenes"-style balance change that Racing+ performs, with the aim of slightly increasing the reward for skilled players who play well and not take any red-heart damage. Hopefully you can agree that this is a relatively modest increase.
+This is the only "behind the scenes"-style balance change that Racing+ performs, with the aim of slightly increasing the reward for skilled players who play well and do not take any red-heart damage. Hopefully you can agree that this is a relatively modest increase.
 
 These are the 3 changes - that's it. Notably, the mod does not change the item pools or item strengths in any way. The overall difficulty of a Racing+ speedrun is extremely similar to just playing a run on the vanilla game with the Isaac character.
 
-(As if you think that more generally, playing Isaac with powerful items is cheap, then I direct you to the Complaint #2 section.)
+(If you think that more generally, playing Isaac with powerful items is cheap, refer to the Complaint #2 section.)
 
 <br />
 
