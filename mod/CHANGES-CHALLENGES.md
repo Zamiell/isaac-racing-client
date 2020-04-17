@@ -196,6 +196,7 @@
 * Black Judas starts with three and a half black hearts.
 * Apollyon starts with Void inside the Schoolbag.
 * Apollyon starts with an extra half soul heart.
+* Mega Blast is removed from all pools on Apollyon.
 
 ### Shared Item Pools and Cards
 
@@ -205,7 +206,6 @@
 * When a card is used, it will no longer drop for the rest of the run or on subsequent runs.
 * The starting items for all 7 characters are removed from all pools (for all characters).
 * Judas' Shadow and Lazarus Rags are removed from all pools.
-* Mega Blast is removed from all pools on Apollyon.
 
 ### Shared Pills
 
