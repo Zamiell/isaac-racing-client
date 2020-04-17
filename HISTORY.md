@@ -6,7 +6,7 @@
 * Mom's Hands and Mom's Dead Hands now have an "Appear" animation. This is helpful for players who are deaf and/or play with the sound turned off. (Thanks Satanas)
 * Deleted Sheol room #33. (Thanks Shigan)
 * Added Basement/Cellar/Burning room #721 to the list of rooms for Spiked Chest replacement. (Thanks Dea1h)
-* The mod will no longer fix an invalid entrance after a teleport if it is an L room or a 2x2 room. (Thanks mgln)
+* The mod will no longer fix an invalid entrance after a teleport if it is a big room. (Thanks mgln)
 * Fixed the bug where the mod would not fix an invalid entrance after using a teleportation card.
 * Fixed the bug where fast clear would not work with Dark Red champions under certain conditions. (Thanks thereisnofuture & mgln)
 * Fixed the bug where the extra tears from a Monstro's Lung synergy would only fire at half the velocity. (Thanks Gamonymous)

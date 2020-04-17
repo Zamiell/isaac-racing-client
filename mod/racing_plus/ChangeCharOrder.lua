@@ -199,7 +199,6 @@ ChangeCharOrder.seasons = {
       {12, 5, 3},  -- Black Judas
       {15, 7, 3},  -- Apollyon
     },
-    hidden = true,
   },
 }
 
