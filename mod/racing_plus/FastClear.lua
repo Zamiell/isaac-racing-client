@@ -9,12 +9,12 @@ local Season8  = require("racing_plus/season8")
 -- Variables
 --
 
--- These are reset in the "FastClear:InitRun()" function
+-- These are reset in the "FastClear:PostGameStarted()" function
 FastClear.familiars = {}
 FastClear.roomClearAwardRNG = 0
 FastClear.roomClearAwardRNG2 = 0 -- Used for Devil Rooms and Angel Rooms
 
--- These are reset in the "FastClear:InitRun()" function and
+-- These are reset in the "FastClear:PostGameStarted()" function and
 -- the "FastClear:PostNPCInit()" function (upon entering a new room)
 FastClear.aliveEnemies = {}
 FastClear.aliveEnemiesCount = 0
@@ -29,8 +29,8 @@ FastClear.buttonsAllPushed = false
 -- Fast clear functions
 --
 
--- Called from the PostGameStarted callback
-function FastClear:InitRun()
+-- ModCallbacks.MC_POST_GAME_STARTED (15)
+function FastClear:PostGameStarted()
   -- Local variables
   local stage = g.l:GetStage()
   local startSeed = g.seeds:GetStartSeed()
@@ -81,7 +81,7 @@ function FastClear:NPCUpdate(npc)
   -- Thus, we have to wait until they are initialized and then remove them from the table
   if npc:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then -- 1 << 29
     -- Remove it from the list if it is on it
-    FastClear:CheckDeadNPC(npc)
+    FastClear:CheckDeadNPC(npc, "NPCUpdate")
     return
   end
 
@@ -99,7 +99,7 @@ function FastClear:NPC246(npc)
      npc.State == NpcState.STATE_UNIQUE_DEATH then -- 16
      -- They go to state 16 when they are patches on the ground
 
-    FastClear:CheckDeadNPC(npc)
+    FastClear:CheckDeadNPC(npc, "NPC246")
   end
 end
 
@@ -240,11 +240,12 @@ function FastClear:PostEntityRemove(entity)
 
   -- We can't rely on the MC_POST_ENTITY_KILL callback because it is not fired for certain NPCs
   -- (like when Daddy Long Legs does a stomp attack or a Portal despawns)
-  FastClear:CheckDeadNPC(npc)
+  FastClear:CheckDeadNPC(npc, "PostEntityRemove")
 end
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
--- (we can't use the MC_POST_NPC_DEATH callback because that will only fire once the death animation is finished)
+-- (we can't use the MC_POST_NPC_DEATH callback or MC_POST_ENTITY_REMOVE callbacks because
+-- they are only fired once the death animation is finished)
 function FastClear:PostEntityKill(entity)
   -- We only care about NPCs dying
   local npc = entity:ToNPC()
@@ -262,11 +263,10 @@ function FastClear:PostEntityKill(entity)
                     "index " .. tostring(index) .. ", " ..
                     "frame " .. tostring(gameFrameCount))
 
-  -- We can't rely on the MC_POST_ENTITY_REMOVE callback because it is only fired once the death animation is complete
-  FastClear:CheckDeadNPC(npc)
+  FastClear:CheckDeadNPC(npc, "PostEntityKill")
 end
 
-function FastClear:CheckDeadNPC(npc)
+function FastClear:CheckDeadNPC(npc, parentFunction)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
 
@@ -276,14 +276,15 @@ function FastClear:CheckDeadNPC(npc)
     return
   end
 
-  -- We don't care if this is a Dark Red champion flesh pile
+  -- The "MC_POST_ENTITY_KILL" callback will be triggered when a Dark Red champion changes to a flesh pile
+  -- This does not count as a real death (and the NPC should not be removed), so we need to handle this
+  -- We cannot check for "npc:GetSprite():GetFilename() == "gfx/024.000_Globin.anm2"",
+  -- because that won't work for Gapers & Globins
+  -- We cannot check for "npc:GetSprite():IsPlaying("ReGenChamp")", because that will only be updated on the next frame
   if npc:GetChampionColorIdx() == 12 and -- Dark Red champion (collapses into a flesh pile upon death)
-     npc:GetSprite():GetFilename() ~= "gfx/024.000_Globin.anm2" then
-     -- The filename will be set to this if it is in the flesh pile state
-     -- TODO: This does not work with Red Champion Gapers
+     parentFunction == "PostEntityKill" then
 
-    -- This callback will be triggered when the champion changes into the flesh pile
-    -- We don't want to open the doors yet until the flesh pile is actually killed
+    -- We don't want to open the doors yet until the flesh pile is actually removed in the "MC_POST_ENTITY_REMOVE"
     return
   end
 
@@ -316,6 +317,7 @@ function FastClear:PostUpdate()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local roomClear = g.r:IsClear()
+  local roomFrameCount = g.r:GetFrameCount()
 
   -- Disable this in Greed Mode
   if g.g.Difficulty >= Difficulty.DIFFICULTY_GREED then -- 2
@@ -339,7 +341,7 @@ function FastClear:PostUpdate()
      FastClear.delayFrame == 0 and
      not roomClear and
      FastClear:CheckAllPressurePlatesPushed() and
-     gameFrameCount > 1 then -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
+     roomFrameCount > 1 then -- If a Mushroom is replaced, the room can be clear of enemies on the first frame
 
     FastClear:ClearRoom()
   end

@@ -242,7 +242,7 @@ function Pedestals:Replace(pickup)
       itemName = g.itemConfig:GetCollectible(subType).Name
     end
     Isaac.DebugString("Made a copied pedestal of \"" .. itemName .. "\" " ..
-                      " at (" .. tostring(position.X) .. ", " .. tostring(position.Y) .. ") " ..
+                      "at (" .. tostring(position.X) .. ", " .. tostring(position.Y) .. ") " ..
                       "using seed " .. tostring(newSeed) .. " on frame " .. tostring(gameFrameCount) .. ".")
   end
   newPedestal = newPedestal:ToPickup()

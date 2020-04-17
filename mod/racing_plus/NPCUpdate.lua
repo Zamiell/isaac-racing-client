@@ -295,7 +295,15 @@ end
 -- EntityType.ENTITY_MOMS_HAND (213)
 -- EntityType.ENTITY_MOMS_DEAD_HAND (287)
 function NPCUpdate:SpeedupHand(npc)
-  -- Mom's Hands and Mom's Dead Hands
+  if npc.FrameCount == 1 then
+    -- Play a custom "Appear" animation
+    local sprite = npc:GetSprite()
+    if not sprite:IsPlaying("Appear") then
+      npc.Position = g.run.handPositions[npc.Index]
+      sprite:Play("Appear", true)
+    end
+  end
+
   if npc.State == 4 and npc.StateFrame < 25 then
     -- Speed up their attack patterns
     -- (StateFrame starts between 0 and a random negative value and ticks upwards)

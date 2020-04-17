@@ -437,7 +437,7 @@ function Season8:PostGameStarted()
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_RAZOR_BLADE) -- 126
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_ANEMIC) -- 214
-  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 249
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_VOID) -- 477
 
   -- Some revival items are removed from all pools (since these characters in in the lineup)
@@ -462,7 +462,7 @@ function Season8:PostGameStarted()
     end
   end
 
-  g.g:ShowHallucination()
+  --g.g:ShowHallucination()
 end
 
 -- ModCallbacks.MC_GET_CARD (20)

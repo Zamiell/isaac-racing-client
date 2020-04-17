@@ -29,6 +29,13 @@ POST-FLIP ACTIONS:
 
 --]]
 
+-- Integrate Mod Config Menu by piber20
+-- require("mod_config_menu")
+
+-- Integrate MinimapAPI by Taz & Wofsauge
+-- https://github.com/TazTxUK/MinimapAPI/wiki/Integrating-MinimapAPI-into-a-standalone-mod
+-- require("scripts/minimapapi/init")
+
 -- Register the mod (the second argument is the API version)
 local RacingPlus = RegisterMod("Racing+", 1)
 
@@ -66,6 +73,7 @@ local PostFireTear        = require("racing_plus/postfiretear") -- 61
 local PreGetCollectible   = require("racing_plus/pregetcollectible") -- 62
 local GetPillEffect       = require("racing_plus/getpilleffect") -- 65
 local PostEntityKill      = require("racing_plus/postentitykill") -- 68
+local PreNPCUpdate        = require("racing_plus/prenpcupdate") -- 69
 local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
 local FastClear           = require("racing_plus/fastclear") -- Functions for the "Fast-Clear" feature
 local Schoolbag           = require("racing_plus/schoolbag") -- Functions for the Schoolbag custom item
@@ -298,7 +306,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pick
 
 -- Define post laser init callbacks (47)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT, PostLaserInit.Laser6, -- 47
-                       g.LaserVariant.LASER_GIANT) -- 6
+                       g.LaserVariant.LASER_GIANT_RED) -- 6
 
 -- Define post effect init callbacks (54)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, PostEffectInit.Effect15, -- 54
@@ -344,7 +352,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, PostBombInit.SetTimer, --
 RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_INIT, PostBombInit.SetTimer, -- 57
                        BombVariant.BOMB_SUPERTROLL) -- 4
 
--- Define post-entity-kill callbacks (68)
+-- Define post entity kill callbacks (68)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity45,
                        EntityType.ENTITY_MOM) -- 45
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity78,
@@ -361,6 +369,12 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Entity78
                        EntityType.ENTITY_HUSH) -- 407
 RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.RoomClearDelayNPC,
                        EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC)
+
+--Define pre NPC update callbacks (69)
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, PreNPCUpdate.NPC213, -- 69
+                       EntityType.ENTITY_MOMS_HAND) -- 213
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_NPC_UPDATE, PreNPCUpdate.NPC213, -- 69
+                       EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
 
 -- Samael callbacks
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Samael.scytheUpdate, -- 0

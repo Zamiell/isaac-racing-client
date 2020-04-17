@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.49.5"
+g.version = "v0.50.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -168,15 +168,15 @@ PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
 PlayerForm.NUM_PLAYER_FORMS  = PlayerForm.PLAYERFORM_STOMPY + 1
 
 g.LaserVariant = {
-  LASER_THICK     = 1, -- Brimstone
-  LASER_THIN      = 2, -- Technology
-  LASER_SHOOP     = 3, -- Shoop Da Whoop!
-  LASER_PRIDE     = 4, -- Pride (looks like a squiggly line)
-  LASER_LIGHT     = 5, -- Angel lasers
-  LASER_GIANT     = 6, -- Mega Blast
-  LASER_TRACTOR   = 7, -- Tractor Beam
-  LASER_LIGHTRING = 8, -- ? (looks like pulsating Angel laser)
-  LASER_BRIMTECH  = 9, -- Brimstone + Technology
+  LASER_THICK_RED      = 1, -- Brimstone
+  LASER_THIN_RED       = 2, -- Technology
+  LASER_SHOOP_DA_WHOOP = 3,
+  LASER_PRIDE          = 4, -- (looks like a squiggly line)
+  LASER_LIGHT_BEAM     = 5, -- Angel lasers
+  LASER_GIANT_RED      = 6, -- Mega Blast
+  LASER_TRACTOR_BEAM   = 7,
+  LASER_LIGHT_RING     = 8, -- (not sure, looks like a thinner Angel laser)
+  LASER_BRIMTECH       = 9, -- Brimstone + Technology
 }
 
 -- Spaded by ilise rose (@yatboim)
@@ -440,6 +440,7 @@ function g:InitRoom()
   g.run.currentHoppers        = {} -- Used to prevent softlocks
   g.run.usedStrength          = false
   g.run.handsDelay            = 0 -- Used to speed up Mom's Hands
+  g.run.handPositions         = {} -- Used to play an "Appear" animation for Mom's Hands
   g.run.naturalTeleport       = false
   g.run.diceRoomActivated     = false
   g.run.megaSatanDead         = false

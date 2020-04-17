@@ -80,7 +80,7 @@ function PostGameStarted:Main(saveState)
   g:InitRun()
 
   -- Reset some RNG counters for familiars
-  FastClear:InitRun()
+  FastClear:PostGameStarted()
 
   -- Reset some race variables that we keep track of per run
   -- (loadOnNextFrame does not need to be reset because it should be already set to false)

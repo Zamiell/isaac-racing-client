@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.50.0* - March 29th, 2020 (unreleased)
+
+* [R+7 Season 8](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) is now released for beta testing.
+* Mom's Hands and Mom's Dead Hands now have an "Appear" animation. This is helpful for players who are deaf and/or play with the sound turned off. (Thanks Satanas)
+* Deleted Sheol room #33. (Thanks Shigan)
+* Fixed the bug where fast clear would not work with Dark Red champions under certain conditions. (Thanks thereisnofuture & mgln)
+
 ### *v0.49.4* - March 28th, 2020
 
 * Removed Depths/Necropolis/Dank room #709. (Thanks Gamonymous)
