@@ -21,6 +21,7 @@ function PostFireTear:Main(tear)
   PostFireTear:FixMonstrosLungSynergy(tear)
 end
 
+-- Monstro's Lung does not properly synergize with 20/20, The Inner Eye, etc.
 function PostFireTear:FixMonstrosLungSynergy(tear)
   if g.run.firingExtraTear then
     return
@@ -67,7 +68,7 @@ function PostFireTear:FixMonstrosLungSynergy(tear)
     if extraTears > 0 then
       for i = 1, extraTears do
         g.run.firingExtraTear = true
-        g.p:FireTear(tear.Position, tear.Velocity * 0.5, true, false, true)
+        g.p:FireTear(tear.Position, tear.Velocity, true, false, true)
         g.run.firingExtraTear = false
       end
     end

@@ -461,8 +461,6 @@ function Season8:PostGameStarted()
       g.itemPool:IdentifyPill(pill.color)
     end
   end
-
-  --g.g:ShowHallucination()
 end
 
 -- ModCallbacks.MC_GET_CARD (20)
@@ -546,6 +544,32 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
   Isaac.DebugString("Season8:GetCard() - There are " .. tostring(#remainingCards) .. " cards remaining.")
   Isaac.DebugString("Season8:GetCard() - Returning a custom card of: " .. tostring(remainingCards[randomIndex]))
   return remainingCards[randomIndex]
+end
+
+-- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
+function Season8:PostPickupUpdateTrinket(pickup)
+  -- We only care about freshly spawned trinkets
+  -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
+  if pickup.FrameCount ~= 1 or
+     pickup.SpawnerType == EntityType.ENTITY_PLAYER then -- 1
+     -- (we need to ignore trinkets that the player drops,
+     -- or else they would be able to infinitely spawn new trinkets)
+
+    return
+  end
+
+  -- Check to make sure that this trinket has not already been touched
+  -- e.g. "set" drops, like Left Hand from Ultra Pride
+  if g:TableContains(Season8.touchedTrinkets, pickup.SubType) then
+    pickup:Remove()
+    Isaac.DebugString("A - " .. tostring(pickup.SpawnerEntity))
+    Isaac.DebugString("B - " .. tostring(pickup.Parent))
+    Isaac.DebugString("C - " .. tostring(pickup.SpawnerType))
+
+    -- Spawn a random trinket in its place (5.350)
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET,
+              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+  end
 end
 
 -- ModCallbacks.MC_GET_PILL_EFFECT (65)

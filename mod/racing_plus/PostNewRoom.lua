@@ -212,6 +212,15 @@ function PostNewRoom:CheckUndefined()
   end
   g.run.usedTeleport = false
 
+  -- Local variables
+  local roomShape = g.r:GetRoomShape()
+
+  -- Don't bother fixing entrances in big room,
+  -- as teleporting the player to a valid door can cause the camera to jerk in a buggy way
+  if roomShape >= RoomShape.ROOMSHAPE_1x2 then -- 4
+    return
+  end
+
   -- Check to see if they are at an entrance
   local nextToADoor = false
   local firstDoorSlot
@@ -612,7 +621,7 @@ function PostNewRoom:Race()
   -- Remove the final place graphic if it is showing
   Sprites:Init("place2", 0)
 
-  -- Go to the custom "Race Start" room
+  -- Go to the custom "Race Room"
   if (g.race.status == "open" or
       g.race.status == "starting") then
 
@@ -770,6 +779,11 @@ function PostNewRoom:RaceStartRoom()
   -- Spawn two Gaping Maws (235.0)
   Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
   Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
+
+  -- Disable the MinimapAPI to emulate what happens with the vanilla map
+  if MinimapAPI ~= nil then
+    MinimapAPI.Config.Disable = true
+  end
 end
 
 return PostNewRoom

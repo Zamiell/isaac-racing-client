@@ -84,6 +84,7 @@ end
 
 function UseCard:Teleport()
   g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
+  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
 end
 
 return UseCard

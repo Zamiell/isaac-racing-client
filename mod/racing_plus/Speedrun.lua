@@ -11,7 +11,7 @@ Speedrun.challengeTable = {
   [Isaac.GetChallengeIdByName("R+7 (Season 2)")]  = {"R7S2",  7},
   [Isaac.GetChallengeIdByName("R+7 (Season 3)")]  = {"R7S3",  7},
   [Isaac.GetChallengeIdByName("R+7 (Season 4)")]  = {"R7S4",  14}, -- (7 characters + 7 starting items)
-  -- (there is no character order for season 5)
+  [Isaac.GetChallengeIdByName("R+7 (Season 5)")]  = {"R7S5",  7},
   [Isaac.GetChallengeIdByName("R+7 (Season 6)")]  = {"R7S6",  11}, -- (7 characters + 3 item bans + 1 big 4 item ban)
   [Isaac.GetChallengeIdByName("R+7 (Season 7)")]  = {"R7S7",  7},
   [Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)")]  = {"R7S8",  7},

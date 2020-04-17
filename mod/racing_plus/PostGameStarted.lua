@@ -55,6 +55,11 @@ function PostGameStarted:Main(saveState)
     return
   end
 
+  -- Make sure that the MinimapAPI is enabled (we may have disabled it in a previous run)
+  if MinimapAPI ~= nil then
+    MinimapAPI.Config.Disable = false
+  end
+
   -- Make sure that the "Total Curse Immunity" easter egg is on (the "BLCK CNDL" seed)
   if not g.seeds:HasSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) and -- 70
      Isaac.GetChallenge() == 0 then

@@ -7,6 +7,7 @@ local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Samael     = require("racing_plus/samael")
 local Pedestals  = require("racing_plus/pedestals")
+local Season8    = require("racing_plus/season8")
 
 -- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
 function PostPickupUpdate:Main(pickup)
@@ -98,6 +99,11 @@ end
 function PostPickupUpdate:Pickup100(pickup)
   -- We manually manage the seed of all collectible items
   Pedestals:Replace(pickup)
+end
+
+-- PickupVariant.PICKUP_TRINKET (350)
+function PostPickupUpdate:Pickup350(pickup)
+  Season8:PostPickupUpdateTrinket(pickup)
 end
 
 return PostPickupUpdate

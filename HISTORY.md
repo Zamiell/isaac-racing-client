@@ -1,11 +1,16 @@
 # Racing+ Version History and News
 
-### *v0.50.0* - March 29th, 2020 (unreleased)
+### *v0.50.1* - April 17th, 2020
 
 * [R+7 Season 8](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) is now released for beta testing.
 * Mom's Hands and Mom's Dead Hands now have an "Appear" animation. This is helpful for players who are deaf and/or play with the sound turned off. (Thanks Satanas)
 * Deleted Sheol room #33. (Thanks Shigan)
+* Added Basement/Cellar/Burning room #721 to the list of rooms for Spiked Chest replacement. (Thanks Dea1h)
+* The mod will no longer fix an invalid entrance after a teleport if it is an L room or a 2x2 room. (Thanks mgln)
+* Fixed the bug where the mod would not fix an invalid entrance after using a teleportation card.
 * Fixed the bug where fast clear would not work with Dark Red champions under certain conditions. (Thanks thereisnofuture & mgln)
+* Fixed the bug where the extra tears from a Monstro's Lung synergy would only fire at half the velocity. (Thanks Gamonymous)
+* Fixed the bug where the "S5" sprite was not showing in season 5. (Thanks mgln)
 
 ### *v0.49.4* - March 28th, 2020
 
