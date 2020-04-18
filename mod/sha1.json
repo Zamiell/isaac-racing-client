@@ -38,7 +38,7 @@
     "racing_plus\\FastTravel.lua": "cdda7d47267bb12259eaefdc8b15205680fe341e",
     "racing_plus\\GetCard.lua": "f811f2254bbdc0282722d5afa59ea50632308981",
     "racing_plus\\GetPillEffect.lua": "ccb0a39d152479cb4e0bf1ae84c5fa9380902846",
-    "racing_plus\\Globals.lua": "2275386e6d0f64e33f8c4192ae31b6337f33f820",
+    "racing_plus\\Globals.lua": "cad94b4c8f71f9504df7428d4700111a2cefc07a",
     "racing_plus\\InputAction.lua": "92bec27d7807c9976f3e244b6a2d04ff3836a65e",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -79,7 +79,7 @@
     "racing_plus\\Season5.lua": "cfdda378213fe5137506171d6317dec3a5790b86",
     "racing_plus\\Season6.lua": "e8bc629397a9094d258b10e8c0755092547a37a8",
     "racing_plus\\Season7.lua": "5f26ff93859da26abab94e573530097f0f3ca313",
-    "racing_plus\\Season8.lua": "d11cd509c8e195e1885dd92a70e25beadde4b332",
+    "racing_plus\\Season8.lua": "eae4dd358bac9b0011ba3adba52870b9f260c08d",
     "racing_plus\\SeededDeath.lua": "fafdc8f68bc9df3e99304c4f4c9b3bde32cf7fd0",
     "racing_plus\\SeededFloors.lua": "6587e8f1393a992732971dc898ed59d09fdd3103",
     "racing_plus\\SeededRooms.lua": "100c2ac8cceb24c6fc430d14e7511ae663b153ec",
@@ -2101,7 +2101,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "adc151187bb9145e9aaa775b209d84c60a6a9641",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "f17da363ba82c9906cf9da71080d30f933ff4e22",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2179,5 +2179,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "71b49eb259f0834d5339f97e9bb1e85ece506002",
-    "sha1.json": "26a63f1f59178eb4ed4764a5c3b8481afdebd289"
+    "sha1.json": "4cff355bbbdbaae0ec5f18dfac8700d427597fff"
 }

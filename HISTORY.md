@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.50.4* - April ?th, 2020 (Unreleased)
+
+* Fixed the bug where cards would despawn in all non-season 8. (Thanks Carter)
+
 ### *v0.50.3* - April 18th, 2020
 
 * Fixed the bug in season 8 where you could get black runes and ? cards from Devil Rooms when you had already used them. (Thanks Gamonymous)

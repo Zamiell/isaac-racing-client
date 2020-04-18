@@ -549,6 +549,13 @@ end
 -- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
 -- PickupVariant.PICKUP_TAROTCARD (300)
 function Season8:PostPickupUpdateTarotCard(pickup)
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
   -- We only care about freshly spawned cards
   -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
   if pickup.FrameCount ~= 1 or
@@ -567,12 +574,21 @@ function Season8:PostPickupUpdateTarotCard(pickup)
     -- Spawn a random card in its place
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300
               pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+    Isaac.DebugString("Season 8: Replaced card " .. tostring(pickup.SubType) .. " with a new " ..
+                      "random card due to it already being used.")
   end
 end
 
 -- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
 -- PickupVariant.PICKUP_TRINKET (350)
 function Season8:PostPickupUpdateTrinket(pickup)
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
   -- We only care about freshly spawned trinkets
   -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
   if pickup.FrameCount ~= 1 or
@@ -591,6 +607,8 @@ function Season8:PostPickupUpdateTrinket(pickup)
     -- Spawn a random trinket in its place
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
               pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+    Isaac.DebugString("Season 8: Replaced trinket " .. tostring(pickup.SubType) .. " with a new " ..
+                      "random trinket due to it already being touched..")
   end
 end
 
