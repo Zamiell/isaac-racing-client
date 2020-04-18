@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.50.3* - April 18th, 2020
+
+* Fixed the bug in season 8 where you could get black runes and ? cards from Devil Rooms when you had already used them. (Thanks Gamonymous)
+
 ### *v0.50.1* - April 17th, 2020
 
 * [R+7 Season 8](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) is now released for beta testing.

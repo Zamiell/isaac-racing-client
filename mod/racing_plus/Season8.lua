@@ -547,6 +547,31 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
 end
 
 -- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
+-- PickupVariant.PICKUP_TAROTCARD (300)
+function Season8:PostPickupUpdateTarotCard(pickup)
+  -- We only care about freshly spawned cards
+  -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
+  if pickup.FrameCount ~= 1 or
+     pickup.SpawnerType == EntityType.ENTITY_PLAYER then -- 1
+     -- (we need to ignore cards that the player drops,
+     -- or else they would be able to infinitely spawn new cards)
+
+    return
+  end
+
+  -- Check to make sure that this card has not already been used
+  -- e.g. "set" drops, like ? Card and Black Rune in Devil Rooms
+  if not g:TableContains(Season8.remainingCards, pickup.SubType) then
+    pickup:Remove()
+
+    -- Spawn a random card in its place
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300
+              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+  end
+end
+
+-- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
+-- PickupVariant.PICKUP_TRINKET (350)
 function Season8:PostPickupUpdateTrinket(pickup)
   -- We only care about freshly spawned trinkets
   -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
@@ -562,12 +587,9 @@ function Season8:PostPickupUpdateTrinket(pickup)
   -- e.g. "set" drops, like Left Hand from Ultra Pride
   if g:TableContains(Season8.touchedTrinkets, pickup.SubType) then
     pickup:Remove()
-    Isaac.DebugString("A - " .. tostring(pickup.SpawnerEntity))
-    Isaac.DebugString("B - " .. tostring(pickup.Parent))
-    Isaac.DebugString("C - " .. tostring(pickup.SpawnerType))
 
-    -- Spawn a random trinket in its place (5.350)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET,
+    -- Spawn a random trinket in its place
+    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
               pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
   end
 end

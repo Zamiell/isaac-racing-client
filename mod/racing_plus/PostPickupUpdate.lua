@@ -101,6 +101,11 @@ function PostPickupUpdate:Pickup100(pickup)
   Pedestals:Replace(pickup)
 end
 
+-- PickupVariant.PICKUP_TAROTCARD (300)
+function PostPickupUpdate:Pickup300(pickup)
+  Season8:PostPickupUpdateTarotCard(pickup)
+end
+
 -- PickupVariant.PICKUP_TRINKET (350)
 function PostPickupUpdate:Pickup350(pickup)
   Season8:PostPickupUpdateTrinket(pickup)

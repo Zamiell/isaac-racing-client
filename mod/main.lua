@@ -303,6 +303,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pick
                        PickupVariant.PICKUP_COIN) -- 20
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup100, -- 35
                        PickupVariant.PICKUP_COLLECTIBLE) -- 100
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup300, -- 35
+                       PickupVariant.PICKUP_TAROTCARD) -- 300
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Pickup350, -- 35
                        PickupVariant.PICKUP_TRINKET) -- 350
 
