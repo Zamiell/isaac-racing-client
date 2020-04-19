@@ -130,7 +130,6 @@ While there are thousands of rooms in the game, many players have already seen t
   * the fade when entering or exiting crawlspaces (replaced with a normal room transition animation)
   * all "giantbook" animations (with the exception of Book of Revelations, Satanic Bible, eternal hearts, black hearts, and rainbow poop)
   * the pause and unpause animations
-  * teleporting upwards
   * traveling upwards in a beam of light (replaced with a faster version)
   * the use animation for Telepills
   * the use animation for Blank Card when you have a teleport card
@@ -140,6 +139,7 @@ While there are thousands of rooms in the game, many players have already seen t
   * various animations during the Big Horn fight
   * Hush's appear animation
   * Ultra Greed's appear and death animation
+* Teleporting animations are sped up by a factor of 2.
 
 ### Bug Fixes
 

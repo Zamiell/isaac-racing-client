@@ -1,8 +1,15 @@
 # Racing+ Version History and News
 
-### *v0.50.4* - April ?th, 2020 (Unreleased)
+### *v0.50.5* - April 19th, 2020
 
-* Fixed the bug where cards would despawn in all non-season 8. (Thanks Carter)
+* The "TeleportUp" animation has been restored. Both "TeleportUp" and "TeleportDown" are now sped up by a factor of 2.
+* Blank Rune will no longer spawn in season 8. (Thanks Hispa)
+* Fart-rerolls will no longer have a special color.
+* Fixed the bug where PHD would not work properly in season 8. (Thanks Dea1h)
+* Fixed the bug where active items in season 8 would have no charges if they were a repeat-item replacement. (Thanks Pingouin23)
+* Fixed the bug where replaced cards in season 8 would be automatically purchased. (Thanks ez_duke)
+* Fixed the bug where backtracking could reroll cards in season 8 in specific circumstances.
+* Fixed the bug where cards would despawn in all non-season 8 runs. (Thanks Carter)
 
 ### *v0.50.3* - April 18th, 2020
 

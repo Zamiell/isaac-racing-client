@@ -322,20 +322,14 @@ function Season8:UseCard(card)
     return
   end
 
-  -- Don't remove the random effect from a blank rune from the pool (1/2)
-  if g.run.usingBlankRune then
-    g.run.usingBlankRune = false
-    return
-  end
-
   -- Remove this card from the card pool
   if g:TableContains(Season8.remainingCards, card) then
     g:TableRemove(Season8.remainingCards, card)
-  end
-
-  -- Don't remove the random effect from a blank rune from the pool (2/2)
-  if card == Card.RUNE_BLANK then -- 40
-    g.run.usingBlankRune = true
+    Isaac.DebugString("Season8:UseCard() - Used and removed card: " .. tostring(card))
+  else
+    Isaac.DebugString("Season8:UseCard() - Used card " .. tostring(card) .. " (but it was not " ..
+                      "in the \"remainingCards\" table, so it must have been a duplicate card " ..
+                      "from a Jera or something like that.")
   end
 end
 
@@ -350,7 +344,10 @@ function Season8:PostGameStartedFirstCharacter()
 
   -- Fill the card pool with all of the possible cards
   for i = 1, Card.NUM_CARDS - 1 do -- 55
-    Season8.remainingCards[#Season8.remainingCards + 1] = i
+    -- Make an exception for Blank Rune, which should be always removed
+    if i ~= Card.RUNE_BLANK then -- 40
+      Season8.remainingCards[#Season8.remainingCards + 1] = i
+    end
   end
 
   -- Fill the pill pool with all of the possible pill effects
@@ -472,6 +469,19 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
     return
   end
 
+  -- Debug
+  Isaac.DebugString("Season8:GetCard() - " ..
+                    "currentCard: " .. tostring(currentCard) .. ", " ..
+                    "playing: " .. tostring(playing) .. ", " ..
+                    "runes: " .. tostring(runes) .. ", " ..
+                    "onlyRunes: " .. tostring(onlyRunes))
+  local cards = ""
+  for _, card in ipairs(Season8.remainingCards) do
+    cards = cards .. tostring(card) .. ", "
+  end
+  Isaac.DebugString("Season8:GetCard() - " .. tostring(#Season8.remainingCards) .. " cards remaining: " ..
+                    "(" .. tostring(cards) .. ")")
+
   if g:TableContains(Season8.remainingCards, currentCard) then
     -- They have not used this card/rune yet
     Isaac.DebugString("Season8:GetCard() - Card " .. tostring(currentCard) .. " is not yet used.")
@@ -541,8 +551,8 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
   -- Return a random card
   math.randomseed(rng:GetSeed())
   local randomIndex = math.random(1, #remainingCards)
-  Isaac.DebugString("Season8:GetCard() - There are " .. tostring(#remainingCards) .. " cards remaining.")
-  Isaac.DebugString("Season8:GetCard() - Returning a custom card of: " .. tostring(remainingCards[randomIndex]))
+  Isaac.DebugString("Season8:GetCard() - There are " .. tostring(#remainingCards) .. " cards remaining. " ..
+                    "Returning a custom card of: " .. tostring(remainingCards[randomIndex]))
   return remainingCards[randomIndex]
 end
 
@@ -550,9 +560,18 @@ end
 -- PickupVariant.PICKUP_TAROTCARD (300)
 function Season8:PostPickupUpdateTarotCard(pickup)
   -- Local variables
+  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
+  -- If we just re-entered a room that we have previously been in, ignore all cards
+  if not g.r:IsFirstVisit() and
+     pickup.FrameCount == 1 and
+     roomFrameCount == 1 then
+
     return
   end
 
@@ -572,10 +591,16 @@ function Season8:PostPickupUpdateTarotCard(pickup)
     pickup:Remove()
 
     -- Spawn a random card in its place
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300
-              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
-    Isaac.DebugString("Season 8: Replaced card " .. tostring(pickup.SubType) .. " with a new " ..
-                      "random card due to it already being used.")
+    Isaac.DebugString("Season 8 - Replacing card " .. tostring(pickup.SubType) .. " with a new " ..
+                      "random card due to it already being used. " ..
+                      "(This should only happen in Devil Room #4 and #7.)")
+    local newCard = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300
+                              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+
+    -- If it is a shop item, we need to copy over the shop properties
+    -- so that the replaced card is not automatically bought
+    newCard.Price = pickup.Price
+    newCard.ShopItemId = pickup.ShopItemId
   end
 end
 
@@ -583,9 +608,18 @@ end
 -- PickupVariant.PICKUP_TRINKET (350)
 function Season8:PostPickupUpdateTrinket(pickup)
   -- Local variables
+  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
+  -- If we just re-entered a room that we have previously been in, ignore all trinkets
+  if not g.r:IsFirstVisit() and
+     pickup.FrameCount == 1 and
+     roomFrameCount == 1 then
+
     return
   end
 
@@ -605,10 +639,10 @@ function Season8:PostPickupUpdateTrinket(pickup)
     pickup:Remove()
 
     -- Spawn a random trinket in its place
+    Isaac.DebugString("Season 8 - Replacing trinket " .. tostring(pickup.SubType) .. " with a new " ..
+                      "random trinket due to it already being touched..")
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
               pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
-    Isaac.DebugString("Season 8: Replaced trinket " .. tostring(pickup.SubType) .. " with a new " ..
-                      "random trinket due to it already being touched..")
   end
 end
 
@@ -618,7 +652,23 @@ function Season8:GetPillEffect(selectedPillEffect, pillColor)
   local challenge = Isaac.GetChallenge()
 
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    Isaac.DebugString("Season 8 - Replacing a pill effect of " .. tostring(selectedPillEffect) ..
+                      " with " .. tostring(Season8.runPillEffects[pillColor]) .. ".")
     return Season8.runPillEffects[pillColor]
+  end
+end
+
+function Season8:PHD()
+  -- The player just picked up PHD or Virgo, so we may need to swap out some pill effects
+  -- (all of the pill effects were chosen at the beginning of the first character)
+  for i, effect in ipairs(Season8.runPillEffects) do
+    if effect == PillEffect.PILLEFFECT_HEALTH_DOWN then -- 6
+      Season8.runPillEffects[i] = PillEffect.PILLEFFECT_HEALTH_UP -- 7
+    elseif effect == PillEffect.PILLEFFECT_SPEED_DOWN then -- 13
+      Season8.runPillEffects[i] = PillEffect.PILLEFFECT_SPEED_UP -- 14
+    elseif effect == PillEffect.PILLEFFECT_TEARS_DOWN then -- 15
+      Season8.runPillEffects[i] = PillEffect.PILLEFFECT_TEARS_UP -- 16
+    end
   end
 end
 

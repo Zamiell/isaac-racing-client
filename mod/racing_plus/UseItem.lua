@@ -98,9 +98,9 @@ function UseItem:Item286()
      card == Card.CARD_JOKER then -- 48
      -- (checking for "? Card" is not necessary)
 
-    -- We don't want to display the "use" animation, we just want to instantly teleport
+    -- We do not want to display the "use" animation
     -- Blank Card is hard coded to queue the "use" animation, so stop it on the next frame
-    g.run.usedTelepills = true
+    g.run.usedBlankCard = true
   end
 end
 

@@ -159,6 +159,7 @@ function Pedestals:Replace(pickup)
     local surpriseChance = math.random(1, 10)
     if surpriseChance == 1 then
       pickup.SubType = CollectibleType.COLLECTIBLE_WAIT_WHAT -- 484
+      pickup.Charge = g:GetItemMaxCharges(CollectibleType.COLLECTIBLE_WAIT_WHAT) -- 484
     end
   end
 
@@ -196,12 +197,13 @@ function Pedestals:Replace(pickup)
 
     -- Play a fart animation so that it doesn't look like some bug with the Racing+ mod
     g.g:Fart(newPedestal.Position, 0, newPedestal, 0.5, 0)
-    g.run.changeFartColor = true -- Change it to a bright red fart to distinguish that it is a special reroll
     Isaac.DebugString("Item " .. tostring(pickup.SubType) .. " is special, " ..
                       "made a new " .. tostring(specialReroll) .. " pedestal using seed: " .. tostring(newSeed))
 
   else
     -- Fix the bug where Steven can drop on runs where the player started with Steven
+    -- (the case of Little Steven is automatically handled by the vanilla game,
+    -- e.g. the boss will always drop Steven if the player has Little Steven)
     local subType = pickup.SubType
     if subType == CollectibleType.COLLECTIBLE_STEVEN and -- 50
        g.p:HasCollectible(CollectibleType.COLLECTIBLE_STEVEN) then -- 50
@@ -248,8 +250,9 @@ function Pedestals:Replace(pickup)
   newPedestal = newPedestal:ToPickup()
 
   -- We don't want to replicate the charge if this is a brand new item
-  if specialReroll == 0 then
-    -- If we don't do this, the item will be fully recharged every time the player swaps it out
+  if pickup.SubType ~= 0 then
+    -- We need to replicate the charge of dropped active items,
+    -- or else they will be fully charged every time
     newPedestal.Charge = pickup.Charge
   end
 

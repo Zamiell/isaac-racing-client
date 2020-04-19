@@ -1,7 +1,8 @@
 local Pills = {}
 
 -- Includes
-local g = require("racing_plus/globals")
+local g       = require("racing_plus/globals")
+local Season8 = require("racing_plus/season8")
 
 function Pills:PostRender()
   -- This feature is disabled if the Single Player Co-op Babies mod is enabled
@@ -103,6 +104,8 @@ function Pills:CheckPHD()
       pillEntry.effect = PillEffect.PILLEFFECT_IM_DROWSY -- 41
     end
   end
+
+  Season8:PHD()
 end
 
 return Pills

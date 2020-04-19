@@ -206,6 +206,7 @@
 * When a card is used, it will no longer drop for the rest of the run or on subsequent runs.
 * The starting items for all 7 characters are removed from all pools (for all characters).
 * Judas' Shadow and Lazarus Rags are removed from all pools.
+* Blank Rune is removed from the card pool.
 
 ### Shared Pills
 
@@ -226,7 +227,7 @@
   * Power Pill! (36)
   * I'm Drowsy... (41)
   * Gulp! (43)
-* Health Down will never be converted to a Health Up pill, regardless of how much health you have.
+* If you have one heart or less, Health Down will not be converted to a Health Up pill.
 
 <br />
 

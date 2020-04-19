@@ -83,12 +83,8 @@ function PostRender:Main()
   -- Make Cursed Eye seeded
   PostRender:CheckCursedEye()
 
-  -- Stop the animation after using Telepills or Blank Card
-  -- (this has to be in the PostRender callback because game frames do not tick when the use animation is happening)
-  if g.run.usedTelepills then
-    g.run.usedTelepills = false
-    g.p:StopExtraAnimation()
-  end
+  -- Speed up teleport animations
+  PostRender:SpeedUpTeleport()
 
   -- Check for trapdoor related things
   FastTravel:CheckTrapdoor()
@@ -522,6 +518,36 @@ function PostRender:CheckCursedEye()
         UseItem:Item44()
       end
     end
+  end
+end
+
+function PostRender:SpeedUpTeleport()
+  -- Local variables
+  local playerSprite = g.p:GetSprite()
+
+  -- Replace the "item raising" animation after using Telepills with a "TeleportUp" animation
+  -- (this has to be in the PostRender callback because game frames do not tick when the use animation is happening)
+  if g.run.usedTelepills then
+    g.run.usedTelepills = false
+    playerSprite:Play("TeleportUp", true)
+    Isaac.DebugString("Replaced the \"use\" animation for Telepills with a \"TeleportUp\" animation.")
+  end
+
+  -- Replace the "item raising" animation after using Blank Card with a "TeleportUp" animation
+  -- (this has to be in the PostRender callback because game frames do not tick when the use animation is happening)
+  if g.run.usedBlankCard then
+    g.run.usedBlankCard = false
+    g.p:AnimateTeleport(true) -- Using "playerSprite:Play("TeleportUp", true)" does not work here for some reason
+    Isaac.DebugString("Replaced the \"use\" animation for Blank Card with a \"TeleportUp\" animation.")
+  end
+
+  -- The vanilla teleport animations are annoyingly slow, so speed them up by a factor of 2
+  if (playerSprite:IsPlaying("TeleportUp") or
+      playerSprite:IsPlaying("TeleportDown")) and
+     playerSprite.PlaybackSpeed == 1 then
+
+    playerSprite.PlaybackSpeed = 2
+    Isaac.DebugString("Increased the playback speed of a teleport animation.")
   end
 end
 

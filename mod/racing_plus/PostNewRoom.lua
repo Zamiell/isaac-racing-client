@@ -33,7 +33,8 @@ function PostNewRoom:Main()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
 
-  Isaac.DebugString("MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
+  Isaac.DebugString("MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " " ..
+                    "(on stage " .. tostring(stage) .. ")")
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
@@ -63,12 +64,14 @@ end
 
 function PostNewRoom:NewRoom()
   -- Local variables
+  local stage = g.l:GetStage()
   local roomDesc = g.l:GetCurrentRoomDesc()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
 
-  Isaac.DebugString("MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant))
+  Isaac.DebugString("MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " " ..
+                    "(on stage " .. tostring(stage) .. ")")
 
   -- Keep track of how many rooms we enter over the course of the run
   g.run.roomsEntered = g.run.roomsEntered + 1

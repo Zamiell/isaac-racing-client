@@ -2,8 +2,6 @@
 
 Changes:
 - Deleted the "Appear" animation
-- Changed the "TeleportUp" animation to have 0 frames
-  (if you actually delete the contents if the animation, it will cause the game to crash)
 - Added the "Trapdoor2" animation
 - Changed the "LightTravel" animation
 
@@ -356,7 +354,7 @@ Changes:
 			</NullAnimations>
 			<Triggers/>
 		</Animation>
-		<Animation Name="TeleportUp" FrameNum="0" Loop="false">
+		<Animation Name="TeleportUp" FrameNum="19" Loop="false">
 			<RootAnimation>
 				<Frame XPosition="0" YPosition="0" XScale="100" YScale="100" Delay="19" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
 			</RootAnimation>

@@ -315,8 +315,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_LASER_INIT, PostLaserInit.Laser6, --
 -- Define post effect init callbacks (54)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, PostEffectInit.Effect15, -- 54
                        EffectVariant.POOF01) -- 15
-RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, PostEffectInit.Effect34, -- 54
-                       EffectVariant.FART) -- 34
 RacingPlus:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, PostEffectInit.Effect51, -- 54
                        EffectVariant.HOT_BOMB_FIRE) -- 51
 

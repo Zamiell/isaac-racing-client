@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.50.4"
+g.version = "v0.50.5"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
@@ -272,12 +272,12 @@ function g:InitRun()
   g.run.streakIgnore          = false
   g.run.usedD6Frame           = 0 -- Set when the D6 is used; used to prevent bugs with The Void + D6
   g.run.usedVoidFrame         = 0 -- Set when Void is used; used to prevent bugs with The Void + D6
-  g.run.usedTelepills         = false
+  g.run.usedTelepills         = false -- Used to replace the "use" animation
+  g.run.usedBlankCard         = false -- Used to replace the "use" animation
   g.run.giveExtraCharge       = false -- Used to fix The Battery + 9 Volt synergy
   g.run.droppedButterItem     = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
   g.run.fastResetFrame        = 0 -- Set when the user presses the reset button on the keyboard
   g.run.dualityCheckFrame     = 0
-  g.run.changeFartColor       = false
   g.run.momDied               = false -- Used to fix bugs with fast-clear and killing Mom
   g.run.photosSpawning        = false -- Used when replacing The Polaroid and The Negative
   g.run.playerGenPedSeeds     = {} -- Used so that we properly seed player-generated pedestals (1/2)
@@ -312,7 +312,6 @@ function g:InitRun()
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
   g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
-  g.run.usingBlankRune        = false -- Used in Season 8
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy

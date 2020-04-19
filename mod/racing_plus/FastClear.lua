@@ -279,7 +279,7 @@ function FastClear:CheckDeadNPC(npc, parentFunction)
   -- The "MC_POST_ENTITY_KILL" callback will be triggered when a Dark Red champion changes to a flesh pile
   -- This does not count as a real death (and the NPC should not be removed), so we need to handle this
   -- We cannot check for "npc:GetSprite():GetFilename() == "gfx/024.000_Globin.anm2"",
-  -- because that won't work for Gapers & Globins
+  -- because that won't work for champion Gapers & Globins
   -- We cannot check for "npc:GetSprite():IsPlaying("ReGenChamp")", because that will only be updated on the next frame
   if npc:GetChampionColorIdx() == 12 and -- Dark Red champion (collapses into a flesh pile upon death)
      parentFunction == "PostEntityKill" then
