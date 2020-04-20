@@ -186,8 +186,9 @@ function PostUpdate:CheckItemPickup()
       if g.run.pickingUpItemType ~= ItemType.ITEM_TRINKET then -- 2
         local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
         if postItemFunction ~= nil and
-          roomIndex == g.run.pickingUpItemRoom then
+          roomIndex == g.run.pickingUpItemRoom and
           -- (don't do any custom inventory work if we have changed rooms in the meantime)
+          not PostUpdate:HoldingDropInput() then
 
           postItemFunction()
         end
@@ -221,6 +222,15 @@ function PostUpdate:CheckItemPickup()
     end
     Season5:PostItemPickup()
   end
+end
+
+function PostUpdate:HoldingDropInput()
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
+      return true
+    end
+  end
+  return false
 end
 
 function PostUpdate:CheckTransformations()

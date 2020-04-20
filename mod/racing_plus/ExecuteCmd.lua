@@ -532,6 +532,20 @@ ExecuteCmd.functions["spam"] = function(params)
   g.run.spamButtons = not g.run.spamButtons
 end
 
+ExecuteCmd.functions["spawns"] = function(params)
+  local positions = {
+    {0, 0}, {2, 0}, {4, 0}, {6, 0}, {8, 0}, {10, 0}, {12, 0},
+    {0, 2}, {2, 2}, {4, 2}, {6, 2}, {8, 2}, {10, 2}, {12, 2},
+    {0, 4}, {2, 4}, {4, 4}, {6, 4}, {8, 4}, {10, 4}, {12, 4},
+    {0, 6}, {2, 6}, {4, 6}, {6, 6}, {8, 6}, {10, 6}, {12, 6},
+  }
+  for _, position in ipairs(positions) do
+    local pos = g:GridToPos(position[1], position[2])
+    Isaac.Spawn(EntityType.ENTITY_SLOT, 12, 0, pos, g.zeroVector, nil) -- Mom's Dressing Machine
+    Isaac.Spawn(EntityType.ENTITY_BOMBDROP, 0, 0, pos, g.zeroVector, nil) -- Bomb
+  end
+end
+
 ExecuteCmd.functions["speed"] = function(params)
   g.run.debugSpeed = true
   if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LORD_OF_THE_PIT) then -- 82

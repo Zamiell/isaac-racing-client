@@ -1,9 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.50.6* - April 20th, 2020
+
+* Items will no longer be automatically inserted into your inventory if you are holding down the "drop" button.
+* Fixed the bug where an eternal chest would show instead of a broken dressing machine when a dressing machine dropped an item. (Thanks Hispa)
+
 ### *v0.50.5* - April 19th, 2020
 
 * The "TeleportUp" animation has been restored. Both "TeleportUp" and "TeleportDown" are now sped up by a factor of 2.
-* Blank Rune will no longer spawn in season 8. (Thanks Hispa)
+* Blank Runes will no longer spawn in season 8. (Thanks Hispa)
 * Fart-rerolls will no longer have a special color.
 * Fixed the bug where PHD would not work properly in season 8. (Thanks Dea1h)
 * Fixed the bug where active items in season 8 would have no charges if they were a repeat-item replacement. (Thanks Pingouin23)
