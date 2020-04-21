@@ -1,5 +1,12 @@
 # Racing+ Version History and News
 
+### *v0.50.7* - April 21st, 2020
+
+* Items will no longer be automatically inserted into your inventory if you are holding down any of the "fast-drop" buttons. (Thanks Moucheron Quipet)
+* Fixed the bug where the MinimapAPI icon for the Black Rune was wrong. (Thanks Gamonymous)
+* Fixed the bug in season 8 where the "Cards used" would start at 1 instead of 0.
+* Fixed the bug in season 8 where it would show 128 trinkets instead of 127. (Thanks Gamonymous)
+
 ### *v0.50.6* - April 20th, 2020
 
 * Items will no longer be automatically inserted into your inventory if you are holding down the "drop" button.

@@ -51,15 +51,20 @@ function PostUpdate:Main()
   CheckEntities:NonGrid() -- Check all the non-grid entities in the room
 
   -- Check for item drop inputs (fast-drop)
-  FastDrop:CheckDropInput()
-  FastDrop:CheckDropInputTrinket()
-  FastDrop:CheckDropInputPocket()
+  if PostUpdate:CheckCustomInput("hotkeyDrop") then
+    FastDrop:Main("both")
+  end
+  if PostUpdate:CheckCustomInput("hotkeyDropTrinket") then
+    FastDrop:Main("trinket")
+  end
+  if PostUpdate:CheckCustomInput("hotkeyDropPocket") then
+    FastDrop:Main("pocket")
+  end
 
-  -- Check for Schoolbag switch inputs
-  -- (and other miscellaneous Schoolbag activities)
+  -- Check for Schoolbag switch inputs (and other miscellaneous Schoolbag activities)
+  Schoolbag:CheckInput() -- (this is too complicated to use the "PostUpdate:CheckCustomInput()" function)
   Schoolbag:CheckActiveCharges()
   Schoolbag:CheckEmptyActiveItem()
-  Schoolbag:CheckInput()
   Schoolbag:ConvertVanilla()
   Schoolbag:CheckRemoved()
 
@@ -188,7 +193,12 @@ function PostUpdate:CheckItemPickup()
         if postItemFunction ~= nil and
           roomIndex == g.run.pickingUpItemRoom and
           -- (don't do any custom inventory work if we have changed rooms in the meantime)
-          not PostUpdate:HoldingDropInput() then
+          not PostUpdate:CheckDropInput() and
+          not PostUpdate:CheckCustomInput("hotkeyDrop") and
+          not PostUpdate:CheckCustomInput("hotkeyDropTrinket") and
+          not PostUpdate:CheckCustomInput("hotkeyDropPocket") then
+          -- (allow the player to cancel the automatic insertion functionality by holding down a
+          -- "drop" input)
 
           postItemFunction()
         end
@@ -224,12 +234,13 @@ function PostUpdate:CheckItemPickup()
   end
 end
 
-function PostUpdate:HoldingDropInput()
+function PostUpdate:CheckDropInput()
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
     if Input.IsActionPressed(ButtonAction.ACTION_DROP, i) then -- 11
       return true
     end
   end
+
   return false
 end
 
@@ -513,6 +524,32 @@ function PostUpdate:Fix9VoltSynergy()
     g.run.giveExtraCharge = false
     g.p:SetActiveCharge(g.p:GetActiveCharge() + 1)
   end
+end
+
+function PostUpdate:CheckCustomInput(racingPlusDataKey)
+  -- If they do not have a hotkey bound, do nothing
+  local hotkey
+  if RacingPlusData ~= nil then
+    hotkey = RacingPlusData:Get(racingPlusDataKey)
+  end
+  if hotkey == nil or
+  hotkey == 0 then
+
+    return false
+  end
+
+  -- Check for the input
+  -- (we check all inputs instead of "player.ControllerIndex" because
+  -- a controller player might be using the keyboard to reset)
+  -- (we use "IsActionPressed()" instead of "IsActionTriggered()" because
+  -- it is faster to do an action on press than on release)
+  for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
+    if Input.IsButtonPressed(hotkey, i) then
+      return true
+    end
+  end
+
+  return false
 end
 
 return PostUpdate

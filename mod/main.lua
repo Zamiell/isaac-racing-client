@@ -446,6 +446,11 @@ if MinimapAPI ~= nil then
     MinimapAPI:AddPickup("BlankRune", "BlankRune",
                         EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.RUNE_BLANK, -- 5.300.40
                         MinimapAPI.PickupNotCollected, "runes", 1200)
+    -- New sprite for Black Rune
+    MinimapAPI:AddIcon("BlackRune", customIcons, "CustomIconBlackRune", 0) -- 41
+    MinimapAPI:AddPickup("BlackRune", "BlackRune",
+                        EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.RUNE_BLACK, -- 5.300.41
+                        MinimapAPI.PickupNotCollected, "runes", 1200)
     -- New sprite for Rules Card
     MinimapAPI:AddIcon("Rules", customIcons, "CustomIconRules", 0) -- 44
     MinimapAPI:AddPickup("Rules", "Rules",

@@ -229,12 +229,14 @@ function Season8:PostRender()
   g.font:DrawString(string, x, y, g.kcolor, 0, true)
   y = y + 20
 
-  string = tostring(#Season8.touchedTrinkets) .. " / " .. tostring(TrinketType.NUM_TRINKETS - 1)
+  string = tostring(#Season8.touchedTrinkets) .. " / " .. tostring(TrinketType.NUM_TRINKETS - 2)
+  -- (we minus 2 because Karma is removed)
   g.font:DrawString(string, x, y, g.kcolor, 0, true)
   y = y + 20
 
-  local cardsUsed = Card.NUM_CARDS - 1 - #Season8.remainingCards
-  string = tostring(cardsUsed) .. " / " .. tostring(Card.NUM_CARDS - 1)
+  local cardsUsed = Card.NUM_CARDS - 2 - #Season8.remainingCards
+  -- (we minus 2 because Blank Rune is removed)
+  string = tostring(cardsUsed) .. " / " .. tostring(Card.NUM_CARDS - 2)
   g.font:DrawString(string, x, y, g.kcolor, 0, true)
   y = y + 20
 

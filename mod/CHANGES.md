@@ -75,7 +75,7 @@ While there are thousands of rooms in the game, many players have already seen t
 ### Custom Hotkeys
 
 * Racing+ allows you to bind two new hotkeys via a custom challenge:
-  * a drop button that will immediately drop all trinkets and pocket items
+  * a drop button that will immediately drop all trinkets and pocket items (called "fast-drop")
   * a dedicated Schoolbag switch button
 * Binding these hotkeys is optional. If they are not bound, Racing+ will use the vanilla behavior.
 
@@ -95,7 +95,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
 * [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
-* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.) This effect also applies to the Spun! transformation. Players can disable automatic insersion by holding down the drop button.
+* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.) This effect also applies to the Spun! transformation. Players can disable automatic insersion by holding down the drop button (or one of the fast-drop buttons).
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
