@@ -1,6 +1,6 @@
 # Legal Mods to use with Racing+
 
-Only the mods in the "Legal Mods" list below are allowed to be used while doing Racing+ races, playing multi-character custom challenges, or playing in tournaments. Contact Zamiel if you want a mod to be added to the list.
+In general, using any other mods alongside Racing+ is forbidden. Some specific exceptions are listed below. Contact Zamiel if you want a mod to be added to the list.
 
 <br />
 
