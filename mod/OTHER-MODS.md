@@ -1,18 +1,10 @@
 # Legal Mods to use with Racing+
 
-If a mod is not in the "Legal mod list" below, then you are not allowed to use it while doing Racing+ races or while playing multi-character custom challenges or while playing in tournaments. Contact Zamiel if you want a mod to be added to the list.
+Only the mods in the "Legal Mods" list below are allowed to be used while doing Racing+ races, playing multi-character custom challenges, or playing in tournaments. Contact Zamiel if you want a mod to be added to the list.
 
 <br />
 
-### Illegal mod list (affects "gameplay")
-
-* [Literal Item Names](https://steamcommunity.com/sharedfiles/filedetails/?id=1397447846)
-* [Colorful Lasers!](https://steamcommunity.com/sharedfiles/filedetails/?id=1479395410)
-* [External item descriptions](https://steamcommunity.com/sharedfiles/filedetails/?id=836319872&searchtext=external)
-
-<br />
-
-### Legal mod list (does not affect "gameplay"):
+### Legal Mods
 
 * [Vanilla Streak Text](https://steamcommunity.com/sharedfiles/filedetails/?id=1714310911)
 * [Mod Config Menu](https://steamcommunity.com/workshop/filedetails/?id=1603631350)
@@ -30,3 +22,13 @@ If a mod is not in the "Legal mod list" below, then you are not allowed to use i
 * [Mega Santa](https://steamcommunity.com/sharedfiles/filedetails/?id=864860083)
 * [Mustachtro](https://steamcommunity.com/sharedfiles/filedetails/?id=834910019)
 * [Better Doors Updated](https://steamcommunity.com/sharedfiles/filedetails/?id=1439369140)
+
+<br />
+
+### Illegal Mods (affects "gameplay")
+
+These are mods that interfere with Racing+ and affect gameplay.
+
+* [Literal Item Names](https://steamcommunity.com/sharedfiles/filedetails/?id=1397447846)
+* [Colorful Lasers!](https://steamcommunity.com/sharedfiles/filedetails/?id=1479395410)
+* [External item descriptions](https://steamcommunity.com/sharedfiles/filedetails/?id=836319872&searchtext=external)
