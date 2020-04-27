@@ -1,11 +1,15 @@
+# Legal Mods to use with Racing+
+
 If a mod is not in the "Legal mod list" below, then you are not allowed to use it while doing Racing+ races or while playing multi-character custom challenges or while playing in tournaments. Contact Zamiel if you want a mod to be added to the list.
 
-Illegal mod list (affects "gameplay"):
-- [Literal Item Names](https://steamcommunity.com/sharedfiles/filedetails/?id=1397447846)
-- [Colorful Lasers!](https://steamcommunity.com/sharedfiles/filedetails/?id=1479395410)
-- [External item descriptions](https://steamcommunity.com/sharedfiles/filedetails/?id=836319872&searchtext=external)
+### Illegal mod list (affects "gameplay")
 
-Legal mod list (does not affect "gameplay"):
+* [Literal Item Names](https://steamcommunity.com/sharedfiles/filedetails/?id=1397447846)
+* [Colorful Lasers!](https://steamcommunity.com/sharedfiles/filedetails/?id=1479395410)
+* [External item descriptions](https://steamcommunity.com/sharedfiles/filedetails/?id=836319872&searchtext=external)
+
+### Legal mod list (does not affect "gameplay"):
+
 * [Vanilla Streak Text](https://steamcommunity.com/sharedfiles/filedetails/?id=1714310911)
 * [Mod Config Menu](https://steamcommunity.com/workshop/filedetails/?id=1603631350)
 * [MiniMAPI](https://steamcommunity.com/sharedfiles/filedetails/?id=1978904635)
