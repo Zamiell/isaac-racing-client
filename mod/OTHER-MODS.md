@@ -1,6 +1,6 @@
 # Legal Mods to use with Racing+
 
-In general, using any other mods alongside Racing+ is forbidden. Some specific exceptions are listed below. Contact Zamiel if you want a mod to be added to the list.
+In general, using **any** other mods alongside Racing+ is forbidden. Some specific exceptions are listed below. Contact Zamiel if you want a mod to be added to the list.
 
 <br />
 
