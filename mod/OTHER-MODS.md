@@ -2,11 +2,15 @@
 
 If a mod is not in the "Legal mod list" below, then you are not allowed to use it while doing Racing+ races or while playing multi-character custom challenges or while playing in tournaments. Contact Zamiel if you want a mod to be added to the list.
 
+<br />
+
 ### Illegal mod list (affects "gameplay")
 
 * [Literal Item Names](https://steamcommunity.com/sharedfiles/filedetails/?id=1397447846)
 * [Colorful Lasers!](https://steamcommunity.com/sharedfiles/filedetails/?id=1479395410)
 * [External item descriptions](https://steamcommunity.com/sharedfiles/filedetails/?id=836319872&searchtext=external)
+
+<br />
 
 ### Legal mod list (does not affect "gameplay"):
 
