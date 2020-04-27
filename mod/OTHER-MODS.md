@@ -25,7 +25,7 @@ Only the mods in the "Legal Mods" list below are allowed to be used while doing 
 
 <br />
 
-### Illegal Mods (affects "gameplay")
+### Illegal Mods
 
 These are mods that interfere with Racing+ and affect gameplay.
 
