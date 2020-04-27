@@ -227,7 +227,7 @@
   * Power Pill! (36)
   * I'm Drowsy... (41)
   * Gulp! (43)
-* If you have one heart or less, Health Down will not be converted to a Health Up pill.
+* If you have one heart or less, Health Down will not be converted to a Health Up pill. (This can kill you if you are at exactly 1 red heart with no other types of hearts.)
 
 <br />
 
