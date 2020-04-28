@@ -1,5 +1,13 @@
 # Racing+ Version History and News
 
+### *v0.50.8* - April 28th, 2020
+
+* If you only have Key Piece 1 or only have Key Piece 2, Uriel and Gabriel will now always drop the other key piece. (This is different than the vanilla behavior.)
+* In season 8, when resetting on Eve, she should now be a little less noisy. (It is not possible to completely remove the sound effect because of lag and the limitiations of the Isaac API.)
+* Mod Config Menu will now always open, even if there are enemies in the room.
+* Fixed the bug where More Options would not work if Mom spawned a boss item. (Thanks Hispa)
+* Fixed the bug where familiars would be placed at an invalid entrance after a teleport under certain conditions.
+
 ### *v0.50.7* - April 21st, 2020
 
 * Items will no longer be automatically inserted into your inventory if you are holding down any of the "fast-drop" buttons. (Thanks Moucheron Quipet)

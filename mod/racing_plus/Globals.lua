@@ -5,9 +5,10 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.50.7"
+g.version = "v0.50.8"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
+g.modConfigMenuMessage = false -- Used to only show the "Press X to open Mod Config Menu"
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   state         = 0, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
@@ -300,7 +301,7 @@ function g:InitRun()
   g.run.fadeForgottenFrame    = 0 -- Used to fix a bug with seeded death
   g.run.showVersionFrame      = 0
   g.run.bombKeyPressed        = false
-  g.run.spawningAngel         = false
+  g.run.spawningAngel         = false -- Used to prevent unavoidable damage on the Isaac fight
   g.run.bossCommand           = false -- Used in Racing+ Rebalanced
   g.run.questionMarkCard      = 0 -- Equal to the last game frame that one was used
   g.run.gettingCollectible    = false
@@ -312,6 +313,7 @@ function g:InitRun()
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
   g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
+  g.run.eveUsedRazor          = false -- Used in Season 8
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy

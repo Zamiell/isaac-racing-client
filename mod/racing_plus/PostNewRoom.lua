@@ -104,7 +104,7 @@ function PostNewRoom:NewRoom()
   PostNewRoom:CheckRemoveMoreOptions() -- Remove the "More Options" buff if they have entered a Treasure Room
   PostNewRoom:CheckZeroHealth() -- Fix the bug where we don't die at 0 hearts
   PostNewRoom:CheckStartingRoom() -- Draw the starting room graphic
-  PostNewRoom:CheckUndefined() -- Check if the player teleports to a a non-existent entrance
+  PostNewRoom:CheckPostTeleportInvalidEntrance()
   PostNewRoom:CheckSatanRoom() -- Check for the Satan room
   PostNewRoom:CheckMegaSatanRoom() -- Check for Mega Satan on "Everything" races
   PostNewRoom:CheckScolexRoom() -- Check for all of the Scolex boss rooms
@@ -208,8 +208,7 @@ function PostNewRoom:CheckStartingRoom()
   end
 end
 
--- Check if the player teleports to a a non-existent entrance
-function PostNewRoom:CheckUndefined()
+function PostNewRoom:CheckPostTeleportInvalidEntrance()
   if not g.run.usedTeleport then
     return
   end
@@ -274,8 +273,17 @@ function PostNewRoom:CheckUndefined()
 
       y = y - 40
     end
-    g.p.Position = Vector(x, y)
+
+    -- Move the player
+    local newPosition = Vector(x, y)
+    g.p.Position = newPosition
     Isaac.DebugString("Manually moved a player to a door after an Undefined teleport.")
+
+    -- Also move the familiars
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+    for _, familiar in ipairs(familiars) do
+      familiar.Position = newPosition
+    end
   end
 end
 

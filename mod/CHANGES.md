@@ -112,6 +112,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The pickup delay on reloaded pedestal items is decreased from 18 frames to 15 frames.
 * Having Duality will now always give you both the Devil Room and the Angel Room. (This does not happen consistently on vanilla like you would expect.)
 * All Spike Chests will spawn as Mimics instead. (Since they are so similar, there is little reason for Spike Chests to exist.)
+* Uriel and Gabriel will always drop the key piece that you happen to be missing, if any.
 * The Chub that spawns after The Matriarch will be automatically stunned for a few frames to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The Forsaken is now immune to fear. (This prevents the bug where it will not attack.)

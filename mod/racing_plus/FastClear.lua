@@ -685,11 +685,23 @@ function FastClear:SpawnPhotos()
                       "(on frame " .. tostring(gameFrameCount) .. ").")
 
   elseif situation == situations.RANDOM then
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector, nil, 0, roomSeed)
-    -- (a SubType of 0 will make a random item of the pool according to the room type)
-    -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
-    Isaac.DebugString("FastClear:SpawnPhotos() - Spawned a random boss item instead of a photo " ..
-                      "(on frame " .. tostring(gameFrameCount) .. ").")
+    -- If the player has There's Options, they should get two boss items instead of 1
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) then -- 246
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                posCenterLeft, g.zeroVector, nil, 0, roomSeed)
+      local nextSeed = g:IncrementRNG(roomSeed)
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                posCenterRight, g.zeroVector, nil, 0, nextSeed)
+      Isaac.DebugString("FastClear:SpawnPhotos() - Spawned two random boss items instead of a photo " ..
+                        "(on frame " .. tostring(gameFrameCount) .. ").")
+    else
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, posCenter, g.zeroVector, nil, 0, roomSeed)
+      -- (a SubType of 0 will make a random item of the pool according to the room type)
+      -- (if we use an InitSeed of 0, the item will always be Magic Mushroom, so use the room seed instead)
+      -- (using "Isaac.Spawn()" will result in an unseeded item)
+      Isaac.DebugString("FastClear:SpawnPhotos() - Spawned a random boss item instead of a photo " ..
+                        "(on frame " .. tostring(gameFrameCount) .. ").")
+    end
   end
 end
 

@@ -30,11 +30,11 @@ POST-FLIP ACTIONS:
 --]]
 
 -- Integrate Mod Config Menu by piber20
--- require("mod_config_menu")
+-- require("scripts.modconfig")
 
 -- Integrate MinimapAPI by Taz & Wofsauge
 -- https://github.com/TazTxUK/MinimapAPI/wiki/Integrating-MinimapAPI-into-a-standalone-mod
--- require("scripts/minimapapi/init")
+-- require("scripts.minimapapi.init")
 
 -- Register the mod (the second argument is the API version)
 local RacingPlus = RegisterMod("Racing+", 1)
@@ -466,6 +466,12 @@ if MinimapAPI ~= nil then
     MinimapAPI:AddPickup("QuestionMark", "QuestionMark",
                         EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.CARD_QUESTIONMARK, -- 5.300.48
                         MinimapAPI.PickupNotCollected, "cards", 1200)
+end
+
+-- Bugfix for Mod Config Menu
+local mcmexists, MCM = pcall(require, "scripts.modconfig")
+if mcmexists then
+  MCM.RoomIsSafe = function() return true end
 end
 
 -- Welcome banner

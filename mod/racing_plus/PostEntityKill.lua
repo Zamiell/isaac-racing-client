@@ -367,26 +367,41 @@ function PostEntityKill:Entity271(entity)
     return
   end
 
+  -- Do not drop any key pieces if the player already has both of them
+  -- (this matches the behavior of vanilla)
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) and -- 238
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
+     not g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
+
+    return
+  end
+
   -- Figure out what item to spawn
   local subType
   if g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
     -- Even if the player has both key pieces,
     -- Filigree Feather will still make an angel drop a random item (on vanilla and in R+)
     subType = 0 -- A random item
-  elseif entity.Type == EntityType.ENTITY_URIEL then -- 271
+
+  elseif entity.Type == EntityType.ENTITY_URIEL and -- 271
+         not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) then -- 238
+
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
-  elseif entity.Type == EntityType.ENTITY_GABRIEL then -- 272
+
+  elseif entity.Type == EntityType.ENTITY_GABRIEL and -- 272
+         not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) then -- 239
+
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
   end
-
-  -- Don't spawn duplicate keys
-  -- (this matches the behavior of vanilla)
-  if (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_1 and -- 238
-      g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1)) or -- 238
-     (subType == CollectibleType.COLLECTIBLE_KEY_PIECE_2 and -- 239
-      g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2)) then -- 239
-
-    return
+  if subType == nil then
+    -- In vanilla, angels will always drop their respective key piece
+    -- Since it is possible on Racing+ for two of the same angel to spawn,
+    -- ensure that an angel will drop the other key piece instead of dropping nothing
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) then -- 238
+      subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
+    elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) then -- 239
+      subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
+    end
   end
 
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") and

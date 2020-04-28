@@ -80,6 +80,10 @@ function Season8:PostUpdate()
     return
   end
 
+  Season8:CheckItemPickupAnimation()
+end
+
+function Season8:CheckItemPickupAnimation()
   -- On every frame, check to see if we are holding an item above our heads
   if g.p:IsItemQueueEmpty() then
     return
@@ -149,6 +153,13 @@ end
 
 -- Called from the "SpeedrunPostUpdate:CheckCheckpointTouched()" function
 function Season8:CheckpointTouched()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
   Season8.identifiedPills = g:TableClone(g.run.pills)
 end
 
@@ -161,6 +172,31 @@ function Season8:PostRender()
     return
   end
 
+  Season8:CheckEveStart()
+  Season8:DrawRemainingItems()
+end
+
+function Season8:CheckEveStart()
+  local character = g.p:GetPlayerType()
+  local gameFrameCount = g.g:GetFrameCount()
+
+  if character == PlayerType.PLAYER_EVE and -- 5
+     gameFrameCount == 1 and
+     not g.run.eveUsedRazor then
+
+    -- Setting the red hearts does not automatically trigger Whore of Babylon
+    -- (and dealing fake damage procs Dead Bird, so we temporarily remove the collectible)
+    g.run.eveUsedRazor = true
+    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
+    g.p:TakeDamage(0, DamageFlag.DAMAGE_FAKE, EntityRef(g.p), 0)
+    g.sfx:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT) -- 55
+    g.p:StopExtraAnimation()
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD, 0, false) -- 117
+    Isaac.DebugString("Removing collectible 117 (Dead Bird)")
+  end
+end
+
+function Season8:DrawRemainingItems()
   -- Make the text persist for at least 2 seconds after the player presses tab
   local tabPressed = false
   for i = 0, 3 do -- There are 4 possible inputs/players from 0 to 3
@@ -399,14 +435,11 @@ function Season8:PostGameStarted()
     g.p:AddHearts(-2)
     g.p:AddSoulHearts(1)
 
-    -- Setting the red hearts does not automatically trigger Whore of Babylon
-    -- (dealing the damage procs Dead Bird, so we temporarily remove the collectible)
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
-    g.p:TakeDamage(0, DamageFlag.DAMAGE_FAKE, EntityRef(g.p), 0)
-    g.sfx:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT) -- 55
-    g.p:StopExtraAnimation()
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD, 0, false) -- 117
-    Isaac.DebugString("Removing collectible 117 (Dead Bird)")
+    -- We also want to activate Whore of Babylon, but if we do it now,
+    -- it will cause an annoying sound effect, so we will wait until frame 1
+    -- However, we want to add the costume now to avoid the sudden change later
+    g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON)) -- 122
+    g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON)) -- 122
 
   elseif character == PlayerType.PLAYER_LAZARUS2 then -- 11
     -- Make the D6 appear first on the item tracker

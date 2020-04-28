@@ -13,10 +13,7 @@ function EntityTakeDmg:Player(tookDamage, damageAmount, damageFlag, damageSource
     return false
   end
 
-  -- Handle the Soul Jar
   SoulJar:EntityTakeDmg(damageFlag)
-
-  -- Handle seeded death
   return SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
 end
 

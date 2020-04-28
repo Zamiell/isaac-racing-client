@@ -111,6 +111,7 @@ ExecuteCmd.functions["card"] = function(params)
   cardMap["wheel"] = 11
   cardMap["fortune"] = 11
   cardMap["strength"] = 12
+  cardMap["str"] = 12
   cardMap["hanged man"] = 13
   cardMap["hangedman"] = 13
   cardMap["hanged"] = 13

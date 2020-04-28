@@ -26,6 +26,7 @@ Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to Pop! (529)
 - Added the "damage" cache to Ring Worm (11)
 - Added the "damage" cache to Hook Worm (26)
+
 -->
 
 <items gfxroot="gfx/items/" version="1">
