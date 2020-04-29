@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.50.8"
+g.version = "v0.51.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.modConfigMenuMessage = false -- Used to only show the "Press X to open Mod Config Menu"
@@ -260,7 +260,6 @@ function g:InitRun()
   g.run.restart               = false -- If set, we restart the run on the next frame
   g.run.currentRoomClearState = true
   g.run.diversity             = false -- Whether or not this is a diversity race
-  g.run.b1HasCurse            = false
   g.run.reseededFloor         = false
   g.run.usedStrengthChar      = 0
   g.run.goingToDebugRoom      = false
@@ -313,7 +312,6 @@ function g:InitRun()
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
   g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
-  g.run.eveUsedRazor          = false -- Used in Season 8
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy
@@ -407,7 +405,7 @@ function g:InitRun()
   g.run.bossRush = {
     started        = false,
     finished       = false,
-    waves          = {},
+    bosses         = {},
     currentWave    = 0,
     spawnWaveFrame = 0,
   }
@@ -431,6 +429,15 @@ function g:InitLevel()
   g.run.replacedHeavenDoors = {}
   g.run.reseedCount         = 0
   g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
+
+  -- Custom Challenge Room tracking
+  g.run.challengeRoom = {
+    started        = false,
+    finished       = false,
+    waves          = {},
+    currentWave    = 0,
+    spawnWaveFrame = 0,
+  }
 end
 
 function g:InitRoom()
@@ -807,6 +814,18 @@ g.bossArray = {
   {410, 0, 0}, -- Sisters Vis
   {411, 0, 0}, -- Big Horn
   {413, 0, 0}, -- The Matriarch
+}
+
+g.splittingBosses = {
+  EntityType.ENTITY_LARRYJR, -- 19
+  EntityType.ENTITY_FISTULA_BIG, -- 71
+  EntityType.ENTITY_FISTULA_MEDIUM, -- 72
+  EntityType.ENTITY_FISTULA_SMALL, -- 73
+  EntityType.ENTITY_BLASTOCYST_BIG, -- 74
+  EntityType.ENTITY_BLASTOCYST_MEDIUM, -- 75
+  EntityType.ENTITY_BLASTOCYST_SMALL, -- 76
+  EntityType.ENTITY_FALLEN, -- 81
+  EntityType.ENTITY_BROWNIE, -- 402
 }
 
 -- Used to fix Greed's Gullet bugs

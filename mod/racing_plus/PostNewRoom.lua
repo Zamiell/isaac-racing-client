@@ -14,6 +14,7 @@ local Schoolbag           = require("racing_plus/schoolbag")
 local SeededDeath         = require("racing_plus/seededdeath")
 local SeededRooms         = require("racing_plus/seededrooms")
 local BossRush            = require("racing_plus/bossrush")
+local ChallengeRooms      = require("racing_plus/challengerooms")
 local Samael              = require("racing_plus/samael")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
@@ -96,7 +97,8 @@ function PostNewRoom:NewRoom()
 
   Samael:CheckHairpin() -- Check to see if we need to fix the Wraith Skull + Hairpin bug
   Schoolbag:PostNewRoom() -- Handle the Glowing Hour Glass mechanics relating to the Schoolbag
-  BossRush:PostNewRoom() -- Check for the Boss Rush
+  BossRush:PostNewRoom()
+  ChallengeRooms:PostNewRoom()
   FastTravel:CheckRoomRespawn() -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
   FastTravel:CheckNewFloor() -- Check if we are just arriving on a new floor
   FastTravel:CheckCrawlspaceMiscBugs() -- Check for miscellaneous crawlspace bugs

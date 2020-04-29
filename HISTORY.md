@@ -1,11 +1,22 @@
 # Racing+ Version History and News
 
-### *v0.50.8* - April 28th, 2020
+### *v0.51.0* - April 28th, 2020
+
+* The waves in Challenge Rooms are now generated in a custom way that roughly matches vanilla. This means that the long delay between waves has been removed. This also fixes the bug where items in the Schoolbag would not be charged when clearing Challenge Room waves.
+* All Boss Challenge Rooms will now spawn random bosses instead of two set bosses.
+* Normal Challenge Rooms on floor 7 and beyond will now correctly use Womb enemies.
+* Boss Challenge Rooms on floor 7 and beyond will now correctly use Womb bosses.
+* Removed the "R+" icon during unseeded runs. (Curses are now removed via a callback instead of via the "BLCK CNDL" seed.)
+* Fixed the bug where using a Strength card could give an additional heart container on seeded runs under certain conditions. (Thanks Dea1h)
+* Fixed the bug where you could take both boss items after the Mom fight. (Thanks Hispa)
+* Fixed the bug where in season 8, Eve would play the beginning of her "hurt" sound effect when resetting the game.
+
+### *v0.50.8* - April 27th, 2020
 
 * If you only have Key Piece 1 or only have Key Piece 2, Uriel and Gabriel will now always drop the other key piece. (This is different than the vanilla behavior.)
-* In season 8, when resetting on Eve, she should now be a little less noisy. (It is not possible to completely remove the sound effect because of lag and the limitiations of the Isaac API.)
+* In season 8, when resetting on Eve, she should now be a little less noisy.
 * Mod Config Menu will now always open, even if there are enemies in the room.
-* Fixed the bug where More Options would not work if Mom spawned a boss item. (Thanks Hispa)
+* Fixed the bug where There's Options would not work if Mom spawned a boss item. (Thanks Hispa)
 * Fixed the bug where familiars would be placed at an invalid entrance after a teleport under certain conditions.
 
 ### *v0.50.7* - April 21st, 2020

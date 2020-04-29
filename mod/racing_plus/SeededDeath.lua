@@ -53,7 +53,6 @@ function SeededDeath:PostUpdate()
     g.run.seededDeath.state = SeededDeath.state.CHANGING_ROOMS
     g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
     g.seeds:RemoveSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
-    g.seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
 
     if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
       -- The "Revive()" function is bugged with The Forgotton;
@@ -256,7 +255,6 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
 
   -- Hide the player's health to obfucate the fact that they are still technically alive
-  g.seeds:RemoveSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
   g.seeds:AddSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
 
   -- Drop all trinkets and pocket items

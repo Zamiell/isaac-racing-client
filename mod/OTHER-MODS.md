@@ -6,6 +6,7 @@ In general, using **any** other mods alongside Racing+ is forbidden. Some specif
 
 ### Legal Mods
 
+* [Racing+ Data](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809)
 * [Vanilla Streak Text](https://steamcommunity.com/sharedfiles/filedetails/?id=1714310911)
 * [Mod Config Menu](https://steamcommunity.com/workshop/filedetails/?id=1603631350)
 * [MiniMAPI](https://steamcommunity.com/sharedfiles/filedetails/?id=1978904635)

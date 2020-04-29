@@ -53,6 +53,7 @@ local EvaluateCache       = require("racing_plus/evaluatecache") -- 8
 local PostPlayerInit      = require("racing_plus/postplayerinit") -- 9
 local UsePill             = require("racing_plus/usepill") -- 10
 local EntityTakeDmg       = require("racing_plus/entitytakedmg") -- 11
+local PostCurseEval       = require("racing_plus/postcurseeval") -- 12
 local InputAction         = require("racing_plus/inputaction") -- 13
 local PostGameStarted     = require("racing_plus/postgamestarted") -- 15
 local PostNewLevel        = require("racing_plus/postnewlevel") -- 18
@@ -80,7 +81,7 @@ local Schoolbag           = require("racing_plus/schoolbag") -- Functions for th
 local Speedrun            = require("racing_plus/speedrun") -- Functions for custom challenges
 local Season7             = require("racing_plus/season7") -- Functions for R+7 Season 7
 local Samael              = require("racing_plus/samael") -- Samael functions
-local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions (2/2)
+local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions
 local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions
 local Debug               = require("racing_plus/debug") -- Debug functions
 
@@ -104,6 +105,7 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD,              UseCard.Main) -- 5
 RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        EvaluateCache.Main) -- 8
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      PostPlayerInit.Main) -- 9
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL,              UsePill.Main) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL,       PostCurseEval.Main) -- 12
 RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          InputAction.Main) -- 13
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Main) -- 15
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         Speedrun.PostGameEnd) -- 16

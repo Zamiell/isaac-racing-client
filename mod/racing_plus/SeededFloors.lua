@@ -81,6 +81,8 @@ function SeededFloors:Before(stage)
   end
 
   -- Remove all health
+  g.seeds:AddSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
+  -- (we hide the health in case they are using Forget Me Now)
   g.p:AddGoldenHearts(goldenHearts * -1)
   -- (we have to remove the exact amount of Golden Hearts or else it will bug out)
   -- (we remove Golden Hearts first so that they don't break)
@@ -295,6 +297,8 @@ function SeededFloors:LoadHealth()
   g.p:AddHearts(hearts.hearts)
   g.p:AddGoldenHearts(hearts.goldenHearts)
   -- (no matter what kind of heart is added, no sounds effects will play)
+
+  g.seeds:RemoveSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
 end
 
 return SeededFloors

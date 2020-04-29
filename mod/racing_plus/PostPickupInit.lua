@@ -3,9 +3,9 @@ local PostPickupInit = {}
 -- Note: Position, SpawnerType, SpawnerVariant, and Price are not initialized yet in this callback
 
 -- Includes
-local g          = require("racing_plus/globals")
-local BigChest   = require("racing_plus/bigchest")
-local Speedrun   = require("racing_plus/speedrun")
+local g        = require("racing_plus/globals")
+local BigChest = require("racing_plus/bigchest")
+local Speedrun = require("racing_plus/speedrun")
 
 -- Variables
 PostPickupInit.bigChestAction = false

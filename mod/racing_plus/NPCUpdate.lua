@@ -226,7 +226,9 @@ function NPCUpdate:NPC275(npc)
 
     -- Stop the room from being cleared, which has a chance to take us back to the menu
     g.run.megaSatanDead = true
-    Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0, g:GridToPos(0, 0), g.zeroVector, nil)
+    local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
+                                          g:GridToPos(0, 0), g.zeroVector, nil)
+    roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
     Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
 
     -- Give a charge to the player's active item

@@ -639,6 +639,9 @@ function FastTravel:GotoNextFloor(upwards, redirect)
     end
   end
 
+  -- Before we go to the next floor, remove health if we used a Strength Card
+  FastTravel:FixStrengthCardBug()
+
   -- Check to see we need to take extra steps to seed the floor consistently by
   --- performing health and inventory modifications
   SeededFloors:Before(nextStage)

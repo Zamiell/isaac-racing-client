@@ -16,6 +16,7 @@ local Season7            = require("racing_plus/season7")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 local BossRush           = require("racing_plus/bossrush")
+local ChallengeRooms     = require("racing_plus/challengerooms")
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
@@ -37,10 +38,9 @@ function PostUpdate:Main()
   PostUpdate:CheckWalnut()
   PostUpdate:Fix9VoltSynergy()
   BossRush:PostUpdate()
+  ChallengeRooms:PostUpdate()
 
   -- Check on every frame to see if we need to open the doors
-  -- (we can't just add this as a new MC_POST_UPDATE callback because
-  -- it causes a bug where the Womb 2 trapdoor appears for a frame)
   FastClear:PostUpdate()
 
   -- Check to see if we are leaving a crawlspace (and if we are softlocked in a Boss Rush)

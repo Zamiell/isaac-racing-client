@@ -1,7 +1,8 @@
 local PostPlayerInit = {}
 
 -- Includes
-local g = require("racing_plus/globals")
+local g       = require("racing_plus/globals")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_POST_PLAYER_INIT (9)
 -- (this will get called before the "PostGameStarted" callback)
@@ -14,8 +15,16 @@ function PostPlayerInit:Main(player)
   -- Cache the player object so that we don't have to repeatedly call Game():GetPlayer(0)
   g.p = player
 
-  local character = g.p:GetPlayerType()
-  Isaac.DebugString("MC_POST_PLAYER_INIT - " .. tostring(character))
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
+  local character = player:GetPlayerType()
+
+  Isaac.DebugString("MC_POST_PLAYER_INIT - Character " .. tostring(character))
+
+  -- Do nothing if we are continuing an existing run
+  if gameFrameCount ~= 0 then
+    return
+  end
 
   -- With Eve, Eden, and Keeper, the beginning of the recharge sound will play, which is annoying
   if character == PlayerType.PLAYER_EVE or -- 5
@@ -28,6 +37,8 @@ function PostPlayerInit:Main(player)
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
   end
+
+  Season8:PostPlayerInit()
 end
 
 return PostPlayerInit

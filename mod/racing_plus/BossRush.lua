@@ -3,7 +3,7 @@ local BossRush = {}
 -- Racing+ replaces the vanilla Boss Rush with a custom version
 
 -- Includes
-local g = require("racing_plus/globals")
+local g         = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
 local Schoolbag = require("racing_plus/schoolbag")
 
@@ -70,17 +70,6 @@ BossRush.bosses = {
   {410, 0}, -- Sisters Vis
   {411, 0}, -- Big Horn
   {413, 0}, -- The Matriarch
-}
-BossRush.splittingBosses = {
-  EntityType.ENTITY_LARRYJR, -- 19
-  EntityType.ENTITY_FISTULA_BIG, -- 71
-  EntityType.ENTITY_FISTULA_MEDIUM, -- 72
-  EntityType.ENTITY_FISTULA_SMALL, -- 73
-  EntityType.ENTITY_BLASTOCYST_BIG, -- 74
-  EntityType.ENTITY_BLASTOCYST_MEDIUM, -- 75
-  EntityType.ENTITY_BLASTOCYST_SMALL, -- 76
-  EntityType.ENTITY_FALLEN, -- 81
-  EntityType.ENTITY_BROWNIE, -- 402
 }
 
 -- Other constants
@@ -185,29 +174,29 @@ function BossRush:CheckSpawnNewWave()
 
   -- Find out whether it is time to spawn the next wave
   -- If this is the final wave, then we only want to proceed if every enemy is killed (not just the bosses)
-  -- When the boss rush is active, the "Room Clear Delay NPC" boss will always be present,
+  -- When the Boss Rush is active, the "Room Clear Delay NPC" boss will always be present,
   -- which is why we check for equal to 1
   local spawnNextWave = false
   if totalBossesDefeatedIfWaveIsClear >= BossRush.totalBosses then
     if FastClear.aliveEnemiesCount == 1 then
-      -- Every enemy is dead, but also check to see if there are any splitting enemies alive
-      local splittingEnemiesAlive = false
+      -- Every enemy is dead, but also check to see if any splitting enemies exist
+      local splittingEnemyExists = false
       for _, entity in ipairs(Isaac.GetRoomEntities()) do
-        for _, splittingEntity in ipairs(BossRush.splittingBosses) do
+        for _, splittingEntity in ipairs(g.splittingBosses) do
           if entity.Type == splittingEntity then
-            splittingEnemiesAlive = true
+            splittingEnemyExists = true
             break
           end
         end
-        if splittingEnemiesAlive then
+        if splittingEnemyExists then
           break
         end
       end
-      if splittingEnemiesAlive then
+      if splittingEnemyExists then
         return
       end
 
-      -- No splitting enemies are alive, so consider the Boss Rush finished
+      -- No splitting enemies exist, so consider the Boss Rush finished
       spawnNextWave = true
       Isaac.DebugString("All bosses killed on frame: " .. tostring(gameFrameCount))
     end
@@ -258,7 +247,7 @@ function BossRush:PostNewRoom()
   -- Local variables
   local roomType = g.r:GetType()
 
-  if roomType ~= RoomType.ROOM_BOSSRUSH then
+  if roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
     return
   end
 

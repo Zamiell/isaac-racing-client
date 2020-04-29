@@ -123,9 +123,6 @@ function PostNewLevel:NewLevel()
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
 
-  -- Handle Fast Travel
-  FastTravel:FixStrengthCardBug()
-
   -- Hande multi-character speedruns
   Season7:PostNewLevel()
 

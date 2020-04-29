@@ -172,28 +172,7 @@ function Season8:PostRender()
     return
   end
 
-  Season8:CheckEveStart()
   Season8:DrawRemainingItems()
-end
-
-function Season8:CheckEveStart()
-  local character = g.p:GetPlayerType()
-  local gameFrameCount = g.g:GetFrameCount()
-
-  if character == PlayerType.PLAYER_EVE and -- 5
-     gameFrameCount == 1 and
-     not g.run.eveUsedRazor then
-
-    -- Setting the red hearts does not automatically trigger Whore of Babylon
-    -- (and dealing fake damage procs Dead Bird, so we temporarily remove the collectible)
-    g.run.eveUsedRazor = true
-    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD) -- 117
-    g.p:TakeDamage(0, DamageFlag.DAMAGE_FAKE, EntityRef(g.p), 0)
-    g.sfx:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT) -- 55
-    g.p:StopExtraAnimation()
-    g.p:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_BIRD, 0, false) -- 117
-    Isaac.DebugString("Removing collectible 117 (Dead Bird)")
-  end
 end
 
 function Season8:DrawRemainingItems()
@@ -371,6 +350,29 @@ function Season8:UseCard(card)
   end
 end
 
+-- ModCallbacks.MC_POST_PLAYER_INIT (9)
+function Season8:PostPlayerInit()
+  -- Local variables
+  local character = g.p:GetPlayerType()
+  local challenge = Isaac.GetChallenge()
+
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    return
+  end
+
+  -- We want Eve to start with Whore of Babylon procced, so we adjust the health
+  -- (the room has not loaded yet, so Whore will be procced in the first room)
+  -- Alternatively, we could adjust the health in the PostGameStarted/PostUpdate/PostRender callback
+  -- and then do:
+  -- 1) g.p:TakeDamage(0, DamageFlag.DAMAGE_FAKE, EntityRef(g.p), 0)
+  -- 2) g.sfx:Stop(SoundEffect.SOUND_ISAAC_HURT_GRUNT) -- 55
+  -- But this is buggy because the sound will still ocassionally play when the game lags,
+  -- so this solution is better
+  if character == PlayerType.PLAYER_EVE then -- 5
+    g.p:AddHearts(-2)
+  end
+end
+
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function Season8:PostGameStartedFirstCharacter()
   -- Reset variables
@@ -432,14 +434,8 @@ function Season8:PostGameStarted()
 
   elseif character == PlayerType.PLAYER_EVE then -- 5
     Schoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, 3) -- 126
-    g.p:AddHearts(-2)
     g.p:AddSoulHearts(1)
-
-    -- We also want to activate Whore of Babylon, but if we do it now,
-    -- it will cause an annoying sound effect, so we will wait until frame 1
-    -- However, we want to add the costume now to avoid the sudden change later
-    g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON)) -- 122
-    g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_WHORE_OF_BABYLON)) -- 122
+    -- (one red heart was already taken away in the "Season8:PostPlayerInit()" function)
 
   elseif character == PlayerType.PLAYER_LAZARUS2 then -- 11
     -- Make the D6 appear first on the item tracker

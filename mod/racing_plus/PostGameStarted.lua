@@ -17,7 +17,6 @@ function PostGameStarted:Main(saveState)
   -- Local variables
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local curses = g.l:GetCurses()
   local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
@@ -58,24 +57,6 @@ function PostGameStarted:Main(saveState)
   -- Make sure that the MinimapAPI is enabled (we may have disabled it in a previous run)
   if MinimapAPI ~= nil then
     MinimapAPI.Config.Disable = false
-  end
-
-  -- Make sure that the "Total Curse Immunity" easter egg is on (the "BLCK CNDL" seed)
-  if not g.seeds:HasSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) and -- 70
-     Isaac.GetChallenge() == 0 then
-     -- If we don't check for challenges, this can cause an infinite loop when entering Challenge #1, for example
-
-    g.seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_ALL_CURSES) -- 70
-    Isaac.DebugString("Added the \"Total Curse Immunity\" easter egg.")
-
-    -- We only need to restart the game if there is a curse on B1 already
-    if curses ~= LevelCurse.CURSE_NONE then -- 0
-      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
-      g.run.restart = true
-      g.run.b1HasCurse = true
-      Isaac.DebugString("Restarting because there was a curse on Basement 1.")
-      return
-    end
   end
 
   -- Log the run beginning

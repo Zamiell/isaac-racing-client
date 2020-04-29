@@ -687,11 +687,13 @@ function FastClear:SpawnPhotos()
   elseif situation == situations.RANDOM then
     -- If the player has There's Options, they should get two boss items instead of 1
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) then -- 246
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                posCenterLeft, g.zeroVector, nil, 0, roomSeed)
+      local item1 = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                              posCenterLeft, g.zeroVector, nil, 0, roomSeed)
+      item1:ToPickup().TheresOptionsPickup = true
       local nextSeed = g:IncrementRNG(roomSeed)
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                posCenterRight, g.zeroVector, nil, 0, nextSeed)
+      local item2 = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                              posCenterRight, g.zeroVector, nil, 0, nextSeed)
+      item2:ToPickup().TheresOptionsPickup = true
       Isaac.DebugString("FastClear:SpawnPhotos() - Spawned two random boss items instead of a photo " ..
                         "(on frame " .. tostring(gameFrameCount) .. ").")
     else

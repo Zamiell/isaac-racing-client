@@ -342,9 +342,6 @@ function PostRender:CheckRestart()
 
       g:ExecuteCommand("seed " .. g.saveFile.old.seed)
     end
-    if g.run.b1HasCurse then
-      g:ExecuteCommand("restart")
-    end
     return
   end
 

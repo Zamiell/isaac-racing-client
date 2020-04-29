@@ -7,8 +7,6 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 ## Miscellaneous Bugs
 
 * Various bugs will happen if you alternate between playing two different runs on two different save files.
-* Fast-clear does not apply to Challenge Rooms.
-* Clearing waves of Challenge Rooms will not give charges to an item in a Schoolbag.
 * When returning to the Boss Rush from a crawlspace, the camera will jerk from the door to the location of the crawlspace.
 * Rules cards will sometimes show vanilla seeds instead of tournament winners.
 * In a multi-character speedrun, if you save and quit on the frame that the Checkpoint spawns, then you will also spawn a trophy. (Reported by thereisnofuture)
