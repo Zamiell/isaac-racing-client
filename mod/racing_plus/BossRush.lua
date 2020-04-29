@@ -87,11 +87,10 @@ function BossRush:PostUpdate()
 
   BossRush:CheckStart()
   BossRush:CheckSpawnNewWave()
-  BossRush:CheckOpenDoors()
 end
 
 function BossRush:CheckStart()
-  if g.r:IsAmbushActive() and
+  if not g.p:IsItemQueueEmpty() and
      not g.run.bossRush.started and
      not g.run.bossRush.finished then
 
@@ -107,10 +106,29 @@ function BossRush:Start()
   local roomVariant = roomData.Variant
   local startSeed = g.seeds:GetStartSeed()
 
-  -- The "ambush" is active and we have not started the Boss Rush yet, so start spawning mobs
+  -- We have touched an item and have not started the Boss Rush yet, so start spawning mobs
   g.run.bossRush.started = true
   g.run.bossRush.currentWave = 0
   Isaac.DebugString("Started the Boss Rush on frame: " .. tostring(gameFrameCount))
+
+  -- Spawn a room clear delay NPC as a helper to keep the doors closed
+  -- (otherwise, the doors will re-open on every frame)
+  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
+                                        g:GridToPos(0, 0), g.zeroVector, nil)
+  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+  Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for the Boss Rush).")
+
+  -- Close the door
+  local num = g.r:GetGridSize()
+  for i = 1, num do
+    local gridEntity = g.r:GetGridEntity(i)
+    if gridEntity ~= nil then
+      local door = gridEntity:ToDoor()
+      if door ~= nil then
+        door:Close(true)
+      end
+    end
+  end
 
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}
@@ -175,7 +193,7 @@ function BossRush:CheckSpawnNewWave()
   -- Find out whether it is time to spawn the next wave
   -- If this is the final wave, then we only want to proceed if every enemy is killed (not just the bosses)
   -- When the Boss Rush is active, the "Room Clear Delay NPC" boss will always be present,
-  -- which is why we check for equal to 1
+  -- which is why we check for equal to 1 instead of equal to 0
   local spawnNextWave = false
   if totalBossesDefeatedIfWaveIsClear >= BossRush.totalBosses then
     if FastClear.aliveEnemiesCount == 1 then
@@ -200,7 +218,7 @@ function BossRush:CheckSpawnNewWave()
       spawnNextWave = true
       Isaac.DebugString("All bosses killed on frame: " .. tostring(gameFrameCount))
     end
-  elseif FastClear.aliveBossesCount == 1 then
+  elseif FastClear.aliveBossesCount == 0 then
     spawnNextWave = true
     Isaac.DebugString("Bosses for this wave were defeated on frame: " .. tostring(gameFrameCount))
   end
@@ -232,32 +250,19 @@ function BossRush:CheckSpawnNewWave()
   end
 end
 
-function BossRush:CheckOpenDoors()
-  -- The doors should always be open if the Boss Rush has not started yet or
-  -- if it has already been completed
-  if not g.run.bossRush.started or
-     g.run.bossRush.finished then
-
-    BossRush:OpenDoor()
-  end
-end
-
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function BossRush:PostNewRoom()
   -- Local variables
   local roomType = g.r:GetType()
 
   if roomType ~= RoomType.ROOM_BOSSRUSH then -- 17
+    g.run.bossRush.started = false
+    g.run.bossRush.currentWave = 0
     return
   end
 
-  -- We spawn an invisible boss that has no collision;
-  -- this will prevent the normal Boss Rush waves from spawning
-  -- We also need to remove the "Appear" flag so that the "Poof" animation does not appear
-  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        Vector(-1000, -1000), g.zeroVector, nil)
-  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
-  Isaac.DebugString("Spawned the room clear delay NPC (for the Boss Rush).")
+  -- Ensure that the vanilla Challenge Room does not activate by setting it to be already cleared
+  g.r:SetAmbushDone(true)
 
   -- If we already started the Boss Rush and did not finish it,
   -- and are now returning to the room, then start spawning the waves again from the beginning
@@ -362,17 +367,6 @@ function BossRush:Finish()
   end
 
   -- Open the door
-  BossRush:OpenDoor()
-
-  -- Play the sound effect for the doors opening
-  g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
-
-  -- Announce the completion via streak text
-  g.run.streakText = "Complete!"
-  g.run.streakFrame = Isaac.GetFrameCount()
-end
-
-function BossRush:OpenDoor()
   local num = g.r:GetGridSize()
   for i = 1, num do
     local gridEntity = g.r:GetGridEntity(i)
@@ -383,6 +377,13 @@ function BossRush:OpenDoor()
       end
     end
   end
+
+  -- Play the sound effect for the doors opening
+  g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
+
+  -- Announce the completion via streak text
+  g.run.streakText = "Complete!"
+  g.run.streakFrame = Isaac.GetFrameCount()
 end
 
 return BossRush

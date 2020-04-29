@@ -5,12 +5,27 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function EvaluateCache:Main(player, cacheFlag)
+  EvaluateCache:Magdalene(player, cacheFlag)
   EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
   EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
   EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
   EvaluateCache:ThirteenLuck(player, cacheFlag)
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   EvaluateCache:DebugStats(player, cacheFlag)
+end
+
+function EvaluateCache:Magdalene(player, cacheFlag)
+  -- Local variables
+  local character = player:GetPlayerType()
+
+  if character ~= PlayerType.PLAYER_MAGDALENA or -- 1
+     cacheFlag ~= CacheFlag.CACHE_SPEED then -- 16
+
+    return
+  end
+
+  -- Emulate having used the starting "Speed Up" pill
+  player.MoveSpeed = player.MoveSpeed + 0.15
 end
 
 function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)

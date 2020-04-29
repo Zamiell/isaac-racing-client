@@ -3,6 +3,7 @@ local PostGameStarted = {}
 -- Includes
 local g                       = require("racing_plus/globals")
 local PostNewLevel            = require("racing_plus/postnewlevel")
+local UsePill                 = require("racing_plus/usepill")
 local Sprites                 = require("racing_plus/sprites")
 local Schoolbag               = require("racing_plus/schoolbag")
 local SoulJar                 = require("racing_plus/souljar")
@@ -315,6 +316,7 @@ function PostGameStarted:Character()
   local character = g.p:GetPlayerType()
   local activeItem = g.p:GetActiveItem()
   local activeCharge = g.p:GetActiveCharge()
+  local pillColor = g.p:GetPill(0)
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()
 
@@ -356,21 +358,16 @@ function PostGameStarted:Character()
 
   -- Do character-specific actions
   if character == PlayerType.PLAYER_MAGDALENA then -- 1
-    -- Automatically use Maggy's Speed Up pill
-    local pillColor = g.p:GetPill(0)
-    g.p:UsePill(PillEffect.PILLEFFECT_SPEED_UP, pillColor) -- 14
-
-    -- We also have to update the speed cache
-    g.p:AddCacheFlags(CacheFlag.CACHE_SPEED) -- 16
-    g.p:EvaluateItems()
-
-    -- Mute the sound effects
-    g.sfx:Stop(SoundEffect.SOUND_POWERUP_SPEWER) -- 132
-    g.sfx:Stop(SoundEffect.SOUND_THUMBSUP) -- 268
-    g.sfx:Stop(SoundEffect.SOUND_SPEED_UP) -- 364
+    -- Identify the pill so that we will know what it is later on in the run
+    g.itemPool:IdentifyPill(pillColor)
+    UsePill:UsedNewPill(pillColor, PillEffect.PILLEFFECT_SPEED_UP) -- 14
 
     -- Delete the starting pill
     g.p:SetPill(0, PillColor.PILL_NULL) -- 0
+
+    -- Update the speed cache so that we get the emulated speed bonus
+    g.p:AddCacheFlags(CacheFlag.CACHE_SPEED) -- 16
+    g.p:EvaluateItems()
 
   elseif character == PlayerType.PLAYER_CAIN then -- 2
     -- Make the D6 appear first on the item tracker

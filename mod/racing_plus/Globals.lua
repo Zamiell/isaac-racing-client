@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.51.0"
+g.version = "v0.51.1"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.modConfigMenuMessage = false -- Used to only show the "Press X to open Mod Config Menu"
@@ -463,6 +463,7 @@ function g:InitRoom()
   -- Used to fix the bug where multiple black hearts can drop from the same multi-segment enemy
   g.run.blackHeartNPCs  = {} -- Indexed by NPC index
   g.run.blackHeartCount = {} -- Indexed by NPC init seed
+  g.run.touchedPickup   = false -- Used for Challenge Rooms
   g.run.matriarch       = { -- Used to rebalance The Matriarch
     spawned   = false,
     chubIndex = -1,

@@ -21,6 +21,10 @@ function UsePill:Main(pillEffect)
     end
   end
 
+  UsePill:UsedNewPill(pillColor, pillEffect)
+end
+
+function UsePill:UsedNewPill(pillColor, pillEffect)
   -- This is the first time we have used this pill, so keep track of the pill color and effect
   local pillEntry = {
     color  = pillColor,

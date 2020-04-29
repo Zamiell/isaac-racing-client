@@ -13,10 +13,12 @@ local Season8    = require("racing_plus/season8")
 function PostPickupUpdate:Main(pickup)
   -- Keep track of pickups that are touched
   -- (used for moving pickups on top of a trapdoor/crawlspace)
-  if pickup:GetSprite():IsPlaying("Collect") and
+  if (pickup:GetSprite():IsPlaying("Collect") or -- Most pickups have a "Collect" animation
+      pickup:GetSprite():IsPlaying("Open")) and -- Chests do not have a "Collect" animation
      not pickup.Touched then
 
     pickup.Touched = true
+    g.run.touchedPickup = true -- This variable is tracked per room
     Isaac.DebugString("Touched pickup: " ..
                       tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
 

@@ -908,15 +908,6 @@ function FastTravel:CheckCrawlspaceEnter(effect)
       -- Go to the crawlspace
       g.g:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
                               g.RoomTransition.TRANSITION_NONE) -- 0
-
-      -- There is a custom mechanic in vanilla where going into a crawlspace will "finish" the Boss Rush
-      -- Emulate this mechanic with the Racing+ custom version of the Boss Rush
-      if g.run.bossRush.started then
-        g.run.bossRush.started = false
-        g.run.bossRush.finished = true
-        g.g:SetStateFlag(GameStateFlag.STATE_BOSSRUSH_DONE, true)
-        Isaac.DebugString("Custom Boss Rush finished (via entering a crawlspace).")
-      end
     end
   end
 end

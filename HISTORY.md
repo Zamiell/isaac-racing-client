@@ -1,15 +1,21 @@
 # Racing+ Version History and News
 
+### *v0.51.1* - April 29th, 2020
+
+* Fixed the bug where the beginning of the pill sound effect would sometimes play when resetting the game as Magdalene. (Thanks mgln)
+* Fixed the bug where the boss HP UI would remain on the screen after completing a Boss Challenge Room or the Boss Rush.
+* Fixed the bug where a Challenge Room and a Boss Rush would start when they were not supposed to under certain conditions.
+
 ### *v0.51.0* - April 28th, 2020
 
 * The waves in Challenge Rooms are now generated in a custom way that roughly matches vanilla. This means that the long delay between waves has been removed. This also fixes the bug where items in the Schoolbag would not be charged when clearing Challenge Room waves.
-* All Boss Challenge Rooms will now spawn random bosses instead of two set bosses.
+* All Boss Challenge Rooms will now spawn two random bosses instead of two set bosses.
 * Normal Challenge Rooms on floor 7 and beyond will now correctly use Womb enemies.
 * Boss Challenge Rooms on floor 7 and beyond will now correctly use Womb bosses.
 * Removed the "R+" icon during unseeded runs. (Curses are now removed via a callback instead of via the "BLCK CNDL" seed.)
 * Fixed the bug where using a Strength card could give an additional heart container on seeded runs under certain conditions. (Thanks Dea1h)
 * Fixed the bug where you could take both boss items after the Mom fight. (Thanks Hispa)
-* Fixed the bug where in season 8, Eve would play the beginning of her "hurt" sound effect when resetting the game.
+* Fixed the bug where in season 8, the beginning of "hurt" sound effect would sometimes play when resetting the game as Eve.
 
 ### *v0.50.8* - April 27th, 2020
 

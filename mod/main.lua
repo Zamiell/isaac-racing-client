@@ -9,12 +9,9 @@ Directory: racing+_857628390
 Steam Workshop URL: https://steamcommunity.com/sharedfiles/filedetails/?id=857628390
 
 TODO:
-- In Rep, give judas half heart, give Cain + Eve + Apollyon half soul
+- In Rep, give Judas full red heart, give Cain + Eve + Apollyon half soul
 - Implement time offsets, show on the first room of each floor
 - Opponent's shadows
-
-TODO CAN'T FIX:
-- Make fast-clear apply to Challenge rooms ("room:SetAmbushDone()" doesn't do anything)
 
 POST-FLIP ACTIONS:
 1) Remove the duplicated start rooms for The Chest / Dark Room

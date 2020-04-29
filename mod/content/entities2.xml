@@ -63,7 +63,7 @@
 		Effects don't work to stop room clear for some reason; thus, we need to set it to have an ID of something other than 1000.
 		This will be killed with "debug 10". Also note that this must be set to a boss for the custom Boss Rush to work properly.
 	-->
-	<entity name="Room Clear Delay NPC" id="1002" variant="0" baseHP="0" boss="1" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+	<entity name="Room Clear Delay NPC" id="999" variant="0" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 

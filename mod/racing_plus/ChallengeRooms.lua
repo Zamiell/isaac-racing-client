@@ -157,11 +157,11 @@ function ChallengeRooms:PostUpdate()
 
   ChallengeRooms:CheckStart()
   ChallengeRooms:CheckSpawnNewWave()
-  ChallengeRooms:CheckOpenDoors()
 end
 
 function ChallengeRooms:CheckStart()
-  if g.r:IsAmbushActive() and
+  if (not g.p:IsItemQueueEmpty() or
+      g.run.touchedPickup) and
      not g.run.challengeRoom.started and
      not g.run.challengeRoom.finished then
 
@@ -179,6 +179,25 @@ function ChallengeRooms:Start()
   g.run.challengeRoom.started = true
   g.run.challengeRoom.currentWave = 0
   Isaac.DebugString("Started the Challenge Room on frame: " .. tostring(gameFrameCount))
+
+  -- Spawn a room clear delay NPC as a helper to keep the doors closed
+  -- (otherwise, the doors will re-open on every frame)
+  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
+                                        g:GridToPos(0, 0), g.zeroVector, nil)
+  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+  Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for a Challenge Room).")
+
+  -- Close the door
+  local num = g.r:GetGridSize()
+  for i = 1, num do
+    local gridEntity = g.r:GetGridEntity(i)
+    if gridEntity ~= nil then
+      local door = gridEntity:ToDoor()
+      if door ~= nil then
+        door:Close(true)
+      end
+    end
+  end
 
   -- Get the specific waves for this particular Challenge Room
   local waveType = math.ceil(stage / 2) -- e.g. Depths 1 is stage 5, which is wave type 3
@@ -297,32 +316,19 @@ function ChallengeRooms:CheckSpawnNewWave()
   end
 end
 
-function ChallengeRooms:CheckOpenDoors()
-  -- The doors should always be open if the Challenge Room has not started yet or
-  -- if it has already been completed
-  if not g.run.challengeRoom.started or
-     g.run.challengeRoom.finished then
-
-    ChallengeRooms:OpenDoor()
-  end
-end
-
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function ChallengeRooms:PostNewRoom()
   -- Local variables
   local roomType = g.r:GetType()
 
   if roomType ~= RoomType.ROOM_CHALLENGE then -- 11
+    g.run.challengeRoom.started = false
+    g.run.challengeRoom.currentWave = 0
     return
   end
 
-  -- We spawn an invisible boss that has no collision;
-  -- this will prevent the normal Challenge Room waves from spawning
-  -- We also need to remove the "Appear" flag so that the "Poof" animation does not appear
-  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        Vector(-1000, -1000), g.zeroVector, nil)
-  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
-  Isaac.DebugString("Spawned the room clear delay NPC (for a Challenge Room).")
+  -- Ensure that the vanilla Challenge Room does not activate by setting it to be already cleared
+  g.r:SetAmbushDone(true)
 
   -- If we already started the Challenge Room and did not finish it,
   -- and are now returning to the room, then start spawning the waves again from the beginning
@@ -434,17 +440,6 @@ function ChallengeRooms:Finish()
   g.r:SpawnClearAward()
 
   -- Open the door
-  ChallengeRooms:OpenDoor()
-
-  -- Play the sound effect for the doors opening
-  g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
-end
-
-function ChallengeRooms:OpenDoor()
-  if g.r:GetFrameCount() == 0 then
-    return
-  end
-
   local num = g.r:GetGridSize()
   for i = 1, num do
     local gridEntity = g.r:GetGridEntity(i)
@@ -459,6 +454,9 @@ function ChallengeRooms:OpenDoor()
       end
     end
   end
+
+  -- Play the sound effect for the doors opening
+  g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
 end
 
 return ChallengeRooms
