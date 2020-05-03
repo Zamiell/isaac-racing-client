@@ -429,7 +429,9 @@ function FastTravel:CheckTrapdoor()
     g.run.trapdoor.state = FastTravel.state.SCREEN_IS_BLACK
     g.run.trapdoor.floor = stage
     Sprites:Init("black", "black") -- Cover the screen with a big black sprite
-    MinimapAPI.Config.Disable = true -- We must also disable the custom minimap when we want the screen to be black
+    if MinimapAPI ~= nil then
+      MinimapAPI.Config.Disable = true -- We must also disable the custom minimap when we want the screen to be black
+    end
     FastTravel:GotoNextFloor(g.run.trapdoor.upwards)
 
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_2 and
@@ -522,7 +524,9 @@ function FastTravel:CheckNewFloor()
 
     -- Remove the black sprite to reveal the new floor
     Sprites:Init("black", 0)
-    MinimapAPI.Config.Disable = false
+    if MinimapAPI ~= nil then
+      MinimapAPI.Config.Disable = false
+    end
 
     local pos = g.r:GetCenterPos()
     if g.g.Difficulty >= Difficulty.DIFFICULTY_GREED and -- 2

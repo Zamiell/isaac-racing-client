@@ -39,10 +39,10 @@
     "racing_plus\\ExecuteCmd.lua": "e9763f02e88752d6253293055a3862639e390b79",
     "racing_plus\\FastClear.lua": "cc8d78bfaf1bc545b9925413cd7ed9afe94794cb",
     "racing_plus\\FastDrop.lua": "2b83e522adb6488c98caaceaed143dfeba98d152",
-    "racing_plus\\FastTravel.lua": "3d1f9bb26c47bce7d84e368cca4d48368356435a",
+    "racing_plus\\FastTravel.lua": "573528f61953ada5efc21d39dc7248df0acb1c1c",
     "racing_plus\\GetCard.lua": "f811f2254bbdc0282722d5afa59ea50632308981",
     "racing_plus\\GetPillEffect.lua": "ccb0a39d152479cb4e0bf1ae84c5fa9380902846",
-    "racing_plus\\Globals.lua": "3c46b6e714c3aa07188a898aafaee2ea13591516",
+    "racing_plus\\Globals.lua": "6ad483e4a02f9dafb954ef49a69eb97cca747fea",
     "racing_plus\\InputAction.lua": "92bec27d7807c9976f3e244b6a2d04ff3836a65e",
     "racing_plus\\JrFetus.lua": "2a9acd8f44f55aa4de61bf3fbdec492cf6be034b",
     "racing_plus\\Mahalath.lua": "01e4adfce3495ea00bbdaea4e2eeafaac39a0619",
@@ -2106,7 +2106,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "43223e2f1bdfe4d3c2b01fd24031b77d7477cb73",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "9d91d8e179b21f1cda2bfc445fef454aab5b10cb",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2184,5 +2184,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "71b49eb259f0834d5339f97e9bb1e85ece506002",
-    "sha1.json": "efacbcdcebe4ffd36abe6bfde1f3fae1851e6953"
+    "sha1.json": "8141abb48f4ea285659e0bee724fc4cc6beee116"
 }

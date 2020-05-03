@@ -1,6 +1,6 @@
 # Racing+ Version History and News
 
-### *v0.52.0* - April 29th, 2020
+### *v0.52.0* - May 3rd, 2020
 
 * Season 7 is finished!
   * Congradulations to Dea1h for the best time of 49:34, thereisnofuture for the second best time of 49:41, and mgln for the third best time of 49:45.
