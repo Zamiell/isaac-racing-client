@@ -1,10 +1,24 @@
 # Racing+ Version History and News
 
+### *v0.52.0* - April 29th, 2020
+
+* Season 7 is finished!
+  * Congradulations to Dea1h for the best time of 49:34, thereisnofuture for the second best time of 49:41, and mgln for the third best time of 49:45.
+  * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
+  * If you want to beat these times, the R+7 (S7) category will continue to be tracked on speedrun.com, but the official competition will move on to season 8.
+* [Season 8](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) has officially begun!
+* The R+ sprite will now always show, which fixes the bug where the place sprite would overlap with the stats. (Thanks Gamonymous)
+* Added an error message for when you try to continue a run that was played prior to opening the game. (Thanks mgln)
+* Fixed the bug where using Void or a Black Rune on a pedestal item in a Challenge Room or the Boss Rush would not start the event. (Thanks Hispa)
+* Fixed the bug where races to Mega Satan would not register a finish when you touched the trophy. (Thanks Gamonymous)
+* Fixed the bug where if you were using the MinimapAPI, you could see the minimap on certain frames of fast-travel when you were not supposed to. (Thanks Pingouin23)
+* Fixed the bug where you could kill the "Room Clear Delay NPC".
+
 ### *v0.51.1* - April 29th, 2020
 
 * Fixed the bug where the beginning of the pill sound effect would sometimes play when resetting the game as Magdalene. (Thanks mgln)
 * Fixed the bug where the boss HP UI would remain on the screen after completing a Boss Challenge Room or the Boss Rush.
-* Fixed the bug where a Challenge Room and a Boss Rush would start when they were not supposed to under certain conditions.
+* Fixed the bug where a Challenge Room and the Boss Rush would start when they were not supposed to under certain conditions.
 
 ### *v0.51.0* - April 28th, 2020
 
@@ -692,7 +706,7 @@ Mod changes:
   * Congradulations to antizoubilamakA for the best time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S4) category will continue to be tracked on speedrun.com, but the official competition will move on to season 5.
-* [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun! The new category is now considered final; there will be no more major balance changes.
+* [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun!
 * Diagonal knife throws will now have a 3-frame window instead of a 1-frame window.
 * Fixed the bug where Contract From Below would result in errors when clearing a room on a set seed. (Thanks mgln)
 
@@ -1245,7 +1259,7 @@ Mod Changes:
   * Congradulations to Dea1h for the best time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S3) category will continue to be tracked on speedrun.com, but the official competition will move on to season 4.
-* [Season 4](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-4) has officially begun! The new category is now considered final; there will be no more major balance changes.
+* [Season 4](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-4) has officially begun!
 * There is a new death mechanic for seeded races:
   * Upon dying, you will respawn in the previous room with 1.5 soul hearts.
   * You will then have a "debuff" effect that removes all of your items. The debuff will last 45 seconds.
@@ -1481,7 +1495,7 @@ News:
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
   * If you tried out Season 2 and did not like it, Samael is being heavily buffed in this patch with the goal of making him more fun to play (see below).
-* Season 3 has officially begun! The new category is now considered final; there will be no more major balance changes.
+* Season 3 has officially begun!
 * Thanks goes to [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900), who created the [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of Cathedral / Sheol.
 * Thanks goes to [melon goodposter](http://steamcommunity.com/id/pleasebecareful), who created the [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of The Chest / Dark Room.
 * If you have ideas for season 4, send them to me on Discord, which is planned for May 2018.
@@ -1960,7 +1974,7 @@ News:
   * Congradulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+9 and R+14 categories will continue to be tracked on speedrun.com, but the official competition will move on to season 2.
-* Season 2 has officially begun! The new category is now considered final; there will be no more major balance changes.
+* Season 2 has officially begun!
 * If you have ideas for season 3, send them to me on Discord, which is planned for November 2017.
 
 Changes:

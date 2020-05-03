@@ -173,6 +173,13 @@ end
 function UseItem:Item477()
   -- Used to prevent bugs with The Void + D6
   g.run.usedVoidFrame = g.g:GetFrameCount()
+
+  -- Voided pedestal items should count as starting a Challenge Room or the Boss Rush
+  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                        -1, false, false)
+  if #collectibles > 0 then
+    g.run.touchedPickup = true
+  end
 end
 
 -- CollectibleType.COLLECTIBLE_MOVING_BOX (523)
@@ -204,8 +211,8 @@ function UseItem:Item523()
 end
 
 -- Racing+ manually seeds all pedestal items based on the room seed
--- This is a problem for player-created pedestals, since they will be able to be rerolled into different items
--- depending on which room they are used in
+-- This is a problem for player-created pedestals, since they will be able to be rerolled into
+-- different items depending on which room they are used in
 function UseItem:PlayerGeneratedPedestal()
   local gameFrameCount = g.g:GetFrameCount()
   g.run.playerGenPedFrame = gameFrameCount + 1

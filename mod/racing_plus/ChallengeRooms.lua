@@ -160,8 +160,7 @@ function ChallengeRooms:PostUpdate()
 end
 
 function ChallengeRooms:CheckStart()
-  if (not g.p:IsItemQueueEmpty() or
-      g.run.touchedPickup) and
+  if g.run.touchedPickup and
      not g.run.challengeRoom.started and
      not g.run.challengeRoom.finished then
 
@@ -183,8 +182,9 @@ function ChallengeRooms:Start()
   -- Spawn a room clear delay NPC as a helper to keep the doors closed
   -- (otherwise, the doors will re-open on every frame)
   local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        g:GridToPos(0, 0), g.zeroVector, nil)
+                                        g.zeroVector, g.zeroVector, nil)
   roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+  roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for a Challenge Room).")
 
   -- Close the door

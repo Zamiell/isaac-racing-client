@@ -213,6 +213,9 @@ function PostUpdate:CheckItemPickup()
     return
   end
 
+  -- Mark that we have touched a pickup (for Challenge Rooms & Boss Rush)
+  g.run.touchedPickup = true
+
   -- Mark which item we are picking up
   g.run.pickingUpItem = g.p.QueuedItem.Item.ID
   g.run.pickingUpItemRoom = roomIndex

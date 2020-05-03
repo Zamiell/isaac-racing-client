@@ -105,7 +105,7 @@ function SpeedrunPostGameStarted:Main()
       Season6:PostGameStartedFirstCharacter()
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
       Season7:PostGameStartedFirstCharacter()
-    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
       Season8:PostGameStartedFirstCharacter()
     end
   end
@@ -144,7 +144,7 @@ function SpeedrunPostGameStarted:Main()
     Season6:PostGameStarted()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     Season7:PostGameStarted()
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     Season8:PostGameStarted()
   else
     Isaac.DebugString("Error: Unknown challenge.")

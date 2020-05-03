@@ -110,7 +110,7 @@ function PostEntityKill:Entity78(entity)
      challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") or
      (g.race.status == "in progress" and g.race.goal == "Blue Baby") or
      (g.race.status == "in progress" and g.race.goal == "Everything") then
 
@@ -291,7 +291,7 @@ function PostEntityKill:Entity81(entity)
       end
     end
   end
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
       coalBanned = true
     end
@@ -404,7 +404,7 @@ function PostEntityKill:Entity271(entity)
     end
   end
 
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") and
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") and
      subType ~= 0 then
 
     -- If we already got this key piece on a previous run, then change it to a random Angel Room item
@@ -436,7 +436,8 @@ function PostEntityKill:RoomClearDelayNPC(entity)
   -- If this occurs, just spawn a new one
   Isaac.DebugString("Room Clear Delay NPC death detected - spawning a new one.")
   local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        g:GridToPos(0, 0), g.zeroVector, nil)
+                                        g.zeroVector, g.zeroVector, nil)
+  roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
 end
 

@@ -34,6 +34,14 @@ function PostGameStarted:Main(saveState)
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
   if saveState then
+    -- Unlike vanilla, Racing+ does not support continuing runs that were played prior to opening
+    -- the game (since it would need to write all state variables to the "save#.dat" file)
+    -- Detect for this and show an error message if so
+    if g.saveFile.state == g.saveFileState.NOT_CHECKED then
+      g.resumedOldRun = true
+      return
+    end
+
     -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
     g.run.currentFloor = stage
     g.run.currentFloorType = stageType
@@ -54,6 +62,7 @@ function PostGameStarted:Main(saveState)
     -- We don't need to do the long series of checks if they quit and continued in the middle of a run
     return
   end
+  g.resumedOldRun = false
 
   -- Make sure that the MinimapAPI is enabled (we may have disabled it in a previous run)
   if MinimapAPI ~= nil then
@@ -104,6 +113,12 @@ function PostGameStarted:Main(saveState)
   SoulJar.sprites = {}
   Speedrun.sprites = {}
   Timer.sprites = {}
+
+  -- We need to disable achievements so that the R+ sprite shows above the stats on the left side of the screen
+  -- We want the R+ sprite to display on all runs so that the "1st" sprite has somewhere to go
+  -- The easiest way to disable achievements without affecting gameplay is to enable the easter egg that disables
+  -- Curse of Darkness (this has no effect since all curses are removed in the "PostCurseEval" callback anyway)
+  g.seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_CURSE_DARKNESS) -- 63
 
   if PostGameStarted:CheckCorruptMod() or
      PostGameStarted:CheckFullyUnlockedSave() then

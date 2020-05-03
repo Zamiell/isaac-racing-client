@@ -76,7 +76,7 @@ function Season8:PostUpdate()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -107,7 +107,7 @@ function Season8:Pedestals(pickup)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") or
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") or
      not g:TableContains(Season8.touchedItems, pickup.SubType) or
      pickup.Touched then
 
@@ -142,7 +142,7 @@ function Season8:RemoveTrinket(trinket)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -156,7 +156,7 @@ function Season8:CheckpointTouched()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -168,7 +168,7 @@ function Season8:PostRender()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -335,7 +335,7 @@ function Season8:UseCard(card)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -356,7 +356,7 @@ function Season8:PostPlayerInit()
   local character = g.p:GetPlayerType()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -496,7 +496,7 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -594,7 +594,7 @@ function Season8:PostPickupUpdateTarotCard(pickup)
   local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -642,7 +642,7 @@ function Season8:PostPickupUpdateTrinket(pickup)
   local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
 
@@ -682,7 +682,7 @@ function Season8:GetPillEffect(selectedPillEffect, pillColor)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     Isaac.DebugString("Season 8 - Replacing a pill effect of " .. tostring(selectedPillEffect) ..
                       " with " .. tostring(Season8.runPillEffects[pillColor]) .. ".")
     return Season8.runPillEffects[pillColor]

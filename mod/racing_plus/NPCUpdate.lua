@@ -227,8 +227,9 @@ function NPCUpdate:NPC275(npc)
     -- Stop the room from being cleared, which has a chance to take us back to the menu
     g.run.megaSatanDead = true
     local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                          g:GridToPos(0, 0), g.zeroVector, nil)
+                                          g.zeroVector, g.zeroVector, nil)
     roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+    roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
     Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
 
     -- Give a charge to the player's active item
@@ -242,7 +243,7 @@ function NPCUpdate:NPC275(npc)
                 g.r:GetCenterPos(), g.zeroVector, nil)
 
     -- Set the room status to clear so that the player cannot fight Mega Satan a second time
-    -- if they happen to use a Fool card after defeating it
+    -- (e.g. if they use a Fool Card)
     g.r:SetClear(true)
   end
 end

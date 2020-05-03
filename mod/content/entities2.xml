@@ -3,9 +3,18 @@
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
-	<!-- "12545" is the subtype arbitrarily chosen by StageAPI, so we will keep it for consistency -->
-	<entity id="1000" name="Floor Effect Creep" variant="46" subtype="12545" anm2path="none.anm2" collisionRadius="0" numGridCollisionPoints="0">
-		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	<!-- For testing -->
+	<entity id="231" variant="2" name="Test Enemy" reroll="true" baseHP="1000" stageHP="0" boss="1" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="22" portrait="108" anm2path="231.000_NerveEnding.anm2">
+		<gibs amount="4" blood="1" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+
+	<!--
+		In most cases, effects don't work to stop room clear;
+		thus, we need to set it to have an ID of something other than 1000
+		This will be killed with "debug 10"
+	-->
+	<entity name="Room Clear Delay NPC" id="999" variant="0" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
 	<!--
@@ -54,16 +63,14 @@
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 
-	<!-- Other entities take ids past 1000 -->
-	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" shutdoors="false" stageHP="0">
-		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
+	<!-- "12545" is the subtype arbitrarily chosen by StageAPI, so we will keep it for consistency -->
+	<entity id="1000" name="Floor Effect Creep" variant="46" subtype="12545" anm2path="none.anm2" collisionRadius="0" numGridCollisionPoints="0">
+		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 
-	<!--
-		Effects don't work to stop room clear for some reason; thus, we need to set it to have an ID of something other than 1000.
-		This will be killed with "debug 10". Also note that this must be set to a boss for the custom Boss Rush to work properly.
-	-->
-	<entity name="Room Clear Delay NPC" id="999" variant="0" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="0" numGridCollisionPoints="0" shadowSize="0" shutdoors="true" stageHP="0">
+	<!-- Other entities take ids past 1000 -->
+	<!-- JSG reports that any entity with an ID past 1000 will not work properly, but I have yet to see any problems -->
+	<entity name="Race Trophy" id="1001" variant="0" anm2path="005.370_Trophy.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="13" friction="1" numGridCollisionPoints="24" shadowSize="16" shutdoors="false" stageHP="0">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" worm="0" />
 	</entity>
 
@@ -120,10 +127,5 @@
 	</entity>
 	<entity id="1000" variant="781" subtype="0" name="Suction Ring" baseHP="0" stageHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="0" collisionRadius="0" friction="1" numGridCollisionPoints="0" shadowSize="0" shutdoors="false" anm2path="mahalath_suction.anm2">
 		<gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-	</entity>
-
-	<!-- For testing -->
-	<entity id="231" variant="2" name="Test Enemy" reroll="true" baseHP="1000" stageHP="0" boss="1" champion="0" collisionDamage="1" collisionMass="100" collisionRadius="13" friction="1" numGridCollisionPoints="12" shadowSize="22" portrait="108" anm2path="231.000_NerveEnding.anm2">
-		<gibs amount="4" blood="1" bone="0" eye="0" gut="0" large="0" />
 	</entity>
 </entities>

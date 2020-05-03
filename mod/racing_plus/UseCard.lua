@@ -59,19 +59,29 @@ end
 function UseCard:BlackRune()
   -- Local variables
   local stage = g.l:GetStage()
+  local challenge = Isaac.GetChallenge()
 
-  local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                       CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
-  for _, checkpoint in ipairs(checkpoints) do
-    -- The Checkpoint custom item is about to be deleted, so spawn another one
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, checkpoint.Position, checkpoint.Velocity,
-              nil, CollectibleType.COLLECTIBLE_CHECKPOINT, checkpoint.InitSeed)
-    Isaac.DebugString("A black rune deleted a Checkpoint - spawning another one.")
+  -- Voided pedestal items should count as starting a Challenge Room or the Boss Rush
+  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                        -1, false, false)
+  if #collectibles > 0 then
+    g.run.touchedPickup = true
+  end
 
-    -- Kill the player if they are trying to cheat on the season 7 custom challenge
-    if stage == 8 then
-      g.p:AnimateSad()
-      g.p:Kill()
+  for _, collectible in ipairs(collectibles) do
+    if collectible.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
+      -- The Checkpoint custom item is about to be deleted, so spawn another one
+      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, collectible.Position, collectible.Velocity,
+                nil, CollectibleType.COLLECTIBLE_CHECKPOINT, collectible.InitSeed)
+      Isaac.DebugString("A black rune deleted a Checkpoint - spawning another one.")
+
+      -- Kill the player if they are trying to cheat on the season 7 custom challenge
+      if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
+         stage == 8 then
+
+        g.p:AnimateSad()
+        g.p:Kill()
+      end
     end
   end
 end

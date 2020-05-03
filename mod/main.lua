@@ -27,10 +27,12 @@ POST-FLIP ACTIONS:
 --]]
 
 -- Integrate Mod Config Menu by piber20
+-- (waiting for Rep to integrate since "save.dat" files are complicated to manage)
 -- require("scripts.modconfig")
 
 -- Integrate MinimapAPI by Taz & Wofsauge
 -- https://github.com/TazTxUK/MinimapAPI/wiki/Integrating-MinimapAPI-into-a-standalone-mod
+-- (waiting for Rep to integrate since "save.dat" files are complicated to manage)
 -- require("scripts.minimapapi.init")
 
 -- Register the mod (the second argument is the API version)

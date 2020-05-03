@@ -578,7 +578,7 @@ function FastClear:SpawnPhotos()
     -- Most seasons give the player a choice between the two photos
     situation = situations.BOTH
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_POLAROID) and -- 327
        g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
 

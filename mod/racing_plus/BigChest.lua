@@ -69,7 +69,7 @@ function BigChest:PostPickupInit(pickup)
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
     BigChest:S7(pickup)
 
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") then
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     BigChest:SpeedrunUp(pickup)
 
   elseif challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then

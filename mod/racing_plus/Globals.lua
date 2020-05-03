@@ -5,12 +5,18 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.51.1"
+g.version = "v0.52.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
-g.modConfigMenuMessage = false -- Used to only show the "Press X to open Mod Config Menu"
+g.resumedOldRun = false
+g.saveFileState = {
+  NOT_CHECKED   = 0,
+  GOING_TO_EDEN = 1, -- Going to the set seed with Eden
+  GOING_BACK    = 2, -- Going back to the old challenge/character/seed
+  FINISHED      = 3,
+}
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
-  state         = 0, -- See the "g.saveFileState" enum below
+  state         = g.saveFileState.NOT_CHECKED, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
   seed          = "P8Q3 MRKZ", -- A randomly chosen seed that contains a BP5 item
   activeItem    = CollectibleType.COLLECTIBLE_BOOK_OF_THE_DEAD, -- 545
@@ -27,12 +33,6 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
     seededRun = false,
     seed      = "",
   },
-}
-g.saveFileState = {
-  NOT_CHECKED   = 0,
-  GOING_TO_EDEN = 1, -- Going to the set seed with Eden
-  GOING_BACK    = 2, -- Going back to the old challenge/character/seed
-  FINISHED      = 3,
 }
 
 -- These are variables that are reset at the beginning of every run

@@ -14,7 +14,7 @@ Speedrun.challengeTable = {
   [Isaac.GetChallengeIdByName("R+7 (Season 5)")]  = {"R7S5",  7},
   [Isaac.GetChallengeIdByName("R+7 (Season 6)")]  = {"R7S6",  11}, -- (7 characters + 3 item bans + 1 big 4 item ban)
   [Isaac.GetChallengeIdByName("R+7 (Season 7)")]  = {"R7S7",  7},
-  [Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)")]  = {"R7S8",  7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 8)")]  = {"R7S8",  7},
   [Isaac.GetChallengeIdByName("R+15 (Vanilla)")]  = {"R15V",  15},
 }
 
@@ -86,7 +86,7 @@ function Speedrun:InSpeedrun()
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8 Beta)") or
+     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") or
      challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
 
     return true

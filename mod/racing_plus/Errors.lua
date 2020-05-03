@@ -17,6 +17,10 @@ function Errors:Draw()
     Errors:DrawCorrupted()
     return true
 
+  elseif g.resumedOldRun then
+    Errors:DrawResumedOldRun()
+    return true
+
   elseif not g.saveFile.fullyUnlocked then
     Errors:DrawInvalidSaveFile()
     return true
@@ -81,6 +85,17 @@ function Errors:DrawCorrupted()
   Isaac.RenderText("then your Racing+ mod is corrupted and needs to be", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("redownloaded/reinstalled.", x, y, 2, 2, 2, 2)
+end
+
+function Errors:DrawResumedOldRun()
+  local x = Errors.startingX
+  local y = Errors.startingY
+  Isaac.RenderText("Error: Racing+ does not support continuing old", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("runs that were played prior to opening the", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("game. Please reset the run.", x, y, 2, 2, 2, 2)
 end
 
 function Errors:DrawInvalidSaveFile()
