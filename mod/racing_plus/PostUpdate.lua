@@ -213,13 +213,16 @@ function PostUpdate:CheckItemPickup()
     return
   end
 
-  -- Mark that we have touched a pickup (for Challenge Rooms & Boss Rush)
-  g.run.touchedPickup = true
-
   -- Mark which item we are picking up
   g.run.pickingUpItem = g.p.QueuedItem.Item.ID
   g.run.pickingUpItemRoom = roomIndex
   g.run.pickingUpItemType = g.p.QueuedItem.Item.Type
+
+  -- Mark that we have touched a pedestal item (for Challenge Rooms & Boss Rush)
+  -- (trinkets do not start Challenge Rooms or the Boss Rush on vanilla)
+  if g.run.pickingUpItemType ~= ItemType.ITEM_TRINKET then -- 2
+    g.run.touchedPickup = true
+  end
 
   -- Mark to draw the streak text for this item
   g.run.streakText = g.p.QueuedItem.Item.Name

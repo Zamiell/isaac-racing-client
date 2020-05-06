@@ -414,16 +414,21 @@ function FastClear:ClearRoom()
   -- (by default, they will only die after the death animations are completed)
   -- Additionally, open any closed heaven doors
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_DEATHS_HEAD and entity.Variant == 0 then -- 212.0
+    if entity.Type == EntityType.ENTITY_DEATHS_HEAD and
+       entity.Variant == 0 then -- 212.0
+
       -- Activate its death state
+      -- (we don't want to target Dank Death's Heads)
       entity:ToNPC().State = 18
-    elseif entity.Type == EntityType.ENTITY_FLESH_DEATHS_HEAD then -- 286.0
+
+    elseif entity.Type == EntityType.ENTITY_FLESH_DEATHS_HEAD then -- 286
       -- Activating the death state won't make the tears explode out of it, so just kill it and spawn another one to die
       entity.Visible = false
       entity:Kill()
       local newHead = g.g:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity,
                                 entity.Parent, entity.SubType, entity.InitSeed)
       newHead:ToNPC().State = 18
+
     elseif entity.Type == EntityType.ENTITY_EFFECT then -- 1000
       if entity.Variant == EffectVariant.CREEP_RED or -- 22
          entity.Variant == EffectVariant.CREEP_GREEN or -- 23

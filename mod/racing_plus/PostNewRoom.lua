@@ -473,7 +473,7 @@ function PostNewRoom:CheckDepthsPuzzle()
 end
 
 -- Check for various NPCs all at once
--- (we want to loop through all of the entities in the room only once to maximize performance)
+-- (we want to loop through all of the entities in the room only for performance reasons)
 function PostNewRoom:CheckEntities()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
@@ -517,6 +517,16 @@ function PostNewRoom:CheckEntities()
       if entity:ToNPC():GetBossColorIdx() == 17 then
         g.run.speedLilHauntsBlack = true
       end
+
+    elseif entity.Type == EntityType.ENTITY_PITFALL and -- 291
+           entity.Variant == 1 and -- Suction Pitfall
+           roomClear then
+
+      -- Prevent the bug where if Suction Pitfalls do not complete their "Disappear" animation by
+      -- the time the player leaves the room, they will re-appear the next time the player enters
+      -- the room (even though the room is already cleared and they should be gone)
+      entity:Remove()
+      Isaac.DebugString("Removed a buggy stray Suction Pitall.")
     end
   end
 

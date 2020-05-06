@@ -62,6 +62,7 @@ local ExecuteCmd          = require("racing_plus/executecmd") -- 22
 local PreUseItem          = require("racing_plus/preuseitem") -- 23
 local PreEntitySpawn      = require("racing_plus/preentityspawn") -- 24
 local PostNPCInit         = require("racing_plus/postnpcinit") -- 27
+local PostNPCRender       = require("racing_plus/postnpcrender") -- 28
 local PostPickupInit      = require("racing_plus/postpickupinit") -- 34
 local PostPickupUpdate    = require("racing_plus/postpickupupdate") -- 35
 local PostLaserInit       = require("racing_plus/postlaserinit") -- 47
@@ -282,6 +283,10 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, Season7.PostNPCInitIsaac, 
                        EntityType.ENTITY_ISAAC) -- 102
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, PostNPCInit.NPC260, -- 27
                        EntityType.ENTITY_THE_HAUNT) -- 260
+
+-- Define post-NPC-render callbacks (28)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, PostNPCRender.NPC291, -- 28
+                       EntityType.ENTITY_PITFALL) -- 291
 
 -- Define post pickup init callbacks (34)
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, PostPickupInit.Pickup20, -- 34

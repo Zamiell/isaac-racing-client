@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.52.2* - May 6th, 2020
+
+* The "Disappear" animation for Pitfalls has been sped up by a factor of 2.
+* Fixed the bug where picking up a dropped trinket would start a Challenge Room or the Boss Rush. (Thanks ez_duke)
+* Fixed the bug where Suction Pitfalls would persist after the room was cleared under certain circumstances. (Thanks ez_duke)
+
 ### *v0.52.0* - May 3rd, 2020
 
 * Season 7 is finished!
