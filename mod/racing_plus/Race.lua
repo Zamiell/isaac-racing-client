@@ -6,6 +6,22 @@ local FastTravel  = require("racing_plus/fasttravel")
 local Speedrun    = require("racing_plus/speedrun")
 local Sprites     = require("racing_plus/sprites")
 local SeededDeath = require("racing_plus/seededdeath")
+local struct      = require('racing_plus/struct')
+
+local ModServer = {
+  host = "127.0.0.1",  -- Notice: using special domains e.g. localhost may cause socket to be created as IPV6
+  port = 9001,
+  connected = false, -- represents connection to mod server (mostly for shadow render)
+  dataFormat = "ff", -- two floats at this point (x, y)
+  socket = g.socket
+}
+
+local Shadow = {
+  loaded = false,
+  sprite = Sprite {
+    Color = Color(1, 1, 1, 0.9, 0, 0, 0),
+  },
+}
 
 function Race:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
@@ -13,6 +29,7 @@ function Race:PostUpdate()
   Race:PostUpdateCheckVictoryLap()
   Race:PostUpdateCheckFinished()
   Race:PostUpdateCheckKeeperHolyMantle()
+  Race:PostUpdateShadow()
   SeededDeath:PostUpdate()
 end
 
@@ -112,6 +129,90 @@ function Race:PostUpdateCheckKeeperHolyMantle()
      not effects:HasCollectibleEffect(CollectibleType.COLLECTIBLE_HOLY_MANTLE) then -- 313
 
     g.run.tempHolyMantle = false
+  end
+end
+
+function ModServer:Connect()
+  if not ModServer.socket then return end
+
+  if not ModServer.connected then
+    Isaac.DebugString('Connecting to Modserver')
+
+    local udp = ModServer.socket.udp()
+    udp:settimeout(0)
+    udp:setpeername(ModServer.host, ModServer.port)
+    local host, port, af = udp:getpeername()
+
+    if af and host and port then
+      Isaac.DebugString("Egress connection (" .. af .. ") is up: " .. host .. ':' .. port)
+    else return end
+
+    ModServer.conn = udp
+    ModServer.connected = true
+    Isaac.DebugString('Connected to Modserver')
+  end
+end
+
+function ModServer:Disconnect()
+  if ModServer.connected then
+    ModServer.conn:close()
+    ModServer.conn = nil
+    ModServer.connected = false
+    Isaac.DebugString('Disconnected from Modserver')
+  end
+end
+
+function Race:SendShadow()
+  local co = coroutine.create(function()
+    local packed = struct.pack(ModServer.dataFormat, g.p.Position.X, g.p.Position.Y) -- TODO: send anything else
+    ModServer.conn:send(packed)
+    coroutine.yield()
+  end)
+  return co
+end
+
+function Race:RecvOpponentShadow()
+  local co =  coroutine.create(function()
+    local data = ModServer.conn:receive(1024)
+    if not data then
+      ModServer.socket.sleep(0.001) -- in case we were too fast to send data but no data available yet from server
+      data = ModServer.conn:receive(1024) -- time to retry receiving
+    end
+    if not data then coroutine.yield() end
+    local x, y = struct.unpack(ModServer.dataFormat, data)
+    -- Isaac.DebugString('Received shadow at ' .. tostring(x) .. ':' .. tostring(y))
+    coroutine.yield(x, y)
+  end)
+  return co
+end
+
+function Race:IsShadowEnabled()
+  return g.luadebug and g.raceVars.shadowEnabled
+  -- TODO: more race condition checks e.g.:
+  -- and g.race.id ~= 0 or g.race.status ~= "none" and not g.race.solo
+end
+
+function Race:PostUpdateShadow()
+  if not Race:IsShadowEnabled() then return ModServer:Disconnect() end
+  if not ModServer.connected then ModServer:Connect() end
+
+  coroutine.resume(Race:SendShadow())
+  local _, x, y = coroutine.resume(Race:RecvOpponentShadow())
+
+  if x and y then
+    local shadowPos = Isaac.WorldToScreen(Vector(x, y))
+    -- TODO: define case when we should not draw
+    if not Shadow.loaded then
+      -- TODO: we might consider using dynamic player model (based on data received)
+      -- TODO: if we do, Load/Unload must be handled differently
+      Shadow.sprite:Load("gfx/custom/characters/" .. PlayerType.PLAYER_AZAZEL .. ".anm2", true)
+      Shadow.sprite:SetFrame("Death", 5)
+      Shadow.loaded = true
+      Isaac.DebugString('Shadow sprite initialized')
+    end
+    -- Isaac.DebugString('Player at ' .. tostring(g.p.Position.X) .. ':' .. tostring(g.p.Position.Y))
+    -- Isaac.DebugString('Drawing shadow')
+    Shadow.sprite:Render(shadowPos, g.zeroVector, g.zeroVector)
   end
 end
 
