@@ -585,6 +585,11 @@ ExecuteCmd.functions["treasure"] = function(params)
   g.p:UseCard(Card.CARD_STARS) -- 18
 end
 
+ExecuteCmd.functions["shadow"] = function(params)
+  g.raceVars.shadowEnabled = not g.raceVars.shadowEnabled -- not just = false but flip
+  Isaac.DebugString("Shadow Enabled: " .. tostring(g.raceVars.shadowEnabled))
+end
+
 --
 -- Subroutines
 --

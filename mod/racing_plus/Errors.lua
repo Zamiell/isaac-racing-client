@@ -69,6 +69,9 @@ function Errors:Draw()
 
     Errors:DrawSetCharOrder()
     return true
+  elseif not g.luadebug and g.raceVars.shadowEnabled then
+    Errors:DrawEnableDebug()
+    return true
   end
 end
 
@@ -225,6 +228,14 @@ function Errors:DrawSetCharOrder()
   Isaac.RenderText("by using the \"Change Char Order\" custom", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("challenge.", x, y, 2, 2, 2, 2)
+end
+
+function Errors:DrawEnableDebug()
+  local x = Errors.startingX
+  local y = Errors.startingY
+  Isaac.RenderText("Error: You must set --luadebug in game", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("launch options in order to draw shadows", x, y, 2, 2, 2, 2)
 end
 
 return Errors

@@ -35,6 +35,17 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   },
 }
 
+g.luadebug = false
+g.socket = nil
+local ok, socket = pcall(require, 'socket')
+if ok and socket then
+  g.luadebug = true
+  g.socket = socket
+  Isaac.DebugString("Initialized socket: " .. socket._VERSION)
+else
+  Isaac.DebugString("Importing socket failed. The \"--luadebug\" flag is not turned on in the Steam launch options.")
+end
+
 -- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "g:InitRun()" function)
 g.run = {}
@@ -70,6 +81,7 @@ g.raceVars = {
   finishedFrames     = 0,
   fireworks          = 0,
   victoryLaps        = 0,
+  shadowEnabled      = false
 }
 
 g.RNGCounter = {
