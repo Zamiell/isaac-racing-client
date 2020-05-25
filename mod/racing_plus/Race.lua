@@ -17,18 +17,17 @@ local ModServer = {
 }
 
 local Shadow = {
-  loaded = false,
   entity = nil,
   sprite = Sprite {
     Color = Color(1, 1, 1, 0.9, 0, 0, 0),
   },
 }
 
-local ShadowModel = {
+local ShadowModel = { -- fields prototype
   x=nil, y=nil,
   room=nil, level=nil,
   character=nil,
-  animation_name=nil, animation_frame=nil
+  anim_name=nil, anim_frame=nil
 }
 
 function ShadowModel.new(self, t)
@@ -46,10 +45,12 @@ function ShadowModel.new(self, t)
         "s" a zero-terminated string
         "cn" a sequence of exactly n chars corresponding to a single Lua string]]
   local _t = t or {}
-  _t.dataorder = {"x",   "y",   "level", "room",  "character", "animation_name", "animation_frame"}
+  _t.dataorder = {"x",   "y",   "level", "room",  "character", "anim_name", "anim_frame"}
   _t.dataformat = "f" .. "f" .. "I" ..   "I" ..   "I" ..       "s" ..            "I"
   setmetatable(_t, self)
   self.__index = self
+  -- TODO: animation name truncation to 20 characters?
+  -- TODO: __newindex function may become handy here in case animation_name is set after constructor call
   return _t
 end
 
@@ -59,7 +60,7 @@ function ShadowModel.fromGame()
     x = g.p.Position.X, y = g.p.Position.Y,
     level = g.l.GetStage(), room = g.l:GetCurrentRoomIndex(),
     character = g.p.GetPlayerType(),
-    animation_name = "no", animation_frame = g.p:GetSprite().GetFrame()
+    anim_name = "no", anim_frame = g.p:GetSprite().GetFrame()
   }
   return s
 end
@@ -226,8 +227,7 @@ end
 
 function Race:SendShadow()
   local co = coroutine.create(function()
-    local packed = struct.pack(ModServer.dataFormat, g.p.Position.X, g.p.Position.Y) -- TODO: send anything else
-    ModServer.conn:send(packed)
+    ModServer.conn:send(ShadowModel.fromGame().marshall())
     coroutine.yield()
   end)
   return co
@@ -241,9 +241,7 @@ function Race:RecvOpponentShadow()
       data = ModServer.conn:receive(1024) -- time to retry receiving
     end
     if not data then coroutine.yield() end
-    local x, y = struct.unpack(ModServer.dataFormat, data)
-    -- Isaac.DebugString('Received shadow at ' .. tostring(x) .. ':' .. tostring(y))
-    coroutine.yield(x, y)
+    coroutine.yield(ShadowModel.fromRawData(data))
   end)
   return co
 end
@@ -254,28 +252,34 @@ function Race:IsShadowEnabled()
   -- and g.race.id ~= 0 or g.race.status ~= "none" and not g.race.solo
 end
 
+function Race:DrawShadow(shadow)
+  -- TODO: define other conditions when shadow is not to be drawn
+  local drawShadow = shadow.x and shadow.y -- we obviously need coords
+  drawShadow = drawShadow and shadow.level == g.l.GetStage() -- same level
+  drawShadow = drawShadow and shadow.room == g.l.GetCurrentRoomIndex() -- same room
+
+  if drawShadow then
+    local shadowPos = Isaac.WorldToScreen(Vector(shadow.x, shadow.y))
+    -- TODO: if constant sprite model is chosen - put default value in Shadow table, remove condition and load once
+    if Shadow.entity ~= shadow.character then
+      Shadow.sprite:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
+      Isaac.DebugString('Shadow sprite loaded')
+    end
+    -- TODO: animation routine
+    Shadow.sprite:SetFrame("Death", 5)
+    Shadow.sprite:Render(shadowPos, g.zeroVector, g.zeroVector)
+  -- Isaac.DebugString('Drawing shadow')
+  end
+  -- Isaac.DebugString('Player at ' .. tostring(g.p.Position.X) .. ':' .. tostring(g.p.Position.Y))
+end
+
 function Race:PostUpdateShadow()
   if not Race:IsShadowEnabled() then return ModServer:Disconnect() end
   if not ModServer.connected then ModServer:Connect() end
 
   coroutine.resume(Race:SendShadow())
-  local _, x, y = coroutine.resume(Race:RecvOpponentShadow())
-
-  if x and y then
-    local shadowPos = Isaac.WorldToScreen(Vector(x, y))
-    -- TODO: define case when we should not draw
-    if not Shadow.loaded then
-      -- TODO: we might consider using dynamic player model (based on data received)
-      -- TODO: if we do, Load/Unload must be handled differently
-      Shadow.sprite:Load("gfx/custom/characters/" .. PlayerType.PLAYER_AZAZEL .. ".anm2", true)
-      Shadow.sprite:SetFrame("Death", 5)
-      Shadow.loaded = true
-      Isaac.DebugString('Shadow sprite initialized')
-    end
-    -- Isaac.DebugString('Player at ' .. tostring(g.p.Position.X) .. ':' .. tostring(g.p.Position.Y))
-    -- Isaac.DebugString('Drawing shadow')
-    Shadow.sprite:Render(shadowPos, g.zeroVector, g.zeroVector)
-  end
+  local _, shadow = coroutine.resume(Race:RecvOpponentShadow())
+  if shadow then Race:DrawShadow(shadow) end -- data may not be yet received
 end
 
 -- Called from the PostUpdate callback (the "CheckEntities:EntityRaceTrophy()" function)
