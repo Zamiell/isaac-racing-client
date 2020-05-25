@@ -18,10 +18,72 @@ local ModServer = {
 
 local Shadow = {
   loaded = false,
+  entity = nil,
   sprite = Sprite {
     Color = Color(1, 1, 1, 0.9, 0, 0, 0),
   },
 }
+
+local ShadowModel = {
+  x=nil, y=nil,
+  room=nil, level=nil,
+  character=nil,
+  animation_name=nil, animation_frame=nil
+}
+
+function ShadowModel.new(self, t)
+  --[[ pack/unpack reference:
+        "b" a signed char
+        "B" an unsigned char
+        "h" a signed short (2 bytes)
+        "H" an unsigned short (2 bytes)
+        "i" a signed int (4 bytes)
+        "I" an unsigned int (4 bytes)
+        "l" a signed long (8 bytes)
+        "L" an unsigned long (8 bytes)
+        "f" a float (4 bytes)
+        "d" a double (8 bytes)
+        "s" a zero-terminated string
+        "cn" a sequence of exactly n chars corresponding to a single Lua string]]
+  local _t = t or {}
+  _t.dataorder = {"x",   "y",   "level", "room",  "character", "animation_name", "animation_frame"}
+  _t.dataformat = "f" .. "f" .. "I" ..   "I" ..   "I" ..       "s" ..            "I"
+  setmetatable(_t, self)
+  self.__index = self
+  return _t
+end
+
+function ShadowModel.fromGame()
+  -- TODO: implement custom animation getter
+  local s = ShadowModel.new {
+    x = g.p.Position.X, y = g.p.Position.Y,
+    level = g.l.GetStage(), room = g.l:GetCurrentRoomIndex(),
+    character = g.p.GetPlayerType(),
+    animation_name = "no", animation_frame = g.p:GetSprite().GetFrame()
+  }
+  return s
+end
+
+function ShadowModel.marshall(self)
+  local ordered = {}
+  for _, field in pairs(self.dataorder) do
+    table.insert(ordered, self[field])
+  end
+  return struct.pack(self.dataformat, table.unpack(ordered))
+end
+
+function ShadowModel.unmarshall(self, data)
+  local unpacked = {struct.unpack(self.dataformat, data)}
+  for num, field in ipairs(self.dataorder) do
+    self[field] = unpacked[num]
+  end
+end
+
+function ShadowModel.fromRawData(data)
+  local s = ShadowModel.new()
+  s.unmarshall(data)
+  return s
+end
 
 function Race:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
