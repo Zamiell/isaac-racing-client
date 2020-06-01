@@ -341,7 +341,8 @@ function startChildProcess(name) {
     }
     const childProcessPath = path.join(childProcessBasePath, name);
     // Normally, we would want to check to see if the file exists before running it
-    // However, due to oddities with files inside asar archives, if we try to check for it, it won't exist
+    // However, due to oddities with files inside asar archives, if we try to check for it,
+    // it won't exist
 
     // Start it
     childProcesses[name] = fork(childProcessPath, childProcessOptions);
@@ -361,7 +362,8 @@ function startChildProcess(name) {
 
     // Track when the process exits
     childProcesses[name].on('exit', () => {
-        // If the user is exiting the program, the main window might have already closed, so check for that
+        // If the user is exiting the program, the main window might have already closed,
+        // so check for that
         if (mainWindow !== null) {
             mainWindow.webContents.send(name, 'exited');
         }

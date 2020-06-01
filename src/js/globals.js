@@ -41,7 +41,8 @@ module.exports = {
     lang: null, // The language switcher instance, set in "localization.js"
     modLoader: {
         // Race values are reset in the "mod-loader.js" file
-        id: 0,
+        userID: 0,
+        raceID: 0,
         status: 'none',
         myStatus: 'not ready',
         ranked: false,
@@ -61,7 +62,8 @@ module.exports = {
     modName,
     modNameDev,
     modPath: null, // Set in main.js
-    myUsername: null,
+    myUserID: null, // Set from the "settings" command
+    myUsername: null, // Set from the "settings" command
     playingSound: false,
     pbkdf2Digest,
     pbkdf2Iterations,
@@ -88,8 +90,10 @@ module.exports = {
     tabCompleteIndex: 0,
     tabCompleteWordList: null,
     timeLaunched: new Date().getTime(),
-    websiteURL: `http${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}`, // Always default to HTTP if connecting to localhost
-    websocketURL: `ws${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`, // Always default to HTTP if connecting to localhost
+    // Always default to HTTP if connecting to localhost
+    websiteURL: `http${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}`,
+    // Always default to HTTP if connecting to localhost
+    websocketURL: `ws${(secure && !localhost ? 's' : '')}://${(localhost ? 'localhost' : domain)}/ws`,
     wordList: null, // Filled in main.js
     version: null, // Filled in main.js
 };

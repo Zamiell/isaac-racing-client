@@ -130,6 +130,8 @@ exports.init = (username, password, remember) => {
         globals.log.info(`Websocket - settings - ${JSON.stringify(data)}`);
 
         // Username
+        globals.myUserID = data.userID;
+        globals.modLoader.userID = data.userID;
         globals.myUsername = data.username;
         globals.Raven.setContext({
             user: { // All errors reported from now on will contain this user's username
