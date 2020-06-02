@@ -52,7 +52,8 @@ g.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 g.race = {
-  id                = 0,           -- 0 if a race is not going on
+  raceID            = 0,           -- 0 if a race is not going on
+  userID            = 0,           -- 0 if player has not connected racing-client
   status            = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus          = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked            = false,       -- Can be true or false

@@ -16,6 +16,7 @@ local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostRender = require("racing_plus/speedrunpostrender")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 local SeededDeath        = require("racing_plus/seededdeath")
+local Shadow             = require("racing_plus/shadow")
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -98,6 +99,9 @@ function PostRender:Main()
 
   -- Do race specific stuff
   PostRender:Race()
+
+  -- Render Shadow
+  Shadow:Draw()
 
   -- Handle things for multi-character speedruns
   SpeedrunPostRender:Main()
@@ -665,7 +669,7 @@ function PostRender:DisplayTopLeftText()
          Isaac.GetTime() - g.raceVars.startedTime <= 2000 then
 
     -- Only show it in the first two seconds of the race
-    Isaac.RenderText("Race ID: " .. g.race.id, x, y, 2, 2, 2, 2)
+    Isaac.RenderText("Race ID: " .. g.race.raceID, x, y, 2, 2, 2, 2)
   end
 end
 

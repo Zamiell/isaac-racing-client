@@ -1,90 +1,11 @@
 local Race = {}
 
 -- Includes
-local g           = require("racing_plus/globals")
-local FastTravel  = require("racing_plus/fasttravel")
-local Speedrun    = require("racing_plus/speedrun")
-local Sprites     = require("racing_plus/sprites")
-local SeededDeath = require("racing_plus/seededdeath")
-local struct      = require('racing_plus/struct')
-
-local ModServer = {
-  host = "127.0.0.1",  -- Notice: using special domains e.g. localhost may cause socket to be created as IPV6
-  port = 9001,
-  connected = false, -- represents connection to mod server (mostly for shadow render)
-  dataFormat = "ff", -- two floats at this point (x, y)
-  socket = g.socket
-}
-
-local Shadow = {
-  entity = nil,
-  sprite = Sprite {
-    Color = Color(1, 1, 1, 0.9, 0, 0, 0),
-  },
-}
-
-local ShadowModel = { -- fields prototype
-  x=nil, y=nil,
-  room=nil, level=nil,
-  character=nil,
-  anim_name=nil, anim_frame=nil
-}
-
-function ShadowModel.new(self, t)
-  --[[ pack/unpack reference:
-        "b" a signed char
-        "B" an unsigned char
-        "h" a signed short (2 bytes)
-        "H" an unsigned short (2 bytes)
-        "i" a signed int (4 bytes)
-        "I" an unsigned int (4 bytes)
-        "l" a signed long (8 bytes)
-        "L" an unsigned long (8 bytes)
-        "f" a float (4 bytes)
-        "d" a double (8 bytes)
-        "s" a zero-terminated string
-        "cn" a sequence of exactly n chars corresponding to a single Lua string]]
-  local _t = t or {}
-  _t.dataorder = {"x",   "y",   "level", "room",  "character", "anim_name", "anim_frame"}
-  _t.dataformat = "f" .. "f" .. "I" ..   "I" ..   "I" ..       "s" ..            "I"
-  setmetatable(_t, self)
-  self.__index = self
-  -- TODO: animation name truncation to 20 characters?
-  -- TODO: __newindex function may become handy here in case animation_name is set after constructor call
-  return _t
-end
-
-function ShadowModel.fromGame()
-  -- TODO: implement custom animation getter
-  local s = ShadowModel.new {
-    x = g.p.Position.X, y = g.p.Position.Y,
-    level = g.l.GetStage(), room = g.l:GetCurrentRoomIndex(),
-    character = g.p.GetPlayerType(),
-    anim_name = "no", anim_frame = g.p:GetSprite().GetFrame()
-  }
-  return s
-end
-
-function ShadowModel.marshall(self)
-  local ordered = {}
-  for _, field in pairs(self.dataorder) do
-    table.insert(ordered, self[field])
-  end
-  return struct.pack(self.dataformat, table.unpack(ordered))
-end
-
-function ShadowModel.unmarshall(self, data)
-  local unpacked = {struct.unpack(self.dataformat, data)}
-  for num, field in ipairs(self.dataorder) do
-    self[field] = unpacked[num]
-  end
-end
-
-function ShadowModel.fromRawData(data)
-  local s = ShadowModel.new()
-  s.unmarshall(data)
-  return s
-end
+local g            = require("racing_plus/globals")
+local FastTravel   = require("racing_plus/fasttravel")
+local Speedrun     = require("racing_plus/speedrun")
+local Sprites      = require("racing_plus/sprites")
+local SeededDeath  = require("racing_plus/seededdeath")
 
 function Race:PostUpdate()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
@@ -92,7 +13,6 @@ function Race:PostUpdate()
   Race:PostUpdateCheckVictoryLap()
   Race:PostUpdateCheckFinished()
   Race:PostUpdateCheckKeeperHolyMantle()
-  Race:PostUpdateShadow()
   SeededDeath:PostUpdate()
 end
 
@@ -195,93 +115,6 @@ function Race:PostUpdateCheckKeeperHolyMantle()
   end
 end
 
-function ModServer:Connect()
-  if not ModServer.socket then return end
-
-  if not ModServer.connected then
-    Isaac.DebugString('Connecting to Modserver')
-
-    local udp = ModServer.socket.udp()
-    udp:settimeout(0)
-    udp:setpeername(ModServer.host, ModServer.port)
-    local host, port, af = udp:getpeername()
-
-    if af and host and port then
-      Isaac.DebugString("Egress connection (" .. af .. ") is up: " .. host .. ':' .. port)
-    else return end
-
-    ModServer.conn = udp
-    ModServer.connected = true
-    Isaac.DebugString('Connected to Modserver')
-  end
-end
-
-function ModServer:Disconnect()
-  if ModServer.connected then
-    ModServer.conn:close()
-    ModServer.conn = nil
-    ModServer.connected = false
-    Isaac.DebugString('Disconnected from Modserver')
-  end
-end
-
-function Race:SendShadow()
-  local co = coroutine.create(function()
-    ModServer.conn:send(ShadowModel.fromGame().marshall())
-    coroutine.yield()
-  end)
-  return co
-end
-
-function Race:RecvOpponentShadow()
-  local co =  coroutine.create(function()
-    local data = ModServer.conn:receive(1024)
-    if not data then
-      ModServer.socket.sleep(0.001) -- in case we were too fast to send data but no data available yet from server
-      data = ModServer.conn:receive(1024) -- time to retry receiving
-    end
-    if not data then coroutine.yield() end
-    coroutine.yield(ShadowModel.fromRawData(data))
-  end)
-  return co
-end
-
-function Race:IsShadowEnabled()
-  return g.luadebug and g.raceVars.shadowEnabled
-  -- TODO: more race condition checks e.g.:
-  -- and g.race.id ~= 0 or g.race.status ~= "none" and not g.race.solo
-end
-
-function Race:DrawShadow(shadow)
-  -- TODO: define other conditions when shadow is not to be drawn
-  local drawShadow = shadow.x and shadow.y -- we obviously need coords
-  drawShadow = drawShadow and shadow.level == g.l.GetStage() -- same level
-  drawShadow = drawShadow and shadow.room == g.l.GetCurrentRoomIndex() -- same room
-
-  if drawShadow then
-    local shadowPos = Isaac.WorldToScreen(Vector(shadow.x, shadow.y))
-    -- TODO: if constant sprite model is chosen - put default value in Shadow table, remove condition and load once
-    if Shadow.entity ~= shadow.character then
-      Shadow.sprite:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
-      Isaac.DebugString('Shadow sprite loaded')
-    end
-    -- TODO: animation routine
-    Shadow.sprite:SetFrame("Death", 5)
-    Shadow.sprite:Render(shadowPos, g.zeroVector, g.zeroVector)
-  -- Isaac.DebugString('Drawing shadow')
-  end
-  -- Isaac.DebugString('Player at ' .. tostring(g.p.Position.X) .. ':' .. tostring(g.p.Position.Y))
-end
-
-function Race:PostUpdateShadow()
-  if not Race:IsShadowEnabled() then return ModServer:Disconnect() end
-  if not ModServer.connected then ModServer:Connect() end
-
-  coroutine.resume(Race:SendShadow())
-  local _, shadow = coroutine.resume(Race:RecvOpponentShadow())
-  if shadow then Race:DrawShadow(shadow) end -- data may not be yet received
-end
-
 -- Called from the PostUpdate callback (the "CheckEntities:EntityRaceTrophy()" function)
 function Race:Finish()
   -- Local variables
@@ -299,7 +132,7 @@ function Race:Finish()
   g.run.endOfRunText = true -- Show the run summary
 
   -- Tell the client that the goal was achieved (and the race length)
-  Isaac.DebugString("Finished race " .. tostring(g.race.id) ..
+  Isaac.DebugString("Finished race " .. tostring(g.race.raceID) ..
                     " with time: " .. tostring(g.raceVars.finishedTime))
 
   if stage == 11 then
