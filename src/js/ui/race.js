@@ -230,7 +230,7 @@ const show = (raceID) => {
     }
 
     // Tell the Lua mod that we are in a new race
-    globals.modLoader.userID = globals.userID;
+    globals.modLoader.userID = globals.myUserID;
     globals.modLoader.raceID = race.id;
     globals.modLoader.status = race.status;
     globals.modLoader.ranked = race.ruleset.ranked;
