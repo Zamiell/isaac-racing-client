@@ -14,9 +14,7 @@ const misc = nodeRequire('./js/misc');
 // (check for a fully unlocked save file, check to see if the Racing+ mod is corrupted, etc.)
 exports.start = () => {
     // "globals.modPath" is set in main.js
-    if (!globals.localhost) {
-        ipcRenderer.send('asynchronous-message', 'isaac', globals.modPath);
-    }
+    ipcRenderer.send('asynchronous-message', 'isaac', globals.modPath);
 
     // Check to see if the mod path exists
     // (this may not exist if they are just using the client to race vanilla or some other custom mod)
