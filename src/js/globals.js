@@ -35,10 +35,11 @@ module.exports = {
     },
     initError: null, // Filled in main.js (only if there is an error)
     itemList: {}, // Filled in main.js
+    lang: null, // The language switcher instance, set in "localization.js"
     lastPM: null,
     lastRaceTitle: '',
+    localhost,
     log: null,
-    lang: null, // The language switcher instance, set in "localization.js"
     modLoader: {
         // Race values are reset in the "mod-loader.js" file
         userID: 0,
