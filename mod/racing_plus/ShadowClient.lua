@@ -5,7 +5,7 @@ local g            = require("racing_plus/globals")
 local ShadowModel  = require("racing_plus/shadowmodel")
 
 -- connection
-local isaacServerHost = "127.0.0.1"
+local isaacServerHost = "isaacracing.net"
 local isaacServerPort = 9001
 
 -- client

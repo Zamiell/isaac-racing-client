@@ -28,12 +28,12 @@ function Shadow:Draw()
     if Shadow.body == nil and state.character ~= nil then
         Shadow.body = Sprite {}
         Shadow.body:Load("gfx/custom/characters/" ..state.character .. ".anm2", true)
-        Shadow.body.Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+        Shadow.body.Color = Color(1, 1, 1, 0.075, 0, 0, 0)
     end
     if Shadow.head == nil and state.character ~= nil then
         Shadow.head = Sprite {}
         Shadow.head:Load("gfx/custom/characters/" .. state.character .. ".anm2", true)
-        Shadow.head.Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+        Shadow.head.Color = Color(1, 1, 1, 0.075, 0, 0, 0)
     end
 
     if Shadow.isActive then
@@ -106,7 +106,8 @@ function Shadow:PostUpdate()
 
         Shadow.isActive = shadow.level == g.l:GetStage() -- same level
         Shadow.isActive = Shadow.isActive and shadow.room == g.l:GetCurrentRoomIndex() -- same room
-        Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60
+        Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- didnt receive
+        Shadow.isActive = Shadow.isActive and g.r:GetFrameCount() > 0
         state.lastUpdated = currentFrame
     end
 end

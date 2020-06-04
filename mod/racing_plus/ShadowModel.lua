@@ -80,7 +80,6 @@ function Shadow.fromRawData(data)
         return
     end
     s:unmarshall(data)
-    Isaac.DebugString("shadow unmarshalled")
     return s
 end
 
