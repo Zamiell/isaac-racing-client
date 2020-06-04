@@ -27,7 +27,7 @@ end
 function Shadow.fromGame()
     -- TODO: implement custom animation getter
     local s = Shadow:new {
-        race = g.race.raceID, player = g.race.userID, -- TODO: replace race/player hardcoded values
+        race = g.race.raceID, player = g.race.userID,
         x = g.p.Position.X, y = g.p.Position.Y,
         level = g.l:GetStage(), room = g.l:GetCurrentRoomIndex(),
         character = g.p:GetPlayerType(),
@@ -81,7 +81,7 @@ local KeepAlive = { -- prototype
 
 function KeepAlive:toNetworkBytes()
     local _t = {
-        race = 7, player = 1, message = "HELLO" -- TODO: replace race/player hardcoded values
+        race = g.race.raceID, player = g.race.userID, message = "HELLO"
     }
 
     local ordered = {}

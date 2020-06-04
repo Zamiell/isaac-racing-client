@@ -72,7 +72,7 @@ function Shadow:PostUpdate()
         state.y = shadow.y
         state.level = shadow.level
         state.room = shadow.room
-        if state.character ~= shadow.character then
+        if Shadow.sprite ~= nil and state.character ~= shadow.character then
             Shadow.sprite:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
         end
         state.character = shadow.character
