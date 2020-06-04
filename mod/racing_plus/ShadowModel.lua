@@ -8,7 +8,7 @@ local supportedAnimations = {
     "WalkLeft", "WalkRight", "WalkUp", "WalkDown",
     "Trapdoor2",
     "Death",
-    -- "TeleportUp", "TeleportDown", "LightTravel" -- needs more sophisticated handling by callbacks
+    -- "TeleportUp", "TeleportDown", "LightTravel" -- Needs more sophisticated handling by callbacks
 }
 
 function Shadow.new(self, t)
@@ -60,7 +60,7 @@ function Shadow.unmarshall(self, data)
     for num, field in ipairs(self.dataorder) do
         self[field] = unpacked[num]
     end
-    self.anim_name = string.gsub(self.anim_name, '%s+', '') -- poormans trailing whitespace trim
+    self.anim_name = string.gsub(self.anim_name, '%s+', '') -- Poormans trailing whitespace trim
 end
 
 local function validate(data, allowedLength)
@@ -83,7 +83,7 @@ function Shadow.fromRawData(data)
     return s
 end
 
-local KeepAlive = { -- prototype
+local KeepAlive = { -- Prototype
     dataorder = {"race", "player", "message"},
     dataformat = "I" ..  "I" ..    "c5"
 }

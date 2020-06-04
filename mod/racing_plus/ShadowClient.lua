@@ -4,13 +4,13 @@
 local g            = require("racing_plus/globals")
 local ShadowModel  = require("racing_plus/shadowmodel")
 
--- connection
+-- Connection
 local isaacServerHost = "isaacracing.net"
 local isaacServerPort = 9001
 
--- client
+-- Client
 local ShadowClient = {
-    connected = false, -- represents connection to mod server (mostly for shadow render)
+    connected = false, -- Represents connection to mod server (mostly for shadow render)
     socket = g.socket,
     maxBufferSize = 1024
 }

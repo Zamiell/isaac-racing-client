@@ -74,7 +74,7 @@ function Shadow:PostUpdate()
     end
     if not ShadowClient.connected then
         ShadowClient:Connect()
-        ShadowClient:SendBeacon() -- initial session start
+        ShadowClient:SendBeacon() -- Initial session start
     end
 
     if Shadow:IsBeaconFrame() then
@@ -82,7 +82,7 @@ function Shadow:PostUpdate()
     end
 
     ShadowClient:SendShadow()
-    local shadow = ShadowClient:RecvOpponentShadow() -- data may not be yet received
+    local shadow = ShadowClient:RecvOpponentShadow() -- Data may not be yet received
     Shadow.isActive = Shadow.isActive and shadow ~= nil
 
     if shadow ~= nil then
@@ -104,9 +104,9 @@ function Shadow:PostUpdate()
         state.anim_name = shadow.anim_name
         state.anim_frame = shadow.anim_frame
 
-        Shadow.isActive = shadow.level == g.l:GetStage() -- same level
-        Shadow.isActive = Shadow.isActive and shadow.room == g.l:GetCurrentRoomIndex() -- same room
-        Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- didnt receive
+        Shadow.isActive = shadow.level == g.l:GetStage() -- Same level
+        Shadow.isActive = Shadow.isActive and shadow.room == g.l:GetCurrentRoomIndex() -- Same room
+        Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- Didnt receive update
         Shadow.isActive = Shadow.isActive and g.r:GetFrameCount() > 0
         state.lastUpdated = currentFrame
     end
