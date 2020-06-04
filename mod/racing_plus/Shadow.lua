@@ -6,6 +6,7 @@ local ShadowClient = require("racing_plus/shadowclient")
 local Shadow = {
     beaconInterval = 10 * 60, -- (60 fps per  Isaac::GetFrameCount)
     sprite = nil,
+    head = nil, body = nil,
     isActive = false
 }
 
@@ -13,38 +14,57 @@ local state = {
     lastUpdated = 0,
     x = nil, y = nil,
     level = nil, room = nil,
-    character = nil, -- TODO: this field may probably be redundant if we don't wanna see transformations
-    anim_name = "no", anim_frame = nil
+    character = nil,
+    anim_name = nil, anim_frame = nil
 }
 
 function Shadow:IsEnabled()
-    return g.luadebug and g.raceVars.shadowEnabled
-    -- TODO: more race condition checks e.g.:
-    -- and g.race.raceID ~= 0 or g.race.status ~= "none" and not g.race.solo
+    local isEnabled = g.luadebug and g.raceVars.shadowEnabled
+    isEnabled = isEnabled and g.race.raceID ~= 0 and g.race.status == 'in progress'
+    return isEnabled
 end
 
 function Shadow:Draw()
-    -- TODO: define other conditions when shadow is not to be drawn
-    if Shadow.isActive then
-        Isaac.DebugString("Drawing shadow")
-        if Shadow.sprite == nil and state.character ~= nil then
-            Shadow.sprite = Sprite {}
-            Shadow.sprite:Load("gfx/custom/characters/" .. state.character .. ".anm2", true)
-            Shadow.sprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)
-            Isaac.DebugString('Shadow sprite loaded')
-            Shadow.sprite:SetFrame("Death", 5)
-        end
-
-        local shadowPos = Isaac.WorldToScreen(Vector(state.x, state.y))
-        Shadow.sprite:Render(shadowPos, g.zeroVector, g.zeroVector)
+    if Shadow.body == nil and state.character ~= nil then
+        Shadow.body = Sprite {}
+        Shadow.body:Load("gfx/custom/characters/" ..state.character .. ".anm2", true)
+        Shadow.body.Color = Color(1, 1, 1, 0.35, 0, 0, 0)
+    end
+    if Shadow.head == nil and state.character ~= nil then
+        Shadow.head = Sprite {}
+        Shadow.head:Load("gfx/custom/characters/" .. state.character .. ".anm2", true)
+        Shadow.head.Color = Color(1, 1, 1, 0.35, 0, 0, 0)
     end
 
-    -- Isaac.DebugString("Player pos: x=" .. g.p.Position.X .. ", y=" .. g.p.Position.Y)
-    -- Isaac.DebugString("Shadow pos: x=" .. shadow.x .. ", y=" .. shadow.x)
+    if Shadow.isActive then
+        local shadowPos = Isaac.WorldToScreen(Vector(state.x, state.y))
+
+        if #state.anim_name > 0 then
+            if string.find(state.anim_name, "Trapdoor") then
+                Shadow.head:SetFrame("Trapdoor", state.anim_frame)
+                Shadow.body:SetFrame("Trapdoor", state.anim_frame)
+
+            elseif string.find(state.anim_name, "Walk") then
+                local headanim = string.gsub(state.anim_name, "Walk", "Head")
+                Shadow.head:SetFrame(headanim, state.anim_frame)
+                Shadow.body:SetFrame(state.anim_name, state.anim_frame)
+
+            else
+                Shadow.head:SetFrame(state.anim_name, state.anim_frame)
+                Shadow.body:SetFrame(state.anim_name, state.anim_frame)
+            end
+            Shadow.head:Render(shadowPos, g.zeroVector, g.zeroVector)
+        else
+            Shadow.body:SetFrame("Death", 0)
+        end
+
+        Shadow.body:Render(shadowPos, g.zeroVector, g.zeroVector)
+    end
 end
 
 function Shadow:IsBeaconFrame()
     local currentFrame = Isaac:GetFrameCount()
+    -- math.floor(a/b)*b is lua poormans modulo division
     return currentFrame - math.floor(currentFrame/Shadow.beaconInterval)*Shadow.beaconInterval == 0
 end
 
@@ -72,12 +92,15 @@ function Shadow:PostUpdate()
         state.y = shadow.y
         state.level = shadow.level
         state.room = shadow.room
-        if Shadow.sprite ~= nil and state.character ~= shadow.character then
-            Shadow.sprite:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
-        end
-        state.character = shadow.character
 
-        -- TODO: animation routine
+        if Shadow.body ~= nil and state.character ~= shadow.character then
+            Shadow.body:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
+        end
+        if Shadow.head ~= nil and state.character ~= shadow.character then
+            Shadow.head:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
+        end
+
+        state.character = shadow.character
         state.anim_name = shadow.anim_name
         state.anim_frame = shadow.anim_frame
 
@@ -86,8 +109,6 @@ function Shadow:PostUpdate()
         Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60
         state.lastUpdated = currentFrame
     end
-
-
 end
 
 return Shadow

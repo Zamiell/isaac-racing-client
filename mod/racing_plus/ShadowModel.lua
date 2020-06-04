@@ -4,6 +4,13 @@ local Shadow = {}
 local g           = require("racing_plus/globals")
 local struct      = require('racing_plus/struct')
 
+local supportedAnimations = {
+    "WalkLeft", "WalkRight", "WalkUp", "WalkDown",
+    "Trapdoor2",
+    "Death",
+    -- "TeleportUp", "TeleportDown", "LightTravel" -- needs more sophisticated handling by callbacks
+}
+
 function Shadow.new(self, t)
     --[[ pack/unpack reference:
         "b" a signed char, "B" an unsigned char
@@ -20,20 +27,23 @@ function Shadow.new(self, t)
     _t.allowedLength = 52
     setmetatable(_t, self)
     self.__index = self
-    -- TODO: __newindex function may become handy here in case animation_name is set after constructor call
     return _t
 end
 
 function Shadow.fromGame()
-    -- TODO: implement custom animation getter
     local s = Shadow:new {
         race = g.race.raceID, player = g.race.userID,
         x = g.p.Position.X, y = g.p.Position.Y,
         level = g.l:GetStage(), room = g.l:GetCurrentRoomIndex(),
         character = g.p:GetPlayerType(),
-        anim_name = "no",
+        anim_name = "",
         anim_frame = g.p:GetSprite():GetFrame(),
     }
+    for _, animation in pairs(supportedAnimations) do
+        if g.p:GetSprite():IsPlaying(animation) then
+            s.anim_name = s.anim_name .. animation
+        end
+    end
     return s
 end
 

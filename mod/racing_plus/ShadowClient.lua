@@ -4,10 +4,12 @@
 local g            = require("racing_plus/globals")
 local ShadowModel  = require("racing_plus/shadowmodel")
 
+-- connection
+local isaacServerHost = "127.0.0.1"
+local isaacServerPort = 9001
+
 -- client
 local ShadowClient = {
-    host = "127.0.0.1",  -- Notice: using special domains e.g. localhost may cause socket to be created as IPV6
-    port = 9001,
     connected = false, -- represents connection to mod server (mostly for shadow render)
     socket = g.socket,
     maxBufferSize = 1024
@@ -23,7 +25,7 @@ function ShadowClient:Connect()
 
         local udp = ShadowClient.socket.udp4()
         udp:settimeout(0)
-        udp:setpeername(ShadowClient.host, ShadowClient.port)
+        udp:setpeername(isaacServerHost, isaacServerPort)
 
         local host, port, af = udp:getpeername()
         if af and host and port then
@@ -44,7 +46,6 @@ function ShadowClient:Connect()
 end
 
 function ShadowClient:SendShadow()
-    Isaac.DebugString("-----------Sending shadow---------")
     ShadowClient.conn:send(ShadowModel.shadow.fromGame():marshall())
 end
 
@@ -70,12 +71,10 @@ function ShadowClient:RecvOpponentShadow()
     if data == nil then
         return nil
     end
-    Isaac.DebugString("      Received shadow")
     return ShadowModel.shadow.fromRawData(data)
 end
 
 function ShadowClient:SendBeacon()
-    Isaac.DebugString("-----------Sending beacon---------")
     ShadowClient.conn:send(ShadowModel.keepalive:toNetworkBytes())
 end
 
