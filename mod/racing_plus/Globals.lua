@@ -5,8 +5,8 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.52.2"
-g.debug = true
+g.version = "v0.53.0"
+g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
 g.resumedOldRun = false
@@ -37,16 +37,16 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
 }
 
 -- We need to verify if the user has "--luadebug" set as part of their Steam options
-local function importSocket()
-  require("socket")
-end
-if pcall(importSocket) then
+g.luaDebug = false
+g.socket = nil
+local ok, socket = pcall(require, 'socket')
+if ok and socket then
   g.luaDebug = true
+  g.socket = socket
+  Isaac.DebugString("Initialized socket: " .. socket._VERSION)
 else
-  g.luaDebug = false
   Isaac.DebugString("Importing socket failed. The \"--luadebug\" flag is not turned on in the Steam launch options.")
 end
-g.socket = nil
 
 -- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "g:InitRun()" function)
@@ -84,6 +84,7 @@ g.raceVars = {
   finishedFrames     = 0,
   fireworks          = 0,
   victoryLaps        = 0,
+  shadowEnabled      = false,
 }
 
 g.RNGCounter = {

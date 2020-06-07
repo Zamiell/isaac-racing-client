@@ -536,6 +536,15 @@ function ExecuteCmd:Schoolbag(params)
   Schoolbag:Put(item, "max")
 end
 
+ExecuteCmd.functions["shadow"] = function(params)
+  g.raceVars.shadowEnabled = not g.raceVars.shadowEnabled
+  if g.raceVars.shadowEnabled then
+    Isaac.ConsoleOutput("Enabled opponent's shadows.")
+  else
+    Isaac.ConsoleOutput("Disabled opponent's shadows.")
+  end
+end
+
 ExecuteCmd.functions["shop"] = function(params)
   g.p:UseCard(Card.CARD_HERMIT) -- 10
 end

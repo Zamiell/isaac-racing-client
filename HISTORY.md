@@ -38,8 +38,6 @@
 * Fixed the bug in season 8 where resetting to the same character would not remember any pills identified on that character. (Thanks mgln)
 * Fixed the bug in season 8 where Divorce Papers would give you Mysterious Paper when it was already removed from the trinket pool. (Thanks mgln)
 
-@imps @Dea1h @ez_duke @antizoubilamakA @thereisnofuture @Gamonymous @Po4ti @mgln @Siskua
-
 ### *v0.52.2* - May 6th, 2020
 
 * The "Disappear" animation for Pitfalls has been sped up by a factor of 2.

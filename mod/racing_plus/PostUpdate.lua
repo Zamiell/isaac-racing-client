@@ -17,6 +17,7 @@ local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 local BossRush           = require("racing_plus/bossrush")
 local ChallengeRooms     = require("racing_plus/challengerooms")
+local Shadow             = require("racing_plus/shadow")
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
@@ -77,6 +78,7 @@ function PostUpdate:Main()
 
   -- Handle things for races
   RacePostUpdate:Main()
+  Shadow:PostUpdate()
 
   -- Handle things for multi-character speedruns
   SpeedrunPostUpdate:Main()

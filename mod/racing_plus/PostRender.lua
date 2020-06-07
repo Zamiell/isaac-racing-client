@@ -17,6 +17,7 @@ local Speedrun           = require("racing_plus/speedrun")
 local SpeedrunPostRender = require("racing_plus/speedrunpostrender")
 local ChangeCharOrder    = require("racing_plus/changecharorder")
 local SeededDeath        = require("racing_plus/seededdeath")
+local Shadow             = require("racing_plus/shadow")
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -100,6 +101,7 @@ function PostRender:Main()
 
   -- Do race specific stuff
   PostRender:Race()
+  Shadow:Draw()
 
   -- Handle things for multi-character speedruns
   SpeedrunPostRender:Main()

@@ -29,11 +29,11 @@ function Errors:Draw()
     Errors:DrawInvalidItemsXML()
     return true
 
-  --[[
-  elseif not g.luaDebug then
+  elseif not g.luaDebug and
+         g.raceVars.shadowEnabled then
+
     Errors:DrawNoLuaDebug()
     return true
-  --]]
 
   elseif (Speedrun:InSpeedrun() or
           challenge == Isaac.GetChallengeIdByName("Change Char Order")) and
@@ -153,18 +153,18 @@ end
 function Errors:DrawNoLuaDebug()
   local x = Errors.startingX
   local y = Errors.startingY
-  Isaac.RenderText("Error: In order for Racing+ to work correctly,", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("Error: In order for Racing+ to draw the opponent's", x, y, 2, 2, 2, 2)
   x = x + 42
   y = y + 10
-  Isaac.RenderText("you must set \"--luadebug\" in the Steam launch", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("shadows, you must set \"--luadebug\" in the Steam", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("options for the game. Before doing this, it is", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("launch options for the game. Before doing this,", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("imperative that you disable any mods that you do", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("it is imperative that you disable any mods that", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("not fully trust. For more information, please", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("you do not fully trust. For more information,", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("read the following link:", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("please read the following link:", x, y, 2, 2, 2, 2)
   y = y + 20
   Isaac.RenderText("https://pastebin.com/2ZnRxDba", x, y, 2, 2, 2, 2)
 end

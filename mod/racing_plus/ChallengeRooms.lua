@@ -23,7 +23,6 @@ ChallengeRooms.normalWaves = {
   },
   {
     -- Caves / Catacombs / Flooded Caves
-    --[[
     {EntityType.ENTITY_HIVE, 3}, -- 22
     {EntityType.ENTITY_CHARGER, 5}, -- 23
     {EntityType.ENTITY_GLOBIN, 4}, -- 24
@@ -32,11 +31,10 @@ ChallengeRooms.normalWaves = {
     {EntityType.ENTITY_SPITY, 5}, -- 31
     {EntityType.ENTITY_BONY, 2}, -- 227
     {EntityType.ENTITY_TUMOR, 2}, -- 229
-    --]]
     {EntityType.ENTITY_GRUB, 1}, -- 239
     {EntityType.ENTITY_WALL_CREEP, 3}, -- 240
     {EntityType.ENTITY_ROUND_WORM, 4}, -- 244
-    --{EntityType.ENTITY_NIGHT_CRAWLER, 3}, -- 255
+    {EntityType.ENTITY_NIGHT_CRAWLER, 3}, -- 255
   },
   {
     -- Depths / Necropolis / Dank Depths
