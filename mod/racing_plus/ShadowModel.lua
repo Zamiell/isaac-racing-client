@@ -6,6 +6,7 @@ local struct = require('racing_plus/struct')
 
 local supportedAnimations = {
   "WalkLeft", "WalkRight", "WalkUp", "WalkDown",
+  "PickupWalkLeft", "PickupWalkRight", "PickupWalkUp", "PickupWalkDown",
   "Trapdoor2",
   "Death",
   -- "TeleportUp", "TeleportDown", "LightTravel" -- Needs more sophisticated handling by callbacks
@@ -21,9 +22,9 @@ function Shadow.new(self, t)
     "s" a zero-terminated string
     "cn" a sequence of exactly n chars corresponding to a single Lua string]]
   local _t = t or {}
-  _t.dataorder = {"race", "player", "x",   "y",   "level", "room",  "character", "anim_name", "anim_frame"}
-  _t.dataformat = "I" ..  "I" ..  "f" .. "f" .. "I" ..   "I" ..   "I" ..     "c20" ..      "I"
-  --        +4Bytes +4Bytes   +4Bytes+4Bytes+4Bytes  +4Bytes  +4Bytes    +20Bytes      +4Bytes = 52Bytes
+  _t.dataorder = {"race", "player", "x",    "y",    "level", "room",  "character", "anim_name", "anim_frame"}
+  _t.dataformat = "I"  .. "I"    .. "f" ..  "f" ..  "I" ..   "I" ..   "I" ..       "c20" ..     "I"
+  --              +4Bytes +4Bytes   +4Bytes +4Bytes +4Bytes  +4Bytes  +4Bytes    +20Bytes      +4Bytes = 52Bytes
   _t.allowedLength = 52
   setmetatable(_t, self)
   self.__index = self
