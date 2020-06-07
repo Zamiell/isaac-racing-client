@@ -267,7 +267,7 @@ if ARGS.github:
     TRANSPORT = paramiko.Transport((os.environ.get('VPS_IP'), 22))
     TRANSPORT.connect(None, os.environ.get('VPS_USER'), os.environ.get('VPS_PASS'))
     SFTP = paramiko.SFTPClient.from_transport(TRANSPORT)
-    REMOTE_PATH = 'go/src/github.com/Zamiell/isaac-racing-server/' + LATEST_CLIENT_VERSION_FILE
+    REMOTE_PATH = 'isaac-racing-server/' + LATEST_CLIENT_VERSION_FILE
     SFTP.put(LATEST_CLIENT_VERSION_FILE, REMOTE_PATH)
     TRANSPORT.close()
     os.remove(LATEST_CLIENT_VERSION_FILE)
