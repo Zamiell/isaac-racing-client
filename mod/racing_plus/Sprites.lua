@@ -6,7 +6,7 @@ local g = require("racing_plus/globals")
 -- Variables
 Sprites.sprites = {}
 
--- Call this once to load the PNG from the anm2 file
+-- This is called once to load the PNG from the anm2 file
 function Sprites:Init(spriteType, spriteName)
   -- If this is a new sprite type, initialize it in the sprite table
   if Sprites.sprites[spriteType] == nil then
@@ -28,6 +28,7 @@ function Sprites:Init(spriteType, spriteName)
   -- Otherwise, initialize the sprite
   Sprites.sprites[spriteType].spriteName = spriteName
   Sprites.sprites[spriteType].sprite = Sprite()
+  local animationName = "Default"
 
   if spriteType == "seeded-item1" or
      spriteType == "seeded-item2" or
@@ -37,7 +38,9 @@ function Sprites:Init(spriteType, spriteName)
      spriteType == "diversity-item1" or
      spriteType == "diversity-item2" or
      spriteType == "diversity-item3" or
-     spriteType == "diversity-item4" then
+     spriteType == "diversity-item4" or
+     spriteType == "eden-item1" or
+     spriteType == "eden-item2" then
 
     Sprites.sprites[spriteType].sprite:Load("gfx/items2/collectibles/" .. spriteName .. ".anm2", true)
 
@@ -67,17 +70,32 @@ function Sprites:Init(spriteType, spriteName)
   elseif spriteType == "black" then
     Sprites.sprites[spriteType].sprite:Load("gfx/misc/black.anm2", true)
 
+  elseif spriteType == "dps-button" then
+    local filename = "gfx/potato/PotatoDummy.anm2"
+    Sprites.sprites[spriteType].sprite:Load(filename, true)
+    Sprites.sprites[spriteType].sprite.Scale = Vector(0.75, 0.75)
+    animationName = "Idle"
+
+  elseif spriteType == "victory-lap-button" then
+    local filename = "gfx/items2/collectibles/" .. CollectibleType.COLLECTIBLE_FORGET_ME_NOW .. ".anm2" -- 127
+    Sprites.sprites[spriteType].sprite:Load(filename, true)
+
   else
     Sprites.sprites[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
 
   -- Everything is a non-animation, so we just want to set frame 0
-  Sprites.sprites[spriteType].sprite:SetFrame("Default", 0)
+  Sprites.sprites[spriteType].sprite:SetFrame(animationName, 0)
 end
 
-  -- Call this every frame in MC_POST_RENDER
+-- This is called on every frame in MC_POST_RENDER
 function Sprites:Display()
   -- Local variables
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
+  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- Loop through all the sprites and render them
@@ -162,6 +180,12 @@ function Sprites:Display()
     elseif k == "diversity-item5" then -- The trinket
       pos.X = pos.X - 90
       pos.Y = pos.Y + 60
+    elseif k == "eden-item1" then
+      pos.X = 123
+      pos.Y = 17
+    elseif k == "eden-item2" then
+      pos.X = 153
+      pos.Y = 17
     elseif k == "place" then -- "1st", "2nd", etc.
       -- Move it next to the "R+" icon
       pos.X = 24
@@ -179,6 +203,32 @@ function Sprites:Display()
       pos.Y = pos.Y - 80
     elseif k == "corrupt2" then -- The final place graphic
       pos.Y = pos.Y - 50
+    elseif k == "dps-button" then
+      if roomFrameCount == 0 then
+        return
+      end
+      for _, button in ipairs(g.run.buttons) do
+        if button.type == "dps" and
+           button.roomIndex == roomIndex then
+
+          local newPos = Isaac.WorldToScreen(button.pos)
+          pos.X = newPos.X
+          pos.Y = newPos.Y - 15
+        end
+      end
+    elseif k == "victory-lap-button" then
+      if roomFrameCount == 0 then
+        return
+      end
+      for _, button in ipairs(g.run.buttons) do
+        if button.type == "victory-lap" and
+           button.roomIndex == roomIndex then
+
+          local newPos = Isaac.WorldToScreen(button.pos)
+          pos.X = newPos.X + 1
+          pos.Y = newPos.Y - 25
+        end
+      end
     end
 
     -- Draw it

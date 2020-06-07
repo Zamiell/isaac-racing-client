@@ -10,6 +10,7 @@ local SoulJar            = require("racing_plus/souljar")
 local UseItem            = require("racing_plus/useitem")
 local Pills              = require("racing_plus/pills")
 local FastTravel         = require("racing_plus/fasttravel")
+local ChallengeRooms     = require("racing_plus/challengerooms")
 local ChangeKeybindings  = require("racing_plus/changekeybindings")
 local Timer              = require("racing_plus/timer")
 local Speedrun           = require("racing_plus/speedrun")
@@ -72,6 +73,7 @@ function PostRender:Main()
   Pills:PostRender()
   ChangeCharOrder:PostRender()
   ChangeKeybindings:PostRender()
+  PostRender:DrawNumSacRoom()
   PostRender:DisplayTopLeftText()
   PostRender:DrawVersion()
 
@@ -545,6 +547,9 @@ function PostRender:SpeedUpTeleport()
 
     playerSprite.PlaybackSpeed = 2
     Isaac.DebugString("Increased the playback speed of a teleport animation.")
+
+    -- Furthermore, cancel any ongoing Challenge Rooms
+    ChallengeRooms:Teleport()
   end
 end
 
@@ -614,6 +619,26 @@ function PostRender:CheckSubvertTeleport()
   Isaac.DebugString("Subverted a position teleport (2/2).")
 end
 
+function PostRender:DrawNumSacRoom()
+  local roomType = g.r:GetType()
+  if roomType ~= RoomType.ROOM_SACRIFICE then -- 13
+    return
+  end
+
+  local roomFrameCount = g.r:GetFrameCount()
+  if roomFrameCount == 0 then
+    return
+  end
+
+  -- We want to place informational text for the player to the right of the heart containers
+  -- (which will depend on how many heart containers we have)
+  -- (this code is copied from the "DisplayTopLeftText()" function)
+  local x = 55 + SoulJar:GetHeartXOffset()
+  local y = 10
+  local text = "Sacrifices: " .. tostring(g.run.numSacrifices)
+  Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+end
+
 function PostRender:DisplayTopLeftText()
   -- Local variables
   local seedString = g.seeds:GetStartSeedString()
@@ -660,12 +685,13 @@ function PostRender:DisplayTopLeftText()
       Isaac.RenderText(thirdLine, x, y, 2, 2, 2, 2)
     end
 
-  elseif g.race.status == "in progress" and
+  elseif g.race.raceID ~= nil and
+         g.race.status == "in progress" and
          g.run.roomsEntered <= 1 and
          Isaac.GetTime() - g.raceVars.startedTime <= 2000 then
 
     -- Only show it in the first two seconds of the race
-    Isaac.RenderText("Race ID: " .. g.race.id, x, y, 2, 2, 2, 2)
+    Isaac.RenderText("Race ID: " .. g.race.raceID, x, y, 2, 2, 2, 2)
   end
 end
 

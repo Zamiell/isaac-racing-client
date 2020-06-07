@@ -320,6 +320,11 @@ end
 -- CollectibleType.COLLECTIBLE_DIVORCE_PAPERS (547)
 function PostItemPickup.DivorcePapers()
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) -- 21
+  if Isaac.GetChallenge() == Isaac.GetChallengeIdByName("R+7 (Season 8)") and
+     g:TableContains(Season8.touchedTrinkets, TrinketType.TRINKET_MYSTERIOUS_PAPER) then
+
+    return
+  end
   PostItemPickup:InsertNearestTrinket()
 end
 

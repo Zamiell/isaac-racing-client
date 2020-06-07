@@ -1,7 +1,8 @@
 local UsePill = {}
 
 -- Includes
-local g = require("racing_plus/globals")
+local g       = require("racing_plus/globals")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_PILL (10)
 function UsePill:Main(pillEffect)
@@ -25,6 +26,9 @@ function UsePill:Main(pillEffect)
 end
 
 function UsePill:UsedNewPill(pillColor, pillEffect)
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
   -- This is the first time we have used this pill, so keep track of the pill color and effect
   local pillEntry = {
     color  = pillColor,
@@ -36,6 +40,9 @@ function UsePill:UsedNewPill(pillColor, pillEffect)
   pillEntry.sprite:Load("gfx/pills/pill" .. pillColor .. ".anm2", true)
   pillEntry.sprite:SetFrame("Default", 0)
   g.run.pills[#g.run.pills + 1] = pillEntry
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
+    Season8.identifiedPills[#Season8.identifiedPills + 1] = pillEntry
+  end
 end
 
 -- PillEffect.PILLEFFECT_HEALTH_DOWN (6)

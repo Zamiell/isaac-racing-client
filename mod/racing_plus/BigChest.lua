@@ -5,6 +5,7 @@ local g          = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
 local Speedrun   = require("racing_plus/speedrun")
 local Season7    = require("racing_plus/season7")
+local Sprites    = require("racing_plus/sprites")
 
 BigChest.action = "leave"
 BigChest.checkpointPos = g.zeroVector
@@ -160,10 +161,17 @@ function BigChest:PostPickupInit(pickup)
     g.run.trophy.position = position
 
   elseif BigChest.action == "victoryLap" then
-    -- Spawn a Victory Lap (a custom item that emulates Forget Me Now) in the center of the room
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-              g.r:GetCenterPos(), g.zeroVector, nil, CollectibleType.COLLECTIBLE_VICTORY_LAP, roomSeed)
-    Isaac.DebugString("Spawned a Victory Lap in the center of the room.")
+    -- Spawn a button for the Victory Lap feature
+    g.run.buttons[#g.run.buttons + 1] = {
+      type      = "victory-lap",
+      -- We want to use a position from the "GridToPos()" function because otherwise the position
+      -- can slightly shift if it does not align with the grid
+      pos       = g:GridToPos(6, 9),
+      roomIndex = roomIndex,
+    }
+    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, g.run.buttons[#g.run.buttons].pos, true) -- 20
+    Sprites:Init("victory-lap-button", "victory-lap-button")
+    Isaac.DebugString("Spawned a Victory Lap button to replace a Big Chest.")
     pickup:Remove()
   end
 end

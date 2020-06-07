@@ -2,20 +2,18 @@ local PostNewRoom = {}
 
 -- Includes
 local g                   = require("racing_plus/globals")
-local Race                = require("racing_plus/race")
 local FastClear           = require("racing_plus/fastclear")
 local FastTravel          = require("racing_plus/fasttravel")
+local RacePostNewRoom     = require("racing_plus/racepostnewroom")
 local Speedrun            = require("racing_plus/speedrun")
 local SpeedrunPostNewRoom = require("racing_plus/speedrunpostnewroom")
 local ChangeCharOrder     = require("racing_plus/changecharorder")
 local ChangeKeybindings   = require("racing_plus/changekeybindings")
-local Sprites             = require("racing_plus/sprites")
 local Schoolbag           = require("racing_plus/schoolbag")
-local SeededDeath         = require("racing_plus/seededdeath")
-local SeededRooms         = require("racing_plus/seededrooms")
 local BossRush            = require("racing_plus/bossrush")
 local ChallengeRooms      = require("racing_plus/challengerooms")
 local Samael              = require("racing_plus/samael")
+local Sprites             = require("racing_plus/sprites")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function PostNewRoom:Main()
@@ -103,6 +101,7 @@ function PostNewRoom:NewRoom()
   FastTravel:CheckNewFloor() -- Check if we are just arriving on a new floor
   FastTravel:CheckCrawlspaceMiscBugs() -- Check for miscellaneous crawlspace bugs
 
+  PostNewRoom:CheckDrawEdenStartingItems()
   PostNewRoom:CheckRemoveMoreOptions() -- Remove the "More Options" buff if they have entered a Treasure Room
   PostNewRoom:CheckZeroHealth() -- Fix the bug where we don't die at 0 hearts
   PostNewRoom:CheckStartingRoom() -- Draw the starting room graphic
@@ -117,7 +116,7 @@ function PostNewRoom:NewRoom()
 
   ChangeCharOrder:PostNewRoom() -- The "Change Char Order" custom challenge
   ChangeKeybindings:PostNewRoom() -- The "Change Keybindings" custom challenge
-  PostNewRoom:Race() -- Do race related stuff
+  RacePostNewRoom:Main() -- Do race related stuff
   SpeedrunPostNewRoom:Main() -- Do speedrun related stuff
 end
 
@@ -135,6 +134,23 @@ function PostNewRoom:CheckRemoveKeeperHeartContainerFromStrength()
     g.p:AddMaxHearts(-2, true) -- Take away a heart container
     Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (PostNewRoom)")
   end
+end
+
+function PostNewRoom:CheckDrawEdenStartingItems()
+  -- Show only the items in the starting room
+  if g.run.roomsEntered >= 2 then
+    Sprites:Init("eden-item1", 0)
+    Sprites:Init("eden-item2", 0)
+    return
+  end
+
+  local character = g.p:GetPlayerType()
+  if character ~= PlayerType.PLAYER_EDEN then -- 9
+    return
+  end
+
+  Sprites:Init("eden-item1", tostring(g.run.edenStartingItems[1]))
+  Sprites:Init("eden-item2", tostring(g.run.edenStartingItems[2]))
 end
 
 -- Remove the "More Options" buff if they have entered a Treasure Room
@@ -483,6 +499,7 @@ function PostNewRoom:CheckEntities()
   local character = g.p:GetPlayerType()
 
   local subvertTeleport = false
+  local pinFound = false
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
     if entity.Type == EntityType.ENTITY_GURDY or -- 36
        entity.Type == EntityType.ENTITY_MOM or -- 45
@@ -501,6 +518,9 @@ function PostNewRoom:CheckEntities()
       -- in vanilla the type of card that drops depends on the order you kill them in)
       g.g:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity, entity.Parent, entity.SubType, roomSeed)
       entity:Remove()
+
+    elseif entity.Type == EntityType.ENTITY_PIN then -- 62
+      pinFound = true
 
     elseif entity.Type == EntityType.ENTITY_THE_HAUNT and -- 260
            entity.Variant == 0 then
@@ -561,6 +581,12 @@ function PostNewRoom:CheckEntities()
 
     Isaac.DebugString("Subverted a position teleport (1/2).")
   end
+
+  -- If Pin is in the room, cause a rumble as a warning for deaf players
+  if pinFound then
+    g.g:ShakeScreen(20)
+    Isaac.DebugString("Pin detected; shaking the screen.")
+  end
 end
 
 -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
@@ -593,7 +619,7 @@ function PostNewRoom:CheckRespawnTrophy()
 end
 
 function PostNewRoom:BanB1TreasureRoom()
-  if not Race:CheckBanB1TreasureRoom() then
+  if not PostNewRoom:CheckBanB1TreasureRoom() then
     return
   end
 
@@ -625,188 +651,17 @@ function PostNewRoom:BanB1TreasureRoom()
   end
 end
 
-function PostNewRoom:Race()
+function PostNewRoom:CheckBanB1TreasureRoom()
   -- Local variables
   local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
-  local roomDesc = g.l:GetCurrentRoomDesc()
-  local roomStageID = roomDesc.Data.StageID
-  local roomVariant = roomDesc.Data.Variant
-  local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
-  local gridSize = g.r:GetGridSize()
+  local challenge = Isaac.GetChallenge()
 
-  -- Remove the final place graphic if it is showing
-  Sprites:Init("place2", 0)
-
-  -- Go to the custom "Race Room"
-  if (g.race.status == "open" or
-      g.race.status == "starting") then
-
-    if g.run.roomsEntered == 1 then
-      Isaac.ExecuteCommand("stage 1a") -- The Cellar is the cleanest floor
-      g.run.goingToDebugRoom = true
-      Isaac.ExecuteCommand("goto d.0") -- We do more things in the next "PostNewRoom" callback
-    elseif g.run.roomsEntered == 2 then
-      PostNewRoom:RaceStartRoom()
-    end
-    return
-  end
-
-  -- Check for the special death condition
-  SeededDeath:PostNewRoom()
-  SeededDeath:PostNewRoomCheckSacrificeRoom()
-
-  -- Check for rooms that should be manually seeded during seeded races
-  SeededRooms:PostNewRoom()
-
-  -- Prevent players from skipping a floor on the "Everything" race goal
-  if g.race.goal == "Everything" and
-     (roomType == RoomType.ROOM_ERROR or -- 3
-      roomType == RoomType.ROOM_BLACK_MARKET) then -- 22
-
-    local convertTrapdoorsToBeamsOfLight = false
-    local convertBeamsOfLightToTrapdoors = false
-    if stage == 8 then
-      convertTrapdoorsToBeamsOfLight = true
-
-    elseif stage == 10 and
-           stageType == 1 then -- Cathedral
-
-      convertBeamsOfLightToTrapdoors = true
-
-    elseif stage == 10 and
-           stageType == 0 then -- Sheol
-
-      convertTrapdoorsToBeamsOfLight = true
-    end
-    -- (it is impossible to get a I AM ERROR room or a Black Market on The Chest or the Dark Room)
-
-    if convertTrapdoorsToBeamsOfLight then
-      -- Replace all trapdoors with beams of light
-      for i = 1, gridSize do
-        local gridEntity = g.r:GetGridEntity(i)
-        if gridEntity ~= nil then
-          local saveState = gridEntity:GetSaveState()
-          if saveState.Type == GridEntityType.GRID_TRAPDOOR then -- 17
-            -- Remove the crawlspace and spawn a Heaven Door (1000.39), which will get replaced on the next frame
-            -- in the "FastTravel:ReplaceHeavenDoor()" function
-            -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
-            g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
-            Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
-                        gridEntity.Position, g.zeroVector, g.p)
-            Isaac.DebugString("Replaced a trapdoor with a heaven door for an Everything race.")
-          end
-        end
-      end
-    end
-
-    if convertBeamsOfLightToTrapdoors then
-      -- Replace all beams of light with trapdoors
-      local heavenDoors = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, -- 1000.39
-                                           -1, false, false)
-      for _, heavenDoor in ipairs(heavenDoors) do
-        heavenDoor:Remove()
-
-        -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
-        Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, heavenDoor.Position, true) -- 17
-        Isaac.DebugString("Replaced a heaven door with a trapdoor for an Everything race.")
-      end
-    end
-  end
-
-  -- Check to see if we need to open the Mega Satan Door
-  if (g.race.goal == "Mega Satan" or
-      g.raceVars.finished or
-      (g.race.goal == "Everything") and
-       g.run.killedLamb) and
-     stage == 11 and -- If this is The Chest or Dark Room
-     roomIndex == g.l:GetStartingRoomIndex() then
-
-    local door = g.r:GetDoor(1) -- The top door is always 1
-    door:TryUnlock(true)
-    g.sfx:Stop(SoundEffect.SOUND_UNLOCK00) -- 156
-    -- door:IsOpen() is always equal to false here for some reason,
-    -- so just open it every time we enter the room and silence the sound effect
-    Isaac.DebugString("Opened the Mega Satan door.")
-  end
-
-  -- Check to see if we need to spawn Victory Lap bosses
-  if g.raceVars.finished and
-     not roomClear and
-     roomStageID == 0 and
-     (roomVariant == 3390 or -- Blue Baby
-      roomVariant == 3391 or
-      roomVariant == 3392 or
-      roomVariant == 3393 or
-      roomVariant == 5130) then -- The Lamb
-
-    -- Replace Blue Baby / The Lamb with some random bosses (based on the number of Victory Laps)
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-      if entity.Type == EntityType.ENTITY_ISAAC or -- 102
-         entity.Type == EntityType.ENTITY_THE_LAMB then -- 273
-
-        entity:Remove()
-      end
-    end
-
-    local randomBossSeed = roomSeed
-    local numBosses = g.raceVars.victoryLaps + 1
-    for i = 1, numBosses do
-      randomBossSeed = g:IncrementRNG(randomBossSeed)
-      math.randomseed(randomBossSeed)
-      local randomBoss = g.bossArray[math.random(1, #g.bossArray)]
-      if randomBoss[1] == EntityType.ENTITY_LARRYJR then -- 19
-        -- Larry Jr. and The Hollow require multiple segments
-        for j = 1, 6 do
-          Isaac.Spawn(randomBoss[1], randomBoss[2], randomBoss[3], g.r:GetCenterPos(), g.zeroVector, nil)
-        end
-      else
-        Isaac.Spawn(randomBoss[1], randomBoss[2], randomBoss[3], g.r:GetCenterPos(), g.zeroVector, nil)
-      end
-    end
-    Isaac.DebugString("Replaced Blue Baby / The Lamb with " .. tostring(numBosses) .. " random bosses.")
-  end
-end
-
-function PostNewRoom:RaceStartRoom()
-  -- Remove all enemies
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    local npc = entity:ToNPC()
-    if npc ~= nil then
-      entity:Remove()
-    end
-  end
-  g.r:SetClear(true)
-
-  -- We want to trap the player in the room, so delete all 4 doors
-  for i = 0, 3 do
-    g.r:RemoveDoor(i)
-  end
-
-  -- Put the player next to the bottom door
-  local pos = Vector(320, 400)
-  g.p.Position = pos
-
-  -- Put familiars next to the bottom door, if any
-  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
-  for _, familiar in ipairs(familiars) do
-    familiar.Position = pos
-  end
-
-  -- Spawn two Gaping Maws (235.0)
-  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
-  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
-
-  -- Disable the MinimapAPI to emulate what happens with the vanilla map
-  if MinimapAPI ~= nil then
-    MinimapAPI.Config.Disable = true
-  end
+  return stage == 1 and
+         (g.race.rFormat == "seeded" or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
+          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
+           Speedrun.charNum >= 2) or
+          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)"))
 end
 
 return PostNewRoom

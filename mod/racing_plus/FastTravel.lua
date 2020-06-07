@@ -565,6 +565,12 @@ function FastTravel:CheckNewFloor()
       player.Position = pos
     end
 
+    -- Additionally, move all familiars to the center of the room
+    local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+    for _, familiar in ipairs(familiars) do
+      familiar.Position = pos
+    end
+
     -- Spawn a hole
     Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PITFALL_CUSTOM, 0, -- 1000
                 pos, g.zeroVector, nil)

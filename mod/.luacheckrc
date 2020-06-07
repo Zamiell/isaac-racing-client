@@ -53,6 +53,7 @@ globals = {
   "ModCallbacks",
   "Mouse",
   "Music",
+  "MusicManager",
   "NpcState",
   "NullItemID",
   "PickupPrice",

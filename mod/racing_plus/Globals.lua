@@ -6,8 +6,9 @@ local g  = {}
 --
 
 g.version = "v0.52.2"
-g.debug = false
+g.debug = true
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
+g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
 g.resumedOldRun = false
 g.saveFileState = {
   NOT_CHECKED   = 0,
@@ -35,13 +36,26 @@ g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
   },
 }
 
+-- We need to verify if the user has "--luadebug" set as part of their Steam options
+local function importSocket()
+  require("socket")
+end
+if pcall(importSocket) then
+  g.luaDebug = true
+else
+  g.luaDebug = false
+  Isaac.DebugString("Importing socket failed. The \"--luadebug\" flag is not turned on in the Steam launch options.")
+end
+g.socket = nil
+
 -- These are variables that are reset at the beginning of every run
 -- (defaults are set below in the "g:InitRun()" function)
 g.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 g.race = {
-  id                = 0,           -- 0 if a race is not going on
+  userID            = 0,           -- Equal to our Racing+ user ID
+  raceID            = 0,           -- 0 if a race is not going on
   status            = "none",      -- Can be "none", "open", "starting", "in progress"
   myStatus          = "not ready", -- Can be either "not ready", "ready", or "racing"
   ranked            = false,       -- Can be true or false
@@ -76,6 +90,7 @@ g.RNGCounter = {
   -- Seeded at the beginning of the run
   BookOfSin       = 0, -- 97
   DeadSeaScrolls  = 0, -- 124
+  GuppysHead      = 0, -- 145
   GuppysCollar    = 0, -- 212
   ButterBean      = 0, -- 294
   -- Devil Rooms and Angel Rooms go in order on seeded races
@@ -108,6 +123,7 @@ g.seeds = g.g:GetSeeds()
 g.itemPool = g.g:GetItemPool()
 g.itemConfig = Isaac.GetItemConfig()
 g.sfx = SFXManager()
+g.music = MusicManager()
 g.zeroVector = Vector(0, 0)
 g.font = Font()
 g.font:Load("font/droid.fnt")
@@ -143,8 +159,8 @@ EffectVariant.STICKY_NICKEL                  = Isaac.GetEntityVariantByName("Sti
 CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
 CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
 CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
-CollectibleType.COLLECTIBLE_VICTORY_LAP             = Isaac.GetItemIdByName("Victory Lap")
-CollectibleType.COLLECTIBLE_FINISHED                = Isaac.GetItemIdByName("Finished")
+CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED    = Isaac.GetItemIdByName("3 Dollar Bill (Seeded)")
+CollectibleType.COLLECTIBLE_PLACEHOLDER             = Isaac.GetItemIdByName("Placeholder")
 CollectibleType.COLLECTIBLE_OFF_LIMITS              = Isaac.GetItemIdByName("Off Limits")
 CollectibleType.COLLECTIBLE_13_LUCK                 = Isaac.GetItemIdByName("13 Luck")
 CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Checkpoint")
@@ -233,8 +249,10 @@ function g:InitRun()
   g.run.startedTime       = 0
   g.run.erasedFadeIn      = false
   g.run.roomsEntered      = 0
+  g.run.items             = {}
   g.run.roomIDs           = {}
   g.run.pills             = {} -- We want to track all pills taken for identification purposes
+  g.run.edenStartingItems = {}
   g.run.metKrampus        = false
   g.run.movingBoxOpen     = true
   g.run.killedLamb        = false -- Used for the "Everything" race goal
@@ -312,6 +330,8 @@ function g:InitRun()
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
   g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
+  g.run.frameOfLastDD         = 0
+  g.run.threeDollarBillItem   = 0
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy
@@ -390,7 +410,6 @@ function g:InitRun()
     guppysCollar    = false,
     position        = g.zeroVector,
     debuffEndTime   = 0,
-    frameOfLastDD   = 0,
     items           = {},
     charge          = 0,
     spriteScale     = g.zeroVector,
@@ -429,6 +448,7 @@ function g:InitLevel()
   g.run.replacedHeavenDoors = {}
   g.run.reseedCount         = 0
   g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
+  g.run.numSacrifices       = 0
 
   -- Custom Challenge Room tracking
   g.run.challengeRoom = {
@@ -438,6 +458,9 @@ function g:InitLevel()
     currentWave    = 0,
     spawnWaveFrame = 0,
   }
+
+  -- End of race buttons
+  g.run.buttons = {}
 end
 
 function g:InitRoom()
@@ -451,6 +474,7 @@ function g:InitRoom()
   g.run.handPositions         = {} -- Used to play an "Appear" animation for Mom's Hands
   g.run.naturalTeleport       = false
   g.run.diceRoomActivated     = false
+  g.run.numDDItems            = 0
   g.run.megaSatanDead         = false
   g.run.endOfRunText          = false -- Shown when the run is completed but only for one room
   g.run.teleportSubverted     = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
@@ -599,19 +623,7 @@ function g:TableRemove(t, el)
 end
 
 function g:GetTotalItemCount()
-  -- Racing+ adds a bunch of items
-  -- Furthermore, we need to account for if the user has other items added from other mods
-  -- Start with the highest vanilla item ID and iterate upwards
-  local i = CollectibleType.NUM_COLLECTIBLES - 1
-  local totalItems = i
-  while true do
-    i = i + 1
-    if g.itemConfig:GetCollectible(i) ~= nil then
-      totalItems = i
-    else
-      return totalItems
-    end
-  end
+  return Isaac.GetItemConfig():GetCollectibles().Size -1
 end
 
 -- Find out how many charges this item has
@@ -690,6 +702,15 @@ function g:GetScreenSize()
   local ry = pos.Y + 140 * (26 / 40)
 
   return { rx * 2 + 13 * 26, ry * 2 + 7 * 26 }
+end
+
+function g:OpenDoors()
+  for i = 0, 7 do
+    local door = g.r:GetDoor(i)
+    if door ~= nil then
+      door:Open()
+    end
+  end
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

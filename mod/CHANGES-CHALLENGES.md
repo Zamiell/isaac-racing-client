@@ -183,7 +183,7 @@
 ### Characters & Starting Items
 
 * You must defeat Blue Baby on the following 7 characters:
-  * Isaac, Cain, Judas, Eve, Lazarus II, Black Judas, Apollyon
+  * Isaac, Cain, Judas, Eve, Lazarus II, Dark Judas, Apollyon
 * All characters start with the Schoolbag.
 * Isaac starts with a 2nd D6 inside the Schoolbag.
 * Cain starts with More Options.
@@ -193,7 +193,7 @@
 * Eve starts with an extra half soul heart.
 * Lazarus II starts with There's Options.
 * Lazarus II starts with one half red heart and one half soul heart.
-* Black Judas starts with three and a half black hearts.
+* Dark Judas starts with three and a half black hearts.
 * Apollyon starts with Void inside the Schoolbag.
 * Apollyon starts with an extra half soul heart.
 * Mega Blast is removed from all pools on Apollyon.

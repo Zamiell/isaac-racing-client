@@ -211,7 +211,7 @@ end
 -- (this code check runs only when the item is first spawned)
 function Schoolbag:CheckSecondItem(pickup)
   -- Local variables
-  local roomType = g.r:GetType()
+  local gameFrameCount = g.g:GetFrameCount()
   local roomFrameCount = g.r:GetFrameCount()
 
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
@@ -250,10 +250,7 @@ function Schoolbag:CheckSecondItem(pickup)
                       tostring(g.run.schoolbag.charge) .. " charges (and " ..
                       tostring(g.run.schoolbag.chargeBattery) .. " Battery charges).")
 
-    if roomType == RoomType.ROOM_DEVIL or -- 14
-       roomType == RoomType.ROOM_CURSE or -- 10 (in Racing+ Rebalanced, there are DD items in a Curse Room)
-       roomType == RoomType.ROOM_BLACK_MARKET then -- 22
-
+    if gameFrameCount == g.run.frameOfLastDD + 1 then
       -- If we took this item from a devil deal, then we want to delete the pedestal entirely
       -- (since the item was not on a pedestal to begin with, it would not make any sense to leave an empty pedestal)
       -- Unfortunately, the empty pedestal will still show for a single frame
@@ -461,8 +458,12 @@ function Schoolbag:CheckRemoved()
       -- Drop the item that was in the Schoolbag on the ground
       -- (spawn it with an InitSeed of 0 so that it will be replaced on the next frame)
       local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                position, g.zeroVector, nil, g.run.schoolbag.item, 0)
+      local collectible = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
+                                    position, g.zeroVector, nil, g.run.schoolbag.item, 0):ToPickup()
+      -- We need to transfer back the current charge to the item
+      -- Furthermore, we do not need to worry about the case of The Battery overcharge,
+      -- because by using the D4 or the D100, they will have rerolled away The Battery
+      collectible.Charge = g.run.schoolbag.charge
       g.run.schoolbag.item = 0
     end
   end

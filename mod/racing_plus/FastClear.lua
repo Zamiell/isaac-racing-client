@@ -466,6 +466,7 @@ function FastClear:ClearRoom()
     -- Try to spawn the Blue Womb door
     if stage == 8 and
        ((g.race.status == "in progress" and g.race.goal == "Hush") or
+        (g.race.status == "in progress" and g.race.goal == "Delirium") or
         (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
          g:TableContains(Season7.remainingGoals, "Hush"))) then
 
@@ -857,7 +858,7 @@ function FastClear:CheckBagFamiliars()
         math.randomseed(FastClear.familiars.MysterySack.seed)
 
         if sackPickupType == 1 then
-          local heartType = math.random(1, 10) -- From Heart (5.10.1) to Blended Heart (5.10.10)
+          local heartType = math.random(1, 11) -- From Heart (5.10.1) to Bone Heart (5.10.11)
           g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, familiar.Position, g.zeroVector,
                     familiar, heartType, FastClear.familiars.MysterySack.seed)
 
@@ -872,7 +873,7 @@ function FastClear:CheckBagFamiliars()
                     familiar, keyType, FastClear.familiars.MysterySack.seed)
 
         elseif sackPickupType == 4 then
-          local bombType = math.random(1, 5) -- From Bomb (5.40.1) to Megatroll Bomb (5.40.5)
+          local bombType = math.random(1, 4) -- From Bomb (5.40.1) to Golden Bomb (5.40.4)
           g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, familiar.Position, g.zeroVector,
                     familiar, bombType, FastClear.familiars.MysterySack.seed)
         end

@@ -1,5 +1,6 @@
 {
-   "id":            0,
+   "userID":        0,
+   "raceID":        0,
    "status":        "none",
    "myStatus":      "not ready",
    "ranked":        false,

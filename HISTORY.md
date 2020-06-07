@@ -1,5 +1,45 @@
 # Racing+ Version History and News
 
+### *v0.53.0* - June 7th, 2020
+
+* In seeded races, you now have the ability to see your opponent inside your own game as a shadow. Thanks to imps for coding this, which was difficult to do. For more instructions, see this Pastebin: https://pastebin.com/2ZnRxDba
+* The Technology Zero + Pop! + Cupid's Arrow build now grants a -50% damage multiplier.
+* If you are currently jumping into a trapdoor, you can now save & quit in order to cancel travelling to the next floor. (Thanks Dea1h)
+* The mod will now display your starting items in the starting room when you are playing as Eden.
+* The mod will now display how many sacrifices you have performed when you are in a Sacrifice Room.
+* Entering a room with Pin, Frail, or Scolex will now cause the screen to shake for 20 frames as an indication that there are enemies hidden under the ground. (Thanks Dea1h)
+* The seeded death mechanic will now always count as causing red heart damage for the purposes of getting a devil deal. (Thanks ez_duke)
+* In seeded races, 3 Dollar Bill will now grant one item effect per room, similar to how it worked in Rebirth. The effect is seeded per room. If the player already has the randomly chosen item, another random item effect will be chosen.
+* The "+13 Luck" item no longer gives +13 luck. Instead, it will set your luck value to 13. (Thanks antizoubilamakA)
+* The "Finished" custom item will no longer spawn after completing a race.
+* A button to spawn a DPS-measuring potato will now spawn after completing a race. Thanks to Sinsthar for creating this.
+* The "Victory Lap" custom item has been replaced by a button.
+* Removed some rocks from Basement/Cellar/Burning room #301 to mitigate a pseudo-softlock with Round Worms.
+* Fixed the (vanilla) bug where Guppy's Head was not seeded. (Thanks antizoubilamakA)
+* Fixed the (vanilla) bug where The Ludovico Technique, Brimstone, and Dr. Fetus cause a stationary Brimstone ring to remain around the player, potentially softlocking them. When this occurs, Dr. Fetus will be removed to fix the softlock.
+* Fixed the (vanilla) bug where The Ludovico Technique, Technology, and Mom's Knife cause a stationary laser ring to remain around the player, potentially softlocking them. When this occurs, Mom's Knife will be removed to fix the softlock.
+* Fixed the bug where Larry Jr. and The Hollow were not spawning properly in the Challenge and the Boss Rush.
+* Fixed the bug where Grub was not spawning properly in the Challenge Room.
+* Fixed the bug where teleporting from a Challenge Room to a Challenge Room would not count as completing it. (Thanks ez_duke)
+* Fixed the bug where taking certain pickups in a Challenge Room or the Boss Rush would count as starting it. (Thanks thereisnofuture)
+* Fixed the bug where a chest opening into a pedestal item would not start a Challenge Room the Boss Rush. (Thanks ez_duke)
+* Fixed the bug where Pitfalls were not working properly in the Big Horn fight. (Thanks thereisnofuture)
+* Fixed the bug where Mystery Sack did not include Bone Hearts in the random heart options.
+* Fixed the bug where Mystery Sack included Mega Troll Bomb in the random bomb options.
+* Fixed the bug with the seeded death mechanic where you would retain the Succubus damage aura bonus after dying. (Thanks Gamonymous)
+* Fixed the bug where Judas would not touch his Book of Belial when he started a run with it in the Schoolbag. (Thanks ez_duke)
+* Fixed the bug where items dropped from the Schoolbag would not have their charge set properly. (Thanks Gamonymous)
+* Fixed the bug where putting an item into a Schoolbag in a Devil Room would delete the empty pedestal under certain circumstances.
+* Fixed the bug where the Blue Womb door would not spawn correctly if your race goal was Delirium. (Thanks Po4ti)
+* Fixed the bug where Dead Sea Scrolls would not properly be depleted of a charge under certain circumstances. (Thanks ez_duke)
+* Fixed the bug where familiars would not be teleported to the center of the room when entering a new floor.
+* Fixed the bug where Curse of the Unknown was incorrectly applied to new runs under certain circumstances. (Thanks mgln)
+* Fixed the bug where music was not playing correctly in Challenge Rooms and the Boss Rush. (Thanks Siskua)
+* Fixed the bug in season 8 where resetting to the same character would not remember any pills identified on that character. (Thanks mgln)
+* Fixed the bug in season 8 where Divorce Papers would give you Mysterious Paper when it was already removed from the trinket pool. (Thanks mgln)
+
+@imps @Dea1h @ez_duke @antizoubilamakA @thereisnofuture @Gamonymous @Po4ti @mgln @Siskua
+
 ### *v0.52.2* - May 6th, 2020
 
 * The "Disappear" animation for Pitfalls has been sped up by a factor of 2.

@@ -5,6 +5,7 @@ Changes:
 - Judas no longer starts with 3 coins
 - Judas starts with a bomb and a half soul heart
 - Blue Baby starts with an extra half soul heart
+- Renamed "Black Judas" to "Dark Judas"
 
 -->
 
@@ -101,7 +102,7 @@ Changes:
           nameimage="PlayerName_10_Lazarus.png"
           portrait="PlayerPortrait_10_Lazarus2.png"
           bigportrait="PlayerPortraitBig_10_Lazarus2.png" costume="33" skinColor="-1" />
-	<player id="12" name="Black Judas" skin="Character_013_BlackJudas.png" black="4"
+	<player id="12" name="Dark Judas" skin="Character_013_BlackJudas.png" black="4"
           nameimage="PlayerName_04_Judas.png"
           portrait="PlayerPortrait_BlackJudas.png"
           bigportrait="PlayerPortraitBig_BlackJudas.png" skinColor="1" />

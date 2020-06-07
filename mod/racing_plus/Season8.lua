@@ -159,8 +159,6 @@ function Season8:CheckpointTouched()
   if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     return
   end
-
-  Season8.identifiedPills = g:TableClone(g.run.pills)
 end
 
 -- ModCallbacks.MC_POST_RENDER (2)
@@ -430,6 +428,9 @@ function Season8:PostGameStarted()
 
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
     g.p:AddHearts(1)
+    -- We need to touch it to lock in the Bookworm touch
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 0, false) -- 34
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
 
   elseif character == PlayerType.PLAYER_EVE then -- 5
@@ -683,8 +684,6 @@ function Season8:GetPillEffect(selectedPillEffect, pillColor)
   local challenge = Isaac.GetChallenge()
 
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
-    Isaac.DebugString("Season 8 - Replacing a pill effect of " .. tostring(selectedPillEffect) ..
-                      " with " .. tostring(Season8.runPillEffects[pillColor]) .. ".")
     return Season8.runPillEffects[pillColor]
   end
 end
@@ -695,10 +694,13 @@ function Season8:PHD()
   for i, effect in ipairs(Season8.runPillEffects) do
     if effect == PillEffect.PILLEFFECT_HEALTH_DOWN then -- 6
       Season8.runPillEffects[i] = PillEffect.PILLEFFECT_HEALTH_UP -- 7
+      Isaac.DebugString("Season 8 - Converted Health Down to Health Up.")
     elseif effect == PillEffect.PILLEFFECT_SPEED_DOWN then -- 13
       Season8.runPillEffects[i] = PillEffect.PILLEFFECT_SPEED_UP -- 14
+      Isaac.DebugString("Season 8 - Converted Speed Down to Speed Up.")
     elseif effect == PillEffect.PILLEFFECT_TEARS_DOWN then -- 15
       Season8.runPillEffects[i] = PillEffect.PILLEFFECT_TEARS_UP -- 16
+      Isaac.DebugString("Season 8 - Converted Tears Down to Tears Up.")
     end
   end
 end

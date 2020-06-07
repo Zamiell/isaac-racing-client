@@ -25,6 +25,16 @@ function Errors:Draw()
     Errors:DrawInvalidSaveFile()
     return true
 
+  elseif g.invalidItemsXML then
+    Errors:DrawInvalidItemsXML()
+    return true
+
+  --[[
+  elseif not g.luaDebug then
+    Errors:DrawNoLuaDebug()
+    return true
+  --]]
+
   elseif (Speedrun:InSpeedrun() or
           challenge == Isaac.GetChallengeIdByName("Change Char Order")) and
          RacingPlusData == nil then
@@ -120,6 +130,43 @@ function Errors:DrawInvalidSaveFile()
   Isaac.RenderText("following link:", x, y, 2, 2, 2, 2)
   y = y + 20
   Isaac.RenderText("https://pastebin.com/1YY4jb4P", x, y, 2, 2, 2, 2)
+end
+
+function Errors:DrawInvalidItemsXML()
+  local x = Errors.startingX
+  local y = Errors.startingY
+  Isaac.RenderText("Error: You are using a mod that conflicts with", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("Racing+. Please disable all other mods, and then", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("completely close and re-open the game. See the", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("Discord server for more information about legal", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("mods:", x, y, 2, 2, 2, 2)
+  x = x - 42
+  y = y + 20
+  Isaac.RenderText("https://www.speedrun.com/afterbirthplus/thread/pffgt", x, y, 2, 2, 2, 2)
+end
+
+function Errors:DrawNoLuaDebug()
+  local x = Errors.startingX
+  local y = Errors.startingY
+  Isaac.RenderText("Error: In order for Racing+ to work correctly,", x, y, 2, 2, 2, 2)
+  x = x + 42
+  y = y + 10
+  Isaac.RenderText("you must set \"--luadebug\" in the Steam launch", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("options for the game. Before doing this, it is", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("imperative that you disable any mods that you do", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("not fully trust. For more information, please", x, y, 2, 2, 2, 2)
+  y = y + 10
+  Isaac.RenderText("read the following link:", x, y, 2, 2, 2, 2)
+  y = y + 20
+  Isaac.RenderText("https://pastebin.com/2ZnRxDba", x, y, 2, 2, 2, 2)
 end
 
 function Errors:DrawRacingPlusData1()

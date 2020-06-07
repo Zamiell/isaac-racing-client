@@ -56,6 +56,12 @@ function SaveDat:Load()
     SaveDat.failedCounter = 0
 
     -- If anything changed, write it to the log
+    if oldRace.userID ~= g.race.userID then
+      Isaac.DebugString("ModData userID changed: " .. tostring(g.race.userID))
+    end
+    if oldRace.raceID ~= g.race.raceID then
+      Isaac.DebugString("ModData raceID changed: " .. tostring(g.race.raceID))
+    end
     if oldRace.status ~= g.race.status then
       Isaac.DebugString("ModData status changed: " .. g.race.status)
       SaveDat:ChangedStatus()
@@ -67,9 +73,15 @@ function SaveDat:Load()
     if oldRace.ranked ~= g.race.ranked then
       Isaac.DebugString("ModData ranked changed: " .. tostring(g.race.ranked))
     end
+    if oldRace.solo ~= g.race.solo then
+      Isaac.DebugString("ModData solo changed: " .. tostring(g.race.solo))
+    end
     if oldRace.rFormat ~= g.race.rFormat then
       Isaac.DebugString("ModData rFormat changed: " .. g.race.rFormat)
       SaveDat:ChangedFormat()
+    end
+    if oldRace.difficulty ~= g.race.difficulty then
+      Isaac.DebugString("ModData difficulty changed: " .. tostring(g.race.difficulty))
     end
     if oldRace.character ~= g.race.character then
       Isaac.DebugString("ModData character changed: " .. g.race.character)
@@ -92,6 +104,9 @@ function SaveDat:Load()
     if oldRace.place ~= g.race.place then
       Isaac.DebugString("ModData place changed: " .. tostring(g.race.place))
       SaveDat:ChangedPlace()
+    end
+    if oldRace.numEntrants ~= g.race.numEntrants then
+      Isaac.DebugString("ModData numEntrants changed: " .. tostring(g.race.numEntrants))
     end
   end
 end

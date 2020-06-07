@@ -8,6 +8,7 @@ local Sprites                 = require("racing_plus/sprites")
 local Schoolbag               = require("racing_plus/schoolbag")
 local SoulJar                 = require("racing_plus/souljar")
 local FastClear               = require("racing_plus/fastclear")
+local FastTravel              = require("racing_plus/fasttravel")
 local Speedrun                = require("racing_plus/speedrun")
 local RacePostGameStarted     = require("racing_plus/racepostgamestarted")
 local SpeedrunPostGameStarted = require("racing_plus/speedrunpostgamestarted")
@@ -59,6 +60,11 @@ function PostGameStarted:Main(saveState)
       Isaac.DebugString("Respawned 2 Gaping Maws.")
     end
 
+    -- Cancel fast-travel if we save & quit in the middle of the jumping animation
+    if g.run.trapdoor.state == FastTravel.state.PLAYER_ANIMATION then
+      g.run.trapdoor.state = FastTravel.state.DISABLED
+    end
+
     -- We don't need to do the long series of checks if they quit and continued in the middle of a run
     return
   end
@@ -93,6 +99,7 @@ function PostGameStarted:Main(saveState)
   g.run.playerGenPedSeeds = { startSeed }
   g.RNGCounter.BookOfSin = startSeed
   g.RNGCounter.DeadSeaScrolls = startSeed
+  g.RNGCounter.GuppysHead = startSeed
   g.RNGCounter.GuppysCollar = startSeed
   g.RNGCounter.ButterBean = startSeed
   g.RNGCounter.DevilRoomKrampus = startSeed
@@ -114,6 +121,9 @@ function PostGameStarted:Main(saveState)
   Speedrun.sprites = {}
   Timer.sprites = {}
 
+  -- We may have had the Curse of the Unknown seed enabled in a previous run, so ensure that it is removed
+  g.seeds:RemoveSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
+
   -- We need to disable achievements so that the R+ sprite shows above the stats on the left side of the screen
   -- We want the R+ sprite to display on all runs so that the "1st" sprite has somewhere to go
   -- The easiest way to disable achievements without affecting gameplay is to enable the easter egg that disables
@@ -121,7 +131,9 @@ function PostGameStarted:Main(saveState)
   g.seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_CURSE_DARKNESS) -- 63
 
   if PostGameStarted:CheckCorruptMod() or
-     PostGameStarted:CheckFullyUnlockedSave() then
+     PostGameStarted:CheckNotFullyUnlockedSave() or
+     PostGameStarted:CheckInvalidItemsXML() then
+     --PostGameStarted:CheckMissingSocket() then
 
     return
   end
@@ -222,7 +234,7 @@ end
 -- We can verify that the player is playing on a fully unlocked save by file by
 -- going to a specific seed on Eden and checking to see if the items are accurate
 -- This function returns true if the MC_POST_GAME_STARTED callback should halt
-function PostGameStarted:CheckFullyUnlockedSave()
+function PostGameStarted:CheckNotFullyUnlockedSave()
   -- Local variables
   local character = g.p:GetPlayerType()
   local activeItem = g.p:GetActiveItem()
@@ -323,6 +335,47 @@ function PostGameStarted:CheckFullyUnlockedSave()
     g.saveFile.state = g.saveFileState.FINISHED
     Isaac.DebugString("Valid save file detected.")
   end
+
+  return false
+end
+
+-- We can verify that the "items.xml" is legit, because some other mods will write over it
+function PostGameStarted:CheckInvalidItemsXML()
+  local breakfastCacheFlags = g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BREAKFAST).CacheFlags -- 25
+  if breakfastCacheFlags ~= 8 then
+    g.invalidItemsXML = true
+  end
+end
+
+function PostGameStarted:CheckMissingSocket()
+  if not g.luaDebug then
+    return true
+  end
+
+  if g.socket then
+    Isaac.DebugString("Racing+ client socket already initialized.")
+    --[[
+    local returnValue = g.socket:send("poop\n")
+    if returnValue == nil then
+      Isaac.DebugString("Socket closed.")
+      g.socket = nil
+    end
+    return false
+    --]]
+  end
+
+  local socket = require("socket")
+  g.socket = socket.tcp()
+  g.socket:settimeout(0.01)
+  local returnValue = g.socket:connect("127.0.0.1", 12001)
+  if returnValue == nil then
+    Isaac.DebugString("Racing+ client not detected.")
+    g.socket = nil
+  else
+    Isaac.DebugString("Connected to the Racing+ client: ")
+  end
+
+  return false
 end
 
 -- This is done when a run is started
@@ -451,6 +504,10 @@ function PostGameStarted:Character()
     Isaac.DebugString("Removing collectible " .. passiveItem)
     Isaac.DebugString("Adding collectible " .. activeItem)
     Isaac.DebugString("Adding collectible " .. passiveItem)
+
+    -- Store Eden's natural starting items so that we can show them to the player
+  g.run.edenStartingItems[1] = activeItem
+  g.run.edenStartingItems[2] = passiveItem
 
   elseif character == PlayerType.PLAYER_THELOST then -- 10
     -- Make the D6 appear first on the item tracker

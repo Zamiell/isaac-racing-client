@@ -92,6 +92,7 @@ While there are thousands of rooms in the game, many players have already seen t
   * Teleport!, Undefined, Cursed Eye, Broken Remote, and Telepills teleports
   * Dead Sea Scrolls item selection
   * cards from Sloth, Super Sloth, Pride, and Super Pride
+  * Guppy's Head fly count
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
 * [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
@@ -143,6 +144,7 @@ While there are thousands of rooms in the game, many players have already seen t
   * Hush's appear animation
   * Ultra Greed's appear and death animation
 * Teleporting animations are sped up by a factor of 2.
+* The disappearing animation for Pitfalls are sped up by a factor of 2.
 
 ### Bug Fixes
 
@@ -166,6 +168,8 @@ While there are thousands of rooms in the game, many players have already seen t
 * Multi-segment bosses will no longer drop more than one black heart when killed with Maw of the Void, Athame, or Serpent's Kiss.
 * The trapdoor / beam of light in I AM ERROR rooms will no longer be accessible if the room is not cleared.
 * All forms of teleport will no longer send you to an invalid entrance.
+* The synergy of The Ludovico Technique, Brimstone, and Dr. Fetus will no longer softlock you.
+* The synergy of The Ludovico Technique, Technology, and Mom's Knife will no longer softlock you.
 
 ### Graphics & Sound Fixes
 

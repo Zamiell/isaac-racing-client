@@ -11,7 +11,6 @@ Steam Workshop URL: https://steamcommunity.com/sharedfiles/filedetails/?id=85762
 TODO:
 - In Rep, give Judas full red heart, give Cain + Eve + Apollyon half soul
 - Implement time offsets, show on the first room of each floor
-- Opponent's shadows
 
 POST-FLIP ACTIONS:
 1) Remove the duplicated start rooms for The Chest / Dark Room
@@ -80,9 +79,10 @@ local FastClear           = require("racing_plus/fastclear") -- Functions for th
 local Schoolbag           = require("racing_plus/schoolbag") -- Functions for the Schoolbag custom item
 local Speedrun            = require("racing_plus/speedrun") -- Functions for custom challenges
 local Season7             = require("racing_plus/season7") -- Functions for R+7 Season 7
-local Samael              = require("racing_plus/samael") -- Samael functions
-local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions
-local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions
+local Samael              = require("racing_plus/samael") -- Samael functions (custom character)
+local JrFetus             = require("racing_plus/jrfetus") -- Jr. Fetus functions (custom boss)
+local Mahalath            = require("racing_plus/mahalath") -- Mahalath functions (custom boss)
+local PotatoDummy         = require("racing_plus/potatodummy") -- Potato Dummy functions (custom enemy)
 local Debug               = require("racing_plus/debug") -- Debug functions
 
 -- Initialize the "g.run" table
@@ -250,6 +250,8 @@ RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item97, -- 23
                        CollectibleType.COLLECTIBLE_BOOK_OF_SIN) -- 97
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item124, -- 23
                        CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item145, -- 23
+                       CollectibleType.COLLECTIBLE_GUPPYS_HEAD) -- 145
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item286, -- 23
                        CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_USE_ITEM, PreUseItem.Item422, -- 23
@@ -430,6 +432,13 @@ RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Mahalath.check_bomb,
 RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, Mahalath.check_del,
                        EntityType.ENTITY_DELIRIUM) -- 412
 RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mahalath.take_dmg)
+
+-- Potato Dummy callbacks
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,       PotatoDummy.PostUpdate)
+RacingPlus:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG,   PotatoDummy.EntityTakeDmg, EntityType.ENTITY_NERVE_ENDING)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,       PotatoDummy.PostRender)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, PotatoDummy.PostGameStarted)
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,     PotatoDummy.PostNewRoom)
 
 -- MinimapAPI init
 if MinimapAPI ~= nil then

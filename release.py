@@ -67,13 +67,13 @@ VERSION = 'v' + DATA['version']
 
 if not ARGS.skipmod:
     # Search for debug print statements
-    output = ''
+    OUTPUT = ''
     try:
-        output = subprocess.check_output(['grep', '-rni', 'getting here', MOD_DIR]).strip()
+        OUTPUT = subprocess.check_output(['grep', '-rni', 'getting here', MOD_DIR]).strip()
     except subprocess.CalledProcessError:
         # We except a return value of 1 since it should not find any results
         pass
-    if output != '':
+    if OUTPUT != '':
         print('Found leftover debug statements.')
         sys.exit(1)
 

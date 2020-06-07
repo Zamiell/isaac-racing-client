@@ -339,6 +339,17 @@ ExecuteCmd.functions["doors"] = function(params)
   end
 end
 
+ExecuteCmd.functions["finish"] = function(params)
+  Isaac.ExecuteCommand("stage 11a")
+  Isaac.ExecuteCommand("boss")
+  Isaac.ExecuteCommand("cc")
+  Isaac.ExecuteCommand("speed")
+end
+
+ExecuteCmd.functions["fool"] = function(params)
+  g.p:UseCard(Card.CARD_FOOL) -- 1
+end
+
 ExecuteCmd.functions["error"] = function(params)
   ExecuteCmd:IAMERROR()
 end

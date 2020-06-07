@@ -10,7 +10,7 @@ local Schoolbag          = require("racing_plus/schoolbag")
 local SoulJar            = require("racing_plus/souljar")
 local FastTravel         = require("racing_plus/fasttravel")
 local PostItemPickup     = require("racing_plus/postitempickup")
-local Race               = require("racing_plus/race")
+local RacePostUpdate     = require("racing_plus/racepostupdate")
 local Season5            = require("racing_plus/season5")
 local Season7            = require("racing_plus/season7")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
@@ -24,6 +24,7 @@ local ChallengeRooms     = require("racing_plus/challengerooms")
 function PostUpdate:Main()
   PostUpdate:CheckStartTime()
   PostUpdate:CheckRoomCleared()
+  PostUpdate:CheckDDItems()
   PostUpdate:CheckKeeperHearts()
   PostUpdate:CheckItemPickup()
   PostUpdate:CheckTransformations()
@@ -34,6 +35,7 @@ function PostUpdate:Main()
   PostUpdate:CheckMutantSpiderInnerEye()
   PostUpdate:CrownOfLight()
   PostUpdate:CheckLilithExtraIncubus()
+  PostUpdate:CheckLudoSoftlock()
   PostUpdate:CheckWishbone()
   PostUpdate:CheckWalnut()
   PostUpdate:Fix9VoltSynergy()
@@ -74,7 +76,7 @@ function PostUpdate:Main()
   Pills:CheckPHD()
 
   -- Handle things for races
-  Race:PostUpdate()
+  RacePostUpdate:Main()
 
   -- Handle things for multi-character speedruns
   SpeedrunPostUpdate:Main()
@@ -118,6 +120,41 @@ function PostUpdate:CheckRoomCleared()
 
   -- Handle speedrun tasks
   Season7:RoomCleared()
+end
+
+function PostUpdate:CheckDDItems()
+  -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
+  local roomType = g.r:GetType()
+  local roomFrameCount = g.r:GetFrameCount()
+
+  -- Check to see if the player is taking a devil deal
+  if roomType ~= RoomType.ROOM_CURSE and -- 10 (in Racing+ Rebalanced, there are DD items in a Curse Room)
+     roomType ~= RoomType.ROOM_DEVIL and -- 14
+     roomType ~= RoomType.ROOM_BLACK_MARKET then -- 22
+
+    return
+  end
+
+  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, -- 5.100
+                                        false, false)
+  local numDDItems = 0
+  for _, entity in ipairs(collectibles) do
+    local collectible = entity:ToPickup()
+    if collectible.Price < 0 then
+      numDDItems = numDDItems + 1
+    end
+  end
+
+  if roomFrameCount == 1 then
+   g.run.numDDItems = numDDItems
+   return
+ end
+
+  if numDDItems < g.run.numDDItems then
+    g.run.numDDItems = numDDItems
+    g.run.frameOfLastDD = gameFrameCount
+  end
 end
 
 -- Keep track of our hearts if we are Keeper
@@ -189,6 +226,18 @@ function PostUpdate:CheckItemPickup()
     if g.run.pickingUpItem ~= 0 then
       -- Check to see if we need to do something specific after this item is added to our inventory
       if g.run.pickingUpItemType ~= ItemType.ITEM_TRINKET then -- 2
+        -- Keep track of all the items that we pick up
+        g.run.items[#g.run.items + 1] = g.run.pickingUpItem
+
+        -- Check to see if we picked up the item that conflicts with the custom 3 Dollar Bill
+        if g.p:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED) and
+           g.run.pickingUpItem == g.run.threeDollarBillItem then
+
+          -- Set the variable back to 0 so that the new item does not get blown away after a room change
+          g.run.threeDollarBillItem = 0
+        end
+
+        -- Automatically insert pickups
         local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
         if postItemFunction ~= nil and
           roomIndex == g.run.pickingUpItemRoom and
@@ -486,6 +535,28 @@ function PostUpdate:CheckLilithExtraIncubus()
     g.run.extraIncubus = false
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
     Isaac.DebugString("Removed the extra Incubus.")
+  end
+end
+
+function PostUpdate:CheckLudoSoftlock()
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) and -- 329
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and -- 118
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) then -- 52
+
+    -- These 3 items will cause a stationary Brimstone ring to surround the player
+    -- It deals damage, but it can softlock the game if there are island enemies
+    -- Just remove Dr. Fetus to fix the softlock condition and transform it into a normal Ludo + Brim
+    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) -- 52
+  end
+
+  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) and -- 329
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) and -- 68
+     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
+
+    -- These 3 items will cause a stationary laser ring to surround the player
+    -- It deals damage, but it can softlock the game if there are island enemies
+    -- Just remove Mom's Knife to fix the softlock condition and transform it into a normal Ludo + Technology
+    g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
   end
 end
 

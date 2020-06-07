@@ -4,6 +4,7 @@ local CheckEntities = {}
 local g                  = require("racing_plus/globals")
 local FastTravel         = require("racing_plus/fasttravel")
 local Race               = require("racing_plus/race")
+local RacePostUpdate     = require("racing_plus/racepostupdate")
 local SeededDeath        = require("racing_plus/seededdeath")
 local Speedrun           = require("racing_plus/speedrun")
 local Season6            = require("racing_plus/season6")
@@ -41,6 +42,7 @@ function CheckEntities:Grid()
 
       elseif saveState.Type == GridEntityType.GRID_PRESSURE_PLATE then -- 20
         ChangeCharOrder:CheckButtonPressed(gridEntity)
+        RacePostUpdate:CheckFinalButtons(gridEntity, i)
         Season6:CheckVetoButton(gridEntity)
       end
     end

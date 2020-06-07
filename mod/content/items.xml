@@ -2,8 +2,8 @@
 	<passive description="More active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag" />
 	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
-	<passive description="Let's keep this run going" gfx="Collectibles_127_ForgetMeNow.png" name="Victory Lap" />
-	<passive description="Roll the credits" gfx="Finished.png" name="Finished" />
+	<passive description="Rainbow tears" gfx="Collectibles_191_3DollarBill.png" name="3 Dollar Bill (Seeded)" />
+	<passive description="Roll the credits" gfx="Finished.png" name="Placeholder" />
 	<passive description="B1 Treasure Room items are off limits in this format." gfx="Off_Limits.png" name="Off Limits" />
 	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
 	<passive description="On to the next character!" gfx="Finished.png" name="Checkpoint" />

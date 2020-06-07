@@ -2,7 +2,7 @@ local UseItem = {}
 
 -- Includes
 local g            = require("racing_plus/globals")
-local Race         = require("racing_plus/race")
+local PostNewRoom  = require("racing_plus/postnewroom")
 local SeededFloors = require("racing_plus/seededfloors")
 
 -- ModCallbacks.MC_USE_ITEM (3)
@@ -132,7 +132,7 @@ function UseItem:Item324()
     local room = rooms:Get(i)
     local roomType = room.Data.Type
     if roomType == RoomType.ROOM_TREASURE and -- 4
-       not Race:CheckBanB1TreasureRoom() then
+       not PostNewRoom:CheckBanB1TreasureRoom() then
 
       roomIndexes[#roomIndexes + 1] = room.SafeGridIndex
     end

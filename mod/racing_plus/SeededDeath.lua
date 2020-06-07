@@ -21,17 +21,8 @@ function SeededDeath:PostUpdate()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local previousRoomIndex = g.l:GetPreviousRoomIndex()
-  local roomType = g.r:GetType()
   local character = g.p:GetPlayerType()
   local playerSprite = g.p:GetSprite()
-
-  -- Check to see if the player is taking a devil deal
-  if not g.p:IsItemQueueEmpty() and
-     (roomType == RoomType.ROOM_DEVIL or -- 14
-      roomType == RoomType.ROOM_BLACK_MARKET) then -- 22
-
-    g.run.seededDeath.frameOfLastDD = gameFrameCount
-  end
 
   -- Fix the bug where The Forgotten will not be properly faded
   -- if he switched from The Soul immediately before the debuff occured
@@ -144,9 +135,11 @@ function SeededDeath:PostNewRoom()
     -- Start the debuff and set the finishing time to be in the future
     SeededDeath:DebuffOn()
     local debuffTimeMilliseconds = SeededDeath.debuffTime * 1000
+    --[[
     if g.debug then
       debuffTimeMilliseconds = 5000
     end
+    --]]
     g.run.seededDeath.debuffEndTime = Isaac.GetTime() + debuffTimeMilliseconds
 
     -- Play the animation where Isaac lies in the fetal position
@@ -218,7 +211,7 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- Do not revive the player if they took a devil deal within the past 5 seconds (150 game frames)
   -- (we cannot use the "DamageFlag.DAMAGE_DEVIL" to determine this because the player could have
   -- taken a devil deal and then died to a fire / spikes / etc.)
-  if gameFrameCount <= g.run.seededDeath.frameOfLastDD + 150 then
+  if gameFrameCount <= g.run.frameOfLastDD + 150 then
     Isaac.DebugString("Not invoking seeded death since we are within 5 seconds of a devil deal.")
     return
   end
@@ -368,6 +361,7 @@ function SeededDeath:DebuffOn()
   end
 
   -- Now that we have deleted every item, update the players stats
+  g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
   g.p:EvaluateItems()
 
   -- Remove any golden bombs and keys
@@ -380,6 +374,9 @@ function SeededDeath:DebuffOn()
     -- so just call it 100 times to be safe
     g.p:ClearDeadEyeCharge()
   end
+
+  -- Make them take "red heart damage" for the purposes of getting a Devil Deal
+  g.l:SetRedHeartDamage()
 
   -- Fade the player
   playerSprite.Color = Color(1, 1, 1, 0.25, 0, 0, 0)

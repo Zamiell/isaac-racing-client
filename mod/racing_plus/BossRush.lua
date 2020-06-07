@@ -131,6 +131,10 @@ function BossRush:Start()
     end
   end
 
+  -- Start the music
+  g.music:Fadein(Music.MUSIC_CHALLENGE_FIGHT, 0) -- 38
+  g.music:UpdateVolume()
+
   -- Calculate the bosses for each wave
   g.run.bossRush.bosses = {}
   local seed = startSeed
@@ -303,25 +307,24 @@ function BossRush:SpawnWave(bossesPerWave)
       numToSpawn = 3
     end
 
+    local position
+    for k = 1, 100 do
+      -- If this is the first boss, spawn it to the left of the items
+      -- If this is the second boss, spawn it to the right of the items
+      -- If this is the third boss, spawn it above the items
+      position = g.r:FindFreePickupSpawnPosition(bossPos[i], k, true)
+
+      -- However, ensure that we do not spawn a boss too close to the player
+      if position:Distance(g.p.Position) > 120 then
+        break
+      end
+    end
+    if boss[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
+      -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
+      position = g:GridToPos(12, 0)
+    end
+
     for j = 1, numToSpawn do
-      local position
-      for k = 1, 100 do
-        -- If this is the first boss, spawn it to the left of the items
-        -- If this is the second boss, spawn it to the right of the items
-        -- If this is the third boss, spawn it above the items
-        position = g.r:FindFreePickupSpawnPosition(bossPos[i], k, true)
-
-        -- However, ensure that we do not spawn a boss too close to the player
-        if position:Distance(g.p.Position) > 120 then
-          break
-        end
-      end
-
-      if boss[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
-        -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
-        position = g:GridToPos(12, 0)
-      end
-
       Isaac.Spawn(boss[1], boss[2], 0, position, g.zeroVector, nil)
     end
   end
@@ -367,20 +370,14 @@ function BossRush:Finish()
     g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, g.zeroVector, nil, 0, roomSeed) -- 5.100
   end
 
-  -- Open the door
-  local num = g.r:GetGridSize()
-  for i = 1, num do
-    local gridEntity = g.r:GetGridEntity(i)
-    if gridEntity ~= nil then
-      local door = gridEntity:ToDoor()
-      if door ~= nil then
-        door:Open()
-      end
-    end
-  end
+  g:OpenDoors()
 
   -- Play the sound effect for the doors opening
   g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
+
+  -- Set the music back
+  g.music:Fadein(Music.MUSIC_BOSS_OVER, 0) -- 38
+  g.music:UpdateVolume()
 
   -- Announce the completion via streak text
   g.run.streakText = "Complete!"

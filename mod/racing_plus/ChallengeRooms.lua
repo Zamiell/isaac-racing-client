@@ -23,6 +23,7 @@ ChallengeRooms.normalWaves = {
   },
   {
     -- Caves / Catacombs / Flooded Caves
+    --[[
     {EntityType.ENTITY_HIVE, 3}, -- 22
     {EntityType.ENTITY_CHARGER, 5}, -- 23
     {EntityType.ENTITY_GLOBIN, 4}, -- 24
@@ -31,10 +32,11 @@ ChallengeRooms.normalWaves = {
     {EntityType.ENTITY_SPITY, 5}, -- 31
     {EntityType.ENTITY_BONY, 2}, -- 227
     {EntityType.ENTITY_TUMOR, 2}, -- 229
+    --]]
     {EntityType.ENTITY_GRUB, 1}, -- 239
     {EntityType.ENTITY_WALL_CREEP, 3}, -- 240
     {EntityType.ENTITY_ROUND_WORM, 4}, -- 244
-    {EntityType.ENTITY_NIGHT_CRAWLER, 3}, -- 255
+    --{EntityType.ENTITY_NIGHT_CRAWLER, 3}, -- 255
   },
   {
     -- Depths / Necropolis / Dank Depths
@@ -198,6 +200,10 @@ function ChallengeRooms:Start()
       end
     end
   end
+
+  -- Start the music
+  g.music:Fadein(Music.MUSIC_CHALLENGE_FIGHT, 0) -- 38
+  g.music:UpdateVolume()
 
   -- Get the specific waves for this particular Challenge Room
   local waveType = math.ceil(stage / 2) -- e.g. Depths 1 is stage 5, which is wave type 3
@@ -389,33 +395,35 @@ function ChallengeRooms:SpawnWave()
       -- Gurglings and Turdlings spawn in sets of 2
       -- (this is how it is in vanilla Challenge Rooms)
       numToSpawn = 2
+    elseif wave[1] == EntityType.ENTITY_GRUB then-- 239
+      -- Grub is similar to Larry Jr.
+      numToSpawn = 6
+    end
+
+    local position
+    for k = 1, 100 do
+      -- Get a position to spawn the enemy at
+      if bossChallengeRoom or numEnemiesInWave == 1 then
+        position = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), k, true)
+      elseif numEnemiesInWave == 2 then
+        position = g.r:FindFreePickupSpawnPosition(wavePositions2[i], k, true)
+      elseif numEnemiesInWave == 3 then
+        position = g.r:FindFreePickupSpawnPosition(wavePositions3[i], k, true)
+      else
+        position = g.r:FindFreePickupSpawnPosition(wavePositions5[i], k, true)
+      end
+
+      -- Ensure that we do not spawn a boss too close to the player
+      if position:Distance(g.p.Position) > 120 then
+        break
+      end
+    end
+    if wave[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
+      -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
+      position = g:GridToPos(6, 0)
     end
 
     for j = 1, numToSpawn do
-      local position
-      for k = 1, 100 do
-        -- Get a position to spawn the enemy at
-        if bossChallengeRoom or numEnemiesInWave == 1 then
-          position = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), k, true)
-        elseif numEnemiesInWave == 2 then
-          position = g.r:FindFreePickupSpawnPosition(wavePositions2[i], k, true)
-        elseif numEnemiesInWave == 3 then
-          position = g.r:FindFreePickupSpawnPosition(wavePositions3[i], k, true)
-        else
-          position = g.r:FindFreePickupSpawnPosition(wavePositions5[i], k, true)
-        end
-
-        -- Ensure that we do not spawn a boss too close to the player
-        if position:Distance(g.p.Position) > 120 then
-          break
-        end
-      end
-
-      if wave[1] == EntityType.ENTITY_MAMA_GURDY then -- 266
-        -- Hard code Mama Gurdy to spawn at the top of the room to prevent glitchy behavior
-        position = g:GridToPos(6, 0)
-      end
-
       if bossChallengeRoom then
         Isaac.Spawn(wave[1], wave[2], 0, position, g.zeroVector, nil)
       else
@@ -457,6 +465,16 @@ function ChallengeRooms:Finish()
 
   -- Play the sound effect for the doors opening
   g.sfx:Play(SoundEffect.SOUND_DOOR_HEAVY_OPEN, 1, 0, false, 1) -- 36
+
+  -- Set the music back
+  g.music:Fadein(Music.MUSIC_BOSS_OVER, 0) -- 38
+  g.music:UpdateVolume()
+end
+
+function ChallengeRooms:Teleport()
+  -- This is needed in case a player teleports from a Challenge room into the same Challenge Room
+  g.run.challengeRoom.started = false
+  g.run.challengeRoom.currentWave = 0
 end
 
 return ChallengeRooms

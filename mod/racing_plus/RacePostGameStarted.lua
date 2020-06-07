@@ -344,6 +344,9 @@ function RacePostGameStarted:Seeded()
       Schoolbag:Put(CollectibleType.COLLECTIBLE_YUM_HEART, 4) -- 45
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_YUM_HEART) -- 45
     elseif character == PlayerType.PLAYER_JUDAS then -- 3
+      -- We need to touch it to lock in the Bookworm touch
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 0, false) -- 34
+      g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
       Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) -- 34
     elseif character == PlayerType.PLAYER_XXX then -- 4

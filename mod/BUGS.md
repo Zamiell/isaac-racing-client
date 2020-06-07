@@ -26,7 +26,7 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * If you are using a Breath of Life and perform a Schoolbag switch before releasing the spacebar, it will continue to drain your new active item.
 * If you put Telekinesis into the Schoolbag while the effect is active, your other item will be drained. (Found by TaKer093)
 * If you have Breath of Life inside a Schoolbag, it will automatically be dropped by the Butter! trinket if you hold down the "use item" button instead of immediately releasing it. (Found by Thoday)
-* If you use Book of Shadows while shooting Shoop Da Whoop, then the shield will be deactivated when the animation from Shoop Da Whoop ends. (Found by Hispa)
+* If you open the same Eternal Chest two or more times and happen to get a active pedestal item and happen to have an empty Schoolbag, the pedestal item [will automatically be put in the Schoolbag](https://www.twitch.tv/sisuka7/clip/ArtisticSincereChowderRalpherZ).
 
 <br />
 
@@ -48,7 +48,7 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * It does not add the familiars back in the correct order. (Reported by thisguyisbarry)
 * It does not properly account for familiars from Cambion Conception and Immaculate Conception.
 * It can cause you to get a 2nd Small Rock from a tinted rock. (Reported by Moucheron Quipet)
-* It can grant the Stompy transformation if you revive with Magic Mushroom.
+* It can grant the Stompy transformation if you revive with Magic Mushroom or Leo.
 * Reviving with Magic Mushroom bugs out the screen. (Reported by thisguyisbarry)
 * Being a ghost while Mega Blast is active will show the animation playing but the blast itself will be removed.
 * Being a ghost will prevent Brimstone-style lasers from firing. (Reported by Xelnas)

@@ -13,8 +13,21 @@ function EntityTakeDmg:Player(tookDamage, damageAmount, damageFlag, damageSource
     return false
   end
 
+  EntityTakeDmg:SacrificeRoom(damageFlag)
   SoulJar:EntityTakeDmg(damageFlag)
   return SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
+end
+
+function EntityTakeDmg:SacrificeRoom(damageFlag)
+  local roomType = g.r:GetType()
+  if roomType ~= RoomType.ROOM_SACRIFICE then -- 13
+    return
+  end
+
+  local bit = (damageFlag & (1 << 7)) >> 7 -- DamageFlag.DAMAGE_SPIKES
+  if bit == 1 then
+    g.run.numSacrifices = g.run.numSacrifices + 1
+  end
 end
 
 return EntityTakeDmg

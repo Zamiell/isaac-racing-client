@@ -128,6 +128,15 @@ The changed room is as follows:
 
 <br />
 
+### Round Worm Fix
+
+In one room, Round Worms can cause a pseudo-softlock if they continue to appear behind rocks. Some rocks were removed to mitigate this.
+
+The change room is as follows:
+* Basement/Burning: #301
+
+<br />
+
 
 
 

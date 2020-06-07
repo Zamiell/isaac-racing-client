@@ -272,7 +272,14 @@ function Pedestals:Replace(pickup)
   -- The pedestal might be from a chest or machine, so we need to copy the overlay frame
   if pickup.Price == 0 then
     local overlayFrame = pickup:GetSprite():GetOverlayFrame()
-    newPedestal:GetSprite():SetOverlayFrame("Alternates", overlayFrame)
+    if overlayFrame ~= 0 then
+      newPedestal:GetSprite():SetOverlayFrame("Alternates", overlayFrame)
+
+      -- Also mark that we have "touched" a chest, which should start a Challenge Room or Boss Rush
+      g.run.touchedPickup = true -- This variable is tracked per room
+      Isaac.DebugString("Touched pickup (from a chest opening into a pedestal item): " ..
+                        tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+    end
   end
 
   -- Remove the pedestal delay for the Checkpoint, since players will always want to immediately pick it up

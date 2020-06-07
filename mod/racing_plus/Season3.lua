@@ -24,6 +24,9 @@ function Season3:PostGameStarted()
     Schoolbag:Put(CollectibleType.COLLECTIBLE_HOW_TO_JUMP, 0) -- 282
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOW_TO_JUMP) -- 282
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
+    -- We need to touch it to lock in the Bookworm touch
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 0, false) -- 34
+    g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL) -- 34
   elseif character == PlayerType.PLAYER_EVE then -- 5

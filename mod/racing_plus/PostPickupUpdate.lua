@@ -18,9 +18,21 @@ function PostPickupUpdate:Main(pickup)
      not pickup.Touched then
 
     pickup.Touched = true
-    g.run.touchedPickup = true -- This variable is tracked per room
-    Isaac.DebugString("Touched pickup: " ..
-                      tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+
+    -- Some pickups should count as "starting" a Challenge Room or Boss Rush
+    if pickup.Variant == PickupVariant.PICKUP_CHEST or -- 50
+       pickup.Variant == PickupVariant.PICKUP_BOMBCHEST or -- 51
+       pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
+       pickup.Variant == PickupVariant.PICKUP_ETERNALCHEST or -- 53
+       pickup.Variant == PickupVariant.PICKUP_MIMICCHEST or -- 54
+       pickup.Variant == PickupVariant.PICKUP_LOCKEDCHEST or -- 60
+       pickup.Variant == PickupVariant.PICKUP_GRAB_BAG or -- 69
+       pickup.Variant == PickupVariant.PICKUP_REDCHEST then -- 360
+
+      g.run.touchedPickup = true -- This variable is tracked per room
+      Isaac.DebugString("Touched pickup: " ..
+                        tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+    end
 
     if pickup.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
        (pickup.Variant == PickupVariant.PICKUP_KEY and pickup.SubType == 4) then -- Charged Key (30.4)

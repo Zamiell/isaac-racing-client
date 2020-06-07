@@ -196,7 +196,7 @@ ChangeCharOrder.seasons = {
       {3, 6, 1},   -- Judas
       {5, 8, 1},   -- Eve
       {11, 10, 1}, -- Lazarus II
-      {12, 5, 3},  -- Black Judas
+      {12, 5, 3},  -- Dark Judas
       {15, 7, 3},  -- Apollyon
     },
   },

@@ -134,8 +134,41 @@ function PreUseItem:Item124()
   -- When we return from the function below, no animation will play, so we have to explitily perform one
   g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS, "UseItem", "PlayerPickup") -- 124
 
+  -- Get rid of the charges
+  -- (otherwise, the charges won't be consistently depleted)
+  local activeCharge = g.p:GetActiveCharge()
+  local batteryCharge = g.p:GetBatteryCharge()
+  local totalCharge = activeCharge + batteryCharge
+  totalCharge = totalCharge - 2
+  g.p:SetActiveCharge(totalCharge)
+
   -- Since we cancel the original effect, the UseItem callback will never fire, so do it manually
   UseItem:Main(CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS) -- 124
+
+  -- Cancel the original effect
+  return true
+end
+
+-- CollectibleType.COLLECTIBLE_GUPPYS_HEAD (145)
+function PreUseItem:Item145()
+  g.RNGCounter.GuppysHead = g:IncrementRNG(g.RNGCounter.GuppysHead)
+  math.randomseed(g.RNGCounter.GuppysHead)
+  local numFlies = math.random(2, 4)
+  g.p:AddBlueFlies(numFlies, g.p.Position, nil)
+
+  -- When we return from the function below, no animation will play, so we have to explitily perform one
+  g.p:AnimateCollectible(CollectibleType.COLLECTIBLE_GUPPYS_HEAD, "UseItem", "PlayerPickup") -- 145
+
+  -- Get rid of the charges
+  -- (otherwise, the charges won't be consistently depleted)
+  local activeCharge = g.p:GetActiveCharge()
+  local batteryCharge = g.p:GetBatteryCharge()
+  local totalCharge = activeCharge + batteryCharge
+  totalCharge = totalCharge - 1
+  g.p:SetActiveCharge(totalCharge)
+
+  -- Since we cancel the original effect, the UseItem callback will never fire, so do it manually
+  UseItem:Main(CollectibleType.COLLECTIBLE_GUPPYS_HEAD) -- 145
 
   -- Cancel the original effect
   return true

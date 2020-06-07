@@ -9,7 +9,8 @@ function EvaluateCache:Main(player, cacheFlag)
   EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
   EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
   EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
-  EvaluateCache:ThirteenLuck(player, cacheFlag)
+  EvaluateCache:ThirteenLuck(player, cacheFlag) -- +13 luck
+  EvaluateCache:TechZeroBuild(player, cacheFlag)
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   EvaluateCache:DebugStats(player, cacheFlag)
 end
@@ -166,7 +167,20 @@ function EvaluateCache:ThirteenLuck(player, cacheFlag)
   if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
      player:HasCollectible(CollectibleType.COLLECTIBLE_13_LUCK) then
 
-    player.Luck = player.Luck + 13
+    while player.Luck < 13 do
+      player.Luck = player.Luck + 1
+    end
+  end
+end
+
+function EvaluateCache:TechZeroBuild(player, cacheFlag)
+  if cacheFlag == CacheFlag.CACHE_DAMAGE then -- 1
+    if g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_TECHNOLOGY_ZERO) and -- 524
+       g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_POP) and -- 529
+       g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_CUPIDS_ARROW) then -- 48
+
+      player.Damage = player.Damage * 0.5
+    end
   end
 end
 
