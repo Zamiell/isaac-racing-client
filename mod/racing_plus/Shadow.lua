@@ -40,7 +40,7 @@ function Shadow:Draw()
     Shadow.head.Color = Color(1, 1, 1, 0.075, 0, 0, 0)
   end
 
-  if Shadow.isActive then
+  if Shadow.isActive and g.r:GetFrameCount() > 0 then
     local shadowPos = Isaac.WorldToScreen(Vector(state.x, state.y))
 
     if #state.anim_name > 0 then
@@ -110,8 +110,7 @@ function Shadow:PostUpdate()
 
     Shadow.isActive = shadow.level == g.l:GetStage() -- Same level
     Shadow.isActive = Shadow.isActive and shadow.room == g.l:GetCurrentRoomIndex() -- Same room
-    Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- Didnt receive update
-    Shadow.isActive = Shadow.isActive and g.r:GetFrameCount() > 0
+    Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- Didn't receive update
     state.lastUpdated = currentFrame
   end
 end

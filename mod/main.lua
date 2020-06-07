@@ -38,9 +38,10 @@ POST-FLIP ACTIONS:
 local RacingPlus = RegisterMod("Racing+", 1)
 
 -- The Lua code is split up into separate files for organizational purposes
--- (file names must be in a uniquely named directory because no two mods can have the same require path)
--- (in the code, file names must be in lowercase for Linux compatibility purposes;
--- the actual files themselves can have capital letters)
+-- File names must be in a uniquely named directory because no two mods can have the same require
+-- path
+-- In the code, file names must be in lowercase for Linux compatibility purposes;
+-- the actual files themselves can have capital letters
 local g                   = require("racing_plus/globals") -- Global variables
 local NPCUpdate           = require("racing_plus/npcupdate") -- 0
 local PostUpdate          = require("racing_plus/postupdate") -- 1
@@ -125,72 +126,161 @@ RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Mai
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
 
 -- Define NPC callbacks (0)
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC24,
-                       EntityType.ENTITY_GLOBIN) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
-                       EntityType.ENTITY_HOST) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC28,
-                       EntityType.ENTITY_CHUB) -- 28
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC54,
-                       EntityType.ENTITY_FLAMINGHOPPER) -- 54
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC62,
-                       EntityType.ENTITY_PIN) -- 62
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC66,
-                       EntityType.ENTITY_DEATH) -- 66
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
-                       EntityType.ENTITY_BLASTOCYST_BIG) -- 74
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
-                       EntityType.ENTITY_BLASTOCYST_MEDIUM) -- 75
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FreezeImmunity,
-                       EntityType.ENTITY_BLASTOCYST_SMALL) -- 76
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
-                       EntityType.ENTITY_MOBILE_HOST) -- 204
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupHand,
-                       EntityType.ENTITY_MOMS_HAND) -- 213
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC246,
-                       EntityType.ENTITY_RAGLING) -- 246
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupHand,
-                       EntityType.ENTITY_MOMS_DEAD_HAND) -- 287
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupGhost,
-                       EntityType.ENTITY_WIZOOB) -- 219
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC261,
-                       EntityType.ENTITY_DINGLE) -- 261
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.SpeedupGhost,
-                       EntityType.ENTITY_RED_GHOST) -- 285
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC273,
-                       EntityType.ENTITY_THE_LAMB) -- 273
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC275,
-                       EntityType.ENTITY_MEGA_SATAN_2) -- 273
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, FastClear.NPC302,
-                       EntityType.ENTITY_STONEY) -- 302
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.FearImmunity,
-                       EntityType.ENTITY_FORSAKEN) -- 403
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC406,
-                       EntityType.ENTITY_ULTRA_GREED) -- 406
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC411,
-                       EntityType.ENTITY_BIG_HORN) -- 411
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.NPC413,
-                       EntityType.ENTITY_MATRIARCH) -- 413
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC24,
+  EntityType.ENTITY_GLOBIN -- 24
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FearImmunity,
+  EntityType.ENTITY_HOST -- 27
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC28,
+  EntityType.ENTITY_CHUB -- 28
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC54,
+  EntityType.ENTITY_FLAMINGHOPPER -- 54
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC62,
+  EntityType.ENTITY_PIN -- 62
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC66,
+  EntityType.ENTITY_DEATH -- 66
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FreezeImmunity,
+  EntityType.ENTITY_BLASTOCYST_BIG -- 74
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FreezeImmunity,
+  EntityType.ENTITY_BLASTOCYST_MEDIUM -- 75
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FreezeImmunity,
+  EntityType.ENTITY_BLASTOCYST_SMALL -- 76
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FearImmunity,
+  EntityType.ENTITY_MOBILE_HOST -- 204
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.SpeedupHand,
+  EntityType.ENTITY_MOMS_HAND -- 213
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  FastClear.NPC246,
+  EntityType.ENTITY_RAGLING -- 246
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.SpeedupHand,
+  EntityType.ENTITY_MOMS_DEAD_HAND -- 287
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.SpeedupGhost,
+  EntityType.ENTITY_WIZOOB -- 219
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC261,
+  EntityType.ENTITY_DINGLE -- 261
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.SpeedupGhost,
+  EntityType.ENTITY_RED_GHOST -- 285
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC273,
+  EntityType.ENTITY_THE_LAMB -- 273
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC275,
+  EntityType.ENTITY_MEGA_SATAN_2 -- 273
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  FastClear.NPC302,
+  EntityType.ENTITY_STONEY -- 302
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.FearImmunity,
+  EntityType.ENTITY_FORSAKEN -- 403
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC406, -- 406
+  EntityType.ENTITY_ULTRA_GREED
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC411,
+  EntityType.ENTITY_BIG_HORN -- 411
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_NPC_UPDATE,
+  NPCUpdate.NPC413,
+  EntityType.ENTITY_MATRIARCH -- 413
+)
 
 -- Define post-use item callbacks (3)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item44,
-                       CollectibleType.COLLECTIBLE_TELEPORT) -- 44
--- (this callback is also used by Broken Remote)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item105,
-                       CollectibleType.COLLECTIBLE_D6) -- 105
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item127,
-                       CollectibleType.COLLECTIBLE_FORGET_ME_NOW) -- 127
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item286,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item44, -- This callback is also used by Broken Remote
+  CollectibleType.COLLECTIBLE_TELEPORT -- 44
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item105,
+  CollectibleType.COLLECTIBLE_D6 -- 105
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item127,
+  CollectibleType.COLLECTIBLE_FORGET_ME_NOW -- 127
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item286,
                        CollectibleType.COLLECTIBLE_BLANK_CARD) -- 286
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item324,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item324,
                        CollectibleType.COLLECTIBLE_UNDEFINED) -- 324
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item419,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item419,
                        CollectibleType.COLLECTIBLE_TELEPORT_2) -- 419
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item477,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item477,
                        CollectibleType.COLLECTIBLE_VOID) -- 477
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Item523,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  UseItem.Item523,
                        CollectibleType.COLLECTIBLE_MOVING_BOX) -- 523
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, Debug.Main,
+RacingPlus:AddCallback(
+  ModCallbacks.MC_USE_ITEM,
+  Debug.Main,
                        CollectibleType.COLLECTIBLE_DEBUG)
 
 -- Define post-use item callbacks for seeding player-generated pedestals (3)
