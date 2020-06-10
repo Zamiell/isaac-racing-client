@@ -28,25 +28,27 @@ RacePostNewRoom.ThreeDollarBillEffects = {
 }
 
 function RacePostNewRoom:Main()
-  -- Local variables
-  local stage = g.l:GetStage()
-  local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
-  local roomDesc = g.l:GetCurrentRoomDesc()
-  local roomStageID = roomDesc.Data.StageID
-  local roomVariant = roomDesc.Data.Variant
-  local roomType = g.r:GetType()
-  local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
-  local gridSize = g.r:GetGridSize()
-
-  -- Remove the final place graphic if it is showing
+  -- Remove some sprites if they are showing
   Sprites:Init("place2", 0)
+  Sprites:Init("dps-button", 0)
+  Sprites:Init("victory-lap-button", 0)
 
-  -- Go to the custom "Race Room"
+  RacePostNewRoom:GotoRaceRoom()
+  RacePostNewRoom:ThreeDollarBill()
+  RacePostNewRoom:CheckEverythingFloorSkip()
+  RacePostNewRoom:CheckOpenMegaSatanDoor()
+  RacePostNewRoom:CheckVictoryLapBossReplace()
+
+  -- Check for the special death mechanic
+  SeededDeath:PostNewRoom()
+  SeededDeath:PostNewRoomCheckSacrificeRoom()
+
+  -- Check for rooms that should be manually seeded during seeded races
+  SeededRooms:PostNewRoom()
+end
+
+-- Go to the custom "Race Room"
+function RacePostNewRoom:GotoRaceRoom()
   if (g.race.status == "open" or
       g.race.status == "starting") then
 
@@ -59,16 +61,64 @@ function RacePostNewRoom:Main()
     end
     return
   end
+end
 
-  -- Check for the special death mechanic
-  SeededDeath:PostNewRoom()
-  SeededDeath:PostNewRoomCheckSacrificeRoom()
+function RacePostNewRoom:ThreeDollarBill()
+  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED) then
+    return
+  end
 
-  -- Check for rooms that should be manually seeded during seeded races
-  SeededRooms:PostNewRoom()
+  -- Local variables
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
-  RacePostNewRoom:ThreeDollarBill()
-  RacePostNewRoom:ClearButtonSprites()
+  -- Remove the old item
+  if g.run.threeDollarBillItem ~= 0 then
+    g.p:RemoveCollectible(g.run.threeDollarBillItem)
+
+    -- Also remove it from the item tracker
+    Isaac.DebugString("Removing collectible " .. tostring(g.run.threeDollarBillItem))
+  end
+
+  -- Get the new item
+  math.randomseed(roomSeed)
+  local effectIndex = math.random(1, #RacePostNewRoom.ThreeDollarBillEffects)
+  local item = RacePostNewRoom.ThreeDollarBillEffects[effectIndex]
+  if not g.p:HasCollectible(item) then
+    g.run.threeDollarBillItem = item
+    g.p:AddCollectible(item, 0, false, false)
+    return
+  end
+
+  -- We already have this item,
+  -- keep iterating over the effect table until we find an item that we do not have yet
+  local originalIndex = effectIndex
+  while true do
+    effectIndex = effectIndex + 1
+    if effectIndex > #RacePostNewRoom.ThreeDollarBillEffects then
+      effectIndex = 0
+    end
+
+    if effectIndex == originalIndex then
+      -- We have every single item in the list, so do nothing
+      g.run.threeDollarBillItem = 0
+      return
+    end
+
+    local newItem = RacePostNewRoom.ThreeDollarBillEffects[effectIndex]
+    if not g.p:HasCollectible(newItem) then
+      g.run.threeDollarBillItem = newItem
+      g.p:AddCollectible(newItem, 0, false, false)
+      return
+    end
+  end
+end
+
+function RacePostNewRoom:CheckEverythingFloorSkip()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local stageType = g.l:GetStageType()
+  local roomType = g.r:GetType()
+  local gridSize = g.r:GetGridSize()
 
   -- Prevent players from skipping a floor on the "Everything" race goal
   if g.race.goal == "Everything" and
@@ -124,6 +174,50 @@ function RacePostNewRoom:Main()
       end
     end
   end
+end
+
+function RacePostNewRoom:RaceStartRoom()
+  -- Remove all enemies
+  for _, entity in ipairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      entity:Remove()
+    end
+  end
+  g.r:SetClear(true)
+
+  -- We want to trap the player in the room, so delete all 4 doors
+  for i = 0, 3 do
+    g.r:RemoveDoor(i)
+  end
+
+  -- Put the player next to the bottom door
+  local pos = Vector(320, 400)
+  g.p.Position = pos
+
+  -- Put familiars next to the bottom door, if any
+  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
+  for _, familiar in ipairs(familiars) do
+    familiar.Position = pos
+  end
+
+  -- Spawn two Gaping Maws (235.0)
+  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
+  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
+
+  -- Disable the MinimapAPI to emulate what happens with the vanilla map
+  if MinimapAPI ~= nil then
+    MinimapAPI.Config.Disable = true
+  end
+end
+
+function RacePostNewRoom:CheckOpenMegaSatanDoor()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    roomIndex = g.l:GetCurrentRoomIndex()
+  end
 
   -- Check to see if we need to open the Mega Satan Door
   if (g.race.goal == "Mega Satan" or
@@ -140,6 +234,15 @@ function RacePostNewRoom:Main()
     -- so just open it every time we enter the room and silence the sound effect
     Isaac.DebugString("Opened the Mega Satan door.")
   end
+end
+
+function RacePostNewRoom:CheckVictoryLapBossReplace()
+  -- Local variables
+  local roomDesc = g.l:GetCurrentRoomDesc()
+  local roomStageID = roomDesc.Data.StageID
+  local roomVariant = roomDesc.Data.Variant
+  local roomClear = g.r:IsClear()
+  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
 
   -- Check to see if we need to spawn Victory Lap bosses
   if g.raceVars.finished and
@@ -177,101 +280,6 @@ function RacePostNewRoom:Main()
       end
     end
     Isaac.DebugString("Replaced Blue Baby / The Lamb with " .. tostring(numBosses) .. " random bosses.")
-  end
-end
-
-function RacePostNewRoom:ThreeDollarBill()
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED) then
-    return
-  end
-
-  -- Local variables
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
-
-  -- Remove the old item
-  if g.run.threeDollarBillItem ~= 0 then
-    g.p:RemoveCollectible(g.run.threeDollarBillItem)
-
-    -- Also remove it from the item tracker
-    Isaac.DebugString("Removing collectible " .. tostring(g.run.threeDollarBillItem))
-  end
-
-  -- Get the new item
-  math.randomseed(roomSeed)
-  local effectIndex = math.random(1, #RacePostNewRoom.ThreeDollarBillEffects)
-  local item = RacePostNewRoom.ThreeDollarBillEffects[effectIndex]
-  if not g.p:HasCollectible(item) then
-    g.run.threeDollarBillItem = item
-    g.p:AddCollectible(item, 0, false, false)
-    return
-  end
-
-  -- We already have this item,
-  -- keep iterating over the effect table until we find an item that we do not have yet
-  local originalIndex = effectIndex
-  while true do
-    effectIndex = effectIndex + 1
-    if effectIndex > #RacePostNewRoom.ThreeDollarBillEffects then
-      effectIndex = 0
-    end
-
-    if effectIndex == originalIndex then
-      -- We have every single item in the list, so do nothing
-      g.run.threeDollarBillItem = 0
-      return
-    end
-
-    local newItem = RacePostNewRoom.ThreeDollarBillEffects[effectIndex]
-    if not g.p:HasCollectible(newItem) then
-      g.run.threeDollarBillItem = newItem
-      g.p:AddCollectible(newItem, 0, false, false)
-      return
-    end
-  end
-end
-
-function RacePostNewRoom:ClearButtonSprites()
-  if not g.raceVars.finished then
-    return
-  end
-
-  Sprites:Init("dps-button", 0)
-  Sprites:Init("victory-lap-button", 0)
-  Isaac.DebugString("Clearing the button sprites.")
-end
-
-function RacePostNewRoom:RaceStartRoom()
-  -- Remove all enemies
-  for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    local npc = entity:ToNPC()
-    if npc ~= nil then
-      entity:Remove()
-    end
-  end
-  g.r:SetClear(true)
-
-  -- We want to trap the player in the room, so delete all 4 doors
-  for i = 0, 3 do
-    g.r:RemoveDoor(i)
-  end
-
-  -- Put the player next to the bottom door
-  local pos = Vector(320, 400)
-  g.p.Position = pos
-
-  -- Put familiars next to the bottom door, if any
-  local familiars = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -1, -1, false, false) -- 3
-  for _, familiar in ipairs(familiars) do
-    familiar.Position = pos
-  end
-
-  -- Spawn two Gaping Maws (235.0)
-  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
-  Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
-
-  -- Disable the MinimapAPI to emulate what happens with the vanilla map
-  if MinimapAPI ~= nil then
-    MinimapAPI.Config.Disable = true
   end
 end
 

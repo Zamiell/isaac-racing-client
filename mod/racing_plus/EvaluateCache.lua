@@ -5,28 +5,63 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function EvaluateCache:Main(player, cacheFlag)
-  EvaluateCache:Magdalene(player, cacheFlag)
-  EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
-  EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
-  EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
-  EvaluateCache:ThirteenLuck(player, cacheFlag) -- +13 luck
+  -- CacheFlag.CACHE_DAMAGE (1)
   EvaluateCache:TechZeroBuild(player, cacheFlag)
+
+  -- CacheFlag.CACHE_SHOTSPEED (4)
+  EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
+
+  -- CacheFlag.CACHE_RANGE (8)
+  EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
+
+  -- CacheFlag.CACHE_SPEED (16)
+  EvaluateCache:Magdalene(player, cacheFlag)
+
+  -- CacheFlag.CACHE_LUCK (1024)
+  EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
+  EvaluateCache:ThirteenLuck(player, cacheFlag) -- +13 luck
+
+  -- Multiple
   EvaluateCache:DebugStats(player, cacheFlag)
 end
 
-function EvaluateCache:Magdalene(player, cacheFlag)
-  -- Local variables
-  local character = player:GetPlayerType()
-
-  if character ~= PlayerType.PLAYER_MAGDALENA or -- 1
-     cacheFlag ~= CacheFlag.CACHE_SPEED then -- 16
-
+function EvaluateCache:TechZeroBuild(player, cacheFlag)
+  if cacheFlag ~= CacheFlag.CACHE_DAMAGE then -- 1
     return
   end
 
-  -- Emulate having used the starting "Speed Up" pill
-  player.MoveSpeed = player.MoveSpeed + 0.15
+  if g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_TECHNOLOGY_ZERO) and -- 524
+     g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_POP) and -- 529
+     g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_CUPIDS_ARROW) and -- 48
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) and -- 395
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) and -- 168
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_IPECAC) and -- 149
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and -- 118
+     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) then -- 52
+
+    player.Damage = player.Damage * 0.5
+  end
+end
+
+-- CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT (415)
+function EvaluateCache:CrownOfLight(player, cacheFlag)
+  -- Local variables
+  local stage = g.l:GetStage()
+  local roomType = g.r:GetType()
+  local character = player:GetPlayerType()
+
+  -- If Crown of Light is started from a Basement 1 Treasure Room, it should heal for a half heart
+  if cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
+     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
+     stage == 1 and
+     roomType == RoomType.ROOM_TREASURE and -- 4
+     -- (this will still work even if you exit the room with the item held overhead)
+     character == PlayerType.PLAYER_JUDAS then -- 7
+
+    player:AddHearts(1)
+  end
 end
 
 function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
@@ -132,23 +167,18 @@ function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
   end
 end
 
--- CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT (415)
-function EvaluateCache:CrownOfLight(player, cacheFlag)
+function EvaluateCache:Magdalene(player, cacheFlag)
   -- Local variables
-  local stage = g.l:GetStage()
-  local roomType = g.r:GetType()
   local character = player:GetPlayerType()
 
-  -- If Crown of Light is started from a Basement 1 Treasure Room, it should heal for a half heart
-  if cacheFlag == CacheFlag.CACHE_SHOTSPEED and -- 4
-     player:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     stage == 1 and
-     roomType == RoomType.ROOM_TREASURE and -- 4
-     -- (this will still work even if you exit the room with the item held overhead)
-     character == PlayerType.PLAYER_JUDAS then -- 7
+  if character ~= PlayerType.PLAYER_MAGDALENA or -- 1
+     cacheFlag ~= CacheFlag.CACHE_SPEED then -- 16
 
-    player:AddHearts(1)
+    return
   end
+
+  -- Emulate having used the starting "Speed Up" pill
+  player.MoveSpeed = player.MoveSpeed + 0.15
 end
 
 -- CollectibleType.COLLECTIBLE_DADS_LOST_COIN (455)
@@ -161,35 +191,22 @@ function EvaluateCache:DadsLostCoin(player, cacheFlag)
   end
 end
 
--- CollectibleType.CollectibleType.COLLECTIBLE_13_LUCK
-function EvaluateCache:ThirteenLuck(player, cacheFlag)
-  -- Look for the custom start item that gives 13 luck
-  if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
-     player:HasCollectible(CollectibleType.COLLECTIBLE_13_LUCK) then
-
-    while player.Luck < 13 do
-      player.Luck = player.Luck + 1
-    end
-  end
-end
-
-function EvaluateCache:TechZeroBuild(player, cacheFlag)
-  if cacheFlag == CacheFlag.CACHE_DAMAGE then -- 1
-    if g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_TECHNOLOGY_ZERO) and -- 524
-       g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_POP) and -- 529
-       g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_CUPIDS_ARROW) then -- 48
-
-      player.Damage = player.Damage * 0.5
-    end
-  end
-end
-
 function EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   -- The Pageant Boy ruleset starts with 7 luck
   if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
      g.race.rFormat == "pageant" then
 
     player.Luck = player.Luck + 7
+  end
+end
+
+-- CollectibleType.CollectibleType.COLLECTIBLE_13_LUCK
+function EvaluateCache:ThirteenLuck(player, cacheFlag)
+  -- Look for the custom start item that gives 13 luck
+  if cacheFlag == CacheFlag.CACHE_LUCK and -- 1024
+     player:HasCollectible(CollectibleType.COLLECTIBLE_13_LUCK) then
+
+    player.Luck = 13
   end
 end
 

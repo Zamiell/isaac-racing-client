@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.53.3"
+g.version = "v0.53.4"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
@@ -54,23 +54,23 @@ g.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 g.race = {
-  userID            = 0,           -- Equal to our Racing+ user ID
-  raceID            = 0,           -- 0 if a race is not going on
-  status            = "none",      -- Can be "none", "open", "starting", "in progress"
-  myStatus          = "not ready", -- Can be either "not ready", "ready", or "racing"
-  ranked            = false,       -- Can be true or false
-  solo              = false,       -- Can be true or false
-  rFormat           = "unseeded",  -- Can be "unseeded", "seeded", "diversity", or "custom"
+  userID        = 0,           -- Equal to our Racing+ user ID
+  raceID        = 0,           -- 0 if a race is not going on
+  status        = "none",      -- Can be "none", "open", "starting", "in progress"
+  myStatus      = "not ready", -- Can be either "not ready", "ready", or "racing"
+  ranked        = false,       -- Can be true or false
+  solo          = false,       -- Can be true or false
+  rFormat       = "unseeded",  -- Can be "unseeded", "seeded", "diversity", or "custom"
   -- Unofficially this can also be "pageant"
-  difficulty        = "normal",    -- Can be "normal" or "hard"
-  character         = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
-  goal              = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
-  seed              = "-",         -- Corresponds to the seed that is the race goal
-  startingItems     = {},          -- The starting items for this race
-  countdown         = -1,          -- This corresponds to the graphic to draw on the screen
-  placeMid          = 0,           -- This is either the number of people ready, or the non-fnished place
-  place             = 1,           -- This is the final place
-  numEntrants       = 1,           -- The number of people in the race
+  difficulty    = "normal",    -- Can be "normal" or "hard"
+  character     = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
+  goal          = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
+  seed          = "-",         -- Corresponds to the seed that is the race goal
+  startingItems = {},          -- The starting items for this race
+  countdown     = -1,          -- This corresponds to the graphic to draw on the screen
+  placeMid      = 0,           -- This is either the number of people ready, or the non-fnished place
+  place         = 1,           -- This is the final place
+  numEntrants   = 1,           -- The number of people in the race
 }
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
@@ -94,6 +94,7 @@ g.RNGCounter = {
   GuppysHead      = 0, -- 145
   GuppysCollar    = 0, -- 212
   ButterBean      = 0, -- 294
+
   -- Devil Rooms and Angel Rooms go in order on seeded races
   DevilRoomKrampus = 0,
   DevilRoomChoice  = 0,
@@ -333,6 +334,7 @@ function g:InitRun()
   g.run.spawnedUltraGreed     = false -- Used in Season 7
   g.run.frameOfLastDD         = 0
   g.run.threeDollarBillItem   = 0
+  g.run.disableControls       = false
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy
@@ -708,7 +710,10 @@ end
 function g:OpenDoors()
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
-    if door ~= nil then
+    if door ~= nil and
+       door.TargetRoomType ~= RoomType.ROOM_SECRET and -- 7
+       door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET then -- 8
+
       door:Open()
     end
   end

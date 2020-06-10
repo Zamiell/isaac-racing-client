@@ -647,20 +647,20 @@ function Season8:PostPickupUpdateTrinket(pickup)
     return
   end
 
-  -- If we just re-entered a room that we have previously been in, ignore all trinkets
-  if not g.r:IsFirstVisit() and
-     pickup.FrameCount == 1 and
-     roomFrameCount == 1 then
-
+  -- We only care about freshly spawned trinkets
+  -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
+  if pickup.FrameCount ~= 1 then
     return
   end
 
-  -- We only care about freshly spawned trinkets
-  -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
-  if pickup.FrameCount ~= 1 or
-     pickup.SpawnerType == EntityType.ENTITY_PLAYER then -- 1
-     -- (we need to ignore trinkets that the player drops,
-     -- or else they would be able to infinitely spawn new trinkets)
+  -- Ignore trinkets that the player drops
+  if pickup.SpawnerType == EntityType.ENTITY_PLAYER then -- 1
+    return
+  end
+
+  -- Don't do anything if we are returning to a room with a previously dropped trinket
+  if roomFrameCount == 1 and
+     not g.r:IsFirstVisit() then
 
     return
   end

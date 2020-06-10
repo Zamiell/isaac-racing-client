@@ -1,5 +1,15 @@
 # Racing+ Version History and News
 
+### *v0.53.4* - June 9th, 2020
+
+* In seeded races, the Technology Zero + Pop! + Cupid's Arrow damage penalty will no longer apply if you have Mom's Knife, Tech X, Epic Fetus, Ipecac, or Dr. Fetus. (Thanks antizoubilamakA)
+* Fixed the bug where completing a Challenge Room could open the way to a Secret Room.
+* Fixed the bug in season 8 where Divorce Papers would give you Mysterious Paper when it was already removed from the trinket pool. (Thanks mgln & Gamonymous)
+* Fixed the bug where touching a loading zone would cancel the seeded death animation. (Thanks Gamonymous)
+* Fixed the bug where in season 6, the builds would not be reset if you finished all 7 characters. (Thanks Gamonymous)
+* Fixed the bug where the Fire Mind + 13 luck build would not set the luck to 13 in certain circumstances. (Thanks Gamonymous)
+* Fixed the bug where you could not do more than one Victory Lap. (Thanks caesar)
+
 ### *v0.53.0* - June 7th, 2020
 
 * In seeded races, you now have the ability to see your opponent inside your own game as a shadow. Thanks to imps for coding this, which was difficult to do. For more instructions, see this Pastebin: https://pastebin.com/2ZnRxDba
@@ -34,9 +44,8 @@
 * Fixed the bug where Dead Sea Scrolls would not properly be depleted of a charge under certain circumstances. (Thanks ez_duke)
 * Fixed the bug where familiars would not be teleported to the center of the room when entering a new floor.
 * Fixed the bug where Curse of the Unknown was incorrectly applied to new runs under certain circumstances. (Thanks mgln)
-* Fixed the bug where music was not playing correctly in Challenge Rooms and the Boss Rush. (Thanks Siskua)
+* Fixed the bug where music was not playing correctly in Challenge Rooms and the Boss Rush. (Thanks Sisuka)
 * Fixed the bug in season 8 where resetting to the same character would not remember any pills identified on that character. (Thanks mgln)
-* Fixed the bug in season 8 where Divorce Papers would give you Mysterious Paper when it was already removed from the trinket pool. (Thanks mgln)
 
 ### *v0.52.2* - May 6th, 2020
 

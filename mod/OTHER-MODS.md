@@ -24,6 +24,7 @@ In general, using **any** other mods alongside Racing+ is forbidden. Some specif
 * [Mustachtro](https://steamcommunity.com/sharedfiles/filedetails/?id=834910019)
 * [Better Doors Updated](https://steamcommunity.com/sharedfiles/filedetails/?id=1439369140)
 * [The Binding of Synth](https://steamcommunity.com/sharedfiles/filedetails/?id=2019808125)
+* [Antibirth Music++](https://steamcommunity.com/sharedfiles/filedetails/?id=1547034524)
 
 <br />
 

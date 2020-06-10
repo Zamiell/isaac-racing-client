@@ -27,6 +27,7 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * If you put Telekinesis into the Schoolbag while the effect is active, your other item will be drained. (Found by TaKer093)
 * If you have Breath of Life inside a Schoolbag, it will automatically be dropped by the Butter! trinket if you hold down the "use item" button instead of immediately releasing it. (Found by Thoday)
 * If you open the same Eternal Chest two or more times and happen to get a active pedestal item and happen to have an empty Schoolbag, the pedestal item [will automatically be put in the Schoolbag](https://www.twitch.tv/sisuka7/clip/ArtisticSincereChowderRalpherZ).
+* If you swap a Schoolbag item on the same frame as a room is cleared, one of the items will get two charges and the other item will get 0 charges. (Found by mgln)
 
 <br />
 

@@ -40,6 +40,9 @@ Speedrun.selectedItemStarts = {} -- Reset at the beginning of a new run on the f
 
 -- Called from the PostUpdate callback (the "CheckEntities:NonGrid()" function)
 function Speedrun:Finish()
+  -- Local variables
+  local challenge = Isaac.GetChallenge()
+
   -- Give them the Checkpoint custom item
   -- (this is used by the AutoSplitter to know when to split)
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
@@ -58,6 +61,12 @@ function Speedrun:Finish()
 
   -- Play a sound effect
   g.sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+
+  -- Reset season-specific variables
+  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
+    -- Fix the bug where the builds will be remembered after finishing
+    Speedrun.selectedItemStarts = {}
+  end
 
   -- Fireworks will play on the next frame (from the PostUpdate callback)
 end

@@ -37,6 +37,10 @@ function PostItemPickup:InsertNearestTrinket()
   PostItemPickup:InsertNearestPickup(PickupVariant.PICKUP_TRINKET) -- 350
 end
 
+function PostItemPickup:RemoveNearestTrinket()
+  PostItemPickup:RemoveNearestPickup(PickupVariant.PICKUP_TRINKET) -- 350
+end
+
 function PostItemPickup:InsertNearestPickup(variant)
   local nearestPickup = PostItemPickup:FindNearestPickup(variant)
   if nearestPickup == nil then
@@ -58,6 +62,16 @@ function PostItemPickup:InsertNearestPickup(variant)
   end
 
   return false
+end
+
+function PostItemPickup:RemoveNearestPickup(variant)
+  local nearestPickup = PostItemPickup:FindNearestPickup(variant)
+  if nearestPickup == nil then
+    return false
+  end
+
+  nearestPickup:Remove()
+  return true
 end
 
 function PostItemPickup:FindNearestPickup(variant)
@@ -323,6 +337,7 @@ function PostItemPickup.DivorcePapers()
   if Isaac.GetChallenge() == Isaac.GetChallengeIdByName("R+7 (Season 8)") and
      g:TableContains(Season8.touchedTrinkets, TrinketType.TRINKET_MYSTERIOUS_PAPER) then
 
+    PostItemPickup:RemoveNearestTrinket()
     return
   end
   PostItemPickup:InsertNearestTrinket()

@@ -40,6 +40,7 @@ function PostUpdate:Main()
   PostUpdate:CheckWishbone()
   PostUpdate:CheckWalnut()
   PostUpdate:Fix9VoltSynergy()
+  PostUpdate:CheckDisableControls()
   BossRush:PostUpdate()
   ChallengeRooms:PostUpdate()
 
@@ -602,6 +603,13 @@ function PostUpdate:Fix9VoltSynergy()
   if g.run.giveExtraCharge then
     g.run.giveExtraCharge = false
     g.p:SetActiveCharge(g.p:GetActiveCharge() + 1)
+  end
+end
+
+function PostUpdate:CheckDisableControls()
+  if g.run.disableControls then
+    g.run.disableControls = false
+    g.p.ControlsEnabled = false
   end
 end
 

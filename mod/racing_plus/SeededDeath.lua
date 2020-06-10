@@ -121,6 +121,20 @@ function SeededDeath:PostNewRoom()
     end
   end
 
+  -- Check for if they entered a loading zone while dying (e.g. running through a Curse Room door)
+  if g.run.seededDeath.state == SeededDeath.state.DEATH_ANIMATION then
+    -- Play the death animation again, since entering a new room canceled it
+    g.p:PlayExtraAnimation("Death")
+
+    -- We need to disable the controls, or the player will be able to move around during the death animation
+    -- If we disable them now, it will not apply, since you cannot disable controls inside of this callback
+    -- So mark to disable the controls during the next post-update frame
+    g.run.disableControls = true
+
+    -- We need to disable the collision, or else enemies will be able to push around the body during the death animation
+    g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+  end
+
   -- Put the player in the fetal position (the "AppearVanilla" animation)
   if g.run.seededDeath.state == SeededDeath.state.CHANGING_ROOMS then
     -- Do not continue on with the custom death mechanic if the 50% roll for Guppy's Collar was successful
@@ -177,17 +191,24 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- Check to see if this is fatal damage
   local totalHealth = hearts + eternalHearts + soulHearts + boneHearts
   if damageAmount < totalHealth then
+    Isaac.DebugString(
+      "SeededDeath:EntityTakeDmg() - Non-fatal damage detected. " ..
+      "(totalHealth: " .. tostring(totalHealth) .. ", " ..
+      "damageAmount: " .. tostring(damageAmount) .. ")"
+    )
     return
   end
 
   -- Furthermore, this will not be fatal damage if we have two different kinds of hearts
-  -- e.g. a bomb explosion deals 2 damage, but if the player has one half soul heart and one half red heart,
+  -- e.g. a bomb explosion deals 2 damage,
+  -- but if the player has one half soul heart and one half red heart,
   -- the game will only remove the soul heart
   if (hearts > 0 and soulHearts > 0) or
      (hearts > 0 and boneHearts > 0) or
      (soulHearts > 0 and boneHearts > 0) or
      boneHearts >= 2 then -- Two bone hearts and nothing else should not result in a death
 
+    Isaac.DebugString("SeededDeath:EntityTakeDmg() - Non-fatal damage detected; different types of hearts detected.")
     return
   end
 
@@ -205,6 +226,7 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
     extraLives = extraLives + 1
   end
   if extraLives > 0 then
+    Isaac.DebugString("SeededDeath:EntityTakeDmg() - Non-fatal damage detected; extra life detected.")
     return
   end
 
@@ -212,7 +234,10 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- (we cannot use the "DamageFlag.DAMAGE_DEVIL" to determine this because the player could have
   -- taken a devil deal and then died to a fire / spikes / etc.)
   if gameFrameCount <= g.run.frameOfLastDD + 150 then
-    Isaac.DebugString("Not invoking seeded death since we are within 5 seconds of a devil deal.")
+    Isaac.DebugString(
+      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death " ..
+      "mechanic since we are within 5 seconds of a devil deal."
+    )
     return
   end
 
@@ -221,6 +246,10 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   if roomType == RoomType.ROOM_SACRIFICE or -- 13
      roomType == RoomType.ROOM_BOSSRUSH then -- 17
 
+    Isaac.DebugString(
+      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death " ..
+      "mechanic since we are in a Sacrifice Room or a Boss Rush."
+    )
     return
   end
 

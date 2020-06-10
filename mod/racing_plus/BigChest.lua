@@ -166,7 +166,7 @@ function BigChest:PostPickupInit(pickup)
       type      = "victory-lap",
       -- We want to use a position from the "GridToPos()" function because otherwise the position
       -- can slightly shift if it does not align with the grid
-      pos       = g:GridToPos(6, 9),
+      pos       = g:GridToPos(6, 3),
       roomIndex = roomIndex,
     }
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, g.run.buttons[#g.run.buttons].pos, true) -- 20
