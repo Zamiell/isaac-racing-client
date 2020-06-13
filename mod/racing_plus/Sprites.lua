@@ -56,10 +56,10 @@ function Sprites:Init(spriteType, spriteName)
       Sprites.sprites[spriteType].sprite:Load("gfx/race/ready/" .. spriteName .. ".anm2", true)
     end
 
-  elseif spriteType == "place" then
+  elseif spriteType == "place" then -- On the middle-left-hand side of the screen
     Sprites.sprites[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
 
-  elseif spriteType == "place2" then
+  elseif spriteType == "place2" then -- Displayed when the race is finished
     Sprites.sprites[spriteType].sprite:Load("gfx/race/place2/" .. spriteName .. ".anm2", true)
 
   elseif spriteType == "corrupt1" or
@@ -95,7 +95,6 @@ function Sprites:Display()
   if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
     roomIndex = g.l:GetCurrentRoomIndex()
   end
-  local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
 
   -- Loop through all the sprites and render them
@@ -204,9 +203,6 @@ function Sprites:Display()
     elseif k == "corrupt2" then -- The final place graphic
       pos.Y = pos.Y - 50
     elseif k == "dps-button" then
-      if roomFrameCount == 0 then
-        return
-      end
       for _, button in ipairs(g.run.buttons) do
         if button.type == "dps" and
            button.roomIndex == roomIndex then
@@ -217,9 +213,6 @@ function Sprites:Display()
         end
       end
     elseif k == "victory-lap-button" then
-      if roomFrameCount == 0 then
-        return
-      end
       for _, button in ipairs(g.run.buttons) do
         if button.type == "victory-lap" and
            button.roomIndex == roomIndex then
