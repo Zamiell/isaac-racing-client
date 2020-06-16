@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.54.0"
+g.version = "v0.54.1"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback

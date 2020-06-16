@@ -1,6 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.54.0* - June 9th, 2020
+### *v0.54.1* - June 16th, 2020
+
+* Fixed the bug where seeded death would not work properly if you died as The Soul. (Thanks Gamonymous)
+
+### *v0.54.0* - June 16th, 2020
 
 * A new seeded build has arrived: Pointy Rib + Eve's Mascara. (Thanks Gamonymous)
 * In most 2x2 and L rooms, Lumps have been replaced with Mr. Red Maws, Tumors, and Guts.

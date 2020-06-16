@@ -167,6 +167,7 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
+  local character = g.p:GetPlayerType()
   local hearts = g.p:GetHearts()
   local eternalHearts = g.p:GetEternalHearts()
   local soulHearts = g.p:GetSoulHearts()
@@ -287,6 +288,12 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
     g.p:DropPoketItem(0, pos2)
     local pos3 = g.r:FindFreePickupSpawnPosition(g.p.Position, 0, true)
     g.p:DropPoketItem(1, pos3)
+  end
+
+  -- If we are The Soul, the death animation will not work properly
+  -- Thus, manually switch to the Forgotten to avoid this
+  if character == PlayerType.PLAYER_THESOUL then -- 17
+    g.run.switchForgotten = true
   end
 
   return false

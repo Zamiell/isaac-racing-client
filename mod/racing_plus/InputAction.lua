@@ -6,8 +6,9 @@ local InputAction = {}
 -- ButtonAction.ACTION_MENUCONFIRM (14) is bugged and will never fire
 
 -- Includes
-local g      = require("racing_plus/globals")
-local Samael = require("racing_plus/samael")
+local g           = require("racing_plus/globals")
+local Samael      = require("racing_plus/samael")
+local SeededDeath = require("racing_plus/seededdeath")
 
 -- ModCallbacks.MC_INPUT_ACTION (13)
 function InputAction:Main(entity, inputHook, buttonAction)
@@ -81,6 +82,9 @@ function InputAction.IsActionTriggeredDrop()
   -- Manually switch from The Soul to The Forgotten in specific circumstances
   if g.run.switchForgotten then
     g.run.switchForgotten = false
+    if g.run.seededDeath.state == SeededDeath.state.DEATH_ANIMATION then
+      g.p:PlayExtraAnimation("Death")
+    end
     return true
   end
 
