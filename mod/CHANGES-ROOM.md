@@ -132,8 +132,19 @@ The changed room is as follows:
 
 In one room, Round Worms can cause a pseudo-softlock if they continue to appear behind rocks. Some rocks were removed to mitigate this.
 
-The change room is as follows:
+The changed room is as follows:
 * Basement/Burning: #301
+
+<br />
+
+### Lump Fix
+
+In L rooms and 2x2 rooms, Tar Boys and Lumps can pseudo-softlock the player by constantly appearing outside of vision. This results in the clear time of the room being highly reliant on RNG. In these rooms, Tar Boys are replaced with Black Bonies or Dank Chargers, and Lumps are replaced with Mr. Red Maws, Tumors, or Guts.
+
+The changed rooms are as follows:
+* Dank Depths: #930, #999
+* Womb/Utero/Scarred: #398, #419, #430, #680, #755, #769
+* Womb/Scarred: #514
 
 <br />
 

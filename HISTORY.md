@@ -1,5 +1,14 @@
 # Racing+ Version History and News
 
+### *v0.54.0* - June 9th, 2020
+
+* A new seeded build has arrived: Pointy Rib + Eve's Mascara. (Thanks Gamonymous)
+* In most 2x2 and L rooms, Lumps have been replaced with Mr. Red Maws, Tumors, and Guts.
+* Fixed the bug where in seeded races, 3 Dollar Bill would not grant an effect until you entered a new room. (Thanks mgln)
+* Fixed the bug where the place text would not show when the room frame count was equal to 0. (Thanks ez_duke)
+* Fixed the bug where race placings would be inaccurate under certain conditions. (Thanks mgln)
+* Fixed the bug where the seeded death mechanic would not trigger if you died within the first 5 seconds of the run. (Thanks Gamonymous)
+
 ### *v0.53.4* - June 9th, 2020
 
 * In seeded races, the Technology Zero + Pop! + Cupid's Arrow damage penalty will no longer apply if you have Mom's Knife, Tech X, Epic Fetus, Ipecac, or Dr. Fetus. (Thanks antizoubilamakA)

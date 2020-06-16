@@ -5,7 +5,7 @@ local g  = {}
 -- Global variables
 --
 
-g.version = "v0.53.5"
+g.version = "v0.54.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
@@ -332,7 +332,7 @@ function g:InitRun()
   g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
   g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
   g.run.spawnedUltraGreed     = false -- Used in Season 7
-  g.run.frameOfLastDD         = 0
+  g.run.frameOfLastDD         = -1000
   g.run.threeDollarBillItem   = 0
   g.run.disableControls       = false
 
@@ -626,7 +626,21 @@ function g:TableRemove(t, el)
 end
 
 function g:GetTotalItemCount()
-  return Isaac.GetItemConfig():GetCollectibles().Size -1
+  -- Racing+ adds a bunch of items
+  -- Furthermore, we need to account for if the user has other items added from other mods
+  -- Start with the highest vanilla item ID and iterate upwards
+  -- (we can't use "Isaac.GetItemConfig():GetCollectibles().Size - 1" because it throws an error on
+  -- MacOS)
+  local i = CollectibleType.NUM_COLLECTIBLES - 1
+  local totalItems = i
+  while true do
+    i = i + 1
+    if g.itemConfig:GetCollectible(i) ~= nil then
+      totalItems = i
+    else
+      return totalItems
+    end
+  end
 end
 
 -- Find out how many charges this item has

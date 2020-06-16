@@ -477,12 +477,7 @@ function PostGameStarted:Character()
   elseif character == PlayerType.PLAYER_EDEN then -- 9
     -- Find out what the passive item is
     local passiveItem
-    local totalItems = g:GetTotalItemCount()
-    if totalItems == nil then
-      -- The above function might fail on MacOS, so handle the failure
-      totalItems = CollectibleType.COLLECTIBLE_WRAITH_SKULL + 1
-    end
-    for i = 1, totalItems do
+    for i = 1, g:GetTotalItemCount() do
       if g.p:HasCollectible(i) and
          i ~= activeItem and
          i ~= CollectibleType.COLLECTIBLE_D6 then -- 105

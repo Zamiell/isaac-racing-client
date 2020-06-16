@@ -53,6 +53,9 @@
     [{ "id": 40,  "name": "Kamikaze!" },
      { "id": 375, "name": "Host Hat" }],
 
+    [{ "id": 544, "name": "Pointy Rib" },
+     { "id": 310, "name": "Eve's Mascara" }],
+   
     [{ "id": 441, "name": "Mega Blast" },
      { "id": 63,  "name": "The Battery" },
      { "id": 156, "name": "Habit" },

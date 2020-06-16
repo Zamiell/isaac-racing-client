@@ -1,12 +1,13 @@
 local RacePostUpdate = {}
 
 -- Includes
-local g           = require("racing_plus/globals")
-local Race        = require("racing_plus/race")
-local Speedrun    = require("racing_plus/speedrun")
-local Sprites     = require("racing_plus/sprites")
-local SeededDeath = require("racing_plus/seededdeath")
-local PotatoDummy = require("racing_plus/potatodummy")
+local g               = require("racing_plus/globals")
+local Race            = require("racing_plus/race")
+local Speedrun        = require("racing_plus/speedrun")
+local Sprites         = require("racing_plus/sprites")
+local SeededDeath     = require("racing_plus/seededdeath")
+local PotatoDummy     = require("racing_plus/potatodummy")
+local RacePostNewRoom = require("racing_plus/racepostnewroom")
 
 function RacePostUpdate:Main()
   -- We do not want to return if we are not in a race, as there are also speedrun-related checks in the follow functions
@@ -26,6 +27,9 @@ function RacePostUpdate:Check3DollarBill()
     Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL)) -- 191
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED, 0, false)
     Isaac.DebugString("Activated the custom 3 Dollar Bill for seeded races.")
+
+    -- Activate a new effect for it (pretending that we just walked into a new room)
+    RacePostNewRoom:ThreeDollarBill()
   end
 end
 
