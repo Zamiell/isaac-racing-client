@@ -1,8 +1,9 @@
 # Racing+ Version History and News
 
-### *v0.54.1* - June 16th, 2020
+### *v0.54.2* - June 16th, 2020
 
 * Fixed the bug where seeded death would not work properly if you died as The Soul. (Thanks Gamonymous)
+* Fixed the bug where reviving from seeded death would not update the cache in certain situations. (Thanks Hispa)
 
 ### *v0.54.0* - June 16th, 2020
 

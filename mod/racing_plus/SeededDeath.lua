@@ -593,6 +593,11 @@ function SeededDeath:DebuffOff()
     g.p:AddCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_HOLY_MANTLE)) -- 313
   end
 
+  -- Now that we have added every item, update the players stats
+  -- (needed in case e.g. we dropped a Pony)
+  g.p:AddCacheFlags(CacheFlag.CACHE_ALL) -- 0xFFFFFFFF
+  g.p:EvaluateItems()
+
   -- Make any Checkpoints touchable again
   local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
                                        CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)

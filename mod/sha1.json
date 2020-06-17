@@ -89,7 +89,7 @@
     "racing_plus\\Season6.lua": "e8bc629397a9094d258b10e8c0755092547a37a8",
     "racing_plus\\Season7.lua": "5f26ff93859da26abab94e573530097f0f3ca313",
     "racing_plus\\Season8.lua": "5bcbff993254adc2a03658aed3fce5296b14fa20",
-    "racing_plus\\SeededDeath.lua": "505866817cbf8410d6fbab326ccf665780c5bcbd",
+    "racing_plus\\SeededDeath.lua": "5f9da15fc11868fe06377223bfeb5041d0bf7aed",
     "racing_plus\\SeededFloors.lua": "ec84aed6a035f962c3f5ac1ad5285274a63d157c",
     "racing_plus\\SeededRooms.lua": "100c2ac8cceb24c6fc430d14e7511ae663b153ec",
     "racing_plus\\Shadow.lua": "fdd9ea98d7d73a8b93a77416a329efb5cd615ebb",
@@ -2169,10 +2169,10 @@
     "resources\\rooms\\06.flooded caves.stb": "1416e8c23620ca23eb3639080d488fcd84bf3611",
     "resources\\rooms\\07.depths.stb": "e502ddf1d19bd80aa4a41a5ffa4335a71391949e",
     "resources\\rooms\\08.necropolis.stb": "7f36308ad3a3c60cc9e7ad67dd92ae29496af06f",
-    "resources\\rooms\\09.dank depths.stb": "9eeb0dc663dcbc0be1d7d9174f6df606e5fb5dfa",
-    "resources\\rooms\\10.womb.stb": "4c180952e2b95478146701a72c6270cee765be43",
-    "resources\\rooms\\11.utero.stb": "243617e257eecc1628395551ef366f2c97aaf7b6",
-    "resources\\rooms\\12.scarred womb.stb": "cf5554ecc2d996e2ee553c91761d62c565c21f7c",
+    "resources\\rooms\\09.dank depths.stb": "662d426c386a35242409b292ccdbac82bb01d3c0",
+    "resources\\rooms\\10.womb.stb": "ae3ba2c8fccd206d902dd424d0c9cbd54a56fe3c",
+    "resources\\rooms\\11.utero.stb": "f5609e6891ba8acbfb2acd045e02a0b8f527c254",
+    "resources\\rooms\\12.scarred womb.stb": "fd44008e0ca80148db993694f93bc733bf0ab949",
     "resources\\rooms\\13.blue womb.stb": "cef899b83a63eaae62fe5aae31b96479eb89993a",
     "resources\\rooms\\14.sheol.stb": "2efd98e2003e0b21146409ba35ff784a32ebe5cc",
     "resources\\rooms\\15.cathedral.stb": "cc5ba23f6bd2f3a4e44a4019655c56868db7cbcd",
@@ -2202,5 +2202,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "d5c5bceb4075c8709cbe5fd403e53075905bb0df",
-    "sha1.json": "8455e32851bf590de44c4f8080c1cd12fe912c9f"
+    "sha1.json": "52f13615abc5b98edea6b83c6c277b2ac34e407e"
 }
