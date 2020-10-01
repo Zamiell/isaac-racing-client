@@ -1,10 +1,10 @@
 # Racing+ Version History and News
 
-### *v0.55.0* - September 26th, 2020
+### *v0.55.0* - October 1st, 2020
 
 * A new seeded build has arrived: Distant Admiration + Friend Zone + Forever Alone + BFFS! (Thanks antizoubilamakA)
 * The Pointy Rib + Eve's Mascara build has been replaced with 2 Pointy Ribs. (Thanks toooschi)
-* The mod will now remove some unnecessary effects in order to prevent lag. (This will be most noticable after the Mom fight and the It Lives! fight.)
+* The mod will now remove some unnecessary effects in order to prevent lag. (This will be most noticeable after the Mom fight and the It Lives! fight.)
 * The mod now has the option to set an auto-fire keybinding for Anti-Gravity or No. 2 builds. Using this can help prevent RSI/CTS.
 * The "shadow" command will now permanently remember whether or not you have it enabled or not. (This requires the "Racing+ Data" mod in order to work properly.)
 * Added the "ghost", "ghosts", and "shadows" commands as alternates for the "shadow" command.
