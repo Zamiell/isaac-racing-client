@@ -129,9 +129,12 @@ function PreEntitySpawn.Effect(variant, subType, position, spawner, seed)
   -- We only remove blood explosions on specific laggy bosses
   if (
     g.run.preventBloodExplosion
-    and variant == EffectVariant.BLOOD_EXPLOSION -- 2
+    and (
+      variant == EffectVariant.BLOOD_EXPLOSION -- 2
+      or variant == EffectVariant.BLOOD_PARTICLE -- 5
+    )
   ) then
-    return false
+    return {EntityType.ENTITY_EFFECT, EffectVariant.INVISIBLE_EFFECT, 0, 0}
   end
 
   local preEntityFunction = PreEntitySpawn.effectFunctions[variant]

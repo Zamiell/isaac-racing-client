@@ -53,7 +53,8 @@ function PostEntityKill:Mom(entity)
   g.run.momDied = true
 
   -- Prevent effects from spawning to fix lag
-  g.run.preventBloodExplosion = false
+  g.run.preventBloodExplosion = true
+  Isaac.DebugString("Preventing blood explosions.")
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
@@ -250,7 +251,8 @@ function PostEntityKill:MomsHeart(entity)
   end
 
   -- Prevent effects from spawning to fix lag
-  g.run.preventBloodExplosion = false
+  g.run.preventBloodExplosion = true
+  Isaac.DebugString("Preventing blood explosions.")
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
