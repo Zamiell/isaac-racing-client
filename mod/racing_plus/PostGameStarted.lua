@@ -1,37 +1,36 @@
 local PostGameStarted = {}
 
 -- Includes
-local g                       = require("racing_plus/globals")
-local PostNewLevel            = require("racing_plus/postnewlevel")
-local UsePill                 = require("racing_plus/usepill")
-local Sprites                 = require("racing_plus/sprites")
-local Schoolbag               = require("racing_plus/schoolbag")
-local SoulJar                 = require("racing_plus/souljar")
-local FastClear               = require("racing_plus/fastclear")
-local FastTravel              = require("racing_plus/fasttravel")
-local Speedrun                = require("racing_plus/speedrun")
-local RacePostGameStarted     = require("racing_plus/racepostgamestarted")
+local g = require("racing_plus/globals")
+local PostNewLevel = require("racing_plus/postnewlevel")
+local UsePill = require("racing_plus/usepill")
+local Sprites = require("racing_plus/sprites")
+local Schoolbag = require("racing_plus/schoolbag")
+local SoulJar = require("racing_plus/souljar")
+local FastClear = require("racing_plus/fastclear")
+local FastTravel = require("racing_plus/fasttravel")
+local Speedrun = require("racing_plus/speedrun")
+local RacePostGameStarted = require("racing_plus/racepostgamestarted")
 local SpeedrunPostGameStarted = require("racing_plus/speedrunpostgamestarted")
-local Timer                   = require("racing_plus/timer")
+local Timer = require("racing_plus/timer")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function PostGameStarted:Main(saveState)
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local startSeed = g.seeds:GetStartSeed()
   local startSeedString = g.seeds:GetStartSeedString()
   local customRun = g.seeds:IsCustomRun()
   local challenge = Isaac.GetChallenge()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  Isaac.DebugString("MC_POST_GAME_STARTED - " ..
-                    "Seed: " .. tostring(startSeedString) .. " - " ..
-                    "IsaacFrame: " .. tostring(isaacFrameCount))
+  Isaac.DebugString(
+    "MC_POST_GAME_STARTED - "
+    .. "Seed: " .. tostring(startSeedString) .. " - "
+    .. "IsaacFrame: " .. tostring(isaacFrameCount)
+  )
   Isaac.DebugString(Isaac.ExecuteCommand("luamem"))
 
   if saveState then
@@ -43,17 +42,20 @@ function PostGameStarted:Main(saveState)
       return
     end
 
-    -- Fix the bug where the mod won't know what floor they are on if they exit the game and continue
+    -- Fix the bug where the mod won't know what floor they are on if they exit the game and
+    -- continue
     g.run.currentFloor = stage
     g.run.currentFloorType = stageType
-    Isaac.DebugString("New floor: " .. tostring(g.run.currentFloor) .. "-" ..
-                      tostring(g.run.currentFloorType) .. " (from S+Q)")
+    Isaac.DebugString(
+      "New floor: " .. tostring(g.run.currentFloor) .. "-" .. tostring(g.run.currentFloorType)
+      .. " (from S+Q)"
+    )
 
     -- Fix the bug where the Gaping Maws will not respawn in the "Race Room"
-    if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
-       (g.race.status == "open" or
-        g.race.status == "starting") then
-
+    if (
+      roomIndex == GridRooms.ROOM_DEBUG_IDX -- -3
+      and (g.race.status == "open" or g.race.status == "starting")
+    ) then
       -- Spawn two Gaping Maws (235.0)
       Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(5, 5), g.zeroVector, nil)
       Isaac.Spawn(EntityType.ENTITY_GAPING_MAW, 0, 0, g:GridToPos(7, 5), g.zeroVector, nil)
@@ -65,7 +67,8 @@ function PostGameStarted:Main(saveState)
       g.run.trapdoor.state = FastTravel.state.DISABLED
     end
 
-    -- We don't need to do the long series of checks if they quit and continued in the middle of a run
+    -- We don't need to do the long series of checks if they quit and continued in the middle of a
+    -- run
     return
   end
   g.resumedOldRun = false
@@ -93,6 +96,9 @@ function PostGameStarted:Main(saveState)
   g.raceVars.finishedTime = 0
   g.raceVars.fireworks = 0
   g.raceVars.victoryLaps = 0
+  if RacingPlusData ~= nil then
+    g.raceVars.shadowEnabled = RacingPlusData:Get("shadowEnabled")
+  end
 
   -- Reset some RNG counters to the start RNG of the seed
   -- (future drops will be based on the RNG from this initial random value)
@@ -114,27 +120,32 @@ function PostGameStarted:Main(saveState)
   -- Reset all graphics
   -- (this is needed to prevent a bug where the "Race Start" room graphics
   -- will flash on the screen before the room is actually entered)
-  -- (it also prevents the bug where if you reset during the stage animation, it will permanently stay on the screen)
+  -- (it also prevents the bug where if you reset during the stage animation,
+  -- it will permanently stay on the screen)
   Sprites.sprites = {}
   Schoolbag.sprites = {}
   SoulJar.sprites = {}
   Speedrun.sprites = {}
   Timer.sprites = {}
 
-  -- We may have had the Curse of the Unknown seed enabled in a previous run, so ensure that it is removed
+  -- We may have had the Curse of the Unknown seed enabled in a previous run,
+  -- so ensure that it is removed
   g.seeds:RemoveSeedEffect(SeedEffect.SEED_PERMANENT_CURSE_UNKNOWN) -- 59
 
-  -- We need to disable achievements so that the R+ sprite shows above the stats on the left side of the screen
+  -- We need to disable achievements so that the R+ sprite shows above the stats on the left side of
+  -- the screen
   -- We want the R+ sprite to display on all runs so that the "1st" sprite has somewhere to go
-  -- The easiest way to disable achievements without affecting gameplay is to enable the easter egg that disables
-  -- Curse of Darkness (this has no effect since all curses are removed in the "PostCurseEval" callback anyway)
+  -- The easiest way to disable achievements without affecting gameplay is to enable the easter egg
+  -- that disables Curse of Darkness
+  -- (this has no effect since all curses are removed in the "PostCurseEval" callback anyway)
   g.seeds:AddSeedEffect(SeedEffect.SEED_PREVENT_CURSE_DARKNESS) -- 63
 
-  if PostGameStarted:CheckCorruptMod() or
-     PostGameStarted:CheckNotFullyUnlockedSave() or
-     PostGameStarted:CheckInvalidItemsXML() then
-     --PostGameStarted:CheckMissingSocket() then
-
+  if (
+    PostGameStarted:CheckCorruptMod()
+    or PostGameStarted:CheckNotFullyUnlockedSave()
+    or PostGameStarted:CheckInvalidItemsXML()
+    -- or PostGameStarted:CheckMissingSocket()
+  ) then
     return
   end
 
@@ -144,14 +155,14 @@ function PostGameStarted:Main(saveState)
   -- Racing+ removes the Karma trinket from the game
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
 
-  if challenge == 0 and
-     customRun then
-
-    -- Racing+ also removes certain trinkets that mess up floor generation when playing on a set seed
+  if challenge == 0 and customRun then
+    -- Racing+ also removes certain trinkets that mess up floor generation when playing on a set
+    -- seed
     g.itemPool:RemoveTrinket(TrinketType.TRINKET_SILVER_DOLLAR) -- 110
     g.itemPool:RemoveTrinket(TrinketType.TRINKET_BLOODY_CROWN) -- 111
 
-    -- Racing+ also removes certain items and trinkets that change room drop calculation when playing on a set seed
+    -- Racing+ also removes certain items and trinkets that change room drop calculation when
+    -- playing on a set seed
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_LUCKY_FOOT) -- 46
     g.itemPool:RemoveTrinket(TrinketType.TRINKET_DAEMONS_TAIL) -- 22
     g.itemPool:RemoveTrinket(TrinketType.TRINKET_CHILDS_HEART) -- 34
@@ -165,9 +176,10 @@ function PostGameStarted:Main(saveState)
 
   -- By default, the player starts near the bottom door
   -- Instead, put the player in the middle of the room
-  if g.g.Difficulty == Difficulty.DIFFICULTY_NORMAL or -- 0
-     g.g.Difficulty == Difficulty.DIFFICULTY_HARD then -- 1
-
+  if (
+    g.g.Difficulty == Difficulty.DIFFICULTY_NORMAL -- 0
+    or g.g.Difficulty == Difficulty.DIFFICULTY_HARD -- 1
+  ) then
     -- Don't do this in Greed Mode, since if the player starts at the center of the room,
     -- they they will immediately touch the trigger button
     g.p.Position = g.r:GetCenterPos()
@@ -193,9 +205,10 @@ function PostGameStarted:Main(saveState)
   end
 
   -- Remove the 3 placeholder items if this is not a diversity race
-  if not g.run.diversity and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-
+  if (
+    not g.run.diversity
+    and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)")
+  ) then
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2)
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
@@ -224,8 +237,10 @@ function PostGameStarted:CheckCorruptMod()
   sprite:SetLastFrame()
   local lastFrame = sprite:GetFrame()
   if lastFrame ~= 0 then
-    Isaac.DebugString("Error: Corrupted Racing+ instantiation detected. " ..
-                      "(The last frame of the \"Scene\" animation is frame " .. tostring(lastFrame) .. ".)")
+    Isaac.DebugString(
+      "Error: Corrupted Racing+ instantiation detected. "
+      .. "(The last frame of the \"Scene\" animation is frame " .. tostring(lastFrame) .. ".)"
+    )
     g.corrupted = true
   end
   return g.corrupted
@@ -252,9 +267,7 @@ function PostGameStarted:CheckNotFullyUnlockedSave()
     -- Store what the old run was like
     g.saveFile.old.challenge = challenge
     g.saveFile.old.character = character
-    if challenge == 0 and
-       customRun then
-
+    if challenge == 0 and customRun then
       g.saveFile.old.seededRun = true
       g.saveFile.old.seed = startSeedString
     end
@@ -275,7 +288,8 @@ function PostGameStarted:CheckNotFullyUnlockedSave()
       valid = false
     end
     if not valid then
-      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
+      -- Doing a "restart" command here does not work for some reason,
+      -- so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Going to Eden for the save file check.")
       return true
@@ -291,12 +305,15 @@ function PostGameStarted:CheckNotFullyUnlockedSave()
     elseif RacingPlusRebalanced ~= nil then
       neededActiveItem = g.saveFile.activeItem3
       neededPassiveItem = g.saveFile.passiveItem3
+      g.saveFile.fullyUnlocked = true -- Debug
     end
 
     local string = "Error: On seed \"" .. tostring(g.saveFile.seed) .. "\", Eden needs "
     if activeItem ~= neededActiveItem then
-      string = string .. "an active item of " .. tostring(g.saveFile.activeItem2) ..
-              " (they have an active item of " .. tostring(activeItem) .. ")."
+      string = (
+        string .. "an active item of " .. tostring(g.saveFile.activeItem2)
+        .. " (they have an active item of " .. tostring(activeItem) .. ")."
+      )
       Isaac.DebugString(string)
     elseif not g.p:HasCollectible(neededPassiveItem) then
       string = string .. "a passive item of " .. tostring(g.saveFile.passiveItem2) .. "."
@@ -320,13 +337,15 @@ function PostGameStarted:CheckNotFullyUnlockedSave()
     if customRun ~= g.saveFile.old.seededRun then
       valid = false
     end
-    if g.saveFile.old.seededRun and
-       startSeedString ~= g.saveFile.old.seed then
-
+    if (
+      g.saveFile.old.seededRun
+      and startSeedString ~= g.saveFile.old.seed
+    ) then
       valid = false
     end
     if not valid then
-      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
+      -- Doing a "restart" command here does not work for some reason,
+      -- so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Save file check complete; going back to where we came from.")
       return true
@@ -341,7 +360,8 @@ end
 
 -- We can verify that the "items.xml" is legit, because some other mods will write over it
 function PostGameStarted:CheckInvalidItemsXML()
-  local breakfastCacheFlags = g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BREAKFAST).CacheFlags -- 25
+  local breakfast = g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_BREAKFAST) -- 25
+  local breakfastCacheFlags = breakfast.CacheFlags
   if breakfastCacheFlags ~= 8 then
     g.invalidItemsXML = true
   end
@@ -354,14 +374,6 @@ function PostGameStarted:CheckMissingSocket()
 
   if g.socket then
     Isaac.DebugString("Racing+ client socket already initialized.")
-    --[[
-    local returnValue = g.socket:send("poop\n")
-    if returnValue == nil then
-      Isaac.DebugString("Socket closed.")
-      g.socket = nil
-    end
-    return false
-    --]]
   end
 
   local socket = require("socket")
@@ -391,20 +403,22 @@ function PostGameStarted:Character()
   -- Since Eden starts with the Schoolbag in Racing+,
   -- Eden will "miss out" on a passive item if they happen to start with the vanilla Schoolbag
   -- Reset the game if this is the case
-  if character == PlayerType.PLAYER_EDEN and -- 9
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
-
-    if (challenge == Challenge.CHALLENGE_NULL and -- 0
-        customRun) then
-
+  if (
+    character == PlayerType.PLAYER_EDEN -- 9
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
+  ) then
+    if (
+      challenge == Challenge.CHALLENGE_NULL -- 0
+      and customRun
+    ) then
       -- In the unlikely event that they are playing on a specific seed with Eden,
       -- the below code will cause the game to infinitely restart
-      -- Instead, just take away the vanilla Schoolbag and give them the Sad Onion as a replacement for the passive item
+      -- Instead, just take away the vanilla Schoolbag and give them the Sad Onion as a replacement
+      -- for the passive item
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_SAD_ONION, 0, false) -- 1
       Isaac.DebugString("Eden has started with the vanilla Schoolbag; removing it.")
       Isaac.DebugString("Removing collectible 534 (Schoolbag)")
-
     else
       g.run.restart = true
       Speedrun.fastReset = true
@@ -413,7 +427,8 @@ function PostGameStarted:Character()
     end
   end
 
-  -- If they started with the Karma trinket, we need to delete it, since it is supposed to be removed from the game
+  -- If they started with the Karma trinket, we need to delete it, since it is supposed to be
+  -- removed from the game
   -- (this should be only possible on Eden)
   if g.p:HasTrinket(TrinketType.TRINKET_KARMA) then -- 85
     g.p:TryRemoveTrinket(TrinketType.TRINKET_KARMA) -- 85
@@ -436,16 +451,13 @@ function PostGameStarted:Character()
     -- Update the speed cache so that we get the emulated speed bonus
     g.p:AddCacheFlags(CacheFlag.CACHE_SPEED) -- 16
     g.p:EvaluateItems()
-
   elseif character == PlayerType.PLAYER_CAIN then -- 2
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 46 (Lucky Foot)")
     Isaac.DebugString("Adding collectible 46 (Lucky Foot)")
-
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
     -- Judas needs to be at half of a red heart
     g.p:AddHearts(-1)
-
   elseif character == PlayerType.PLAYER_EVE then -- 5
     -- Remove the Razor Blade from the item tracker
     -- (this is given via an achivement and not from the "players.xml file")
@@ -456,7 +468,6 @@ function PostGameStarted:Character()
     Isaac.DebugString("Adding collectible 122 (Whore of Babylon)")
     Isaac.DebugString("Removing collectible 117 (Dead Bird)")
     Isaac.DebugString("Adding collectible 117 (Dead Bird)")
-
   elseif character == PlayerType.PLAYER_SAMSON then -- 6
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 157 (Bloody Lust)")
@@ -464,16 +475,13 @@ function PostGameStarted:Character()
 
     -- Remove the trinket, since everyone just drops it anyway
     g.p:TryRemoveTrinket(TrinketType.TRINKET_CHILDS_HEART) -- 34
-
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7
     -- Give him an additional half soul heart
     g.p:AddSoulHearts(1)
-
   elseif character == PlayerType.PLAYER_LAZARUS then -- 8
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 214 (Anemic)")
     Isaac.DebugString("Adding collectible 214 (Anemic)")
-
   elseif character == PlayerType.PLAYER_EDEN then -- 9
     -- Find out what the passive item is
     local passiveItem
@@ -506,24 +514,20 @@ function PostGameStarted:Character()
     Isaac.DebugString("Adding collectible " .. passiveItem)
 
     -- Store Eden's natural starting items so that we can show them to the player
-  g.run.edenStartingItems[1] = activeItem
-  g.run.edenStartingItems[2] = passiveItem
-
+    g.run.edenStartingItems[1] = activeItem
+    g.run.edenStartingItems[2] = passiveItem
   elseif character == PlayerType.PLAYER_THELOST then -- 10
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 313 (Holy Mantle)")
     Isaac.DebugString("Adding collectible 313 (Holy Mantle)")
-
   elseif character == PlayerType.PLAYER_LILITH then -- 13
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 412 (Cambion Conception)")
     Isaac.DebugString("Adding collectible 412 (Cambion Conception)")
-
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Remove the Wooden Nickel from the item tracker
     -- (this is given via an achivement and not from the "players.xml file")
     Isaac.DebugString("Removing collectible 349 (Wooden Nickel)")
-
   elseif character == PlayerType.PLAYER_SAMAEL then
     -- Give him the Schoolbag with the Wraith Skull
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)

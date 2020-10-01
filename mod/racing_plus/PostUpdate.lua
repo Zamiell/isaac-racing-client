@@ -1,28 +1,31 @@
 local PostUpdate = {}
 
 -- Includes
-local g                  = require("racing_plus/globals")
-local Pills              = require("racing_plus/pills")
-local CheckEntities      = require("racing_plus/checkentities")
-local FastClear          = require("racing_plus/fastclear")
-local FastDrop           = require("racing_plus/fastdrop")
-local Schoolbag          = require("racing_plus/schoolbag")
-local SoulJar            = require("racing_plus/souljar")
-local FastTravel         = require("racing_plus/fasttravel")
-local PostItemPickup     = require("racing_plus/postitempickup")
-local RacePostUpdate     = require("racing_plus/racepostupdate")
-local Season5            = require("racing_plus/season5")
-local Season7            = require("racing_plus/season7")
+local g = require("racing_plus/globals")
+local Pills = require("racing_plus/pills")
+local CheckEntities = require("racing_plus/checkentities")
+local FastClear = require("racing_plus/fastclear")
+local BagFamiliars = require("racing_plus/bagfamiliars")
+local FastDrop = require("racing_plus/fastdrop")
+local Schoolbag = require("racing_plus/schoolbag")
+local SoulJar = require("racing_plus/souljar")
+local FastTravel = require("racing_plus/fasttravel")
+local PostItemPickup = require("racing_plus/postitempickup")
+local RacePostUpdate = require("racing_plus/racepostupdate")
+local Season5 = require("racing_plus/season5")
+local Season7 = require("racing_plus/season7")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
-local ChangeCharOrder    = require("racing_plus/changecharorder")
-local BossRush           = require("racing_plus/bossrush")
-local ChallengeRooms     = require("racing_plus/challengerooms")
-local Shadow             = require("racing_plus/shadow")
+local ChangeCharOrder = require("racing_plus/changecharorder")
+local BossRush = require("racing_plus/bossrush")
+local ChallengeRooms = require("racing_plus/challengerooms")
+local Shadow = require("racing_plus/shadow")
+local Autofire = require("racing_plus/autofire")
 
 -- Check various things once per game frame (30 times a second)
 -- (this will not fire while the floor/room is loading)
 -- ModCallbacks.MC_POST_UPDATE (1)
 function PostUpdate:Main()
+  PostUpdate:RemoveLowFX()
   PostUpdate:CheckStartTime()
   PostUpdate:CheckRoomCleared()
   PostUpdate:CheckDDItems()
@@ -64,9 +67,13 @@ function PostUpdate:Main()
   if PostUpdate:CheckCustomInput("hotkeyDropPocket") then
     FastDrop:Main("pocket")
   end
+  if PostUpdate:CheckCustomInput("hotkeyAutofire") then
+    Autofire:Toggle()
+  end
 
   -- Check for Schoolbag switch inputs (and other miscellaneous Schoolbag activities)
-  Schoolbag:CheckInput() -- (this is too complicated to use the "PostUpdate:CheckCustomInput()" function)
+  Schoolbag:CheckInput()
+  -- (Schoolbag switching is too complicated to use the "PostUpdate:CheckCustomInput()" function)
   Schoolbag:CheckActiveCharges()
   Schoolbag:CheckEmptyActiveItem()
   Schoolbag:ConvertVanilla()
@@ -88,6 +95,20 @@ function PostUpdate:Main()
   ChangeCharOrder:PostUpdate()
 end
 
+function PostUpdate:RemoveLowFX()
+  -- Remove invisible effects on every frame, since they will not go away by themselves
+  local invisibleEffects = Isaac.FindByType(
+    EntityType.ENTITY_EFFECT, -- 1000
+    EffectVariant.INVISIBLE_EFFECT,
+    -1,
+    false,
+    false
+  )
+  for _, invisibleEffect in ipairs(invisibleEffects) do
+    invisibleEffect:Remove()
+  end
+end
+
 -- Check to see if we need to start the timers
 function PostUpdate:CheckStartTime()
   if g.run.startedTime == 0 then
@@ -95,7 +116,8 @@ function PostUpdate:CheckStartTime()
   end
 end
 
--- Keep track of the when the room is cleared and the total amount of rooms cleared on this run thus far
+-- Keep track of the when the room is cleared
+-- and the total amount of rooms cleared on this run thus far
 function PostUpdate:CheckRoomCleared()
   -- Local variables
   local roomClear = g.r:IsClear()
@@ -115,8 +137,8 @@ function PostUpdate:CheckRoomCleared()
     Isaac.DebugString("Vanilla room clear detected!")
   end
 
-  -- If the room just got changed to a cleared state, increment the variables for the bag familiars
-  FastClear:IncrementBagFamiliars()
+  -- Handle any bag familiars
+  BagFamiliars:Increment()
 
   -- Give a charge to the player's Schoolbag item
   Schoolbag:AddCharge()
@@ -132,15 +154,22 @@ function PostUpdate:CheckDDItems()
   local roomFrameCount = g.r:GetFrameCount()
 
   -- Check to see if the player is taking a devil deal
-  if roomType ~= RoomType.ROOM_CURSE and -- 10 (in Racing+ Rebalanced, there are DD items in a Curse Room)
-     roomType ~= RoomType.ROOM_DEVIL and -- 14
-     roomType ~= RoomType.ROOM_BLACK_MARKET then -- 22
-
+  if (
+    -- In Racing+ Rebalanced, there are DD items in a Curse Room
+    roomType ~= RoomType.ROOM_CURSE -- 10
+    and roomType ~= RoomType.ROOM_DEVIL -- 14
+    and roomType ~= RoomType.ROOM_BLACK_MARKET -- 22
+  ) then
     return
   end
 
-  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -1, -- 5.100
-                                        false, false)
+  local collectibles = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    -1,
+    false,
+    false
+  )
   local numDDItems = 0
   for _, entity in ipairs(collectibles) do
     local collectible = entity:ToPickup()
@@ -187,11 +216,14 @@ function PostUpdate:CheckKeeperHearts()
   local baseHearts = maxHearts - coinContainers
 
   if baseHearts ~= g.run.keeper.baseHearts then
-    -- Our health changed; we took a devil deal, took a health down pill, or went from 1 heart to 2 hearts
+    -- Our health changed; we took a devil deal, took a health down pill,
+    -- or went from 1 heart to 2 hearts
     local heartsDiff = baseHearts - g.run.keeper.baseHearts
     g.run.keeper.baseHearts = g.run.keeper.baseHearts + heartsDiff
-    Isaac.DebugString("Set new Keeper baseHearts to: " .. tostring(g.run.keeper.baseHearts) ..
-                      " (from detection, change was " .. tostring(heartsDiff) .. ")")
+    Isaac.DebugString(
+      "Set new Keeper baseHearts to: " .. tostring(g.run.keeper.baseHearts)
+      .. " (from detection, change was " .. tostring(heartsDiff) .. ")"
+    )
   end
 
   -- Check Keeper coin count
@@ -200,12 +232,13 @@ function PostUpdate:CheckKeeperHearts()
     if coinDifference > 0 then
       for i = 1, coinDifference do
         local newCoins = g.p:GetNumCoins()
-        if g.p:GetHearts() < g.p:GetMaxHearts() and
-           newCoins ~= 25 and
-           newCoins ~= 50 and
-           newCoins ~= 75 and
-           newCoins ~= 99 then
-
+        if (
+          g.p:GetHearts() < g.p:GetMaxHearts()
+          and newCoins ~= 25
+          and newCoins ~= 50
+          and newCoins ~= 75
+          and newCoins ~= 99
+        ) then
           g.p:AddHearts(2)
           g.p:AddCoins(-1)
         end
@@ -219,10 +252,7 @@ end
 
 function PostUpdate:CheckItemPickup()
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
 
   -- Only run the below code once per item
   if g.p:IsItemQueueEmpty() then
@@ -233,25 +263,28 @@ function PostUpdate:CheckItemPickup()
         g.run.items[#g.run.items + 1] = g.run.pickingUpItem
 
         -- Check to see if we picked up the item that conflicts with the custom 3 Dollar Bill
-        if g.p:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED) and
-           g.run.pickingUpItem == g.run.threeDollarBillItem then
-
-          -- Set the variable back to 0 so that the new item does not get blown away after a room change
+        if (
+          g.p:HasCollectible(CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED)
+          and g.run.pickingUpItem == g.run.threeDollarBillItem
+        ) then
+          -- Set the variable back to 0 so that the new item does not get blown away after a room
+          -- change
           g.run.threeDollarBillItem = 0
         end
 
         -- Automatically insert pickups
         local postItemFunction = PostItemPickup.functions[g.run.pickingUpItem]
-        if postItemFunction ~= nil and
-          roomIndex == g.run.pickingUpItemRoom and
-          -- (don't do any custom inventory work if we have changed rooms in the meantime)
-          not PostUpdate:CheckDropInput() and
-          not PostUpdate:CheckCustomInput("hotkeyDrop") and
-          not PostUpdate:CheckCustomInput("hotkeyDropTrinket") and
-          not PostUpdate:CheckCustomInput("hotkeyDropPocket") then
-          -- (allow the player to cancel the automatic insertion functionality by holding down a
-          -- "drop" input)
-
+        if (
+          postItemFunction ~= nil
+          -- Don't do any custom inventory work if we have changed rooms in the meantime
+          and roomIndex == g.run.pickingUpItemRoom
+          and not PostUpdate:CheckDropInput()
+          -- Allow the player to cancel the automatic insertion functionality by holding down a
+          -- "drop" input
+          and not PostUpdate:CheckCustomInput("hotkeyDrop")
+          and not PostUpdate:CheckCustomInput("hotkeyDropTrinket")
+          and not PostUpdate:CheckCustomInput("hotkeyDropPocket")
+        ) then
           postItemFunction()
         end
       end
@@ -281,9 +314,10 @@ function PostUpdate:CheckItemPickup()
   g.run.streakFrame = Isaac.GetFrameCount()
 
   -- Keep track of our passive items over the course of the run
-  if g.p.QueuedItem.Item.Type == ItemType.ITEM_PASSIVE or -- 1
-     g.p.QueuedItem.Item.Type == ItemType.ITEM_FAMILIAR then -- 4
-
+  if (
+    g.p.QueuedItem.Item.Type == ItemType.ITEM_PASSIVE -- 1
+    or g.p.QueuedItem.Item.Type == ItemType.ITEM_FAMILIAR -- 4
+  ) then
     g.run.passiveItems[#g.run.passiveItems + 1] = g.p.QueuedItem.Item.ID
     if g.p.QueuedItem.Item.ID == CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE then
       Isaac.DebugString("Adding collectible 3001 (Mutant Spider's Inner Eye)")
@@ -324,9 +358,10 @@ function PostUpdate:CheckCharacter()
   end
   g.run.currentCharacter = character
 
-  if character ~= PlayerType.PLAYER_THEFORGOTTEN and -- 16
-     character ~= PlayerType.PLAYER_THESOUL then -- 17
-
+  if (
+    character ~= PlayerType.PLAYER_THEFORGOTTEN -- 16
+    and character ~= PlayerType.PLAYER_THESOUL -- 17
+  ) then
     return
   end
 
@@ -334,13 +369,16 @@ function PostUpdate:CheckCharacter()
   if g.run.trapdoor.state == 0 then
     local effects = Isaac.FindByType(EntityType.ENTITY_EFFECT, -1, -1, false, false) -- 1000
     for _, entity in ipairs(effects) do
-      if (entity.Variant == EffectVariant.TRAPDOOR_FAST_TRAVEL or
-          entity.Variant == EffectVariant.CRAWLSPACE_FAST_TRAVEL or
-          entity.Variant == EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL or
-          entity.Variant == EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL or
-          entity.Variant == EffectVariant.HEAVEN_DOOR_FAST_TRAVEL) and
-         g.p.Position:Distance(entity.Position) <= 40 then
-
+      if (
+        (
+          entity.Variant == EffectVariant.TRAPDOOR_FAST_TRAVEL
+          or entity.Variant == EffectVariant.CRAWLSPACE_FAST_TRAVEL
+          or entity.Variant == EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL
+          or entity.Variant == EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL
+          or entity.Variant == EffectVariant.HEAVEN_DOOR_FAST_TRAVEL
+        )
+        and g.p.Position:Distance(entity.Position) <= 40
+      ) then
         local effect = entity:ToEffect()
         effect.State = 1
         effect:GetSprite():Play("Closed", true)
@@ -354,9 +392,10 @@ function PostUpdate:CheckHauntSpeedup()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local blackChampionHaunt = g.run.speedLilHauntsBlack
-  if g.run.speedLilHauntsFrame == 0 or
-     gameFrameCount < g.run.speedLilHauntsFrame then
-
+  if (
+    g.run.speedLilHauntsFrame == 0
+    or gameFrameCount < g.run.speedLilHauntsFrame
+  ) then
     return
   end
   g.run.speedLilHauntsFrame = 0
@@ -372,7 +411,8 @@ function PostUpdate:CheckHauntSpeedup()
     return
   end
 
-  -- If there is more than one Haunt, detach every Lil Haunt, because tracking everything will be too hard
+  -- If there is more than one Haunt, detach every Lil Haunt,
+  -- because tracking everything will be too hard
   if hauntCount > 1 then
     Isaac.DebugString("Detaching all of the Lil' Haunts in the room.")
     for _, lilHaunt in ipairs(lilHaunts) do
@@ -403,7 +443,8 @@ function PostUpdate:CheckHauntSpeedup()
   end
 end
 
--- Subverting the teleport on the Mom fight can result in a buggy interaction where Mom does not stomp
+-- Subverting the teleport on the Mom fight can result in a buggy interaction where Mom does not
+-- stomp
 -- Force Mom to stomp by teleporting the player to the middle of the room for one frame
 function PostUpdate:CheckMomStomp()
   if not g.run.forceMomStomp then
@@ -431,11 +472,9 @@ function PostUpdate:CheckMomStomp()
     for _, scythe in ipairs(scythes) do
       scythe.Visible = false
     end
-
   elseif roomFrameCount == 20 then
     g.p.Position = g.run.forceMomStompPos
     g.p.Visible = true
-
   elseif roomFrameCount == 21 then
     -- We have to delay a frame before making familiars and knives visible,
     -- since they lag behind the position of the player by a frame
@@ -468,9 +507,10 @@ end
 
 -- Check for Mutant Spider's Inner Eye (a custom item)
 function PostUpdate:CheckMutantSpiderInnerEye()
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE) and
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE)
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+  ) then
     -- This custom item is set to not be shown on the item tracker
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER, 0, false) -- 153
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
@@ -495,31 +535,40 @@ function PostUpdate:DetachLilHaunt(npc)
   -- We need to manually set their collision or else tears will pass through them
   npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
-  Isaac.DebugString("Manually detached a Lil' Haunt with index " .. tostring(npc.Index) ..
-                    " on frame: " .. tostring(gameFrameCount))
+  Isaac.DebugString(
+    "Manually detached a Lil' Haunt with index " .. tostring(npc.Index)
+    .. " on frame: " .. tostring(gameFrameCount)
+  )
 end
 
--- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room fart-reroll
+-- Check to see if the player just picked up the a Crown of Light from a Basement 1 Treasure Room
+-- fart-reroll
 function PostUpdate:CrownOfLight()
   -- Local variables
   local stage = g.l:GetStage()
   local challenge = Isaac.GetChallenge()
 
-  if not g.run.removedCrownHearts and
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     g.run.roomsEntered == 1 then -- They are still in the starting room
-
+  if (
+    not g.run.removedCrownHearts
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) -- 415
+    and g.run.roomsEntered == 1 -- They are still in the starting room
+  ) then
     -- The player started with Crown of Light, so we don't need to even go into the below code block
     g.run.removedCrownHearts = true
   end
-  if not g.run.removedCrownHearts and
-     stage == 1 and
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) and -- 415
-     (((g.race.rFormat == "unseeded" or
-        g.race.rFormat == "diversity") and
-       g.race.status == "in progress") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) then
 
+  if (
+    not g.run.removedCrownHearts
+    and stage == 1
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT) -- 415
+    and (
+      (
+        (g.race.rFormat == "unseeded" or g.race.rFormat == "diversity")
+        and g.race.status == "in progress"
+      )
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    )
+  ) then
      -- Remove the two soul hearts that the Crown of Light gives
      g.run.removedCrownHearts = true
      g.p:AddSoulHearts(-4)
@@ -532,9 +581,10 @@ function PostUpdate:CheckLilithExtraIncubus()
   -- Local variables
   local character = g.p:GetPlayerType()
 
-  if g.run.extraIncubus and
-     character ~= PlayerType.PLAYER_LILITH then -- 13
-
+  if (
+    g.run.extraIncubus
+    and character ~= PlayerType.PLAYER_LILITH -- 13
+  ) then
     g.run.extraIncubus = false
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
     Isaac.DebugString("Removed the extra Incubus.")
@@ -542,23 +592,27 @@ function PostUpdate:CheckLilithExtraIncubus()
 end
 
 function PostUpdate:CheckLudoSoftlock()
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) and -- 329
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and -- 118
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) then -- 52
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) -- 329
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) -- 118
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) -- 52
+  ) then
     -- These 3 items will cause a stationary Brimstone ring to surround the player
     -- It deals damage, but it can softlock the game if there are island enemies
-    -- Just remove Dr. Fetus to fix the softlock condition and transform it into a normal Ludo + Brim
+    -- Just remove Dr. Fetus to fix the softlock condition
+    -- (which transforms the build into a normal Ludo + Brimstone)
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) -- 52
   end
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) and -- 329
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) and -- 68
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then -- 114
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) -- 329
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) -- 68
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
+  ) then
     -- These 3 items will cause a stationary laser ring to surround the player
     -- It deals damage, but it can softlock the game if there are island enemies
-    -- Just remove Mom's Knife to fix the softlock condition and transform it into a normal Ludo + Technology
+    -- Just remove Mom's Knife to fix the softlock condition
+    -- (whichs transform the build into a normal Ludo + Technology)
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
   end
 end
@@ -567,10 +621,15 @@ function PostUpdate:CheckWishbone()
   if g.run.haveWishbone then
     if not g.p:HasTrinket(TrinketType.TRINKET_WISH_BONE) then -- 104
       g.run.haveWishbone = false
-      local wishBones = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
-                                         TrinketType.TRINKET_WISH_BONE, false, false) -- 104
+      local wishBones = Isaac.FindByType(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_TRINKET, -- 350
+        TrinketType.TRINKET_WISH_BONE, -- 104
+        false,
+        false
+      )
       if #wishBones == 0 then
-        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1)
         -- (we reuse the Walnut breaking sound effect for this)
       end
     end
@@ -585,10 +644,15 @@ function PostUpdate:CheckWalnut()
   if g.run.haveWalnut then
     if not g.p:HasTrinket(TrinketType.TRINKET_WALNUT) then -- 108
       g.run.haveWalnut = false
-      local walnuts = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
-                                       TrinketType.TRINKET_WALNUT, false, false) -- 108
+      local walnuts = Isaac.FindByType(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_TRINKET, -- 350
+        TrinketType.TRINKET_WALNUT, -- 108
+        false,
+        false
+      )
       if #walnuts == 0 then
-        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+        g.sfx:Play(SoundEffect.SOUND_WALNUT, 1, 0, false, 1)
       end
     end
   else
@@ -619,9 +683,7 @@ function PostUpdate:CheckCustomInput(racingPlusDataKey)
   if RacingPlusData ~= nil then
     hotkey = RacingPlusData:Get(racingPlusDataKey)
   end
-  if hotkey == nil or
-  hotkey == 0 then
-
+  if hotkey == nil or hotkey == 0 then
     return false
   end
 

@@ -4,8 +4,10 @@ local PreGetCollectible = {}
 local g = require("racing_plus/globals")
 
 -- This callback is called when the game needs to get a new random item from an item pool
--- It is undocumented, but you can return an integer from this callback in order to change the returned item subtype
--- It is not called for "set" drops (like Mr. Boom from Wrath) and manually spawned items (like the Checkpoint)
+-- It is undocumented, but you can return an integer from this callback in order to change the
+-- returned item subtype
+-- It is not called for "set" drops (like Mr. Boom from Wrath) and manually spawned items
+-- (like the Checkpoint)
 
 -- ModCallbacks.MC_PRE_GET_COLLECTIBLE (62)
 function PreGetCollectible:Main(poolType, decrease, seed)
@@ -20,12 +22,15 @@ end
 
 function PreGetCollectible:SeededRace(poolType, decrease, seed)
   -- Manually generate random items for specific item pools in seeded races
-  if g.race.rFormat ~= "seeded" or
-     g.race.status ~= "in progress" or
-     (poolType ~= ItemPoolType.POOL_DEVIL and -- 3
-      poolType ~= ItemPoolType.POOL_ANGEL and -- 4
-      poolType ~= ItemPoolType.POOL_DEMON_BEGGAR) then -- 11
-
+  if (
+    g.race.rFormat ~= "seeded"
+    or g.race.status ~= "in progress"
+    or (
+      poolType ~= ItemPoolType.POOL_DEVIL -- 3
+      and poolType ~= ItemPoolType.POOL_ANGEL -- 4
+      and poolType ~= ItemPoolType.POOL_DEMON_BEGGAR -- 11
+    )
+  ) then
     return
   end
 
@@ -37,7 +42,8 @@ function PreGetCollectible:SeededRace(poolType, decrease, seed)
     g.p:TryRemoveTrinket(TrinketType.TRINKET_NO) -- 88
   end
 
-  for i = 1, 100 do -- Only attempt to find a valid item for 100 iterations in case something goes wrong
+  -- Only attempt to find a valid item for 100 iterations in case something goes wrong
+  for i = 1, 100 do
     local subType
     g.run.gettingCollectible = true
     if poolType == ItemPoolType.POOL_DEVIL then -- 3
@@ -67,7 +73,9 @@ function PreGetCollectible:SeededRace(poolType, decrease, seed)
     end
 
     -- It is an active item, so let the RNG increment and generate another random item
-    Isaac.DebugString("Skipping over item " .. tostring(subType) .. " since we have the NO! trinket.")
+    Isaac.DebugString(
+      "Skipping over item " .. tostring(subType) .. " since we have the NO! trinket."
+    )
   end
 end
 

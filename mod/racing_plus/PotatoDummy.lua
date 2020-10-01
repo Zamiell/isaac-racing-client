@@ -12,11 +12,11 @@ local PotatoModel = 1    -- le visuel de la patate
 local textAlpha = 1.0
 local textHitAlpha = 1.0
 local textDelay = 60
-local textShow  = true
+local textShow = true
 
 local textMaxAlpha = 1.0
 local textMaxDelay = 60
-local textMaxShow  = false
+local textMaxShow = false
 
 local hurtframe = 0
 local currentDPS = 0
@@ -233,7 +233,10 @@ function PotatoDummy:PostUpdate()
     for i = 1, #entities do
       dist = entities[i].Position:Distance(PotatoEntity.Position)
 
-      if (dist < 80) and (entities[i].Type == 5) and (entities[i].Variant == 20) and (entities[i].FrameCount < 2) then
+      if (
+        (dist < 80) and (entities[i].Type == 5)
+        and (entities[i].Variant == 20) and (entities[i].FrameCount < 2)
+      ) then
         entities[i]:Remove()
       end
     end

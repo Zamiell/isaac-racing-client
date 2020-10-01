@@ -1,10 +1,10 @@
 local Season7 = {}
 
 -- Includes
-local g                   = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local RacePostGameStarted = require("racing_plus/racepostgamestarted")
-local Speedrun            = require("racing_plus/speedrun")
-local Sprites             = require("racing_plus/sprites")
+local Speedrun = require("racing_plus/speedrun")
+local Sprites = require("racing_plus/sprites")
 
 -- Constants
 Season7.goals = {
@@ -43,7 +43,13 @@ function Season7:CheckUltraGreedSpawned()
        door:IsOpen() then
 
       -- Find the Ultra Greed Door that overlaps with this open door
-      local ultraGreedDoors = Isaac.FindByType(EntityType.ENTITY_ULTRA_DOOR, -1, -1, false, false) -- 294
+      local ultraGreedDoors = Isaac.FindByType(
+        EntityType.ENTITY_ULTRA_DOOR, -- 294
+        -1,
+        -1,
+        false,
+        false
+      )
       for j, ultraGreedDoor in ipairs(ultraGreedDoors) do
         if ultraGreedDoor.Position:Distance(door.Position) < 25 then
           ultraGreedDoor:Remove()
@@ -120,13 +126,21 @@ function Season7:RoomCleared()
   local challenge = Isaac.GetChallenge()
 
   -- Check to see if we just defeated Ultra Greed on a Season 7 speedrun
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-     stage == 12 and
-     roomIndexUnsafe == g.run.customBossRoomIndex then
-
-    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                centerPos, g.zeroVector, nil)
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    and stage == 12
+    and roomIndexUnsafe == g.run.customBossRoomIndex
+  ) then
+    -- Spawn a big chest
+    -- (which will get replaced with either a checkpoint or a trophy on the next frame)
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BIGCHEST, -- 340
+      0,
+      centerPos,
+      g.zeroVector,
+      nil
+    )
   end
 end
 
@@ -135,9 +149,10 @@ function Season7:PostRender()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     Speedrun.finished then
-
+  if (
+    challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    or Speedrun.finished
+  ) then
     return
   end
 
@@ -168,7 +183,13 @@ end
 -- ModCallbacks.MC_ENTITY_TAKE_DMG (11)
 -- EntityType.ENTITY_ULTRA_GREED (406)
 -- EntityType.ENTITY_HUSH (407)
-function Season7:EntityTakeDmgRemoveArmor(tookDamage, damageAmount, damageFlag, damageSource, damageCountdownFrames)
+function Season7:EntityTakeDmgRemoveArmor(
+  tookDamage,
+  damageAmount,
+  damageFlag,
+  damageSource,
+  damageCountdownFrames
+)
   if g.run.dealingExtraDamage then
     return
   end
@@ -238,15 +259,16 @@ function Season7:PostNewLevel()
   -- Set the custom boss room to be the first 1x1 boss room
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
-    local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
+    local roomIndexSafe = roomDesc.SafeGridIndex -- This is always the top-left index
     local roomData = roomDesc.Data
     local roomType = roomData.Type
     local roomShape = roomData.Shape
 
-    if roomType == RoomType.ROOM_BOSS and -- 5
-       roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
-
-      g.run.customBossRoomIndex = roomIndex
+    if (
+      roomType == RoomType.ROOM_BOSS -- 5
+      and roomShape == RoomShape.ROOMSHAPE_1x1 -- 1
+    ) then
+      g.run.customBossRoomIndex = roomIndexSafe
       Isaac.DebugString("Set the custom boss room to: " .. tostring(g.run.customBossRoomIndex))
       break
     end
@@ -277,9 +299,10 @@ function Season7:PostNewRoomStage9()
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
 
-  if stage ~= 9 or
-     roomType ~= RoomType.ROOM_BOSS then -- 5
-
+  if (
+    stage ~= 9
+    or roomType ~= RoomType.ROOM_BOSS -- 5
+  ) then
     return
   end
 
@@ -295,28 +318,47 @@ function Season7:PostNewRoomStage11()
   local roomIndexUnsafe = g.l:GetCurrentRoomIndex()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
 
-  if stage ~= 11 or
-     roomIndexUnsafe ~= startingRoomIndex then
-
+  if (
+    stage ~= 11
+    or roomIndexUnsafe ~= startingRoomIndex
+  ) then
     return
   end
 
   -- Spawn a Void Portal if we still need to go to The Void
   if g:TableContains(Season7.remainingGoals, "Ultra Greed") then
-    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.VOID_PORTAL_FAST_TRAVEL, 0, -- 1000
-                                 g:GridToPos(1, 1), g.zeroVector, nil)
-    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+    local trapdoor = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.VOID_PORTAL_FAST_TRAVEL,
+      0,
+      g:GridToPos(1, 1),
+      g.zeroVector,
+      nil
+    )
+
+    -- This is needed so that the entity will not appear on top of the player
+    trapdoor.DepthOffset = -100
   end
 
   -- Spawn the Mega Satan trapdoor if we still need to go to Mega Satan
   -- and we are on the second character or beyond
-  -- (the normal Mega Satan door does not appear on custom challenges that have a goal set to Blue Baby)
-  if g:TableContains(Season7.remainingGoals, "Mega Satan") and
-     Speedrun.charNum >= 2 then
+  -- (the normal Mega Satan door does not appear on custom challenges that have a goal set to
+  -- Blue Baby)
+  if (
+    g:TableContains(Season7.remainingGoals, "Mega Satan")
+    and Speedrun.charNum >= 2
+  ) then
+    local trapdoor = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.MEGA_SATAN_TRAPDOOR,
+      0,
+      g:GridToPos(11, 1),
+      g.zeroVector,
+      nil
+    )
 
-    local trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.MEGA_SATAN_TRAPDOOR, 0, -- 1000
-                                 g:GridToPos(11, 1), g.zeroVector, nil)
-    trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+    -- This is needed so that the entity will not appear on top of the player
+    trapdoor.DepthOffset = -100
   end
 end
 
@@ -336,10 +378,11 @@ function Season7:PostNewRoomStage12()
   -- (we must delete the door before changing the minimap, or else the icon will remain)
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
-    if door ~= nil and
-       door.TargetRoomType == RoomType.ROOM_BOSS and -- 5
-       door.TargetRoomIndex ~= g.run.customBossRoomIndex then
-
+    if (
+      door ~= nil
+      and door.TargetRoomType == RoomType.ROOM_BOSS -- 5
+      and door.TargetRoomIndex ~= g.run.customBossRoomIndex
+    ) then
       g.r:RemoveDoor(i)
     end
   end
@@ -347,20 +390,21 @@ function Season7:PostNewRoomStage12()
   -- Show the boss icon for the custom boss room and remove all of the other ones
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomDesc = rooms:Get(i)
-    local roomIndex = roomDesc.SafeGridIndex -- This is always the top-left index
+    local roomIndexSafe = roomDesc.SafeGridIndex -- This is always the top-left index
     local roomData = roomDesc.Data
     local roomType = roomData.Type
 
     if roomType == RoomType.ROOM_BOSS then -- 5
       local room
       if MinimapAPI == nil then
-        -- For whatever reason, we can't modify the DisplayFlags on the roomDesc that we already have,
+        -- For whatever reason,
+        -- we can't modify the DisplayFlags on the roomDesc that we already have,
         -- so we have to re-get the room using the following function
-        room = g.l:GetRoomByIdx(roomIndex)
+        room = g.l:GetRoomByIdx(roomIndexSafe)
       else
-        room = MinimapAPI:GetRoomByIdx(roomIndex)
+        room = MinimapAPI:GetRoomByIdx(roomIndexSafe)
       end
-      if roomIndex == g.run.customBossRoomIndex then
+      if roomIndexSafe == g.run.customBossRoomIndex then
         -- Make the Ultra Greed room visible and show the icon
         room.DisplayFlags = 5
       else
@@ -376,9 +420,10 @@ function Season7:PostNewRoomStage12()
   g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
 
   -- Spawn the custom boss
-  if roomIndexUnsafe == g.run.customBossRoomIndex and
-     not roomClear then
-
+  if (
+    roomIndexUnsafe == g.run.customBossRoomIndex
+    and not roomClear
+  ) then
     -- Remove all enemies
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
       local npc = entity:ToNPC()
@@ -409,7 +454,15 @@ function Season7:PostNPCInitIsaac(npc)
   -- In season 7 speedruns, we want to go directly into the second phase of Hush
   if npc.Variant == 2 then
     npc:Remove()
-    g.g:Spawn(EntityType.ENTITY_HUSH, 0, Vector(580, 260), g.zeroVector, nil, 0, npc.InitSeed) -- 407
+    g.g:Spawn(
+      EntityType.ENTITY_HUSH, -- 407
+      0,
+      Vector(580, 260),
+      g.zeroVector,
+      nil,
+      0,
+      npc.InitSeed
+    )
     -- (the position is copied from vanilla)
   end
 end

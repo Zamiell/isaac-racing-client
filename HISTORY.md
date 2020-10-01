@@ -1,5 +1,22 @@
 # Racing+ Version History and News
 
+### *v0.55.0* - September 26th, 2020
+
+* A new seeded build has arrived: Distant Admiration + Friend Zone + Forever Alone + BFFS! (Thanks antizoubilamakA)
+* The Pointy Rib + Eve's Mascara build has been replaced with 2 Pointy Ribs. (Thanks toooschi)
+* The mod will now remove some unnecessary effects in order to prevent lag. (This will be most noticable after the Mom fight and the It Lives! fight.)
+* The mod now has the option to set an auto-fire keybinding for Anti-Gravity or No. 2 builds. Using this can help prevent RSI/CTS.
+* The "shadow" command will now permanently remember whether or not you have it enabled or not. (This requires the "Racing+ Data" mod in order to work properly.)
+* Added the "ghost", "ghosts", and "shadows" commands as alternates for the "shadow" command.
+* Added the "shadowstatus" command.
+* Fixed the (vanilla) bug where Fire Mind spawned from Angelic Prism tears would damage the player.
+* Fixed the bug where teleporting to an Angel Room from a Sacrifice Room would not work if you had Cursed Eye. (Thanks Dea1h)
+* Fixed the bug where the 2nd Dad's Lost Coin and beyond would not affect the stats of the player. (Thanks sisuka)
+* Fixed the bug where a Lucky Penny would spawn if you left the room during the pickup animation of Dad's Lost Coin. (Thanks sisuka)
+* Fixed the bug where the charge bar for the Lead Pencil would be misaligned when the player had flying and another charge item. (Thanks KGHB41)
+* Fixed the bug where the Victory Lap button would spawn in the wrong place in Mega Satan's room. (Thanks edy47)
+* Updated the "--luadebug" Pastebin as it had some incorrect information.
+
 ### *v0.54.2* - June 16th, 2020
 
 * Fixed the bug where seeded death would not work properly if you died as The Soul. (Thanks Gamonymous)
@@ -70,7 +87,7 @@
 ### *v0.52.0* - May 3rd, 2020
 
 * Season 7 is finished!
-  * Congradulations to Dea1h for the best time of 49:34, thereisnofuture for the second best time of 49:41, and mgln for the third best time of 49:45.
+  * Congratulations to Dea1h for the best time of 49:34, thereisnofuture for the second best time of 49:41, and mgln for the third best time of 49:45.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S7) category will continue to be tracked on speedrun.com, but the official competition will move on to season 8.
 * [Season 8](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) has officially begun!
@@ -308,7 +325,7 @@ Mod changes:
 ### *v0.46.0* - November 2nd, 2019
 
 * Season 6 is finished!
-  * Congradulations to Shigan_ for the best time of 44:04, thereisnofuture for the second best time of 45:54, and Greg570 for the third best time of 46:30.
+  * Congratulations to Shigan_ for the best time of 44:04, thereisnofuture for the second best time of 45:54, and Greg570 for the third best time of 46:30.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S6) category will continue to be tracked on speedrun.com, but the official competition will move on to season 7.
 * [Season 7](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-7-the-diversity-season) has officially begun!
@@ -671,7 +688,7 @@ Mod changes:
 ### *v0.34.0* - May 2nd, 2019
 
 * Season 5 is finished!
-  * Congradulations to Dea1h for the best time of 1:02:53, Cyber_1 for the second best time of 1:03:26, and CrafterLynx for the third best time of 1:04:17.
+  * Congratulations to Dea1h for the best time of 1:02:53, Cyber_1 for the second best time of 1:03:26, and CrafterLynx for the third best time of 1:04:17.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S5) category will continue to be tracked on speedrun.com, but the official competition will move on to season 6.
 * [Season 6](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-6) has officially begun! The new season will be considered beta for the first 2-3 weeks.
@@ -770,7 +787,7 @@ Mod changes:
 ### *v0.29.0* - November 19th, 2018
 
 * Season 4 is finished!
-  * Congradulations to antizoubilamakA for the best time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
+  * Congratulations to antizoubilamakA for the best time of 56:46, Cyber_1 for the second best time of 57:55, and leo_ze_tron for the third best time of 58:42.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S4) category will continue to be tracked on speedrun.com, but the official competition will move on to season 5.
 * [Season 5](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-5) has officially begun!
@@ -1323,7 +1340,7 @@ Mod Changes:
 ### *v0.17.0* - April 21st, 2018
 
 * Season 3 is finished!
-  * Congradulations to Dea1h for the best time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
+  * Congratulations to Dea1h for the best time of 1:03:17, ReidMercury for the second best time of 1:04:04, and BMZ_Loop for the third best time of 1:08:11.
   * The top 10 times will be stored in the [Hall of Fame page](https://isaacracing.net/halloffame).
   * If you want to beat these times, the R+7 (S3) category will continue to be tracked on speedrun.com, but the official competition will move on to season 4.
 * [Season 4](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-4) has officially begun!
@@ -1421,7 +1438,7 @@ Client:
 
 ### *v0.16.0* - March 18th, 2018
 
-* The Unseeded Ranked Solo Season 1 has concluded. Congradulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the client was a little wonky until v0.15.0 (February 11th).
+* The Unseeded Ranked Solo Season 1 has concluded. Congratulations to BMZ_Loop on 1st place with an average time of 12:41, CrafterLynx on 2nd place with an average time of 12:51, and Dea1h with 3rd place with an average time of 13:12. Note that these times should be taken with a grain of salt, since the timing of the client was a little wonky until v0.15.0 (February 11th).
 * Season 2 has now started! The leaderboard has been completely reset. In Season 2, Judas will now start with the Schoolbag, but the category is otherwise the same.
 * You can now use the "Change Keybindings" custom challenge to set a unique key for fast-drop and a Schoolbag-switch.
   * If you do not have a binding set for fast-drop, the fast-drop feature will not function at all.
@@ -1558,7 +1575,7 @@ News:
 
 * Isaac is now feeling festive. Happy Thanksgiving! (Thanks to Gromfalloon for this)
 * Season 2 is finished!
-  * Congradulations to Dea1h for the best time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
+  * Congratulations to Dea1h for the best time of 1:01:13, Shigan for the second best time of 1:07:13, and ceehe for the third best time of 1:09:18.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
   * If you tried out Season 2 and did not like it, Samael is being heavily buffed in this patch with the goal of making him more fun to play (see below).
@@ -2037,8 +2054,8 @@ Client/Server:
 News:
 
 * Season 1 is finished!
-  * Congradulations to Cyber_1 for the best R+9 time of 1:31:02 and Dea1h on the second best time of 1:33:27. I was luckily able to nab third place with 1:33:49.
-  * Congradulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
+  * Congratulations to Cyber_1 for the best R+9 time of 1:31:02 and Dea1h on the second best time of 1:33:27. I was luckily able to nab third place with 1:33:49.
+  * Congratulations to Dea1h for the best R+14 time of 2:41:37, Shigan for the second best time of 2:49:48, and CrafterLynx for the third best time of 2:54:08.
   * The top 10 times will be stored in a hall of fame page on the website in the future.
   * If you want to beat these times, the R+9 and R+14 categories will continue to be tracked on speedrun.com, but the official competition will move on to season 2.
 * Season 2 has officially begun!

@@ -1,7 +1,7 @@
 local Errors = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
 
 Errors.startingX = 115
@@ -16,67 +16,63 @@ function Errors:Draw()
   if g.corrupted then
     Errors:DrawCorrupted()
     return true
-
   elseif g.resumedOldRun then
     Errors:DrawResumedOldRun()
     return true
-
   elseif not g.saveFile.fullyUnlocked then
     Errors:DrawInvalidSaveFile()
     return true
-
   elseif g.invalidItemsXML then
     Errors:DrawInvalidItemsXML()
     return true
-
-  elseif not g.luaDebug and
-         g.raceVars.shadowEnabled then
-
+  elseif (
+    not g.luaDebug
+    and g.raceVars.shadowEnabled
+  ) then
     Errors:DrawNoLuaDebug()
     return true
-
-  elseif (Speedrun:InSpeedrun() or
-          challenge == Isaac.GetChallengeIdByName("Change Char Order")) and
-         RacingPlusData == nil then
-
+  elseif (
+    (Speedrun:InSpeedrun() or challenge == Isaac.GetChallengeIdByName("Change Char Order"))
+    and RacingPlusData == nil
+  ) then
     Errors:DrawRacingPlusData1()
     return true
-
-  elseif challenge == Isaac.GetChallengeIdByName("Change Keybindings") and
-         RacingPlusData == nil then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("Change Keybindings")
+    and RacingPlusData == nil
+  ) then
     Errors:DrawRacingPlusData2()
     return true
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-         SinglePlayerCoopBabies == nil then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")
+    and SinglePlayerCoopBabies == nil
+  ) then
     Errors:DrawEnableBabiesMod()
     return true
-
-  elseif Speedrun:InSpeedrun() and
-         challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-         SinglePlayerCoopBabies ~= nil then
-
+  elseif (
+    Speedrun:InSpeedrun()
+    and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)")
+    and SinglePlayerCoopBabies ~= nil
+  ) then
     Errors:DrawDisableBabiesMod()
     return true
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season X)") and
-         RacingPlusRebalanced == nil then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+    and RacingPlusRebalanced == nil
+  ) then
     Errors:DrawEnableBalanceMod()
     return true
-
-  elseif Speedrun:InSpeedrun() and
-         challenge ~= Isaac.GetChallengeIdByName("R+7 (Season X)") and
-         RacingPlusRebalanced ~= nil then
-
+  elseif (
+    Speedrun:InSpeedrun()
+    and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+    and RacingPlusRebalanced ~= nil
+  ) then
     Errors:DrawDisableBalanceMod()
     return true
-
-  elseif Speedrun:InSpeedrun() and
-         not Speedrun:CheckValidCharOrder() then
-
+  elseif (
+    Speedrun:InSpeedrun()
+    and not Speedrun:CheckValidCharOrder()
+  ) then
     Errors:DrawSetCharOrder()
     return true
   end

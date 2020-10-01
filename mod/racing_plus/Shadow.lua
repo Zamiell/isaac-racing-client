@@ -1,31 +1,33 @@
 -- Includes
-local g            = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local ShadowClient = require("racing_plus/shadowclient")
 
 local Shadow = {
-  beaconInterval = 10 * 60, -- 60 fps per Isaac::GetFrameCount
-  sprite         = nil,
-  head           = nil,
-  body           = nil,
-  isActive       = false,
+  beaconInterval = 10 * 60, -- 60 fps per "Isaac.GetFrameCount()"
+  sprite = nil,
+  head = nil,
+  body = nil,
+  isActive = false,
 }
 
 local state = {
   lastUpdated = 0,
-  x           = nil,
-  y           = nil,
-  level       = nil,
-  room        = nil,
-  character   = nil,
-  anim_name   = nil,
-  anim_frame  = nil,
+  x = nil,
+  y = nil,
+  level = nil,
+  room = nil,
+  character = nil,
+  anim_name = nil,
+  anim_frame = nil,
 }
 
 function Shadow:IsEnabled()
-  return g.luaDebug
-         and g.raceVars.shadowEnabled
-         and g.race.raceID ~= 0
-         and g.race.status == 'in progress'
+  return (
+    g.luaDebug
+    and g.raceVars.shadowEnabled
+    and g.race.raceID ~= 0
+    and g.race.status == 'in progress'
+  )
 end
 
 function Shadow:Draw()
@@ -47,12 +49,10 @@ function Shadow:Draw()
       if string.find(state.anim_name, "Trapdoor") then
         Shadow.head:SetFrame("Trapdoor", state.anim_frame)
         Shadow.body:SetFrame("Trapdoor", state.anim_frame)
-
       elseif string.find(state.anim_name, "Walk") then
         local headanim = string.gsub(state.anim_name, "Walk", "Head")
         Shadow.head:SetFrame(headanim, state.anim_frame)
         Shadow.body:SetFrame(state.anim_name, state.anim_frame)
-
       else
         Shadow.head:SetFrame(state.anim_name, state.anim_frame)
         Shadow.body:SetFrame(state.anim_name, state.anim_frame)
@@ -67,9 +67,8 @@ function Shadow:Draw()
 end
 
 function Shadow:IsBeaconFrame()
-  local currentFrame = Isaac:GetFrameCount()
-  -- math.floor(a/b)*b is lua poormans modulo division
-  return currentFrame - math.floor(currentFrame/Shadow.beaconInterval)*Shadow.beaconInterval == 0
+  local isaacFrameCount = Isaac:GetFrameCount()
+  return isaacFrameCount - math.fmod(isaacFrameCount, Shadow.beaconInterval) == 0
 end
 
 function Shadow:PostUpdate()
@@ -89,30 +88,37 @@ function Shadow:PostUpdate()
   local shadow = ShadowClient:RecvOpponentShadow() -- Data may not be yet received
   Shadow.isActive = Shadow.isActive and shadow ~= nil
 
-  if shadow ~= nil then
-    local currentFrame = Isaac:GetFrameCount()
-
-    state.x = shadow.x
-    state.y = shadow.y
-    state.level = shadow.level
-    state.room = shadow.room
-
-    if Shadow.body ~= nil and state.character ~= shadow.character then
-      Shadow.body:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
-    end
-    if Shadow.head ~= nil and state.character ~= shadow.character then
-      Shadow.head:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
-    end
-
-    state.character = shadow.character
-    state.anim_name = shadow.anim_name
-    state.anim_frame = shadow.anim_frame
-
-    Shadow.isActive = shadow.level == g.l:GetStage() -- Same level
-    Shadow.isActive = Shadow.isActive and shadow.room == g.l:GetCurrentRoomIndex() -- Same room
-    Shadow.isActive = Shadow.isActive and currentFrame - state.lastUpdated < 60 -- Didn't receive update
-    state.lastUpdated = currentFrame
+  if shadow == nil then
+    return
   end
+
+  -- Local variables
+  local roomIndex = g:GetRoomIndex()
+  local stage = g.l:GetStage()
+  local currentFrame = Isaac:GetFrameCount()
+
+  state.x = shadow.x
+  state.y = shadow.y
+  state.level = shadow.level
+  state.room = shadow.room
+
+  if Shadow.body ~= nil and state.character ~= shadow.character then
+    Shadow.body:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
+  end
+  if Shadow.head ~= nil and state.character ~= shadow.character then
+    Shadow.head:Load("gfx/custom/characters/" .. shadow.character .. ".anm2", true)
+  end
+
+  state.character = shadow.character
+  state.anim_name = shadow.anim_name
+  state.anim_frame = shadow.anim_frame
+
+  Shadow.isActive = (
+    shadow.level == stage -- Same level
+    and shadow.room == roomIndex -- Same room
+    and currentFrame - state.lastUpdated < 60
+  )
+  state.lastUpdated = currentFrame
 end
 
 return Shadow

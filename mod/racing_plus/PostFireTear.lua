@@ -27,12 +27,13 @@ function PostFireTear:FixMonstrosLungSynergy(tear)
     return
   end
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) and -- 229
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) and -- 68
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and -- 114
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) and -- 168
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) then -- 395
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) -- 229
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) -- 68
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) -- 395
+  ) then
     local extraTears = 0
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) then -- 2
       extraTears = 2
@@ -43,25 +44,29 @@ function PostFireTear:FixMonstrosLungSynergy(tear)
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then -- 245
       extraTears = 1
     end
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) and -- 2
-       g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) then -- 153
-
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+    ) then
       extraTears = 6
     end
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) and -- 2
-       g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then -- 245
-
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) -- 245
+    ) then
       extraTears = 4
     end
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) and -- 153
-       g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then -- 245
-
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) -- 245
+    ) then
       extraTears = 5
     end
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) and -- 2
-       g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) and -- 153
-       g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) then -- 245
-
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_20_20) -- 245
+    ) then
       extraTears = 8
     end
 

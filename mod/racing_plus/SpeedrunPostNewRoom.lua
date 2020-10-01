@@ -1,11 +1,11 @@
 local SpeedrunPostNewRoom = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g= require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
-local Season3  = require("racing_plus/season3")
-local Season6  = require("racing_plus/season6")
-local Season7  = require("racing_plus/season7")
+local Season3 = require("racing_plus/season3")
+local Season6 = require("racing_plus/season6")
+local Season7 = require("racing_plus/season7")
 
 function SpeedrunPostNewRoom:Main()
   if not Speedrun:InSpeedrun() then
@@ -24,17 +24,16 @@ function SpeedrunPostNewRoom:Main()
   Season7:PostNewRoom()
 end
 
--- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges (1/2)
+-- Fix the bug where the "correct" exit always appears in the I AM ERROR room in custom challenges
+-- (1/2)
 function SpeedrunPostNewRoom:Stage8IAMERROR()
   -- Local variables
   local stage = g.l:GetStage()
   local roomType = g.r:GetType()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
   local gridSize = g.r:GetGridSize()
 
-  if stage ~= 8 or
-     roomType ~= RoomType.ROOM_ERROR then -- 3
-
+  if stage ~= 8 or roomType ~= RoomType.ROOM_ERROR then -- 3
     return
   end
 
@@ -59,9 +58,17 @@ function SpeedrunPostNewRoom:Stage8IAMERROR()
           pos = gridEntity.Position
           g.r:RemoveGridEntity(i, 0, false) -- gridEntity:Destroy() does not work
 
-          -- Spawn a Heaven Door (1000.39) (it will get replaced with the fast-travel version on this frame)
-          -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
-          Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, pos, g.zeroVector, g.p)
+          -- Spawn a Heaven Door (it will get replaced with the fast-travel version on this frame)
+          -- Make the spawner entity the player so that we can distinguish it from the vanilla
+          -- heaven door
+          Isaac.Spawn(
+            EntityType.ENTITY_EFFECT, -- 1000
+            EffectVariant.HEAVEN_LIGHT_DOOR, -- 39
+            0,
+            pos,
+            g.zeroVector,
+            g.p
+          )
           Isaac.DebugString("Replaced a trapdoor with a beam of light.")
           return
         elseif direction == 2 then
@@ -73,8 +80,13 @@ function SpeedrunPostNewRoom:Stage8IAMERROR()
   end
 
   -- Find any existing beams of light
-  local lightDoors = Isaac.FindByType(EntityType.ENTITY_EFFECT, -- 1000
-                                      EffectVariant.HEAVEN_LIGHT_DOOR, -1, false, false) -- 39
+  local lightDoors = Isaac.FindByType(
+    EntityType.ENTITY_EFFECT, -- 1000
+    EffectVariant.HEAVEN_LIGHT_DOOR, -- 39
+    -1,
+    false,
+    false
+  )
   for _, lightDoor in ipairs(lightDoors) do
     if direction == 1 then
       -- If we are going up and there is already a beam of light, we don't need to do anything
@@ -98,13 +110,16 @@ function SpeedrunPostNewRoom:CheckCurseRoom()
   local roomType = g.r:GetType()
   local challenge = Isaac.GetChallenge()
 
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) or
-     Speedrun.charNum ~= 1 or
-     stage ~= 1 or
-     roomType ~= RoomType.ROOM_CURSE or -- 10
-     not g.r:IsFirstVisit() then
-
+  if (
+    (
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)")
+      and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    )
+    or Speedrun.charNum ~= 1
+    or stage ~= 1
+    or roomType ~= RoomType.ROOM_CURSE -- 10
+    or not g.r:IsFirstVisit()
+  ) then
     return
   end
 
@@ -130,18 +145,23 @@ function SpeedrunPostNewRoom:CheckSacrificeRoom()
   local gridSize = g.r:GetGridSize()
   local challenge = Isaac.GetChallenge()
 
-  if (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) or
-     Speedrun.charNum ~= 1 or
-     stage ~= 1 or
-     roomType ~= RoomType.ROOM_SACRIFICE then -- 13
-
+  if (
+    (
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)")
+      and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    )
+    or Speedrun.charNum ~= 1
+    or stage ~= 1
+    or roomType ~= RoomType.ROOM_SACRIFICE -- 13
+  ) then
     return
   end
 
   if g.r:IsFirstVisit() then
-    -- On the first visit to a Sacrifice Room, give a sign to the player that the spikes were intentionally deleted
-    -- Note that the spikes need to be deleted every time we enter the room, as they will respawn once the player leaves
+    -- On the first visit to a Sacrifice Room,
+    -- give a sign to the player that the spikes were intentionally deleted
+    -- Note that the spikes need to be deleted every time we enter the room,
+    -- as they will respawn once the player leaves
     g.p:AnimateSad()
   end
   for i = 1, gridSize do

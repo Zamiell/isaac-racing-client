@@ -1,7 +1,7 @@
 local Season8 = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- Constants
@@ -107,29 +107,38 @@ function Season8:Pedestals(pickup)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)") or
-     not g:TableContains(Season8.touchedItems, pickup.SubType) or
-     pickup.Touched then
-
+  if (
+    challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 8)")
+    or not g:TableContains(Season8.touchedItems, pickup.SubType)
+    or pickup.Touched
+  ) then
     -- Don't do anything special with this item
     return pickup.SubType
   end
 
   -- This is a "set" drop that we have already touched
   local itemName = g.itemConfig:GetCollectible(pickup.SubType).Name
-  if pickup.SubType == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) and -- 73
-     not g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) then -- 207
-
-    Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" " ..
-                      "with Ball of Bandages (special case).")
+  if (
+    pickup.SubType == CollectibleType.COLLECTIBLE_CUBE_OF_MEAT -- 73
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) -- 73
+    and not g:TableContains(
+      Season8.touchedItems,
+      CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
+    )
+  ) then
+    Isaac.DebugString(
+      "Season 8 - Replacing set-drop item \"" .. itemName .. "\" "
+      .. "with Ball of Bandages (special case)."
+    )
     return CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
-
-  elseif pickup.SubType == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES and -- 207
-         not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) and -- 207
-         not g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) then -- 73
-
-    Isaac.DebugString("Season 8 - Replacing set-drop item \"" .. itemName .. "\" with Cube of Meat (special case).")
+  elseif (
+    pickup.SubType == CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES) -- 207
+    and not g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_CUBE_OF_MEAT) -- 73
+  ) then
+    Isaac.DebugString(
+      "Season 8 - Replacing set-drop item \"" .. itemName .. "\" with Cube of Meat (special case)."
+    )
     return CollectibleType.COLLECTIBLE_CUBE_OF_MEAT -- 73
   end
 
@@ -211,9 +220,10 @@ function Season8:DrawRemainingItems()
   local pill = g.p:GetPill(0)
   local screenSize = g:GetScreenSize()
   local x = screenSize[1] - 180
-  if #Season8.touchedItems >= 100 or
-     #Season8.touchedTrinkets >= 100 then
-
+  if (
+    #Season8.touchedItems >= 100
+    or #Season8.touchedTrinkets >= 100
+  ) then
     -- The extra digit will run off the right side of the screen
     x = x - 10
   end
@@ -256,7 +266,8 @@ function Season8:DrawRemainingItems()
   -- Draw icons for some important specific items
   local scale = 0.7
   local baseX = screenSize[1] - 235
-  local yAdjustment = 23 -- The item sprites need to be adjusted further down than a line of text would
+  -- The item sprites need to be adjusted further down than a line of text would
+  local yAdjustment = 23
 
   x = baseX
   string = "Starters:"
@@ -342,9 +353,11 @@ function Season8:UseCard(card)
     g:TableRemove(Season8.remainingCards, card)
     Isaac.DebugString("Season8:UseCard() - Used and removed card: " .. tostring(card))
   else
-    Isaac.DebugString("Season8:UseCard() - Used card " .. tostring(card) .. " (but it was not " ..
-                      "in the \"remainingCards\" table, so it must have been a duplicate card " ..
-                      "from a Jera or something like that.")
+    Isaac.DebugString(
+      "Season8:UseCard() - Used card " .. tostring(card)
+      .. " (but it was not in the \"remainingCards\" table, "
+      .. "so it must have been a duplicate card from a Jera or something like that."
+    )
   end
 end
 
@@ -421,23 +434,19 @@ function Season8:PostGameStarted()
   -- Do character-specific actions
   if character == PlayerType.PLAYER_ISAAC then -- 0
     Schoolbag:Put(CollectibleType.COLLECTIBLE_D6, 6) -- 105
-
   elseif character == PlayerType.PLAYER_CAIN then -- 2
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     g.p:AddSoulHearts(1)
-
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
     g.p:AddHearts(1)
     -- We need to touch it to lock in the Bookworm touch
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 0, false) -- 34
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_D6, 6, false) -- 105
     Schoolbag:Put(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL, 3) -- 34
-
   elseif character == PlayerType.PLAYER_EVE then -- 5
     Schoolbag:Put(CollectibleType.COLLECTIBLE_RAZOR_BLADE, 3) -- 126
     g.p:AddSoulHearts(1)
     -- (one red heart was already taken away in the "Season8:PostPlayerInit()" function)
-
   elseif character == PlayerType.PLAYER_LAZARUS2 then -- 11
     -- Make the D6 appear first on the item tracker
     Isaac.DebugString("Removing collectible 214 (Anemic)")
@@ -445,10 +454,8 @@ function Season8:PostGameStarted()
 
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 249
     g.p:AddSoulHearts(1)
-
   elseif character == PlayerType.PLAYER_BLACKJUDAS then -- 12
     g.p:AddBlackHearts(3)
-
   elseif character == PlayerType.PLAYER_APOLLYON then -- 15
     Schoolbag:Put(CollectibleType.COLLECTIBLE_VOID, 6) -- 477
     g.p:AddSoulHearts(1)
@@ -502,17 +509,21 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
   end
 
   -- Debug
-  Isaac.DebugString("Season8:GetCard() - " ..
-                    "currentCard: " .. tostring(currentCard) .. ", " ..
-                    "playing: " .. tostring(playing) .. ", " ..
-                    "runes: " .. tostring(runes) .. ", " ..
-                    "onlyRunes: " .. tostring(onlyRunes))
+  Isaac.DebugString(
+    "Season8:GetCard() - "
+    .. "currentCard: " .. tostring(currentCard) .. ", "
+    .. "playing: " .. tostring(playing) .. ", "
+    .. "runes: " .. tostring(runes) .. ", "
+    .. "onlyRunes: " .. tostring(onlyRunes)
+  )
   local cards = ""
   for _, card in ipairs(Season8.remainingCards) do
     cards = cards .. tostring(card) .. ", "
   end
-  Isaac.DebugString("Season8:GetCard() - " .. tostring(#Season8.remainingCards) .. " cards remaining: " ..
-                    "(" .. tostring(cards) .. ")")
+  Isaac.DebugString(
+    "Season8:GetCard() - " .. tostring(#Season8.remainingCards) .. " cards remaining: "
+    .. "(" .. tostring(cards) .. ")"
+  )
 
   if g:TableContains(Season8.remainingCards, currentCard) then
     -- They have not used this card/rune yet
@@ -540,8 +551,12 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
     -- Return a random rune
     math.randomseed(rng:GetSeed())
     local randomIndex = math.random(1, #remainingRunes)
-    Isaac.DebugString("Season8:GetCard() - There are " .. tostring(#remainingRunes) .. " runes remaining.")
-    Isaac.DebugString("Season8:GetCard() - Returning a custom rune of: " .. tostring(remainingRunes[randomIndex]))
+    Isaac.DebugString(
+      "Season8:GetCard() - There are " .. tostring(#remainingRunes) .. " runes remaining."
+    )
+    Isaac.DebugString(
+      "Season8:GetCard() - Returning a custom rune of: " .. tostring(remainingRunes[randomIndex])
+    )
     return remainingRunes[randomIndex]
   end
 
@@ -583,8 +598,10 @@ function Season8:GetCard(rng, currentCard, playing, runes, onlyRunes)
   -- Return a random card
   math.randomseed(rng:GetSeed())
   local randomIndex = math.random(1, #remainingCards)
-  Isaac.DebugString("Season8:GetCard() - There are " .. tostring(#remainingCards) .. " cards remaining. " ..
-                    "Returning a custom card of: " .. tostring(remainingCards[randomIndex]))
+  Isaac.DebugString(
+    "Season8:GetCard() - There are " .. tostring(#remainingCards) .. " cards remaining. "
+    .. "Returning a custom card of: " .. tostring(remainingCards[randomIndex])
+  )
   return remainingCards[randomIndex]
 end
 
@@ -600,20 +617,22 @@ function Season8:PostPickupUpdateTarotCard(pickup)
   end
 
   -- If we just re-entered a room that we have previously been in, ignore all cards
-  if not g.r:IsFirstVisit() and
-     pickup.FrameCount == 1 and
-     roomFrameCount == 1 then
-
+  if (
+    not g.r:IsFirstVisit()
+    and pickup.FrameCount == 1
+    and roomFrameCount == 1
+  ) then
     return
   end
 
   -- We only care about freshly spawned cards
   -- (we cannot use the POST_PICKUP_INIT callback because the position is yet not initialized there)
-  if pickup.FrameCount ~= 1 or
-     pickup.SpawnerType == EntityType.ENTITY_PLAYER then -- 1
-     -- (we need to ignore cards that the player drops,
-     -- or else they would be able to infinitely spawn new cards)
-
+  if (
+    pickup.FrameCount ~= 1
+    -- We need to ignore cards that the player drops,
+    -- or else they would be able to infinitely spawn new cards
+    or pickup.SpawnerType == EntityType.ENTITY_PLAYER -- 1
+  ) then
     return
   end
 
@@ -623,11 +642,19 @@ function Season8:PostPickupUpdateTarotCard(pickup)
     pickup:Remove()
 
     -- Spawn a random card in its place
-    Isaac.DebugString("Season 8 - Replacing card " .. tostring(pickup.SubType) .. " with a new " ..
-                      "random card due to it already being used. " ..
-                      "(This should only happen in Devil Room #4 and #7.)")
-    local newCard = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, -- 5.300
-                              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+    Isaac.DebugString(
+      "Season 8 - Replacing card " .. tostring(pickup.SubType) .. " with a new random card due to "
+      .. "it already being used. (This should only happen in Devil Room #4 and #7.)"
+    )
+    local newCard = g.g:Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_TAROTCARD, -- 300
+      pickup.Position,
+      pickup.Velocity,
+      pickup.SpawnerEntity,
+      0,
+      pickup.InitSeed
+    )
 
     -- If it is a shop item, we need to copy over the shop properties
     -- so that the replaced card is not automatically bought
@@ -659,9 +686,10 @@ function Season8:PostPickupUpdateTrinket(pickup)
   end
 
   -- Don't do anything if we are returning to a room with a previously dropped trinket
-  if roomFrameCount == 1 and
-     not g.r:IsFirstVisit() then
-
+  if (
+    roomFrameCount == 1
+    and not g.r:IsFirstVisit()
+  ) then
     return
   end
 
@@ -671,10 +699,19 @@ function Season8:PostPickupUpdateTrinket(pickup)
     pickup:Remove()
 
     -- Spawn a random trinket in its place
-    Isaac.DebugString("Season 8 - Replacing trinket " .. tostring(pickup.SubType) .. " with a new " ..
-                      "random trinket due to it already being touched..")
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -- 5.350
-              pickup.Position, pickup.Velocity, pickup.SpawnerEntity, 0, pickup.InitSeed)
+    Isaac.DebugString(
+      "Season 8 - Replacing trinket " .. tostring(pickup.SubType) .. " with a new random trinket "
+      .. "due to it already being touched."
+    )
+    g.g:Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_TRINKET, -- 350
+      pickup.Position,
+      pickup.Velocity,
+      pickup.SpawnerEntity,
+      0,
+      pickup.InitSeed
+    )
   end
 end
 

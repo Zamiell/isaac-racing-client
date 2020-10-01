@@ -1,7 +1,7 @@
 local SamaelMod = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- Samael was originally created by Ghostbroster
@@ -9,9 +9,9 @@ local Schoolbag = require("racing_plus/schoolbag")
 -- (and to pass the linter)
 
 --References and junk
-local hitBoxType = 617 --Subtype of the scythe's hitbox entity (It is a subtype of a Sacrificial Dagger)
-local hood = Isaac.GetCostumeIdByPath("gfx/characters/samaelhood.anm2") --Hood+horns+bandages costume
-local cloak = Isaac.GetCostumeIdByPath("gfx/characters/samaelcloak.anm2") --Cloak costume
+local hitBoxType = 617 --SubType of the scythe's hitbox entity (a subtype of a Sacrificial Dagger)
+local hood = Isaac.GetCostumeIdByPath("gfx/characters/samaelhood.anm2")
+local cloak = Isaac.GetCostumeIdByPath("gfx/characters/samaelcloak.anm2")
 local deadEyeCountdown = 3
 local zeroColor = Color(0, 0, 0, 0, 0, 0, 0)
 
@@ -26,7 +26,8 @@ local scytheProjectileDamageMultiplier = 1.0 --Scythe projectile damage = damage
 local chargeTimeMax = 40 --Maximum number of frames to charge a projectile
 local chargeTimeMid = 20 --Charge time at default fire delay (10)
 local chargeTimeMin = 10 --Minimum number of frames to charge a projectile
-local swingDelayCap = 30 --Cap on how high the swingDelay can be (maximum frames between scythe swings)
+-- Cap on how high the swingDelay can be (maximum frames between scythe swings)
+local swingDelayCap = 30
 local knockbackMagnitude = 4 --How much of a knockback effect the scythe has
 local luckCap = 15 --How much luck samael needs to get status effects 100% of the time with melee
 --local maxSizeRange = 50 --How much range to get a scythe thats twice as big
@@ -39,8 +40,10 @@ local scytheColor --For storing what colour the scythe should be
 local chargeTime = 0 --Number of frames required to charge a projectile
 local charge = 0 --Current charge (For charging a projectile)
 local lastCharge = 0
---Amount charged before being released (used for mom's knife so you need to charge at least 5 frames)
-local lastDirection = -1 --Saves the last attack direction in order to keep track of it while an attack is taking place
+-- Amount charged before being released
+-- (used for mom's knife so you need to charge at least 5 frames)
+-- Saves the last attack direction in order to keep track of it while an attack is taking place
+local lastDirection = -1
 local hitPos = nil --Where the hitbox for the melee scythe should be placed
 local swing = 0 --Alternating value that denotes whether the scythe is doing a left or right swing
 local swingDelay = 0 --If above 0, this is the number of frames until the scythe can be swung again
@@ -48,7 +51,8 @@ local swingDelay = 0 --If above 0, this is the number of frames until the scythe
 local costumeEquipped = false --Are his costumes equipped?
 local dying = false --Flag for dying animation (to activate custom death animation)
 local itemChecks = {}
---Array for checking if certain items are held to give damage boosts (multishot items, blood clot etc)
+-- Array for checking if certain items are held to give damage boosts
+-- (multishot items, blood clot etc)
 local numItems = -1 --Number of items currently held (used to identify when you get a new item)
 local canShoot = false --If false, stops the player from firing tears normally
 local isaacDying = false
@@ -60,7 +64,8 @@ local epiphoraCounter = 0 --How many times you've swung in the same direction
 local lastEpiphoraDirection = -1
 local hideScythe = false --Visibly hide the scythe (used with mom's knife synergy)
 local laserRingSpawned = false --For spawning tech x rings around samael when he swings
-local mawSoundCanceler = 0 --For blocking the maw of the void sound effect with the Godhead synergy's light circle
+-- For blocking the maw of the void sound effect with the Godhead synergy's light circle
+local mawSoundCanceler = 0
 --local spawnSkull = false
 
 --Three Dollar Bill/Fruit Cake effects and other tear effect related variables
@@ -145,9 +150,10 @@ function SamaelMod:PostUpdate()
     end
 
     if roomFrames == 1 then
-      --Respawn scythe every room (It does not persist otherwise. I prefer it this way.
+      -- Respawn scythe every room (It does not persist otherwise. I prefer it this way.
       -- It's easy to manage, since this is all you have to do to fix it.)
-      --Isaac.SaveModData(SamaelMod, tostring(math.floor(wraithCharge))) --Also save the wraithCharge
+      -- Also save the wraithCharge
+      --Isaac.SaveModData(SamaelMod, tostring(math.floor(wraithCharge)))
       spawned = false
     end
 
@@ -159,8 +165,14 @@ function SamaelMod:PostUpdate()
     if g.p:GetSprite():IsPlaying("Death") then --When player dies
       if not dying then
         --Spawn the special animations entity
-        local special = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS, 0, 0,
-                                    g.p.Position, g.zeroVector, g.p):ToNPC()
+        local special = Isaac.Spawn(
+          EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS,
+          0,
+          0,
+          g.p.Position,
+          g.zeroVector,
+          g.p
+        ):ToNPC()
         special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
         special:GetSprite():Play("Death", 1) --Play custom death animation
         special.CanShutDoors = false
@@ -193,7 +205,14 @@ function SamaelMod:PostUpdate()
     end
 
     if not spawned then --If scythe is not spawned
-      local scythe = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SCYTHE, 0, 0, g.p.Position, g.zeroVector, g.p)
+      local scythe = Isaac.Spawn(
+        EntityType.ENTITY_SAMAEL_SCYTHE,
+        0,
+        0,
+        g.p.Position,
+        g.zeroVector,
+        g.p
+      )
       scythe = scythe:ToNPC()
       SamaelMod:getScytheColor()
       scythe:GetSprite().Color = scytheColor
@@ -209,7 +228,8 @@ function SamaelMod:PostUpdate()
       laserRingSpawned = false
     end
 
-    if chargeTime == 0 then --Set charge time on init (only really activates upon using the luamod command)
+    -- Set charge time on init (only really activates upon using the luamod command)
+    if chargeTime == 0 then
       SamaelMod:calcChargeTime()
     end
 
@@ -236,8 +256,10 @@ function SamaelMod:PostUpdate()
            g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) then
 
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
-      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) ..
-                        " (Samael Dr. Fetus)")
+      Isaac.DebugString(
+        "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
+        .. " (Samael Dr. Fetus)"
+      )
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
     --Marked is awful, replace it
@@ -284,26 +306,34 @@ function SamaelMod:PostUpdate()
     --Make sure custom items do not persist outside of Samael
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE)
-      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) ..
-                        " (Samael Dead Eye)")
+      Isaac.DebugString(
+        "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE)
+        .. " (Samael Dead Eye)"
+      )
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DEAD_EYE, 0, false)
     end
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK)
-      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) ..
-                        " (Samael Chocolate Milk)")
+      Isaac.DebugString(
+        "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK)
+        .. " (Samael Chocolate Milk)"
+      )
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, 0, false)
     end
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
-      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS) ..
-                        " (Samael Dr. Fetus)")
+      Isaac.DebugString(
+        "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS)
+        .. " (Samael Dr. Fetus)"
+      )
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_DR_FETUS, 0, false)
     end
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) then
       g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SAMAEL_MARKED)
-      Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_MARKED) ..
-                        " (Samael Marked)")
+      Isaac.DebugString(
+        "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SAMAEL_MARKED)
+        .. " (Samael Marked)"
+      )
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_MARKED, 0, false)
     end
     if not g.p:GetSprite():IsPlaying("Death") and dying then
@@ -334,7 +364,8 @@ function SamaelMod:wraithModeHandler()
 
     SamaelMod:triggerWraithModeEnd()
   end
-  if wraithCooldown > 0 then --On cooldown after wraith form wears off (briefly flashing and still invulnerable)
+  -- On cooldown after wraith form wears off (briefly flashing and still invulnerable)
+  if wraithCooldown > 0 then
     wraithCooldown = wraithCooldown - 1
     if wraithCooldown % 4 == 0 then
       g.p:SetColor(Color(0.6,0.3,0.3,0.4,0,0,0), 2, 990, false, false)
@@ -347,17 +378,33 @@ function SamaelMod:wraithModeHandler()
     wraithTime = wraithTime - 1
     wraithCharge = 0
     g.p:GetSprite().Color = zeroColor
-    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.DARK_BALL_SMOKE_PARTICLE, 0,
-                g.p.Position, g.zeroVector, g.p) --Smoke trail
+    Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.DARK_BALL_SMOKE_PARTICLE, -- 88
+      0,
+      g.p.Position,
+      g.zeroVector,
+      g.p
+    )
     if wraithTime == 0 then --When wraith time is over
       wraithCooldown = 24
       g.p.MoveSpeed = g.p.MoveSpeed - 0.3
-      --Isaac.DebugString("Decreased speed from the Wraith ability being over: " .. tostring(player.MoveSpeed))
+      --[[
+      Isaac.DebugString(
+        "Decreased speed from the Wraith ability being over: " .. tostring(player.MoveSpeed)
+      )
+      --]]
       g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL
       SamaelMod:playSound(316, 1.8, 1.25)
       --Black poof effect
-      local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                               g.p.Position, g.zeroVector, g.p):ToEffect()
+      local poof = Isaac.Spawn(
+        EntityType.ENTITY_EFFECT, -- 1000
+        EffectVariant.POOF02, -- 16
+        0,
+        g.p.Position,
+        g.zeroVector,
+        g.p
+      ):ToEffect()
       poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
       poof:FollowParent(g.p)
     end
@@ -370,8 +417,12 @@ function SamaelMod:triggerWraithModeEnd()
   end
   if wraithCooldown == 0 then
     g.p.MoveSpeed = g.p.MoveSpeed - 0.3
-    --Isaac.DebugString("Decreased speed from the Wraith ability being over (inside triggerWraithModeEnd function): " ..
-                      --tostring(player.MoveSpeed))
+    --[[
+    Isaac.DebugString(
+      "Decreased speed from the Wraith ability being over (inside triggerWraithModeEnd function): "
+      .. tostring(player.MoveSpeed)
+    )
+    --]]
   end
   wraithActive = false
   wraithCooldown = 0
@@ -399,8 +450,14 @@ function SamaelMod:scytheUpdate(scythe)
 
   local hitBox --Local variable to store reference to hitbox entity
   if scythe.Child == nil then --If the scythe has no child (no spawned hitbox)
-    hitBox = Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER, hitBoxType,
-                         g.p.Position, g.zeroVector, scythe) --Spawn the hitbox
+    hitBox = Isaac.Spawn(
+      EntityType.ENTITY_FAMILIAR, -- 3
+      FamiliarVariant.SACRIFICIAL_DAGGER, -- 35
+      hitBoxType,
+      g.p.Position,
+      g.zeroVector,
+      scythe
+    )
     hitBox:ClearEntityFlags(EntityFlag.FLAG_APPEAR) --Skip appear animations
     hitBox = hitBox:ToFamiliar()
     scythe.Child = hitBox --Set it as the scythe's child
@@ -413,7 +470,8 @@ function SamaelMod:scytheUpdate(scythe)
     hitBox.Position = g.zeroVector --Move it off of the screen
     hitBox.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
   else
-    hitBox = scythe.Child:ToFamiliar() --If scythe has a child, then the hitbox exists. Set this as a reference to it
+    -- If scythe has a child, then the hitbox exists. Set this as a reference to it
+    hitBox = scythe.Child:ToFamiliar()
   end
   local sprite = scythe:GetSprite() --The Scythe's sprite
   local headDirection = g.p:GetHeadDirection()
@@ -454,9 +512,11 @@ function SamaelMod:scytheUpdate(scythe)
     scythe:GetSprite().Color = Color(0,0,0,0,0,0,0)
     swingDelay = 4
   else
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE) and
-       not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then --Set redness for deadEye boost
-
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE)
+      and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE)
+    ) then
+      --Set redness for deadEye boost
       scytheColor.RO = (deadEyeBoost/properDamage)/2
     end
     scythe:GetSprite().Color = scytheColor --Set colour
@@ -470,16 +530,19 @@ function SamaelMod:scytheUpdate(scythe)
   --scytheState 1 = Ready/Charging, holding down an attack direction (holding up the scythe)
   --scytheState 2 = Swinging the scythe
 
-  --READY ATTACK: When the player is holding down a fire direction, and the scythe is not on cooldown
+  -- READY ATTACK: When the player is holding down a fire direction,
+  -- and the scythe is not on cooldown
   if fireDirection ~= -1 and swingDelay == 0 then
     if not canShoot or g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then
-      if charge < chargeTime then --Make the scythe being held up, unless the projectile attack is charged...
+      if charge < chargeTime then
+        -- Make the scythe being held up, unless the projectile attack is charged
         if scytheScale >= 1.5 then
           sprite:SetFrame("BigSwing", 0) --Play scythe swing animation
         else
           sprite:SetFrame("Swing", 0) --Play scythe swing animation
         end
-      elseif charge == chargeTime then --If the player has been charging long enough to fire a projectile, flash red
+      elseif charge == chargeTime then
+        -- If the player has been charging long enough to fire a projectile, flash red
         if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) then
           if scytheScale >= 1.5 then
             sprite:Play("BigCharge", 1)
@@ -526,7 +589,7 @@ function SamaelMod:scytheUpdate(scythe)
       charge = 0
     end
 
-    --If they were charging long enough to fire a projectile...
+    --If they were charging long enough to fire a projectile
     if charge >= chargeTime and
        not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) and
        not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then
@@ -543,13 +606,15 @@ function SamaelMod:scytheUpdate(scythe)
       end
       projVel = projVel:__add(g.p.Velocity) --Add the players velocity to the projectile's velocity
 
-      scythe:PlaySound(133, 1, 0, false, 0.66) --Play the tech firing sound (albeit somewhat pitch shifted)
+      --Play the tech firing sound (albeit somewhat pitch shifted)
+      scythe:PlaySound(133, 1, 0, false, 0.66)
 
       local numTears = SamaelMod:getNumTears()
 
       if numTears == 0 then --0 actually means 1 in this case
         SamaelMod:fireScytheProjectile(projVel, 0, 0, 0) --Normal shot
-      elseif numTears == 2 and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_THE_WIZ) then --double shot
+      elseif numTears == 2 and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_THE_WIZ) then
+        -- double shot
         if lastDirection == Direction.UP or lastDirection == Direction.DOWN then
           SamaelMod:fireScytheProjectile(projVel, 0, 8, 0)
           SamaelMod:fireScytheProjectile(projVel, 0, -8, 0)
@@ -558,7 +623,8 @@ function SamaelMod:scytheUpdate(scythe)
           SamaelMod:fireScytheProjectile(projVel, 0, 0, -8)
         end
       else --triple shot and above
-        local arc = 20 --how wide the projectiles disperse (this value is actually half of the total angle)
+        local arc = 20 --how wide the projectiles disperse
+        -- (this value is actually half of the total angle)
         local angle
         for i=1,numTears do --For each projectile
           angle = -arc+(arc*2)*((i-1)/(numTears-1)) --Firing angle of this particular projectile
@@ -588,13 +654,21 @@ function SamaelMod:scytheUpdate(scythe)
 
           if math.random(10-luck) == 1 then
             if lastDirection ~= Direction.UP then
-              SamaelMod:fireScytheProjectile(Vector(0, (-1)*g.p.ShotSpeed*10):__add(g.p.Velocity), 0, 0,0) end
+              local vel = Vector(0, (-1)*g.p.ShotSpeed*10):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0, 0)
+            end
             if lastDirection ~= Direction.DOWN then
-              SamaelMod:fireScytheProjectile(Vector(0, g.p.ShotSpeed*10):__add(g.p.Velocity), 0, 0,0) end
+              local vel = Vector(0, g.p.ShotSpeed*10):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0, 0)
+            end
             if lastDirection ~= Direction.LEFT then
-              SamaelMod:fireScytheProjectile(Vector((-1)*g.p.ShotSpeed*10, 0):__add(g.p.Velocity), 0, 0,0) end
+              local vel = Vector((-1)*g.p.ShotSpeed*10, 0):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
+            end
             if lastDirection ~= Direction.RIGHT then
-              SamaelMod:fireScytheProjectile(Vector(g.p.ShotSpeed*10, 0):__add(g.p.Velocity), 0, 0,0) end
+              local vel = Vector(g.p.ShotSpeed*10, 0):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
+            end
             lokiTriggered = true
           end
         end
@@ -603,13 +677,17 @@ function SamaelMod:scytheUpdate(scythe)
 
           if math.random(5-luck) == 1 then
             if lastDirection == Direction.UP then
-              SamaelMod:fireScytheProjectile(Vector(0, g.p.ShotSpeed*10):__add(g.p.Velocity), 0, 0,0)
+              local vel = Vector(0, g.p.ShotSpeed*10):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
             elseif lastDirection == Direction.DOWN then
-              SamaelMod:fireScytheProjectile(Vector(0, (-1)*g.p.ShotSpeed*10):__add(g.p.Velocity), 0, 0,0)
+              local vel = Vector(0, (-1)*g.p.ShotSpeed*10):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
             elseif lastDirection == Direction.LEFT then
-              SamaelMod:fireScytheProjectile(Vector(g.p.ShotSpeed*10, 0):__add(g.p.Velocity), 0, 0,0)
+              local vel = Vector(g.p.ShotSpeed*10, 0):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
             elseif lastDirection == Direction.RIGHT then
-              SamaelMod:fireScytheProjectile(Vector((-1)*g.p.ShotSpeed*10, 0):__add(g.p.Velocity), 0, 0,0)
+              local vel = Vector((-1)*g.p.ShotSpeed*10, 0):__add(g.p.Velocity)
+              SamaelMod:fireScytheProjectile(vel, 0, 0,0)
             end
           end
         end
@@ -651,7 +729,8 @@ function SamaelMod:scytheUpdate(scythe)
       SamaelMod:epiphoraFunc() --Epiphora
     end
 
-    swingDelay = SamaelMod:calcSwingDelay()+1 --Set new swing delay (+1 so as to not count this frame)
+    -- Set new swing delay (+1 so as to not count this frame)
+    swingDelay = SamaelMod:calcSwingDelay()+1
 
     scythe:PlaySound(38, 1.75, 0, false, 1.2) --Play swinging sound
     scytheState = 2 --Set state to 2 (swinging scythe)
@@ -665,7 +744,8 @@ function SamaelMod:scytheUpdate(scythe)
   end
   --If scythe is swinging, and the animation is between the frames where the scythe can hit enemies
   if scytheState == 2 and sprite:GetFrame() >= 1 and sprite:GetFrame() <= 5 then
-     --On the first hit frame, send the attack direction to the hitBox entity and set its collision damage
+     -- On the first hit frame,
+     -- send the attack direction to the hitBox entity and set its collision damage
     if sprite:GetFrame() == 1 then
       -- Adding this to buff 20/20 / The Inner Eye / Mutant Spider
       local modifiedMult = scytheDamageMultiplier
@@ -710,21 +790,32 @@ function SamaelMod:scytheUpdate(scythe)
         elseif lastDirection == Direction.RIGHT then
           projVel = Vector(flameSpeed, 0)
         end
-        projVel = projVel:__add(g.p.Velocity) --Add the players velocity to the projectile's velocity
-        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.RED_CANDLE_FLAME, 0, g.p.Position, projVel, g.p)
+        -- Add the players velocity to the projectile's velocity
+        projVel = projVel:__add(g.p.Velocity)
+        Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.RED_CANDLE_FLAME, -- 52
+          0,
+          g.p.Position,
+          projVel,
+          g.p
+        )
       end
     end
     hitPos = hitBox.Position
     if sprite:GetFrame() == 5 then --After this duration, get rid of the hitbox
       hitPos = nil
       hitBox.Coins = -1 --"No direction"
-      hitBox.CollisionDamage = 0 --Remove the collision damage (just making sure it cant hurt anything)
+      --Remove the collision damage (just making sure it cant hurt anything)
+      hitBox.CollisionDamage = 0
       hitBox.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ENEMIES
       SamaelMod:deadEyeFunc(false)
     end
-  elseif scytheState == 2 and
-         (sprite:IsFinished("Swing") or sprite:IsFinished("BigSwing")) then --If the swinging animation finished
-
+  elseif (
+    scytheState == 2
+    and (sprite:IsFinished("Swing") or sprite:IsFinished("BigSwing"))
+  ) then
+    --If the swinging animation finished
     sprite.Rotation = 0
     scytheState = 0
     if swing == 0 then --Switch the side of the scythe
@@ -840,7 +931,8 @@ function SamaelMod:fireScytheProjectile(projVel, angle, XOffset, YOffset)
       proj.TearFlags = proj.TearFlags | 1 --Add Spectral
       proj.SpriteScale = Vector(proj.Scale,proj.Scale) --Set proper size
     end
-    proj.CollisionDamage = proj.CollisionDamage*scytheProjectileDamageMultiplier --Set new tear damage
+    -- Set new tear damage
+    proj.CollisionDamage = proj.CollisionDamage*scytheProjectileDamageMultiplier
     if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK) then
       local chocBoost = math.min(charge/chargeTime, 3)
       proj.CollisionDamage = proj.CollisionDamage*chocBoost
@@ -875,7 +967,8 @@ function SamaelMod:deadEyeFunc(interrupt)
   hits = 0
 end
 
--------Custom epiphora functionality (increased attack rate for attacking in the same direction repeatedly)-------
+-------Custom epiphora functionality-------
+-- (increased attack rate for attacking in the same direction repeatedly)
 function SamaelMod:epiphoraFunc()
   if lastEpiphoraDirection == lastDirection then
     epiphoraCounter = epiphoraCounter + 1 --Add to counter
@@ -919,10 +1012,18 @@ function SamaelMod:getScytheColor()
   --local purple = {player:HasCollectible(CollectibleType.COLLECTIBLE_SPOON_BENDER)}
   --local pink = {player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYESHADOW)}
 
-  if threeDollarBillEffect == "fire" then table.insert(orange, true) end
-  if threeDollarBillEffect == "poison" or threeDollarBillEffect == "creep" then table.insert(green, true) end
-  if threeDollarBillEffect == "freeze" then table.insert(red, true) end
-  if threeDollarBillEffect == "pee" then table.insert(yellow, true) end
+  if threeDollarBillEffect == "fire" then
+    table.insert(orange, true)
+  end
+  if threeDollarBillEffect == "poison" or threeDollarBillEffect == "creep" then
+    table.insert(green, true)
+  end
+  if threeDollarBillEffect == "freeze" then
+    table.insert(red, true)
+  end
+  if threeDollarBillEffect == "pee" then
+    table.insert(yellow, true)
+  end
 
   for i = 1, #red do
     if red[i] then
@@ -950,7 +1051,10 @@ function SamaelMod:getScytheColor()
     color.R = color.R+2
     color.B = color.B+2
   end
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYESHADOW) or threeDollarBillEffect == "charm" then
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_EYESHADOW)
+    or threeDollarBillEffect == "charm"
+  ) then
     color.R = color.R+2
     color.B = color.B+1
   end
@@ -1079,12 +1183,9 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
        not player:HasCollectible(CollectibleType.COLLECTIBLE_WHITE_PONY) then -- 181
 
       player.MoveSpeed = player.MoveSpeed + 0.15
-      --Isaac.DebugString("Decreased speed in the speed cache for Samael: " .. tostring(player.MoveSpeed))
     end
     if wraithActive then
       player.MoveSpeed = player.MoveSpeed + 0.3
-      --Isaac.DebugString("Increased speed in the speed cache for Samael (wraithActive): " ..
-                          --tostring(player.MoveSpeed))
     end
   end
 
@@ -1107,7 +1208,9 @@ function SamaelMod:cacheUpdate(player, cacheFlag)
     else
       fireDelayReduced = false
     end
-    if fireDelayReduced then player.MaxFireDelay = math.ceil(player.MaxFireDelay+fireDelayPenalty) end
+    if fireDelayReduced then
+      player.MaxFireDelay = math.ceil(player.MaxFireDelay+fireDelayPenalty)
+    end
   end
 
   if player:HasCollectible(442) then -- Dark Princes Crown
@@ -1196,7 +1299,7 @@ function SamaelMod:calcSwingDelay()
   return delay
 end
 
------------Callback function for the Scythe's hitbox (Its an invisible sacrificial dagger)-----------
+-----------Callback function for the Scythe's hitbox (Its an invisible sacrificial dagger)----------
 function SamaelMod:hitBoxFunc(hitBox)
   -- Local variables
   local character = g.p:GetPlayerType()
@@ -1240,7 +1343,8 @@ function SamaelMod:hitBoxFunc(hitBox)
     }
     for i = 1, 5 do
       if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SULFURIC_ACID) then
-        g.r:DestroyGrid(indexes[i], 1) --Destroy rocks and poop on these tiles if the player has sulfuric acid
+        --Destroy rocks and poop on these tiles if the player has sulfuric acid
+        g.r:DestroyGrid(indexes[i], 1)
       else
         g.r:DamageGrid(indexes[i], 1) --Damage poop in any of these tiles
       end
@@ -1326,8 +1430,9 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       if g.p:HasTrinket(TrinketType.TRINKET_BLISTER) then
         knockBackBonus = knockBackBonus + 1.5
       end
-       --"Push" the enemy away from the player (knockback)
-       local vel = tookDamage.Position:__sub(g.p.Position):Normalized():__mul(knockbackMagnitude+knockBackBonus)
+      --"Push" the enemy away from the player (knockback)
+      local vel = tookDamage.Position - g.p.Position
+      vel = vel:Normalized() * knockbackMagnitude + knockBackBonus
       tookDamage:AddVelocity(vel)
 
       --Status condition stuff
@@ -1336,7 +1441,11 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       if luck < 1 then luck = 1
       elseif luck > luckCap then luck = luckCap end
 
-      if threeDollarBillEffect == "fire" or fruitCakeEffect == "fire" or (g.p.TearFlags & 1 << 22) ~= 0 then --Burn
+      if (
+        threeDollarBillEffect == "fire"
+        or fruitCakeEffect == "fire"
+        or (g.p.TearFlags & 1 << 22) ~= 0 -- Burn
+      ) then
         tookDamage:AddBurn(damageSourceRef, 80, 5)
       end
       if fruitCakeEffect == "poison" or
@@ -1408,23 +1517,41 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
          (math.random(luckCap+1-luck)==1 and
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_HOLY_LIGHT)) then --Holy Light
 
-        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, 0,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, g.p)
+        Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.CRACK_THE_SKY, -- 19
+          0,
+          Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size),
+          g.zeroVector,
+          g.p
+        )
       end
       if (threeDollarBillEffect == "creep" or
           fruitCakeEffect == "creep" or
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID)) and
          math.random(2) == 1 then --Mysterious Liquid
 
-        Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_GREEN, 0,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, g.p)
+        Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.PLAYER_CREEP_GREEN, -- 53
+          0,
+          Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size),
+          g.zeroVector,
+          g.p
+        )
       end
       if (fruitCakeEffect == "keeper" or
           g.p:HasCollectible(CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER)) and
           math.random(luckCap+1-luck) == 1 then --Head of the Keepo
 
-        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COIN, CoinSubType.COIN_PENNY,
-                    Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size), g.zeroVector, nil)
+        Isaac.Spawn(
+          EntityType.ENTITY_PICKUP, -- 5
+          PickupVariant.PICKUP_COIN, -- 20
+          CoinSubType.COIN_PENNY, -- 1
+          Isaac.GetFreeNearPosition(tookDamage.Position, tookDamage.Size),
+          g.zeroVector,
+          nil
+        )
       end
 
       --Flies and spiders (guppy, mulligan, parisitoid)
@@ -1433,8 +1560,13 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_MULLIGAN) and math.random(6) == 1 then
         g.p:AddBlueFlies(1, g.p.Position, tookDamage)
       end
-      if fruitCakeEffect == "fly" or
-         (g.p:HasCollectible(CollectibleType.COLLECTIBLE_PARASITOID) and math.random(luckCap+1-luck) == 1) then
+      if (
+        fruitCakeEffect == "fly"
+        or (
+          g.p:HasCollectible(CollectibleType.COLLECTIBLE_PARASITOID)
+          and math.random(luckCap + 1 - luck) == 1
+        )
+      ) then
         if math.random(2) == 1 then
           g.p:AddBlueSpider(g.p.Position)
         else
@@ -1495,8 +1627,13 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
          fruitCakeEffect == "shock" then
 
         if not jacobTriggered then
-          local jacobTear = g.p:FireTear(tookDamage.Position, g.zeroVector:Rotated(math.random(360)),
-                                         false, true, true):ToTear() --Fire the tear
+          local jacobTear = g.p:FireTear(
+            tookDamage.Position,
+            g.zeroVector:Rotated(math.random(360)),
+            false,
+            true,
+            true
+          ):ToTear()
           jacobTear.TearFlags = 1 << 53 --Add piercing
           jacobTear.CollisionDamage = 0.0
           jacobTear.Mass = 0
@@ -1545,7 +1682,10 @@ function SamaelMod:specialAnimFunc(npc)
     npc.Position = g.p.Position
     npc.Velocity = g.p.Velocity
     local dir = g.p:GetHeadDirection()
-    if not sprite:IsPlaying("WraithDown") and (dir == Direction.DOWN or dir == Direction.NO_DIRECTION) then
+    if (
+      not sprite:IsPlaying("WraithDown")
+      and (dir == Direction.DOWN or dir == Direction.NO_DIRECTION)
+    ) then
       sprite:Play("WraithDown", 1)
     elseif not sprite:IsPlaying("WraithUp") and dir == Direction.UP then
       sprite:Play("WraithUp", 1)
@@ -1593,14 +1733,18 @@ function SamaelMod:roomEntitiesLoop()
            entity.Variant == TearVariant.MAGIC_SCYTHE and
            not g.p:HasCollectible(CollectibleType.COLLECTIBLE_GODHEAD) then
 
-      --Keep the size of the scythe projectiles consistent whenever it might change (proptosis, lump of coal, etc)
+      -- Keep the size of the scythe projectiles consistent whenever it might change
+      -- (proptosis, lump of coal, etc)
       entity = entity:ToTear()
       entity.SpriteScale = Vector(entity.Scale, entity.Scale)
 
     elseif entity.Type == EntityType.ENTITY_TEAR  then
       entity = entity:ToTear()
       local sprite = entity:GetSprite()
-      if (entity.TearFlags & 1 << 55) ~= 0 and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2" then
+      if (
+        (entity.TearFlags & 1 << 55) ~= 0
+        and sprite:GetFilename() ~= "gfx/samael_scythe_projectile.anm2"
+      ) then
         --entity:ChangeVariant(8)
         sprite:Load("gfx/samael_scythe_projectile.anm2", true)
         sprite:Play("Idle", true)
@@ -1662,8 +1806,14 @@ function SamaelMod:activateWraith()
   end
 
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BLACK_POWDER) then
-    local pentagram = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PENTAGRAM_BLACKPOWDER, 0,
-                                  g.p.Position, g.zeroVector, g.p):ToEffect()
+    local pentagram = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.PENTAGRAM_BLACKPOWDER, -- 93
+      0,
+      g.p.Position,
+      g.zeroVector,
+      g.p
+    ):ToEffect()
     pentagram.State = 1
     pentagram.Size = 150
     pentagram.SpriteScale = Vector(0.75,0.75)
@@ -1675,18 +1825,29 @@ function SamaelMod:activateWraith()
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE
   SamaelMod:playSound(33, 1, 1.1)
   g.p.MoveSpeed = g.p.MoveSpeed + 0.3
-  --Isaac.DebugString("Increased speed from the Wraith ability being activated: " .. tostring(g.p.MoveSpeed))
 
   --Black poof effect
-  local poof = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 0,
-                           g.p.Position, g.zeroVector, g.p):ToEffect()
+  local poof = Isaac.Spawn(
+    EntityType.ENTITY_EFFECT, -- 1000
+    EffectVariant.POOF02, -- 16
+    0,
+    g.p.Position,
+    g.zeroVector,
+    g.p
+  ):ToEffect()
   poof:GetSprite().Color = Color(0, 0, 0, 0.66, 0, 0, 0)
   poof:FollowParent(g.p)
 
   --Special animation
   g.p:GetSprite().Color = zeroColor
-  local special = Isaac.Spawn(EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS, 0, 0,
-                              g.p.Position, g.zeroVector, g.p):ToNPC() --Spawn the special animations entity
+  local special = Isaac.Spawn(
+    EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS,
+    0,
+    0,
+    g.p.Position,
+    g.zeroVector,
+    g.p
+  ):ToNPC()
   special:ClearEntityFlags(EntityFlag.FLAG_APPEAR)
   special:GetSprite():Play("WraithDown", 1) --Wraith form animation
   special:GetSprite().Color = Color(0.75,0.25,0.25,0.8,0,0,0)
@@ -1792,22 +1953,30 @@ function SamaelMod:PostUpdateFixBugs()
     if g.run.schoolbag.item == CollectibleType.COLLECTIBLE_WRAITH_SKULL then
       g.run.schoolbag.item = 0
       Schoolbag.sprites.item = nil
-      Isaac.DebugString("Removed the Wraith Skull (from the Schoolbag) since we are not on Samael anymore.")
+      Isaac.DebugString(
+        "Removed the Wraith Skull (from the Schoolbag) since we are not on Samael anymore."
+      )
     end
 
     return
   end
 
   -- Sacrificial Dagger bug
-  if not SamaelMod.SacDaggerAcquired and
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER) then -- 172
-
+  if (
+    not SamaelMod.SacDaggerAcquired
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_SACRIFICIAL_DAGGER) -- 172
+  ) then
     SamaelMod.SacDaggerAcquired = true
 
     -- Check for an existing Sacrifical Dagger
     local foundSacDag = false
-    local daggers = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, -- 3
-                                     FamiliarVariant.SACRIFICIAL_DAGGER, -1, false, false) -- 35
+    local daggers = Isaac.FindByType(
+      EntityType.ENTITY_FAMILIAR, -- 3
+      FamiliarVariant.SACRIFICIAL_DAGGER, -- 35
+      -1,
+      false,
+      false
+    )
     for i, dagger in ipairs(daggers) do
       if dagger.SubType ~= hitBoxType then
         foundSacDag = true
@@ -1815,9 +1984,15 @@ function SamaelMod:PostUpdateFixBugs()
       end
     end
     if not foundSacDag then
-      -- Manually spawn a Sacrificial Dagger familiar (3.35)
-      Isaac.Spawn(EntityType.ENTITY_FAMILIAR, FamiliarVariant.SACRIFICIAL_DAGGER, 0,
-                  g.p.Position, g.zeroVector, g.p)
+      -- Manually spawn a Sacrificial Dagger familiar
+      Isaac.Spawn(
+        EntityType.ENTITY_FAMILIAR, -- 3
+        FamiliarVariant.SACRIFICIAL_DAGGER, -- 35
+        0,
+        g.p.Position,
+        g.zeroVector,
+        g.p
+      )
       Isaac.DebugString("Spawned a new Sac Dagger familiar.")
     end
   end
@@ -1825,11 +2000,14 @@ end
 
 -- Called from the "CheckEntities:NonGrid()" and "SamaelMod:CheckHairpin()" functions
 function SamaelMod:CheckRechargeWraithSkull()
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) and
-     wraithCharge ~= 100 then
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL)
+    and wraithCharge ~= 100
+  ) then
     wraithCharge = 100
-    Isaac.DebugString("Manually charged the Wraith Skull (from Lil' Battery / Charged Key / Hairpin).")
+    Isaac.DebugString(
+      "Manually charged the Wraith Skull (from Lil' Battery / Charged Key / Hairpin)."
+    )
   end
 end
 
@@ -1838,19 +2016,22 @@ function SamaelMod:CheckHairpin()
   -- Local variables
   local roomType = g.r:GetType()
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL) and
-     -- We don't want to check for "player:NeedsCharge()" because the Hairpin will actually work,
-     -- but if the wraithCharge variable is not updated, then it will get uncharged on the next frame
-     g.p:HasTrinket(TrinketType.TRINKET_HAIRPIN) and -- 120
-     roomType == RoomType.ROOM_BOSS and -- 5
-     g.l:GetCurrentRoomDesc().VisitedCount == 1 then
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_WRAITH_SKULL)
+    -- We don't want to check for "player:NeedsCharge()" because the Hairpin will actually work,
+    -- but if the wraithCharge variable is not updated,
+    -- then it will get uncharged on the next frame
+    and g.p:HasTrinket(TrinketType.TRINKET_HAIRPIN) -- 120
+    and roomType == RoomType.ROOM_BOSS -- 5
+    and g.l:GetCurrentRoomDesc().VisitedCount == 1
+  ) then
     Isaac.DebugString("Hairpin recharge detected.")
     SamaelMod:CheckRechargeWraithSkull()
   end
 end
 
--- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys (1/2)
+-- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys
+-- (1/2)
 function SamaelMod:IsActionPressed()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
@@ -1860,11 +2041,12 @@ function SamaelMod:IsActionPressed()
     return
   end
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) or -- 316
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) then -- 329
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) -- 118
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) -- 316
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE) -- 329
+  ) then
     return
   end
 
@@ -1872,8 +2054,12 @@ function SamaelMod:IsActionPressed()
     return
   end
 
-  if gameFrameCount >= scytheAnimationEndFrame or -- We have reached the end of the scythe swing animation
-     swingDelay <= 1 then -- The scythe swing animation has not finished, but we are ready to swing again
+  if (
+    -- We have reached the end of the scythe swing animation
+    gameFrameCount >= scytheAnimationEndFrame
+    -- The scythe swing animation has not finished, but we are ready to swing again
+    or swingDelay <= 1
+  ) then
 
     scytheAnimationEndFrame = 0
     return
@@ -1885,7 +2071,8 @@ function SamaelMod:IsActionPressed()
   return true
 end
 
--- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys (2/2)
+-- Fix the bug where Samael's head will jerk violently when the player spams the tear shoot keys
+-- (2/2)
 function SamaelMod:GetActionValue(buttonAction)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
@@ -1895,10 +2082,11 @@ function SamaelMod:GetActionValue(buttonAction)
     return
   end
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) -- 118
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) -- 316
+  ) then
     return
   end
 
@@ -1906,23 +2094,32 @@ function SamaelMod:GetActionValue(buttonAction)
     return
   end
 
-  if gameFrameCount >= scytheAnimationEndFrame or -- We have reached the end of the scythe swing animation
-     swingDelay <= 1 then -- The scythe swing animation has not finished, but we are ready to swing again
-
+  if (
+    -- We have reached the end of the scythe swing animation
+    gameFrameCount >= scytheAnimationEndFrame
+    -- The scythe swing animation has not finished, but we are ready to swing again
+    or swingDelay <= 1
+  ) then
     scytheAnimationEndFrame = 0
     return
   end
 
   -- We need to tell the game which direction we want to shoot in
-  if (buttonAction == ButtonAction.ACTION_SHOOTLEFT and -- 5
-      lastDirection == Direction.LEFT) or -- 0
-     (buttonAction == ButtonAction.ACTION_SHOOTRIGHT and -- 4
-      lastDirection == Direction.RIGHT) or -- 2
-     (buttonAction == ButtonAction.ACTION_SHOOTUP and -- 6
-      lastDirection == Direction.UP) or -- 1
-     (buttonAction == ButtonAction.ACTION_SHOOTDOWN and -- 7
-      lastDirection == Direction.DOWN) then -- 3
-
+  if (
+    (
+      buttonAction == ButtonAction.ACTION_SHOOTLEFT -- 5
+      and lastDirection == Direction.LEFT -- 0
+    ) or (
+      buttonAction == ButtonAction.ACTION_SHOOTRIGHT -- 4
+      and lastDirection == Direction.RIGHT -- 2
+    ) or (
+      buttonAction == ButtonAction.ACTION_SHOOTUP -- 6
+      and lastDirection == Direction.UP -- 1
+    ) or (
+      buttonAction == ButtonAction.ACTION_SHOOTDOWN -- 7
+      and lastDirection == Direction.DOWN -- 3
+    )
+  ) then
     return 1
   end
 

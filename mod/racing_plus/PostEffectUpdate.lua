@@ -3,23 +3,29 @@ local PostEffectUpdate = {}
 -- Note: Distance, SpawnerType, and SpawnerVariant are not initialized yet in this callback
 
 -- Includes
-local g          = require("racing_plus/globals")
-local UseItem    = require("racing_plus/useitem")
+local g = require("racing_plus/globals")
+local UseItem = require("racing_plus/useitem")
 local FastTravel = require("racing_plus/fasttravel")
 
 -- EffectVariant.DEVIL (6)
-function PostEffectUpdate:Effect6(effect)
+function PostEffectUpdate:Devil(effect)
   -- Fade the statue if there are any collectibles in range
   -- Squares (5, 2), (6, 2), (7, 2), (5, 3), (6, 3), and (7, 3) are not allowed
   local collectibleIsClose = false
-  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                        -1, false, false)
+  local collectibles = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    -1,
+    false,
+    false
+  )
   for _, collectible in ipairs(collectibles) do
-    if collectible.Position.X >= 260 and
-       collectible.Position.X <= 380 and
-       collectible.Position.Y >= 180 and
-       collectible.Position.Y <= 260 then
-
+    if (
+      collectible.Position.X >= 260
+      and collectible.Position.X <= 380
+      and collectible.Position.Y >= 180
+      and collectible.Position.Y <= 260
+    ) then
       collectibleIsClose = true
       break
     end
@@ -32,20 +38,23 @@ function PostEffectUpdate:Effect6(effect)
 end
 
 -- EffectVariant.HEAVEN_LIGHT_DOOR (39)
-function PostEffectUpdate:Effect39(effect)
-  -- We cannot put this in the PostEffectInit callback because the position of the effect is not initialized yet
+function PostEffectUpdate:HeavenLightDoor(effect)
+  -- We cannot put this in the PostEffectInit callback because the position of the effect is not
+  -- initialized yet
   FastTravel:ReplaceHeavenDoor(effect)
 end
 
 -- EffectVariant.DICE_FLOOR (76)
-function PostEffectUpdate:Effect76(effect)
-  -- We need to keep track of when the player uses a 5-pip Dice Room so that we can seed the floor appropriately
-  if not g.run.diceRoomActivated and
-     effect.SubType == 4 and -- 5-pip Dice Room
-     g.p.Position:Distance(effect.Position) <= 75 then -- Determined through trial and error
-
+function PostEffectUpdate:DiceFloor(effect)
+  -- We need to keep track of when the player uses a 5-pip Dice Room so that we can seed the floor
+  -- appropriately
+  if (
+    not g.run.diceRoomActivated
+    and effect.SubType == 4 -- 5-pip Dice Room
+    and g.p.Position:Distance(effect.Position) <= 75 -- Determined through trial and error
+  ) then
     g.run.diceRoomActivated = true
-    UseItem:Item127() -- Forget Me Now
+    UseItem:ForgetMeNow()
   end
 end
 
@@ -94,9 +103,15 @@ function PostEffectUpdate:CrackTheSkyBase(effect)
   end
   if spawnRealLight then
     g.run.spawningLight = true
-    local light = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, -- 1000.19
-                            data.CrackSkySpawnPosition, g.zeroVector,
-                            data.CrackSkySpawnSpawner, 0, effect.InitSeed)
+    local light = g.g:Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.CRACK_THE_SKY, -- 19
+      data.CrackSkySpawnPosition,
+      g.zeroVector,
+      data.CrackSkySpawnSpawner,
+      0,
+      effect.InitSeed
+    )
     g.run.spawningLight = false
     data.CrackSkyLinkedEffect = light
 
@@ -105,19 +120,17 @@ function PostEffectUpdate:CrackTheSkyBase(effect)
   end
 
   -- While the light exists, constantly set the base's position to the light
-  if data.CrackSkyLinkedEffect and
-     data.CrackSkyLinkedEffect:Exists() and
-     (sprite:IsPlaying("Spotlight") or
-      sprite:IsPlaying("Delayed")) then
-
+  if (
+    data.CrackSkyLinkedEffect
+    and data.CrackSkyLinkedEffect:Exists()
+    and (sprite:IsPlaying("Spotlight") or sprite:IsPlaying("Delayed"))
+  ) then
     effect.Position = data.CrackSkyLinkedEffect.Position
     effect.Velocity = data.CrackSkyLinkedEffect.Velocity
   end
 
   -- Remove this once the animations are finished
-  if sprite:IsFinished("Spotlight") or
-     sprite:IsFinished("Delayed") then
-
+  if sprite:IsFinished("Spotlight") or sprite:IsFinished("Delayed") then
     effect:Remove()
   end
 end
@@ -132,8 +145,11 @@ function PostEffectUpdate:StickyNickel(effect)
     local coin = data.StickyNickel
     if coin:Exists() then --check if the nickel exists
       if coin.SubType == CoinSubType.COIN_STICKYNICKEL then
-        effect.Position = coin.Position -- Update our position to the nickel's position (in case it moved)
-        removeEffect = false -- We do not want to remove the effect yet, since the nickel is still sticky
+        -- Update our position to the nickel's position (in case it moved)
+        effect.Position = coin.Position
+
+        -- We do not want to remove the effect yet, since the nickel is still sticky
+        removeEffect = false
       end
     end
   end

@@ -30,56 +30,55 @@ function Sprites:Init(spriteType, spriteName)
   Sprites.sprites[spriteType].sprite = Sprite()
   local animationName = "Default"
 
-  if spriteType == "seeded-item1" or
-     spriteType == "seeded-item2" or
-     spriteType == "seeded-item3" or
-     spriteType == "seeded-item4" or
-     spriteType == "seeded-item5" or
-     spriteType == "diversity-item1" or
-     spriteType == "diversity-item2" or
-     spriteType == "diversity-item3" or
-     spriteType == "diversity-item4" or
-     spriteType == "eden-item1" or
-     spriteType == "eden-item2" then
-
-    Sprites.sprites[spriteType].sprite:Load("gfx/items2/collectibles/" .. spriteName .. ".anm2", true)
-
+  if (
+    spriteType == "seeded-item1"
+    or spriteType == "seeded-item2"
+    or spriteType == "seeded-item3"
+    or spriteType == "seeded-item4"
+    or spriteType == "seeded-item5"
+    or spriteType == "diversity-item1"
+    or spriteType == "diversity-item2"
+    or spriteType == "diversity-item3"
+    or spriteType == "diversity-item4"
+    or spriteType == "eden-item1"
+    or spriteType == "eden-item2"
+  ) then
+    Sprites.sprites[spriteType].sprite:Load(
+      "gfx/items2/collectibles/" .. spriteName .. ".anm2",
+      true
+    )
   elseif spriteType == "diversity-item5" then
     Sprites.sprites[spriteType].sprite:Load("gfx/items2/trinkets/" .. spriteName .. ".anm2", true)
-
-  elseif spriteType == "ready" or
-         spriteType == "readyTotal" then
-
+  elseif (
+    spriteType == "ready"
+    or spriteType == "readyTotal"
+  ) then
     if tonumber(spriteName) > 50 then
       Sprites.sprites[spriteType].sprite:Load("gfx/race/ready/unknown.anm2", true)
     else
       Sprites.sprites[spriteType].sprite:Load("gfx/race/ready/" .. spriteName .. ".anm2", true)
     end
-
   elseif spriteType == "place" then -- On the middle-left-hand side of the screen
     Sprites.sprites[spriteType].sprite:Load("gfx/race/place/" .. spriteName .. ".anm2", true)
-
   elseif spriteType == "place2" then -- Displayed when the race is finished
     Sprites.sprites[spriteType].sprite:Load("gfx/race/place2/" .. spriteName .. ".anm2", true)
-
-  elseif spriteType == "corrupt1" or
-         spriteType == "corrupt2" then
-
+  elseif (
+    spriteType == "corrupt1"
+    or spriteType == "corrupt2"
+  ) then
     Sprites.sprites[spriteType].sprite:Load("gfx/misc/" .. spriteName .. ".anm2", true)
-
   elseif spriteType == "black" then
     Sprites.sprites[spriteType].sprite:Load("gfx/misc/black.anm2", true)
-
   elseif spriteType == "dps-button" then
     local filename = "gfx/potato/PotatoDummy.anm2"
     Sprites.sprites[spriteType].sprite:Load(filename, true)
     Sprites.sprites[spriteType].sprite.Scale = Vector(0.75, 0.75)
     animationName = "Idle"
-
   elseif spriteType == "victory-lap-button" then
-    local filename = "gfx/items2/collectibles/" .. CollectibleType.COLLECTIBLE_FORGET_ME_NOW .. ".anm2" -- 127
-    Sprites.sprites[spriteType].sprite:Load(filename, true)
-
+    Sprites.sprites[spriteType].sprite:Load(
+      "gfx/items2/collectibles/" .. CollectibleType.COLLECTIBLE_FORGET_ME_NOW .. ".anm2", -- 127
+      true
+    )
   else
     Sprites.sprites[spriteType].sprite:Load("gfx/race/" .. spriteName .. ".anm2", true)
   end
@@ -91,10 +90,7 @@ end
 -- This is called on every frame in MC_POST_RENDER
 function Sprites:Display()
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
   local challenge = Isaac.GetChallenge()
 
   -- Loop through all the sprites and render them
@@ -242,17 +238,19 @@ function Sprites:GetScreenCenterPosition()
   if centerOffset.X > 260 then
     centerPos.X = centerPos.X - 260
   end
-  if shape == RoomShape.ROOMSHAPE_LTL or -- 9
-     shape == RoomShape.ROOMSHAPE_LBL then -- 11
-
+  if (
+    shape == RoomShape.ROOMSHAPE_LTL -- 9
+    or shape == RoomShape.ROOMSHAPE_LBL -- 11
+  ) then
     centerPos.X = centerPos.X - 260
   end
   if centerOffset.Y > 140 then
     centerPos.Y = centerPos.Y - 140
   end
-  if shape == RoomShape.ROOMSHAPE_LTL or -- 9
-     shape == RoomShape.ROOMSHAPE_LTR then -- 10
-
+  if (
+    shape == RoomShape.ROOMSHAPE_LTL -- 9
+    or shape == RoomShape.ROOMSHAPE_LTR -- 10
+  ) then
     centerPos.Y = centerPos.Y - 140
   end
 

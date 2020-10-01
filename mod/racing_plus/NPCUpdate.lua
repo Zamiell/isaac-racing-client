@@ -3,13 +3,15 @@ local NPCUpdate = {}
 -- Note: This callback only fires on frame 1 and onwards
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
 
 -- ModCallbacks.MC_NPC_UPDATE (0)
 function NPCUpdate:Main(npc)
-  -- Check for dying enemies so that we can fix the bug where multi-segment enemies drop multiple black hearts
-  -- We need to track enemy positions as a workaround because black hearts will not have a Parent or SpawnerEntity
+  -- Check for dying enemies so that we can fix the bug where multi-segment enemies drop multiple
+  -- black hearts
+  -- We need to track enemy positions as a workaround because black hearts will not have a Parent or
+-- SpawnerEntity
   if npc:IsDead() then
     if g.run.blackHeartNPCs[npc.Index] == nil then
       -- An enemy has died for the first time (and begun its death animation on this frame)
@@ -26,13 +28,13 @@ function NPCUpdate:Main(npc)
 end
 
 -- EntityType.ENTITY_GLOBIN (24)
-function NPCUpdate:NPC24(npc)
+function NPCUpdate:Globin(npc)
   -- Keep track of Globins for softlock prevention
   if g.run.currentGlobins[npc.Index] == nil then
     g.run.currentGlobins[npc.Index] = {
-      npc       = npc,
+      npc = npc,
       lastState = npc.State,
-      regens    = 0,
+      regens = 0,
     }
   end
 
@@ -54,7 +56,7 @@ function NPCUpdate:NPC24(npc)
 end
 
 -- EntityType.ENTITY_CHUB (28)
-function NPCUpdate:NPC28(npc)
+function NPCUpdate:Chub(npc)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
 
@@ -63,35 +65,41 @@ function NPCUpdate:NPC28(npc)
     return
   end
 
-  -- When Matriarch is killed, it will morph into a Chub (and the MC_POST_ENTITY_KILL will never fire)
+  -- When Matriarch is killed, it will morph into a Chub
+  -- (and the MC_POST_ENTITY_KILL will never fire)
   -- When this happens, the other segments of Chub will spawn (it is a multi-segment entity)
-  -- The new segments will start at frame 0, but the main segment will retain the FrameCount of the Matriarch entity
+  -- The new segments will start at frame 0, but the main segment will retain the FrameCount of the
+  -- Matriarch entity
   -- We want to find the index of the main Chub so that we can stun it
-  if g.run.matriarch.chubIndex == -1 and
-     npc.FrameCount > 30 then
-     -- This can be any value higher than 1, since the new segments will first appear here on frame 1,
-     -- but use 30 frames to be safe
-
+  if (
+    g.run.matriarch.chubIndex == -1
+    -- Frame count can be any value higher than 1,
+    -- since the new segments will first appear here on frame 1,
+    -- but use 30 frames to be safe
+    and npc.FrameCount > 30
+  ) then
     g.run.matriarch.chubIndex = npc.Index
     g.run.matriarch.stunFrame = gameFrameCount + 1
 
     -- The Matriarch has died, so also nerf the fight slightly by killing everything in the room
     -- to clear things up a little bit
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
-      if entity:ToNPC() ~= nil and
-         entity.Type ~= EntityType.ENTITY_CHUB and -- 28
-         entity.Type ~= EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC and
-         entity.Type ~= EntityType.ENTITY_SAMAEL_SCYTHE then
-
+      if (
+        entity:ToNPC() ~= nil
+        and entity.Type ~= EntityType.ENTITY_CHUB -- 28
+        and entity.Type ~= EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC
+        and entity.Type ~= EntityType.ENTITY_SAMAEL_SCYTHE
+      ) then
         entity:Kill()
       end
     end
   end
 
   -- Stun (slow down) the Chub that spawns from The Matriarch
-  if npc.Index == g.run.matriarch.chubIndex and
-     gameFrameCount <= g.run.matriarch.stunFrame then
-
+  if (
+    npc.Index == g.run.matriarch.chubIndex
+    and gameFrameCount <= g.run.matriarch.stunFrame
+  ) then
     npc.State = NpcState.STATE_UNIQUE_DEATH -- 16
     -- (the state after he eats a bomb)
     g.sfx:Stop(SoundEffect.SOUND_MONSTER_ROAR_2) -- 117
@@ -100,24 +108,25 @@ function NPCUpdate:NPC28(npc)
 end
 
 -- EntityType.ENTITY_FLAMINGHOPPER (54)
-function NPCUpdate:NPC54(npc)
+function NPCUpdate:FlamingHopper(npc)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
 
   -- Prevent Flaming Hopper softlocks
   if g.run.currentHoppers[npc.Index] == nil then
     g.run.currentHoppers[npc.Index] = {
-      npc           = npc,
-      posX          = npc.Position.X,
-      posY          = npc.Position.Y,
+      npc = npc,
+      posX = npc.Position.X,
+      posY = npc.Position.Y,
       lastMoveFrame = gameFrameCount,
     }
   end
 
   -- Find out if it moved
-  if g.run.currentHoppers[npc.Index].posX ~= npc.Position.X or
-     g.run.currentHoppers[npc.Index].posY ~= npc.Position.Y then
-
+  if (
+    g.run.currentHoppers[npc.Index].posX ~= npc.Position.X
+    or g.run.currentHoppers[npc.Index].posY ~= npc.Position.Y
+  ) then
     -- Update the position
     g.run.currentHoppers[npc.Index].posX = npc.Position.X
     g.run.currentHoppers[npc.Index].posY = npc.Position.Y
@@ -133,7 +142,7 @@ function NPCUpdate:NPC54(npc)
 end
 
 -- EntityType.ENTITY_PIN (62)
-function NPCUpdate:NPC62(npc)
+function NPCUpdate:Pin(npc)
   -- We only care about the head
   if npc.Parent ~= nil then
     return
@@ -160,23 +169,26 @@ function NPCUpdate:NPC62(npc)
     npc.State = 3
   elseif npc.FrameCount == 31 then
     -- We also need to adjust the "charge" velocity, or else the first attack will be really wimpy
-    if g.l.EnterDoor == DoorSlot.UP0 or -- 1
-       g.l.EnterDoor == DoorSlot.DOWN0 then -- 3
-
+    if (
+      g.l.EnterDoor == DoorSlot.UP0 -- 1
+      or g.l.EnterDoor == DoorSlot.DOWN0 -- 3
+    ) then
       -- From the bottom/top door, the vanilla V1 velocity (on frame 74) is 6.08
       -- From the bottom/top door, the frame 31 V1 velocity is 3.69
       npc.V1 = npc.V1 * 1.65
-
     else
       -- From the left/right door, the vanilla V1 velocity (on frame 74) is 6.92
       -- From the left/right door, the frame 16 V1 velocity is 2.13
       npc.V1 = npc.V1 * 3.25
     end
-    while math.abs(npc.V1.X) > 7 or
-          math.abs(npc.V1.Y) > 7 do
 
+    while (
+      math.abs(npc.V1.X) > 7
+      or math.abs(npc.V1.Y) > 7
+    ) do
       npc.V1 = npc.V1 * 0.9
     end
+
     if roomShape > 3 then -- 1-3 are 1x1 room types
       npc.Velocity = npc.Velocity * -1
     end
@@ -184,7 +196,7 @@ function NPCUpdate:NPC62(npc)
 end
 
 -- EntityType.ENTITY_DEATH (66)
-function NPCUpdate:NPC66(npc)
+function NPCUpdate:Death(npc)
   -- We only care about the main Death
   if npc.Variant ~= 0 then
     return
@@ -197,22 +209,25 @@ function NPCUpdate:NPC66(npc)
 end
 
 -- EntityType.ENTITY_DINGLE (261)
-function NPCUpdate:NPC261(npc)
+function NPCUpdate:Dingle(npc)
   -- We only care about Dangles that are freshly spawned
-  if npc.Variant == 1 and
-     npc.State == NpcState.STATE_INIT then -- 0
-
+  if (
+    npc.Variant == 1
+    and npc.State == NpcState.STATE_INIT -- 0
+  ) then
     -- Fix the bug where a Dangle spawned from a Brownie will be faded
     npc:SetColor(g.color, 1000, 0, true, true) -- KColor, Duration, Priority, Fadeout, Share
   end
 end
 
 -- EntityType.ENTITY_THE_LAMB (273)
-function NPCUpdate:NPC273(npc)
- if npc.Variant == 10 and -- Lamb Body (273.10)
-    npc:IsInvincible() and -- It only turns invincible once it is defeated
-    not npc:IsDead() then -- This is necessary because the callback will be hit again during the removal
-
+function NPCUpdate:TheLamb(npc)
+  if (
+    npc.Variant == 10 -- Lamb Body (273.10)
+    and npc:IsInvincible() -- It only turns invincible once it is defeated
+     -- This is necessary because the callback will be hit again during the removal
+    and not npc:IsDead()
+  ) then
     -- Remove the body once it is defeated so that it does not interfere with taking the trophy
     npc:Kill() -- This plays the blood and guts animation, but does not actually remove the entity
     npc:Remove()
@@ -220,36 +235,51 @@ function NPCUpdate:NPC273(npc)
 end
 
 -- EntityType.ENTITY_MEGA_SATAN_2 (275)
-function NPCUpdate:NPC275(npc)
-  if not g.run.megaSatanDead and
-     npc:GetSprite():IsPlaying("Death") then
-
-    -- Stop the room from being cleared, which has a chance to take us back to the menu
-    g.run.megaSatanDead = true
-    local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                          g.zeroVector, g.zeroVector, nil)
-    roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
-    roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-    Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
-
-    -- Give a charge to the player's active item
-    if g.p:NeedsCharge() == true then
-      local currentCharge = g.p:GetActiveCharge()
-      g.p:SetActiveCharge(currentCharge + 1)
-    end
-
-    -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                g.r:GetCenterPos(), g.zeroVector, nil)
-
-    -- Set the room status to clear so that the player cannot fight Mega Satan a second time
-    -- (e.g. if they use a Fool Card)
-    g.r:SetClear(true)
+function NPCUpdate:MegaSatan2(npc)
+  if (
+    g.run.megaSatanDead
+    or not npc:GetSprite():IsPlaying("Death")
+  ) then
+    return
   end
+
+  -- Stop the room from being cleared, which has a chance to take us back to the menu
+  g.run.megaSatanDead = true
+  local roomClearDelayNPC = Isaac.Spawn(
+    EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC,
+    0,
+    0,
+    g.zeroVector,
+    g.zeroVector,
+    nil
+  )
+  roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
+  roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
+  Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for Mega Satan).")
+
+  -- Give a charge to the player's active item
+  if g.p:NeedsCharge() == true then
+    local currentCharge = g.p:GetActiveCharge()
+    g.p:SetActiveCharge(currentCharge + 1)
+  end
+
+  -- Spawn a big chest (which will get replaced with a trophy if we happen to be in a race)
+  Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_BIGCHEST, -- 340
+    0,
+    g.r:GetCenterPos(),
+    g.zeroVector,
+    nil
+  )
+
+  -- Set the room status to clear so that the player cannot fight Mega Satan a second time
+  -- (e.g. if they use a Fool Card)
+  g.r:SetClear(true)
 end
 
 -- EntityType.ENTITY_ULTRA_GREED (406)
-function NPCUpdate:NPC406(npc)
+function NPCUpdate:UltraGreed(npc)
   if npc.State == NpcState.STATE_APPEAR_CUSTOM then -- 2
     npc.State = 3
     Isaac.DebugString("Sped up the appear animation of Ultra Greed.")
@@ -257,18 +287,19 @@ function NPCUpdate:NPC406(npc)
 end
 
 -- EntityType.ENTITY_BIG_HORN (411)
-function NPCUpdate:NPC411(npc)
+function NPCUpdate:BigHorn(npc)
   -- Speed up coming out of the ground
-  if npc.State == NpcState.STATE_MOVE and -- 4
-     npc.StateFrame >= 67 and
-     npc.StateFrame < 100 then
-
+  if (
+    npc.State == NpcState.STATE_MOVE -- 4
+    and npc.StateFrame >= 67
+    and npc.StateFrame < 100
+  ) then
     npc.StateFrame = 100
   end
 end
 
 -- EntityType.ENTITY_MATRIARCH (413)
-function NPCUpdate:NPC413(npc)
+function NPCUpdate:Matriarch(npc)
   -- Mark that we are fighting a Matriarch so that we can slow down the Chub later
   g.run.matriarch.spawned = true
 end
@@ -278,7 +309,8 @@ end
 -- EntityType.ENTITY_FORSAKEN (403)
 function NPCUpdate:FearImmunity(npc)
   if npc:HasEntityFlags(EntityFlag.FLAG_FEAR) then -- 1 << 11
-    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FEAR)" because it will not remove the color change
+    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FEAR)" because
+    -- it will not remove the color change
     npc:RemoveStatusEffects()
     Isaac.DebugString("Unfeared a Host / Mobile Host / Forsaken.")
   end
@@ -289,7 +321,8 @@ end
 -- EntityType.ENTITY_BLASTOCYST_SMALL (76)
 function NPCUpdate:FreezeImmunity(npc)
   if npc:HasEntityFlags(EntityFlag.FLAG_FREEZE) then -- 1 << 5
-    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE)" because it will not remove the color change
+    -- We can't use "npc:ClearEntityFlags(EntityFlag.FLAG_FREEZE)" because
+    -- it will not remove the color change
     npc:RemoveStatusEffects()
     Isaac.DebugString("Unfreezed a Blastocyst.")
   end
@@ -325,13 +358,17 @@ end
 function NPCUpdate:SpeedupGhost(npc)
   -- Wizoobs and Red Ghosts
   -- Make it so that tears don't pass through them
-  if npc.FrameCount == 0 then -- (most NPCs are only visable on the 4th frame, but these are visible immediately)
+  -- Most NPCs are only visable on the 4th frame, but these are visible immediately
+  if npc.FrameCount == 0 then
     -- The ghost is set to ENTCOLL_NONE until the first reappearance
     npc.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
   end
 
   -- Speed up their attack pattern
-  if npc.State == 3 and npc.StateFrame ~= 0 then -- State 3 is when they are disappeared and doing nothing
+  if (
+    npc.State == 3 -- State 3 is when they are disappeared and doing nothing
+    and npc.StateFrame ~= 0
+  ) then
     npc.StateFrame = 0 -- StateFrame decrements down from 60 to 0, so just jump ahead
   end
 end

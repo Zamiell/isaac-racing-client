@@ -1,3 +1,5 @@
+-- luacheck: ignore
+
 --[[
  * Copyright (c) 2015-2020 Iryont <https://github.com/iryont/lua-struct>
  *
@@ -94,7 +96,10 @@ function struct.pack(format, ...)
         val = math.floor(val / (2 ^ 8))
       end
 
-      table.insert(bytes, string.char(math.floor(exponent * ((opt == 'd') and 16 or 128) + val) % (2 ^ 8)))
+      table.insert(
+        bytes,
+        string.char(math.floor(exponent * ((opt == 'd') and 16 or 128) + val) % (2 ^ 8))
+      )
       val = math.floor((exponent * ((opt == 'd') and 16 or 128) + val) / (2 ^ 8))
       table.insert(bytes, string.char(math.floor(sign * 128 + val) % (2 ^ 8)))
       val = math.floor((sign * 128 + val) / (2 ^ 8))
@@ -176,7 +181,11 @@ function struct.unpack(format, stream, pos)
         sign = -1
       end
 
-      local exponent = (string.byte(x, n) % 128) * ((opt == 'd') and 16 or 2) + math.floor(string.byte(x, n - 1) / ((opt == 'd') and 16 or 128))
+      local exponent = (
+        (string.byte(x, n) % 128)
+        * ((opt == 'd') and 16 or 2)
+        + math.floor(string.byte(x, n - 1) / ((opt == 'd') and 16 or 128))
+      )
       if exponent == 0 then
         table.insert(vars, 0.0)
       else

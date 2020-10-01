@@ -1,8 +1,8 @@
 local Season4 = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Speedrun  = require("racing_plus/speedrun")
+local g = require("racing_plus/globals")
+local Speedrun = require("racing_plus/speedrun")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
@@ -20,7 +20,6 @@ function Season4:PostGameStarted()
   if character == PlayerType.PLAYER_LAZARUS then -- 8
     -- Lazarus does not start with a pill to prevent players resetting for a good pill
     g.p:SetPill(0, 0)
-
   elseif character == PlayerType.PLAYER_LILITH then -- 13
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_INCUBUS, 0, false) -- 360
     g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INCUBUS) -- 360
@@ -46,20 +45,17 @@ function Season4:PostGameStarted()
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MUTANT_SPIDER) -- 153
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_INNER_EYE, 0, false) -- 2
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_INNER_EYE) -- 2
-
     elseif itemID == 1002 then
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY, 0, false) -- 68
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) -- 68
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL, 0, false) -- 132
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_LUMP_OF_COAL) -- 132
-
     elseif itemID == 1003 then
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND, 0, false) -- 257
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_FIRE_MIND) -- 257
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID, 0, false) -- 317
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_MYSTERIOUS_LIQUID) -- 317
-
     elseif itemID == 1004 then
       -- Start with the Kamikaze in the active slot for quality of life purposes
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_KAMIKAZE, 0, false) -- 40
@@ -67,13 +63,11 @@ function Season4:PostGameStarted()
       Schoolbag:Put(CollectibleType.COLLECTIBLE_D6, 6) -- 105
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_HOST_HAT, 0, false) -- 375
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_HOST_HAT) -- 375
-
     elseif itemID == 1005 then
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_JACOBS_LADDER, 0, false) -- 494
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_JACOBS_LADDER) -- 494
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS, 0, false) -- 249
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_THERES_OPTIONS) -- 249
-
     elseif itemID == 1006 then
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, 0, false) -- 69
       g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) -- 69

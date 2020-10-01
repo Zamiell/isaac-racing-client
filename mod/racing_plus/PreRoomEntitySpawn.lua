@@ -1,18 +1,21 @@
 local PreRoomEntitySpawn = {}
 
 -- Includes
-local g           = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local SeededRooms = require("racing_plus/seededrooms")
 
 -- ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN (71)
--- We want the player to always be able to take an item in the Basement 1 Treasure Room without spending a bomb
+-- We want the player to always be able to take an item in the Basement 1 Treasure Room without
+-- spending a bomb
 -- or being forced to walk on spikes
 function PreRoomEntitySpawn:Main(entityType, variant, subType, gridIndex, seed)
   local newTable
+
   newTable = PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
   if newTable ~= nil then
     return newTable
   end
+
   newTable = SeededRooms:PreEntitySpawn(entityType, variant, subType, seed)
   if newTable ~= nil then
     return newTable
@@ -48,7 +51,6 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
         return {1930, 0, 0} -- Spikes
       end
     end
-
   elseif roomVariant == 19 then
     -- Left item surrounded by rocks
     local rocksReplaced = {49, 63, 65, 79}
@@ -63,7 +65,6 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
         return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
     end
-
   elseif roomVariant == 21 then
     -- Left item surrounded by spikes
     local spikes = {48, 50, 78, 80}
@@ -72,7 +73,6 @@ function PreRoomEntitySpawn:Basement1EasyItems(gridIndex)
         return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
       end
     end
-
   elseif roomVariant == 22 then
     -- Left item surrounded by pots/mushrooms/skulls
     local pots = {49, 63, 65, 79}

@@ -1,8 +1,8 @@
 local RacePostGameStarted = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Sprites   = require("racing_plus/sprites")
+local g = require("racing_plus/globals")
+local Sprites = require("racing_plus/sprites")
 local Schoolbag = require("racing_plus/schoolbag")
 
 local validDiversityActiveItems = {
@@ -41,13 +41,14 @@ end
 local validDiversityPassiveItems = {
   -- Rebirth items
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-  -- <3 (15), Raw Liver (16), Lunch (22), Dinner (23), Dessert (24), Breakfast (25), and Rotten Meat (26) are banned
+  -- <3 (15), Raw Liver (16), Lunch (22), Dinner (23), Dessert (24), Breakfast (25),
+  -- and Rotten Meat (26) are banned
   11, 12, 13, 14, 17, 18, 19, 20, 21, 27,
   -- Mom's Underwear (29), Moms Heels (30), Moms Lipstick (31), and Lucky Foot (46) are banned
   28, 32, 48, 50, 51, 52, 53, 54, 55, 57,
   60, 62, 63, 64, 67, 68, 69, 70, 71, 72,
   73, 74, 75, 76, 79, 80, 81, 82, 87, 88,
-  89, 90, 91, 94, 95, 96, 98, 99, 100, 101,--/ Super Bandage (92) is banned
+  89, 90, 91, 94, 95, 96, 98, 99, 100, 101,-- Super Bandage (92) is banned
   103, 104, 106, 108, 109, 110, 112, 113, 114, 115,
   116, 117, 118, 119, 120, 121, 122, 125, 128, 129,
   131, 132, 134, 138, 139, 140, 141, 142, 143, 144,
@@ -58,14 +59,16 @@ local validDiversityPassiveItems = {
   200, 201, 202, 203, 204, 205, 206, 207, 208, 209,
   210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
   220, 221, 222, 223, 224, 225, 227, 228, 229, 230, -- Black Lotus (226) is banned
-  231, 232, 233, 234, 236, 237, 240, 241, 242, 243, -- Key Piece #1 (238) and Key Piece #2 (239) are banned
+  -- Key Piece #1 (238) and Key Piece #2 (239) are banned
+  231, 232, 233, 234, 236, 237, 240, 241, 242, 243,
   244, 245, 246, 247, 248, 249, 250, 251, 252, 254, -- Magic Scab (253) is banned
   255, 256, 257, 259, 260, 261, 262, 264, 265, 266, -- Missing No. (258) is banned
   267, 268, 269, 270, 271, 272, 273, 274, 275, 276,
   277, 278, 279, 280, 281, 299, 300, 301, 302, 303,
   304, 305, 306, 307, 308, 309, 310, 311, 312, 313,
   314, 315, 316, 317, 318, 319, 320, 321, 322, 327,
-  328, 329, 330, 331, 332, 333, 335, 336, 337, 340, -- The Body (334) and Safety Pin (339) are banned
+  -- The Body (334) and Safety Pin (339) are banned
+  328, 329, 330, 331, 332, 333, 335, 336, 337, 340,
   341, 342, 343, 345, -- Match Book (344) and A Snack (346) are banned
 
   -- Afterbirth items
@@ -80,7 +83,8 @@ local validDiversityPassiveItems = {
 
   -- Afterbirth+ items
   442, 443, 444, 445, 446, 447, 448, 449, 450, 451,
-  452, 453, 454, 457, 458, 459, 460, 461, 462, 463, -- Dad's Lost Coin (455) and Moldy Bread (456) are banned
+  -- Dad's Lost Coin (455) and Moldy Bread (456) are banned
+  452, 453, 454, 457, 458, 459, 460, 461, 462, 463,
   464, 465, 466, 467, 468, 469, 470, 471, 472, 473,
   474, 491, 492, 493, 494, 495, 496, 497, 498, 499,
   500, 501, 502, 503, 505, 506, 508, 509,
@@ -187,55 +191,62 @@ function RacePostGameStarted:Main()
   local challenge = Isaac.GetChallenge()
 
   -- Validate that we are not on a custom challenge
-  if challenge ~= 0 and
-     g.race.rFormat ~= "custom" then
-
+  if challenge ~= 0 and g.race.rFormat ~= "custom" then
     g.g:Fadeout(0.05, g.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
-    Isaac.DebugString("We are in a race but also in a custom challenge; fading out back to the menu.")
+    Isaac.DebugString(
+      "We are in a race but also in a custom challenge; fading out back to the menu."
+    )
     return
   end
 
   -- Validate the difficulty (hard mode / Greed mode) for races
-  if g.race.difficulty == "normal" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
-     g.race.rFormat ~= "custom" then
-
-    Isaac.DebugString("Race error: Supposed to be on easy mode (currently on " .. tostring(g.g.Difficulty) .. ").")
+  if (
+    g.race.difficulty == "normal"
+    and g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL -- 0
+    and g.race.rFormat ~= "custom"
+  ) then
+    Isaac.DebugString(
+      "Race error: Supposed to be on easy mode (currently on " .. tostring(g.g.Difficulty) .. ")."
+    )
     return
-
-  elseif g.race.difficulty == "hard" and
-         g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
-         g.race.rFormat ~= "custom" then
-
-    Isaac.DebugString("Race error: Supposed to be on hard mode (currently on " .. tostring(g.g.Difficulty) .. ").")
+  elseif (
+    g.race.difficulty == "hard"
+    and g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD -- 1
+    and g.race.rFormat ~= "custom"
+  ) then
+    Isaac.DebugString(
+      "Race error: Supposed to be on hard mode (currently on " .. tostring(g.g.Difficulty) .. ")."
+    )
     return
   end
 
-  if g.race.rFormat == "seeded" and
-     g.race.status == "in progress" then
-
+  if g.race.rFormat == "seeded" and g.race.status == "in progress" then
     -- Validate that we are on the intended seed
     if g.seeds:GetStartSeedString() ~= g.race.seed then
-      -- Doing a "seed #### ####" here does not work for some reason, so mark to reset on the next frame
+      -- Doing a "seed #### ####" here does not work for some reason,
+      -- so mark to reset on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting because we were not on the right seed.")
       return true
     end
-
-  elseif g.race.rFormat == "unseeded" or
-          g.race.rFormat == "diversity" or
-          g.race.rFormat == "pageant" then
-
+  elseif (
+    g.race.rFormat == "unseeded"
+    or g.race.rFormat == "diversity"
+    or g.race.rFormat == "pageant"
+  ) then
     -- Validate that we are not on a set seed
     -- (this will be true if we are on a set seed or on a challenge,
     -- but we won't get this far if we are on a challenge)
-    if customRun and
-       not g.debug then -- Make an exception if we are trying to debug something on a certain seed
-
-      -- If the run started with a set seed, this will change the reset behavior to that of an unseeded run
+    if (
+      customRun
+      and not g.debug -- Make an exception if we are trying to debug something on a certain seed
+    ) then
+      -- If the run started with a set seed,
+      -- this will change the reset behavior to that of an unseeded run
       g.seeds:Reset()
 
-      -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
+      -- Doing a "restart" command here does not work for some reason,
+      -- so mark to restart on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting because we were on a set seed.")
       return true
@@ -243,10 +254,9 @@ function RacePostGameStarted:Main()
   end
 
   -- Validate that we are on the right character
-  if character ~= g.race.character and
-     g.race.rFormat ~= "custom" then
-
-    -- Doing a "restart" command here does not work for some reason, so mark to restart on the next frame
+  if character ~= g.race.character and g.race.rFormat ~= "custom" then
+    -- Doing a "restart" command here does not work for some reason,
+    -- so mark to restart on the next frame
     g.run.restart = true
     Isaac.DebugString("Restarting because we were not on the right character.")
     return true
@@ -263,10 +273,8 @@ function RacePostGameStarted:Main()
     else
       RacePostGameStarted:Unseeded()
     end
-
   elseif g.race.rFormat == "seeded" then
     RacePostGameStarted:Seeded()
-
   elseif g.race.rFormat == "diversity" then
     -- If the diversity race has not started yet, don't give the items
     if g.raceVars.started then
@@ -277,7 +285,8 @@ function RacePostGameStarted:Main()
 end
 
 function RacePostGameStarted:Unseeded()
-  -- Unseeded is like vanilla, but the player will still start with More Options to reduce resetting time
+  -- Unseeded is like vanilla,
+  -- but the player will still start with More Options to reduce resetting time
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
   g.p:RemoveCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
   -- We don't want the costume to show
@@ -310,7 +319,6 @@ function RacePostGameStarted:Seeded()
       -- The 13 luck is a special case
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_13_LUCK, 0, false)
     else
-      -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
       g.p:AddCollectible(itemID, g:GetItemMaxCharges(itemID), true)
 
       -- Remove it from all the pools
@@ -370,7 +378,8 @@ function RacePostGameStarted:Seeded()
     end
   end
 
-  -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the Schoolbag item
+  -- Reorganize the items on the item tracker so that the "Instant Start" item comes after the
+  -- Schoolbag item
   for _, itemID in ipairs(g.race.startingItems) do
     if itemID == 600 then
       itemID = tostring(CollectibleType.COLLECTIBLE_13_LUCK)
@@ -404,8 +413,10 @@ function RacePostGameStarted:Seeded()
       Sprites:Init("seeded-starting-build", "seeded-starting-build")
       Sprites:Init("seeded-item2", tostring(g.race.startingItems[2]))
       Sprites:Init("seeded-item3", tostring(g.race.startingItems[3]))
-      Sprites:Init("seeded-item4", tostring(g.race.startingItems[1])) -- This will be to the left of 2
-      Sprites:Init("seeded-item5", tostring(g.race.startingItems[4])) -- This will be to the right of 3
+      -- This will be to the left of 2
+      Sprites:Init("seeded-item4", tostring(g.race.startingItems[1]))
+      -- This will be to the right of 3
+      Sprites:Init("seeded-item5", tostring(g.race.startingItems[4]))
     end
     g.run.startingRoomGraphics = true
   end
@@ -466,17 +477,16 @@ function RacePostGameStarted:Diversity()
 
       -- Remove the costume, if any (some items give a costume, like A Pony)
       g.p:RemoveCostume(g.itemConfig:GetCollectible(itemID))
-
     elseif i == 2 or i == 3 or i == 4 then
       -- Items 2, 3, and 4 are the passives
-      -- Give the item; the second argument is charge amount, and the third argument is "AddConsumables"
       g.p:AddCollectible(itemID, g:GetItemMaxCharges(itemID), true)
 
       -- Remove it from all of the item pools
       -- (make an exception for items that you can normally get duplicates of)
-      if itemID ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT and -- 73
-         itemID ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES then -- 207
-
+      if (
+        itemID ~= CollectibleType.COLLECTIBLE_CUBE_OF_MEAT -- 73
+        and itemID ~= CollectibleType.COLLECTIBLE_BALL_OF_BANDAGES -- 207
+      ) then
         g.itemPool:RemoveCollectible(itemID)
         if itemID == CollectibleType.COLLECTIBLE_INCUBUS then -- 360
           g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1)
@@ -486,7 +496,6 @@ function RacePostGameStarted:Diversity()
           g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3)
         end
       end
-
     elseif i == 5 then
       -- Item 5 is the trinket
       g.p:TryRemoveTrinket(trinket1) -- It is safe to feed 0 to this function
@@ -596,19 +605,22 @@ function RacePostGameStarted:GenerateDiversityStarts()
       end
 
       -- Do specific item synergy bans
-      if passiveItem == CollectibleType.COLLECTIBLE_ISAACS_HEART and -- 276
-         activeItem == CollectibleType.COLLECTIBLE_BLOOD_RIGHTS then -- 186
-
+      if (
+        passiveItem == CollectibleType.COLLECTIBLE_ISAACS_HEART -- 276
+        and activeItem == CollectibleType.COLLECTIBLE_BLOOD_RIGHTS -- 186
+      ) then
         valid = false
       end
-      if passiveItem == CollectibleType.COLLECTIBLE_LIBRA and -- 304
-         g:TableContains(startingItems, CollectibleType.COLLECTIBLE_SOY_MILK) then -- 330
-
+      if (
+        passiveItem == CollectibleType.COLLECTIBLE_LIBRA -- 304
+        and g:TableContains(startingItems, CollectibleType.COLLECTIBLE_SOY_MILK) -- 330
+      ) then
         valid = false
       end
-      if passiveItem == CollectibleType.COLLECTIBLE_SOY_MILK and -- 330
-         g:TableContains(startingItems, CollectibleType.COLLECTIBLE_LIBRA) then -- 304
-
+      if (
+        passiveItem == CollectibleType.COLLECTIBLE_SOY_MILK -- 330
+        and g:TableContains(startingItems, CollectibleType.COLLECTIBLE_LIBRA) -- 304
+      ) then
         valid = false
       end
 
@@ -653,16 +665,23 @@ function RacePostGameStarted:Pageant()
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_CANCER) -- 39
 
   -- Delete the trinket that drops from the Belly Button
-  local pickups = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, -1, false, false) -- 5.350
-  for _, pickup in ipairs(pickups) do
-    pickup:Remove()
+  local trinkets = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TRINKET, -- 350
+    -1,
+    false,
+    false
+  )
+  for _, trinket in ipairs(trinkets) do
+    trinket:Remove()
   end
 
   Isaac.DebugString("Added Pageant Boy ruleset items.")
 end
 
 function RacePostGameStarted:UnseededRankedSolo()
-  -- The client will populate the starting items for the current season into the "startingItems" variable
+  -- The client will populate the starting items for the current season into the "startingItems"
+  -- variable
   for _, itemID in ipairs(g.race.startingItems) do
     g.p:AddCollectible(itemID, 12, true)
     g.itemPool:RemoveCollectible(itemID)

@@ -1,7 +1,7 @@
 local Shadow = {}
 
 -- Includes
-local g      = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local struct = require('racing_plus/struct')
 
 local supportedAnimations = {
@@ -13,19 +13,33 @@ local supportedAnimations = {
 }
 
 function Shadow.new(self, t)
-  --[[ pack/unpack reference:
+  --[[
+    pack/unpack reference:
     "b" a signed char, "B" an unsigned char
     "h" a signed short (2 bytes), "H" an unsigned short (2 bytes)
     "i" a signed int (4 bytes), "I" an unsigned int (4 bytes)
     "l" a signed long (8 bytes), "L" an unsigned long (8 bytes)
     "f" a float (4 bytes), "d" a double (8 bytes)
     "s" a zero-terminated string
-    "cn" a sequence of exactly n chars corresponding to a single Lua string]]
+    "cn" a sequence of exactly n chars corresponding to a single Lua string
+  --]]
   local _t = t or {}
-  _t.dataorder = {"race", "player", "x",    "y",    "level", "room",  "character", "anim_name", "anim_frame"}
-  _t.dataformat = "I"  .. "I"    .. "f" ..  "f" ..  "I" ..   "I" ..   "I" ..       "c20" ..     "I"
-  --              +4Bytes +4Bytes   +4Bytes +4Bytes +4Bytes  +4Bytes  +4Bytes    +20Bytes      +4Bytes = 52Bytes
-  _t.allowedLength = 52
+  _t.dataorder = {
+    "race",
+    "player",
+    "x",
+    "y",
+    "level",
+    "room",
+    "character",
+    "anim_name",
+    "anim_frame"
+  }
+  _t.dataformat = "I" .. "I" .. "f" .. "f" .. "I" .. "I" .. "I" .. "c20" .. "I"
+  -- I = 4 bytes
+  -- f = 4 bytes
+  -- c20 = 20 bytes
+  _t.allowedLength = 52 -- 4 + 4 + 4 + + 4 + 4 + 4 + 4 + 20 + 4 = 52
   setmetatable(_t, self)
   self.__index = self
   return _t
@@ -61,7 +75,7 @@ function Shadow.unmarshall(self, data)
   for num, field in ipairs(self.dataorder) do
     self[field] = unpacked[num]
   end
-  self.anim_name = string.gsub(self.anim_name, '%s+', '') -- Poormans trailing whitespace trim
+  self.anim_name = string.gsub(self.anim_name, '%s+', '') -- Poorman's trailing whitespace trim
 end
 
 local function validate(data, allowedLength)

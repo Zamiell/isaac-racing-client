@@ -3,49 +3,61 @@ local PostPickupUpdate = {}
 -- Note: This callback only fires on frame 1 and onwards
 
 -- Includes
-local g          = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local FastTravel = require("racing_plus/fasttravel")
-local Samael     = require("racing_plus/samael")
-local Pedestals  = require("racing_plus/pedestals")
-local Season8    = require("racing_plus/season8")
+local Samael = require("racing_plus/samael")
+local Pedestals = require("racing_plus/pedestals")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_POST_PICKUP_UPDATE (35)
 function PostPickupUpdate:Main(pickup)
   -- Keep track of pickups that are touched
   -- (used for moving pickups on top of a trapdoor/crawlspace)
-  if (pickup:GetSprite():IsPlaying("Collect") or -- Most pickups have a "Collect" animation
-      pickup:GetSprite():IsPlaying("Open")) and -- Chests do not have a "Collect" animation
-     not pickup.Touched then
-
+  if (
+    (
+      pickup:GetSprite():IsPlaying("Collect") -- Most pickups have a "Collect" animation
+      or pickup:GetSprite():IsPlaying("Open") -- Chests do not have a "Collect" animation
+    )
+    and not pickup.Touched
+  ) then
     pickup.Touched = true
 
     -- Some pickups should count as "starting" a Challenge Room or Boss Rush
-    if pickup.Variant == PickupVariant.PICKUP_CHEST or -- 50
-       pickup.Variant == PickupVariant.PICKUP_BOMBCHEST or -- 51
-       pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST or -- 52
-       pickup.Variant == PickupVariant.PICKUP_ETERNALCHEST or -- 53
-       pickup.Variant == PickupVariant.PICKUP_MIMICCHEST or -- 54
-       pickup.Variant == PickupVariant.PICKUP_LOCKEDCHEST or -- 60
-       pickup.Variant == PickupVariant.PICKUP_GRAB_BAG or -- 69
-       pickup.Variant == PickupVariant.PICKUP_REDCHEST then -- 360
-
+    if (
+      pickup.Variant == PickupVariant.PICKUP_CHEST -- 50
+      or pickup.Variant == PickupVariant.PICKUP_BOMBCHEST -- 51
+      or pickup.Variant == PickupVariant.PICKUP_SPIKEDCHEST -- 52
+      or pickup.Variant == PickupVariant.PICKUP_ETERNALCHEST -- 53
+      or pickup.Variant == PickupVariant.PICKUP_MIMICCHEST -- 54
+      or pickup.Variant == PickupVariant.PICKUP_LOCKEDCHEST -- 60
+      or pickup.Variant == PickupVariant.PICKUP_GRAB_BAG -- 69
+      or pickup.Variant == PickupVariant.PICKUP_REDCHEST -- 360
+    ) then
       g.run.touchedPickup = true -- This variable is tracked per room
-      Isaac.DebugString("Touched pickup: " ..
-                        tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+      Isaac.DebugString(
+        "Touched pickup: " .. tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "."
+        .. tostring(pickup.SubType)
+      )
     end
 
-    if pickup.Variant == PickupVariant.PICKUP_LIL_BATTERY or -- 90
-       (pickup.Variant == PickupVariant.PICKUP_KEY and pickup.SubType == 4) then -- Charged Key (30.4)
-
+    if (
+      pickup.Variant == PickupVariant.PICKUP_LIL_BATTERY -- 90
+      or (
+        pickup.Variant == PickupVariant.PICKUP_KEY -- 30
+        and pickup.SubType == KeySubType.KEY_CHARGED -- 4
+      )
+    ) then
       -- Recharge the Wraith Skull
-      -- (we have to do this manually because the charges on the Wraith Skull are not handled naturally by the game)
+      -- (we have to do this manually because the charges on the Wraith Skull are not handled
+      -- naturally by the game)
       Samael:CheckRechargeWraithSkull()
     end
   end
 
   -- Make sure that pickups are not overlapping with trapdoors / beams of light / crawlspaces
   if not pickup.Touched then
-    -- Pickups will still exist for 15 frames after being picked up since they will be playing the "Collect" animation
+    -- Pickups will still exist for 15 frames after being picked up since they will be playing the
+    -- "Collect" animation
     -- So we don't want to move a pickup that is already collected, or it will duplicate it
     -- ("Touched" was manually set to true by the mod above)
     -- Alternatively, we could check for "entity.EntityCollisionClass ~= 0",
@@ -57,11 +69,12 @@ function PostPickupUpdate:Main(pickup)
 end
 
 -- PickupVariant.PICKUP_HEART (10)
-function PostPickupUpdate:Pickup10(pickup)
+function PostPickupUpdate:Heart(pickup)
   -- We only care about freshly spawned black hearts
-  if pickup.FrameCount ~= 1 or
-     pickup.SubType ~= HeartSubType.HEART_BLACK then -- 6
-
+  if (
+    pickup.FrameCount ~= 1
+    or pickup.SubType ~= HeartSubType.HEART_BLACK -- 6
+  ) then
     return
   end
 
@@ -69,9 +82,10 @@ function PostPickupUpdate:Pickup10(pickup)
   -- assume that it was spawned from a Maw of the Void or Athame
   local parentNPC
   for index, entry in pairs(g.run.blackHeartNPCs) do
-    if entry.position.X == pickup.Position.X and
-       entry.position.Y == pickup.Position.Y then
-
+    if (
+      entry.position.X == pickup.Position.X
+      and entry.position.Y == pickup.Position.Y
+    ) then
       parentNPC = entry
       break
     end
@@ -93,7 +107,7 @@ function PostPickupUpdate:Pickup10(pickup)
 end
 
 -- PickupVariant.PICKUP_COIN (20)
-function PostPickupUpdate:Pickup20(pickup)
+function PostPickupUpdate:Coin(pickup)
   -- Local variables
   local sprite = pickup:GetSprite()
   local data = pickup:GetData()
@@ -110,18 +124,18 @@ function PostPickupUpdate:Pickup20(pickup)
 end
 
 -- PickupVariant.PICKUP_COLLECTIBLE (100)
-function PostPickupUpdate:Pickup100(pickup)
+function PostPickupUpdate:Collectible(pickup)
   -- We manually manage the seed of all collectible items
   Pedestals:Replace(pickup)
 end
 
 -- PickupVariant.PICKUP_TAROTCARD (300)
-function PostPickupUpdate:Pickup300(pickup)
+function PostPickupUpdate:TarotCard(pickup)
   Season8:PostPickupUpdateTarotCard(pickup)
 end
 
 -- PickupVariant.PICKUP_TRINKET (350)
-function PostPickupUpdate:Pickup350(pickup)
+function PostPickupUpdate:Trinket(pickup)
   Season8:PostPickupUpdateTrinket(pickup)
 end
 

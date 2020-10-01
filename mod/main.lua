@@ -17,13 +17,13 @@ TODO:
 POST-FLIP ACTIONS:
 1) Remove the duplicated start rooms for The Chest / Dark Room
 2) Un-flip Y-flipped Gurdy rooms:
-    The Chest - #20018, #30018
+   The Chest - #20018, #30018
 3) Un-flip double Gate rooms (and enable all of the doors)
-    The Chest - #20040, #30040
-    Dark Room - #20012, #30012
+   The Chest - #20040, #30040
+   Dark Room - #20012, #30012
 4) Un-flip some Mega Maw rooms:
-    The Chest - #20039, #30039, #20269, #30269
-    Dark Room - #20011, #30011
+   The Chest - #20039, #30039, #20269, #30269
+   Dark Room - #20011, #30011
 
 --]]
 
@@ -44,49 +44,49 @@ local RacingPlus = RegisterMod("Racing+", 1)
 -- path
 -- In the code, file names must be in lowercase for Linux compatibility purposes;
 -- the actual files themselves can have capital letters
-local g                   = require("racing_plus/globals") -- Global variables
-local NPCUpdate           = require("racing_plus/npcupdate") -- 0
-local PostUpdate          = require("racing_plus/postupdate") -- 1
-local PostRender          = require("racing_plus/postrender") -- 2
-local UseItem             = require("racing_plus/useitem") -- 3
-local UseCard             = require("racing_plus/usecard") -- 5
-local EvaluateCache       = require("racing_plus/evaluatecache") -- 8
-local PostPlayerInit      = require("racing_plus/postplayerinit") -- 9
-local UsePill             = require("racing_plus/usepill") -- 10
-local EntityTakeDmg       = require("racing_plus/entitytakedmg") -- 11
-local PostCurseEval       = require("racing_plus/postcurseeval") -- 12
-local InputAction         = require("racing_plus/inputaction") -- 13
-local PostGameStarted     = require("racing_plus/postgamestarted") -- 15
-local PostNewLevel        = require("racing_plus/postnewlevel") -- 18
-local PostNewRoom         = require("racing_plus/postnewroom") -- 19
-local GetCard             = require("racing_plus/getcard") -- 20
-local ExecuteCmd          = require("racing_plus/executecmd") -- 22
-local PreUseItem          = require("racing_plus/preuseitem") -- 23
-local PreEntitySpawn      = require("racing_plus/preentityspawn") -- 24
-local PostNPCInit         = require("racing_plus/postnpcinit") -- 27
-local PostNPCRender       = require("racing_plus/postnpcrender") -- 28
-local PostPickupInit      = require("racing_plus/postpickupinit") -- 34
-local PostPickupUpdate    = require("racing_plus/postpickupupdate") -- 35
-local PostLaserInit       = require("racing_plus/postlaserinit") -- 47
-local PostEffectInit      = require("racing_plus/posteffectinit") -- 54
-local PostEffectUpdate    = require("racing_plus/posteffectupdate") -- 55
-local PostBombInit        = require("racing_plus/postbombinit") -- 57
-local PostBombUpdate      = require("racing_plus/postbombupdate") -- 58
-local PostFireTear        = require("racing_plus/postfiretear") -- 61
-local PreGetCollectible   = require("racing_plus/pregetcollectible") -- 62
-local GetPillEffect       = require("racing_plus/getpilleffect") -- 65
-local PostEntityKill      = require("racing_plus/postentitykill") -- 68
-local PreNPCUpdate        = require("racing_plus/prenpcupdate") -- 69
-local PreRoomEntitySpawn  = require("racing_plus/preroomentityspawn") -- 71
-local FastClear           = require("racing_plus/fastclear")
-local Schoolbag           = require("racing_plus/schoolbag")
-local Speedrun            = require("racing_plus/speedrun")
-local Season7             = require("racing_plus/season7")
-local Samael              = require("racing_plus/samael")
-local JrFetus             = require("racing_plus/jrfetus")
-local Mahalath            = require("racing_plus/mahalath")
-local PotatoDummy         = require("racing_plus/potatodummy")
-local Debug               = require("racing_plus/debug")
+local g = require("racing_plus/globals") -- Global variables
+local NPCUpdate = require("racing_plus/npcupdate") -- 0
+local PostUpdate = require("racing_plus/postupdate") -- 1
+local PostRender = require("racing_plus/postrender") -- 2
+local UseItem = require("racing_plus/useitem") -- 3
+local UseCard = require("racing_plus/usecard") -- 5
+local EvaluateCache = require("racing_plus/evaluatecache") -- 8
+local PostPlayerInit = require("racing_plus/postplayerinit") -- 9
+local UsePill = require("racing_plus/usepill") -- 10
+local EntityTakeDmg = require("racing_plus/entitytakedmg") -- 11
+local PostCurseEval = require("racing_plus/postcurseeval") -- 12
+local InputAction = require("racing_plus/inputaction") -- 13
+local PostGameStarted = require("racing_plus/postgamestarted") -- 15
+local PostNewLevel = require("racing_plus/postnewlevel") -- 18
+local PostNewRoom = require("racing_plus/postnewroom") -- 19
+local GetCard = require("racing_plus/getcard") -- 20
+local ExecuteCmd = require("racing_plus/executecmd") -- 22
+local PreUseItem = require("racing_plus/preuseitem") -- 23
+local PreEntitySpawn = require("racing_plus/preentityspawn") -- 24
+local PostNPCInit = require("racing_plus/postnpcinit") -- 27
+local PostNPCRender = require("racing_plus/postnpcrender") -- 28
+local PostPickupInit = require("racing_plus/postpickupinit") -- 34
+local PostPickupUpdate = require("racing_plus/postpickupupdate") -- 35
+local PostLaserInit = require("racing_plus/postlaserinit") -- 47
+local PostEffectInit = require("racing_plus/posteffectinit") -- 54
+local PostEffectUpdate = require("racing_plus/posteffectupdate") -- 55
+local PostBombInit = require("racing_plus/postbombinit") -- 57
+local PostBombUpdate = require("racing_plus/postbombupdate") -- 58
+local PostFireTear = require("racing_plus/postfiretear") -- 61
+local PreGetCollectible = require("racing_plus/pregetcollectible") -- 62
+local GetPillEffect = require("racing_plus/getpilleffect") -- 65
+local PostEntityKill = require("racing_plus/postentitykill") -- 68
+local PreNPCUpdate = require("racing_plus/prenpcupdate") -- 69
+local PreRoomEntitySpawn = require("racing_plus/preroomentityspawn") -- 71
+local FastClear = require("racing_plus/fastclear")
+local Schoolbag = require("racing_plus/schoolbag")
+local Speedrun = require("racing_plus/speedrun")
+local Season7 = require("racing_plus/season7")
+local Samael = require("racing_plus/samael")
+local JrFetus = require("racing_plus/jrfetus")
+local Mahalath = require("racing_plus/mahalath")
+local PotatoDummy = require("racing_plus/potatodummy")
+local Debug = require("racing_plus/debug")
 
 -- Initialize the "g.run" table
 g:InitRun()
@@ -100,37 +100,37 @@ RacingPlusSchoolbag = Schoolbag
 RacingPlusSpeedrun = Speedrun
 
 -- Define miscellaneous callbacks
-RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE,            NPCUpdate.Main) -- 0
-RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE,           PostUpdate.Main) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER,           PostRender.Main) -- 2
-RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM,              UseItem.Main) -- 3
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD,              UseCard.Main) -- 5
-RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,        EvaluateCache.Main) -- 8
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT,      PostPlayerInit.Main) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL,              UsePill.Main) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL,       PostCurseEval.Main) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION,          InputAction.Main) -- 13
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED,     PostGameStarted.Main) -- 15
-RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END,         Speedrun.PostGameEnd) -- 16
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL,        PostNewLevel.Main) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM,         PostNewRoom.Main) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_GET_CARD,              GetCard.Main) -- 20
-RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD,           ExecuteCmd.Main) -- 22
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN,      PreEntitySpawn.Main) -- 24
-RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT,         FastClear.PostNPCInit) -- 27
-RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE,    PostPickupUpdate.Main) -- 35
-RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE,      PostBombUpdate.Main) -- 58
-RacingPlus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR,        PostFireTear.Main) -- 61
-RacingPlus:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE,   PreGetCollectible.Main) -- 62
-RacingPlus:AddCallback(ModCallbacks.MC_GET_PILL_EFFECT,       GetPillEffect.Main) -- 65
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE,    FastClear.PostEntityRemove) -- 67
-RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL,      PostEntityKill.Main) -- 68
+RacingPlus:AddCallback(ModCallbacks.MC_NPC_UPDATE, NPCUpdate.Main) -- 0
+RacingPlus:AddCallback(ModCallbacks.MC_POST_UPDATE, PostUpdate.Main) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_POST_RENDER, PostRender.Main) -- 2
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, UseItem.Main) -- 3
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Main) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, EvaluateCache.Main) -- 8
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, PostPlayerInit.Main) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, PostCurseEval.Main) -- 12
+RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION, InputAction.Main) -- 13
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, PostGameStarted.Main) -- 15
+RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END, Speedrun.PostGameEnd) -- 16
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, PostNewLevel.Main) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, PostNewRoom.Main) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_GET_CARD, GetCard.Main) -- 20
+RacingPlus:AddCallback(ModCallbacks.MC_EXECUTE_CMD, ExecuteCmd.Main) -- 22
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_ENTITY_SPAWN, PreEntitySpawn.Main) -- 24
+RacingPlus:AddCallback(ModCallbacks.MC_POST_NPC_INIT, FastClear.PostNPCInit) -- 27
+RacingPlus:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, PostPickupUpdate.Main) -- 35
+RacingPlus:AddCallback(ModCallbacks.MC_POST_BOMB_UPDATE, PostBombUpdate.Main) -- 58
+RacingPlus:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, PostFireTear.Main) -- 61
+RacingPlus:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, PreGetCollectible.Main) -- 62
+RacingPlus:AddCallback(ModCallbacks.MC_GET_PILL_EFFECT, GetPillEffect.Main) -- 65
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, FastClear.PostEntityRemove) -- 67
+RacingPlus:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, PostEntityKill.Main) -- 68
 RacingPlus:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, PreRoomEntitySpawn.Main) -- 71
 
 -- Define NPC callbacks (0)
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC24,
+  NPCUpdate.Globin,
   EntityType.ENTITY_GLOBIN -- 24
 )
 RacingPlus:AddCallback(
@@ -140,22 +140,22 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC28,
+  NPCUpdate.Chub,
   EntityType.ENTITY_CHUB -- 28
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC54,
+  NPCUpdate.FlamingHopper,
   EntityType.ENTITY_FLAMINGHOPPER -- 54
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC62,
+  NPCUpdate.Pin,
   EntityType.ENTITY_PIN -- 62
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC66,
+  NPCUpdate.Death,
   EntityType.ENTITY_DEATH -- 66
 )
 RacingPlus:AddCallback(
@@ -185,7 +185,7 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  FastClear.NPC246,
+  FastClear.Ragling,
   EntityType.ENTITY_RAGLING -- 246
 )
 RacingPlus:AddCallback(
@@ -200,7 +200,7 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC261,
+  NPCUpdate.Dingle,
   EntityType.ENTITY_DINGLE -- 261
 )
 RacingPlus:AddCallback(
@@ -210,17 +210,17 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC273,
+  NPCUpdate.TheLamb,
   EntityType.ENTITY_THE_LAMB -- 273
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC275,
+  NPCUpdate.MegaSatan2,
   EntityType.ENTITY_MEGA_SATAN_2 -- 273
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  FastClear.NPC302,
+  FastClear.Stoney,
   EntityType.ENTITY_STONEY -- 302
 )
 RacingPlus:AddCallback(
@@ -230,66 +230,57 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC406, -- 406
+  NPCUpdate.UltraGreed, -- 406
   EntityType.ENTITY_ULTRA_GREED
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC411,
+  NPCUpdate.BigHorn,
   EntityType.ENTITY_BIG_HORN -- 411
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_NPC_UPDATE,
-  NPCUpdate.NPC413,
+  NPCUpdate.Matriarch,
   EntityType.ENTITY_MATRIARCH -- 413
 )
 
 -- Define post-use item callbacks (3)
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item44, -- This callback is also used by Broken Remote
+  UseItem.Teleport, -- This callback is also used by Broken Remote
   CollectibleType.COLLECTIBLE_TELEPORT -- 44
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item105,
+  UseItem.D6,
   CollectibleType.COLLECTIBLE_D6 -- 105
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item127,
+  UseItem.ForgetMeNow,
   CollectibleType.COLLECTIBLE_FORGET_ME_NOW -- 127
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item286,
+  UseItem.BlankCard,
   CollectibleType.COLLECTIBLE_BLANK_CARD -- 286
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item324,
+  UseItem.Undefined,
   CollectibleType.COLLECTIBLE_UNDEFINED -- 324
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item419,
-  CollectibleType.COLLECTIBLE_TELEPORT_2 -- 419
-)
-RacingPlus:AddCallback(
-  ModCallbacks.MC_USE_ITEM,
-  UseItem.Item477,
+  UseItem.Void,
   CollectibleType.COLLECTIBLE_VOID -- 477
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_ITEM,
-  UseItem.Item523,
+  UseItem.MovingBox,
   CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
 )
-RacingPlus:AddCallback(
-  ModCallbacks.MC_USE_ITEM,
-  Debug.Main,
-  CollectibleType.COLLECTIBLE_DEBUG
-)
+RacingPlus:AddCallback(ModCallbacks.MC_USE_ITEM, Debug.Main, CollectibleType.COLLECTIBLE_DEBUG)
 
 -- Define post-use item callbacks for seeding player-generated pedestals (3)
 RacingPlus:AddCallback(
@@ -309,15 +300,15 @@ RacingPlus:AddCallback(
 )
 
 -- Define card callbacks (5)
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_FOOL) -- 1
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_EMPEROR) -- 5
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice,      Card.CARD_JUSTICE) -- 9
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_HERMIT) -- 10
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength,     Card.CARD_STRENGTH) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_STARS) -- 18
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_MOON) -- 19
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport,     Card.CARD_JOKER) -- 31
-RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune,    Card.RUNE_BLACK) -- 41
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_FOOL) -- 1
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_EMPEROR) -- 5
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Justice, Card.CARD_JUSTICE) -- 9
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_HERMIT) -- 10
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Strength, Card.CARD_STRENGTH) -- 12
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_STARS) -- 18
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_MOON) -- 19
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_JOKER) -- 31
+RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.QuestionMark, Card.CARD_QUESTIONMARK) -- 48
 
 -- Define pill callbacks (10)
@@ -392,37 +383,32 @@ RacingPlus:AddCallback(
 -- Define pre-use item callbacks (23)
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item84,
+  PreUseItem.WeNeedToGoDeeper,
   CollectibleType.COLLECTIBLE_WE_NEED_GO_DEEPER -- 84
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item97,
+  PreUseItem.BookOfSin,
   CollectibleType.COLLECTIBLE_BOOK_OF_SIN -- 97
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item124,
+  PreUseItem.DeadSeaScrolls,
   CollectibleType.COLLECTIBLE_DEAD_SEA_SCROLLS -- 124
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item145,
+  PreUseItem.GuppysHead,
   CollectibleType.COLLECTIBLE_GUPPYS_HEAD -- 145
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item286,
-  CollectibleType.COLLECTIBLE_BLANK_CARD -- 286
-)
-RacingPlus:AddCallback(
-  ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item422,
+  PreUseItem.GlowingHourGlass,
   CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS -- 422
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_USE_ITEM,
-  PreUseItem.Item479,
+  PreUseItem.Smelter,
   CollectibleType.COLLECTIBLE_SMELTER -- 479
 )
 
@@ -469,7 +455,7 @@ RacingPlus:AddCallback(
 -- Define post-NPC-initialization callbacks (27)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_NPC_INIT,
-  PostNPCInit.NPC38,
+  PostNPCInit.Baby,
   EntityType.ENTITY_BABY -- 38
 )
 RacingPlus:AddCallback(
@@ -479,21 +465,21 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_NPC_INIT,
-  PostNPCInit.NPC260,
+  PostNPCInit.TheHaunt,
   EntityType.ENTITY_THE_HAUNT -- 260
 )
 
 -- Define post-NPC-render callbacks (28)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_NPC_RENDER,
-  PostNPCRender.NPC291,
+  PostNPCRender.Pitfall,
   EntityType.ENTITY_PITFALL -- 291
 )
 
 -- Define post pickup init callbacks (34)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_INIT,
-  PostPickupInit.Pickup20,
+  PostPickupInit.Coin,
   PickupVariant.PICKUP_COIN -- 20
 )
 RacingPlus:AddCallback(
@@ -508,70 +494,70 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_INIT,
-  PostPickupInit.Pickup300,
+  PostPickupInit.TarotCard,
   PickupVariant.PICKUP_TAROTCARD -- 300
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_INIT,
-  PostPickupInit.Pickup340,
+  PostPickupInit.BigChest,
   PickupVariant.PICKUP_BIGCHEST -- 340
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_INIT,
-  PostPickupInit.Pickup370,
-  PickupVariant.PICKUP_TROPHY-- 370
+  PostPickupInit.Trophy,
+  PickupVariant.PICKUP_TROPHY -- 370
 )
 
 -- Define post pickup update callbacks (35)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_UPDATE,
-  PostPickupUpdate.Pickup10,
+  PostPickupUpdate.Heart,
   PickupVariant.PICKUP_HEART -- 10
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_UPDATE,
-  PostPickupUpdate.Pickup20,
+  PostPickupUpdate.Coin,
   PickupVariant.PICKUP_COIN -- 20
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_UPDATE,
-  PostPickupUpdate.Pickup100,
+  PostPickupUpdate.Collectible,
   PickupVariant.PICKUP_COLLECTIBLE -- 100
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_UPDATE,
-  PostPickupUpdate.Pickup300,
+  PostPickupUpdate.TarotCard,
   PickupVariant.PICKUP_TAROTCARD -- 300
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_PICKUP_UPDATE,
-  PostPickupUpdate.Pickup350,
+  PostPickupUpdate.Trinket,
   PickupVariant.PICKUP_TRINKET -- 350
 )
 
 -- Define post laser init callbacks (47)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_LASER_INIT,
-  PostLaserInit.Laser6,
+  PostLaserInit.GiantRed,
   g.LaserVariant.LASER_GIANT_RED -- 6
 )
 
 -- Define post effect init callbacks (54)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_EFFECT_INIT,
-  PostEffectInit.Effect15,
+  PostEffectInit.Poof01,
   EffectVariant.POOF01 -- 15
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_EFFECT_INIT,
-  PostEffectInit.Effect51,
+  PostEffectInit.HotBombFire,
   EffectVariant.HOT_BOMB_FIRE -- 51
 )
 
 -- Define post effect update callbacks (55)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_EFFECT_UPDATE,
-  PostEffectUpdate.Effect6,
+  PostEffectUpdate.Devil,
   EffectVariant.DEVIL -- 6
 )
 RacingPlus:AddCallback(
@@ -586,12 +572,12 @@ RacingPlus:AddCallback(
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_EFFECT_UPDATE,
-  PostEffectUpdate.Effect39,
+  PostEffectUpdate.HeavenLightDoor,
   EffectVariant.HEAVEN_LIGHT_DOOR -- 39
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_EFFECT_UPDATE,
-  PostEffectUpdate.Effect76,
+  PostEffectUpdate.DiceFloor,
   EffectVariant.DICE_FLOOR -- 76
 )
 RacingPlus:AddCallback(
@@ -655,40 +641,40 @@ RacingPlus:AddCallback(
 -- Define post entity kill callbacks (68)
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity45,
+  PostEntityKill.Mom,
   EntityType.ENTITY_MOM -- 45
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity78,
+  PostEntityKill.MomsHeart,
   EntityType.ENTITY_MOMS_HEART -- 78
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity81,
+  PostEntityKill.Fallen,
   EntityType.ENTITY_FALLEN -- 81
   -- (to handle fast-drops)
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity271,
+  PostEntityKill.Angel,
   EntityType.ENTITY_URIEL -- 271
   -- (to handle fast-drops)
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity271,
+  PostEntityKill.Angel,
   EntityType.ENTITY_GABRIEL -- 272
-   -- (to handle fast-drops)
+  -- (to handle fast-drops)
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity406,
+  PostEntityKill.UltraGreed,
   EntityType.ENTITY_ULTRA_GREED -- 406
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_POST_ENTITY_KILL,
-  PostEntityKill.Entity78,
+  PostEntityKill.MomsHeart, -- Hush uses the Mom's Heart callback
   EntityType.ENTITY_HUSH -- 407
 )
 RacingPlus:AddCallback(
@@ -700,12 +686,12 @@ RacingPlus:AddCallback(
 --Define pre NPC update callbacks (69)
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_NPC_UPDATE,
-  PreNPCUpdate.NPC213,
+  PreNPCUpdate.Hand,
   EntityType.ENTITY_MOMS_HAND -- 213
 )
 RacingPlus:AddCallback(
   ModCallbacks.MC_PRE_NPC_UPDATE,
-  PreNPCUpdate.NPC213,
+  PreNPCUpdate.Hand,
   EntityType.ENTITY_MOMS_DEAD_HAND -- 287
 )
 
@@ -856,90 +842,92 @@ RacingPlus:AddCallback(
 
 -- MinimapAPI init
 if MinimapAPI ~= nil then
-    local customIcons = Sprite()
-    customIcons:Load("gfx/pills/custom_icons.anm2", true)
-    -- Getting rid of the ugly white pixel
-    MinimapAPI:AddIcon("PillOrangeOrange", customIcons, "CustomIconPillOrangeOrange", 0) -- 3
-    -- Red dots / red --> full red
-    MinimapAPI:AddIcon("PillReddotsRed", customIcons, "CustomIconPillReddotsRed", 0) -- 5
-    -- Pink red / red --> white / red
-    MinimapAPI:AddIcon("PillPinkRed", customIcons, "CustomIconPillPinkRed", 0) -- 6
-    -- Getting rid of the ugly white pixel
-    MinimapAPI:AddIcon("PillYellowOrange", customIcons, "CustomIconPillYellowOrange", 0) -- 8
-    -- White dots / white --> full white dots
-    MinimapAPI:AddIcon("PillOrangedotsWhite", customIcons, "CustomIconPillOrangedotsWhite", 0) -- 9
-    -- Cleaner sprite for Emergency Contact
-    MinimapAPI:AddIcon("MomsContract", customIcons, "CustomIconMomsContract", 0) -- 50
-    -- New sprite for Blank Rune
-    MinimapAPI:AddIcon("BlankRune", customIcons, "CustomIconBlankRune", 0) -- 40
-    MinimapAPI:AddPickup(
-      "BlankRune",
-      "BlankRune",
-      EntityType.ENTITY_PICKUP, -- 5
-      PickupVariant.PICKUP_TAROTCARD, -- 300
-      Card.RUNE_BLANK, -- 40
-      MinimapAPI.PickupNotCollected,
-      "runes",
-      1200
-    )
-    -- New sprite for Black Rune
-    MinimapAPI:AddIcon("BlackRune", customIcons, "CustomIconBlackRune", 0) -- 41
-    MinimapAPI:AddPickup(
-      "BlackRune",
-      "BlackRune",
-      EntityType.ENTITY_PICKUP, -- 5
-      PickupVariant.PICKUP_TAROTCARD, -- 300
-      Card.RUNE_BLACK, -- 41
-      MinimapAPI.PickupNotCollected,
-      "runes",
-      1200
-    )
-    -- New sprite for Rules Card
-    MinimapAPI:AddIcon("Rules", customIcons, "CustomIconRules", 0) -- 44
-    MinimapAPI:AddPickup(
-      "Rules",
-      "Rules",
-      EntityType.ENTITY_PICKUP, -- 5
-      PickupVariant.PICKUP_TAROTCARD, -- 300
-      Card.CARD_RULES, -- 44
-      MinimapAPI.PickupNotCollected,
-      "cards",
-      1200
-    )
-    -- New sprite for Suicide King
-    MinimapAPI:AddIcon("SuicideKing", customIcons, "CustomIconSuicideKing", 0) -- 46
-    MinimapAPI:AddPickup(
-      "SuicideKing",
-      "SuicideKing",
-      EntityType.ENTITY_PICKUP, -- 5
-      PickupVariant.PICKUP_TAROTCARD, -- 300
-      Card.CARD_SUICIDE_KING, -- 46
-      MinimapAPI.PickupNotCollected,
-      "cards",
-      1200
-    )
-    -- New sprite for ? Card
-    MinimapAPI:AddIcon("QuestionMark", customIcons, "CustomIconQuestionMark", 0) -- 48
-    MinimapAPI:AddPickup(
-      "QuestionMark",
-      "QuestionMark",
-      EntityType.ENTITY_PICKUP, -- 5
-      PickupVariant.PICKUP_TAROTCARD, -- 300
-      Card.CARD_QUESTIONMARK, -- 48
-      MinimapAPI.PickupNotCollected,
-      "cards",
-      1200
-    )
+  local customIcons = Sprite()
+  customIcons:Load("gfx/pills/custom_icons.anm2", true)
+  -- Getting rid of the ugly white pixel
+  MinimapAPI:AddIcon("PillOrangeOrange", customIcons, "CustomIconPillOrangeOrange", 0) -- 3
+  -- Red dots / red --> full red
+  MinimapAPI:AddIcon("PillReddotsRed", customIcons, "CustomIconPillReddotsRed", 0) -- 5
+  -- Pink red / red --> white / red
+  MinimapAPI:AddIcon("PillPinkRed", customIcons, "CustomIconPillPinkRed", 0) -- 6
+  -- Getting rid of the ugly white pixel
+  MinimapAPI:AddIcon("PillYellowOrange", customIcons, "CustomIconPillYellowOrange", 0) -- 8
+  -- White dots / white --> full white dots
+  MinimapAPI:AddIcon("PillOrangedotsWhite", customIcons, "CustomIconPillOrangedotsWhite", 0) -- 9
+  -- Cleaner sprite for Emergency Contact
+  MinimapAPI:AddIcon("MomsContract", customIcons, "CustomIconMomsContract", 0) -- 50
+  -- New sprite for Blank Rune
+  MinimapAPI:AddIcon("BlankRune", customIcons, "CustomIconBlankRune", 0) -- 40
+  MinimapAPI:AddPickup(
+    "BlankRune",
+    "BlankRune",
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TAROTCARD, -- 300
+    Card.RUNE_BLANK, -- 40
+    MinimapAPI.PickupNotCollected,
+    "runes",
+    1200
+  )
+  -- New sprite for Black Rune
+  MinimapAPI:AddIcon("BlackRune", customIcons, "CustomIconBlackRune", 0) -- 41
+  MinimapAPI:AddPickup(
+    "BlackRune",
+    "BlackRune",
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TAROTCARD, -- 300
+    Card.RUNE_BLACK, -- 41
+    MinimapAPI.PickupNotCollected,
+    "runes",
+    1200
+  )
+  -- New sprite for Rules Card
+  MinimapAPI:AddIcon("Rules", customIcons, "CustomIconRules", 0) -- 44
+  MinimapAPI:AddPickup(
+    "Rules",
+    "Rules",
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TAROTCARD, -- 300
+    Card.CARD_RULES, -- 44
+    MinimapAPI.PickupNotCollected,
+    "cards",
+    1200
+  )
+  -- New sprite for Suicide King
+  MinimapAPI:AddIcon("SuicideKing", customIcons, "CustomIconSuicideKing", 0) -- 46
+  MinimapAPI:AddPickup(
+    "SuicideKing",
+    "SuicideKing",
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TAROTCARD, -- 300
+    Card.CARD_SUICIDE_KING, -- 46
+    MinimapAPI.PickupNotCollected,
+    "cards",
+    1200
+  )
+  -- New sprite for ? Card
+  MinimapAPI:AddIcon("QuestionMark", customIcons, "CustomIconQuestionMark", 0) -- 48
+  MinimapAPI:AddPickup(
+    "QuestionMark",
+    "QuestionMark",
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_TAROTCARD, -- 300
+    Card.CARD_QUESTIONMARK, -- 48
+    MinimapAPI.PickupNotCollected,
+    "cards",
+    1200
+  )
 end
 
 -- Bugfix for Mod Config Menu
 local mcmexists, MCM = pcall(require, "scripts.modconfig")
 if mcmexists then
-  MCM.RoomIsSafe = function() return true end
+  MCM.RoomIsSafe = function()
+    return true
+  end
 end
 
 -- Welcome banner
-local hyphens = ''
+local hyphens = ""
 for i = 1, 23 + string.len(g.version) do
   hyphens = hyphens .. "-"
 end

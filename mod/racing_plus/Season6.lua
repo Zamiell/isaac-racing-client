@@ -1,7 +1,7 @@
 local Season6 = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
 
 --
@@ -75,17 +75,18 @@ Season6.vetoList = {}
 Season6.vetoSprites = {}
 Season6.vetoTimer = 0
 
--- Handle the "Veto" button
+-- Check to see if the "Veto" button was pressed
 -- Called from the "CheckEntities:Grid()" function
 function Season6:CheckVetoButton(gridEntity)
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     Speedrun.charNum ~= 1 or
-     g.run.roomsEntered ~= 1 or
-     gridEntity:GetSaveState().State ~= 3 then
-
+  if (
+    challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    or Speedrun.charNum ~= 1
+    or g.run.roomsEntered ~= 1
+    or gridEntity:GetSaveState().State ~= 3
+  ) then
     return
   end
 
@@ -118,14 +119,16 @@ function Season6:CheckVetoButton(gridEntity)
 end
 
 -- ModCallbacks.MC_POST_RENDER (2)
+-- Draw the "Veto" button
 function Season6:PostRender()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     Speedrun.charNum ~= 1 or
-     g.run.roomsEntered ~= 1 then
-
+  if (
+    challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    or Speedrun.charNum ~= 1
+    or g.run.roomsEntered ~= 1
+  ) then
     return
   end
 
@@ -169,15 +172,21 @@ function Season6:PostGameStarted()
 
   Isaac.DebugString("In the R+7 (Season 6) challenge.")
 
-  -- If Eden starts with The Compass as the random passive item or a banned trinket, restart the game
-  if character == PlayerType.PLAYER_EDEN and -- 9
-     (g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) or -- 21
-      g.p:HasTrinket(TrinketType.TRINKET_CAINS_EYE) or -- 59
-      g.p:HasTrinket(TrinketType.TRINKET_BROKEN_ANKH)) then -- 28
-
+  -- If Eden starts with The Compass as the random passive item or a banned trinket,
+  -- restart the game
+  if (
+    character == PlayerType.PLAYER_EDEN -- 9
+    and (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_COMPASS) -- 21
+      or g.p:HasTrinket(TrinketType.TRINKET_CAINS_EYE) -- 59
+      or g.p:HasTrinket(TrinketType.TRINKET_BROKEN_ANKH) -- 28
+    )
+  ) then
     g.run.restart = true
     Speedrun.fastReset = true
-    Isaac.DebugString("Restarting because Eden started with either The Compass, Cain's Eye, or Broken Ankh.")
+    Isaac.DebugString(
+      "Restarting because Eden started with either The Compass, Cain's Eye, or Broken Ankh."
+    )
     return
   end
 
@@ -214,7 +223,9 @@ function Season6:PostGameStarted()
 
   -- Check to see if a start is already assigned for this character number
   -- (dying and resetting should not reassign the selected starting item)
-  Isaac.DebugString("Number of builds that we have already started: " .. tostring(#Speedrun.selectedItemStarts))
+  Isaac.DebugString(
+    "Number of builds that we have already started: " .. tostring(#Speedrun.selectedItemStarts)
+  )
   local startingBuild = Speedrun.selectedItemStarts[Speedrun.charNum]
   if startingBuild == nil then
     -- Get a random start
@@ -241,91 +252,7 @@ function Season6:PostGameStarted()
       end
       startingBuild = Speedrun.remainingItemStarts[startingBuildIndex]
 
-      local valid = true
-
-      -- If we are on the first character, we do not want to play a build that we have already played recently
-      if Speedrun.charNum == 1 and
-         (startingBuild[1] == Season6.lastBuildItem or
-          startingBuild[1] == Season6.lastBuildItemOnFirstChar) then
-
-        valid = false
-      end
-
-      -- Check to see if we already started this item
-      for _, startedBuild in ipairs(Speedrun.selectedItemStarts) do
-        if startedBuild[1] == startingBuild[1] then
-          valid = false
-          break
-        end
-      end
-
-      -- Check to see if we banned this item
-      local charOrder = RacingPlusData:Get("charOrder-R7S6")
-      for i = 8, #charOrder do
-        local item = charOrder[i]
-
-        -- Convert builds to the primary item
-        if item == 1006 then
-          item = CollectibleType.COLLECTIBLE_CHOCOLATE_MILK -- 69
-        elseif item == 1005 then
-          item = CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
-        elseif item == 1001 then
-          item = CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
-        elseif item == 1002 then
-          item = CollectibleType.COLLECTIBLE_TECHNOLOGY -- 68
-        elseif item == 1003 then
-          item = CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
-        end
-
-        if startingBuild[1] == item then
-          valid = false
-          break
-        end
-      end
-
-      -- Check to see if this start synergizes with this character (character/item bans)
-      if character == PlayerType.PLAYER_JUDAS then -- 3
-        if startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
-          valid = false
-        end
-
-      elseif character == PlayerType.PLAYER_EVE then -- 5
-        if startingBuild[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
-          valid = false
-        end
-
-      elseif character == PlayerType.PLAYER_AZAZEL then -- 7
-        if startingBuild[1] == CollectibleType.COLLECTIBLE_IPECAC or -- 149
-           startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER or -- 153
-           startingBuild[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY or -- 224
-           startingBuild[1] == CollectibleType.COLLECTIBLE_DEAD_EYE or -- 373
-           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 331
-           startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
-           startingBuild[1] == CollectibleType.COLLECTIBLE_JACOBS_LADDER then -- 494
-
-          valid = false
-        end
-
-      elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-        if startingBuild[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH or -- 237
-           startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND or -- 257
-           startingBuild[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE or -- 275
-           startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW or -- 311
-           startingBuild[1] == CollectibleType.COLLECTIBLE_INCUBUS then -- 350
-
-          valid = false
-        end
-      end
-
-      -- Check to see if we vetoed this item and we are on the first character
-      if Speedrun.charNum == 1 then
-        for _, veto in ipairs(Season6.vetoList) do
-          if veto == startingBuild[1] then
-            valid = false
-            break
-          end
-        end
-      end
+      local valid = Season6:CheckValidStartingBuild(startingBuild)
 
       -- Just in case, prevent the possibility of having an infinite loop here
       if randomAttempts >= 100 then
@@ -364,13 +291,16 @@ function Season6:PostGameStarted()
   -- Give the items to the player (and remove the items from the pools)
   for _, item in ipairs(startingBuild) do
     -- Eden might have already started with this item, so reset the run if so
-    if character == PlayerType.PLAYER_EDEN and -- 9
-       g.p:HasCollectible(item) then
-
+    if (
+      character == PlayerType.PLAYER_EDEN -- 9
+      and g.p:HasCollectible(item)
+    ) then
       g.run.restart = true
       Speedrun.fastReset = true
-      Isaac.DebugString("Restarting because Eden naturally started with the selected starting item of: " ..
-                        tostring(item))
+      Isaac.DebugString(
+        "Restarting because Eden naturally started with the selected starting item of: "
+        .. tostring(item)
+      )
       return
     end
 
@@ -388,36 +318,127 @@ function Season6:PostGameStarted()
   end
 
   -- Spawn a "Veto" button on the first character
-  if Season6.vetoTimer ~= 0 and
-     Isaac.GetTime() >= Season6.vetoTimer then
-
+  if (
+    Season6.vetoTimer ~= 0
+    and Isaac.GetTime() >= Season6.vetoTimer
+  ) then
       Season6.vetoTimer = 0
   end
-  if Speedrun.charNum == 1 and
-     Season6.vetoTimer == 0 then
-
+  if (
+    Speedrun.charNum == 1
+    and Season6.vetoTimer == 0
+  ) then
     local pos = g:GridToPos(11, 6)
     Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
   end
 end
 
+function Season6:CheckValidStartingBuild(startingBuild)
+  -- Local variables
+  local character = g.p:GetPlayerType()
+
+  -- If we are on the first character,
+  -- we do not want to play a build that we have already played recently
+  if (
+    Speedrun.charNum == 1
+    and (
+      startingBuild[1] == Season6.lastBuildItem
+      or startingBuild[1] == Season6.lastBuildItemOnFirstChar
+    )
+  ) then
+    return false
+  end
+
+  -- Check to see if we already started this item
+  for _, startedBuild in ipairs(Speedrun.selectedItemStarts) do
+    if startedBuild[1] == startingBuild[1] then
+      return false
+    end
+  end
+
+  -- Check to see if we banned this item
+  local charOrder = RacingPlusData:Get("charOrder-R7S6")
+  for i = 8, #charOrder do
+    local item = charOrder[i]
+
+    -- Convert builds to the primary item
+    if item == 1006 then
+      item = CollectibleType.COLLECTIBLE_CHOCOLATE_MILK -- 69
+    elseif item == 1005 then
+      item = CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
+    elseif item == 1001 then
+      item = CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
+    elseif item == 1002 then
+      item = CollectibleType.COLLECTIBLE_TECHNOLOGY -- 68
+    elseif item == 1003 then
+      item = CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+    end
+
+    if startingBuild[1] == item then
+      return false
+    end
+  end
+
+  -- Check to see if this start synergizes with this character (character/item bans)
+  if character == PlayerType.PLAYER_JUDAS then -- 3
+    if startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
+      return false
+    end
+  elseif character == PlayerType.PLAYER_EVE then -- 5
+    if startingBuild[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+      return false
+    end
+  elseif character == PlayerType.PLAYER_AZAZEL then -- 7
+    if (
+      startingBuild[1] == CollectibleType.COLLECTIBLE_IPECAC -- 149
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY -- 224
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_DEAD_EYE -- 373
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 331
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
+    ) then
+      return false
+    end
+  elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
+    if (
+      startingBuild[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH -- 237
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE -- 275
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 311
+      or startingBuild[1] == CollectibleType.COLLECTIBLE_INCUBUS -- 350
+    ) then
+      return false
+    end
+  end
+
+  -- Check to see if we vetoed this item and we are on the first character
+  if Speedrun.charNum == 1 then
+    for _, veto in ipairs(Season6.vetoList) do
+      if veto == startingBuild[1] then
+        return false
+      end
+    end
+  end
+
+  return true
+end
+
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
+-- Delete the veto button if we are re-entering the starting room
 function Season6:PostNewRoom()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
   local startingRoomIndex = g.l:GetStartingRoomIndex()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local challenge = Isaac.GetChallenge()
 
-  -- Delete the veto button if we are re-entering the starting room
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-     stage == 1 and
-     roomIndex == startingRoomIndex and
-     g.run.roomsEntered ~= 1 then
-
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    and stage == 1
+    and roomIndex == startingRoomIndex
+    and g.run.roomsEntered ~= 1
+  ) then
     g.r:RemoveGridEntity(117, 0, false)
   end
 end
@@ -431,9 +452,10 @@ function Season6:PostBombUpdate(bomb)
     return
   end
 
-  if bomb.SpawnerType ~= EntityType.ENTITY_PLAYER or -- 1
-     bomb.FrameCount ~= 1 then
-
+  if (
+    bomb.SpawnerType ~= EntityType.ENTITY_PLAYER -- 1
+    or bomb.FrameCount ~= 1
+  ) then
     return
   end
 
@@ -449,9 +471,10 @@ function Season6:PostBombUpdate(bomb)
   end
 
   -- Don't do anything if we have Dr. Fetus or Bobby Bomb (normal homing bombs)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or -- 52
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BOBBY_BOMB) then -- 125
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) -- 52
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_BOBBY_BOMB) -- 125
+  ) then
     return
   end
 
@@ -460,27 +483,18 @@ function Season6:PostBombUpdate(bomb)
   bomb.Flags = bomb.Flags & ~TearFlags.TEAR_HOMING -- 1 << 2
 end
 
--- ModCallbacks.MC_POST_ENTITY_KILL (68)
-function Season6:PostEntityKill(entity)
+-- Reset the starting item timer if we just killed the Basement 2 boss
+function Season6:PostClearRoom()
   -- Local variables
-  local challenge = Isaac.GetChallenge()
   local stage = g.l:GetStage()
+  local roomType = g.r:GetType()
+  local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-    return
-  end
-
-  -- We only care about when a boss dies
-  local npc = entity:ToNPC()
-  if npc == nil then
-    return
-  end
-  if not npc:IsBoss() then
-    return
-  end
-
-  -- Reset the starting item timer if we just killed the Basement 2 boss
-  if stage == 2 then
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    and stage == 2
+    and roomType == RoomType.ROOM_BOSS -- 5
+  ) then
     Season6.timeItemAssigned = 0
   end
 end

@@ -99,6 +99,8 @@ globals = {
   "MinimapAPI",
 }
 
+max_line_length = 100
+
 -- Luacheck complains about functions in a module declared with a colon if self is unused;
 -- we may want all functions to be declared with a colon for uniformity
 unused_args = false

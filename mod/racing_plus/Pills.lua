@@ -1,7 +1,7 @@
 local Pills = {}
 
 -- Includes
-local g       = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Season8 = require("racing_plus/season8")
 
 function Pills:PostRender()
@@ -42,7 +42,13 @@ function Pills:PostRender()
       baseY = baseY - 20
     end
   end
-  local string = "Pills identified: " .. tostring(#g.run.pills) .. " / 13"
+  local totalPillsInPool = 13
+  if RacingPlusRebalanced ~= nil then
+    totalPillsInPool = 4
+  end
+  local string = (
+    "Pills identified: " .. tostring(#g.run.pills) .. " / " .. tostring(totalPillsInPool)
+  )
   g.font:DrawString(string, x - 10, baseY - 9 + 20, g.kcolor, 0, true)
   baseY = baseY + 20
   for i, pillEntry in ipairs(g.run.pills) do
@@ -67,9 +73,10 @@ function Pills:CheckPHD()
   end
 
   -- Check for the PHD / Virgo
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_PHD) and -- 75
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_VIRGO) then -- 303
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_PHD) -- 75
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_VIRGO) -- 303
+  ) then
     return
   end
 

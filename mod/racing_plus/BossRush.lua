@@ -3,8 +3,9 @@ local BossRush = {}
 -- Racing+ replaces the vanilla Boss Rush with a custom version
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
+local BagFamiliars = require("racing_plus/bagfamiliars")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- This is the pool to pull random bosses from
@@ -90,10 +91,11 @@ function BossRush:PostUpdate()
 end
 
 function BossRush:CheckStart()
-  if g.run.touchedPickup and
-     not g.run.bossRush.started and
-     not g.run.bossRush.finished then
-
+  if (
+    g.run.touchedPickup
+    and not g.run.bossRush.started
+    and not g.run.bossRush.finished
+  ) then
     BossRush:Start()
   end
 end
@@ -113,8 +115,14 @@ function BossRush:Start()
 
   -- Spawn a room clear delay NPC as a helper to keep the doors closed
   -- (otherwise, the doors will re-open on every frame)
-  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        g.zeroVector, g.zeroVector, nil)
+  local roomClearDelayNPC = Isaac.Spawn(
+    EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC,
+    0,
+    0,
+    g.zeroVector,
+    g.zeroVector,
+    nil
+  )
   roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
   roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for the Boss Rush).")
@@ -148,21 +156,25 @@ function BossRush:Start()
     local valid = true
     for i = 1, #g.run.bossRush.bosses do
       local alreadyChosenBoss = g.run.bossRush.bosses[i]
-      if boss[1] == alreadyChosenBoss[1] and
-         boss[2] == alreadyChosenBoss[2] then
-
+      if (
+        boss[1] == alreadyChosenBoss[1]
+        and boss[2] == alreadyChosenBoss[2]
+      ) then
         valid = false
         break
       end
     end
 
     -- Check to see if the boss would be blocked by rocks at the top of the screen
-    if roomVariant == 3 and
-       (boss[1] == EntityType.ENTITY_THE_HAUNT or -- 260
-        boss[1] == EntityType.ENTITY_MAMA_GURDY or -- 266
-        boss[1] == EntityType.ENTITY_MEGA_MAW or -- 262
-        boss[1] == EntityType.ENTITY_GATE) then -- 263
-
+    if (
+      roomVariant == 3
+      and (
+        boss[1] == EntityType.ENTITY_THE_HAUNT -- 260
+        or boss[1] == EntityType.ENTITY_MAMA_GURDY -- 266
+        or boss[1] == EntityType.ENTITY_MEGA_MAW -- 262
+        or boss[1] == EntityType.ENTITY_GATE -- 263
+      )
+    ) then
       valid = false
     end
 
@@ -196,7 +208,8 @@ function BossRush:CheckSpawnNewWave()
   end
 
   -- Find out whether it is time to spawn the next wave
-  -- If this is the final wave, then we only want to proceed if every enemy is killed (not just the bosses)
+  -- If this is the final wave, then we only want to proceed if every enemy is killed
+  -- (not just the bosses)
   -- When the Boss Rush is active, the "Room Clear Delay NPC" boss will always be present,
   -- which is why we check for equal to 1 instead of equal to 0
   local spawnNextWave = false
@@ -236,8 +249,8 @@ function BossRush:CheckSpawnNewWave()
   if g.run.bossRush.currentWave > 0 then
     FastClear:AddCharge()
     Schoolbag:AddCharge()
-    FastClear:IncrementBagFamiliars()
-    FastClear:CheckBagFamiliars()
+    BagFamiliars:Increment()
+    BagFamiliars:CheckSpawn()
   end
 
   -- Find out if the Boss Rush is over
@@ -251,7 +264,9 @@ function BossRush:CheckSpawnNewWave()
     end
     g.run.bossRush.spawnWaveFrame = gameFrameCount + BossRush.delay
     g.run.bossRush.currentWave = g.run.bossRush.currentWave + 1
-    Isaac.DebugString("Marking to spawn the next wave on frame: " .. tostring(g.run.bossRush.spawnWaveFrame))
+    Isaac.DebugString(
+      "Marking to spawn the next wave on frame: " .. tostring(g.run.bossRush.spawnWaveFrame)
+    )
   end
 end
 
@@ -271,9 +286,10 @@ function BossRush:PostNewRoom()
 
   -- If we already started the Boss Rush and did not finish it,
   -- and are now returning to the room, then start spawning the waves again from the beginning
-  if g.run.bossRush.started and
-     not g.run.bossRush.finished then
-
+  if (
+    g.run.bossRush.started
+    and not g.run.bossRush.finished
+  ) then
     g.run.bossRush.currentWave = 0
     g.run.bossRush.spawnWaveFrame = 0
     BossRush:Start()
@@ -334,16 +350,20 @@ function BossRush:SpawnWave(bossesPerWave)
 
   -- Display the wave number as streak text
   local totalWaves = math.floor(BossRush.totalBosses / bossesPerWave)
-  g.run.streakText = "Wave " .. tostring(g.run.bossRush.currentWave) .. " / " .. tostring(totalWaves)
+  g.run.streakText = (
+    "Wave " .. tostring(g.run.bossRush.currentWave) .. " / " .. tostring(totalWaves)
+  )
   g.run.streakFrame = Isaac.GetFrameCount()
 
-  Isaac.DebugString("Spawned wave " .. tostring(g.run.bossRush.currentWave) ..
-                    " on frame: " .. tostring(gameFrameCount))
+  Isaac.DebugString(
+    "Spawned wave " .. tostring(g.run.bossRush.currentWave) .. " on frame: "
+    .. tostring(gameFrameCount)
+  )
 end
 
 function BossRush:Finish()
   -- Local variables
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
   local centerPos = g.r:GetCenterPos()
   local challenge = Isaac.GetChallenge()
 
@@ -354,20 +374,40 @@ function BossRush:Finish()
 
   local pos = g.r:FindFreePickupSpawnPosition(g.r:GetCenterPos(), 1, true)
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                centerPos, g.zeroVector, nil)
-
-  elseif g.race.status == "in progress" and
-         g.race.goal == "Boss Rush" then
-
+    -- Spawn a big chest
+    -- (which will get replaced with either a checkpoint or a trophy on the next frame)
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BIGCHEST, -- 340
+      0,
+      centerPos,
+      g.zeroVector,
+      nil
+    )
+  elseif (
+    g.race.status == "in progress"
+    and g.race.goal == "Boss Rush"
+  ) then
     -- Spawn a big chest (which will get replaced with a trophy on the next frame)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                centerPos, g.zeroVector, nil)
-
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BIGCHEST, -- 340
+      0,
+      centerPos,
+      g.zeroVector,
+      nil
+    )
   else
     -- Spawn a random item
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, pos, g.zeroVector, nil, 0, roomSeed) -- 5.100
+    g.g:Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_COLLECTIBLE, -- 100
+      pos,
+      g.zeroVector,
+      nil,
+      0,
+      roomSeed
+    )
   end
 
   g:OpenDoors()

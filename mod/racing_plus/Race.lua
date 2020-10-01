@@ -1,18 +1,15 @@
 local Race = {}
 
 -- Includes
-local g          = require("racing_plus/globals")
-local Sprites    = require("racing_plus/sprites")
+local g = require("racing_plus/globals")
+local Sprites = require("racing_plus/sprites")
 local FastTravel = require("racing_plus/fasttravel")
 
 -- Called from the PostUpdate callback (the "CheckEntities:EntityRaceTrophy()" function)
 function Race:Finish()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
 
   -- Finish the race
   g.raceVars.finished = true
@@ -21,8 +18,10 @@ function Race:Finish()
   g.run.endOfRunText = true -- Show the run summary
 
   -- Tell the client that the goal was achieved (and the race length)
-  Isaac.DebugString("Finished race " .. tostring(g.race.raceID) ..
-                    " with time: " .. tostring(g.raceVars.finishedTime))
+  Isaac.DebugString(
+    "Finished race " .. tostring(g.race.raceID) .. " with time: "
+    .. tostring(g.raceVars.finishedTime)
+  )
 
   if stage == 11 then
     -- Spawn a button for the DPS feature
@@ -31,11 +30,16 @@ function Race:Finish()
       pos1 = g:GridToPos(1, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
     end
     g.run.buttons[#g.run.buttons + 1] = {
-      type      = "dps",
-      pos       = pos1,
+      type = "dps",
+      pos = pos1,
       roomIndex = roomIndex,
     }
-    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, g.run.buttons[#g.run.buttons].pos, true) -- 20
+    Isaac.GridSpawn(
+      GridEntityType.GRID_PRESSURE_PLATE, -- 20
+      0,
+      g.run.buttons[#g.run.buttons].pos,
+      true
+    )
     Sprites:Init("dps-button", "dps-button")
 
     -- Spawn a button for the Victory Lap feature
@@ -44,11 +48,16 @@ function Race:Finish()
       pos2 = g:GridToPos(11, 6) -- A Y of 1 is out of bounds inside of the Mega Satan room
     end
     g.run.buttons[#g.run.buttons + 1] = {
-      type      = "victory-lap",
-      pos       = pos2,
+      type = "victory-lap",
+      pos = pos2,
       roomIndex = roomIndex,
     }
-    Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, g.run.buttons[#g.run.buttons].pos, true) -- 20
+    Isaac.GridSpawn(
+      GridEntityType.GRID_PRESSURE_PLATE, -- 20
+      0,
+      g.run.buttons[#g.run.buttons].pos,
+      true
+    )
     Sprites:Init("victory-lap-button", "victory-lap-button")
   end
 
@@ -69,7 +78,8 @@ function Race:VictoryLap()
   g.run.trapdoor.frame = gameFrameCount + 16
   g.p.ControlsEnabled = false
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-  -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+  -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping
+  -- animation)
   g.p.Velocity = g.zeroVector -- Remove all of the player's momentum
   g.p:PlayExtraAnimation("LightTravel")
   g.run.currentFloor = g.run.currentFloor - 1

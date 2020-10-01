@@ -6,16 +6,19 @@ local g = require("racing_plus/globals")
 -- The challenge table maps challenge names to abbreviations and
 -- the number of elements in the "character order" table
 Speedrun.challengeTable = {
-  [Isaac.GetChallengeIdByName("R+9 (Season 1)")]  = {"R9S1",  9},
+  [Isaac.GetChallengeIdByName("R+9 (Season 1)")] = {"R9S1", 9},
   [Isaac.GetChallengeIdByName("R+14 (Season 1)")] = {"R14S1", 14},
-  [Isaac.GetChallengeIdByName("R+7 (Season 2)")]  = {"R7S2",  7},
-  [Isaac.GetChallengeIdByName("R+7 (Season 3)")]  = {"R7S3",  7},
-  [Isaac.GetChallengeIdByName("R+7 (Season 4)")]  = {"R7S4",  14}, -- (7 characters + 7 starting items)
-  [Isaac.GetChallengeIdByName("R+7 (Season 5)")]  = {"R7S5",  7},
-  [Isaac.GetChallengeIdByName("R+7 (Season 6)")]  = {"R7S6",  11}, -- (7 characters + 3 item bans + 1 big 4 item ban)
-  [Isaac.GetChallengeIdByName("R+7 (Season 7)")]  = {"R7S7",  7},
-  [Isaac.GetChallengeIdByName("R+7 (Season 8)")]  = {"R7S8",  7},
-  [Isaac.GetChallengeIdByName("R+15 (Vanilla)")]  = {"R15V",  15},
+  [Isaac.GetChallengeIdByName("R+7 (Season 2)")] = {"R7S2", 7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 3)")] = {"R7S3", 7},
+  -- 14 = 7 characters + 7 starting items
+  [Isaac.GetChallengeIdByName("R+7 (Season 4)")] = {"R7S4", 14},
+  [Isaac.GetChallengeIdByName("R+7 (Season 5)")] = {"R7S5", 7},
+  -- 11 = 7 characters + 3 item bans + 1 big 4 item ban
+  [Isaac.GetChallengeIdByName("R+7 (Season 6)")] = {"R7S6", 11},
+  [Isaac.GetChallengeIdByName("R+7 (Season 7)")] = {"R7S7", 7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 8)")] = {"R7S8", 7},
+  [Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")] = {"R7S9", 7},
+  [Isaac.GetChallengeIdByName("R+15 (Vanilla)")] = {"R15V", 15},
 }
 
 -- Variables
@@ -23,15 +26,18 @@ Speedrun.sprites = {} -- Reset at the beginning of a new run (in the PostGameSta
 Speedrun.charNum = 1 -- Reset expliticly from a long-reset and on the first reset after a finish
 Speedrun.startedTime = 0 -- Reset expliticly if we are on the first character
 Speedrun.startedFrame = 0 -- Reset expliticly if we are on the first character
-Speedrun.startedCharTime = 0 -- Reset expliticly if we are on the first character and when we touch a Checkpoint
+-- Reset expliticly if we are on the first character and when we touch a Checkpoint
+Speedrun.startedCharTime = 0
 Speedrun.charRunTimes = {} -- Reset expliticly if we are on the first character
 Speedrun.finished = false -- Reset at the beginning of every run
 Speedrun.finishedTime = 0 -- Reset at the beginning of every run
 Speedrun.finishedFrames = 0 -- Reset at the beginning of every run
 Speedrun.fastReset = false -- Reset expliticly when we detect a fast reset
-Speedrun.spawnedCheckpoint = false -- Reset after we touch the checkpoint and at the beginning of a new run
+-- Reset after we touch the checkpoint and at the beginning of a new run
+Speedrun.spawnedCheckpoint = false
 Speedrun.fadeFrame = 0 -- Reset after we touch the checkpoint and at the beginning of a new run
-Speedrun.resetFrame = 0 -- Reset after we execute the "restart" command and at the beginning of a new run
+-- Reset after we execute the "restart" command and at the beginning of a new run
+Speedrun.resetFrame = 0
 Speedrun.liveSplitReset = false
 
 -- Season 5, 6, & 7 variables
@@ -60,7 +66,7 @@ function Speedrun:Finish()
   Speedrun.finishedFrames = Isaac.GetFrameCount() - Speedrun.startedFrame
 
   -- Play a sound effect
-  g.sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1) -- ID, Volume, FrameDelay, Loop, Pitch
+  g.sfx:Play(SoundEffect.SOUND_SPEEDRUN_FINISH, 1.5, 0, false, 1)
 
   -- Reset season-specific variables
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
@@ -87,17 +93,19 @@ end
 
 function Speedrun:InSpeedrun()
   local challenge = Isaac.GetChallenge()
-  if challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") or
-     challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") then
-
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)")
+    or challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+    or challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)")
+  ) then
     return true
   else
     return false
@@ -120,7 +128,9 @@ function Speedrun:CheckValidCharOrder()
   local abbreviation = Speedrun.challengeTable[challenge][1]
   local numElements = Speedrun.challengeTable[challenge][2]
   if abbreviation == nil then
-    Isaac.DebugString("Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable.")
+    Isaac.DebugString(
+      "Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable."
+    )
     return false
   end
   local charOrder = RacingPlusData:Get("charOrder-" .. abbreviation)
@@ -156,7 +166,9 @@ function Speedrun:GetCurrentChar()
   end
   local abbreviation = Speedrun.challengeTable[challenge][1]
   if abbreviation == nil then
-    Isaac.DebugString("Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable.")
+    Isaac.DebugString(
+      "Error: Failed to find challenge \"" .. challenge .. "\" in the challengeTable."
+    )
     return false
   end
   local charOrder = RacingPlusData:Get("charOrder-" .. abbreviation)
@@ -195,7 +207,13 @@ function Speedrun:GetAverageTimePerCharacter()
   local timeTable = g:ConvertTimeToString(averageSeconds)
 
   -- e.g. [minute1][minute2]:[second1][second2]
-  return tostring(timeTable[2]) .. tostring(timeTable[3]) .. ":" .. tostring(timeTable[4]) .. tostring(timeTable[5])
+  return (
+    tostring(timeTable[2])
+    .. tostring(timeTable[3])
+    .. ":"
+    .. tostring(timeTable[4])
+    .. tostring(timeTable[5])
+  )
 end
 
 return Speedrun

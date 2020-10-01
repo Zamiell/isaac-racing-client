@@ -25,7 +25,7 @@ function SoulJar:EntityTakeDmg(damageFlag)
   local bit1 = (damageFlag & (1 << 5)) >> 5 -- DamageFlag.DAMAGE_RED_HEARTS
   local bit2 = (damageFlag & (1 << 18)) >> 18 -- DamageFlag.DAMAGE_IV_BAG
   if bit1 == 1 or bit2 == 1 then
-      selfDamage = true
+    selfDamage = true
   end
   if not selfDamage then
     g.g:SetLastDevilRoomStage(g.run.lastDDLevel)
@@ -73,12 +73,13 @@ function SoulJar:SpriteDisplay()
 
     SoulJar.sprites.barLines = Sprite()
     SoulJar.sprites.barLines:Load("gfx/ui/ui_chargebar2.anm2", true)
-    SoulJar.sprites.barLines:Play("BarOverlay12", true) -- This is custom replaced with an 8 charge bar
+    -- This is custom replaced with an 8 charge bar
+    SoulJar.sprites.barLines:Play("BarOverlay12", true)
   end
 
   -- Place the bar to the right of the heart containers
   -- (which will depend on how many heart containers we have)
-  local barX = 49 + SoulJar:GetHeartXOffset()
+  local barX = 49 + g:GetHeartXOffset()
   local barY = 17
   local barVector = Vector(barX, barY)
 
@@ -95,36 +96,6 @@ function SoulJar:SpriteDisplay()
   -- Draw the charge bar 3/3 (the segment lines on top)
   SoulJar.sprites.barLines:Render(barVector, g.zeroVector, g.zeroVector)
   SoulJar.sprites.barLines:Update()
-end
-
-function SoulJar:GetHeartXOffset()
-  -- Local variables
-  local maxHearts = g.p:GetMaxHearts()
-  local soulHearts = g.p:GetSoulHearts()
-  local boneHearts = g.p:GetBoneHearts()
-  local extraLives = g.p:GetExtraLives()
-
-  local heartLength = 12 -- This is how long each heart is on the UI in the upper left hand corner
-  -- (this is not in pixels, but in draw coordinates; you can see that it is 13 pixels wide in the "ui_hearts.png" file)
-  local combinedHearts = maxHearts + soulHearts + (boneHearts * 2) -- There are no half bone hearts
-  if combinedHearts > 12 then
-    combinedHearts = 12 -- After 6 hearts, it wraps to a second row
-  end
-
-  local offset = (combinedHearts / 2) * heartLength
-  if extraLives > 9 then
-    offset = offset + 20
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then -- 212
-      offset = offset + 6
-    end
-  elseif extraLives > 0 then
-    offset = offset + 16
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then -- 212
-      offset = offset + 4
-    end
-  end
-
-  return offset
 end
 
 return SoulJar

@@ -7,11 +7,11 @@ Changes:
 - Removed the "special" tag from all items
 - Added the "range" cache to all health up items (used for fixing the Greed's Gullet bug on Keeper)
 	(items that give bone hearts do not count as health up items for Keeper)
-- Added the "luck" cache to Dad's Lost Coin (455) (for the inventory change)
 - Renamed "Forever alone" (128) to "Forever Alone"
 - Renamed "Maw Of The Void" (399) to "Maw of the Void"
 - Renamed "Spear Of Destiny" (400) to "Spear of Destiny"
 - Renamed "Crown Of Light" (415) to "Crown of Light"
+- Renamed "Dad's Lost Coin" (455) to "Dad's Lost Coin (Vanilla)"
 - Renamed "Schoolbag" (534) to "Schoolbag (Vanilla)"
 
 Changes for Racing+ Rebalanced:
@@ -24,6 +24,7 @@ Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to Explosivo (401)
 - Added the "firedelay" cache to Glaucoma (460)
 - Added the "firedelay" cache to Pop! (529)
+- Added the "shotspeed" cache to Trisagion (533)
 - Added the "damage" cache to Ring Worm (11)
 - Added the "damage" cache to Hook Worm (26)
 
@@ -490,7 +491,7 @@ Changes for Racing+ Rebalanced:
 	<passive description="I'm leaking..." gfx="Collectibles_452_VaricoseVeins.png" id="452" name="Varicose Veins" />
 	<passive achievement="291" description="Bone tears!" gfx="Collectibles_453_CompoundFracture.png" id="453" name="Compound Fracture" cache="range tearflag" />
 	<passive description="Hold me!" gfx="Collectibles_454_Polydactyly.png" id="454" name="Polydactyly" />
-	<passive achievement="307" description="I remember this..." gfx="Collectibles_455_DadsLostCoin.png" id="455" name="Dad's Lost Coin" cache="range luck" />
+	<passive achievement="307" description="I remember this..." gfx="Collectibles_455_DadsLostCoin.png" id="455" name="Dad's Lost Coin (Vanilla)" cache="range" />
 	<passive cache="range" description="Midnight snack!" gfx="Collectibles_456_MoldyBread.png" id="456" name="Moldy Bread" hearts="2" maxhearts="2" />
 	<passive description="Hard headed!" gfx="Collectibles_457_Conehead.png" id="457" name="Cone Head" soulhearts="2" />
 	<passive description="What's in there?" gfx="Collectibles_458_BellyButton.png" id="458" name="Belly Button" />
@@ -580,7 +581,7 @@ Changes for Racing+ Rebalanced:
 	<passive achievement="376" description="Just hope you're not next..." gfx="Collectibles_530_DeathsList.png" name="Death's List" id="530" />
 	<passive achievement="377" cache="weapon firedelay damage tearcolor" description="I'm seeing red..." gfx="Collectibles_531_Haemolacria.png" name="Haemolacria" id="531" />
 	<passive achievement="378" description="Feed them!" gfx="Collectibles_532_Lachryphagy.png" name="Lachryphagy" id="532" />
-	<passive achievement="380" cache="tearflag" description="Smite thy enemy" gfx="Collectibles_533_Trisagion.png" name="Trisagion" id="533" />
+	<passive achievement="380" cache="tearflag shotspeed" description="Smite thy enemy" gfx="Collectibles_533_Trisagion.png" name="Trisagion" id="533" />
 	<passive achievement="379" description="Extra active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag (Vanilla)" id="534" />
 
 	<!-- Booster Pack #5 -->

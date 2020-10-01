@@ -30,10 +30,12 @@ function Schoolbag:Remove()
 end
 
 function Schoolbag:AddCharge(singleCharge)
-  -- We don't need to do anything if we don't have a Schoolbag or we don't have an item in the Schoolbag
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     g.run.schoolbag.item == 0 then
-
+  -- We don't need to do anything if we don't have a Schoolbag
+  -- or we don't have an item in the Schoolbag
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    or g.run.schoolbag.item == 0
+  ) then
     return
   end
 
@@ -41,30 +43,32 @@ function Schoolbag:AddCharge(singleCharge)
   local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
 
   -- We don't need to do anything if the item is already charged
-  if g.run.schoolbag.charge >= maxCharges and
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) then -- 63
-
+  if (
+    g.run.schoolbag.charge >= maxCharges
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+  ) then
     return
   end
 
   -- We don't need to do anything if the item is already double-charged
-  if g.run.schoolbag.chargeBattery >= maxCharges and
-  g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) then -- 63
-
+  if (
+    g.run.schoolbag.chargeBattery >= maxCharges
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+  ) then
     return
   end
 
   -- Find out how many charges we should add
   local chargesToAdd = 1
   local shape = g.r:GetRoomShape()
-  if shape >= 8 then -- -5
-
+  if shape >= 8 then
     chargesToAdd = 2
-
-  elseif g.p:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) and -- 3
-         g.run.schoolbag.charge == maxCharges - 2 then
-
-    -- The AAA Battery grants an extra charge when the active item is one away from being fully charged
+  elseif (
+    g.p:HasTrinket(TrinketType.TRINKET_AAA_BATTERY) -- 3
+    and g.run.schoolbag.charge == maxCharges - 2
+  ) then
+    -- The AAA Battery grants an extra charge when the active item is one away from being fully
+    -- charged
     chargesToAdd = 2
   end
   if singleCharge ~= nil then
@@ -110,10 +114,10 @@ function Schoolbag:SpriteDisplay()
     if g.run.schoolbag.item == 0 then
       -- We don't have anything inside of the Schoolbag, so show a faded Schoolbag sprite
       fileName = "gfx/items/collectibles/Schoolbag_Empty.png"
-
-    elseif g.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX and -- 523
-       g.run.movingBoxOpen then
-
+    elseif (
+      g.run.schoolbag.item == CollectibleType.COLLECTIBLE_MOVING_BOX -- 523
+      and g.run.movingBoxOpen
+    ) then
       -- We need custom logic to handle Moving Box, which has two different sprites
       fileName = "gfx/items/collectibles/collectibles_523_movingbox_open.png"
     else
@@ -182,9 +186,10 @@ function Schoolbag:CheckActiveCharges()
   local activeCharge = g.p:GetActiveCharge()
   local batteryCharge = g.p:GetBatteryCharge()
 
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     g.p:GetActiveItem() == 0 then
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    or g.p:GetActiveItem() == 0
+  ) then
     return
   end
 
@@ -199,7 +204,9 @@ end
 function Schoolbag:ConvertVanilla()
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) then -- 534
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)")
+    Isaac.DebugString(
+      "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_SCHOOLBAG) .. " (Schoolbag)"
+    )
     if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) then
       g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)
     end
@@ -214,11 +221,12 @@ function Schoolbag:CheckSecondItem(pickup)
   local gameFrameCount = g.g:GetFrameCount()
   local roomFrameCount = g.r:GetFrameCount()
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-     g.run.schoolbag.item == 0 and
-     pickup.Touched and
-     g.itemConfig:GetCollectible(pickup.SubType).Type == ItemType.ITEM_ACTIVE then -- 3
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    and g.run.schoolbag.item == 0
+    and pickup.Touched
+    and g.itemConfig:GetCollectible(pickup.SubType).Type == ItemType.ITEM_ACTIVE -- 3
+  ) then
     -- We don't want to put the item in the Schoolbag if we just entered the room and
     -- there is a touched item sitting on the ground for whatever reason
     if roomFrameCount == 1 then
@@ -226,18 +234,24 @@ function Schoolbag:CheckSecondItem(pickup)
     end
 
     -- We don't want to put the item in the Schoolbag if we dropped it from a Butter! trinket
-    if g.p:HasTrinket(TrinketType.TRINKET_BUTTER) and
-       g.run.droppedButterItem == pickup.SubType then
-
+    if (
+      g.p:HasTrinket(TrinketType.TRINKET_BUTTER)
+      and g.run.droppedButterItem == pickup.SubType
+    ) then
       g.run.droppedButterItem = 0
-      Isaac.DebugString("Prevented putting item " .. tostring(pickup.SubType) .. " in the Schoolbag (from Butter).")
+      Isaac.DebugString(
+        "Prevented putting item " .. tostring(pickup.SubType) .. " in the Schoolbag (from Butter)."
+      )
       return false
     end
 
     -- We don't want to put the item in the Schoolbag if we dropped it from a Moving Box
     if g.run.droppedMovingBoxItem == pickup.SubType then
       g.run.droppedMovingBoxItem = 0
-      Isaac.DebugString("Prevented putting item " .. tostring(pickup.SubType) .. " in the Schoolbag (from Moving Box).")
+      Isaac.DebugString(
+        "Prevented putting item " .. tostring(pickup.SubType)
+        .. " in the Schoolbag (from Moving Box)."
+      )
       return false
     end
 
@@ -246,13 +260,16 @@ function Schoolbag:CheckSecondItem(pickup)
     g.run.schoolbag.charge = g.run.schoolbag.lastCharge
     g.run.schoolbag.chargeBattery = g.run.schoolbag.lastChargeBattery
     Schoolbag.sprites.item = nil
-    Isaac.DebugString("Put pedestal " .. tostring(pickup.SubType) .. " into the Schoolbag with " ..
-                      tostring(g.run.schoolbag.charge) .. " charges (and " ..
-                      tostring(g.run.schoolbag.chargeBattery) .. " Battery charges).")
+    Isaac.DebugString(
+      "Put pedestal " .. tostring(pickup.SubType) .. " into the Schoolbag with "
+      .. tostring(g.run.schoolbag.charge) .. " charges "
+      .. "(and " .. tostring(g.run.schoolbag.chargeBattery) .. " Battery charges)."
+    )
 
     if gameFrameCount == g.run.frameOfLastDD + 1 then
       -- If we took this item from a devil deal, then we want to delete the pedestal entirely
-      -- (since the item was not on a pedestal to begin with, it would not make any sense to leave an empty pedestal)
+      -- (since the item was not on a pedestal to begin with,
+      -- it would not make any sense to leave an empty pedestal)
       -- Unfortunately, the empty pedestal will still show for a single frame
       pickup:Remove()
     else
@@ -268,16 +285,20 @@ end
 
 -- Check to see if the Schoolbag item needs to be swapped back in
 function Schoolbag:CheckEmptyActiveItem()
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     g.run.schoolbag.item == 0 or
-     g.p:GetActiveItem() ~= 0 or
-     not g.p:IsItemQueueEmpty() then
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    or g.run.schoolbag.item == 0
+    or g.p:GetActiveItem() ~= 0
+    or not g.p:IsItemQueueEmpty()
+  ) then
     return
   end
 
-  -- They used their primary item (Pandora's Box, etc.), so put the Schoolbag item in the primary slot
-  Isaac.DebugString("Empty active detected; swapping in Schoolbag item " .. g.run.schoolbag.item .. ".")
+  -- They used their primary item (Pandora's Box, etc.),
+  -- so put the Schoolbag item in the primary slot
+  Isaac.DebugString(
+    "Empty active detected; swapping in Schoolbag item " .. g.run.schoolbag.item .. "."
+  )
   Schoolbag:Switch()
 
   -- Empty the contents of the Schoolbag
@@ -295,12 +316,13 @@ function Schoolbag:CheckInput()
   -- We don't care about detecting inputs if we don't have the Schoolbag,
   -- we don't have anything in the Schoolbag,
   -- or we currently have an active item held overhead
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) or
-     g.run.schoolbag.item == 0 or
-     Schoolbag:IsActiveItemQueued() then
-     -- This will allow switches while the use/pickup animation is occuring but
-     -- prevent bugs where queued items will override things
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    or g.run.schoolbag.item == 0
+    or Schoolbag:IsActiveItemQueued()
+  ) then
+    -- This will allow switches while the use/pickup animation is occuring but
+    -- prevent bugs where queued items will override things
     return
   end
 
@@ -308,9 +330,7 @@ function Schoolbag:CheckInput()
   if RacingPlusData ~= nil then
     hotkeySwitch = RacingPlusData:Get("hotkeySwitch")
   end
-  if hotkeySwitch ~= nil and
-     hotkeySwitch ~= 0 then
-
+  if hotkeySwitch ~= nil and hotkeySwitch ~= 0 then
     -- They have a custom Schoolbag-switch hotkey bound, so we need check for that input
     -- (we use "IsButtonPressed()" instead of "IsButtonTriggered()" because
     -- the latter is not very responsive with fast sequences of inputs)
@@ -352,9 +372,11 @@ function Schoolbag:CheckInput()
   g.run.schoolbag.charge = activeCharge
   g.run.schoolbag.chargeBattery = batteryCharge
   Schoolbag.sprites.item = nil
-  Isaac.DebugString("Put item " .. tostring(g.run.schoolbag.item) .. " into the Schoolbag with charge: " ..
-                    tostring(g.run.schoolbag.charge) .. "-" ..
-                    tostring(g.run.schoolbag.chargeBattery))
+  Isaac.DebugString(
+    "Put item " .. tostring(g.run.schoolbag.item) .. " into the Schoolbag with charge: "
+    .. tostring(g.run.schoolbag.charge) .. "-"
+    .. tostring(g.run.schoolbag.chargeBattery)
+  )
 end
 
 function Schoolbag:IsActiveItemQueued()
@@ -376,11 +398,14 @@ function Schoolbag:Switch()
 
   -- Fix the bug where you can spam Schoolbag switches to get permanent invincibility from
   -- My Little Unicorn and Unicorn Stump
-  if (g.p:HasCollectible(CollectibleType.COLLECTIBLE_MY_LITTLE_UNICORN) or -- 77
-      g.p:HasCollectible(CollectibleType.COLLECTIBLE_UNICORN_STUMP)) and -- 298
-     g.p:HasInvincibility() then
-
-      g.p:ClearTemporaryEffects()
+  if (
+    (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_MY_LITTLE_UNICORN) -- 77
+      or g.p:HasCollectible(CollectibleType.COLLECTIBLE_UNICORN_STUMP) -- 298
+    )
+    and g.p:HasInvincibility()
+  ) then
+    g.p:ClearTemporaryEffects()
     Isaac.DebugString("Ended My Little Unicorn / Unicorn Stump invulnerability early.")
   end
 
@@ -392,13 +417,16 @@ function Schoolbag:Switch()
   Isaac.DebugString("Set charges to: " .. tostring(totalCharges))
 
   -- Fix the bug where the charge sound will play if the item is fully charged or partially charged
-  if g.p:GetActiveCharge() == maxCharges and
-     g.sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) then -- 170
-
+  if (
+    g.p:GetActiveCharge() == maxCharges
+    and g.sfx:IsPlaying(SoundEffect.SOUND_BATTERYCHARGE) -- 170
+  ) then
     g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
   end
-  if g.p:GetActiveCharge() ~= 0 and
-     g.sfx:IsPlaying(SoundEffect.SOUND_BEEP) then -- 171
+  if (
+    g.p:GetActiveCharge() ~= 0
+    and g.sfx:IsPlaying(SoundEffect.SOUND_BEEP) -- 171
+  ) then
 
     g.sfx:Stop(SoundEffect.SOUND_BEEP) -- 171
   end
@@ -406,35 +434,40 @@ function Schoolbag:Switch()
   -- Update the cache (in case the new or old item granted stats, like A Pony)
   -- (we don't want to update the familiar cache because it can cause bugs with Dino Baby and
   -- cause temporary familiars to despawn)
-  local allCacheFlagsMinusFamiliars = CacheFlag.CACHE_DAMAGE + -- 1
-                                      CacheFlag.CACHE_FIREDELAY + -- 2
-                                      CacheFlag.CACHE_SHOTSPEED + -- 4
-                                      CacheFlag.CACHE_RANGE + -- 8
-                                      CacheFlag.CACHE_SPEED + -- 16
-                                      CacheFlag.CACHE_TEARFLAG + -- 32
-                                      CacheFlag.CACHE_TEARCOLOR + -- 64
-                                      CacheFlag.CACHE_FLYING + -- 128
-                                      CacheFlag.CACHE_WEAPON + -- 256
-                                      CacheFlag.CACHE_LUCK -- 1024
+  local allCacheFlagsMinusFamiliars = (
+    CacheFlag.CACHE_DAMAGE -- 1
+    + CacheFlag.CACHE_FIREDELAY -- 2
+    + CacheFlag.CACHE_SHOTSPEED -- 4
+    + CacheFlag.CACHE_RANGE -- 8
+    + CacheFlag.CACHE_SPEED -- 16
+    + CacheFlag.CACHE_TEARFLAG -- 32
+    + CacheFlag.CACHE_TEARCOLOR -- 64
+    + CacheFlag.CACHE_FLYING -- 128
+    + CacheFlag.CACHE_WEAPON -- 256
+    + CacheFlag.CACHE_LUCK -- 1024
+  )
   g.p:AddCacheFlags(allCacheFlagsMinusFamiliars)
   g.p:EvaluateItems()
 
   -- If the old active item granted a non-temporary costume, we need to remove it
   -- Only certain specific items grant permanent costumes;
   -- this list was determined by testing all active items through trial and error
-  if activeItem == CollectibleType.COLLECTIBLE_KAMIKAZE or -- 40
-     activeItem == CollectibleType.COLLECTIBLE_MONSTROS_TOOTH or -- 86
-     activeItem == CollectibleType.COLLECTIBLE_PONY or -- 130
-     activeItem == CollectibleType.COLLECTIBLE_WHITE_PONY then -- 181
-
+  if (
+    activeItem == CollectibleType.COLLECTIBLE_KAMIKAZE -- 40
+    or activeItem == CollectibleType.COLLECTIBLE_MONSTROS_TOOTH -- 86
+    or activeItem == CollectibleType.COLLECTIBLE_PONY -- 130
+    or activeItem == CollectibleType.COLLECTIBLE_WHITE_PONY -- 181
+  ) then
     g.p:RemoveCostume(g.itemConfig:GetCollectible(activeItem))
   end
 
   -- Set the item hold cooldown to 0 since this doesn't count as picking up a new item
-  -- (this fixes the bug where you can't immediately pick up a new item after performing a Schoolbag switch)
+  -- (this fixes the bug where you can't immediately pick up a new item after performing a Schoolbag
+  -- switch)
   g.p.ItemHoldCooldown = 0
 
-  -- Tell The Babies Mod to reload the sprite just in case the new active item has a costume and it messes up the sprite
+  -- Tell The Babies Mod to reload the sprite just in case the new active item has a costume and it
+  -- messes up the sprite
   if SinglePlayerCoopBabies ~= nil then
     SinglePlayerCoopBabies.run.reloadSprite = true
   end
@@ -442,24 +475,34 @@ end
 
 -- Called from the MC_POST_UPDATE callback
 function Schoolbag:CheckRemoved()
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-     not g.run.schoolbag.present then
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    and not g.run.schoolbag.present
+  ) then
     -- We just got the Schoolbag for the first time
     g.run.schoolbag.present = true
   end
 
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-     g.run.schoolbag.present then
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    and g.run.schoolbag.present
+  ) then
     -- We had the Schoolbag collectible at some point in the past and now it is gone
     g.run.schoolbag.present = false
     if g.run.schoolbag.item ~= 0 then
       -- Drop the item that was in the Schoolbag on the ground
       -- (spawn it with an InitSeed of 0 so that it will be replaced on the next frame)
       local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-      local collectible = g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                    position, g.zeroVector, nil, g.run.schoolbag.item, 0):ToPickup()
+      local collectible = g.g:Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_COLLECTIBLE, -- 100
+        position,
+        g.zeroVector,
+        nil,
+        g.run.schoolbag.item,
+        0
+      ):ToPickup()
+
       -- We need to transfer back the current charge to the item
       -- Furthermore, we do not need to worry about the case of The Battery overcharge,
       -- because by using the D4 or the D100, they will have rerolled away The Battery

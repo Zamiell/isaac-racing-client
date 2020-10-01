@@ -6,9 +6,7 @@ local g = require("racing_plus/globals")
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function SeededRooms:PostNewRoom()
   -- We only want to manually create certain rooms in seeded races
-  if g.race.rFormat ~= "seeded" or
-     g.race.status ~= "in progress" then
-
+  if g.race.rFormat ~= "seeded" or g.race.status ~= "in progress" then
     return
   end
 
@@ -54,10 +52,12 @@ function SeededRooms:DevilRoom()
   end
 
   -- Second, find out how many item pedestals we should spawn
-  -- We remove the 1x 10 red chests room (0.1 weight) because it can cause different items to spawn on the same seed
+  -- We remove the 1x 10 red chests room (0.1 weight) because it can cause different items to spawn
+  -- on the same seed
   g.RNGCounter.DevilRoomChoice = g:IncrementRNG(g.RNGCounter.DevilRoomChoice)
   math.randomseed(g.RNGCounter.DevilRoomChoice)
-  local roomRoll = math.random(1, 1695) -- The total weight of all of the rooms is 17.05 - 0.1 = 16.95
+  -- The total weight of all of the rooms is 17.05 - 0.1 = 16.95
+  local roomRoll = math.random(1, 1695)
 
   if roomRoll <= 110 then
     -- 1x 1 pedestal + 4 bombs (1 weight)
@@ -68,40 +68,60 @@ function SeededRooms:DevilRoom()
       if i == 2 then
         pos = g:GridToPos(8, 4)
       end
-      Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, BombSubType.BOMB_DOUBLEPACK, -- 5.40.2
-                  pos, g.zeroVector, nil)
+      Isaac.Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_BOMB, -- 40
+        BombSubType.BOMB_DOUBLEPACK, -- 2
+        pos,
+        g.zeroVector,
+        nil
+      )
     end
-
   elseif roomRoll <= 210 then
     -- 1x 1 pedestal + ? card (1 weight)
     SeededRooms:SpawnPedestalDevilRoom(5, 4)
 
     local pos = g:GridToPos(7, 4)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.CARD_QUESTIONMARK, -- 5.300.48
-                pos, g.zeroVector, nil)
-
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_TAROTCARD, -- 300
+      Card.CARD_QUESTIONMARK, -- 48
+      pos,
+      g.zeroVector,
+      nil
+    )
   elseif roomRoll <= 310 then
     -- 1x 1 pedestal + black rune (1 weight)
     local pos = g:GridToPos(5, 4)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, Card.RUNE_BLACK, -- 5.300.41
-                pos, g.zeroVector, nil)
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_TAROTCARD, -- 300
+      Card.RUNE_BLACK, -- 41
+      pos,
+      g.zeroVector,
+      nil
+    )
 
     SeededRooms:SpawnPedestalDevilRoom(7, 4)
-
   elseif roomRoll <= 410 then
     -- 1x 1 pedestal + Devil Beggar (1 weight)
     SeededRooms:SpawnPedestalDevilRoom(5, 4)
 
     g.RNGCounter.DevilRoomBeggar = g:IncrementRNG(g.RNGCounter.DevilRoomBeggar)
     local pos2 = g:GridToPos(7, 4)
-    g.g:Spawn(EntityType.ENTITY_SLOT, 5, -- 6.5
-              pos2, g.zeroVector, nil, 0, g.RNGCounter.DevilRoomBeggar)
-
+    g.g:Spawn(
+      EntityType.ENTITY_SLOT, -- 6
+      5,
+      pos2,
+      g.zeroVector,
+      nil,
+      0,
+      g.RNGCounter.DevilRoomBeggar
+    )
   elseif roomRoll <= 1610 then
     -- 12x 2 pedestals (12 weight)
     SeededRooms:SpawnPedestalDevilRoom(5, 4)
     SeededRooms:SpawnPedestalDevilRoom(7, 4)
-
   elseif roomRoll <= 1695 then
     -- 1x 3 pedestals (0.85 weight)
     for x = 4, 8 do
@@ -119,7 +139,6 @@ function SeededRooms:DevilRoom()
         end
       end
     end
-
   elseif roomRoll <= 1705 then
     -- 1x 4 pedestals (0.1 weight)
     for x = 3, 9 do
@@ -149,8 +168,14 @@ end
 function SeededRooms:SpawnPedestalDevilRoom(x, y)
   -- The collectible will be manually chosen in the PreGetCollectible callback
   local pos = g:GridToPos(x, y)
-  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_SHOPITEM, 0, -- 5.150.0
-              pos, g.zeroVector, nil)
+  Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_SHOPITEM, -- 150
+    0,
+    pos,
+    g.zeroVector,
+    nil
+  )
   -- (we do not care about the seed because it will be replaced on the next frame)
 end
 
@@ -167,7 +192,6 @@ function SeededRooms:AngelRoom()
 
     -- Spawn the Angel Statue
     g.r:SpawnGridEntity(52, GridEntityType.GRID_STATUE, 1, 0, 0) -- 21
-
   elseif roomRoll <= 13 then
     -- 1x 3 pedestals (1 weight)
     SeededRooms:SpawnPedestalAngelRoom(0, 0)
@@ -186,7 +210,6 @@ function SeededRooms:AngelRoom()
 
     -- Spawn the Angel Statue
     g.r:SpawnGridEntity(52, GridEntityType.GRID_STATUE, 1, 0, 0) -- 21
-
   elseif roomRoll <= 14 then
     -- 1x 1 pedestal + 2 Eternal Chests (1 weight)
     SeededRooms:SpawnPedestalAngelRoom(6, 4)
@@ -202,10 +225,16 @@ function SeededRooms:AngelRoom()
       if i == 2 then
         pos = g:GridToPos(8, 4)
       end
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_ETERNALCHEST, -- 5.53
-                pos, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomMisc)
+      g.g:Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_ETERNALCHEST, -- 53
+        pos,
+        g.zeroVector,
+        nil,
+        0,
+        g.RNGCounter.AngelRoomMisc
+      )
     end
-
   elseif roomRoll <= 15 then
     -- 1x 1 pedestal + 1 random bomb (1 weight)
     SeededRooms:SpawnPedestalAngelRoom(6, 4)
@@ -213,13 +242,19 @@ function SeededRooms:AngelRoom()
     -- 1x Random Bomb
     g.RNGCounter.AngelRoomMisc = g:IncrementRNG(g.RNGCounter.AngelRoomMisc)
     local pos = g:GridToPos(6, 1)
-    g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, -- 5.40
-              pos, g.zeroVector, nil, 0, g.RNGCounter.AngelRoomMisc)
+    g.g:Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BOMB, -- 40
+      pos,
+      g.zeroVector,
+      nil,
+      0,
+      g.RNGCounter.AngelRoomMisc
+    )
 
     -- Spawn 2 Angel Statues
     g.r:SpawnGridEntity(50, GridEntityType.GRID_STATUE, 1, 0, 0) -- 21
     g.r:SpawnGridEntity(54, GridEntityType.GRID_STATUE, 1, 0, 0) -- 21
-
   elseif roomRoll <= 16 then
     -- 1x 1 pedestal (1 weight)
     SeededRooms:SpawnPedestalAngelRoom(6, 4)
@@ -233,8 +268,14 @@ end
 function SeededRooms:SpawnPedestalAngelRoom(x, y)
   -- The collectible will be manually chosen in the PreGetCollectible callback
   local pos = g:GridToPos(x, y)
-  local entity = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0, -- 5.100.0
-                             pos, g.zeroVector, nil)
+  local entity = Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    0,
+    pos,
+    g.zeroVector,
+    nil
+  )
   -- (we do not care about the seed because it will be replaced on the next frame)
   entity:ToPickup().TheresOptionsPickup = true
 end
@@ -242,9 +283,7 @@ end
 -- ModCallbacks.MC_PRE_ENTITY_SPAWN (24)
 function SeededRooms:PreEntitySpawn(entityType, variant, subType, seed)
   -- We only want to delete things in seeded races
-  if g.race.rFormat ~= "seeded" or
-     g.race.status ~= "in progress" then
-
+  if g.race.rFormat ~= "seeded" or g.race.status ~= "in progress" then
     return
   end
 
@@ -254,9 +293,10 @@ function SeededRooms:PreEntitySpawn(entityType, variant, subType, seed)
   end
 
   local roomType = g.r:GetType()
-  if roomType == RoomType.ROOM_DEVIL or -- 14
-     roomType == RoomType.ROOM_ANGEL then -- 15
-
+  if (
+    roomType == RoomType.ROOM_DEVIL -- 14
+    or roomType == RoomType.ROOM_ANGEL -- 15
+  ) then
     return {999, 0, 0} -- Equal to 1000.0, which is a blank effect, which is essentially nothing
   end
 end

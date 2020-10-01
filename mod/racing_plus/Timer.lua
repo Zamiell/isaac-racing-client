@@ -1,10 +1,10 @@
 local Timer = {}
 
 -- Includes
-local g           = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local SeededDeath = require("racing_plus/seededdeath")
-local Speedrun    = require("racing_plus/speedrun")
-local Season6     = require("racing_plus/season6")
+local Speedrun = require("racing_plus/speedrun")
+local Season6 = require("racing_plus/season6")
 
 -- Variables
 Timer.sprites = {}
@@ -13,10 +13,11 @@ Timer.sprites = {}
 function Timer:Display()
   -- Always show the timer in a speedrun
   -- Don't show the timer if the race has not started yet or they quit in the middle of the race
-  if not Speedrun:InSpeedrun() and
-     not g.raceVars.started and
-     not g.raceVars.finished then
-
+  if (
+    not Speedrun:InSpeedrun()
+    and not g.raceVars.started
+    and not g.raceVars.finished
+  ) then
     return
   end
 
@@ -111,12 +112,17 @@ function Timer:Display()
   Timer.sprites.digit[3]:SetFrame("Default", timeTable[4])
   Timer.sprites.digit[3]:RenderLayer(0, posSecond1)
 
-  local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
+  local posSecond2 = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2,
+    startingY
+  )
   Timer.sprites.digit[4]:SetFrame("Default", timeTable[5])
   Timer.sprites.digit[4]:RenderLayer(0, posSecond2)
 
-  local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
-                           startingY + 1)
+  local posTenths = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
+    startingY + 1
+  )
   Timer.sprites.digitMini:SetFrame("Default", timeTable[6])
   Timer.sprites.digitMini:RenderLayer(0, posTenths)
 end
@@ -225,12 +231,17 @@ function Timer:DisplayRun()
   Timer.sprites.digit2[3]:SetFrame("Default", timeTable[4])
   Timer.sprites.digit2[3]:RenderLayer(0, posSecond1)
 
-  local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
+  local posSecond2 = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2,
+    startingY
+  )
   Timer.sprites.digit2[4]:SetFrame("Default", timeTable[5])
   Timer.sprites.digit2[4]:RenderLayer(0, posSecond2)
 
-  local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
-                           startingY + 1)
+  local posTenths = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
+    startingY + 1
+  )
   Timer.sprites.digitMini2:SetFrame("Default", timeTable[6])
   Timer.sprites.digitMini2:RenderLayer(0, posTenths)
 end
@@ -251,11 +262,11 @@ function Timer:DisplaySeededDeath()
       -- The timer needs to be moved to the right to account for the "(S#)" icon
       adjustTimerRight = true
     end
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") and
-         Speedrun.charNum == 1 and
-         g.run.roomsEntered == 1 then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    and Speedrun.charNum == 1
+    and g.run.roomsEntered == 1
+  ) then
     local timeReset = Season6.timeItemAssigned + Season6.itemLockTime
     elapsedTime = timeReset - Isaac.GetTime()
     moveTimerToBottomRight = true
@@ -352,12 +363,17 @@ function Timer:DisplaySeededDeath()
   Timer.sprites.digit3[3]:SetFrame("Default", timeTable[4])
   Timer.sprites.digit3[3]:RenderLayer(0, posSecond1)
 
-  local posSecond2 = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2, startingY)
+  local posSecond2 = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2,
+    startingY
+  )
   Timer.sprites.digit3[4]:SetFrame("Default", timeTable[5])
   Timer.sprites.digit3[4]:RenderLayer(0, posSecond2)
 
-  local posTenths = Vector(startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
-                           startingY + 1)
+  local posTenths = Vector(
+    startingX + digitLength + 11 + digitLength + 1 - hourAdjustment2 + digitLength,
+    startingY + 1
+  )
   Timer.sprites.digitMini3:SetFrame("Default", timeTable[6])
   Timer.sprites.digitMini3:RenderLayer(0, posTenths)
 end

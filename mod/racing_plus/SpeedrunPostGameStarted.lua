@@ -1,16 +1,17 @@
 local SpeedrunPostGameStarted = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Speedrun  = require("racing_plus/speedrun")
-local Season1   = require("racing_plus/season1")
-local Season2   = require("racing_plus/season2")
-local Season3   = require("racing_plus/season3")
-local Season4   = require("racing_plus/season4")
-local Season5   = require("racing_plus/season5")
-local Season6   = require("racing_plus/season6")
-local Season7   = require("racing_plus/season7")
-local Season8   = require("racing_plus/season8")
+local g = require("racing_plus/globals")
+local Speedrun = require("racing_plus/speedrun")
+local Season1 = require("racing_plus/season1")
+local Season2= require("racing_plus/season2")
+local Season3 = require("racing_plus/season3")
+local Season4 = require("racing_plus/season4")
+local Season5 = require("racing_plus/season5")
+local Season6 = require("racing_plus/season6")
+local Season7 = require("racing_plus/season7")
+local Season8 = require("racing_plus/season8")
+local Season9 = require("racing_plus/season9")
 
 -- Called from the "PostGameStarted:Main()" function
 function SpeedrunPostGameStarted:Main()
@@ -32,13 +33,18 @@ function SpeedrunPostGameStarted:Main()
   if Speedrun.liveSplitReset then
     Speedrun.liveSplitReset = false
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_OFF_LIMITS, 0, false)
-    Isaac.DebugString("Reset the LiveSplit AutoSplitter by giving \"Off Limits\", item ID " ..
-                      tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. ".")
-    Isaac.DebugString("Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. " (Off Limits)")
+    Isaac.DebugString(
+      "Reset the LiveSplit AutoSplitter by giving \"Off Limits\", item ID "
+      .. tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. "."
+    )
+    Isaac.DebugString(
+      "Removing collectible " .. tostring(CollectibleType.COLLECTIBLE_OFF_LIMITS) .. " (Off Limits)"
+    )
   end
 
   -- Move to the first character if we finished
-  -- (this has to be above the challenge name check so that the fireworks won't carry over to another run)
+  -- (this has to be above the challenge name check so that the fireworks won't carry over to
+  -- another run)
   if Speedrun.finished then
     Speedrun.charNum = 1
     Speedrun.finished = false
@@ -46,7 +52,9 @@ function SpeedrunPostGameStarted:Main()
     Speedrun.finishedFrames = 0
     Speedrun.fastReset = false
     g.run.restart = true
-    Isaac.DebugString("Restarting to go back to the first character (since we finished the speedrun).")
+    Isaac.DebugString(
+      "Restarting to go back to the first character (since we finished the speedrun)."
+    )
     return
   end
 
@@ -69,19 +77,22 @@ function SpeedrunPostGameStarted:Main()
   if character ~= correctCharacter then
     Speedrun.fastReset = true
     g.run.restart = true
-    Isaac.DebugString("Restarting because we are on character " .. tostring(character) ..
-                      " and we need to be on character " .. tostring(correctCharacter))
+    Isaac.DebugString(
+      "Restarting because we are on character " .. tostring(character)
+      .. " and we need to be on character " .. tostring(correctCharacter)
+    )
     return
   end
 
   -- Check if they want to go back to the first character
   if Speedrun.fastReset then
     Speedrun.fastReset = false
-
-  elseif not Speedrun.fastReset and
-         Speedrun.charNum ~= 1 then
-
-    -- They held R, and they are not on the first character, so they want to restart from the first character
+  elseif (
+    not Speedrun.fastReset
+    and Speedrun.charNum ~= 1
+  ) then
+    -- They held R, and they are not on the first character,
+    -- so they want to restart from the first character
     Speedrun.charNum = 1
     Speedrun.selectedItemStarts = {}
     g.run.restart = true
@@ -107,15 +118,21 @@ function SpeedrunPostGameStarted:Main()
       Season7:PostGameStartedFirstCharacter()
     elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
       Season8:PostGameStartedFirstCharacter()
+    elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)") then
+      Season9:PostGameStartedFirstCharacter()
     end
   end
 
-  -- The first character of the speedrun always gets More Options to speed up the process of getting a run going
+  -- The first character of the speedrun always gets More Options to speed up the process of getting
+  -- a run going
   -- (but Season 4 and Season 6 never get it, since there is no resetting involved)
-  if Speedrun.charNum == 1 and
-     (challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)") and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) then
-
+  if (
+    Speedrun.charNum == 1
+    and (
+      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 4)")
+      and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    )
+  ) then
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS, 0, false) -- 414
     g.p:RemoveCostume(g.itemConfig:GetCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS))
     -- We don't want the costume to show
@@ -146,6 +163,8 @@ function SpeedrunPostGameStarted:Main()
     Season7:PostGameStarted()
   elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") then
     Season8:PostGameStarted()
+  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)") then
+    Season9:PostGameStarted()
   else
     Isaac.DebugString("Error: Unknown challenge.")
   end

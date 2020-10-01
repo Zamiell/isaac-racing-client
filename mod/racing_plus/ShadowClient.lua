@@ -1,37 +1,38 @@
+local ShadowClient = {}
+
 -- Includes
-local g            = require("racing_plus/globals")
-local ShadowModel  = require("racing_plus/shadowmodel")
+local g = require("racing_plus/globals")
+local ShadowModel = require("racing_plus/shadowmodel")
 
 -- Connection
 local isaacServerHost = "isaacracing.net"
 local isaacServerPort = 9001
 
 -- Client
-local ShadowClient = {
-  connected = false, -- Represents connection to mod server (mostly for shadow render)
-  socket = g.socket,
-  maxBufferSize = 1024
-}
+ShadowClient.connected = false -- Represents connection to mod server (mostly for shadow render)
+ShadowClient.maxBufferSize = 1024
 
 function ShadowClient:Connect()
-  if not ShadowClient.socket then
+  if not g.socket then
     return
   end
 
   if not ShadowClient.connected then
     Isaac.DebugString('Connecting to mod server')
 
-    local udp = ShadowClient.socket.udp4()
+    local udp = g.socket.udp4()
     udp:settimeout(0)
     udp:setpeername(isaacServerHost, isaacServerPort)
 
     local host, port, af = udp:getpeername()
-    if af and host and port then
+    if host and port and af then
       Isaac.DebugString("Egress raddr: (" .. af .. ") " .. host .. ':' .. port)
-    else return end
+    else
+      return
+    end
 
     host, port, af = udp:getsockname()
-    if af and host and port then
+    if host and port and af then
       Isaac.DebugString("Egress laddr: (" .. af .. ") " .. host .. ':' .. port)
     else
       return
@@ -39,7 +40,7 @@ function ShadowClient:Connect()
 
     ShadowClient.conn = udp
     ShadowClient.connected = true
-    Isaac.DebugString('Connected to mod server')
+    Isaac.DebugString('Connected to UDP server.')
   end
 end
 
@@ -52,7 +53,7 @@ function ShadowClient:Disconnect()
     ShadowClient.conn:close()
     ShadowClient.conn = nil
     ShadowClient.connected = false
-    Isaac.DebugString('Disconnected from Modserver')
+    Isaac.DebugString('Disconnected from UDP server.')
   end
 end
 

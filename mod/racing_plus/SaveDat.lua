@@ -1,8 +1,8 @@
 local SaveDat = {}
 
 -- Includes
-local json    = require("json")
-local g       = require("racing_plus/globals")
+local json = require("json")
+local g = require("racing_plus/globals")
 local Sprites = require("racing_plus/sprites")
 
 -- Variables
@@ -13,16 +13,23 @@ function SaveDat:Load()
   -- Local variables
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if g.raceVars.loadOnNextFrame or -- We need to check on the first frame of the run
-     (g.race.status == "starting" and
-     -- We want to check for updates on every other frame if the race is starting so that the countdown is smooth
-     isaacFrameCount & 1 == 0) or -- (this is the same as "isaacFrameCount % 2 == 0", but runs 20% faster)
-     -- Otherwise, only check for updates every half second, since file reads are expensive
-     isaacFrameCount % 30 == 0 then
-
+  if (
+    g.raceVars.loadOnNextFrame -- We need to check on the first frame of the run
+    or (
+      g.race.status == "starting"
+     -- We want to check for updates on every other frame if the race is starting so that the
+     -- countdown is smooth
+     -- This is the same as "isaacFrameCount % 2 == 0", but runs 20% faster
+     and isaacFrameCount & 1 == 0
+    )
+    -- Otherwise, only check for updates every half second, since file reads are expensive
+    or isaacFrameCount % 30 == 0
+  ) then
     -- Check to see if there a "save.dat" file for this save slot
     if not Isaac.HasModData(g.RacingPlus) then
-      Isaac.DebugString("The \"save.dat\" file does not exist for this save slot. Writing defaults.")
+      Isaac.DebugString(
+        "The \"save.dat\" file does not exist for this save slot. Writing defaults."
+      )
       SaveDat:Save()
       return
     end
@@ -44,7 +51,9 @@ function SaveDat:Load()
       g.race = oldRace -- Restore the backup
       SaveDat.failedCounter = SaveDat.failedCounter + 1
       if SaveDat.failedCounter >= 100 then
-        Isaac.DebugString("Loading the \"save.dat\" file failed 100 times in a row. Writing defaults.")
+        Isaac.DebugString(
+          "Loading the \"save.dat\" file failed 100 times in a row. Writing defaults."
+        )
         SaveDat:Save()
       else
         Isaac.DebugString("Loading the \"save.dat\" file failed. Trying again on the next frame...")
@@ -118,15 +127,13 @@ end
 
 function SaveDat:ChangedStatus()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
 
   if g.race.status == "open" then
     if stage == 1 and roomIndex == g.l:GetStartingRoomIndex() then
-      -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
+      -- Doing a "restart" won't work if we are just starting a run,
+      -- so mark to reset on the next frame
       g.run.restart = true
       Isaac.DebugString("Restarting so that we can go to the race room.")
       return
@@ -141,16 +148,15 @@ function SaveDat:ChangedStatus()
       end
       g.showPlaceGraphic = true
     end
-
   elseif g.race.status == "starting" then
     -- Remove the final place graphic, if present
     Sprites:Init("place2", 0)
-
-  elseif g.race.status == "in progress" or
-         (g.race.status == "none" and
-          roomIndex == GridRooms.ROOM_DEBUG_IDX) then -- -3
-
-    -- Doing a "restart" won't work if we are just starting a run, so mark to reset on the next frame
+  elseif (
+    g.race.status == "in progress"
+    or (g.race.status == "none" and roomIndex == GridRooms.ROOM_DEBUG_IDX) -- -3
+  ) then
+    -- Doing a "restart" won't work if we are just starting a run,
+    -- so mark to reset on the next frame
     g.run.restart = true
     Isaac.DebugString("Restarting because we want to exit the race room.")
     return
@@ -159,23 +165,19 @@ end
 
 function SaveDat:ChangedMyStatus()
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
 
-  if (g.race.status == "open" or
-      g.race.status == "starting") and
-     g.race.myStatus == "not ready" and
-     roomIndex ~= GridRooms.ROOM_DEBUG_IDX then -- -3
-
+  if (
+    (g.race.status == "open" or g.race.status == "starting")
+    and g.race.myStatus == "not ready"
+    and roomIndex ~= GridRooms.ROOM_DEBUG_IDX -- -3
+  ) then
     Sprites:Init("place", "pre1")
-
-  elseif (g.race.status == "open" or
-          g.race.status == "starting") and
-         g.race.myStatus == "ready" and
-         roomIndex ~= GridRooms.ROOM_DEBUG_IDX then -- -3
-
+  elseif (
+    (g.race.status == "open" or g.race.status == "starting")
+    and g.race.myStatus == "ready"
+    and roomIndex ~= GridRooms.ROOM_DEBUG_IDX -- -3
+  ) then
     Sprites:Init("place", "pre2")
   end
 end
@@ -183,7 +185,8 @@ end
 function SaveDat:ChangedFormat()
   if g.race.rFormat == "pageant" then
     -- For special rulesets, fix the bug where it is not loaded on the first run
-    -- Doing a "restart" won't work since we are just starting a run, so mark to reset on the next frame
+    -- Doing a "restart" won't work since we are just starting a run,
+    -- so mark to reset on the next frame
     g.run.restart = true
     Isaac.DebugString("Restarting because the race format was changed to \"pageant\".")
   end

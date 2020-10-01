@@ -1,7 +1,7 @@
 local Season5 = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
 
 --
@@ -44,13 +44,14 @@ function Season5:PostItemPickup()
   -- Local variables
   local challenge = Isaac.GetChallenge()
 
-  if challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     #g.run.passiveItems ~= 1 or
-     Speedrun.charNum ~= 1 or
-     g.run.roomsEntered < 2 then
-     -- (characters can start with a starting item,
-     -- so we want to make sure that we enter at least one room)
-
+  if (
+    challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 5)")
+    or #g.run.passiveItems ~= 1
+    or Speedrun.charNum ~= 1
+    -- Characters can start with a starting item,
+    -- so we want to make sure that we enter at least one room
+    or g.run.roomsEntered < 2
+  ) then
     return
   end
 
@@ -61,8 +62,10 @@ function Season5:PostItemPickup()
     end
   end
   Speedrun.selectedItemStarts[1] = g.run.passiveItems[1]
-  Isaac.DebugString("Starting item " .. tostring(Speedrun.selectedItemStarts[1]) ..
-                    " on the first character of an insta-start speedrun.")
+  Isaac.DebugString(
+    "Starting item " .. tostring(Speedrun.selectedItemStarts[1])
+    .. " on the first character of an insta-start speedrun."
+  )
 end
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
@@ -87,7 +90,8 @@ function Season5:PostGameStarted()
     return
   end
 
-  -- As a safety measure, check to see if the "selectedItemStarts" table has a value in it for the first character
+  -- As a safety measure,
+  -- check to see if the "selectedItemStarts" table has a value in it for the first character
   -- (it should contain one item, equal to the item that was started on the first character)
   if #Speedrun.selectedItemStarts < 1 then
     -- Just assume that they started the Sad Onion

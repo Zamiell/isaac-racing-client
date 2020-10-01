@@ -1,7 +1,7 @@
 local SeededDeath = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- Enums
@@ -26,9 +26,10 @@ function SeededDeath:PostUpdate()
 
   -- Fix the bug where The Forgotten will not be properly faded
   -- if he switched from The Soul immediately before the debuff occured
-  if g.run.fadeForgottenFrame ~= 0 and
-     gameFrameCount >= g.run.fadeForgottenFrame then
-
+  if (
+    g.run.fadeForgottenFrame ~= 0
+    and gameFrameCount >= g.run.fadeForgottenFrame
+  ) then
     g.run.fadeForgottenFrame = 0
 
     -- Re-fade the player
@@ -36,10 +37,11 @@ function SeededDeath:PostUpdate()
   end
 
   -- Check to see if the (fake) death animation is over
-  if g.run.seededDeath.state == SeededDeath.state.DEATH_ANIMATION and
-     g.run.seededDeath.reviveFrame ~= 0 and
-     gameFrameCount >= g.run.seededDeath.reviveFrame then
-
+  if (
+    g.run.seededDeath.state == SeededDeath.state.DEATH_ANIMATION
+    and g.run.seededDeath.reviveFrame ~= 0
+    and gameFrameCount >= g.run.seededDeath.reviveFrame
+  ) then
     g.run.seededDeath.reviveFrame = 0
     g.run.seededDeath.state = SeededDeath.state.CHANGING_ROOMS
     g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
@@ -113,8 +115,13 @@ function SeededDeath:PostNewRoom()
 
   -- Make any Checkpoints not touchable
   if g.run.seededDeath.state > 0 then
-    local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                         CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
+    local checkpoints = Isaac.FindByType(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_COLLECTIBLE, -- 100
+      CollectibleType.COLLECTIBLE_CHECKPOINT,
+      false,
+      false
+    )
     for _, checkpoint in ipairs(checkpoints) do
       checkpoint:ToPickup().Timeout = 10000000
       Isaac.DebugString("Delayed a Checkpoint due to seeded death.")
@@ -126,18 +133,22 @@ function SeededDeath:PostNewRoom()
     -- Play the death animation again, since entering a new room canceled it
     g.p:PlayExtraAnimation("Death")
 
-    -- We need to disable the controls, or the player will be able to move around during the death animation
-    -- If we disable them now, it will not apply, since you cannot disable controls inside of this callback
+    -- We need to disable the controls,
+    -- or the player will be able to move around during the death animation
+    -- If we disable them now, it will not apply,
+    -- since you cannot disable controls inside of this callback
     -- So mark to disable the controls during the next post-update frame
     g.run.disableControls = true
 
-    -- We need to disable the collision, or else enemies will be able to push around the body during the death animation
+    -- We need to disable the collision,
+    -- or else enemies will be able to push around the body during the death animation
     g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   end
 
   -- Put the player in the fetal position (the "AppearVanilla" animation)
   if g.run.seededDeath.state == SeededDeath.state.CHANGING_ROOMS then
-    -- Do not continue on with the custom death mechanic if the 50% roll for Guppy's Collar was successful
+    -- Do not continue on with the custom death mechanic if the 50% roll for Guppy's Collar was
+    -- successful
     if g.run.seededDeath.guppysCollar then
       g.run.seededDeath.state = SeededDeath.state.DISABLED
       g.run.seededDeath.guppysCollar = false
@@ -181,11 +192,15 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   end
 
   -- Check to see if this is a situation where the custom death mechanic should apply
-  if (g.run.seededDeath.state == SeededDeath.state.DISABLED or
-      g.run.seededDeath.state == SeededDeath.state.GHOST_FORM) and
-     (g.race.rFormat ~= "seeded" and
-      challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")) then -- 10
-
+  if (
+    (
+      g.run.seededDeath.state == SeededDeath.state.DISABLED
+      or g.run.seededDeath.state == SeededDeath.state.GHOST_FORM
+    ) and (
+      g.race.rFormat ~= "seeded"
+      and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    )
+  ) then
     return
   end
 
@@ -193,9 +208,9 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   local totalHealth = hearts + eternalHearts + soulHearts + boneHearts
   if damageAmount < totalHealth then
     Isaac.DebugString(
-      "SeededDeath:EntityTakeDmg() - Non-fatal damage detected. " ..
-      "(totalHealth: " .. tostring(totalHealth) .. ", " ..
-      "damageAmount: " .. tostring(damageAmount) .. ")"
+      "SeededDeath:EntityTakeDmg() - Non-fatal damage detected. "
+      .. "(totalHealth: " .. tostring(totalHealth) .. ", "
+      .. "damageAmount: " .. tostring(damageAmount) .. ")"
     )
     return
   end
@@ -204,12 +219,16 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- e.g. a bomb explosion deals 2 damage,
   -- but if the player has one half soul heart and one half red heart,
   -- the game will only remove the soul heart
-  if (hearts > 0 and soulHearts > 0) or
-     (hearts > 0 and boneHearts > 0) or
-     (soulHearts > 0 and boneHearts > 0) or
-     boneHearts >= 2 then -- Two bone hearts and nothing else should not result in a death
+  if (
+    (hearts > 0 and soulHearts > 0)
+    or (hearts > 0 and boneHearts > 0)
+    or (soulHearts > 0 and boneHearts > 0)
+    or boneHearts >= 2 -- Two bone hearts and nothing else should not result in a death
+  ) then
 
-    Isaac.DebugString("SeededDeath:EntityTakeDmg() - Non-fatal damage detected; different types of hearts detected.")
+    Isaac.DebugString(
+      "SeededDeath:EntityTakeDmg() - Non-fatal damage detected; different types of hearts detected."
+    )
     return
   end
 
@@ -219,15 +238,18 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
     -- We handle Guppy's Collar manually
     extraLives = extraLives - 1
   end
-  if g.p:HasTrinket(TrinketType.TRINKET_MISSING_POSTER) and -- 23
-     not g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
-     -- (Mysterious Paper has a chance to give Missing Poster on every frame)
-
+  if (
+    g.p:HasTrinket(TrinketType.TRINKET_MISSING_POSTER) -- 23
+    -- Mysterious Paper has a chance to give Missing Poster on every frame
+    and not g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) -- 21
+  ) then
     -- Having Missing Poster does not affect the extra lives variable, so manually account for this
     extraLives = extraLives + 1
   end
   if extraLives > 0 then
-    Isaac.DebugString("SeededDeath:EntityTakeDmg() - Non-fatal damage detected; extra life detected.")
+    Isaac.DebugString(
+      "SeededDeath:EntityTakeDmg() - Non-fatal damage detected; extra life detected."
+    )
     return
   end
 
@@ -236,20 +258,21 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   -- taken a devil deal and then died to a fire / spikes / etc.)
   if gameFrameCount <= g.run.frameOfLastDD + 150 then
     Isaac.DebugString(
-      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death " ..
-      "mechanic since we are within 5 seconds of a devil deal."
+      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death "
+      .. "mechanic since we are within 5 seconds of a devil deal."
     )
     return
   end
 
   -- Do not revive the player if they are trying to get a "free" item in either
   -- a Sacrifice Room or the Boss Rush
-  if roomType == RoomType.ROOM_SACRIFICE or -- 13
-     roomType == RoomType.ROOM_BOSSRUSH then -- 17
-
+  if (
+    roomType == RoomType.ROOM_SACRIFICE -- 13
+    or roomType == RoomType.ROOM_BOSSRUSH -- 17
+  ) then
     Isaac.DebugString(
-      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death " ..
-      "mechanic since we are in a Sacrifice Room or a Boss Rush."
+      "SeededDeath:EntityTakeDmg() - Fatal damage detected, but not invoking the seeded death "
+      .. "mechanic since we are in a Sacrifice Room or a Boss Rush."
     )
     return
   end
@@ -271,10 +294,12 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
   g.p:PlayExtraAnimation("Death")
   g.sfx:Play(SoundEffect.SOUND_ISAACDIES, 1, 0, false, 1) -- 217
 
-  -- We need to disable the controls, or the player will be able to move around during the death animation
+  -- We need to disable the controls,
+  -- or the player will be able to move around during the death animation
   g.p.ControlsEnabled = false
 
-  -- We need to disable the collision, or else enemies will be able to push around the body during the death animation
+  -- We need to disable the collision,
+  -- or else enemies will be able to push around the body during the death animation
   g.p.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
 
   -- Hide the player's health to obfucate the fact that they are still technically alive
@@ -375,14 +400,15 @@ function SeededDeath:DebuffOn()
   g.run.seededDeath.goldenKey = g.p:HasGoldenKey()
 
   -- We need to remove every item (and store it for later)
-  -- ("player:GetCollectibleNum()" is bugged if you feed it a number higher than the total amount of items and
-  -- can cause the game to crash)
+  -- ("player:GetCollectibleNum()" is bugged if you feed it a number higher than the total amount of
+  -- items and can cause the game to crash)
   for i = 1, g:GetTotalItemCount() do
     local numItems = g.p:GetCollectibleNum(i)
     if numItems > 0 and
        g.p:HasCollectible(i) then
 
-      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as Lilith having 1 Incubus
+      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as Lilith
+      -- having 1 Incubus
       for j = 1, numItems do
         g.run.seededDeath.items[#g.run.seededDeath.items + 1] = i
         g.p:RemoveCollectible(i)
@@ -420,7 +446,8 @@ function SeededDeath:DebuffOn()
   -- The fade will now work if we just switched from The Soul on the last frame,
   -- so mark to redo the fade a few frames from now
   if character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
-    g.run.fadeForgottenFrame = gameFrameCount + 6 -- If we wait 5 frames or less, then the fade will not stick
+    -- If we wait 5 frames or less, then the fade will not stick
+    g.run.fadeForgottenFrame = gameFrameCount + 6
   end
 end
 
@@ -456,9 +483,10 @@ function SeededDeath:DebuffOff()
   for _, itemID in ipairs(g.run.seededDeath.items) do
     -- Make an exception for The Quarter and The Dollar,
     -- since it will just give us extra money
-    if itemID ~= CollectibleType.COLLECTIBLE_QUARTER and -- 74
-       itemID ~= CollectibleType.COLLECTIBLE_DOLLAR then -- 18
-
+    if (
+      itemID ~= CollectibleType.COLLECTIBLE_QUARTER -- 74
+      and itemID ~= CollectibleType.COLLECTIBLE_DOLLAR -- 18
+    ) then
       g.p:AddCollectible(itemID, 0, false)
 
       -- The Halo of Flies item actually gives two Halo of Flies, so we need to remove one
@@ -485,25 +513,35 @@ function SeededDeath:DebuffOff()
   -- Check to see if the active item changed
   -- (meaning that the player picked up a new active item during their ghost state)
   local newActiveItem = g.p:GetActiveItem()
-  if activeItem ~= 0 and
-     newActiveItem ~= activeItem then
-
-    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM) and
-       g.run.schoolbag.item == 0 then
-
+  if (
+    activeItem ~= 0
+    and newActiveItem ~= activeItem
+  ) then
+    if (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+      and g.run.schoolbag.item == 0
+    ) then
       -- There is room in the Schoolbag, so put it in the Schoolbag
       Schoolbag:Put(activeItem, activeCharge)
       Isaac.DebugString("SeededDeath - Put the ghost active inside the Schoolbag.")
-
     else
       -- There is no room in the Schoolbag, so spawn it on the ground
       local position = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-      local pedestal = Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, activeItem, -- 5.100
-                                   position, g.zeroVector, nil):ToPickup()
+      local pedestal = Isaac.Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_COLLECTIBLE, -- 100
+        activeItem,
+        position,
+        g.zeroVector,
+        nil
+      ):ToPickup()
       -- (we do not care about the seed beacuse it will be replaced on the next frame)
+
       pedestal.Charge = activeCharge
       pedestal.Touched = true
-      Isaac.DebugString("SeededDeath - Put the old active item on the ground since there was no room for it.")
+      Isaac.DebugString(
+        "SeededDeath - Put the old active item on the ground since there was no room for it."
+      )
     end
   end
 
@@ -581,7 +619,13 @@ function SeededDeath:DebuffOff()
     end
   elseif character == PlayerType.PLAYER_KEEPER then -- 14
     -- Keeper will get extra blue flies if he was given any items that grant soul hearts
-    local blueFlies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_FLY, -1, false, false) -- 3.43
+    local blueFlies = Isaac.FindByType(
+      EntityType.ENTITY_FAMILIAR, -- 3
+      FamiliarVariant.BLUE_FLY, -- 43
+      -1,
+      false,
+      false
+    )
     for i, fly in ipairs(blueFlies) do
       fly:Remove()
     end
@@ -599,8 +643,13 @@ function SeededDeath:DebuffOff()
   g.p:EvaluateItems()
 
   -- Make any Checkpoints touchable again
-  local checkpoints = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                       CollectibleType.COLLECTIBLE_CHECKPOINT, false, false)
+  local checkpoints = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    CollectibleType.COLLECTIBLE_CHECKPOINT,
+    false,
+    false
+  )
   for _, checkpoint in ipairs(checkpoints) do
     checkpoint:ToPickup().Timeout = -1
   end
@@ -621,7 +670,8 @@ function SeededDeath:DeleteMegaBlastLaser(laser)
   laser:Remove()
 
   -- Even though we delete it, it will still show up for a frame
-  -- Thus, the Mega Blast laser will look like it is intermittently shooting, even though it deals no damage
+  -- Thus, the Mega Blast laser will look like it is intermittently shooting,
+  -- even though it deals no damage
   -- Make it invisible to fix this
   laser.Visible = false
   -- (this also has the side effect of muting the sound effects)

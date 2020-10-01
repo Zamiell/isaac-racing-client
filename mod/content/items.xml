@@ -1,23 +1,32 @@
 <items gfxroot="gfx/items/" version="1">
-	<passive description="More active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag" />
-	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
-	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
+	<!-- Replacing 191 -->
 	<passive description="Rainbow tears" gfx="Collectibles_191_3DollarBill.png" name="3 Dollar Bill (Seeded)" />
-	<passive description="Roll the credits" gfx="Finished.png" name="Placeholder" />
-	<passive description="B1 Treasure Room items are off limits in this format." gfx="Off_Limits.png" name="Off Limits" />
+	<!-- Replacing 455 -->
+	<passive description="I remember this..." gfx="Collectibles_455_DadsLostCoin.png" id="455" name="Dad's Lost Coin" cache="range luck" />
+	<!-- Replacing 534 -->
+	<passive description="More active item room" gfx="collectibles_534_Schoolbag.png" name="Schoolbag" />
+	<!-- Other custom items -->
+	<passive description="Save your souls" gfx="Soul_Jar.png" name="Soul Jar" />
 	<passive description="An explosive amount of luck" gfx="13_Luck.png" name="13 Luck" cache="luck" />
+	<passive description="7 shot" gfx="Mutant_Spider_Inner_Eye.png" name="Mutant Spider's Inner Eye" />
+	<!-- Utility items -->
+	<passive description="Congradulations!" gfx="Trophy.png" name="Trophy" />
+	<passive description="B1 Treasure Room items are off limits in this format." gfx="Off_Limits.png" name="Off Limits" />
 	<passive description="On to the next character!" gfx="Finished.png" name="Checkpoint" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 1" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 2" />
 	<passive description="This fart-rerolls into something else!" name="Diversity Placeholder 3" />
-	<passive description="7 shot" gfx="Mutant_Spider_Inner_Eye.png" name="Mutant Spider's Inner Eye" />
-	<passive description="No more items!" gfx="Off_Limits.png" name="Null" />
 	<active description="Debug" gfx="Debug.png" maxcharges="0" name="Debug" />
 
 	<!-- Samual Items -->
-	<passive description="Accuracy brings power!" gfx="Collectibles_373_DeadEye.png" name="Samael Dead Eye" />
-	<passive cache="all" description="Charge shots" gfx="Collectibles_069_ChocolateMilk.png" name="Samael Chocolate Milk" />
+	<!-- Replacing 52 -->
 	<passive cache="all" description="???" gfx="Collectibles_052_DrFetus.png" name="Samael Dr. Fetus" special="true" />
+	<!-- Replacing 69 -->
+	<passive cache="all" description="Charge shots" gfx="Collectibles_069_ChocolateMilk.png" name="Samael Chocolate Milk" />
+	<!-- Replacing 373 -->
+	<passive description="Accuracy brings power!" gfx="Collectibles_373_DeadEye.png" name="Samael Dead Eye" />
+	<!-- Replacing 394 -->
 	<passive cache="firedelay range" description="Directed tears" gfx="Collectibles_394_Marked.png" name="Samael Marked" />
+	<!-- Other custom items -->
 	<active description="Evil flows through you" gfx="Collectibles_Samael_Wraith.png" maxcharges="100" name="Wraith Skull" />
 </items>

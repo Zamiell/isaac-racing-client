@@ -1,12 +1,13 @@
 local ExecuteCmd = {}
 
 -- Includes
-local g                  = require("racing_plus/globals")
-local FastTravel         = require("racing_plus/fasttravel")
-local Schoolbag          = require("racing_plus/schoolbag")
-local Speedrun           = require("racing_plus/speedrun")
+local g = require("racing_plus/globals")
+local FastTravel = require("racing_plus/fasttravel")
+local Schoolbag = require("racing_plus/schoolbag")
+local Speedrun = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
-local SeededFloors       = require("racing_plus/seededfloors")
+local SeededFloors = require("racing_plus/seededfloors")
+local ShadowClient = require("racing_plus/shadowclient")
 
 ExecuteCmd.functions = {}
 
@@ -42,11 +43,17 @@ ExecuteCmd.functions["blackmarket"] = function(params)
 end
 
 function ExecuteCmd:BlackMarket()
-  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
-  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
-  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-  g.g:StartRoomTransition(GridRooms.ROOM_BLACK_MARKET_IDX, -- 6
-                          Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
+  -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
+  g.run.usedTeleport = true
+
+  -- You have to set LeaveDoor before every teleport or else it will send you to the wrong room
+  g.l.LeaveDoor = -1
+
+  g.g:StartRoomTransition(
+    GridRooms.ROOM_BLACK_MARKET_IDX, -- 6
+    Direction.NO_DIRECTION, -- -1
+    g.RoomTransition.TRANSITION_TELEPORT -- 3
+  )
 end
 
 ExecuteCmd.functions["boss"] = function(params)
@@ -74,9 +81,7 @@ ExecuteCmd.functions["card"] = function(params)
   local num = tonumber(params)
   if num ~= nil then
     -- Validate the card ID
-    if num < 1 or
-       num >= Card.NUM_CARDS then
-
+    if num < 1 or num >= Card.NUM_CARDS then
       Isaac.ConsoleOutput("That is an invalid card ID.")
       return
     end
@@ -229,7 +234,14 @@ ExecuteCmd.functions["cards"] = function(params)
     for x = 0, 12 do
       if cardNum < Card.NUM_CARDS then
         local pos = g:GridToPos(x, y)
-        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TAROTCARD, cardNum, pos, g.zeroVector, nil) -- 5.300
+        Isaac.Spawn(
+          EntityType.ENTITY_PICKUP, -- 5
+          PickupVariant.PICKUP_TAROTCARD, -- 300
+          cardNum,
+          pos,
+          g.zeroVector,
+          nil
+        )
         cardNum = cardNum + 1
       end
     end
@@ -312,8 +324,10 @@ function ExecuteCmd:Debug()
   g.p:AddCoins(99)
   g.p:AddBombs(99)
   g.p:AddKeys(99)
-  Isaac.ConsoleOutput("Added \"debug 3\", \"debug 8\", \"debug 10\", \"damage\", \"speed\", " ..
-                      "X-Ray Vision, The Mind, 99 coins, 99 bombs, and 99 keys.")
+  Isaac.ConsoleOutput(
+    "Added \"debug 3\", \"debug 8\", \"debug 10\", \"damage\", \"speed\", "
+    .. "X-Ray Vision, The Mind, 99 coins, 99 bombs, and 99 keys."
+  )
 end
 
 ExecuteCmd.functions["dd"] = function(params)
@@ -333,8 +347,10 @@ ExecuteCmd.functions["doors"] = function(params)
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
     if door ~= nil then
-      Isaac.ConsoleOutput("Door " .. tostring(i) .. " - " ..
-                          "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")\n")
+      Isaac.ConsoleOutput(
+        "Door " .. tostring(i) .. " - "
+        .. "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")\n"
+      )
     end
   end
 end
@@ -355,11 +371,17 @@ ExecuteCmd.functions["error"] = function(params)
 end
 
 function ExecuteCmd:IAMERROR()
-  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
-  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
-  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-  g.g:StartRoomTransition(GridRooms.ROOM_ERROR_IDX, -- 2
-                          Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT) -- -1, 3
+  -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
+  g.run.usedTeleport = true
+
+  -- You have to set LeaveDoor before every teleport or else it will send you to the wrong room
+  g.l.LeaveDoor = -1
+
+  g.g:StartRoomTransition(
+    GridRooms.ROOM_ERROR_IDX, -- 2
+    Direction.NO_DIRECTION, -- -1
+    g.RoomTransition.TRANSITION_TELEPORT -- 3
+  )
 end
 
 ExecuteCmd.functions["getframe"] = function(params)
@@ -371,6 +393,14 @@ end
 
 ExecuteCmd.functions["getroom"] = function(params)
   Isaac.ConsoleOutput("Room index is: " .. g.l:GetCurrentRoomIndex())
+end
+
+ExecuteCmd.functions["ghost"] = function(params)
+  ExecuteCmd:Shadow()
+end
+
+ExecuteCmd.functions["ghosts"] = function(params)
+  ExecuteCmd:Shadow()
 end
 
 ExecuteCmd.functions["help"] = function(params)
@@ -410,8 +440,10 @@ ExecuteCmd.functions["list"] = function(params)
   -- Used to print out all of the entities in the room
   Isaac.DebugString("Entities in the room:")
   for i, entity in ipairs(Isaac.GetRoomEntities()) do
-    local debugString = tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "." ..
-                        tostring(entity.SubType)
+    local debugString = (
+      tostring(i) .. " - " .. tostring(entity.Type) .. "." .. tostring(entity.Variant) .. "."
+      .. tostring(entity.SubType)
+    )
     local npc = entity:ToNPC()
     if npc ~= nil then
       debugString = debugString .. "." .. npc.State
@@ -433,7 +465,14 @@ ExecuteCmd.functions["pills"] = function(params)
     for x = 0, 12 do
       if pillNum < PillColor.NUM_PILLS then
         local pos = g:GridToPos(x, y)
-        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pillNum, pos, g.zeroVector, nil) -- 5.70
+        Isaac.Spawn(
+          EntityType.ENTITY_PICKUP, -- 5
+          PickupVariant.PICKUP_PILL, -- 70
+          pillNum,
+          pos,
+          g.zeroVector,
+          nil
+        )
         pillNum = pillNum + 1
       end
     end
@@ -441,7 +480,9 @@ ExecuteCmd.functions["pills"] = function(params)
 end
 
 ExecuteCmd.functions["pos"] = function(params)
-  Isaac.ConsoleOutput("Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y))
+  Isaac.ConsoleOutput(
+    "Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y)
+  )
 end
 
 ExecuteCmd.functions["previous"] = function(params)
@@ -460,7 +501,8 @@ ExecuteCmd.functions["removeall"] = function(params)
     if numItems > 0 and
        g.p:HasCollectible(i) then
 
-      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as Lilith having 1 Incubus
+      -- Checking both "GetCollectibleNum()" and "HasCollectible()" prevents bugs such as
+      -- Lilith having 1 Incubus
       for j = 1, numItems do
         g.p:RemoveCollectible(i)
         local debugString = "Removing collectible " .. tostring(i)
@@ -469,6 +511,17 @@ ExecuteCmd.functions["removeall"] = function(params)
         end
         Isaac.DebugString(debugString)
         g.p:TryRemoveCollectibleCostume(i, false)
+      end
+    end
+  end
+end
+
+ExecuteCmd.functions["removenonchampions"] = function(params)
+  for _, entity in ipairs(Isaac.GetRoomEntities()) do
+    local npc = entity:ToNPC()
+    if npc ~= nil then
+      if not npc:IsChampion() then
+        npc:Remove()
       end
     end
   end
@@ -484,9 +537,7 @@ ExecuteCmd.functions["s"] = function(params)
   local finalCharacter = string.sub(params, -1)
   local stageNum
   local stageType
-  if finalCharacter == "a" or
-     finalCharacter == "b" then
-
+  if finalCharacter == "a" or finalCharacter == "b" then
     -- e.g. "s 11a" for going to The Chest
     stageNum = string.sub(1, #params - 1)
     stageType = finalCharacter
@@ -529,7 +580,9 @@ function ExecuteCmd:Schoolbag(params)
 
   local totalItems = g:GetTotalItemCount()
   if item < 0 or item > g:GetTotalItemCount() then
-    Isaac.ConsoleOutput("Invalid item number; must be between 0 and " .. tostring(totalItems) .. ".")
+    Isaac.ConsoleOutput(
+      "Invalid item number; must be between 0 and " .. tostring(totalItems) .. "."
+    )
     return
   end
 
@@ -537,16 +590,60 @@ function ExecuteCmd:Schoolbag(params)
 end
 
 ExecuteCmd.functions["shadow"] = function(params)
+  ExecuteCmd:Shadow()
+end
+
+ExecuteCmd.functions["shadows"] = function(params)
+  ExecuteCmd:Shadow()
+end
+
+function ExecuteCmd:Shadow()
+  -- We don't have to verify "g.luaDebug" here before it will be drawn on the screen as an error
+  -- message in the "Errors.lua" file
   g.raceVars.shadowEnabled = not g.raceVars.shadowEnabled
+  local msg
   if g.raceVars.shadowEnabled then
-    Isaac.ConsoleOutput("Enabled opponent's shadows.")
+    msg = "Enabled"
   else
-    Isaac.ConsoleOutput("Disabled opponent's shadows.")
+    msg = "Disabled"
+  end
+  msg = msg .. " opponent's ghost / shadow."
+  if RacingPlusData == nil then
+    msg = (
+      msg
+      .. " (Subscribe to the Racing+ Data mod and enable if you want this option to be remembered.)"
+    )
+  else
+    RacingPlusData:Set("shadowEnabled", g.raceVars.shadowEnabled)
+  end
+  Isaac.ConsoleOutput(msg)
+end
+
+ExecuteCmd.functions["shadowstatus"] = function(params)
+  local msg = "Opponent's ghost / shadow is "
+  if g.raceVars.shadowEnabled then
+    msg = msg .. "enabled."
+  else
+    msg = msg .. "disabled."
+  end
+  Isaac.ConsoleOutput(msg)
+
+  if g.raceVars.shadowEnabled then
+    Isaac.ConsoleOutput("Connected to the server: " .. tostring(ShadowClient.connected))
   end
 end
 
 ExecuteCmd.functions["shop"] = function(params)
   g.p:UseCard(Card.CARD_HERMIT) -- 10
+end
+
+ExecuteCmd.functions["sounds"] = function(params)
+  Isaac.ConsoleOutput("Printing out the currently playing sounds.")
+  for i = 0, SoundEffect.NUM_SOUND_EFFECTS do
+    if g.sfx:IsPlaying(i) then
+      Isaac.DebugString("Currently playing sound effect: " .. i)
+    end
+  end
 end
 
 ExecuteCmd.functions["spam"] = function(params)
@@ -593,7 +690,9 @@ ExecuteCmd.functions["teleport"] = function(params)
     return
   end
 
-  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
+  -- You have to set LeaveDoor before every teleport or else it will send you to the wrong room
+  g.l.LeaveDoor = -1
+
   g.l:ChangeRoom(roomIndex)
 end
 

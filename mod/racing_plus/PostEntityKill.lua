@@ -1,18 +1,17 @@
 local PostEntityKill = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
-local Speedrun  = require("racing_plus/speedrun")
-local Season6   = require("racing_plus/season6")
-local Season7   = require("racing_plus/season7")
-local Season8   = require("racing_plus/season8")
+local Speedrun = require("racing_plus/speedrun")
+local Season7 = require("racing_plus/season7")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_POST_ENTITY_KILL (68)
 function PostEntityKill:Main(entity)
-  FastClear:PostEntityKill(entity) -- Track which enemies are cleared for the purposes of the "fast-clear" feature
+  -- Track which enemies are cleared for the purposes of the "fast-clear" feature
+  FastClear:PostEntityKill(entity)
   PostEntityKill:FadeBosses(entity) -- Fade bosses that are killed
-  Season6:PostEntityKill(entity)
 end
 
 -- When beginning a death animation, make bosses faded so that it makes it easier to see
@@ -26,12 +25,14 @@ function PostEntityKill:FadeBosses(entity)
     return
   end
 
-  -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the segments
-  if entity.Type == EntityType.ENTITY_LARRYJR or -- 19 (and The Hollow)
-     entity.Type == EntityType.ENTITY_PIN or -- 62 (and Scolex / Frail)
-     entity.Type == EntityType.ENTITY_GEMINI or -- 79 (and Steven / Blighted Ovum)
-     entity.Type == EntityType.ENTITY_HEART_OF_INFAMY then -- 98
-
+  -- We don't want to fade multi-segment bosses since killing one segment will fade the rest of the
+  -- segments
+  if (
+    entity.Type == EntityType.ENTITY_LARRYJR -- 19 (and The Hollow)
+    or entity.Type == EntityType.ENTITY_PIN -- 62 (and Scolex / Frail)
+    or entity.Type == EntityType.ENTITY_GEMINI -- 79 (and Steven / Blighted Ovum)
+    or entity.Type == EntityType.ENTITY_HEART_OF_INFAMY -- 98
+  ) then
     return
   end
 
@@ -43,12 +44,16 @@ function PostEntityKill:FadeBosses(entity)
 end
 
 -- EntityType.ENTITY_MOM (45)
-function PostEntityKill:Entity45(entity)
-  -- There can be up to 5 Mom entities in the room, so don't do anything if we have already spawned the photos
+function PostEntityKill:Mom(entity)
+  -- There can be up to 5 Mom entities in the room,
+  -- so don't do anything if we have already spawned the photos
   if g.run.momDied then
     return
   end
   g.run.momDied = true
+
+  -- Prevent effects from spawning to fix lag
+  g.run.preventBloodExplosion = false
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
@@ -56,7 +61,7 @@ end
 
 -- EntityType.ENTITY_MOMS_HEART (78)
 -- EntityType.ENTITY_HUSH (407)
-function PostEntityKill:Entity78(entity)
+function PostEntityKill:MomsHeart(entity)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
@@ -71,12 +76,15 @@ function PostEntityKill:Entity78(entity)
   -- For some reason, Mom's Heart / It Lives! will die twice in a row on two subsequent frames
   -- (this does not happen on Hush)
   -- We don't want to do anything if this is the first time it died
-  if stage ~= 9 and
-     gameFrameCount - g.run.itLivesKillFrame > 1 then
-
+  if (
+    stage ~= 9
+    and gameFrameCount - g.run.itLivesKillFrame > 1
+  ) then
     g.run.itLivesKillFrame = gameFrameCount
-    Isaac.DebugString("Killed Mom's Heart / It Lives! / Hush (fake first death) on frame: " ..
-                      tostring(gameFrameCount))
+    Isaac.DebugString(
+      "Killed Mom's Heart / It Lives! / Hush (fake first death) on frame: "
+      .. tostring(gameFrameCount)
+    )
     return
   end
 
@@ -99,98 +107,108 @@ function PostEntityKill:Entity78(entity)
 
   -- Figure out if we need to spawn either a trapdoor, a beam of light, or both
   local situations = {
-    NEITHER       = 0,
+    NEITHER = 0,
     BEAM_OF_LIGHT = 1,
-    TRAPDOOR      = 2,
-    BOTH          = 3,
+    TRAPDOOR = 2,
+    BOTH = 3,
   }
   local situation
-  if challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)") or
-     challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") or
-     (g.race.status == "in progress" and g.race.goal == "Blue Baby") or
-     (g.race.status == "in progress" and g.race.goal == "Everything") then
-
-    -- Seasons 1, 4, and 5 always go to Cathedral / The Chest
-    -- Races to Blue Baby go to Cathedral / The Chest
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+15 (Vanilla)")
+    or challenge == Isaac.GetChallengeIdByName("R+9 (Season 1)")
+    or challenge == Isaac.GetChallengeIdByName("R+14 (Season 1)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+    or (g.race.status == "in progress" and g.race.goal == "Blue Baby")
+    or (g.race.status == "in progress" and g.race.goal == "Everything")
+  ) then
+    -- Some seasons always go to the Cathedral / The Chest
+    -- Races to Blue Baby go to the Cathedral / The Chest
     -- "Everything" races always go to Cathedral first (and then Sheol after that)
     situation = situations.BEAM_OF_LIGHT
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)") or
-         (g.race.status == "in progress" and g.race.goal == "The Lamb") then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 2)")
+    or (g.race.status == "in progress" and g.race.goal == "The Lamb")
+  ) then
     -- Season 2 speedruns always goes to Sheol / the Dark Room
     -- Races to The Lamb go to Sheol / the Dark Room
     situation = situations.TRAPDOOR
-
-  elseif challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-         challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-
+  elseif (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+  ) then
     -- Some speedruns alternate between Cathedral / The Chest and Sheol / the Dark Room,
     -- starting with Cathedral / The Chest
     situation = Speedrun.charNum % 2
     if situation == 0 then
       situation = situations.TRAPDOOR
     end
-
-  elseif ((g.race.status == "in progress" and g.race.goal == "Hush") or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) and
-         entity.Type == EntityType.ENTITY_HUSH then -- 78
-
+  elseif (
+    (
+      (g.race.status == "in progress" and g.race.goal == "Hush")
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    )
+    and entity.Type == EntityType.ENTITY_HUSH -- 78
+  ) then
     -- Hush is the goal
     -- Don't spawn any paths in case the player would accidently walk into them
     situation = situations.NEITHER
-
   else
     -- We can potentially go in either direction
     -- So, determine the direction by looking at the photo(s) that we collected
     if g.p:HasTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) then -- 21
-      -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or The Negative,
-      -- so since it is impossible to determine their actual photo status,
+      -- On every frame, the Mysterious Paper trinket will randomly give The Polaroid or
+      -- The Negative, so since it is impossible to determine their actual photo status,
       -- just give the player a choice between the directions
       situation = situations.BOTH
-
-    elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) and -- 327
-           g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
-
+    elseif (
+      g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) -- 327
+      and g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) -- 328
+    ) then
       -- The player has both photos (this can only occur in a diversity race)
       -- So, give the player a choice between the directions
       situation = situations.BOTH
-
     elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_POLAROID) then -- 327
       -- The player has The Polaroid, so send them to Cathdral
       situation = situations.BEAM_OF_LIGHT
-
     elseif g.p:HasCollectible(CollectibleType.COLLECTIBLE_NEGATIVE) then -- 328
       -- The player has The Negative, so send them to Sheol
       situation = situations.TRAPDOOR
-
     else
-      -- The player does not have either The Polaroid or The Negative, so give them a choice between the directions
+      -- The player does not have either The Polaroid or The Negative,
+      -- so give them a choice between the directions
       situation = situations.BOTH
     end
   end
 
   -- Handle special things for Season 7
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-     entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78
-
-    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    and entity.Type == EntityType.ENTITY_MOMS_HEART -- 78
+  ) then
+    -- Spawn a big chest
+    -- (which will get replaced with either a checkpoint or a trophy on the next frame)
     if g:TableContains(Season7.remainingGoals, "It Lives!") then
-      Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                  centerPos, g.zeroVector, nil)
+      Isaac.Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_BIGCHEST, -- 340
+        0,
+        centerPos,
+        g.zeroVector,
+        nil
+      )
     end
 
     -- Perform some path validation for Season 7
-    if situation ~= situations.NEITHER and
-       not g:TableContains(Season7.remainingGoals, "Blue Baby") and
-       not g:TableContains(Season7.remainingGoals, "The Lamb") and
-       not g:TableContains(Season7.remainingGoals, "Mega Satan") and
-       not g:TableContains(Season7.remainingGoals, "Ultra Greed") then
-
+    if (
+      situation ~= situations.NEITHER
+      and not g:TableContains(Season7.remainingGoals, "Blue Baby")
+      and not g:TableContains(Season7.remainingGoals, "The Lamb")
+      and not g:TableContains(Season7.remainingGoals, "Mega Satan")
+      and not g:TableContains(Season7.remainingGoals, "Ultra Greed")
+    ) then
        situation = situations.NEITHER
     end
   end
@@ -198,29 +216,41 @@ function PostEntityKill:Entity78(entity)
   -- Do the appropriate action depending on the situation
   if situation == situations.NEITHER then
     Isaac.DebugString("It Lives! or Hush killed; situation 0 - neither up nor down.")
-
   elseif situation == situations.BEAM_OF_LIGHT then
     -- Spawn a beam of light, a.k.a. Heaven Door (1000.39)
     -- It will get replaced with the fast-travel version on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
-    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
-                posCenter, g.zeroVector, g.p)
+    Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.HEAVEN_LIGHT_DOOR, -- 39
+      0,
+      posCenter,
+      g.zeroVector,
+      g.p
+    )
     Isaac.DebugString("It Lives! or Hush killed; situation 1 - only up.")
-
   elseif situation == situations.TRAPDOOR then
     -- Spawn a trapdoor (it will get replaced with the fast-travel version on this frame)
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenter, true) -- 17
     Isaac.DebugString("It Lives! or Hush killed; situation 2 - only down.")
-
   elseif situation == situations.BOTH then
     -- Spawn both a trapdoor and a beam of light
     -- They will get replaced with the fast-travel versions on this frame
     -- Make the spawner entity the player so that we can distinguish it from the vanilla heaven door
     Isaac.GridSpawn(GridEntityType.GRID_TRAPDOOR, 0, posCenterLeft, true) -- 17
-    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_LIGHT_DOOR, 0, -- 1000.39
-                posCenterRight, g.zeroVector, g.p)
+    Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.HEAVEN_LIGHT_DOOR, -- 39
+      0,
+      posCenterRight,
+      g.zeroVector,
+      g.p
+    )
     Isaac.DebugString("It Lives! or Hush killed; situation 3 - up and down.")
   end
+
+  -- Prevent effects from spawning to fix lag
+  g.run.preventBloodExplosion = false
 
   -- Fix the (vanilla) bug with Globins, Sacks, etc.
   PostEntityKill:KillExtraEnemies()
@@ -232,21 +262,35 @@ function PostEntityKill:Entity78(entity)
 
   -- Season 7 speedruns end at Hush
   if challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-    -- Spawn a big chest (which will get replaced with either a checkpoint or a trophy on the next frame)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                centerPos, g.zeroVector, nil)
+    -- Spawn a big chest
+    -- (which will get replaced with either a checkpoint or a trophy on the next frame)
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BIGCHEST, -- 340
+      0,
+      centerPos,
+      g.zeroVector,
+      nil
+    )
     return
   end
 
   -- Manually open the Void door
   g.r:TrySpawnTheVoidDoor()
 
-  if g.race.status == "in progress" and
-      g.race.goal == "Hush" then
-
+  if (
+    g.race.status == "in progress"
+    and g.race.goal == "Hush"
+  ) then
     -- Spawn a big chest (which will get replaced with a trophy on the next frame)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BIGCHEST, 0, -- 5.340
-                centerPos, g.zeroVector, nil)
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP, -- 5
+      PickupVariant.PICKUP_BIGCHEST, -- 340
+      0,
+      centerPos,
+      g.zeroVector,
+      nil
+    )
   end
 end
 
@@ -254,8 +298,9 @@ end
 -- We want to manually spawn the Krampus item instead of letting the game do it
 -- This slightly speeds up the spawn so that it can not be accidently deleted by leaving the room
 -- Furthermore, it fixes the seeding issue where if you have Gimpy and Krampus drops a heart,
--- the spawned pedestal to be moved one tile over, and this movement can cause the item to be different
-function PostEntityKill:Entity81(entity)
+-- the spawned pedestal to be moved one tile over,
+-- and this movement can cause the item to be different
+function PostEntityKill:Fallen(entity)
   -- The Fallen does not drop items
   if entity.Variant ~= 1 then
     return
@@ -263,13 +308,18 @@ function PostEntityKill:Entity81(entity)
 
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
-  local startSeed = g.seeds:GetStartSeed() -- Gets the starting seed of the run, something like "2496979501"
+  local startSeed = g.seeds:GetStartSeed()
   local challenge = Isaac.GetChallenge()
 
   -- Mark the frame that Krampus was killed so that we can manually
   -- despawn it one frame before it drops the vanilla item
   local data = entity:GetData()
   data.killedFrame = gameFrameCount
+
+  -- Krampus does not drop items in Racing+ Rebalanced
+  if RacingPlusRebalanced ~= nil then
+    return
+  end
 
   -- Figure out whether we should spawn the Lump of Coal of Krampus' Head
   local coalBanned = false
@@ -295,7 +345,10 @@ function PostEntityKill:Entity81(entity)
     if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_LUMP_OF_COAL) then -- 132
       coalBanned = true
     end
-    if g:TableContains(Season8.touchedItems, CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS) then -- 293
+    if g:TableContains(
+      Season8.touchedItems,
+      CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
+    ) then
       headBanned = true
     end
   end
@@ -303,7 +356,9 @@ function PostEntityKill:Entity81(entity)
   if coalBanned and headBanned then
     -- Both A Lump of Coal and Krampus' Head are on the ban list, so make a random item instead
     subType = g.itemPool:GetCollectible(ItemPoolType.POOL_DEVIL, true, startSeed) -- 3
-    Isaac.DebugString("Spawned a random item since both A Lump of Coal and Krampus' Head are banned.")
+    Isaac.DebugString(
+      "Spawned a random item since both A Lump of Coal and Krampus' Head are banned."
+    )
   elseif coalBanned then
     -- Switch A Lump of Coal to Krampus' Head
     subType = CollectibleType.COLLECTIBLE_HEAD_OF_KRAMPUS -- 293
@@ -334,15 +389,21 @@ function PostEntityKill:Entity81(entity)
 
   -- Spawn the item
   -- (it will get replaced on the next frame in the "Pedestals:Replace()" function)
-  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
-              pos, g.zeroVector, nil)
+  Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    subType,
+    pos,
+    g.zeroVector,
+    nil
+  )
 end
 
 -- EntityType.ENTITY_URIEL (271)
 -- EntityType.ENTITY_GABRIEL (272)
 -- We want to manually spawn the key pieces instead of letting the game do it
 -- This slightly speeds up the spawn so that they can not be accidently deleted by leaving the room
-function PostEntityKill:Entity271(entity)
+function PostEntityKill:Angel(entity)
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local roomType = g.r:GetType()
@@ -359,20 +420,22 @@ function PostEntityKill:Entity271(entity)
   data.killedFrame = gameFrameCount
 
   -- We don't want to drop key pieces from angels in Victory Lap bosses or the Boss Rush
-  if roomType ~= RoomType.ROOM_SUPERSECRET and -- 8
-     roomType ~= RoomType.ROOM_SACRIFICE and -- 13
-     roomType ~= RoomType.ROOM_ANGEL then -- 15
-
+  if (
+    roomType ~= RoomType.ROOM_SUPERSECRET -- 8
+    and roomType ~= RoomType.ROOM_SACRIFICE -- 13
+    and roomType ~= RoomType.ROOM_ANGEL -- 15
+  ) then
     -- Key pieces dropping from angels in non-Angel Rooms was introduced in Booster Pack #4
     return
   end
 
   -- Do not drop any key pieces if the player already has both of them
   -- (this matches the behavior of vanilla)
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) and -- 238
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) and -- 239
-     not g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) then -- 123
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) -- 238
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) -- 239
+    and not g.p:HasTrinket(TrinketType.TRINKET_FILIGREE_FEATHERS) -- 123
+  ) then
     return
   end
 
@@ -382,15 +445,15 @@ function PostEntityKill:Entity271(entity)
     -- Even if the player has both key pieces,
     -- Filigree Feather will still make an angel drop a random item (on vanilla and in R+)
     subType = 0 -- A random item
-
-  elseif entity.Type == EntityType.ENTITY_URIEL and -- 271
-         not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) then -- 238
-
+  elseif (
+    entity.Type == EntityType.ENTITY_URIEL -- 271
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_1) -- 238
+  ) then
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_1 -- 238
-
-  elseif entity.Type == EntityType.ENTITY_GABRIEL and -- 272
-         not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) then -- 239
-
+  elseif (
+    entity.Type == EntityType.ENTITY_GABRIEL -- 272
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_KEY_PIECE_2) -- 239
+  ) then
     subType = CollectibleType.COLLECTIBLE_KEY_PIECE_2 -- 239
   end
   if subType == nil then
@@ -404,10 +467,12 @@ function PostEntityKill:Entity271(entity)
     end
   end
 
-  if challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)") and
-     subType ~= 0 then
-
-    -- If we already got this key piece on a previous run, then change it to a random Angel Room item
+  if (
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 8)")
+    and subType ~= 0
+  ) then
+    -- If we already got this key piece on a previous run,
+    -- then change it to a random Angel Room item
     if g:TableContains(Season8.touchedItems, subType) then
       subType = 0
     end
@@ -419,13 +484,20 @@ function PostEntityKill:Entity271(entity)
 
   -- Spawn the item
   -- (it will get replaced on the next frame in the "Pedestals:Replace()" function)
-  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, subType, -- 5.100
-              pos, g.zeroVector, nil)
+  Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    subType,
+    pos,
+    g.zeroVector,
+    nil
+  )
 end
 
 -- EntityType.ENTITY_ULTRA_GREED (406)
-function PostEntityKill:Entity406(entity)
-  -- In vanilla, he will turn into a gold statue and block movement, which can block access to the Checkpoint
+function PostEntityKill:UltraGreed(entity)
+  -- In vanilla, he will turn into a gold statue and block movement,
+  -- which can block access to the Checkpoint
   -- Instead, simply remove Ultra Greed as soon as he dies
   -- (this also has the benefit of not forcing the player to watch the long death animation)
   entity:Remove()
@@ -435,14 +507,21 @@ function PostEntityKill:RoomClearDelayNPC(entity)
   -- The room clear delay NPC may accidentally die if Lua code kills all NPCs in a room
   -- If this occurs, just spawn a new one
   Isaac.DebugString("Room Clear Delay NPC death detected - spawning a new one.")
-  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        g.zeroVector, g.zeroVector, nil)
+  local roomClearDelayNPC = Isaac.Spawn(
+    EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC,
+    0,
+    0,
+    g.zeroVector,
+    g.zeroVector,
+    nil
+  )
   roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
 end
 
 -- After killing Mom, Mom's Heart, or It Lives!, all entities in the room are killed
--- However, Nicalis didn't consider that Globins need to be killed twice (to kill their flesh pile forms)
+-- However, Nicalis didn't consider that Globins need to be killed twice
+-- (to kill their flesh pile forms)
 -- Blisters also need to be killed twice (to kill the spawned Sacks)
 -- Racing+ manually fixes this bug by expliticly killing them (and removing Fistula and Teratoma)
 -- This code is also necessary to fix the issue where a Globin will prevent the
@@ -451,14 +530,16 @@ end
 function PostEntityKill:KillExtraEnemies()
   Isaac.DebugString("Checking for extra enemies to kill after a Mom / It Lives! fight.")
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_GLOBIN or -- 24
-       entity.Type == EntityType.ENTITY_BOIL or -- 30
-       entity.Type == EntityType.ENTITY_FISTULA_BIG or -- 71 (also includes Teratoma)
-       entity.Type == EntityType.ENTITY_FISTULA_MEDIUM or -- 72 (also includes Teratoma)
-       entity.Type == EntityType.ENTITY_FISTULA_SMALL or -- 73 (also includes Teratoma)
-       entity.Type == EntityType.ENTITY_BLISTER then -- 303
-
-      -- Removing it just causes it to disappear, which looks buggy, so show a small blood explosion as well
+    if (
+      entity.Type == EntityType.ENTITY_GLOBIN -- 24
+      or entity.Type == EntityType.ENTITY_BOIL -- 30
+      or entity.Type == EntityType.ENTITY_FISTULA_BIG -- 71 (also includes Teratoma)
+      or entity.Type == EntityType.ENTITY_FISTULA_MEDIUM -- 72 (also includes Teratoma)
+      or entity.Type == EntityType.ENTITY_FISTULA_SMALL -- 73 (also includes Teratoma)
+      or entity.Type == EntityType.ENTITY_BLISTER -- 303
+    ) then
+      -- Removing it just causes it to disappear, which looks buggy,
+      -- so show a small blood explosion as well
       entity:BloodExplode()
       entity:Remove()
       Isaac.DebugString("Manually removed an enemy after Mom / It Lives!")

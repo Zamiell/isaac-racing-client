@@ -8,7 +8,8 @@ SeededFloors.enabled = true -- Set to false when debugging
 -- Different inventory and health conditions can affect special room generation
 -- Different special rooms can also sometimes change the actual room selection of non-special rooms
 -- This is bad for seeded races; we want to ensure consistent floors
--- Thus, we arbitrarily set inventory and health conditions before going to the next floor, and then swap them back
+-- Thus, we arbitrarily set inventory and health conditions before going to the next floor,
+-- and then swap them back
 -- https://bindingofisaacrebirth.gamepedia.com/Level_Generation
 function SeededFloors:Before(stage)
   if not SeededFloors.enabled then
@@ -25,9 +26,10 @@ function SeededFloors:Before(stage)
   local challenge = Isaac.GetChallenge()
 
   -- Only swap things if we are playing a specific seed
-  if challenge ~= 0 or
-     not customRun then
-
+  if (
+    challenge ~= 0
+    or not customRun
+  ) then
     return
   end
 
@@ -111,7 +113,13 @@ function SeededFloors:Before(stage)
 
     -- Keeper will get 3 Blue Flies from this, so manually remove them
     if character == PlayerType.PLAYER_KEEPER then -- 14
-      local blueFlies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, FamiliarVariant.BLUE_FLY, -1, false, false) -- 3.43
+      local blueFlies = Isaac.FindByType(
+        EntityType.ENTITY_FAMILIAR, -- 3
+        FamiliarVariant.BLUE_FLY, -- 43
+        -1,
+        false,
+        false
+      )
       for i, fly in ipairs(blueFlies) do
         if i > 3 then
           break
@@ -172,22 +180,25 @@ function SeededFloors:SaveHealth()
     maxHearts = boneHearts * 2
     boneHearts = 0
 
-    -- The Forgotten will always have 0 soul hearts; we need to get the soul heart amount from the sub player
+    -- The Forgotten will always have 0 soul hearts;
+    -- we need to get the soul heart amount from the sub player
     soulHearts = subPlayer:GetSoulHearts()
-
   elseif character == PlayerType.PLAYER_THESOUL then -- 17
-    -- The Soul will always have 0 bone hearts; we need to get the bone heart amount from the sub player
-    maxHearts = subPlayer:GetBoneHearts() * 2 -- We need to store it as "maxHearts" instead of "boneHearts"
+    -- The Soul will always have 0 bone hearts;
+    -- we need to get the bone heart amount from the sub player
+    -- We need to store it as "maxHearts" instead of "boneHearts"
+    maxHearts = subPlayer:GetBoneHearts() * 2
     hearts = subPlayer:GetHearts()
   end
 
-  -- Eternal Hearts will be lost since we are about to change floors, so convert it to other types of health
+  -- Eternal Hearts will be lost since we are about to change floors,
+  -- so convert it to other types of health
   -- "eternalHearts" will be equal to 1 if we have an Eternal Heart
-  if character == PlayerType.PLAYER_XXX or -- 4
-     character == PlayerType.PLAYER_THESOUL then -- 17
-
+  if (
+    character == PlayerType.PLAYER_XXX -- 4
+    or character == PlayerType.PLAYER_THESOUL -- 17
+  ) then
     soulHearts = soulHearts + eternalHearts * 2
-
   else
     maxHearts = maxHearts + eternalHearts * 2
     hearts = hearts + eternalHearts * 2
@@ -226,11 +237,11 @@ function SeededFloors:SaveHealth()
 
   return {
     soulHeartTypes = soulHeartTypes,
-    maxHearts      = maxHearts,
-    hearts         = hearts,
-    soulHearts     = soulHearts,
-    boneHearts     = boneHearts,
-    goldenHearts   = goldenHearts,
+    maxHearts = maxHearts,
+    hearts = hearts,
+    soulHearts = soulHearts,
+    boneHearts = boneHearts,
+    goldenHearts = goldenHearts,
   }
 end
 
@@ -274,11 +285,13 @@ function SeededFloors:LoadHealth()
   for i, heartType in ipairs(hearts.soulHeartTypes) do
     local isHalf = (hearts.soulHearts + hearts.boneHearts * 2) < i * 2
     local addAmount = 2
-    if isHalf or
-       heartType == HeartSubType.HEART_BONE or -- 11
-       soulHeartsRemaining < 2 then
-       -- (fix the bug where a half soul heart to the left of a bone heart will be treated as a full soul heart)
-
+    if (
+      isHalf
+      or heartType == HeartSubType.HEART_BONE -- 11
+      or soulHeartsRemaining < 2
+    ) then
+       -- Fix the bug where a half soul heart to the left of a bone heart will be treated as a full
+       -- soul heart
       addAmount = 1
     end
 

@@ -7,6 +7,15 @@
 	<Pool Name="shop">
 		<Item Name="Schoolbag" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>
+	<Pool Name="boss">
+		<Item Name="Dad's Lost Coin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="beggar">
+		<Item Name="Dad's Lost Coin" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="greedBoss">
+		<Item Name="Dad's Lost Coin" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
+	</Pool>
 	<Pool Name="greedShop">
 		<Item Name="Schoolbag" Weight="1" DecreaseBy="0.5" RemoveOn="0.1"/>
 	</Pool>

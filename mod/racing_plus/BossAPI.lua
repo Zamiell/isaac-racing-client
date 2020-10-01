@@ -7,9 +7,11 @@ if InfinityBossAPI then START_FUNC()
 else if not __infinityBossInit then
 __infinityBossInit={Mod = RegisterMod("InfinityBossAPI", 1.0)}
 __infinityBossInit.Mod:AddCallback(ModCallbacks.MC_POST_RENDER, function()
-	if not InfinityBossAPI then
-		Isaac.RenderText("A mod requires Simple Boss API to run, go get it on the workshop!", 100, 40, 255, 255, 255, 1)
-	end
+  if not InfinityBossAPI then
+    Isaac.RenderText(
+      "A mod requires Simple Boss API to run, go get it on the workshop!", 100, 40, 255, 255, 255, 1
+    )
+  end
 end) end
 __infinityBossInit[#__infinityBossInit+1]=START_FUNC end
 ]]

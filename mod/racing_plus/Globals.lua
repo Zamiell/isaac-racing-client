@@ -1,38 +1,37 @@
-
-local g  = {}
+local g = {}
 
 --
 -- Global variables
 --
 
-g.version = "v0.54.1"
+g.version = "v0.55.0"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
 g.resumedOldRun = false
 g.saveFileState = {
-  NOT_CHECKED   = 0,
+  NOT_CHECKED = 0,
   GOING_TO_EDEN = 1, -- Going to the set seed with Eden
-  GOING_BACK    = 2, -- Going back to the old challenge/character/seed
-  FINISHED      = 3,
+  GOING_BACK = 2, -- Going back to the old challenge/character/seed
+  FINISHED = 3,
 }
 g.saveFile = { -- Checked in the MC_POST_GAME_STARTED callback
-  state         = g.saveFileState.NOT_CHECKED, -- See the "g.saveFileState" enum below
+  state = g.saveFileState.NOT_CHECKED, -- See the "g.saveFileState" enum below
   fullyUnlocked = false,
-  seed          = "P8Q3 MRKZ", -- A randomly chosen seed that contains a BP5 item
-  activeItem    = CollectibleType.COLLECTIBLE_BOOK_OF_THE_DEAD, -- 545
-  passiveItem   = CollectibleType.COLLECTIBLE_MYSTERY_EGG, -- 539
+  seed = "P8Q3 MRKZ", -- A randomly chosen seed that contains a BP5 item
+  activeItem = CollectibleType.COLLECTIBLE_BOOK_OF_THE_DEAD, -- 545
+  passiveItem = CollectibleType.COLLECTIBLE_CAMO_UNDIES, -- 497
   -- Eden's items will change if we have The Babies Mod enabled
-  activeItem2  = CollectibleType.COLLECTIBLE_MYSTERY_GIFT, -- 515
-  passiveItem2 = CollectibleType.COLLECTIBLE_ABEL, -- 188
+  activeItem2 = CollectibleType.COLLECTIBLE_WAIT_WHAT, -- 484
+  passiveItem2 = CollectibleType.COLLECTIBLE_PIGGY_BANK, -- 227
   -- Eden's items will change if we have Racing+ Rebalanced enabled
-  activeItem3  = CollectibleType.COLLECTIBLE_D6, -- 105
+  activeItem3 = CollectibleType.COLLECTIBLE_D6, -- 105
   passiveItem3 = CollectibleType.COLLECTIBLE_FOREVER_ALONE, -- 128
   old = {
     challenge = 0,
     character = 0,
     seededRun = false,
-    seed      = "",
+    seed = "",
   },
 }
 
@@ -45,7 +44,9 @@ if ok and socket then
   g.socket = socket
   Isaac.DebugString("Initialized socket: " .. socket._VERSION)
 else
-  Isaac.DebugString("Importing socket failed. The \"--luadebug\" flag is not turned on in the Steam launch options.")
+  Isaac.DebugString(
+    "Importing socket failed. The \"--luadebug\" flag is not turned on in the Steam launch options."
+  )
 end
 
 -- These are variables that are reset at the beginning of every run
@@ -54,60 +55,60 @@ g.run = {}
 
 -- This is the table that gets updated from the "save.dat" file
 g.race = {
-  userID        = 0,           -- Equal to our Racing+ user ID
-  raceID        = 0,           -- 0 if a race is not going on
-  status        = "none",      -- Can be "none", "open", "starting", "in progress"
-  myStatus      = "not ready", -- Can be either "not ready", "ready", or "racing"
-  ranked        = false,       -- Can be true or false
-  solo          = false,       -- Can be true or false
-  rFormat       = "unseeded",  -- Can be "unseeded", "seeded", "diversity", or "custom"
-  -- Unofficially this can also be "pageant"
-  difficulty    = "normal",    -- Can be "normal" or "hard"
-  character     = 3,           -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
-  goal          = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
-  seed          = "-",         -- Corresponds to the seed that is the race goal
-  startingItems = {},          -- The starting items for this race
-  countdown     = -1,          -- This corresponds to the graphic to draw on the screen
-  placeMid      = 0,           -- This is either the number of people ready, or the non-fnished place
-  place         = 1,           -- This is the final place
-  numEntrants   = 1,           -- The number of people in the race
+  userID = 0, -- Equal to our Racing+ user ID
+  raceID = 0, -- 0 if a race is not going on
+  status = "none", -- Can be "none", "open", "starting", "in progress"
+  myStatus = "not ready", -- Can be either "not ready", "ready", or "racing"
+  ranked = false, -- Can be true or false
+  solo = false, -- Can be true or false
+  -- Can be "unseeded", "seeded", "diversity", or "custom"; unofficially it can also be "pageant"
+  rFormat = "unseeded",
+  difficulty = "normal", -- Can be "normal" or "hard"
+  character = 3, -- 3 is Judas; can be 0 to 15 (the "PlayerType" Lua enumeration)
+  goal = "Blue Baby", -- Can be "Blue Baby", "The Lamb", "Mega Satan", "Hush", or "Everything"
+  seed = "-", -- Corresponds to the seed that is the race goal
+  startingItems = {}, -- The starting items for this race
+  countdown = -1, -- This corresponds to the graphic to draw on the screen
+  placeMid = 0, -- This is either the number of people ready, or the non-fnished place
+  place = 1, -- This is the final place
+  numEntrants = 1, -- The number of people in the race
 }
 
 -- These are things that pertain to the race but are not read from the "save.dat" file
 g.raceVars = {
-  loadOnNextFrame    = false,
-  started            = false,
-  startedTime        = 0,
-  startedFrame       = 0,
-  finished           = false,
-  finishedTime       = 0,
-  finishedFrames     = 0,
-  fireworks          = 0,
-  victoryLaps        = 0,
-  shadowEnabled      = false,
+  loadOnNextFrame = false,
+  started = false,
+  startedTime = 0,
+  startedFrame = 0,
+  finished = false,
+  finishedTime = 0,
+  finishedFrames = 0,
+  fireworks = 0,
+  victoryLaps = 0,
+  shadowEnabled = false,
 }
 
 g.RNGCounter = {
   -- Seeded at the beginning of the run
-  BookOfSin       = 0, -- 97
-  DeadSeaScrolls  = 0, -- 124
-  GuppysHead      = 0, -- 145
-  GuppysCollar    = 0, -- 212
-  ButterBean      = 0, -- 294
+  BookOfSin = 0, -- 97
+  DeadSeaScrolls = 0, -- 124
+  GuppysHead = 0, -- 145
+  GuppysCollar = 0, -- 212
+  ButterBean = 0, -- 294
 
   -- Devil Rooms and Angel Rooms go in order on seeded races
   DevilRoomKrampus = 0,
-  DevilRoomChoice  = 0,
-  DevilRoomItem    = 0,
-  DevilRoomBeggar  = 0,
-  AngelRoomChoice  = 0,
-  AngelRoomItem    = 0,
-  AngelRoomMisc    = 0,
+  DevilRoomChoice = 0,
+  DevilRoomItem = 0,
+  DevilRoomBeggar = 0,
+  AngelRoomChoice = 0,
+  AngelRoomItem = 0,
+  AngelRoomMisc = 0,
 
   -- Seeded at the beginning of the floor
-  Teleport      = 0, -- 44 (Broken Remote also uses this)
-  Undefined     = 0, -- 324
-  Telepills     = 0, -- 19
+  Teleport = 0, -- 44 (Broken Remote also uses this)
+  Undefined = 0, -- 324
+  Telepills = 0, -- 19
 }
 
 -- The contents of the "Racing+ Data" mod save.dat file is cached in memory
@@ -137,90 +138,103 @@ g.kcolor = KColor(1, 1, 1, 1)
 --
 
 -- Entities
-EntityType.ENTITY_RACE_TROPHY                = Isaac.GetEntityTypeByName("Race Trophy")
-EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC       = Isaac.GetEntityTypeByName("Room Clear Delay NPC")
-EntityType.ENTITY_SAMAEL_SCYTHE              = Isaac.GetEntityTypeByName("Samael Scythe")
-EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS  = Isaac.GetEntityTypeByName("Samael Special Animations")
-TearVariant.MAGIC_SCYTHE                     = Isaac.GetEntityVariantByName("Magic Scythe")
-FamiliarVariant.SCYTHE_HITBOX                = Isaac.GetEntityVariantByName("Scythe Hitbox")
-PlayerType.PLAYER_SAMAEL                     = Isaac.GetPlayerTypeByName("Samael")
-PickupVariant.INVISIBLE_PICKUP               = Isaac.GetEntityVariantByName("Invisible Pickup")
-EffectVariant.TRAPDOOR_FAST_TRAVEL           = Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")
-EffectVariant.CRAWLSPACE_FAST_TRAVEL         = Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)")
-EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL      = Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")
-EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL = Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")
-EffectVariant.HEAVEN_DOOR_FAST_TRAVEL        = Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")
-EffectVariant.VOID_PORTAL_FAST_TRAVEL        = Isaac.GetEntityVariantByName("Void Portal (Fast-Travel)")
-EffectVariant.MEGA_SATAN_TRAPDOOR            = Isaac.GetEntityVariantByName("Mega Satan Trapdoor")
-EffectVariant.PITFALL_CUSTOM                 = Isaac.GetEntityVariantByName("Pitfall (Custom)")
-EffectVariant.ROOM_CLEAR_DELAY               = Isaac.GetEntityVariantByName("Room Clear Delay")
-EffectVariant.CRACK_THE_SKY_BASE             = Isaac.GetEntityVariantByName("Crack the Sky Base")
-EffectVariant.STICKY_NICKEL                  = Isaac.GetEntityVariantByName("Sticky Nickel Effect")
+EntityType.ENTITY_RACE_TROPHY = Isaac.GetEntityTypeByName("Race Trophy")
+EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC = Isaac.GetEntityTypeByName("Room Clear Delay NPC")
+EntityType.ENTITY_SAMAEL_SCYTHE = Isaac.GetEntityTypeByName("Samael Scythe")
+EntityType.ENTITY_SAMAEL_SPECIAL_ANIMATIONS = Isaac.GetEntityTypeByName("Samael Special Animations")
+TearVariant.MAGIC_SCYTHE = Isaac.GetEntityVariantByName("Magic Scythe")
+FamiliarVariant.SCYTHE_HITBOX = Isaac.GetEntityVariantByName("Scythe Hitbox")
+PlayerType.PLAYER_SAMAEL = Isaac.GetPlayerTypeByName("Samael")
+PickupVariant.INVISIBLE_PICKUP = Isaac.GetEntityVariantByName("Invisible Pickup")
+EffectVariant.TRAPDOOR_FAST_TRAVEL = Isaac.GetEntityVariantByName("Trapdoor (Fast-Travel)")
+EffectVariant.CRAWLSPACE_FAST_TRAVEL = Isaac.GetEntityVariantByName("Crawlspace (Fast-Travel)")
+local wombTrapdoor = Isaac.GetEntityVariantByName("Womb Trapdoor (Fast-Travel)")
+EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL = wombTrapdoor
+local blueWombTrapdoor = Isaac.GetEntityVariantByName("Blue Womb Trapdoor (Fast-Travel)")
+EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL = blueWombTrapdoor
+EffectVariant.HEAVEN_DOOR_FAST_TRAVEL = Isaac.GetEntityVariantByName("Heaven Door (Fast-Travel)")
+EffectVariant.VOID_PORTAL_FAST_TRAVEL = Isaac.GetEntityVariantByName("Void Portal (Fast-Travel)")
+EffectVariant.MEGA_SATAN_TRAPDOOR = Isaac.GetEntityVariantByName("Mega Satan Trapdoor")
+EffectVariant.PITFALL_CUSTOM = Isaac.GetEntityVariantByName("Pitfall (Custom)")
+EffectVariant.ROOM_CLEAR_DELAY = Isaac.GetEntityVariantByName("Room Clear Delay")
+EffectVariant.CRACK_THE_SKY_BASE = Isaac.GetEntityVariantByName("Crack the Sky Base")
+EffectVariant.STICKY_NICKEL = Isaac.GetEntityVariantByName("Sticky Nickel Effect")
+EffectVariant.INVISIBLE_EFFECT = Isaac.GetEntityVariantByName("Invisible Effect")
 
 -- Collectibles
-CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM        = Isaac.GetItemIdByName("Schoolbag")
-CollectibleType.COLLECTIBLE_SOUL_JAR                = Isaac.GetItemIdByName("Soul Jar")
-CollectibleType.COLLECTIBLE_TROPHY                  = Isaac.GetItemIdByName("Trophy")
-CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED    = Isaac.GetItemIdByName("3 Dollar Bill (Seeded)")
-CollectibleType.COLLECTIBLE_PLACEHOLDER             = Isaac.GetItemIdByName("Placeholder")
-CollectibleType.COLLECTIBLE_OFF_LIMITS              = Isaac.GetItemIdByName("Off Limits")
-CollectibleType.COLLECTIBLE_13_LUCK                 = Isaac.GetItemIdByName("13 Luck")
-CollectibleType.COLLECTIBLE_CHECKPOINT              = Isaac.GetItemIdByName("Checkpoint")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = Isaac.GetItemIdByName("Diversity Placeholder 1")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = Isaac.GetItemIdByName("Diversity Placeholder 2")
-CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = Isaac.GetItemIdByName("Diversity Placeholder 3")
-CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE = Isaac.GetItemIdByName("Mutant Spider's Inner Eye")
-CollectibleType.COLLECTIBLE_MEGA_SATAN_TELEPORT     = Isaac.GetItemIdByName("Mega Satan Teleport")
-CollectibleType.COLLECTIBLE_DEBUG                   = Isaac.GetItemIdByName("Debug")
-CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE         = Isaac.GetItemIdByName("Samael Dead Eye")
-CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK   = Isaac.GetItemIdByName("Samael Chocolate Milk")
-CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS         = Isaac.GetItemIdByName("Samael Dr. Fetus")
-CollectibleType.COLLECTIBLE_SAMAEL_MARKED           = Isaac.GetItemIdByName("Samael Marked")
-CollectibleType.COLLECTIBLE_WRAITH_SKULL            = Isaac.GetItemIdByName("Wraith Skull")
+-- Replacing 191
+CollectibleType.COLLECTIBLE_3_DOLLAR_BILL_SEEDED = Isaac.GetItemIdByName("3 Dollar Bill (Seeded)")
+-- Replacing 455
+CollectibleType.COLLECTIBLE_DADS_LOST_COIN_CUSTOM = Isaac.GetItemIdByName("Dad's Lost Coin")
+-- Replacing 534
+CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM = Isaac.GetItemIdByName("Schoolbag")
+CollectibleType.COLLECTIBLE_SOUL_JAR = Isaac.GetItemIdByName("Soul Jar")
+CollectibleType.COLLECTIBLE_13_LUCK = Isaac.GetItemIdByName("13 Luck")
+local mutantSpidersInnerEye = Isaac.GetItemIdByName("Mutant Spider's Inner Eye")
+CollectibleType.COLLECTIBLE_MUTANT_SPIDER_INNER_EYE = mutantSpidersInnerEye
+CollectibleType.COLLECTIBLE_TROPHY = Isaac.GetItemIdByName("Trophy")
+CollectibleType.COLLECTIBLE_OFF_LIMITS = Isaac.GetItemIdByName("Off Limits")
+CollectibleType.COLLECTIBLE_CHECKPOINT = Isaac.GetItemIdByName("Checkpoint")
+local diversityPlaceholder1 = Isaac.GetItemIdByName("Diversity Placeholder 1")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_1 = diversityPlaceholder1
+local diversityPlaceholder2 = Isaac.GetItemIdByName("Diversity Placeholder 2")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_2 = diversityPlaceholder2
+local diversityPlaceholder3 = Isaac.GetItemIdByName("Diversity Placeholder 3")
+CollectibleType.COLLECTIBLE_DIVERSITY_PLACEHOLDER_3 = diversityPlaceholder3
+CollectibleType.COLLECTIBLE_DEBUG = Isaac.GetItemIdByName("Debug")
+-- Replacing 52
+CollectibleType.COLLECTIBLE_SAMAEL_DR_FETUS = Isaac.GetItemIdByName("Samael Dr. Fetus")
+-- Replacing 69
+CollectibleType.COLLECTIBLE_SAMAEL_CHOCOLATE_MILK = Isaac.GetItemIdByName("Samael Chocolate Milk")
+-- Replacing 373
+CollectibleType.COLLECTIBLE_SAMAEL_DEAD_EYE = Isaac.GetItemIdByName("Samael Dead Eye")
+-- Replacing 394
+CollectibleType.COLLECTIBLE_SAMAEL_MARKED = Isaac.GetItemIdByName("Samael Marked")
+CollectibleType.COLLECTIBLE_WRAITH_SKULL = Isaac.GetItemIdByName("Wraith Skull")
 
 -- Sounds
 SoundEffect.SOUND_SPEEDRUN_FINISH = Isaac.GetSoundIdByName("Speedrun Finish")
-SoundEffect.SOUND_WALNUT          = Isaac.GetSoundIdByName("Walnut")
+SoundEffect.SOUND_WALNUT = Isaac.GetSoundIdByName("Walnut")
 
 -- Transformations
 PlayerForm.PLAYERFORM_STOMPY = PlayerForm.PLAYERFORM_SPIDERBABY + 1
-PlayerForm.NUM_PLAYER_FORMS  = PlayerForm.PLAYERFORM_STOMPY + 1
+PlayerForm.NUM_PLAYER_FORMS = PlayerForm.PLAYERFORM_STOMPY + 1
 
 g.LaserVariant = {
-  LASER_THICK_RED      = 1, -- Brimstone
-  LASER_THIN_RED       = 2, -- Technology
+  LASER_THICK_RED = 1, -- Brimstone
+  LASER_THIN_RED = 2, -- Technology
   LASER_SHOOP_DA_WHOOP = 3,
-  LASER_PRIDE          = 4, -- (looks like a squiggly line)
-  LASER_LIGHT_BEAM     = 5, -- Angel lasers
-  LASER_GIANT_RED      = 6, -- Mega Blast
-  LASER_TRACTOR_BEAM   = 7,
-  LASER_LIGHT_RING     = 8, -- (not sure, looks like a thinner Angel laser)
-  LASER_BRIMTECH       = 9, -- Brimstone + Technology
+  LASER_PRIDE = 4, -- (looks like a squiggly line)
+  LASER_LIGHT_BEAM = 5, -- Angel lasers
+  LASER_GIANT_RED = 6, -- Mega Blast
+  LASER_TRACTOR_BEAM = 7,
+  LASER_LIGHT_RING = 8, -- (not sure, looks like a thinner Angel laser)
+  LASER_BRIMTECH = 9, -- Brimstone + Technology
 }
 
 -- Spaded by ilise rose (@yatboim)
 g.RoomTransition = {
-  TRANSITION_NONE              = 0,
-  TRANSITION_DEFAULT           = 1,
-  TRANSITION_STAGE             = 2,
-  TRANSITION_TELEPORT          = 3,
-  TRANSITION_ANKH              = 5,
-  TRANSITION_DEAD_CAT          = 6,
-  TRANSITION_1UP               = 7,
-  TRANSITION_GUPPYS_COLLAR     = 8,
-  TRANSITION_JUDAS_SHADOW      = 9,
-  TRANSITION_LAZARUS_RAGS      = 10,
+  TRANSITION_NONE = 0,
+  TRANSITION_DEFAULT = 1,
+  TRANSITION_STAGE = 2,
+  TRANSITION_TELEPORT = 3,
+  TRANSITION_ANKH = 5,
+  TRANSITION_DEAD_CAT = 6,
+  TRANSITION_1UP = 7,
+  TRANSITION_GUPPYS_COLLAR = 8,
+  TRANSITION_JUDAS_SHADOW = 9,
+  TRANSITION_LAZARUS_RAGS = 10,
   TRANSITION_GLOWING_HOURGLASS = 12,
-  TRANSITION_D7                = 13,
-  TRANSITION_MISSING_POSTER    = 14,
+  TRANSITION_D7 = 13,
+  TRANSITION_MISSING_POSTER = 14,
 }
 
 g.FadeoutTarget = {
   -- -1 and lower result in a black screen
-  FADEOUT_FILE_SELECT     = 0,
-  FADEOUT_MAIN_MENU       = 1,
-  FADEOUT_TITLE_SCREEN    = 2,
-  FADEOUT_RESTART_RUN     = 3,
+  FADEOUT_FILE_SELECT = 0,
+  FADEOUT_MAIN_MENU = 1,
+  FADEOUT_TITLE_SCREEN = 2,
+  FADEOUT_RESTART_RUN = 3,
   FADEOUT_RESTART_RUN_LAP = 4,
   -- 5 and higher result in a black screen
 }
@@ -248,100 +262,109 @@ g.Transformations = {
 
 function g:InitRun()
   -- Tracking per run
-  g.run.startedTime       = 0
-  g.run.erasedFadeIn      = false
-  g.run.roomsEntered      = 0
-  g.run.items             = {}
-  g.run.roomIDs           = {}
-  g.run.pills             = {} -- We want to track all pills taken for identification purposes
+  g.run.startedTime = 0
+  g.run.erasedFadeIn = false
+  g.run.roomsEntered = 0
+  g.run.items = {}
+  g.run.roomIDs = {}
+  g.run.pills = {} -- We want to track all pills taken for identification purposes
   g.run.edenStartingItems = {}
-  g.run.metKrampus        = false
-  g.run.movingBoxOpen     = true
-  g.run.killedLamb        = false -- Used for the "Everything" race goal
+  g.run.metKrampus = false
+  g.run.movingBoxOpen = true
+  g.run.killedLamb = false -- Used for the "Everything" race goal
   g.run.removeMoreOptions = false -- Used to give only one double item Treasure Room
-  g.run.PHDPills          = false -- Used to determine when to change the pill text
-  g.run.haveWishbone      = false
-  g.run.haveWalnut        = false
-  g.run.debugDamage       = false
-  g.run.debugTears        = false
-  g.run.debugSpeed        = false
-  g.run.debugChaosCard    = false
+  g.run.PHDPills = false -- Used to determine when to change the pill text
+  g.run.haveWishbone = false
+  g.run.haveWalnut = false
+  g.run.debugDamage = false
+  g.run.debugTears = false
+  g.run.debugSpeed = false
+  g.run.debugChaosCard = false
 
   -- Tracking per level
-  g.run.currentFloor        = 0
+  g.run.currentFloor = 0
   -- (start at 0 so that we can trigger the PostNewRoom callback after the PostNewLevel callback)
-  g.run.currentFloorType    = 0 -- We need to track this because we can go from Cathedral to Sheol, for example
+  -- We track the floor type because we can go from Cathedral to Sheol, for example
+  g.run.currentFloorType = 0
   g:InitLevel()
 
   -- Tracking per room
   g:InitRoom()
 
   -- Temporary tracking
-  g.run.restart               = false -- If set, we restart the run on the next frame
+  g.run.restart = false -- If set, we restart the run on the next frame
   g.run.currentRoomClearState = true
-  g.run.diversity             = false -- Whether or not this is a diversity race
-  g.run.reseededFloor         = false
-  g.run.usedStrengthChar      = 0
-  g.run.goingToDebugRoom      = false
-  g.run.forgetMeNow           = false
-  g.run.consoleOpened         = false -- If set, fast-resetting is disabled
-  g.run.streakText            = "" -- Text that appears after players touch an item, reach a new level, etc.
-  g.run.streakText2           = "" -- Secondary streak text that will only show if there is no primary streak text
-  g.run.streakFrame           = 0
-  g.run.streakForce           = false
-  g.run.streakIgnore          = false
-  g.run.usedD6Frame           = 0 -- Set when the D6 is used; used to prevent bugs with The Void + D6
-  g.run.usedVoidFrame         = 0 -- Set when Void is used; used to prevent bugs with The Void + D6
-  g.run.usedTelepills         = false -- Used to replace the "use" animation
-  g.run.usedBlankCard         = false -- Used to replace the "use" animation
-  g.run.giveExtraCharge       = false -- Used to fix The Battery + 9 Volt synergy
-  g.run.droppedButterItem     = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
-  g.run.fastResetFrame        = 0 -- Set when the user presses the reset button on the keyboard
-  g.run.dualityCheckFrame     = 0
-  g.run.momDied               = false -- Used to fix bugs with fast-clear and killing Mom
-  g.run.photosSpawning        = false -- Used when replacing The Polaroid and The Negative
-  g.run.playerGenPedSeeds     = {} -- Used so that we properly seed player-generated pedestals (1/2)
-  g.run.playerGenPedFrame     = 0 -- Used so that we properly seed player-generated pedestals (2/2)
-  g.run.itLivesKillFrame      = 0 -- Used to delete the trapdoor and beam of light after It Lives! and Hush
-  g.run.speedLilHauntsFrame   = 0 -- Used to speed up The Haunt fight (1/2)
-  g.run.speedLilHauntsBlack   = false -- Used to speed up The Haunt fight (2/2)
-  g.run.rechargeItemFrame     = 0 -- Used to recharge the D6 / Void after a failed attempt
-  g.run.killAttackFly         = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
-  g.run.extraIncubus          = false -- Used in Racing+ Season 4
-  g.run.removedCrownHearts    = false -- Used to remove health after taking Crown of Light from a fart-reroll
-  g.run.passiveItems          = {} -- Used to keep track of the currently collected passive items
-  g.run.pickingUpItem         = 0 -- Equal to the ID of the currently queued item
-  g.run.pickingUpItemRoom     = 0 -- Equal to the room that we picked up the currently queued item
-  g.run.pickingUpItemType     = 0 -- Equal to the "QueuedItem.Item.Type" (the "ItemType" enum)
-  g.run.knifeDirection        = {} -- A 2-dimensional array that stores the directions held on past frames
-  g.run.lastDDLevel           = 0 -- Used by the Soul Jar
-  g.run.switchForgotten       = false -- Used to manually switch the player between The Forgotten and The Soul
-  g.run.currentCharacter      = 0
-  g.run.fadeForgottenFrame    = 0 -- Used to fix a bug with seeded death
-  g.run.showVersionFrame      = 0
-  g.run.bombKeyPressed        = false
-  g.run.spawningAngel         = false -- Used to prevent unavoidable damage on the Isaac fight
-  g.run.bossCommand           = false -- Used in Racing+ Rebalanced
-  g.run.questionMarkCard      = 0 -- Equal to the last game frame that one was used
-  g.run.gettingCollectible    = false
-  g.run.dealingExtraDamage    = false -- Used for Hush
-  g.run.firingExtraTear       = false -- Used for Hush
-  g.run.customBossRoomIndex   = -1000 -- Used in Season 7
-  g.run.pencilCounter         = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
-  g.run.spamButtons           = false -- Used to spam Blood Rights
-  g.run.startingRoomGraphics  = false -- Used to toggle off the controls graphic in some race types
-  g.run.usedTeleport          = false -- Used to reposition the player (if they appear at a non-existent entrance)
-  g.run.spawnedUltraGreed     = false -- Used in Season 7
-  g.run.frameOfLastDD         = -1000
-  g.run.threeDollarBillItem   = 0
-  g.run.disableControls       = false
+  g.run.lastDamageFrame = 0
+  g.run.diversity = false -- Whether or not this is a diversity race
+  g.run.reseededFloor = false
+  g.run.usedStrengthChar = 0
+  g.run.goingToDebugRoom = false
+  g.run.forgetMeNow = false
+  g.run.consoleOpened = false -- If set, fast-resetting is disabled
+  g.run.streakText = "" -- Text that appears after players touch an item, reach a new level, etc.
+  -- Secondary streak text that will only show if there is no primary streak text
+  g.run.streakText2 = ""
+  g.run.streakFrame = 0
+  g.run.streakForce = false
+  g.run.streakIgnore = false
+  g.run.usedD6Frame = 0 -- Set when the D6 is used; used to prevent bugs with The Void + D6
+  g.run.usedVoidFrame = 0 -- Set when Void is used; used to prevent bugs with The Void + D6
+  g.run.usedTelepills = false -- Used to replace the "use" animation
+  g.run.usedBlankCard = false -- Used to replace the "use" animation
+  g.run.giveExtraCharge = false -- Used to fix The Battery + 9 Volt synergy
+  g.run.droppedButterItem = 0 -- Needed to fix a bug with the Schoolbag and the Butter! trinket
+  g.run.fastResetFrame = 0 -- Set when the user presses the reset button on the keyboard
+  g.run.dualityCheckFrame = 0
+  g.run.momDied = false -- Used to fix bugs with fast-clear and killing Mom
+  g.run.photosSpawning = false -- Used when replacing The Polaroid and The Negative
+  g.run.playerGenPedSeeds = {} -- Used so that we properly seed player-generated pedestals (1/2)
+  g.run.playerGenPedFrame = 0 -- Used so that we properly seed player-generated pedestals (2/2)
+  -- Used to delete the trapdoor and beam of light after It Lives! and Hush
+  g.run.itLivesKillFrame = 0
+  g.run.speedLilHauntsFrame = 0 -- Used to speed up The Haunt fight (1/2)
+  g.run.speedLilHauntsBlack = false -- Used to speed up The Haunt fight (2/2)
+  g.run.rechargeItemFrame = 0 -- Used to recharge the D6 / Void after a failed attempt
+  g.run.killAttackFly = false -- Used to prevent a bug with trapdoors/crawlspaces and Corny Poop
+  g.run.extraIncubus = false -- Used in Racing+ Season 4
+  -- Used to remove health after taking Crown of Light from a fart-reroll
+  g.run.removedCrownHearts = false
+  g.run.passiveItems = {} -- Used to keep track of the currently collected passive items
+  g.run.pickingUpItem = 0 -- Equal to the ID of the currently queued item
+  g.run.pickingUpItemRoom = 0 -- Equal to the room that we picked up the currently queued item
+  g.run.pickingUpItemType = 0 -- Equal to the "QueuedItem.Item.Type" (the "ItemType" enum)
+  g.run.directions = {} -- A 2-dimensional array that stores the directions held on past frames
+  g.run.lastDDLevel = 0 -- Used by the Soul Jar
+  -- Used to manually switch the player between The Forgotten and The Soul
+  g.run.switchForgotten = false
+  g.run.currentCharacter = 0
+  g.run.fadeForgottenFrame = 0 -- Used to fix a bug with seeded death
+  g.run.showVersionFrame = 0
+  g.run.bombKeyPressed = false
+  g.run.spawningAngel = false -- Used to prevent unavoidable damage on the Isaac fight
+  g.run.bossCommand = false -- Used in Racing+ Rebalanced
+  g.run.questionMarkCard = 0 -- Equal to the last game frame that one was used
+  g.run.gettingCollectible = false
+  g.run.dealingExtraDamage = false -- Used for Hush
+  g.run.firingExtraTear = false -- Used for Hush
+  g.run.customBossRoomIndex = -1000 -- Used in Season 7
+  g.run.pencilCounter = 0 -- Used for tracking the number of tears fired (for Lead Pencil)
+  g.run.spamButtons = false -- Used to spam Blood Rights
+  g.run.startingRoomGraphics = false -- Used to toggle off the controls graphic in some race types
+  -- Used to reposition the player (if they appear at a non-existent entrance)
+  g.run.usedTeleport = false
+  g.run.spawnedUltraGreed = false -- Used in Season 7
+  g.run.frameOfLastDD = -1000
+  g.run.threeDollarBillItem = 0
+  g.run.disableControls = false
+  g.run.autofire = false
+  g.run.autofireChangeFrame = 0
 
   -- Trophy
   g.run.trophy = { -- Used to know when to respawn the trophy
-    spawned   = false,
-    stage     = 0,
+    spawned = false,
+    stage = 0,
     roomIndex = 0,
-    position  = g.zeroVector,
+    position = g.zeroVector,
   }
 
   -- Transformations
@@ -352,28 +375,28 @@ function g:InitRun()
 
   -- Trapdoor tracking
   g.run.trapdoor = {
-    state      = 0, -- See FastTravel.state for enum definitions
-    upwards    = false,
-    floor      = 0,
-    frame      = 0,
-    scale      = {}, -- Needs to be a table in order to handle multiple players
+    state = 0, -- See FastTravel.state for enum definitions
+    upwards = false,
+    floor = 0,
+    frame = 0,
+    scale = {}, -- Needs to be a table in order to handle multiple players
     voidPortal = false,
-    megaSatan  = false,
-    reseeding  = false, -- True if we will reseed the floor after getting there
+    megaSatan = false,
+    reseeding = false, -- True if we will reseed the floor after getting there
   }
 
   -- Crawlspace tracking
   g.run.crawlspace = {
-    prevRoom    = 0,
-    direction   = -1, -- Used to fix nested room softlocks
+    prevRoom = 0,
+    direction = -1, -- Used to fix nested room softlocks
     blackMarket = false,
   }
 
   -- Keeper + Greed's Gullet tracking
   g.run.keeper = {
-    baseHearts       = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
-    healthUpItems    = {},
-    coins            = 50,
+    baseHearts = 4, -- Either 4 (for base), 2, 0, -2, -4, -6, etc.
+    healthUpItems = {},
+    coins = 50,
     usedHealthUpPill = false,
   }
   for _, itemID in ipairs(g.healthUpItems) do
@@ -382,13 +405,15 @@ function g:InitRun()
 
   -- Schoolbag tracking
   g.run.schoolbag = {
-    present              = false, -- Corresponds to whether or not they have the Schoolbag collectible
-    item                 = 0,
-    charge               = 0,
-    chargeBattery        = 0,
-    pressed              = false, -- Used for keeping track of whether the "Switch" button is held down or not
+    -- Corresponds to whether or not they have the Schoolbag collectible
+    present = false,
+    item = 0,
+    charge = 0,
+    chargeBattery = 0,
+    -- Used for keeping track of whether the "Switch" button is held down or not
+    pressed = false,
     usedGlowingHourGlass = 0, -- 0 is not used, 1 is just used, 2 is entered the next room
-    last                 = { -- Used for handling the Glowing Hour Glass
+    last = { -- Used for handling the Glowing Hour Glass
       active = {
         item = 0,
         charge = 0,
@@ -407,58 +432,58 @@ function g:InitRun()
 
   -- Special death handling for seeded races
   g.run.seededDeath = {
-    state           = 0, -- See the "SeededDeath.state" enum
-    stage           = 0,
-    reviveFrame     = 0,
-    guppysCollar    = false,
-    position        = g.zeroVector,
-    debuffEndTime   = 0,
-    items           = {},
-    charge          = 0,
-    spriteScale     = g.zeroVector,
-    goldenBomb      = false,
-    goldenKey       = false,
-    sbItem          = 0,
-    sbCharge        = 0,
+    state = 0, -- See the "SeededDeath.state" enum
+    stage = 0,
+    reviveFrame = 0,
+    guppysCollar = false,
+    position = g.zeroVector,
+    debuffEndTime = 0,
+    items = {},
+    charge = 0,
+    spriteScale = g.zeroVector,
+    goldenBomb = false,
+    goldenKey = false,
+    sbItem = 0,
+    sbCharge = 0,
     sbChargeBattery = 0,
   }
 
   -- Custom Boss Rush tracking
   g.run.bossRush = {
-    started        = false,
-    finished       = false,
-    bosses         = {},
-    currentWave    = 0,
+    started = false,
+    finished = false,
+    bosses = {},
+    currentWave = 0,
     spawnWaveFrame = 0,
   }
 
   -- Special room seeding
   g.run.seededSwap = {
-    swapping     = false,
+    swapping = false,
     devilVisited = false,
-    bookTouched  = false,
-    coins        = 0,
-    keys         = 0,
-    heartTable   = {},
+    bookTouched = false,
+    coins = 0,
+    keys = 0,
+    heartTable = {},
   }
 end
 
 function g:InitLevel()
   -- Tracking per floor
-  g.run.replacedPedestals   = {}
-  g.run.replacedTrapdoors   = {}
+  g.run.replacedPedestals = {}
+  g.run.replacedTrapdoors = {}
   g.run.replacedCrawlspaces = {}
   g.run.replacedHeavenDoors = {}
-  g.run.reseedCount         = 0
-  g.run.tempHolyMantle      = false -- Used to give Keeper 2 hits upon revival in a seeded race
-  g.run.numSacrifices       = 0
+  g.run.reseedCount = 0
+  g.run.tempHolyMantle = false -- Used to give Keeper 2 hits upon revival in a seeded race
+  g.run.numSacrifices = 0
 
   -- Custom Challenge Room tracking
   g.run.challengeRoom = {
-    started        = false,
-    finished       = false,
-    waves          = {},
-    currentWave    = 0,
+    started = false,
+    finished = false,
+    waves = {},
+    currentWave = 0,
     spawnWaveFrame = 0,
   }
 
@@ -468,34 +493,43 @@ end
 
 function g:InitRoom()
   -- Tracking per room
-  g.run.fastCleared           = false
-  g.run.currentGlobins        = {} -- Used for softlock prevention
-  g.run.currentLilHaunts      = {} -- Used to delete invulnerability frames
-  g.run.currentHoppers        = {} -- Used to prevent softlocks
-  g.run.usedStrength          = false
-  g.run.handsDelay            = 0 -- Used to speed up Mom's Hands
-  g.run.handPositions         = {} -- Used to play an "Appear" animation for Mom's Hands
-  g.run.naturalTeleport       = false
-  g.run.diceRoomActivated     = false
-  g.run.numDDItems            = 0
-  g.run.megaSatanDead         = false
-  g.run.endOfRunText          = false -- Shown when the run is completed but only for one room
-  g.run.teleportSubverted     = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
-  g.run.teleportSubvertScale  = Vector(1, 1) -- Used for repositioning the player on It Lives! / Gurdy (2/2)
-  g.run.forceMomStomp         = false
-  g.run.forceMomStompPos      = nil
-  g.run.spawningLight         = false -- For the custom Crack the Sky effect
-  g.run.spawningExtraLight    = false -- For the custom Crack the Sky effect
-  g.run.lightPositions        = {} -- For the custom Crack the Sky effect
+  g.run.fastCleared = false
+  g.run.currentGlobins = {} -- Used for softlock prevention
+  g.run.currentLilHaunts = {} -- Used to delete invulnerability frames
+  g.run.currentHoppers = {} -- Used to prevent softlocks
+  g.run.usedStrength = false
+  g.run.handsDelay = 0 -- Used to speed up Mom's Hands
+  g.run.handPositions = {} -- Used to play an "Appear" animation for Mom's Hands
+  g.run.diceRoomActivated = false
+  g.run.numDDItems = 0
+  g.run.megaSatanDead = false
+  g.run.endOfRunText = false -- Shown when the run is completed but only for one room
+  g.run.teleportSubverted = false -- Used for repositioning the player on It Lives! / Gurdy (1/2)
+  -- Used for repositioning the player on It Lives! / Gurdy (2/2)
+  g.run.teleportSubvertScale = Vector(1, 1)
+  g.run.forceMomStomp = false
+  g.run.forceMomStompPos = nil
+  g.run.preventBloodExplosion = false
+  g.run.spawningLight = false -- For the custom Crack the Sky effect
+  g.run.spawningExtraLight = false -- For the custom Crack the Sky effect
+  g.run.lightPositions = {} -- For the custom Crack the Sky effect
   -- Used to fix the bug where multiple black hearts can drop from the same multi-segment enemy
-  g.run.blackHeartNPCs  = {} -- Indexed by NPC index
+  g.run.blackHeartNPCs = {} -- Indexed by NPC index
   g.run.blackHeartCount = {} -- Indexed by NPC init seed
-  g.run.touchedPickup   = false -- Used for Challenge Rooms
-  g.run.matriarch       = { -- Used to rebalance The Matriarch
-    spawned   = false,
+  g.run.touchedPickup = false -- Used for Challenge Rooms
+  g.run.matriarch = { -- Used to rebalance The Matriarch
+    spawned = false,
     chubIndex = -1,
     stunFrame = 0,
   }
+end
+
+function g:GetRoomIndex()
+  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
+  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
+    return g.l:GetCurrentRoomIndex()
+  end
+  return roomIndex
 end
 
 function g:IncrementRNG(seed)
@@ -543,6 +577,7 @@ function g:TableEqual(table1, table2)
       return false
     end
   end
+
   return true
 end
 
@@ -550,21 +585,23 @@ end
 function g:TableValToStr(v)
   if "string" == type(v) then
     v = string.gsub(v, "\n", "\\n")
+
     if string.match(string.gsub(v, "[^'\"]", ""), '^"+$') then
       return "'" .. v .. "'"
     end
+
     return '"' .. string.gsub(v, '"', '\\"') .. '"'
-  else
-    return "table" == type(v) and g.TableToString(v) or tostring(v)
   end
+
+  return "table" == type(v) and g.TableToString(v) or tostring(v)
 end
 
 function g:TableKeyToStr(k)
   if "string" == type(k) and string.match(k, "^[_%a][_%a%d]*$") then
     return k
-  else
-    return "[" .. g:TableValToStr(k) .. "]"
   end
+
+  return "[" .. g:TableValToStr(k) .. "]"
 end
 
 function g:TableToString(tbl)
@@ -594,7 +631,7 @@ function g:TableConcat(t1, t2)
   return t1
 end
 
--- From: https://stackoverflow.com/questions/2705793/how-to-get-number-of-entries-in-a-lua-table/2705804
+-- From: https://stackoverflow.com/questions/2705793/how-to-get-number-of-entries-in-a-lua-table
 function g:TableLen(t)
   local count = 0
   for _ in pairs(t) do
@@ -647,9 +684,9 @@ end
 function g:GetItemMaxCharges(itemID)
   if itemID == 0 then
     return 0
-  else
-    return g.itemConfig:GetCollectible(itemID).MaxCharges
   end
+
+  return g.itemConfig:GetCollectible(itemID).MaxCharges
 end
 
 function g:ExecuteCommand(command)
@@ -713,7 +750,11 @@ end
 
 -- Kilburn's function (pinned in the Isaac Discord server)
 function g:GetScreenSize()
-  local pos = g.r:WorldToScreenPosition(g.zeroVector) - g.r:GetRenderScrollOffset() - g.g.ScreenShakeOffset
+  local pos = (
+    g.r:WorldToScreenPosition(g.zeroVector)
+    - g.r:GetRenderScrollOffset()
+    - g.g.ScreenShakeOffset
+  )
 
   local rx = pos.X + 60 * 26 / 40
   local ry = pos.Y + 140 * (26 / 40)
@@ -724,13 +765,50 @@ end
 function g:OpenDoors()
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
-    if door ~= nil and
-       door.TargetRoomType ~= RoomType.ROOM_SECRET and -- 7
-       door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET then -- 8
-
+    if (
+      door ~= nil
+      and door.TargetRoomType ~= RoomType.ROOM_SECRET -- 7
+      and door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET -- 8
+    ) then
       door:Open()
     end
   end
+end
+
+function g:GetHeartXOffset()
+  -- Local variables
+  local curses = g.l:GetCurses()
+  local maxHearts = g.p:GetMaxHearts()
+  local soulHearts = g.p:GetSoulHearts()
+  local boneHearts = g.p:GetBoneHearts()
+  local extraLives = g.p:GetExtraLives()
+
+  local heartLength = 12 -- This is how long each heart is on the UI in the upper left hand corner
+  -- (this is not in pixels, but in draw coordinates;
+  -- you can see that it is 13 pixels wide in the "ui_hearts.png" file)
+  local combinedHearts = maxHearts + soulHearts + (boneHearts * 2) -- There are no half bone hearts
+  if combinedHearts > 12 then
+    combinedHearts = 12 -- After 6 hearts, it wraps to a second row
+  end
+
+  if curses == LevelCurse.CURSE_OF_THE_UNKNOWN then -- 1 << 3
+    combinedHearts = 2
+  end
+
+  local offset = (combinedHearts / 2) * heartLength
+  if extraLives > 9 then
+    offset = offset + 20
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then -- 212
+      offset = offset + 6
+    end
+  elseif extraLives > 0 then
+    offset = offset + 16
+    if g.p:HasCollectible(CollectibleType.COLLECTIBLE_GUPPYS_COLLAR) then -- 212
+      offset = offset + 4
+    end
+  end
+
+  return offset
 end
 
 -- This is used for the Victory Lap feature that spawns multiple bosses

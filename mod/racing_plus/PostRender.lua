@@ -1,23 +1,23 @@
 local PostRender = {}
 
 -- Includes
-local g                  = require("racing_plus/globals")
-local SaveDat            = require("racing_plus/savedat")
-local Errors             = require("racing_plus/errors")
-local Sprites            = require("racing_plus/sprites")
-local Schoolbag          = require("racing_plus/schoolbag")
-local SoulJar            = require("racing_plus/souljar")
-local UseItem            = require("racing_plus/useitem")
-local Pills              = require("racing_plus/pills")
-local FastTravel         = require("racing_plus/fasttravel")
-local ChallengeRooms     = require("racing_plus/challengerooms")
-local ChangeKeybindings  = require("racing_plus/changekeybindings")
-local Timer              = require("racing_plus/timer")
-local Speedrun           = require("racing_plus/speedrun")
+local g = require("racing_plus/globals")
+local SaveDat = require("racing_plus/savedat")
+local Errors = require("racing_plus/errors")
+local Sprites = require("racing_plus/sprites")
+local Schoolbag = require("racing_plus/schoolbag")
+local SoulJar = require("racing_plus/souljar")
+local UseItem = require("racing_plus/useitem")
+local Pills = require("racing_plus/pills")
+local FastTravel = require("racing_plus/fasttravel")
+local ChallengeRooms = require("racing_plus/challengerooms")
+local ChangeKeybindings = require("racing_plus/changekeybindings")
+local Timer = require("racing_plus/timer")
+local Speedrun = require("racing_plus/speedrun")
 local SpeedrunPostRender = require("racing_plus/speedrunpostrender")
-local ChangeCharOrder    = require("racing_plus/changecharorder")
-local SeededDeath        = require("racing_plus/seededdeath")
-local Shadow             = require("racing_plus/shadow")
+local ChangeCharOrder = require("racing_plus/changecharorder")
+local SeededDeath = require("racing_plus/seededdeath")
+local Shadow = require("racing_plus/shadow")
 
 -- Check various things once per draw frame (60 times a second)
 -- (this will fire while the floor/room is loading)
@@ -36,9 +36,7 @@ function PostRender:Main()
   -- Keep track of whether the race is finished or not
   -- (we need to check for "open" because it is possible to quit at the main menu and
   -- then join another race before starting the game)
-  if g.race.status == "none" or
-     g.race.status == "open" then
-
+  if g.race.status == "none" or g.race.status == "open" then
     g.raceVars.started = false
   end
 
@@ -81,7 +79,7 @@ function PostRender:Main()
   -- Check for inputs
   PostRender:CheckConsoleInput()
   PostRender:CheckResetInput()
-  PostRender:CheckKnifeDirection()
+  PostRender:CheckDirection()
 
   -- Make Cursed Eye seeded
   PostRender:CheckCursedEye()
@@ -118,15 +116,22 @@ function PostRender:DrawStreakText()
       local color = KColor(1, 1, 1, 1)
       local scale = 1
       local length = g.font:GetStringWidthUTF8(g.run.streakText2) * scale
-      g.font:DrawStringScaled(g.run.streakText2, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
+      g.font:DrawStringScaled(
+        g.run.streakText2,
+        pos.X - (length / 2),
+        pos.Y,
+        scale,
+        scale,
+        color,
+        0,
+        true
+      )
     end
     return
   end
 
   -- Players who prefer the vanilla streak text will have a separate mod enabled
-  if VanillaStreakText ~= nil and
-     not g.run.streakForce then
-
+  if VanillaStreakText ~= nil and not g.run.streakForce then
     return
   end
 
@@ -152,7 +157,16 @@ function PostRender:DrawStreakText()
   local color = KColor(1, 1, 1, fade)
   local scale = 1
   local length = g.font:GetStringWidthUTF8(g.run.streakText) * scale
-  g.font:DrawStringScaled(g.run.streakText, pos.X - (length / 2), pos.Y, scale, scale, color, 0, true)
+  g.font:DrawStringScaled(
+    g.run.streakText,
+    pos.X - (length / 2),
+    pos.Y,
+    scale,
+    scale,
+    color,
+    0,
+    true
+  )
 end
 
 function PostRender:TheLostHealth()
@@ -235,15 +249,19 @@ function PostRender:HolyMantle()
     Xoffset = hudOffset6Heart
   end
 
+  if g.l:GetCurses() == LevelCurse.CURSE_OF_THE_UNKNOWN then -- 1 << 3
+    Xoffset = hudOffset1Heart
+  end
+
   local character = g.p:GetPlayerType()
-  if character == PlayerType.PLAYER_THELOST then
+  if character == PlayerType.PLAYER_THELOST then -- 10
     if g.p:GetExtraLives() > 0 then
       Xoffset = Xoffset + 24
     end
   end
 
   local animationToPlay
-  if character == PlayerType.PLAYER_KEEPER then
+  if character == PlayerType.PLAYER_KEEPER then -- 14
     animationToPlay = "Keeper_Mantle"
   else
     animationToPlay = "Mantle"
@@ -256,18 +274,20 @@ end
 -- Make an additional charge bar for the Lead Pencil
 function PostRender:LeadPencilChargeBar()
   local character = g.p:GetPlayerType()
+  local flyingOffset = g.p:GetFlyingOffset()
 
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) or -- 444
-     character == PlayerType.PLAYER_AZAZEL or -- 7
-     character == PlayerType.PLAYER_LILITH or -- 13
-     character == PlayerType.PLAYER_THEFORGOTTEN or -- 16
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) or -- 52
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) or -- 68
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) or -- 118
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) or -- 168
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) then -- 395
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_LEAD_PENCIL) -- 444
+    or character == PlayerType.PLAYER_AZAZEL -- 7
+    or character == PlayerType.PLAYER_LILITH -- 13
+    or character == PlayerType.PLAYER_THEFORGOTTEN -- 16
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_DR_FETUS) -- 52
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY) -- 68
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) -- 118
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) -- 395
+  ) then
    return
   end
 
@@ -280,13 +300,18 @@ function PostRender:LeadPencilChargeBar()
   -- Adjust the position slightly so that it appears properly centered on the player,
   -- taking into account the size of the player sprite and if there are any existing charge bars
   local adjustX = 18.5 * g.p.SpriteScale.X
-  local adjustY = 15 + (54 * g.p.SpriteScale.Y)
+  local adjustY = 15 + (54 * g.p.SpriteScale.Y) - flyingOffset.Y
   local chargeBarHeight = 4.5
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) or -- 69
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) or -- 229
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
-
+  if (
+    g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) -- 69
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) -- 229
+    or g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) -- 316
+  ) then
     adjustY = adjustY + chargeBarHeight
+    if flyingOffset.Y ~= 0 then
+      -- When the character has flying, the charge bar will overlap, so manually adjust for this
+      adjustY = adjustY - 6 -- 5 is too small and 6 is just right
+    end
   end
   if g.p:HasCollectible(CollectibleType.COLLECTIBLE_MAW_OF_VOID) then -- 399
     adjustY = adjustY + chargeBarHeight
@@ -294,11 +319,16 @@ function PostRender:LeadPencilChargeBar()
   local adjustedPosition = Vector(g.p.Position.X + adjustX, g.p.Position.Y - adjustY)
 
   -- Render it
-  -- (there are 101 frames in the "Charging animation" and it takes 15 shots to fire a pencil barrage)
+  -- (there are 101 frames in the "Charging animation" and it takes 15 shots to fire a pencil
+  -- barrage)
   local barFrame = g.run.pencilCounter * (101 / 15)
   barFrame = g:Round(barFrame, 0)
   PostRender.pencilSprite:SetFrame("Charging", barFrame)
-  PostRender.pencilSprite:Render(g.r:WorldToScreenPosition(adjustedPosition), g.zeroVector, g.zeroVector)
+  PostRender.pencilSprite:Render(
+    g.r:WorldToScreenPosition(adjustedPosition),
+    g.zeroVector,
+    g.zeroVector
+  )
 end
 
 -- Restart the game if Easter Egg or character validation failed
@@ -351,44 +381,40 @@ function PostRender:CheckRestart()
 
   -- Change the seed of the run if need be
   local intendedSeed
-  if g.race.rFormat == "seeded" and
-     g.race.status == "in progress" then
-
+  if g.race.rFormat == "seeded" and g.race.status == "in progress" then
     intendedSeed = g.race.seed
   end
-  if intendedSeed ~= nil and
-     startSeedString ~= intendedSeed then
-
+  if intendedSeed ~= nil and startSeedString ~= intendedSeed then
     -- Change the seed of the run and restart the game
     g:ExecuteCommand("seed " .. intendedSeed)
-    -- (we can perform another restart immediately afterwards to change the character and nothing will go wrong)
+    -- (we can perform another restart immediately afterwards to change the character and nothing
+    -- will go wrong)
   end
 
-  -- The "restart" command takes an optional argument to specify the character; we might want to specify this
+  -- The "restart" command takes an optional argument to specify the character;
+  -- we might want to specify this
   local command = "restart"
   if Speedrun:InSpeedrun() then
     local currentChar = Speedrun:GetCurrentChar()
-    if currentChar == nil or
-       not Speedrun:CheckValidCharOrder() then
-
+    if currentChar == nil or not Speedrun:CheckValidCharOrder() then
       -- The character order is not set properly; we will display an error to the user later on
       return
     end
     command = command .. " " .. currentChar
-
-  elseif g.race.status ~= "none" and
-         g.race.rFormat ~= "custom" then -- Custom races might switch between characters
-
+  elseif g.race.status ~= "none" and g.race.rFormat ~= "custom" then
+    -- Custom races might switch between characters
     command = command .. " " .. g.race.character
   end
 
   g:ExecuteCommand(command)
 end
 
--- Keep track that we opened the console on this run so that we can disable the fast-resetting feature
+-- Keep track that we opened the console on this run so that we can disable the fast-resetting
+-- feature
 -- (so that typing an "r" into the console does not cause a fast-reset)
 function PostRender:CheckConsoleInput()
-  -- We don't need to perform any additional checks if we have already opened the console on this run
+  -- We don't need to perform any additional checks if we have already opened the console on this
+  -- run
   if g.run.consoleOpened then
     return
   end
@@ -410,13 +436,14 @@ function PostRender:CheckResetInput()
 
   -- Don't fast-reset if any modifiers are pressed
   -- (with the exception of shift, since the speedrunner MasterofPotato uses shift)
-  if Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) or -- 341
-     Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) or -- 342
-     Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) or -- 343
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) or -- 345
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) or -- 346
-     Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) then -- 347
-
+  if (
+    Input.IsButtonPressed(Keyboard.KEY_LEFT_CONTROL, 0) -- 341
+    or Input.IsButtonPressed(Keyboard.KEY_LEFT_ALT, 0) -- 342
+    or Input.IsButtonPressed(Keyboard.KEY_LEFT_SUPER, 0) -- 343
+    or Input.IsButtonPressed(Keyboard.KEY_RIGHT_CONTROL, 0) -- 345
+    or Input.IsButtonPressed(Keyboard.KEY_RIGHT_ALT, 0) -- 346
+    or Input.IsButtonPressed(Keyboard.KEY_RIGHT_SUPER, 0) -- 347
+  ) then
     return
   end
 
@@ -435,11 +462,10 @@ function PostRender:CheckResetInput()
   end
 
   local isaacFrameCount = Isaac.GetFrameCount()
-  if g.run.roomsEntered <= 3 or
-     isaacFrameCount <= g.run.fastResetFrame + 60 then
-
+  if g.run.roomsEntered <= 3 or isaacFrameCount <= g.run.fastResetFrame + 60 then
     Speedrun.fastReset = true
-    -- A fast reset means to reset the current character, a slow/normal reset means to go back to the first character
+    -- A fast reset means to reset the current character,
+    -- a slow/normal reset means to go back to the first character
     g:ExecuteCommand("restart")
   else
     -- In speedruns, we want to double tap R to return reset to the same character
@@ -448,27 +474,20 @@ function PostRender:CheckResetInput()
 end
 
 -- Fix the bug where diagonal knife throws have a 1-frame window when playing on keyboard (1/2)
-function PostRender:CheckKnifeDirection()
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) or -- 114
-     g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) then -- 168
-     -- (Epic Fetus is the only thing that overwrites Mom's Knife)
-
-    return
-  end
-
-  local knifeDirection = {}
+function PostRender:CheckDirection()
+  local directions = {}
   for i = 1, 4 do -- This corresponds to the "ButtonAction.ACTION_SHOOTX" enum
-    knifeDirection[i] = Input.IsActionPressed(i + 3, 0) -- e.g. ButtonAction.ACTION_SHOOTLEFT is 4
+    directions[i] = Input.IsActionPressed(i + 3, 0) -- e.g. ButtonAction.ACTION_SHOOTLEFT is 4
   end
-  g.run.knifeDirection[#g.run.knifeDirection + 1] = knifeDirection
-  if #g.run.knifeDirection > 2 then -- We want there to be a 3-frame window instead of a 1-frame window
-    table.remove(g.run.knifeDirection, 1)
+  g.run.directions[#g.run.directions + 1] = directions
+  if #g.run.directions > 2 then -- We want there to be a 3-frame window instead of a 1-frame window
+    table.remove(g.run.directions, 1) -- Remove the first element in the array
   end
 
   --[[
   Isaac.DebugString("         L R U D")
-  for i, directionTable in ipairs(g.run.knifeDirection) do
-    local frame = #g.run.knifeDirection - i
+  for i, directionTable in ipairs(g.run.directions) do
+    local frame = #g.run.directions - i
     local debugString = "Frame " .. tostring(frame) .. ": "
     for j = 1, 4 do
       if directionTable[j] then
@@ -487,39 +506,37 @@ end
 -- the teleport animation is happening)
 function PostRender:CheckCursedEye()
   -- Local variables
+  local gameFrameCount = g.g:GetFrameCount()
   local playerSprite = g.p:GetSprite()
   local hearts = g.p:GetHearts()
   local soulHearts = g.p:GetSoulHearts()
 
-  if g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) and -- 316
-     playerSprite:IsPlaying("TeleportUp") and
-     not g.run.naturalTeleport then -- Only catch Cursed Eye teleports
-
-    -- Account for the Cursed Skull trinket
-    if g.p:HasTrinket(TrinketType.TRINKET_CURSED_SKULL) and -- 43
-       ((hearts == 1 and soulHearts == 0) or
-        (hearts == 0 and soulHearts == 1)) then -- 1/2 of a heart remaining
-
-      Isaac.DebugString("Cursed Skull teleport detected.")
-    else
-      -- Account for Devil Room teleports from Red Chests
-      local touchingRedChest = false
-      local openedRedChests = Isaac.FindByType(EntityType.ENTITY_PICKUP, -- 5
-                                               PickupVariant.PICKUP_REDCHEST, 0, false, false) -- 360
-      -- (a subtype of 0 indicates that it is opened, a 1 indicates that it is unopened)
-      for _, chest in ipairs(openedRedChests) do
-        if g.p.Position:Distance(chest.Position.X) <= 24 then -- 25 is a touch too big
-          touchingRedChest = true
-        end
-      end
-      if touchingRedChest then
-        Isaac.DebugString("Red Chest teleport detected.")
-      else
-        Isaac.DebugString("Cursed Eye teleport detected.")
-        UseItem:Item44()
-      end
-    end
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) -- 316
+    or not playerSprite:IsPlaying("TeleportUp")
+    or g.run.lastDamageFrame == 0
+    -- If we were not damaged on this frame, we can assume it is not a Cursed Eye teleport
+    or gameFrameCount ~= g.run.lastDamageFrame
+    or g.run.usedTeleport
+  ) then
+    return
   end
+
+  -- Account for the Cursed Skull trinket
+  if (
+    g.p:HasTrinket(TrinketType.TRINKET_CURSED_SKULL) -- 43
+    -- 1/2 of a heart remaining
+    and (
+      (hearts == 1 and soulHearts == 0)
+      or (hearts == 0 and soulHearts == 1)
+    )
+  ) then
+    Isaac.DebugString("Cursed Skull teleport detected.")
+    return
+  end
+
+  Isaac.DebugString("Cursed Eye teleport detected.")
+  UseItem:Teleport()
 end
 
 function PostRender:SpeedUpTeleport()
@@ -527,26 +544,33 @@ function PostRender:SpeedUpTeleport()
   local playerSprite = g.p:GetSprite()
 
   -- Replace the "item raising" animation after using Telepills with a "TeleportUp" animation
-  -- (this has to be in the PostRender callback because game frames do not tick when the use animation is happening)
+  -- (this has to be in the PostRender callback because game frames do not tick when the use
+  -- animation is happening)
   if g.run.usedTelepills then
     g.run.usedTelepills = false
     playerSprite:Play("TeleportUp", true)
-    Isaac.DebugString("Replaced the \"use\" animation for Telepills with a \"TeleportUp\" animation.")
+    Isaac.DebugString(
+      "Replaced the \"use\" animation for Telepills with a \"TeleportUp\" animation."
+    )
   end
 
   -- Replace the "item raising" animation after using Blank Card with a "TeleportUp" animation
-  -- (this has to be in the PostRender callback because game frames do not tick when the use animation is happening)
+  -- (this has to be in the PostRender callback because game frames do not tick when the use
+  -- animation is happening)
   if g.run.usedBlankCard then
     g.run.usedBlankCard = false
-    g.p:AnimateTeleport(true) -- Using "playerSprite:Play("TeleportUp", true)" does not work here for some reason
-    Isaac.DebugString("Replaced the \"use\" animation for Blank Card with a \"TeleportUp\" animation.")
+    -- Using "playerSprite:Play("TeleportUp", true)" does not work here for some reason
+    g.p:AnimateTeleport(true)
+    Isaac.DebugString(
+      "Replaced the \"use\" animation for Blank Card with a \"TeleportUp\" animation."
+    )
   end
 
   -- The vanilla teleport animations are annoyingly slow, so speed them up by a factor of 2
-  if (playerSprite:IsPlaying("TeleportUp") or
-      playerSprite:IsPlaying("TeleportDown")) and
-     playerSprite.PlaybackSpeed == 1 then
-
+  if (
+    (playerSprite:IsPlaying("TeleportUp") or playerSprite:IsPlaying("TeleportDown"))
+    and playerSprite.PlaybackSpeed == 1
+  ) then
     playerSprite.PlaybackSpeed = 2
     Isaac.DebugString("Increased the playback speed of a teleport animation.")
 
@@ -635,7 +659,7 @@ function PostRender:DrawNumSacRoom()
   -- We want to place informational text for the player to the right of the heart containers
   -- (which will depend on how many heart containers we have)
   -- (this code is copied from the "DisplayTopLeftText()" function)
-  local x = 55 + SoulJar:GetHeartXOffset()
+  local x = 55 + g:GetHeartXOffset()
   local y = 10
   local text = "Sacrifices: " .. tostring(g.run.numSacrifices)
   Isaac.RenderText(text, x, y, 2, 2, 2, 2)
@@ -647,7 +671,7 @@ function PostRender:DisplayTopLeftText()
 
   -- We want to place informational text for the player to the right of the heart containers
   -- (which will depend on how many heart containers we have)
-  local x = 55 + SoulJar:GetHeartXOffset()
+  local x = 55 + g:GetHeartXOffset()
   local y = 10
   local lineLength = 15
 
@@ -655,7 +679,6 @@ function PostRender:DisplayTopLeftText()
     -- Display the number of victory laps
     -- (this should have priority over showing the seed)
     Isaac.RenderText("Victory Lap #" .. tostring(g.raceVars.victoryLaps), x, y, 2, 2, 2, 2)
-
   elseif g.run.endOfRunText then
     -- Show some run summary information
     -- (it will be removed if they exit the room)
@@ -664,7 +687,8 @@ function PostRender:DisplayTopLeftText()
     y = y + lineLength
     local secondLine
     if Speedrun:InSpeedrun() then
-      -- We can't put average time on a 3rd line because it will be blocked by the Checkpoint item text
+      -- We can't put average time on a 3rd line because it will be blocked by the Checkpoint item
+      -- text
       secondLine = "Avg. time per char: " .. Speedrun:GetAverageTimePerCharacter()
     else
       secondLine = "Rooms entered: " .. tostring(g.run.roomsEntered)
@@ -672,9 +696,7 @@ function PostRender:DisplayTopLeftText()
     Isaac.RenderText(secondLine, x, y, 2, 2, 2, 2)
 
     -- Draw a 3rd line to show the total frames
-    if not Speedrun:InSpeedrun() or
-       Speedrun:IsOnFinalCharacter() then
-
+    if not Speedrun:InSpeedrun() or Speedrun:IsOnFinalCharacter() then
       local frames
       if Speedrun:InSpeedrun() then
         frames = Speedrun.finishedFrames
@@ -686,12 +708,12 @@ function PostRender:DisplayTopLeftText()
       local thirdLine = tostring(frames) .. " frames (" .. tostring(seconds) .. "s)"
       Isaac.RenderText(thirdLine, x, y, 2, 2, 2, 2)
     end
-
-  elseif g.race.raceID ~= nil and
-         g.race.status == "in progress" and
-         g.run.roomsEntered <= 1 and
-         Isaac.GetTime() - g.raceVars.startedTime <= 2000 then
-
+  elseif (
+    g.race.raceID ~= nil
+    and g.race.status == "in progress"
+    and g.run.roomsEntered <= 1
+    and Isaac.GetTime() - g.raceVars.startedTime <= 2000
+  ) then
     -- Only show it in the first two seconds of the race
     Isaac.RenderText("Race ID: " .. g.race.raceID, x, y, 2, 2, 2, 2)
   end
@@ -700,17 +722,15 @@ end
 -- Do race specific stuff
 function PostRender:Race()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local challenge = Isaac.GetChallenge()
 
   -- If we are not in a race, do nothing
-  if g.race.status == "none" and
-     challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)") then
-
+  if (
+    g.race.status == "none"
+    and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 7)")
+  ) then
     Sprites:ClearPostRaceStartGraphics()
   end
   if g.race.status == "none" then
@@ -725,32 +745,28 @@ function PostRender:Race()
   end
 
   --
-  -- Race validation stuff
+  -- Race validation / show warning messages
   --
 
-  -- Show warning messages
-  if g.race.difficulty == "hard" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD and -- 1
-     g.race.rFormat ~= "custom" then
-
+  if (
+    g.race.difficulty == "hard"
+    and g.g.Difficulty ~= Difficulty.DIFFICULTY_HARD -- 1
+    and g.race.rFormat ~= "custom"
+  ) then
     Sprites:Init("top", "error-not-hard-mode") -- Error: You are not on hard mode.
     return
-
-  elseif Sprites.sprites.top ~= nil and
-         Sprites.sprites.top.spriteName == "error-not-hard-mode" then
-
+  elseif Sprites.sprites.top ~= nil and Sprites.sprites.top.spriteName == "error-not-hard-mode" then
     Sprites:Init("top", 0)
   end
-  if g.race.difficulty == "normal" and
-     g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL and -- 0
-     g.race.rFormat ~= "custom" then
 
+  if (
+    g.race.difficulty == "normal"
+    and g.g.Difficulty ~= Difficulty.DIFFICULTY_NORMAL -- 0
+    and g.race.rFormat ~= "custom"
+  ) then
     Sprites:Init("top", "error-hard-mode") -- Error: You are on hard mode.
     return
-
-  elseif Sprites.sprites.top ~= nil and
-         Sprites.sprites.top.spriteName == "error-hard-mode" then
-
+  elseif Sprites.sprites.top ~= nil and Sprites.sprites.top.spriteName == "error-hard-mode" then
     Sprites:Init("top", 0)
   end
 
@@ -759,9 +775,7 @@ function PostRender:Race()
   --
 
   -- Show the graphics for the "Race Start" room (the top half)
-  if g.race.status == "open" and
-     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
-
+  if g.race.status == "open" and roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
     Sprites:Init("top", "wait") -- "Wait for the race to begin!"
     Sprites:Init("myStatus", g.race.myStatus)
     Sprites:Init("ready", tostring(g.race.placeMid))
@@ -770,20 +784,19 @@ function PostRender:Race()
     Sprites:Init("readyTotal", tostring(g.race.numEntrants))
   else
     if Sprites.sprites.top ~= nil and Sprites.sprites.top.spriteName == "wait" then
-      -- There can be other things on the "top" sprite location and we don't want to have to reload it on every frame
+      -- There can be other things on the "top" sprite location and we don't want to have to reload
+      -- it on every frame
       Sprites:Init("top", 0)
     end
     Sprites:ClearStartingRoomGraphicsTop()
   end
 
   -- Show the graphics for the "Race Start" room (the bottom half)
-  if (g.race.status == "open" or
-      g.race.status == "starting") and
-     roomIndex == GridRooms.ROOM_DEBUG_IDX then -- -3
-
-    if g.race.ranked or
-       not g.race.solo then
-
+  if (
+    (g.race.status == "open" or g.race.status == "starting")
+    and roomIndex == GridRooms.ROOM_DEBUG_IDX -- -3
+  ) then
+    if g.race.ranked or not g.race.solo then
       Sprites:Init("raceRanked", "ranked")
       Sprites:Init("raceRankedIcon", "ranked-icon")
     else
@@ -806,19 +819,14 @@ function PostRender:Race()
   if g.race.status == "starting" then
     if g.race.countdown == 10 then
       Sprites:Init("top", "10")
-
     elseif g.race.countdown == 5 then
       Sprites:Init("top", "5")
-
     elseif g.race.countdown == 4 then
       Sprites:Init("top", "4")
-
     elseif g.race.countdown == 3 then
       Sprites:Init("top", "3")
-
     elseif g.race.countdown == 2 then
       Sprites:Init("top", "2")
-
     elseif g.race.countdown == 1 then
       Sprites:Init("top", "1")
     end
@@ -829,7 +837,8 @@ function PostRender:Race()
   --
 
   if g.race.status == "in progress" then
-    -- The client will set countdown equal to 0 and the status equal to "in progress" at the same time
+    -- The client will set countdown equal to 0 and the status equal to "in progress" at the same
+    -- time
     if not g.raceVars.started then
       -- Reset some race-related variables
       g.raceVars.started = true
@@ -852,9 +861,11 @@ function PostRender:Race()
     end
 
     -- Draw the graphic that shows what place we are in
-    if stage >= 2 and -- Our place is irrelevant on the first floor, so don't bother showing it
-       not g.race.solo then -- Its irrelevant to show "1st" when there is only one person in the race
-
+    if (
+      stage >= 2 -- Our place is irrelevant on the first floor, so don't bother showing it
+      -- It is irrelevant to show "1st" when there is only one person in the race
+      and not g.race.solo
+    ) then
       Sprites:Init("place", tostring(g.race.placeMid))
     else
       Sprites:Init("place", 0)
@@ -862,16 +873,18 @@ function PostRender:Race()
   end
 
   -- Remove graphics as soon as we enter another room
-  -- (this is done separately from the above if block in case the client and mod become desynchronized)
+  -- (this is done separately from the above if block in case the client and mod become
+  -- desynchronized)
   if g.raceVars.started == true and g.run.roomsEntered > 1 then
     Sprites:ClearPostRaceStartGraphics()
   end
 
   -- Hold the player in place when in the Race Room (to emulate the Gaping Maws effect)
   -- (this looks glitchy and jittery if is done in the PostUpdate callback, so do it here instead)
-  if roomIndex == GridRooms.ROOM_DEBUG_IDX and -- -3
-     not g.raceVars.started then
-
+  if (
+    roomIndex == GridRooms.ROOM_DEBUG_IDX -- -3
+    and not g.raceVars.started
+  ) then
     -- The starting position is 320, 380
     g.p.Position = Vector(320, 380)
   end
@@ -886,9 +899,7 @@ function PostRender:DrawVersion()
     g.run.showVersionFrame = gameFrameCount + 60
   end
 
-  if g.run.showVersionFrame == 0 or
-     gameFrameCount > g.run.showVersionFrame then
-
+  if g.run.showVersionFrame == 0 or gameFrameCount > g.run.showVersionFrame then
     return
   end
 
@@ -908,34 +919,42 @@ end
 
 -- Make the Schoolbag work properly with the Glowing Hour Glass
 -- (this has to be in the POST_RENDER callback instead of the POST_NEW_ROOM callback since
--- the game decrements the charge from the Glowing Hour Glass on the first render frame after the room is loaded)
+-- the game decrements the charge from the Glowing Hour Glass on the first render frame after the
+-- room is loaded)
 function PostRender:SchoolbagGlowingHourGlass()
   if g.run.schoolbag.usedGlowingHourGlass ~= 2 then
     return
   end
 
+  -- Local variables
+  local last = g.run.schoolbag.last
+
   -- Decrement the charges on the Glowing Hour Glass
-  if g.run.schoolbag.last.active.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
-    g.run.schoolbag.last.active.charge =g.run.schoolbag.last.active.charge - 2
+  if last.active.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
+    last.active.charge = last.active.charge - 2
   end
-  if g.run.schoolbag.last.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
-    g.run.schoolbag.last.schoolbag.charge = g.run.schoolbag.last.schoolbag.chargeBattery
+  if last.schoolbag.item == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS then -- 422
+    last.schoolbag.charge = last.schoolbag.chargeBattery
   end
 
   -- Rewind the charges on the active item and the Schoolbag item
   g.run.schoolbag.usedGlowingHourGlass = 0
-  local totalActiveCharge = g.run.schoolbag.last.active.charge + g.run.schoolbag.last.active.chargeBattery
-  g.p:AddCollectible(g.run.schoolbag.last.active.item, totalActiveCharge, true)
-  Schoolbag:Put(g.run.schoolbag.last.schoolbag.item, g.run.schoolbag.last.schoolbag.charge)
-  g.run.schoolbag.chargeBattery = g.run.schoolbag.last.schoolbag.chargeBattery
-  Isaac.DebugString("Glowing Hour Glass used - manually restored the active item: " ..
-                    tostring(g.run.schoolbag.last.active.item) .. " - " ..
-                    tostring(g.run.schoolbag.last.active.charge) .. " - " ..
-                    tostring(g.run.schoolbag.last.active.chargeBattery))
-  Isaac.DebugString("Glowing Hour Glass used - manually restored the Schoolbag item: " ..
-                    tostring(g.run.schoolbag.last.schoolbag.item) .. " - " ..
-                    tostring(g.run.schoolbag.last.schoolbag.charge) .. " - " ..
-                    tostring(g.run.schoolbag.last.schoolbag.chargeBattery))
+  local totalActiveCharge = last.active.charge + last.active.chargeBattery
+  g.p:AddCollectible(last.active.item, totalActiveCharge, true)
+  Schoolbag:Put(last.schoolbag.item, last.schoolbag.charge)
+  g.run.schoolbag.chargeBattery = last.schoolbag.chargeBattery
+  Isaac.DebugString(
+    "Glowing Hour Glass used - manually restored the active item: "
+    .. tostring(last.active.item) .. " - "
+    .. tostring(last.active.charge) .. " - "
+    .. tostring(last.active.chargeBattery)
+  )
+  Isaac.DebugString(
+    "Glowing Hour Glass used - manually restored the Schoolbag item: "
+    .. tostring(last.schoolbag.item) .. " - "
+    .. tostring(last.schoolbag.charge) .. " - "
+    .. tostring(last.schoolbag.chargeBattery)
+  )
 end
 
 function PostRender:DisplayFloorName()
@@ -972,16 +991,16 @@ function PostRender:GetScreenCenterPosition()
   local pos = g.r:GetCenterPos()
 
   if centerOffset.X > 260 then
-      pos.X = pos.X - 260
+    pos.X = pos.X - 260
   end
   if shape == RoomShape.ROOMSHAPE_LBL or shape == RoomShape.ROOMSHAPE_LTL then
-      pos.X = pos.X - 260
+    pos.X = pos.X - 260
   end
   if centerOffset.Y > 140 then
-      pos.Y = pos.Y - 140
+    pos.Y = pos.Y - 140
   end
   if shape == RoomShape.ROOMSHAPE_LTR or shape == RoomShape.ROOMSHAPE_LTL then
-      pos.Y = pos.Y - 140
+    pos.Y = pos.Y - 140
   end
 
   return Isaac.WorldToRenderPosition(pos, false)

@@ -1,7 +1,7 @@
 local Season2 = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
@@ -20,7 +20,6 @@ function Season2:PostGameStarted()
     -- Make Isaac start with a double charge instead of a single charge
     g.p:SetActiveCharge(12)
     g.sfx:Stop(SoundEffect.SOUND_BATTERYCHARGE) -- 170
-
   elseif character == PlayerType.PLAYER_APOLLYON then -- 15
     -- Apollyon starts with the Schoolbag by default
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM, 0, false)

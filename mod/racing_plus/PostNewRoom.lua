@@ -1,19 +1,19 @@
 local PostNewRoom = {}
 
 -- Includes
-local g                   = require("racing_plus/globals")
-local FastClear           = require("racing_plus/fastclear")
-local FastTravel          = require("racing_plus/fasttravel")
-local RacePostNewRoom     = require("racing_plus/racepostnewroom")
-local Speedrun            = require("racing_plus/speedrun")
+local g = require("racing_plus/globals")
+local FastClear = require("racing_plus/fastclear")
+local FastTravel = require("racing_plus/fasttravel")
+local RacePostNewRoom = require("racing_plus/racepostnewroom")
+local Speedrun = require("racing_plus/speedrun")
 local SpeedrunPostNewRoom = require("racing_plus/speedrunpostnewroom")
-local ChangeCharOrder     = require("racing_plus/changecharorder")
-local ChangeKeybindings   = require("racing_plus/changekeybindings")
-local Schoolbag           = require("racing_plus/schoolbag")
-local BossRush            = require("racing_plus/bossrush")
-local ChallengeRooms      = require("racing_plus/challengerooms")
-local Samael              = require("racing_plus/samael")
-local Sprites             = require("racing_plus/sprites")
+local ChangeCharOrder = require("racing_plus/changecharorder")
+local ChangeKeybindings = require("racing_plus/changekeybindings")
+local Schoolbag = require("racing_plus/schoolbag")
+local BossRush = require("racing_plus/bossrush")
+local ChallengeRooms = require("racing_plus/challengerooms")
+local Samael = require("racing_plus/samael")
+local Sprites = require("racing_plus/sprites")
 
 -- ModCallbacks.MC_POST_NEW_ROOM (19)
 function PostNewRoom:Main()
@@ -32,20 +32,24 @@ function PostNewRoom:Main()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
 
-  Isaac.DebugString("MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " " ..
-                    "(on stage " .. tostring(stage) .. ")")
+  Isaac.DebugString(
+    "MC_POST_NEW_ROOM - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " "
+    .. "(on stage " .. tostring(stage) .. ")"
+  )
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewRoom gets called before the PostNewLevel and PostGameStarted callbacks)
-  if gameFrameCount == 0 or
-     g.run.currentFloor ~= stage or
-     g.run.currentFloorType ~= stageType then
-
+  if (
+    gameFrameCount == 0
+    or g.run.currentFloor ~= stage
+    or g.run.currentFloorType ~= stageType
+  ) then
     -- Make an exception if we are using the "goto" command to go to a debug room
-    if g.run.goingToDebugRoom and
-       roomStageID == 2 and
-       roomVariant == 0 then
-
+    if (
+      g.run.goingToDebugRoom
+      and roomStageID == 2
+      and roomVariant == 0
+    ) then
       g.run.goingToDebugRoom = false
     else
       return
@@ -69,8 +73,10 @@ function PostNewRoom:NewRoom()
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
 
-  Isaac.DebugString("MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " " ..
-                    "(on stage " .. tostring(stage) .. ")")
+  Isaac.DebugString(
+    "MC_POST_NEW_ROOM2 - " .. tostring(roomStageID) .. "." .. tostring(roomVariant) .. " "
+    .. "(on stage " .. tostring(stage) .. ")"
+  )
 
   -- Keep track of how many rooms we enter over the course of the run
   g.run.roomsEntered = g.run.roomsEntered + 1
@@ -97,12 +103,14 @@ function PostNewRoom:NewRoom()
   Schoolbag:PostNewRoom() -- Handle the Glowing Hour Glass mechanics relating to the Schoolbag
   BossRush:PostNewRoom()
   ChallengeRooms:PostNewRoom()
-  FastTravel:CheckRoomRespawn() -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
+  -- Check to see if we need to respawn trapdoors / crawlspaces / beams of light
+  FastTravel:CheckRoomRespawn()
   FastTravel:CheckNewFloor() -- Check if we are just arriving on a new floor
   FastTravel:CheckCrawlspaceMiscBugs() -- Check for miscellaneous crawlspace bugs
 
   PostNewRoom:CheckDrawEdenStartingItems()
-  PostNewRoom:CheckRemoveMoreOptions() -- Remove the "More Options" buff if they have entered a Treasure Room
+  -- Remove the "More Options" buff if they have entered a Treasure Room
+  PostNewRoom:CheckRemoveMoreOptions()
   PostNewRoom:CheckZeroHealth() -- Fix the bug where we don't die at 0 hearts
   PostNewRoom:CheckStartingRoom() -- Draw the starting room graphic
   PostNewRoom:CheckPostTeleportInvalidEntrance()
@@ -111,8 +119,10 @@ function PostNewRoom:NewRoom()
   PostNewRoom:CheckScolexRoom() -- Check for all of the Scolex boss rooms
   PostNewRoom:CheckDepthsPuzzle() -- Check for the unavoidable puzzle room in the Dank Depths
   PostNewRoom:CheckEntities() -- Check for various NPCs
-  PostNewRoom:CheckRespawnTrophy() -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
+  -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
+  PostNewRoom:CheckRespawnTrophy()
   PostNewRoom:BanB1TreasureRoom() -- Certain formats ban the Treasure Room in Basement 1
+  PostNewRoom:BanB1CurseRoom() -- Certain formats ban the Curse Room in Basement 1
 
   ChangeCharOrder:PostNewRoom() -- The "Change Char Order" custom challenge
   ChangeKeybindings:PostNewRoom() -- The "Change Keybindings" custom challenge
@@ -126,13 +136,16 @@ function PostNewRoom:CheckRemoveKeeperHeartContainerFromStrength()
   -- Local variables
   local character = g.p:GetPlayerType()
 
-  if character == PlayerType.PLAYER_KEEPER and -- 14
-     g.run.keeper.baseHearts == 4 and
-     g.run.usedStrength then
-
+  if (
+    character == PlayerType.PLAYER_KEEPER -- 14
+    and g.run.keeper.baseHearts == 4
+    and g.run.usedStrength
+  ) then
     g.run.keeper.baseHearts = 2
     g.p:AddMaxHearts(-2, true) -- Take away a heart container
-    Isaac.DebugString("Took away 1 heart container from Keeper (via a Strength card). (PostNewRoom)")
+    Isaac.DebugString(
+      "Took away 1 heart container from Keeper (via a Strength card). (PostNewRoom)"
+    )
   end
 end
 
@@ -158,9 +171,10 @@ function PostNewRoom:CheckRemoveMoreOptions()
   -- Local variables
   local roomType = g.r:GetType()
 
-  if g.run.removeMoreOptions == true and
-     roomType == RoomType.ROOM_TREASURE then -- 4
-
+  if (
+    g.run.removeMoreOptions == true
+    and roomType == RoomType.ROOM_TREASURE -- 4
+  ) then
     g.run.removeMoreOptions = false
     g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_MORE_OPTIONS) -- 414
   end
@@ -175,42 +189,47 @@ function PostNewRoom:CheckZeroHealth()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
 
-  if maxHearts == 0 and
-     soulHearts == 0 and
-     boneHearts == 0 and
-     not g.run.seededSwap.swapping and -- Make an exception if we are manually swapping health values
-     InfinityTrueCoopInterface == nil then -- Make an exception if the True Co-op mod is on
-
+  if (
+    maxHearts == 0
+    and soulHearts == 0
+    and boneHearts == 0
+    and not g.run.seededSwap.swapping -- Make an exception if we are manually swapping health values
+    and InfinityTrueCoopInterface == nil -- Make an exception if the True Co-op mod is on
+  ) then
     g.p:Kill()
     Isaac.DebugString("Manually killing the player since they are at 0 hearts.")
   end
 end
 
--- Racing+ re-implements the starting room graphic so that it will not interfere with other kinds of graphics
--- (some code is borrowed from Revelations / StageAPI)
+-- Racing+ re-implements the starting room graphic so that it will not interfere with other kinds of
+-- graphics (some code is borrowed from Revelations / StageAPI)
 function PostNewRoom:CheckStartingRoom()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local centerPos = g.r:GetCenterPos()
 
   -- Only draw the graphic in the starting room of the first floor
   -- (and ignore Greed Mode, even though on vanilla the sprite will display in Greed Mode)
-  if g.run.startingRoomGraphics or
-     g.g.Difficulty >= Difficulty.DIFFICULTY_GREED or -- 2
-     stage ~= 1 or
-     roomIndex ~= g.l:GetStartingRoomIndex() then
-
+  if (
+    g.run.startingRoomGraphics
+    or g.g.Difficulty >= Difficulty.DIFFICULTY_GREED -- 2
+    or stage ~= 1
+    or roomIndex ~= g.l:GetStartingRoomIndex()
+  ) then
     return
   end
 
   -- Spawn the custom "Floor Effect Creep" entity (1000.46.12545)
-  local controlsEffect = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PLAYER_CREEP_RED, 12545,
-                                     centerPos, g.zeroVector, nil):ToEffect()
+  local controlsEffect = Isaac.Spawn(
+    EntityType.ENTITY_EFFECT,
+    EffectVariant.PLAYER_CREEP_RED,
+    12545, -- There is no "Isaac.GetEntitySubTypeByName()" function
+    centerPos,
+    g.zeroVector,
+    nil
+  ):ToEffect()
   controlsEffect.Timeout = 1000000
   local controlsSprite = controlsEffect:GetSprite()
   controlsSprite:Load("gfx/backdrop/controls.anm2", true)
@@ -247,10 +266,11 @@ function PostNewRoom:CheckPostTeleportInvalidEntrance()
   local firstDoorPosition
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
-    if door ~= nil and
-       door.TargetRoomType ~= RoomType.ROOM_SECRET and -- 7
-       door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET then -- 8
-
+    if (
+      door ~= nil
+      and door.TargetRoomType ~= RoomType.ROOM_SECRET -- 7
+      and door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET -- 8
+    ) then
       if firstDoorSlot == nil then
         firstDoorSlot = i
         firstDoorPosition = Vector(door.Position.X, door.Position.Y)
@@ -261,9 +281,9 @@ function PostNewRoom:CheckPostTeleportInvalidEntrance()
       end
     end
   end
-  if not nextToADoor and
-     firstDoorSlot ~= nil then -- Some rooms have no doors, like I AM ERROR rooms
 
+  -- Some rooms have no doors, like I AM ERROR rooms
+  if not nextToADoor and firstDoorSlot ~= nil then
     -- They teleported to a non-existent entrance,
     -- so manually move the player next to the first door in the room
     -- We can't move them directly to the door position or they would just enter the loading zone
@@ -271,24 +291,25 @@ function PostNewRoom:CheckPostTeleportInvalidEntrance()
     -- so calculate the offset based on the door slot
     local x = firstDoorPosition.X
     local y = firstDoorPosition.Y
-    if firstDoorSlot == DoorSlot.LEFT0 or -- 0
-       firstDoorSlot == DoorSlot.LEFT1 then -- 4
-
+    if (
+      firstDoorSlot == DoorSlot.LEFT0 -- 0
+      or firstDoorSlot == DoorSlot.LEFT1 -- 4
+    ) then
       x = x + 40
-
-    elseif firstDoorSlot == DoorSlot.UP0 or -- 1
-           firstDoorSlot == DoorSlot.UP1 then -- 5
-
+    elseif (
+      firstDoorSlot == DoorSlot.UP0 -- 1
+      or firstDoorSlot == DoorSlot.UP1 -- 5
+    ) then
       y = y + 40
-
-    elseif firstDoorSlot == DoorSlot.RIGHT0 or -- 2
-           firstDoorSlot == DoorSlot.RIGHT1 then -- 6
-
+    elseif (
+      firstDoorSlot == DoorSlot.RIGHT0 -- 2
+      or firstDoorSlot == DoorSlot.RIGHT1 -- 6
+    ) then
       x = x - 40
-
-    elseif firstDoorSlot == DoorSlot.DOWN0 or -- 3
-           firstDoorSlot == DoorSlot.DOWN1 then -- 7
-
+    elseif (
+      firstDoorSlot == DoorSlot.DOWN0 -- 3
+      or firstDoorSlot == DoorSlot.DOWN1 -- 7
+    ) then
       y = y - 40
     end
 
@@ -305,14 +326,15 @@ function PostNewRoom:CheckPostTeleportInvalidEntrance()
   end
 end
 
--- Instantly spawn the first part of the fight (there is an annoying delay before The Fallen and the leeches spawn)
+-- Instantly spawn the first part of the fight
+-- (there is an annoying delay before The Fallen and the leeches spawn)
 function PostNewRoom:CheckSatanRoom()
   -- Local variables
   local roomDesc = g.l:GetCurrentRoomDesc()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
   local challenge = Isaac.GetChallenge()
 
   if roomClear then
@@ -328,13 +350,15 @@ function PostNewRoom:CheckSatanRoom()
     return
   end
 
+  -- Spawn 2x Kamikaze Leech (55.1) & 1x Fallen (81.0)
+  -- 55.1 (Kamikaze Leech)
   local seed = roomSeed
   seed = g:IncrementRNG(seed)
-  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(5, 3), g.zeroVector, nil, 0, seed) -- 55.1 (Kamikaze Leech)
+  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(5, 3), g.zeroVector, nil, 0, seed)
   seed = g:IncrementRNG(seed)
-  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(7, 3), g.zeroVector, nil, 0, seed) -- 55.1 (Kamikaze Leech)
+  g.g:Spawn(EntityType.ENTITY_LEECH, 1, g:GridToPos(7, 3), g.zeroVector, nil, 0, seed)
   seed = g:IncrementRNG(seed)
-  g.g:Spawn(EntityType.ENTITY_FALLEN, 0, g:GridToPos(6, 3), g.zeroVector, nil, 0, seed) -- 81.0 (The Fallen)
+  g.g:Spawn(EntityType.ENTITY_FALLEN, 0, g:GridToPos(6, 3), g.zeroVector, nil, 0, seed)
 
   -- Prime the statue to wake up quicker
   local satans = Isaac.FindByType(EntityType.ENTITY_SATAN, -1, -1, false, false) -- 84
@@ -349,10 +373,7 @@ end
 -- prevent cheating on the "Everything" race goal
 function PostNewRoom:CheckMegaSatanRoom()
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
 
   -- Check to see if we are entering the Mega Satan room
   if roomIndex ~= GridRooms.ROOM_MEGA_SATAN_IDX then -- -7
@@ -363,9 +384,7 @@ function PostNewRoom:CheckMegaSatanRoom()
   Isaac.DebugString('Entered the Mega Satan room.')
 
   -- Check to see if we are cheating on the "Everything" race goal
-  if g.race.goal == "Everything" and
-     not g.run.killedLamb then
-
+  if g.race.goal == "Everything" and not g.run.killedLamb then
     -- Do a little something fun
     g.sfx:Play(SoundEffect.SOUND_THUMBS_DOWN, 1, 0, false, 1) -- 267
     for i = 1, 20 do
@@ -384,7 +403,7 @@ function PostNewRoom:CheckScolexRoom()
   local roomStageID = roomDesc.Data.StageID
   local roomVariant = roomDesc.Data.Variant
   local roomClear = g.r:IsClear()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
   local challenge = Isaac.GetChallenge()
 
   -- We don't need to modify Scolex if the room is already cleared
@@ -399,19 +418,21 @@ function PostNewRoom:CheckScolexRoom()
 
   -- Don't do anything if we are not in one of the Scolex boss rooms
   -- (there are no Double Trouble rooms with Scolexes)
-  if roomVariant ~= 1070 and
-     roomVariant ~= 1071 and
-     roomVariant ~= 1072 and
-     roomVariant ~= 1073 and
-     roomVariant ~= 1074 and
-     roomVariant ~= 1075 then
-
+  if (
+    roomVariant ~= 1070
+    and roomVariant ~= 1071
+    and roomVariant ~= 1072
+    and roomVariant ~= 1073
+    and roomVariant ~= 1074
+    and roomVariant ~= 1075
+  ) then
     return
   end
 
-  if g.race.rFormat == "seeded" or
-     challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") then
-
+  if (
+    g.race.rFormat == "seeded"
+    or challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+  ) then
      -- Since Scolex attack patterns ruin seeded races, delete it and replace it with two Frails
     -- (there are 10 Scolex entities)
     local scolexes = Isaac.FindByType(EntityType.ENTITY_PIN, 1, -1, false, false) -- 62.1 (Scolex)
@@ -421,7 +442,8 @@ function PostNewRoom:CheckScolexRoom()
 
     local seed = roomSeed
     for i = 1, 2 do
-      -- We don't want to spawn both of them on top of each other since that would make them behave a little glitchy
+      -- We don't want to spawn both of them on top of each other since that would make them behave
+      -- a little glitchy
       local pos = g.r:GetCenterPos()
       if i == 1 then
         pos.X = pos.X - 150
@@ -432,7 +454,8 @@ function PostNewRoom:CheckScolexRoom()
       -- causing damage if the player moves into the room too quickly
       seed = g:IncrementRNG(seed)
       local frail = g.g:Spawn(EntityType.ENTITY_PIN, 2, pos, g.zeroVector, nil, 0, seed)
-      frail.Visible = false -- It will show the head on the first frame after spawning unless we do this
+      -- It will show the head on the first frame after spawning unless we hide it
+      frail.Visible = false
       -- The game will automatically make the entity visible later on
     end
     Isaac.DebugString("Spawned 2 replacement Frails for Scolex.")
@@ -449,20 +472,19 @@ function PostNewRoom:CheckDepthsPuzzle()
   local gridSize = g.r:GetGridSize()
 
   -- We only need to check if we are in the Dank Depths
-  if stage ~= 5 and
-     stage ~= 6 then
-
+  if stage ~= 5 and stage ~= 6 then
     return
   end
   if stageType ~= 2 then
     return
   end
 
-  if roomVariant ~= 41 and
-     roomVariant ~= 10041 and -- (flipped)
-     roomVariant ~= 20041 and -- (flipped)
-     roomVariant ~= 30041 then -- (flipped)
-
+  if (
+    roomVariant ~= 41
+    and roomVariant ~= 10041 -- (flipped)
+    and roomVariant ~= 20041 -- (flipped)
+    and roomVariant ~= 30041 -- (flipped)
+  ) then
     return
   end
 
@@ -495,36 +517,45 @@ function PostNewRoom:CheckEntities()
   local gameFrameCount = g.g:GetFrameCount()
   local roomClear = g.r:IsClear()
   local roomShape = g.r:GetRoomShape()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
   local character = g.p:GetPlayerType()
 
   local subvertTeleport = false
   local pinFound = false
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if entity.Type == EntityType.ENTITY_GURDY or -- 36
-       entity.Type == EntityType.ENTITY_MOM or -- 45
-       entity.Type == EntityType.ENTITY_MOMS_HEART then -- 78 (this includes It Lives!)
-
+    if (
+      entity.Type == EntityType.ENTITY_GURDY -- 36
+      or entity.Type == EntityType.ENTITY_MOM -- 45
+      or entity.Type == EntityType.ENTITY_MOMS_HEART -- 78 (this includes It Lives!)
+    ) then
       subvertTeleport = true
       if entity.Type == EntityType.ENTITY_MOM then -- 45
         g.run.forceMomStomp = true
       end
-
-    elseif entity.Type == EntityType.ENTITY_SLOTH or -- Sloth (46.0) and Super Sloth (46.1)
-           entity.Type == EntityType.ENTITY_PRIDE then -- Pride (52.0) and Super Pride (52.1)
-
-      -- Replace all Sloths / Super Sloths / Prides / Super Prides with a new one that has an InitSeed equal to the room
-      -- (we want the card drop to always be the same if there happens to be more than one in the room;
-      -- in vanilla the type of card that drops depends on the order you kill them in)
-      g.g:Spawn(entity.Type, entity.Variant, entity.Position, entity.Velocity, entity.Parent, entity.SubType, roomSeed)
+    elseif (
+      entity.Type == EntityType.ENTITY_SLOTH -- Sloth (46.0) and Super Sloth (46.1)
+      or entity.Type == EntityType.ENTITY_PRIDE -- Pride (52.0) and Super Pride (52.1)
+    ) then
+      -- Replace all Sloths / Super Sloths / Prides / Super Prides with a new one that has an
+      -- InitSeed equal to the room
+      -- (we want the card drop to always be the same if there happens to be more than one in the
+      -- room; in vanilla the type of card that drops depends on the order you kill them in)
+      g.g:Spawn(
+        entity.Type,
+        entity.Variant,
+        entity.Position,
+        entity.Velocity,
+        entity.Parent,
+        entity.SubType,
+        roomSeed
+      )
       entity:Remove()
-
     elseif entity.Type == EntityType.ENTITY_PIN then -- 62
       pinFound = true
-
-    elseif entity.Type == EntityType.ENTITY_THE_HAUNT and -- 260
-           entity.Variant == 0 then
-
+    elseif (
+      entity.Type == EntityType.ENTITY_THE_HAUNT -- 260
+      and entity.Variant == 0
+    ) then
       -- Speed up the first Lil' Haunt attached to a Haunt (1/3)
       -- Later on this frame, the Lil' Haunts will spawn and have their state altered
       -- in the "PostNPCInit:Main()" function
@@ -537,11 +568,11 @@ function PostNewRoom:CheckEntities()
       if entity:ToNPC():GetBossColorIdx() == 17 then
         g.run.speedLilHauntsBlack = true
       end
-
-    elseif entity.Type == EntityType.ENTITY_PITFALL and -- 291
-           entity.Variant == 1 and -- Suction Pitfall
-           roomClear then
-
+    elseif (
+      entity.Type == EntityType.ENTITY_PITFALL -- 291
+      and entity.Variant == 1 -- Suction Pitfall
+      and roomClear
+    ) then
       -- Prevent the bug where if Suction Pitfalls do not complete their "Disappear" animation by
       -- the time the player leaves the room, they will re-appear the next time the player enters
       -- the room (even though the room is already cleared and they should be gone)
@@ -551,18 +582,20 @@ function PostNewRoom:CheckEntities()
   end
 
   -- Subvert the disruptive teleportation from Gurdy, Mom, Mom's Heart, and It Lives
-  if subvertTeleport and
-     not roomClear and
-     roomShape == RoomShape.ROOMSHAPE_1x1 then -- 1
-     -- (there are Double Trouble rooms with Gurdy but they don't cause a teleport)
-
+  if (
+    subvertTeleport
+    and not roomClear
+    and roomShape == RoomShape.ROOMSHAPE_1x1 -- 1
+    -- (there are Double Trouble rooms with Gurdy but they don't cause a teleport)
+  ) then
      g.run.teleportSubverted = true
 
     -- Make the player invisible or else it will show them on the teleported position for 1 frame
     -- (we can't just move the player here because the teleport occurs after this callback finishes)
     g.run.teleportSubvertScale = g.p.SpriteScale
     g.p.SpriteScale = g.zeroVector
-    -- (we actually move the player on the next frame in the "PostRender:CheckSubvertTeleport()" function)
+    -- (we actually move the player on the next frame in the "PostRender:CheckSubvertTeleport()"
+    -- function)
 
     -- Also make the familiars invisible
     -- (for some reason, we can use the "Visible" property instead of
@@ -573,7 +606,8 @@ function PostNewRoom:CheckEntities()
     end
 
     -- If we are The Soul, the Forgotten body will also need to be teleported
-    -- However, if we change its position manually, it will just warp back to the same spot on the next frame
+    -- However, if we change its position manually,
+    -- it will just warp back to the same spot on the next frame
     -- Thus, just manually switch to the Forgotten to avoid this bug
     if character == PlayerType.PLAYER_THESOUL then -- 17
       g.run.switchForgotten = true
@@ -592,23 +626,19 @@ end
 -- Check to see if we need to respawn an end-of-race or end-of-speedrun trophy
 function PostNewRoom:CheckRespawnTrophy()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
 
-  if g.run.trophy.spawned == false or
-     g.run.trophy.stage ~= stage or
-     g.run.trophy.roomIndex ~= roomIndex then
-
+  if (
+    g.run.trophy.spawned == false
+    or g.run.trophy.stage ~= stage
+    or g.run.trophy.roomIndex ~= roomIndex
+  ) then
     return
   end
 
   -- Don't respawn the trophy if we already touched it and finished a race or speedrun
-  if g.raceVars.finished or
-     Speedrun.finished then
-
+  if g.raceVars.finished or Speedrun.finished then
     return
   end
 
@@ -626,27 +656,26 @@ function PostNewRoom:BanB1TreasureRoom()
   -- Delete the doors to the Basement 1 treasure room, if any
   -- (this includes the doors in a Secret Room)
   -- (we must delete the door before changing the minimap, or else the icon will remain)
-  local treasureIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
+  local roomIndex = g.l:QueryRoomTypeIndex(RoomType.ROOM_TREASURE, false, RNG()) -- 4
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
-    if door ~= nil and
-       door.TargetRoomIndex == treasureIndex then
-
+    if door ~= nil and door.TargetRoomIndex == roomIndex then
       g.r:RemoveDoor(i)
+      Isaac.DebugString("Removed the Treasure Room door on B1.")
     end
   end
 
   -- Delete the icon on the minimap
   -- (this has to be done on every room, because it will reappear)
-  local treasureRoom
+  local roomDesc
   if MinimapAPI == nil then
-    treasureRoom = g.l:GetRoomByIdx(treasureIndex)
-    treasureRoom.DisplayFlags = 0
+    roomDesc = g.l:GetRoomByIdx(roomIndex)
+    roomDesc.DisplayFlags = 0
     g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
   else
-    treasureRoom = MinimapAPI:GetRoomByIdx(treasureIndex)
-    if treasureRoom ~= nil then
-      treasureRoom:Remove()
+    roomDesc = MinimapAPI:GetRoomByIdx(roomIndex)
+    if roomDesc ~= nil then
+      roomDesc:Remove()
     end
   end
 end
@@ -656,12 +685,61 @@ function PostNewRoom:CheckBanB1TreasureRoom()
   local stage = g.l:GetStage()
   local challenge = Isaac.GetChallenge()
 
-  return stage == 1 and
-         (g.race.rFormat == "seeded" or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)") or
-          (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and
-           Speedrun.charNum >= 2) or
-          challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)"))
+  return (
+    stage == 1
+    and (
+      g.race.rFormat == "seeded"
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 4)")
+      or (challenge == Isaac.GetChallengeIdByName("R+7 (Season 5)") and Speedrun.charNum >= 2)
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+    )
+  )
+end
+
+function PostNewRoom:BanB1CurseRoom()
+  if not PostNewRoom:CheckBanB1CurseRoom() then
+    return
+  end
+
+  -- Delete the doors to the Basement 1 curse room, if any
+  -- (this includes the doors in a Secret Room)
+  -- (we must delete the door before changing the minimap, or else the icon will remain)
+  local roomIndex
+  for i = 0, 7 do
+    local door = g.r:GetDoor(i)
+    -- We check for "door.TargetroomType" instead of "door.TargetRoomIndex" because it leads to bugs
+    if door ~= nil and door.TargetRoomType == RoomType.ROOM_CURSE then -- 10
+      g.r:RemoveDoor(i)
+      roomIndex = door.TargetRoomIndex
+      Isaac.DebugString("Removed the Curse Room door on B1.")
+    end
+  end
+
+  -- Delete the icon on the minimap
+  -- (this has to be done on every room, because it will reappear)
+  local roomDesc
+  if MinimapAPI == nil then
+    roomDesc = g.l:GetRoomByIdx(roomIndex)
+    roomDesc.DisplayFlags = 0
+    g.l:UpdateVisibility() -- Setting the display flag will not actually update the map
+  else
+    roomDesc = MinimapAPI:GetRoomByIdx(roomIndex)
+    if roomDesc ~= nil then
+      roomDesc:Remove()
+    end
+  end
+end
+
+function PostNewRoom:CheckBanB1CurseRoom()
+  -- Local variables
+  local stage = g.l:GetStage()
+  local challenge = Isaac.GetChallenge()
+
+  return (
+    stage == 1
+    and challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
+  )
 end
 
 return PostNewRoom

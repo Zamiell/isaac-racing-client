@@ -1,11 +1,11 @@
 local Debug = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Sprites   = require("racing_plus/sprites")
+local g = require("racing_plus/globals")
+local Sprites = require("racing_plus/sprites")
 local FastClear = require("racing_plus/fastclear")
-local Speedrun  = require("racing_plus/speedrun")
-local Season8   = require("racing_plus/season8")
+local Speedrun = require("racing_plus/speedrun")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_ITEM (3)
 function Debug:Main()

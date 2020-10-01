@@ -13,111 +13,116 @@ ChangeCharOrder.seasons = {
     X = 0,
     Y = 1,
     charPosition = {
-      {0, 1, 1},   -- Isaac
-      {1, 3, 1},   -- Magdalene
-      {2, 5, 1},   -- Cain
-      {3, 7, 1},   -- Judas
-      {4, 9, 1},   -- Blue Baby
-      {5, 11, 1},  -- Eve
-      {6, 1, 3},   -- Samson
-      {7, 3, 3},   -- Azazel
-      {8, 5, 3},   -- Lazarus
-      {9, 7, 3},   -- Eden
-      {10, 9, 3},  -- The Lost
+      {0, 1, 1}, -- Isaac
+      {1, 3, 1}, -- Magdalene
+      {2, 5, 1}, -- Cain
+      {3, 7, 1}, -- Judas
+      {4, 9, 1}, -- Blue Baby
+      {5, 11, 1}, -- Eve
+      {6, 1, 3}, -- Samson
+      {7, 3, 3}, -- Azazel
+      {8, 5, 3}, -- Lazarus
+      {9, 7, 3}, -- Eden
+      {10, 9, 3}, -- The Lost
       {13, 11, 3}, -- Lilith
-      {14, 1, 5},  -- Keeper
-      {15, 3, 5},  -- Apollyon
+      {14, 1, 5}, -- Keeper
+      {15, 3, 5}, -- Apollyon
       {16, 11, 5}, -- The Forgotton
     },
   },
+
   R9S1 = {
     X = 4,
     Y = 1,
     charPosition = {
-      {2, 2, 1},  -- Cain
-      {3, 4, 1},  -- Judas
-      {4, 6, 1},  -- Blue Baby
-      {5, 8, 1},  -- Eve
+      {2, 2, 1}, -- Cain
+      {3, 4, 1}, -- Judas
+      {4, 6, 1}, -- Blue Baby
+      {5, 8, 1}, -- Eve
       {6, 10, 1}, -- Samson
-      {7, 3, 3},  -- Azazel
-      {8, 5, 3},  -- Lazarus
+      {7, 3, 3}, -- Azazel
+      {8, 5, 3}, -- Lazarus
       {10, 7, 3}, -- The Lost
       {14, 9, 3}, -- Keeper
     },
   },
+
   R14S1 = {
     X = 8,
     Y = 1,
     charPosition = {
-      {0, 1, 1},   -- Isaac
-      {1, 3, 1},   -- Magdalene
-      {2, 5, 1},   -- Cain
-      {3, 7, 1},   -- Judas
-      {4, 9, 1},   -- Blue Baby
-      {5, 11, 1},  -- Eve
-      {6, 1, 3},   -- Samson
-      {7, 3, 3},   -- Azazel
-      {8, 5, 3},   -- Lazarus
-      {9, 7, 3},   -- Eden
-      {10, 9, 3},  -- The Lost
+      {0, 1, 1}, -- Isaac
+      {1, 3, 1}, -- Magdalene
+      {2, 5, 1}, -- Cain
+      {3, 7, 1}, -- Judas
+      {4, 9, 1}, -- Blue Baby
+      {5, 11, 1}, -- Eve
+      {6, 1, 3}, -- Samson
+      {7, 3, 3}, -- Azazel
+      {8, 5, 3}, -- Lazarus
+      {9, 7, 3}, -- Eden
+      {10, 9, 3}, -- The Lost
       {13, 11, 3}, -- Lilith
-      {14, 2, 5},  -- Keeper
+      {14, 2, 5}, -- Keeper
       {15, 10, 5}, -- Apollyon
 
     },
   },
+
   R7S2 = {
     X = 12,
     Y = 1,
     charPosition = {
-      {0, 2, 1},  -- Isaac
-      {2, 4, 1},  -- Cain
-      {3, 6, 1},  -- Judas
-      {7, 8, 1},  -- Azazel
+      {0, 2, 1}, -- Isaac
+      {2, 4, 1}, -- Cain
+      {3, 6, 1}, -- Judas
+      {7, 8, 1}, -- Azazel
       {9, 10, 1}, -- Eden
       {15, 5, 3}, -- Apollyon
       {PlayerType.PLAYER_SAMAEL, 7, 3}, -- Samael
     },
   },
+
   R7S3 = {
     X = 0,
     Y = 3,
     charPosition = {
-      {0, 2, 1},  -- Isaac
-      {1, 4, 1},  -- Magdalene
-      {3, 6, 1},  -- Judas
-      {5, 8, 1},  -- Eve
+      {0, 2, 1}, -- Isaac
+      {1, 4, 1}, -- Magdalene
+      {3, 6, 1}, -- Judas
+      {5, 8, 1}, -- Eve
       {6, 10, 1}, -- Samson
-      {8, 5, 3},  -- Lazarus
+      {8, 5, 3}, -- Lazarus
       {10, 7, 3}, -- The Lost
     },
   },
+
   R7S4 = {
     X = 4,
     Y = 3,
     charPosition = {
-      {2, 2, 1},  -- Cain
-      {3, 4, 1},  -- Judas
-      {4, 6, 1},  -- Blue Baby
-      {7, 8, 1},  -- Azazel
+      {2, 2, 1}, -- Cain
+      {3, 4, 1}, -- Judas
+      {4, 6, 1}, -- Blue Baby
+      {7, 8, 1}, -- Azazel
       {8, 10, 1}, -- Lazarus
       {13, 5, 3}, -- Lilith
       {15, 7, 3}, -- Apollyon
     },
     itemPosition = {
-      {172, 1, 1},  -- Sacrificial Dagger
-      {224, 3, 1},  -- Cricket's Body
-      {373, 5, 1},  -- Dead Eye
-      {52, 7, 1},   -- Dr. Fetus
-      {229, 9, 1},  -- Monstro's Lung
+      {172, 1, 1}, -- Sacrificial Dagger
+      {224, 3, 1}, -- Cricket's Body
+      {373, 5, 1}, -- Dead Eye
+      {52, 7, 1}, -- Dr. Fetus
+      {229, 9, 1}, -- Monstro's Lung
       {311, 11, 1}, -- Judas' Shadow
-      {1006, 1, 3},   -- Chocolate Milk + Steven
-      {1005, 11, 3},  -- Jacob's Ladder + There's Options
+      {1006, 1, 3}, -- Chocolate Milk + Steven
+      {1005, 11, 3}, -- Jacob's Ladder + There's Options
 
-      {1001, 9, 5},  -- Mutant Spider + The Inner Eye
-      {1002, 10, 5},  -- Technology + A Lump of Coal
+      {1001, 9, 5}, -- Mutant Spider + The Inner Eye
+      {1002, 10, 5}, -- Technology + A Lump of Coal
       {1003, 11, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
-      {1004, 12, 5},  -- Kamikaze! + Host Hat
+      {1004, 12, 5}, -- Kamikaze! + Host Hat
 
       {114, 0, 5}, -- Mom's Knife
       {395, 1, 5}, -- Tech X
@@ -126,14 +131,15 @@ ChangeCharOrder.seasons = {
     },
     numSClass = 4,
   },
+
   R7S6 = {
     X = 8,
     Y = 3,
     charPosition = {
-      {3, 2, 1},  -- Judas
-      {4, 4, 1},  -- Blue Baby
-      {5, 6, 1},  -- Eve
-      {7, 8, 1},  -- Azazel
+      {3, 2, 1}, -- Judas
+      {4, 4, 1}, -- Blue Baby
+      {5, 6, 1}, -- Eve
+      {7, 8, 1}, -- Azazel
       {9, 10, 1}, -- Eden
       {10, 5, 3}, -- The Lost
       {16, 7, 3}, -- The Forgotten
@@ -146,26 +152,26 @@ ChangeCharOrder.seasons = {
     },
     itemBans = 3,
     itemPosition2 = {
-      {172, 1, 1},  -- Sacrificial Dagger
-      {245, 2, 1},  -- 20/20
-      {261, 3, 1},  -- Proptosis
-      {275, 4, 1},  -- Lil Brimstone
-      {12, 5, 1},   -- Magic Mushroom
-      {244, 6, 1},  -- Tech.5
-      {169, 7, 1},  -- Polyphemus
-      {4, 8, 1},    -- Cricket's Head
-      {237, 9, 1},  -- Death's Touch
+      {172, 1, 1}, -- Sacrificial Dagger
+      {245, 2, 1}, -- 20/20
+      {261, 3, 1}, -- Proptosis
+      {275, 4, 1}, -- Lil Brimstone
+      {12, 5, 1}, -- Magic Mushroom
+      {244, 6, 1}, -- Tech.5
+      {169, 7, 1}, -- Polyphemus
+      {4, 8, 1}, -- Cricket's Head
+      {237, 9, 1}, -- Death's Touch
       {373, 10, 1}, -- Dead Eye
       {224, 11, 1}, -- Cricket's Body
-      {52, 1, 3},   -- Dr. Fetus
-      {229, 2, 3},  -- Monstro's Lung
-      {311, 3, 3},  -- Judas' Shadow
+      {52, 1, 3}, -- Dr. Fetus
+      {229, 2, 3}, -- Monstro's Lung
+      {311, 3, 3}, -- Judas' Shadow
 
       {1006, 5, 3}, -- Chocolate Milk + Steven
       {1005, 6, 3}, -- Jacob's Ladder + There's Options
 
-      {118, 8, 3},  -- Brimstone
-      {360, 9, 3},  -- Incubus
+      {118, 8, 3}, -- Brimstone
+      {360, 9, 3}, -- Incubus
       {415, 10, 3}, -- Crown of Light
       {182, 11, 3}, -- Sacred Heart
 
@@ -174,30 +180,46 @@ ChangeCharOrder.seasons = {
       {1003, 3, 5}, -- Fire Mind + Mysterious Liquid + 13 luck
     },
   },
+
   R7S7 = {
     X = 12,
     Y = 3,
     charPosition = {
-      {2, 2, 1},  -- Cain
-      {3, 4, 1},  -- Judas
-      {6, 6, 1},  -- Samson
-      {7, 8, 1},  -- Azazel
+      {2, 2, 1}, -- Cain
+      {3, 4, 1}, -- Judas
+      {6, 6, 1}, -- Samson
+      {7, 8, 1}, -- Azazel
       {8, 10, 1}, -- Lazarus
       {10, 5, 3}, -- The Lost
       {13, 7, 3}, -- Lilith
     },
   },
+
   R7S8 = {
     X = 2,
     Y = 5,
     charPosition = {
-      {0, 2, 1},   -- Isaac
-      {2, 4, 1},   -- Cain
-      {3, 6, 1},   -- Judas
-      {5, 8, 1},   -- Eve
+      {0, 2, 1}, -- Isaac
+      {2, 4, 1}, -- Cain
+      {3, 6, 1}, -- Judas
+      {5, 8, 1}, -- Eve
       {11, 10, 1}, -- Lazarus II
-      {12, 5, 3},  -- Dark Judas
-      {15, 7, 3},  -- Apollyon
+      {12, 5, 3}, -- Dark Judas
+      {15, 7, 3}, -- Apollyon
+    },
+  },
+
+  R7S9 = {
+    X = 10,
+    Y = 5,
+    charPosition = {
+      {0, 2, 1}, -- Isaac
+      {1, 4, 1}, -- Magdalene
+      {2, 6, 1}, -- Cain
+      {3, 8, 1}, -- Judas
+      {4, 10, 1}, -- Blue Baby
+      {7, 5, 3}, -- Azazel
+      {8, 7, 3}, -- Lazarus
     },
   },
 }
@@ -231,9 +253,10 @@ function ChangeCharOrder:PostUpdate()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
 
-  if ChangeCharOrder.createButtonsFrame ~= 0 and
-     gameFrameCount >= ChangeCharOrder.createButtonsFrame then
-
+  if (
+    ChangeCharOrder.createButtonsFrame ~= 0
+    and gameFrameCount >= ChangeCharOrder.createButtonsFrame
+  ) then
     ChangeCharOrder.createButtonsFrame = 0
 
     -- Create the character buttons
@@ -248,8 +271,10 @@ function ChangeCharOrder:PostUpdate()
     elseif ChangeCharOrder.phase == 4 then
       ChangeCharOrder:CreateItemBanButtons2()
     else
-      Isaac.DebugString("ERROR: The \"ChangeCharOrder:PostUpdate()\" function was entered with a phase of: " ..
-                        tostring(ChangeCharOrder.phase))
+      Isaac.DebugString(
+        "ERROR: The \"ChangeCharOrder:PostUpdate()\" function was entered with a phase of: "
+        .. tostring(ChangeCharOrder.phase)
+      )
     end
   end
 end
@@ -267,10 +292,14 @@ function ChangeCharOrder:CreateCharacterButtons()
     -- Spawn the character selection graphic next to the button
     ChangeCharOrder.sprites.characters[i] = Sprite()
     local charNum = charPos[1]
-    ChangeCharOrder.sprites.characters[i]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
-    ChangeCharOrder.sprites.characters[i]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-    ChangeCharOrder.sprites.characters[i].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+    ChangeCharOrder.sprites.characters[i]:Load(
+      "gfx/custom/characters/" .. tostring(charNum) .. ".anm2",
+      true
+    )
+    -- The 5th frame is rather interesting
+    ChangeCharOrder.sprites.characters[i]:SetFrame("Death", 5)
     -- Fade the character so it looks like a ghost
+    ChangeCharOrder.sprites.characters[i].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
   end
 
   -- In Season 6, we are not allowed to choose Eden for the first character
@@ -294,10 +323,14 @@ function ChangeCharOrder:CreateItemButtons()
   ChangeCharOrder.sprites.characters = {}
   ChangeCharOrder.sprites.characters[1] = Sprite()
   local charNum = ChangeCharOrder.charOrder[1]
-  ChangeCharOrder.sprites.characters[1]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
-  ChangeCharOrder.sprites.characters[1]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-  ChangeCharOrder.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+  ChangeCharOrder.sprites.characters[1]:Load(
+    "gfx/custom/characters/" .. tostring(charNum) .. ".anm2",
+    true
+  )
+  -- The 5th frame is rather interesting
+  ChangeCharOrder.sprites.characters[1]:SetFrame("Death", 5)
   -- Fade the character so that it looks like a ghost
+  ChangeCharOrder.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
 
   local season = ChangeCharOrder.seasons[ChangeCharOrder.seasonChosen]
   ChangeCharOrder.sprites.items = {}
@@ -309,8 +342,16 @@ function ChangeCharOrder:CreateItemButtons()
       -- Spawn creep for the S-Class items
       g.r:SetClear(false) -- Or else the creep will instantly dissipate
       for j = 1, 10 do
-        local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CREEP_RED, 0, -- 1000.22
-                                 buttonPos, g.zeroVector, nil, 0, 0)
+        local creep = Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.CREEP_RED, -- 22
+          0,
+          buttonPos,
+          g.zeroVector,
+          nil,
+          0,
+          0
+        )
         creep:ToEffect().Timeout = 1000000
       end
     end
@@ -326,7 +367,10 @@ function ChangeCharOrder:CreateItemButtons()
       ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
     else
       -- This is a build
-      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
+      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(
+        0,
+        "gfx/builds/" .. tostring(itemNum) .. ".png"
+      )
     end
     ChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
     ChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
@@ -358,7 +402,10 @@ function ChangeCharOrder:CreateItemBanButtons1()
       ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
     else
       -- This is a build
-      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
+      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(
+        0,
+        "gfx/builds/" .. tostring(itemNum) .. ".png"
+      )
     end
     ChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
     ChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
@@ -387,7 +434,10 @@ function ChangeCharOrder:CreateItemBanButtons2()
       ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, fileName)
     else
       -- This is a build
-      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(0, "gfx/builds/" .. tostring(itemNum) .. ".png")
+      ChangeCharOrder.sprites.items[newIndex]:ReplaceSpritesheet(
+        0,
+        "gfx/builds/" .. tostring(itemNum) .. ".png"
+      )
     end
     ChangeCharOrder.sprites.items[newIndex]:LoadGraphics()
     ChangeCharOrder.sprites.items[newIndex]:SetFrame("Default", 1)
@@ -477,10 +527,11 @@ function ChangeCharOrder:CheckButtonPressed1(gridEntity)
 
   for k, v in pairs(ChangeCharOrder.seasons) do
     local buttonPos = g:GridToPos(v.X, v.Y)
-    if gridEntity:GetSaveState().State == 3 and
-       gridEntity.Position.X == buttonPos.X and
-       gridEntity.Position.Y == buttonPos.Y then
-
+    if (
+      gridEntity:GetSaveState().State == 3
+      and gridEntity.Position.X == buttonPos.X
+      and gridEntity.Position.Y == buttonPos.Y
+    ) then
       ChangeCharOrder.phase = 2
       ChangeCharOrder.seasonChosen = k
       ChangeCharOrder:RemoveAllRoomButtons()
@@ -502,18 +553,22 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
 
   for i, charPos in ipairs(season.charPosition) do
     local posButton = g:GridToPos(charPos[2], charPos[3])
-    if gridEntity:GetSaveState().State == 3 and
-       gridEntity.VarData == 0 and
-       gridEntity.Position.X == posButton.X and
-       gridEntity.Position.Y == posButton.Y then
-
+    if (
+      gridEntity:GetSaveState().State == 3
+      and gridEntity.VarData == 0
+      and gridEntity.Position.X == posButton.X
+      and gridEntity.Position.Y == posButton.Y
+    ) then
       -- Check to see if we chose Eden first on season 6
-      if ChangeCharOrder.seasonChosen == "R7S6" and
-         #ChangeCharOrder.charOrder == 0 then
-
+      if (
+        ChangeCharOrder.seasonChosen == "R7S6"
+        and #ChangeCharOrder.charOrder == 0
+      ) then
         if charPos[1] == PlayerType.PLAYER_EDEN then -- 9
           g.p:Kill()
-          Isaac.DebugString("Cheating detected (attempted to choose Eden first). Killing the player.")
+          Isaac.DebugString(
+            "Cheating detected (attempted to choose Eden first). Killing the player."
+          )
           return
         end
 
@@ -539,9 +594,10 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
 
       -- Check to see if this is our last character
       if #ChangeCharOrder.charOrder == #season.charPosition then
-        if ChangeCharOrder.seasonChosen == "R7S4" or
-           ChangeCharOrder.seasonChosen == "R7S6" then
-
+        if (
+          ChangeCharOrder.seasonChosen == "R7S4"
+          or ChangeCharOrder.seasonChosen == "R7S6"
+        ) then
           -- In R+7 Season 4/6, now we have to choose our items
           ChangeCharOrder.phase = 3
           ChangeCharOrder:RemoveAllRoomButtons()
@@ -550,7 +606,10 @@ function ChangeCharOrder:CheckButtonPressed2(gridEntity)
           ChangeCharOrder.createButtonsFrame = gameFrameCount + 1
         else
           -- We are done, so write the changes to the Racing+ Data mod's "save#.dat" file
-          RacingPlusData:Set("charOrder-" .. ChangeCharOrder.seasonChosen, ChangeCharOrder.charOrder)
+          RacingPlusData:Set(
+            "charOrder-" .. ChangeCharOrder.seasonChosen,
+            ChangeCharOrder.charOrder
+          )
 
           g.g:Fadeout(0.05, g.FadeoutTarget.FADEOUT_MAIN_MENU) -- 1
         end
@@ -566,11 +625,12 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
 
   for i, itemPos in ipairs(season.itemPosition) do
     local posButton = g:GridToPos(itemPos[2], itemPos[3])
-    if gridEntity:GetSaveState().State == 3 and
-       gridEntity.VarData == 0 and
-       gridEntity.Position.X == posButton.X and
-       gridEntity.Position.Y == posButton.Y then
-
+    if (
+      gridEntity:GetSaveState().State == 3
+      and gridEntity.VarData == 0
+      and gridEntity.Position.X == posButton.X
+      and gridEntity.Position.Y == posButton.Y
+    ) then
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
       ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
@@ -582,17 +642,20 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
         local numBig4Items = 0
         for j = 1, #ChangeCharOrder.itemOrder do
           local item = ChangeCharOrder.itemOrder[j]
-          if item == 114 or
-             item == 395 or
-             item == 168 or
-             item == 149 then
-
+          if (
+            item == 114
+            or item == 395
+            or item == 168
+            or item == 149
+          ) then
             numBig4Items = numBig4Items + 1
           end
         end
         if numBig4Items > 1 then
           g.p:Kill()
-          Isaac.DebugString("Cheating detected (attempt to choose two big 4 items). Killing the player.")
+          Isaac.DebugString(
+            "Cheating detected (attempt to choose two big 4 items). Killing the player."
+          )
           return
         end
 
@@ -611,10 +674,14 @@ function ChangeCharOrder:CheckButtonPressed3(gridEntity)
 
       -- Change the player sprite
       local charNum = ChangeCharOrder.charOrder[#ChangeCharOrder.itemOrder + 1]
-      ChangeCharOrder.sprites.characters[1]:Load("gfx/custom/characters/" .. tostring(charNum) .. ".anm2", true)
-      ChangeCharOrder.sprites.characters[1]:SetFrame("Death", 5) -- The 5th frame is rather interesting
-      ChangeCharOrder.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
+      ChangeCharOrder.sprites.characters[1]:Load(
+        "gfx/custom/characters/" .. tostring(charNum) .. ".anm2",
+        true
+      )
+      -- The 5th frame is rather interesting
+        ChangeCharOrder.sprites.characters[1]:SetFrame("Death", 5)
       -- Fade the character so it looks like a ghost
+      ChangeCharOrder.sprites.characters[1].Color = Color(1, 1, 1, 0.5, 0, 0, 0)
 
       if i > #season.itemPosition - season.numSClass then -- Big 4
         -- They touched an S class item, and are only allowed to choose one of those
@@ -632,11 +699,12 @@ function ChangeCharOrder:CheckButtonPressedBan1(gridEntity)
 
   for _, itemPos in ipairs(season.itemPosition1) do
     local posButton = g:GridToPos(itemPos[2], itemPos[3])
-    if gridEntity:GetSaveState().State == 3 and
-       gridEntity.VarData == 0 and
-       gridEntity.Position.X == posButton.X and
-       gridEntity.Position.Y == posButton.Y then
-
+    if (
+      gridEntity:GetSaveState().State == 3
+      and gridEntity.VarData == 0
+      and gridEntity.Position.X == posButton.X
+      and gridEntity.Position.Y == posButton.Y
+    ) then
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
       ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
@@ -645,7 +713,10 @@ function ChangeCharOrder:CheckButtonPressedBan1(gridEntity)
         -- They finished banning a big 4 item
 
         -- Concatentate the character order and the items chosen into one big table
-        ChangeCharOrder.charOrder = g:TableConcat(ChangeCharOrder.charOrder, ChangeCharOrder.itemOrder)
+        ChangeCharOrder.charOrder = g:TableConcat(
+          ChangeCharOrder.charOrder,
+          ChangeCharOrder.itemOrder
+        )
 
         -- Reset the items chosen
         ChangeCharOrder.itemOrder = {}
@@ -668,11 +739,12 @@ function ChangeCharOrder:CheckButtonPressedBan2(gridEntity)
 
   for i, itemPos in ipairs(season.itemPosition2) do
     local posButton = g:GridToPos(itemPos[2], itemPos[3])
-    if gridEntity:GetSaveState().State == 3 and
-       gridEntity.VarData == 0 and
-       gridEntity.Position.X == posButton.X and
-       gridEntity.Position.Y == posButton.Y then
-
+    if (
+      gridEntity:GetSaveState().State == 3
+      and gridEntity.VarData == 0
+      and gridEntity.Position.X == posButton.X
+      and gridEntity.Position.Y == posButton.Y
+    ) then
       -- Mark that we have pressed this button already
       gridEntity.VarData = 1
       ChangeCharOrder.itemOrder[#ChangeCharOrder.itemOrder + 1] = itemPos[1]
@@ -708,7 +780,8 @@ function ChangeCharOrder:PostRender()
     return
   end
 
-  -- Disable the controls or else the player will be able to move around while the screen is still black
+  -- Disable the controls or else the player will be able to move around while the screen is still
+  -- black
   if gameFrameCount < 1 then
     g.p.ControlsEnabled = false
   else
@@ -731,7 +804,10 @@ function ChangeCharOrder:PostRender()
       string = "Choose a Big 4 item to ban"
     end
   elseif ChangeCharOrder.phase == 4 then
-    string = "Choose " .. tostring(ChangeCharOrder.seasons.R7S6.itemBans) .. " items to ban from the starting pool"
+    string = (
+      "Choose " .. tostring(ChangeCharOrder.seasons.R7S6.itemBans)
+      .. " items to ban from the starting pool"
+    )
   end
   local length = g.font:GetStringWidthUTF8(string)
   g.font:DrawString(string, posActivity.X - (length / 2), posActivity.Y, g.kcolor, 0, true)
@@ -740,7 +816,10 @@ function ChangeCharOrder:PostRender()
   if ChangeCharOrder.sprites.buttons ~= nil then
     for k, v in pairs(ChangeCharOrder.sprites.buttons) do
       if v ~= nil then
-        local posButton = g:GridToPos(ChangeCharOrder.seasons[k].X, ChangeCharOrder.seasons[k].Y - 1)
+        local posButton = g:GridToPos(
+          ChangeCharOrder.seasons[k].X,
+          ChangeCharOrder.seasons[k].Y - 1
+        )
         local posRender = Isaac.WorldToRenderPosition(posButton, false)
         v:RenderLayer(0, posRender)
       end
@@ -863,7 +942,10 @@ function ChangeCharOrder:PostNewRoom()
       Isaac.GridSpawn(GridEntityType.GRID_PRESSURE_PLATE, 0, pos, true) -- 20
 
       ChangeCharOrder.sprites.buttons[k] = Sprite()
-      ChangeCharOrder.sprites.buttons[k]:Load("gfx/speedrun/button-" .. tostring(k) .. ".anm2", true)
+      ChangeCharOrder.sprites.buttons[k]:Load(
+        "gfx/speedrun/button-" .. tostring(k) .. ".anm2",
+        true
+      )
       ChangeCharOrder.sprites.buttons[k]:SetFrame("Default", 0)
     end
   end

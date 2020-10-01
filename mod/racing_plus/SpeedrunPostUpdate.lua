@@ -1,10 +1,10 @@
 local SpeedrunPostUpdate = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
-local Season7  = require("racing_plus/season7")
-local Season8  = require("racing_plus/season8")
+local Season7 = require("racing_plus/season7")
+local Season8 = require("racing_plus/season8")
 
 function SpeedrunPostUpdate:Main()
   if not Speedrun:InSpeedrun() then
@@ -17,7 +17,8 @@ function SpeedrunPostUpdate:Main()
 
   -- Check to see if we need to start the timers
   if Speedrun.startedTime == 0 then
-    -- We want to start the timer on the first game frame (as opposed to when the screen is fading in)
+    -- We want to start the timer on the first game frame
+    -- (as opposed to when the screen is fading in)
     -- Thus, we must check for this on every frame
     -- This is to keep the timing consistent with historical timing of speedruns
     Speedrun.startedTime = Isaac.GetTime()
@@ -36,11 +37,14 @@ function SpeedrunPostUpdate:CheckCheckpointTouched(force)
   -- Local variables
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if force == nil and
-     (g.p.QueuedItem.Item == nil or
-      g.p.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT or
-      g.run.seededDeath.state ~= 0) then
-
+  if (
+    force == nil
+    and (
+      g.p.QueuedItem.Item == nil
+      or g.p.QueuedItem.Item.ID ~= CollectibleType.COLLECTIBLE_CHECKPOINT
+      or g.run.seededDeath.state ~= 0
+    )
+  ) then
     return
   end
 
@@ -53,7 +57,9 @@ function SpeedrunPostUpdate:CheckCheckpointTouched(force)
   -- Give them the Checkpoint custom item
   -- (this is used by the AutoSplitter to know when to split)
   g.p:AddCollectible(CollectibleType.COLLECTIBLE_CHECKPOINT, 0, false)
-  Isaac.DebugString("Checkpoint custom item given (" .. tostring(CollectibleType.COLLECTIBLE_CHECKPOINT) .. ").")
+  Isaac.DebugString(
+    "Checkpoint custom item given (" .. tostring(CollectibleType.COLLECTIBLE_CHECKPOINT) .. ")."
+  )
 
   -- Freeze the player
   g.p.ControlsEnabled = false

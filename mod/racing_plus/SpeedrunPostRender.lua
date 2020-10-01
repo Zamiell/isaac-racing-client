@@ -1,11 +1,11 @@
 local SpeedrunPostRender = {}
 
 -- Includes
-local g        = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
-local Season6  = require("racing_plus/season6")
-local Season7  = require("racing_plus/season7")
-local Season8  = require("racing_plus/season8")
+local Season6 = require("racing_plus/season6")
+local Season7 = require("racing_plus/season7")
+local Season8 = require("racing_plus/season8")
 
 function SpeedrunPostRender:Main()
   if not Speedrun:InSpeedrun() then
@@ -31,8 +31,10 @@ function SpeedrunPostRender:CheckRestart()
   if Speedrun.fadeFrame ~= 0 and isaacFrameCount >= Speedrun.fadeFrame then
     Speedrun.fadeFrame = 0
     g.g:Fadeout(0.0275, g.FadeoutTarget.FADEOUT_RESTART_RUN) -- 3
-    Speedrun.resetFrame = isaacFrameCount + 70 -- 72 restarts as the current character, and we want a frame of leeway
-    -- (this is necessary because we don't want the player to be able to reset to skip having to watch the fade out)
+    -- 72 restarts as the current character, and we want a frame of leeway
+    Speedrun.resetFrame = isaacFrameCount + 70
+    -- (this is necessary because we don't want the player to be able to reset to skip having to
+    -- watch the fade out)
     return
   end
 

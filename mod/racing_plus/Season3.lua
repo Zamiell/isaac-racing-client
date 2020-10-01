@@ -1,8 +1,8 @@
 local Season3 = {}
 
 -- Includes
-local g         = require("racing_plus/globals")
-local Speedrun  = require("racing_plus/speedrun")
+local g = require("racing_plus/globals")
+local Speedrun = require("racing_plus/speedrun")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
@@ -47,12 +47,9 @@ end
 -- Replace Blue Baby and The Lamb with custom bosses
 function Season3:PostNewRoom()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
   local stageType = g.l:GetStageType()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local roomType = g.r:GetType()
   local roomClear = g.r:IsClear()
   local challenge = Isaac.GetChallenge()
@@ -61,9 +58,7 @@ function Season3:PostNewRoom()
     return
   end
 
-  if stage ~= 10 and
-     stage ~= 11 then
-
+  if stage ~= 10 and stage ~= 11 then
     return
   end
 
@@ -85,46 +80,45 @@ function Season3:PostNewRoom()
   if direction == 0 then
     direction = 2
   end
-  if stageType == 1 and -- Cathedral or The Chest
-     direction == 2 then
-
+  if stageType == 1 and direction == 2 then -- Cathedral or The Chest
     return
   end
-  if stageType == 0 and -- Sheol or Dark Room
-     direction == 1 then
-
+  if stageType == 0 and direction == 1 then -- Sheol or Dark Room
     return
   end
 
   for _, entity in ipairs(Isaac.GetRoomEntities()) do
-    if stageType == 1 and -- Cathedral
-       entity.Type == EntityType.ENTITY_ISAAC then -- 273
-
+    if (
+      stageType == 1 -- Cathedral
+      and entity.Type == EntityType.ENTITY_ISAAC -- 273
+    ) then
       entity:Remove()
-
-    elseif stageType == 0 and -- Sheol
-           entity.Type == EntityType.ENTITY_SATAN then -- 84
-
+    elseif (
+      stageType == 0 -- Sheol
+      and entity.Type == EntityType.ENTITY_SATAN -- 84
+    ) then
       entity:Remove()
-
-    elseif stageType == 1 and -- The Chest
-           entity.Type == EntityType.ENTITY_ISAAC then -- 102
-
+    elseif (
+      stageType == 1 -- The Chest
+      and entity.Type == EntityType.ENTITY_ISAAC -- 102
+    ) then
       entity:Remove()
-
-    elseif stageType == 0 and -- Dark Room
-           entity.Type == EntityType.ENTITY_THE_LAMB  then -- 273
-
+    elseif (
+      stageType == 0 -- Dark Room
+      and entity.Type == EntityType.ENTITY_THE_LAMB -- 273
+    ) then
       entity:Remove()
     end
   end
 
   -- Spawn the replacement boss
   if stage == 10 then
-    Isaac.Spawn(838, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
+    local jrFetusType = Isaac.GetEntityTypeByName("Dr Fetus Jr")
+    Isaac.Spawn(jrFetusType, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
     Isaac.DebugString("Spawned Jr. Fetus (for season 3).")
   elseif stage == 11 then
-    Isaac.Spawn(777, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
+    local mahalathType = Isaac.GetEntityTypeByName("Mahalath")
+    Isaac.Spawn(mahalathType, 0, 0, g.r:GetCenterPos(), g.zeroVector, nil)
     Isaac.DebugString("Spawned Mahalath (for season 3).")
   end
 end

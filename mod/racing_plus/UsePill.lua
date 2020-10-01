@@ -1,7 +1,7 @@
 local UsePill = {}
 
 -- Includes
-local g       = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_PILL (10)
@@ -31,7 +31,7 @@ function UsePill:UsedNewPill(pillColor, pillEffect)
 
   -- This is the first time we have used this pill, so keep track of the pill color and effect
   local pillEntry = {
-    color  = pillColor,
+    color = pillColor,
     effect = pillEffect,
     sprite = Sprite()
   }
@@ -68,7 +68,6 @@ function UsePill:HealthUp()
   g.run.keeper.usedHealthUpPill = true
   g.p:AddCacheFlags(CacheFlag.CACHE_RANGE) -- 8
   g.p:EvaluateItems()
-  -- We check to see if we are Keeper, have Greed's Gullet, and are at maximum hearts inside this function
 end
 
 -- PillEffect.PILLEFFECT_TELEPILLS (19)
@@ -83,10 +82,11 @@ function UsePill:Telepills()
   if stage ~= 11 then
     insertErrorRoom = true
 
-    -- There is a 2% chance have a Black Market inserted into the list of possibilities (according to blcd)
+    -- There is a 2% chance have a Black Market inserted into the list of possibilities
+    -- (according to blcd)
     g.RNGCounter.Telepills = g:IncrementRNG(g.RNGCounter.Telepills)
     math.randomseed(g.RNGCounter.Telepills)
-    local blackMarketRoll = math.random(1, 100) -- Item room, secret room, super secret room, I AM ERROR room
+    local blackMarketRoll = math.random(1, 100)
     if blackMarketRoll <= 2 then
       insertBlackMarket = true
     end
@@ -95,9 +95,10 @@ function UsePill:Telepills()
   -- Find the indexes for all of the room possibilities
   local roomIndexes = {}
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
-    local gridIndex = rooms:Get(i).SafeGridIndex
-    -- We need to use SafeGridIndex instead of GridIndex because we will crash when teleporting to L rooms otherwise
-    roomIndexes[#roomIndexes + 1] = gridIndex
+    local gridIndexSafe = rooms:Get(i).SafeGridIndex
+    -- We need to use SafeGridIndex instead of GridIndex because
+    -- we will crash when teleporting to L rooms otherwise
+    roomIndexes[#roomIndexes + 1] = gridIndexSafe
   end
   if insertErrorRoom then
     roomIndexes[#roomIndexes + 1] = GridRooms.ROOM_ERROR_IDX -- -2
@@ -111,10 +112,12 @@ function UsePill:Telepills()
   math.randomseed(g.RNGCounter.Telepills)
   local gridIndex = roomIndexes[math.random(1, #roomIndexes)]
 
-  -- Teleport
-  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
-  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
-  g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
+  -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
+  g.run.usedTeleport = true
+
+  -- You have to set LeaveDoor before every teleport or else it will send you to the wrong room
+  g.l.LeaveDoor = -1
+
   g.g:StartRoomTransition(gridIndex, Direction.NO_DIRECTION, g.RoomTransition.TRANSITION_TELEPORT)
 
   -- We don't want to display the "use" animation, we just want to instantly teleport

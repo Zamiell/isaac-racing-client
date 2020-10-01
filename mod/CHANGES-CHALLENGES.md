@@ -79,7 +79,7 @@
 * Lazarus does not start with a pill.
 * You get to choose a starting item for each character. (You can find the full list in the "Change Char Order" custom challenge.)
 * Picking Mom's Knife, Tech X, Epic Fetus, or Ipecac will cause the other 3 items to become unavailable to pick.
-* The Treasure Room on Basement 1 is permanently barred.
+* The Treasure Room on Basement 1 is removed.
 * Entering a Curse Room on Basement 1 will despawn all of the pickups and beggars in the room. (This is to prevent resetting for a Curse Room.)
 * Entering a Sacrifice Room on Basement 1 will despawn the spikes. (This is to prevent resetting for Sacrifice Room rewards.)
 
@@ -98,8 +98,8 @@
 * The following only applies to the second character and beyond:
   * Each baby will randomly start with one of the following items:
     * Mom's Knife, Tech X, Epic Fetus, Ipecac, Sacrificial Dagger, 20/20, Proptosis, Crown of Light, Incubus, Mutant Spider's Inner Eye, Lil Brimstone, Sacred Heart, Magic Mushroom, Tech.5, Polyphemus, Cricket's Head, Death's Touch, Dead Eye, Cricket's Body
-  * The Treasure Room on Basement 1 is permanently barred.
-  * Resetting the game will change the seed, but not change the randomly assigned starting item.
+  * The Treasure Room on Basement 1 is removed.
+  * Resetting the game will change the seed, but will not change the randomly assigned starting item.
   * Only one big 4 item will be randomly assigned per 7 character run.
   * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
   * Duplicate starting items will never be given over the course of a 7 character run.
@@ -116,7 +116,7 @@
 * All characters start with the Schoolbag. (It starts empty by default.)
 * All characters start with the Compass.
 * Each character will be randomly assigned a starting item or build. (You can find the full list in the "Change Char Order" custom challenge.)
-* The Treasure Room on Basement 1 is permanently barred.
+* The Treasure Room on Basement 1 is removed.
 * Resetting the game will change the seed, but not change the randomly assigned starting item.
 * Only one big 4 item will be randomly assigned per 7 character run.
 * If a big 4 item has not been started by the time the 7th character is reached, a big 4 item is guaranteed to be selected.
@@ -228,6 +228,21 @@
   * I'm Drowsy... (41)
   * Gulp! (43)
 * If you have one heart or less, Health Down will not be converted to a Health Up pill. (This can kill you if you are at exactly 1 red heart with no other types of hearts.)
+
+<br />
+
+## R+7 Season 9 (The Rebalanced Season)
+
+* You must defeat Blue Baby 7 times using the [Racing+ Rebalanced Mod](https://www.google.com/), which reworks the item pools and attempts to make every item worth taking.
+* Similar to Season 6, each character will be randomly assigned a starting item or build. Unlike Season 6, there are no bans or vetos. (The list of starting items is [listed in the Racing+ Rebalanced documentation](https://www.google.com/).)
+* Judas starts with a full red heart.
+* Blue Baby starts with Spirit of the Night.
+* Lazarus does not start with a pill.
+* The Treasure Room on Basement 1 is removed.
+* The Curse Room on Basement 1 is removed (if any).
+* Resetting the game will change the seed, but will not change the randomly assigned starting item.
+* Duplicate starting items will never be given over the course of a 7 character run.
+* The randomly selected item for the first character will expire after 1 minute or when a Basement 2 boss dies, whichever happens first.
 
 <br />
 

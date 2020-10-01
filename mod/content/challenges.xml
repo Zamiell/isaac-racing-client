@@ -11,6 +11,7 @@
 	<challenge name="R+7 (Season 6)" endstage="11" altpath="true" />
 	<challenge name="R+7 (Season 7)" endstage="11" altpath="true" />
 	<challenge name="R+7 (Season 8)" endstage="11" altpath="true" />
+	<challenge name="R+7 (Season 9 Beta)" endstage="11" altpath="true" />
 	<challenge name="Change Char Order" endstage="6" canshoot="false" />
 	<challenge name="Change Keybindings" endstage="6" canshoot="false" />
 </challenges>

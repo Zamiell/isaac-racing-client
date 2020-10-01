@@ -1,14 +1,15 @@
 local FastTravel = {}
 
 -- Includes
-local g            = require("racing_plus/globals")
-local Sprites      = require("racing_plus/sprites")
+local g = require("racing_plus/globals")
+local Sprites = require("racing_plus/sprites")
 local SeededFloors = require("racing_plus/seededfloors")
-local Season7      = require("racing_plus/season7")
+local Season7 = require("racing_plus/season7")
 
 -- Constants
-FastTravel.trapdoorOpenDistance  = 60 -- This feels about right
-FastTravel.trapdoorTouchDistance = 16.5 -- This feels about right (it is slightly smaller than vanilla)
+FastTravel.trapdoorOpenDistance = 60 -- This feels about right
+FastTravel.trapdoorTouchDistance = 16.5 -- This feels about right
+-- (it is slightly smaller than vanilla)
 
 -- Enums
 FastTravel.state = {
@@ -33,12 +34,9 @@ FastTravel.reseed = false -- Used when we need to reseed the next floor
 -- (called from the "CheckEntities:Grid()" and "CheckEntities:NonGrid()" functions)
 function FastTravel:ReplaceTrapdoor(entity, i)
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
   local roomType = g.r:GetType()
   local roomFrameCount = g.r:GetFrameCount()
   local challenge = Isaac.GetChallenge()
@@ -57,12 +55,17 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   local deleteAndDontReplace = false
 
   -- Delete the Womb trapdoor that spawns after Mom if the goal of the run is the Boss Rush
-  if stage == 6 and
-     ((g.race.status == "in progress" and g.race.goal == "Boss Rush") or
-      (challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)") and
-       g:TableContains(Season7.remainingGoals, "Boss Rush") and
-       #Season7.remainingGoals == 1)) then
-
+  if (
+    stage == 6
+    and (
+      (g.race.status == "in progress" and g.race.goal == "Boss Rush")
+      or (
+        challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+        and g:TableContains(Season7.remainingGoals, "Boss Rush")
+        and #Season7.remainingGoals == 1
+      )
+    )
+  ) then
     deleteAndDontReplace = true
     Isaac.DebugString("Deleted the natural trapdoor after Mom.")
   end
@@ -83,20 +86,37 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   -- Spawn a custom entity to emulate the original
   local trapdoor
   if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-    trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                           entity.Position, g.zeroVector, nil)
-
-  elseif stage == 6 or
-         stage == 7 then
-
-    trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                           entity.Position, g.zeroVector, nil)
-
+    trapdoor = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL,
+      0,
+      entity.Position,
+      g.zeroVector,
+      nil
+    )
+  elseif stage == 6 or stage == 7 then
+    trapdoor = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL,
+      0,
+      entity.Position,
+      g.zeroVector,
+      nil
+    )
   else
-    trapdoor = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                           entity.Position, g.zeroVector, nil)
+    trapdoor = Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.TRAPDOOR_FAST_TRAVEL,
+      0,
+      entity.Position,
+      g.zeroVector,
+      nil
+    )
   end
-  trapdoor.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+
+  -- This is needed so that the entity will not appear on top of the player
+  trapdoor.DepthOffset = -100
+
   if roomFrameCount > 1 then
     local data = trapdoor:GetData()
     data.fresh = true -- Mark that it should be open even if the room is not cleared
@@ -106,16 +126,19 @@ function FastTravel:ReplaceTrapdoor(entity, i)
   -- so we need to keep track of it for the remainder of the floor
   g.run.replacedTrapdoors[#g.run.replacedTrapdoors + 1] = {
     room = roomIndex,
-    pos  = entity.Position,
+    pos = entity.Position,
   }
 
   -- Spawn the trapdoor closed by default
   local closed = true
-  if (stage == 10 or -- After Satan, there is no reason to remain in Sheol
-      stage == 11) and -- After Blue Baby in an "Everything" race, there is no reason to remain on The Chest
-     roomType == RoomType.ROOM_BOSS then -- 5
-     -- (it looks buggy if the trapdoor snaps open in I AM ERROR rooms)
-
+  if (
+    -- After Satan, there is no reason to remain in Sheol
+    -- After Blue Baby in an "Everything" race, there is no reason to remain on The Chest
+    (stage == 10 or stage == 11)
+    -- We only want it to apply to Boss rooms because
+    -- it looks buggy if the trapdoor snaps open in I AM ERROR rooms
+    and roomType == RoomType.ROOM_BOSS -- 5
+  ) then
     closed = false
   end
   if closed then
@@ -125,10 +148,11 @@ function FastTravel:ReplaceTrapdoor(entity, i)
 
   -- Log it
   --[[
-  local debugString = "Replaced a trapdoor in room " .. tostring(roomIndex) .. " at "
-  debugString = debugString .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. ") "
-  debugString = debugString .. "on frame " .. tostring(gameFrameCount)
-  Isaac.DebugString(debugString)
+  Isaac.DebugString(
+    "Replaced a trapdoor in room " .. tostring(roomIndex) .. " at "
+    .. "(" .. tostring(entity.Position.X) .. ", " .. tostring(entity.Position.Y) .. ") "
+    .. "on frame " .. tostring(gameFrameCount)
+  )
   --]]
 
   -- Remove the original entity
@@ -144,19 +168,17 @@ end
 
 function FastTravel:ReplaceHeavenDoor(entity)
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomIndex = g:GetRoomIndex()
+  local roomSeed = g.r:GetSpawnSeed()
 
   -- Delete the "natural" beam of light
   if entity.SpawnerType ~= EntityType.ENTITY_PLAYER then -- 1
     entity:Remove()
 
-    if roomIndex ~= GridRooms.ROOM_ERROR_IDX and -- -2
-       roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX then -- 6
-
+    if (
+      roomIndex ~= GridRooms.ROOM_ERROR_IDX -- -2
+      and roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX -- 6
+    ) then
       -- This is the beam of light that spawns one frame after It Lives! (or Hush) is killed
       -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)
       Isaac.DebugString("Deleted the natural beam of light after It Lives! (or Hush).")
@@ -165,16 +187,24 @@ function FastTravel:ReplaceHeavenDoor(entity)
   end
 
   -- Spawn a custom entity to emulate the original
-  -- (we use an InitSeed of the room seed instead of a random seed to indicate that this is a freshly spawned entity)
-  local heavenDoor = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
-                               entity.Position, g.zeroVector, nil, 0, roomSeed)
+  -- (we use an InitSeed of the room seed instead of a random seed to indicate that this is a
+  -- freshly spawned entity)
+  local heavenDoor = g.g:Spawn(
+    EntityType.ENTITY_EFFECT, -- 1000
+    EffectVariant.HEAVEN_DOOR_FAST_TRAVEL,
+    entity.Position,
+    g.zeroVector,
+    nil,
+    0,
+    roomSeed
+  )
   heavenDoor.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
 
   -- The custom entity will not respawn if we leave the room,
   -- so we need to keep track of it for the remainder of the floor
   g.run.replacedHeavenDoors[#g.run.replacedHeavenDoors + 1] = {
     room = roomIndex,
-    pos  = entity.Position,
+    pos = entity.Position,
   }
 
   -- If the room is not cleared yet, spawn the heaven door and close it
@@ -188,10 +218,11 @@ function FastTravel:ReplaceHeavenDoor(entity)
 
   --[[
   -- Log it
-  local debugString = "Replaced a beam of light in room " .. tostring(roomIndex) .. " "
-  debugString = debugString .. " at (" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") "
-  debugString = debugString .. "on frame " .. tostring(gameFrameCount)
-  Isaac.DebugString(debugString)
+  Isaac.DebugString(
+    "Replaced a beam of light in room " .. tostring(roomIndex) .. " "
+    .. " at (" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ") "
+    .. "on frame " .. tostring(gameFrameCount)
+  )
   --]]
 
   -- Remove the original entity
@@ -200,47 +231,52 @@ end
 
 function FastTravel:CheckPickupOverHole(pickup)
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
 
   -- We don't need to move Big Chests, Trophies, or Beds
-  if pickup.Variant == PickupVariant.PICKUP_BIGCHEST or -- 340
-     pickup.Variant == PickupVariant.PICKUP_TROPHY or -- 370
-     pickup.Variant == PickupVariant.PICKUP_BED then -- 380
-
+  if (
+    pickup.Variant == PickupVariant.PICKUP_BIGCHEST -- 340
+    or pickup.Variant == PickupVariant.PICKUP_TROPHY -- 370
+    or pickup.Variant == PickupVariant.PICKUP_BED -- 380
+  ) then
     return
   end
 
   --[[
-  Isaac.DebugString("Checking pickup: " ..
-                    tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
-  Isaac.DebugString("Position: " .. tostring(pickup.Position.X) .. ", " .. tostring(pickup.Position.Y))
+  Isaac.DebugString(
+    "Checking pickup: " .. tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "."
+    .. tostring(pickup.SubType)
+  )
+  Isaac.DebugString(
+    "Position: " .. tostring(pickup.Position.X) .. ", " .. tostring(pickup.Position.Y)
+  )
   --]]
 
   -- Check to see if it is overlapping with a trapdoor / beam of light / crawlspace
   local squareSize = FastTravel.trapdoorTouchDistance + 2
   for _, trapdoor in ipairs(g.run.replacedTrapdoors) do
-    if roomIndex == trapdoor.room and
-       pickup.Position:Distance(trapdoor.pos) <= squareSize then
-
+    if (
+      roomIndex == trapdoor.room
+      and pickup.Position:Distance(trapdoor.pos) <= squareSize
+    ) then
       FastTravel:MovePickupFromHole(pickup, trapdoor.pos)
       return
     end
   end
   for _, heavenDoor in ipairs(g.run.replacedHeavenDoors) do
-    if roomIndex == heavenDoor.room and
-       pickup.Position:Distance(heavenDoor.pos) <= squareSize then
-
+    if (
+      roomIndex == heavenDoor.room
+      and pickup.Position:Distance(heavenDoor.pos) <= squareSize
+    ) then
       FastTravel:MovePickupFromHole(pickup, heavenDoor.pos)
       return
     end
   end
   for _, crawlspace in ipairs(g.run.replacedCrawlspaces) do
-    if roomIndex == crawlspace.room and
-       pickup.Position:Distance(crawlspace.pos) <= squareSize then
-
+    if (
+      roomIndex == crawlspace.room
+      and pickup.Position:Distance(crawlspace.pos) <= squareSize
+    ) then
       FastTravel:MovePickupFromHole(pickup, crawlspace.pos)
       return
     end
@@ -259,9 +295,10 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
   end
 
   -- Make pickups with velocity "bounce" off of the hole
-  if (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0) and
-     (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y) then
-
+  if (
+    (pickup.Velocity.X ~= 0 or pickup.Velocity.Y ~= 0)
+    and (pickup.Position.X ~= posHole.X and pickup.Position.Y ~= posHole.Y)
+  ) then
     -- Invert the velocity
     local reverseVelocity = Vector(pickup.Velocity.X, pickup.Velocity.Y)
     if math.abs(reverseVelocity.X) == math.abs(reverseVelocity.Y) then
@@ -289,7 +326,9 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
       end
     end
     if not pushedOut then
-      Isaac.DebugString("Error: Was not able to move the pickup out of the hole after 100 iterations.")
+      Isaac.DebugString(
+        "Error: Was not able to move the pickup out of the hole after 100 iterations."
+      )
     end
     pickup.Position = newPos
 
@@ -309,15 +348,20 @@ function FastTravel:MovePickupFromHole(pickup, posHole)
     end
   end
   if overlapping then
-    -- We were not able to find a free location after 100 attempts, so give up and just delete the pickup
+    -- We were not able to find a free location after 100 attempts,
+    -- so give up and just delete the pickup
     pickup:Remove()
-    Isaac.DebugString("Error: Failed to find a free location after 100 attempts for pickup: " ..
-                      tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+    Isaac.DebugString(
+      "Error: Failed to find a free location after 100 attempts for pickup: "
+      .. tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType)
+    )
   else
     -- Move it
     pickup.Position = newPos
-    Isaac.DebugString("Moved a pickup that was overlapping with a hole: " ..
-                      tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType))
+    Isaac.DebugString(
+      "Moved a pickup that was overlapping with a hole: "
+      .. tostring(pickup.Type) .. "." .. tostring(pickup.Variant) .. "." .. tostring(pickup.SubType)
+    )
   end
 end
 
@@ -339,22 +383,27 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
   -- Check to see if a player is touching the trapdoor / heaven door
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
-    if (not upwards or -- The trapdoor is open
-        (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0) or
-        -- We want the player to be forced to dodge the final wave of tears from It Lives!, so we have to delay
+    if (
+      (
+        not upwards -- The trapdoor is open
+        -- We want the player to be forced to dodge the final wave of tears from It Lives!,
+        -- so we have to delay
         -- (we initially spawn it with an InitSeed equal to the room seed)
-        (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0) or
+        or (upwards and stage == 8 and effect.FrameCount >= 40 and effect.InitSeed ~= 0)
         -- The extra delay should not apply if they are re-entering the room
         -- (we respawn beams of light with an InitSeed of 0)
-        (upwards and stage ~= 8 and effect.FrameCount >= 8)) and
-        -- The beam of light opening animation is 16 frames long,
-        -- but we want the player to be taken upwards automatically if they hold "up" or "down" with max (2.0) speed
-        -- (and the minimum for this is 8 frames, determined from trial and error)
-       player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance and
-       not player:IsHoldingItem() and
-       not player:GetSprite():IsPlaying("Happy") and -- Account for lucky pennies
-       not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
-
+        or (upwards and stage == 8 and effect.FrameCount >= 8 and effect.InitSeed == 0)
+        or (upwards and stage ~= 8 and effect.FrameCount >= 8)
+      )
+      -- The beam of light opening animation is 16 frames long,
+      -- but we want the player to be taken upwards automatically if they hold "up" or "down" with
+      -- max (2.0) speed
+      -- (and the minimum for this is 8 frames, determined from trial and error)
+      and player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance
+      and not player:IsHoldingItem()
+      and not player:GetSprite():IsPlaying("Happy") -- Account for lucky pennies
+      and not player:GetSprite():IsPlaying("Jump") -- Account for How to Jump
+    ) then
       -- State 1 is activated the moment we touch the trapdoor
       g.run.trapdoor.state = FastTravel.state.PLAYER_ANIMATION
       g.run.trapdoor.upwards = upwards
@@ -364,22 +413,33 @@ function FastTravel:CheckTrapdoorEnter(effect, upwards, theVoid)
       g.run.trapdoor.megaSatan = effect.Variant == EffectVariant.MEGA_SATAN_TRAPDOOR
 
       -- If we are The Soul, the Forgotten body will also need to be teleported
-      -- However, if we change its position manually, it will just warp back to the same spot on the next frame
+      -- However, if we change its position manually, it will just warp back to the same spot on the
+      -- next frame
       -- Thus, just manually switch to the Forgotten to avoid this bug
       local character = g.p:GetPlayerType()
       if character == PlayerType.PLAYER_THESOUL then -- 17
         g.run.switchForgotten = true
 
-        -- Also warp the body to where The Soul is so that The Forgotton won't jump down through a normal floor
-        local forgottenBodies = Isaac.FindByType(EntityType.ENTITY_FAMILIAR, 900, -1, false, false) -- 3
+        -- Also warp the body to where The Soul is so that The Forgotton won't jump down through a
+        -- normal floor
+        local forgottenBodies = Isaac.FindByType(
+          EntityType.ENTITY_FAMILIAR, -- 3
+          900, -- Forgotten Body (has no enum)
+          -1,
+          false,
+          false
+        )
         for _, forgottenBody in ipairs(forgottenBodies) do
           forgottenBody.Position = g.p.Position
         end
       end
 
       player.ControlsEnabled = false
+
+      -- We need to modify the collision class so that enemy attacks don't move the player while
+      -- they are doing the jumping animation
       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
-      -- (this is necessary so that enemy attacks don't move the player while they are doing the jumping animation)
+
       player.Position = effect.Position -- Teleport the player on top of the trapdoor
       player.Velocity = g.zeroVector -- Remove all of the player's momentum
 
@@ -405,75 +465,86 @@ function FastTravel:CheckTrapdoor()
   local gameFrameCount = g.g:GetFrameCount()
   local isaacFrameCount = Isaac.GetFrameCount()
 
-  if g.run.trapdoor.state == FastTravel.state.PLAYER_ANIMATION and
-     gameFrameCount >= g.run.trapdoor.frame then
-
+  if (
+    g.run.trapdoor.state == FastTravel.state.PLAYER_ANIMATION
+    and gameFrameCount >= g.run.trapdoor.frame
+  ) then
     -- State 2 is activated when the "Trapdoor" animation is completed
     g.p.Visible = false
 
     -- Make the screen fade to black
     -- (we can go to any room for this, so we just use the starting room)
-    g.g:StartRoomTransition(g.l:GetStartingRoomIndex(), Direction.NO_DIRECTION, -- -1
-                            g.RoomTransition.TRANSITION_NONE) -- 0
+    g.g:StartRoomTransition(
+      g.l:GetStartingRoomIndex(),
+      Direction.NO_DIRECTION, -- -1
+      g.RoomTransition.TRANSITION_NONE -- 0
+    )
 
     -- Mark to change floors after the screen is black
     g.run.trapdoor.state = FastTravel.state.FADING_TO_BLACK
-    g.run.trapdoor.frame = isaacFrameCount + 9 -- 10 is too many (you can start to see the same room again)
-    -- (we must use Isaac frames instead of game frames for this part because
-    -- game frames do not pass during a room transition)
-
-  elseif g.run.trapdoor.state == FastTravel.state.FADING_TO_BLACK and
-         isaacFrameCount >= g.run.trapdoor.frame then
-
+    g.run.trapdoor.frame = isaacFrameCount + 9
+    -- (10 is too many, as you can start to see the same room again)
+    -- (we must use Isaac frames instead of game frames for this part because game frames do not
+    -- pass during a room transition)
+  elseif (
+    g.run.trapdoor.state == FastTravel.state.FADING_TO_BLACK
+    and isaacFrameCount >= g.run.trapdoor.frame
+  ) then
     -- Stage 3 is actiated when the screen is black
     g.run.trapdoor.state = FastTravel.state.SCREEN_IS_BLACK
     g.run.trapdoor.floor = stage
     Sprites:Init("black", "black") -- Cover the screen with a big black sprite
     if MinimapAPI ~= nil then
-      MinimapAPI.Config.Disable = true -- We must also disable the custom minimap when we want the screen to be black
+      -- We must also disable the custom minimap when we want the screen to be black
+      MinimapAPI.Config.Disable = true
     end
     FastTravel:GotoNextFloor(g.run.trapdoor.upwards)
+  elseif (
+    g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_2
+    and g.p.ControlsEnabled
+  ) then
+    -- State 6 is activated when the player controls are enabled
+    -- (this happens automatically by the game)
+    -- (stages 4 and 5 are in the PostNewRoom callback)
+    g.run.trapdoor.state = FastTravel.state.CONTROLS_ENABLED
+    g.run.trapdoor.frame = gameFrameCount + 5 -- Wait a while longer
+    g.p.ControlsEnabled = false
+  elseif (
+    g.run.trapdoor.state == FastTravel.state.CONTROLS_ENABLED
+    and gameFrameCount >= g.run.trapdoor.frame
+  ) then
+    -- State 7 is activated when the the hole is spawned and ready
+    g.run.trapdoor.state = FastTravel.state.PLAYER_JUMP
+    g.run.trapdoor.frame = gameFrameCount + 7
 
-  elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_2 and
-         g.p.ControlsEnabled then
+    for i = 1, g.g:GetNumPlayers() do
+      local player = Isaac.GetPlayer(i - 1)
 
-     -- State 6 is activated when the player controls are enabled
-     -- (this happens automatically by the game)
-     -- (stages 4 and 5 are in the PostNewRoom callback)
-     g.run.trapdoor.state = FastTravel.state.CONTROLS_ENABLED
-     g.run.trapdoor.frame = gameFrameCount + 5 -- Wait a while longer
-     g.p.ControlsEnabled = false
+      -- Make the player(s) visable again
+      player.SpriteScale = g.run.trapdoor.scale[i]
 
-  elseif g.run.trapdoor.state == FastTravel.state.CONTROLS_ENABLED and
-         gameFrameCount >= g.run.trapdoor.frame then
+      -- Give the player(s) the collision that we removed earlier
+      player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
 
-     -- State 7 is activated when the the hole is spawned and ready
-     g.run.trapdoor.state = FastTravel.state.PLAYER_JUMP
-     g.run.trapdoor.frame = gameFrameCount + 7
+      -- Play the jumping out of the hole animation
+      player:PlayExtraAnimation("Jump")
+    end
 
-     for i = 1, g.g:GetNumPlayers() do
-       local player = Isaac.GetPlayer(i - 1)
-
-       -- Make the player(s) visable again
-       player.SpriteScale = g.run.trapdoor.scale[i]
-
-       -- Give the player(s) the collision that we removed earlier
-       player.EntityCollisionClass = EntityCollisionClass.ENTCOLL_ALL -- 4
-
-       -- Play the jumping out of the hole animation
-       player:PlayExtraAnimation("Jump")
-     end
-
-     -- Make the hole do the dissapear animation
-     local pitfalls = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.PITFALL_CUSTOM, -- 1000
-                                       -1, false, false)
-     for _, pitfall in ipairs(pitfalls) do
-       pitfall:GetSprite():Play("Disappear", true)
-     end
-
-  elseif g.run.trapdoor.state == FastTravel.state.PLAYER_JUMP and
-         gameFrameCount >= g.run.trapdoor.frame then
-
+    -- Make the hole do the dissapear animation
+    local pitfalls = Isaac.FindByType(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.PITFALL_CUSTOM,
+      -1,
+      false,
+      false
+    )
+    for _, pitfall in ipairs(pitfalls) do
+      pitfall:GetSprite():Play("Disappear", true)
+    end
+  elseif (
+    g.run.trapdoor.state == FastTravel.state.PLAYER_JUMP
+    and gameFrameCount >= g.run.trapdoor.frame
+  ) then
     -- We are finished when the the player has emerged from the hole
     g.run.trapdoor.state = FastTravel.state.DISABLED
 
@@ -484,8 +555,13 @@ function FastTravel:CheckTrapdoor()
     end
 
     -- Kill the hole
-    local pitfalls = Isaac.FindByType(EntityType.ENTITY_EFFECT, EffectVariant.PITFALL_CUSTOM, -- 1000
-                                      -1, false, false) -- 3
+    local pitfalls = Isaac.FindByType(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.PITFALL_CUSTOM,
+      -1,
+      false,
+      false
+    )
     for _, pitfall in ipairs(pitfalls) do
       pitfall:Remove()
     end
@@ -506,18 +582,19 @@ function FastTravel:CheckNewFloor()
 
   -- We are not travelling to a new level if we went through a Mega Satan trapdoor,
   -- so bypass the below PostNewRoom check
-  if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK and
-     g.run.trapdoor.megaSatan then
-
+  if (
+    g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK
+    and g.run.trapdoor.megaSatan
+  ) then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_1
   end
 
-  -- We will hit the PostNewRoom callback twice when doing a fast-travel, so do nothing on the first time
+  -- We will hit the PostNewRoom callback twice when doing a fast-travel,
+  -- so do nothing on the first time
   -- (this is only because of the manual callback reordering)
   if g.run.trapdoor.state == FastTravel.state.SCREEN_IS_BLACK then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_1
     Isaac.DebugString("Set trapdoor state to POST_NEW_ROOM_1.")
-
   elseif g.run.trapdoor.state == FastTravel.state.POST_NEW_ROOM_1 then
     g.run.trapdoor.state = FastTravel.state.POST_NEW_ROOM_2
     Isaac.DebugString("Set trapdoor state to POST_NEW_ROOM_2.")
@@ -529,15 +606,15 @@ function FastTravel:CheckNewFloor()
     end
 
     local pos = g.r:GetCenterPos()
-    if g.g.Difficulty >= Difficulty.DIFFICULTY_GREED and -- 2
-       stage ~= 7 then
-
+    if (
+      g.g.Difficulty >= Difficulty.DIFFICULTY_GREED -- 2
+      and stage ~= 7
+    ) then
       -- The center of the room in Greed Mode will be on top of the trigger switch
       -- On vanilla, the player appears near the top of the room (at 320, 280)
       -- However, if we adjust the position to this, it will cause the camera to bug out
       -- Thus, make the player appear near the bottom
       pos = Vector(320, 560)
-
     elseif g.run.trapdoor.megaSatan then
       -- The center of the Mega Satan room is near the top
       -- Causing Isaac to warp to the top causes the camera to bug out,
@@ -546,7 +623,6 @@ function FastTravel:CheckNewFloor()
 
       -- Additionally, stop the boss room sound effect
       g.sfx:Stop(SoundEffect.SOUND_CASTLEPORTCULLIS) -- 190
-
     elseif stage == 9 then -- Blue Womb
       -- Emulate the vanilla starting position
       pos = Vector(320, 560)
@@ -556,7 +632,8 @@ function FastTravel:CheckNewFloor()
       local player = Isaac.GetPlayer(i - 1)
 
       -- Make the player(s) invisible so that we can jump out of the hole
-      -- (this has to be in the PostNewRoom callback so that we don't get bugs with the Glowing Hour Glass)
+      -- (this has to be in the PostNewRoom callback so that we don't get bugs with the
+      -- Glowing Hour Glass)
       -- (we can't use "player.Visible = false" because it won't do anything here)
       g.run.trapdoor.scale[i] = player.SpriteScale
       player.SpriteScale = g.zeroVector
@@ -572,16 +649,25 @@ function FastTravel:CheckNewFloor()
     end
 
     -- Spawn a hole
-    Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.PITFALL_CUSTOM, 0, -- 1000
-                pos, g.zeroVector, nil)
+    Isaac.Spawn(
+      EntityType.ENTITY_EFFECT, -- 1000
+      EffectVariant.PITFALL_CUSTOM,
+      0,
+      pos,
+      g.zeroVector,
+      nil
+    )
 
-    -- Show what the new floor is (the game won't show this naturally since we used the console command to get here)
-    if not g.raceVars.finished and
-       -- (the "Victory Lap" text will overlap with the stage text, so don't bother showing it if the race is finished)
-       character ~= Isaac.GetPlayerTypeByName("Random Baby") then
-       -- (the baby descriptions will slightly overlap with the stage text,
-       -- so don't bother showing it if we are playing as "Random Baby")
-
+    -- Show what the new floor is
+    -- (the game won't show this naturally since we used the console command to get here)
+    if (
+      -- The "Victory Lap" text will overlap with the stage text,
+      -- so don't bother showing it if the race is finished
+      not g.raceVars.finished
+      -- The baby descriptions will slightly overlap with the stage text,
+      -- so don't bother showing it if we are playing as "Random Baby"
+      and character ~= Isaac.GetPlayerTypeByName("Random Baby")
+    ) then
        g.run.streakText = g.l:GetName(stage, stageType, 0, false)
        if g.run.streakText == "???" then
         g.run.streakText = "Blue Womb"
@@ -609,7 +695,11 @@ function FastTravel:GotoNextFloor(upwards, redirect)
 
   -- Handle custom Mega Satan trapdoors
   if g.run.trapdoor.megaSatan then
-    g.g:StartRoomTransition(GridRooms.ROOM_MEGA_SATAN_IDX, Direction.UP, g.RoomTransition.TRANSITION_NONE) -- -7, 1, 0
+    g.g:StartRoomTransition(
+      GridRooms.ROOM_MEGA_SATAN_IDX, -- -7
+      Direction.UP, -- 1
+      g.RoomTransition.TRANSITION_NONE -- 0
+    )
     return
   end
 
@@ -635,12 +725,10 @@ function FastTravel:GotoNextFloor(upwards, redirect)
 
       -- We need to reseed it because by default, Sheol will have the same layout as Cathedral
       FastTravel.reseed = true
-
     elseif stage == 10 and stageType == 0 then -- 10.0 (Sheol)
       -- Sheol goes to The Chest
       nextStage = 11
       nextStageType = 1
-
     elseif stage == 11 and stageType == 1 then -- 11.0 (The Chest)
       -- The Chest goes to the Dark Room
       nextStage = 11
@@ -673,20 +761,18 @@ function FastTravel:GetNextStage()
   local nextStage = stage + 1
   if g.run.trapdoor.voidPortal then
     nextStage = 12
-
-  elseif stage == 8 and
-     roomIndexUnsafe ~= GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-
+  elseif (
+    stage == 8
+    and roomIndexUnsafe ~= GridRooms.ROOM_BLUE_WOOM_IDX -- -8
+  ) then
     -- If we are not in the Womb special room, then we need to skip a floor
     -- (The Blue Womb is floor 9)
     nextStage = 10
-
   elseif stage == 11 then
     -- The Chest goes to The Chest
     -- The Dark Room goes to the Dark Room
     nextStage = 11
     FastTravel.reseed = true
-
   elseif stage == 12 then
     -- The Void goes to The Void
     nextStage = 12
@@ -704,7 +790,6 @@ function FastTravel:GetNextStageType(nextStage, upwards)
   if nextStage == 9 then
     -- Blue Womb does not have any alternate floors
     nextStageType = 0
-
   elseif nextStage == 10 then
     if upwards then
       -- Go to Cathedral (10.1)
@@ -713,7 +798,6 @@ function FastTravel:GetNextStageType(nextStage, upwards)
       -- Go to Sheol (10.0)
       nextStageType = 0
     end
-
   elseif nextStage == 11 then
     -- By default, go to The Chest (11.1)
     nextStageType = 1
@@ -790,14 +874,21 @@ function FastTravel:FixStrengthCardBug()
 
   -- Handle the special case of if we used a Strength card on another form
   local character = g.p:GetPlayerType()
-  if (g.run.usedStrengthChar == PlayerType.PLAYER_THEFORGOTTEN and -- 16
-      character == PlayerType.PLAYER_THESOUL) or -- 17
-     (g.run.usedStrengthChar == PlayerType.PLAYER_THESOUL and -- 17
-       character == PlayerType.PLAYER_THEFORGOTTEN) then -- 16
-
+  if (
+    (
+      g.run.usedStrengthChar == PlayerType.PLAYER_THEFORGOTTEN -- 16
+      and character == PlayerType.PLAYER_THESOUL -- 17
+    )
+    or (
+      g.run.usedStrengthChar == PlayerType.PLAYER_THESOUL -- 17
+      and character == PlayerType.PLAYER_THEFORGOTTEN -- 16
+    )
+  ) then
     -- The bug will not occur in this special case
-    -- In other words, the game will properly remove the bone heart (if we used the Strength card on The Forgotten)
-    -- or the soul heart (if we used the Strength card on The Soul) for us, so we don't have to do anything here
+    -- In other words, the game will properly remove the bone heart
+    -- (if we used the Strength card on The Forgotten)
+    -- or the soul heart (if we used the Strength card on The Soul) for us,
+    -- so we don't have to do anything here
     Isaac.DebugString("Strength card character swap occurred; doing nothing.")
     return
   end
@@ -807,13 +898,13 @@ function FastTravel:FixStrengthCardBug()
   local maxHearts = g.p:GetMaxHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
-  if (maxHearts == 2 and
-      soulHearts == 0 and
-      boneHearts == 0) or
-     (character == PlayerType.PLAYER_THEFORGOTTEN and
-      boneHearts == 1) then
-
-    Isaac.DebugString("Deliberately not removing the heart from a Strength card since it would kill us.")
+  if (
+    (maxHearts == 2 and soulHearts == 0 and boneHearts == 0)
+    or (character == PlayerType.PLAYER_THEFORGOTTEN and boneHearts == 1)
+  ) then
+    Isaac.DebugString(
+      "Deliberately not removing the heart from a Strength card since it would kill us."
+    )
   else
     g.p:AddMaxHearts(-2, true) -- Remove a heart container
     Isaac.DebugString("Took away 1 heart container to fix the Fast-Travel bug with Strength cards.")
@@ -827,16 +918,22 @@ end
 -- Called from the "CheckEntities:Grid()" function
 function FastTravel:ReplaceCrawlspace(entity, i)
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
   local roomFrameCount = g.r:GetFrameCount()
 
   -- Spawn a custom entity to emulate the original
-  local crawlspace = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRAWLSPACE_FAST_TRAVEL, 0, -- 1000
-                                 entity.Position, g.zeroVector, nil)
-  crawlspace.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+  local crawlspace = Isaac.Spawn(
+    EntityType.ENTITY_EFFECT, -- 1000
+    EffectVariant.CRAWLSPACE_FAST_TRAVEL,
+    0,
+    entity.Position,
+    g.zeroVector,
+    nil
+  )
+
+  -- This is needed so that the entity will not appear on top of the player
+  crawlspace.DepthOffset = -100
+
   if roomFrameCount > 1 then
     local data = crawlspace:GetData()
     data.fresh = true -- Mark that it should be open even if the room is not cleared
@@ -846,13 +943,15 @@ function FastTravel:ReplaceCrawlspace(entity, i)
   -- so we need to keep track of it for the remainder of the floor
   g.run.replacedCrawlspaces[#g.run.replacedCrawlspaces + 1] = {
     room = roomIndex,
-    pos  = entity.Position,
+    pos = entity.Position,
   }
 
   -- Log it
   --[[
-  Isaac.DebugString("Replaced crawlspace in room " .. tostring(roomIndex) .. " at (" ..
-                    tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")")
+  Isaac.DebugString(
+    "Replaced crawlspace in room " .. tostring(roomIndex) .. " at "
+    .. "(" .. tostring(entity.Position.X) .. "," .. tostring(entity.Position.Y) .. ")"
+  )
   --]]
 
   -- Figure out if it should spawn open or closed,
@@ -883,11 +982,8 @@ end
 -- Called from the "CheckEntities:NonGrid()" function
 function FastTravel:CheckCrawlspaceEnter(effect)
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local prevRoomIndex = g.l:GetPreviousRoomIndex()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
 
   -- Do nothing if the trapdoor is closed
   if effect.State ~= 0 then
@@ -897,17 +993,21 @@ function FastTravel:CheckCrawlspaceEnter(effect)
   -- Check to see if a player is touching the crawlspace
   for i = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(i - 1)
-    if player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance and
-       not player:IsHoldingItem() and
-       not player:GetSprite():IsPlaying("Happy") and -- Account for lucky pennies
-       not player:GetSprite():IsPlaying("Jump") then -- Account for How to Jump
-
-      -- Save the previous room information in case we return to a room outside the grid (with a negative room index)
+    if (
+      player.Position:Distance(effect.Position) <= FastTravel.trapdoorTouchDistance
+      and not player:IsHoldingItem()
+      and not player:GetSprite():IsPlaying("Happy") -- Account for lucky pennies
+      and not player:GetSprite():IsPlaying("Jump") -- Account for How to Jump
+    ) then
+      -- Save the previous room information in case we return to a room outside the grid
+      -- (with a negative room index)
       if prevRoomIndex < 0 then
         Isaac.DebugString("Skipped saving the crawlspace previous room since it was negative.")
       else
         g.run.crawlspace.prevRoom = g.l:GetPreviousRoomIndex()
-        Isaac.DebugString("Set crawlspace previous room to: " .. tostring(g.run.crawlspace.prevRoom))
+        Isaac.DebugString(
+          "Set crawlspace previous room to: " .. tostring(g.run.crawlspace.prevRoom)
+        )
       end
 
       -- If we don't set this, we will return to the center of the room by default
@@ -918,8 +1018,11 @@ function FastTravel:CheckCrawlspaceEnter(effect)
       g.l.DungeonReturnRoomIndex = roomIndex
 
       -- Go to the crawlspace
-      g.g:StartRoomTransition(GridRooms.ROOM_DUNGEON_IDX, Direction.DOWN, -- -4, 3
-                              g.RoomTransition.TRANSITION_NONE) -- 0
+      g.g:StartRoomTransition(
+        GridRooms.ROOM_DUNGEON_IDX, -- -4
+        Direction.DOWN, -- 3
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
     end
   end
 end
@@ -929,13 +1032,18 @@ function FastTravel:CheckCrawlspaceExit()
   -- Local variables
   local playerGridIndex = g.r:GetGridIndex(g.p.Position)
 
-  if g.r:GetType() == RoomType.ROOM_DUNGEON and -- 16
-     playerGridIndex == 2 then -- If the player is standing on top of the ladder
+  if (
+    g.r:GetType() == RoomType.ROOM_DUNGEON -- 16
+    and playerGridIndex == 2 -- If the player is standing on top of the ladder
+  ) then
+    -- You have to set LeaveDoor before every teleport or else it will send you to the wrong room
+    g.l.LeaveDoor = -1
 
-    -- Do a manual room transition
-    g.l.LeaveDoor = -1 -- You have to set this before every teleport or else it will send you to the wrong room
-    g.g:StartRoomTransition(g.l.DungeonReturnRoomIndex, Direction.UP, -- 1
-                            g.RoomTransition.TRANSITION_NONE) -- 0
+    g.g:StartRoomTransition(
+      g.l.DungeonReturnRoomIndex,
+      Direction.UP, -- 1
+      g.RoomTransition.TRANSITION_NONE -- 0
+    )
   end
 end
 
@@ -947,69 +1055,99 @@ function FastTravel:CheckCrawlspaceSoftlock()
   local roomType = g.r:GetType()
   local playerGridIndex = g.r:GetGridIndex(g.p.Position)
 
-  if (roomType == RoomType.ROOM_DEVIL or -- 14
-      roomType == RoomType.ROOM_ANGEL) and -- 15
-     prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
-
+  if (
+    (
+      roomType == RoomType.ROOM_DEVIL -- 14
+      or roomType == RoomType.ROOM_ANGEL -- 15
+    )
+    and prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX -- -4
+  ) then
     if playerGridIndex == 7 then -- Top door
       g.run.crawlspace.direction = Direction.UP -- 1
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.UP, -- 1
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil/Angel Room, moving up to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.UP, -- 1
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Devil/Angel Room, moving up to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 74 then -- Right door
       g.run.crawlspace.direction = Direction.RIGHT -- 2
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.RIGHT, -- 2
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil/Angel Room, moving right to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.RIGHT, -- 2
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Devil/Angel Room, moving right to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 127 then -- Bottom door
       g.run.crawlspace.direction = Direction.DOWN -- 3
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.DOWN, -- 3
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil Devil/Angel Room, moving down to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.DOWN, -- 3
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Devil Devil/Angel Room, moving down to room: "
+        .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 60 then -- Left door
       g.run.crawlspace.direction = Direction.LEFT -- 0
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.LEFT, -- 0
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Devil/Angel Room, moving left to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.LEFT, -- 0
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Devil/Angel Room, moving left to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     end
-
-  elseif roomType == RoomType.ROOM_BOSSRUSH and -- 17
-         prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
-
+  elseif (
+    roomType == RoomType.ROOM_BOSSRUSH -- 17
+    and prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX -- -4
+  ) then
     if playerGridIndex == 7 then -- Top left door
       g.run.crawlspace.direction = Direction.UP -- 1
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.UP, -- 1
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving up to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.UP, -- 1
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Boss Rush, moving up to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 139 then -- Right top door
       g.run.crawlspace.direction = Direction.RIGHT -- 2
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.RIGHT, -- 2
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving right to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.RIGHT, -- 2
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Boss Rush, moving right to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 427 then -- Bottom left door
       g.run.crawlspace.direction = Direction.DOWN -- 3
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.DOWN, -- 3
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving down to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
-
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.DOWN, -- 3
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Boss Rush, moving down to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     elseif playerGridIndex == 112 then -- Left top door
       g.run.crawlspace.direction = Direction.LEFT -- 0
-      g.g:StartRoomTransition(g.run.crawlspace.prevRoom, Direction.LEFT, -- 0
-                              g.RoomTransition.TRANSITION_NONE) -- 0
-      Isaac.DebugString("Exited Boss Rush, moving left to room: " ..
-                        tostring(g.run.crawlspace.prevRoom))
+      g.g:StartRoomTransition(
+        g.run.crawlspace.prevRoom,
+        Direction.LEFT, -- 0
+        g.RoomTransition.TRANSITION_NONE -- 0
+      )
+      Isaac.DebugString(
+        "Exited Boss Rush, moving left to room: " .. tostring(g.run.crawlspace.prevRoom)
+      )
     end
   end
 end
@@ -1017,57 +1155,67 @@ end
 -- Called in the PostNewRoom callback
 function FastTravel:CheckCrawlspaceMiscBugs()
   -- Local variables
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
+  local roomIndex = g:GetRoomIndex()
   local prevRoomIndex = g.l:GetPreviousRoomIndex() -- We need the unsafe version here
 
-  -- For some reason, we won't go back to location of the crawlspace if we entered from a room outside of the grid,
-  -- so we need to move there manually
-  -- (in the Boss Rush, this will look glitchy because the game originally sends us next to a Boss Rush door,
-  -- but there is no way around this; even if we change player.Position on every frame in the PostRender callback,
-  -- the glitchy warp will still occur)
-  if roomIndex < 0 and
-     roomIndex ~= GridRooms.ROOM_DUNGEON_IDX and -- -4
-     -- We don't want to teleport if we are returning to a crawlspace from a Black Market
-     roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX and -- -6
-     -- We don't want to teleport in a Black Market
-     prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX then -- -4
-
+  -- For some reason, we won't go back to location of the crawlspace if we entered from a room
+  -- outside of the grid, so we need to move there manually
+  -- (in the Boss Rush, this will look glitchy because the game originally sends us next to a Boss
+  -- Rush door, but there is no way around this; even if we change player.Position on every frame in
+  -- the PostRender callback, the glitchy warp will still occur)
+  if (
+    roomIndex < 0
+    and roomIndex ~= GridRooms.ROOM_DUNGEON_IDX -- -4
+    -- We don't want to teleport if we are returning to a crawlspace from a Black Market
+    and roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX -- -6
+    -- We don't want to teleport in a Black Market
+    and prevRoomIndex == GridRooms.ROOM_DUNGEON_IDX -- -4
+  ) then
     g.p.Position = g.l.DungeonReturnPosition
     Isaac.DebugString("Exited a crawlspace in an off-grid room; crawlspace teleport complete.")
   end
 
   -- For some reason, if we exit and re-enter a crawlspace from a room outside of the grid,
-  -- we won't spawn on the ladder, so move there manually (this causes no visual hiccups like the above code does)
-  if roomIndex == GridRooms.ROOM_DUNGEON_IDX and -- -4
-     g.l.DungeonReturnRoomIndex < 0 and
-     not g.run.crawlspace.blackMarket then
-
-    g.p.Position = Vector(120, 160) -- This is the standard starting location at the top of the ladder
+  -- we won't spawn on the ladder, so move there manually
+  -- (this causes no visual hiccups like the above code does)
+  if (
+    roomIndex == GridRooms.ROOM_DUNGEON_IDX -- -4
+    and g.l.DungeonReturnRoomIndex < 0
+    and not g.run.crawlspace.blackMarket
+  ) then
+    -- This is the standard starting location at the top of the ladder
+    g.p.Position = Vector(120, 160)
     Isaac.DebugString("Entered crawlspace from a room outside the grid; ladder teleport complete.")
   end
 
   -- When returning to the boss room from a Boss Rush with a crawlspace in it,
-  -- we might not end up in a spot where the player expects, so move to the most logical position manually
+  -- we might not end up in a spot where the player expects,
+  -- so move to the most logical position manually
   if g.run.crawlspace.direction ~= -1 then
     if g.run.crawlspace.direction == Direction.LEFT then -- 0
       -- Returning from the right door
       g.p.Position = g.r:GetGridPosition(73)
-      Isaac.DebugString("Entered the previous room from a nested crawlspace (going left), teleport complete.")
+      Isaac.DebugString(
+        "Entered the previous room from a nested crawlspace (going left), teleport complete."
+      )
     elseif g.run.crawlspace.direction == Direction.UP then -- 1
       -- Returning from the bottom door
       g.p.Position = g.r:GetGridPosition(112)
-      Isaac.DebugString("Entered the previous room from a nested crawlspace (going up), teleport complete.")
+      Isaac.DebugString(
+        "Entered the previous room from a nested crawlspace (going up), teleport complete."
+      )
     elseif g.run.crawlspace.direction == Direction.RIGHT then -- 2
       -- Returning from the left door
       g.p.Position = g.r:GetGridPosition(61)
-      Isaac.DebugString("Entered the previous room from a nested crawlspace (going left), teleport complete.")
+      Isaac.DebugString(
+        "Entered the previous room from a nested crawlspace (going left), teleport complete."
+      )
     elseif g.run.crawlspace.direction == Direction.DOWN then -- 3
       -- Returning from the top door
       g.p.Position = g.r:GetGridPosition(22)
-      Isaac.DebugString("Entered the previous room from a nested crawlspace (going down), teleport complete.")
+      Isaac.DebugString(
+        "Entered the previous room from a nested crawlspace (going down), teleport complete."
+      )
     end
     g.run.crawlspace.direction = -1
   end
@@ -1100,7 +1248,8 @@ function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
     return
   end
 
-  -- Don't do anything if it is freshly spawned in a boss room and one or more players are relatively close
+  -- Don't do anything if it is freshly spawned in a boss room and one or more players are
+  -- relatively close
   local playerRelativelyClose = false
   for j = 1, g.g:GetNumPlayers() do
     local player = Isaac.GetPlayer(j - 1)
@@ -1109,11 +1258,12 @@ function FastTravel:CheckTrapdoorCrawlspaceOpen(effect)
       break
     end
   end
-  if roomType == RoomType.ROOM_BOSS and -- 5
-     effect.FrameCount <= 30 and
-     effect.DepthOffset ~= -101 and -- We use -101 to signify that it is a respawned trapdoor
-     playerRelativelyClose then
-
+  if (
+    roomType == RoomType.ROOM_BOSS -- 5
+    and effect.FrameCount <= 30
+    and effect.DepthOffset ~= -101 -- We use -101 to signify that it is a respawned trapdoor
+    and playerRelativelyClose
+  ) then
     return
   end
 
@@ -1156,11 +1306,8 @@ end
 -- Called from the PostNewRoom callback
 function FastTravel:CheckRoomRespawn()
   -- Local variables
+  local roomIndex = g:GetRoomIndex()
   local stage = g.l:GetStage()
-  local roomIndex = g.l:GetCurrentRoomDesc().SafeGridIndex
-  if roomIndex < 0 then -- SafeGridIndex is always -1 for rooms outside the grid
-    roomIndex = g.l:GetCurrentRoomIndex()
-  end
 
   -- Respawn trapdoors, if necessary
   for _, trapdoor in ipairs(g.run.replacedTrapdoors) do
@@ -1170,23 +1317,40 @@ function FastTravel:CheckRoomRespawn()
       -- Spawn the new custom entity
       local entity
       if roomIndex == GridRooms.ROOM_BLUE_WOOM_IDX then -- -8
-        entity = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                             trapdoor.pos, g.zeroVector, nil)
-
-      elseif stage == 6 or
-             stage == 7 then
-
-        entity = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                             trapdoor.pos, g.zeroVector, nil)
-
+        entity = Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.BLUE_WOMB_TRAPDOOR_FAST_TRAVEL,
+          0,
+          trapdoor.pos,
+          g.zeroVector,
+          nil
+        )
+      elseif stage == 6 or stage == 7 then
+        entity = Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.WOMB_TRAPDOOR_FAST_TRAVEL,
+          0,
+          trapdoor.pos,
+          g.zeroVector,
+          nil
+        )
       else
-        entity = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.TRAPDOOR_FAST_TRAVEL, 0, -- 1000
-                             trapdoor.pos, g.zeroVector, nil)
+        entity = Isaac.Spawn(
+          EntityType.ENTITY_EFFECT, -- 1000
+          EffectVariant.TRAPDOOR_FAST_TRAVEL,
+          0,
+          trapdoor.pos,
+          g.zeroVector,
+          nil
+        )
       end
-      entity.DepthOffset = -101 -- This is needed so that the entity will not appear on top of the player
-      -- We use -101 instead of -100 to signify that it is a respawned trapdoor
 
-      -- Figure out if it should spawn open or closed, depending on if one or more players is close to it
+      -- This is needed so that the entity will not appear on top of the player
+      -- We use -101 instead of -100 to signify that it is a respawned trapdoor
+      entity.DepthOffset = -101
+
+      -- Figure out if it should spawn open or closed,
+      -- depending on if one or more players is close to it
       local playerClose = false
       for j = 1, g.g:GetNumPlayers() do
         local player = Isaac.GetPlayer(j - 1)
@@ -1195,11 +1359,12 @@ function FastTravel:CheckRoomRespawn()
           break
         end
       end
-      if not FastTravel:IsRoomClear() or
-         playerClose or
-         roomIndex == GridRooms.ROOM_BOSSRUSH_IDX then -- -5
-         -- (always spawn trapdoors closed in the Boss Rush to prevent specific bugs)
-
+      if (
+        not FastTravel:IsRoomClear()
+        or playerClose
+        -- Always spawn trapdoors closed in the Boss Rush to prevent specific bugs
+        or roomIndex == GridRooms.ROOM_BOSSRUSH_IDX -- -5
+      ) then
         entity:ToEffect().State = 1
         entity:GetSprite():Play("Closed", true)
         Isaac.DebugString("Respawned trapdoor (closed, state 1).")
@@ -1216,11 +1381,20 @@ function FastTravel:CheckRoomRespawn()
       FastTravel:RemoveOverlappingGridEntity(crawlspace.pos, "crawlspace")
 
       -- Spawn the new custom entity
-      local entity = Isaac.Spawn(EntityType.ENTITY_EFFECT, EffectVariant.CRAWLSPACE_FAST_TRAVEL, 0, -- 1000
-                                 crawlspace.pos, g.zeroVector, nil)
-      entity.DepthOffset = -100 -- This is needed so that the entity will not appear on top of the player
+      local entity = Isaac.Spawn(
+        EntityType.ENTITY_EFFECT, -- 1000
+        EffectVariant.CRAWLSPACE_FAST_TRAVEL,
+        0,
+        crawlspace.pos,
+        g.zeroVector,
+        nil
+      )
 
-      -- Figure out if it should spawn open or closed, depending on if one or more players is close to it
+      -- This is needed so that the entity will not appear on top of the player
+      entity.DepthOffset = -100
+
+      -- Figure out if it should spawn open or closed,
+      -- depending on if one or more players is close to it
       local playerClose = false
       for j = 1, g.g:GetNumPlayers() do
         local player = Isaac.GetPlayer(j - 1)
@@ -1230,12 +1404,13 @@ function FastTravel:CheckRoomRespawn()
         end
       end
 
-      if not FastTravel:IsRoomClear() or
-         playerClose or
-         roomIndex < 0 then
-         -- (always spawn crawlspaces closed in rooms outside the grid to prevent specific bugs;
-         -- e.g. if we need to teleport back to a crawlspace and it is open, the player can softlock)
-
+      if (
+        not FastTravel:IsRoomClear()
+        or playerClose
+        or roomIndex < 0
+      ) then
+        -- Always spawn crawlspaces closed in rooms outside the grid to prevent specific bugs;
+        -- e.g. if we need to teleport back to a crawlspace and it is open, the player can softlock
         entity:ToEffect().State = 1
         entity:GetSprite():Play("Closed", true)
         Isaac.DebugString("Respawned crawlspace (closed, state 1).")
@@ -1251,8 +1426,15 @@ function FastTravel:CheckRoomRespawn()
     if heavenDoor.room == roomIndex then
       -- Spawn the new custom entity
       -- (we use an InitSeed of 0 instead of a random seed to signify that it is a respawned entity)
-      local entity = g.g:Spawn(EntityType.ENTITY_EFFECT, EffectVariant.HEAVEN_DOOR_FAST_TRAVEL, -- 1000
-                               heavenDoor.pos, g.zeroVector, nil, 0, 0)
+      local entity = g.g:Spawn(
+        EntityType.ENTITY_EFFECT, -- 1000
+        EffectVariant.HEAVEN_DOOR_FAST_TRAVEL,
+        heavenDoor.pos,
+        g.zeroVector,
+        nil,
+        0,
+        0
+      )
       entity.DepthOffset = 15 -- The default offset of 0 is too low, and 15 is just about perfect
       Isaac.DebugString("Respawned heaven door.")
     end
@@ -1269,16 +1451,18 @@ function FastTravel:RemoveOverlappingGridEntity(pos, entityType)
     return
   end
 
-  -- Remove it
-  g.r:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() will only work on destroyable entities like TNT
-  Isaac.DebugString("Removed a grid entity at index " .. tostring(gridIndex) ..
-                    " that would interfere with the " .. tostring(entityType) .. ".")
+  g.r:RemoveGridEntity(gridIndex, 0, false) -- entity:Destroy() does not work
+  Isaac.DebugString(
+    "Removed a grid entity at index " .. tostring(gridIndex) .. " that would interfere with the "
+    .. tostring(entityType) .. "."
+  )
 
   -- If this was a Corny Poop, it will turn the Eternal Fly into an Attack Fly
   local saveState = gridEntity:GetSaveState()
-  if saveState.Type == GridEntityType.GRID_POOP and -- 14
-     saveState.Variant == 2 then -- Corny Poop
-
+  if (
+    saveState.Type == GridEntityType.GRID_POOP -- 14
+    and saveState.Variant == 2 -- Corny Poop
+  ) then
     local flies = Isaac.FindByType(EntityType.ENTITY_ETERNALFLY, -1, -1, false, false) -- 96
     for _, fly in ipairs(flies) do
       fly:Remove()
@@ -1288,6 +1472,9 @@ function FastTravel:RemoveOverlappingGridEntity(pos, entityType)
 end
 
 function FastTravel:IsRoomClear(entity)
+  -- Local variables
+  local roomType = g.r:GetType()
+
   -- Racing+ will use mgln's custom mechanic until the release of Repentance
   -- This means that freshly spawned trapdoors will always be open,
   -- regardless of whether the room is clear or not
@@ -1298,18 +1485,19 @@ function FastTravel:IsRoomClear(entity)
     end
   end
 
-  local roomType = g.r:GetType()
   if roomType == RoomType.ROOM_CHALLENGE then -- 11
     return not g.r:IsAmbushActive()
-  elseif roomType == RoomType.ROOM_BOSSRUSH then -- 17
+  end
+
+  if roomType == RoomType.ROOM_BOSSRUSH then -- 17
     if g.run.bossRush.started then
       return g.run.bossRush.finished
     else
       return true
     end
-  else
-    return g.r:IsClear()
   end
+
+  return g.r:IsClear()
 end
 
 return FastTravel

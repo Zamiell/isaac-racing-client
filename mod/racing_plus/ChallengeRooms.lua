@@ -3,8 +3,9 @@ local ChallengeRooms = {}
 -- Racing+ replaces the vanilla Challenge Rooms with a custom version
 
 -- Includes
-local g         = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local FastClear = require("racing_plus/fastclear")
+local BagFamiliars = require("racing_plus/bagfamiliars")
 local Schoolbag = require("racing_plus/schoolbag")
 
 -- For normal waves, each wave is specified by entity type and number of entities to spawn
@@ -160,10 +161,11 @@ function ChallengeRooms:PostUpdate()
 end
 
 function ChallengeRooms:CheckStart()
-  if g.run.touchedPickup and
-     not g.run.challengeRoom.started and
-     not g.run.challengeRoom.finished then
-
+  if (
+    g.run.touchedPickup
+    and not g.run.challengeRoom.started
+    and not g.run.challengeRoom.finished
+  ) then
     ChallengeRooms:Start()
   end
 end
@@ -172,7 +174,7 @@ function ChallengeRooms:Start()
   -- Local variables
   local gameFrameCount = g.g:GetFrameCount()
   local stage = g.l:GetStage()
-  local roomSeed = g.r:GetSpawnSeed() -- Gets a reproducible seed based on the room, e.g. "2496979501"
+  local roomSeed = g.r:GetSpawnSeed()
 
   -- The "ambush" is active and we have not started the Challenge Room yet, so start spawning mobs
   g.run.challengeRoom.started = true
@@ -181,8 +183,14 @@ function ChallengeRooms:Start()
 
   -- Spawn a room clear delay NPC as a helper to keep the doors closed
   -- (otherwise, the doors will re-open on every frame)
-  local roomClearDelayNPC = Isaac.Spawn(EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC, 0, 0,
-                                        g.zeroVector, g.zeroVector, nil)
+  local roomClearDelayNPC = Isaac.Spawn(
+    EntityType.ENTITY_ROOM_CLEAR_DELAY_NPC,
+    0,
+    0,
+    g.zeroVector,
+    g.zeroVector,
+    nil
+  )
   roomClearDelayNPC:ClearEntityFlags(EntityFlag.FLAG_APPEAR) -- 1 << 2
   roomClearDelayNPC.EntityCollisionClass = EntityCollisionClass.ENTCOLL_NONE -- 0
   Isaac.DebugString("Spawned the \"Room Clear Delay NPC\" custom entity (for a Challenge Room).")
@@ -234,9 +242,10 @@ function ChallengeRooms:Start()
     for i = 1, #g.run.challengeRoom.waves do
       -- We compare both the first and second values in case this is a Boss Challenge Room
       local alreadyChosenWave = g.run.challengeRoom.waves[i]
-      if wave[1] == alreadyChosenWave[1] and
-         wave[2] == alreadyChosenWave[2] then
-
+      if (
+        wave[1] == alreadyChosenWave[1]
+        and wave[2] == alreadyChosenWave[2]
+      ) then
         valid = false
         break
       end
@@ -290,8 +299,10 @@ function ChallengeRooms:CheckSpawnNewWave()
 
     -- No splitting enemies exist, so consider the Challenge Room finished
     spawnNextWave = true
-    Isaac.DebugString("Challenge Room wave " .. tostring(g.run.challengeRoom.currentWave) ..
-                      " finished on frame: " .. tostring(gameFrameCount))
+    Isaac.DebugString(
+      "Challenge Room wave " .. tostring(g.run.challengeRoom.currentWave) .. " finished on frame: "
+      .. tostring(gameFrameCount)
+    )
   end
   if not spawnNextWave then
     return
@@ -302,8 +313,8 @@ function ChallengeRooms:CheckSpawnNewWave()
   if g.run.challengeRoom.currentWave > 0 then
     FastClear:AddCharge()
     Schoolbag:AddCharge()
-    FastClear:IncrementBagFamiliars()
-    FastClear:CheckBagFamiliars()
+    BagFamiliars:Increment()
+    BagFamiliars:CheckSpawn()
   end
 
   -- Find out if the Challenge Room is over
@@ -316,7 +327,9 @@ function ChallengeRooms:CheckSpawnNewWave()
     end
     g.run.challengeRoom.spawnWaveFrame = gameFrameCount + ChallengeRooms.delay
     g.run.challengeRoom.currentWave = g.run.challengeRoom.currentWave + 1
-    Isaac.DebugString("Marking to spawn the next wave on frame: " .. tostring(g.run.challengeRoom.spawnWaveFrame))
+    Isaac.DebugString(
+      "Marking to spawn the next wave on frame: " .. tostring(g.run.challengeRoom.spawnWaveFrame)
+    )
   end
 end
 
@@ -336,9 +349,10 @@ function ChallengeRooms:PostNewRoom()
 
   -- If we already started the Challenge Room and did not finish it,
   -- and are now returning to the room, then start spawning the waves again from the beginning
-  if g.run.challengeRoom.started and
-     not g.run.challengeRoom.finished then
-
+  if (
+    g.run.challengeRoom.started
+    and not g.run.challengeRoom.finished
+  ) then
     g.run.challengeRoom.currentWave = 0
     g.run.challengeRoom.spawnWaveFrame = 0
     ChallengeRooms:Start()
@@ -433,8 +447,10 @@ function ChallengeRooms:SpawnWave()
   -- Play the summon sound
   g.sfx:Play(SoundEffect.SOUND_SUMMONSOUND, 1, 0, false, 1) -- 265
 
-  Isaac.DebugString("Spawned wave " .. tostring(g.run.challengeRoom.currentWave) ..
-                    " on frame: " .. tostring(gameFrameCount))
+  Isaac.DebugString(
+    "Spawned wave " .. tostring(g.run.challengeRoom.currentWave) .. " on frame: "
+    .. tostring(gameFrameCount)
+  )
 end
 
 function ChallengeRooms:Finish()

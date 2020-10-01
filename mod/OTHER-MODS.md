@@ -10,6 +10,7 @@ In general, using **any** other mods alongside Racing+ is forbidden. Some specif
 * [Vanilla Streak Text](https://steamcommunity.com/sharedfiles/filedetails/?id=1714310911)
 * [Mod Config Menu](https://steamcommunity.com/workshop/filedetails/?id=1603631350)
 * [MiniMAPI](https://steamcommunity.com/sharedfiles/filedetails/?id=1978904635)
+* [Less gore - Less lag](https://steamcommunity.com/sharedfiles/filedetails/?id=1274915376)
 * [Honk Bros](https://steamcommunity.com/sharedfiles/filedetails/?id=850578581)
 * [Primstone](https://steamcommunity.com/sharedfiles/filedetails/?id=940291141)
 * [reHUD](https://steamcommunity.com/sharedfiles/filedetails/?id=1906405707)

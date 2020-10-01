@@ -1,12 +1,12 @@
 local PostNewLevel = {}
 
 -- Includes
-local g            = require("racing_plus/globals")
-local PostNewRoom  = require("racing_plus/postnewroom")
-local FastTravel   = require("racing_plus/fasttravel")
+local g = require("racing_plus/globals")
+local PostNewRoom = require("racing_plus/postnewroom")
+local FastTravel = require("racing_plus/fasttravel")
 local SeededFloors = require("racing_plus/seededfloors")
-local SoulJar      = require("racing_plus/souljar")
-local Season7      = require("racing_plus/season7")
+local SoulJar = require("racing_plus/souljar")
+local Season7 = require("racing_plus/season7")
 
 -- ModCallbacks.MC_POST_NEW_LEVEL (18)
 function PostNewLevel:Main()
@@ -19,9 +19,10 @@ function PostNewLevel:Main()
 
   -- Make sure the callbacks run in the right order
   -- (naturally, PostNewLevel gets called before the PostGameStarted callbacks)
-  if gameFrameCount == 0 and
-     not g.run.reseededFloor then
-
+  if (
+    gameFrameCount == 0
+    and not g.run.reseededFloor
+  ) then
     return
   end
   if g.run.reseededFloor then
@@ -47,16 +48,19 @@ function PostNewLevel:NewLevel()
   Isaac.DebugString("MC_POST_NEW_LEVEL2 - " .. tostring(stage) .. "." .. tostring(stageType))
 
   -- Find out if we performed a Sacrifice Room teleport
-  if (g.race.goal == "The Lamb" or
-      g.race.goal == "Mega Satan" or
-      g.race.goal == "Everything" or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)") or
-      challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")) and
-     stage == 11 and stageType == 0 and -- 11.0 is Dark Room
-     (g.run.currentFloor ~= 10 and
-      g.run.currentFloor ~= 11) then -- This is necessary because of Forget Me Now
-
+  if (
+    (
+      g.race.goal == "The Lamb"
+      or g.race.goal == "Mega Satan"
+      or g.race.goal == "Everything"
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 3)")
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+      or challenge == Isaac.GetChallengeIdByName("R+7 (Season 7)")
+    )
+    and stage == 11 and stageType == 0 -- 11.0 is Dark Room
+    -- Check for Forget Me Now
+    and (g.run.currentFloor ~= 10 and g.run.currentFloor ~= 11)
+  ) then
     -- We arrived at the Dark Room without going through Sheol
     Isaac.DebugString("Sacrifice Room teleport detected.")
     FastTravel:GotoNextFloor(false, g.run.currentFloor + 1)
@@ -65,18 +69,22 @@ function PostNewLevel:NewLevel()
   end
 
   -- Reseed the floor if it has a flaw in it
-  if (challenge ~= 0 or not customRun) and -- Disable all reseeding for set seeds
-     stage ~= 12 then -- Disable all reseeding on The Void
-
-    if PostNewLevel:CheckDualityNarrowRoom() or -- Check for Duality restrictions
-       PostNewLevel:CheckForgottenSoftlock() or -- Forgotten can become softlocked in certain rooms
-       PostNewLevel:CheckDupeRooms() then -- Check for duplicate rooms
-      -- (checking for duplicate rooms has to be the last check because it will store the rooms as "seen")
-
+  if (
+    (challenge ~= 0 or not customRun) -- Disable all reseeding for set seeds
+    and stage ~= 12 -- Disable all reseeding on The Void
+  ) then
+    if (
+      PostNewLevel:CheckDualityNarrowRoom() -- Check for Duality restrictions
+      or PostNewLevel:CheckForgottenSoftlock() -- Forgotten can become softlocked in certain rooms
+      or PostNewLevel:CheckDupeRooms() -- Check for duplicate rooms
+      -- (checking for duplicate rooms has to be the last check because it will store the rooms as
+      -- "seen")
+    ) then
       g.run.reseededFloor = true
       g.run.reseedCount = g.run.reseedCount + 1
       if g.p:GetEternalHearts() == 1 then
-        -- Prevent the bug where Maggy's Faith will give an extra red heart container if we reseed a floor
+        -- Prevent the bug where Maggy's Faith will give an extra red heart container if we reseed a
+        -- floor
         g.p:AddEternalHearts(-1)
       end
       g:ExecuteCommand("reseed")
@@ -87,8 +95,9 @@ function PostNewLevel:NewLevel()
   -- Set the new floor
   g.run.currentFloor = stage
   g.run.currentFloorType = stageType
-  Isaac.DebugString("New floor: " .. tostring(g.run.currentFloor) .. "-" ..
-                    tostring(g.run.currentFloorType))
+  Isaac.DebugString(
+    "New floor: " .. tostring(g.run.currentFloor) .. "-" .. tostring(g.run.currentFloorType)
+  )
 
   -- Clear variables that track things per level
   g:InitLevel()
@@ -145,9 +154,7 @@ function PostNewLevel:CheckDualityNarrowRoom()
   -- It is only possible to get a Devil Deal on floors 2 through 8
   -- Furthermore, it is not possible to get a narrow room on floor 8
   local stage = g.l:GetStage()
-  if stage <= 1 or
-     stage >= 8 then
-
+  if stage <= 1 or stage >= 8 then
     return false
   end
 
@@ -156,9 +163,10 @@ function PostNewLevel:CheckDualityNarrowRoom()
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomData = rooms:Get(i).Data
     if roomData.Type == RoomType.ROOM_BOSS then -- 5
-      if roomData.Shape == RoomShape.ROOMSHAPE_IH or -- 2
-         roomData.Shape == RoomShape.ROOMSHAPE_IV then -- 3
-
+      if (
+        roomData.Shape == RoomShape.ROOMSHAPE_IH -- 2
+        or roomData.Shape == RoomShape.ROOMSHAPE_IV -- 3
+      ) then
         Isaac.DebugString("Narrow boss room detected with Duality - reseeding.")
         return true
       end
@@ -168,8 +176,8 @@ function PostNewLevel:CheckDualityNarrowRoom()
   return false
 end
 
--- If the Forgotten has Chocolate Milk or Brimstone, and then spends all of his soul hearts in a devil deal,
--- then they can become softlocked in certain specific island rooms
+-- If the Forgotten has Chocolate Milk or Brimstone, and then spends all of his soul hearts in a
+-- devil deal, then they can become softlocked in certain specific island rooms
 function PostNewLevel:CheckForgottenSoftlock()
   local character = g.p:GetPlayerType()
   if character ~= PlayerType.PLAYER_THEFORGOTTEN then -- 17
@@ -182,18 +190,17 @@ function PostNewLevel:CheckForgottenSoftlock()
     return false
   end
 
-  if not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) and -- 69
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) and -- 118
-     not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) then -- 316
-
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CHOCOLATE_MILK) -- 69
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BRIMSTONE) -- 118
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_CURSED_EYE) -- 316
+  ) then
     return false
   end
 
   -- Local variables
   local stage = g.l:GetStage()
-  if stage <= 2 or
-     stage >= 9 then
-
+  if stage <= 2 or stage >= 9 then
     return false
   end
 
@@ -210,32 +217,38 @@ function PostNewLevel:CheckForgottenSoftlock()
       end
 
       local stageID = roomData.StageID
-      if ((stageID == 4 or stageID == 6) and roomID == 226) or -- Caves / Flooded Caves
-         ((stageID == 4 or stageID == 6) and roomID == 251) or
-         ((stageID == 4 or stageID == 6) and roomID == 303) or
-         ((stageID == 4 or stageID == 6) and roomID == 500) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 305) or -- Caves / Catacombs / Flooded Caves
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 337) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 378) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 450) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 488) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742) or
-         ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 754) or
-         (stageID == 5 and roomID == 224) or -- Catacombs
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 226) or -- Depths / Necropolis / Dank Depths
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 227) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 275) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 390) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 417) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 446) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 455) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 492) or
-         ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 573) or
-         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 344) or -- Womb / Utero / Scarred Womb
-         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 417) or
-         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 458) or
-         ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 459) then
-
+      if (
+        -- Caves / Flooded Caves
+        ((stageID == 4 or stageID == 6) and roomID == 226)
+        or ((stageID == 4 or stageID == 6) and roomID == 251)
+        or ((stageID == 4 or stageID == 6) and roomID == 303)
+        or ((stageID == 4 or stageID == 6) and roomID == 500)
+        -- Caves / Catacombs / Flooded Caves
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 305)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 337)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 378)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 450)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 488)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 742)
+        or ((stageID == 4 or stageID == 5 or stageID == 6) and roomID == 754)
+        -- Catacombs
+        or (stageID == 5 and roomID == 224)
+        -- Depths / Necropolis / Dank Depths
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 226)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 227)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 275)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 390)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 417)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 446)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 455)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 492)
+        or ((stageID == 7 or stageID == 8 or stageID == 9) and roomID == 573)
+        -- Womb / Utero / Scarred Womb
+        or ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 344)
+        or ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 417)
+        or ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 458)
+        or ((stageID == 10 or stageID == 11 or stageID == 12) and roomID == 459)
+      ) then
         Isaac.DebugString("Island room detected with low-range Forgotten - reseeding.")
         return true
       end
@@ -258,30 +271,23 @@ function PostNewLevel:CheckDupeRooms()
   end
 
   -- Don't bother checking on Blue Womb, The Chest / Dark Room, or The Void
-  if stage == 9 or
-     stage == 11 or
-     stage == 12 then
-
+  if stage == 9 or stage == 11 or stage == 12 then
     return false
   end
 
   -- Reset the room IDs if we are arriving at a level with a new stage type
-  if stage == 3 or
-     stage == 5 or
-     stage == 7 or
-     stage == 10 or
-     stage == 11 then
-
+  if stage == 3 or stage == 5 or stage == 7 or stage == 10 or stage == 11 then
     g.run.roomIDs = {}
   end
 
   local roomIDs = {}
   for i = 0, rooms.Size - 1 do -- This is 0 indexed
     local roomData = rooms:Get(i).Data
-    if roomData.Type == RoomType.ROOM_DEFAULT and -- 1
-       roomData.Variant ~= 2 and -- This is the starting room
-       roomData.Variant ~= 0 then -- This is the starting room on The Chest / Dark Room
-
+    if (
+      roomData.Type == RoomType.ROOM_DEFAULT -- 1
+      and roomData.Variant ~= 2 -- This is the starting room
+      and roomData.Variant ~= 0 -- This is the starting room on The Chest / Dark Room
+    ) then
       -- Normalize the room ID (to account for flipped rooms)
       local roomID = roomData.Variant
       while roomID >= 10000 do
@@ -289,12 +295,15 @@ function PostNewLevel:CheckDupeRooms()
         roomID = roomID - 10000
       end
 
-      -- Make Basement 1 exempt from duplication checking so that resetting is faster on potato computers
+      -- Make Basement 1 exempt from duplication checking so that resetting is faster on bad
+      -- computers
       if stage ~= 1 then
         -- Check to see if this room ID has appeared on previous floors
         for j = 1, #g.run.roomIDs do
           if roomID == g.run.roomIDs[j] then
-            Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding.")
+            Isaac.DebugString(
+              "Duplicate room " .. tostring(roomID) .. " found (on previous floor) - reseeding."
+            )
             return true
           end
         end
@@ -302,7 +311,9 @@ function PostNewLevel:CheckDupeRooms()
         -- Also check to see if this room ID appears multiple times on this floor
         for j = 1, #roomIDs do
           if roomID == roomIDs[j] then
-            Isaac.DebugString("Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding.")
+            Isaac.DebugString(
+              "Duplicate room " .. tostring(roomID) .. " found (on same floor) - reseeding."
+            )
             return true
           end
         end
@@ -313,7 +324,8 @@ function PostNewLevel:CheckDupeRooms()
     end
   end
 
-  -- We have gone through all of the rooms and none are duplicated, so permanently store them as rooms already seen
+  -- We have gone through all of the rooms and none are duplicated,
+  -- so permanently store them as rooms already seen
   for _, roomID in ipairs(roomIDs) do
     g.run.roomIDs[#g.run.roomIDs + 1] = roomID
   end

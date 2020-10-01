@@ -96,7 +96,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * Void Portals are automatically deleted.
 * The restart key immediately restarts the game. (To perform a fast-restart on the second floor and beyond, you need to double tap R.)
 * [Special items](https://bindingofisaacrebirth.gamepedia.com/Special_Item) are no longer special.
-* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.) This effect also applies to the Spun! transformation. Players can disable automatic insersion by holding down the drop button (or one of the fast-drop buttons).
+* Items that drop pickups on the ground will now automatically insert them into your inventory instead, if there is room. (However, Purple Heart, Mom's Toenail, The Tick, Faded Polaroid, and Ouroboros Worm are never inserted automatically.) This effect also applies to the Spun! transformation. Players can disable automatic insertion by holding down the drop button (or one of the fast-drop buttons).
 * You will always be able to take an item in the Basement 1 Treasure Room without spending a bomb or being forced to walk on spikes.
 * Troll Bombs and Mega Troll Bombs always have a fuse timer of exactly 2 seconds.
 * Identified pills (up to 7) will be shown when the player presses Tab.
@@ -119,7 +119,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * The Chub that spawns after The Matriarch will be automatically stunned for a few frames to prevent unavoidable damage.
 * Hosts and Mobile Hosts are now immune to fear. (This prevents bugs where feared Hosts will not properly play animations.)
 * The Forsaken is now immune to fear. (This prevents the bug where it will not attack.)
-* Blastocyst is now immmune to freeze. (This prevents delays during the death animation.)
+* Blastocyst is now immune to freeze. (This prevents delays during the death animation.)
 * The "Would you like to do a Victory Lap!?" popup no longer appears after defeating The Lamb.
 * All pills can now be used to cancel pedestal pickup animations.
 * The door to Hush is now automatically opened.
@@ -168,8 +168,9 @@ While there are thousands of rooms in the game, many players have already seen t
 * Multi-segment bosses will no longer drop more than one black heart when killed with Maw of the Void, Athame, or Serpent's Kiss.
 * The trapdoor / beam of light in I AM ERROR rooms will no longer be accessible if the room is not cleared.
 * All forms of teleport will no longer send you to an invalid entrance.
-* The synergy of The Ludovico Technique, Brimstone, and Dr. Fetus will no longer softlock you.
-* The synergy of The Ludovico Technique, Technology, and Mom's Knife will no longer softlock you.
+* The synergy of The Ludovico Technique, Brimstone, and Dr. Fetus will no longer softlock the player.
+* The synergy of The Ludovico Technique, Technology, and Mom's Knife will no longer softlock the player.
+* Fire Mind fires spawned from Angelic Prism tears will no longer damage the player.
 
 ### Graphics & Sound Fixes
 

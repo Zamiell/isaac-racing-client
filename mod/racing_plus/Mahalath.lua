@@ -40,8 +40,14 @@ local delfight = false
 -- In Racing+ we modify the level 1 balance values
 -- (the original values are noted in a comment next to each value)
 local bal = {
-  barfcolor = {Color(132 / 255, 188 / 255, 88 / 255, 1, 0, 0, 0), Color(138 / 255, 36 / 255, 49 / 255, 1, 0, 0, 0)},
-  bloodcolor = {Color(215 / 255, 10 / 255, 10 / 255, 1, 0, 0, 0), Color(15 / 255, 15 / 255, 15 / 255, 1, 0, 0, 0)},
+  barfcolor = {
+    Color(132 / 255, 188 / 255, 88 / 255, 1, 0, 0, 0),
+    Color(138 / 255, 36 / 255, 49 / 255, 1, 0, 0, 0),
+  },
+  bloodcolor = {
+    Color(215 / 255, 10 / 255, 10 / 255, 1, 0, 0, 0),
+    Color(15 / 255, 15 / 255, 15 / 255, 1, 0, 0, 0),
+  },
   creeptype = {23, 22},
 
   RegBallHitSpeed = {7, 7}, -- 5
@@ -256,7 +262,11 @@ function Mahalath:check_girl(en)
     --IDLE
   elseif d.state == 'idle' then
     --transform check
-    if d.mouth == nil and en.HitPoints < en.MaxHitPoints * bal.TransformPercent[d.v] and not delfight then
+    if (
+      d.mouth == nil
+      and en.HitPoints < en.MaxHitPoints * bal.TransformPercent[d.v]
+      and not delfight
+    ) then
       d.state = 'transform'
     end
     --base
@@ -398,7 +408,12 @@ function Mahalath:check_girl(en)
         for i = 1, 360, 360 / 6 do
           params.FallingSpeedModifier = -11 - math.random(3)
           angle = i + math.random(20)
-          en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * 1)), 0, getAddress(params))
+          en:FireProjectiles(
+            en.Position,
+            Vector.FromAngle(angle) * (1.5 + (math.random() * 1)),
+            0,
+            getAddress(params)
+          )
         end
         sfx:Play(SoundEffect.SOUND_BLOODSHOOT, 1, 0, false, 1)
         sfx:Play(SoundEffect.SOUND_MEATY_DEATHS, 1, 0, false, 1.1)
@@ -491,7 +506,14 @@ function Mahalath:check_girl(en)
     if s:IsPlaying("Spin") or s:IsPlaying("Spin2") then
       if d.statetime % bal.SpinBarfFireRate[d.v] == 0 and not d.mouth then
         sfx:Play(SoundEffect.SOUND_BLOODSHOOT, .4, 0, false, 1)
-        local sptear = Isaac.Spawn(9, 4, 0, pos + Vector(0, 15), Vector.FromAngle(d.spinshot) * 7, en)
+        local sptear = Isaac.Spawn(
+          9,
+          4,
+          0,
+          pos + Vector(0, 15),
+          Vector.FromAngle(d.spinshot) * 7,
+          en
+        )
         sptear.Color = bal.barfcolor[d.v]
         sptear:GetData().behavior = 'spin'
         table.insert(barf.tears, sptear)
@@ -593,7 +615,14 @@ function Mahalath:check_girl(en)
       d.move = 'stop'
       sfx:Play(SoundEffect.SOUND_BOSS2_BUBBLES, 1.5, 0, false, 1)
       sfx:Play(SoundEffect.SOUND_LITTLE_SPIT, 1, 0, false, 1.8)
-      local bbomb = Isaac.Spawn(barf.bomb.Type, 0, 0, d.mouth.Position + Vector(0, 15), en.Velocity, en):ToNPC()
+      local bbomb = Isaac.Spawn(
+        barf.bomb.Type,
+        0,
+        0,
+        d.mouth.Position + Vector(0, 15),
+        en.Velocity,
+        en
+      ):ToNPC()
       bbomb.State = 4
       bbomb:GetData().launch = 1
       bbomb:GetData().girl = en
@@ -973,13 +1002,19 @@ function Mahalath:check_mouth(en)
       local bball = Isaac.Spawn(barf.ball.Type, 0, 0, pos + Vector(0, 5), Vector(0, 0), nil):ToNPC()
       bball.Velocity = (ppos - (pos + Vector(0, 5))):Normalized() * bal.ShootBallSpeed[d.v]
       if d.v == 2 then
-        local predict = game:GetRoom():GetClampedPosition(ppos + (player.Velocity * bal.ShootBallSpeed[d.v]), 40)
+        local predict = game:GetRoom():GetClampedPosition(
+          ppos + (player.Velocity * bal.ShootBallSpeed[d.v]),
+          40
+        )
         bball.Velocity = (predict - (pos + Vector(0, 5))):Normalized() * 9
       end
       en.Velocity = bball.Velocity * - 1.5
       bball.State = 4
       bball.PositionOffset = Vector(0, - 5)
-      bball.HitPoints = math.min(bball.HitPoints + (d.girl:GetData().ballskilled * 5), bball.MaxHitPoints * 2)
+      bball.HitPoints = math.min(
+        bball.HitPoints + (d.girl:GetData().ballskilled * 5),
+        bball.MaxHitPoints * 2
+      )
       bball:GetData().girl = d.girl
       bball:GetData().lasthit = 0
       if d.v == 2 then
@@ -1068,9 +1103,17 @@ function Mahalath:check_mouth(en)
             local len = dif:Length()
             local force2 = (120 - math.min(120, len)) / 120
             if type == barf.bomb.Type then
-              bomb.Velocity = Lerp(bomb.Velocity, dif2:Normalized() * math.min(len, 7), force2 * .08)
+              bomb.Velocity = Lerp(
+                bomb.Velocity,
+                dif2:Normalized() * math.min(len, 7),
+                force2 * .08
+              )
             else
-              bomb.Velocity = Lerp(bomb.Velocity, dif2:Normalized() * math.min(len, 7), force2 * .05)
+              bomb.Velocity = Lerp(
+                bomb.Velocity,
+                dif2:Normalized() * math.min(len, 7),
+                force2 * .05
+              )
             end
           end
         end
@@ -1112,7 +1155,14 @@ function Mahalath:check_mouth(en)
       local angle = math.random(360)
       for i = 0, 2 do
         local creepPos = en.Position + (Vector.FromAngle((i * 120) + angle) * 22)
-        local creep = Isaac.Spawn(1000, bal.creeptype[d.v], 0, creepPos, Vector(0, 0), en):ToEffect()
+        local creep = Isaac.Spawn(
+          1000,
+          bal.creeptype[d.v],
+          0,
+          creepPos,
+          Vector(0, 0),
+          en
+        ):ToEffect()
         creep.SpriteScale = Vector(2, 2)
         creep.SizeMulti = Vector(2, 2)
       end
@@ -1125,7 +1175,12 @@ function Mahalath:check_mouth(en)
       for i = 1, 360, 360 / 5 do
         params.FallingSpeedModifier = -11 - math.random(3)
         angle = i + math.random(20)
-        en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * 1)), 0, getAddress(params))
+        en:FireProjectiles(
+          en.Position,
+          Vector.FromAngle(angle) * (1.5 + (math.random() * 1)),
+          0,
+          getAddress(params)
+        )
       end
 
     end
@@ -1290,13 +1345,20 @@ function Mahalath:move_me(en)
         local win = false
         d.ballhit:GetData().lasthit = d.ballhit.FrameCount
         if angdif(d.ballhit.Position, pos, d.balltgt) > 150 then
-          d.ballhit.Velocity = (d.balltgt - d.ballhit.Position):Normalized() * bal.BallKnockSpeed[d.v]
+          local normalized = (d.balltgt - d.ballhit.Position):Normalized()
+          d.ballhit.Velocity = normalized * bal.BallKnockSpeed[d.v]
           win = true
         else
           local angle = (pos - d.ballhit.Position):GetAngleDegrees()
           local bpos = d.tgtball.Position
-          local edge1 = game:GetRoom():GetClampedPosition(Vector(-10000, - 10000), d.tgtball:GetData().size)
-          local edge2 = game:GetRoom():GetClampedPosition(Vector(10000, 10000), d.tgtball:GetData().size)
+          local edge1 = game:GetRoom():GetClampedPosition(
+            Vector(-10000, - 10000),
+            d.tgtball:GetData().size
+          )
+          local edge2 = game:GetRoom():GetClampedPosition(
+            Vector(10000, 10000),
+            d.tgtball:GetData().size
+          )
           if not win and math.abs(angle - 90) < 60 then
             local ydif1 = math.abs(bpos.Y - edge1.Y)
             local ydif2 = math.abs(d.balltgt.Y - edge1.Y)
@@ -1305,7 +1367,8 @@ function Mahalath:move_me(en)
             local balldest = Vector(bpos.X + xrate, edge1.Y)
             if angdif(bpos, pos, balldest) > 110 then
               win = true
-              d.ballhit.Velocity = (balldest - d.ballhit.Position ):Normalized() * bal.BallKnockSpeed[d.v]
+              local normalized = (balldest - d.ballhit.Position ):Normalized()
+              d.ballhit.Velocity = normalized * bal.BallKnockSpeed[d.v]
             end
           end
           if not win and math.abs(angle) + 60 > 180 then
@@ -1316,7 +1379,8 @@ function Mahalath:move_me(en)
             local balldest = Vector(edge2.X, bpos.Y + yrate)
             if angdif(bpos, pos, balldest) > 110 then
               win = true
-              d.ballhit.Velocity = (balldest - d.ballhit.Position ):Normalized() * bal.BallKnockSpeed[d.v]
+              local normalized = (balldest - d.ballhit.Position ):Normalized()
+              d.ballhit.Velocity = normalized * bal.BallKnockSpeed[d.v]
             end
           end
           if not win and math.abs(angle + 90) < 60 then
@@ -1327,7 +1391,8 @@ function Mahalath:move_me(en)
             local balldest = Vector(bpos.X + xrate, edge2.Y)
             if angdif(bpos, pos, balldest) > 110 then
               win = true
-              d.ballhit.Velocity = (balldest - d.ballhit.Position ):Normalized() * bal.BallKnockSpeed[d.v]
+              local normalized = (balldest - d.ballhit.Position ):Normalized()
+              d.ballhit.Velocity = normalized * bal.BallKnockSpeed[d.v]
             end
           end
           if not win and math.abs(angle) < 60 then
@@ -1338,7 +1403,8 @@ function Mahalath:move_me(en)
             local balldest = Vector(edge1.X, bpos.Y + yrate)
             if angdif(bpos, pos, balldest) > 110 then
               win = true
-              d.ballhit.Velocity = (balldest - d.ballhit.Position ):Normalized() * bal.BallKnockSpeed[d.v]
+              local normalized = (balldest - d.ballhit.Position ):Normalized()
+              d.ballhit.Velocity = normalized * bal.BallKnockSpeed[d.v]
             end
           end
         end
@@ -1356,7 +1422,10 @@ function Mahalath:move_me(en)
     mspeed = 0
     mcorrect = .05
     local mouth = d.mouth.Position
-    local reflect = game:GetRoom():GetClampedPosition(mouth + ((mouth - ppos):Normalized() * 150), 60)
+    local reflect = game:GetRoom():GetClampedPosition(
+      mouth + ((mouth - ppos):Normalized() * 150),
+      60
+    )
     d.dest = reflect
     --chomp
   elseif d.move == 'chomp' then
@@ -1596,7 +1665,12 @@ function Mahalath:check_bomb(en)
     for i = 1, 360, 360 / 5 do
       params.FallingSpeedModifier = -12 - math.random(5)
       angle = i + math.random(20)
-      en:FireProjectiles(en.Position, Vector.FromAngle(angle) * (1.5 + (math.random() * .5)), 0, getAddress(params))
+      en:FireProjectiles(
+        en.Position,
+        Vector.FromAngle(angle) * (1.5 + (math.random() * .5)),
+        0,
+        getAddress(params)
+      )
     end
 
     en:Remove()

@@ -1,9 +1,9 @@
 local UseCard = {}
 
 -- Includes
-local g              = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local PostItemPickup = require("racing_plus/postitempickup")
-local Season8        = require("racing_plus/season8")
+local Season8 = require("racing_plus/season8")
 
 -- ModCallbacks.MC_USE_CARD (5)
 function UseCard:Main(card)
@@ -34,7 +34,8 @@ function UseCard:Strength()
   -- Local variables
   local character = g.p:GetPlayerType()
 
-  -- Keep track of whether or not we used a Strength card so that we can fix the bug with Fast-Travel
+  -- Keep track of whether or not we used a Strength card so that we can fix the bug with
+  -- Fast-Travel
   if character ~= PlayerType.PLAYER_KEEPER then -- 14
     g.run.usedStrength = true
     Isaac.DebugString("Used a Strength card.")
@@ -62,8 +63,13 @@ function UseCard:BlackRune()
   local challenge = Isaac.GetChallenge()
 
   -- Voided pedestal items should count as starting a Challenge Room or the Boss Rush
-  local collectibles = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, -- 5.100
-                                        -1, false, false)
+  local collectibles = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_COLLECTIBLE, -- 100
+    -1,
+    false,
+    false
+  )
   if #collectibles > 0 then
     g.run.touchedPickup = true
   end
@@ -71,8 +77,15 @@ function UseCard:BlackRune()
   for _, collectible in ipairs(collectibles) do
     if collectible.SubType == CollectibleType.COLLECTIBLE_CHECKPOINT then
       -- The Checkpoint custom item is about to be deleted, so spawn another one
-      g.g:Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, collectible.Position, collectible.Velocity,
-                nil, CollectibleType.COLLECTIBLE_CHECKPOINT, collectible.InitSeed)
+      g.g:Spawn(
+        EntityType.ENTITY_PICKUP, -- 5
+        PickupVariant.PICKUP_COLLECTIBLE, -- 100
+        collectible.Position,
+        collectible.Velocity,
+        nil,
+        CollectibleType.COLLECTIBLE_CHECKPOINT,
+        collectible.InitSeed
+      )
       Isaac.DebugString("A black rune deleted a Checkpoint - spawning another one.")
 
       -- Kill the player if they are trying to cheat on the season 7 custom challenge
@@ -88,13 +101,15 @@ end
 
 -- Card.CARD_QUESTIONMARK (48)
 function UseCard:QuestionMark()
-  -- Prevent the bug where using a ? Card while having Tarot Cloth will cause the D6 to get a free charge (1/2)
+  -- Prevent the bug where using a ? Card while having Tarot Cloth will cause the D6 to get a free
+  -- charge (1/2)
   g.run.questionMarkCard = g.g:GetFrameCount()
 end
 
 function UseCard:Teleport()
-  g.run.naturalTeleport = true -- Mark that this is not a Cursed Eye teleport
-  g.run.usedTeleport = true -- Mark to potentially reposition the player (if they appear at a non-existent entrance)
+  -- Mark to potentially reposition the player
+  -- (if they appear at a non-existent entrance)
+  g.run.usedTeleport = true
 end
 
 return UseCard

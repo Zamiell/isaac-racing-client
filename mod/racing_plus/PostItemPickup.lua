@@ -3,7 +3,7 @@ local PostItemPickup = {}
 -- These functions are used to deposit items directly in the player's inventory, if there is room
 
 -- Includes
-local g       = require("racing_plus/globals")
+local g = require("racing_plus/globals")
 local Season8 = require("racing_plus/season8")
 
 function PostItemPickup:InsertNearestCoin()
@@ -80,25 +80,36 @@ function PostItemPickup:FindNearestPickup(variant)
   local nearestPickupDistance = nil
   for _, entity in ipairs(pickups) do
     local pickup = entity:ToPickup()
-    if pickup.FrameCount <= 1 and
-       pickup.SpawnerType == EntityType.ENTITY_PLAYER and -- 1
-       pickup.Touched == false and
-       pickup.Price == 0 and
-       -- Make an exception for Sticky Nickels
-       (variant ~= PickupVariant.PICKUP_COIN or -- 20
-        (pickup.SubType ~= CoinSubType.COIN_STICKYNICKEL)) and -- 5
-       -- Make an exception for Troll Bombs / Mega Troll Bombs
-       (variant ~= PickupVariant.PICKUP_BOMB or -- 40
-        (pickup.SubType ~= BombSubType.BOMB_TROLL and -- 3
-         pickup.SubType ~= BombSubType.BOMB_SUPERTROLL)) and -- 5
-       -- Make an exception for some detrimental (or potentially detrimental) trinkets
-       (variant ~= PickupVariant.PICKUP_TRINKET or -- 350
-        (pickup.SubType ~= TrinketType.TRINKET_PURPLE_HEART and -- 5
-         pickup.SubType ~= TrinketType.TRINKET_MOMS_TOENAIL and -- 16
-         pickup.SubType ~= TrinketType.TRINKET_TICK and -- 53
-         pickup.SubType ~= TrinketType.TRINKET_FADED_POLAROID and -- 69
-         pickup.SubType ~= TrinketType.TRINKET_OUROBOROS_WORM)) then -- 96
-
+    if (
+      pickup.FrameCount <= 1
+      and pickup.SpawnerType == EntityType.ENTITY_PLAYER -- 1
+      and pickup.Touched == false
+      and pickup.Price == 0
+      -- Make an exception for Sticky Nickels
+      and (
+        variant ~= PickupVariant.PICKUP_COIN -- 20
+        or pickup.SubType ~= CoinSubType.COIN_STICKYNICKEL -- 5
+      )
+      -- Make an exception for Troll Bombs / Mega Troll Bombs
+      and (
+        variant ~= PickupVariant.PICKUP_BOMB -- 40
+        or (
+          pickup.SubType ~= BombSubType.BOMB_TROLL -- 3
+          and pickup.SubType ~= BombSubType.BOMB_SUPERTROLL -- 5
+        )
+      )
+      -- Make an exception for some detrimental (or potentially detrimental) trinkets
+      and (
+        variant ~= PickupVariant.PICKUP_TRINKET -- 350
+        or (
+          pickup.SubType ~= TrinketType.TRINKET_PURPLE_HEART -- 5
+          and pickup.SubType ~= TrinketType.TRINKET_MOMS_TOENAIL -- 16
+          and pickup.SubType ~= TrinketType.TRINKET_TICK -- 53
+          and pickup.SubType ~= TrinketType.TRINKET_FADED_POLAROID -- 69
+          and pickup.SubType ~= TrinketType.TRINKET_OUROBOROS_WORM -- 96
+        )
+      )
+    ) then
       local distance = g.p.Position:DistanceSquared(pickup.Position)
       if nearestPickup == nil then
         nearestPickup = pickup
@@ -124,15 +135,17 @@ function PostItemPickup:InsertCoin(coin)
   elseif coin.SubType == CoinSubType.COIN_DOUBLEPACK then -- 4
     g.p:AddCoins(2)
   elseif coin.SubType == CoinSubType.COIN_LUCKYPENNY then -- 5
-    g.p:AddCoins(1)
-    -- (just ignore the luck component for simplicity)
+    g.p:AddCoins(1) -- (just ignore the luck component for simplicity)
   else
     -- Don't put Sticky Nickels in our inventory automatically
     return
   end
 
   coin:Remove()
-  coin.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  -- Arbitrarily use the "Touched" property to mark that it is in the process of being deleted
+  coin.Touched = true
+
   return true
 end
 
@@ -150,7 +163,10 @@ function PostItemPickup:InsertKey(key)
   end
 
   key:Remove()
-  key.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  -- Arbitrarily use the "Touched" property to mark that it is in the process of being deleted
+  key.Touched = true
+
   return true
 end
 
@@ -168,7 +184,10 @@ function PostItemPickup:InsertBomb(bomb)
   end
 
   bomb:Remove()
-  bomb.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  -- Arbitrarily use the "Touched" property to mark that it is in the process of being deleted
+  bomb.Touched = true
+
   return true
 end
 
@@ -180,7 +199,10 @@ function PostItemPickup:InsertPill(pill)
 
   g.p:AddPill(pill.SubType)
   pill:Remove()
-  pill.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  -- Arbitrarily use the "Touched" property to mark that it is in the process of being deleted
+  pill.Touched = true
+
   return true
 end
 
@@ -192,7 +214,10 @@ function PostItemPickup:InsertCard(card)
 
   g.p:AddCard(card.SubType)
   card:Remove()
-  card.Touched = true -- (arbitrarily use the "Touched" property to mark that it is in the process of being deleted)
+
+  -- Arbitrarily use the "Touched" property to mark that it is in the process of being deleted
+  card.Touched = true
+
   return true
 end
 
@@ -204,9 +229,10 @@ function PostItemPickup:CheckPocketSlotOpen()
   local pill2 = g.p:GetPill(1) -- Returns 0 if no pill
 
   local slots = g.p:GetMaxPoketItems()
-  if (slots == 1 and (card1 ~= 0 or pill1 ~= 0)) or
-     (slots == 2 and (card2 ~= 0 or pill2 ~= 0)) then
-
+  if (
+    (slots == 1 and (card1 ~= 0 or pill1 ~= 0))
+    or (slots == 2 and (card2 ~= 0 or pill2 ~= 0))
+  ) then
     return false
   end
   return true
@@ -234,9 +260,10 @@ function PostItemPickup:CheckTrinketSlotOpen()
   local trinket2 = g.p:GetTrinket(1) -- Returns 0 if no trinket
 
   local slots = g.p:GetMaxTrinkets()
-  if (slots == 1 and trinket1 ~= 0) or
-     (slots == 2 and trinket2 ~= 0) then
-
+  if (
+    (slots == 1 and trinket1 ~= 0)
+    or (slots == 2 and trinket2 ~= 0)
+  ) then
     return false
   end
   return true
@@ -277,22 +304,32 @@ function PostItemPickup.CaffeinePill()
   end
 
   -- Directly overwrite the pill from Caffeine Pill (the given pill will always go to slot 1)
-  local string = "Returned "
+  local pickupName
   if droppedPickup.Variant == PickupVariant.PICKUP_PILL then -- 70 then
     g.p:SetPill(0, droppedPickup.SubType)
-    string = string .. "pill"
+    pickupName = "pill"
   elseif droppedPickup.Variant == PickupVariant.PICKUP_TAROTCARD then -- 300 then
     g.p:SetCard(0, droppedPickup.SubType)
-    string = string .. "card"
+    pickupName = "card"
   end
-  string = string .. " " .. tostring(droppedPickup.SubType) .. " and dropped pill " .. tostring(pill1) .. "."
-  Isaac.DebugString(string)
+  Isaac.DebugString(
+    "Returned " .. pickupName .. " " .. tostring(droppedPickup.SubType) .. " and dropped pill "
+    .. tostring(pill1) .. "."
+  )
   droppedPickup:Remove()
 
   -- Drop the pill given from Caffeine Pill
-  -- (we spawn it instead of using "player:DropPoketItem()" to avoid the complexity of having two slots)
+  -- (we spawn it instead of using "player:DropPoketItem()" to avoid the complexity of having two
+  -- slots)
   local pos = g.r:FindFreePickupSpawnPosition(g.p.Position, 1, true)
-  Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_PILL, pill1, pos, g.zeroVector, g.p) -- 5.70
+  Isaac.Spawn(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.PICKUP_PILL, -- 70
+    pill1,
+    pos,
+    g.zeroVector,
+    g.p
+  )
 end
 
 -- CollectibleType.COLLECTIBLE_LATCH_KEY (343)
@@ -331,12 +368,21 @@ function PostItemPickup.Chaos()
   end
 end
 
+-- CollectibleType.COLLECTIBLE_DADS_LOST_COIN (455)
+function PostItemPickup.DadsLostCoin()
+  g.p:RemoveCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) -- 455
+  Isaac.DebugString("Removing collectible 455 (Dad's Lost Coin (Vanilla))")
+  g.p:AddCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN_CUSTOM, 0, false)
+  PostItemPickup:RemoveNearestPickup(PickupVariant.PICKUP_COIN) -- 20
+end
+
 -- CollectibleType.COLLECTIBLE_DIVORCE_PAPERS (547)
 function PostItemPickup.DivorcePapers()
   g.itemPool:RemoveTrinket(TrinketType.TRINKET_MYSTERIOUS_PAPER) -- 21
-  if Isaac.GetChallenge() == Isaac.GetChallengeIdByName("R+7 (Season 8)") and
-     g:TableContains(Season8.touchedTrinkets, TrinketType.TRINKET_MYSTERIOUS_PAPER) then
-
+  if (
+    Isaac.GetChallenge() == Isaac.GetChallengeIdByName("R+7 (Season 8)")
+    and g:TableContains(Season8.touchedTrinkets, TrinketType.TRINKET_MYSTERIOUS_PAPER)
+  ) then
     PostItemPickup:RemoveNearestTrinket()
     return
   end
@@ -359,7 +405,7 @@ PostItemPickup.functions = {
   [CollectibleType.COLLECTIBLE_CHAOS] = PostItemPickup.Chaos, -- 402
   [CollectibleType.COLLECTIBLE_TAROT_CLOTH] = PostItemPickup.InsertNearestCard, -- 451
   [CollectibleType.COLLECTIBLE_BELLY_BUTTON] = PostItemPickup.InsertNearestTrinket, -- 458
-  [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.InsertNearestCoin, -- 455
+  [CollectibleType.COLLECTIBLE_DADS_LOST_COIN] = PostItemPickup.DadsLostCoin, -- 455
   [CollectibleType.COLLECTIBLE_POLYDACTYLY] = PostItemPickup.InsertNearestCardPill, -- 454
   [CollectibleType.COLLECTIBLE_LIL_SPEWER] = PostItemPickup.InsertNearestPill, -- 537
   [CollectibleType.COLLECTIBLE_DIVORCE_PAPERS] = PostItemPickup.DivorcePapers, -- 547
