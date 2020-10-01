@@ -23,7 +23,7 @@ TITLE_SCREEN_PATH = os.path.join(MOD_DIR, 'resources', 'gfx', 'ui', 'main menu')
 REPOSITORY_DIR = os.path.join('C:\\Repositories\\', REPOSITORY_NAME)
 os.chdir(REPOSITORY_DIR)
 
-# This script is written for Pyhton 3
+# This script is written for Python 3
 if sys.version_info < (3, 0):
     print('This script requires Python 3.')
     sys.exit(1)
@@ -58,6 +58,16 @@ ARGS = PARSER.parse_args()
 
 # Load environment variables
 dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+if ARGS.github:
+    if (
+        os.environ.get('GH_TOKEN') == ''
+        or os.environ.get('VPS_IP') == ''
+        or os.environ.get('VPS_USER') == ''
+        or os.environ.get('VPS_PASS') == ''
+    ):
+        print('GH_TOKEN is blank in the ".env" file')
+        sys.exit(1)
 
 # Get the version
 with open('package.json') as package_JSON:
