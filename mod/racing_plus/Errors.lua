@@ -238,7 +238,7 @@ function Errors:DrawEnableBalanceMod()
   y = y + 10
   Isaac.RenderText("\"Racing+ Rebalanced\" mod on the Steam Workshop", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("in order for the Racing+ season X custom", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("in order for the Racing+ season 9 custom", x, y, 2, 2, 2, 2)
   y = y + 10
   Isaac.RenderText("challenge to work correctly.", x, y, 2, 2, 2, 2)
   x = x - 42

@@ -37,7 +37,7 @@
     "racing_plus\\CheckEntities.lua": "000d739248ef99db133456f338b0d69615d06194",
     "racing_plus\\Debug.lua": "72e48f6c336e42a39f02e6932b09c946e0c83bbd",
     "racing_plus\\EntityTakeDmg.lua": "f7f30b277cd3eef9147317bea5527439cb894b40",
-    "racing_plus\\Errors.lua": "d3c9565ff3d92928b0a58886b19a6dfa9f0aa939",
+    "racing_plus\\Errors.lua": "e7a033a4c730a431af8f94ddeca5a88fa44eddd6",
     "racing_plus\\EvaluateCache.lua": "9dfbaaf0e70a87376099fad4978162c1a6c62dd4",
     "racing_plus\\ExecuteCmd.lua": "0a52ced20234ab96e222e030823118fdc9270b0e",
     "racing_plus\\FastClear.lua": "f9daac1fe21af321d1c55d321a75419d09e1834b",
@@ -45,7 +45,7 @@
     "racing_plus\\FastTravel.lua": "67ddb03c5ac8792e341b6d8606662fe777d75d0d",
     "racing_plus\\GetCard.lua": "ba8e0bcd2d60571eace3bc6c156ccba6a71337c6",
     "racing_plus\\GetPillEffect.lua": "ccb0a39d152479cb4e0bf1ae84c5fa9380902846",
-    "racing_plus\\Globals.lua": "fd7a9409102661b68dea3107108c99bf2cf03c83",
+    "racing_plus\\Globals.lua": "ff2415e20a0540dafdb40e82d4f50e59a4ceac0b",
     "racing_plus\\InputAction.lua": "91cb1f52b8e2e845ab81b950bb9e6447b052d119",
     "racing_plus\\JrFetus.lua": "bc14fbe7e9c58cedffb95bd8bcca1e8f6a398134",
     "racing_plus\\Mahalath.lua": "7bf7c8c2a5c7e0fafd3c3ce39c1b3d12cc80cdc8",
@@ -59,7 +59,7 @@
     "racing_plus\\PostEffectUpdate.lua": "103d82a765c0ee24560cd847ca093fe9464d8b73",
     "racing_plus\\PostEntityKill.lua": "7ee3486e33c43eebc35c30fb56409c42cd7122fe",
     "racing_plus\\PostFireTear.lua": "dc9bef39dc1374f1ad20a2f7ce4973d03904b973",
-    "racing_plus\\PostGameStarted.lua": "55f3dfe34707067bd97bd6b4747dcaa99958b5aa",
+    "racing_plus\\PostGameStarted.lua": "eddfd2f8509c52dac70f6d6bedf572074aef3f34",
     "racing_plus\\PostItemPickup.lua": "831db9fad37c956d605cbe5019765228898886c4",
     "racing_plus\\PostLaserInit.lua": "3b862d57b35295dab2a6b7cc651ddd5635d522cd",
     "racing_plus\\PostNPCInit.lua": "c50591570aeed87b33f0f455cec7b8d649916b85",
@@ -2128,7 +2128,7 @@
     "resources\\gfx\\ui\\main menu\\sketches.png": "a2246f34f70a2a16efe72e4739f609f706b94eee",
     "resources\\gfx\\ui\\main menu\\splashes.png": "405188fa3fbf3ea60741c57ebf4de8eb474f5b17",
     "resources\\gfx\\ui\\main menu\\titlemenu-orig.png": "cc200d5f42bff03fb9d2ab3478e01f8509c22d5e",
-    "resources\\gfx\\ui\\main menu\\titlemenu.png": "f4bcc0930f454658f2bde51718286ad206d9577f",
+    "resources\\gfx\\ui\\main menu\\titlemenu.png": "36601f93a8c09261f6799c01bac4b8f244b1dc36",
     "resources\\gfx\\ui\\main menu\\winstreakwidget.png": "2385a1ee4083c7f9f6e9680da45e3df17050af14",
     "resources\\gfx\\ui\\minimap1.png": "b02041406bdff8c4d8641d150f85f519b1dc3a3d",
     "resources\\gfx\\ui\\minimap2.png": "570564ee8249c09c5e7bc6acfd89fe0610c85ee4",
@@ -2206,5 +2206,5 @@
     "resources\\sfx\\speedrun_finish.wav": "6522d100a4e517fded302db673f0b796a15154c8",
     "resources\\sfx\\walnut.wav": "a3cd0d7a7b5e31b2dba0681ca12b5d83f0805b4d",
     "save-defaults.dat": "d5c5bceb4075c8709cbe5fd403e53075905bb0df",
-    "sha1.json": "d943e9f25e2629d885d07423c13cbe2ee7131f37"
+    "sha1.json": "0e7bd655d70d92221dbfdd357c3a77af029f4ac6"
 }

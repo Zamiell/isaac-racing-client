@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.55.5* - October 2nd, 2020
+
+* Fixed the bug where the vanilla version of Dad's Lost Coin was still in some item pools. (Thanks sisuka)
+
 ### *v0.55.0* - October 1st, 2020
 
 * A new seeded build has arrived: Distant Admiration + Friend Zone + Forever Alone + BFFS! (Thanks antizoubilamakA)

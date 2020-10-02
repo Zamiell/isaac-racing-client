@@ -150,6 +150,7 @@ function PostGameStarted:Main(saveState)
   end
 
   -- Racing+ replaces some vanilla items; remove them from all the pools
+  g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) -- 455
   g.itemPool:RemoveCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) -- 534
 
   -- Racing+ removes the Karma trinket from the game
