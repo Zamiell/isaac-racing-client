@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.55.6* - October 2nd, 2020
+
+* Fixed the bug where Dad's Lost Coin was not correctly granting a luck up. (Thanks sisuka)
+
 ### *v0.55.5* - October 2nd, 2020
 
 * Fixed the bug where the vanilla version of Dad's Lost Coin was still in some item pools. (Thanks sisuka)

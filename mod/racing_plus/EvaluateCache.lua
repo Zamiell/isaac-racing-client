@@ -189,16 +189,16 @@ end
 
 -- CacheFlag.CACHE_LUCK (1024)
 function EvaluateCache.Luck(player, cacheFlag)
-  EvaluateCache:DadsLostCoin(player, cacheFlag) -- 455
+  EvaluateCache:DadsLostCoinCustom(player, cacheFlag)
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   EvaluateCache:ThirteenLuck(player, cacheFlag)
 end
 
--- CollectibleType.COLLECTIBLE_DADS_LOST_COIN (455)
-function EvaluateCache:DadsLostCoin(player, cacheFlag)
+-- CollectibleType.COLLECTIBLE_DADS_LOST_COIN_CUSTOM
+function EvaluateCache:DadsLostCoinCustom(player, cacheFlag)
   -- We want to put the lucky penny directly into the inventory,
   -- so we make the item itself grant luck
-  local numDadsLostCoins = g.p:GetCollectibleNum(CollectibleType.COLLECTIBLE_DADS_LOST_COIN) -- 455
+  local numDadsLostCoins = g.p:GetCollectibleNum(CollectibleType.COLLECTIBLE_DADS_LOST_COIN_CUSTOM)
   if numDadsLostCoins > 0 then
     for i = 1, numDadsLostCoins do
       player.Luck = player.Luck + 1
