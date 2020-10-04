@@ -9,6 +9,10 @@ local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local SeededFloors = require("racing_plus/seededfloors")
 local ShadowClient = require("racing_plus/shadowclient")
 
+local function console(msg)
+  Isaac.ConsoleOutput(msg .. "\n")
+end
+
 ExecuteCmd.functions = {}
 
 -- ModCallbacks.MC_EXECUTE_CMD (22)
@@ -23,7 +27,7 @@ function ExecuteCmd:Main(cmd, params)
   if executeCmdFunc ~= nil then
     executeCmdFunc(params)
   else
-    Isaac.ConsoleOutput("Unknown command.")
+    console("Unknown command.\n")
   end
 end
 
@@ -65,7 +69,7 @@ end
 ExecuteCmd.functions["bossrush"] = function(params)
   local wave = 15
   g.run.bossRush.currentWave = wave
-  Isaac.ConsoleOutput("Set the Boss Rush current wave to: " .. tostring(wave))
+  console("Set the Boss Rush current wave to: " .. tostring(wave))
 end
 
 ExecuteCmd.functions["bm"] = function(params)
@@ -74,7 +78,7 @@ end
 
 ExecuteCmd.functions["card"] = function(params)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a card name.")
+    console("You must specify a card name.")
     return
   end
 
@@ -82,13 +86,13 @@ ExecuteCmd.functions["card"] = function(params)
   if num ~= nil then
     -- Validate the card ID
     if num < 1 or num >= Card.NUM_CARDS then
-      Isaac.ConsoleOutput("That is an invalid card ID.")
+      console("That is an invalid card ID.")
       return
     end
 
     -- They entered a number instead of a name, so just give the card corresponding to this number
     Isaac.ExecuteCommand("g k" .. tostring(num))
-    Isaac.ConsoleOutput("Gave card #" .. tostring(num) .. ".")
+    console("Gave card: #" .. tostring(num))
     return
   end
 
@@ -96,6 +100,7 @@ ExecuteCmd.functions["card"] = function(params)
   cardMap["fool"] = 1
   cardMap["magician"] = 2
   cardMap["magi"] = 2
+  cardMap["mag"] = 2
   cardMap["high priestess"] = 3
   cardMap["highpriestess"] = 3
   cardMap["high"] = 3
@@ -221,11 +226,11 @@ ExecuteCmd.functions["card"] = function(params)
   end
 
   if giveCardNum == 0 then
-    Isaac.ConsoleOutput("Unknown card.")
+    console("Unknown card.")
     return
   end
   Isaac.ExecuteCommand("g k" .. tostring(giveCardNum))
-  Isaac.ConsoleOutput("Gave card #" .. tostring(giveCardNum) .. ".")
+  console("Gave card: #" .. tostring(giveCardNum))
 end
 
 ExecuteCmd.functions["cards"] = function(params)
@@ -254,14 +259,14 @@ end
 
 function ExecuteCmd:ChaosCardTears()
   g.run.debugChaosCard = not g.run.debugChaosCard
-  local string
+  local msg
   if g.run.debugChaosCard then
-    string = "Enabled"
+    msg = "Enabled"
   else
-    string = "Disabled"
+    msg = "Disabled"
   end
-  string = string .. " Chaos Card tears."
-  Isaac.ConsoleOutput(string)
+  msg = msg .. " Chaos Card tears."
+  console(msg)
 end
 
 ExecuteCmd.functions["chaos"] = function(params)
@@ -270,7 +275,7 @@ end
 
 ExecuteCmd.functions["char"] = function(params)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a character number.")
+    console("You must specify a character number.")
   end
 
   local num = ExecuteCmd:ValidateNumber(params)
@@ -293,9 +298,9 @@ function ExecuteCmd:Commands()
   end
   table.sort(commands)
 
-  Isaac.ConsoleOutput("List of Racing+ custom commands:\n")
+  console("List of Racing+ custom commands:\n")
   for _, commandName in ipairs(commands) do
-    Isaac.ConsoleOutput(commandName .. " ")
+    console(commandName .. " ")
   end
 end
 
@@ -324,7 +329,7 @@ function ExecuteCmd:Debug()
   g.p:AddCoins(99)
   g.p:AddBombs(99)
   g.p:AddKeys(99)
-  Isaac.ConsoleOutput(
+  console(
     "Added \"debug 3\", \"debug 8\", \"debug 10\", \"damage\", \"speed\", "
     .. "X-Ray Vision, The Mind, 99 coins, 99 bombs, and 99 keys."
   )
@@ -347,7 +352,7 @@ ExecuteCmd.functions["doors"] = function(params)
   for i = 0, 7 do
     local door = g.r:GetDoor(i)
     if door ~= nil then
-      Isaac.ConsoleOutput(
+      console(
         "Door " .. tostring(i) .. " - "
         .. "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")\n"
       )
@@ -364,6 +369,16 @@ end
 
 ExecuteCmd.functions["fool"] = function(params)
   g.p:UseCard(Card.CARD_FOOL) -- 1
+end
+
+ExecuteCmd.functions["effects"] = function(params)
+  local effects = g.p:GetEffects()
+  local effectsList = effects:GetEffectsList()
+
+  for i = 1, effectsList.Size do
+    local effect = effectsList:Get(i - 1)
+    console("Temp effect " .. i .. ": " .. effect.Item.ID)
+  end
 end
 
 ExecuteCmd.functions["error"] = function(params)
@@ -386,13 +401,13 @@ end
 
 ExecuteCmd.functions["getframe"] = function(params)
   -- Used for debugging
-  Isaac.ConsoleOutput("Isaac frame count is at: " .. tostring(Isaac.GetFrameCount()))
-  Isaac.ConsoleOutput("Game frame count is at: " .. tostring(g.g:GetFrameCount()))
-  Isaac.ConsoleOutput("Room frame count is at: " .. tostring(g.r:GetFrameCount()))
+  console("Isaac frame count is at: " .. tostring(Isaac.GetFrameCount()))
+  console("Game frame count is at: " .. tostring(g.g:GetFrameCount()))
+  console("Room frame count is at: " .. tostring(g.r:GetFrameCount()))
 end
 
 ExecuteCmd.functions["getroom"] = function(params)
-  Isaac.ConsoleOutput("Room index is: " .. g.l:GetCurrentRoomIndex())
+  console("Room index is: " .. g.l:GetCurrentRoomIndex())
 end
 
 ExecuteCmd.functions["ghost"] = function(params)
@@ -415,7 +430,7 @@ ExecuteCmd.functions["level"] = function(params)
   -- Used to go to the proper floor and stage
   -- (always assume a seeded race)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a level number.")
+    console("You must specify a level number.")
     return
   end
   local stage = tonumber(params)
@@ -451,7 +466,7 @@ ExecuteCmd.functions["list"] = function(params)
     debugString = debugString .. " (InitSeed: " .. tostring(entity.InitSeed) .. ")"
     Isaac.DebugString(debugString)
   end
-  Isaac.ConsoleOutput("Logged the entities in the room to the \"log.txt\" file.")
+  console("Logged the entities in the room to the \"log.txt\" file.")
 end
 
 ExecuteCmd.functions["next"] = function(params)
@@ -480,9 +495,7 @@ ExecuteCmd.functions["pills"] = function(params)
 end
 
 ExecuteCmd.functions["pos"] = function(params)
-  Isaac.ConsoleOutput(
-    "Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y)
-  )
+  console("Player position: " .. tostring(g.p.Position.X) .. ", " .. tostring(g.p.Position.Y))
 end
 
 ExecuteCmd.functions["previous"] = function(params)
@@ -530,7 +543,7 @@ end
 -- "s" is a crash-safe wrapper for the vanilla "stage" command
 ExecuteCmd.functions["s"] = function(params)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a stage number.")
+    console("You must specify a stage number.")
     return
   end
 
@@ -552,7 +565,7 @@ ExecuteCmd.functions["s"] = function(params)
   end
 
   if stage < 1 or stage > 12 then
-    Isaac.ConsoleOutput("Invalid stage number; must be between 1 and 12.")
+    console("Invalid stage number; must be between 1 and 12.")
     return
   end
 
@@ -569,7 +582,7 @@ end
 
 function ExecuteCmd:Schoolbag(params)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a Schoolbag item.")
+    console("You must specify a Schoolbag item.")
     return
   end
 
@@ -580,9 +593,7 @@ function ExecuteCmd:Schoolbag(params)
 
   local totalItems = g:GetTotalItemCount()
   if item < 0 or item > g:GetTotalItemCount() then
-    Isaac.ConsoleOutput(
-      "Invalid item number; must be between 0 and " .. tostring(totalItems) .. "."
-    )
+    console("Invalid item number; must be between 0 and " .. tostring(totalItems) .. ".")
     return
   end
 
@@ -616,7 +627,7 @@ function ExecuteCmd:Shadow()
   else
     RacingPlusData:Set("shadowEnabled", g.raceVars.shadowEnabled)
   end
-  Isaac.ConsoleOutput(msg)
+  console(msg)
 end
 
 ExecuteCmd.functions["shadowstatus"] = function(params)
@@ -626,10 +637,10 @@ ExecuteCmd.functions["shadowstatus"] = function(params)
   else
     msg = msg .. "disabled."
   end
-  Isaac.ConsoleOutput(msg)
+  console(msg)
 
   if g.raceVars.shadowEnabled then
-    Isaac.ConsoleOutput("Connected to the server: " .. tostring(ShadowClient.connected))
+    console("Connected to the server: " .. tostring(ShadowClient.connected))
   end
 end
 
@@ -638,7 +649,7 @@ ExecuteCmd.functions["shop"] = function(params)
 end
 
 ExecuteCmd.functions["sounds"] = function(params)
-  Isaac.ConsoleOutput("Printing out the currently playing sounds.")
+  console("Printing out the currently playing sounds.")
   for i = 0, SoundEffect.NUM_SOUND_EFFECTS do
     if g.sfx:IsPlaying(i) then
       Isaac.DebugString("Currently playing sound effect: " .. i)
@@ -681,7 +692,7 @@ end
 
 ExecuteCmd.functions["teleport"] = function(params)
   if params == "" then
-    Isaac.ConsoleOutput("You must specify a room index number.")
+    console("You must specify a room index number.")
     return
   end
 
@@ -711,7 +722,7 @@ end
 function ExecuteCmd:ValidateNumber(params)
   local num = tonumber(params)
   if num == nil then
-    Isaac.ConsoleOutput("You must specify a number.")
+    console("You must specify a number.")
   end
   return num
 end

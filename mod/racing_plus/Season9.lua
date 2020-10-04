@@ -10,17 +10,30 @@ local Speedrun = require("racing_plus/speedrun")
 
 -- This is how long the randomly-selected item start is "locked-in"
 Season9.itemLockTime = 60 * 1000 -- 1 minute
+Season9.historyDataLabel = "s9hbi"
 
 -- Variables
-Season9.timeItemAssigned = 0 -- Reset when the time limit elapses
-Season9.lastBuildItem = 0 -- Set when a new build is assigned
-Season9.lastBuildItemOnFirstChar = 0 -- Set when a new build is assigned on the first character
+Season9.selectedBuildIndexes = {}
+Season9.timeBuildAssigned = 0 -- Reset when the time limit elapses
+Season9.loadedSaveDat = false
+Season9.historicalBuildIndexes = {}
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function Season9:PostGameStartedFirstCharacter()
-  Speedrun.remainingItemStarts = g:TableClone(RacingPlusRebalanced.itemStarts)
-  if Isaac.GetTime() - Season9.timeItemAssigned >= Season9.itemLockTime then
-    Speedrun.selectedItemStarts = {}
+  if Isaac.GetTime() - Season9.timeBuildAssigned >= Season9.itemLockTime then
+    Season9.selectedBuildIndexes = {}
+  end
+
+  if not Season9.loadedSaveDat then
+    Season9.loadedSaveDat = true
+    Season9.historicalBuildIndexes = RacingPlusData:Get(Season9.historyDataLabel)
+    if Season9.historicalBuildIndexes == nil then
+      Season9.historicalBuildIndexes = {}
+      RacingPlusData:Set(Season9.historyDataLabel, Season9.historicalBuildIndexes)
+    else
+      local lastStartedBuildIndex = Season9.historicalBuildIndexes[#Season9.historicalBuildIndexes]
+      Season9.selectedBuildIndexes = { lastStartedBuildIndex }
+    end
   end
 end
 
@@ -44,57 +57,26 @@ function Season9:PostGameStarted()
   -- Everyone starts with a random passive item / build
   -- Check to see if a start is already assigned for this character number
   -- (dying and resetting should not reassign the selected starting item)
-  Isaac.DebugString(
-    "Number of builds that we have already started: " .. tostring(#Speedrun.selectedItemStarts)
-  )
-  local startingBuild = Speedrun.selectedItemStarts[Speedrun.charNum]
-  if startingBuild == nil then
-    -- Get a random start
-    local seed = g.seeds:GetStartSeed()
-    local randomAttempts = 0
-    while true do
-      seed = g:IncrementRNG(seed)
-      math.randomseed(seed)
-      local startingBuildIndex = math.random(1, #Speedrun.remainingItemStarts)
-      startingBuild = Speedrun.remainingItemStarts[startingBuildIndex]
+  local startingBuildIndex = Season9.selectedBuildIndexes[Speedrun.charNum]
+  if startingBuildIndex == nil then
+    startingBuildIndex = Season9:GetRandomStartingBuildIndex()
+    Isaac.DebugString("Assigned build #" .. tostring(startingBuildIndex) .. ".")
 
-      local valid = Season9:CheckValidStartingBuild(startingBuild)
+    -- Keep track of what builds we start
+    Season9.selectedBuildIndexes[Speedrun.charNum] = startingBuildIndex
 
-      -- Just in case, prevent the possibility of having an infinite loop here
-      if randomAttempts >= 100 then
-        valid = true
-      end
+    -- Mark down the time that we assigned this item
+    Season9.timeBuildAssigned = Isaac.GetTime()
 
-      if valid then
-        -- Keep track of what item we start so that we don't get the same two starts in a row
-        Season9.lastBuildItem = startingBuild[1]
-        if Speedrun.charNum == 1 then
-          Season9.lastBuildItemOnFirstChar = startingBuild[1]
-        end
-        Isaac.DebugString("Set the last starting build to: " .. tostring(Season9.lastBuildItem))
-
-        -- Remove it from the remaining item pool
-        table.remove(Speedrun.remainingItemStarts, startingBuildIndex)
-
-        -- Keep track of what item we are supposed to be starting on this character / run
-        Speedrun.selectedItemStarts[#Speedrun.selectedItemStarts + 1] = startingBuild
-
-        -- Mark down the time that we assigned this item
-        Season9.timeItemAssigned = Isaac.GetTime()
-
-        -- Break out of the infinite loop
-        Isaac.DebugString("Assigned a starting item of: " .. tostring(startingBuild[1]))
-        break
-      end
-
-      randomAttempts = randomAttempts + 1
-    end
-
+    -- Record it for historical purposes
+    Season9.historicalBuildIndexes[#Season9.historicalBuildIndexes + 1] = startingBuildIndex
+    RacingPlusData:Set(Season9.historyDataLabel, Season9.historicalBuildIndexes)
   else
-    Isaac.DebugString("Already assigned an item: " .. tostring(startingBuild[1]))
+    Isaac.DebugString("Already assigned build #" .. tostring(startingBuildIndex) .. ".")
   end
 
   -- Give the items to the player (and remove the items from the pools)
+  local startingBuild = RacingPlusRebalanced.itemStarts[startingBuildIndex]
   for _, item in ipairs(startingBuild) do
     g.p:AddCollectible(item, 0, false)
     g.itemPool:RemoveCollectible(item)
@@ -104,90 +86,90 @@ function Season9:PostGameStarted()
   end
 end
 
-function Season9:CheckValidStartingBuild(startingBuild)
+function Season9:GetRandomStartingBuildIndex()
+  -- Local variables
+  local seed = g.seeds:GetStartSeed()
+
+  -- Build a list of build indexes that we have not started yet in past runs
+  local unplayedStartingBuildIndexes = Season9:MakeValidStartingBuildIndexes()
+
+  if #unplayedStartingBuildIndexes == 0 then
+    -- We have played every item (with the potential exception of a character-banned item),
+    -- so delete the history (with the exception of the last started item)
+    local lastStartedBuildIndex = Season9.historicalBuildIndexes[#Season9.historicalBuildIndexes]
+    Season9.historicalBuildIndexes = { lastStartedBuildIndex }
+    RacingPlusData:Set(Season9.historyDataLabel, Season9.historicalBuildIndexes)
+
+    -- Re-get the valid starting build indexes
+    -- This will always have a size greater than 0 now
+    unplayedStartingBuildIndexes = Season9:MakeValidStartingBuildIndexes()
+  end
+
+  math.randomseed(seed)
+  local randomIndexOfIndexArray = math.random(1, #unplayedStartingBuildIndexes)
+  local randomIndex = unplayedStartingBuildIndexes[randomIndexOfIndexArray]
+
+  return randomIndex
+end
+
+function Season9:MakeValidStartingBuildIndexes()
+  local unplayedStartingBuildIndexes = {}
+
+  for i = 1, #RacingPlusRebalanced.itemStarts  do
+    if (
+      -- If we have not started this build already on this 7-character run
+      not g:TableContains(Season9.selectedBuildIndexes, i)
+      -- And we have not started this build recently on a previous 7-character run
+      and not g:TableContains(Season9.historicalBuildIndexes, i)
+      -- And this build is not banned on this character
+      and not Season9:BuildIsBannedOnThisCharacter(i)
+    ) then
+      unplayedStartingBuildIndexes[#unplayedStartingBuildIndexes + 1] = i
+    end
+  end
+
+  return unplayedStartingBuildIndexes
+end
+
+function Season9:BuildIsBannedOnThisCharacter(buildIndex)
   -- Local variables
   local character = g.p:GetPlayerType()
+  local build = RacingPlusRebalanced.itemStarts[buildIndex]
+  local item = build[1]
 
-  -- If we are on the first character,
-  -- we do not want to play a build that we have already played recently
-  if (
-    Speedrun.charNum == 1
-    and (
-      startingBuild[1] == Season9.lastBuildItem
-      or startingBuild[1] == Season9.lastBuildItemOnFirstChar
-    )
-  ) then
-
-    return false
-  end
-
-  -- Check to see if we already started this item
-  for _, startedBuild in ipairs(Speedrun.selectedItemStarts) do
-    if startedBuild[1] == startingBuild[1] then
-      return false
-    end
-  end
-
-  -- Check to see if we banned this item
-  local charOrder = RacingPlusData:Get("charOrder-R7S6")
-  for i = 8, #charOrder do
-    local item = charOrder[i]
-
-    -- Convert builds to the primary item
-    if item == 1006 then
-      item = CollectibleType.COLLECTIBLE_CHOCOLATE_MILK -- 69
-    elseif item == 1005 then
-      item = CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
-    elseif item == 1001 then
-      item = CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
-    elseif item == 1002 then
-      item = CollectibleType.COLLECTIBLE_TECHNOLOGY -- 68
-    elseif item == 1003 then
-      item = CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
-    end
-
-    if startingBuild[1] == item then
-      return false
-    end
-  end
-
-  -- Check to see if this start synergizes with this character (character/item bans)
   if character == PlayerType.PLAYER_JUDAS then -- 3
-    if startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
-      return false
+    if item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
+      return true
     end
-
   elseif character == PlayerType.PLAYER_EVE then -- 5
-    if startingBuild[1] == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
-      return false
+    if item == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+      return true
     end
-
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7
     if (
-      startingBuild[1] == CollectibleType.COLLECTIBLE_IPECAC -- 149
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_CRICKETS_BODY -- 224
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_DEAD_EYE -- 373
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 331
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
+      item == CollectibleType.COLLECTIBLE_IPECAC -- 149
+      or item == CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
+      or item == CollectibleType.COLLECTIBLE_CRICKETS_BODY -- 224
+      or item == CollectibleType.COLLECTIBLE_DEAD_EYE -- 373
+      or item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 331
+      or item == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+      or item == CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
     ) then
-      return false
+      return true
     end
-
   elseif character == PlayerType.PLAYER_THEFORGOTTEN then -- 16
     if (
-      startingBuild[1] == CollectibleType.COLLECTIBLE_DEATHS_TOUCH -- 237
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE -- 275
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 311
-      or startingBuild[1] == CollectibleType.COLLECTIBLE_INCUBUS -- 350
+      item == CollectibleType.COLLECTIBLE_DEATHS_TOUCH -- 237
+      or item == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+      or item == CollectibleType.COLLECTIBLE_LIL_BRIMSTONE -- 275
+      or item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 311
+      or item == CollectibleType.COLLECTIBLE_INCUBUS -- 350
     ) then
-      return false
+      return true
     end
   end
 
-  return true
+  return false
 end
 
 -- Reset the starting item timer if we just killed the Basement 2 boss
@@ -198,11 +180,23 @@ function Season9:PostClearRoom()
   local challenge = Isaac.GetChallenge()
 
   if (
-    challenge == Isaac.GetChallengeIdByName("R+7 (Season 6)")
+    challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
     and stage == 2
     and roomType == RoomType.ROOM_BOSS -- 5
   ) then
-    Season9.timeItemAssigned = 0
+    Season9.timeBuildAssigned = 0
+  end
+end
+
+function Season9:Debug()
+  Isaac.DebugString("Season9.selectedBuildIndexes:")
+  for i, index in ipairs(Season9.selectedBuildIndexes) do
+    Isaac.DebugString(tostring(i) .. " - " .. tostring(index))
+  end
+
+  Isaac.DebugString("Season9.historicalBuildIndexes:")
+  for i, index in ipairs(Season9.historicalBuildIndexes) do
+    Isaac.DebugString(tostring(i) .. " - " .. tostring(index))
   end
 end
 

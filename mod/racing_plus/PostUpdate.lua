@@ -25,7 +25,7 @@ local Autofire = require("racing_plus/autofire")
 -- (this will not fire while the floor/room is loading)
 -- ModCallbacks.MC_POST_UPDATE (1)
 function PostUpdate:Main()
-  PostUpdate:RemoveLowFX()
+  PostUpdate:RemoveInvisibleEntities()
   PostUpdate:CheckStartTime()
   PostUpdate:CheckRoomCleared()
   PostUpdate:CheckDDItems()
@@ -95,7 +95,19 @@ function PostUpdate:Main()
   ChangeCharOrder:PostUpdate()
 end
 
-function PostUpdate:RemoveLowFX()
+function PostUpdate:RemoveInvisibleEntities()
+  -- Remove invisible pickups on every frame, since they will not go away by themselves
+  local invisiblePickups = Isaac.FindByType(
+    EntityType.ENTITY_PICKUP, -- 5
+    PickupVariant.INVISIBLE_PICKUP,
+    -1,
+    false,
+    false
+  )
+  for _, invisiblePickup in ipairs(invisiblePickups) do
+    invisiblePickup:Remove()
+  end
+
   -- Remove invisible effects on every frame, since they will not go away by themselves
   local invisibleEffects = Isaac.FindByType(
     EntityType.ENTITY_EFFECT, -- 1000

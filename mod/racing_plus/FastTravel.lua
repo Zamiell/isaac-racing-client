@@ -169,6 +169,7 @@ end
 function FastTravel:ReplaceHeavenDoor(entity)
   -- Local variables
   local roomIndex = g:GetRoomIndex()
+  local roomType = g.r:GetType()
   local roomSeed = g.r:GetSpawnSeed()
 
   -- Delete the "natural" beam of light
@@ -178,6 +179,8 @@ function FastTravel:ReplaceHeavenDoor(entity)
     if (
       roomIndex ~= GridRooms.ROOM_ERROR_IDX -- -2
       and roomIndex ~= GridRooms.ROOM_BLACK_MARKET_IDX -- 6
+      -- Racing+ Rebalanced spawns a beam of light in an arcade
+      and roomType ~= RoomType.ROOM_ARCADE -- 9
     ) then
       -- This is the beam of light that spawns one frame after It Lives! (or Hush) is killed
       -- (it spawns after one frame because of fast-clear; on vanilla it spawns after a long delay)

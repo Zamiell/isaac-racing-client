@@ -519,6 +519,15 @@ The changed rooms are as follows:
 
 <br />
 
+### Narrow Arcade Removal
+
+Narrow Arcades cause some bugs in Racing+.
+
+The removed rooms are as follows:
+* #14, #15, #16
+
+<br />
+
 ### Close Enemies Fix
 
 Due to bug fixes in May 2018, most enemies that spawn near an entrance are no longer completely unavoidable damage. However, enemies that spawn very close to doors are unfair in certain circumstances, and it is more reasonable to have enemies spawn at least 2 squares away from the player.

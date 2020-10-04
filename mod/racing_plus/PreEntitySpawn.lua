@@ -5,7 +5,7 @@ local PreEntitySpawn = {}
 Note that:
 
 1) For this callback, you cannot specify an entity type as a second parameter
-   e.g. RacingPlus:AddCallback(
+   e.g. mod:AddCallback(
           ModCallbacks.MC_PRE_ENTITY_SPAWN, -- 24
           PreEntitySpawn.Pickup,
           EntityType.ENTITY_PICKUP -- 5

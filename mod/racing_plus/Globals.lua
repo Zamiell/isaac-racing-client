@@ -4,7 +4,7 @@ local g = {}
 -- Global variables
 --
 
-g.version = "v0.55.6"
+g.version = "v0.55.7"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
@@ -469,7 +469,6 @@ function g:InitRun()
 end
 
 function g:InitLevel()
-  -- Tracking per floor
   g.run.replacedPedestals = {}
   g.run.replacedTrapdoors = {}
   g.run.replacedCrawlspaces = {}
@@ -492,7 +491,6 @@ function g:InitLevel()
 end
 
 function g:InitRoom()
-  -- Tracking per room
   g.run.fastCleared = false
   g.run.currentGlobins = {} -- Used for softlock prevention
   g.run.currentLilHaunts = {} -- Used to delete invulnerability frames

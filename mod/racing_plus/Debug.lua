@@ -5,7 +5,7 @@ local g = require("racing_plus/globals")
 local Sprites = require("racing_plus/sprites")
 local FastClear = require("racing_plus/fastclear")
 local Speedrun = require("racing_plus/speedrun")
-local Season8 = require("racing_plus/season8")
+local Season9 = require("racing_plus/season9")
 
 -- ModCallbacks.MC_USE_ITEM (3)
 function Debug:Main()
@@ -85,9 +85,7 @@ function Debug:Main()
   Sprites:Init("diversity-item5", 125) -- Trinket
   --]]
 
-  for i = 1, 100 do
-    Season8.touchedItems[#Season8.touchedItems + 1] = 1
-  end
+  Season9:Debug()
 
   --
   -- End test stuff

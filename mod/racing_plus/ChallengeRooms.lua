@@ -469,7 +469,11 @@ function ChallengeRooms:Finish()
       local door = gridEntity:ToDoor()
       if door ~= nil then
         -- Doing "door:Open()" does not work
-        if not door:IsOpen() then
+        if (
+          not door:IsOpen()
+          and door.TargetRoomType ~= RoomType.ROOM_SECRET -- 7
+          and door.TargetRoomType ~= RoomType.ROOM_SUPERSECRET -- 8
+        ) then
           door:TryUnlock(true)
           g.sfx:Stop(SoundEffect.SOUND_UNLOCK00) -- 156
         end

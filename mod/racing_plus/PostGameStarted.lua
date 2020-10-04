@@ -443,8 +443,11 @@ function PostGameStarted:Character()
   -- Do character-specific actions
   if character == PlayerType.PLAYER_MAGDALENA then -- 1
     -- Identify the pill so that we will know what it is later on in the run
-    g.itemPool:IdentifyPill(pillColor)
-    UsePill:UsedNewPill(pillColor, PillEffect.PILLEFFECT_SPEED_UP) -- 14
+    -- Racing+ Rebalanced has custom pill effects
+    if RacingPlusRebalanced == nil then
+      g.itemPool:IdentifyPill(pillColor)
+      UsePill:UsedNewPill(pillColor, PillEffect.PILLEFFECT_SPEED_UP) -- 14
+    end
 
     -- Delete the starting pill
     g.p:SetPill(0, PillColor.PILL_NULL) -- 0

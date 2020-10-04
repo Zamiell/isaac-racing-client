@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.55.7* - October 4th, 2020
+
+* Fixed the bug where clearing a Challenge Room would also open any attached Secret Rooms.
+
 ### *v0.55.6* - October 2nd, 2020
 
 * Fixed the bug where Dad's Lost Coin was not correctly granting a luck up. (Thanks sisuka)
