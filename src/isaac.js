@@ -147,7 +147,7 @@ function checkSteam2() {
             return;
         }
 
-        let steamID = item.value; // This comes from the registry in hexidecimal format
+        let steamID = item.value; // This comes from the registry in hexadecimal format
         steamID = parseInt(steamID, 16); // Convert it to decimal, which will match what the directory is
         steamID = steamID.toString(); // Convert it to a string so that it can be used in the path.join() function
         saveFileDir = path.join(steamPath, 'userdata', steamID, '250900', 'remote');
@@ -187,10 +187,11 @@ function checkSaveFile(saveFile) {
             // "saveFileBytes.data" is now an array of bytes
 
             // Achievements are located at 0x20 (32) + achievement number
-            // So we need to check 33 through 407 (since there are 375 achievements)
-            for (let i = 33; i <= 407; i++) {
-                if (saveFileBytes[i] === 1) {
-                    fullyUnlockedSaveFileFound = true;
+            // So we need to check 33 through 435 (since there are 403 achievements in Booster Pack 5)
+            fullyUnlockedSaveFileFound = true;
+            for (let i = 33; i <= 435; i++) {
+                if (saveFileBytes[i] === 0) {
+                    fullyUnlockedSaveFileFound = false;
                     break;
                 }
             }
