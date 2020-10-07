@@ -389,29 +389,6 @@ function checkIsaacOpen() {
         }
 
         closeIsaac();
-
-        /*
-        // (this is the old way of checking for the tasks, commented out for now)
-        // On Windows, we use the taskkill module (the ps-node module is very slow)
-        tasklist({
-            filter: [`Imagename eq ${processName}`], // https://technet.microsoft.com/en-us/library/bb491010.aspx
-        }).then((data) => {
-            if (data.length === 0) {
-                // Isaac is not open
-                closeIsaac();
-            } else if (data.length === 1) {
-                IsaacOpen = true;
-                IsaacPID = data[0].pid;
-                closeIsaac();
-            } else {
-                process.send('error: Somehow, you have more than one "isaac-ng.exe" program open.', processExit);
-            }
-        }, (err) => {
-            // There is a bug with this on non-English platforms:
-            // https://github.com/sindresorhus/tasklist/issues/11
-            process.send(`error: Failed to detect if Isaac is open: ${err}`, processExit);
-        });
-        */
     } else if (process.platform === 'darwin' || process.platform === 'linux') { // macOS, Linux
         // On macOS and Linux, we use the ps-node module
         const processName = process.platform === 'darwin' ? 'The Binding of Isaac Afterbirth+' : 'isaac\\.(i386|x64)';

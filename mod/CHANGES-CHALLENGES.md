@@ -235,6 +235,7 @@
 
 * You must defeat Blue Baby 7 times using the [Racing+ Rebalanced Mod](https://www.google.com/), which reworks the item pools and attempts to make every item worth taking.
 * Similar to Season 6, each character will be randomly assigned a starting item or build. Unlike Season 6, there are no bans or vetos. (The list of starting items is [listed in the Racing+ Rebalanced documentation](https://www.google.com/).)
+* Isaac starts with Clockwork Assembly.
 * Judas starts with a full red heart.
 * Blue Baby starts with Spirit of the Night.
 * Lazarus does not start with a pill.

@@ -1430,9 +1430,12 @@ function SamaelMod:scytheHits(tookDamage, damage, damageFlags, damageSourceRef)
       if g.p:HasTrinket(TrinketType.TRINKET_BLISTER) then
         knockBackBonus = knockBackBonus + 1.5
       end
+
       --"Push" the enemy away from the player (knockback)
-      local vel = tookDamage.Position - g.p.Position
-      vel = vel:Normalized() * knockbackMagnitude + knockBackBonus
+      local vel = tookDamage.Position
+      vel = vel:__sub(g.p.Position) -- Don't mess with this
+      vel = vel:Normalized()
+      vel = vel:__mul(knockbackMagnitude+knockBackBonus) -- Don't mess with this
       tookDamage:AddVelocity(vel)
 
       --Status condition stuff

@@ -3,6 +3,7 @@ local Season9 = {}
 -- Includes
 local g = require("racing_plus/globals")
 local Speedrun = require("racing_plus/speedrun")
+local Schoolbag = require("racing_plus/schoolbag")
 
 --
 -- Constants
@@ -45,7 +46,9 @@ function Season9:PostGameStarted()
   Isaac.DebugString("In the R+7 (Season 9) challenge.")
 
   -- Character-specific items
-  if character == PlayerType.PLAYER_JUDAS then -- 3
+  if character == PlayerType.PLAYER_ISAAC then -- 0
+    Schoolbag:Put(CollectibleType.COLLECTIBLE_CLOCKWORK_ASSEMBLY, 6)
+  elseif character == PlayerType.PLAYER_JUDAS then -- 3
     g.p:AddHearts(1)
   elseif character == PlayerType.PLAYER_XXX then -- 4
     g.p:AddCollectible(CollectibleType.COLLECTIBLE_SPIRIT_NIGHT, 0, false) -- 159
@@ -68,9 +71,16 @@ function Season9:PostGameStarted()
     -- Mark down the time that we assigned this item
     Season9.timeBuildAssigned = Isaac.GetTime()
 
-    -- Record it for historical purposes
+    -- Record it for historical purposes (but only keep track of the past X builds)
     Season9.historicalBuildIndexes[#Season9.historicalBuildIndexes + 1] = startingBuildIndex
+    while #Season9.historicalBuildIndexes > math.floor(#RacingPlusRebalanced.itemStarts / 2) do
+      table.remove(Season9.historicalBuildIndexes, 1)
+    end
     RacingPlusData:Set(Season9.historyDataLabel, Season9.historicalBuildIndexes)
+    Isaac.DebugString("Current historical builds:")
+    for i, build in ipairs(Season9.historicalBuildIndexes) do
+      Isaac.DebugString(tostring(i) .. ") " .. tostring(build))
+    end
   else
     Isaac.DebugString("Already assigned build #" .. tostring(startingBuildIndex) .. ".")
   end

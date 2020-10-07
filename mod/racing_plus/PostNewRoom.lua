@@ -185,12 +185,12 @@ end
 -- when Magdalene takes a devil deal that grants soul/black hearts)
 function PostNewRoom:CheckZeroHealth()
   -- Local variables
-  local maxHearts = g.p:GetMaxHearts()
+  local hearts = g.p:GetHearts()
   local soulHearts = g.p:GetSoulHearts()
   local boneHearts = g.p:GetBoneHearts()
 
   if (
-    maxHearts == 0
+    hearts == 0
     and soulHearts == 0
     and boneHearts == 0
     and not g.run.seededSwap.swapping -- Make an exception if we are manually swapping health values

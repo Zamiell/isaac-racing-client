@@ -30,31 +30,10 @@ function Schoolbag:Remove()
 end
 
 function Schoolbag:AddCharge(singleCharge)
-  -- We don't need to do anything if we don't have a Schoolbag
-  -- or we don't have an item in the Schoolbag
-  if (
-    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
-    or g.run.schoolbag.item == 0
-  ) then
-    return
-  end
-
   -- Local variables
   local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
 
-  -- We don't need to do anything if the item is already charged
-  if (
-    g.run.schoolbag.charge >= maxCharges
-    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
-  ) then
-    return
-  end
-
-  -- We don't need to do anything if the item is already double-charged
-  if (
-    g.run.schoolbag.chargeBattery >= maxCharges
-    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
-  ) then
+  if Schoolbag:IsItemFullyCharged() then
     return
   end
 
@@ -88,6 +67,38 @@ function Schoolbag:AddCharge(singleCharge)
     end
     g.run.schoolbag.charge = maxCharges
   end
+end
+
+function Schoolbag:IsItemFullyCharged()
+  -- Local variables
+  local maxCharges = g:GetItemMaxCharges(g.run.schoolbag.item)
+
+  -- We don't need to do anything if we don't have a Schoolbag
+  -- or we don't have an item in the Schoolbag
+  if (
+    not g.p:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG_CUSTOM)
+    or g.run.schoolbag.item == 0
+  ) then
+    return true
+  end
+
+  -- We don't need to do anything if the item is already charged
+  if (
+    g.run.schoolbag.charge >= maxCharges
+    and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+  ) then
+    return true
+  end
+
+  -- We don't need to do anything if the item is already double-charged
+  if (
+    g.run.schoolbag.chargeBattery >= maxCharges
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_BATTERY) -- 63
+  ) then
+    return true
+  end
+
+  return false
 end
 
 function Schoolbag:SpriteDisplay()

@@ -913,8 +913,21 @@ function PostRender:DrawVersion()
   Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
   text = g.version
+  x = center.X - 3 * #text
   y = y + 15
   Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+
+  if RacingPlusRebalanced ~= nil then
+    text = "Racing+ Rebalanced"
+    x = center.X - 3 * #text
+    y = y + 15
+    Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+
+    text = RacingPlusRebalanced.version
+    x = center.X - 3 * #text
+    y = y + 15
+    Isaac.RenderText(text, x, y, 2, 2, 2, 2)
+    end
 end
 
 -- Make the Schoolbag work properly with the Glowing Hour Glass

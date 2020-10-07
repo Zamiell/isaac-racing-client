@@ -19,6 +19,7 @@ Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to Cupid's Arrow (48)
 - Added the "luck" cache to Loki's Horns (87)
 - Added the "firedelay" and "damage" cache to Isaac's Heart (276)
+- Added the "speed" cache to Leo (302)
 - Added the "firedelay" cache to Strange Attractor (315)
 - Added the "firedelay" cache to The Wiz (358)
 - Added the "firedelay" cache to Explosivo (401)
@@ -26,7 +27,6 @@ Changes for Racing+ Rebalanced:
 - Added the "firedelay" cache to Pop! (529)
 - Added the "shotspeed" cache to Trisagion (533)
 - Added the "damage" cache to Ring Worm (11)
-- Added the "damage" cache to Hook Worm (26)
 
 -->
 
@@ -333,7 +333,7 @@ Changes for Racing+ Rebalanced:
 	<passive cache="speed" description="Speed down + rage is building" gfx="collectibles_299_taurus.png" id="299" name="Taurus" />
 	<passive cache="speed" description="Ramming speed" gfx="collectibles_300_aries.png" id="300" name="Aries" />
 	<passive description="HP up + you feel protected" gfx="collectibles_301_cancer.png" id="301" name="Cancer" soulhearts="6" />
-	<passive description="Stompy" gfx="collectibles_302_leo.png" id="302" name="Leo" />
+	<passive cache="speed" description="Stompy" gfx="collectibles_302_leo.png" id="302" name="Leo" />
 	<passive description="You feel refreshed and protected" gfx="collectibles_303_virgo.png" id="303" name="Virgo" />
 	<passive bombs="6" cache="speed firedelay damage range" coins="6" description="You feel balanced" gfx="collectibles_304_libra.png" id="304" keys="6" name="Libra" />
 	<passive cache="tearflag" description="Poison tears" gfx="collectibles_305_scorpio.png" id="305" name="Scorpio" />
@@ -631,7 +631,7 @@ Changes for Racing+ Rebalanced:
 	<trinket achievement="149" description="???" gfx="trinket_023_missingposter.png" id="23" name="Missing Poster" />
 	<trinket description="Wealth of gas" gfx="trinket_024_buttpenny.png" id="24" name="Butt Penny" />
 	<trinket description="Uh-oh!" gfx="trinket_025_mysteriouscandy.png" id="25" name="Mysterious Candy" />
-	<trinket cache="damage tearflag range" description="Zip zoop!" gfx="trinket_026_hookworm.png" id="26" name="Hook Worm" />
+	<trinket cache="tearflag range" description="Zip zoop!" gfx="trinket_026_hookworm.png" id="26" name="Hook Worm" />
 	<trinket cache="shotspeed" description="Wooosh!" gfx="trinket_027_whipworm.png" id="27" name="Whip Worm" />
 	<trinket achievement="117" description="Eternal life?" gfx="trinket_028_brokenankh.png" id="28" name="Broken Ankh" />
 	<trinket description="It stinks" gfx="trinket_029_fishhead.png" id="29" name="Fish Head" />
