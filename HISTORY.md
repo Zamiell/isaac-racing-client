@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.55.10* - October 8th, 2020
+
+* Fixed the bug where you would die in a seeded race if you had a half soul heart and an eternal heart. (Thanks mgln)
+
 ### *v0.55.7* - October 4th, 2020
 
 * Fixed the bug where clearing a Challenge Room would also open any attached Secret Rooms.

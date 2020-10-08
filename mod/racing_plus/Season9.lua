@@ -152,8 +152,8 @@ function Season9:BuildIsBannedOnThisCharacter(buildIndex)
     if item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
       return true
     end
-  elseif character == PlayerType.PLAYER_EVE then -- 5
-    if item == CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT then -- 415
+  elseif character == PlayerType.PLAYER_XXX then -- 4
+    if item == CollectibleType.COLLECTIBLE_IPECAC then -- 149
       return true
     end
   elseif character == PlayerType.PLAYER_AZAZEL then -- 7

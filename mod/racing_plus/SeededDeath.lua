@@ -223,9 +223,9 @@ function SeededDeath:EntityTakeDmg(damageAmount, damageFlag)
     (hearts > 0 and soulHearts > 0)
     or (hearts > 0 and boneHearts > 0)
     or (soulHearts > 0 and boneHearts > 0)
+    or (soulHearts > 0 and eternalHearts > 0)
     or boneHearts >= 2 -- Two bone hearts and nothing else should not result in a death
   ) then
-
     Isaac.DebugString(
       "SeededDeath:EntityTakeDmg() - Non-fatal damage detected; different types of hearts detected."
     )
