@@ -3,8 +3,8 @@
 */
 
 // Configuration
-const domain = 'isaacracing.net';
-const secure = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
+const domain = '192.168.1.100';
+const secure = false; // "true" for HTTPS/WSS and "false" for HTTP/WS
 const localhost = false; // "true" for connecting to a test server on localhost and false for connecting to the specified domain
 const fadeTime = 300; // In milliseconds
 const modName = 'racing+_857628390'; // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam

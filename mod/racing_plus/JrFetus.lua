@@ -8,6 +8,8 @@ local api = require("racing_plus/bossapi")
 -- (even though the file is "bossAPI.lua",
 -- this must be in lowercase for Linux compatibility purposes)
 
+local drFetusType = Isaac.GetEntityTypeByName("Dr Fetus Jr")
+
 local targetVariant = Isaac.GetEntityVariantByName("FetusBossTarget")
 local rocketVariant = Isaac.GetEntityVariantByName("FetusBossRocket")
 
@@ -190,7 +192,7 @@ local Weights = {
 local timeSinceLastPatternAttack = 9999
 
 function JrFetus:UpdateDrFetus(entity)
-    local sprite, ai, target = api.GetBossVars(entity)
+    local sprite, data, ai, target = api.GetBossVars(entity)
 
     local hp = entity.HitPoints
     local maxhp = entity.MaxHitPoints
@@ -207,46 +209,17 @@ function JrFetus:UpdateDrFetus(entity)
     if sprite:IsPlaying("Death") then
         ai:SetActiveAttack("Dying")
         if api.Random(1, 2) == 1 then
-            api.SpillCreep(
-                entity.Position,
-                60,
-                3,
-                nil,
-                drFetusCreepType,
-                drFetusCreepVariant,
-                drFetusCreepSubtype
-            )
+            api.SpillCreep(entity.Position, 60, 3, nil, drFetusCreepType, drFetusCreepVariant, drFetusCreepSubtype)
         end
 
         if sprite:IsEventTriggered("SpawnEmbryo") then
-            Isaac.Spawn(
-                drFetusEmbryoType,
-                drFetusEmbryoVariant,
-                0,
-                entity.Position,
-                api.ZeroVector,
-                nil
-            )
+            Isaac.Spawn(drFetusEmbryoType, drFetusEmbryoVariant, 0, entity.Position, api.ZeroVector, nil)
         end
     elseif sprite:IsFinished("Death") then
         entity:Kill()
     end
 
-    local isIdle = not api.IsPlaying(
-        sprite,
-        "FlipOff",
-        "AttackUp",
-        "AttackRight",
-        "AttackDown",
-        "AttackLeft",
-        "Slam",
-        "SwimUp",
-        "IdleTop",
-        "AttackTop",
-        "SwimDown",
-        "Appear",
-        "Death"
-    ) and not activeAttack
+    local isIdle = not api.IsPlaying(sprite, "FlipOff", "AttackUp", "AttackRight", "AttackDown", "AttackLeft", "Slam", "SwimUp", "IdleTop", "AttackTop", "SwimDown", "Appear", "Death") and not activeAttack
     if isIdle and not sprite:IsPlaying("Idle") then
         sprite:Play("Idle", true)
     end
@@ -264,17 +237,10 @@ function JrFetus:UpdateDrFetus(entity)
         end
 
         if timeSinceLastPatternAttack > 70 and not ai:GetBackgroundAttack("FollowingMissile") then
-            ai:AddAttackToPool(
-                "Pattern",
-                Weights.Pattern + math.floor(timeSinceLastPatternAttack / 100)
-            )
+            ai:AddAttackToPool("Pattern", Weights.Pattern + math.floor(timeSinceLastPatternAttack / 100))
         end
 
-        if (
-            not ai:GetBackgroundAttack("FollowingMissile")
-            and not ai:GetBackgroundAttack("Pattern")
-            and hp < maxhp * 0.5
-        ) then
+        if not ai:GetBackgroundAttack("FollowingMissile") and not ai:GetBackgroundAttack("Pattern") and hp < maxhp * 0.5 then
             ai:AddAttackToPool("FollowingMissile", Weights.FollowingMissile)
         end
 
@@ -317,7 +283,7 @@ function JrFetus:UpdateDrFetus(entity)
             ai:SetActiveAttack("FollowingMissile")
         elseif attack == "AimedShot" then -- triple / quadruple shot aimed at the player
             local direction = target.Position - entity.Position
-            local anim
+            local anim = "Slam"
             if math.abs(direction.X) > math.abs(direction.Y) then
                 if direction.X < 0 then
                     anim = "AttackLeft"
@@ -339,31 +305,18 @@ function JrFetus:UpdateDrFetus(entity)
         end
     elseif activeAttack then
         if activeAttack.Name == "4Shot" then
-            if (
-                not activeAttack.Firing
-                and activeAttack.NumFired < 4
-                and not api.IsPlaying(sprite, "AttackUp", "AttackDown", "AttackLeft", "AttackRight")
-            ) then
+            if not activeAttack.Firing and activeAttack.NumFired < 4 and not api.IsPlaying(sprite, "AttackUp", "AttackDown", "AttackLeft", "AttackRight") then
                 activeAttack.NumFired = activeAttack.NumFired + 1
                 local direction = activeAttack.DirectionOrder[activeAttack.NumFired]
                 sprite:Play(direction.Anim, true)
                 activeAttack.Firing = direction
-            elseif (
-                not activeAttack.Firing
-                and activeAttack.NumFired >= 4
-                and not api.IsPlaying(sprite, "AttackUp", "AttackDown", "AttackLeft", "AttackRight")
-            ) then
+            elseif not activeAttack.Firing and activeAttack.NumFired >= 4 and not api.IsPlaying(sprite, "AttackUp", "AttackDown", "AttackLeft", "AttackRight") then
                 ai:SetAttackCooldown(AttackCooldowns.Post4Shot)
                 ai:RemoveActiveAttack()
             elseif activeAttack.Firing then
                 if sprite:IsEventTriggered(activeAttack.Firing.Anim) then
                     api.PlaySound(sounds.Whoosh)
-                    core.launchMissile(
-                        entity.Position,
-                        Vector.FromAngle(activeAttack.Firing.Angle) * 12,
-                        entity,
-                        fourShotParams
-                    )
+                    core.launchMissile(entity.Position, Vector.FromAngle(activeAttack.Firing.Angle) * 12, entity, fourShotParams)
                     activeAttack.Firing = nil
                 end
             end
@@ -379,14 +332,8 @@ function JrFetus:UpdateDrFetus(entity)
 
                 local offset = api.Random(1, 360)
                 for i = 0, numShots - 1 do
-                    local angle = api.GetCircleDegreeOffset(i, numShots) + offset
-                    local direction = Vector.FromAngle(angle)
-                    core.launchMissile(
-                        entity.Position,
-                        direction * (entity.Position:Distance(target.Position) * 0.05),
-                        entity,
-                        fiveShotParams
-                    )
+                    local direction = Vector.FromAngle(api.GetCircleDegreeOffset(i, numShots) + offset)
+                    core.launchMissile(entity.Position, direction * (entity.Position:Distance(target.Position) * 0.05), entity, fiveShotParams)
                 end
 
                 ai:RemoveActiveAttack()
@@ -420,15 +367,7 @@ function JrFetus:UpdateDrFetus(entity)
 
             if activeAttack.CanSpawnCreep then
                 if api.Random(1, 2) == 1 then
-                    api.SpillCreep(
-                        entity.Position,
-                        80,
-                        3,
-                        nil,
-                        drFetusCreepType,
-                        drFetusCreepVariant,
-                        drFetusCreepSubtype
-                    )
+                    api.SpillCreep(entity.Position, 80, 3, nil, drFetusCreepType, drFetusCreepVariant, drFetusCreepSubtype)
                 end
             end
 
@@ -453,12 +392,8 @@ function JrFetus:UpdateDrFetus(entity)
 
                 local spread = 30
                 for i = 1, total do
-                    local angle = activeAttack.Direction:GetAngleDegrees() + api.GetDegreeOffset(
-                        i,
-                        total,
-                        spread
-                    )
-                    local direction = Vector.FromAngle(angle)
+                    local angle = activeAttack.Direction:GetAngleDegrees()
+                    local direction = Vector.FromAngle(angle + api.GetDegreeOffset(i, total, spread))
                     core.launchMissile(entity.Position, direction * 10, entity, randomShotParams)
                 end
 
@@ -479,14 +414,7 @@ function JrFetus:UpdateDrFetus(entity)
                     sprite:Play("AttackTop", true)
                     api.PlaySound(sounds.Whoosh)
                     local direction = target.Position - entity.Position
-                    local bomb = Isaac.Spawn(
-                        EntityType.ENTITY_BOMBDROP,
-                        BombVariant.BOMB_TROLL,
-                        0,
-                        entity.Position,
-                        direction * 0.1,
-                        entity
-                    )
+                    local bomb = Isaac.Spawn(EntityType.ENTITY_BOMBDROP, BombVariant.BOMB_TROLL, 0, entity.Position, direction * 0.1, entity)
                     bomb:ToBomb().ExplosionDamage = 1
                     -- This still makes the troll bomb deal a full heart of damage to the player
                     -- but mitigates the damage dealt to NPCs (by default it is 60)
@@ -499,29 +427,12 @@ function JrFetus:UpdateDrFetus(entity)
 
             if sprite:IsEventTriggered("Splash") then
                 api.PlaySound(sounds.Splash)
-                local offsetEnt = Isaac.Spawn(
-                    EntityType.ENTITY_FLY,
-                    0,
-                    0,
-                    entity.Position + topOfTheJarOffset,
-                    api.ZeroVector,
-                    nil
-                ):ToNPC()
-                offsetEnt:FireBossProjectiles(
-                    api.Random(18, 26),
-                    zeroVector,
-                    10,
-                    splashProjectileParams
-                )
+                local offsetEnt = Isaac.Spawn(EntityType.ENTITY_FLY, 0, 0, entity.Position + topOfTheJarOffset, api.ZeroVector, nil):ToNPC()
+                offsetEnt:FireBossProjectiles(api.Random(18, 26), zeroVector, 10, splashProjectileParams)
                 offsetEnt:Remove()
             end
 
-            if (
-                not sprite:IsPlaying("SwimUp")
-                and not sprite:IsPlaying("IdleTop")
-                and not sprite:IsPlaying("AttackTop")
-                and not sprite:IsPlaying("SwimDown")
-            ) then
+            if not sprite:IsPlaying("SwimUp") and not sprite:IsPlaying("IdleTop") and not sprite:IsPlaying("AttackTop") and not sprite:IsPlaying("SwimDown") then
                 sprite:Play("IdleTop", true)
             end
         end
@@ -545,14 +456,7 @@ end
 function JrFetus:DrFetusEmbryoKill(entity)
     if entity.Variant == drFetusEmbryoVariant then
         for i = 1, api.Random(1, 3) do
-            Isaac.Spawn(
-                EntityType.ENTITY_PICKUP,
-                PickupVariant.PICKUP_BOMB,
-                0,
-                entity.Position,
-                RandomVector() * 3,
-                nil
-            )
+            Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BOMB, 0, entity.Position, RandomVector() * 3, nil)
         end
     end
 end
@@ -588,6 +492,7 @@ end
 function JrFetus:UpdateMissileTarget(entity)
     local data = entity:GetData()
     if data.BossMissile then
+        local sprite = entity:GetSprite()
         local boss = data.Boss
         local target
         if boss then
@@ -602,8 +507,7 @@ function JrFetus:UpdateMissileTarget(entity)
             end
 
             if data.MissileParams.HomingDistance then
-                local distanceSquared = target.Position:DistanceSquared(entity.Position)
-                if not (distanceSquared < data.MissileParams.HomingDistance) then
+                if not (target.Position:DistanceSquared(entity.Position) < data.MissileParams.HomingDistance) then
                     shouldHome = false
                 end
             end
@@ -617,14 +521,7 @@ function JrFetus:UpdateMissileTarget(entity)
         if data.MissileParams.Cooldown and data.MissileParams.Cooldown > 0 then
             data.MissileParams.Cooldown = data.MissileParams.Cooldown - 1
         elseif not data.Rocket then
-            local rocket = Isaac.Spawn(
-                EntityType.ENTITY_EFFECT,
-                rocketVariant,
-                0,
-                entity.Position,
-                zeroVector,
-                data.Boss
-            )
+            local rocket = Isaac.Spawn(EntityType.ENTITY_EFFECT, rocketVariant, 0, entity.Position, zeroVector, data.Boss)
             rocket.SpriteOffset = rocket.SpriteOffset + rocketHeightOffset
             data.Rocket = rocket
         end
@@ -642,8 +539,7 @@ function JrFetus:UpdateMissileTarget(entity)
                    data.MissileParams.NumRockets and
                    data.RocketsFired < data.MissileParams.NumRockets then
 
-                    local tbr = (data.MissileParams.TimeBetweenRockets or 1)
-                    data.MissileParams.Cooldown = data.MissileParams.Cooldown + tbr
+                    data.MissileParams.Cooldown = data.MissileParams.Cooldown + (data.MissileParams.TimeBetweenRockets or 1)
                 else
                     entity:Remove()
                 end

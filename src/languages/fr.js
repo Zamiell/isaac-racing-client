@@ -219,7 +219,7 @@ Lang.prototype.pack.fr = {
         "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "Étant donné qu'il s'agit d'une course en multijoueur, vous devez attendre qu'un autre joueur rejoigne avant de vous marquer en tant que prêt.",
         "You have to start a run before you can mark yourself as ready.": "Vous devez commencer une partie pour pouvoir cocher la case \"prêt\".",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "Vous devez être en mode \"Normal\" pour pouvoir cocher la case \"prêt\".",
-        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "Vous devez avoir le mod Racing+ actif en jeu avant de pouvoir vous indiquer en tant que prêt.",
+        "You must have the Racing+ mod enabled in-game before you can mark yourself as ready.": "Vous devez avoir le mod Racing+ actif en jeu avant de pouvoir vous indiquer en tant que prêt.",
 
         // register.js
         "The username field is required.": "Le nom d'utilisateur est requis.",

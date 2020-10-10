@@ -219,7 +219,7 @@ Lang.prototype.pack.zz = {
         "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.": "",
         "You have to start a run before you can mark yourself as ready.": "",
         "You must be in a \"Normal\" mode run before you can mark yourself as ready.": "",
-        "You must having the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
+        "You must have the Racing+ mod enabled in-game before you can mark yourself as ready.": "",
 
         // register.js
         "The username field is required.": "",

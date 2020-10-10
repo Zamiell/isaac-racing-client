@@ -19,7 +19,7 @@ const send = () => {
 
     // Do nothing if we are on a test account > 1
     if (globals.myUsername.startsWith('TestAccount') && globals.myUsername !== 'TestAccount1') {
-        return;
+        // return;
     }
 
     // We want to send the "modLoader" object to the Lua mod, but with some modifications

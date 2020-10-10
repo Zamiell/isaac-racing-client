@@ -1,5 +1,9 @@
 # Racing+ Version History and News
 
+### *v0.55.11* - October 8th, 2020
+
+* Fixed the bug where Jr. Fetus was not working correctly. (Thanks LbrtN)
+
 ### *v0.55.10* - October 8th, 2020
 
 * Fixed the bug where you would die in a seeded race if you had a half soul heart and an eternal heart. (Thanks mgln)

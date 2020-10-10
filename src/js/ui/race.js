@@ -1163,7 +1163,7 @@ const checkReadyValid = () => {
         tooltipContent = '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
     } else if (!globals.gameState.racingPlusModEnabled && race.ruleset.format !== 'custom') {
         valid = false;
-        tooltipContent = '<span lang="en">You must having the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
+        tooltipContent = '<span lang="en">You must have the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
     } else if (!globals.gameState.fileChecksComplete) {
         valid = false;
         tooltipContent = '<span lang="en">The Racing+ client is currently checking to see if your mod is corrupted. Please wait a minute or two.</span>';
