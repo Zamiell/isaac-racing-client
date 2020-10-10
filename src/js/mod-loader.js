@@ -19,7 +19,7 @@ const send = () => {
 
     // Do nothing if we are on a test account > 1
     if (globals.myUsername.startsWith('TestAccount') && globals.myUsername !== 'TestAccount1') {
-        // return;
+        return;
     }
 
     // We want to send the "modLoader" object to the Lua mod, but with some modifications
@@ -59,12 +59,12 @@ const send = () => {
 
     // Write to it
     try {
-        // This has to be syncronous to prevent bugs with writing to the file multiple times in a row
+        // This has to be synchronous to prevent bugs with writing to the file multiple times in a row
         const modLoaderFile = path.join(globals.modPath, `save${globals.modLoaderSlot}.dat`);
         fs.writeFileSync(modLoaderFile, JSON.stringify(json), 'utf8');
         // globals.log.info(`successfully wrote to: ${modLoaderFile}`);
     } catch (err) {
-        // Ocassional errors are normal, because there can be a ton of file writes going on,
+        // Occasional errors are normal, because there can be a ton of file writes going on,
         // so just try again in 1/20 of a second
         globals.log.info(`Error while filling up the "save${globals.modLoaderSlot}.dat" file: ${err}`);
         setTimeout(() => {
