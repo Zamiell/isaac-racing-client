@@ -245,7 +245,7 @@ function Errors:DrawEnableBalanceMod()
   y = y + 20
   Isaac.RenderText("https://steamcommunity.com/sharedfiles/", x, y, 2, 2, 2, 2)
   y = y + 10
-  Isaac.RenderText("filedetails/?id=FILL_THIS_IN_LATER", x, y, 2, 2, 2, 2)
+  Isaac.RenderText("filedetails/?id=2263635610", x, y, 2, 2, 2, 2)
 end
 
 function Errors:DrawDisableBalanceMod()
