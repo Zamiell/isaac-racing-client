@@ -1,5 +1,11 @@
 # Racing+ Version History and News
 
+### *v0.55.15* - October 21st, 2020
+
+* [R+7 Season 9](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) is now released for beta testing.
+  * This season will require more feedback than most other seasons, because I want everything to be relatively balanced, and this is a very difficult thing to do. Please report feedback in the Discord server.
+* Fixed some miscellaneous bugs with the Season 9 alpha.
+
 ### *v0.55.11* - October 8th, 2020
 
 * Fixed the bug where Jr. Fetus was not working correctly. (Thanks LbrtN)
