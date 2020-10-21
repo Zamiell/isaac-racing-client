@@ -58,14 +58,14 @@ function Errors:Draw()
     return true
   elseif (
     challenge == Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
-    and RacingPlusRebalanced == nil
+    and RacingPlusRebalancedVersion == nil
   ) then
     Errors:DrawEnableBalanceMod()
     return true
   elseif (
     Speedrun:InSpeedrun()
     and challenge ~= Isaac.GetChallengeIdByName("R+7 (Season 9 Beta)")
-    and RacingPlusRebalanced ~= nil
+    and RacingPlusRebalancedVersion ~= nil
   ) then
     Errors:DrawDisableBalanceMod()
     return true

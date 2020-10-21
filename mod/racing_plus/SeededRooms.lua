@@ -38,7 +38,7 @@ function SeededRooms:DevilRoom()
     else
       krampusChance = 10
     end
-    if RacingPlusRebalanced ~= nil then
+    if RacingPlusRebalancedVersion ~= nil then
       krampusChance = 0
     end
 

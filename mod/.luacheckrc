@@ -93,7 +93,7 @@ globals = {
 
   -- Other mods
   "SinglePlayerCoopBabies", -- The Babies Mod
-  "RacingPlusRebalanced",
+  "RacingPlusRebalancedVersion",
   "VanillaStreakText",
   "InfinityTrueCoopInterface", -- The True Co-op Mod
   "MinimapAPI",

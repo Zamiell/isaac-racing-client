@@ -18,6 +18,72 @@ Season9.selectedBuildIndexes = {}
 Season9.timeBuildAssigned = 0 -- Reset when the time limit elapses
 Season9.loadedSaveDat = false
 Season9.historicalBuildIndexes = {}
+Season9.setBuild = nil
+
+-- Starting builds
+-- The average build power level should be roughly equivalent to Proptosis
+Season9.builds = {
+  -- Big 4
+  { CollectibleType.COLLECTIBLE_MOMS_KNIFE }, -- 114, #1
+  { CollectibleType.COLLECTIBLE_IPECAC }, -- 149, #2
+  { CollectibleType.COLLECTIBLE_TECH_X }, -- 395, #3
+  { CollectibleType.COLLECTIBLE_EPIC_FETUS }, -- 168, #4
+
+  -- Single item starts (Treasure Room)
+  { CollectibleType.COLLECTIBLE_MAXS_HEAD }, -- 4, #5
+  { CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM }, -- 12, #6
+  { CollectibleType.COLLECTIBLE_DR_FETUS }, -- 52, #7
+  { CollectibleType.COLLECTIBLE_TECHNOLOGY }, -- 68, #8
+  { CollectibleType.COLLECTIBLE_POLYPHEMUS }, -- 169, #9
+  { CollectibleType.COLLECTIBLE_TECH_5 }, -- 244, #10
+  { CollectibleType.COLLECTIBLE_20_20 }, -- 245, #11
+  { CollectibleType.COLLECTIBLE_PROPTOSIS }, -- 261, #12
+  { CollectibleType.COLLECTIBLE_ISAACS_HEART }, -- 276, #13
+  { CollectibleType.COLLECTIBLE_JUDAS_SHADOW }, -- 311, #14
+
+  -- Single item starts (Devil Room)
+  { CollectibleType.COLLECTIBLE_BRIMSTONE }, -- 118, #15
+  { CollectibleType.COLLECTIBLE_MAW_OF_VOID }, -- 399, #16
+  { CollectibleType.COLLECTIBLE_INCUBUS }, -- 360, #17
+
+  -- Single item starts (Angel Room)
+  { CollectibleType.COLLECTIBLE_SACRED_HEART }, -- 182, #18
+  { CollectibleType.COLLECTIBLE_GODHEAD }, -- 331, #19
+  { CollectibleType.COLLECTIBLE_CROWN_OF_LIGHT }, -- 415, #20
+
+  -- Double item starts
+  { -- #21
+    CollectibleType.COLLECTIBLE_CRICKETS_BODY, -- 224
+    CollectibleType.COLLECTIBLE_SAD_ONION, -- 104
+  },
+  { -- #22
+    CollectibleType.COLLECTIBLE_MONSTROS_LUNG, -- 229
+    CollectibleType.COLLECTIBLE_SAD_ONION, -- 453
+  },
+  { -- #23
+    CollectibleType.COLLECTIBLE_DEATHS_TOUCH, -- 237
+    CollectibleType.COLLECTIBLE_SAD_ONION, -- 453
+  },
+  { -- #24
+    CollectibleType.COLLECTIBLE_DEAD_EYE, -- 373
+    CollectibleType.COLLECTIBLE_APPLE, -- 443
+  },
+  { -- #25
+    CollectibleType.COLLECTIBLE_JACOBS_LADDER, -- 494
+    CollectibleType.COLLECTIBLE_THERES_OPTIONS, -- 249
+  },
+  { -- #26
+    CollectibleType.COLLECTIBLE_POINTY_RIB, -- 544
+    CollectibleType.COLLECTIBLE_POINTY_RIB, -- 544
+  },
+
+  -- Triple item starts
+  { -- #27
+    CollectibleType.COLLECTIBLE_CHOCOLATE_MILK, -- 69
+    CollectibleType.COLLECTIBLE_STEVEN, -- 50
+    CollectibleType.COLLECTIBLE_SAD_ONION, -- 255
+  },
+}
 
 -- ModCallbacks.MC_POST_GAME_STARTED (15)
 function Season9:PostGameStartedFirstCharacter()
@@ -74,7 +140,7 @@ function Season9:PostGameStarted()
 
     -- Record it for historical purposes (but only keep track of the past X builds)
     Season9.historicalBuildIndexes[#Season9.historicalBuildIndexes + 1] = startingBuildIndex
-    while #Season9.historicalBuildIndexes > math.floor(#RacingPlusRebalanced.itemStarts / 2) do
+    while #Season9.historicalBuildIndexes > math.floor(#Season9.builds / 2) do
       table.remove(Season9.historicalBuildIndexes, 1)
     end
     RacingPlusData:Set(Season9.historyDataLabel, Season9.historicalBuildIndexes)
@@ -87,7 +153,7 @@ function Season9:PostGameStarted()
   end
 
   -- Give the items to the player (and remove the items from the pools)
-  local startingBuild = RacingPlusRebalanced.itemStarts[startingBuildIndex]
+  local startingBuild = Season9.builds[startingBuildIndex]
   for _, item in ipairs(startingBuild) do
     g.p:AddCollectible(item, 0, false)
     g.itemPool:RemoveCollectible(item)
@@ -100,6 +166,14 @@ end
 function Season9:GetRandomStartingBuildIndex()
   -- Local variables
   local seed = g.seeds:GetStartSeed()
+
+  -- Shortcut the logic if we are debugging
+  if Season9.setBuild ~= nil then
+    local setBuild = Season9.setBuild
+    Season9.setBuild = nil
+    Isaac.DebugString("Using the debug set build of: " .. tostring(setBuild))
+    return setBuild
+  end
 
   -- Build a list of build indexes that we have not started yet in past runs
   local unplayedStartingBuildIndexes = Season9:MakeValidStartingBuildIndexes()
@@ -126,7 +200,7 @@ end
 function Season9:MakeValidStartingBuildIndexes()
   local unplayedStartingBuildIndexes = {}
 
-  for i = 1, #RacingPlusRebalanced.itemStarts  do
+  for i = 1, #Season9.builds  do
     if (
       -- If we have not started this build already on this 7-character run
       not g:TableContains(Season9.selectedBuildIndexes, i)
@@ -145,10 +219,14 @@ end
 function Season9:BuildIsBannedOnThisCharacter(buildIndex)
   -- Local variables
   local character = g.p:GetPlayerType()
-  local build = RacingPlusRebalanced.itemStarts[buildIndex]
+  local build = Season9.builds[buildIndex]
   local item = build[1]
 
-  if character == PlayerType.PLAYER_JUDAS then -- 3
+  if character == PlayerType.PLAYER_CAIN then -- 2
+    if item == CollectibleType.COLLECTIBLE_CRICKETS_BODY then -- 224
+      return true
+    end
+  elseif character == PlayerType.PLAYER_JUDAS then -- 3
     if item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW then -- 311
       return true
     end
@@ -161,6 +239,7 @@ function Season9:BuildIsBannedOnThisCharacter(buildIndex)
       item == CollectibleType.COLLECTIBLE_IPECAC -- 149
       or item == CollectibleType.COLLECTIBLE_MUTANT_SPIDER -- 153
       or item == CollectibleType.COLLECTIBLE_CRICKETS_BODY -- 224
+      or item == CollectibleType.COLLECTIBLE_ISAACS_HEART -- 276
       or item == CollectibleType.COLLECTIBLE_DEAD_EYE -- 373
       or item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 331
       or item == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257

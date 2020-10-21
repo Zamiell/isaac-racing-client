@@ -85,7 +85,7 @@ function login() {
         } else {
             // The client has not yet begun to check for an update, so stall
             // However, sometimes this can be permanently null in production (maybe after an automatic update?),
-            // so allow them to procede after a while
+            // so allow them to proceed after a while
             const now = new Date().getTime();
             if (now - globals.timeLaunched < 10000) { // 10 seconds
                 setTimeout(() => {
@@ -157,7 +157,7 @@ function login() {
     request.done((data) => {
         data = data.trim();
         if (data === 'Accepted') {
-            // If the server gives us "Accepeted", then our Steam credentials are valid, but we don't have an account on the server yet
+            // If the server gives us "Accepted", then our Steam credentials are valid, but we don't have an account on the server yet
             // Let the user pick their username
             registerScreen.show();
         } else {

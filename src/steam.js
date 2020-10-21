@@ -46,7 +46,7 @@ function greenworksInit() {
     // Create the "steam_appid.txt" that Greenworks expects to find in:
     //   C:\Users\james\AppData\Local\Programs\RacingPlus\steam_appid.txt (in production)
     //   or
-    //   D:\Repositories\isaac-racing-client\steam_appid.txt (in development)
+    //   C:\Repositories\isaac-racing-client\steam_appid.txt (in development)
     // 570660 is the Steam app ID for The Binding of Isaac: Afterbirth+
     try {
         fs.writeFileSync('steam_appid.txt', '250900', 'utf8');
@@ -74,29 +74,29 @@ function greenworksInit() {
         The object will look something like the following:
         {
            "flags":{
-              "anonymous":false,
-              "anonymousGameServer":false,
-              "anonymousGameServerLogin":false,
-              "anonymousUser":false,
-              "chat":false,
-              "clan":false,
-              "consoleUser":false,
-              "contentServer":false,
-              "gameServer":false,
-              "individual":true,
-              "gameServerPersistent":false,
-              "lobby":false
+              "anonymous": false,
+              "anonymousGameServer": false,
+              "anonymousGameServerLogin": false,
+              "anonymousUser": false,
+              "chat": false,
+              "clan": false,
+              "consoleUser": false,
+              "contentServer": false,
+              "gameServer": false,
+              "individual": true,
+              "gameServerPersistent": false,
+              "lobby": false
            },
            "type":{
-              "name":"k_EAccountTypeIndividual",
-              "value":1
+              "name": "k_EAccountTypeIndividual",
+              "value": 1
            },
-           "accountId":33000000,
-           "steamId":"76561190000000000",
-           "staticAccountId":"76561190000000000",
-           "isValid":1,
-           "level":7,
-           "screenName":"Zamie"
+           "accountId": 33000000,
+           "steamId": "76561190000000000",
+           "staticAccountId": "76561190000000000",
+           "isValid": 1,
+           "level": 7,
+           "screenName": "Zamiel"
         }
     */
 

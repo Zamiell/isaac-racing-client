@@ -109,7 +109,6 @@ RacingPlus:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, EvaluateCache.Main) -- 8
 RacingPlus:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, PostPlayerInit.Main) -- 9
 RacingPlus:AddCallback(ModCallbacks.MC_USE_PILL, UsePill.Main) -- 10
 RacingPlus:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, PostCurseEval.Main) -- 12
-RacingPlus:AddCallback(ModCallbacks.MC_INPUT_ACTION, InputAction.Main) -- 13
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, PostGameStarted.Main) -- 15
 RacingPlus:AddCallback(ModCallbacks.MC_POST_GAME_END, Speedrun.PostGameEnd) -- 16
 RacingPlus:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, PostNewLevel.Main) -- 18
@@ -311,6 +310,33 @@ RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.Teleport, Card.CARD_JOK
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.BlackRune, Card.RUNE_BLACK) -- 41
 RacingPlus:AddCallback(ModCallbacks.MC_USE_CARD, UseCard.QuestionMark, Card.CARD_QUESTIONMARK) -- 48
 
+-- Define evaluate cache callbacks (8)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_EVALUATE_CACHE,
+  EvaluateCache.Damage,
+  CacheFlag.CACHE_DAMAGE -- 1
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_EVALUATE_CACHE,
+  EvaluateCache.ShotSpeed,
+  CacheFlag.CACHE_SHOTSPEED -- 4
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_EVALUATE_CACHE,
+  EvaluateCache.Range,
+  CacheFlag.CACHE_RANGE -- 8
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_EVALUATE_CACHE,
+  EvaluateCache.Speed,
+  CacheFlag.CACHE_SPEED -- 16
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_EVALUATE_CACHE,
+  EvaluateCache.Luck,
+  CacheFlag.CACHE_LUCK -- 1024
+)
+
 -- Define pill callbacks (10)
 RacingPlus:AddCallback(
   ModCallbacks.MC_USE_PILL,
@@ -378,6 +404,23 @@ RacingPlus:AddCallback(
   ModCallbacks.MC_ENTITY_TAKE_DMG,
   Season7.EntityTakeDmgRemoveArmor,
   EntityType.ENTITY_HUSH -- 407
+)
+
+-- Define input action callbacks (13)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_INPUT_ACTION, -- 13
+  InputAction.IsActionPressed,
+  InputHook.IS_ACTION_PRESSED -- 0
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_INPUT_ACTION, -- 13
+  InputAction.IsActionTriggered,
+  InputHook.IS_ACTION_TRIGGERED -- 1
+)
+RacingPlus:AddCallback(
+  ModCallbacks.MC_INPUT_ACTION, -- 13
+  InputAction.GetActionValue,
+  InputHook.GET_ACTION_VALUE -- 2
 )
 
 -- Define pre-use item callbacks (23)

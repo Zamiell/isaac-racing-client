@@ -5,16 +5,34 @@ local g = require("racing_plus/globals")
 
 -- ModCallbacks.MC_EVALUATE_CACHE (8)
 function EvaluateCache:Main(player, cacheFlag)
-  local cacheFunction = EvaluateCache.cacheFunctions[cacheFlag]
-  if cacheFunction ~= nil then
-    cacheFunction(player, cacheFlag)
-  end
-
   EvaluateCache:DebugStats(player, cacheFlag)
 end
 
+function EvaluateCache:DebugStats(player, cacheFlag)
+  if (
+    g.run.debugDamage
+    and cacheFlag == CacheFlag.CACHE_DAMAGE -- 1
+  ) then
+    player.Damage = 1000
+  end
+
+  if (
+    g.run.debugTears
+    and cacheFlag == CacheFlag.CACHE_FIREDELAY -- 2
+  ) then
+    player.MaxFireDelay = 3
+  end
+
+  if (
+    g.run.debugSpeed
+    and cacheFlag == CacheFlag.CACHE_SPEED -- 16
+  ) then
+    player.MoveSpeed = 2
+  end
+end
+
 -- CacheFlag.CACHE_DAMAGE (1)
-function EvaluateCache.Damage(player, cacheFlag)
+function EvaluateCache:Damage(player, cacheFlag)
   EvaluateCache:TechZeroBuild(player, cacheFlag)
 end
 
@@ -35,7 +53,7 @@ function EvaluateCache:TechZeroBuild(player, cacheFlag)
 end
 
 -- CacheFlag.CACHE_SHOTSPEED (4)
-function EvaluateCache.ShotSpeed(player, cacheFlag)
+function EvaluateCache:ShotSpeed(player, cacheFlag)
   EvaluateCache:CrownOfLight(player, cacheFlag) -- 415
 end
 
@@ -59,7 +77,7 @@ function EvaluateCache:CrownOfLight(player, cacheFlag)
 end
 
 -- CacheFlag.CACHE_RANGE (8)
-function EvaluateCache.Range(player, cacheFlag)
+function EvaluateCache:Range(player, cacheFlag)
   EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
 end
 
@@ -171,7 +189,7 @@ function EvaluateCache:ManageKeeperHeartContainers(player, cacheFlag)
 end
 
 -- CacheFlag.CACHE_SPEED (16)
-function EvaluateCache.Speed(player, cacheFlag)
+function EvaluateCache:Speed(player, cacheFlag)
   EvaluateCache:Magdalene(player, cacheFlag)
 end
 
@@ -188,7 +206,7 @@ function EvaluateCache:Magdalene(player, cacheFlag)
 end
 
 -- CacheFlag.CACHE_LUCK (1024)
-function EvaluateCache.Luck(player, cacheFlag)
+function EvaluateCache:Luck(player, cacheFlag)
   EvaluateCache:DadsLostCoinCustom(player, cacheFlag)
   EvaluateCache:PageantBoyRuleset(player, cacheFlag)
   EvaluateCache:ThirteenLuck(player, cacheFlag)
@@ -219,36 +237,5 @@ function EvaluateCache:ThirteenLuck(player, cacheFlag)
     player.Luck = 13
   end
 end
-
-function EvaluateCache:DebugStats(player, cacheFlag)
-  if (
-    g.run.debugDamage
-    and cacheFlag == CacheFlag.CACHE_DAMAGE -- 1
-  ) then
-    player.Damage = 1000
-  end
-
-  if (
-    g.run.debugTears
-    and cacheFlag == CacheFlag.CACHE_FIREDELAY -- 2
-  ) then
-    player.MaxFireDelay = 3
-  end
-
-  if (
-    g.run.debugSpeed
-    and cacheFlag == CacheFlag.CACHE_SPEED -- 16
-  ) then
-    player.MoveSpeed = 2
-  end
-end
-
-EvaluateCache.cacheFunctions = {
-  [CacheFlag.CACHE_DAMAGE] = EvaluateCache.Damage, -- 1
-  [CacheFlag.CACHE_SHOTSPEED] = EvaluateCache.ShotSpeed, -- 4
-  [CacheFlag.CACHE_RANGE] = EvaluateCache.Range, -- 8
-  [CacheFlag.CACHE_SPEED] = EvaluateCache.Speed, -- 16
-  [CacheFlag.CACHE_LUCK] = EvaluateCache.Luck, -- 1024
-}
 
 return EvaluateCache

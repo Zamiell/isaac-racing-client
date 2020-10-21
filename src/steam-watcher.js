@@ -54,7 +54,7 @@ function checkActiveUser() {
             return;
         }
 
-        // The active user is stored in the registry as a hexidecimal value, so we have to convert it to base 10
+        // The active user is stored in the registry as a hexadecimal value, so we have to convert it to base 10
         const activeUserDecimal = parseInt(item.value, 16);
 
         if (steamID !== activeUserDecimal) {

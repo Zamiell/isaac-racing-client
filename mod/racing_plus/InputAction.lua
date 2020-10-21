@@ -11,13 +11,8 @@ local Samael = require("racing_plus/samael")
 local SeededDeath = require("racing_plus/seededdeath")
 local Autofire = require("racing_plus/autofire")
 
--- ModCallbacks.MC_INPUT_ACTION (13)
-function InputAction:Main(entity, inputHook, buttonAction)
-  return InputAction.InputHookFunction[inputHook](buttonAction)
-end
-
 -- InputHook.IS_ACTION_PRESSED (0)
-function InputAction.IsActionPressed(buttonAction)
+function InputAction:IsActionPressed(entity, inputHook, buttonAction)
   local actionPressedFunction = InputAction.IsActionPressedFunction[buttonAction]
   if actionPressedFunction ~= nil then
     return actionPressedFunction()
@@ -25,7 +20,7 @@ function InputAction.IsActionPressed(buttonAction)
 end
 
 -- InputHook.IS_ACTION_TRIGGERED (1)
-function InputAction.IsActionTriggered(buttonAction)
+function InputAction:IsActionTriggered(entity, inputHook, buttonAction)
   local actionTriggeredFunction = InputAction.IsActionTriggeredFunction[buttonAction]
   if actionTriggeredFunction ~= nil then
     return actionTriggeredFunction()
@@ -33,7 +28,7 @@ function InputAction.IsActionTriggered(buttonAction)
 end
 
 -- InputHook.GET_ACTION_VALUE (2)
-function InputAction.GetActionValue(buttonAction)
+function InputAction:GetActionValue(entity, inputHook, buttonAction)
   local actionValueFunction = InputAction.GetActionValueFunction[buttonAction]
   if actionValueFunction ~= nil then
     -- We pass the buttonAction because the child functions need to know what specific button was
@@ -41,12 +36,6 @@ function InputAction.GetActionValue(buttonAction)
     return actionValueFunction(buttonAction)
   end
 end
-
-InputAction.InputHookFunction = {
-  [InputHook.IS_ACTION_PRESSED] = InputAction.IsActionPressed, -- 0
-  [InputHook.IS_ACTION_TRIGGERED] = InputAction.IsActionTriggered, -- 1
-  [InputHook.GET_ACTION_VALUE] = InputAction.GetActionValue, -- 2
-}
 
 --
 -- InputHook.IS_ACTION_PRESSED (0)

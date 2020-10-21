@@ -4,7 +4,7 @@ local g = {}
 -- Global variables
 --
 
-g.version = "v0.55.12"
+g.version = "v0.55.13"
 g.debug = false
 g.corrupted = false -- Checked in the MC_POST_GAME_STARTED callback
 g.invalidItemsXML = false -- Checked in the MC_POST_GAME_STARTED callback
@@ -230,7 +230,6 @@ g.RoomTransition = {
 }
 
 g.FadeoutTarget = {
-  -- -1 and lower result in a black screen
   FADEOUT_FILE_SELECT = 0,
   FADEOUT_MAIN_MENU = 1,
   FADEOUT_TITLE_SCREEN = 2,

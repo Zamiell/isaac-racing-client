@@ -303,10 +303,11 @@ function PostGameStarted:CheckNotFullyUnlockedSave()
     if SinglePlayerCoopBabies ~= nil then
       neededActiveItem = g.saveFile.activeItem2
       neededPassiveItem = g.saveFile.passiveItem2
-    elseif RacingPlusRebalanced ~= nil then
+    elseif RacingPlusRebalancedVersion ~= nil then
       neededActiveItem = g.saveFile.activeItem3
       neededPassiveItem = g.saveFile.passiveItem3
       g.saveFile.fullyUnlocked = true -- Debug
+      Isaac.DebugString("DEBUG - Racing+ Rebalanced detected.")
     end
 
     local string = "Error: On seed \"" .. tostring(g.saveFile.seed) .. "\", Eden needs "
@@ -444,7 +445,7 @@ function PostGameStarted:Character()
   if character == PlayerType.PLAYER_MAGDALENA then -- 1
     -- Identify the pill so that we will know what it is later on in the run
     -- Racing+ Rebalanced has custom pill effects
-    if RacingPlusRebalanced == nil then
+    if RacingPlusRebalancedVersion == nil then
       g.itemPool:IdentifyPill(pillColor)
       UsePill:UsedNewPill(pillColor, PillEffect.PILLEFFECT_SPEED_UP) -- 14
     end

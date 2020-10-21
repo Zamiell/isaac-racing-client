@@ -43,7 +43,7 @@ function Pills:PostRender()
     end
   end
   local totalPillsInPool = 13
-  if RacingPlusRebalanced ~= nil then
+  if RacingPlusRebalancedVersion ~= nil then
     totalPillsInPool = 4
   end
   local string = (

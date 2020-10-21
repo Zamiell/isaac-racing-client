@@ -319,7 +319,7 @@ function PostEntityKill:Fallen(entity)
   data.killedFrame = gameFrameCount
 
   -- Krampus does not drop items in Racing+ Rebalanced
-  if RacingPlusRebalanced ~= nil then
+  if RacingPlusRebalancedVersion ~= nil then
     return
   end
 

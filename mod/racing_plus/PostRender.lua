@@ -917,13 +917,13 @@ function PostRender:DrawVersion()
   y = y + 15
   Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
-  if RacingPlusRebalanced ~= nil then
+  if RacingPlusRebalancedVersion ~= nil then
     text = "Racing+ Rebalanced"
     x = center.X - 3 * #text
     y = y + 15
     Isaac.RenderText(text, x, y, 2, 2, 2, 2)
 
-    text = RacingPlusRebalanced.version
+    text = RacingPlusRebalancedVersion
     x = center.X - 3 * #text
     y = y + 15
     Isaac.RenderText(text, x, y, 2, 2, 2, 2)

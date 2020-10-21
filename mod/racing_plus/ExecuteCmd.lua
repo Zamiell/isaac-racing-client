@@ -8,6 +8,7 @@ local Speedrun = require("racing_plus/speedrun")
 local SpeedrunPostUpdate = require("racing_plus/speedrunpostupdate")
 local SeededFloors = require("racing_plus/seededfloors")
 local ShadowClient = require("racing_plus/shadowclient")
+local Season9 = require("racing_plus/season9")
 
 local function console(msg)
   Isaac.ConsoleOutput(msg .. "\n")
@@ -27,7 +28,7 @@ function ExecuteCmd:Main(cmd, params)
   if executeCmdFunc ~= nil then
     executeCmdFunc(params)
   else
-    console("Unknown command.\n")
+    console("Unknown command.")
   end
 end
 
@@ -298,7 +299,7 @@ function ExecuteCmd:Commands()
   end
   table.sort(commands)
 
-  console("List of Racing+ custom commands:\n")
+  console("List of Racing+ custom commands:")
   for _, commandName in ipairs(commands) do
     console(commandName .. " ")
   end
@@ -354,7 +355,7 @@ ExecuteCmd.functions["doors"] = function(params)
     if door ~= nil then
       console(
         "Door " .. tostring(i) .. " - "
-        .. "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")\n"
+        .. "(" .. tostring(door.Position.X) .. ", " .. tostring(door.Position.Y) .. ")"
       )
     end
   end
@@ -598,6 +599,21 @@ function ExecuteCmd:Schoolbag(params)
   end
 
   Schoolbag:Put(item, "max")
+end
+
+ExecuteCmd.functions["setbuild"] = function(params)
+  if params == "" then
+    console("You must specify a build index.")
+  end
+
+  local num = ExecuteCmd:ValidateNumber(params)
+  if num == nil then
+    return
+  end
+
+  Season9.setBuild = num
+  Season9.timeBuildAssigned = 0
+  Isaac.DebugString("Set the Season 9 build to: " .. tostring(Season9.setBuild))
 end
 
 ExecuteCmd.functions["shadow"] = function(params)

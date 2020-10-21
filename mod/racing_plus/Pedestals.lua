@@ -36,7 +36,6 @@ function Pedestals:Replace(pickup)
     gameFrameCount == g.run.usedD6Frame + 1
     and gameFrameCount == g.run.usedVoidFrame + 1
   ) then
-
     -- Account for the Butter trinket
     if (
       g.p:HasTrinket(TrinketType.TRINKET_BUTTER) -- 122
@@ -72,6 +71,13 @@ function Pedestals:Replace(pickup)
         -- This is too long, so shorten it
         pickup.Wait = 15
       end
+
+      -- We set the state to 1 when we have replaced it
+      -- If we are re-entering a room, the pedestal state might be back to 0, so change it if so
+      if pickup.State == 0 then
+        pickup.State = 1
+      end
+
       return
     end
   end

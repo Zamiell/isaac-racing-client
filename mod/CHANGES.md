@@ -124,6 +124,7 @@ While there are thousands of rooms in the game, many players have already seen t
 * All pills can now be used to cancel pedestal pickup animations.
 * The door to Hush is now automatically opened.
 * The devil statue will be faded if there is an item pedestal hiding behind it.
+* There is now a sound effect when a Walnut or a Wishbone breaks.
 
 ### Cutscene & Animation Removal
 
