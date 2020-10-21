@@ -715,6 +715,9 @@ function PostNewRoom:BanB1CurseRoom()
       Isaac.DebugString("Removed the Curse Room door on B1.")
     end
   end
+  if roomIndex == nil then
+    return
+  end
 
   -- Delete the icon on the minimap
   -- (this has to be done on every room, because it will reappear)

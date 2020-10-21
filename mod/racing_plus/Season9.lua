@@ -114,7 +114,8 @@ function Season9:PostGameStarted()
 
   -- Character-specific items
   if character == PlayerType.PLAYER_ISAAC then -- 0
-    Schoolbag:Put(CollectibleType.COLLECTIBLE_CLOCKWORK_ASSEMBLY, 12)
+    local clockWorkAssembly = Isaac.GetItemIdByName("Clockwork Assembly")
+    Schoolbag:Put(clockWorkAssembly, 12)
   elseif character == PlayerType.PLAYER_JUDAS then -- 3
     g.p:AddHearts(1)
   elseif character == PlayerType.PLAYER_XXX then -- 4

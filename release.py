@@ -1,3 +1,5 @@
+#!/c/Python38/python.exe
+
 """ This is the script that compiles and builds the Racing+ client. """
 
 # Standard imports
