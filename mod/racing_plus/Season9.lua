@@ -244,6 +244,7 @@ function Season9:BuildIsBannedOnThisCharacter(buildIndex)
       or item == CollectibleType.COLLECTIBLE_DEAD_EYE -- 373
       or item == CollectibleType.COLLECTIBLE_JUDAS_SHADOW -- 331
       or item == CollectibleType.COLLECTIBLE_FIRE_MIND -- 257
+      or item == CollectibleType.COLLECTIBLE_GODHEAD -- 331
       or item == CollectibleType.COLLECTIBLE_JACOBS_LADDER -- 494
     ) then
       return true
