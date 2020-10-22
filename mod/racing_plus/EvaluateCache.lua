@@ -39,8 +39,11 @@ end
 function EvaluateCache:TechZeroBuild(player, cacheFlag)
   if (
     g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_TECHNOLOGY_ZERO) -- 524
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECHNOLOGY_ZERO) -- 524
     and g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_POP) -- 529
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_POP) -- 529
     and g:TableContains(g.race.startingItems, CollectibleType.COLLECTIBLE_CUPIDS_ARROW) -- 48
+    and g.p:HasCollectible(CollectibleType.COLLECTIBLE_CUPIDS_ARROW) -- 48
     and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_KNIFE) -- 114
     and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_TECH_X) -- 395
     and not g.p:HasCollectible(CollectibleType.COLLECTIBLE_EPIC_FETUS) -- 168

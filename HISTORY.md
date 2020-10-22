@@ -1,5 +1,10 @@
 # Racing+ Version History and News
 
+### *v0.55.17* - October 21st, 2020
+
+* In season 9, it is no longer possible to start with Godhead as Azazel.
+* Fixed the bug where the damage penalty from the Technology Zero build would apply when you were dead. (Thanks Po4ti)
+
 ### *v0.55.15* - October 21st, 2020
 
 * [R+7 Season 9](https://github.com/Zamiell/isaac-racing-client/blob/master/mod/CHANGES-CHALLENGES.md#r7-season-8-the-shared-item-pool-season) is now released for beta testing.
