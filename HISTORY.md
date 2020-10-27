@@ -1,8 +1,8 @@
 # Racing+ Version History and News
 
-### *v0.55.17* - October 21st, 2020
+### *v0.55.17* - October 22nd, 2020
 
-* In season 9, it is no longer possible to start with Godhead as Azazel.
+* In season 9, it is no longer possible to start with Godhead as Azazel. (Thanks Adrayon)
 * Fixed the bug where the damage penalty from the Technology Zero build would apply when you were dead. (Thanks Po4ti)
 
 ### *v0.55.15* - October 21st, 2020

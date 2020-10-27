@@ -298,6 +298,9 @@ function Pedestals:Replace(pickup)
     newPedestal.Charge = pickup.Charge
   end
 
+  -- If we don't do this, then mods that manually update the price of items will fail
+  newPedestal.AutoUpdatePrice = pickup.AutoUpdatePrice
+
   -- If we don't do this, shop and Devil Room items will become automatically bought
   newPedestal.Price = pickup.Price
 
@@ -310,6 +313,13 @@ function Pedestals:Replace(pickup)
 
   -- If we don't do this, you can take both of the pedestals in a double Treasure Room
   newPedestal.TheresOptionsPickup = pickup.TheresOptionsPickup
+
+  -- Copy over the old mod data
+  local oldData = pickup:GetData()
+  local newData = newPedestal:GetData()
+  for key, value in pairs(oldData) do
+    newData[key] = value
+  end
 
   -- The pedestal might be from a chest or machine, so we need to copy the overlay frame
   if pickup.Price == 0 then
@@ -346,9 +356,6 @@ function Pedestals:Replace(pickup)
     -- Another mod has modified the state of this pedestal; make it persist over to the new pedestal
     newPedestal.State = pickup.State
   end
-
-  -- If we don't do this, then mods that manually update the price of items will fail
-  newPedestal.AutoUpdatePrice = pickup.AutoUpdatePrice
 
   -- We probably need to add this item to the tracking table,
   -- but first check to see if it is already there
