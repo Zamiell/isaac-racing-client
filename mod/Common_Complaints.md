@@ -88,7 +88,7 @@ Certainly, having the D6 makes the game easier, but there is a pretty good reaso
 
 The mod removes all curses.
 
-At first glance, turning curses off clearly makes the game easier. But when we go into the nitty-gritty details and examine each curse, none of them actually make the game more skill-based or improves gameplay. One example of a potentially-well-designed curse would be something like a Curse of Double Damage - skilled players would be able to adjust and play more defensively in order to mitigate the effects. But none of the curses in the game really function in this way. Rather, they largely rob the player of autonomy and decision making. While Isaac is generally considered extremely well-designed, we feel that the curse system is one of Edmund's major blunders, especially when viewing the game in a competitive context.
+At first glance, turning curses off clearly makes the game easier. But when we go into the nitty-gritty details and examine each curse, none of them actually make the game more skill-based or improves gameplay. One example of a potentially-well-designed curse would be something like a Curse of Double Damage - skilled players would be able to adjust and play more defensively in order to mitigate the effects. But none of the actual curses in the game really function in this way. Rather, they largely rob the player of autonomy and decision making. While Isaac is generally considered extremely well-designed, we feel that the curse system is one of Edmund's major blunders, especially when viewing the game in a competitive context.
 
 #### 3) Devil Deals and Angel Deals
 
