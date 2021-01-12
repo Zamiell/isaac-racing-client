@@ -53,6 +53,7 @@ Some gameplay-related bugs are not fixable due to the limitations of the Afterbi
 * Reviving with Magic Mushroom bugs out the screen. (Reported by thisguyisbarry)
 * Being a ghost while Mega Blast is active will show the animation playing but the blast itself will be removed.
 * Being a ghost will prevent Brimstone-style lasers from firing. (Reported by Xelnas)
+* Reviving with Experimental Treatment will give you different stats. (Reported by sisuka)
 * The following pills will cause the player to become unfaded:
   * Health Up (7)
   * Range Up (12)
