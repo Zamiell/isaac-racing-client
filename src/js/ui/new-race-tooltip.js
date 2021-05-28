@@ -31,7 +31,25 @@ const characterArray = [
     'Keeper', // 12
     'Apollyon', // 13
     'The Forgotten', // 14
-    'Samael', // 15
+    'Bethany', // 15
+    'Jacob and Esau', //16
+    'Tainted Isaac', // 17
+    'Tainted Magdalene', // 18
+    'Tainted Cain', // 19
+    'Tainted Judas', // 20
+    'Tainted ???', // 21
+    'Tainted Eve', // 22
+    'Tainted Samson', // 23
+    'Tainted Azazel', // 24
+    'Tainted Lazarus', // 25
+    'Tainted Eden', // 26
+    'Tainted Lost', // 27
+    'Tainted Lilith', // 28
+    'Tainted Keeper', // 29
+    'Tainted Apollyon', // 30
+    'Tainted Forgotten', // 31
+    'Tainted Bethany', // 32
+    'Tainted Jacob', // 33
     'Random Baby', // 16
 ];
 
