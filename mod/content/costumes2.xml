@@ -1,4 +1,0 @@
-﻿<costumes anm2root="gfx/characters/">
-	<costume anm2path="samaelhood.anm2" priority="99" type="none" />
-	<costume anm2path="samaelcloak.anm2" priority="99" type="none" />
-</costumes>

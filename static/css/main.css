@@ -1,0 +1,1113 @@
+body {
+  background-attachment: scroll, fixed;
+  background-color: #666;
+  background-image: url("../img/overlay.png"), url("../img/banner.jpg");
+  background-position: top left, center center;
+  background-repeat: repeat, no-repeat;
+  background-size: auto, cover;
+  height: 100vh;
+}
+
+#page-wrapper {
+  position: absolute;
+  top: 3.25em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  overflow: auto;
+}
+
+.hotkey-indicator {
+  color: #ccddff;
+}
+
+.hidden {
+  display: none;
+}
+
+.selectable {
+  user-select: auto;
+}
+
+.padding0p5 {
+  padding-bottom: 0.5em;
+}
+
+.padding1 {
+  padding-bottom: 1em;
+}
+
+.padding1p5 {
+  padding-bottom: 1.5em;
+}
+
+.padding2 {
+  padding-bottom: 2em;
+}
+
+.padding2p5 {
+  padding-bottom: 2.5em;
+}
+
+.padding3 {
+  padding-bottom: 3em;
+}
+
+.hpadding1p5 {
+  padding-right: 1.5em;
+}
+
+.hpadding5 {
+  padding-right: 5em;
+}
+
+.button.small {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.underline {
+  border-bottom: 1px solid #e4886a;
+}
+
+/*
+  Header
+*/
+
+.drag {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.header-links {
+  -moz-transition: color 0.2s ease-in-out;
+  -webkit-transition: color 0.2s ease-in-out;
+  -ms-transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.header-links:hover {
+  color: rgba(255, 255, 255, 0.625) !important;
+}
+
+.header-links:active {
+  color: rgba(255, 255, 255, 0.375) !important;
+}
+
+.header-button-icons {
+  position: relative;
+  top: 1px;
+  right: 4px;
+}
+
+.header-window-buttons {
+  cursor: pointer;
+  margin: 0 0 0 0 !important;
+  padding: 0 0.375em 0 0.375em !important;
+}
+
+.header-window-buttons:hover {
+  color: rgba(153, 153, 153, 0.75) !important;
+}
+
+.header-window-buttons:active {
+  color: rgba(153, 153, 153, 0.25) !important;
+}
+
+#header-minimize-icon {
+  position: relative;
+  top: 4px;
+}
+
+/*
+  Title
+*/
+
+#title {
+  font-size: 16pt !important;
+}
+
+#title-subtitle {
+  margin-bottom: 0.5em !important;
+}
+
+#title-image {
+  max-width: 35%;
+  height: auto;
+  width: auto;
+}
+
+.selected-language {
+  font-weight: bolder;
+}
+
+.unselected-language {
+  cursor: pointer;
+}
+
+.selected-color {
+  font-weight: bolder;
+}
+
+.unselected-color {
+  cursor: pointer;
+}
+
+#title-ajax {
+  width: 56px;
+  height: 56px;
+  transform: scale(0.5);
+  margin: auto;
+  text-align: center;
+  padding-bottom: 8em;
+  padding-right: 6.5em;
+}
+
+.title-button-icons {
+  position: relative;
+  top: 1px;
+}
+
+#title-error {
+  display: none;
+  margin-bottom: 2em;
+  padding: 0.75em 1em 0.75em 1em;
+  background-color: #ffb3b3;
+  border-radius: 6px;
+  border: 1px solid #ff6666;
+  color: black;
+  font-size: 0.75em;
+}
+
+#title-version {
+  float: center;
+  text-align: center;
+}
+
+/*
+  Tutorial
+*/
+
+#tutorial1 {
+  font-size: 16pt !important;
+  margin: 0 2.5em 0 2.5em;
+}
+
+#tutorial2 {
+  font-size: 16pt !important;
+  margin: 0 2.5em 0 2.5em;
+}
+
+/*
+  Login
+*/
+
+#login {
+  font-size: 16pt !important;
+}
+
+#login-title {
+  margin-left: -3.5em;
+}
+
+#login-form {
+  margin: 0 0 0 0;
+}
+
+#login-ajax {
+  display: none;
+  position: relative;
+  bottom: 15px;
+  right: 5px;
+  width: 56px;
+  height: 56px;
+  transform: scale(0.3);
+}
+
+#login-error {
+  display: none;
+  margin-bottom: 2em;
+  padding: 0.75em 1em 0.75em 1em;
+  background-color: #ffb3b3;
+  border-radius: 6px;
+  border: 1px solid #ff6666;
+  color: black;
+  font-size: 0.75em;
+}
+
+#login-remember-checkbox-label {
+  position: relative;
+  top: 0.2em;
+}
+
+/*
+  Forgot Password
+*/
+
+#forgot {
+  display: none;
+  font-size: 16pt !important;
+}
+
+#forgot-title {
+  margin-left: -3.5em;
+}
+
+#forgot-form {
+  margin: 0 0 0 0;
+}
+
+#forgot-ajax {
+  display: none;
+  position: relative;
+  bottom: 15px;
+  right: 5px;
+  width: 56px;
+  height: 56px;
+  transform: scale(0.3);
+}
+
+#forgot-success {
+  display: none;
+  margin-bottom: 2em;
+  padding: 0.75em 1em 0.75em 1em;
+  background-color: #c2f0c2;
+  border-radius: 6px;
+  border: 1px solid #85e085;
+  color: black;
+  font-size: 0.75em;
+}
+
+#forgot-error {
+  display: none;
+  margin-bottom: 2em;
+  padding: 0.75em 1em 0.75em 1em;
+  background-color: #ffb3b3;
+  border-radius: 6px;
+  border: 1px solid #ff6666;
+  color: black;
+  font-size: 0.75em;
+}
+
+/*
+  Register
+*/
+
+#register {
+  display: none;
+  font-size: 16pt !important;
+}
+
+#register-title {
+  margin-left: -3.5em;
+}
+
+#register-form {
+  margin: 0 0 0 0;
+}
+
+.register-note {
+  padding-top: 1.5em !important;
+}
+
+#register-ajax {
+  display: none;
+  position: relative;
+  bottom: 15px;
+  right: 5px;
+  width: 56px;
+  height: 56px;
+  transform: scale(0.3);
+}
+
+#register-submit {
+  position: relative;
+  top: 0.15em;
+}
+
+#register-error {
+  display: none;
+  margin-bottom: 2em;
+  padding: 0.75em 1em 0.75em 1em;
+  background-color: #ffb3b3;
+  border-radius: 6px;
+  border: 1px solid #ff6666;
+  color: black;
+  font-size: 0.75em;
+}
+
+#register-languages {
+  float: center;
+  margin-bottom: 0;
+}
+
+#register-color-mode {
+  float: center;
+  margin-bottom: 0;
+}
+
+/*
+  Updating
+*/
+
+#updating-title {
+  margin-left: -3.5em;
+}
+
+#updating-ajax {
+  position: relative;
+  bottom: 15px;
+  right: 5px;
+  width: 56px;
+  height: 56px;
+  transform: scale(0.3);
+}
+
+/*
+  Chat
+*/
+
+.chat-box {
+  margin: 0 0 0 1.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+}
+
+.chat-emote {
+  height: 1.6em; /* This is derived from how Twitch does it */
+}
+
+.chat-pm {
+  color: red;
+}
+
+.chat-server {
+  color: blue;
+}
+
+.chat-discord {
+  color: blue;
+}
+
+.chat-text {
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  height: 13em;
+  border-style: solid !important;
+  border-color: #e5e5e5 !important;
+  border: 1px;
+  margin-bottom: 1em;
+  padding: 0 0.5em 0 0.5em;
+}
+
+/*
+  Lobby (races)
+*/
+
+#lobby-current-races-box {
+  margin: 1.5em 1.5em 1.5em 1.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+}
+
+#lobby-current-races-table-wrapper {
+  height: 12.5em;
+  overflow-y: auto;
+}
+
+#lobby-current-races-table {
+  display: none;
+  margin: 0;
+}
+
+#lobby-current-races-table > tbody > tr > td {
+  padding: 0.25em 0.75em;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+}
+
+.lobby-race-row-open {
+  -moz-transition: background-color 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  -ms-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.lobby-race-row-open:hover {
+  background-color: #dce2ef;
+}
+
+/* This is column 1 of the lobby races table */
+.lobby-current-races-name {
+  width: 11em;
+  max-width: 11em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* This is column 2 of the lobby races table */
+.lobby-current-races-status {
+  /*text-align: center;*/ /* If centered, it moves the circle on status change, which is disorientating */
+  width: 7em;
+  max-width: 7em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.lobby-current-races-open {
+  background: green;
+}
+
+.lobby-current-races-starting {
+  background: blue;
+}
+
+.lobby-current-races-in-progress {
+  background: orange;
+}
+
+.lobby-current-races-finished {
+  background: white;
+  border: solid 1px black;
+}
+
+/* This is the old column 3 of the lobby races table */
+.lobby-current-races-type {
+  width: 9.9em;
+  max-width: 9.9em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.lobby-current-races-type-icon {
+  display: inline-block;
+  position: relative;
+  bottom: 1.4em;
+  right: 0.35em;
+}
+
+.lobby-current-races-size-icon {
+  width: 1.5em;
+  display: inline-block;
+  position: relative;
+}
+
+.lobby-current-races-ranked {
+  background-image: url("../img/types/ranked.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+  transform: scale(0.85);
+}
+
+.lobby-current-races-unranked {
+  background-image: url("../img/types/unranked.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+  transform: scale(0.75);
+}
+
+/* This is column 4 of the lobby races table */
+.lobby-current-races-format {
+  width: 4.6em;
+  max-width: 4.6em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.lobby-current-races-format-icon {
+  display: inline-block;
+  position: relative;
+  bottom: 1.4em;
+  right: 0.35em;
+}
+
+.lobby-current-races-unseeded {
+  background-image: url("../img/formats/unseeded.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+}
+
+.lobby-current-races-seeded {
+  background-image: url("../img/formats/seeded.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+}
+
+.lobby-current-races-diversity {
+  background-image: url("../img/formats/diversity.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+  transform: scale(0.75);
+}
+
+.lobby-current-races-custom {
+  background-image: url("../img/formats/custom.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2.1em;
+  width: 2em;
+  position: absolute;
+}
+
+/* This is column 5 of the lobby races table */
+.lobby-current-races-size {
+  width: 2.25em;
+  max-width: 2.25em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* This is column 6 of the lobby races table */
+.lobby-current-races-racers {
+  width: 15em;
+  max-width: 15em; /* 16 is too high and causes overflows when there are 5 races or more */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.lobby-current-races-spacing {
+  display: inline-block;
+  width: 1.85em;
+}
+
+.lobby-current-races-format-li {
+  margin-bottom: 0.5em;
+}
+
+/*
+  Lobby (users)
+*/
+
+#lobby-users-container {
+  padding-left: 1em;
+}
+
+#lobby-users-box {
+  margin: 0 1.5em 0 0.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+}
+
+.users-users {
+  overflow-y: auto;
+  height: 14.9em;
+  max-width: 10em;
+  border-style: solid !important;
+  border-color: #e5e5e5 !important;
+  border: 1px;
+  padding: 0 0.5em 0 0.5em;
+}
+
+.users-user {
+  cursor: pointer;
+}
+
+.users-user:hover {
+  font-weight: bolder;
+}
+
+#user-click-tooltip {
+  padding: 0 0 0 0;
+}
+
+#user-click-tooltip > div > div > button {
+  margin-bottom: 0;
+}
+
+/*
+  New race tooltip
+*/
+
+#new-race-tooltip {
+  padding: 2em 2em 2em 2em;
+}
+
+#new-race-form {
+  margin: 0 0 0 0;
+}
+
+#new-race-title {
+  width: 22em;
+}
+
+#new-race-title-error {
+  color: red;
+}
+
+.new-race-note {
+  padding-top: 2em !important;
+}
+
+.new-race-randomize {
+  padding-top: 1.5em !important;
+}
+
+.new-race-size-icon-container {
+  position: absolute;
+}
+
+.new-race-toggle-row-container {
+  position: relative;
+  height: 4.4em;
+}
+
+.new-race-toggle-row-container > .row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.new-race-toggle-row-container > #new-race-ranked-row {
+  padding-top: 1em;
+}
+
+#new-race-size-icon-solo-i {
+  position: relative;
+  bottom: 0.2em;
+  left: 0.35em;
+}
+
+#new-race-size-icon-multiplayer-i {
+  position: relative;
+  bottom: 0.2em;
+  left: 0.20em;
+}
+
+#new-race-difficulty-icon-i {
+  position: relative;
+  bottom: 0.2em;
+  left: 0.35em;
+}
+
+.new-race-radio-label {
+  position: relative;
+  bottom: 0.35em;
+}
+
+.new-race-radio-text {
+  position: relative;
+  top: 0.3em;
+}
+
+.new-race-icon {
+  width: 38px;
+  height: 52px !important;
+  min-height: 52px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#new-race-password-no-password-icon > .fa,
+#new-race-password-has-password-icon > .fa {
+  position: relative;
+  bottom: -0.3em;
+  left: 0.4em;
+}
+
+#new-race-ranked-icon {
+  -moz-transition: background-image 0.3s ease-in-out;
+  -webkit-transition: background-image 0.3s ease-in-out;
+  -ms-transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.3s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  display: inline-block;
+  height: 1.75em; /* 3em */
+  width: 3em;
+  position: relative;
+  bottom: 8px;
+}
+
+#new-race-format {
+  -moz-transition: border 0.3s ease-in-out;
+  -webkit-transition: border 0.3s ease-in-out;
+  -ms-transition: border 0.3s ease-in-out;
+  transition: border 0.3s ease-in-out;
+}
+
+#new-race-format-icon {
+  -moz-transition: background-image 0.3s ease-in-out;
+  -webkit-transition: background-image 0.3s ease-in-out;
+  -ms-transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.3s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  display: inline-block;
+  height: 3em;
+  width: 3em;
+  position: relative;
+  bottom: 13px; /* 3em = 53px, height of dice = 27px, 53px - 27px = 26px, 26px / 2 = 13px */
+  transform: scale(1.25);
+}
+
+#new-race-character-icon {
+  -moz-transition: background-image 0.3s ease-in-out;
+  -webkit-transition: background-image 0.3s ease-in-out;
+  -ms-transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.3s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: bottom center; /* using bottom since the characters have different size hair */
+  display: inline-block;
+  height: 3em;
+  width: 3em;
+  position: relative;
+  bottom: 10px; /* 3em = 53px, height of Isaac = 33px, 53px - 33px = 20px, 20px / 2 = 10px */
+}
+
+#new-race-goal {
+  -moz-transition: border 0.3s ease-in-out;
+  -webkit-transition: border 0.3s ease-in-out;
+  -ms-transition: border 0.3s ease-in-out;
+  transition: border 0.3s ease-in-out;
+}
+
+#new-race-goal-icon {
+  -moz-transition: background-image 0.3s ease-in-out;
+  -webkit-transition: background-image 0.3s ease-in-out;
+  -ms-transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.3s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  display: inline-block;
+  height: 3em;
+  width: 3em;
+  position: relative;
+  bottom: 12px; /* 3em = 53px, height of chest = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
+}
+
+#new-race-starting-build-icon {
+  -moz-transition: background-image 0.3s ease-in-out;
+  -webkit-transition: background-image 0.3s ease-in-out;
+  -ms-transition: background-image 0.3s ease-in-out;
+  transition: background-image 0.3s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  display: inline-block;
+  height: 3em;
+  width: 3em;
+  position: relative;
+  bottom: 14px; /* manually found the right value */
+  transform: scale(1.25);
+}
+
+#new-race-starting-build-padding {
+  height: 4.2em;
+}
+
+#new-race-submit-button-icon {
+  position: relative;
+  right: 12px;
+}
+
+/*
+  Settings tooltip
+*/
+
+.checkbox-text {
+  position: relative;
+  top: 0.25em;
+}
+
+#settings-tooltip {
+  padding: 2em 2em 2em 2em;
+}
+
+#settings-form {
+  margin-bottom: 0;
+}
+
+#settings-username {
+  font-weight: bolder;
+}
+
+#settings-log-out {
+  position: relative;
+  bottom: 0.5em;
+  right: 0.75em;
+}
+
+#settings-version {
+  font-weight: bolder;
+}
+
+#settings-language {
+  width: 9em;
+  background: #f8f8f8;
+}
+
+#settings-color-mode {
+  width: 9em;
+  background: #f8f8f8;
+}
+
+#settings-volume-slider-value {
+  width: 3em;
+}
+
+#settings-username-capitalization {
+  width: 10em;
+}
+
+#settings-stream-url {
+  width: 20em;
+}
+
+#settings-stream-url-error {
+  color: red;
+}
+
+/* Necessary so that the checkbox is in line with the delay text box */
+#settings-enable-twitch-bot-checkbox-container {
+  position: relative;
+  top: 0.25em;
+}
+
+#settings-enable-twitch-bot-checkbox-tooltip {
+  text-align: center;
+  line-height: 1.5;
+}
+
+#settings-twitch-bot-delay {
+  width: 5em;
+}
+
+#settings-twitch-bot-delay-error {
+  color: red;
+}
+
+/*
+  Race (title table)
+*/
+
+#race-title-box {
+  margin: 1.5em 0 1.5em 1.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+  height: 15em;
+  text-align: center;
+}
+
+#race-title-table {
+  margin: 0;
+}
+
+#race-title-table th {
+  text-align: center;
+}
+
+#race-title-table > tbody > tr > td {
+  padding: 0.25em 0.75em;
+}
+
+.race-title-icon-container {
+  position: relative;
+  display: inline-block;
+  bottom: 1.35em;
+  right: 1.4em;
+}
+
+.race-title-icon {
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2em;
+  width: 3em;
+  position: absolute;
+}
+
+#race-title-items {
+  width: 6em;
+}
+
+.race-title-items-icon-blind {
+  background-image: url("../img/items/questionmark.png");
+}
+
+/*
+  The next 3 are used for diversity items
+*/
+
+.race-title-icon-container1 {
+  position: relative;
+  display: inline-block;
+  bottom: 1.35em;
+  right: 2.9em;
+}
+
+.race-title-icon-container2 {
+  position: relative;
+  display: inline-block;
+  bottom: 1.35em;
+  right: 1.4em;
+}
+
+.race-title-icon-container3 {
+  position: relative;
+  display: inline-block;
+  bottom: 1.35em;
+  right: -0.1em;
+}
+
+/*
+  Race (title controls)
+*/
+
+#race-title-controls-container {
+  margin-top: 1.2em;
+  font-size: 1.25em;
+}
+
+#race-ready-checkbox-text {
+  position: relative;
+  top: 0.2em;
+}
+
+#race-countdown {
+  position: relative;
+}
+
+#race-quit-button-container {
+  padding: 0 0 0 0;
+}
+
+#race-num-left {
+  margin: 0 0 0 0;
+}
+
+/*
+  Race (participants)
+*/
+
+#race-participants-box {
+  margin: 1.5em 0 1.5em 1.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+}
+
+#race-participants-table-wrapper {
+  height: 16.5em;
+  overflow-y: auto;
+}
+
+#race-participants-table {
+  margin: 0;
+}
+
+#race-participants-table > tbody > tr > td {
+  padding: 0.25em 0.75em;
+}
+
+.race-participants-table-item {
+  text-align: center;
+}
+
+.race-participants-table-starting-item-icon-container {
+  position: relative;
+  display: inline-block;
+  bottom: 1.35em;
+  right: 1.4em;
+}
+
+.race-participants-table-starting-item-icon {
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: inline-block;
+  height: 2em;
+  width: 3em;
+  position: absolute;
+}
+
+.race-participants-table-self-row {
+background-color: #cce6ff !important;
+}
+
+/*
+  Race (chat)
+*/
+
+#race-chat-container {
+  padding-left: 1em;
+}
+
+#race-chat-box {
+  margin: 1.5em 1.5em 1.5em 0.5em;
+  padding: 1em 1em 1em 1em; /* Default is 3em */
+  height: 35em;
+  overflow-y: auto;
+}
+
+#race-chat-text {
+  height: 29em;
+}
+
+/*
+  Modals
+*/
+
+.modal {
+  font-size: 16pt !important;
+  position: absolute;
+  z-index: 1;
+  top: 5em;
+  left: 5em;
+  right: 5em;
+  bottom: 5em;
+  overflow: auto;
+}
+
+#error-modal-description {
+  margin-bottom: 3em;
+}
+
+#error-modal-description ul {
+  margin-bottom: 0;
+}
+
+#log-file-link {
+  cursor: pointer;
+}
+
+/*
+  Notes:
+  - blue of the cross is #435D91
+  - 3 shades darker: #304369
+*/

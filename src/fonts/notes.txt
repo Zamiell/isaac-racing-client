@@ -1,4 +1,0 @@
-Notes:
-- FontAwesome is the main font used on the client.
-- Jelly Crazies is used by "release.py" to draw the version number on the mod title screen.
-- Vera is used by "release.py" to draw the website URL on the mod title screen.

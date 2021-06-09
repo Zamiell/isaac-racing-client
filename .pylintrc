@@ -1,5 +1,0 @@
-[MESSAGES CONTROL]
-; C0111 - Missing docstring
-; C0301 - Line too long
-; W0703 - Catching too general exception
-disable=C0111,C0301,W0703

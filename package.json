@@ -1,8 +1,8 @@
 {
-  "name": "RacingPlus",
+  "name": "isaac-racing-client",
   "productName": "Racing+",
-  "description": "A racing mod for The Binding of Isaac: Afterbirth+",
-  "version": "0.55.18",
+  "description": "A racing mod for The Binding of Isaac: Repentance",
+  "version": "0.56.0",
   "author": "Racing+",
   "license": "GPL-3.0",
   "homepage": "https://isaacracing.net",
@@ -13,49 +13,54 @@
   "bugs": {
     "url": "https://github.com/Zamiell/isaac-racing-client/issues"
   },
-  "main": "./src/main.js",
+  "main": "./dist/main/main.js",
   "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir --publish never",
-    "dist": "electron-builder --publish never",
-    "distPub": "electron-builder --ia32 --x64 --publish always",
-    "postinstall": "electron-builder install-app-deps"
+    "publish": "electron-builder --publish always"
   },
   "build": {
     "appId": "org.electron.IsaacRacingPlus",
-    "win": {
-      "target": "nsis-web"
-    },
-    "mac": {
-      "category": "public.app-category.games"
-    },
+    "files": [
+      "./build/**/*",
+      "./dist/**/*",
+      "./static/**/*"
+    ],
     "publish": {
       "provider": "github",
       "releaseType": "release"
     },
     "asarUnpack": [
-      "./src/lib/*",
-      "./mod/**"
+      "./src/lib/*"
     ]
   },
   "dependencies": {
-    "electron-updater": "3.1.2",
-    "hash-files": "^1.1.1",
+    "electron-context-menu": "^3.1.0",
+    "electron-store": "^8.0.0",
+    "electron-updater": "4.3.9",
     "klaw-sync": "^6.0.0",
-    "linkifyjs": "^2.1.7",
-    "mkdirp": "^0.5.1",
-    "opn": "^5.4.0",
+    "linkifyjs": "*",
+    "mkdirp": "^0.5.5",
     "ps-node": "^0.1.6",
-    "raven": "^2.6.4",
-    "teeny-conf": "^1.1.0",
-    "tracer": "^0.9.1",
-    "winreg": "^1.2.4"
+    "vdf-parser": "^1.1.0",
+    "winreg": "^1.2.4",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
-    "electron": "3.0.9",
-    "electron-builder": "20.28.4",
-    "eslint": "^5.7.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "@tsconfig/node16": "^1.0.1",
+    "@types/jquery": "^3.5.5",
+    "@types/klaw-sync": "^6.0.0",
+    "@types/linkifyjs": "^2.1.3",
+    "@types/mkdirp": "^1.0.1",
+    "@types/node": "^15.12.1",
+    "@types/ps-node": "^0.1.0",
+    "@types/tooltipster": "^0.0.30",
+    "@types/winreg": "^1.2.30",
+    "electron": "^13.1.1",
+    "electron-builder": "^22.11.4",
+    "isaacscript-lint": "^1.0.24",
+    "ts-loader": "^9.2.3",
+    "typescript": "^3.9.9",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.1"
   }
 }

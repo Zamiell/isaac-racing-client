@@ -1,7 +1,0 @@
-https://twithelper.com/long-text-to-image-converter
-
-font: Lato
-font size: 64px
-text color: white
-
-gridlines: 37x47
