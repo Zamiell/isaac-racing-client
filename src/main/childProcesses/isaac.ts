@@ -23,10 +23,10 @@ import path from "path";
 import ps from "ps-node";
 import * as vdfParser from "vdf-parser";
 import Registry, { RegistryItem } from "winreg";
-import * as file from "../common/file";
-import { parseIntSafe } from "../common/util";
-import { handleErrors, processExit } from "./childSubroutines";
-import { STEAM_WORKSHOP_MOD_NAME } from "./constants";
+import * as file from "../../common/file";
+import { parseIntSafe } from "../../common/util";
+import { STEAM_WORKSHOP_MOD_NAME } from "../constants";
+import { handleErrors, processExit } from "./subroutines";
 
 const BACKUP_MOD_PATH = path.join("app.asar", "mod");
 

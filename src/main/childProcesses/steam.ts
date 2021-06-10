@@ -1,12 +1,12 @@
 // Child process that initializes the Steamworks API and generates a login ticket
 
 import fs from "fs";
-import SteamMessage from "../common/types/SteamMessage";
-import { childError, handleErrors, processExit } from "./childSubroutines";
-import Greenworks, { SteamIDObject, TicketObject } from "./types/Greenworks";
+import SteamMessage from "../../common/types/SteamMessage";
+import Greenworks, { SteamIDObject, TicketObject } from "../types/Greenworks";
+import { childError, handleErrors, processExit } from "./subroutines";
 
 // eslint-disable-next-line
-const greenworks = require("./lib/greenworks") as Greenworks;
+const greenworks = require("../lib/greenworks") as Greenworks;
 
 handleErrors();
 init();

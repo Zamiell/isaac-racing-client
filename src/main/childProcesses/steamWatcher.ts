@@ -1,7 +1,7 @@
 // Child process that checks to see if the user logs out of Steam
 
 import Registry from "winreg";
-import { handleErrors, processExit } from "./childSubroutines";
+import { handleErrors, processExit } from "./subroutines";
 
 const CHECK_STEAM_INTERVAL = 5000; // 5 seconds
 

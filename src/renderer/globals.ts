@@ -5,8 +5,6 @@ import Room from "./types/Room";
 
 type Screen =
   | "title-ajax"
-  | "tutorial1"
-  | "tutorial2"
   | "login"
   | "login-ajax"
   | "forgot"

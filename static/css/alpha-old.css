@@ -26,7 +26,6 @@
 
     body {
         line-height: 1;
-        /* user-select: none; */ /* CHANGED from vanilla */
     }
 
     ol, ul {
@@ -3054,12 +3053,14 @@
 /* Banner */
 
     #banner {
-        /*background-attachment: scroll, fixed;
+        /*
+        background-attachment: scroll, fixed;
         background-color: #666;
         background-image: url("images/overlay.png"), url("../../images/banner.jpg");
         background-position: top left, center center;
         background-repeat: repeat, no-repeat;
-        background-size: auto, cover; */ /* CHANGED from vanilla - removed background */
+        background-size: auto, cover;
+        */ /* CHANGED from vanilla - removed background */
         color: #fff;
         /*padding: 12em 0 20em 0; */
         padding: 0 0 1em 0; /* CHANGED from vanilla - bottom is 1em instead of 0 because Isaac's head makes the title image taller than it looks */

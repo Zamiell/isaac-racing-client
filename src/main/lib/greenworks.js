@@ -4,22 +4,32 @@
 
 // The source code can be found in https://github.com/greenheartgames/greenworks
 const fs = require("fs");
+const path = require("path");
 
-let greenworks;
+const LIB_PATH = path.join(__dirname, "lib");
 
+let greenworksPath;
 if (process.platform == "darwin") {
-  if (process.arch == "x64") greenworks = require("./lib/greenworks-osx64");
-  else if (process.arch == "ia32")
-    greenworks = require("./lib/greenworks-osx32");
+  if (process.arch == "x64") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-osx64")
+  } else if (process.arch == "ia32") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-osx32");
+  }
 } else if (process.platform == "win32") {
-  if (process.arch == "x64") greenworks = require("./lib/greenworks-win64");
-  else if (process.arch == "ia32")
-    greenworks = require("./lib/greenworks-win32");
+  if (process.arch == "x64") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-win64");
+  } else if (process.arch == "ia32") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-win32");
+  }
 } else if (process.platform == "linux") {
-  if (process.arch == "x64") greenworks = require("./lib/greenworks-linux64");
-  else if (process.arch == "ia32")
-    greenworks = require("./lib/greenworks-linux32");
+  if (process.arch == "x64") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-linux64");
+  } else if (process.arch == "ia32") {
+    greenworksPath = path.join(LIB_PATH, "greenworks-linux32");
+  }
 }
+
+const greenworks = require(greenworksPath);
 
 function error_process(err, error_callback) {
   if (err && error_callback) error_callback(err);
@@ -148,7 +158,7 @@ greenworks.ugcPublishUpdate = function (
   );
 };
 
-// Greenworks Utils APIs implmentation.
+// Greenworks Utils APIs implementation.
 greenworks.Utils.move = function (
   source_dir,
   target_dir,

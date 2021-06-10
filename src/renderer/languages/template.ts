@@ -15,20 +15,6 @@ const languagePack = {
       "",
     "The username provided is in use already.": "",
 
-    // Tutorial screen (currently unused)
-    "Get Started": "",
-    Tutorial: "",
-    "Start each race at the character selection screen, shown below.": "",
-    "Stay there until the countdown reaches 0, then go into the game!": "",
-    "Got it": "",
-    "When you finish the race, you don't have to do anything.": "",
-    "The program will know that you finished from Isaac's log file.": "",
-    "If you die, you do not have to quit. Keep going if you want.": "",
-    'If you want to give up for any reason, use the "Quit" button on the left side of the race screen.':
-      "",
-    "If you take longer than 30 minutes to complete a race, you will be forced to quit.":
-      "",
-
     // Updating screen
     Updating: "",
     "A new version of the client is being downloaded. The program will automatically restart once it is complete.":

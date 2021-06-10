@@ -12,13 +12,17 @@ export function init(): void {
 
   $("#settings-volume-test").click(() => {
     const volumeElement = $("#settings-volume-slider");
-    const volumeElementValue = volumeElement.val();
-    if (typeof volumeElementValue !== "number") {
+    const volumeElementValueString = volumeElement.val();
+    if (typeof volumeElementValueString !== "string") {
       throw new Error("Failed to get the value of the volume element.");
     }
+    const volumeElementValue = parseIntSafe(volumeElementValueString);
+    if (Number.isNaN(volumeElementValue)) {
+      throw new Error("Failed to parse the value of the volume element.");
+    }
 
-    // Play the "Go" sound effect
-    const audio = new Audio("sounds/go.mp3");
+    // Play the "Go" sound effect (but only the voice because it sounds better in this context)
+    const audio = new Audio("sounds/go-voice.mp3");
     audio.volume = volumeElementValue / 100;
     audio.play().catch((err) => {
       throw new Error(`Failed to play the sound effect: ${err}`);
@@ -127,9 +131,13 @@ function submit(event: JQuery.SubmitEvent) {
   localization.localize(language);
 
   // Volume
-  const volume = $("#settings-volume-slider").val();
-  if (typeof volume !== "number") {
+  const volumeString = $("#settings-volume-slider").val();
+  if (typeof volumeString !== "string") {
     throw new Error("Failed to get the value of the volume element.");
+  }
+  const volume = parseIntSafe(volumeString);
+  if (Number.isNaN(volume)) {
+    throw new Error("Failed to parse the value of the volume element.");
   }
   settings.set("volume", volume / 100);
 

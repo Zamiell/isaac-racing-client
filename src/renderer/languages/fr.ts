@@ -22,25 +22,6 @@ const languagePack = {
     "The username provided is in use already.":
       "Ce nom d'utilisateur est déjà utilisé.",
 
-    // Tutorial screen (currently unused)
-    "Get Started": "Commencer",
-    Tutorial: "Tutoriel",
-    "Start each race at the character selection screen, shown below.":
-      "Commencez chaque course à l'écran de selection du personnage, voir dessous.",
-    "Stay there until the countdown reaches 0, then go into the game!":
-      "Restez sur cet écran jusqu'à ce que le compte à rebours atteigne 0, puis commencez la partie!",
-    "Got it": "J'ai compris",
-    "When you finish the race, you don't have to do anything.":
-      "Losque vous terminez la course, vous n'avez pas besoin de faire quoi que ce soit.",
-    "The program will know that you finished from Isaac's log file.":
-      "Le programme va détecter que vous avez terminé la course à partir du fichier log d'Isaac.",
-    "If you die, you do not have to quit. Keep going if you want.":
-      "Si vous mourrez, vous n'êtes pas obligé de quitter. Continuez si vous le voulez.",
-    'If you want to give up for any reason, use the "Quit" button on the left side of the race screen.':
-      'Pour abandonner, utilisez le bouton "Quitter"sur la gauche de l\'écran de la course.',
-    "If you take longer than 30 minutes to complete a race, you will be forced to quit.":
-      "Si vous mettez plus de 30 minutes à compléter la course, vous serez forcé de quitter.",
-
     // Updating screen
     Updating: "Mise à jour en cours",
     "A new version of the client is being downloaded. The program will automatically restart once it is complete.":

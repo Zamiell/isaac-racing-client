@@ -19,10 +19,6 @@ export function initDefault(): void {
     settings.set("language", "en"); // English
   }
 
-  if (settings.get("tutorial") === undefined) {
-    settings.set("tutorial", "true");
-  }
-
   if (settings.get("volume") === undefined) {
     settings.set("volume", 0.5); // 50%
   }

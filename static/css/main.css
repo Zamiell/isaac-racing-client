@@ -1,51 +1,27 @@
 /*
-    Local Google Fonts
-    From: https://google-webfonts-helper.herokuapp.com/
+  Alpha edits
 */
 
-/* source-sans-pro-300 - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'),
-       url('../webfonts/source-sans-pro-v11-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/source-sans-pro-v11-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+a {
+  color: #80aaff;
 }
 
-/* source-sans-pro-300italic - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 300;
-  src: local('Source Sans Pro Light Italic'), local('SourceSansPro-LightItalic'),
-       url('../webfonts/source-sans-pro-v11-latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/source-sans-pro-v11-latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+.box {
+  margin: 0 0 0 0;
 }
 
-/* source-sans-pro-regular - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'),
-       url('../webfonts/source-sans-pro-v11-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../webfonts/source-sans-pro-v11-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+#banner {
+  background-attachment: unset;
+  background-color: unset;
+  background-position: unset;
+  background-repeat: unset;
+  background-size: unset;
+  padding: 0 0 1em 0; /* bottom is 1em instead of 0 because Isaac's head makes the title image taller than it looks */
 }
 
-/* source-sans-pro-italic - latin */
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'),
-       url('../fonts/source-sans-pro-v11-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/source-sans-pro-v11-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+.main {
+  padding: 0 0 0 0;
 }
-
-/*
-  Font Awesome 6 fixes
-*/
 
 body {
   background-attachment: scroll, fixed;
@@ -64,12 +40,65 @@ body {
   right: 0;
   bottom: 0;
   overflow-y: auto;
+  padding-top: 0em;
 }
+
+/*
+  New CSS added in 2021 to make the boxes expand to the full size of the screen
+*/
+
+#gui {
+  height: 100%;
+  width: 100%;
+}
+
+#title {
+  height: 100%;
+  width: 100%;
+}
+
+.lobby-half {
+  height: calc((100% - 1.5em) / 2);
+  width: 100%;
+  margin: 0 0 0 0;
+  padding-right: 1.5em;
+}
+
+#lobby-top-half {
+  padding-top: 1.5em;
+}
+
+#lobby-bottom-half {
+  padding-bottom: 1.5em;
+}
+
+#lobby-separator {
+  height: 1.5em;
+}
+
+.lobby-table-container {
+  overflow-y: auto;
+  height: 100%;
+}
+
+#lobby-chat-text {
+  height: calc(100% - 3.5em);
+  /* (the height of the input box is 3.5em) */
+}
+
+/*
+  Extra classes
+*/
 
 .vertical-center {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
 }
 
 .main {
@@ -127,6 +156,19 @@ body {
 
 .underline {
   border-bottom: 1px solid #e4886a;
+}
+
+/* This is needed so that we can resize the window from the top */
+#header-top {
+  background: #444;
+  color: #bbb;
+  cursor: default;
+  height: 2px;
+  left: 0;
+  line-height: 2px;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 /*
@@ -248,20 +290,6 @@ body {
 }
 
 /*
-  Tutorial
-*/
-
-#tutorial1 {
-  font-size: 16pt !important;
-  margin: 0 2.5em 0 2.5em;
-}
-
-#tutorial2 {
-  font-size: 16pt !important;
-  margin: 0 2.5em 0 2.5em;
-}
-
-/*
   Login
 */
 
@@ -357,8 +385,25 @@ body {
 */
 
 #register {
-  display: none;
   font-size: 16pt !important;
+}
+
+#register {
+  height: calc(100% - 20em);
+  width: calc(100% - 20em);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#register > .box {
+  height: 100%;
+  width: 100%;
+  margin-top: 10em;
+  margin-bottom: 10em;
+  margin-left: 10em;
+  margin-right: 10em;
 }
 
 #register-title {
@@ -413,6 +458,25 @@ body {
   Updating
 */
 
+#updating {
+  font-size: 16pt !important;
+  height: calc(100% - 20em);
+  width: calc(100% - 20em);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#updating > .box {
+  height: 60%;
+  width: 100%;
+  margin-top: 10em;
+  margin-bottom: 10em;
+  margin-left: 10em;
+  margin-right: 10em;
+}
+
 #updating-title {
   margin-left: -3.5em;
 }
@@ -431,7 +495,6 @@ body {
 */
 
 .chat-box {
-  margin: 0 0 0 1.5em;
   padding: 1em 1em 1em 1em; /* Default is 3em */
 }
 
@@ -454,7 +517,6 @@ body {
 .chat-text {
   overflow-y: auto;
   overflow-wrap: break-word;
-  height: 13em;
   border-style: solid !important;
   border-color: #e5e5e5 !important;
   border: 1px;
@@ -466,13 +528,28 @@ body {
   Lobby (races)
 */
 
+#lobby {
+  margin: 0 0 0 0;
+  height: 100%;
+  width: 100%;
+}
+
+#lobby > div > div {
+  height: 100%;
+}
+
+#lobby > div > div > section {
+  padding: 1.5em;
+  margin-bottom: 0;
+  height: 100%;
+}
+
 #lobby-current-races-box {
-  margin: 1.5em 1.5em 1.5em 1.5em;
   padding: 1em 1em 1em 1em; /* Default is 3em */
 }
 
 #lobby-current-races-table-wrapper {
-  height: 12.5em;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -672,18 +749,16 @@ body {
 }
 
 #lobby-users-box {
-  margin: 0 1.5em 0 0.5em;
   padding: 1em 1em 1em 1em; /* Default is 3em */
 }
 
 .users-users {
   overflow-y: auto;
-  height: 14.9em;
-  max-width: 10em;
   border-style: solid !important;
   border-color: #e5e5e5 !important;
   border: 1px;
   padding: 0 0.5em 0 0.5em;
+  height: calc(100% - 2em);
 }
 
 .users-user {
@@ -965,6 +1040,14 @@ body {
   color: red;
 }
 
+/* From https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/ */
+
+input[type=range] {
+  -webkit-appearance: slider-horizontal; /* Hides the slider so that custom slider can be made */
+  background: black; /* Otherwise white in Chrome */
+}
+
+
 /*
   Race (title table)
 */
@@ -1009,7 +1092,7 @@ body {
 }
 
 .race-title-items-icon-blind {
-  background-image: url("../img/items/questionmark.png");
+  background-image: url("../img/items/questionmark.png"); /* cspell:disable-line */
 }
 
 /*
@@ -1153,6 +1236,203 @@ background-color: #cce6ff !important;
 
 #log-file-link {
   cursor: pointer;
+}
+
+/*
+    Ajax circle
+*/
+
+@-webkit-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-ms-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes uil-ring-anim {
+  0% {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+  }
+}
+
+.ajax-ring {
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+  box-shadow: 0 6px 0 0 #59ebff;
+  -ms-animation: uil-ring-anim 1s linear infinite;
+  -moz-animation: uil-ring-anim 1s linear infinite;
+  -webkit-animation: uil-ring-anim 1s linear infinite;
+  -o-animation: uil-ring-anim 1s linear infinite;
+  animation: uil-ring-anim 1s linear infinite;
+}
+
+/*
+  Local Google Fonts
+  From: https://google-webfonts-helper.herokuapp.com/
+*/
+
+/* source-sans-pro-300 - latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'),
+       url('../webfonts/source-sans-pro-v11-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/source-sans-pro-v11-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-300italic - latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Source Sans Pro Light Italic'), local('SourceSansPro-LightItalic'),
+       url('../webfonts/source-sans-pro-v11-latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/source-sans-pro-v11-latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-regular - latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'),
+       url('../webfonts/source-sans-pro-v11-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/source-sans-pro-v11-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* source-sans-pro-italic - latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'),
+       url('../webfonts/source-sans-pro-v11-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../webfonts/source-sans-pro-v11-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /*

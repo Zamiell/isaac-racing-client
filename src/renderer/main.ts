@@ -16,6 +16,7 @@ import * as localization from "./localization";
 import * as steam from "./steam";
 import * as steamWatcher from "./steamWatcher";
 import Item from "./types/Item";
+import * as devButtons from "./ui/devButtons";
 import * as header from "./ui/header";
 import * as lobbyScreen from "./ui/lobby";
 import * as modals from "./ui/modals";
@@ -23,7 +24,6 @@ import * as newRaceTooltip from "./ui/newRaceTooltip";
 import * as raceScreen from "./ui/race";
 import * as registerScreen from "./ui/register";
 import * as settingsTooltip from "./ui/settingsTooltip";
-import * as tutorialScreen from "./ui/tutorial";
 
 const DATA_PATH = path.join(__dirname, "data");
 
@@ -43,6 +43,7 @@ $(() => {
   steam.init();
   steamWatcher.init();
 
+  devButtons.init();
   header.init();
   lobbyScreen.init();
   modals.init();
@@ -50,7 +51,6 @@ $(() => {
   raceScreen.init();
   registerScreen.init();
   settingsTooltip.init();
-  tutorialScreen.init();
 
   log.info("Renderer initialization completed.");
 

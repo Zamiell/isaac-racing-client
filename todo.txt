@@ -1,6 +1,5 @@
 New New TODO:
 - use new version of Alpha / fix CSS
-- test to see if Tutorial works
 - test typing in password input field in new race tooltip to see if icon fades in/out
 
 New TODO:

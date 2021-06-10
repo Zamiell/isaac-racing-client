@@ -492,7 +492,7 @@ export function statusTimer(raceID: number): void {
   const now = new Date().getTime();
   const raceMilliseconds = now - race.datetimeStarted;
   const raceTotalSeconds = Math.round(raceMilliseconds / 1000);
-  const raceMinutes = raceTotalSeconds / 60;
+  const raceMinutes = Math.floor(raceTotalSeconds / 60);
   const raceSeconds = raceTotalSeconds % 60;
   const timeDiv = `${pad(raceMinutes)}:${pad(raceSeconds)}`;
   $(`#lobby-current-races-${raceID}-status`).html(timeDiv);

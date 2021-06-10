@@ -19,6 +19,7 @@ import {
   playSound,
 } from "../misc";
 import * as modSocket from "../modSocket";
+import { preloadSounds } from "../preloadSounds";
 import User from "../types/User";
 
 export function init(): void {
@@ -258,6 +259,10 @@ export function show(raceID: number): void {
     errorShow(`The character of "${race.ruleset.character}" is unsupported.`);
     return;
   }
+
+  // We preload sounds now since the user has probably interacted with the page at this point
+  // (this won't be true if they are reconnecting mid-way through a race, but oh well)
+  preloadSounds();
 
   // Tell the Lua mod that we are in a new race
   g.modSocket.userID = g.myUserID;
@@ -765,7 +770,7 @@ export function participantsSetStatus(i: number, initial = false): void {
   if (racer.status === "finished") {
     // This code is partially copied from the "raceTimerTick()" function below
     const raceTotalSeconds = Math.floor(racer.runTime / 1000); // "runTime" is in milliseconds
-    const raceMinutes = raceTotalSeconds / 60;
+    const raceMinutes = Math.floor(raceTotalSeconds / 60);
     const raceSeconds = raceTotalSeconds % 60;
     const timeDiv = `${pad(raceMinutes)}:${pad(raceSeconds)}`;
     $(`#race-participants-table-${racer.name}-time`).html(timeDiv);
@@ -1254,7 +1259,7 @@ function raceTimerTick() {
   const now = new Date().getTime();
   const raceMilliseconds = now - race.datetimeStarted;
   const raceTotalSeconds = Math.floor(raceMilliseconds / 1000);
-  const raceMinutes = raceTotalSeconds / 60;
+  const raceMinutes = Math.floor(raceTotalSeconds / 60);
   const raceSeconds = raceTotalSeconds % 60;
   const timeDiv = `${pad(raceMinutes)}:${pad(raceSeconds)}`;
 

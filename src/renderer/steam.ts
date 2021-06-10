@@ -15,54 +15,6 @@ const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 10;
 
 export function init(): void {
   electron.ipcRenderer.on("steam", IPCSteam);
-
-  if (IS_DEV) {
-    initDevButtons();
-  }
-}
-
-function initDevButtons() {
-  // Don't automatically log in with our Steam account
-  // We want to choose from a list of login options
-  $("#title-ajax").fadeOut(0);
-  $("#title-choose").fadeIn(0);
-
-  $("#title-choose-steam").click(() => {
-    loginDebug(null);
-  });
-
-  for (let i = 1; i <= 10; i++) {
-    $(`#title-choose-${i}`).click(() => {
-      loginDebug(i);
-    });
-  }
-
-  $("#title-restart").click(() => {
-    // Restart the client
-    electron.ipcRenderer.send("asynchronous-message", "restart");
-  });
-}
-
-function loginDebug(account: number | null) {
-  if (g.currentScreen !== "title-ajax") {
-    return;
-  }
-
-  $("#title-choose").fadeOut(FADE_TIME, () => {
-    $("#title-ajax").fadeIn(FADE_TIME);
-  });
-
-  if (account === null) {
-    // A normal login
-    electron.ipcRenderer.send("asynchronous-message", "steam", account);
-  } else {
-    // A manual login that does not rely on Steam authentication
-    g.steam.id = `-${account}`;
-    g.steam.accountID = 0;
-    g.steam.screenName = `TestAccount${account}`;
-    g.steam.ticket = "debug";
-    login();
-  }
 }
 
 // Monitor for notifications from the child process that is getting the data from Greenworks
@@ -116,7 +68,7 @@ function IPCSteam(
 // (you have to be logged in for the link to work)
 // The server will validate our session ticket using the Steam web API, and if successful, give us a cookie
 // If our Steam ID does not already exist in the database, we will be told to register
-function login() {
+export function login(): void {
   switch (g.autoUpdateStatus) {
     case null: {
       // Don't login yet if we are still checking for updates

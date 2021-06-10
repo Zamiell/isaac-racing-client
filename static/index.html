@@ -10,11 +10,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="../static/css/jquery.mobile-1.4.5.css" />
-    <link rel="stylesheet" href="../static/css/tooltipster.bundle.min.css" />
-    <link rel="stylesheet" href="../static/css/tooltipster-sideTip-shadow.min.css" />
-    <link rel="stylesheet" href="../static/css/alpha.css" />
-    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" href="css/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" href="css/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="css/alpha.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <title>Racing+</title>
 
     <!--
@@ -36,7 +38,7 @@
     <script src="js/skel.min.js"></script>
 
     <!-- Functionality for the Alpha HTML5UP template -->
-    <script src="js/alpha.js"></script>
+    <!--<script src="js/alpha.js"></script>-->
 
     <!-- The main application code -->
     <script src="../dist/renderer/main.js"></script>
@@ -50,8 +52,7 @@
   <body>
     <div id="page-wrapper" class="vertical-center">
 
-      <header id="header-top" class="no-drag">
-      </header>
+      <header id="header-top" class="no-drag"></header>
 
       <!-- Header -->
       <header id="header" class="drag">
@@ -61,7 +62,7 @@
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
               <a id="header-profile" class="header-links no-drag" style="display: none;">
-                <i class="fa fa-area-chart" aria-hidden="true"></i>
+                <i class="fa fa-chart-area" aria-hidden="true"></i>
                 &nbsp;
                 <span lang="en">Profile</span>
               </a>
@@ -126,9 +127,8 @@
 
       <!-- Everything not in the header is contained in this element -->
       <div id="gui">
-
         <!-- Title screen -->
-        <div id="title">
+        <div id="title" class="vertical-center">
           <section id="banner">
             <h2>
               <img id="title-image" src="img/title.png" />
@@ -141,45 +141,43 @@
 
             <p id="title-error"></p>
 
-            <ul id="title-buttons" class="actions hidden">
-              <li>
-                <a href="#" id="title-tutorial-button" class="button">
-                  <i class="fa fa-play title-button-icons" aria-hidden="true"></i>
-                  &nbsp;
-                  <span lang="en">Get Started</span>
-                </a>
-              </li>
-            </ul>
-
             <div id="title-ajax">
               <div class="ajax-ring"></div>
             </div>
 
             <!-- This only appears in a development environment -->
-            <ul id="title-choose" class="actions hidden">
-              <br /><br /><br />
-              <li><a href="#" id="title-choose-steam" class="button small">Steam (`)</a></li>
-              <li><a href="#" id="title-restart" class="button small">Restart (R)</a></li>
+            <div id="title-choose" class="hidden">
               <br /><br />
-              <li><a href="#" id="title-choose-1" class="button small">Test 1 (1)</a></li>
-              <li><a href="#" id="title-choose-2" class="button small">Test 2 (2)</a></li>
-              <li><a href="#" id="title-choose-3" class="button small">Test 3 (3)</a></li>
-              <li><a href="#" id="title-choose-4" class="button small">Test 4</a></li>
-              <br /><br />
-              <li><a href="#" id="title-choose-5" class="button small">Test 5</a></li>
-              <li><a href="#" id="title-choose-6" class="button small">Test 6</a></li>
-              <li><a href="#" id="title-choose-7" class="button small">Test 7</a></li>
-              <li><a href="#" id="title-choose-8" class="button small">Test 8</a></li>
-              <br /><br />
-              <li><a href="#" id="title-choose-9" class="button small">Test 9</a></li>
-              <li><a href="#" id="title-choose-10" class="button small">Test 10</a></li>
-            </ul>
+              <ul class="actions special">
+                <br /><br /><br />
+                <li><a href="#" id="title-choose-steam" class="button small">Steam (`)</a></li>
+                <li><a href="#" id="title-restart" class="button small">Restart (R)</a></li>
+              </ul>
+              <ul class="actions special">
+                <li><a href="#" id="title-choose-1" class="button small">Test 1 (1)</a></li>
+                <li><a href="#" id="title-choose-2" class="button small">Test 2 (2)</a></li>
+                <li><a href="#" id="title-choose-3" class="button small">Test 3 (3)</a></li>
+                <li><a href="#" id="title-choose-4" class="button small">Test 4</a></li>
+              </ul>
+              <!--
+              <ul class="actions special">
+                <li><a href="#" id="title-choose-5" class="button small">Test 5</a></li>
+                <li><a href="#" id="title-choose-6" class="button small">Test 6</a></li>
+                <li><a href="#" id="title-choose-7" class="button small">Test 7</a></li>
+                <li><a href="#" id="title-choose-8" class="button small">Test 8</a></li>
+              </ul>
+              <ul class="actions special">
+                <li><a href="#" id="title-choose-9" class="button small">Test 9</a></li>
+                <li><a href="#" id="title-choose-10" class="button small">Test 10</a></li>
+              </ul>
+              -->
+            </div>
 
           </section>
         </div><!-- title -->
 
         <!-- Register -->
-        <div id="register">
+        <div id="register" class="hidden">
           <section class="box">
             <div id="register-title" class="row">
               <h3><span lang="en">Register</span></h3>
@@ -202,10 +200,10 @@
 
             <form id="register-form">
               <div class="row uniform 50%">
-                <div class="8u">
+                <div class="col-8">
                   <input id="register-username" type="text" placeholder="Username" lang="en" />
                 </div>
-                <div class="4u">
+                <div class="col-4">
                   <button id="register-submit-button" class="button small" type="submit">
                     <i class="fa fa-check" aria-hidden="true"></i>
                     &nbsp;
@@ -217,70 +215,18 @@
 
             <div class="padding2"></div>
 
-            <center>
-              <ul id="register-languages" class="actions">
-                <li id="register-language-english" class="selected-language">English</li>
-                <li>|</li>
-                <li id="register-language-french" class="unselected-language"><a>Français</a></li>
-                <li>|</li>
-                <li id="register-language-spanish" class="unselected-language"><a>Español</a></li>
-              </ul>
-            </center>
+            <ul id="register-languages" class="actions">
+              <li id="register-language-english" class="selected-language">English</li>
+              <li>|</li>
+              <li id="register-language-french" class="unselected-language"><a>Français</a></li>
+              <li>|</li>
+              <li id="register-language-spanish" class="unselected-language"><a>Español</a></li>
+            </ul>
 
             <div class="padding2"></div>
 
           </section>
         </div><!-- register -->
-
-        <!-- Tutorial1 -->
-        <div id="tutorial1" class="hidden">
-          <section class="box">
-            <div class="row">
-              <h3><span lang="en">Tutorial</span> (1/2)</h3>
-            </div>
-
-            <p lang="en">Start each race at the character selection screen, shown below.</p>
-
-            <img src="img/character-selection-screen.png" />
-            <br />
-            <br />
-
-            <p lang="en">Stay there until the countdown reaches 0, then go into the game!</p>
-
-            <button id="tutorial1-next-button" class="button small alt" type="button">
-              <i class="fa fa-check" aria-hidden="true"></i>
-              &nbsp;
-              <span lang="en">Got it</span>
-            </button>
-
-          </section>
-        </div><!-- tutorial1 -->
-
-        <!-- Tutorial2 -->
-        <div id="tutorial2" class="hidden">
-          <section class="box">
-            <div class="row">
-              <h3><span lang="en">Tutorial</span> (2/2)</h3>
-            </div>
-
-            <ul>
-              <li>
-                <span lang="en">When you finish the race, you don't have to do anything.</span><br />
-                (<span lang="en">The program will know that you finished from the Racing+ Lua mod.</span>)
-              </li>
-              <li lang="en">If you die, you do not have to quit. Keep going if you want.</li>
-              <li lang="en">If you want to give up for any reason, use the "Quit" button on the left side of the race screen.</li>
-              <li lang="en">If you take longer than 30 minutes to complete a race, you will be forced to quit.</li>
-            </ul>
-
-            <button id="tutorial2-next-button" class="button small alt" type="button">
-              <i class="fa fa-check" aria-hidden="true"></i>
-              &nbsp;
-              <span lang="en">Got it</span>
-            </button>
-
-          </section>
-        </div><!-- tutorial2 -->
 
         <!-- Updating -->
         <div id="updating" class="hidden">
@@ -291,55 +237,57 @@
                 <div class="ajax-ring"></div>
               </div>
             </div>
-            <p id="updating" lang="en">A new version of the client is being downloaded. The program will automatically restart once it is complete.</p>
-            <p id="updating" lang="en">The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</p>
+            <p lang="en">A new version of the client is being downloaded. The program will automatically restart once it is complete.</p>
+            <p lang="en">The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</p>
           </section>
         </div><!-- updating -->
 
         <!-- Lobby -->
         <div id="lobby" class="hidden">
 
-          <!-- Main -->
-          <section class="main container">
-            <div class="row">
-              <div class="12u">
-                <section id="lobby-current-races-box" class="box">
-                  <div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
-                    <h3 id="lobby-current-races-table-no" lang="en">No current races.</h3>
-                    <table id="lobby-current-races-table" class="alt">
-                      <thead>
-                        <th class="lobby-current-races-title"><span lang="en">Title</span></th>
-                        <th class="lobby-current-races-status"><span lang="en">Status</span></th>
-                        <!--<th class="lobby-current-races-type"><span lang="en">Type</span></th>-->
-                        <th class="lobby-current-races-format"><span lang="en">Format</span></th>
-                        <th><span lang="en">Size</span></th><!-- Don't put the class on this element because it makes it look weird -->
-                        <th class="lobby-current-races-racers"><span lang="en">Entrants</span></th>
-                      </thead>
-                      <tbody id="lobby-current-races-table-body"></tbody>
-                    </table>
-                    <div style="padding-bottom: 0.1em;"></div><!-- Otherwise the bottom border of the table gets cut off -->
-                  </div>
-                </section>
-              </div>
+          <!-- lobby-top-half -->
+          <div id="lobby-top-half" class="row lobby-half">
+            <div class="col-12">
+              <section id="lobby-current-races-box" class="box">
+                <div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
+                  <h3 id="lobby-current-races-table-no" lang="en">No current races.</h3>
+                  <table id="lobby-current-races-table" class="alt">
+                    <thead>
+                      <th class="lobby-current-races-title"><span lang="en">Title</span></th>
+                      <th class="lobby-current-races-status"><span lang="en">Status</span></th>
+                      <th class="lobby-current-races-format"><span lang="en">Format</span></th>
+                      <th><span lang="en">Size</span></th><!-- Don't put the class on this element because it makes it look weird -->
+                      <th class="lobby-current-races-racers"><span lang="en">Entrants</span></th>
+                    </thead>
+                    <tbody id="lobby-current-races-table-body"></tbody>
+                  </table>
+                  <div style="padding-bottom: 0.1em;"></div><!-- Otherwise the bottom border of the table gets cut off -->
+                </div>
+              </section>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="9u">
-                <section class="box chat-box">
-                  <div id="lobby-chat-text" class="chat-text selectable"></div>
-                  <form id="lobby-chat-form">
-                    <input id="lobby-chat-box-input" type="text" placeholder="Chat" lang="en" />
-                  </form>
-                </section>
-              </div>
-              <div id="lobby-users-container" class="3u">
-                <section id="lobby-users-box" class="box">
-                  <h4><span lang="en">Online Users</span> (<span id="lobby-users-online">0</span>)</span></h4>
-                  <div id="lobby-users-users" class="users-users selectable"></div>
-                </section>
-              </div>
+          <!-- Spacing -->
+          <div id="lobby-separator" class="row"></div>
+
+          <!-- lobby-bottom-half -->
+          <div id="lobby-bottom-half" class="row lobby-half">
+            <div class="col-9">
+              <section id="lobby-chat-box" class="box chat-box">
+                <div id="lobby-chat-text" class="chat-text selectable"></div>
+                <form id="lobby-chat-form">
+                  <input id="lobby-chat-box-input" type="text" placeholder="Chat" lang="en" />
+                </form>
+              </section>
             </div>
-          </section><!-- main -->
+            <div id="lobby-users-container" class="col-3">
+              <section id="lobby-users-box" class="box">
+                <h4><span lang="en">Online Users</span> (<span id="lobby-users-online">0</span>)</span></h4>
+                <div id="lobby-users-users" class="users-users selectable"></div>
+              </section>
+            </div>
+          </div>
+
         </div><!-- lobby -->
 
         <!-- Race -->
@@ -348,7 +296,7 @@
           <!-- Main -->
           <section class="main container">
             <div class="row">
-              <div class="8u">
+              <div class="col-8">
                 <section id="race-title-box" class="box">
                   <h3 id="race-title"></h3>
                   <div id="race-title-table-wrapper">
@@ -463,7 +411,7 @@
                   </div>
                 </section>
               </div>
-              <div id="race-chat-container" class="4u">
+              <div id="race-chat-container" class="col-4">
                 <section id="race-chat-box" class="box">
                   <div id="race-chat-text" class="chat-text selectable"></div>
                   <form id="race-chat-form">
@@ -509,15 +457,15 @@
         <h3><span lang="en">Password Required</span></h3>
         <p lang="en">Please enter the race's password to join:</p>
         <div class="row uniform 50%">
-          <div class="12u">
+          <div class="col-12">
             <input id="password-input" type="password" placeholder="Race's Password" lang="en"/>
           </div>
         </div>
         <div class="row uniform 50%">
-          <div class="2u">
+          <div class="col-2">
             <button id="password-modal-ok-button" class="button small block" lang="en">OK</button>
           </div>
-          <div class="2u">
+          <div class="col-2">
             <button id="password-modal-cancel-button" class="button small block alt" lang="en">Cancel</button>
           </div>
         </div>
@@ -528,7 +476,7 @@
       <div id="new-race-tooltip">
         <form id="new-race-form">
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Title</span>:</li>
                 <li>
@@ -546,10 +494,10 @@
           <div class="padding2"></div>
 
           <div class="row uniform 50%">
-            <div class="2u">
+            <div class="col-2">
               <p><span lang="en">Size</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-size-icon-solo" class="new-race-size-icon-container">
                 <i id="new-race-size-icon-solo-i" class="fa fa-user fa-2x" aria-hidden="true"></i>
               </span>
@@ -557,13 +505,13 @@
                 <i id="new-race-size-icon-multiplayer-i" class="fa fa-users fa-2x" aria-hidden="true" style="color: blue;"></i>
               </span>
             </div>
-            <div class="3u">
+            <div class="col-3">
               <input type="radio" id="new-race-size-solo" name="new-race-size" value="solo" checked></td>
               <label for="new-race-size-solo" class="new-race-radio-label" >
                 <span class="new-race-radio-text" lang="en">Solo</span>
               </label>
             </div>
-            <div class="3u">
+            <div class="col-3">
               <input type="radio" id="new-race-size-multiplayer" name="new-race-size" value="multiplayer">
               <label for="new-race-size-multiplayer" class="new-race-radio-label">
                 <span class="new-race-radio-text" lang="en">Multiplayer</span>
@@ -575,19 +523,19 @@
 
           <div class="new-race-toggle-row-container">
             <div id="new-race-ranked-row" class="row uniform 50%">
-              <div class="2u">
+              <div class="col-2">
                 <p><span lang="en">Ranked</span>:</p>
               </div>
-              <div class="2u">
+              <div class="col-2">
                 <span id="new-race-ranked-icon"></span>
               </div>
-              <div class="3u">
+              <div class="col-3">
                 <input type="radio" id="new-race-ranked-no" name="new-race-ranked" value="no" checked></td>
                 <label for="new-race-ranked-no" class="new-race-radio-label" >
                   <span class="new-race-radio-text" lang="en">No</span>
                 </label>
               </div>
-              <div class="3u">
+              <div class="col-3">
                 <input type="radio" id="new-race-ranked-yes" name="new-race-ranked" value="yes">
                 <label for="new-race-ranked-yes" class="new-race-radio-label">
                   <span class="new-race-radio-text" lang="en">Yes</span>
@@ -595,10 +543,10 @@
               </div>
             </div>
             <div id="new-race-password-row" class="row uniform 50%">
-              <div class="2u new-race-note">
+              <div class="col-2 new-race-note">
                 <p><span lang="en">Password</span>:</p>
               </div>
-              <div class="2u">
+              <div class="col-2">
                 <span id="new-race-password-no-password-icon" class="new-race-size-icon-container">
                   <i class="fa fa-unlock-alt fa-2x" aria-hidden="true"></i>
                 </span>
@@ -606,20 +554,20 @@
                   <i class="fa fa-lock fa-2x" aria-hidden="true"></i>
                 </span>
               </div>
-              <div class="8u">
+              <div class="col-8">
                 <input id="new-race-password" type="password" placeholder="[none]" lang="en"/>
               </div>
             </div>
           </div>
 
           <div class="row uniform 50%">
-            <div class="2u new-race-note">
+            <div class="col-2 new-race-note">
               <p><span lang="en">Format</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-format-icon"></span>
             </div>
-            <div class="8u">
+            <div class="col-8">
               <div class="select-wrapper">
                 <select id="new-race-format">
                   <option value="unseeded" selected="selected" lang="en">Unseeded</option>
@@ -632,18 +580,18 @@
           </div>
 
           <div id="new-race-character-container" class="row uniform 50%">
-            <div class="2u new-race-note">
+            <div class="col-2 new-race-note">
               <p><span lang="en">Character</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-character-icon"></span>
             </div>
-            <div class="7u">
+            <div class="col-7">
               <div class="select-wrapper">
                 <select id="new-race-character"></select>
               </div>
             </div>
-            <div class="1u new-race-randomize">
+            <div class="col-1 new-race-randomize">
               <button id="new-race-character-randomize" class="button alt small" type="button">
                 <i class="fa fa-random" aria-hidden="true"></i>
               </button>
@@ -651,13 +599,13 @@
           </div>
 
           <div id="new-race-goal-container" class="row uniform 50%">
-            <div class="2u new-race-note">
+            <div class="col-2 new-race-note">
               <p><span lang="en">Goal</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-goal-icon"></span>
             </div>
-            <div class="8u">
+            <div class="col-8">
               <div class="select-wrapper">
                 <select id="new-race-goal">
                   <option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
@@ -674,18 +622,18 @@
           </div>
 
           <div id="new-race-starting-build-container" class="row uniform 50% hidden">
-            <div class="2u new-race-note">
+            <div class="col-2 new-race-note">
               <p><span lang="en">Build</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-starting-build-icon"></span>
             </div>
-            <div class="7u">
+            <div class="col-7">
               <div class="select-wrapper">
                 <select id="new-race-starting-build"></select>
               </div>
             </div>
-            <div class="1u new-race-randomize">
+            <div class="col-1 new-race-randomize">
               <button id="new-race-build-randomize" class="button alt small" type="button">
                 <i class="fa fa-random" aria-hidden="true"></i>
               </button>
@@ -695,21 +643,21 @@
           <div class="padding2"></div>
 
           <div id="new-race-difficulty-row" class="row uniform 50%">
-            <div class="2u">
+            <div class="col-2">
               <p><span lang="en">Difficulty</span>:</p>
             </div>
-            <div class="2u">
+            <div class="col-2">
               <span id="new-race-difficulty-icon" class="new-race-size-icon-container">
                 <i id="new-race-difficulty-icon-i" class="fa fa-circle fa-2x" aria-hidden="true" style="color: green;"></i>
               </span>
             </div>
-            <div class="3u">
+            <div class="col-3">
               <input type="radio" id="new-race-difficulty-normal" name="new-race-difficulty" value="normal" checked></td>
               <label for="new-race-difficulty-normal" class="new-race-radio-label" >
                 <span class="new-race-radio-text" lang="en">Normal</span>
               </label>
             </div>
-            <div class="3u">
+            <div class="col-3">
               <input type="radio" id="new-race-difficulty-hard" name="new-race-difficulty" value="hard">
               <label for="new-race-difficulty-hard" class="new-race-radio-label">
                 <span class="new-race-radio-text" lang="en">Hard</span>
@@ -718,7 +666,7 @@
           </div>
 
           <div class="row uniform">
-            <div class="12u align-center">
+            <div class="col-12 align-center">
               <button class="button big" type="submit">
                 <i id="new-race-submit-button-icon" class="fa fa-check" aria-hidden="true"></i>
                 <span lang="en">Create</span>
@@ -733,7 +681,7 @@
       <div id="settings-tooltip">
         <form id="settings-form">
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Logged in as</span>:</li>
                 <li id="settings-username"></li>
@@ -742,7 +690,7 @@
           </div>
 
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Client version</span>:</li>
                 <li id="settings-version">Unknown</li>
@@ -751,7 +699,7 @@
           </div>
 
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Language</span>:</li>
                 <li>
@@ -768,11 +716,11 @@
           </div>
 
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Volume</span>:</li>
                 <li>
-                  <input id="settings-volume-slider" type="range" min="0" max="100" value="50" />
+                  <input id="settings-volume-slider" type="range" min="0" max="100" value="50" step="5" />
                 </li>
                 <li id="settings-volume-slider-value"></li>
                 <li>
@@ -787,7 +735,7 @@
           <div class="padding2"></div>
 
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li><span lang="en">Change stream URL</span>:</li>
                 <li>
@@ -798,7 +746,7 @@
           </div>
 
           <div class="row uniform 50%">
-            <div class="12u">
+            <div class="col-12">
               <ul class="actions">
                 <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
                   <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
@@ -816,7 +764,7 @@
           </div>
 
           <div class="row uniform">
-            <div class="6u">
+            <div class="col-6">
               <ul class="actions">
                 <li>
                   <button id="settings-save-button" class="button small" lang="en">Save</button>
@@ -839,7 +787,7 @@
       <div id="user-click-tooltip">
         <div class="padding0p5"></div>
         <div class="row">
-          <div class="12u">
+          <div class="col-12">
             <button id="user-click-profile" class="button alt small fit" type="button">
               <i class="fa fa-area-chart" aria-hidden="true"></i>
               &nbsp;
@@ -849,7 +797,7 @@
         </div>
         <div class="padding0p5"></div>
         <div class="row">
-          <div class="12u">
+          <div class="col-12">
             <button id="user-click-private-message" class="button alt small fit" type="button">
               <i class="fa fa-comment-o" aria-hidden="true"></i>
               &nbsp;
