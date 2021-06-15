@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import * as steam from "../steam";
+import login from "../login";
 
 export function init(): void {
   // Don't automatically log in with our Steam account
@@ -43,6 +43,6 @@ function loginDebug(account: number | null) {
     g.steam.accountID = 0;
     g.steam.screenName = `TestAccount${account}`;
     g.steam.ticket = "debug";
-    steam.login();
+    login();
   }
 }

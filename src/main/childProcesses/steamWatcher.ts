@@ -1,7 +1,9 @@
+/* eslint-disable import/no-unused-modules */
+
 // Child process that checks to see if the user logs out of Steam
 
 import Registry from "winreg";
-import { handleErrors, processExit } from "./subroutines";
+import { handleErrors } from "./subroutines";
 
 const CHECK_STEAM_INTERVAL = 5000; // 5 seconds
 
@@ -22,6 +24,8 @@ function onMessage(message: number | string) {
   // After we have spawned, the parent will communicate with us, telling us the ID of the Steam user
   // If the message is a number, we can assume that it is the steam ID
   if (typeof message === "number") {
+    // This child process will not be spawned if the Steam ID is 0 or a negative number
+    // Thus, we can be sure that at this point, the Steam ID is a real, valid ID
     const steamID = message;
 
     setInterval(() => {
@@ -46,16 +50,10 @@ function postGetActiveUser(
   item: Registry.RegistryItem,
   steamID: number,
 ) {
-  if (process.send === undefined) {
-    return;
-  }
-
-  if (err) {
-    process.send(
-      `error: Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
-      processExit,
+  if (err !== undefined) {
+    throw new Error(
+      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
     );
-    return;
   }
 
   // The active user is stored in the registry as a hexadecimal value,
@@ -63,6 +61,6 @@ function postGetActiveUser(
   const registrySteamID = parseInt(item.value, 16);
 
   if (steamID !== registrySteamID) {
-    process.send("error: It appears that you have logged out of Steam.");
+    throw new Error("It appears that you have logged out of Steam.");
   }
 }

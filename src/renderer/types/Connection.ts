@@ -33,13 +33,13 @@ export default class Connection {
   }
 
   onOpen(evt: Event): void {
-    if (this.callbacks.open) {
+    if (this.callbacks.open !== undefined) {
       this.callbacks.open(evt);
     }
   }
 
   onClose(evt: CloseEvent): void {
-    if (this.callbacks.close) {
+    if (this.callbacks.close !== undefined) {
       this.callbacks.close(evt);
     }
   }
@@ -60,7 +60,7 @@ export default class Connection {
   }
 
   onError(evt: Event): void {
-    if (this.callbacks.socketError) {
+    if (this.callbacks.socketError !== undefined) {
       this.callbacks.socketError(evt);
     }
   }
@@ -74,7 +74,12 @@ export default class Connection {
     if (this.ws.readyState !== WebSocket.OPEN) {
       return;
     }
-    this.ws.send(marshalAndPack(command, data || {}));
+
+    if (data === undefined) {
+      data = {}; // eslint-disable-line no-param-reassign
+    }
+    const stringToSend = marshalAndPack(command, data);
+    this.ws.send(stringToSend);
   }
 
   send(command: string, data?: unknown): void {

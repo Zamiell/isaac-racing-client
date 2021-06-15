@@ -1,11 +1,13 @@
 import * as electron from "electron";
 import { autoUpdater } from "electron-updater";
+import { HandlerDetails } from "electron/main";
 import path from "path";
 import * as file from "../common/file";
 import log from "../common/log";
 import settings from "../common/settings";
-import { IS_DEV } from "./constants";
 import { isaacFocus } from "./focus";
+import IS_DEV from "./isDev";
+import launchIsaac from "./launchIsaac";
 
 interface WindowSettings {
   width?: number;
@@ -78,9 +80,9 @@ export function createWindow(): electron.BrowserWindow {
   });
 
   // Open the JavaScript console
-  // if (IS_DEV) { // TODO uncomment
-  window.webContents.openDevTools();
-  // }
+  if (IS_DEV) {
+    window.webContents.openDevTools();
+  }
 
   // Check if the window is off-screen
   // (for example, this can happen if it was put on a second monitor which is currently
@@ -109,6 +111,16 @@ export function createWindow(): electron.BrowserWindow {
     settings.set("window", window.getBounds());
   });
 
+  // Make external links (i.e. with target="_blank") open in a real browser
+  // https://stackoverflow.com/questions/32402327/how-can-i-force-external-links-from-browser-window-to-open-in-a-default-browser
+  window.webContents.setWindowOpenHandler((details: HandlerDetails) => {
+    electron.shell.openExternal(details.url).catch((err) => {
+      log.error(`Failed open external URL: ${err}`);
+    });
+
+    return { action: "deny" };
+  });
+
   return window;
 }
 
@@ -130,9 +142,7 @@ function isInBounds(x: number, y: number) {
 
 export function registerKeyboardHotkeys(window: electron.BrowserWindow): void {
   const hotkeyIsaacLaunch = electron.globalShortcut.register("Alt+B", () => {
-    electron.shell.openExternal("steam://rungameid/250900").catch((err) => {
-      log.error(`Failed to open Isaac: ${err}`);
-    });
+    launchIsaac();
   });
   if (!hotkeyIsaacLaunch) {
     log.warn("Alt+B hotkey registration failed.");

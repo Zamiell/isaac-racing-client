@@ -7,22 +7,10 @@ module.exports = {
     "eslint-config-isaacscript/base",
   ],
 
-  /*
-  env: {
-    browser: true,
-    node: true,
-    es6: true,
-    jquery: true,
-  },
-  */
-
-  globals: {
-    // Lang: true,
-    // nodeRequire: true,
-  },
-
-  // Don't bother linting the compiled output
-  ignorePatterns: ["./dist/**"],
+  ignorePatterns: [
+    "dist/**", // Don't bother linting the compiled output
+    "src/main/lib/greenworks.js", // Don't bother linting the Greenworks library
+  ],
 
   parserOptions: {
     // ESLint needs to know about the project's TypeScript settings in order for TypeScript-specific
@@ -40,6 +28,30 @@ module.exports = {
 
   // We modify the base for some specific things
   rules: {
+    // Documentation:
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-cycle.md
+    // Defined at:
+    // https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/imports.js
+    // Unfortunately, this project has cyclical dependencies
     "import/no-cycle": "off",
+
+    // Documentation:
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unused-modules.md
+    // Not defined in parent configs
+    // This helps to find dead code that should be deleted
+    "import/no-unused-modules": [
+      "error",
+      {
+        missingExports: true,
+        unusedExports: true,
+        ignoreExports: [
+          "src/**/*.d.ts",
+          ".eslintrc.js",
+          "webpack.*.config.js",
+          "src/main/main.ts",
+          "src/renderer/main.ts",
+        ],
+      },
+    ],
   },
 };

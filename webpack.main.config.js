@@ -15,9 +15,10 @@ const webpackConfig = getBaseConfig(ELECTRON_TYPE);
 // https://stackoverflow.com/questions/40096470/get-webpack-not-to-bundle-files
 webpackConfig.entry = {
   main: path.join(BASE_PATH, "main.ts"),
+  isaac: path.join(CHILD_PROCESSES_PATH, "isaac.ts"),
+  socket: path.join(CHILD_PROCESSES_PATH, "socket.ts"),
   steam: path.join(CHILD_PROCESSES_PATH, "steam.ts"),
   steamWatcher: path.join(CHILD_PROCESSES_PATH, "steamWatcher.ts"),
-  isaac: path.join(CHILD_PROCESSES_PATH, "isaac.ts"),
 };
 webpackConfig.output = {
   path: path.join(__dirname, "dist", "main"),

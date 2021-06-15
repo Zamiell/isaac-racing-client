@@ -1,4 +1,23 @@
+import crypto from "crypto";
 import fs from "fs";
+
+export function copy(filePathSrc: string, filePathDst: string): void {
+  try {
+    fs.copyFileSync(filePathSrc, filePathDst);
+  } catch (err) {
+    throw new Error(
+      `Failed to copy "${filePathSrc}" to "${filePathDst}": ${err}`,
+    );
+  }
+}
+
+export function deleteFile(filePath: string): void {
+  try {
+    fs.unlinkSync(filePath);
+  } catch (err) {
+    throw new Error(`Failed to delete "${filePath}": ${err}`);
+  }
+}
 
 export function exists(filePath: string): boolean {
   let pathExists: boolean;
@@ -33,6 +52,22 @@ function getFileStats(filePath: string): fs.Stats {
   }
 
   return fileStats;
+}
+
+export function getHash(filePath: string): string {
+  let hash: string;
+  try {
+    const fileBuffer = read(filePath);
+    const sum = crypto.createHash("sha1");
+    sum.update(fileBuffer);
+    hash = sum.digest("hex");
+  } catch (err) {
+    throw new Error(
+      `Failed to create a hash for the "${filePath}" file: ${err}`,
+    );
+  }
+
+  return hash;
 }
 
 export function isDir(filePath: string): boolean {

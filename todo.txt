@@ -1,5 +1,5 @@
 New New TODO:
-- use new version of Alpha / fix CSS
+- enable strict mode in tsconfig
 - test typing in password input field in new race tooltip to see if icon fades in/out
 
 New TODO:

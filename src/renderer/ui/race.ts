@@ -8,6 +8,7 @@ import { CHARACTER_MAP } from "../characters";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
+import * as socket from "../ipc/socket";
 import {
   capitalize,
   closeAllTooltips,
@@ -18,7 +19,6 @@ import {
   pad,
   playSound,
 } from "../misc";
-import * as modSocket from "../modSocket";
 import { preloadSounds } from "../preloadSounds";
 import User from "../types/User";
 
@@ -265,12 +265,11 @@ export function show(raceID: number): void {
   preloadSounds();
 
   // Tell the Lua mod that we are in a new race
-  g.modSocket.userID = g.myUserID;
   g.modSocket.raceID = race.id;
   g.modSocket.status = race.status;
   g.modSocket.ranked = race.ruleset.ranked;
   g.modSocket.solo = race.ruleset.solo;
-  g.modSocket.rFormat = race.ruleset.format;
+  g.modSocket.format = race.ruleset.format;
   g.modSocket.difficulty = race.ruleset.difficulty;
   g.modSocket.character = character;
   g.modSocket.goal = race.ruleset.goal;
@@ -471,15 +470,6 @@ export function show(raceID: number): void {
         '<span lang="en">Complete the Boss Rush (after defeating Mom)</span><br />';
       goalTooltipContent +=
         '<span lang="en">and touch the trophy that falls down afterward.</span>';
-    } else if (goal === "Everything") {
-      goalTooltipContent +=
-        '<strong><span lang="en">Everything</span>:</strong><br />';
-      goalTooltipContent +=
-        '<span lang="en">Defeat Blue Baby, The Lamb, and Mega Satan</span><br />';
-      goalTooltipContent +=
-        '<span lang="en">and touch the trophy that falls down afterward.</span><br />';
-      goalTooltipContent +=
-        '(<span lang="en">You will automatically be taken to the right places.</span>)';
     } else if (goal === "custom") {
       goalTooltipContent +=
         '<strong><span lang="en">Custom</span>:</strong><br />';
@@ -521,7 +511,6 @@ export function show(raceID: number): void {
       const items = race.ruleset.seed.split(",");
 
       // Show the graphic corresponding to this item on the race title table
-      // TODO item 1 (the active)
       $("#race-title-items-icon1").css(
         "background-image",
         `url("img/items/${items[1]}.png")`,
@@ -534,7 +523,6 @@ export function show(raceID: number): void {
         "background-image",
         `url("img/items/${items[3]}.png")`,
       );
-      // TODO item 5 (the trinket)
 
       // Build the tooltip
       let buildTooltipContent = "";
@@ -626,7 +614,7 @@ export function participantAdd(i: number): void {
   }
 
   const racer = race.racerList[i];
-  if (!racer) {
+  if (racer === undefined) {
     log.error(
       `Failed to get racer #${i} from race #${g.currentRaceID}. (There are only ${race.racerList.length} racers in the race.)`,
     );
@@ -814,7 +802,7 @@ export function participantsSetStatus(i: number, initial = false): void {
     $("#header-lobby").removeClass("disabled");
 
     // Tell the Lua mod that we are finished with the race
-    modSocket.reset();
+    socket.send("reset");
   }
 
   // Play a sound effect if someone quit or finished
@@ -890,27 +878,8 @@ export function placeMidRecalculateAll(): void {
       } else if (racer2.floorNum > racer.floorNum) {
         racer.placeMid += 1;
       } else if (
-        race.ruleset.goal === "Everything" &&
         racer2.floorNum === racer.floorNum &&
-        racer2.floorNum >= 10 &&
-        racer2.stageType < racer.stageType
-      ) {
-        // This is custom logic for the "Everything" race goal
-        // Sheol is StageType 0 and the Dark Room is StageType 0
-        // Those are considered ahead of Cathedral and The Chest
-        racer.placeMid += 1;
-      } else if (
-        race.ruleset.goal === "Everything" &&
-        racer2.floorNum === racer.floorNum &&
-        racer2.floorNum >= 10 &&
-        racer2.stageType === racer.stageType &&
         racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor
-      ) {
-        racer.placeMid += 1;
-      } else if (
-        racer2.floorNum === racer.floorNum &&
-        racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor &&
-        (race.ruleset.goal !== "Everything" || racer2.floorNum < 10)
       ) {
         racer.placeMid += 1;
       }
@@ -1000,11 +969,11 @@ export function participantsSetStartingItem(i: number): void {
 }
 
 export function markOnline(_user: User): void {
-  // TODO
+  // This function is unimplemented
 }
 
 export function markOffline(): void {
-  // TODO
+  // This function is unimplemented
 }
 
 export function startCountdown(): void {
@@ -1039,8 +1008,7 @@ export function startCountdown(): void {
     playSound("lets-go");
 
     // Tell the Lua mod that we are starting a race
-    g.modSocket.countdown = 10;
-    modSocket.send();
+    socket.send("set", "countdown 10");
 
     // Show the countdown
     $("#race-ready-checkbox-container").fadeOut(FADE_TIME, () => {
@@ -1091,11 +1059,12 @@ export function countdownTick(i: number): void {
     g.modSocket.countdown = i;
     if (i === 0) {
       // This is to avoid bugs where things happen out of order
-      g.modSocket.status = "in progress";
-      g.modSocket.place = 0;
+      socket.send("set", "countdown -1");
+      socket.send("set", "status in progress");
+      socket.send("set", "place 0");
+    } else {
+      socket.send("set", `countdown ${i}`);
     }
-    modSocket.send();
-    // log.info(`modLoader - Sent a countdown of ${i}.`);
   }, FADE_TIME);
 
   if (i > 0) {
@@ -1286,7 +1255,7 @@ export function checkReadyValid(): void {
   }
 
   // Don't do anything if we are not in a race
-  if (g.currentScreen !== "race" || !g.currentRaceID) {
+  if (g.currentScreen !== "race" || g.currentRaceID === -1) {
     return;
   }
 
@@ -1315,25 +1284,18 @@ export function checkReadyValid(): void {
     // Do nothing
     // (we want to do no validation for custom rulesets;
     // it's all up to the players to decide when they are ready)
+  } else if (!g.gameState.modConnected) {
+    valid = false;
+    tooltipContent =
+      '<span lang="en">You must have the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
   } else if (!g.gameState.inGame) {
     valid = false;
     tooltipContent =
       '<span lang="en">You have to start a run before you can mark yourself as ready.</span>';
-  } else if (g.gameState.hardMode && race.ruleset.format !== "custom") {
+  } else if (!g.gameState.runMatchesRuleset) {
     valid = false;
     tooltipContent =
-      '<span lang="en">You must be in a "Normal" mode run before you can mark yourself as ready.</span>';
-  } else if (
-    !g.gameState.racingPlusModEnabled &&
-    race.ruleset.format !== "custom"
-  ) {
-    valid = false;
-    tooltipContent =
-      '<span lang="en">You must have the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
-  } else if (!g.gameState.fileChecksComplete) {
-    valid = false;
-    tooltipContent =
-      '<span lang="en">The Racing+ client is currently checking to see if your mod is corrupted. Please wait a minute or two.</span>';
+      '<span lang="en">The type of run that you are on does not match the race\'s ruleset. Make sure that you are not in a challenge and are on the correct difficulty.</span>';
   }
 
   if (!valid) {

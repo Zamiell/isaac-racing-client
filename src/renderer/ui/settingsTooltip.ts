@@ -100,7 +100,10 @@ export function init(): void {
   });
 
   $("#settings-enable-twitch-bot-checkbox").change(() => {
-    if ($("#settings-enable-twitch-bot-checkbox").prop("checked")) {
+    const isChecked = $("#settings-enable-twitch-bot-checkbox").prop(
+      "checked",
+    ) as boolean;
+    if (isChecked) {
       $("#settings-twitch-bot-delay-label").fadeTo(FADE_TIME, 1);
       $("#settings-twitch-bot-delay").fadeTo(FADE_TIME, 1);
       $("#settings-twitch-bot-delay").prop("disabled", false);

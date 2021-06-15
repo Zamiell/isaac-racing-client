@@ -1,7 +1,13 @@
+// Get a WebSocket cookie from the Racing+ server using our Steam ticket generated from Greenworks
+// The authentication flow is described here:
+// https://partner.steamgames.com/documentation/auth#client_to_backend_webapi
+// (you have to be logged in for the link to work)
+// The server will validate our session ticket using the Steam web API, and if successful, give us a cookie
+// If our Steam ID does not already exist in the database, we will be told to register
+
 import * as electron from "electron";
 import pkg from "../../package.json";
 import log from "../common/log";
-import SteamMessage from "../common/types/SteamMessage";
 import { FADE_TIME, IS_DEV, WEBSITE_URL } from "./constants";
 import g from "./globals";
 import { errorShow, findAjaxError } from "./misc";
@@ -10,65 +16,7 @@ import * as websocket from "./websocket";
 
 const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 10;
 
-// const websocket = nodeRequire('./js/websocket');
-// const registerScreen = nodeRequire('./js/ui/register');
-
-export function init(): void {
-  electron.ipcRenderer.on("steam", IPCSteam);
-}
-
-// Monitor for notifications from the child process that is getting the data from Greenworks
-function IPCSteam(
-  _event: electron.IpcRendererEvent,
-  message: string | SteamMessage,
-) {
-  log.info(`Steam child message: ${message}`);
-
-  if (typeof message !== "string") {
-    // If the message is not a string, assume that it is an object containing the Steam-related
-    // information from Greenworks
-    const steamMessage = message;
-
-    g.steam.id = steamMessage.id;
-    g.steam.accountID = steamMessage.accountID;
-    g.steam.screenName = steamMessage.screenName;
-    g.steam.ticket = steamMessage.ticket;
-
-    login();
-    return;
-  }
-
-  if (
-    message === "errorInit" ||
-    message.startsWith("error: Error: channel closed") ||
-    message.startsWith(
-      "error: Error: Steam initialization failed, but Steam is running, and steam_appid.txt is present and valid.",
-    )
-  ) {
-    errorShow(
-      "Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.",
-    );
-  } else if (message.startsWith("error: ")) {
-    // This is some other uncommon error
-    const match = /error: (.+)/.exec(message);
-    let error: string;
-    if (match) {
-      error = match[1];
-    } else {
-      error =
-        "Failed to parse an error message from the Greenworks child process.";
-    }
-    errorShow(error);
-  }
-}
-
-// Get a WebSocket cookie from the Racing+ server using our Steam ticket generated from Greenworks
-// The authentication flow is described here:
-// https://partner.steamgames.com/documentation/auth#client_to_backend_webapi
-// (you have to be logged in for the link to work)
-// The server will validate our session ticket using the Steam web API, and if successful, give us a cookie
-// If our Steam ID does not already exist in the database, we will be told to register
-export function login(): void {
+export default function login(): void {
   switch (g.autoUpdateStatus) {
     case null: {
       // Don't login yet if we are still checking for updates

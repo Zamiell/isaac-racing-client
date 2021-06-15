@@ -58,27 +58,37 @@ body {
 }
 
 .lobby-half {
-  height: calc((100% - 1.5em) / 2);
   width: 100%;
-  margin: 0 0 0 0;
   padding-right: 1.5em;
 }
 
-#lobby-top-half {
+.half {
+  height: calc((100% - 1.5em) / 2);
+  margin: 0 0 0 0;
+}
+
+.half-top {
+  height: 20em;
+  min-height: 20em;
+  max-height: 20em;
+  margin: 0 0 0 0;
+}
+
+.half-bottom {
+  height: calc(100% - 20em - 1.5em);
+  margin: 0 0 0 0;
+}
+
+.top-half {
   padding-top: 1.5em;
 }
 
-#lobby-bottom-half {
+.bottom-half {
   padding-bottom: 1.5em;
 }
 
-#lobby-separator {
+.box-separator {
   height: 1.5em;
-}
-
-.lobby-table-container {
-  overflow-y: auto;
-  height: 100%;
 }
 
 #lobby-chat-text {
@@ -458,7 +468,7 @@ body {
   Updating
 */
 
-#updating {
+.updating {
   font-size: 16pt !important;
   height: calc(100% - 20em);
   width: calc(100% - 20em);
@@ -468,7 +478,7 @@ body {
   margin-right: 0;
 }
 
-#updating > .box {
+.updating > .box {
   height: 60%;
   width: 100%;
   margin-top: 10em;
@@ -477,11 +487,11 @@ body {
   margin-right: 10em;
 }
 
-#updating-title {
+.updating-title {
   margin-left: -3.5em;
 }
 
-#updating-ajax {
+.updating-ajax {
   position: relative;
   bottom: 15px;
   right: 5px;
@@ -1052,11 +1062,57 @@ input[type=range] {
   Race (title table)
 */
 
-#race-title-box {
-  margin: 1.5em 0 1.5em 1.5em;
-  padding: 1em 1em 1em 1em; /* Default is 3em */
-  height: 15em;
-  text-align: center;
+#race {
+  margin: 0 0 0 0;
+  height: 100%;
+  width: 100%;
+}
+
+#race > div > div {
+  height: 100%;
+}
+
+#race > div > div > section {
+  padding: 1.5em;
+  margin-bottom: 0;
+  height: 100%;
+}
+
+#race-row {
+  height: 100%;
+}
+
+#race-top-left-row {
+  height: calc((100% - 1.5em) * 0.33);
+  width: 100%;
+  padding-top: 1.5em;
+  padding-left: 1.5em;
+  padding-right: 0em;
+  margin-right: 0em;
+}
+
+#race-bottom-left-row {
+  height: calc((100% - 1.5em) * 0.5);
+  width: 100%;
+  padding-top: 1.5em;
+  padding-left: 1.5em;
+  padding-right: 0em;
+  margin-right: 0em;
+}
+
+#race-chat-row {
+  height: 100%;
+  padding-top: 1.5em;
+  padding-right: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+#race-chat-box {
+  height: 100%;
+}
+
+#race-chat-text {
+  height: calc(100% - 4em);
 }
 
 #race-title-table {
@@ -1124,6 +1180,12 @@ input[type=range] {
   Race (title controls)
 */
 
+#race-title-box {
+  height: 100%;
+  text-align: center;
+  padding: 1.5em 1.5em 1.5em 1.5em;
+}
+
 #race-title-controls-container {
   margin-top: 1.2em;
   font-size: 1.25em;
@@ -1151,12 +1213,12 @@ input[type=range] {
 */
 
 #race-participants-box {
-  margin: 1.5em 0 1.5em 1.5em;
-  padding: 1em 1em 1em 1em; /* Default is 3em */
+  height: 100%;
+  padding: 1.5em 1.5em 1.5em 1.5em;
 }
 
 #race-participants-table-wrapper {
-  height: 16.5em;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -1195,21 +1257,6 @@ background-color: #cce6ff !important;
 /*
   Race (chat)
 */
-
-#race-chat-container {
-  padding-left: 1em;
-}
-
-#race-chat-box {
-  margin: 1.5em 1.5em 1.5em 0.5em;
-  padding: 1em 1em 1em 1em; /* Default is 3em */
-  height: 35em;
-  overflow-y: auto;
-}
-
-#race-chat-text {
-  height: 29em;
-}
 
 /*
   Modals

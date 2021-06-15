@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unused-modules */
+
 const languagePack = {
   token: {
     // Title screen

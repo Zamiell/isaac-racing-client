@@ -20,7 +20,8 @@ import {
 export function init(): void {
   $("#new-race-title-randomize").click(() => {
     // Don't randomize the race name if we are on a test account
-    if (/TestAccount\d+/.exec(g.myUsername)) {
+    const match = /TestAccount\d+/.exec(g.myUsername);
+    if (match !== null) {
       $("#new-race-title").val("{ test race }");
       return;
     }
@@ -134,7 +135,7 @@ export function init(): void {
     }
 
     const lastItem = build[build.length - 1] as unknown as BuildItem;
-    if (lastItem.spacing) {
+    if (lastItem.spacing === true) {
       const spacing = new Option("─────────────────────────");
       spacing.disabled = true;
       $("#new-race-starting-build").append($(spacing));

@@ -303,8 +303,10 @@ functionMap.set(83, (event: JQuery.KeyDownEvent) => {
 });
 
 // l
-functionMap.set(76, (_event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "race") {
-    $("#header-lobby").click();
+functionMap.set(76, (event: JQuery.KeyDownEvent) => {
+  if (event.altKey) {
+    if (g.currentScreen === "race") {
+      $("#header-lobby").click();
+    }
   }
 });

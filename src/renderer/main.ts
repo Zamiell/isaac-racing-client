@@ -10,11 +10,12 @@ import log from "../common/log";
 import * as automaticUpdate from "./automaticUpdate";
 import { IS_DEV } from "./constants";
 import g from "./globals";
-import * as isaac from "./isaac";
+import * as isaac from "./ipc/isaac";
+import * as socket from "./ipc/socket";
+import * as steam from "./ipc/steam";
+import * as steamWatcher from "./ipc/steamWatcher";
 import * as keyboard from "./keyboard";
 import * as localization from "./localization";
-import * as steam from "./steam";
-import * as steamWatcher from "./steamWatcher";
 import Item from "./types/Item";
 import * as devButtons from "./ui/devButtons";
 import * as header from "./ui/header";
@@ -36,13 +37,12 @@ $(() => {
 
   initData();
 
+  // Main
   automaticUpdate.init();
-  isaac.init();
   keyboard.init();
   localization.init();
-  steam.init();
-  steamWatcher.init();
 
+  // UI
   devButtons.init();
   header.init();
   lobbyScreen.init();
@@ -51,6 +51,12 @@ $(() => {
   raceScreen.init();
   registerScreen.init();
   settingsTooltip.init();
+
+  // IPC
+  isaac.init();
+  socket.init();
+  steam.init();
+  steamWatcher.init();
 
   log.info("Renderer initialization completed.");
 

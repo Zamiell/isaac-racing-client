@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 // It is possible for the webpack configuration to be written in TypeScript,
 // but this will not work with the full range of options in "tsconfig.json"
 // Keep the config file written in JavaScript for simplicity

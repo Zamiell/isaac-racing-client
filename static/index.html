@@ -37,9 +37,6 @@
     <!-- The Alpha HTML5UP template uses Skel -->
     <script src="js/skel.min.js"></script>
 
-    <!-- Functionality for the Alpha HTML5UP template -->
-    <!--<script src="js/alpha.js"></script>-->
-
     <!-- The main application code -->
     <script src="../dist/renderer/main.js"></script>
 
@@ -229,11 +226,11 @@
         </div><!-- register -->
 
         <!-- Updating -->
-        <div id="updating" class="hidden">
+        <div id="updating" class="updating hidden">
           <section class="box">
-            <div id="updating-title" class="row">
+            <div class="row updating-title">
               <h3><span lang="en">Updating</span></h3>
-              <div id="updating-ajax">
+              <div class="updating-ajax">
                 <div class="ajax-ring"></div>
               </div>
             </div>
@@ -242,11 +239,25 @@
           </section>
         </div><!-- updating -->
 
+        <!-- File Checking -->
+        <div id="file-checking" class="updating hidden">
+          <section class="box">
+            <div class="row updating-title">
+              <h3><span lang="en">File Checking</span></h3>
+              <div class="updating-ajax">
+                <div class="ajax-ring"></div>
+              </div>
+            </div>
+            <p lang="en" style="margin-bottom: 0;">Performing a scan on the Racing+ mod to ensure that it is not corrupted.</p>
+            <p lang="en">Please wait a few moments.</p>
+          </section>
+        </div><!-- file-checking -->
+
         <!-- Lobby -->
         <div id="lobby" class="hidden">
 
-          <!-- lobby-top-half -->
-          <div id="lobby-top-half" class="row lobby-half">
+          <!-- top-half -->
+          <div class="row half lobby-half top-half">
             <div class="col-12">
               <section id="lobby-current-races-box" class="box">
                 <div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
@@ -268,10 +279,10 @@
           </div>
 
           <!-- Spacing -->
-          <div id="lobby-separator" class="row"></div>
+          <div class="box-separator" class="row"></div>
 
-          <!-- lobby-bottom-half -->
-          <div id="lobby-bottom-half" class="row lobby-half">
+          <!-- bottom-half -->
+          <div class="row half lobby-half bottom-half">
             <div class="col-9">
               <section id="lobby-chat-box" class="box chat-box">
                 <div id="lobby-chat-text" class="chat-text selectable"></div>
@@ -293,134 +304,153 @@
         <!-- Race -->
         <div id="race" class="hidden">
 
-          <!-- Main -->
-          <section class="main container">
-            <div class="row">
-              <div class="col-8">
-                <section id="race-title-box" class="box">
-                  <h3 id="race-title"></h3>
-                  <div id="race-title-table-wrapper">
-                    <table id="race-title-table" class="alt">
-                      <thead>
-                        <th><span lang="en">Status</span></th>
-                        <th><span lang="en">Type</span></th>
-                        <th><span lang="en">Format</span></th>
-                        <th><span lang="en">Character</span></th>
-                        <th><span lang="en">Goal</span></th>
-                        <th id="race-title-table-build"><span lang="en">Build</span></th>
-                        <th id="race-title-table-items"><span lang="en">Items</span></th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td id="race-title-status"></td>
-                          <td id="race-title-type">
-                            <div class="race-title-icon-container">
-                              <span id="race-title-type-icon" class="race-title-icon"></span>
-                            </div>
-                          </td>
-                          <td id="race-title-format">
-                            <div class="race-title-icon-container">
-                              <span id="race-title-format-icon" class="race-title-icon"></span>
-                            </div>
-                          </td>
-                          <td id="race-title-character"></td>
-                          <td id="race-title-goal">
-                            <div class="race-title-icon-container">
-                              <span id="race-title-goal-icon" class="race-title-icon"></span>
-                            </div>
-                          </td>
-                          <td id="race-title-build">
-                            <div class="race-title-icon-container">
-                              <span id="race-title-build-icon" class="race-title-icon"></span>
-                            </div>
-                          </td>
-                          <td id="race-title-items-blind" class="hidden">
-                            <div class="race-title-icon-container1">
-                              <span class="race-title-items-icon-blind race-title-icon"></span>
-                            </div>
-                            <div class="race-title-icon-container2">
-                              <span class="race-title-items-icon-blind race-title-icon"></span>
-                            </div>
-                            <div class="race-title-icon-container3">
-                              <span class="race-title-items-icon-blind race-title-icon"></span>
-                            </div>
-                          </td>
-                          <td id="race-title-items" class="hidden">
-                            <div class="race-title-icon-container1">
-                              <span id="race-title-items-icon1" class="race-title-icon"></span>
-                            </div>
-                            <div class="race-title-icon-container2">
-                              <span id="race-title-items-icon2" class="race-title-icon"></span>
-                            </div>
-                            <div class="race-title-icon-container3">
-                              <span id="race-title-items-icon3" class="race-title-icon"></span>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+          <div id="race-row" class="row">
+            <div class="col-9">
 
-                  <div id="race-title-controls-container">
-                    <span id="race-ready-checkbox-container">
-                      <input id="race-ready-checkbox" type="checkbox" />
-                      <label id="race-ready-checkbox-label" for="race-ready-checkbox">
-                        <span id="race-ready-checkbox-text" lang="en">Ready</span>
-                      </label>
-                    </span>
-                    <h3 id="race-countdown" class="hidden"></h3>
-                    <ul class="actions">
-                      <li id="race-finish-button-container" class="hidden">
-                        <button id="race-finish-button" class="button small">
-                          <i class="fa fa-flag-checkered" aria-hidden="true"></i>
-                          &nbsp;
-                          <span lang="en">Finish Race</span>
-                        </button>
-                      </li>
-                      <li id="race-quit-button-container" class="hidden">
-                        <button id="race-quit-button" class="button small">
-                          <i class="mdi mdi-skull"></i>
-                          &nbsp;
-                          <span lang="en">Quit Race</span>
-                        </button>
-                      </li>
-                      <li id="race-controls-padding" class="hidden">
-                        <div class="hpadding1p5"></div>
-                      </li>
-                      <li id="race-num-left-container" class="hidden">
-                        <h3 id="race-num-left"></h3>
-                      </li>
-                    </ul>
-                  </div>
-                </section>
+              <!-- top-left -->
+              <div class="row half-top lobby-half top-half">
+                <div class="col-12">
+                  <section id="race-title-box" class="box">
+                    <h3 id="race-title"></h3>
+                    <div id="race-title-table-wrapper">
+                      <table id="race-title-table" class="alt">
+                        <thead>
+                          <th><span lang="en">Status</span></th>
+                          <th><span lang="en">Type</span></th>
+                          <th><span lang="en">Format</span></th>
+                          <th><span lang="en">Character</span></th>
+                          <th><span lang="en">Goal</span></th>
+                          <th id="race-title-table-build"><span lang="en">Build</span></th>
+                          <th id="race-title-table-items"><span lang="en">Items</span></th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td id="race-title-status"></td>
+                            <td id="race-title-type">
+                              <div class="race-title-icon-container">
+                                <span id="race-title-type-icon" class="race-title-icon"></span>
+                              </div>
+                            </td>
+                            <td id="race-title-format">
+                              <div class="race-title-icon-container">
+                                <span id="race-title-format-icon" class="race-title-icon"></span>
+                              </div>
+                            </td>
+                            <td id="race-title-character"></td>
+                            <td id="race-title-goal">
+                              <div class="race-title-icon-container">
+                                <span id="race-title-goal-icon" class="race-title-icon"></span>
+                              </div>
+                            </td>
+                            <td id="race-title-build">
+                              <div class="race-title-icon-container">
+                                <span id="race-title-build-icon" class="race-title-icon"></span>
+                              </div>
+                            </td>
+                            <td id="race-title-items-blind" class="hidden">
+                              <div class="race-title-icon-container1">
+                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                              </div>
+                              <div class="race-title-icon-container2">
+                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                              </div>
+                              <div class="race-title-icon-container3">
+                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                              </div>
+                            </td>
+                            <td id="race-title-items" class="hidden">
+                              <div class="race-title-icon-container1">
+                                <span id="race-title-items-icon1" class="race-title-icon"></span>
+                              </div>
+                              <div class="race-title-icon-container2">
+                                <span id="race-title-items-icon2" class="race-title-icon"></span>
+                              </div>
+                              <div class="race-title-icon-container3">
+                                <span id="race-title-items-icon3" class="race-title-icon"></span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
-                <section id="race-participants-box" class="box">
-                  <div id="race-participants-table-wrapper" class="table-wrapper vertical-center">
-                    <table id="race-participants-table" class="alt">
-                      <thead>
-                        <th id="race-participants-table-place" class="hidden" lang="en">Place</th>
-                        <th id="race-participants-table-racer" lang="en">Racer</th>
-                        <th id="race-participants-table-status" lang="en">Status</th>
-                        <th id="race-participants-table-floor" class="hidden" lang="en">Floor</th>
-                        <th id="race-participants-table-item" class="hidden" lang="en">Items</th>
-                        <th id="race-participants-table-time" class="hidden" lang="en">Time</th>
-                        <th id="race-participants-table-offset" class="hidden" lang="en">Offset</th>
-                      </thead>
-                      <tbody id="race-participants-table-body"></tbody>
-                    </table>
-                  </div>
-                </section>
+                    <div id="race-title-controls-container">
+                      <span id="race-ready-checkbox-container">
+                        <input id="race-ready-checkbox" type="checkbox" />
+                        <label id="race-ready-checkbox-label" for="race-ready-checkbox">
+                          <span id="race-ready-checkbox-text" lang="en">Ready</span>
+                        </label>
+                      </span>
+                      <h3 id="race-countdown" class="hidden"></h3>
+                      <ul class="actions">
+                        <li id="race-finish-button-container" class="hidden">
+                          <button id="race-finish-button" class="button small">
+                            <i class="fa fa-flag-checkered" aria-hidden="true"></i>
+                            &nbsp;
+                            <span lang="en">Finish Race</span>
+                          </button>
+                        </li>
+                        <li id="race-quit-button-container" class="hidden">
+                          <button id="race-quit-button" class="button small">
+                            <i class="mdi mdi-skull"></i>
+                            &nbsp;
+                            <span lang="en">Quit Race</span>
+                          </button>
+                        </li>
+                        <li id="race-controls-padding" class="hidden">
+                          <div class="hpadding1p5"></div>
+                        </li>
+                        <li id="race-num-left-container" class="hidden">
+                          <h3 id="race-num-left"></h3>
+                        </li>
+                      </ul>
+                    </div>
+                  </section>
+                </div>
               </div>
-              <div id="race-chat-container" class="col-4">
-                <section id="race-chat-box" class="box">
-                  <div id="race-chat-text" class="chat-text selectable"></div>
-                  <form id="race-chat-form">
-                    <input id="race-chat-box-input" type="text" placeholder="Chat" lang="en" />
-                  </form>
-                </select>
+
+              <!-- Spacing -->
+              <div class="box-separator" class="row"></div>
+
+              <!-- bottom-left -->
+              <div class="row half-bottom lobby-half bottom-half">
+                <div class="col-12">
+                  <section id="race-participants-box" class="box">
+                    <div id="race-participants-table-wrapper" class="table-wrapper vertical-center">
+                      <table id="race-participants-table" class="alt">
+                        <thead>
+                          <th id="race-participants-table-place" class="hidden" lang="en">Place</th>
+                          <th id="race-participants-table-racer" lang="en">Racer</th>
+                          <th id="race-participants-table-status" lang="en">Status</th>
+                          <th id="race-participants-table-floor" class="hidden" lang="en">Floor</th>
+                          <th id="race-participants-table-item" class="hidden" lang="en">Items</th>
+                          <th id="race-participants-table-time" class="hidden" lang="en">Time</th>
+                          <th id="race-participants-table-offset" class="hidden" lang="en">Offset</th>
+                        </thead>
+                        <tbody id="race-participants-table-body"></tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- right column -->
+            <div class="col-3">
+              <div id="race-chat-row" class="row">
+                <div class="col-12" style="padding-left: 0;">
+                  <section id="race-chat-box" class="box chat-box">
+                    <div id="race-chat-text" class="chat-text selectable"></div>
+                    <form id="race-chat-form">
+                      <input id="race-chat-box-input" type="text" placeholder="Chat" lang="en" />
+                    </form>
+                  </select>
+                </div>
               </div>
             </div>
-          </section><!-- main -->
+          </div>
+
         </div><!-- race -->
 
     </div><!-- page-wrapper -->

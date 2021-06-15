@@ -1,7 +1,10 @@
+/* eslint-disable import/no-unused-modules */
+
 // Child process that initializes the Steamworks API and generates a login ticket
 
-import fs from "fs";
+import * as file from "../../common/file";
 import SteamMessage from "../../common/types/SteamMessage";
+import { REBIRTH_STEAM_ID } from "../constants";
 import Greenworks, { SteamIDObject, TicketObject } from "../types/Greenworks";
 import { childError, handleErrors, processExit } from "./subroutines";
 
@@ -38,25 +41,12 @@ function greenworksInit() {
   //   C:\Repositories\isaac-racing-client\steam_appid.txt (in development)
   // 570660 is the Steam app ID for The Binding of Isaac: Rebirth
   const steamAppIDPath = "steam_appid.txt";
-  try {
-    fs.writeFileSync(steamAppIDPath, "250900");
-  } catch (err) {
-    process.send(
-      `error: Failed to write to the "${steamAppIDPath}" file: ${err}`,
-      processExit,
-    );
-    return;
-  }
+  file.write(steamAppIDPath, REBIRTH_STEAM_ID.toString());
 
   // Initialize Greenworks
-  try {
-    // This cannot be written as "!greenworks.init()"
-    if (greenworks.init() === false) {
-      process.send("errorInit", processExit);
-      return;
-    }
-  } catch (err) {
-    childError(err);
+  // (this cannot be written as "!greenworks.init()")
+  if (!greenworks.init()) {
+    process.send("errorInit", processExit);
     return;
   }
 
@@ -65,17 +55,13 @@ function greenworksInit() {
 
   // Check to see if it is valid
   if (steamIDObject.isValid !== 1) {
-    process.send(
-      "error: It appears that your Steam account is invalid.",
-      processExit,
-    );
-    return;
+    throw new Error("It appears that your Steam account is invalid.");
   }
 
   // Get a session ticket from Steam
   greenworks.getAuthSessionTicket((ticketObject: TicketObject) => {
     successCallback(steamIDObject, ticketObject);
-  }, failureCallback);
+  }, childError);
 }
 
 function successCallback(
@@ -96,8 +82,4 @@ function successCallback(
 
   // The ticket will become invalid if the process ends
   // Thus, we need to keep the process alive doing nothing until we get a message that the authentication is over
-}
-
-function failureCallback(err: Error) {
-  childError(err);
 }

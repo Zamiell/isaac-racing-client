@@ -2,6 +2,7 @@ import * as electron from "electron";
 import { autoUpdater } from "electron-updater";
 import * as childProcesses from "./childProcesses";
 import { isaacFocus } from "./focus";
+import launchIsaac from "./launchIsaac";
 
 const functionMap = new Map<
   string,
@@ -40,6 +41,21 @@ functionMap.set("quitAndInstall", () => {
 functionMap.set("restart", () => {
   electron.app.relaunch();
   electron.app.quit();
+});
+
+functionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
+  if (arg2 === "start") {
+    // Initialize the socket server in a separate process
+    childProcesses.start("socket", window);
+  } else {
+    // The the command from the renderer process to the child process
+    // (e.g. "set countdown 10")
+    childProcesses.send("socket", arg2);
+  }
+});
+
+functionMap.set("startIsaac", (_window: electron.BrowserWindow) => {
+  launchIsaac();
 });
 
 functionMap.set("steam", (window: electron.BrowserWindow) => {

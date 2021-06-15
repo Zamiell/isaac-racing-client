@@ -1,9 +1,15 @@
+import { SocketCommandOut } from "../renderer/types/SocketCommand";
+
 /**
  * parseIntSafe is a more reliable version of parseInt.
  * By default, "parseInt('1a')" will return "1", which is unexpected.
  * This returns either an integer or NaN.
  */
 export function parseIntSafe(input: string): number {
+  if (typeof input !== "string") {
+    return NaN;
+  }
+
   // Remove all leading and trailing whitespace
   let trimmedInput = input.trim();
 
@@ -24,4 +30,15 @@ export function parseIntSafe(input: string): number {
   }
 
   return Number.parseInt(trimmedInput, 10);
+}
+
+// We use roughly the same protocol for the WebSocket traffic as we do the TCP socket traffic
+// (based on Golem)
+// e.g. "floor 1" or "finish"
+export function unpackSocketMsg(rawData: string): [SocketCommandOut, string] {
+  const separator = " ";
+  const [command, ...dataArray] = rawData.split(separator);
+  const data = dataArray.join(separator);
+
+  return [command as SocketCommandOut, data];
 }

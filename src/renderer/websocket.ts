@@ -5,13 +5,16 @@ import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import discordEmotes from "./discordEmotes";
 import g from "./globals";
+import * as isaac from "./ipc/isaac";
+import * as socket from "./ipc/socket";
 import { capitalize, errorShow, playSound, warningShow } from "./misc";
-import * as modSocket from "./modSocket";
 import ChatMessage from "./types/ChatMessage";
 import Connection from "./types/Connection";
 import Race from "./types/Race";
 import RaceItem from "./types/RaceItem";
 import Racer from "./types/Racer";
+import RacerStatus from "./types/RacerStatus";
+import RaceStatus from "./types/RaceStatus";
 import User from "./types/User";
 import * as lobbyScreen from "./ui/lobby";
 import * as raceScreen from "./ui/race";
@@ -24,7 +27,9 @@ export function connect(): void {
   );
 
   // We have successfully authenticated with the server, so we no longer need the Greenworks process open
-  electron.ipcRenderer.send("asynchronous-message", "steamExit");
+  if (g.steam.accountID !== null && g.steam.accountID > 0) {
+    electron.ipcRenderer.send("asynchronous-message", "steamExit");
+  }
 
   // Establish a WebSocket connection
   // It will automatically use the cookie that we received earlier
@@ -42,22 +47,24 @@ function initMiscHandlers(conn: Connection) {
   conn.on("open", () => {
     log.info("WebSocket connection established.");
 
-    // Login success; join the lobby chat channel
+    // Launch the process that will perform Isaac-related checks
+    isaac.start();
+
     conn.send("roomJoin", {
       room: "lobby",
     });
 
-    // Do the proper transition to the lobby depending on where we logged in from
+    // Do the proper transition to the "File Checking" depending on where we logged in from
     if (g.currentScreen === "title-ajax") {
       g.currentScreen = "transition";
       $("#title").fadeOut(FADE_TIME, () => {
-        lobbyScreen.show();
+        showIsaacChecking();
       });
     } else if (g.currentScreen === "register-ajax") {
       g.currentScreen = "transition";
       $("#register").fadeOut(FADE_TIME, () => {
         registerScreen.reset();
-        lobbyScreen.show();
+        showIsaacChecking();
       });
     } else if (g.currentScreen === "error") {
       // If we are showing an error screen already, then don't bother going to the lobby
@@ -100,6 +107,16 @@ function initMiscHandlers(conn: Connection) {
       errorShow(error);
     }
   });
+}
+
+function showIsaacChecking() {
+  if (IS_DEV) {
+    lobbyScreen.show();
+  } else {
+    $("#file-checking").fadeIn(FADE_TIME, () => {
+      g.currentScreen = "file-checking";
+    });
+  }
 }
 
 function initMiscCommandHandlers(conn: Connection) {
@@ -181,7 +198,7 @@ function initChatCommandHandlers(conn: Connection) {
       lobbyScreen.usersDraw();
     } else if (data.room.startsWith("_race_")) {
       const match = /_race_(\d+)/.exec(data.room);
-      if (!match) {
+      if (match === null) {
         throw new Error(`Failed to parse the room name: ${data.room}`);
       }
       const raceIDString = match[1];
@@ -471,13 +488,13 @@ function initRaceCommandHandlers(conn: Connection) {
     if (race.status === "in progress") {
       // If the race is in progress, we are coming back after a disconnect
       // Write this to the save.dat file so that it does not reset us in the middle of the run
-      g.modSocket.status = race.status;
+      socket.send("set", `status ${race.status}`);
       log.info("Coming back after a disconnect.");
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
     // (and "status" if we are reconnecting)
-    modSocket.sendPlace();
+    socket.sendPlace();
   });
 
   conn.on("raceCreated", connRaceCreated);
@@ -580,7 +597,7 @@ function initRaceCommandHandlers(conn: Connection) {
 
       // Update the mod
       g.modSocket.numEntrants = race.racerList.length;
-      modSocket.send();
+      socket.sendAll();
     }
   }
 
@@ -684,13 +701,13 @@ function initRaceCommandHandlers(conn: Connection) {
       g.modSocket.numEntrants = race.racerList.length;
 
       // Since the person could have been readied up, recount how many people are ready
-      modSocket.sendPlace();
+      socket.sendPlace();
     }
   }
 
   interface RaceSetStatusData {
     id: number;
-    status: string;
+    status: RaceStatus;
   }
 
   conn.on("raceSetStatus", connRaceSetStatus);
@@ -717,11 +734,11 @@ function initRaceCommandHandlers(conn: Connection) {
     if (data.id === g.currentRaceID) {
       // Update the status of the race in the Lua mod
       // (we will update the status to "in progress" manually when the countdown reaches 0)
-      // (and we don't care if the race finishes because we will set the "save#.dat" file to defaults once we personally finish or quit the race)
+      // (and we don't care if the race finishes because we will set the "save#.dat" file to
+      // defaults once we personally finish or quit the race)
       if (data.status !== "in progress" && data.status !== "finished") {
         g.modSocket.status = data.status;
-        modSocket.send();
-        // log.info(`modLoader - Sent a race status of "${data.status}".`);
+        socket.sendAll();
       }
 
       // Do different things depending on the status
@@ -808,7 +825,7 @@ function initRaceCommandHandlers(conn: Connection) {
   interface RacerSetStatusData {
     id: number;
     name: string;
-    status: string;
+    status: RacerStatus;
     place: number;
     runTime: number;
   }
@@ -854,7 +871,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
-    modSocket.sendPlace();
+    socket.sendPlace();
   }
 
   interface RaceStartData {
@@ -962,7 +979,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
-    modSocket.sendPlace();
+    socket.sendPlace();
   }
 
   interface RacerAddItemData {

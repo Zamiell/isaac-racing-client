@@ -1,10 +1,11 @@
 import RaceItem from "./RaceItem";
+import RacerStatus from "./RacerStatus";
 
 /** Matches "RacerMessage" in "racer.go". */
 export default interface Racer {
   name: string;
   datetimeJoined: number;
-  status: string;
+  status: RacerStatus;
   floorNum: number;
   stageType: number;
   datetimeArrivedFloor: number;

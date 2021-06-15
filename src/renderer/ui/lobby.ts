@@ -2,10 +2,8 @@ import builds from "../../../static/data/builds.json";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import * as isaac from "../isaac";
+import * as socket from "../ipc/socket";
 import { capitalize, errorShow, escapeHTML, pad } from "../misc";
-import * as modSocket from "../modSocket";
-import * as steamWatcher from "../steamWatcher";
 import Race from "../types/Race";
 import * as header from "./header";
 
@@ -21,12 +19,6 @@ export function init(): void {
 
 // Called from the login screen or the register screen
 export function show(): void {
-  // Start the Steam watcher
-  steamWatcher.start();
-
-  // Start the Isaac validator
-  isaac.start();
-
   // Make sure that all of the forms are cleared out
   $("#login-username").val("");
   $("#login-password").val("");
@@ -115,7 +107,7 @@ export function showFromRace(): void {
     $("#lobby-chat-box-input").focus();
 
     // Update the Racing+ Lua mod
-    modSocket.reset();
+    socket.send("reset");
   });
 }
 

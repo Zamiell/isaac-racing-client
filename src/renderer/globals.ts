@@ -12,6 +12,7 @@ type Screen =
   | "register"
   | "register-ajax"
   | "updating"
+  | "file-checking"
   | "lobby"
   | "race"
   | "error"
@@ -23,18 +24,18 @@ type Screen =
 // The object that contains all of the global variables
 const globals = {
   autoUpdateStatus: null as string | null,
-  conn: null as Connection | null, // The WebSocket connection (set in "websocket.ts")
+  /** The WebSocket connection (set in "websocket.ts") */
+  conn: null as Connection | null,
   currentScreen: "title-ajax" as Screen,
   currentRaceID: -1,
   emoteList: [] as string[], // Filled in main.js
 
   gameState: {
-    inGame: false, // The mod will tell us if we are in the menu or in a run
-    hardMode: false, // The mod will tell us if a run is started on hard mode or Greed mode
-    // The mod will tell us if race validation succeeded, which is an indicator that they have
-    // successfully downloaded and are running the Racing+ Lua mod
-    racingPlusModEnabled: false,
-    fileChecksComplete: false, // This will be set to true when the "isaac.js" subprocess exits
+    modConnected: false,
+    /** The mod will tell us if we are in the menu or in a run. */
+    inGame: false,
+    /** The mod will tell us if the current run matches the race ruleset. */
+    runMatchesRuleset: false,
   },
 
   itemList: {} as Record<string, Item>, // Filled in main.js
@@ -43,14 +44,12 @@ const globals = {
   lastFinishedTime: 0,
 
   modSocket: {
-    // Race values are reset in the "mod-loader.js" file
-    userID: 0,
     raceID: 0,
     status: "none",
     myStatus: "not ready",
     ranked: false,
     solo: false,
-    rFormat: "unseeded",
+    format: "unseeded",
     difficulty: "hard",
     character: 3, // Judas
     goal: "Blue Baby",

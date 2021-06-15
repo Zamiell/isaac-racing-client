@@ -42,20 +42,20 @@ export function send(destination: string): void {
 
     // First, for any formatted command, validate that it is formatted correctly
     if (
-      /^\/p\b/.exec(message) ||
-      /^\/pm\b/.exec(message) ||
-      /^\/m\b/.exec(message) ||
-      /^\/msg\b/.exec(message) ||
-      /^\/w\b/.exec(message) ||
-      /^\/whisper\b/.exec(message) ||
-      /^\/t\b/.exec(message) ||
-      /^\/tell\b/.exec(message)
+      /^\/p\b/.exec(message) !== null ||
+      /^\/pm\b/.exec(message) !== null ||
+      /^\/m\b/.exec(message) !== null ||
+      /^\/msg\b/.exec(message) !== null ||
+      /^\/w\b/.exec(message) !== null ||
+      /^\/whisper\b/.exec(message) !== null ||
+      /^\/t\b/.exec(message) !== null ||
+      /^\/tell\b/.exec(message) !== null
     ) {
       isPM = true;
 
       // Validate that private messages have a recipient
       const m = /^\/\w+ (.+?) (.+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         [, chatArg1, chatArg2] = m; // recipient, message
       } else {
         warningShow(
@@ -86,10 +86,10 @@ export function send(destination: string): void {
         warningShow("That user is not currently online.");
         return;
       }
-    } else if (/^\/notice\b/.exec(message)) {
+    } else if (/^\/notice\b/.exec(message) !== null) {
       // Validate that there is an attached message
       const m = /^\/\w+ (.+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         [, chatArg1] = m;
       } else {
         warningShow(
@@ -97,10 +97,10 @@ export function send(destination: string): void {
         );
         return;
       }
-    } else if (/^\/ban\b/.exec(message)) {
+    } else if (/^\/ban\b/.exec(message) !== null) {
       // Validate that ban commands have a recipient and a reason
       const m = /^\/ban (.+?) (.+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         [, chatArg1, chatArg2] = m; // recipient, reason
       } else {
         warningShow(
@@ -108,10 +108,10 @@ export function send(destination: string): void {
         );
         return;
       }
-    } else if (/^\/unban\b/.exec(message)) {
+    } else if (/^\/unban\b/.exec(message) !== null) {
       // Validate that unban commands have a recipient
       const m = /^\/unban (.+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         [, chatArg1] = m;
       } else {
         warningShow(
@@ -119,7 +119,7 @@ export function send(destination: string): void {
         );
         return;
       }
-    } else if (/^\/r\b/.exec(message)) {
+    } else if (/^\/r\b/.exec(message) !== null) {
       // Check if the user is replying to a message
       isPM = true;
 
@@ -130,17 +130,17 @@ export function send(destination: string): void {
       }
 
       const m = /^\/r (.+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         chatArg1 = g.lastPM;
         [, chatArg2] = m;
       } else {
         warningShow("The format of a reply is: <code>/r [message]</code>");
         return;
       }
-    } else if (/^\/floor\b/.exec(message)) {
+    } else if (/^\/floor\b/.exec(message) !== null) {
       // Validate that unban commands have a recipient
       const m = /^\/floor (\d+) (\d+)/.exec(message);
-      if (m) {
+      if (m !== null) {
         [, chatArg1, chatArg2] = m; // stage, stage type
       } else {
         warningShow(
@@ -315,7 +315,7 @@ export function draw(
   // Don't show messages that are not for the current race
   if (room.startsWith("_race_")) {
     const match = /_race_(\d+)/.exec(room);
-    if (!match) {
+    if (match === null) {
       throw new Error("Failed to parse the race ID from the room.");
     }
     const raceIDString = match[1];
@@ -380,7 +380,7 @@ export function draw(
   if (error) {
     // The "chat-pm" class will make it red
     chatLine += '<span class="chat-pm">[ERROR]</span> ';
-  } else if (privateMessage) {
+  } else if (privateMessage !== null) {
     chatLine += `<span class="chat-pm">[PM ${privateMessage} <strong class="chat-pm">${name}</strong>]</span> &nbsp; `;
   } else if (name !== "!server") {
     chatLine += `&lt;<strong>${name}</strong>&gt; &nbsp; `;

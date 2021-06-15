@@ -8,8 +8,8 @@ import pkg from "../../package.json";
 import log from "../common/log";
 import * as settings from "../common/settings";
 import * as childProcesses from "./childProcesses";
-import { IS_DEV } from "./constants";
 import ipcFunctions from "./ipcFunctions";
+import IS_DEV from "./isDev";
 import * as onReady from "./onReady";
 
 let window = null as null | electron.BrowserWindow;
@@ -72,15 +72,17 @@ function initElectronHandlers() {
     }
   });
 
-  electron.ipcMain.on("asynchronous-message", ipcMessage);
+  electron.ipcMain.on("asynchronous-message", IPCMessage);
 
   // By default, Electron does not come with a right-click context menu
   // This library provides some sensible defaults
   electronContextMenu();
 }
 
-function ipcMessage(_event: electron.IpcMainEvent, arg1: string, arg2: string) {
-  log.info(`Main process received message: ${arg1}`);
+function IPCMessage(_event: electron.IpcMainEvent, arg1: string, arg2: string) {
+  log.info(
+    `Main process received message from renderer process of type: ${arg1}`,
+  );
 
   if (window === null) {
     log.error("Main window is not initialized yet.");
