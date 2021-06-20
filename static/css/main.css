@@ -799,6 +799,10 @@ body {
   margin: 0 0 0 0;
 }
 
+#new-race-form .col-7, #new-race-form .col-8, .margin-t-1 {
+  margin-top: 1em;
+}
+
 #new-race-title {
   width: 22em;
 }
@@ -811,6 +815,14 @@ body {
   padding-top: 2em !important;
 }
 
+#new-race-title-randomize {
+  margin-top: 0.5em !important;
+}
+
+#new-race-starting-build-container {
+  display: flex;
+}
+
 .new-race-randomize {
   padding-top: 1.5em !important;
 }
@@ -821,7 +833,7 @@ body {
 
 .new-race-toggle-row-container {
   position: relative;
-  height: 4.4em;
+  height: 3.4em;
 }
 
 .new-race-toggle-row-container > .row {
@@ -829,6 +841,10 @@ body {
   top: 0;
   left: 0;
   right: 0;
+}
+
+#new-race-password-row {
+  top: -16px !important;
 }
 
 .new-race-toggle-row-container > #new-race-ranked-row {
@@ -853,6 +869,10 @@ body {
   left: 0.35em;
 }
 
+#new-race-format-icon, #new-race-character-icon, #new-race-goal-icon, #new-race-starting-build-icon {
+  margin-top: 1.5em;
+}
+
 .new-race-radio-label {
   position: relative;
   bottom: 0.35em;
@@ -875,7 +895,7 @@ body {
 #new-race-password-no-password-icon > .fa,
 #new-race-password-has-password-icon > .fa {
   position: relative;
-  bottom: -0.3em;
+  bottom: -0.8em;
   left: 0.4em;
 }
 
@@ -887,7 +907,7 @@ body {
   background-repeat: no-repeat;
   background-position: bottom center;
   display: inline-block;
-  height: 1.75em; /* 3em */
+  height: 2.1em; /* 3em */
   width: 3em;
   position: relative;
   bottom: 8px;
@@ -1015,8 +1035,20 @@ body {
   background: #f8f8f8;
 }
 
+#settings-volume {
+  margin-bottom: auto;
+}
+
 #settings-volume-slider-value {
   width: 3em;
+}
+
+#settings-test-button {
+  margin-top: -0.5em;
+}
+
+#settings-twitch-bot li {
+  margin: auto;
 }
 
 #settings-username-capitalization {
@@ -1189,6 +1221,10 @@ input[type=range] {
 #race-title-controls-container {
   margin-top: 1.2em;
   font-size: 1.25em;
+}
+
+#race-title-controls-container ul.actions {
+  justify-content: center;
 }
 
 #race-ready-checkbox-text {

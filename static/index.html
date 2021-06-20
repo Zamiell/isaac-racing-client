@@ -382,31 +382,28 @@
                         </label>
                       </span>
                       <h3 id="race-countdown" class="hidden"></h3>
-                      <center>
-                        <div id="race-finish-button-container" class="hidden">
-                          <button id="race-finish-button" class="button small">
-                            <i class="fa fa-flag-checkered" aria-hidden="true"></i>
-                            &nbsp;
-                            <span lang="en">Finish Race</span>
-                          </button>
-                        </div>
-
-                        <div id="race-quit-button-container" class="hidden">
-                          <button id="race-quit-button" class="button small">
-                            <i class="mdi mdi-skull"></i>
-                            &nbsp;
-                            <span lang="en">Quit Race</span>
-                          </button>
-                        </div>
-
-                        <div id="race-controls-padding" class="hidden">
-                          <div class="hpadding1p5"></div>
-                        </div>
-
-                        <div id="race-num-left-container" class="hidden">
-                          <h3 id="race-num-left"></h3>
-                        </div>
-                      </center>
+                      <ul class="actions">
+                        <li id="race-finish-button-container" class="hidden">
+                            <button id="race-finish-button" class="button small">
+                                <i class="fa fa-flag-checkered" aria-hidden="true"></i>
+                                &nbsp;
+                                <span lang="en">Finish Race</span>
+                            </button>
+                        </li>
+                        <li id="race-quit-button-container" class="hidden">
+                            <button id="race-quit-button" class="button small">
+                                <i class="mdi mdi-skull"></i>
+                                &nbsp;
+                                <span lang="en">Quit Race</span>
+                            </button>
+                        </li>
+                        <li id="race-controls-padding" class="hidden">
+                            <div class="hpadding1p5"></div>
+                        </li>
+                        <li id="race-num-left-container" class="hidden">
+                            <h3 id="race-num-left"></h3>
+                        </li>
+                      </ul>
                     </div>
                   </section>
                 </div>
@@ -494,7 +491,7 @@
             <input id="password-input" type="password" placeholder="Race's Password" lang="en"/>
           </div>
         </div>
-        <div class="row uniform 50%">
+        <div class="row uniform 50% margin-t-1">
           <div class="col-2">
             <button id="password-modal-ok-button" class="button small block" lang="en">OK</button>
           </div>
@@ -511,7 +508,7 @@
           <div class="row uniform 50%">
             <div class="col-12">
               <ul class="actions">
-                <li><span lang="en">Title</span>:</li>
+                <li class="margin-t-1"><span lang="en">Title</span>:</li>
                 <li>
                   <input id="new-race-title" type="text" placeholder="Race title (optional)" lang="en" data-tooltip-content="#new-race-title-error" />
                 </li>
@@ -523,8 +520,6 @@
               </ul>
             </div>
           </div>
-
-          <div class="padding2"></div>
 
           <div class="row uniform 50%">
             <div class="col-2">
@@ -551,8 +546,6 @@
               </label>
             </div>
           </div>
-
-          <div class="padding2"></div>
 
           <div class="new-race-toggle-row-container">
             <div id="new-race-ranked-row" class="row uniform 50%">
@@ -619,7 +612,7 @@
             <div class="col-2">
               <span id="new-race-character-icon"></span>
             </div>
-            <div class="col-7">
+            <div class="col-7 margin-t-1">
               <div class="select-wrapper">
                 <select id="new-race-character"></select>
               </div>
@@ -638,7 +631,7 @@
             <div class="col-2">
               <span id="new-race-goal-icon"></span>
             </div>
-            <div class="col-8">
+            <div class="col-8 margin-t-1">
               <div class="select-wrapper">
                 <select id="new-race-goal">
                   <option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
@@ -661,7 +654,7 @@
             <div class="col-2">
               <span id="new-race-starting-build-icon"></span>
             </div>
-            <div class="col-7">
+            <div class="col-7 margin-t-1">
               <div class="select-wrapper">
                 <select id="new-race-starting-build"></select>
               </div>
@@ -734,7 +727,7 @@
           <div class="row uniform 50%">
             <div class="col-12">
               <ul class="actions">
-                <li><span lang="en">Language</span>:</li>
+                <li class="margin-t-1"><span lang="en">Language</span>:</li>
                 <li>
                   <div class="select-wrapper">
                     <select id="settings-language">
@@ -750,13 +743,13 @@
 
           <div class="row uniform 50%">
             <div class="col-12">
-              <ul class="actions">
+              <ul id="settings-volume" class="actions">
                 <li><span lang="en">Volume</span>:</li>
                 <li>
                   <input id="settings-volume-slider" type="range" min="0" max="100" value="50" step="5" />
                 </li>
                 <li id="settings-volume-slider-value"></li>
-                <li>
+                <li id="settings-test-button">
                   <button id="settings-volume-test" class="button alt small" type="button">
                     <span lang="en">Test</span>
                   </button>
@@ -770,7 +763,7 @@
           <div class="row uniform 50%">
             <div class="col-12">
               <ul class="actions">
-                <li><span lang="en">Change stream URL</span>:</li>
+                <li class="margin-t-1"><span lang="en">Change stream URL</span>:</li>
                 <li>
                   <input id="settings-stream-url" type="text" data-tooltip-content="#settings-stream-url-error" />
                 </li>
@@ -780,7 +773,7 @@
 
           <div class="row uniform 50%">
             <div class="col-12">
-              <ul class="actions">
+              <ul class="actions" id="settings-twitch-bot">
                 <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
                   <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
                   <label id="settings-enable-twitch-bot-checkbox-label" for="settings-enable-twitch-bot-checkbox">
