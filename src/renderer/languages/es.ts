@@ -3,8 +3,8 @@
 const languagePack = {
   token: {
     // Title screen
-    "A racing mod for The Binding of Isaac: Afterbirth+.":
-      "Un mod de carreras para The Binding of Isaac: Afterbirth+.",
+    "A racing mod for The Binding of Isaac: Repentance.":
+      "Un mod de carreras para The Binding of Isaac: Repentance.",
 
     // Register screen
     Register: "Regístrate",
@@ -131,13 +131,13 @@ const languagePack = {
     "Please relaunch the program.": "Por favor, relanza el programa.",
     'Locate "log.txt"': 'Localizar "log.txt"',
     'Select your Isaac "log.txt" file': 'Selecciona el "log.txt" del juego',
-    "Please try again and select your Afterbirth+ log file.":
-      "Por favor, intenta de nuevo y selecciona el fichero de log de tu Afterbirth+.",
+    "Please try again and select your Repentance log file.":
+      "Por favor, intenta de nuevo y selecciona el fichero de log de tu Repentance.",
 
     // Save file modal
     "Save File": "Fichero de guardado",
-    "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.":
-      "Racing+ no fue capaz de encontrar un fichero de guardado completo para The Binding of Isaac: Afterbirth+. Las carreras se suelen hacer en un fichero de guardado completo para que así todos los jugadores tengan las mismas posibilidades.",
+    "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Repentance. Racing is typically done on a fully unlocked file so that all players have the same possibilities.":
+      "Racing+ no fue capaz de encontrar un fichero de guardado completo para The Binding of Isaac: Repentance. Las carreras se suelen hacer en un fichero de guardado completo para que así todos los jugadores tengan las mismas posibilidades.",
     "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you aren't sure, make sure to back up your save files before proceeding.":
       "Si lo deseas, el cliente de Racing+ puede instalarte automáticamente un fichero de guardado completo. Ten cuidado, esto sobreescribirá tu fichero de guardado actual. Asegúrate de hacer backups antes de proceder.",
     "Replace save slot": "Reemplaza el slot de guardado",
@@ -160,10 +160,10 @@ const languagePack = {
     Casual: "Casual",
     Season: "Temporada",
     Random: "Aleatorio",
-    "Random (all, 1-33)": "Aleatorio (todos, 1-33)",
-    "Random (single items only, 1-26)": "Aleatorio (sólo objetos únicos, 1-26)",
-    "Random (Treasure Room only, 1-20)":
-      "Aleatorio (sólo objetos de la Habitación del Tesoro",
+    "Random (all, 1-31)": "Aleatorio (todos, 1-31)",
+    "Random (single items only, 1-24)": "Aleatorio (sólo objetos únicos, 1-24)",
+    "Random (Treasure Room only, 1-15)":
+      "Aleatorio (sólo objetos de la Habitación del Tesoro)",
     Create: "Crear",
 
     // Settings tooltip
@@ -212,10 +212,12 @@ const languagePack = {
     "The format of an unban is": "El formato de un indulto es",
 
     // log-watcher.js
-    'It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.':
-      'Parece que has elegido un "log.txt" del Rebirth, el cual es diferente del "log.txt" del Afterbirth+.',
-    'It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.':
-      'Parece que has elegido un "log.txt" del Afterbirth, el cual es diferente del "log.txt" del Afterbirth+.',
+    'It appears that you have selected your Rebirth "log.txt" file, which is different than the Repentance "log.txt" file.':
+      'Parece que has elegido un "log.txt" del Rebirth, el cual es diferente del "log.txt" del Repentance.',
+    'It appears that you have selected your Afterbirth "log.txt" file, which is different than the Repentance "log.txt" file.':
+      'Parece que has elegido un "log.txt" del Afterbirth, el cual es diferente del "log.txt" del Repentance.',
+    'It appears that you have selected your Afterbirth+ "log.txt" file, which is different than the Repentance "log.txt" file.':
+      'Parece que has elegido un "log.txt" del Afterbirth+, el cual es diferente del "log.txt" del Repentance.',
 
     // race.js
     "The random items are not revealed until the race begins!":

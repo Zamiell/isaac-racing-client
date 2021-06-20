@@ -3,7 +3,7 @@
 const languagePack = {
   token: {
     // Title screen
-    "A racing mod for The Binding of Isaac: Afterbirth+.": "",
+    "A racing mod for The Binding of Isaac: Repentance.": "",
 
     // Register screen
     Register: "",
@@ -124,11 +124,11 @@ const languagePack = {
     "Please relaunch the program.": "",
     'Locate "log.txt"': "",
     'Select your Isaac "log.txt" file': "",
-    "Please try again and select your Afterbirth+ log file.": "",
+    "Please try again and select your Repentance log file.": "",
 
     // Save file modal
     "Save File": "",
-    "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Afterbirth+. Racing is typically done on a fully unlocked file so that all players have the same possibilities.":
+    "Racing+ was not able to find a fully unlocked save file for The Binding of Isaac: Repentance. Racing is typically done on a fully unlocked file so that all players have the same possibilities.":
       "",
     "If you want, the Racing+ client can automatically install a fully unlocked save file for you. Be careful, as this will overwrite the existing save file. If you aren't sure, make sure to back up your save files before proceeding.":
       "",
@@ -196,9 +196,11 @@ const languagePack = {
     "The format of an unban is": "",
 
     // log-watcher.js
-    'It appears that you have selected your Rebirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.':
+    'It appears that you have selected your Rebirth "log.txt" file, which is different than the Repentance "log.txt" file.':
       "",
-    'It appears that you have selected your Afterbirth "log.txt" file, which is different than the Afterbirth+ "log.txt" file.':
+    'It appears that you have selected your Afterbirth "log.txt" file, which is different than the Repentance "log.txt" file.':
+      "",
+    'It appears that you have selected your Afterbirth+ "log.txt" file, which is different than the Repentance "log.txt" file.':
       "",
 
     // race.js
