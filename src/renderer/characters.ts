@@ -59,24 +59,23 @@ export const PLAYABLE_CHARACTERS = [
   "Apollyon", // 13
   "The Forgotten", // 14
   "Bethany", // 15
-  "Jacob", // 16
-  "Esau", // 17
-  "Tainted Isaac", // 18
-  "Tainted Magdalene", // 19
-  "Tainted Cain", // 20
-  "Tainted Judas", // 21
-  "Tainted Blue Baby", // 22
-  "Tainted Eve", // 23
-  "Tainted Samson", // 24
-  "Tainted Azazel", // 25
-  "Tainted Lazarus", // 26
-  "Tainted Eden", // 27
-  "Tainted Lost", // 28
-  "Tainted Lilith", // 29
-  "Tainted Keeper", // 30
-  "Tainted Apollyon", // 31
-  "Tainted Forgotten", // 32
-  "Tainted Bethany", // 33
-  "Tainted Jacob", // 34
-  "Random Baby", // 35
+  "Jacob and Esau", // 16
+  "Tainted Isaac", // 17
+  "Tainted Magdalene", // 18
+  "Tainted Cain", // 19
+  "Tainted Judas", // 20
+  "Tainted Blue Baby", // 21
+  "Tainted Eve", // 22
+  "Tainted Samson", // 23
+  "Tainted Azazel", // 24
+  "Tainted Lazarus", // 25
+  "Tainted Eden", // 26
+  "Tainted Lost", // 27
+  "Tainted Lilith", // 28
+  "Tainted Keeper", // 29
+  "Tainted Apollyon", // 30
+  "Tainted Forgotten", // 31
+  "Tainted Bethany", // 32
+  "Tainted Jacob", // 33
+  "Random Baby", // 34
 ];
