@@ -20,5 +20,6 @@ export default class ModSocket {
   countdown = -1;
   placeMid = 0;
   place = -1;
+  numReady = 0;
   numEntrants = 1;
 }

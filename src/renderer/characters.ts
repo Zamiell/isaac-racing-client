@@ -59,7 +59,7 @@ export const PLAYABLE_CHARACTERS = [
   "Apollyon", // 13
   "The Forgotten", // 14
   "Bethany", // 15
-  "Jacob and Esau", // 16
+  "Jacob & Esau", // 16
   "Tainted Isaac", // 17
   "Tainted Magdalene", // 18
   "Tainted Cain", // 19

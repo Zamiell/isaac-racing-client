@@ -274,8 +274,13 @@ export function show(raceID: number): void {
   g.modSocket.seed = race.ruleset.seed;
   g.modSocket.startingBuild = race.ruleset.startingBuild;
   g.modSocket.countdown = -1;
-  // We will send all of this stuff along with "place", "placeMid", and "numEntrants" later
-  // (in a few milliseconds) once we receive the "racerList" command from the server
+  // The real values for the rest will be sent once we receive the "racerList" command from the
+  // server
+  g.modSocket.place = 0;
+  g.modSocket.placeMid = -1;
+  g.modSocket.numReady = 0;
+  g.modSocket.numEntrants = 1;
+  modSocket.sendAll();
 
   // Show and hide some buttons in the header
   $("#header-profile").fadeOut(FADE_TIME);
@@ -566,7 +571,8 @@ export function show(raceID: number): void {
     $("#race-ready-checkbox").prop("disabled", true);
     $("#race-ready-checkbox-label").css("cursor", "default");
     $("#race-ready-checkbox-container").fadeTo(FADE_TIME, 0.38);
-    checkReadyValid(); // This will update the tooltip on what the player needs to do in order to become ready
+    // This will update the tooltip on what the player needs to do in order to become ready
+    checkReadyValid();
     $("#race-countdown").fadeOut(0);
     $("#race-quit-button-container").fadeOut(0);
     $("#race-finish-button-container").fadeOut(0);
@@ -631,7 +637,12 @@ export function participantAdd(i: number): void {
     racerDiv += "-"; // They quit or were disqualified
   } else if (racer.place === 0) {
     // If they are still racing
-    racerDiv += ordinalSuffixOf(racer.placeMid); // This is their non-finished place based on their current floor
+    if (racer.placeMid === -1) {
+      racerDiv += "-";
+    } else {
+      // This is their non-finished place based on their current floor
+      racerDiv += ordinalSuffixOf(racer.placeMid);
+    }
   } else {
     // They finished, so mark the place as a different color to distinguish it from a mid-game place
     racerDiv += '<span style="color: blue;">';
@@ -679,6 +690,7 @@ export function participantAdd(i: number): void {
   // Update some values in the row
   participantsSetStatus(i, true);
   participantsSetFloor(i);
+  participantsSetPlaceMid(i);
   participantsSetStartingItem(i);
 
   // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
@@ -730,9 +742,6 @@ export function participantsSetStatus(i: number, initial = false): void {
     $(`#race-participants-table-${racer.name}-place`).html("-");
   }
 
-  // Recalculate everyone's mid-race places (and let the mod know)
-  placeMidRecalculateAll();
-
   // Find out the number of people left in the race
   let numLeft = 0;
   for (let j = 0; j < race.racerList.length; j++) {
@@ -764,7 +773,7 @@ export function participantsSetStatus(i: number, initial = false): void {
   }
 
   // If someone finished, play a sound effect corresponding to how they did
-  // (don't play sound effects for 1 player races)
+  // (but don't play sound effects for 1 player races)
   if (
     racer.name === g.myUsername &&
     racer.status === "finished" &&
@@ -799,9 +808,6 @@ export function participantsSetStatus(i: number, initial = false): void {
 
     // Activate the "Lobby" button in the header
     $("#header-lobby").removeClass("disabled");
-
-    // Tell the Lua mod that we are finished with the race
-    modSocket.reset();
   }
 
   // Play a sound effect if someone quit or finished
@@ -813,57 +819,6 @@ export function participantsSetStatus(i: number, initial = false): void {
       playSound("quit");
     }
   }
-}
-
-// Recalculate everyone's mid-race places
-export function placeMidRecalculateAll(): void {
-  const race = g.raceList.get(g.currentRaceID);
-  if (race === undefined) {
-    return;
-  }
-
-  // Get the place that someone would be if they finished the race right now
-  let currentPlace = 0;
-  for (let i = 0; i < race.racerList.length; i++) {
-    if (race.racerList[i].place > currentPlace) {
-      currentPlace = race.racerList[i].place;
-    }
-  }
-  currentPlace += 1;
-
-  for (let i = 0; i < race.racerList.length; i++) {
-    const racer = race.racerList[i];
-    if (racer.status !== "racing") {
-      continue;
-    }
-    racer.placeMid = currentPlace;
-    for (let j = 0; j < race.racerList.length; j++) {
-      const racer2 = race.racerList[j];
-      if (racer2.status !== "racing") {
-        continue;
-      }
-      if (racer2.characterNum < racer.characterNum) {
-        continue;
-      }
-      if (racer2.characterNum > racer.characterNum) {
-        racer.placeMid += 1;
-      } else if (racer2.floorNum > racer.floorNum) {
-        racer.placeMid += 1;
-      } else if (
-        racer2.floorNum === racer.floorNum &&
-        racer2.datetimeArrivedFloor < racer.datetimeArrivedFloor
-      ) {
-        racer.placeMid += 1;
-      }
-    }
-    const ordinal = ordinalSuffixOf(racer.placeMid);
-    $(`#race-participants-table-${racer.name}-place`).html(ordinal);
-  }
-
-  // Disable the feature where the rows are sorted by position,
-  // as it causes the rows to get duplicated for some reason
-  // (it likely has to do with the conversion to TypeScript and modification of the sort algorithm)
-  // sortTableByPositions();
 }
 
 export function participantsSetFloor(i: number): void {
@@ -908,17 +863,26 @@ export function participantsSetFloor(i: number): void {
   } else if (floorNum === 12) {
     floorDiv = "Void";
   } else if (floorNum === 13) {
-    // This is not a real floor
-    floorDiv = "MS"; // Mega Satan
+    floorDiv = "Home";
   } else {
     errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
     return;
   }
 
   $(`#race-participants-table-${name}-floor`).html(floorDiv);
+}
 
-  // Recalculate everyone's mid-race places
-  placeMidRecalculateAll();
+export function participantsSetPlaceMid(i: number): void {
+  const race = g.raceList.get(g.currentRaceID);
+  if (race === undefined) {
+    return;
+  }
+
+  const racer = race.racerList[i];
+  const { placeMid } = racer;
+
+  const html = placeMid === -1 ? "-" : ordinalSuffixOf(placeMid);
+  $(`#race-participants-table-${racer.name}-place`).html(html);
 }
 
 export function participantsSetStartingItem(i: number): void {
@@ -1083,11 +1047,11 @@ export function countdownTick(i: number): void {
         });
       }
 
-      // Add default values to the columns to the race participants table (defaults)
+      // Add default values to the columns to the race participants table
       for (let j = 0; j < race.racerList.length; j++) {
         race.racerList[j].status = "racing";
         race.racerList[j].place = 0;
-        race.racerList[j].placeMid = 1;
+        race.racerList[j].placeMid = -1;
 
         const racerName = race.racerList[j].name;
         const statusDiv =

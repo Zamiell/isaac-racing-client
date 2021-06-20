@@ -60,16 +60,7 @@ export function sendPlace(): void {
       g.modSocket.placeMid = -1; // This will show "last person left"
     }
   } else if (race.status === "open" || race.status === "starting") {
-    // Count how many people are ready
-    let numReady = 0;
-    for (let i = 0; i < race.racerList.length; i++) {
-      const racer = race.racerList[i];
-
-      if (racer.status === "ready") {
-        numReady += 1;
-      }
-    }
-    g.modSocket.placeMid = numReady;
+    g.modSocket.numReady = getNumReady(race);
   }
   g.modSocket.numEntrants = race.racerList.length;
 
@@ -90,6 +81,20 @@ function getMyStatus(race: Race) {
   }
 
   return null;
+}
+
+export function getNumReady(race: Race): number {
+  // Count how many people are ready
+  let numReady = 0;
+  for (let i = 0; i < race.racerList.length; i++) {
+    const racer = race.racerList[i];
+
+    if (racer.status === "ready") {
+      numReady += 1;
+    }
+  }
+
+  return numReady;
 }
 
 export function sendAll(): void {

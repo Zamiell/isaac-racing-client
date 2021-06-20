@@ -581,7 +581,7 @@ function initRaceCommandHandlers(conn: Connection) {
         startingItem: 0,
         characterNum: 0,
         place: 0,
-        placeMid: 1,
+        placeMid: -1,
         datetimeFinished: 0,
         runTime: 0,
         comment: "",
@@ -590,10 +590,11 @@ function initRaceCommandHandlers(conn: Connection) {
       // Update the race screen
       raceScreen.participantAdd(race.racerList.length - 1);
 
+      g.modSocket.numReady = modSocket.getNumReady(race);
+      modSocket.send("set", `numReady ${g.modSocket.numReady}`);
       g.modSocket.numEntrants = race.racerList.length;
+      modSocket.send("set", `numEntrants ${g.modSocket.numEntrants}`);
     }
-
-    modSocket.sendAll();
   }
 
   interface RaceLeftData {
@@ -691,10 +692,10 @@ function initRaceCommandHandlers(conn: Connection) {
       }
 
       // Update the mod
+      g.modSocket.numReady = modSocket.getNumReady(race);
+      modSocket.send("set", `numReady ${g.modSocket.numReady}`);
       g.modSocket.numEntrants = race.racerList.length;
-
-      // Since the person could have been readied up, recount how many people are ready
-      modSocket.sendPlace();
+      modSocket.send("set", `numEntrants ${g.modSocket.numEntrants}`);
     }
   }
 
@@ -729,7 +730,7 @@ function initRaceCommandHandlers(conn: Connection) {
       // defaults once we personally finish or quit the race)
       if (data.status !== "in progress" && data.status !== "finished") {
         g.modSocket.status = data.status;
-        modSocket.sendAll();
+        modSocket.send("set", `status ${g.modSocket.status}`);
       }
 
       // Do different things depending on the status
@@ -859,8 +860,17 @@ function initRaceCommandHandlers(conn: Connection) {
       }
     }
 
-    // Update the mod with "myStatus", "placeMid" and "place"
-    modSocket.sendPlace();
+    if (data.name === g.myUsername) {
+      g.modSocket.myStatus = data.status;
+      modSocket.send("set", `myStatus ${g.modSocket.myStatus}`);
+      g.modSocket.place = data.place;
+      modSocket.send("set", `place ${g.modSocket.place}`);
+    }
+
+    if (race.status === "open") {
+      g.modSocket.numReady = modSocket.getNumReady(race);
+      modSocket.send("set", `numReady ${g.modSocket.numReady}`);
+    }
   }
 
   interface RaceStartData {
@@ -964,9 +974,52 @@ function initRaceCommandHandlers(conn: Connection) {
         break;
       }
     }
+  }
 
-    // Update the mod with "myStatus", "placeMid" and "place"
-    modSocket.sendPlace();
+  interface RacerSetPlaceMidData {
+    id: number;
+    name: string;
+    placeMid: number;
+  }
+
+  conn.on("racerSetPlaceMid", connRacerSetPlaceMid);
+  function connRacerSetPlaceMid(data: RacerSetPlaceMidData) {
+    if (g.currentScreen === "transition") {
+      // Come back when the current transition finishes
+      setTimeout(() => {
+        connRacerSetPlaceMid(data);
+      }, FADE_TIME + 5); // 5 milliseconds of leeway
+      return;
+    }
+
+    if (data.id !== g.currentRaceID) {
+      return;
+    }
+
+    const race = g.raceList.get(data.id);
+    if (race === undefined) {
+      return;
+    }
+
+    // Find the player in the racerList
+    for (let i = 0; i < race.racerList.length; i++) {
+      const racer = race.racerList[i];
+      if (data.name === racer.name) {
+        // Update their placeMid locally
+        racer.placeMid = data.placeMid;
+
+        // Update the race screen
+        if (g.currentScreen === "race") {
+          raceScreen.participantsSetPlaceMid(i);
+        }
+
+        break;
+      }
+    }
+
+    if (data.name === g.myUsername) {
+      modSocket.send("set", `placeMid ${data.placeMid}`);
+    }
   }
 
   interface RacerAddItemData {
@@ -1075,7 +1128,6 @@ function initRaceCommandHandlers(conn: Connection) {
       const racer = race.racerList[i];
       if (data.name === racer.name) {
         racer.characterNum = data.characterNum;
-        raceScreen.placeMidRecalculateAll();
         break;
       }
     }

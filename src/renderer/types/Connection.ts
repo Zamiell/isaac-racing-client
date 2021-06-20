@@ -6,10 +6,11 @@ const SPAMMY_COMMANDS = [
   "privateMessage",
   "discordMessage",
   "adminMessage",
-  "racerSetFloor",
-  "racerAddItem",
-  "racerSetStartingItem",
-  "racerCharacter",
+  // "racerSetFloor",
+  // "racerSetPlaceMid"
+  // "racerAddItem",
+  // "racerSetStartingItem",
+  // "racerCharacter",
 ];
 
 interface WebSocketCallbackCommands {
