@@ -24,7 +24,8 @@
   [{ "id": 415, "name": "Crown of Light" }],
   [{ "id": 331, "name": "Godhead" }],
   [{ "id": 182, "name": "Sacred Heart" }],
-  [{ "id": 643, "name": "Revelation", "spacing": true }],
+  [{ "id": 643, "name": "Revelation" }],
+  [{ "id": 579, "name": "Spirit Sword", "spacing": true }],
 
   [{ "id": 69,  "name": "Chocolate Milk" },
    { "id": 50,  "name": "Steven" }],
