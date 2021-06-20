@@ -947,7 +947,7 @@ body {
   width: 4.5em;
   position: relative;
   bottom: 10px; /* 3em = 53px, height of Isaac = 33px, 53px - 33px = 20px, 20px / 2 = 10px */
-  left: -10px; /* center char sprites because of J&E
+  left: -10px; /* center char sprites because of J&E */
 }
 
 #new-race-goal {
