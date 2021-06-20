@@ -6,8 +6,8 @@
 // If our Steam ID does not already exist in the database, we will be told to register
 
 import * as electron from "electron";
+import log from "electron-log";
 import pkg from "../../package.json";
-import log from "../common/log";
 import { FADE_TIME, IS_DEV, WEBSITE_URL } from "./constants";
 import g from "./globals";
 import { errorShow, findAjaxError } from "./misc";

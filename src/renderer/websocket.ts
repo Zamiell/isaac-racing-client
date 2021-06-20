@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import log from "../common/log";
+import log from "electron-log";
 import { parseIntSafe } from "../common/util";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
@@ -7,7 +7,14 @@ import discordEmotes from "./discordEmotes";
 import g from "./globals";
 import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
-import { capitalize, errorShow, playSound, warningShow } from "./misc";
+import {
+  amSecondTestAccount,
+  capitalize,
+  errorShow,
+  playSound,
+  warningShow,
+} from "./misc";
+import * as modSocket from "./modSocket";
 import ChatMessage from "./types/ChatMessage";
 import Connection from "./types/Connection";
 import Race from "./types/Race";
@@ -48,7 +55,10 @@ function initMiscHandlers(conn: Connection) {
     log.info("WebSocket connection established.");
 
     // Launch the process that will perform Isaac-related checks
-    isaac.start();
+    // (we don't need to do these checks in a development environment though)
+    if (!IS_DEV) {
+      isaac.start();
+    }
 
     conn.send("roomJoin", {
       room: "lobby",
@@ -159,13 +169,18 @@ function initMiscCommandHandlers(conn: Connection) {
 
   // Sent after a successful connection
   conn.on("settings", (data: SettingsData) => {
-    log.info(`Websocket - settings - ${JSON.stringify(data)}`);
-
     g.myUserID = data.userID;
     g.myUsername = data.username;
     g.stream.URL = data.streamURL === "-" ? "" : data.streamURL;
     g.stream.twitchBotEnabled = data.twitchBotEnabled;
     g.stream.twitchBotDelay = data.twitchBotDelay;
+
+    if (IS_DEV && !amSecondTestAccount()) {
+      // Start the local socket server
+      // (this is normally started after Isaac-related checks are complete,
+      // but since we are in development, we won't be doing those)
+      socket.start();
+    }
   });
 }
 
@@ -176,8 +191,6 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomList", (data: RoomListData) => {
-    log.info(`Websocket - roomList - ${JSON.stringify(data)}`);
-
     // We entered a new room, so keep track of all users in this room
     const room = {
       users: new Map(),
@@ -221,8 +234,6 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomHistory", (data: RoomHistoryData) => {
-    // (not logging because it is noisy)
-
     // Figure out what kind of chat room this is
     let destination;
     if (data.room === "lobby") {
@@ -251,8 +262,6 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomJoined", (data: RoomJoinedData) => {
-    log.info(`Websocket - roomJoined - ${JSON.stringify(data)}`);
-
     const room = g.roomList.get(data.room);
     if (room === undefined) {
       throw new Error(`Failed to find room: ${data.room}`);
@@ -289,8 +298,6 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomLeft", (data: RoomLeftData) => {
-    log.info(`Websocket - roomLeft - ${JSON.stringify(data)}`);
-
     const room = g.roomList.get(data.room);
     if (room === undefined) {
       throw new Error(`Failed to find room: ${data.room}`);
@@ -326,8 +333,6 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomUpdate", (data: RoomUpdateData) => {
-    log.info(`Websocket - roomUpdate - ${JSON.stringify(data)}`);
-
     const room = g.roomList.get(data.room);
     if (room === undefined) {
       throw new Error(`Failed to find room: ${data.room}`);
@@ -377,8 +382,6 @@ function initChatCommandHandlers(conn: Connection) {
       return;
     }
 
-    log.info(`Websocket - discordMessage - ${JSON.stringify(data)}`);
-
     // Convert discord style emotes to Racing+ style emotes
     const words = data.message.split(" ");
     for (let i = 0; i < words.length; i++) {
@@ -421,8 +424,6 @@ function initChatCommandHandlers(conn: Connection) {
 function initRaceCommandHandlers(conn: Connection) {
   // On initial connection, we get a list of all of the races that are currently open or ongoing
   conn.on("raceList", (data: Race[]) => {
-    log.info(`Websocket - raceList - ${JSON.stringify(data)}`);
-
     // Check for empty races
     if (data.length === 0) {
       $("#lobby-current-races-table-body").html("");
@@ -470,8 +471,6 @@ function initRaceCommandHandlers(conn: Connection) {
 
   // Sent when we create a race or reconnect in the middle of a race
   conn.on("racerList", (data: RacerListData) => {
-    log.info(`Websocket - racerList - ${JSON.stringify(data)}`);
-
     // Store the racer list
     const race = g.raceList.get(data.id);
     if (race === undefined) {
@@ -488,13 +487,13 @@ function initRaceCommandHandlers(conn: Connection) {
     if (race.status === "in progress") {
       // If the race is in progress, we are coming back after a disconnect
       // Write this to the save.dat file so that it does not reset us in the middle of the run
-      socket.send("set", `status ${race.status}`);
+      modSocket.send("set", `status ${race.status}`);
       log.info("Coming back after a disconnect.");
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
     // (and "status" if we are reconnecting)
-    socket.sendPlace();
+    modSocket.sendPlace();
   });
 
   conn.on("raceCreated", connRaceCreated);
@@ -506,8 +505,6 @@ function initRaceCommandHandlers(conn: Connection) {
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
-
-    log.info(`Websocket - raceCreated - ${JSON.stringify(data)}`);
 
     // Keep track of what races are currently going
     const race = data;
@@ -561,8 +558,6 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    log.info(`Websocket - raceJoined - ${JSON.stringify(data)}`);
-
     // Keep track of the people in each race
     race.racers.push(data.name);
 
@@ -595,10 +590,10 @@ function initRaceCommandHandlers(conn: Connection) {
       // Update the race screen
       raceScreen.participantAdd(race.racerList.length - 1);
 
-      // Update the mod
       g.modSocket.numEntrants = race.racerList.length;
-      socket.sendAll();
     }
+
+    modSocket.sendAll();
   }
 
   interface RaceLeftData {
@@ -615,8 +610,6 @@ function initRaceCommandHandlers(conn: Connection) {
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
-
-    log.info(`Websocket - raceLeft - ${JSON.stringify(data)}`);
 
     const race = g.raceList.get(data.id);
     if (race === undefined) {
@@ -701,7 +694,7 @@ function initRaceCommandHandlers(conn: Connection) {
       g.modSocket.numEntrants = race.racerList.length;
 
       // Since the person could have been readied up, recount how many people are ready
-      socket.sendPlace();
+      modSocket.sendPlace();
     }
   }
 
@@ -720,8 +713,6 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    log.info(`Websocket - raceSetStatus - ${JSON.stringify(data)}`);
-
     const race = g.raceList.get(data.id);
     if (race === undefined) {
       return;
@@ -738,7 +729,7 @@ function initRaceCommandHandlers(conn: Connection) {
       // defaults once we personally finish or quit the race)
       if (data.status !== "in progress" && data.status !== "finished") {
         g.modSocket.status = data.status;
-        socket.sendAll();
+        modSocket.sendAll();
       }
 
       // Do different things depending on the status
@@ -840,8 +831,6 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    log.info(`Websocket - racerSetStatus - ${JSON.stringify(data)}`);
-
     // We don't care about racer updates for a race that is not showing on the current screen
     if (data.id !== g.currentRaceID) {
       return;
@@ -871,7 +860,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
-    socket.sendPlace();
+    modSocket.sendPlace();
   }
 
   interface RaceStartData {
@@ -888,8 +877,6 @@ function initRaceCommandHandlers(conn: Connection) {
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
-
-    log.info(`Websocket - raceStart - ${JSON.stringify(data)}`);
 
     // Check to see if this message actually applies to the race that is showing on the screen
     if (data.id !== g.currentRaceID) {
@@ -979,7 +966,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Update the mod with "myStatus", "placeMid" and "place"
-    socket.sendPlace();
+    modSocket.sendPlace();
   }
 
   interface RacerAddItemData {
@@ -1025,8 +1012,6 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerSetStartingItem", connRacerSetStartingItem);
   function connRacerSetStartingItem(data: RacerSetStartingItemData) {
-    log.info(`Websocket - racerSetStartingItem - ${JSON.stringify(data)}`);
-
     if (g.currentScreen === "transition") {
       // Come back when the current transition finishes
       setTimeout(() => {
@@ -1068,8 +1053,6 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerCharacter", connRacerCharacter);
   function connRacerCharacter(data: RacerCharacter) {
-    log.info(`Websocket - racerCharacter - ${JSON.stringify(data)}`);
-
     if (g.currentScreen === "transition") {
       // Come back when the current transition finishes
       setTimeout(() => {
@@ -1099,7 +1082,5 @@ function initRaceCommandHandlers(conn: Connection) {
   }
 
   conn.on("achievement", connAchievement);
-  function connAchievement(data: unknown) {
-    log.info(`Websocket - achievement - ${JSON.stringify(data)}`);
-  }
+  function connAchievement(_data: unknown) {}
 }

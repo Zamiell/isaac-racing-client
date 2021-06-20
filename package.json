@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "electron-context-menu": "^3.1.0",
+    "electron-log": "^4.3.5",
     "electron-store": "^8.0.0",
     "electron-updater": "4.3.9",
     "klaw-sync": "^6.0.0",
@@ -25,9 +26,7 @@
     "mkdirp": "^1.0.4",
     "ps-node": "^0.1.6",
     "vdf-parser": "^1.1.0",
-    "winreg": "^1.2.4",
-    "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.5"
+    "winreg": "^1.2.4"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.1",

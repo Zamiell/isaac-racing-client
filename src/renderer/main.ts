@@ -3,10 +3,11 @@
 // (renderer process)
 
 import * as electron from "electron";
+import log from "electron-log";
 import path from "path";
 import pkg from "../../package.json";
 import * as file from "../common/file";
-import log from "../common/log";
+import initLogging from "../common/initLogging";
 import * as automaticUpdate from "./automaticUpdate";
 import { IS_DEV } from "./constants";
 import g from "./globals";
@@ -28,7 +29,7 @@ import * as settingsTooltip from "./ui/settingsTooltip";
 
 const DATA_PATH = path.join(__dirname, "data");
 
-// Development-only stuff
+initLogging();
 
 $(() => {
   // Version
@@ -62,7 +63,7 @@ $(() => {
 
   if (IS_DEV) {
     // Automatically log in with account #1
-    $("#title-choose-1").click();
+    // $("#title-choose-1").click();
   } else {
     // Tell the main process to start the child process that will initialize Greenworks
     // That process will get our Steam ID, Steam screen name, and authentication ticket

@@ -1,5 +1,5 @@
 New New TODO:
-- enable strict mode in tsconfig
+- test coming back after a disconnect to see if the mod resets the run
 - test typing in password input field in new race tooltip to see if icon fades in/out
 
 New TODO:

@@ -1,4 +1,4 @@
-import log from "../common/log";
+import log from "electron-log";
 import settings from "../common/settings";
 import languageES from "./languages/es";
 import languageFR from "./languages/fr";

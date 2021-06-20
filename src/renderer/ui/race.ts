@@ -1,14 +1,11 @@
-import { execFile } from "child_process";
 import * as electron from "electron";
-import path from "path";
+import log from "electron-log";
 import builds from "../../../static/data/builds.json";
-import log from "../../common/log";
 import { parseIntSafe } from "../../common/util";
 import { CHARACTER_MAP } from "../characters";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import * as socket from "../ipc/socket";
 import {
   capitalize,
   closeAllTooltips,
@@ -19,6 +16,7 @@ import {
   pad,
   playSound,
 } from "../misc";
+import * as modSocket from "../modSocket";
 import { preloadSounds } from "../preloadSounds";
 import User from "../types/User";
 
@@ -671,7 +669,8 @@ export function participantAdd(i: number): void {
   racerDiv += "</tr>";
   $("#race-participants-table-body").append(racerDiv);
 
-  // To fix a small visual bug where the left border isn't drawn because of the left-most column being hidden
+  // Fix a small visual bug where the left border isn't drawn because of the left-most column being
+  // hidden
   $(`#race-participants-table-${racer.name}-name`).css(
     "border-left",
     "solid 1px #e5e5e5",
@@ -802,7 +801,7 @@ export function participantsSetStatus(i: number, initial = false): void {
     $("#header-lobby").removeClass("disabled");
 
     // Tell the Lua mod that we are finished with the race
-    socket.send("reset");
+    modSocket.reset();
   }
 
   // Play a sound effect if someone quit or finished
@@ -814,33 +813,6 @@ export function participantsSetStatus(i: number, initial = false): void {
       playSound("quit");
     }
   }
-}
-
-export function sortTableByPositions(): void {
-  const tbody = $("#race-participants-table-body");
-
-  const sortedRows = tbody
-    .find("tr")
-    .toArray()
-    .sort((a: HTMLTableRowElement, b: HTMLTableRowElement) => {
-      const pos1 = parseInt($("td:first", a).text(), 10);
-      const pos2 = parseInt($("td:first", b).text(), 10);
-
-      if (!Number.isNaN(pos1) && !Number.isNaN(pos2)) {
-        return pos1 > pos2 ? 1 : -1;
-      }
-
-      if (Number.isNaN(pos1) && Number.isNaN(pos2)) {
-        return 0;
-      }
-
-      if (Number.isNaN(pos1)) {
-        return 1;
-      }
-
-      return -1;
-    });
-  tbody.find("tr").appendTo(sortedRows);
 }
 
 // Recalculate everyone's mid-race places
@@ -888,7 +860,10 @@ export function placeMidRecalculateAll(): void {
     $(`#race-participants-table-${racer.name}-place`).html(ordinal);
   }
 
-  sortTableByPositions();
+  // Disable the feature where the rows are sorted by position,
+  // as it causes the rows to get duplicated for some reason
+  // (it likely has to do with the conversion to TypeScript and modification of the sort algorithm)
+  // sortTableByPositions();
 }
 
 export function participantsSetFloor(i: number): void {
@@ -1008,7 +983,7 @@ export function startCountdown(): void {
     playSound("lets-go");
 
     // Tell the Lua mod that we are starting a race
-    socket.send("set", "countdown 10");
+    modSocket.send("set", "countdown 10");
 
     // Show the countdown
     $("#race-ready-checkbox-container").fadeOut(FADE_TIME, () => {
@@ -1049,23 +1024,32 @@ export function countdownTick(i: number): void {
     return;
   }
 
-  // If one second is left, automatically focus the game
-  if (i === 1) {
+  // If only three seconds are left, automatically focus the game
+  if (i === 3) {
     electron.ipcRenderer.send("asynchronous-message", "isaacFocus");
   }
 
   // Update the Lua mod with how many seconds are left until the race starts
-  setTimeout(() => {
+  g.modSocket.countdown = i;
+  if (i === 0) {
+    // This is to avoid bugs where things happen out of order
+    g.modSocket.countdown = -1;
+    modSocket.send("set", `countdown ${g.modSocket.countdown}`);
+    g.modSocket.status = "in progress";
+    modSocket.send("set", `status ${g.modSocket.status}`);
+    g.modSocket.place = 0;
+    modSocket.send("set", `place ${g.modSocket.place}`);
+  } else {
     g.modSocket.countdown = i;
-    if (i === 0) {
-      // This is to avoid bugs where things happen out of order
-      socket.send("set", "countdown -1");
-      socket.send("set", "status in progress");
-      socket.send("set", "place 0");
-    } else {
-      socket.send("set", `countdown ${i}`);
-    }
-  }, FADE_TIME);
+    modSocket.send("set", `countdown ${g.modSocket.countdown}`);
+  }
+
+  // Play the sound effect associated with the final 3 seconds
+  if (i === 3 || i === 2 || i === 1) {
+    playSound(i.toString());
+  } else if (i === 0) {
+    playSound("go");
+  }
 
   if (i > 0) {
     // Change the number on the race controls area (5, 4, 3, 2, 1)
@@ -1075,20 +1059,6 @@ export function countdownTick(i: number): void {
       $("#race-countdown").css("color", "red");
       $("#race-countdown").html(i.toString());
       $("#race-countdown").fadeIn(FADE_TIME);
-
-      // Focus the game with 3 seconds remaining on the countdown
-      if (i === 3 && process.platform === "win32") {
-        const command = path.join(
-          __dirname,
-          "/programs/focusIsaac/focusIsaac.exe",
-        );
-        execFile(command);
-      }
-
-      // Play the sound effect associated with the final 3 seconds
-      if (i === 3 || i === 2 || i === 1) {
-        playSound(i.toString());
-      }
     });
   } else if (i === 0) {
     setTimeout(() => {
@@ -1103,11 +1073,8 @@ export function countdownTick(i: number): void {
         '<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>',
       );
 
-      // Play the "Go" sound effect
-      playSound("go");
-
-      // Wait 4 seconds, then start to change the controls
-      setTimeout(start, 4000);
+      // Wait 3 seconds, then start to change the controls
+      setTimeout(start, 3000);
 
       // If this is a diversity race, show the three diversity items
       if (race.ruleset.format === "diversity") {
@@ -1288,6 +1255,8 @@ export function checkReadyValid(): void {
     valid = false;
     tooltipContent =
       '<span lang="en">You must have the Racing+ mod enabled in-game before you can mark yourself as ready.</span>';
+    tooltipContent +=
+      '<br /><span lang="en">(If you do have the Racing+ mod enabled, then restart the run to reconnect to the client.)</span>';
   } else if (!g.gameState.inGame) {
     valid = false;
     tooltipContent =
@@ -1312,4 +1281,31 @@ export function checkReadyValid(): void {
   $("#race-ready-checkbox-label").css("cursor", "pointer");
   $("#race-ready-checkbox-container").tooltipster("close");
   $("#race-ready-checkbox-container").fadeTo(FADE_TIME, 1);
+}
+
+export function sortTableByPositions(): void {
+  const tbody = $("#race-participants-table-body");
+
+  const sortedRows = tbody
+    .find("tr")
+    .toArray()
+    .sort((a: HTMLTableRowElement, b: HTMLTableRowElement) => {
+      const pos1 = parseInt($("td:first", a).text(), 10);
+      const pos2 = parseInt($("td:first", b).text(), 10);
+
+      if (!Number.isNaN(pos1) && !Number.isNaN(pos2)) {
+        return pos1 > pos2 ? 1 : -1;
+      }
+
+      if (Number.isNaN(pos1) && Number.isNaN(pos2)) {
+        return 0;
+      }
+
+      if (Number.isNaN(pos1)) {
+        return 1;
+      }
+
+      return -1;
+    });
+  tbody.find("tr").appendTo(sortedRows);
 }

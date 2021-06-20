@@ -1,4 +1,7 @@
+import { execFile } from "child_process";
+import log from "electron-log";
 import path from "path";
+import { STATIC_PATH } from "./constants";
 
 export function isaacFocus(): void {
   if (process.platform !== "win32") {
@@ -6,15 +9,14 @@ export function isaacFocus(): void {
   }
 
   const pathToFocusIsaac = path.join(
-    __dirname,
+    STATIC_PATH,
     "programs",
     "focusIsaac",
     "focusIsaac.exe",
   );
-  console.log(pathToFocusIsaac);
-  /*
-  execFile(pathToFocusIsaac, (error, stdout, stderr) => {
-    // We have to attach an empty callback to this or it does not work for some reason
+  execFile(pathToFocusIsaac, (err) => {
+    if (err !== null) {
+      log.error(`Failed to focus Isaac: ${err}`);
+    }
   });
-  */
 }

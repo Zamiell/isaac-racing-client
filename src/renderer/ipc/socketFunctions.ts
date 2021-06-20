@@ -1,7 +1,8 @@
-import log from "../../common/log";
+import log from "electron-log";
 import { parseIntSafe } from "../../common/util";
 import g from "../globals";
 import { errorShow } from "../misc";
+import * as modSocket from "../modSocket";
 import { SocketCommandOut } from "../types/SocketCommand";
 import * as raceScreen from "../ui/race";
 import { inOngoingRace } from "./socketSubroutines";
@@ -11,16 +12,19 @@ export default functionMap;
 
 functionMap.set("connected", (_data: string) => {
   g.gameState.modConnected = true;
+  log.info(`Set modConnected to: ${g.gameState.modConnected}`);
+  modSocket.sendAll();
   raceScreen.checkReadyValid();
 });
 
 functionMap.set("disconnected", (_data: string) => {
   g.gameState.modConnected = false;
+  log.info(`Set modConnected to: ${g.gameState.modConnected}`);
   raceScreen.checkReadyValid();
 });
 
 functionMap.set("error", (data: string) => {
-  errorShow(`Something went wrong with the socket server: ${data}`);
+  log.error(data);
 });
 
 functionMap.set("finish", (data: string) => {
@@ -61,12 +65,16 @@ functionMap.set("item", (data: string) => {
   }
 });
 
+functionMap.set("info", (data: string) => {
+  log.info(data);
+});
+
 functionMap.set("level", (data: string) => {
   if (!inOngoingRace()) {
     return;
   }
 
-  const match = data.match(/(\d+)-(\d+)/g);
+  const match = /(\d+)-(\d+)/.exec(data); // This does not work with a global flag
   if (match === null) {
     errorShow(`Failed to parse the level: ${data}`);
     return;
@@ -74,13 +82,17 @@ functionMap.set("level", (data: string) => {
 
   const floorNum = parseIntSafe(match[1]); // The server expects this to be an integer
   if (Number.isNaN(floorNum)) {
-    errorShow(`Failed to parse the floor number: ${match[1]}`);
+    errorShow(
+      `Failed to parse the floor number of "${match[1]}" from "${data}".`,
+    );
     return;
   }
 
   const stageType = parseIntSafe(match[2]); // The server expects this to be an integer
   if (Number.isNaN(stageType)) {
-    errorShow(`Failed to parse the stage type: ${match[1]}`);
+    errorShow(
+      `Failed to parse the stage type of "${match[2]}" from "${data}".`,
+    );
     return;
   }
 
@@ -128,17 +140,7 @@ functionMap.set("room", (data: string) => {
   }
 });
 
-functionMap.set("runMatchesRuleset", (data: string) => {
-  let runMatchesRuleset: boolean;
-  if (data === "true") {
-    runMatchesRuleset = true;
-  } else if (data === "false") {
-    runMatchesRuleset = false;
-  } else {
-    log.error(`Failed to parse the "runMatchesRuleset" command: ${data}`);
-    return;
-  }
-
-  g.gameState.runMatchesRuleset = runMatchesRuleset;
+functionMap.set("runMatchesRuleset", (_data: string) => {
+  g.gameState.runMatchesRuleset = true;
   raceScreen.checkReadyValid();
 });

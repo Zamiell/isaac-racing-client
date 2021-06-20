@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import log from "../common/log";
+import log from "electron-log";
 import keyboardFunctions from "./keyboardFunctions";
 
 export function init(): void {

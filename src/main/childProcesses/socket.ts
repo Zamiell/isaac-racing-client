@@ -5,8 +5,9 @@
 // which in turn sends them to the renderer process
 // All messages to the parent must be in the form of "commandName rest of the data"
 
+import log from "electron-log";
 import net from "net";
-import log from "../../common/log";
+import initLogging from "../../common/initLogging";
 import { unpackSocketMsg } from "../../common/util";
 import { processExit } from "./subroutines";
 
@@ -18,6 +19,7 @@ const sockets: net.Socket[] = [];
 init();
 
 function init() {
+  initLogging();
   process.on("uncaughtException", onUncaughtException);
   process.on("message", onMessage);
 
@@ -49,8 +51,7 @@ function onMessage(message: string) {
 
     default: {
       for (const socket of sockets) {
-        // The Lua socket library expects all messages to be terminated by a newline
-        socket.write(`${message}\n`);
+        socket.write(message);
       }
       break;
     }
@@ -87,18 +88,25 @@ function socketData(buffer: Buffer) {
     throw new Error("process.send() does not exist.");
   }
 
-  const rawData = buffer.toString();
-  const command = unpackSocketMsg(rawData)[0];
+  const lines = buffer.toString();
+  for (const line of lines.split("\n")) {
+    const trimmedLine = line.trim();
+    if (trimmedLine === "") {
+      continue;
+    }
 
-  // The client will send a ping on every frame as a means of checking whether or not the socket
-  // is closed
-  // These can be ignored
-  if (command === "ping") {
-    return;
+    const command = unpackSocketMsg(trimmedLine)[0];
+
+    // The client will send a ping on every frame as a means of checking whether or not the socket
+    // is closed
+    // These can be ignored
+    if (command === "ping") {
+      return;
+    }
+
+    // Forward all messages received from the client to the parent process
+    process.send(trimmedLine);
   }
-
-  // Forward all messages received from the client to the parent process
-  process.send(rawData);
 }
 
 function socketClose(socket: net.Socket, clientAddress: string) {

@@ -1,6 +1,6 @@
 import * as electron from "electron";
-import log from "../../common/log";
-import { FADE_TIME, IS_DEV } from "../constants";
+import log from "electron-log";
+import { FADE_TIME } from "../constants";
 import g from "../globals";
 import { errorShow } from "../misc";
 import * as lobbyScreen from "../ui/lobby";
@@ -17,10 +17,7 @@ export function init(): void {
 export function start(): void {
   // This tells the main process to do Isaac-related checks
   // (check to see if the Racing+ mod is corrupted, etc.)
-  // We don't need to do these checks in a development environment though
-  if (!IS_DEV) {
-    electron.ipcRenderer.send("asynchronous-message", "isaac");
-  }
+  electron.ipcRenderer.send("asynchronous-message", "isaac");
 }
 
 // Monitor for notifications from the child process that does file checks and opens Isaac

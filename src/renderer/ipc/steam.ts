@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import log from "../../common/log";
+import log from "electron-log";
 import SteamMessage from "../../common/types/SteamMessage";
 import g from "../globals";
 import login from "../login";

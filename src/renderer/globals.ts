@@ -1,5 +1,6 @@
 import Connection from "./types/Connection";
 import Item from "./types/Item";
+import ModSocket from "./types/ModSocket";
 import Race from "./types/Race";
 import Room from "./types/Room";
 
@@ -43,23 +44,7 @@ const globals = {
   lastRaceTitle: "",
   lastFinishedTime: 0,
 
-  modSocket: {
-    raceID: 0,
-    status: "none",
-    myStatus: "not ready",
-    ranked: false,
-    solo: false,
-    format: "unseeded",
-    difficulty: "hard",
-    character: 3, // Judas
-    goal: "Blue Baby",
-    seed: "-",
-    startingBuild: -1, // Converted to "startingItems" later on
-    countdown: -1,
-    placeMid: 0,
-    place: 1,
-    numEntrants: 1,
-  },
+  modSocket: new ModSocket(),
 
   myUserID: -1, // Set from the "settings" command
   myUsername: "", // Set from the "settings" command

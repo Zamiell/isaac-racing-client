@@ -1,14 +1,6 @@
-type RaceGoal =
-  | "Blue Baby"
-  | "The Lamb"
-  | "Mega Satan"
-  | "Hush"
-  | "Delirium"
-  | "Boss Rush"
-  | "custom";
-
-type RaceFormat = "unseeded" | "seeded" | "diversity" | "custom";
-type RaceDifficulty = "normal" | "hard";
+import RaceDifficulty from "./RaceDifficulty";
+import RaceFormat from "./RaceFormat";
+import RaceGoal from "./RaceGoal";
 
 /** Matches "Ruleset" in "race.go". */
 export default interface Ruleset {

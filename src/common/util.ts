@@ -32,12 +32,10 @@ export function parseIntSafe(input: string): number {
   return Number.parseInt(trimmedInput, 10);
 }
 
-// We use roughly the same protocol for the WebSocket traffic as we do the TCP socket traffic
-// (based on Golem)
 // e.g. "floor 1" or "finish"
 export function unpackSocketMsg(rawData: string): [SocketCommandOut, string] {
   const separator = " ";
-  const [command, ...dataArray] = rawData.split(separator);
+  const [command, ...dataArray] = rawData.trim().split(separator);
   const data = dataArray.join(separator);
 
   return [command as SocketCommandOut, data];

@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import log from "../common/log";
+import log from "electron-log";
 import { FADE_TIME } from "./constants";
 import g from "./globals";
 

@@ -1,7 +1,7 @@
 import { ChildProcess, fork, ForkOptions } from "child_process";
 import * as electron from "electron";
+import log from "electron-log";
 import path from "path";
-import log from "../common/log";
 import IS_DEV from "./isDev";
 
 // Any new child processes also have to be added to the webpack config in "webpack.main.config.js"

@@ -4,8 +4,9 @@
 
 import * as electron from "electron";
 import electronContextMenu from "electron-context-menu";
+import log from "electron-log";
 import pkg from "../../package.json";
-import log from "../common/log";
+import initLogging from "../common/initLogging";
 import * as settings from "../common/settings";
 import * as childProcesses from "./childProcesses";
 import ipcFunctions from "./ipcFunctions";
@@ -14,10 +15,15 @@ import * as onReady from "./onReady";
 
 let window = null as null | electron.BrowserWindow;
 
-printWelcomeMessage();
-checkSecondInstance();
-settings.initDefault();
-initElectronHandlers();
+main();
+
+function main() {
+  initLogging();
+  printWelcomeMessage();
+  checkSecondInstance();
+  settings.initDefault();
+  initElectronHandlers();
+}
 
 function printWelcomeMessage() {
   const welcomeText = `Racing+ client ${pkg.version} started.`;
@@ -80,9 +86,12 @@ function initElectronHandlers() {
 }
 
 function IPCMessage(_event: electron.IpcMainEvent, arg1: string, arg2: string) {
-  log.info(
-    `Main process received message from renderer process of type: ${arg1}`,
-  );
+  // Don't log socket messages, as it gets too spammy
+  if (arg1 !== "socket") {
+    log.info(
+      `Main process received message from renderer process of type: ${arg1}`,
+    );
+  }
 
   if (window === null) {
     log.error("Main window is not initialized yet.");

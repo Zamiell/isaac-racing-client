@@ -6,6 +6,7 @@ export type SocketCommandOut =
   | "connected"
   | "disconnected"
   | "ping"
+  | "info"
   | "mainMenu"
   | "seed"
   | "runMatchesRuleset"

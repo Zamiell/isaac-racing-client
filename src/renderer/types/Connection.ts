@@ -1,4 +1,16 @@
-import log from "../../common/log";
+import log from "electron-log";
+
+const SPAMMY_COMMANDS = [
+  "roomHistory",
+  "roomMessage",
+  "privateMessage",
+  "discordMessage",
+  "adminMessage",
+  "racerSetFloor",
+  "racerAddItem",
+  "racerSetStartingItem",
+  "racerCharacter",
+];
 
 interface WebSocketCallbackCommands {
   [command: string]: (data: unknown) => void;
@@ -45,17 +57,15 @@ export default class Connection {
   }
 
   onMessage(evt: MessageEvent): void {
-    const data = unpack(evt.data);
-    const command = data[0];
+    const [command, data] = unpack(evt.data);
     if (this.callbacks[command] !== undefined) {
-      const obj = unmarshal(data[1]);
-      this.callbacks[command](obj);
+      if (!SPAMMY_COMMANDS.includes(command)) {
+        log.info(`WebSocket received: ${evt.data}`);
+      }
+      const dataObject = unmarshal(data);
+      this.callbacks[command](dataObject);
     } else {
-      log.error(
-        "Received WebSocket message with no callback:",
-        command,
-        JSON.parse(data[1]),
-      );
+      log.error(`Received WebSocket message with no callback: ${evt.data}`);
     }
   }
 

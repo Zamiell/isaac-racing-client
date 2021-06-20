@@ -1,8 +1,14 @@
+import log from "electron-log";
 import path from "path";
-import log from "../common/log";
 import settings from "../common/settings";
 import { FADE_TIME } from "./constants";
 import g from "./globals";
+
+export function amSecondTestAccount(): boolean {
+  return (
+    g.myUsername.startsWith("TestAccount") && g.myUsername !== "TestAccount1"
+  );
+}
 
 // From: https://stackoverflow.com/questions/2332811/capitalize-words-in-string
 export function capitalize(str: string): string {
@@ -140,11 +146,13 @@ export function playSound(soundFilename: string, lengthOfSound = -1): void {
     g.playingSound = true;
     setTimeout(() => {
       g.playingSound = false;
-    }, lengthOfSound); // The 2nd argument to the function should be the length of the sound effect in milliseconds
+    }, lengthOfSound);
+    // (the 2nd argument to "setTimeout()" should be the length of the sound effect in milliseconds)
   }
 
   // Sometimes this can give "net::ERR_REQUEST_RANGE_NOT_SATISFIABLE" for some reason
-  // (might be related to having multiple Electron apps trying to play the same sound at the same time)
+  // (might be related to having multiple Electron apps trying to play the same sound at the same
+  // time)
   const audioPath = path.join("sounds", `${soundFilename}.mp3`);
   const audio = new Audio(audioPath);
   audio.volume = volume;

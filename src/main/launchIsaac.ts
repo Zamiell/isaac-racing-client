@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import log from "../common/log";
+import log from "electron-log";
 import { REBIRTH_STEAM_ID } from "./constants";
 
 export default function launchIsaac(): void {

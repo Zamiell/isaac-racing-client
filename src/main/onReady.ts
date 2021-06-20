@@ -1,10 +1,11 @@
 import * as electron from "electron";
+import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import { HandlerDetails } from "electron/main";
 import path from "path";
 import * as file from "../common/file";
-import log from "../common/log";
 import settings from "../common/settings";
+import { STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
 import IS_DEV from "./isDev";
 import launchIsaac from "./launchIsaac";
@@ -20,7 +21,6 @@ const DEFAULT_WIDTH = 1110;
 const DEFAULT_WIDTH_DEV = 1610;
 const DEFAULT_HEIGHT = 720;
 const WINDOW_TITLE = "Racing+";
-const STATIC_PATH = path.join(__dirname, "..", "..", "static");
 const INDEX_HTML_PATH = path.join(STATIC_PATH, "index.html");
 const FAVICON_PATH = path.join(STATIC_PATH, "img", "favicon.png");
 
@@ -91,16 +91,6 @@ export function createWindow(): electron.BrowserWindow {
     window.center();
   }
 
-  if (IS_DEV) {
-    /*
-    window
-      .loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
-      .catch((err) => {
-        log.error(`Failed to load the initial development URL: ${err}`);
-        electron.app.quit();
-      });
-      */
-  }
   window.loadFile(INDEX_HTML_PATH).catch((err) => {
     log.error(`Failed to load the "index.html" file: ${err}`);
     electron.app.quit();

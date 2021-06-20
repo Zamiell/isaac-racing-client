@@ -1,6 +1,6 @@
 import * as electron from "electron";
+import log from "electron-log";
 import linkifyHtml from "linkifyjs/html";
-import log from "../common/log";
 import { parseIntSafe } from "../common/util";
 import { FADE_TIME, IS_DEV } from "./constants";
 import debugFunction from "./debugFunction";
@@ -228,6 +228,12 @@ export function send(destination: string): void {
   } else if (message === "/ready") {
     if (IS_DEV) {
       g.conn.send("raceReady", {
+        id: g.currentRaceID,
+      });
+    }
+  } else if (message === "/unready") {
+    if (IS_DEV) {
+      g.conn.send("raceUnready", {
         id: g.currentRaceID,
       });
     }

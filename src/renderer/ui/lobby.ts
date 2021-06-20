@@ -2,8 +2,8 @@ import builds from "../../../static/data/builds.json";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import * as socket from "../ipc/socket";
 import { capitalize, errorShow, escapeHTML, pad } from "../misc";
+import * as modSocket from "../modSocket";
 import Race from "../types/Race";
 import * as header from "./header";
 
@@ -71,6 +71,9 @@ export function showFromRace(): void {
   g.currentScreen = "transition";
   g.currentRaceID = -1;
 
+  // Update the Racing+ Lua mod
+  modSocket.reset();
+
   // Show and hide some buttons in the header
   $("#header-profile").fadeOut(FADE_TIME);
   $("#header-leaderboards").fadeOut(FADE_TIME);
@@ -105,9 +108,6 @@ export function showFromRace(): void {
 
     // Focus the chat input
     $("#lobby-chat-box-input").focus();
-
-    // Update the Racing+ Lua mod
-    socket.send("reset");
   });
 }
 
