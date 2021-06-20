@@ -242,9 +242,9 @@ const languagePack = {
     "All players will start with the same five items.":
       "Tous les joueurs démarreront avec les cinq mêmes items.",
     "Extra changes will also be in effect; see the Racing+ website for details.":
-      "D'autres changement prendront aussi effet, référez-vous au site du Racing+ pour davantages de détails.",
+      "D'autres changements prendront aussi effet, référez-vous au site du Racing+ pour davantages de détails.",
     "You make the rules! Make sure that everyone in the race knows what to do before you start.":
-      "Vous choisissez les règles! Faites attention à ce que chaque joueur dans la course les ait intégrées avant qu'elle commence.",
+      "Vous choisissez les règles ! Faites attention à ce que chaque joueur dans la course les ait intégrées avant qu'elle commence.",
     "Defeat Blue Baby (the boss of The Chest)":
       "Battez Blue Baby (le boss de The Chest)",
     "Defeat The Lamb (the boss of The Dark Room)":
