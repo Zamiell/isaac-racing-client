@@ -19,5 +19,5 @@ export interface ValveLocalConfigVDF {
 }
 
 export interface AppConfigVDF {
-  LaunchOptions: string;
+  LaunchOptions?: string;
 }

@@ -17,10 +17,10 @@ export function hasLaunchOption(
   const rebirthEntry = getRebirthLocalConfigVDFEntry(localConfigVDF);
 
   const launchOptions = rebirthEntry.LaunchOptions;
+
+  // It is possible for no launch options to be set
   if (launchOptions === undefined) {
-    throw new Error(
-      'Failed to find the "LaunchOptions" tag in the "localconfig.vdf" file.',
-    );
+    return false;
   }
 
   return launchOptions === LAUNCH_OPTION;
