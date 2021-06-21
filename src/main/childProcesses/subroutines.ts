@@ -1,5 +1,3 @@
-import path from "path";
-
 // If something goes wrong in a child process, the main process will never know unless we explicitly
 // send the error backwards
 export function handleErrors(): void {
@@ -16,13 +14,4 @@ export function childError(err: Error): void {
 
 export function processExit(): void {
   process.exit();
-}
-
-export function getRebirthPath(steamPath: string): string {
-  return path.join(
-    steamPath,
-    "steamapps",
-    "common",
-    "The Binding of Isaac Rebirth",
-  );
 }

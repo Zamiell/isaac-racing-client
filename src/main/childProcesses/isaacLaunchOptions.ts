@@ -2,7 +2,10 @@ import path from "path";
 import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
-import LocalConfigVDF, { AppConfigVDF } from "../types/LocalConfigVDF";
+import LocalConfigVDF, {
+  AppConfigVDF,
+  ValveLocalConfigVDF,
+} from "../types/LocalConfigVDF";
 
 export const LAUNCH_OPTION = "--luadebug";
 
@@ -87,10 +90,17 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     );
   }
 
-  const valve = software.Valve;
+  // On some platforms, "valve" is lowercase for some reason
+  let valve: ValveLocalConfigVDF | undefined;
+  if (software.Valve !== undefined) {
+    valve = software.Valve;
+  } else if (software.valve !== undefined) {
+    valve = software.valve;
+  }
+
   if (valve === undefined) {
     throw new Error(
-      'Failed to find the "Valve" tag in the "localconfig.vdf" file.',
+      'Failed to find the "Valve" or "valve" tag in the "localconfig.vdf" file.',
     );
   }
 
