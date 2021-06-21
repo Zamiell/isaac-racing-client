@@ -14,16 +14,35 @@ const webpackConfig = getBaseConfig(ELECTRON_TYPE);
 // Thus, we use a name driven configuration
 // https://stackoverflow.com/questions/40096470/get-webpack-not-to-bundle-files
 webpackConfig.entry = {
-  main: path.join(BASE_PATH, "main.ts"),
-  isaac: path.join(CHILD_PROCESSES_PATH, "isaac.ts"),
-  socket: path.join(CHILD_PROCESSES_PATH, "socket.ts"),
-  steam: path.join(CHILD_PROCESSES_PATH, "steam.ts"),
-  steamWatcher: path.join(CHILD_PROCESSES_PATH, "steamWatcher.ts"),
+  main: {
+    import: path.join(BASE_PATH, "main.ts"),
+    filename: "[name].js",
+  },
+
+  isaac: {
+    import: path.join(CHILD_PROCESSES_PATH, "isaac.ts"),
+    filename: "childProcesses/[name].js",
+  },
+
+  socket: {
+    import: path.join(CHILD_PROCESSES_PATH, "socket.ts"),
+    filename: "childProcesses/[name].js",
+  },
+
+  steam: {
+    import: path.join(CHILD_PROCESSES_PATH, "steam.ts"),
+    filename: "childProcesses/[name].js",
+  },
+
+  steamWatcher: {
+    import: path.join(CHILD_PROCESSES_PATH, "steamWatcher.ts"),
+    filename: "childProcesses/[name].js",
+  },
 };
+
 webpackConfig.output = {
   path: path.join(__dirname, "dist", "main"),
-  filename: "[name].js",
-  sourceMapFilename: "[name].js.map",
+  sourceMapFilename: "[file].js.map",
 };
 
 // By default, "__dirname" will resolve to "/" in the main process,

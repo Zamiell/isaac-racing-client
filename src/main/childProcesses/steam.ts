@@ -8,8 +8,9 @@ import { REBIRTH_STEAM_ID } from "../constants";
 import Greenworks, { SteamIDObject, TicketObject } from "../types/Greenworks";
 import { childError, handleErrors, processExit } from "./subroutines";
 
-// eslint-disable-next-line
-const greenworks = require("../lib/greenworks") as Greenworks;
+if (process.send === undefined) {
+  throw new Error("process.send() does not exist.");
+}
 
 handleErrors();
 init();
@@ -42,6 +43,10 @@ function greenworksInit() {
   // 570660 is the Steam app ID for The Binding of Isaac: Rebirth
   const steamAppIDPath = "steam_appid.txt";
   file.write(steamAppIDPath, REBIRTH_STEAM_ID.toString());
+
+  // Enclose the following require in an eval to prevent webpack from resolving it
+  // eslint-disable-next-line
+  const greenworks = eval('require("../../../static/js/greenworks/greenworks")') as Greenworks;
 
   // Initialize Greenworks
   // (this cannot be written as "!greenworks.init()")

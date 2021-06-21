@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 // It is possible for the webpack configuration to be written in TypeScript,
 // but this will not work with the full range of options in "tsconfig.json"
 // Keep the config file written in JavaScript for simplicity
@@ -19,6 +21,10 @@ function getBaseConfig(electronType) {
             path.join(__dirname, "src", "common"),
           ],
           use: [{ loader: "ts-loader" }],
+        },
+        {
+          test: /\.node$/,
+          loader: "node-loader",
         },
       ],
     },

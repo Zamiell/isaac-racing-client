@@ -488,13 +488,18 @@ export function show(raceID: number): void {
     if (race.ruleset.format === "seeded") {
       $("#race-title-table-build").fadeIn(0);
       $("#race-title-build").fadeIn(0);
-      const build = race.ruleset.startingBuild;
+      const buildIndex = race.ruleset.startingBuild;
+      const build = builds[buildIndex];
+      if (build === undefined) {
+        throw new Error(`Failed to find the build at index: ${buildIndex}`);
+      }
+      const firstItem = build[0];
       $("#race-title-build-icon").css(
         "background-image",
-        `url("img/builds/${build}.png")`,
+        `url("img/builds/${firstItem.id}.png")`,
       );
       let buildTooltipContent = "";
-      for (const item of builds[build]) {
+      for (const item of build) {
         buildTooltipContent += `${item.name} + `;
       }
       buildTooltipContent = buildTooltipContent.slice(0, -3); // Chop off the trailing " + "

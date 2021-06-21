@@ -482,16 +482,34 @@ function newRaceGoalChange(_event: JQuery.ChangeEvent | null) {
 
 function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   // Change the displayed icon
-  const newBuild = $("#new-race-starting-build").val();
-  if (newBuild === "random") {
+  const newBuildString = $("#new-race-starting-build").val();
+  if (typeof newBuildString !== "string") {
+    throw new Error(
+      'The value of the "new-race-starting-build" element was not a string.',
+    );
+  }
+
+  const newBuild = parseIntSafe(newBuildString);
+  if (Number.isNaN(newBuild)) {
+    throw new Error(
+      `Failed to convert the build of "${newBuildString}" to a number.`,
+    );
+  }
+
+  if (newBuild === 0) {
     $("#new-race-starting-build-icon").css(
       "background-image",
       'url("img/builds/random.png")',
     );
   } else {
+    const build = builds[newBuild];
+    if (build === undefined) {
+      throw new Error(`Failed to find the build at index: ${newBuild}`);
+    }
+    const firstItemOfBuild = build[0];
     $("#new-race-starting-build-icon").css(
       "background-image",
-      `url("img/builds/${newBuild}.png")`,
+      `url("img/builds/${firstItemOfBuild.id}.png")`,
     );
   }
 }

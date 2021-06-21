@@ -28,7 +28,7 @@ export function start(
     return;
   }
 
-  const childProcessPath = path.join(__dirname, name);
+  const childProcessPath = path.join(__dirname, "childProcesses", name);
   const childProcessOptions: ForkOptions = {};
   if (!IS_DEV) {
     // There are problems when forking inside of an ASAR archive

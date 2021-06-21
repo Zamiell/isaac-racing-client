@@ -62,7 +62,7 @@ function initPasswordModal() {
     }
 
     const raceTitle = passwordInputElement.data("raceTitle") as string;
-    if (typeof raceID !== "string") {
+    if (typeof raceTitle !== "string") {
       throw new Error(
         "Failed to get the value of the race title from the password element.",
       );

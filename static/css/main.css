@@ -1222,6 +1222,7 @@ input[type=range] {
 #race-title-controls-container {
   margin-top: 1.2em;
   font-size: 1.25em;
+  height: 2.5em;
 }
 
 #race-title-controls-container ul.actions {

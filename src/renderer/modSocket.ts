@@ -7,6 +7,9 @@ import ModSocket from "./types/ModSocket";
 import Race from "./types/Race";
 import { SocketCommandIn } from "./types/SocketCommand";
 
+const JUDAS_SHADOW_ID = 311;
+const DARK_JUDAS_ID = 12;
+
 export function send(command: SocketCommandIn, data = ""): void {
   if (amSecondTestAccount()) {
     return;
@@ -25,8 +28,8 @@ function packSocketMsg(command: string, data: string) {
   return `${command}${separator}${data}\n`; // Socket messages must be terminated by a newline
 }
 
-export function sendPlace(): void {
-  // This sends an up-to-date myStatus, numEntrants, placeMid, and place to the mod
+// This sends an up-to-date myStatus, numReady, numEntrants, placeMid, and place to the mod
+export function sendExtraValues(): void {
   const race = g.raceList.get(g.currentRaceID);
   if (race === undefined) {
     return;
@@ -35,42 +38,46 @@ export function sendPlace(): void {
   const myStatus = getMyStatus(race);
   if (myStatus !== null) {
     g.modSocket.myStatus = myStatus;
+    send("set", `myStatus ${g.modSocket.myStatus}`);
   }
 
-  if (race.status === "in progress") {
+  if (race.status === "open" || race.status === "starting") {
+    g.modSocket.numReady = getNumReady(race);
+    send("set", `numReady ${g.modSocket.numReady}`);
+  } else if (race.status === "in progress") {
+    const numLeft = getNumLeft(race);
+
     // Find our value of "placeMid"
-    let numLeft = 0;
     let amRacing = false;
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
 
-      if (racer.status === "racing") {
-        numLeft += 1;
-      }
-
       if (racer.name === g.myUsername) {
         g.modSocket.placeMid = racer.placeMid;
         g.modSocket.place = racer.place;
+
         if (racer.status === "racing") {
           amRacing = true;
         }
       }
     }
+
     if (numLeft === 1 && amRacing && race.racerList.length > 2) {
       g.modSocket.placeMid = -1; // This will show "last person left"
     }
-  } else if (race.status === "open" || race.status === "starting") {
-    g.modSocket.numReady = getNumReady(race);
+
+    if (race.ruleset.solo) {
+      // We don't want to send our final place for solo races to avoid showing the "1st place"
+      // graphic at the end of the race
+      g.modSocket.place = 0;
+    }
+
+    send("set", `placeMid ${g.modSocket.placeMid}`);
+    send("set", `place ${g.modSocket.place}`);
   }
+
   g.modSocket.numEntrants = race.racerList.length;
-
-  if (race.ruleset.solo) {
-    // We don't want to send our final place for solo races to avoid showing the "1st place" graphic
-    // at the end of the race
-    g.modSocket.place = 0;
-  }
-
-  sendAll();
+  send("set", `numEntrants ${g.modSocket.numEntrants}`);
 }
 
 function getMyStatus(race: Race) {
@@ -97,9 +104,20 @@ export function getNumReady(race: Race): number {
   return numReady;
 }
 
+function getNumLeft(race: Race): number {
+  let numLeft = 0;
+  for (const racer of race.racerList) {
+    if (racer.status === "racing") {
+      numLeft += 1;
+    }
+  }
+
+  return numLeft;
+}
+
 export function sendAll(): void {
   // Start to compile the list of starting items
-  const startingItems: number[] = [];
+  let startingItems: number[] = [];
   if (g.modSocket.format === "diversity") {
     const items = g.modSocket.seed.split(",");
     for (const itemString of items) {
@@ -118,6 +136,13 @@ export function sendAll(): void {
     }
   }
 
+  // Simplify seeded races that start with Judas' Shadow by changing the starting character
+  let character = g.modSocket.character;
+  if (startingItems.length === 1 && startingItems[0] === JUDAS_SHADOW_ID) {
+    startingItems = [];
+    character = DARK_JUDAS_ID;
+  }
+
   // This is necessary because the 5 diversity items are communicated through the seed
   const seed = g.modSocket.format === "diversity" ? "-" : g.modSocket.seed;
 
@@ -127,7 +152,7 @@ export function sendAll(): void {
   send("set", `solo ${g.modSocket.solo}`);
   send("set", `format ${g.modSocket.format}`);
   send("set", `difficulty ${g.modSocket.difficulty}`);
-  send("set", `character ${g.modSocket.character}`);
+  send("set", `character ${character}`);
   send("set", `goal ${g.modSocket.goal}`);
   send("set", `seed ${seed}`);
   // "startingBuild" is converted to "startingItems"

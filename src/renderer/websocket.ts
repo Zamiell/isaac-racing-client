@@ -491,9 +491,9 @@ function initRaceCommandHandlers(conn: Connection) {
       log.info("Coming back after a disconnect.");
     }
 
-    // Update the mod with "myStatus", "placeMid" and "place"
-    // (and "status" if we are reconnecting)
-    modSocket.sendPlace();
+    // Now that we know the places of the racers,
+    // we can update the mod with some additional information
+    modSocket.sendExtraValues();
   });
 
   conn.on("raceCreated", connRaceCreated);
