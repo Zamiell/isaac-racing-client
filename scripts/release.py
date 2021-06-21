@@ -115,7 +115,7 @@ def close_existing_electron():
             process.kill()
 
 
-def package_electron(version: str, github: bool):
+def package_electron(version: str):
     print("Building:", REPOSITORY_NAME, version)
     return_code = subprocess.call(["npm", "run", "publish"], shell=True)
     if return_code != 0:
