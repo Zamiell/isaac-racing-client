@@ -84,9 +84,9 @@ export function createWindow(): electron.BrowserWindow {
   });
 
   // Open the JavaScript console
-  // if (IS_DEV) {
-  window.webContents.openDevTools();
-  // }
+  if (IS_DEV) {
+    window.webContents.openDevTools();
+  }
 
   // Check if the window is off-screen
   // (for example, this can happen if it was put on a second monitor which is currently

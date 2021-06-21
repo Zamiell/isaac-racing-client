@@ -28,7 +28,7 @@ function init() {
     if (process.send === undefined) {
       throw new Error("process.send() does not exist.");
     }
-    process.send(`info Server started on port ${PORT}.`);
+    process.send(`info Socket server started on port ${PORT}.`);
   });
 }
 

@@ -1,25 +1,23 @@
-#!/c/Python38/python.exe
+""" This is the script that publishes a new version of the client to GitHub. """
 
-""" This is the script that compiles and builds the Racing+ client. """
+import sys
+
+if sys.version_info < (3, 0):
+    print("This script requires Python 3.")
+    sys.exit(1)
 
 # Standard imports
 import argparse
-import sys
 import json
-import subprocess
 import os
 import re
+import subprocess
 import urllib.request
 
 # Non-standard imports
 import dotenv
 import psutil
 import paramiko
-
-# This script is written for Python 3
-if sys.version_info < (3, 0):
-    print("This script requires Python 3.")
-    sys.exit(1)
 
 # Constants
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -33,14 +31,13 @@ VERSION_URL = (
 def main():
     os.chdir(REPOSITORY_DIR)
 
+    args = parse_command_line_arguments()
+
     # Load environment variables
     dotenv.load_dotenv(os.path.join(SCRIPT_DIR, ".env"))
     validate_environment_variables()
 
-    # For the version, match the latest Racing+ mod version uploaded to GitHub
-    with urllib.request.urlopen(VERSION_URL) as response:
-        version = response.read().decode("utf-8").strip()
-
+    version = get_version(args)
     write_version_to_package_json(version)
     ensure_localhost_false()
     git_commit(version)
@@ -50,6 +47,19 @@ def main():
     set_latest_client_version_on_server(version)
 
     print("Released version {} successfully.".format(version))
+
+
+def parse_command_line_arguments():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-i",
+        "--increment",
+        help="increment the version instead of using the latest version of the Racing+ mod",
+        action="store_true",
+    )
+
+    return parser.parse_args()
 
 
 def validate_environment_variables():
@@ -64,6 +74,39 @@ def validate_environment_variables():
 
     if os.environ.get("VPS_PASS") == "":
         error('error: VPS_PASS is blank in the ".env" file')
+
+
+def get_version(args):
+    if args.increment:
+        return get_incremented_version_from_package_json()
+
+    # By default, match the client to the latest version of the Racing+ mod on GitHub
+    with urllib.request.urlopen(VERSION_URL) as response:
+        return response.read().decode("utf-8").strip()
+
+
+def get_incremented_version_from_package_json():
+    with open("package.json") as package_json:
+        data = json.load(package_json)
+    existing_version = data["version"]
+    match = re.search(r"(\d+)\.(\d+)\.(\d+)", existing_version)
+    if not match:
+        error(
+            'Failed to parse the version from the "package.json" file: {}'.format(
+                existing_version
+            )
+        )
+    major_version_string = match.group(1)
+    minor_version_string = match.group(2)
+    patch_version_string = match.group(3)
+
+    patch_version = int(patch_version_string)
+    new_patch_version = patch_version + 1
+    new_patch_version_string = str(new_patch_version)
+
+    return "{}.{}.{}".format(
+        major_version_string, minor_version_string, new_patch_version_string
+    )
 
 
 def write_version_to_package_json(version: str):

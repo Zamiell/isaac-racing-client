@@ -17,6 +17,8 @@ import * as websocket from "./websocket";
 const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 10;
 
 export default function login(): void {
+  log.info("Checking auto update status...");
+
   switch (g.autoUpdateStatus) {
     case null: {
       // Don't login yet if we are still checking for updates

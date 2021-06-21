@@ -1,13 +1,12 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { FADE_TIME } from "./constants";
 import g from "./globals";
 
 export function init(): void {
   electron.ipcRenderer.on("autoUpdater", IPCAutoUpdater);
 }
 
-const IPCAutoUpdater = (event: electron.IpcRendererEvent, message: string) => {
+const IPCAutoUpdater = (_event: electron.IpcRendererEvent, message: string) => {
   log.info("Received autoUpdater message:", message);
   g.autoUpdateStatus = message;
 
@@ -25,14 +24,7 @@ const IPCAutoUpdater = (event: electron.IpcRendererEvent, message: string) => {
     }
 
     case "update-downloaded": {
-      if (g.currentScreen === "transition") {
-        setTimeout(() => {
-          IPCAutoUpdater(event, message);
-        }, FADE_TIME + 5); // 5 milliseconds of leeway
-      } else if (g.currentScreen === "updating") {
-        electron.ipcRenderer.send("asynchronous-message", "quitAndInstall");
-      }
-
+      electron.ipcRenderer.send("asynchronous-message", "quitAndInstall");
       break;
     }
 
