@@ -45,7 +45,8 @@ def main():
     ensure_localhost_false()
     git_commit(version)
     close_existing_electron()
-    package_electron(version)
+    build_javascript()
+    build_and_publish_electron(version)
     set_latest_client_version_on_server(version)
 
     print("Released version {} successfully.".format(version))
@@ -115,11 +116,19 @@ def close_existing_electron():
             process.kill()
 
 
-def package_electron(version: str):
-    print("Building:", REPOSITORY_NAME, version)
-    return_code = subprocess.call(["npm", "run", "publish"], shell=True)
+def build_javascript():
+    return_code = subprocess.call(["bash", "./build.sh"], shell=True)
     if return_code != 0:
-        error("Failed to build.")
+        error("Failed to build the JavaScript.")
+
+
+def build_and_publish_electron(version: str):
+    print("Building:", REPOSITORY_NAME, version)
+    return_code = subprocess.call(
+        ["npx", "electron-builder", "--publish", "always"], shell=True
+    )
+    if return_code != 0:
+        error("Failed to run electron-builder.")
 
 
 def set_latest_client_version_on_server(version: str):

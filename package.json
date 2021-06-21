@@ -1,6 +1,6 @@
 {
   "name": "isaac-racing-client",
-  "version": "0.58.12",
+  "version": "0.58.13",
   "description": "A racing mod for The Binding of Isaac: Repentance",
   "homepage": "https://isaacracing.net",
   "bugs": {
@@ -13,9 +13,6 @@
   "license": "GPL-3.0",
   "author": "Racing+",
   "main": "./dist/main/main.js",
-  "scripts": {
-    "publish": "electron-builder --publish always"
-  },
   "dependencies": {
     "@electron/remote": "^1.2.0",
     "electron-context-menu": "^3.1.1",
