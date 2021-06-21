@@ -77,36 +77,39 @@ def validate_environment_variables():
 
 
 def get_version(args):
-    if args.increment:
-        return get_incremented_version_from_package_json()
+    incremented_version = get_incremented_version_from_package_json()
 
-    # By default, match the client to the latest version of the Racing+ mod on GitHub
+    if args.increment:
+        return incremented_version
+
+    # Get the latest version of the Racing+ mod on GitHub
     with urllib.request.urlopen(VERSION_URL) as response:
-        return response.read().decode("utf-8").strip()
+        racing_plus_mod_version = response.read().decode("utf-8").strip()
+
+    major1, minor1, patch1 = parse_semantic_version(incremented_version)
+    major2, minor2, patch2 = parse_semantic_version(racing_plus_mod_version)
+
+    # If the incremented version is ahead of the mod, then prefer the incremented version
+    if major1 > major2 or minor1 > minor2 or patch1 > patch2:
+        print(
+            "Choosing to use the incremented client version, since it is greater than the mod."
+        )
+        return incremented_version
+
+    # Otherwise, use the version of the mod
+    print("Choosing to match the version of the Racing+ mod.")
+    return racing_plus_mod_version
 
 
 def get_incremented_version_from_package_json():
     with open("package.json") as package_json:
         data = json.load(package_json)
     existing_version = data["version"]
-    match = re.search(r"(\d+)\.(\d+)\.(\d+)", existing_version)
-    if not match:
-        error(
-            'Failed to parse the version from the "package.json" file: {}'.format(
-                existing_version
-            )
-        )
-    major_version_string = match.group(1)
-    minor_version_string = match.group(2)
-    patch_version_string = match.group(3)
 
-    patch_version = int(patch_version_string)
-    new_patch_version = patch_version + 1
-    new_patch_version_string = str(new_patch_version)
+    major, minor, patch = parse_semantic_version(existing_version)
+    incremented_patch = patch + 1
 
-    return "{}.{}.{}".format(
-        major_version_string, minor_version_string, new_patch_version_string
-    )
+    return "{}.{}.{}".format(str(major), str(minor), str(incremented_patch))
 
 
 def write_version_to_package_json(version: str):
@@ -190,6 +193,18 @@ def set_latest_client_version_on_server(version: str):
     transport.close()
 
     os.remove(latest_client_version_file)
+
+
+def parse_semantic_version(version: str):
+    match = re.search(r"(\d+)\.(\d+)\.(\d+)", version)
+    if not match:
+        error("Failed to parse the version: {}".format(version))
+
+    major_version = int(match.group(1))
+    minor_version = int(match.group(2))
+    patch_version = int(match.group(3))
+
+    return major_version, minor_version, patch_version
 
 
 # From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
