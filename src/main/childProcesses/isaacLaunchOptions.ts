@@ -2,7 +2,7 @@ import path from "path";
 import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
-import LocalConfigVDF from "../types/LocalConfigVDF";
+import LocalConfigVDF, { AppConfigVDF } from "../types/LocalConfigVDF";
 
 export const LAUNCH_OPTION = "--luadebug";
 
@@ -17,13 +17,19 @@ export function hasLaunchOption(
     );
   }
 
-  // ---
+  /*
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
   process.send(`DEBUG1: ${localConfigVDF}`);
   process.send(`DEBUG2: ${typeof localConfigVDF}`);
-  // ---
+  const steamLocalConfigPath = getSteamLocalConfigPath(
+    steamPath,
+    steamActiveUserID,
+  );
+  process.send(`DEBUG3: ${steamLocalConfigPath}`);
+  process.send(`DEBUG4: ${file.read(steamLocalConfigPath)}`);
+  */
 
   const userLocalConfigStore = localConfigVDF.UserLocalConfigStore;
   if (userLocalConfigStore === undefined) {
@@ -53,10 +59,17 @@ export function hasLaunchOption(
     );
   }
 
-  const apps = steam.Apps;
+  // On some platforms, "apps" is lowercase for some reason
+  let apps: Record<string, AppConfigVDF> | undefined;
+  if (steam.Apps !== undefined) {
+    apps = steam.Apps;
+  } else if (steam.apps !== undefined) {
+    apps = steam.apps;
+  }
+
   if (apps === undefined) {
     throw new Error(
-      'Failed to find the "Apps" tag in the "localconfig.vdf" file.',
+      'Failed to find the "Apps" or "apps" tag in the "localconfig.vdf" file.',
     );
   }
 
@@ -83,9 +96,23 @@ export function setLaunchOption(
 ): void {
   const localConfig = getSteamLocalConfig(steamPath, steamActiveUserID);
 
-  localConfig.UserLocalConfigStore.Software.Valve.Steam.Apps[
-    REBIRTH_STEAM_ID.toString()
-  ].LaunchOptions = LAUNCH_OPTION;
+  const steam = localConfig.UserLocalConfigStore.Software.Valve.Steam;
+
+  // On some platforms, "apps" is lowercase for some reason
+  let apps: Record<string, AppConfigVDF> | undefined;
+  if (steam.Apps !== undefined) {
+    apps = steam.Apps;
+  } else if (steam.apps !== undefined) {
+    apps = steam.apps;
+  }
+
+  if (apps === undefined) {
+    throw new Error(
+      'Failed to find the "Apps" or "apps" tag in the "localconfig.vdf" file.',
+    );
+  }
+
+  apps[REBIRTH_STEAM_ID.toString()].LaunchOptions = LAUNCH_OPTION;
 
   let localConfigString: string;
   try {
