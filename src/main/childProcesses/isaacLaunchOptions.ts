@@ -11,26 +11,69 @@ export function hasLaunchOption(
   steamActiveUserID: number,
 ): boolean {
   const localConfigVDF = getSteamLocalConfig(steamPath, steamActiveUserID);
-  const apps = localConfigVDF.UserLocalConfigStore.Software.Valve.Steam.Apps;
+  if (localConfigVDF === undefined) {
+    throw new Error(
+      'The parsed result of the "localconfig.vdf" file was undefined.',
+    );
+  }
+
+  // ---
+  if (process.send === undefined) {
+    throw new Error("process.send() does not exist.");
+  }
+  process.send(`DEBUG1: ${localConfigVDF}`);
+  process.send(`DEBUG2: ${typeof localConfigVDF}`);
+  // ---
+
+  const userLocalConfigStore = localConfigVDF.UserLocalConfigStore;
+  if (userLocalConfigStore === undefined) {
+    throw new Error(
+      'The "localconfig.vdf" file did not have a "UserLocalConfigStore" tag.',
+    );
+  }
+
+  const software = userLocalConfigStore.Software;
+  if (software === undefined) {
+    throw new Error(
+      'Failed to find the "Software" tag in the "localconfig.vdf" file.',
+    );
+  }
+
+  const valve = software.Valve;
+  if (valve === undefined) {
+    throw new Error(
+      'Failed to find the "Valve" tag in the "localconfig.vdf" file.',
+    );
+  }
+
+  const steam = valve.Steam;
+  if (steam === undefined) {
+    throw new Error(
+      'Failed to find the "Steam" tag in the "localconfig.vdf" file.',
+    );
+  }
+
+  const apps = steam.Apps;
+  if (apps === undefined) {
+    throw new Error(
+      'Failed to find the "Apps" tag in the "localconfig.vdf" file.',
+    );
+  }
+
   const rebirthEntry = apps[REBIRTH_STEAM_ID.toString()];
   if (rebirthEntry === undefined) {
-    // ---
-    if (process.send === undefined) {
-      throw new Error("process.send() does not exist.");
-    }
-    const localConfigPath = getSteamLocalConfigPath(
-      steamPath,
-      steamActiveUserID,
-    );
-    const localConfigString = file.read(localConfigPath);
-    process.send(`DEBUG: ${localConfigString}`);
-    // ---
-
     throw new Error(
       `Failed to find the entry for "${REBIRTH_STEAM_ID}" in the "localconfig.vdf" file.`,
     );
   }
+
   const launchOptions = rebirthEntry.LaunchOptions;
+  if (launchOptions === undefined) {
+    throw new Error(
+      'Failed to find the "LaunchOptions" tag in the "localconfig.vdf" file.',
+    );
+  }
+
   return launchOptions === LAUNCH_OPTION;
 }
 
