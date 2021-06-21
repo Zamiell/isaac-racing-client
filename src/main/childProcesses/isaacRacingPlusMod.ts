@@ -2,7 +2,6 @@ import klawSync from "klaw-sync";
 import fetch from "node-fetch";
 import path from "path";
 import * as file from "../../common/file";
-import { getRebirthPath } from "./subroutines";
 
 // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
@@ -10,56 +9,38 @@ const DEV_MOD_NAME = "racing-plus";
 const SHA1_HASHES_URL =
   "https://raw.githubusercontent.com/Zamiell/racing-plus/main/sha1.json";
 
-export function exists(steamPath: string): boolean {
-  return getModPath(steamPath) !== null;
+export function devExists(modsPath: string): boolean {
+  const racingPlusModDevPath = path.join(modsPath, DEV_MOD_NAME);
+  return file.exists(racingPlusModDevPath) && file.isDir(racingPlusModDevPath);
 }
 
-export async function isValid(steamPath: string): Promise<boolean> {
-  const modPath = getModPath(steamPath);
-  if (modPath === null) {
-    throw new Error("Failed to get the path to the Racing+ mod.");
-  }
-  const checksums = await getModChecksums();
-
-  const modIsCorrupt = checkCorruptOrMissingFiles(modPath, checksums);
-  const modHadExtraneousFiles = checkExtraneousFiles(modPath, checksums);
-
-  if (modIsCorrupt) {
-    return false;
-  }
-
-  if (modHadExtraneousFiles) {
-    return false;
-  }
-
-  return true;
-}
-
-function getModPath(steamPath: string) {
+export function exists(modsPath: string): boolean {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
 
-  const rebirthPath = getRebirthPath(steamPath);
-  const modsPath = path.join(rebirthPath, "mods");
-
-  const devPath = path.join(modsPath, DEV_MOD_NAME);
-  if (file.exists(devPath) && file.isDir(devPath)) {
-    return devPath;
+  const racingPlusModPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
+  if (file.exists(racingPlusModPath) && file.isDir(racingPlusModPath)) {
+    return true;
   }
 
-  process.send(`Failed to find the Racing+ mod at the dev path: ${devPath}`);
+  process.send(`Failed to find the Racing+ mod at: ${racingPlusModPath}`);
+  return false;
+}
 
-  const steamWorkshopPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
-  if (file.exists(steamWorkshopPath) && file.isDir(steamWorkshopPath)) {
-    return steamWorkshopPath;
+export async function isValid(modsPath: string): Promise<boolean> {
+  const racingPlusModPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
+  const checksums = await getModChecksums();
+
+  if (checkCorruptOrMissingFiles(racingPlusModPath, checksums)) {
+    return false;
   }
 
-  process.send(
-    `Failed to find the Racing+ mod at the Steam workshop path: ${steamWorkshopPath}`,
-  );
+  if (checkExtraneousFiles(racingPlusModPath, checksums)) {
+    return false;
+  }
 
-  return null;
+  return true;
 }
 
 async function getModChecksums() {

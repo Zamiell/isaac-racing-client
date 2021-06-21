@@ -21,6 +21,7 @@ import { execSync } from "child_process";
 import ps from "ps-node";
 import Registry, { RegistryItem } from "winreg";
 import { parseIntSafe } from "../../common/util";
+import getModsPath from "./isaacGetModsPath";
 import isSandboxValid from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
@@ -136,7 +137,19 @@ function checkModExists() {
     throw new Error("process.send() does not exist.");
   }
 
-  const modExists = racingPlusMod.exists(steamPath);
+  const modsPath = getModsPath(steamPath);
+
+  const devModExists = racingPlusMod.devExists(modsPath);
+  if (devModExists) {
+    // Skip checking mod integrity if we are in development
+    process.send(
+      "File system validation passed. (Skipped mod checking since we are in development.)",
+    );
+    process.send("isaacChecksComplete", processExit);
+    return;
+  }
+
+  const modExists = racingPlusMod.exists(modsPath);
   if (!modExists) {
     // The mod not being found is an ordinary error;
     // the end-user probably has not yet subscribed to the mod on the Steam Workshop
@@ -144,10 +157,10 @@ function checkModExists() {
     return;
   }
 
-  checkModIntegrity().catch(childError);
+  checkModIntegrity(modsPath).catch(childError);
 }
 
-async function checkModIntegrity() {
+async function checkModIntegrity(modsPath: string) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -155,7 +168,7 @@ async function checkModIntegrity() {
   process.send("Checking to see if the Racing+ mod is corrupted...");
 
   // Mod checks are performed in a separate file
-  const modValid = await racingPlusMod.isValid(steamPath);
+  const modValid = await racingPlusMod.isValid(modsPath);
   if (modValid) {
     process.send("The mod perfectly matched!");
   } else {
