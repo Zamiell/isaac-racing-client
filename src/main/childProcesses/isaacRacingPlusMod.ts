@@ -36,6 +36,10 @@ export async function isValid(steamPath: string): Promise<boolean> {
 }
 
 function getModPath(steamPath: string) {
+  if (process.send === undefined) {
+    throw new Error("process.send() does not exist.");
+  }
+
   const rebirthPath = getRebirthPath(steamPath);
   const modsPath = path.join(rebirthPath, "mods");
 
@@ -44,10 +48,16 @@ function getModPath(steamPath: string) {
     return devPath;
   }
 
+  process.send(`Failed to find the Racing+ mod at the dev path: ${devPath}`);
+
   const steamWorkshopPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
   if (file.exists(steamWorkshopPath) && file.isDir(steamWorkshopPath)) {
     return steamWorkshopPath;
   }
+
+  process.send(
+    `Failed to find the Racing+ mod at the Steam workshop path: ${steamWorkshopPath}`,
+  );
 
   return null;
 }

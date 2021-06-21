@@ -125,7 +125,9 @@ def ensure_localhost_false():
 
 def git_commit(version: str):
     # Throw an error if this is not a git repository
-    return_code = subprocess.call(["git", "status"])
+    return_code = subprocess.call(
+        ["git", "status"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
     if return_code != 0:
         error("This is not a git repository.")
 
