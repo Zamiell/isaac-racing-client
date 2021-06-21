@@ -45,7 +45,6 @@ def main():
     ensure_localhost_false()
     git_commit(version)
     close_existing_electron()
-    sys.exit(0)
     package_electron(version)
     set_latest_client_version_on_server(version)
 
