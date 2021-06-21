@@ -138,6 +138,7 @@ function checkModExists() {
   }
 
   const modsPath = getModsPath(steamPath);
+  process.send(`Detected the "mods" directory at: ${modsPath}`);
 
   const devModExists = racingPlusMod.devExists(modsPath);
   if (devModExists) {

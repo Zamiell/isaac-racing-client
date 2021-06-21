@@ -30,10 +30,16 @@ export default function getModsPath(steamPath: string): string {
   const basePath =
     baseInstallFolder === undefined ? steamPath : baseInstallFolder;
 
-  return path.join(
+  const modsPath = path.join(
     basePath,
     "steamapps",
     "common",
     "The Binding of Isaac Rebirth",
+    "mods",
   );
+  if (!file.exists(modsPath) || !file.isDir(modsPath)) {
+    throw new Error(`The "mods" directory does not exist at: ${modsPath}`);
+  }
+
+  return modsPath;
 }
