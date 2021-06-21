@@ -9,6 +9,7 @@ import json
 import subprocess
 import os
 import re
+import urllib.request
 
 # Non-standard imports
 import dotenv
@@ -24,96 +25,63 @@ if sys.version_info < (3, 0):
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 REPOSITORY_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 REPOSITORY_NAME = os.path.basename(REPOSITORY_DIR)
-os.chdir(REPOSITORY_DIR)
+VERSION_URL = (
+    "https://raw.githubusercontent.com/Zamiell/racing-plus/main/mod/version.txt"
+)
 
 
 def main():
-    args = get_command_line_args()
+    os.chdir(REPOSITORY_DIR)
 
     # Load environment variables
-    dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+    dotenv.load_dotenv(os.path.join(SCRIPT_DIR, ".env"))
+    validate_environment_variables()
 
-    if args.github:
-        if (
-            os.environ.get("GH_TOKEN") == ""
-            or os.environ.get("VPS_IP") == ""
-            or os.environ.get("VPS_USER") == ""
-            or os.environ.get("VPS_PASS") == ""
-        ):
-            print('error: GH_TOKEN is blank in the ".env" file')
-            sys.exit(1)
+    # For the version, match the latest Racing+ mod version uploaded to GitHub
+    with urllib.request.urlopen(VERSION_URL) as response:
+        version = response.read().decode("utf-8").strip()
 
-    # Get the version
-    with open("package.json") as package_JSON:
-        DATA = json.load(package_JSON)
-    NUMBER_VERSION = DATA["version"]
-    VERSION = "v" + DATA["version"]
+    write_version_to_package_json(version)
+    ensure_localhost_false()
+    git_commit(version)
+    close_existing_electron()
+    sys.exit(0)
+    package_electron(version)
+    set_latest_client_version_on_server(version)
 
-    if args.github:
-        ensure_localhost_false()
-        git_commit()
-
-    # Close the program if it is running
-    # (having it open can cause corrupted ASAR archives)
-    for process in psutil.process_iter():
-        if process.name() == "electron.exe":
-            process.kill()
-
-    # Build/package
-    print("Building:", REPOSITORY_NAME, VERSION)
-    if args.github:
-        RUN_COMMAND = "distPub"
-    else:
-        RUN_COMMAND = "dist"
-    RETURN_CODE = subprocess.call(
-        ["npm", "run", RUN_COMMAND, '--python="C:/Python27/python.exe"'], shell=True
-    )
-    if RETURN_CODE != 0:
-        error("Failed to build.")
-
-    # Set the latest client version number on the server
-    if args.github:
-        latest_client_version_file = "latest_client_version.txt"
-        with open(latest_client_version_file, "w") as version_file:
-            print(VERSION, file=version_file)
-
-        transport = paramiko.Transport((os.environ.get("VPS_IP"), 22))
-        transport.connect(None, os.environ.get("VPS_USER"), os.environ.get("VPS_PASS"))
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        remote_path = "isaac-racing-server/" + latest_client_version_file
-        sftp.put(latest_client_version_file, remote_path)
-        transport.close()
-        os.remove(latest_client_version_file)
-
-    print("Released version", NUMBER_VERSION, "successfully.")
+    print("Released version {} successfully.".format(version))
 
 
-def get_command_line_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-gh",
-        "--github",
-        help="upload to GitHub in addition to building locally",
-        action="store_true",
-    )
-    return parser.parse_args()
+def validate_environment_variables():
+    if os.environ.get("GH_TOKEN") == "":
+        print('error: GH_TOKEN is blank in the ".env" file')
+        sys.exit(1)
+
+    if os.environ.get("VPS_IP") == "":
+        print('error: VPS_IP is blank in the ".env" file')
+        sys.exit(1)
+
+    if os.environ.get("VPS_USER") == "":
+        print('error: VPS_USER is blank in the ".env" file')
+        sys.exit(1)
+
+    if os.environ.get("VPS_PASS") == "":
+        print('error: VPS_PASS is blank in the ".env" file')
+        sys.exit(1)
+
+
+def write_version_to_package_json(version: str):
+    match_regex = r'  "version": "\d+.\d+\.\d+",'
+    replace = '  "version": "{}",'.format(version)
+    find_and_replace_in_file(match_regex, replace, "package.json")
 
 
 def ensure_localhost_false():
     # Make sure that the localhost version of the client is not activated
-    # http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
-    constants_file = os.path.join("src", "renderer", "constants.js")
-    with open(constants_file, "r") as file_handle:
-        file_data = file_handle.read()
-    new_file = ""
-    for line in iter(file_data.splitlines()):
-        match = re.search(r"const localhost = true;", line)
-        if match:
-            new_file += "const localhost = false;" + "\n"
-        else:
-            new_file += line + "\n"
-    with open(constants_file, "w", newline="\n") as file:
-        file.write(new_file)
+    constants_file = os.path.join(REPOSITORY_DIR, "src", "renderer", "constants.ts")
+    find_and_replace_in_file(
+        "const localhost = true;", "const localhost = false;", constants_file
+    )
 
 
 def git_commit(version: str):
@@ -132,7 +100,53 @@ def git_commit(version: str):
         error("Failed to git push.")
 
 
-# Subroutines
+def close_existing_electron():
+    # Having Electron open can cause corrupted ASAR archives
+    for process in psutil.process_iter():
+        if process.name() == "electron.exe":
+            process.kill()
+
+
+def package_electron(version: str, github: bool):
+    print("Building:", REPOSITORY_NAME, version)
+    return_code = subprocess.call(["npm", "run", "publish"], shell=True)
+    if return_code != 0:
+        error("Failed to build.")
+
+
+def set_latest_client_version_on_server(version: str):
+    latest_client_version_file = "latest_client_version.txt"
+
+    with open(latest_client_version_file, "w") as version_file:
+        print(version, file=version_file)
+
+    transport = paramiko.Transport((os.environ.get("VPS_IP"), 22))
+    transport.connect(None, os.environ.get("VPS_USER"), os.environ.get("VPS_PASS"))
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    remote_path = "isaac-racing-server/" + latest_client_version_file
+    sftp.put(latest_client_version_file, remote_path)
+    transport.close()
+
+    os.remove(latest_client_version_file)
+
+
+# From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
+def find_and_replace_in_file(match_regex: str, replace: str, file_path: str):
+    with open(file_path, "r") as file_handle:
+        file_data = file_handle.read()
+
+    new_file = ""
+    for line in iter(file_data.splitlines()):
+        match = re.search(match_regex, line)
+        if match:
+            new_file += replace + "\n"
+        else:
+            new_file += line + "\n"
+
+    with open(file_path, "w", newline="\n") as file:
+        file.write(new_file)
+
+
 def error(message, exception=None):
     if exception is None:
         print(message)

@@ -1,3 +1,3 @@
 paramiko
+psutil
 python-dotenv
-pillow
