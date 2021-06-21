@@ -10,27 +10,69 @@ export function hasLaunchOption(
   steamPath: string,
   steamActiveUserID: number,
 ): boolean {
-  const localConfigVDF = getSteamLocalConfig(steamPath, steamActiveUserID);
-  if (localConfigVDF === undefined) {
+  const localConfigVDF = getLocalConfigVDF(steamPath, steamActiveUserID);
+  const rebirthEntry = getRebirthLocalConfigVDFEntry(localConfigVDF);
+
+  const launchOptions = rebirthEntry.LaunchOptions;
+  if (launchOptions === undefined) {
     throw new Error(
-      'The parsed result of the "localconfig.vdf" file was undefined.',
+      'Failed to find the "LaunchOptions" tag in the "localconfig.vdf" file.',
     );
   }
 
-  /*
-  if (process.send === undefined) {
-    throw new Error("process.send() does not exist.");
-  }
-  process.send(`DEBUG1: ${localConfigVDF}`);
-  process.send(`DEBUG2: ${typeof localConfigVDF}`);
-  const steamLocalConfigPath = getSteamLocalConfigPath(
-    steamPath,
-    steamActiveUserID,
-  );
-  process.send(`DEBUG3: ${steamLocalConfigPath}`);
-  process.send(`DEBUG4: ${file.read(steamLocalConfigPath)}`);
-  */
+  return launchOptions === LAUNCH_OPTION;
+}
 
+export function setLaunchOption(
+  steamPath: string,
+  steamActiveUserID: number,
+): void {
+  const localConfigVDF = getLocalConfigVDF(steamPath, steamActiveUserID);
+  const rebirthEntry = getRebirthLocalConfigVDFEntry(localConfigVDF);
+  rebirthEntry.LaunchOptions = LAUNCH_OPTION;
+
+  let localConfigString: string;
+  try {
+    localConfigString = vdfParser.stringify(localConfigVDF);
+  } catch (err) {
+    throw new Error(`Failed to stringify the Steam local config: ${err}`);
+  }
+
+  const localConfigPath = getLocalConfigPath(steamPath, steamActiveUserID);
+  file.write(localConfigPath, localConfigString);
+}
+
+function getLocalConfigVDF(steamPath: string, steamActiveUserID: number) {
+  const localConfigPath = getLocalConfigPath(steamPath, steamActiveUserID);
+  if (!file.exists(localConfigPath)) {
+    throw new Error(
+      `Failed to find the "localconfig.vdf" file at: ${localConfigPath}`,
+    );
+  }
+
+  const localConfigString = file.read(localConfigPath);
+
+  let localConfigVDF: LocalConfigVDF;
+  try {
+    localConfigVDF = vdfParser.parse(localConfigString) as LocalConfigVDF;
+  } catch (err) {
+    throw new Error(`Failed to parse the "${localConfigPath}" file: ${err}`);
+  }
+
+  return localConfigVDF;
+}
+
+function getLocalConfigPath(steamPath: string, steamActiveUserID: number) {
+  return path.join(
+    steamPath,
+    "userdata",
+    steamActiveUserID.toString(),
+    "config",
+    "localconfig.vdf",
+  );
+}
+
+function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
   const userLocalConfigStore = localConfigVDF.UserLocalConfigStore;
   if (userLocalConfigStore === undefined) {
     throw new Error(
@@ -80,77 +122,5 @@ export function hasLaunchOption(
     );
   }
 
-  const launchOptions = rebirthEntry.LaunchOptions;
-  if (launchOptions === undefined) {
-    throw new Error(
-      'Failed to find the "LaunchOptions" tag in the "localconfig.vdf" file.',
-    );
-  }
-
-  return launchOptions === LAUNCH_OPTION;
-}
-
-export function setLaunchOption(
-  steamPath: string,
-  steamActiveUserID: number,
-): void {
-  const localConfig = getSteamLocalConfig(steamPath, steamActiveUserID);
-
-  const steam = localConfig.UserLocalConfigStore.Software.Valve.Steam;
-
-  // On some platforms, "apps" is lowercase for some reason
-  let apps: Record<string, AppConfigVDF> | undefined;
-  if (steam.Apps !== undefined) {
-    apps = steam.Apps;
-  } else if (steam.apps !== undefined) {
-    apps = steam.apps;
-  }
-
-  if (apps === undefined) {
-    throw new Error(
-      'Failed to find the "Apps" or "apps" tag in the "localconfig.vdf" file.',
-    );
-  }
-
-  apps[REBIRTH_STEAM_ID.toString()].LaunchOptions = LAUNCH_OPTION;
-
-  let localConfigString: string;
-  try {
-    localConfigString = vdfParser.stringify(localConfig);
-  } catch (err) {
-    throw new Error(`Failed to stringify the Steam local config: ${err}`);
-  }
-
-  const localConfigPath = getSteamLocalConfigPath(steamPath, steamActiveUserID);
-  file.write(localConfigPath, localConfigString);
-}
-
-function getSteamLocalConfig(steamPath: string, steamActiveUserID: number) {
-  const localConfigPath = getSteamLocalConfigPath(steamPath, steamActiveUserID);
-  if (!file.exists(localConfigPath)) {
-    throw new Error(
-      `Failed to find the "localconfig.vdf" file at: ${localConfigPath}`,
-    );
-  }
-
-  const localConfigString = file.read(localConfigPath);
-
-  let localConfigVDF: LocalConfigVDF;
-  try {
-    localConfigVDF = vdfParser.parse(localConfigString) as LocalConfigVDF;
-  } catch (err) {
-    throw new Error(`Failed to parse the "${localConfigPath}" file: ${err}`);
-  }
-
-  return localConfigVDF;
-}
-
-function getSteamLocalConfigPath(steamPath: string, steamActiveUserID: number) {
-  return path.join(
-    steamPath,
-    "userdata",
-    steamActiveUserID.toString(),
-    "config",
-    "localconfig.vdf",
-  );
+  return rebirthEntry;
 }

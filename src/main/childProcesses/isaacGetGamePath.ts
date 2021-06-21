@@ -6,7 +6,7 @@
 import path from "path";
 import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
-import ConfigVDF from "../types/ConfigVDF";
+import ConfigVDF, { ValveConfigVDF } from "../types/ConfigVDF";
 
 export default function getRebirthPath(steamPath: string): string {
   const configVDFPath = path.join(steamPath, "config", "config.vdf");
@@ -25,8 +25,43 @@ export default function getRebirthPath(steamPath: string): string {
     throw new Error(`Failed to parse the "${configVDFPath}" file: ${err}`);
   }
 
-  const baseInstallFolder =
-    configVDF.InstallConfigStore.Software.Valve.Steam.BaseInstallFolder_1;
+  const installConfigStore = configVDF.InstallConfigStore;
+  if (installConfigStore === undefined) {
+    throw new Error(
+      'Failed to find the "InstallConfigStore" tag in the "config.vdf" file.',
+    );
+  }
+
+  const software = installConfigStore.Software;
+  if (software === undefined) {
+    throw new Error(
+      'Failed to find the "Software" tag in the "config.vdf" file.',
+    );
+  }
+
+  // On some platforms, "valve" is lowercase for some reason
+  let valve: ValveConfigVDF | undefined;
+  if (software.Valve !== undefined) {
+    valve = software.Valve;
+  } else if (software.valve !== undefined) {
+    valve = software.valve;
+  }
+
+  if (valve === undefined) {
+    throw new Error(
+      'Failed to find the "Valve" or "valve" tag in the "config.vdf" file.',
+    );
+  }
+
+  const steam = valve.Steam;
+  if (steam === undefined) {
+    throw new Error('Failed to find the "Steam" tag in the "config.vdf" file.');
+  }
+
+  const baseInstallFolder = steam.BaseInstallFolder_1;
+  // (the baseInstallFolder will not be present on systems that install Steam games into the
+  // standard directory)
+
   const basePath =
     baseInstallFolder === undefined ? steamPath : baseInstallFolder;
 
