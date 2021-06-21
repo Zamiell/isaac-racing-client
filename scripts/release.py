@@ -54,20 +54,16 @@ def main():
 
 def validate_environment_variables():
     if os.environ.get("GH_TOKEN") == "":
-        print('error: GH_TOKEN is blank in the ".env" file')
-        sys.exit(1)
+        error('error: GH_TOKEN is blank in the ".env" file')
 
     if os.environ.get("VPS_IP") == "":
-        print('error: VPS_IP is blank in the ".env" file')
-        sys.exit(1)
+        error('error: VPS_IP is blank in the ".env" file')
 
     if os.environ.get("VPS_USER") == "":
-        print('error: VPS_USER is blank in the ".env" file')
-        sys.exit(1)
+        error('error: VPS_USER is blank in the ".env" file')
 
     if os.environ.get("VPS_PASS") == "":
-        print('error: VPS_PASS is blank in the ".env" file')
-        sys.exit(1)
+        error('error: VPS_PASS is blank in the ".env" file')
 
 
 def write_version_to_package_json(version: str):
@@ -85,6 +81,19 @@ def ensure_localhost_false():
 
 
 def git_commit(version: str):
+    # Throw an error if this is not a git repository
+    return_code = subprocess.call(["git", "status"])
+    if return_code != 0:
+        error("This is not a git repository.")
+
+    # Check to see if there are any changes
+    # https://stackoverflow.com/questions/3878624/how-do-i-programmatically-determine-if-there-are-uncommitted-changes
+    return_code = subprocess.call(["git", "diff-index", "--quiet", "HEAD", "--"])
+    if return_code == 0:
+        # There are no changes
+        print("There are no changes to commit.")
+        return
+
     # Commit to the client repository
     return_code = subprocess.call(["git", "add", "-A"])
     if return_code != 0:
@@ -147,11 +156,8 @@ def find_and_replace_in_file(match_regex: str, replace: str, file_path: str):
         file.write(new_file)
 
 
-def error(message, exception=None):
-    if exception is None:
-        print(message)
-    else:
-        print(message, exception)
+def error(message):
+    print(message)
     sys.exit(1)
 
 
