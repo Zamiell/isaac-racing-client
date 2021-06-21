@@ -18,10 +18,12 @@
 // we provide a sandbox so that only certain functions can be called
 
 import { execSync } from "child_process";
+import path from "path";
 import ps from "ps-node";
 import Registry, { RegistryItem } from "winreg";
+import * as file from "../../common/file";
 import { parseIntSafe } from "../../common/util";
-import getModsPath from "./isaacGetModsPath";
+import getGamePath from "./isaacGetGamePath";
 import isSandboxValid from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
@@ -36,6 +38,7 @@ const STEAM_PROCESS_NAME = "steam.exe";
 
 let steamPath: string;
 let steamActiveUserID: number;
+let gamePath: string;
 let shouldRestartIsaac = false;
 let shouldRestartSteam = false;
 
@@ -137,8 +140,13 @@ function checkModExists() {
     throw new Error("process.send() does not exist.");
   }
 
-  const modsPath = getModsPath(steamPath);
-  process.send(`Detected the "mods" directory at: ${modsPath}`);
+  gamePath = getGamePath(steamPath);
+  process.send(`Detected the game directory at: ${gamePath}`);
+
+  const modsPath = path.join(gamePath, "mods");
+  if (!file.exists(modsPath) || !file.isDir(modsPath)) {
+    throw new Error(`Failed to find the "mods" directory at: ${modsPath}`);
+  }
 
   const devModExists = racingPlusMod.devExists(modsPath);
   if (devModExists) {
@@ -208,7 +216,7 @@ function checkLuaSandbox() {
   process.send("Checking to see if the Lua sandbox is in place...");
 
   // Sandbox checks are performed in a separate file
-  const sandboxValid = isSandboxValid(steamPath);
+  const sandboxValid = isSandboxValid(gamePath);
   if (sandboxValid) {
     process.send("The sandbox is in place.");
   } else {

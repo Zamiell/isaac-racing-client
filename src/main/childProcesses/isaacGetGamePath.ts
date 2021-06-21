@@ -8,7 +8,7 @@ import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
 import ConfigVDF from "../types/ConfigVDF";
 
-export default function getModsPath(steamPath: string): string {
+export default function getRebirthPath(steamPath: string): string {
   const configVDFPath = path.join(steamPath, "config", "config.vdf");
   if (!file.exists(configVDFPath)) {
     throw new Error(
@@ -30,16 +30,15 @@ export default function getModsPath(steamPath: string): string {
   const basePath =
     baseInstallFolder === undefined ? steamPath : baseInstallFolder;
 
-  const modsPath = path.join(
+  const gamePath = path.join(
     basePath,
     "steamapps",
     "common",
     "The Binding of Isaac Rebirth",
-    "mods",
   );
-  if (!file.exists(modsPath) || !file.isDir(modsPath)) {
-    throw new Error(`The "mods" directory does not exist at: ${modsPath}`);
+  if (!file.exists(gamePath) || !file.isDir(gamePath)) {
+    throw new Error(`Failed to find the game directory at: ${gamePath}`);
   }
 
-  return modsPath;
+  return gamePath;
 }

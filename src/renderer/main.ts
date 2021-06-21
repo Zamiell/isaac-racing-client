@@ -35,8 +35,9 @@ $(() => {
   printWelcomeMessage();
 
   // Version
-  $("#title-version").html(pkg.version);
-  $("#settings-version").html(pkg.version);
+  const versionString = `v${pkg.version}`;
+  $("#title-version").html(versionString);
+  $("#settings-version").html(versionString);
 
   initData();
 

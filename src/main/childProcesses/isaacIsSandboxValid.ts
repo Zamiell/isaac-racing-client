@@ -1,6 +1,5 @@
 import path from "path";
 import * as file from "../../common/file";
-import { getRebirthPath } from "./subroutines";
 
 const SANDBOX_PATH = path.join(
   __dirname,
@@ -14,14 +13,14 @@ const SANDBOX_PATH = path.join(
   "sandbox",
 );
 
-export default function isSandboxValid(steamPath: string): boolean {
-  const mainLuaValid = isMainLuaValid(steamPath);
-  const sandboxLuaValid = isSandboxLuaValid(steamPath);
+export default function isSandboxValid(gamePath: string): boolean {
+  const mainLuaValid = isMainLuaValid(gamePath);
+  const sandboxLuaValid = isSandboxLuaValid(gamePath);
 
   return mainLuaValid && sandboxLuaValid;
 }
 
-function isMainLuaValid(steamPath: string) {
+function isMainLuaValid(gamePath: string) {
   const mainLuaSrcFilename = "main-combined.lua";
   const mainLuaSrcPath = path.join(SANDBOX_PATH, mainLuaSrcFilename);
   if (!file.exists(mainLuaSrcPath) || !file.isFile(mainLuaSrcPath)) {
@@ -31,7 +30,7 @@ function isMainLuaValid(steamPath: string) {
   }
   const mainLuaSrcHash = file.getHash(mainLuaSrcPath);
 
-  const scriptsPath = getScriptsPath(steamPath);
+  const scriptsPath = getScriptsPath(gamePath);
   const mainLuaDstFilename = "main.lua";
   const mainLuaDstPath = path.join(scriptsPath, mainLuaDstFilename);
   if (!file.exists(mainLuaDstPath)) {
@@ -51,7 +50,7 @@ function isMainLuaValid(steamPath: string) {
   return mainLuaValid;
 }
 
-function isSandboxLuaValid(steamPath: string) {
+function isSandboxLuaValid(gamePath: string) {
   const sandboxFilename = "sandbox.lua";
   const sandboxLuaSrcPath = path.join(SANDBOX_PATH, sandboxFilename);
   if (!file.exists(sandboxLuaSrcPath) || !file.isFile(sandboxLuaSrcPath)) {
@@ -61,7 +60,7 @@ function isSandboxLuaValid(steamPath: string) {
   }
   const sandboxLuaSrcHash = file.getHash(sandboxLuaSrcPath);
 
-  const scriptsPath = getScriptsPath(steamPath);
+  const scriptsPath = getScriptsPath(gamePath);
   const sandboxLuaDstPath = path.join(scriptsPath, sandboxFilename);
 
   let sandboxLuaValid: boolean;
@@ -79,7 +78,6 @@ function isSandboxLuaValid(steamPath: string) {
   return sandboxLuaValid;
 }
 
-function getScriptsPath(steamPath: string) {
-  const rebirthPath = getRebirthPath(steamPath);
-  return path.join(rebirthPath, "resources", "scripts");
+function getScriptsPath(gamePath: string) {
+  return path.join(gamePath, "resources", "scripts");
 }
