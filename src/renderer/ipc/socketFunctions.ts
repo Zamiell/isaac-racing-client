@@ -27,6 +27,10 @@ functionMap.set("error", (data: string) => {
   log.error(data);
 });
 
+functionMap.set("exited", (_data: string) => {
+  errorShow("The localhost socket server exited unexpectedly.");
+});
+
 functionMap.set("finish", (data: string) => {
   if (!inOngoingRace()) {
     return;

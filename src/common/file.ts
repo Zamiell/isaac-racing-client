@@ -57,10 +57,10 @@ function getFileStats(filePath: string): fs.Stats {
 export function getHash(filePath: string): string {
   let hash: string;
   try {
-    const fileBuffer = read(filePath);
-    const sum = crypto.createHash("sha1");
-    sum.update(fileBuffer);
-    hash = sum.digest("hex");
+    const fileBuffer = fs.readFileSync(filePath);
+    const hashSum = crypto.createHash("sha1");
+    hashSum.update(fileBuffer);
+    hash = hashSum.digest("hex");
   } catch (err) {
     throw new Error(
       `Failed to create a hash for the "${filePath}" file: ${err}`,

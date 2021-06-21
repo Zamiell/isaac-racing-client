@@ -5,7 +5,7 @@
 // The source code can be found in https://github.com/greenheartgames/greenworks
 const fs = require("fs");
 
-const greenworks = require("./lib/greenworks-win64");
+const greenworks = require("./greenworks-win64");
 
 function error_process(err, error_callback) {
   if (err && error_callback) error_callback(err);

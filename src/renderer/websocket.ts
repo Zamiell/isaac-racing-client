@@ -54,15 +54,20 @@ function initMiscHandlers(conn: Connection) {
   conn.on("open", () => {
     log.info("WebSocket connection established.");
 
-    // Launch the process that will perform Isaac-related checks
-    // (we don't need to do these checks in a development environment though)
-    if (!IS_DEV) {
-      isaac.start();
-    }
-
     conn.send("roomJoin", {
       room: "lobby",
     });
+
+    // If we are in development, skip Isaac checks and go directly to the lobby
+    if (IS_DEV) {
+      $("#title").fadeOut(FADE_TIME, () => {
+        lobbyScreen.show();
+      });
+      return;
+    }
+
+    // Launch the process that will perform Isaac-related checks
+    isaac.start();
 
     // Do the proper transition to the "File Checking" depending on where we logged in from
     if (g.currentScreen === "title-ajax") {
@@ -120,13 +125,9 @@ function initMiscHandlers(conn: Connection) {
 }
 
 function showIsaacChecking() {
-  if (IS_DEV) {
-    lobbyScreen.show();
-  } else {
-    $("#file-checking").fadeIn(FADE_TIME, () => {
-      g.currentScreen = "file-checking";
-    });
-  }
+  $("#file-checking").fadeIn(FADE_TIME, () => {
+    g.currentScreen = "file-checking";
+  });
 }
 
 function initMiscCommandHandlers(conn: Connection) {

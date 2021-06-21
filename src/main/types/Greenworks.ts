@@ -3,13 +3,17 @@ export default interface Greenworks {
     successCallback: (ticket: TicketObject) => void,
     errorCallback: (err: Error) => void,
   ): void;
+  getCloudQuota(
+    successCallback: (totalBytes: number, availableBytes: number) => void,
+    errorCallback: (err: Error) => void,
+  ): void;
   getSteamId(): SteamIDObject;
   init(): unknown;
 }
 
 export interface TicketObject {
-  ticket: number;
-  // The ticket object contains other stuff that we don't care about
+  ticket: Buffer;
+  // The ticket object also contains other stuff that we don't care about
 }
 
 export interface SteamIDObject {

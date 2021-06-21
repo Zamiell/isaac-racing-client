@@ -52,6 +52,13 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
       break;
     }
 
+    case "modCorrupt": {
+      errorShow(
+        "The Racing+ mod has one or more files that are corrupt or missing. Try unsubscribing from the mod on the Steam Workshop and then re-subscribing (so that Steam completely re-downloads it from scratch).",
+      );
+      break;
+    }
+
     case "startIsaac": {
       electron.ipcRenderer.send("asynchronous-message", "startIsaac");
       break;

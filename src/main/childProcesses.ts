@@ -93,9 +93,7 @@ export function start(
     }
   });
 
-  childProcess.on("exit", (code: number | null) => {
-    log.info(`CHILD PROCESS ${name} EXITED WITH CODE: ${code}`);
-
+  childProcess.on("exit", () => {
     // Pass the exit notification to the renderer (browser) process
     // (we need to check to see if the window has been destroyed in the case where we get a message
     // from the child process after the window has already been destroyed)

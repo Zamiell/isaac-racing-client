@@ -5,9 +5,7 @@
 // which in turn sends them to the renderer process
 // All messages to the parent must be in the form of "commandName rest of the data"
 
-import log from "electron-log";
 import net from "net";
-import initLogging from "../../common/initLogging";
 import { unpackSocketMsg } from "../../common/util";
 import { processExit } from "./subroutines";
 
@@ -15,11 +13,10 @@ const PORT = 9112; // Arbitrarily chosen to not conflict with common IANA ports
 
 const sockets: net.Socket[] = [];
 
-// We use a different error message here than in the other child processes
 init();
 
 function init() {
-  initLogging();
+  // We use a different error message here than in the other child processes
   process.on("uncaughtException", onUncaughtException);
   process.on("message", onMessage);
 
@@ -28,7 +25,10 @@ function init() {
     throw err;
   });
   server.listen(PORT, () => {
-    log.info(`Server started on port ${PORT}.`);
+    if (process.send === undefined) {
+      throw new Error("process.send() does not exist.");
+    }
+    process.send(`info Server started on port ${PORT}.`);
   });
 }
 
@@ -36,7 +36,7 @@ function onUncaughtException(err: Error) {
   if (process.send !== undefined) {
     // We forward all errors back to the parent process like in the other child processes
     // But we use a prefix of "error" here instead of "error:"
-    process.send(`error ${err} | ${new Error().stack}`, processExit());
+    process.send(`error ${err}`, processExit);
   }
 }
 

@@ -1,34 +1,55 @@
 import klawSync from "klaw-sync";
-import mkdirp from "mkdirp";
 import fetch from "node-fetch";
 import path from "path";
 import * as file from "../../common/file";
 import { getRebirthPath } from "./subroutines";
 
-const BACKUP_MOD_PATH = path.join("app.asar", "mod");
 // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
+const DEV_MOD_NAME = "racing-plus";
 const SHA1_HASHES_URL =
   "https://raw.githubusercontent.com/Zamiell/racing-plus/main/sha1.json";
 
 export function exists(steamPath: string): boolean {
-  const modPath = getModPath(steamPath);
-  return file.exists(modPath) && file.isDir(modPath);
+  return getModPath(steamPath) !== null;
 }
 
 export async function isValid(steamPath: string): Promise<boolean> {
   const modPath = getModPath(steamPath);
+  if (modPath === null) {
+    throw new Error("Failed to get the path to the Racing+ mod.");
+  }
   const checksums = await getModChecksums();
 
-  const modWasCorrupt = checkCorruptOrMissingFiles(modPath, checksums);
+  const modIsCorrupt = checkCorruptOrMissingFiles(modPath, checksums);
   const modHadExtraneousFiles = checkExtraneousFiles(modPath, checksums);
 
-  return !modWasCorrupt && !modHadExtraneousFiles;
+  if (modIsCorrupt) {
+    return false;
+  }
+
+  if (modHadExtraneousFiles) {
+    return false;
+  }
+
+  return true;
 }
 
 function getModPath(steamPath: string) {
   const rebirthPath = getRebirthPath(steamPath);
-  return path.join(rebirthPath, "mods", STEAM_WORKSHOP_MOD_NAME);
+  const modsPath = path.join(rebirthPath, "mods");
+
+  const devPath = path.join(modsPath, DEV_MOD_NAME);
+  if (file.exists(devPath) && file.isDir(devPath)) {
+    return devPath;
+  }
+
+  const steamWorkshopPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
+  if (file.exists(steamWorkshopPath) && file.isDir(steamWorkshopPath)) {
+    return steamWorkshopPath;
+  }
+
+  return null;
 }
 
 async function getModChecksums() {
@@ -46,14 +67,12 @@ function checkCorruptOrMissingFiles(
     throw new Error("process.send() does not exist.");
   }
 
-  let allFilesValid = true;
+  let modIsCorrupt = false;
 
   // Each key of the JSON is the relative path to the file
   for (const [relativePath, backupFileHash] of Object.entries(checksums)) {
     const filePath = path.join(modPath, relativePath);
-    const backupFilePath = path.join(BACKUP_MOD_PATH, relativePath);
 
-    let copyFile = false; // If this gets set to true, the file is missing or corrupt
     if (file.exists(filePath)) {
       // Make an exception for the "sha1.json" file
       // (this will not have a valid checksum)
@@ -61,33 +80,21 @@ function checkCorruptOrMissingFiles(
         continue;
       }
 
-      if (file.getHash(filePath) !== backupFileHash) {
+      const fileHash = file.getHash(filePath);
+      if (fileHash !== backupFileHash) {
         process.send(`File is corrupt: ${filePath}`);
-        copyFile = true;
+        process.send(
+          `The hash of "${fileHash}" does not match the hash of "${backupFileHash}" from the "sha1.json" file.`,
+        );
+        modIsCorrupt = true;
       }
     } else {
       process.send(`File is missing: ${filePath}`);
-      copyFile = true;
-    }
-
-    // Copy it
-    if (copyFile) {
-      allFilesValid = false;
-      copyModFile(backupFilePath, filePath);
+      modIsCorrupt = true;
     }
   }
 
-  return allFilesValid;
-}
-
-function copyModFile(backupFilePath: string, filePath: string) {
-  const filePathDir = path.dirname(filePath);
-  if (!file.exists(filePathDir)) {
-    // Make sure the directory is there
-    mkdirp.sync(filePathDir);
-  }
-
-  file.copy(backupFilePath, filePath);
+  return modIsCorrupt;
 }
 
 function checkExtraneousFiles(
@@ -109,7 +116,7 @@ function checkExtraneousFiles(
     );
   }
 
-  let areExtraneousFiles = false;
+  let hasExtraneousFiles = false;
 
   for (const klawSyncItem of modFiles) {
     // Get the relative path by chopping off the left side
@@ -131,10 +138,10 @@ function checkExtraneousFiles(
     if (!Object.keys(checksums).includes(modFile)) {
       const filePath = path.join(modPath, modFile);
       process.send(`Extraneous file found: ${filePath}`);
-      areExtraneousFiles = true;
+      hasExtraneousFiles = true;
       file.deleteFile(filePath);
     }
   }
 
-  return areExtraneousFiles;
+  return hasExtraneousFiles;
 }

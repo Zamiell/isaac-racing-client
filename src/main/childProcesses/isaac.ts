@@ -28,7 +28,7 @@ import {
   setLaunchOption,
 } from "./isaacLaunchOptions";
 import * as racingPlusMod from "./isaacRacingPlusMod";
-import { handleErrors, processExit } from "./subroutines";
+import { childError, handleErrors, processExit } from "./subroutines";
 
 const ISAAC_PROCESS_NAME = "isaac-ng.exe";
 const STEAM_PROCESS_NAME = "steam.exe";
@@ -39,6 +39,7 @@ let shouldRestartIsaac = false;
 let shouldRestartSteam = false;
 
 handleErrors();
+
 init();
 
 function init() {
@@ -76,9 +77,9 @@ function postGetSteamPath(err: Error, item: RegistryItem) {
     throw new Error("process.send() does not exist.");
   }
 
-  if (err !== undefined) {
+  if (err !== undefined && err !== null) {
     throw new Error(
-      "Failed to read the Windows registry when trying to figure out what the Steam path is.",
+      `Failed to read the Windows registry when trying to figure out what the Steam path is: ${err}`,
     );
   }
 
@@ -109,9 +110,9 @@ function postGetSteamActiveUser(err: Error, item: RegistryItem) {
     throw new Error("process.send() does not exist.");
   }
 
-  if (err !== undefined) {
+  if (err !== undefined && err !== null) {
     throw new Error(
-      "Failed to read the Windows registry when trying to figure out what the active Steam user is.",
+      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
     );
   }
 
@@ -143,7 +144,7 @@ function checkModExists() {
     return;
   }
 
-  void checkModIntegrity(); // eslint-disable-line no-void
+  checkModIntegrity().catch(childError);
 }
 
 async function checkModIntegrity() {
@@ -158,8 +159,8 @@ async function checkModIntegrity() {
   if (modValid) {
     process.send("The mod perfectly matched!");
   } else {
-    process.send("The mod was corrupted.");
-    shouldRestartIsaac = true;
+    process.send("modCorrupt", processExit);
+    return;
   }
 
   checkLaunchOption();

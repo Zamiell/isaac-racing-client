@@ -87,15 +87,8 @@ function greenworksInit() {
     throw new Error("It appears that your Steam account is invalid.");
   }
 
-  process.send("GETTING HERE 111");
-
   // Get a session ticket from Steam
   greenworks.getAuthSessionTicket((ticketObject: TicketObject) => {
-    if (process.send === undefined) {
-      throw new Error("process.send() does not exist.");
-    }
-    process.send("GETTING HERE 222");
-
     successCallback(steamIDObject, ticketObject);
   }, childError);
 }
@@ -112,7 +105,7 @@ function successCallback(
     id: steamIDObject.steamId,
     accountID: steamIDObject.accountId,
     screenName: steamIDObject.screenName,
-    ticket: ticketObject.ticket.toString(),
+    ticket: ticketObject.ticket.toString("hex"),
   };
   process.send(steamMessage);
 

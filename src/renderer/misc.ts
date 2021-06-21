@@ -47,11 +47,11 @@ export function findAjaxError(jqXHR: JQuery.jqXHR): string {
   return jqXHR.responseText;
 }
 
-export function errorShow(message: string, alternateScreen = ""): void {
+export function errorShow(message: string): void {
   // Come back in a second if we are still in a transition
   if (g.currentScreen === "transition") {
     setTimeout(() => {
-      errorShow(message, alternateScreen);
+      errorShow(message);
     }, FADE_TIME + 5); // 5 milliseconds of leeway
     return;
   }
@@ -88,14 +88,9 @@ export function errorShow(message: string, alternateScreen = ""): void {
   closeAllTooltips();
 
   $("#gui").fadeTo(FADE_TIME, 0.1, () => {
-    if (alternateScreen !== "") {
-      // Show the specific ID that was passed as an argument to this function
-      $(`#${alternateScreen}`).fadeIn(FADE_TIME);
-    } else {
-      // Show the error modal
-      $("#error-modal").fadeIn(FADE_TIME);
-      $("#error-modal-description").html(message);
-    }
+    // Show the error modal
+    $("#error-modal").fadeIn(FADE_TIME);
+    $("#error-modal-description").html(message);
   });
 }
 

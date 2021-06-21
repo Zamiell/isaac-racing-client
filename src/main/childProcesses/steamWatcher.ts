@@ -50,7 +50,7 @@ function postGetActiveUser(
   item: Registry.RegistryItem,
   steamID: number,
 ) {
-  if (err !== undefined) {
+  if (err !== undefined && err !== null) {
     throw new Error(
       `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
     );

@@ -14,4 +14,5 @@ export type SocketCommandOut =
   | "room"
   | "item"
   | "finish"
-  | "error";
+  | "error"
+  | "exited"; // Not a real command; sent when the subprocess exits
