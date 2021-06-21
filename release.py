@@ -207,7 +207,7 @@ if not ARGS.skipmod:
 
             choppedPath = fpath[
                 80:
-            ]  # Chop off the "C:\\Users\\james\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_dev\\" prefix
+            ]  # Chop off the "C:\\Users\\[Username]\\Documents\\My Games\\Binding of Isaac Afterbirth+ Mods\\racing+_dev\\" prefix
             HASHES[choppedPath] = filehash(fpath)
 
     # Write the dictionary to a JSON file

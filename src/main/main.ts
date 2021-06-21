@@ -2,6 +2,7 @@
 // for The Binding of Isaac: Repentance
 // (main process)
 
+import * as remote from "@electron/remote/main";
 import * as electron from "electron";
 import electronContextMenu from "electron-context-menu";
 import log from "electron-log";
@@ -9,7 +10,7 @@ import pkg from "../../package.json";
 import initLogging from "../common/initLogging";
 import * as settings from "../common/settings";
 import * as childProcesses from "./childProcesses";
-import ipcFunctions from "./ipcFunctions";
+import * as ipc from "./ipc";
 import IS_DEV from "./isDev";
 import * as onReady from "./onReady";
 
@@ -49,6 +50,10 @@ function checkSecondInstance() {
 }
 
 function initElectronHandlers() {
+  // Needed so that remote works in the renderer process
+  // https://github.com/electron/remote
+  remote.initialize();
+
   // This method will be called when Electron has finished initialization and is ready to create
   // browser windows
   electron.app.on("ready", () => {
@@ -78,30 +83,14 @@ function initElectronHandlers() {
     }
   });
 
-  electron.ipcMain.on("asynchronous-message", IPCMessage);
+  electron.ipcMain.on(
+    "asynchronous-message",
+    (_event: electron.IpcMainEvent, arg1: string, arg2: string) => {
+      ipc.onMessage(window, arg1, arg2);
+    },
+  );
 
   // By default, Electron does not come with a right-click context menu
   // This library provides some sensible defaults
   electronContextMenu();
-}
-
-function IPCMessage(_event: electron.IpcMainEvent, arg1: string, arg2: string) {
-  // Don't log socket messages, as it gets too spammy
-  if (arg1 !== "socket") {
-    log.info(
-      `Main process received message from renderer process of type: ${arg1}`,
-    );
-  }
-
-  if (window === null) {
-    log.error("Main window is not initialized yet.");
-    return;
-  }
-
-  const ipcFunction = ipcFunctions.get(arg1);
-  if (ipcFunction !== undefined) {
-    ipcFunction(window, arg2);
-  } else {
-    log.error(`Unknown message type: ${arg1}`);
-  }
 }

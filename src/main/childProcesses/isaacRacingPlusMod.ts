@@ -1,5 +1,6 @@
 import klawSync from "klaw-sync";
 import mkdirp from "mkdirp";
+import fetch from "node-fetch";
 import path from "path";
 import * as file from "../../common/file";
 import { getRebirthPath } from "./subroutines";
@@ -7,15 +8,17 @@ import { getRebirthPath } from "./subroutines";
 const BACKUP_MOD_PATH = path.join("app.asar", "mod");
 // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
+const SHA1_HASHES_URL =
+  "https://raw.githubusercontent.com/Zamiell/racing-plus/main/sha1.json";
 
 export function exists(steamPath: string): boolean {
   const modPath = getModPath(steamPath);
   return file.exists(modPath) && file.isDir(modPath);
 }
 
-export function isValid(steamPath: string): boolean {
+export async function isValid(steamPath: string): Promise<boolean> {
   const modPath = getModPath(steamPath);
-  const checksums = getModChecksums();
+  const checksums = await getModChecksums();
 
   const modWasCorrupt = checkCorruptOrMissingFiles(modPath, checksums);
   const modHadExtraneousFiles = checkExtraneousFiles(modPath, checksums);
@@ -28,16 +31,9 @@ function getModPath(steamPath: string) {
   return path.join(rebirthPath, "mods", STEAM_WORKSHOP_MOD_NAME);
 }
 
-function getModChecksums() {
-  const checksumsPath = path.join(BACKUP_MOD_PATH, "sha1.json");
-  const checksumsString = file.read(checksumsPath);
-
-  let checksums: Record<string, string>;
-  try {
-    checksums = JSON.parse(checksumsString) as Record<string, string>;
-  } catch (err) {
-    throw new Error(`Failed to parse the "${checksumsPath}" file: ${err}`);
-  }
+async function getModChecksums() {
+  const response = await fetch(SHA1_HASHES_URL);
+  const checksums = (await response.json()) as Record<string, string>;
 
   return checksums;
 }

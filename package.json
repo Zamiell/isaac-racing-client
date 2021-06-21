@@ -17,6 +17,7 @@
     "publish": "electron-builder --publish always"
   },
   "dependencies": {
+    "@electron/remote": "^1.2.0",
     "electron-context-menu": "^3.1.1",
     "electron-log": "^4.3.5",
     "electron-store": "^8.0.0",
@@ -24,6 +25,7 @@
     "klaw-sync": "^6.0.0",
     "linkifyjs": "*",
     "mkdirp": "^1.0.4",
+    "node-fetch": "^2.6.1",
     "ps-node": "^0.1.6",
     "vdf-parser": "^1.1.0",
     "winreg": "^1.2.4"
@@ -35,6 +37,7 @@
     "@types/linkifyjs": "^2.1.3",
     "@types/mkdirp": "^1.0.1",
     "@types/node": "^15.12.4",
+    "@types/node-fetch": "^2.5.10",
     "@types/ps-node": "^0.1.0",
     "@types/tooltipster": "^0.0.30",
     "@types/winreg": "^1.2.30",
@@ -42,7 +45,6 @@
     "electron-builder": "^22.11.7",
     "electron-rebuild": "^2.3.5",
     "isaacscript-lint": "^1.0.34",
-    "node-gyp": "^7.1.2",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.4",
     "webpack": "^5.39.1",
@@ -60,7 +62,8 @@
       "releaseType": "release"
     },
     "asarUnpack": [
-      "./src/lib/*"
+      "./dist/main/childProcesses/*",
+      "./static/js/greenworks/*"
     ]
   },
   "productName": "Racing+"

@@ -32,6 +32,8 @@ const DATA_PATH = path.join(__dirname, "data");
 initLogging();
 
 $(() => {
+  printWelcomeMessage();
+
   // Version
   $("#title-version").html(pkg.version);
   $("#settings-version").html(pkg.version);
@@ -70,6 +72,15 @@ $(() => {
     electron.ipcRenderer.send("asynchronous-message", "steam");
   }
 });
+
+function printWelcomeMessage() {
+  const welcomeText = `Racing+ client ${pkg.version} started.`;
+  const hyphens = "-".repeat(welcomeText.length);
+  const welcomeTextBorder = `+-${hyphens}-+`;
+  log.info(welcomeTextBorder);
+  log.info(`| ${welcomeText} |`);
+  log.info(welcomeTextBorder);
+}
 
 function initData() {
   // Word list

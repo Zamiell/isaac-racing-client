@@ -5,7 +5,7 @@
 // The source code can be found in https://github.com/greenheartgames/greenworks
 const fs = require("fs");
 
-const greenworks = require("./greenworks-win64");
+const greenworks = require("./lib/greenworks-win64");
 
 function error_process(err, error_callback) {
   if (err && error_callback) error_callback(err);
@@ -151,9 +151,12 @@ greenworks.Utils.move = function (
 };
 
 greenworks.init = function () {
-  if (this.initAPI()) return;
-  if (!this.isSteamRunning())
+  if (this.initAPI()) {
+    return;
+  }
+  if (!this.isSteamRunning()) {
     throw new Error("Steam initialization failed. Steam is not running.");
+  }
   let appId;
   try {
     appId = fs.readFileSync("steam_appid.txt", "utf8");

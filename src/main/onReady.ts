@@ -73,16 +73,20 @@ export function createWindow(): electron.BrowserWindow {
     frame: false,
     webPreferences: {
       // Needed to use Node APIs inside of the renderer process
-      // From: https://stackoverflow.com/questions/44391448/electron-require-is-not-defined
+      // https://stackoverflow.com/questions/44391448/electron-require-is-not-defined
       nodeIntegration: true,
       contextIsolation: false,
+
+      // Needed for @electron/remote to work
+      // https://github.com/electron/remote
+      enableRemoteModule: true,
     },
   });
 
   // Open the JavaScript console
-  if (IS_DEV) {
-    window.webContents.openDevTools();
-  }
+  // if (IS_DEV) {
+  window.webContents.openDevTools();
+  // }
 
   // Check if the window is off-screen
   // (for example, this can happen if it was put on a second monitor which is currently

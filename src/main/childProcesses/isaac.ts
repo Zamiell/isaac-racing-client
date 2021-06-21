@@ -143,10 +143,10 @@ function checkModExists() {
     return;
   }
 
-  checkModIntegrity();
+  void checkModIntegrity(); // eslint-disable-line no-void
 }
 
-function checkModIntegrity() {
+async function checkModIntegrity() {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -154,7 +154,7 @@ function checkModIntegrity() {
   process.send("Checking to see if the Racing+ mod is corrupted...");
 
   // Mod checks are performed in a separate file
-  const modValid = racingPlusMod.isValid(steamPath);
+  const modValid = await racingPlusMod.isValid(steamPath);
   if (modValid) {
     process.send("The mod perfectly matched!");
   } else {
@@ -311,7 +311,7 @@ function isProcessRunning(processName: string): [boolean, number] {
 
   // The "tasklist" module has problems on different languages
   // The "ps-node" module is very slow
-  // The "process-list" module will not compile for some reason (missing "atlbase.h")
+  // The "process-list" module will not compile for some reason
   // So, just manually run the "tasklist" command and parse the output without using any module
   const command = "tasklist";
   let output;

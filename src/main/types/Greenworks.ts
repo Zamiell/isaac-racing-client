@@ -4,7 +4,7 @@ export default interface Greenworks {
     errorCallback: (err: Error) => void,
   ): void;
   getSteamId(): SteamIDObject;
-  init(): boolean;
+  init(): unknown;
 }
 
 export interface TicketObject {
