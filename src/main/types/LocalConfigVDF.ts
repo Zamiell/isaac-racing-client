@@ -10,12 +10,17 @@ export default interface LocalConfigVDF {
 }
 
 export interface ValveLocalConfigVDF {
-  Steam: {
-    // On my "localconfig.vdf", "Apps" is capitalized
-    Apps?: Record<string, AppConfigVDF>;
-    // On some platforms, "apps" is lowercase for some reason
-    apps?: Record<string, AppConfigVDF>;
-  };
+  // On my "localconfig.vdf", "Steam" is capitalized
+  Steam: SteamLocalConfigVDF;
+  // On some platforms, "steam" is lowercase for some reason
+  steam: SteamLocalConfigVDF;
+}
+
+export interface SteamLocalConfigVDF {
+  // On my "localconfig.vdf", "Apps" is capitalized
+  Apps?: Record<string, AppConfigVDF>;
+  // On some platforms, "apps" is lowercase for some reason
+  apps?: Record<string, AppConfigVDF>;
 }
 
 export interface AppConfigVDF {

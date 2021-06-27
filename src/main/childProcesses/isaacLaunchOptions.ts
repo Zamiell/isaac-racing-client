@@ -4,6 +4,7 @@ import * as file from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
 import LocalConfigVDF, {
   AppConfigVDF,
+  SteamLocalConfigVDF,
   ValveLocalConfigVDF,
 } from "../types/LocalConfigVDF";
 
@@ -104,10 +105,17 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     );
   }
 
-  const steam = valve.Steam;
+  // On some platforms, "steam" is lowercase for some reason
+  let steam: SteamLocalConfigVDF | undefined;
+  if (valve.Steam !== undefined) {
+    steam = valve.Steam;
+  } else if (valve.steam !== undefined) {
+    steam = valve.steam;
+  }
+
   if (steam === undefined) {
     throw new Error(
-      'Failed to find the "Steam" tag in the "localconfig.vdf" file.',
+      'Failed to find the "Steam" or "steam" tag in the "localconfig.vdf" file.',
     );
   }
 
