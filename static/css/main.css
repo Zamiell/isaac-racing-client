@@ -969,7 +969,7 @@ body {
   width: 4em;
   position: relative;
   bottom: 12px; /* 3em = 53px, height of chest = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
-  left: -5px; /* Because of Everything goal icon */
+  left: -5px; /* Because of Mega Satan goal icon */
 }
 
 #new-race-starting-build-icon {
