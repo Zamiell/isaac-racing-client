@@ -20,6 +20,8 @@ import * as modSocket from "../modSocket";
 import { preloadSounds } from "../preloadSounds";
 import User from "../types/User";
 
+const FIRST_GOLDEN_TRINKET_ID = 32769;
+
 export function init(): void {
   $("#race-title").tooltipster({
     theme: "tooltipster-shadow",
@@ -537,24 +539,35 @@ export function show(raceID: number): void {
       // Build the tooltip
       let buildTooltipContent = "";
       for (let i = 0; i < items.length; i++) {
+        const itemID = items[i];
+
         if (i === 4) {
           // Item 5 is a trinket
-          const trinketID = parseIntSafe(items[i]) + 2000;
-          if (!Object.prototype.hasOwnProperty.call(g.itemList, trinketID)) {
-            errorShow(`Trinket ${items[i]} was not found in the items list.`);
+          let modifiedTrinketID = parseIntSafe(itemID);
+          if (modifiedTrinketID < FIRST_GOLDEN_TRINKET_ID) {
+            // Trinkets are represented in the "items.json" file as items with IDs past 2000
+            // (but golden trinkets retain their vanilla ID)
+            modifiedTrinketID += 2000;
+          }
+
+          const itemEntry = g.itemList[modifiedTrinketID.toString()];
+          if (itemEntry === undefined) {
+            errorShow(
+              `Trinket ${modifiedTrinketID} was not found in the items list.`,
+            );
             return;
           }
 
-          // Trinkets are represented in the "items.json" file as items with IDs past 2000
-          buildTooltipContent += g.itemList[trinketID].name;
+          buildTooltipContent += itemEntry.name;
         } else {
           // Items 1-4 are passive and active items
-          const itemID = items[i];
-          if (!Object.prototype.hasOwnProperty.call(g.itemList, itemID)) {
-            errorShow(`Item ${items[i]} was not found in the items list.`);
+          const itemEntry = g.itemList[itemID];
+          if (itemEntry === undefined) {
+            errorShow(`Item ${itemID} was not found in the items list.`);
             return;
           }
-          buildTooltipContent += `${g.itemList[itemID].name} + `;
+
+          buildTooltipContent += `${itemEntry.name} + `;
         }
       }
 
