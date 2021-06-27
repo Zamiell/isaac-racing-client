@@ -1021,6 +1021,8 @@ export function countdownTick(i: number): void {
     modSocket.send("set", `countdown ${g.modSocket.countdown}`);
     g.modSocket.status = "in progress";
     modSocket.send("set", `status ${g.modSocket.status}`);
+    g.modSocket.myStatus = "racing";
+    modSocket.send("set", `myStatus ${g.modSocket.myStatus}`);
     g.modSocket.place = 0;
     modSocket.send("set", `place ${g.modSocket.place}`);
   } else {
