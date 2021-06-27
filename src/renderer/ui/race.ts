@@ -236,6 +236,7 @@ export function show(raceID: number): void {
     }, FADE_TIME + 5); // 5 milliseconds of leeway
     return;
   }
+
   if (g.currentScreen !== "waiting-for-server" && g.currentScreen !== "lobby") {
     // currentScreen should be "waiting-for-server" if they created a race or joined a current race
     // currentScreen should be "lobby" if they are rejoining a race after a disconnection
@@ -244,6 +245,7 @@ export function show(raceID: number): void {
     );
     return;
   }
+
   g.currentScreen = "transition";
   g.currentRaceID = raceID;
 

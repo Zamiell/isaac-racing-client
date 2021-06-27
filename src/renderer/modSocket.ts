@@ -63,7 +63,7 @@ export function sendExtraValues(): void {
     }
 
     if (numLeft === 1 && amRacing && race.racerList.length > 2) {
-      g.modSocket.placeMid = -1; // This will show "last person left"
+      g.modSocket.placeMid = 9999; // This will show "last person left"
     }
 
     if (race.ruleset.solo) {
@@ -118,20 +118,21 @@ function getNumLeft(race: Race): number {
 export function sendAll(): void {
   // Start to compile the list of starting items
   let startingItems: number[] = [];
+
+  // Diversity races store the starting items in the seed
   if (g.modSocket.format === "diversity") {
     const items = g.modSocket.seed.split(",");
     for (const itemString of items) {
       const itemID = parseIntSafe(itemString);
       if (!Number.isNaN(itemID)) {
-        startingItems.push(); // The Lua mod expects this to be a number
+        startingItems.push(itemID);
       }
     }
   }
 
-  // Parse the starting build
+  // Seeded races store the starting items as the "startingBuild"
   if (g.modSocket.startingBuild !== -1) {
     for (const item of builds[g.modSocket.startingBuild]) {
-      // The Lua mod just needs the item ID, not the name
       startingItems.push(item.id);
     }
   }
@@ -160,6 +161,7 @@ export function sendAll(): void {
   send("set", `countdown ${g.modSocket.countdown}`);
   send("set", `placeMid ${g.modSocket.placeMid}`);
   send("set", `place ${g.modSocket.place}`);
+  send("set", `numReady ${g.modSocket.numReady}`);
   send("set", `numEntrants ${g.modSocket.numEntrants}`);
 }
 

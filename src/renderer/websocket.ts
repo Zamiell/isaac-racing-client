@@ -461,7 +461,7 @@ function initRaceCommandHandlers(conn: Connection) {
       g.currentRaceID = mostCurrentRaceID;
       setTimeout(() => {
         raceScreen.show(mostCurrentRaceID);
-      }, FADE_TIME * 2 + 5); // Account for fade out and fade in, then add 5 milliseconds of leeway
+      }, FADE_TIME * 3); // Account for fade out and fade in, then add account for some lag
     }
   });
 
