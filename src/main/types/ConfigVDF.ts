@@ -10,7 +10,12 @@ export default interface ConfigVDF {
 }
 
 export interface ValveConfigVDF {
-  Steam: {
-    BaseInstallFolder_1: string;
-  };
+  // On my "config.vdf", "Steam" is capitalized
+  Steam: SteamConfigVDF;
+  // On some platforms, "steam" is lowercase for some reason
+  steam: SteamConfigVDF;
+}
+
+export interface SteamConfigVDF {
+  BaseInstallFolder_1: string;
 }

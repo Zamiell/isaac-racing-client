@@ -6,7 +6,7 @@
 import path from "path";
 import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
-import ConfigVDF, { ValveConfigVDF } from "../types/ConfigVDF";
+import ConfigVDF, { SteamConfigVDF, ValveConfigVDF } from "../types/ConfigVDF";
 
 export default function getRebirthPath(steamPath: string): string {
   const configVDFPath = path.join(steamPath, "config", "config.vdf");
@@ -53,9 +53,18 @@ export default function getRebirthPath(steamPath: string): string {
     );
   }
 
-  const steam = valve.Steam;
+  // On some platforms, "steam" is lowercase for some reason
+  let steam: SteamConfigVDF | undefined;
+  if (valve.Steam !== undefined) {
+    steam = valve.Steam;
+  } else if (valve.steam !== undefined) {
+    steam = valve.steam;
+  }
+
   if (steam === undefined) {
-    throw new Error('Failed to find the "Steam" tag in the "config.vdf" file.');
+    throw new Error(
+      'Failed to find the "Steam" or "steam" tag in the "config.vdf" file.',
+    );
   }
 
   const baseInstallFolder = steam.BaseInstallFolder_1;
