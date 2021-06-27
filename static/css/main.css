@@ -399,7 +399,7 @@ body {
 }
 
 #register {
-  height: calc(100% - 20em);
+  height: calc(100% - 18em);
   width: calc(100% - 20em);
   margin-top: 0;
   margin-bottom: 0;
@@ -470,7 +470,7 @@ body {
 
 .updating {
   font-size: 16pt !important;
-  height: calc(100% - 20em);
+  height: auto;
   width: calc(100% - 20em);
   margin-top: 0;
   margin-bottom: 0;
@@ -966,9 +966,10 @@ body {
   background-position: bottom center;
   display: inline-block;
   height: 3em;
-  width: 3em;
+  width: 4em;
   position: relative;
   bottom: 12px; /* 3em = 53px, height of chest = 29px, 53px - 29px = 24px, 24px / 2 = 12px */
+  left: -5px; /* Because of Everything goal icon */
 }
 
 #new-race-starting-build-icon {
@@ -1138,6 +1139,10 @@ input[type=range] {
   padding-top: 1.5em;
   padding-right: 1.5em;
   padding-bottom: 1.5em;
+}
+
+#race-chat-row .col-12 {
+  max-height: -webkit-fill-available;
 }
 
 #race-chat-box {
