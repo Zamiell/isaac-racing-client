@@ -1,8 +1,8 @@
 import crypto from "crypto";
-import builds from "../../../static/data/builds.json";
+import BUILDS from "../../../static/data/builds.json";
+import CHARACTERS from "../../../static/data/characters.json";
 import settings from "../../common/settings";
 import { parseIntSafe } from "../../common/util";
-import { PLAYABLE_CHARACTERS } from "../characters";
 import {
   FADE_TIME,
   PBKDF2_DIGEST,
@@ -58,8 +58,8 @@ export function init(): void {
     const char = $("#new-race-character").val();
     let randomChar;
     do {
-      const randomCharNum = getRandomNumber(0, PLAYABLE_CHARACTERS.length - 1);
-      randomChar = PLAYABLE_CHARACTERS[randomCharNum];
+      const randomCharNum = getRandomNumber(0, CHARACTERS.length - 1);
+      randomChar = CHARACTERS[randomCharNum];
     } while (randomChar === char);
     $("#new-race-character").val(randomChar);
     newRaceCharacterChange(null);
@@ -74,7 +74,7 @@ export function init(): void {
     let randomBuild;
     do {
       // The build at index 0 is intentionally blank
-      randomBuild = getRandomNumber(1, builds.length - 1);
+      randomBuild = getRandomNumber(1, BUILDS.length - 1);
     } while (randomBuild === oldBuild);
     $("#new-race-starting-build").val(randomBuild);
     newRaceStartingBuildChange(null);
@@ -93,7 +93,7 @@ export function init(): void {
   $("#new-race-format").change(newRaceFormatChange);
 
   // Add the options to the character dropdown
-  for (const character of PLAYABLE_CHARACTERS) {
+  for (const character of CHARACTERS) {
     const characterElement = $("<option></option>")
       .val(character)
       .html(character);
@@ -108,13 +108,13 @@ export function init(): void {
   $("#new-race-goal").change(newRaceGoalChange);
 
   // Add the options to the starting build dropdown
-  for (let i = 0; i < builds.length; i++) {
-    const build = builds[i];
-
+  for (let i = 0; i < BUILDS.length; i++) {
     // The 0th element is an empty array
     if (i === 0) {
       continue;
     }
+
+    const build = BUILDS[i];
 
     // Compile the build description string
     let description = "";
@@ -502,7 +502,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
       'url("img/builds/random.png")',
     );
   } else {
-    const build = builds[newBuild];
+    const build = BUILDS[newBuild];
     if (build === undefined) {
       throw new Error(`Failed to find the build at index: ${newBuild}`);
     }

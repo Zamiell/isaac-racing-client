@@ -1,4 +1,4 @@
-import builds from "../../../static/data/builds.json";
+import BUILDS from "../../../static/data/builds.json";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
@@ -306,7 +306,7 @@ function raceDraw2(race: Race) {
       const { startingBuild } = race.ruleset;
       content +=
         '<li class="lobby-current-races-format-li"><strong><span lang="en">Starting Build</span>:</strong> ';
-      for (const item of builds[startingBuild]) {
+      for (const item of BUILDS[startingBuild]) {
         content += `${item.name} + `;
       }
       content = content.slice(0, -3); // Chop off the trailing " + "

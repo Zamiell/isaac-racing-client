@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import builds from "../../static/data/builds.json";
+import BUILDS from "../../static/data/builds.json";
 import { parseIntSafe } from "../common/util";
 import g from "./globals";
 import { amSecondTestAccount } from "./misc";
@@ -132,7 +132,7 @@ export function sendAll(): void {
 
   // Seeded races store the starting items as the "startingBuild"
   if (g.modSocket.startingBuild !== -1) {
-    for (const item of builds[g.modSocket.startingBuild]) {
+    for (const item of BUILDS[g.modSocket.startingBuild]) {
       startingItems.push(item.id);
     }
   }

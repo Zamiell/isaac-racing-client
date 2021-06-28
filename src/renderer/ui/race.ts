@@ -1,8 +1,8 @@
 import * as electron from "electron";
 import log from "electron-log";
-import builds from "../../../static/data/builds.json";
+import BUILDS from "../../../static/data/builds.json";
 import { parseIntSafe } from "../../common/util";
-import { CHARACTER_MAP } from "../characters";
+import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
@@ -493,7 +493,7 @@ export function show(raceID: number): void {
       $("#race-title-table-build").fadeIn(0);
       $("#race-title-build").fadeIn(0);
       const buildIndex = race.ruleset.startingBuild;
-      const build = builds[buildIndex];
+      const build = BUILDS[buildIndex];
       if (build === undefined) {
         throw new Error(`Failed to find the build at index: ${buildIndex}`);
       }
