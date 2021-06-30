@@ -470,6 +470,13 @@ export function show(raceID: number): void {
         '<span lang="en">Defeat Delirium (the boss in The Void)</span><br />';
       goalTooltipContent +=
         '<span lang="en">and touch the trophy that falls down afterward.</span>';
+    } else if (goal === "Mother") {
+      goalTooltipContent +=
+        '<strong><span lang="en">Mother</span>:</strong><br />';
+      goalTooltipContent +=
+        '<span lang="en">Defeat Mother (the boss of Corpse II)</span><br />';
+      goalTooltipContent +=
+        '<span lang="en">and touch the trophy that falls down afterward.</span>';
     } else if (goal === "Boss Rush") {
       goalTooltipContent +=
         '<strong><span lang="en">Boss Rush</span>:</strong><br />';
@@ -852,24 +859,25 @@ export function participantsSetFloor(i: number): void {
 
   // Update the floor column of the row
   let floorDiv;
+  let altFloor = stageType === 4 || stageType === 5;
   if (floorNum === 0) {
     floorDiv = "-";
   } else if (floorNum === 1) {
-    floorDiv = "B1";
+    floorDiv = altFloor ? "Do1" : "B1";
   } else if (floorNum === 2) {
-    floorDiv = "B2";
+    floorDiv = altFloor ? "Do2" : "B2";
   } else if (floorNum === 3) {
-    floorDiv = "C1";
+    floorDiv = altFloor ? "Mi1" : "C1";
   } else if (floorNum === 4) {
-    floorDiv = "C2";
+    floorDiv = altFloor ? "Mi2" : "C2";
   } else if (floorNum === 5) {
-    floorDiv = "D1";
+    floorDiv = altFloor ? "Ma1" : "D1";
   } else if (floorNum === 6) {
-    floorDiv = "D2";
+    floorDiv = altFloor ? "Ma2" : "D2";
   } else if (floorNum === 7) {
-    floorDiv = "W1";
+    floorDiv = altFloor ? "Co1" : "W1";
   } else if (floorNum === 8) {
-    floorDiv = "W2";
+    floorDiv = altFloor ? "Co2" : "W2";
   } else if (floorNum === 9) {
     floorDiv = "BW";
   } else if (floorNum === 10 && stageType === 0) {
