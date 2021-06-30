@@ -4,6 +4,7 @@ type RaceGoal =
   | "Mega Satan"
   | "Hush"
   | "Delirium"
+  | "Mother"
   | "Boss Rush"
   | "custom";
 export default RaceGoal;

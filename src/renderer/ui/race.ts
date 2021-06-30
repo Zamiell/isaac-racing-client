@@ -470,6 +470,13 @@ export function show(raceID: number): void {
         '<span lang="en">Defeat Delirium (the boss in The Void)</span><br />';
       goalTooltipContent +=
         '<span lang="en">and touch the trophy that falls down afterward.</span>';
+    } else if (goal === "Mother") {
+      goalTooltipContent +=
+        '<strong><span lang="en">Mother</span>:</strong><br />';
+      goalTooltipContent +=
+        '<span lang="en">Defeat Mother (the boss of Corpse II)</span><br />';
+      goalTooltipContent +=
+        '<span lang="en">and touch the trophy that falls down afterward.</span>';
     } else if (goal === "Boss Rush") {
       goalTooltipContent +=
         '<strong><span lang="en">Boss Rush</span>:</strong><br />';
