@@ -956,7 +956,7 @@ function initRaceCommandHandlers(conn: Connection) {
         racer.floorNum = data.floorNum;
         racer.stageType = data.stageType;
         racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
-        if (data.floorNum === 1) {
+        if (data.floorNum === 1 && !(data.stageType === 4 || data.stageType === 5)) {
           // Delete their items, since they reset
           racer.items = [];
           racer.startingItem = 0;
