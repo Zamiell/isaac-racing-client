@@ -996,6 +996,18 @@ body {
   right: 12px;
 }
 
+@media (min-width: 1281px) {
+  #new-race-format-icon, #new-race-character-icon, #new-race-goal-icon, #new-race-starting-build-icon {
+    bottom: 1.1em; /* manually found the right value */
+  }
+}
+
+@media (min-width: 1681px) {
+  #new-race-format-icon, #new-race-character-icon, #new-race-goal-icon, #new-race-starting-build-icon {
+    bottom: 1.3em; /* manually found the right value */
+  }
+}
+
 /*
   Settings tooltip
 */
