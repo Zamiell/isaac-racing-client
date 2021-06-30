@@ -858,8 +858,8 @@ export function participantsSetFloor(i: number): void {
   const { name, floorNum, stageType } = racer;
 
   // Update the floor column of the row
+  const altFloor = stageType === 4 || stageType === 5;
   let floorDiv;
-  let altFloor = stageType === 4 || stageType === 5;
   if (floorNum === 0) {
     floorDiv = "-";
   } else if (floorNum === 1) {

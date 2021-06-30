@@ -957,7 +957,7 @@ function initRaceCommandHandlers(conn: Connection) {
         racer.stageType = data.stageType;
         racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
 
-        let isAltStage = data.stageType === 4 || data.stageType === 5;
+        const isAltStage = data.stageType === 4 || data.stageType === 5;
         if (data.floorNum === 1 && !isAltStage) {
           // Delete their items, since they reset
           racer.items = [];
