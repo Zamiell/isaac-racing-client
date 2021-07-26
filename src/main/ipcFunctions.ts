@@ -94,7 +94,8 @@ functionMap.set(
   },
 );
 
-functionMap.set("isaac", (window: electron.BrowserWindow, _arg2: string) => {
+functionMap.set("isaac", (window: electron.BrowserWindow, arg2: string) => {
   // Start the Isaac checker in a separate process
-  childProcesses.start("isaac", window);
+  const isaacPath = arg2;
+  childProcesses.start("isaac", window, isaacPath);
 });
