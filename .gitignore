@@ -1,10 +1,15 @@
-# isaac-racing-client stuff
+# -------------------
+# isaac-racing-client
+# -------------------
+
 .DS_Store
 .*-audit.json
 *.log.gz
 
+# --------------------------
 # GitHub .gitignore for Node
 # https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore
+# --------------------------
 
 # Logs
 logs

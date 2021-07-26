@@ -37,6 +37,7 @@
     "@types/ps-node": "^0.1.0",
     "@types/tooltipster": "^0.0.30",
     "@types/winreg": "^1.2.30",
+    "cspell": "^5.6.6",
     "electron": "^13.1.4",
     "electron-builder": "^22.11.7",
     "isaacscript-lint": "^1.0.40",
