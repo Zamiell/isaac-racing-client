@@ -1,3 +1,4 @@
+// cspell:disable
 const discordEmotes = new Map([
   ["<:4head:230151563807555585>", "4Head"],
   ["<:4heads:230151104359301120>", "4Heads"],
