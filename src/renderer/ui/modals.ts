@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import * as electron from "electron";
+import log from "electron-log";
+import settings from "../../common/settings";
 import {
   FADE_TIME,
   PBKDF2_DIGEST,
@@ -12,6 +14,7 @@ export function init(): void {
   initErrorModal();
   initWarningModal();
   initPasswordModal();
+  initIsaacPathModal();
 }
 
 function initErrorModal() {
@@ -98,5 +101,53 @@ function initPasswordModal() {
     $("#password-modal").fadeOut(FADE_TIME, () => {
       $("#gui").fadeTo(FADE_TIME, 1);
     });
+  });
+}
+
+function initIsaacPathModal() {
+  $("#isaac-path-find").click(() => {
+    const titleText = $("#isaac-path-dialog-title").html();
+    const dialogReturn = electron.remote.dialog.showOpenDialogSync({
+      title: titleText,
+      filters: [
+        {
+          name: "Programs",
+          extensions: ["exe"],
+        },
+      ],
+      properties: ["openFile"],
+    });
+
+    if (dialogReturn === undefined || dialogReturn.length === 0) {
+      return;
+    }
+
+    const isaacPath = dialogReturn[0];
+    log.info("Selected an Isaac path of:", isaacPath);
+
+    const description1 = $("#isaac-path-description-1");
+    const description2 = $("#isaac-path-description-2");
+    const button1 = $("#isaac-path-find");
+    const button2 = $("#isaac-path-exit");
+
+    if (/[\\/]isaac-ng.exe$/.exec(isaacPath) === null) {
+      description1.html(
+        '<span lang="en">You must select a file that has a name of "isaac-ng.exe".</span>',
+      );
+      button1.hide(FADE_TIME);
+      button2.show(FADE_TIME);
+      return;
+    }
+
+    settings.set("isaacPath", isaacPath);
+
+    description1.hide(FADE_TIME);
+    description2.show(FADE_TIME);
+    button1.hide(FADE_TIME);
+    button2.show(FADE_TIME);
+  });
+
+  $("#isaac-path-exit").click(() => {
+    electron.ipcRenderer.send("asynchronous-message", "restart");
   });
 }

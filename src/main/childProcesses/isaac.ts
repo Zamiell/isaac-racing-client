@@ -23,7 +23,6 @@ import ps from "ps-node";
 import Registry, { RegistryItem } from "winreg";
 import * as file from "../../common/file";
 import { parseIntSafe } from "../../common/util";
-import getGamePath from "./isaacGetGamePath";
 import isSandboxValid from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
@@ -52,11 +51,30 @@ function init() {
 }
 
 function onMessage(message: string) {
+  if (process.send === undefined) {
+    throw new Error("process.send() does not exist.");
+  }
+
   // The child will stay alive even if the parent has closed,
   // so we depend on the parent telling us when to die
   if (message === "exit") {
     process.exit();
   }
+
+  // Otherwise, we expect a message from the parent process telling us what the path to the Isaac
+  // executable is
+  const isaacPath = message;
+  process.send(`Using an Isaac path of: ${isaacPath}`);
+
+  if (!file.exists(isaacPath) || !file.isFile(isaacPath)) {
+    process.send("isaacNotFound", processExit);
+  }
+
+  gamePath = path.dirname(isaacPath);
+  process.send(`Using an game path of: ${isaacPath}`);
+
+  // Begin the process of getting the necessary information from the registry
+  getSteamPath();
 }
 
 function getSteamPath() {
@@ -139,9 +157,6 @@ function checkModExists() {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
-
-  gamePath = getGamePath(steamPath);
-  process.send(`Detected the game directory at: ${gamePath}`);
 
   const modsPath = path.join(gamePath, "mods");
   if (!file.exists(modsPath) || !file.isDir(modsPath)) {

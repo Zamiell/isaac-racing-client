@@ -23,6 +23,7 @@ const childProcesses: ChildProcesses = {
 export function start(
   name: keyof ChildProcesses,
   window: electron.BrowserWindow,
+  isaacPath?: string,
 ): void {
   if (childProcesses[name] !== null) {
     // We already started this process
@@ -103,6 +104,14 @@ export function start(
   });
 
   childProcesses[name] = childProcess;
+
+  // Handle child processes that need custom information fed to them
+  if (name === "steam") {
+    if (isaacPath === undefined) {
+      throw new Error("Failed to receive the isaacPath argument.");
+    }
+    childProcess.send(isaacPath);
+  }
 }
 
 export function send(name: keyof ChildProcesses, msg: string): void {

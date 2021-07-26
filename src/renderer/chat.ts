@@ -208,6 +208,12 @@ export function send(destination: string): void {
     // We won't get a message back from the server if the sending of the PM was successful,
     // so manually call the draw function now
     draw("PM-to", chatArg1, chatArg2);
+  } else if (message === "/debug") {
+    draw(
+      room,
+      "_error",
+      'Use "/debug1" for a client debug and "/debug2" for a server debug.',
+    );
   } else if (message === "/debug1") {
     // /debug1 - Debug command for the client
     debugFunction();
@@ -280,7 +286,6 @@ export function send(destination: string): void {
       itemID: 560,
     });
   } else {
-    // Manually call the draw function
     draw(room, "_error", "That is not a valid command.");
   }
 }

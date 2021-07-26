@@ -47,11 +47,11 @@ export function findAjaxError(jqXHR: JQuery.jqXHR): string {
   return jqXHR.responseText;
 }
 
-export function errorShow(message: string): void {
+export function errorShow(message: string, customModalName?: string): void {
   // Come back in a second if we are still in a transition
   if (g.currentScreen === "transition") {
     setTimeout(() => {
-      errorShow(message);
+      errorShow(message, customModalName);
     }, FADE_TIME + 5); // 5 milliseconds of leeway
     return;
   }
@@ -59,7 +59,7 @@ export function errorShow(message: string): void {
   // Log the message
   if (message !== "") {
     log.error(message);
-  } else {
+  } else if (customModalName === undefined) {
     log.error("Generic error.");
   }
 
@@ -88,9 +88,13 @@ export function errorShow(message: string): void {
   closeAllTooltips();
 
   $("#gui").fadeTo(FADE_TIME, 0.1, () => {
-    // Show the error modal
-    $("#error-modal").fadeIn(FADE_TIME);
-    $("#error-modal-description").html(message);
+    // Show the modal
+    if (customModalName === undefined) {
+      $("#error-modal").fadeIn(FADE_TIME);
+      $("#error-modal-description").html(message);
+    } else if (customModalName === "isaac-path-modal") {
+      $(`#${customModalName}`).fadeIn(FADE_TIME);
+    }
   });
 }
 

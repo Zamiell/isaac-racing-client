@@ -15,6 +15,13 @@ export function initDefault(): void {
     settings.set("window", {});
   }
 
+  if (settings.get("isaacPath") === undefined) {
+    settings.set(
+      "isaacPath",
+      "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\isaac.exe",
+    );
+  }
+
   if (settings.get("language") === undefined) {
     settings.set("language", "en"); // English
   }

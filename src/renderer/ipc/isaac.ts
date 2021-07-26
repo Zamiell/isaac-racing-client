@@ -45,6 +45,11 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
   }
 
   switch (message) {
+    case "isaacNotFound": {
+      errorShow("", "isaac-path-modal");
+      break;
+    }
+
     case "modNotFound": {
       errorShow(
         `The Racing+ mod was not found in your "mods" directory. Have you <a href="${STEAM_WORKSHOP_MOD_LINK}" target="_blank">subscribed to the mod on the Steam Workshop</a>? The Racing+ client needs the mod in place in order to be able to function.`,

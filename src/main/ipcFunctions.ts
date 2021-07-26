@@ -58,11 +58,12 @@ functionMap.set("startIsaac", (_window: electron.BrowserWindow) => {
   launchIsaac();
 });
 
-functionMap.set("steam", (window: electron.BrowserWindow) => {
+functionMap.set("steam", (window: electron.BrowserWindow, arg2: string) => {
   // Initialize the Greenworks API in a separate process because otherwise the game will refuse to
   // open if Racing+ is open
   // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
-  childProcesses.start("steam", window);
+  const isaacPath = arg2;
+  childProcesses.start("steam", window, isaacPath);
 });
 
 functionMap.set("steamExit", () => {
