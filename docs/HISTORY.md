@@ -219,7 +219,7 @@
 * Fixed the bug in season 7 where a Greed Door would overlap with an open door. (Thanks mgln)
 * Fixed the bug where items dropped from angels could overlap with other entities under certain conditions. (Thanks Toooschi)
 * Fixed the bug where Angels would drop key pieces after you already had them.
-* Fixed the (vanilla) bug where Forever Alone was inproperly stylized.
+* Fixed the (vanilla) bug where Forever Alone was improperly stylized.
 
 ### *v0.49.1* - February 23rd, 2020
 
@@ -230,7 +230,7 @@
 
 * If you play custom challenges, you must now subscribe to the [Racing+ Data mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809) on the Steam Workshop. Your character order will no longer reset after every patch. Furthermore, you are no longer limited to having one character order stored at a time, meaning that you can store orders for each season.
 * If you use the extra keybindings provided by Racing+, you must now subscribe to the [Racing+ Data mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2004774809) on the Steam Workshop. Your settings will no longer reset after every patch.
-* Samael now gains double damage with 20/20, triple damage with The Inner Eye, and quadrule damage when picking up Mutant Spider. (This only applies to melee attacks. These effects can stack.)
+* Samael now gains double damage with 20/20, triple damage with The Inner Eye, and quadruple damage when picking up Mutant Spider. (This only applies to melee attacks. These effects can stack.)
 * In unseeded races and season 5, Mom's Knife now fart-rerolls into Mutant Spider's Inner Eye and Ipecac now fart-rerolls into Incubus. (Thanks antizoubilamakA)
 * Fixed the bug where an item would not drop from an angel if you had the Filigree Feather under certain conditions. (Thanks mgln)
 * Fixed the bug where the Schoolbag would incorrectly remove some costumes/shields when swapping an item under certain conditions. (Thanks mgln)
@@ -503,7 +503,7 @@ Mod changes:
 
 ### *v0.43.2* - June 18th, 2019
 
-* Fixed the bug where Samael's attack caused a Sacrifical Dagger to appear for a frame. (Thanks Pingouin23)
+* Fixed the bug where Samael's attack caused a Sacrificial Dagger to appear for a frame. (Thanks Pingouin23)
 
 ### *v0.43.1* - June 17th, 2019
 
@@ -637,8 +637,8 @@ Mod changes:
 * Changed the sprite for spotted red pills to all red so that they are easier to distinguish from other pills.
 * Fast-reset is now disabled if you have entered 3 or more rooms.
 * Enabled both doors in Curse Rooms #10, #18, and #19.
-* Addded Caves / Catacombs / Flooded Caves room #754 to the Forgotten softlock list. (Thanks Gamonymous)
-* Addded Catacombs room #224 to the Forgotten softlock list.
+* Added Caves / Catacombs / Flooded Caves room #754 to the Forgotten softlock list. (Thanks Gamonymous)
+* Added Catacombs room #224 to the Forgotten softlock list.
 * Fixed the bug where Sacred Heart would cause bombs to lose special abilities in season 6. (Thanks NorBro86)
 * Fixed the bug where Forgotten would not get soul hearts and black hearts upon seeded revival. (Thanks InvaderTim)
 * Fixed the bug where enemy creep would show as red creep on the first frame after spawning under certain circumstances.
@@ -905,7 +905,7 @@ Mod changes:
   * Full health: 66% for full health, 33% for damaged health
   * Critical health: 75% for non-critical health, 25% for critical health
 * Because of the above system, Boss Rushes are no longer manually created in seeded races.
-* Previously, rerolled items from player-created pedetals would be seeded based on the particular room. Now, they are seeded based on the start seed.
+* Previously, rerolled items from player-created pedestals would be seeded based on the particular room. Now, they are seeded based on the start seed.
 * The "level #" custom command has been added to the console. This command will take you to the particular stage and stage type for the particular seed. If you are in a seeded race or the R+7 Seeded custom challenge, it will also perform the necessary seeded swapping beforehand. Example usage: "level 5"
 * Rooms will no longer be reseeded in the R+7 Seeded custom challenge (for Duality, duplicate rooms, etc.).
 * Silver Dollar and Bloody Crown are now removed from seeded races and the R+7 Seeded custom challenge.
@@ -1168,7 +1168,7 @@ Mod changes:
 
 * You can now only store one multi-character speedrun order at a time. (This simplifies the code.)
 * When More Options is given for only Basement 1, it will no longer show the costume in order to reduce confusion and clutter.
-* Fixed the bug where the mod would infinitately reset if you went into a custom challenge without setting a character order first. (Thanks olo70009)
+* Fixed the bug where the mod would infinitely reset if you went into a custom challenge without setting a character order first. (Thanks olo70009)
 
 ### *v0.19.12* - July 25th, 2018
 
@@ -1185,7 +1185,7 @@ Mod changes:
 ### *v0.19.9* - July 22nd, 2018
 
 * The system that handles automatic updates has itself been updated, which should hopefully fix the issues with automatic updating in the last patch.
-* Changed the charge bars back to the custom Racing+ minimialistic pre-BP5 version. Note that the Maw of the Void charge bar is placed lower than the other charge bars; this is a vanilla bug that I cannot control.
+* Changed the charge bars back to the custom Racing+ minimalistic pre-BP5 version. Note that the Maw of the Void charge bar is placed lower than the other charge bars; this is a vanilla bug that I cannot control.
 * Changed the color of the Forever Alone collectible from dark blue to light blue (to match the actual color of the familiar).
 * Changed the color of the Distant Admiration collectible from black to red (to match the actual color of the familiar).
 * Changed the 20/20 sprite to make it easier to see.
@@ -1234,7 +1234,7 @@ Client changes:
 
 * Racing+ will no longer erase your character order and custom hotkeys after every patch.
 * Fixed the bug where having the client open would mess up the "Choose Char Order" custom challenge.
-* Removed one row of Pitalls on Devil room #2. (Thanks StoneAgeMarcus)
+* Removed one row of Pitfalls on Devil room #2. (Thanks StoneAgeMarcus)
 * Fixed the bug where it was possible to get an empty boss room on Basement 1 or Basement 2. (Thanks AshDown)
 * Fixed the bug where doors would appear in the Pre-Race Room. (Thanks Greninja_San)
 
@@ -1245,7 +1245,7 @@ Client changes:
 * The Devil Room with 3 items (#2) now has more Pitfalls.
 * Added some Blue Fires to Angel Room #3 to make it unique.
 * Removed adding Flat Stone to the Treasure Room item pool (since it was fixed in the vanilla game).
-* Fixed the bug where flipped rooms were accidently not applied to some floors.
+* Fixed the bug where flipped rooms were accidentally not applied to some floors.
 * Fixed the bug where the Angel Room change from the last patch was not applied.
 
 ### *v0.19.1* - May 10th, 2018
@@ -1342,7 +1342,7 @@ Mod Changes:
 ### *v0.18.0* - April 30th, 2018
 
 * Racing+ will now work with Booster Pack #5. All of the new items are now included in diversity races.
-* Since Booster Pack #5 includes new achievements, all save files will no longer be 100%. The Racing+ client should automatially help you install a new one upon connecting to the server, if you wish. You should know that some of the new content will not work with Racing+ enabled.
+* Since Booster Pack #5 includes new achievements, all save files will no longer be 100%. The Racing+ client should automatically help you install a new one upon connecting to the server, if you wish. You should know that some of the new content will not work with Racing+ enabled.
 * All room changes are reverted to vanilla (for the time being).
 * Removed the custom handling for co-op babies (since "stealing" Devil Room items was fixed in the vanilla game).
 * Removed the custom handling for Knights, Selfless Knights, Floating Knights, and Bone Knights (since it was fixed in the vanilla game).
@@ -1400,7 +1400,7 @@ Mod Changes:
 
 ### *v0.16.29* - April 16th, 2018
 
-* The Battery will now work properly with The Schoolbag in that it will properly show the orange bar as well as remember the proper charge. This will be most noticable during seeded races that start with the Mega Blast build.
+* The Battery will now work properly with The Schoolbag in that it will properly show the orange bar as well as remember the proper charge. This will be most noticeable during seeded races that start with the Mega Blast build.
 * The run summary will now disappear if you leave the room. (Thanks Cyber_1)
 * Deleted Depths/Necropolis/Dank room #639 (a narrow room with Mom's Dead Hand).
 * Isaac is now blindfolded in the "Change Char Order" custom challenge.
@@ -1616,7 +1616,7 @@ News:
   * If you want to beat these times, the R+7 (S2) category will continue to be tracked on speedrun.com, but the official competition will move on to season 3.
   * If you tried out Season 2 and did not like it, Samael is being heavily buffed in this patch with the goal of making him more fun to play (see below).
 * Season 3 has officially begun!
-* Thanks goes to [DeadInfinity / Meowlala](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900), who created the [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of Cathedral / Sheol.
+* Thanks goes to [DeadInfinity](http://steamcommunity.com/profiles/76561198172774482/myworkshopfiles/?appid=250900), who created the [Jr. Fetus](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of Cathedral / Sheol.
 * Thanks goes to [melon goodposter](http://steamcommunity.com/id/pleasebecareful), who created the [Mahalath](http://steamcommunity.com/sharedfiles/filedetails/?id=1145038762) boss, who is featured in season 3 at the end of The Chest / Dark Room.
 * If you have ideas for season 4, send them to me on Discord, which is planned for May 2018.
 * Thanks goes to Krakenos for taking some screenshots that showcase Racing+ on the [Steam Workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=857628390).
@@ -1628,7 +1628,7 @@ Mod changes:
 * Samael's starting health has been changed to 1 red heart, 1 soul heart, and 1 black heart.
 * The Haunt's "Peel" and "AngrySkin" animations are now sped up.
 * Fixed the bug where We Need to Go Deeper! would not work on Womb 2 in the season 3 custom challenge. (Thanks sillypears)
-* Fixed the bug where on the season 3 custom challenge, certain entities would occasionally despawn (trapdoors, devil statues, angel statues, and Epic Fetus targets). DeadInfinity / Meowlala deserves credit for finding and fixing this bug in the base Mahalath mod. (Thanks to Moucheron Quipet, Gamonymous, Dea1h, and Krakenos for reporting.)
+* Fixed the bug where on the season 3 custom challenge, certain entities would occasionally despawn (trapdoors, devil statues, angel statues, and Epic Fetus targets). DeadInfinity deserves credit for finding and fixing this bug in the base Mahalath mod. (Thanks to Moucheron Quipet, Gamonymous, Dea1h, and Krakenos for reporting.)
 * Fixed the bug where you could take the wrong path on the season 3 custom challenge and still progress to the next character.
 * Fixed the bug where dying with Guppy's Collar in custom challenges would send you back to the first character. (Thanks Gamonymous)
 * Fixed the bug where the place graphic next to the R+ icon would overlap with the character progress graphic in races. (Thanks molfried)
@@ -1664,12 +1664,12 @@ Client:
 
 ### *v0.13.6* - November 9th, 2017
 
-* Added the "Seeded (Hard)" ruleset to the client to faciliate the Lynx Trials tournament. This will only exist for the duration of the tournament.
+* Added the "Seeded (Hard)" ruleset to the client to facilitate the Lynx Trials tournament. This will only exist for the duration of the tournament.
 * Fixed the bug where angel statues would drop a key piece even if another angel was still alive. (Thanks StoneAgeMarcus)
 
 ### *v0.13.5* - November 5th, 2017
 
-* Maggy now starts with her speed-up pill in the season 3 custom challenge. (Thanks Cyber_1)
+* Magdalene now starts with her speed-up pill in the season 3 custom challenge. (Thanks Cyber_1)
 * Fixed the bug where an Attack Fly would spawn every time you re-entered a room with a trapdoor or crawlspace that happened to originally be on top of a Corny Poop. (Thanks Nanahachiyasu)
 
 ### *v0.13.2* - November 4th, 2017
@@ -1788,8 +1788,8 @@ Item tracker:
 * Racing+ will now work with the latest patch (Booster Pack #4). The new Booster Pack rooms are not yet integrated. Diversity races won't have the new items yet.
 * The mod no longer fixes the champion Scolex, since the bug was fixed in the vanilla game.
 * The mod no longer has a custom Broken Modem sprite, since they added a good one to the vanilla game.
-* Fixed the bug where holding R to go back to the first character on a custom speedun challenge would not reset LiveSplit.
-* You will now get a warning if you try to perform an inproperly formatted command on the client.
+* Fixed the bug where holding R to go back to the first character on a custom speedrun challenge would not reset LiveSplit.
+* You will now get a warning if you try to perform an improperly formatted command on the client.
 * The valid client commands are now listed on the website.
 
 ### *v0.11.11* - October 1st, 2017
@@ -1860,7 +1860,7 @@ Client:
 ### *v0.10.7* - September 14th, 2017
 
 * Fixed the bug where the client would not remember that you selected a random character. (Thanks Shigan)
-* Fixed the bug where the mod was inproperly deleting A Lump of Coal from Mystery Gift. (Thanks Thalen22)
+* Fixed the bug where the mod was improperly deleting A Lump of Coal from Mystery Gift. (Thanks Thalen22)
 
 ### *v0.10.3* - September 13th, 2017
 
@@ -1874,7 +1874,7 @@ Gameplay:
 
 * Shops are no longer flipped.
 * The Y-flipped double Gate rooms and double Mega Maw rooms have been unflipped due to how the patterns from their respective champion versions are much harder to dodge from behind. (Thanks Shigan)
-* Krampus' item will now spawn at the beginning of the death animation rather than midway through. This prevents the Krampus item getting deleted if you accidently leave the Devil Room as soon as the doors open. Furthermore, this means that it is now possible to do the "Anti Quick Roll" strategy in Racing+, where you can roll the item before the room is cleared to get an extra charge on the D6. (Note that unlike before, this is now a frame perfect trick.) (Thanks Thoday)
+* Krampus' item will now spawn at the beginning of the death animation rather than midway through. This prevents the Krampus item getting deleted if you accidentally leave the Devil Room as soon as the doors open. Furthermore, this means that it is now possible to do the "Anti Quick Roll" strategy in Racing+, where you can roll the item before the room is cleared to get an extra charge on the D6. (Note that unlike before, this is now a frame perfect trick.) (Thanks Thoday)
 * Unfair Dople / Evil Twin tears that fire on the first frame were previously "fixed" by adjusting the Dople / Evil Twin placement in the room. However, this method did not reliably stop Evil Twin triple shots from hitting the player, so Dople / Evil Twin placement has been reverted to vanilla in all rooms and new Lua code will automatically delete any projectiles fired on the first frame.
 * If you enter the Mega Satan room without defeating the Lamb first on the "Everything" race goal, something very bad will happen. (Thanks Shigan and BMZ_Loop)
 * You can no longer use the Glowing Hour Glass in the pre-race room. (Thanks Gamonymous)
@@ -1915,14 +1915,14 @@ Client/Server:
   * The new server should be an order of magnitude faster and will be able to support race ghosts in the same vein that Mario Kart has.
   * The [SQLite](https://www.sqlite.org/about.html) database was replaced with [MariaDB](https://mariadb.org/about/). This was the thing holding leaderboards back. Now it should be pretty easy to make them.
   * The Golem WebSocket framework was replaced with the Melody WebSocket framework. Golem's handling of WebSockets was causing the deadlock during times of mass sending.
-* Are you ready to get flipped? In order to promote run diveristy, all rooms now have the possibility to be flipped on the X axis, the Y axis, or both axises.
+* Are you ready to get flipped? In order to promote run diversity, all rooms now have the possibility to be flipped on the X axis, the Y axis, or both axises.
   * This is probably something that should have been in the original game, but I can only guess that no-one thought of it (or Nicalis was too lazy).
-  * This will only be noticable in non-symmetrical rooms.
+  * This will only be noticeable in non-symmetrical rooms.
   * All room shapes are preserved with the exception of L rooms, which are flipped accordingly.
   * Since the probabilities of getting each individual room are the same (discounting entrances), there are no general strategical implications of this change.
     * One small exception is that instead of there being only 3 types of top-left L-rooms in The Chest, there are now 12.
     * Another small exception is that the trapdoor room on the Caves/Catacombs/Depths/Necropolis is flipped, so you can get it from the bottom now instead of only from the top.
-  * An enormous thanks goes to Chronometrics for this, as he designed the custom code that allowed this to be programatically done.
+  * An enormous thanks goes to Chronometrics for this, as he designed the custom code that allowed this to be programmatically done.
 * The server will no longer send messages to your Twitch chat if your client is closed.
 * In the client, the "Custom" character is now replaced with "Samael" and shows a graphic for him.
 * Fixed the bug where mid-race placements were messed up on non-seeded races. (Thanks Shigan and BMZ_Loop)
@@ -1970,7 +1970,7 @@ Client/Server:
 
 ### *v0.8.10* - July 29th, 2017
 
-* The LiveSplit autosplitter should now work again. (Thanks NorBro86, Sillypears and Hyphen-ated)
+* The LiveSplit auto-splitter should now work again. (Thanks NorBro86, Sillypears and Hyphen-ated)
 * Fixed the bug where the client was crashing. (Thanks DiaTech, rerol, Shigan, and Drunkenshoe)
 * Fixed the bug where fast-clear was not working as Samael. (Thanks NorBro86 and thereisnofuture)
 
@@ -2123,10 +2123,10 @@ Changes:
 
 ### *v0.6.17* - June 6th, 2017
 
-* Putting the Wraith Skull in the Schoolbag will now immediately end the item's invulernability, similar to how My Little Pony and Unicorn Stump work.
+* Putting the Wraith Skull in the Schoolbag will now immediately end the item's invulnerability, similar to how My Little Pony and Unicorn Stump work.
 * Fixed the bug with Samael where A Pony and White Pony did not grant the correct amount of speed. (Thanks Krakenos)
 * Fixed the bug where canceling the pickup animation of Sacrificial Dagger would give you two Sacrificial Daggers. (Thanks SlashSP and Lobsterosity)
-* Fixed the bug with Samael where swapping from the Wraith Skull with the invulernability activated incorrectly lowered your speed permanently (until you swapped back to the Wraith Skull). (Thanks ceehe)
+* Fixed the bug with Samael where swapping from the Wraith Skull with the invulnerability activated incorrectly lowered your speed permanently (until you swapped back to the Wraith Skull). (Thanks ceehe)
 
 ### *v0.6.16* - June 5th, 2017
 
@@ -2159,7 +2159,7 @@ Changes:
 * Fixed a bug with the Butter! trinket where it could give unlimited charges to an active item under certain conditions. (Thanks blcd)
 * Fixed 4 Sheol rooms with Begotten Chains (#255, #269, #334, and #341) to have Begottens instead.
 * Fixed the bug where you saw the old character briefly after grabbing the Checkpoint custom item.
-* Added the Samael custom character for the purposes of testing him out as a potential canditate for season 2. This is a character made by Ghostbroster: http://steamcommunity.com/sharedfiles/filedetails/?id=897795840
+* Added the Samael custom character for the purposes of testing him out as a potential candidate for season 2. This is a character made by Ghostbroster: http://steamcommunity.com/sharedfiles/filedetails/?id=897795840
 * Samael now starts with the D6, the Schoolbag, and 1 bomb.
 * Removed Samael's innate ability; he now starts with the Wraith Skull inside the Schoolbag.
 * Removed Samael's custom Isaac decapitation animation. (It's pretty satisfying to see, but it gets old after a while.)
@@ -2211,7 +2211,7 @@ Changes:
 
 ### *v0.5.25* - May 14th, 2017
 
-* The new Angel Room changes from vanilla are now itegrated into the mod.
+* The new Angel Room changes from vanilla are now integrated into the mod.
 * The fart-reroll system has been deleted; items will now automatically be removed from pools thanks to new API stuff in the last patch. (In diversity races, Incubus, Crown of Light, and Sacred Heart will still have the special fart-reroll.)
 * You can now pick up items immediately after performing a Schoolbag switch thanks to new API stuff in the last patch.
 * Diversity races will now include Booster Pack #2 items.
@@ -2299,7 +2299,7 @@ Changes:
 * Fixed the bug where quitting and continuing in the "Race Room" would delete the two Gaping Maws.
 * Fixed the bug where the mod would incorrectly spawn you as the wrong character under certain conditions. (Thanks PassionDrama)
 * Fixed the bug where the mod would incorrectly spawn fireworks under certain conditions. (Thanks Cyber_1)
-* Fixed the bug where invulernability frames were not being removed properly.
+* Fixed the bug where invulnerability frames were not being removed properly.
 
 ### *v0.5.6* - April 14th, 2017
 
@@ -2334,9 +2334,9 @@ Changes:
 * After each patch, your R+9 and R+14 character orders will be deleted. Backup your "save#.dat" file and copy it back after a patch if you want to quickly restore your character order without having to go through the custom challenge again.
 * Added a new warning message if you attempt to perform a R+9 or R+14 speedrun without having set your character order.
 * Fixed the bug where the "R+9" and "R+14" labels weren't showing on the "Change Char Order" custom challenge.
-* Fixed the bug where the game would ocassionally crash if you restarted the game while playing as Lilith. (Thanks Cyber_1)
+* Fixed the bug where the game would occasionally crash if you restarted the game while playing as Lilith. (Thanks Cyber_1)
 * Fixed the bug where Keeper would not heal properly in certain specific conditions. (Thanks Cyber_1)
-* Fixed the bug where pickups could ocassionally glitch out over trapdoors. (Thanks PassionDrama)
+* Fixed the bug where pickups could occasionally glitch out over trapdoors. (Thanks PassionDrama)
 
 ### *v0.5.0* - April 10th, 2017
 
@@ -2383,7 +2383,7 @@ Changes:
 
 ### *v0.4.18* - April 4th, 2017
 
-* Trapdoors should be behave more similarly to vanilla now in that they won't open right away if the player is standing relatively close. If you continue to accidently fall into trapdoors, please let me know.
+* Trapdoors should be behave more similarly to vanilla now in that they won't open right away if the player is standing relatively close. If you continue to accidentally fall into trapdoors, please let me know.
 * Fixed the bug where using a Glowing Hour Glass on the first room of a floor would make your character permanently invisible. (Thanks Fyon and CrafterLynx)
 
 ### *v0.4.16* - April 3rd, 2017
@@ -2391,7 +2391,7 @@ Changes:
 * Removed the April Fool's joke where [Big Horn and Little Horn had clown suits](http://steamcommunity.com/sharedfiles/filedetails/?id=850578581), which is a mod from [Mr. Metal Alex](http://steamcommunity.com/id/MetalAlex/myworkshopfiles/?appid=250900).
 * Added a "last person left" graphic when you are the last person left. (It will only show in races with 3 people or more.)
 * Added the fast-travel feature to the Blue Womb.
-* Fixed the bug where if you left a room with a trophy, it would disappear forver. (Thanks Cyber_1)
+* Fixed the bug where if you left a room with a trophy, it would disappear forever. (Thanks Cyber_1)
 * Fixed the bug where the run would be reset if your internet hiccuped during a race. (Thanks thisguyisbarry)
 * Fixed the bug where the beam of light would not spawn if you had both The Polaroid and The Negative. (Thanks nicoluwu and tyrannasauruslex)
 * Fixed the bug where the timer would show before a race started.
@@ -2433,8 +2433,8 @@ Changes:
 
 ### *v0.4.7* - March 30th, 2017
 
-* You can now do a Schoolbag switch during the "use item" animation. This is a big buff to the item. PogCena
-* Chargebars are now minimialistic and actually good.
+* You can now do a Schoolbag switch during the "use item" animation. This is a big buff to the item.
+* Charge-bars are now minimalistic.
 * Changed the Broken Modem sprite to one that isn't complete garbage. (I got it from freeze, the original author of the item.)
 * Trapdoors will now be shut if you enter a room and are standing near to them. (This is also how it works in vanilla. Thanks Cyber_1)
 * Fixed the bug where trapdoors would disappear in certain circumstances.
@@ -2455,7 +2455,7 @@ Changes:
 
 ### *v0.4.3* - March 28th, 2017
 
-* The hitbox on trapdoors and crawlspaces was slightly larger than it was on vanilla due to having to override the vanilla entities. Racing+ now uses custom entities for these, which fixes the bug where you would sometimes accidently walk into a trapdoor while entering a Devil Room, for example. This also fixes the bug where you would sometimes skip a floor when going in a trapdoor.
+* The hitbox on trapdoors and crawlspaces was slightly larger than it was on vanilla due to having to override the vanilla entities. Racing+ now uses custom entities for these, which fixes the bug where you would sometimes accidentally walk into a trapdoor while entering a Devil Room, for example. This also fixes the bug where you would sometimes skip a floor when going in a trapdoor.
 * Fixed the bug where your blue flies / spiders would kill themselves on the custom floor transition hole. (Thanks CrafterLynx)
 * Fixed the crash when a diversity race started with Booster Pack #1 items. (Thanks stoogebag)
 * Fixed the bug where your character would move to the center of the room upon coming back from a crawlspace.
@@ -2519,7 +2519,7 @@ Changes:
 * Fixed the bug where in certain circumstances, the client was not able to find the Racing+ mod directory.
 * Trinkets consumed with the Gulp! pill will now show up on the item tracker. (This only works if you are using the Racing+ mod.)
 * Fixed the bug where some glowing item and trinket images were not showing up properly on the starting room. (Thanks Krakenos)
-* Fixed the bug where starting the Boss Rush would not grant a charge to the Schoolbag item. Note that actually clearing the Boss Rush still won't give any charges, due to limiations with the Afterbirth+ API. (Thanks Dea1h, who saw it on tyrannasauruslex's stream)
+* Fixed the bug where starting the Boss Rush would not grant a charge to the Schoolbag item. Note that actually clearing the Boss Rush still won't give any charges, due to limitations with the Afterbirth+ API. (Thanks Dea1h, who saw it on tyrannasauruslex's stream)
 * Fixed the bug where fart-reroll items would start at 0 charges. (Thanks Munch, who saw it on tyrannasauruslex's stream)
 * The Polaroid and The Negative are no longer automatically removed in the Pageant Boy ruleset.
 * The beam of light and the trapdoor are no longer automatically removed after It Lives! in the Pageant Boy ruleset.
@@ -2559,12 +2559,12 @@ Changes:
 
 ### *v0.2.72* - March 17th, 2017
 
-* Boomerang, Butter Bean, The Candle, Red Candle, Glass Cannon, Brown Nugger, and Sharp Straw all appear properly now in the Schoolbag. (Thanks Birdie)
-* The bug where the aformentioned items would not start fully charged is also fixed.
+* Boomerang, Butter Bean, The Candle, Red Candle, Glass Cannon, Brown Nugget, and Sharp Straw all appear properly now in the Schoolbag. (Thanks Birdie)
+* The bug where the aforementioned items would not start fully charged is also fixed.
 * Fixed a client crash when diversity races started with certain items. (No-one actually reported this out of the 12 people that it happened to. WutFace)
 * Fixed the (vanilla) unavoidable damage when a Mimic spawns on top of you. (Thanks henry_92)
 * All Spike Chests will now spawn as Mimics instead, since there isn't really a point in having both of them. (Thanks thisguyisbarry)
-* Mimics are rediculously trivial to spot, so their graphics have been experimentally reverted back to the pre-nerf graphics. You can tell them apart from normal chests by just looking for the beginnings of the spikes protruding from them. It's fairly easy to see if you just pay attention and look for it. It can be very rewarding when you are paying attention and it pays off: https://clips.twitch.tv/AssiduousSillyLardTwitchRPG
+* Mimics are ridiculously trivial to spot, so their graphics have been experimentally reverted back to the pre-nerf graphics. You can tell them apart from normal chests by just looking for the beginnings of the spikes protruding from them. It's fairly easy to see if you just pay attention and look for it. It can be very rewarding when you are paying attention and it pays off: https://clips.twitch.tv/AssiduousSillyLardTwitchRPG
 * Fixed the unavoidable damage that occurs when Spiked Chests and Mimics spawn in very specific rooms that only have a narrow path surrounded by walls or pits (Caves #12, Caves #244, Caves/Catacombs #518, Caves #519, Womb/Utero #489). In these rooms, all Spiked Chests / Mimics will be converted to normal chests. If you find more rooms with narrow paths like these ones, let me know.
 * Hosts and Mobile Hosts are now immune to fear.
 * Maw of the Void and Athame will no longer be canceled upon exiting a room.
@@ -2634,12 +2634,12 @@ Changes:
 * On seeded and diversity races, active items that you start with will now be properly fart-rolled. (Thanks dion and BMZ_Loop)
 * Added a new in-game error message: "Error: Start a new run by holding "R"."
 * Reorganized the way Schoolbag items work, which will fix the bug where Judas only needs 2 touches for the Bookworm transformation. (Thanks Cyber_1 and Dea1h)
-* Added the Catgasm emote (requested by masterofpotato).
+* Added the Catgasm emote (requested by MasterofPotato).
 
 ### *v0.2.66* - March 12th, 2017
 
 * Refactored all of the code for the Lua mod. It is now split up across multiple files instead of in one giant file. If there are any new in-game bugs with this new patch, it's probably due to this. (Thanks to sillypears and Chronometrics for the help.)
-* Fixed the bug where the game would softlock if you entered a crawlspace from a Bossh Rush. (Thanks Dea1h)
+* Fixed the bug where the game would softlock if you entered a crawlspace from a Boss Rush. (Thanks Dea1h)
 * Fixed the bug where the AAA Battery would not do anything.
 * Fixed the (vanilla) bug where the AAA Battery would not synergize with The Battery.
 * Fixed the (vanilla) bug where the 9 Volt would not synergize with The Battery.
@@ -2672,7 +2672,7 @@ Changes:
 
 * Several characters have been changed to make the R+14 speedrun category more interesting. These changes are experimental, and can be changed back to vanilla if people don't like it:
   * Isaac now starts with The Battery.
-  * Maggy now starts with the Soul Jar, a new passive item. (Thanks to Gromfalloon for the custom Soul Jar graphics.)
+  * Magdalene now starts with the Soul Jar, a new passive item. (Thanks to Gromfalloon for the custom Soul Jar graphics.)
   * The Soul Jar has the following effects:
     * You no longer gain health from soul/black hearts.
     * You gain an empty red heart container for every 4 soul/black hearts picked up.
@@ -2687,7 +2687,7 @@ Changes:
 * Replaced the Glowing Hour Glass rewind process of starting a race with a better method. This should help people with potato computers.
 * Moved a lot of code to the game physics callback; the game should run much faster now on potato computers.
 * Fixed the bug where Cain and Samson's trinkets would incorrectly get smeltered in diversity races.
-* Fixed the bug where the active item in a diveristy race would get fart-rolled if you swapped it for something else. Unfortunately, this means your random active item in diversity will not be removed from any pools. (Thanks Thoday)
+* Fixed the bug where the active item in a diversity race would get fart-rolled if you swapped it for something else. Unfortunately, this means your random active item in diversity will not be removed from any pools. (Thanks Thoday)
 * Fixed the bug where the item inside the Schoolbag would not appear on the item tracker in certain situations.
 * Fixed the bug where trophies would appear for non-race goals. (Thanks PassionDrama)
 
@@ -2711,7 +2711,7 @@ Changes:
 * Fixed the bug with duplicating trinkets. (Thanks Dea1h)
 * Fixed the bug where under certain specific circumstances, players could obtain banned trinkets.
 * Fixed the bug where you would die too early after taking a devil deal that killed you. (Thanks ceehe)
-* Fixed the bug on the new Maggy where she would stay alive while at 0 red hearts and 0 soul hearts. (The new Maggy is still disabled by default.)
+* Fixed the bug on the new Magdalene where she would stay alive while at 0 red hearts and 0 soul hearts. (The new Magdalene is still disabled by default.)
 * Fixed the bug with Schoolbag and Crystal Ball / Mega Blast Placeholder. (Thanks Cyber_1)
 * Fast-clear now applies to Fallens who have already split.
 * Trinkets will now only be deleted from the starting room on the Pageant Boy ruleset. (Thanks Dea1h)
@@ -2742,7 +2742,7 @@ Changes:
 
 ### *v0.2.58* - March 3rd, 2017
 
-* Fixed various bugs with the new crawlspace, including getting flies on Keeper and ocassional crashes. (thanks Crafterlynx / Dea1h for reporting, and blcd for the code fix)
+* Fixed various bugs with the new crawlspace, including getting flies on Keeper and occasional crashes. (thanks Crafterlynx / Dea1h for reporting, and blcd for the code fix)
 * Non-purchasable item pedestals in shops are now seeded.
 * On seeded races, Scolex will automatically be replaced with 2 Frails.
 * Fixed the bug where some items that were supposed to be banned were not being fart-rolled. (Thanks BMZ_Loop)
@@ -2764,7 +2764,7 @@ Changes:
 * Fixed a client crash when you quit and continued as Lazarus II or Dark Judas.
 * The countdown should lag a bit less on potato computers.
 * Greatly sped up the attack patterns of Wizoobs and Red Ghosts.
-* Removed invulernability frames from Lil' Haunts.
+* Removed invulnerability frames from Lil' Haunts.
 * Cursed Eye is now seeded. (This is now possible due to a change in the last patch.)
 * Broken Remote is now seeded. (This is now possible due to a change in the last patch.)
 * Broken Remote is no longer removed from seeded races.
@@ -2782,14 +2782,14 @@ Changes:
 * Fixed a Larry Jr. room that should not have an entrance from the top. (Thanks BMZ_Loop)
 * Added better save file graphics, thanks to Gromfalloon.
 * Updated [the FAQ](https://isaacracing.net/info).
-* Lobby chat is now transfered to the Discord #racing-plus-lobby channel, and vice versa.
+* Lobby chat is now transferred to the Discord #racing-plus-lobby channel, and vice versa.
 
 ### *v0.2.53* - February 27th, 2017
 
 * The "drop" button will now immediately drop cards and trinkets. (This won't happen if you have the Schoolbag, Starter Deck, Little Baggy, Deep Pockets, or Polydactyly.)
 * Holding R on Eden no longer kills them (since Nicalis fixed it in the vanilla game).
 * Fixed the crash that occurred with Schoolbag when you swapped at the same time as picking up a new item.
-* You will no longer recieve the Polaroid and get teleported to Womb 1 if you arrive at the Void floor (since Nicalis fixed the instant Void teleport).
+* You will no longer receive the Polaroid and get teleported to Womb 1 if you arrive at the Void floor (since Nicalis fixed the instant Void teleport).
 * Removed the use animation from Telepills.
 * Fixed a Basement/Cellar room that had a chance to spawn empty because of stacked entities.
 * Fixed the Strength card on Keeper. Note that it will only permanently give you a coin container if you are at 0 or less base coin containers. (This is now possible due to a change in the last patch.)
@@ -2851,7 +2851,7 @@ Changes:
 ### *v0.2.42* - February 19th, 2017
 * Keeper now starts with the D6 and 4 coin containers (along with Greed's Gullet and Duality).
 * Fixed the bug where the D6 doesn't get removed from the pools on Keeper. (Thanks @HauntedQuest)
-* The client window is now resiable from the top. (Thanks @tODDlife)
+* The client window is now resizable from the top. (Thanks @tODDlife)
 * Fixed the bug where the doors would open prematurely under certain conditions.
 
 ### *v0.2.41* - February 17th, 2017
