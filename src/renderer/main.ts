@@ -8,7 +8,6 @@ import path from "path";
 import pkg from "../../package.json";
 import * as file from "../common/file";
 import initLogging from "../common/initLogging";
-import settings from "../common/settings";
 import * as automaticUpdate from "./automaticUpdate";
 import { IS_DEV } from "./constants";
 import g from "./globals";
@@ -71,8 +70,7 @@ $(() => {
   } else {
     // Tell the main process to start the child process that will initialize Greenworks
     // That process will get our Steam ID, Steam screen name, and authentication ticket
-    const isaacPath = settings.get("isaacPath") as string;
-    electron.ipcRenderer.send("asynchronous-message", "steam", isaacPath);
+    electron.ipcRenderer.send("asynchronous-message", "steam");
   }
 });
 

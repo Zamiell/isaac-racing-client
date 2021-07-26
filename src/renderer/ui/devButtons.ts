@@ -1,5 +1,4 @@
 import * as electron from "electron";
-import settings from "../../common/settings";
 import { FADE_TIME, IS_DEV } from "../constants";
 import g from "../globals";
 import login from "../login";
@@ -41,8 +40,7 @@ function loginDebug(account: number | null) {
 
   if (account === null) {
     // A normal login
-    const isaacPath = settings.get("isaacPath") as string;
-    electron.ipcRenderer.send("asynchronous-message", "steam", isaacPath);
+    electron.ipcRenderer.send("asynchronous-message", "steam");
   } else {
     // A manual login that does not rely on Steam authentication
     g.steam.id = `-${account}`;

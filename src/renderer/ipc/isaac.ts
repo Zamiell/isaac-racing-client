@@ -1,5 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
+import settings from "../../common/settings";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
 import { errorShow } from "../misc";
@@ -17,7 +18,8 @@ export function init(): void {
 export function start(): void {
   // This tells the main process to do Isaac-related checks
   // (check to see if the Racing+ mod is corrupted, etc.)
-  electron.ipcRenderer.send("asynchronous-message", "isaac");
+  const isaacPath = settings.get("isaacPath") as string;
+  electron.ipcRenderer.send("asynchronous-message", "isaac", isaacPath);
 }
 
 // Monitor for notifications from the child process that does file checks and opens Isaac

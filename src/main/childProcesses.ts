@@ -106,7 +106,7 @@ export function start(
   childProcesses[name] = childProcess;
 
   // Handle child processes that need custom information fed to them
-  if (name === "steam") {
+  if (name === "isaac") {
     if (isaacPath === undefined) {
       throw new Error("Failed to receive the isaacPath argument.");
     }

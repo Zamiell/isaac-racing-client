@@ -64,6 +64,12 @@ function onMessage(message: string) {
   // Otherwise, we expect a message from the parent process telling us what the path to the Isaac
   // executable is
   const isaacPath = message;
+  if (typeof isaacPath !== "string") {
+    process.send(
+      "error: The message received for the isaacPath was not a string.",
+      processExit,
+    );
+  }
   process.send(`Using an Isaac path of: ${isaacPath}`);
 
   if (!file.exists(isaacPath) || !file.isFile(isaacPath)) {

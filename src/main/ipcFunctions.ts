@@ -10,23 +10,26 @@ const functionMap = new Map<
 >();
 export default functionMap;
 
-functionMap.set("close", () => {
+functionMap.set("close", (_window: electron.BrowserWindow, _arg2: string) => {
   electron.app.quit();
 });
 
-functionMap.set("devTools", (window: electron.BrowserWindow) => {
+functionMap.set("devTools", (window: electron.BrowserWindow, _arg2: string) => {
   window.webContents.openDevTools();
 });
 
-functionMap.set("isaacFocus", () => {
-  isaacFocus();
-});
+functionMap.set(
+  "isaacFocus",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    isaacFocus();
+  },
+);
 
-functionMap.set("minimize", (window: electron.BrowserWindow) => {
+functionMap.set("minimize", (window: electron.BrowserWindow, _arg2: string) => {
   window.minimize();
 });
 
-functionMap.set("maximize", (window: electron.BrowserWindow) => {
+functionMap.set("maximize", (window: electron.BrowserWindow, _arg2: string) => {
   if (window.isMaximized()) {
     window.unmaximize();
   } else {
@@ -34,11 +37,14 @@ functionMap.set("maximize", (window: electron.BrowserWindow) => {
   }
 });
 
-functionMap.set("quitAndInstall", () => {
-  autoUpdater.quitAndInstall();
-});
+functionMap.set(
+  "quitAndInstall",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    autoUpdater.quitAndInstall();
+  },
+);
 
-functionMap.set("restart", () => {
+functionMap.set("restart", (_window: electron.BrowserWindow, _arg2: string) => {
   electron.app.relaunch();
   electron.app.quit();
 });
@@ -54,23 +60,28 @@ functionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
   }
 });
 
-functionMap.set("startIsaac", (_window: electron.BrowserWindow) => {
-  launchIsaac();
-});
+functionMap.set(
+  "startIsaac",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    launchIsaac();
+  },
+);
 
-functionMap.set("steam", (window: electron.BrowserWindow, arg2: string) => {
+functionMap.set("steam", (window: electron.BrowserWindow, _arg2: string) => {
   // Initialize the Greenworks API in a separate process because otherwise the game will refuse to
   // open if Racing+ is open
   // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
-  const isaacPath = arg2;
-  childProcesses.start("steam", window, isaacPath);
+  childProcesses.start("steam", window);
 });
 
-functionMap.set("steamExit", () => {
-  // The renderer has successfully authenticated and is now establishing a WebSocket connection,
-  // so we can kill the Greenworks process
-  childProcesses.exit("steam");
-});
+functionMap.set(
+  "steamExit",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    // The renderer has successfully authenticated and is now establishing a WebSocket connection,
+    // so we can kill the Greenworks process
+    childProcesses.exit("steam");
+  },
+);
 
 functionMap.set(
   "steamWatcher",
@@ -83,7 +94,7 @@ functionMap.set(
   },
 );
 
-functionMap.set("isaac", (window: electron.BrowserWindow) => {
+functionMap.set("isaac", (window: electron.BrowserWindow, _arg2: string) => {
   // Start the Isaac checker in a separate process
   childProcesses.start("isaac", window);
 });
