@@ -39,4 +39,5 @@ export const CHARACTER_MAP = new Map([
   ["Tainted Lazarus 2", 38],
   ["Tainted Esau's Ghost", 39],
   ["Tainted Soul", 40],
+  ["Random Baby", 41],
 ]);

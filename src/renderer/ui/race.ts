@@ -248,9 +248,7 @@ export function show(raceID: number): void {
     return;
   }
 
-  g.currentScreen = "transition";
   g.currentRaceID = raceID;
-
   const race = g.raceList.get(g.currentRaceID);
   if (race === undefined) {
     return;
@@ -258,7 +256,9 @@ export function show(raceID: number): void {
 
   const character = CHARACTER_MAP.get(race.ruleset.character);
   if (character === undefined) {
-    errorShow(`The character of "${race.ruleset.character}" is unsupported.`);
+    errorShow(
+      `The character of "${race.ruleset.character}" is unsupported on the client.`,
+    );
     return;
   }
 
@@ -285,6 +285,9 @@ export function show(raceID: number): void {
   g.modSocket.numReady = 0;
   g.modSocket.numEntrants = 1;
   modSocket.sendAll();
+
+  // Start the UI transition
+  g.currentScreen = "transition";
 
   // Show and hide some buttons in the header
   $("#header-profile").fadeOut(FADE_TIME);
