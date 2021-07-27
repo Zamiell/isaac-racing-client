@@ -4,9 +4,8 @@ import settings from "../../common/settings";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
 import { errorShow } from "../misc";
-import * as lobbyScreen from "../ui/lobby";
 import * as socket from "./socket";
-import * as steamWatcher from "./steamWatcher";
+import * as steam from "./steam";
 
 const STEAM_WORKSHOP_MOD_LINK =
   "http://steamcommunity.com/sharedfiles/filedetails/?id=857628390";
@@ -33,10 +32,9 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
   }
 
   if (message.startsWith("error: ")) {
-    // g.currentScreen is equal to "transition" when this is called
+    // g.currentScreen is equal to "title-ajax" when this is called
     g.currentScreen = "null";
 
-    // This is an ordinary error, so don't report it to Sentry
     const match = /error: (.+)/.exec(message);
     if (match === null) {
       throw new Error(`Failed to parse the error message: ${message}`);
@@ -74,16 +72,14 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
     case "isaacChecksComplete": {
       g.currentScreen = "transition";
       $("#file-checking").fadeOut(FADE_TIME, () => {
-        lobbyScreen.show();
+        g.currentScreen = "title-ajax";
       });
 
       // Start the local socket server
       socket.start();
 
-      // Start the Steam watcher process after a short delay
-      setTimeout(() => {
-        steamWatcher.start();
-      }, 5000); // 5 seconds
+      // Start logging in via Steam
+      steam.start();
 
       break;
     }

@@ -9,6 +9,12 @@ export function init(): void {
   electron.ipcRenderer.on("steam", IPCSteam);
 }
 
+export function start(): void {
+  // This tells the main process to start the child process that will initialize Greenworks
+  // That process will get our Steam ID, Steam screen name, and authentication ticket
+  electron.ipcRenderer.send("asynchronous-message", "steam");
+}
+
 // Monitor for notifications from the child process that is getting the data from Greenworks
 function IPCSteam(
   _event: electron.IpcRendererEvent,

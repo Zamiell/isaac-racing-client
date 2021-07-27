@@ -7,6 +7,7 @@ import discordEmotes from "./discordEmotes";
 import g from "./globals";
 import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
+import * as steamWatcher from "./ipc/steamWatcher";
 import {
   amSecondTestAccount,
   capitalize,
@@ -48,6 +49,11 @@ export function connect(): void {
   initMiscCommandHandlers(conn);
   initChatCommandHandlers(conn);
   initRaceCommandHandlers(conn);
+
+  // Start the Steam watcher process after a short delay
+  setTimeout(() => {
+    steamWatcher.start();
+  }, 5000); // 5 seconds
 }
 
 function initMiscHandlers(conn: Connection) {
@@ -73,13 +79,13 @@ function initMiscHandlers(conn: Connection) {
     if (g.currentScreen === "title-ajax") {
       g.currentScreen = "transition";
       $("#title").fadeOut(FADE_TIME, () => {
-        showIsaacChecking();
+        lobbyScreen.show();
       });
     } else if (g.currentScreen === "register-ajax") {
       g.currentScreen = "transition";
       $("#register").fadeOut(FADE_TIME, () => {
         registerScreen.reset();
-        showIsaacChecking();
+        lobbyScreen.show();
       });
     } else if (g.currentScreen === "error") {
       // If we are showing an error screen already, then don't bother going to the lobby
@@ -121,12 +127,6 @@ function initMiscHandlers(conn: Connection) {
       const error = "Encountered a WebSocket error. The server might be down!";
       errorShow(error);
     }
-  });
-}
-
-function showIsaacChecking() {
-  $("#file-checking").fadeIn(FADE_TIME, () => {
-    g.currentScreen = "file-checking";
   });
 }
 

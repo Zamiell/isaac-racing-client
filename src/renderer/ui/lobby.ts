@@ -19,6 +19,8 @@ export function init(): void {
 
 // Called from the login screen or the register screen
 export function show(): void {
+  g.currentScreen = "transition";
+
   // Make sure that all of the forms are cleared out
   $("#login-username").val("");
   $("#login-password").val("");

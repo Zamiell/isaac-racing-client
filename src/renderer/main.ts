@@ -2,14 +2,13 @@
 // for The Binding of Isaac: Repentance
 // (renderer process)
 
-import * as electron from "electron";
 import log from "electron-log";
 import path from "path";
 import pkg from "../../package.json";
 import * as file from "../common/file";
 import initLogging from "../common/initLogging";
 import * as automaticUpdate from "./automaticUpdate";
-import { IS_DEV } from "./constants";
+import { FADE_TIME, IS_DEV } from "./constants";
 import g from "./globals";
 import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
@@ -65,12 +64,12 @@ $(() => {
   log.info("Renderer initialization completed.");
 
   if (IS_DEV) {
-    // Automatically log in with account #1
+    // Skip Isaac-related checks and automatically log in with account #1
     $("#title-choose-1").click();
   } else {
-    // Tell the main process to start the child process that will initialize Greenworks
-    // That process will get our Steam ID, Steam screen name, and authentication ticket
-    electron.ipcRenderer.send("asynchronous-message", "steam");
+    // First, check to see if the game and the mod exist
+    isaac.start();
+    goToFileCheckingScreen();
   }
 });
 
@@ -101,4 +100,11 @@ function initData() {
     // Remove ".png" from each element of emoteList
     g.emoteList[i] = g.emoteList[i].slice(0, -4); // ".png" is 4 characters long
   }
+}
+
+function goToFileCheckingScreen() {
+  g.currentScreen = "transition";
+  $("#file-checking").fadeIn(FADE_TIME, () => {
+    g.currentScreen = "file-checking";
+  });
 }

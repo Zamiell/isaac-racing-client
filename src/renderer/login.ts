@@ -14,7 +14,7 @@ import { errorShow, findAjaxError } from "./misc";
 import * as registerScreen from "./ui/register";
 import * as websocket from "./websocket";
 
-const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 10;
+const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 5;
 
 export default function login(): void {
   log.info("Checking auto update status...");
@@ -22,7 +22,7 @@ export default function login(): void {
   switch (g.autoUpdateStatus) {
     case null: {
       // Don't login yet if we are still checking for updates
-      // (bit we don't auto-update in development)
+      // (but we don't auto-update in development)
       if (!IS_DEV) {
         // The client has not yet begun to check for an update, so stall
         // However, sometimes this can be permanently null in production

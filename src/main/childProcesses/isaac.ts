@@ -111,7 +111,12 @@ function postGetSteamPath(err: Error, item: RegistryItem) {
     );
   }
 
-  steamPath = item.value;
+  steamPath = item.value.trim();
+  if (steamPath === "") {
+    throw new Error(
+      "The Windows registry has a blank Steam path. Is Steam running and are you properly logged in? If so, try restarting your computer.",
+    );
+  }
   process.send(`Steam path found: ${steamPath}`);
 
   getSteamActiveUser();
@@ -144,13 +149,19 @@ function postGetSteamActiveUser(err: Error, item: RegistryItem) {
     );
   }
 
+  const steamActiveUserIDString = item.value.trim();
+  if (steamPath === "") {
+    throw new Error(
+      "The Windows registry has a blank Steam active user ID. Is Steam running and are you properly logged in? If so, try restarting your computer.",
+    );
+  }
+
   // The active user is stored in the registry as a hexadecimal value,
   // so we have to convert it to base 10
-  steamActiveUserID = parseInt(item.value, 16);
-
+  steamActiveUserID = parseInt(steamActiveUserIDString, 16);
   if (Number.isNaN(steamActiveUserID)) {
     throw new Error(
-      `Failed to parse the Steam ID from the Windows registry: ${item.value}`,
+      `Failed to parse the Steam ID from the Windows registry: ${steamActiveUserIDString}`,
     );
   }
 
