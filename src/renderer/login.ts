@@ -35,6 +35,10 @@ export default function login(): void {
         ) {
           log.info("Deferring logging in since autoUpdateStatus is null.");
 
+          $("#title-ajax-description").html(
+            "Waiting for the automatic updater to initialize...",
+          );
+
           setTimeout(() => {
             login();
           }, 250);
@@ -48,6 +52,10 @@ export default function login(): void {
     case "checking-for-update": {
       log.info(
         'Deferring logging in since autoUpdateStatus is "checking-for-update".',
+      );
+
+      $("#title-ajax-description").html(
+        "Checking to see if we are on the latest version...",
       );
 
       setTimeout(() => {
@@ -111,6 +119,8 @@ export default function login(): void {
       break;
     }
   }
+
+  $("#title-ajax-description").html("Logging in to the Racing+ server...");
 
   // Send a request to the Racing+ server
   log.info("Sending a login request to the Racing+ server.");

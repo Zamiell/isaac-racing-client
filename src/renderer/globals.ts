@@ -13,7 +13,6 @@ type Screen =
   | "register"
   | "register-ajax"
   | "updating"
-  | "file-checking"
   | "lobby"
   | "race"
   | "error"

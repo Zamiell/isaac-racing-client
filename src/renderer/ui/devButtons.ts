@@ -1,13 +1,9 @@
 import * as electron from "electron";
-import { FADE_TIME, IS_DEV } from "../constants";
+import { FADE_TIME } from "../constants";
 import g from "../globals";
 import login from "../login";
 
 export function init(): void {
-  if (!IS_DEV) {
-    return;
-  }
-
   // Don't automatically log in with our Steam account
   // We want to choose from a list of login options
   $("#title-ajax").fadeOut(0);

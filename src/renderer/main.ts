@@ -8,7 +8,7 @@ import pkg from "../../package.json";
 import * as file from "../common/file";
 import initLogging from "../common/initLogging";
 import * as automaticUpdate from "./automaticUpdate";
-import { FADE_TIME, IS_DEV } from "./constants";
+import { IS_DEV } from "./constants";
 import g from "./globals";
 import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
@@ -46,7 +46,6 @@ $(() => {
   localization.init();
 
   // UI
-  devButtons.init();
   header.init();
   lobbyScreen.init();
   modals.init();
@@ -64,12 +63,15 @@ $(() => {
   log.info("Renderer initialization completed.");
 
   if (IS_DEV) {
+    devButtons.init();
+
     // Skip Isaac-related checks and automatically log in with account #1
     $("#title-choose-1").click();
   } else {
-    // First, check to see if the game and the mod exist
+    $("#title-ajax-description").html(
+      "Performing a scan on the Racing+ mod to ensure that it is not corrupted...",
+    );
     isaac.start();
-    goToFileCheckingScreen();
   }
 });
 
@@ -100,11 +102,4 @@ function initData() {
     // Remove ".png" from each element of emoteList
     g.emoteList[i] = g.emoteList[i].slice(0, -4); // ".png" is 4 characters long
   }
-}
-
-function goToFileCheckingScreen() {
-  g.currentScreen = "transition";
-  $("#file-checking").fadeIn(FADE_TIME, () => {
-    g.currentScreen = "file-checking";
-  });
 }

@@ -1,7 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
 import settings from "../../common/settings";
-import { FADE_TIME } from "../constants";
 import g from "../globals";
 import { errorShow } from "../misc";
 import * as socket from "./socket";
@@ -70,15 +69,13 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
     }
 
     case "isaacChecksComplete": {
-      g.currentScreen = "transition";
-      $("#file-checking").fadeOut(FADE_TIME, () => {
-        g.currentScreen = "title-ajax";
-      });
-
       // Start the local socket server
       socket.start();
 
       // Start logging in via Steam
+      $("#title-ajax-description").html(
+        "Getting an authentication ticket from Steam...",
+      );
       steam.start();
 
       break;

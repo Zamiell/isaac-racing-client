@@ -165,6 +165,12 @@ function postGetSteamActiveUser(err: Error, item: RegistryItem) {
     );
   }
 
+  if (steamActiveUserID === 0) {
+    throw new Error(
+      "You do not appear to be logged into Steam. (Your Steam user active ID is 0 in the Windows registry.) Is Steam running and are you properly logged in? If so, try restarting your computer.",
+    );
+  }
+
   process.send(`Steam active user found: ${steamActiveUserID}`);
 
   checkModExists();
