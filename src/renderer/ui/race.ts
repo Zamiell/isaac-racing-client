@@ -480,6 +480,12 @@ export function show(raceID: number): void {
         '<span lang="en">Defeat Mother (the boss of Corpse II)</span><br />';
       goalTooltipContent +=
         '<span lang="en">and touch the trophy that falls down afterward.</span>';
+    } else if (goal === "The Beast") {
+      goalTooltipContent +=
+        '<strong><span lang="en">The Beast</span>:</strong><br />';
+      goalTooltipContent += '<span lang="en">Defeat The Beast</span><br />';
+      goalTooltipContent +=
+        '<span lang="en">and touch the trophy that falls down afterward.</span>';
     } else if (goal === "Boss Rush") {
       goalTooltipContent +=
         '<strong><span lang="en">Boss Rush</span>:</strong><br />';
