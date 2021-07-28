@@ -189,8 +189,10 @@ export function init(): void {
       return;
     }
 
-    if (race.ruleset.format !== "custom" || race.ruleset.goal !== "custom") {
-      // The finish button is only for "Custom" formats with "Custom" goals
+    if (race.ruleset.format !== "custom" && race.ruleset.goal !== "custom") {
+      // The finish button is for a race with either:
+      // 1) a "Custom" format
+      // 2) a "Custom" goal
       // (the Racing+ mod normally takes care of finishing the race automatically)
       return;
     }
@@ -1145,7 +1147,7 @@ export function start(): void {
     // Show the quit button
     if (!alreadyFinished) {
       $("#race-quit-button-container").fadeIn(FADE_TIME);
-      if (race.ruleset.format === "custom" && race.ruleset.goal === "custom") {
+      if (race.ruleset.format === "custom" || race.ruleset.goal === "custom") {
         $("#race-finish-button-container").fadeIn(FADE_TIME);
       }
     }

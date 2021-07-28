@@ -1259,10 +1259,6 @@ input[type=range] {
   position: relative;
 }
 
-#race-quit-button-container {
-  padding: 0 0 0 0;
-}
-
 #race-num-left {
   margin: 0 0 0 0;
 }
