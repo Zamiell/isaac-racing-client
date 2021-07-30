@@ -8,7 +8,7 @@ if ok then
   socket = requiredSocket
 end
 
--- Make a copy of the "debug" object
+-- Make a copy of some objects
 local localDebug = debug
 
 local sandbox = {}
@@ -47,34 +47,48 @@ function sandbox.fixPrintFunction()
   -- the "print()" function will no longer map to "Isaac.ConsoleOutput()"
   -- Manually fix this
   print = function(...) -- luacheck: ignore
-    local args = {...}
-    local msg = ""
-    for _, arg in ipairs(args) do
-      -- Separate multiple arguments with a space
-      -- (a tab character appears as a circle, which is unsightly)
-      if msg ~= "" then
-        msg = msg .. " "
-      end
+    local msg = sandbox.getPrintMsg(...)
 
-      -- By default, simply coerce the argument to a string, whatever it is
-      local valueToPrint = tostring(arg)
+    -- First, write it to the log.txt
+    Isaac.DebugString(msg)
 
-      -- Provide special formatting for Vectors
-      local metatable = getmetatable(arg)
-      local isVector = metatable ~= nil and metatable.__type == "Vector"
-      if isVector then
-        valueToPrint = "Vector(" .. tostring(arg.X) .. ", " .. tostring(arg.Y) .. ")"
-      end
+    -- Second, write it to the console
+    -- (this needs to be terminated by a newline or else it won't display properly)
+    local msgWithNewline = msg .. "\n"
+    Isaac.ConsoleOutput(msgWithNewline)
+  end
+end
 
-      msg = msg .. valueToPrint
+function sandbox.getPrintMsg(...)
+  -- Base case
+  if ... == nil then
+    return tostring(nil)
+  end
+
+  local args = {...}
+  local msg = ""
+  for _, arg in ipairs(args) do
+    -- Separate multiple arguments with a space
+    -- (a tab character appears as a circle, which is unsightly)
+    if msg ~= "" then
+      msg = msg .. " "
     end
 
-    -- The "Isaac.ConsoleOutput()" function needs to have input terminated by a newline or else it
-    -- won't display properly
-    msg = msg .. "\n"
+    local valueToPrint
+    local metatable = getmetatable(arg)
+    local isVector = metatable ~= nil and metatable.__type == "Vector"
+    if isVector then
+      -- Provide special formatting for Vectors
+      valueToPrint = "Vector(" .. tostring(arg.X) .. ", " .. tostring(arg.Y) .. ")"
+    else
+      -- By default, simply coerce the argument to a string, whatever it is
+      valueToPrint = tostring(arg)
+    end
 
-    Isaac.ConsoleOutput(msg)
+    msg = msg .. valueToPrint
   end
+
+  return msg
 end
 
 function sandbox.isSocketInitialized()
@@ -132,5 +146,8 @@ function sandbox.traceback()
   local traceback = localDebug.traceback()
   Isaac.DebugString(traceback)
 end
+
+-- Also make it a global variable
+traceback = sandbox.traceback -- luacheck: ignore
 
 return sandbox
