@@ -78,7 +78,7 @@ functionMap.set("level", (data: string) => {
     return;
   }
 
-  const match = /(\d+)-(\d+)/.exec(data); // This does not work with a global flag
+  const match = /(\d+)-(\d+)-(\w+)/.exec(data); // This does not work with a global flag
   if (match === null) {
     errorShow(`Failed to parse the level: ${data}`);
     return;
@@ -100,11 +100,14 @@ functionMap.set("level", (data: string) => {
     return;
   }
 
+  const backwards = match[3] === "true";
+
   if (g.conn !== null) {
     g.conn.send("raceFloor", {
       id: g.currentRaceID,
       floorNum,
       stageType,
+      backwards,
     });
   }
 });
