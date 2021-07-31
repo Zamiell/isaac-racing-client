@@ -100,14 +100,14 @@ functionMap.set("level", (data: string) => {
     return;
   }
 
-  const backwards = match[3] === "true";
+  const backwardsPath = match[3] === "true";
 
   if (g.conn !== null) {
     g.conn.send("raceFloor", {
       id: g.currentRaceID,
       floorNum,
       stageType,
-      backwards,
+      backwardsPath,
     });
   }
 });
