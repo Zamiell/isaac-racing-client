@@ -442,7 +442,7 @@ function initRaceCommandHandlers(conn: Connection) {
       race.racerList = [];
 
       // Update the "Current races" area
-      lobbyScreen.raceDraw(data[i]);
+      lobbyScreen.raceDraw(race);
 
       // Start the callback for the lobby timer
       lobbyScreen.statusTimer(raceID);
@@ -461,7 +461,7 @@ function initRaceCommandHandlers(conn: Connection) {
       g.currentRaceID = mostCurrentRaceID;
       setTimeout(() => {
         raceScreen.show(mostCurrentRaceID);
-      }, FADE_TIME * 3); // Account for fade out and fade in, then add account for some lag
+      }, FADE_TIME * 3); // Account for fade out and fade in, then account for some lag
     }
   });
 
@@ -784,7 +784,6 @@ function initRaceCommandHandlers(conn: Connection) {
     } else if (data.status === "in progress") {
       circleClass = "in-progress";
     } else if (data.status === "finished") {
-      // Delete the race
       g.raceList.delete(data.id);
       lobbyScreen.raceUndraw(data.id);
     } else {

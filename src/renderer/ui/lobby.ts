@@ -187,7 +187,7 @@ export function raceDraw(race: Race): void {
   raceDiv += "</td>";
 
   // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
-  if (Object.keys(g.raceList).length > 4) {
+  if (g.raceList.size > 4) {
     // More than 4 races causes the overflow
     $("#lobby-current-races-table-wrapper").removeClass("vertical-center");
   } else {
@@ -415,14 +415,14 @@ export function raceUndraw(raceID: number): void {
   $(`#lobby-current-races-${raceID}`).fadeOut(FADE_TIME, () => {
     $(`#lobby-current-races-${raceID}`).remove();
 
-    if (Object.keys(g.raceList).length === 0) {
+    if (g.raceList.size === 0) {
       $("#lobby-current-races-table").fadeOut(0);
       $("#lobby-current-races-table-no").fadeIn(FADE_TIME);
     }
   });
 
   // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
-  if (Object.keys(g.raceList).length > 4) {
+  if (g.raceList.size > 4) {
     // More than 4 races causes the overflow
     $("#lobby-current-races-table-wrapper").removeClass("vertical-center");
   } else {
