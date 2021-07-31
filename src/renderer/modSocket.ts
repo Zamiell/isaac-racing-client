@@ -7,9 +7,6 @@ import ModSocket from "./types/ModSocket";
 import Race from "./types/Race";
 import { SocketCommandIn } from "./types/SocketCommand";
 
-const JUDAS_SHADOW_ID = 311;
-const DARK_JUDAS_ID = 12;
-
 export function send(command: SocketCommandIn, data = ""): void {
   if (amSecondTestAccount()) {
     return;
@@ -117,7 +114,7 @@ function getNumLeft(race: Race): number {
 
 export function sendAll(): void {
   // Start to compile the list of starting items
-  let startingItems: number[] = [];
+  const startingItems: number[] = [];
 
   // Diversity races store the starting items in the seed
   if (g.modSocket.format === "diversity") {
@@ -137,13 +134,6 @@ export function sendAll(): void {
     }
   }
 
-  // Simplify seeded races that start with Judas' Shadow by changing the starting character
-  let character = g.modSocket.character;
-  if (startingItems.length === 1 && startingItems[0] === JUDAS_SHADOW_ID) {
-    startingItems = [];
-    character = DARK_JUDAS_ID;
-  }
-
   // This is necessary because the 5 diversity items are communicated through the seed
   const seed = g.modSocket.format === "diversity" ? "-" : g.modSocket.seed;
 
@@ -153,7 +143,7 @@ export function sendAll(): void {
   send("set", `solo ${g.modSocket.solo}`);
   send("set", `format ${g.modSocket.format}`);
   send("set", `difficulty ${g.modSocket.difficulty}`);
-  send("set", `character ${character}`);
+  send("set", `character ${g.modSocket.character}`);
   send("set", `goal ${g.modSocket.goal}`);
   send("set", `seed ${seed}`);
   // "startingBuild" is converted to "startingItems"

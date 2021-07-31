@@ -5,9 +5,8 @@ import { HandlerDetails } from "electron/main";
 import path from "path";
 import * as file from "../common/file";
 import settings from "../common/settings";
-import { STATIC_PATH } from "./constants";
+import { IS_DEV, STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
-import IS_DEV from "./isDev";
 import launchIsaac from "./launchIsaac";
 
 interface WindowSettings {
@@ -96,7 +95,7 @@ export function createWindow(): electron.BrowserWindow {
   }
 
   window.loadFile(INDEX_HTML_PATH).catch((err) => {
-    log.error(`Failed to load the "index.html" file: ${err}`);
+    log.error(`Failed to load the "${INDEX_HTML_PATH}" file: ${err}`);
     electron.app.quit();
   });
 
@@ -214,7 +213,7 @@ export function autoUpdate(window: electron.BrowserWindow): void {
     window.webContents.send("autoUpdater", "update-downloaded");
   });
 
-  log.info("Checking for updates.");
+  log.info("Checking for updates...");
   autoUpdater.checkForUpdates().catch((err) => {
     log.error(`Failed to check for updates: ${err}`);
   });

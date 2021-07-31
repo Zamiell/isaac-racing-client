@@ -3,7 +3,7 @@ import * as electron from "electron";
 import log from "electron-log";
 import path from "path";
 import * as file from "../common/file";
-import IS_DEV from "./isDev";
+import { IS_DEV } from "./constants";
 
 // Any new child processes also have to be added to the webpack config in "webpack.main.config.js"
 interface ChildProcesses {

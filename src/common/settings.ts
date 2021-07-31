@@ -10,7 +10,7 @@ import Store from "electron-store";
 const settings = new Store();
 export default settings;
 
-export function initDefault(): void {
+export function initDefaults(): void {
   if (settings.get("window") === undefined) {
     settings.set("window", {});
   }
@@ -29,9 +29,6 @@ export function initDefault(): void {
   if (settings.get("volume") === undefined) {
     settings.set("volume", 0.5); // 50%
   }
-
-  // Log file path is initialized in main.js since it depends on the return value of a PowerShell
-  // command
 
   if (settings.get("newRaceTitle") === undefined) {
     settings.set("newRaceTitle", ""); // An empty string means to use the random name generator

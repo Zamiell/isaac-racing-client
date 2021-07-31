@@ -34,7 +34,7 @@ function getBaseConfig(electronType) {
       filename: "main.js",
     },
 
-    // .js is needed for libraries (Electron itself, winston, etc.)
+    // .js is needed for libraries (Electron itself, etc.)
     // .json is needed to import JSON files in the "data" directory
     resolve: {
       extensions: [".js", ".ts", ".json"],

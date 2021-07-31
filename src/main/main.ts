@@ -10,8 +10,8 @@ import pkg from "../../package.json";
 import initLogging from "../common/initLogging";
 import * as settings from "../common/settings";
 import * as childProcesses from "./childProcesses";
+import { IS_DEV } from "./constants";
 import * as ipc from "./ipc";
-import IS_DEV from "./isDev";
 import * as onReady from "./onReady";
 
 let window = null as null | electron.BrowserWindow;
@@ -22,7 +22,7 @@ function main() {
   initLogging();
   printWelcomeMessage();
   checkSecondInstance();
-  settings.initDefault();
+  settings.initDefaults();
   initElectronHandlers();
 }
 
