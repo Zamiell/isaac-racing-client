@@ -5,8 +5,9 @@ import { HandlerDetails } from "electron/main";
 import path from "path";
 import * as file from "../common/file";
 import settings from "../common/settings";
-import { IS_DEV, STATIC_PATH } from "./constants";
+import { STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
+import IS_DEV from "./isDev";
 import launchIsaac from "./launchIsaac";
 
 interface WindowSettings {
