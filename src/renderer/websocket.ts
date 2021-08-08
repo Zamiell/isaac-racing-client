@@ -12,10 +12,10 @@ import {
   amSecondTestAccount,
   capitalize,
   errorShow,
-  playSound,
   warningShow,
 } from "./misc";
 import * as modSocket from "./modSocket";
+import * as sounds from "./sounds";
 import ChatMessage from "./types/ChatMessage";
 import Connection from "./types/Connection";
 import Race from "./types/Race";
@@ -535,7 +535,7 @@ function initRaceCommandHandlers(conn: Connection) {
       shouldPlaySound = false;
     }
     if (shouldPlaySound) {
-      playSound("race-created");
+      sounds.play("race-created");
     }
   }
 
@@ -764,7 +764,7 @@ function initRaceCommandHandlers(conn: Connection) {
 
         // Play the "race completed!" sound effect (for multiplayer races)
         if (!race.ruleset.solo) {
-          playSound("race-completed", 1300);
+          sounds.play("race-completed", 1300);
         }
       } else {
         errorShow(
