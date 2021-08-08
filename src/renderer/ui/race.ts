@@ -14,10 +14,9 @@ import {
   getRandomNumber,
   ordinalSuffixOf,
   pad,
-  playSound,
 } from "../misc";
 import * as modSocket from "../modSocket";
-import { preloadSounds } from "../preloadSounds";
+import * as sounds from "../sounds";
 import User from "../types/User";
 
 const FIRST_GOLDEN_TRINKET_ID = 32769;
@@ -266,7 +265,7 @@ export function show(raceID: number): void {
 
   // We preload sounds now since the user has probably interacted with the page at this point
   // (this won't be true if they are reconnecting mid-way through a race, but oh well)
-  preloadSounds();
+  sounds.preload();
 
   // Tell the Lua mod that we are in a new race
   g.modSocket.raceID = race.id;
@@ -821,10 +820,10 @@ export function participantsSetStatus(i: number, initial = false): void {
       // They finished within 3 seconds of the last player that finished
       // Play the special "NO DUDE" sound effect
       const randNum = getRandomNumber(1, 8);
-      playSound(`no/no${randNum}`);
+      sounds.play(`no/no${randNum}`);
     } else {
       // Play the sound effect that matches their place
-      playSound(`place/${racer.place}`, 1800);
+      sounds.play(`place/${racer.place}`, 1800);
     }
   }
 
@@ -851,10 +850,10 @@ export function participantsSetStatus(i: number, initial = false): void {
   // Play a sound effect if someone quit or finished
   if (!initial) {
     if (racer.status === "finished") {
-      playSound("finished");
+      sounds.play("finished");
       g.lastFinishedTime = racer.runTime;
     } else if (racer.status === "quit") {
-      playSound("quit");
+      sounds.play("quit");
     }
   }
 }
@@ -983,7 +982,7 @@ export function startCountdown(): void {
     $("#race-countdown").fadeIn(0);
   } else {
     // Play the "Let's Go" sound effect
-    playSound("lets-go");
+    sounds.play("lets-go");
 
     // Tell the Lua mod that we are starting a race
     modSocket.send("set", "countdown 10");
@@ -1051,9 +1050,9 @@ export function countdownTick(i: number): void {
 
   // Play the sound effect associated with the final 3 seconds
   if (i === 3 || i === 2 || i === 1) {
-    playSound(i.toString());
+    sounds.play(i.toString());
   } else if (i === 0) {
-    playSound("go");
+    sounds.play("go");
   }
 
   if (i > 0) {

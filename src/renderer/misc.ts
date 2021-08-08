@@ -1,5 +1,4 @@
 import log from "electron-log";
-import path from "path";
 import settings from "../common/settings";
 import { FADE_TIME } from "./constants";
 import g from "./globals";
@@ -127,38 +126,6 @@ export function ordinalSuffixOf(i: number): string {
 // From: https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
 export function pad(value: number): string {
   return value > 9 ? value.toString() : `0${value}`;
-}
-
-export function playSound(soundFilename: string, lengthOfSound = -1): void {
-  // First check to see if sound is disabled
-  const volume = settings.get("volume") as number;
-  if (volume === 0) {
-    return;
-  }
-
-  if (lengthOfSound !== -1) {
-    // For some sound effects, we only want one of them playing at once to prevent confusion
-    if (g.playingSound) {
-      return; // Do nothing if we are already playing a sound
-    }
-
-    g.playingSound = true;
-    setTimeout(() => {
-      g.playingSound = false;
-    }, lengthOfSound);
-    // (the 2nd argument to "setTimeout()" should be the length of the sound effect in milliseconds)
-  }
-
-  // Sometimes this can give "net::ERR_REQUEST_RANGE_NOT_SATISFIABLE" for some reason
-  // (might be related to having multiple Electron apps trying to play the same sound at the same
-  // time)
-  const audioPath = path.join("sounds", `${soundFilename}.mp3`);
-  const audio = new Audio(audioPath);
-  audio.volume = volume;
-  audio.play().catch((err) => {
-    log.info(`Failed to play "${audioPath}": ${err}`);
-  });
-  log.info(`Played "${audioPath}".`);
 }
 
 export function warningShow(message: string): void {
