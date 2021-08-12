@@ -150,4 +150,23 @@ end
 -- Also make it a global variable
 traceback = sandbox.traceback -- luacheck: ignore
 
+function sandbox.getParentFunctionDescription(levels)
+  if levels == nil then
+    error("The getParentFunctionDescription function requires the amount of levels to look backwards.")
+  end
+
+  local debugTable = localDebug.getinfo(levels)
+  if debugTable == nil then
+    return ""
+  end
+  if debugTable.name == nil then
+    debugTable.name = "unknown"
+  end
+
+  return debugTable.name .. ":" .. tostring(debugTable.linedefined)
+end
+
+-- Also make it a global variable
+getParentFunctionDescription = sandbox.getParentFunctionDescription -- luacheck: ignore
+
 return sandbox
