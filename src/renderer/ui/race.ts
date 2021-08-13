@@ -1105,6 +1105,7 @@ function countdownReachedZero() {
 
       racer.placeMid = race.racerList.length; // Set everyone to last place
       participantsSetPlaceMid(i);
+      modSocket.sendExtraValues();
 
       const statusDiv =
         '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
