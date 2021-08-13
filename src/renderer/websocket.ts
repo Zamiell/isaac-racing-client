@@ -20,7 +20,7 @@ import ChatMessage from "./types/ChatMessage";
 import Connection from "./types/Connection";
 import Race from "./types/Race";
 import RaceItem from "./types/RaceItem";
-import Racer from "./types/Racer";
+import Racer, { getDefaultRacer } from "./types/Racer";
 import RacerStatus from "./types/RacerStatus";
 import RaceStatus from "./types/RaceStatus";
 import User from "./types/User";
@@ -570,23 +570,7 @@ function initRaceCommandHandlers(conn: Connection) {
       raceScreen.show(data.id);
     } else if (data.id === g.currentRaceID) {
       // We are in this race, so add this racer to the racerList with all default values (defaults)
-      const datetime = new Date().getTime();
-      race.racerList.push({
-        name: data.name,
-        datetimeJoined: datetime,
-        status: "not ready",
-        floorNum: 0,
-        stageType: 0,
-        datetimeArrivedFloor: 0,
-        items: [],
-        startingItem: 0,
-        characterNum: 0,
-        place: 0,
-        placeMid: -1,
-        datetimeFinished: 0,
-        runTime: 0,
-        comment: "",
-      });
+      race.racerList.push(getDefaultRacer(data.name));
 
       // Update the race screen
       raceScreen.participantAdd(race.racerList.length - 1);

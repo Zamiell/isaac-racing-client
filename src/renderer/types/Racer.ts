@@ -18,3 +18,24 @@ export default interface Racer {
   runTime: number;
   comment: string;
 }
+
+export function getDefaultRacer(name: string): Racer {
+  const datetime = new Date().getTime();
+
+  return {
+    name,
+    datetimeJoined: datetime,
+    status: "not ready",
+    floorNum: 1,
+    stageType: 0,
+    datetimeArrivedFloor: 0,
+    items: [],
+    startingItem: 0,
+    characterNum: 0,
+    place: 0,
+    placeMid: -1,
+    datetimeFinished: 0,
+    runTime: 0,
+    comment: "",
+  };
+}

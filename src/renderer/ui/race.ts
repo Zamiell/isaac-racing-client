@@ -1056,53 +1056,64 @@ export function countdownTick(i: number): void {
   }
 
   if (i > 0) {
-    // Change the number on the race controls area (5, 4, 3, 2, 1)
-    $("#race-countdown").fadeOut(FADE_TIME, () => {
-      $("#race-countdown").css("font-size", "2.5em");
-      $("#race-countdown").css("bottom", "0.375em");
-      $("#race-countdown").css("color", "red");
-      $("#race-countdown").html(i.toString());
-      $("#race-countdown").fadeIn(FADE_TIME);
-    });
+    countdownTickAboveZero(i);
   } else if (i === 0) {
-    setTimeout(() => {
-      const race = g.raceList.get(g.currentRaceID);
-      if (race === undefined) {
-        return;
-      }
-
-      // Update the text to "Go!" on the race controls area
-      $("#race-countdown").html('<span lang="en">Go</span>!');
-      $("#race-title-status").html(
-        '<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>',
-      );
-
-      // Wait 3 seconds, then start to change the controls
-      setTimeout(start, 3000);
-
-      // If this is a diversity race, show the three diversity items
-      if (race.ruleset.format === "diversity") {
-        $("#race-title-items-blind").fadeOut(FADE_TIME, () => {
-          $("#race-title-items").fadeIn(FADE_TIME);
-        });
-      }
-
-      // Add default values to the columns to the race participants table
-      for (let j = 0; j < race.racerList.length; j++) {
-        race.racerList[j].status = "racing";
-        race.racerList[j].place = 0;
-        race.racerList[j].placeMid = -1;
-
-        const racerName = race.racerList[j].name;
-        const statusDiv =
-          '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
-        $(`#race-participants-table-${racerName}-status`).html(statusDiv);
-        $(`#race-participants-table-${racerName}-item`).html("-");
-        $(`#race-participants-table-${racerName}-time`).html("-");
-        $(`#race-participants-table-${racerName}-offset`).html("-");
-      }
-    }, FADE_TIME);
+    countdownReachedZero();
   }
+}
+
+function countdownTickAboveZero(i: number) {
+  // Change the number on the race controls area (5, 4, 3, 2, 1)
+  $("#race-countdown").fadeOut(FADE_TIME, () => {
+    $("#race-countdown").css("font-size", "2.5em");
+    $("#race-countdown").css("bottom", "0.375em");
+    $("#race-countdown").css("color", "red");
+    $("#race-countdown").html(i.toString());
+    $("#race-countdown").fadeIn(FADE_TIME);
+  });
+}
+
+function countdownReachedZero() {
+  setTimeout(() => {
+    const race = g.raceList.get(g.currentRaceID);
+    if (race === undefined) {
+      return;
+    }
+
+    // Update the text to "Go!" on the race controls area
+    $("#race-countdown").html('<span lang="en">Go</span>!');
+    $("#race-title-status").html(
+      '<span class="circle lobby-current-races-in-progress"></span> &nbsp; <span lang="en">In Progress</span>',
+    );
+
+    // Wait 3 seconds, then start to change the controls
+    setTimeout(start, 3000);
+
+    // If this is a diversity race, show the three diversity items
+    if (race.ruleset.format === "diversity") {
+      $("#race-title-items-blind").fadeOut(FADE_TIME, () => {
+        $("#race-title-items").fadeIn(FADE_TIME);
+      });
+    }
+
+    // Add default values to the columns to the race participants table
+    for (let i = 0; i < race.racerList.length; i++) {
+      const racer = race.racerList[i];
+
+      racer.status = "racing";
+      racer.place = 0;
+
+      racer.placeMid = race.racerList.length; // Set everyone to last place
+      participantsSetPlaceMid(i);
+
+      const statusDiv =
+        '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; <span lang="en">Racing</span>';
+      $(`#race-participants-table-${racer.name}-status`).html(statusDiv);
+      $(`#race-participants-table-${racer.name}-item`).html("-");
+      $(`#race-participants-table-${racer.name}-time`).html("-");
+      $(`#race-participants-table-${racer.name}-offset`).html("-");
+    }
+  }, FADE_TIME);
 }
 
 export function start(): void {
