@@ -902,6 +902,8 @@ export function participantsSetFloor(i: number): void {
     floorDiv = "Void";
   } else if (floorNum === 13) {
     floorDiv = "Home";
+  } else if (floorNum === 14) {
+    floorDiv = "MS"; // For Mega Satan
   } else {
     errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
     return;
