@@ -1,6 +1,9 @@
 -- Racing+ enables --luadebug, so it also provides this sandbox to prevent other mods from doing
 -- evil things
 
+-- Constants
+local HOSTNAME = "localhost"
+
 -- Import the socket module for our own usage before we gimp the "require()" function
 local socket = nil
 local ok, requiredSocket = pcall(require, "socket")
@@ -14,11 +17,16 @@ local localDebug = debug
 local sandbox = {}
 
 function sandbox.init()
+  sandbox.init = nil
+  if socket == nil then
+    Isaac.DebugString("The sandbox could not initialize because the \"--luadebug\" flag was not enabled.")
+    return
+  end
+
   sandbox.removeDangerousGlobals()
   sandbox.removeDangerousPackageFields()
   sandbox.sanitizeRequireFunction()
   sandbox.fixPrintFunction()
-  sandbox.init = nil
 end
 
 function sandbox.removeDangerousGlobals()
@@ -91,16 +99,13 @@ function sandbox.getPrintMsg(...)
   return msg
 end
 
+--
+-- Exports
+--
+
 function sandbox.isSocketInitialized()
   return socket ~= nil
 end
-
---
--- Exposed socket functionality
---
-
--- Constants
-local HOSTNAME = "localhost"
 
 function sandbox.connectLocalhost(port)
   if port == nil then
@@ -138,11 +143,11 @@ function sandbox.connectLocalhost(port)
   return tcp
 end
 
---
--- Exposed other functionality
---
-
 function sandbox.traceback()
+  if localDebug == nil then
+    Isaac.DebugString("traceback was called but the \"--luadebug\" flag was not enabled.")
+  end
+
   local traceback = localDebug.traceback()
   Isaac.DebugString(traceback)
 end
@@ -153,6 +158,10 @@ traceback = sandbox.traceback -- luacheck: ignore
 function sandbox.getParentFunctionDescription(levels)
   if levels == nil then
     error("The getParentFunctionDescription function requires the amount of levels to look backwards.")
+  end
+
+  if localDebug == nil then
+    return ""
   end
 
   local debugTable = localDebug.getinfo(levels)
