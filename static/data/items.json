@@ -5018,6 +5018,26 @@
       "text": "Throw your head to deal 24 damage",
       "introduced_in": "Repentance"
    },
+   "730": {
+      "name": "Sawblade",
+      "shown": true,
+      "text": "Orbital (10 dmg / tick)",
+      "introduced_in": "Racing+"
+   },
+   "731": {
+      "name": "13 Luck",
+      "text": "",
+      "shown": true,
+      "luck": "13",
+      "introduced_in": "Racing+"
+   },
+   "732": {
+      "name": "15 Luck",
+      "text": "",
+      "shown": true,
+      "luck": "15",
+      "introduced_in": "Racing+"
+   },
    "2001": {
       "name": "Swallowed Penny",
       "text": "Spawn 1-2 pennies on hit",
