@@ -1,5 +1,419 @@
 # Racing+ Version History and News
 
+### *v0.68.2* - September 16th, 2021
+
+- Pin, Frail, and Scolex will now spend less time underground after performing a non-jump attack.
+- Wormwood room #5182 was modified to remove the pits next to the doors, which gives the player slightly more time to react to the faster Wormwood mechanic. (Thanks Moucheron Quipet)
+- Removed the Cathedral room where Bumbino is trapped behind rocks. (Thanks Gamonymous)
+- Fixed the bug where the health for Tainted Lost would be misaligned when they had Birthright. (Thanks Gamonymous)
+- Fixed the bug where some flipped versions of Utero room #975 would make the Wall Huggers move in ways that was not intended. (Thanks Gamonymous)
+
+### *v0.68.0* - September 16th, 2021
+
+- Wormwood will now spend less time underground.
+- Needles & Pasties will now spend less time underground.
+- If two Uriels or two Gabriels will spawn in the same room, the second one will be morphed into the other angel.
+- Fixed the bug where Restock Machines only appeared in shops 20% of the time instead of 25%. (Thanks Gamonymous)
+- Fixed the bug where a trapdoor and/or beam of light was not properly centered in some circumstances. (Thanks Gamonymous)
+- Fixed the bug where Filigree Feather caused double angel drops. (Thanks elgirs)
+
+### *v0.67.2* - September 12th, 2021
+
+- Autofire has been nerfed on Spirit Sword to be one per every 3 frames instead of once every 2 frames.
+- Fixed the bug where the beam of light on Cathedral would not be in the center of the room under certain circumstances. (Thanks Gamonymous)
+
+### *v0.67.1* - September 12th, 2021
+
+- Fixed the bug where Dream Catcher would show two Mr. Fred's instead of one. (Thanks Gamonymous)
+- Fixed the bug where Dream Catcher would make items in Treasure Rooms free for Tainted Keeper. (Thanks Gamonymous)
+
+### *v0.67.0* - September 11th, 2021
+
+- The fast-clear feature has been upgraded. Instead of opening the doors after a 10 frame delay, the doors are opened after a 1 frame delay.
+  - This upgrade does not apply to Boss Rooms, Challenge Rooms, or the Boss Rush.
+
+### *v0.66.1* - September 11th, 2021
+
+- Fixed the bug where the Babies Mod would not work properly if you had Racing+ enabled at the same time.
+
+### *v0.66.0* - September 10th, 2021
+
+- Season 1 has officially begun!
+- Pitfalls will now be killed when the room is cleared. (Thanks ez_duke)
+- Secret Shops are now handled by fast travel.
+- Sharp Plug is now removed from pools on Tainted Magdalene.
+- Fixed the bug where Krampus and Angels would not work properly with Stop Watch or Broken Watch. (Thanks 91)
+- Fixed the bug where items would be deleted on save & quit even if you weren't in a Genesis room. (Thanks Gamonymous)
+- Fixed the bug where the extra starting items would not be removed if you exited a shop. (Thanks mgln)
+
+### *v0.65.2* - September 7th, 2021
+
+- The Lead Pencil charge bar will no longer display if you have Technology 2 (since there is no way to track the tears). (Thanks Gamonymous)
+- Rotgut will no longer appear as a Victory Lap boss.
+- Fixed the bug where the Lead Pencil would not work properly with multi-shot items. (Thanks Gamonymous)
+- Fixed the bug where Sawblade would not work properly on Tainted Lazarus. (Thanks Gamonymous)
+
+### *v0.65.1* - September 6th, 2021
+
+- Fixed the bug where active items could incorrectly become overcharged in certain situations.
+
+### *v0.65.0* - September 6th, 2021
+
+- The DPS button and Victory Lap button will now spawn after finishing a race. The Victory Lap boss pool has been updated to include all of the Repentance bosses.
+- Morphed GB Bug pickups are now seeded in order rather than based on the InitSeed of the morphed pickup.
+- Fixed the bug where Soul of Isaac would not work on quest items. (Thanks mgln)
+
+### *v0.64.0* - September 6th, 2021
+
+- Added an autofire hotkey. (This is useful for Tainted Lilith, Anti-Gravity builds, Number Two builds, and more.)
+- You can now hold down the drop/switch button to temporarily deactivate the pocket item charging precedence.
+- Blood Rights is now removed from pools on Tainted Samson.
+- Pitfalls that incorrectly respawn after not having time to finish their disappearing animation are removed.
+- Custom code is added to provide a synergy for The Battery and 9 Volt.
+- All extra enemies will now properly die after defeating Mom, Mom's Heart, or It Lives!
+- The statue in a Devil Room will now be faded if there are pickups behind it.
+- You can no longer abuse save & quit in a Genesis room.
+- You can no longer abuse save & quit to get extra familiars on Tainted Lilith.
+- Damocles is now correctly removed after using Genesis.
+- In seeded races, 3 Dollar Bill is now seeded per room.
+- Fixed the bug where the beam of light after Isaac would not take you up right away.
+- Fixed the bug where The Battery would cause charging events to grant too many charges.
+
+### *v0.63.4* - September 5th, 2021
+
+- Lead Pencil now shows a charge bar.
+- Blank Runes, Black Runes, and ? Cards now have a unique graphic so that they are easier to identify.
+- Scared Hearts now have a custom animation so that they are easier to identify.
+- Sticky Nickels now have a custom effect so that they are easier to identify.
+- Made the hands in Chest room #193 symmetric.
+
+### *v0.63.3* - September 4th, 2021
+
+- Fixed the bug where the wrong version was displayed when pressing F1. (Thanks mgln)
+- Fixed the bug where Dreamcatcher would not work properly if there were multiple Treasure Rooms or Boss Rooms.
+
+### *v0.63.2* - September 4th, 2021
+
+- Fixed the bug where the Secret Shop crawlspace would lead to a normal crawlspace. (Thanks 91)
+- Fixed the bug where quitting a race could cause specific types of errors to occur. (Thanks cutifire)
+- Fixed the bug where the holy mantle indicator was shaped incorrectly on Tainted Keeper. (Thanks Finalkids)
+- Fixed the bug where Dream Catcher would cause an error on Depths 2. (Thanks Finalkids)
+- Fixed the bug where the Boss Rush would not spawn the proper reward when playing on a set seed. (Thanks Bamiot)
+- Fixed the bug with The Beast races where the trapdoor was incorrectly removed after Mom if you left the room. (Thanks cutifire)
+- Fixed the bug with seeded death where it would not apply to The Lost or Tainted Lost. (Thanks cutifire)
+- Fixed the bug with seeded death where dying as The Soul would not work properly.
+
+### *v0.63.1* - September 3rd, 2021
+
+- Re-coded the "charge pocket item first" feature such that it will work with a wider-range of charging situations than it did previously, including Battery Bums, Golden Batteries, and so on.
+- The heart UI sprites have been modified so that it is easier to see an empty red heart container on a black background.
+- When playing as The Lost & Tainted Lost, the hearts will now show in the UI.
+- The presence of a Holy Mantle shield is now shown on the hearts UI.
+- Pressing F1 will now show the version of Racing+ on the screen.
+- Fixed the bug where Moonlights from Luna were incorrectly deleted. (Thanks sisuka)
+- Fixed the bug where in season 1, the first Devil Room would be empty if you got there on Downpour 1. (Thanks Moucheron Quipet)
+
+### *v0.63.0* - September 2nd, 2021
+
+- A blue target is now drawn on the ground for the Daddy Long Legs multi-stomp attack and rock projectiles to make it more clear where the attack is landing.
+- The Perfection trinket will no longer spawn on the final floor of a run.
+- Fixed the bug where charged keys would not grant a key. (Thanks Hispa)
+- Fixed the bug where automatic pickup insertion could fail in situations where you were already collecting a pickup.
+- Fixed the bug where Eternal Flies were incorrectly removed when you entered a Treasure Room.
+- Fixed the bug where purple pills would not show correctly on the pill tracker.
+
+### *v0.62.9* - September 1st, 2021
+
+- Fixed the bug where charged keys would not charge the pocket active item first. (Thanks mgln)
+- Fixed the bug where Hairpin would not charge the pocket active item first. (Thanks mgln)
+- Fixed the bug with seeded death where dying on Lazarus would cause errors. (Thanks Gamonymous)
+- Fixed the bug where two beams of light would appear in a room if you died on the same frame that a vanilla beam of light would normally spawn. (Thanks Gamonymous)
+
+### *v0.62.8* - August 31st, 2021
+
+- Fixed the bug where Krampus and angels could incorrectly drop items under certain circumstances. (Thanks sisuka)
+
+### *v0.62.7* - August 31st, 2021
+
+- Esau Jr. is now removed from pools on Bethany and Tainted Bethany.
+
+### *v0.62.6* - August 31st, 2021
+
+- Fixed the bug where in Season 1, The Lost could find Holy Mantle. (Thanks Gamonymous)
+- Fixed the bug where the green pill sprite did not show correctly under certain circumstances. (Thanks Gamonymous)
+- Fixed the bug where Esau Jr. was not correctly getting the pocket D6.
+
+### *v0.62.5* - August 30th, 2021
+
+- Racing+ now integrates the Fogless! mod by Mirry: https://steamcommunity.com/sharedfiles/filedetails/?id=835411179
+- If you do not have Mod Config Menu enabled, there is now a notification on your first run to inform you that you can use it to enable custom hotkeys.
+- Fixed the bug where Mod Config Menu was not properly loading your saved data. (Thanks ez_duke)
+- Fixed the bug where the NO! trinket would get removed when you entered a Devil Room or an Angel Room. (Thanks Gamonymous)
+
+### *v0.62.4* - August 30th, 2021
+
+- Added a new option in Mod Config Menu to set a hotkey for switching the Schoolbag item.
+
+### *v0.62.2* - August 29th, 2021
+
+- Orange pills are now purple so that they are easier to distinguish from gold pills.
+- Sawblade is no longer toggleable in Mod Config Menu.
+- Deleted the controller fast-drop hotkeys. If you play with a controller, you must now use the keyboard fast-drop hotkeys and use Joy2Key to bind controller inputs to them. (Thanks Gamonymous)
+- Fixed the bug where Horse Pills would not work properly with the pill remembering feature. (Thanks mgln)
+- Fixed the bug where 48 Hour Energy! would recharge the normal active item instead of the pocket active item. (Thanks Fallenfor)
+- Fixed the bug where Sawblade would be wobbly if you had BFFS!
+- Fixed the bug where Checkpoint would not have a sprite on the pause menu. (Thanks Gamonymous)
+
+### *v0.62.0* - August 28th, 2021
+
+- Batteries will now charge the pocket active item before the normal active item. (The exception is Golden Batteries, which retain the vanilla behavior.)
+- Moonlights from Luna can now be entered as soon as they spawn.
+- White-cyan pills are now white-green so that they are easier to distinguish from white-blue pills.
+- Deleted the two Bumbino rooms where he is trapped in a rock cage. (Thanks Gamonymous)
+- You will now be able to immediately pick up a Checkpoint on the frame that it spawns.
+- Fixed the bug where Recall would replace the D6. (It will now go to the normal active item item slot. If there is not room for a normal active item, then it will spawn on the ground.) (Thanks Gamonymous)
+- Fixed the bug where quest items were not reliably locked into place under certain conditions. (Thanks Fallenfor)
+- Fixed the bug where paths would spawn after defeating It Lives! in an Emperor? card room. (Thanks Gamonymous)
+- Fixed the bug where the Holy Card feature would incorrectly play the announcer sound effect. (Thanks ez_duke)
+- Fixed the bug where Telepills had a chance to send you to the Ultra Secret Room. (Thanks Gamonymous)
+- Fixed the bug where Fissure Spawners were not properly flipped. (Thanks Po4ti)
+- Fixed the bug where you were not able to toggle the map while using a trapdoor.
+- Fixed the bug where Flip would not charge properly when it was in a normal active item slot.
+- Fixed the bug with seeded death where transformations would not be reapplied upon revival. (Thanks Gamonymous)
+- Fixed the bug with seeded death where the familiars from Cambion Conception and Immaculate Conception would not return upon revival. (Thanks Gamonymous)
+- Fixed the bug with seeded death where you were not revived with the correct size.
+- Fixed the bug with seeded death where the death animation would not play under certain conditions.
+- Fixed the bug with seeded death where it would not work properly on Jacob & Esau. (Thanks Gamonymous)
+
+### *v0.61.10* - August 27th, 2021
+
+- All characters are now given the D6 on the pocket active item slot for the purposes of having consistent muscle memory. If a character previously had a pocket item, they will instead have it on active item slot. The exception is Tainted Cain, who is no longer granted the D6.
+- Tainted Lost now automatically uses his Holy Card.
+- Updated the collectible sprite for Sawblade to match what the familiar looks like.
+- Fixed the bug where the key from Keeper's Sack would not be automatically inserted. (Thanks Gamonymous)
+- Fixed the bug where Perfection would not spawn correctly under certain circumstances. (Thanks Gamonymous)
+- Fixed the bug where Turdlet was incorrectly faded under certain circumstances. (Thanks Gamonymous)
+- Fixed the bug where if the player had two Sawblades, they would not be spaced properly.
+
+### *v0.61.9* - August 26th, 2021
+
+- Fixed the bug where the pill tracker did not work under certain conditions.
+
+### *v0.61.4* - August 25th, 2021
+
+- Skipping Dogma's cutscene is now toggleable in Mod Config Menu.
+- Fixed the bug with seeded death where it would trigger on The Beast fight. (Thanks Gamonymous)
+
+### *v0.61.3* - August 25th, 2021
+
+- Fixed the bug where Magic Mushroom would incorrectly appear in Angel Shops. (Thanks olo70009)
+- Fixed the bug where the Angel Statues would not spawn in Angel Shops.
+- Fixed the bug with seeded death where Tainted Lazarus could escape from the seeded ghost by clearing a room. (Now, flipping to the other Lazarus will cause it to switch back.) (Thanks Gamonymous)
+- Fixed the bug with seeded death where Tainted Keeper was not working properly. (Thanks Gamonymous)
+- Fixed the bug with seeded death where stepping on a cobweb would unfade a seeded ghost.
+- Fixed the bug with seeded death where Keeper would cancel the "Appear" animation by using the Holy Card.
+
+### *v0.61.2* - August 25th, 2021
+
+- Colostomia will now instantly appear upon entering its Boss Room.
+- Fixed the bug where you could teleport to the Ultra Secret room when using a teleport item under certain conditions. (Thanks Po4ti)
+- Fixed the bug where seeded death was 5 seconds instead of 45 seconds. (Thanks Gamonymous)
+
+### *v0.61.1* - August 25th, 2021
+
+- Fixed the bug where The Fallen always dropped Magic Mushroom. (Thanks Gamonymous)
+
+### *v0.61.0* - August 25th, 2021
+
+- All Devil Rooms have at least 2 items now.
+- The Devil Room with Wall Huggers has been deleted.
+- The Devil Room with Constant Stone Shooters has been deleted.
+- The Devil Room with 4 items and Pitfalls has been deleted.
+- The Devil Room with teleporters and spikes has changed to be a 4 item room.
+- The Angel Room buff from v0.59.2 has been reverted.
+- Pots in Angel Rooms have been deleted or replaced with blocks.
+- The Angel Room with the spike rocks has been deleted.
+- The Angel Room with poops has been deleted.
+- The Angel Room with the Eternal Chest has had the Eternal Chest removed.
+- The Angel Room with the bomb has had the bomb removed.
+- Several Angel Rooms with 2 items and 1 statue have been converted to rooms with 1 item and 2 statues.
+- The custom death mechanic is added back to seeded races (i.e. "seeded death").
+- Broken Ankh is no longer removed from pools on seeded races (since it works properly now with the new seeded death feature).
+- Attempts to reroll a Checkpoint will now fail.
+- The Checkpoint will now respawn if it is deleted via a Void or a Black Rune.
+- Attempting to make a second player join the run will now forcefully send you back to the title screen. (Thanks Gamonymous)
+- Fixed the bug where items would not reliably be in order on Devil Rooms & Angel Rooms.
+- Fixed the bug where extra items would not appear on Tainted Lost. (Thanks KiraKeepKool)
+- Fixed the bug where water flows were not properly flipped. (Thanks Po4ti)
+- Fixed the bug where Dusty Death's Heads were not properly flipped. (Thanks Po4ti)
+- Fixed the bug where in season 1, the door to the Mines would incorrectly display the planks sprite in certain situations. (Thanks Gamonymous)
+- Fixed the bug where Tainted Lazarus was not properly given his starting items in seeded races and diversity races. (Thanks Gamonymous)
+- Fixed the bug where you could get banned items via using Spindown Dice. In this case, the item will be replaced with the item of the next ID. (Thanks mgln)
+
+### *v0.60.0* - August 22nd, 2021
+
+- Extra items are no longer added to the Treasure Room pool. Instead, extra starting items will appear in the first floor Treasure Room, but not in any other place that Treasure Room items would normally appear. Thanks to Gamonymous for coding this.
+- In seeded races, Scolex will now be replaced by two Frails.
+- In seeded races, special room selection will now be consistent between racers like it was in Afterbirth+ (i.e. the "seeded floors" feature).
+- Duality will no longer modify the Devil Room door if the Angel Room door exists.
+- Fixed the bug where the special Duality doors would not work if there were only 3 door slots.
+- Fixed the bug where using the Bible on It Lives! would result in duplicate paths spawning. (Thanks Gamonymous)
+- Fixed the bug where the game would crash if you tried to go to the pre-race room on a set seed. (Thanks Gamonymous)
+- Fixed the bug where the game would fade out if you were in a challenge and you needed to go to the pre-race room.
+- Fixed the bug where the game would crash if you saved and continued in the pre-race room.
+- Fixed the bug where the client was not showing "MS" as the floor when you were in the Mega Satan room.
+- Fixed the bug where the seeded floors feature would not handle Rotten Hearts properly.
+- Fixed the bug where crawlspaces did not work properly on final floors. (Thanks Gamonymous)
+- Fixed the bug where child players (like Strawman) could enter a trapdoors, crawlspaces, and beams of light. (Thanks Gamonymous)
+
+### *v0.59.11* - August 21st, 2021
+
+- Duality will now combine the Devil Room door and the Angel Room door together.
+- Fixed the bug where Dream Catcher would cause The Stairway to not work. (Thanks Po4ti)
+- Fixed the bug where in season 1, the planks on the door to the Mines would show up incorrectly under certain circumstances. Thanks to Gamonymous for coding this.
+
+### *v0.59.10* - August 21st, 2021
+
+- Fixed the (vanilla) bug where Converter would not work properly on characters that can't have red hearts.
+- Fixed the bug where Perfection would be moved to the center of the room if you dropped it. (Thanks Moucheron Quipet)
+
+### *v0.59.8* - August 20th, 2021
+
+- The Your Soul trinket will now be awarded on the first Devil Room you encounter, unless it is on Caves 1 or later. (Thanks Hispa)
+- Fixed the bug where in Season 1, Repentance doors would be unlocked if you re-entered the room. (Thanks Fallenfor)
+- Fixed the bug where the Dream Catcher sprites would cause errors under certain conditions. (Thanks Gamonymous)
+- Fixed the bug where the screen would shake when entering a Devil Room under certain conditions.
+
+### *v0.59.7* - August 20th, 2021
+
+- Card Reading is now nerfed such that it does not spawn any portals on Womb 2 and beyond. (Similar to Mercurius, this item increases the variance of a run by too much without containing any skill-based component.)
+- Fixed the bug where in season 1, a trapdoor would not appear after killing a boss in certain circumstances. (Thanks leo_ze_tron & Finalkids)
+
+### *v0.59.6* - August 19th, 2021
+
+- Repentance doors will now spawn in the Season 1 challenge. Thanks to Gamonymous for coding this.
+- Fixed the bug where Diplopia would spawn items on top of each other in Devil Rooms & Angel Rooms. (Thanks Hispa)
+- Fixed the bug where pickups could spawn in a beam of light under certain circumstances. (Thanks Gamonymous)
+- Fixed the bug where items from angels on Tainted Keeper with Filigree Feather would not be free. (Thanks Fallenfor)
+
+### *v0.59.5* - August 19th, 2021
+
+- Heartbreak is now banned on Keeper in diversity races. (Thanks Gamonymous)
+- Fixed the bug where errors would happen if you reset on Eden or Tainted Eden. (Thanks Gamonymous)
+- Fixed the bug where the price of items would be wrong in Angel Rooms when playing as Tainted Keeper under certain conditions. (Thanks Fallenfor).
+- Fixed the bug where Angel Room items would be rerolled into hearts when playing as Tainted Keeper. (Thanks Po4ti)
+
+### *v0.59.4* - August 18th, 2021
+
+- Mega Blast and Mega Mush are now removed from pools if the player starts with Void. (Thanks mgln)
+- Fixed the bug where identifying pills would cause errors under certain circumstances. (Thanks Hispa)
+- Fixed the bug where in Season 1, Keeper would not start with the Store Key. (Thanks sisuka)
+- Fixed the bug where key pieces would cost money on Tainted Keeper. (Thanks Po4ti)
+- Fixed the bug where the offset was not working properly for the graphic that showed the character order.
+- Fixed the bug where the offset was not working properly for text to the right of the hearts.
+- Fixed the bug where items could spawn on top of each other under certain conditions. (Thanks Po4ti)
+
+### *v0.59.3* - August 17th, 2021
+
+- The Cross Stone Shooters in Devil Room #67 have been replaced by Wall Huggers.
+- Fixed the bug in Season 1 where the beam of light would always spawn on Womb 2 (instead of only having a 50% chance fo spawn). (Thanks Gamonymous)
+- Fixed the bug where items from Krampus & angels could spawn over pits (for real this time). (Thanks Finalkids)
+- Fixed the bug where Angel Room items would not cost money while playing as Tainted Keeper. (Thanks Gamonymous)
+
+### *v0.59.2* - August 17th, 2021
+
+- 1-item Angel Rooms are now as equally likely as 2-item Angel Rooms. (Previously, it was more likely to get a 1-item Angel Room.)
+- Both 3 item Angel Rooms have been deleted so that you can more consistently get items with a low pickup-count.
+- The coin, bomb, and key from a Justice card will now be automatically inserted. (Automatic insertion will not happen for a Hermit? card or an Ace card because that would save too much time.) (Thanks Gamonymous)
+- Fixed the bug where the Racing+ title screen was not showing in some circumstances. (Thanks Finalkids & Hispa)
+
+### *v0.59.1* - August 17th, 2021
+
+- Removed some pits in Angel Room #11. (Thanks Gamonymous)
+- Fixed the bug in Season 1 where the timer was not showing. (Thanks Gamonymous)
+- Fixed the bug in season 1 where extra items were not removed from pools. (Thanks mgln)
+- Fixed the bug where a Big Chest would spawn on the Cathedral if you did not have the Polaroid. (Thanks Gamonymous)
+- Fixed the bug where the Checkpoint was affected by rerolling mechanics. (Thanks Gamonymous)
+
+### *v0.59.0* - August 16th, 2021
+
+- The Racing+ mod is no longer in alpha.
+- R+7 Season 1 is now available for beta-testing. You can read more about it here: https://github.com/Zamiell/racing-plus/blob/main/docs/challenges.md#r7-season-1-normal-vs-tainted
+- The Treasure Room changes for Season 1 are now applied globally to the mod because it is too complicated to make complex item pool modifications only apply to a specific challenge (due to modding API limitations). With that said, these changes are probably a good idea for all general purpose runs. Since this is a significant change from vanilla, this change is probationary. You can share your feedback in Discord.
+- All enemies are now removed from Treasure Rooms.
+- You are now able to cancel a fast-travel animation by saving and quitting while the screen is fading to black.
+- Fixed the bug where you could switch to The Soul during a trapdoor animation.
+
+### *v0.58.59* - August 16th, 2021
+
+- Krampus drops and angel drops will now always spawn on the nearest empty tile (instead of exactly where the entity dies). This prevents items from sometimes spawning on pits. (Thanks Finalkids)
+
+### *v0.58.58* - August 15th, 2021
+
+- Satan's "Change" and "Death" animations are now sped up. (Thanks Hispa)
+- On races to Mother, you can now become softlocked if you intentionally try to skip Depths 2 with Undefined.
+- On races to The Beast, you can now become softlocked if you intentionally try to skip Depths 2 with Undefined.
+- Fixed the bug where crawlspaces in Genesis rooms on end-floors would softlock you. (They are now represented as a teleporter instead of a crawlspace to make it more clear that they are not a real crawlspace.) (Thanks Gamonymous)
+- Fixed the bug where teleporting to a Devil Room or Angel Room from a crawlspace would not work properly. (Thanks Gamonymous)
+- Fixed the bug where Great Gideon crawlspaces would not work properly with fast-travel. (They now just use the vanilla system by default.) (Thanks Gamonymous)
+- Fixed the bug where the automatic-insertion feature was not working properly. (Thanks Cyber_1)
+- Fixed the bug where Sawblade was not showing properly in the client as the starting item. (Thanks Gamonymous)
+- Fixed the bug where Suplex was not working properly. (Thanks Cyber_1)
+
+### *v0.58.57* - August 13th, 2021
+
+- Fixed the bug where Angel shops were getting overwritten by normal Angel Rooms. (Thanks Hispa)
+
+### *v0.58.56* - August 13th, 2021
+
+- TMTRAINER is removed from the game. (Thanks Hispa)
+- Glitched items will now be rerolled into normal items. (Thanks Hispa)
+- The Sawblade sprite will now spin slower so that it is less distracting. (Thanks KiraKeepKool)
+- Your race place will now always show on the first floor (instead of being hidden). (Thanks Gamonymous)
+- Fixed the client bug where your place would be "-" at the beginning of a race. (Thanks Gamonymous)
+- Fixed the client bug where your floor would be "-" at the beginning of a race. (Thanks Gamonymous)
+- Fixed the bug where some custom Racing+ items would not have associated icons on the death screen. (Thanks to Gamonymous for implementing this.)
+- Fixed the bug where the I AM ERROR room and the Black Market would softlock you under certain conditions. (Thanks to Gamonymous for implementing this.)
+
+### *v0.58.55* - August 12th, 2021
+
+- Sawblade now works in seeded races.
+
+### *v0.58.54* - August 12th, 2021
+
+- Fixed the bug where Sawblade would not display properly on floors with reflections. (Thanks KiraKeepKool)
+
+### *v0.58.53* - August 12th, 2021
+
+- The Sawblade now has the same collision radius as the Afterbirth+ version of the Sacrificial Dagger. (This is an increase to 13 from 10).
+- Increased the size of the Sawblade sprite so that it better matches the new hitbox.
+
+### *v0.58.51* - August 12th, 2021
+
+- Sawblade has been buffed so that it matches the intended DPS. Specifically, this is 66.7% of the DPS of the Afterbirth+ version of the Sacrificial Dagger.
+
+### *v0.58.50* - August 11th, 2021
+
+- Sawblade damage has been increased to 12 (from 11).
+- Sawblade will now work properly if you give it using the debug console. (Thanks Gamonymous)
+- Sawblade will now be removed properly if you lose the collectible (e.g. roll it with D4, etc.).
+
+### *v0.58.49* - August 11th, 2021
+
+- The sprite for Sawblade is changed to be better.
+- There is no a visual indication on the UI when something is automatically inserted into your inventory.
+- The pill from Spun is now automatically inserted.
+- Trinkets from Mom's Purse are now automatically inserted.
+- Pickups from Mom's Purse, Clear Rune, Booster Pack, Consolation Prize, False PHD, and Keeper's Sack are now included. (Thanks to Gamonymous for this.)
+- The Match Stick trinket will no longer automatically inserted.
+- The 'M trinket will no longer automatically inserted.
+- Fixed the bug where cards and pills were not automatically inserted under certain circumstances.
+
+### *v0.58.47* - August 11th, 2021
+
+- New feature: Automatic item insertion for items that drop pickups. (Chaos is deliberately not affected so that you can see what the randomly generated pickups are.)
+- New feature: Sawblade is now in the Treasure Room pool.
+
 ### *v0.58.46* - August 10th, 2021
 
 - Fixed the bug where Dark Esau would be deleted when you entered a Devil Room or an Angel Room.
