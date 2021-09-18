@@ -135,25 +135,21 @@ function sandbox.connectLocalhost(port, useTCP)
         Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
       else
         Isaac.DebugString(
-          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) .. ": "
-          .. errMsg
+          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" "
+          .. "on port " .. tostring(port) .. ": " .. errMsg
         )
       end
 
       return nil
     end
-  elseif protocol == "udp" then
+  elseif protocol == "UDP" then
     socketClient = socket.udp()
     local err, errMsg = socketClient:setpeername(HOSTNAME, port)
     if err ~= 1 then
-      if errMsg == "timeout" then
-        Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
-      else
-        Isaac.DebugString(
-          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) .. ": "
-          .. errMsg
-        )
-      end
+      Isaac.DebugString(
+        "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" "
+        .. "on port " .. tostring(port) .. ": " .. errMsg
+      )
 
       return nil
     end

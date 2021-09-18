@@ -16,8 +16,6 @@ const TCP_PORT = 9112; // Arbitrarily chosen to not conflict with common IANA po
 const UDP_PORT = 9113; // The same port applies to both the localhost server and the remote server
 
 const TCPSockets: net.Socket[] = [];
-const UDPServer = dgram.createSocket("udp4");
-const UDPClient = dgram.createSocket("udp4");
 
 init();
 
@@ -27,8 +25,7 @@ function init() {
   process.on("message", onProcessMessage);
 
   initTCP();
-  initUDPServer();
-  initUDPClient();
+  initUDP();
 }
 
 function initTCP() {
@@ -46,30 +43,33 @@ function initTCP() {
   });
 }
 
-function initUDPServer() {
+function initUDP() {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
+
+  const UDPServer = dgram.createSocket("udp4");
+  const UDPClient = dgram.createSocket("udp4");
 
   UDPServer.on("error", (err: Error) => {
     throw err;
   });
 
   UDPServer.on("message", (msg: Buffer) => {
-    forwardLocalhostMessageToServer(msg);
+    // Forward messages from the mod --> the isaac racing server
+    UDPClient.send(msg, UDP_PORT, REMOTE_HOSTNAME);
   });
 
   UDPServer.bind(UDP_PORT, LOCAL_HOSTNAME);
   process.send(`info UDP socket server started on port ${UDP_PORT}.`);
-}
 
-function initUDPClient() {
   UDPClient.on("error", (err: Error) => {
     throw err;
   });
 
   UDPClient.on("message", (msg: Buffer) => {
-    forwardServerMessageToMod(msg);
+    // Forward messages from the isaac racing server --> the mod
+    UDPServer.send(msg);
   });
 }
 
@@ -114,18 +114,18 @@ function connectionListener(socket: net.Socket) {
   );
   process.send("connected");
 
-  socket.on("data", socketData);
+  socket.on("data", TCPSocketData);
 
   socket.on("close", () => {
-    socketClose(socket, clientAddress);
+    TCPSocketClose(socket, clientAddress);
   });
 
   socket.on("error", (err) => {
-    socketError(err, clientAddress);
+    TCPSocketError(err, clientAddress);
   });
 }
 
-function socketData(buffer: Buffer) {
+function TCPSocketData(buffer: Buffer) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -151,7 +151,7 @@ function socketData(buffer: Buffer) {
   }
 }
 
-function socketClose(socket: net.Socket, clientAddress: string) {
+function TCPSocketClose(socket: net.Socket, clientAddress: string) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -171,20 +171,12 @@ function socketClose(socket: net.Socket, clientAddress: string) {
   }
 }
 
-function socketError(err: Error, clientAddress: string) {
+function TCPSocketError(err: Error, clientAddress: string) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
 
   process.send(
-    `error The socket server got an error for client "${clientAddress}": ${err}`,
+    `error The TCP socket server got an error for client "${clientAddress}": ${err}`,
   );
-}
-
-function forwardLocalhostMessageToServer(msg: Buffer) {
-  UDPClient.send(msg, UDP_PORT, REMOTE_HOSTNAME);
-}
-
-function forwardServerMessageToMod(msg: Buffer) {
-  UDPServer.send(msg);
 }
