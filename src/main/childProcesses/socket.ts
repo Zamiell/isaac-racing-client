@@ -16,6 +16,7 @@ const TCP_PORT = 9112; // Arbitrarily chosen to not conflict with common IANA po
 const UDP_PORT = 9113; // The same port applies to both the localhost server and the remote server
 
 const TCPSockets: net.Socket[] = [];
+let lastUDPClientPort: number | null = null;
 
 init();
 
@@ -55,7 +56,9 @@ function initUDP() {
     throw err;
   });
 
-  UDPServer.on("message", (msg: Buffer) => {
+  UDPServer.on("message", (msg: Buffer, info: dgram.RemoteInfo) => {
+    lastUDPClientPort = info.port;
+
     // Forward messages from the mod --> the Isaac racing server
     if (msg !== undefined && msg !== null && msg.length > 0) {
       UDPClient.send(msg, 0, msg.length, UDP_PORT, REMOTE_HOSTNAME);
@@ -71,12 +74,13 @@ function initUDP() {
 
   UDPClient.on("message", (msg: Buffer) => {
     // Forward messages from the Isaac racing server --> the mod
-    if (msg !== undefined && msg !== null && msg.length > 0) {
-      UDPServer.send(msg);
-
-      if (process.send !== undefined) {
-        process.send(`info GOT MSG FROM SERVER: ${msg}`);
-      }
+    if (
+      msg !== undefined &&
+      msg !== null &&
+      msg.length > 0 &&
+      lastUDPClientPort !== null
+    ) {
+      UDPServer.send(msg, 0, msg.length, lastUDPClientPort, LOCAL_HOSTNAME);
     }
   });
 }
