@@ -57,7 +57,9 @@ function initUDP() {
 
   UDPServer.on("message", (msg: Buffer) => {
     // Forward messages from the mod --> the Isaac racing server
-    UDPClient.send(msg, UDP_PORT, REMOTE_HOSTNAME);
+    if (msg !== undefined && msg !== null && msg.length > 0) {
+      UDPClient.send(msg, 0, msg.length, UDP_PORT, REMOTE_HOSTNAME);
+    }
   });
 
   UDPServer.bind(UDP_PORT, LOCAL_HOSTNAME);
@@ -69,9 +71,12 @@ function initUDP() {
 
   UDPClient.on("message", (msg: Buffer) => {
     // Forward messages from the Isaac racing server --> the mod
-    UDPServer.send(msg);
-    if (process.send !== undefined) {
-      process.send(`GOT MSG FROM SERVER: ${msg}`);
+    if (msg !== undefined && msg !== null && msg.length > 0) {
+      UDPServer.send(msg);
+
+      if (process.send !== undefined) {
+        process.send(`info GOT MSG FROM SERVER: ${msg}`);
+      }
     }
   });
 }
