@@ -137,6 +137,7 @@ export function sendAll(): void {
   // This is necessary because the 5 diversity items are communicated through the seed
   const seed = g.modSocket.format === "diversity" ? "-" : g.modSocket.seed;
 
+  send("set", `userID ${g.modSocket.userID}`);
   send("set", `raceID ${g.modSocket.raceID}`);
   send("set", `status ${g.modSocket.status}`);
   send("set", `myStatus ${g.modSocket.myStatus}`);
