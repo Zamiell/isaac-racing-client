@@ -1718,7 +1718,7 @@ Mod changes:
 - Fixed the bug where you could get an item from a Treasure Room in Basement 1 on the second character and beyond in the R+7 Season 5 custom challenge. (Thanks Dea1h)
 - Fixed the bug where the Lil Delirium sprite was not updated in the starting room of diversity races. (Thanks AshDown)
 - Fixed the bug where Mutant Spider's Inner Eye should not show correctly in the Racing+ client if it was a starting item. (Thanks mgln)
-- Fixed the bug where you could reroll your instant-start item in the the R+7 Season 5 custom challenge under certain circumstances. (Thanks SlashSP)
+- Fixed the bug where you could reroll your instant-start item in the R+7 Season 5 custom challenge under certain circumstances. (Thanks SlashSP)
 
 ### *v0.24.3* - October 22nd, 2018
 
@@ -2055,7 +2055,7 @@ Mod Changes:
 
 - More Devil Room balance changes:
   - Moved a pedestal from the Red Chest room (#4) to another 1 item room.
-  - Moved a pedestal from the the Devil Beggar room (#10) to another 1 item room.
+  - Moved a pedestal from the Devil Beggar room (#10) to another 1 item room.
   - Added a Black Rune to a 1 item room (#7).
   - Added a random card to a 1 item room (#15).
   - Added 2x Red Chest to a 1 item room (#16).

@@ -54,7 +54,7 @@ functionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
     // Initialize the socket server in a separate process
     childProcesses.start("socket", window);
   } else {
-    // The the command from the renderer process to the child process
+    // Send the command from the renderer process to the child process
     // (e.g. "set countdown 10")
     childProcesses.send("socket", arg2);
   }

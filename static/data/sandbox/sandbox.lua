@@ -2,7 +2,15 @@
 -- evil things
 
 -- Constants
-local HOSTNAME = "localhost"
+local LOCALHOST = "127.0.0.1" -- A string of "localhost" does not work
+local UNSAFE_IMPORTS = {
+  "debug",
+  "dump",
+  "io",
+  "loadfile",
+  "os",
+  "socket",
+}
 
 -- Import the socket module for our own usage before we gimp the "require()" function
 local socket = nil
@@ -11,15 +19,80 @@ if ok then
   socket = requiredSocket
 end
 
--- Make a copy of some objects
-local localDebug = debug
+-- Make a copy of some globals
+local originalDebug = debug
+local originalDofile = dofile
+local originalInclude = include
+local originalRequire = require
+
+--
+-- Local functions
+--
+
+local function includes(array, value)
+  for _, element in ipairs(array) do
+    if element == value then
+      return true
+    end
+  end
+
+  return false
+end
+
+-- From TypeScriptToLua
+local function stringTrim(str)
+  local result = string.gsub(str, "^[%s ﻿]*(.-)[%s ﻿]*$", "%1")
+  return result
+end
+
+local function validatePath(path)
+  path = stringTrim(path)
+  local finalPartOfPathWithPeriods = string.match(path, "%.(.*)") -- % is an regex escape in Lua
+  local finalPartOfPathWithSlashes = string.match(path, "/(.*)")
+
+  return not (
+    includes(UNSAFE_IMPORTS, path)
+    or includes(UNSAFE_IMPORTS, finalPartOfPathWithPeriods)
+    or includes(UNSAFE_IMPORTS, finalPartOfPathWithSlashes)
+  )
+end
+
+local function safeDofile(path)
+  if validatePath(path) then
+    return originalDofile(path)
+  end
+
+  error("dofiling " .. path .. " is not allowed")
+end
+
+local function safeInclude(path)
+  if validatePath(path) then
+    return originalInclude(path)
+  end
+
+  error("including " .. path .. " is not allowed")
+end
+
+local function safeRequire(path)
+  if validatePath(path) then
+    return originalRequire(path)
+  end
+
+  error("requiring " .. path .. " is not allowed")
+end
+
+--
+-- Sandbox
+--
 
 local sandbox = {}
 
 function sandbox.init()
   sandbox.init = nil
   if socket == nil then
-    Isaac.DebugString("The sandbox could not initialize because the \"--luadebug\" flag was not enabled.")
+    Isaac.DebugString(
+      "The sandbox could not initialize because the \"--luadebug\" flag was not enabled."
+    )
     return
   end
 
@@ -48,6 +121,11 @@ function sandbox.sanitizeRequireFunction()
   -- https://www.lua.org/manual/5.3/manual.html#pdf-package.searchers
   package.searchers[3] = nil -- Remove the loader function that is intended for C libraries
   package.searchers[4] = nil -- Remove the loader function that is the all-in-one loader
+
+  -- Prevent requiring some of the standard library
+  dofile = safeDofile
+  include = safeInclude
+  require = safeRequire
 end
 
 function sandbox.fixPrintFunction()
@@ -129,13 +207,13 @@ function sandbox.connectLocalhost(port, useTCP)
   if protocol == "TCP" then
     socketClient = socket.tcp()
     socketClient:settimeout(0.0001) -- 100 microseconds
-    local err, errMsg = socketClient:connect(HOSTNAME, port)
+    local err, errMsg = socketClient:connect(LOCALHOST, port)
     if err ~= 1 then
       if errMsg == "timeout" then
         Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
       else
         Isaac.DebugString(
-          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" "
+          "Error: Failed to connect via " .. protocol .. " for \"" .. LOCALHOST .. "\" "
           .. "on port " .. tostring(port) .. ": " .. errMsg
         )
       end
@@ -144,10 +222,10 @@ function sandbox.connectLocalhost(port, useTCP)
     end
   elseif protocol == "UDP" then
     socketClient = socket.udp()
-    local err, errMsg = socketClient:setpeername(HOSTNAME, port)
+    local err, errMsg = socketClient:setpeername(LOCALHOST, port)
     if err ~= 1 then
       Isaac.DebugString(
-        "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" "
+        "Error: Failed to connect via " .. protocol .. " for \"" .. LOCALHOST .. "\" "
         .. "on port " .. tostring(port) .. ": " .. errMsg
       )
 
@@ -157,18 +235,19 @@ function sandbox.connectLocalhost(port, useTCP)
 
   local isaacFrameCount = Isaac.GetFrameCount()
   Isaac.DebugString(
-    "Connected via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) ..
+    "Connected via " .. protocol .. " for \"" .. LOCALHOST .. "\" on port " .. tostring(port) ..
     " (on Isaac frame " .. tostring(isaacFrameCount) .. ")."
   )
   return socketClient
 end
 
 function sandbox.traceback()
-  if localDebug == nil then
+  if originalDebug == nil then
     Isaac.DebugString("traceback was called but the \"--luadebug\" flag was not enabled.")
+    return
   end
 
-  local traceback = localDebug.traceback()
+  local traceback = originalDebug.traceback()
   Isaac.DebugString(traceback)
 end
 
@@ -180,11 +259,11 @@ function sandbox.getParentFunctionDescription(levels)
     error("The getParentFunctionDescription function requires the amount of levels to look backwards.")
   end
 
-  if localDebug == nil then
+  if originalDebug == nil then
     return ""
   end
 
-  local debugTable = localDebug.getinfo(levels)
+  local debugTable = originalDebug.getinfo(levels)
   if debugTable == nil then
     return ""
   end

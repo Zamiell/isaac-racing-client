@@ -56,8 +56,11 @@ function initUDP() {
   });
 
   UDPServer.on("message", (msg: Buffer) => {
-    // Forward messages from the mod --> the isaac racing server
+    // Forward messages from the mod --> the Isaac racing server
     UDPClient.send(msg, UDP_PORT, REMOTE_HOSTNAME);
+    if (process.send !== undefined) {
+      process.send(`SENT SHADOW MESSAGE TO: ${REMOTE_HOSTNAME}`);
+    }
   });
 
   UDPServer.bind(UDP_PORT, LOCAL_HOSTNAME);
@@ -68,7 +71,7 @@ function initUDP() {
   });
 
   UDPClient.on("message", (msg: Buffer) => {
-    // Forward messages from the isaac racing server --> the mod
+    // Forward messages from the Isaac racing server --> the mod
     UDPServer.send(msg);
   });
 }
