@@ -77,10 +77,16 @@ function initUDP() {
 }
 
 function onUncaughtException(err: Error) {
+  const getStackTrace = () => {
+    const obj = {};
+    Error.captureStackTrace(obj, getStackTrace);
+    return (obj as Record<string, unknown>).stack;
+  };
+
   if (process.send !== undefined) {
     // We forward all errors back to the parent process like in the other child processes
     // But we use a prefix of "error" here instead of "error:"
-    process.send(`error ${err}`, processExit);
+    process.send(`error ${err} ${getStackTrace()}`, processExit);
   }
 }
 
