@@ -5,31 +5,69 @@
 // which in turn sends them to the renderer process
 // All messages to the parent must be in the form of "commandName rest of the data"
 
+import dgram from "dgram";
 import net from "net";
 import { unpackSocketMsg } from "../../common/util";
 import { processExit } from "./subroutines";
 
-const PORT = 9112; // Arbitrarily chosen to not conflict with common IANA ports
+const LOCAL_HOSTNAME = "localhost";
+const REMOTE_HOSTNAME = "isaacracing.net";
+const TCP_PORT = 9112; // Arbitrarily chosen to not conflict with common IANA ports
+const UDP_PORT = 9113; // The same port applies to both the localhost server and the remote server
 
-const sockets: net.Socket[] = [];
+const TCPSockets: net.Socket[] = [];
+const UDPServer = dgram.createSocket("udp4");
+const UDPClient = dgram.createSocket("udp4");
 
 init();
 
 function init() {
   // We use a different error message here than in the other child processes
   process.on("uncaughtException", onUncaughtException);
-  process.on("message", onMessage);
+  process.on("message", onProcessMessage);
 
-  const server = net.createServer(connectionListener);
-  server.on("error", (err) => {
+  initTCP();
+  initUDP();
+  initRemoteUDP();
+}
+
+function initTCP() {
+  const TCPServer = net.createServer(connectionListener);
+
+  TCPServer.on("error", (err: Error) => {
     throw err;
   });
-  server.listen(PORT, () => {
+
+  TCPServer.listen(TCP_PORT, LOCAL_HOSTNAME, () => {
     if (process.send === undefined) {
       throw new Error("process.send() does not exist.");
     }
-    process.send(`info Socket server started on port ${PORT}.`);
+    process.send(`info TCP socket server started on port ${TCP_PORT}.`);
   });
+}
+
+function initUDP() {
+  UDPServer.on("error", (err: Error) => {
+    throw err;
+  });
+
+  UDPServer.on("message", (msg: Buffer) => {
+    forwardLocalhostMessageToServer(msg);
+  });
+
+  UDPServer.bind(UDP_PORT, LOCAL_HOSTNAME);
+}
+
+function initRemoteUDP() {
+  UDPClient.on("error", (err: Error) => {
+    throw err;
+  });
+
+  UDPClient.on("message", (msg: Buffer) => {
+    forwardServerMessageToMod(msg);
+  });
+
+  UDPClient.bind(UDP_PORT, REMOTE_HOSTNAME);
 }
 
 function onUncaughtException(err: Error) {
@@ -40,7 +78,7 @@ function onUncaughtException(err: Error) {
   }
 }
 
-function onMessage(message: string) {
+function onProcessMessage(message: string) {
   switch (message) {
     case "exit": {
       // The child will stay alive even if the parent has closed,
@@ -50,7 +88,8 @@ function onMessage(message: string) {
     }
 
     default: {
-      for (const socket of sockets) {
+      // Forward all messages from the main process to the Racing+ mod
+      for (const socket of TCPSockets) {
         socket.write(message);
       }
       break;
@@ -64,11 +103,11 @@ function connectionListener(socket: net.Socket) {
   }
 
   // Keep track of the newly connected client
-  sockets.push(socket);
+  TCPSockets.push(socket);
 
   const clientAddress = `${socket.remoteAddress}:${socket.remotePort}`;
   process.send(
-    `info Client "${clientAddress}" has connected to the socket server. (${sockets.length} total clients)`,
+    `info Client "${clientAddress}" has connected to the socket server. (${TCPSockets.length} total clients)`,
   );
   process.send("connected");
 
@@ -115,16 +154,16 @@ function socketClose(socket: net.Socket, clientAddress: string) {
   }
 
   // Remove it from our list of sockets
-  const index = sockets.indexOf(socket);
+  const index = TCPSockets.indexOf(socket);
   if (index > -1) {
-    sockets.splice(index, 1);
+    TCPSockets.splice(index, 1);
   }
 
   process.send(
-    `info Client "${clientAddress} has disconnected from the socket server. (${sockets.length} total clients)`,
+    `info Client "${clientAddress} has disconnected from the socket server. (${TCPSockets.length} total clients)`,
   );
 
-  if (sockets.length === 0) {
+  if (TCPSockets.length === 0) {
     process.send("disconnected");
   }
 }
@@ -137,4 +176,12 @@ function socketError(err: Error, clientAddress: string) {
   process.send(
     `error The socket server got an error for client "${clientAddress}": ${err}`,
   );
+}
+
+function forwardLocalhostMessageToServer(msg: Buffer) {
+  UDPClient.send(msg);
+}
+
+function forwardServerMessageToMod(msg: Buffer) {
+  UDPServer.send(msg);
 }

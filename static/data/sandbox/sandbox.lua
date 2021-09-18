@@ -107,7 +107,7 @@ function sandbox.isSocketInitialized()
   return socket ~= nil
 end
 
-function sandbox.connectLocalhost(port)
+function sandbox.connectLocalhost(port, useTCP)
   if port == nil then
     Isaac.DebugString(
       "Error: The \"connectLocalhost()\" function requires a port as the first argument."
@@ -115,32 +115,56 @@ function sandbox.connectLocalhost(port)
     return nil
   end
 
+  local protocol = "UDP";
+  if useTCP == true then
+    protocol = "TCP"
+  end
+
   if socket == nil then
     Isaac.DebugString("Error: Failed to connect because the socket library is not initialized.")
     return nil
   end
 
-  local tcp = socket.tcp()
-  tcp:settimeout(0.001) -- 1 millisecond
-  local err, errMsg = tcp:connect(HOSTNAME, port)
-  if err ~= 1 then
-    if errMsg == "timeout" then
-      Isaac.DebugString("Socket server was not present on port " .. tostring(port) ..".")
-    else
-      Isaac.DebugString(
-        "Error: Failed to connect to \"" .. HOSTNAME .. "\" on port " .. tostring(port) .. ": "
-        .. errMsg
-      )
+  local socketClient
+  if protocol == "TCP" then
+    socketClient = socket.tcp()
+    socketClient:settimeout(0.0001) -- 100 microseconds
+    local err, errMsg = socketClient:connect(HOSTNAME, port)
+    if err ~= 1 then
+      if errMsg == "timeout" then
+        Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
+      else
+        Isaac.DebugString(
+          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) .. ": "
+          .. errMsg
+        )
+      end
+
+      return nil
     end
-    return nil
+  elseif protocol == "udp" then
+    socketClient = socket.udp()
+    local err, errMsg = socketClient:setpeername(HOSTNAME, port)
+    if err ~= 1 then
+      if errMsg == "timeout" then
+        Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
+      else
+        Isaac.DebugString(
+          "Error: Failed to connect via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) .. ": "
+          .. errMsg
+        )
+      end
+
+      return nil
+    end
   end
 
   local isaacFrameCount = Isaac.GetFrameCount()
   Isaac.DebugString(
-    "Connected to " .. HOSTNAME .. " on port " .. tostring(port) ..
+    "Connected via " .. protocol .. " for \"" .. HOSTNAME .. "\" on port " .. tostring(port) ..
     " (on Isaac frame " .. tostring(isaacFrameCount) .. ")."
   )
-  return tcp
+  return socketClient
 end
 
 function sandbox.traceback()
