@@ -235,8 +235,10 @@ function sandbox.connectLocalhost(port, useTCP)
 
   local isaacFrameCount = Isaac.GetFrameCount()
   Isaac.DebugString(
-    "Connected via " .. protocol .. " for \"" .. LOCALHOST .. "\" on port " .. tostring(port) ..
-    " (on Isaac frame " .. tostring(isaacFrameCount) .. ")."
+    "Connected via " .. protocol .. " "
+    .. "on local address " .. socketClient:getsockname() .. " "
+    .. "and remote address " .. LOCALHOST .. ":" .. tostring(port)
+    .. " (on Isaac frame " .. tostring(isaacFrameCount) .. ")."
   )
   return socketClient
 end
