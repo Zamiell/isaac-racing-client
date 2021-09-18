@@ -6,7 +6,6 @@ import RaceStatus from "./RaceStatus";
 
 /** This must match the "RaceData" class on the mod. */
 export default class ModSocket {
-  userID = -1;
   raceID = -1;
   status: RaceStatus = "none";
   myStatus: RacerStatus = "not ready";
