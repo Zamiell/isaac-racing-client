@@ -27,8 +27,8 @@ function init() {
   process.on("message", onProcessMessage);
 
   initTCP();
-  initUDP();
-  initRemoteUDP();
+  initUDPServer();
+  initUDPClient();
 }
 
 function initTCP() {
@@ -46,7 +46,11 @@ function initTCP() {
   });
 }
 
-function initUDP() {
+function initUDPServer() {
+  if (process.send === undefined) {
+    throw new Error("process.send() does not exist.");
+  }
+
   UDPServer.on("error", (err: Error) => {
     throw err;
   });
@@ -56,9 +60,10 @@ function initUDP() {
   });
 
   UDPServer.bind(UDP_PORT, LOCAL_HOSTNAME);
+  process.send(`info UDP socket server started on port ${UDP_PORT}.`);
 }
 
-function initRemoteUDP() {
+function initUDPClient() {
   UDPClient.on("error", (err: Error) => {
     throw err;
   });
@@ -66,8 +71,6 @@ function initRemoteUDP() {
   UDPClient.on("message", (msg: Buffer) => {
     forwardServerMessageToMod(msg);
   });
-
-  UDPClient.bind(UDP_PORT, REMOTE_HOSTNAME);
 }
 
 function onUncaughtException(err: Error) {
@@ -179,7 +182,7 @@ function socketError(err: Error, clientAddress: string) {
 }
 
 function forwardLocalhostMessageToServer(msg: Buffer) {
-  UDPClient.send(msg);
+  UDPClient.send(msg, UDP_PORT, REMOTE_HOSTNAME);
 }
 
 function forwardServerMessageToMod(msg: Buffer) {
