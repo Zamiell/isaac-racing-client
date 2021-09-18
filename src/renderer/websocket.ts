@@ -170,7 +170,7 @@ function initMiscCommandHandlers(conn: Connection) {
 
   // Sent after a successful connection
   conn.on("settings", (data: SettingsData) => {
-    g.myUserID = data.userID;
+    g.modSocket.userID = data.userID;
     g.myUsername = data.username;
     g.stream.URL = data.streamURL === "-" ? "" : data.streamURL;
     g.stream.twitchBotEnabled = data.twitchBotEnabled;
