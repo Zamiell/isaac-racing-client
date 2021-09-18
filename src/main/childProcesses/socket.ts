@@ -10,7 +10,7 @@ import net from "net";
 import { unpackSocketMsg } from "../../common/util";
 import { processExit } from "./subroutines";
 
-const LOCAL_HOSTNAME = "localhost";
+const LOCAL_HOSTNAME = "127.0.0.1";
 const REMOTE_HOSTNAME = "isaacracing.net";
 const TCP_PORT = 9112; // Arbitrarily chosen to not conflict with common IANA ports
 const UDP_PORT = 9113; // The same port applies to both the localhost server and the remote server
