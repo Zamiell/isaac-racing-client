@@ -29,7 +29,7 @@ function init() {
 }
 
 function initTCP() {
-  const TCPServer = net.createServer(connectionListener);
+  const TCPServer = net.createServer(TCPConnectionListener);
 
   TCPServer.on("error", (err: Error) => {
     throw err;
@@ -70,6 +70,9 @@ function initUDP() {
   UDPClient.on("message", (msg: Buffer) => {
     // Forward messages from the Isaac racing server --> the mod
     UDPServer.send(msg);
+    if (process.send !== undefined) {
+      process.send(`GOT MSG FROM SERVER: ${msg}`);
+    }
   });
 }
 
@@ -100,27 +103,27 @@ function onProcessMessage(message: string) {
   }
 }
 
-function connectionListener(socket: net.Socket) {
+function TCPConnectionListener(TCPSocket: net.Socket) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
 
   // Keep track of the newly connected client
-  TCPSockets.push(socket);
+  TCPSockets.push(TCPSocket);
 
-  const clientAddress = `${socket.remoteAddress}:${socket.remotePort}`;
+  const clientAddress = `${TCPSocket.remoteAddress}:${TCPSocket.remotePort}`;
   process.send(
     `info Client "${clientAddress}" has connected to the socket server. (${TCPSockets.length} total clients)`,
   );
   process.send("connected");
 
-  socket.on("data", TCPSocketData);
+  TCPSocket.on("data", TCPSocketData);
 
-  socket.on("close", () => {
-    TCPSocketClose(socket, clientAddress);
+  TCPSocket.on("close", () => {
+    TCPSocketClose(TCPSocket, clientAddress);
   });
 
-  socket.on("error", (err) => {
+  TCPSocket.on("error", (err) => {
     TCPSocketError(err, clientAddress);
   });
 }
