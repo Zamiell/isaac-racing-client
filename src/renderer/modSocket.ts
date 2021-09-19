@@ -138,6 +138,7 @@ export function sendAll(): void {
   const seed = g.modSocket.format === "diversity" ? "-" : g.modSocket.seed;
 
   send("set", `userID ${g.myUserID}`);
+  send("set", `username ${g.myUsername}`);
   send("set", `raceID ${g.modSocket.raceID}`);
   send("set", `status ${g.modSocket.status}`);
   send("set", `myStatus ${g.modSocket.myStatus}`);
