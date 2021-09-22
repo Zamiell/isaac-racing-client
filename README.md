@@ -27,27 +27,10 @@ The location for the client settings file is: `C:\Users\[Username]\AppData\Local
 ## Run from Source (on Windows)
 
 * Install [node.js](https://nodejs.org/en/download/).
-* Install [Yarn](https://yarnpkg.com/en/docs/install).
 * Install [Git](https://git-scm.com/download/win).
 * `git clone https://github.com/Zamiell/isaac-racing-client.git`
 * `cd isaac-racing-client`
-* `yarn install`
-* `npm start`
-
-<br />
-
-## Run from Source (on macOS)
-
-* Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
-  * `touch ~/.bash_profile`
-  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
-  * Close and reopen Terminal.
-  * `nvm install node`
-* Install [Yarn](https://yarnpkg.com/en/docs/install):
-  * `brew install yarn --without-node`
-* `git clone https://github.com/Zamiell/isaac-racing-client.git`
-* `cd isaac-racing-client`
-* `yarn install`
+* `npm ci`
 * `npm start`
 
 <br />
