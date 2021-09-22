@@ -31,7 +31,7 @@ The location for the client settings file is: `C:\Users\[Username]\AppData\Local
 * `git clone https://github.com/Zamiell/isaac-racing-client.git`
 * `cd isaac-racing-client`
 * `npm ci`
-* `npm start`
+* `./run.sh`
 
 <br />
 
@@ -43,18 +43,14 @@ The location for the client settings file is: `C:\Users\[Username]\AppData\Local
   * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
   * Close and reopen Terminal.
   * `nvm install node`
-* Install [Yarn](https://yarnpkg.com/en/docs/install):
-  * `curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
-  * `echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
-  * `sudo apt-get update && sudo apt-get install yarn`
 * `git clone https://github.com/Zamiell/isaac-racing-client.git`
 * `cd isaac-racing-client`
-* `yarn install`
-* `npm start`
+* `npm ci`
+* `./run.sh`
 
 <br />
 
 ## Build (on Windows)
 
-* `npm install --global --production windows-build-tools`
-* `C:\Python34\python.exe release.py`
+* Install Python 3.9.
+* `python.exe release.py`
