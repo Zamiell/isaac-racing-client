@@ -9,7 +9,7 @@ import { errorShow, escapeHTML, warningShow } from "./misc";
 
 const CHAT_INDENT_SIZE = "3.2em";
 
-export function send(destination: string): void {
+export function send(destination: string, originalMessage: string): void {
   // Don't do anything if we are not on the screen corresponding to the chat input form
   if (destination === "lobby" && g.currentScreen !== "lobby") {
     return;
@@ -18,14 +18,7 @@ export function send(destination: string): void {
     return;
   }
 
-  // Get values from the form
-  const element = document.getElementById(
-    `${destination}-chat-box-input`,
-  ) as HTMLInputElement | null;
-  if (element === null) {
-    throw new Error("Failed to find the chat element.");
-  }
-  let message = element.value.trim();
+  let message = originalMessage.trim();
 
   // Do nothing if the input field is empty
   if (message === "") {
@@ -323,17 +316,9 @@ export function draw(
     }
   }
 
-  // Don't show messages that are not for the current race
-  if (room.startsWith("_race_")) {
-    const match = /_race_(\d+)/.exec(room);
-    if (match === null) {
-      throw new Error("Failed to parse the race ID from the room.");
-    }
-    const raceIDString = match[1];
-    const raceID = parseIntSafe(raceIDString);
-    if (raceID !== g.currentRaceID) {
-      return;
-    }
+  // Don't show race messages that are not for the current race
+  if (room.startsWith("_race_") && !isChatForThisRace(room)) {
+    return;
   }
 
   // Make sure that the room still exists in the roomList
@@ -362,22 +347,7 @@ export function draw(
   message = fillEmotes(message); // eslint-disable-line no-param-reassign
 
   // Get the hours and minutes from the time
-  let date;
-  if (datetime === null) {
-    date = new Date();
-  } else {
-    date = new Date(datetime * 1000);
-  }
-  const hours = date.getHours();
-  let hoursString = hours.toString();
-  if (hours < 10) {
-    hoursString = `0${hours}`;
-  }
-  const minutes = date.getMinutes();
-  let minutesString = minutes.toString();
-  if (minutes < 10) {
-    minutesString = `0${minutes}`;
-  }
+  const [hoursString, minutesString] = getHoursAndMinutes(datetime);
 
   // Construct the chat line
   let chatLine = `<div id="${room}-chat-text-line-${storedRoom.chatLine}" class="hidden">`;
@@ -462,6 +432,32 @@ export function draw(
       destinationElement.prop("scrollHeight") - destinationElementHeight2;
     $(`#${destination}-chat-text`).scrollTop(bottomPixel);
   }
+}
+
+export function isChatForThisRace(room: string): boolean {
+  const match = /_race_(\d+)/.exec(room);
+  if (match === null) {
+    throw new Error("Failed to parse the race ID from the room.");
+  }
+  const raceIDString = match[1];
+  const raceID = parseIntSafe(raceIDString);
+  return raceID === g.currentRaceID;
+}
+
+export function getHoursAndMinutes(datetime: number | null): [string, string] {
+  const date = datetime === null ? new Date() : new Date(datetime * 1000);
+  const hours = date.getHours();
+  let hoursString = hours.toString();
+  if (hours < 10) {
+    hoursString = `0${hours}`;
+  }
+  const minutes = date.getMinutes();
+  let minutesString = minutes.toString();
+  if (minutes < 10) {
+    minutesString = `0${minutes}`;
+  }
+
+  return [hoursString, minutesString];
 }
 
 export function indentAll(room: string): void {

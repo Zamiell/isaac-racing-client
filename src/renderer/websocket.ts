@@ -356,6 +356,7 @@ function initChatCommandHandlers(conn: Connection) {
 
   conn.on("roomMessage", (data: RoomMessageData) => {
     chat.draw(data.room, data.name, data.message);
+    modSocket.sendChat(data.room, data.name, data.message);
   });
 
   interface PrivateMessageData {

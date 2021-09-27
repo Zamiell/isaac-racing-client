@@ -1,6 +1,7 @@
 import * as electron from "electron";
 import BUILDS from "../../static/data/builds.json";
 import { parseIntSafe } from "../common/util";
+import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
 import { amSecondTestAccount } from "./misc";
 import ModSocket from "./types/ModSocket";
@@ -75,6 +76,30 @@ export function sendExtraValues(): void {
 
   g.modSocket.numEntrants = race.racerList.length;
   send("set", `numEntrants ${g.modSocket.numEntrants}`);
+}
+
+export function sendChat(room: string, username: string, msg: string): void {
+  if (room === "lobby" || room === "PM-to" || room === "PM-from") {
+    return;
+  }
+
+  const race = g.raceList.get(g.currentRaceID);
+  if (race === undefined) {
+    return;
+  }
+
+  if (!isChatForThisRace(room)) {
+    return;
+  }
+
+  const [hoursString, minutesString] = getHoursAndMinutes(null);
+  const time = `${hoursString}:${minutesString}`;
+  const chatMessage = {
+    time,
+    username,
+    msg,
+  };
+  send("chat", JSON.stringify(chatMessage));
 }
 
 function getMyStatus(race: Race) {

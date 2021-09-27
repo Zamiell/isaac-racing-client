@@ -1,5 +1,5 @@
 /** Commands sent to the Racing+ mod from the client. */
-export type SocketCommandIn = "set" | "reset";
+export type SocketCommandIn = "set" | "reset" | "chat";
 
 /** Commands sent to the Racing+ client from the mod. */
 export type SocketCommandOut =
@@ -14,5 +14,6 @@ export type SocketCommandOut =
   | "room"
   | "item"
   | "finish"
+  | "chat"
   | "error"
   | "exited"; // Not a real command; sent when the subprocess exits

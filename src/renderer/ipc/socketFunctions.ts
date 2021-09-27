@@ -1,5 +1,6 @@
 import log from "electron-log";
 import { parseIntSafe } from "../../common/util";
+import * as chat from "../chat";
 import g from "../globals";
 import { errorShow } from "../misc";
 import * as modSocket from "../modSocket";
@@ -21,6 +22,10 @@ functionMap.set("disconnected", (_data: string) => {
   g.gameState.modConnected = false;
   log.info(`Set modConnected to: ${g.gameState.modConnected}`);
   raceScreen.checkReadyValid();
+});
+
+functionMap.set("chat", (data: string) => {
+  chat.send("race", data);
 });
 
 functionMap.set("error", (data: string) => {

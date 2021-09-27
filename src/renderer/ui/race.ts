@@ -227,7 +227,13 @@ export function init(): void {
     event.preventDefault();
 
     // Validate input and send the chat
-    chat.send("race");
+    const element = document.getElementById(
+      "race-chat-box-input",
+    ) as HTMLInputElement | null;
+    if (element !== null) {
+      const message = element.value;
+      chat.send("race", message);
+    }
   });
 }
 

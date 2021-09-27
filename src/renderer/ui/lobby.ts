@@ -13,7 +13,13 @@ export function init(): void {
     event.preventDefault();
 
     // Validate input and send the chat
-    chat.send("lobby");
+    const element = document.getElementById(
+      "lobby-chat-box-input",
+    ) as HTMLInputElement | null;
+    if (element !== null) {
+      const message = element.value;
+      chat.send("lobby", message);
+    }
   });
 }
 
