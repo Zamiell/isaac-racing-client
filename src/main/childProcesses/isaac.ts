@@ -77,7 +77,7 @@ function onMessage(message: string) {
   }
 
   gamePath = path.dirname(isaacPath);
-  process.send(`Using an game path of: ${isaacPath}`);
+  process.send(`Using a game path of: ${gamePath}`);
 
   // Begin the process of getting the necessary information from the registry
   getSteamPath();
@@ -186,7 +186,9 @@ function checkModExists() {
     throw new Error(`Failed to find the "mods" directory at: ${modsPath}`);
   }
 
+  process.send(`DEBUG - mods path is: ${modsPath}`);
   const devModExists = racingPlusMod.devExists(modsPath);
+  process.send(`DEBUG - devModExists: ${devModExists}`);
   if (devModExists) {
     // Skip checking mod integrity if we are in development
     process.send(

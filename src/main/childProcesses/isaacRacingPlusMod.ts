@@ -11,6 +11,14 @@ const SHA1_HASHES_URL =
 
 export function devExists(modsPath: string): boolean {
   const racingPlusModDevPath = path.join(modsPath, DEV_MOD_NAME);
+  if (process.send !== undefined) {
+    process.send(
+      `DEBUG - racingPlusModDevPath path is: ${racingPlusModDevPath}`,
+    );
+    process.send(
+      `DEBUG - file.exists path is: ${file.exists(racingPlusModDevPath)}`,
+    );
+  }
   return file.exists(racingPlusModDevPath) && file.isDir(racingPlusModDevPath);
 }
 
