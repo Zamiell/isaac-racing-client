@@ -3,7 +3,7 @@
 
 -- Constants
 local LOCALHOST = "127.0.0.1" -- A string of "localhost" does not work
-local TIMEOUT = 0.001 -- 1 millisecond
+local TIMEOUT_SECONDS = 0.001 -- 1 millisecond
 local UNSAFE_IMPORTS = {
   "debug",
   "dump",
@@ -207,7 +207,7 @@ function sandbox.connectLocalhost(port, useTCP)
   local socketClient
   if protocol == "TCP" then
     socketClient = socket.tcp()
-    socketClient:settimeout(TIMEOUT)
+    socketClient:settimeout(TIMEOUT_SECONDS)
     local err, errMsg = socketClient:connect(LOCALHOST, port)
     if err ~= 1 then
       if errMsg == "timeout" then

@@ -58,7 +58,7 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
 
     case "modCorrupt": {
       errorShow(
-        "The Racing+ mod has one or more files that are corrupt or missing. Try unsubscribing from the mod on the Steam Workshop and then re-subscribing (so that Steam completely re-downloads it from scratch).",
+        "The Racing+ mod has one or more files that are corrupt or missing. Usually, this happens because a Racing+ patch has been released that Steam has not bothered to download yet. To fix this, try unsubscribing from the mod on the Steam Workshop, launching the game, closing the game, re-subscribing to the mod, launching the game, and then closing the game. This will usually cause Steam to download the mod from scratch. If this does not work, you might also have to delete some cached files; see: https://pastebin.com/kJFkFKz1",
       );
       break;
     }
