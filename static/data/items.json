@@ -5019,19 +5019,39 @@
       "introduced_in": "Repentance"
    },
    "730": {
+      "name": "Glass Eye",
+      "shown": true,
+      "dmg": "0.75",
+      "luck": "1",
+      "introduced_in": "Repentance"
+   },
+   "731": {
+      "name": "Stye",
+      "shown": true,
+      "text": "Damage up on the right eye",
+      "introduced_in": "Repentance"
+   },
+   "732": {
+      "name": "Mom's Ring",
+      "shown": true,
+      "dmg": "1",
+      "text": "Gives a random rune",
+      "introduced_in": "Repentance"
+   },
+   "733": {
       "name": "Sawblade",
       "shown": true,
       "text": "Orbital (10 dmg / tick)",
       "introduced_in": "Racing+"
    },
-   "731": {
+   "734": {
       "name": "13 Luck",
       "text": "",
       "shown": true,
       "luck": "13",
       "introduced_in": "Racing+"
    },
-   "732": {
+   "735": {
       "name": "15 Luck",
       "text": "",
       "shown": true,
