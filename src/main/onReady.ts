@@ -76,10 +76,6 @@ export function createWindow(): electron.BrowserWindow {
       // https://stackoverflow.com/questions/44391448/electron-require-is-not-defined
       nodeIntegration: true,
       contextIsolation: false,
-
-      // Needed for @electron/remote to work
-      // https://github.com/electron/remote
-      enableRemoteModule: true,
     },
   });
 
@@ -114,6 +110,11 @@ export function createWindow(): electron.BrowserWindow {
 
     return { action: "deny" };
   });
+
+  // Enable remote functionality
+  // From: https://stackoverflow.com/questions/37884130/electron-remote-is-undefined
+  require("@electron/remote/main").initialize(); // eslint-disable-line
+  require("@electron/remote/main").enable(window.webContents); // eslint-disable-line
 
   return window;
 }

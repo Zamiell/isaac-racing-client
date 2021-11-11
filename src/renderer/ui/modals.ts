@@ -1,3 +1,4 @@
+import * as remote from "@electron/remote";
 import crypto from "crypto";
 import * as electron from "electron";
 import log from "electron-log";
@@ -107,7 +108,7 @@ function initPasswordModal() {
 function initIsaacPathModal() {
   $("#isaac-path-find").click(() => {
     const titleText = $("#isaac-path-dialog-title").html();
-    const dialogReturn = electron.remote.dialog.showOpenDialogSync({
+    const dialogReturn = remote.dialog.showOpenDialogSync({
       title: titleText,
       filters: [
         {
