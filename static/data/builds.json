@@ -13,7 +13,8 @@
   [{ "id": 169, "name": "Polyphemus" }],
   [{ "id": 261, "name": "Proptosis" }],
   [{ "id": 244, "name": "Tech.5" }],
-  [{ "id": 395, "name": "Tech X", "spacing": true }],
+  [{ "id": 395, "name": "Tech X" }],
+  [{ "id": 678, "name": "C Section", "spacing": true }],
 
   [{ "id": 118, "name": "Brimstone" }],
   [{ "id": 360, "name": "Incubus" }],
@@ -31,7 +32,7 @@
    { "id": 50,  "name": "Steven" }],
 
   [{ "id": 331, "name": "Godhead" },
-   { "id": 48, "name": "Cupid's Arrow" }],
+   { "id": 48,  "name": "Cupid's Arrow" }],
 
   [{ "id": 531, "name": "Haemolacria" },
    { "id": 1,   "name": "The Sad Onion" }],
@@ -47,16 +48,16 @@
 
   [{ "id": 257, "name": "Fire Mind" },
    { "id": 317, "name": "Mysterious Liquid" },
-   { "id": 731, "name": "13 Luck" }],
+   { "id": 734, "name": "13 Luck" }],
 
   [{ "id": 572, "name": "Eye of the Occult" },
    { "id": 87,  "name": "Loki's Horns" },
-   { "id": 732, "name": "15 Luck" }],
+   { "id": 735, "name": "15 Luck" }],
 
   [{ "id": 57,  "name": "Distant Admiration" },
    { "id": 364, "name": "Friend Zone" },
    { "id": 128, "name": "Forever Alone" },
    { "id": 247, "name": "BFFS!" }],
 
-  [{ "id": 730, "name": "Sawblade", "spacing": true }]
+  [{ "id": 733, "name": "Sawblade", "spacing": true }]
 ]
