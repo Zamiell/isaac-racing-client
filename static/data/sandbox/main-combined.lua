@@ -314,6 +314,12 @@ function META:CheckLine(pos1, pos2, mode, gridPathThreshold, ignoreWalls, ignore
 	return ok, out
 end
 
+-- boolean Room:TrySpawnBlueWombDoor(boolean FirstTime = true, boolean IgnoreTime = false, boolean Force = false)
+local Room_TrySpawnBlueWombDoor = META0.TrySpawnBlueWombDoor
+function META:TrySpawnBlueWombDoor(firstTime, ignoreTime, force)
+	return Room_TrySpawnBlueWombDoor(self, firstTime or firstTime == nil, ignoreTime, force)
+end
+
 EndClass()
 
 ---------------------------------------------------------

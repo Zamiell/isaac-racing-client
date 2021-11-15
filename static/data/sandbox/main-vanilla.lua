@@ -25,12 +25,12 @@ function RegisterMod(modname, apiversion)
 end
 
 function StartDebug()
-  local ok, m = pcall(require, 'mobdebug') 
+  local ok, m = pcall(require, 'mobdebug')
   if ok and m then
     m.start()
   else
     Isaac.DebugString("Failed to start debugging.")
-    -- m is now the error 
+    -- m is now the error
     -- Isaac.DebugString(m)
   end
 end
@@ -76,7 +76,7 @@ end
 local function EndClass()
 	local oldIndex = META0.__index
 	local newMeta = META
-	
+
 	rawset(META0, "__index", function(self, k)
 		return newMeta[k] or oldIndex(self, k)
 	end)
@@ -312,6 +312,12 @@ function META:CheckLine(pos1, pos2, mode, gridPathThreshold, ignoreWalls, ignore
 	local out = Vector(0, 0)
 	local ok = Room_CheckLine(self, pos1, pos2, mode, gridPathThreshold or 0, ignoreWalls, ignoreCrushable, out)
 	return ok, out
+end
+
+-- boolean Room:TrySpawnBlueWombDoor(boolean FirstTime = true, boolean IgnoreTime = false, boolean Force = false)
+local Room_TrySpawnBlueWombDoor = META0.TrySpawnBlueWombDoor
+function META:TrySpawnBlueWombDoor(firstTime, ignoreTime, force)
+	return Room_TrySpawnBlueWombDoor(self, firstTime or firstTime == nil, ignoreTime, force)
 end
 
 EndClass()
@@ -672,7 +678,7 @@ local Entity_NPC_MakeChampion = META0.MakeChampion
 function META:MakeChampion(seed, championType, init)
 	Entity_NPC_MakeChampion(self, seed, championType or -1, init)
 end
-		
+
 EndClass()
 
 ---------------------------------------------------------
@@ -690,7 +696,7 @@ end
 -- * IgnoreModifiers: If set to true, ignores item effects that might turn this pickup into something other than the specificed variant and subtype
 
 EndClass()
- 
+
 ---------------------------------------------------------
 BeginClass(EntityPlayer)
 
@@ -784,7 +790,7 @@ function META:UseActiveItem(item, showAnim, keepActive, allowNonMain, addCostume
 		-- Repentance version
 		local useFlags = showAnim
 		activeSlot = keepActive
-		
+
 		Entity_Player_UseActiveItem(self, item, useFlags, activeSlot or -1, 0)
 	else
 		-- AB+ backwards compatibility
@@ -793,7 +799,7 @@ function META:UseActiveItem(item, showAnim, keepActive, allowNonMain, addCostume
 		if keepActive == false then useFlags = useFlags + 16 end
 		if allowNonMain then useFlags = useFlags + 8 end
 		if addCostume == false then useFlags = useFlags + 2 end
-		
+
 		Entity_Player_UseActiveItem(self, item, useFlags, activeSlot or -1, 0)
 	end
 end
