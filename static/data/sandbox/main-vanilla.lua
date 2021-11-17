@@ -275,21 +275,21 @@ end
 -- * Count=-1 removes all instances of that effect
 local TemporaryEffects_RemoveCollectibleEffect = META0.RemoveCollectibleEffect
 function META:RemoveCollectibleEffect(id, num)
-	TemporaryEffects_RemoveCollectibleEffect(self, num or 1)
+	TemporaryEffects_RemoveCollectibleEffect(self, id, num or 1)
 end
 
 -- void TemporaryEffects:RemoveTrinketEffect(TrinketType TrinketType, int Count = 1)
 -- * Count=-1 removes all instances of that effect
 local TemporaryEffects_RemoveTrinketEffect = META0.RemoveTrinketEffect
 function META:RemoveTrinketEffect(id, num)
-	TemporaryEffects_RemoveTrinketEffect(self, num or 1)
+	TemporaryEffects_RemoveTrinketEffect(self, id, num or 1)
 end
 
 -- void TemporaryEffects:RemoveNullEffect(NullItemID NullId, int Count = 1)
 -- * Count=-1 removes all instances of that effect
 local TemporaryEffects_RemoveNullEffect = META0.RemoveNullEffect
 function META:RemoveNullEffect(id, num)
-	TemporaryEffects_RemoveNullEffect(self, num or 1)
+	TemporaryEffects_RemoveNullEffect(self, id, num or 1)
 end
 
 EndClass()
