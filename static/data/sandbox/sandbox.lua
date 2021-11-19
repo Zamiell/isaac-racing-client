@@ -251,12 +251,12 @@ function sandbox.traceback()
     return
   end
 
-  local traceback = originalDebug.traceback()
-  Isaac.DebugString(traceback)
+  local tracebackMsg = originalDebug.traceback()
+  Isaac.DebugString(tracebackMsg)
 end
 
 -- Also make it a global variable
-traceback = sandbox.traceback -- luacheck: ignore
+sandboxTraceback = sandbox.traceback -- luacheck: ignore
 
 function sandbox.getParentFunctionDescription(levels)
   if levels == nil then
