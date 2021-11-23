@@ -1,5 +1,141 @@
 # Racing+ Version History and News
 
+### *v0.71.6 - November 19th, 2021
+
+- Fixed the bug where Eggies would not work properly with fast-clear. (Thanks Finalkids)
+
+### *v0.71.5 - November 19th, 2021
+
+- Fixed the bug with seeded death where Bethany would not revive properly. (Thanks olo70009)
+
+### *v0.71.4 - November 18th, 2021
+
+- The Racing+ mod now exposes the options.ini values that cannot normally be changed in-game (like mouse control) through a new menu in Mod Config Menu.
+
+### *v0.71.2 - November 17th, 2021
+
+- There is now a custom charge bar for Azazel's Rage.
+- Fixed the (vanilla) bug where the default HUD offset was set to 1.0 instead of 0.0. If you intentionally want to set your HUD offset to 1.0 for some reason, you will have to disable the bug fix through Mod Config Menu.
+- Fixed the bug where Flip would not work properly on Tainted Lazarus. (Thanks Moucheron Quipet)
+- Fixed the bug where eternal hearts did not work properly in seeded races. (Thanks Moucheron Quipet)
+- Fixed the bug where the trophy would not appear properly in races to The Beast. (Thanks KiraKeepKool)
+- Fixed the bug where Dark Esau would be removed if you entered a Treasure Room. (Thanks Moucheron Quipet)
+- Fixed the bug where fast-clear could cause a boss item to spawn underneath a pit in a Great Gideon room. (Thanks mijus)
+
+### *v0.71.1 - November 17th, 2021
+
+- Fixed the bug where fast-clear was incorrectly working with Cohorts. (Thanks KiraKeepKool)
+- Fixed the bug where the graphics would get messed up in certain situations. (Thanks Sakk)
+
+### *v0.71.0 - November 17th, 2021
+
+- The mod is now updated with the files from vanilla patch v1.7.6 (including the room changes).
+
+### *v0.70.3* - November 15th, 2021
+
+- Fixed the bug where Deep Gapers would not work properly with fast-clear.
+
+### *v0.70.1* - November 15th, 2021
+
+- Fast-insertion will now be applied to Mom's Ring. Thanks to Gamonymous for this.
+- Removed some Racing+ fixes that are no longer necessary since they are fixed in the vanilla game. Thanks to Gamonymous for this.
+- Fixed the bug where the Justice card could insert pickups with prices. (Thanks 3kch1)
+- Fixed the bug in season 1 where the paths would not spawn properly after It Lives! (Thanks TNTerminator)
+
+### *v0.70.0* - November 14th, 2021
+
+- The fast clear feature is upgraded due to new features in the latest patch. Instead of the doors opening after a 10 frame delay, they will now open after a 1 frame delay.
+- The new rooms from the last vanilla patch are now present in Racing+.
+- Polties and Kinetis will now immediately show themselves upon entering the room.
+- Dusts will now never disappear.
+- A lot of deleted rooms were put back into Racing+ now that there are fast Needles, Pasties, Polties, Kinetis, and Dusts.
+- Fixed the bug where Raglings would not work properly with fast-clear.
+
+### *v0.69.15* - November 11th, 2021
+
+- Fixed the bug where some graphics would not work properly on non-English languages. (Thanks mgln)
+- Fixed the bug where Dead Tainted Lazarus was not getting the Schoolbag in diversity races. (Thanks Moucheron Quipet)
+- Fixed the bug where extra bone hearts would be granted upon reaching a new floor in seeded races. (Thanks AshD0wn)
+
+### *v0.69.13* - November 11th, 2021
+
+- The itempools.xml file has been updated to be the same as the new patch. Thanks to Gamonymous for this.
+- The Lost health feature is now removed from the mod, since it exists in vanilla. (Thanks Finalkids)
+- The Holy Mantle health feature is now removed from the mod, since it exists in vanilla. (Thanks Finalkids)
+- There is now a custom keybinding to open the chat/console.
+- Fixed the bug where the mod was not removing items properly from the item tracker. (Thanks Gamonymous)
+
+### *v0.69.12* - November 10th, 2021
+
+- Racing+ now works with patch v1.7.5.
+- None of the new rooms are yet integrated into Racing+; those will be added in a future patch.
+
+### *v0.69.11* - November 6th, 2021
+
+- Fixed the bug where the streak text was not centered on certain resolutions.
+
+### *v0.69.10* - November 4th, 2021
+
+- In seeded races, Magic 8 Ball no longer increases the chance for a Planetarium to spawn. (Thanks Gamonymous)
+- Mines, Ashpit, and the Ascent are now exempt from room flipping due to bugs with Bomb Grimaces. (Thanks MoucheronQuipet)
+- Fixed the bug where text would not work properly in non-standard room shapes. (Thanks Gamonymous)
+- Fixed the bug where the race place would not be set correctly when you were in Home. Thanks to Gamonymous for fixing this.
+- Fixed the bug where fast-travel pitfalls would not spawn properly in seeded races.
+- Fixed the bug where entering a room with a heaven door would not work properly on the Ascent. (Thanks Gamonymous)
+
+### *v0.69.9* - November 4th, 2021
+
+- In seeded races, not entering a Treasure Room no longer increases the chance of a Planetarium spawning, which should make floor generation more consistent. (Thanks Hispa)
+- Fixed the bug where Card Reading would not work correctly with Dream Catcher. (Thanks Adrayon)
+
+### *v0.69.8* - October 15th, 2021
+
+- Fixed the bug where using Soul of Eden in the Mom boss room would cause the game to crash under certain conditions. (Thanks TNTerminator)
+- Fixed the bug where the custom console would function incorrectly if the player died. (Thanks TNTerminator)
+
+### *v0.69.7* - October 5th, 2021
+
+- Fixed the bug where Angel Room #14 had two items instead of one.
+
+### *v0.69.6* - October 4th, 2021
+
+- Fixed the bug where Perfection could spawn on a pit under certain circumstances. (Thanks MoucheronQuipet)
+
+### *v0.69.5* - October 3rd, 2021
+
+- Damocles is now removed from seeded races (because it isn't seeded).
+- Fixed the bug with seeded death where dying twice would permanently remove your active items. (Thanks Hispa)
+- Fixed the bug where doing two races in a row would result in race data being deleted.
+
+### *v0.69.4* - September 27th, 2021
+
+- Racing+ now has a custom console which can be activated by pressing enter.
+- You can now send race chat from in-game using the custom console. (When you are not in a race, chat will be interpreted as console commands.)
+- Race chat is now displayed in-game. If this is distracting, you can turn it off via Mod Config Menu.
+
+### *v0.69.3* - September 26th, 2021
+
+- Fixed the bug where wisps could damage pitfalls in Devil Rooms.
+
+### *v0.69.2* - September 19th, 2021
+
+- You can now hold down the map button to see the username of a seeded ghost.
+- Fixed the bug with seeded death where the "Appear" animation could play at an inappropriate time. (Thanks Hispa)
+- Fixed the bug with seeded death where dying multiple times could incorrectly grant transformations.
+- Fixed the bug with seeded shadows where they would cause runtime errors in certain situations. (Thanks Hispa)
+- Fixed the bug with seeded shadows where they would show the wrong location in a big room.
+- Fixed the bug in Season 1 where the pits were not properly filled in next to a trapdoor. (Thanks Adrayon)
+
+### *v0.69.0* - September 18th, 2021
+
+- Shadows have been added back to seeded races. Additionally, there are now shadows for every person in the race at the same time.
+- Fixed the bug where the Perfection trinket would drop too early from Fistula and Teratoma. (Thanks makia)
+
+### *v0.68.3* - September 17th, 2021
+
+- Fixed the bug where saving & quitting could cause coins to charge the pocket active item under certain circumstances. (Thanks ez_duke)
+- Fixed the bug where using a Glowing Hourglass in the starting room of a floor could lead to a softlock. (Thanks thereisnofuture)
+
 ### *v0.68.2* - September 16th, 2021
 
 - Pin, Frail, and Scolex will now spend less time underground after performing a non-jump attack.
