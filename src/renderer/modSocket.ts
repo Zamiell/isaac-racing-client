@@ -3,10 +3,10 @@ import BUILDS from "../../static/data/builds.json";
 import { parseIntSafe } from "../common/util";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
-import { amSecondTestAccount } from "./misc";
 import { ModSocket } from "./types/ModSocket";
 import { Race } from "./types/Race";
 import { SocketCommandIn } from "./types/SocketCommand";
+import { amSecondTestAccount } from "./util";
 
 export function send(command: SocketCommandIn, data = ""): void {
   if (amSecondTestAccount()) {

@@ -10,8 +10,9 @@ import log from "electron-log";
 import pkg from "../../package.json";
 import { FADE_TIME, IS_DEV, WEBSITE_URL } from "./constants";
 import g from "./globals";
-import { errorShow, findAjaxError } from "./misc";
+import { Screen } from "./types/Screen";
 import * as registerScreen from "./ui/register";
+import { errorShow, findAjaxError } from "./util";
 import * as websocket from "./websocket";
 
 const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 5;
@@ -77,10 +78,10 @@ export function login(): void {
         'autoUpdateStatus is "update-available". Showing the "updating" screen...',
       );
 
-      g.currentScreen = "transition";
+      g.currentScreen = Screen.TRANSITION;
       $("#title").fadeOut(FADE_TIME, () => {
         $("#updating").fadeIn(FADE_TIME, () => {
-          g.currentScreen = "updating";
+          g.currentScreen = Screen.UPDATING;
         });
       });
 
@@ -101,10 +102,10 @@ export function login(): void {
         'autoUpdateStatus is "update-downloaded". Showing the "updating" screen and automatically restarting in 1.5 seconds...',
       );
 
-      g.currentScreen = "transition";
+      g.currentScreen = Screen.TRANSITION;
       $("#title").fadeOut(FADE_TIME, () => {
         $("#updating").fadeIn(FADE_TIME, () => {
-          g.currentScreen = "updating";
+          g.currentScreen = Screen.UPDATING;
 
           setTimeout(() => {
             electron.ipcRenderer.send("asynchronous-message", "quitAndInstall");

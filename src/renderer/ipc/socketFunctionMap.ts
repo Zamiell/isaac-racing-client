@@ -2,10 +2,10 @@ import log from "electron-log";
 import { parseIntSafe } from "../../common/util";
 import * as chat from "../chat";
 import g from "../globals";
-import { errorShow } from "../misc";
 import * as modSocket from "../modSocket";
 import { SocketCommandOut } from "../types/SocketCommand";
 import * as raceScreen from "../ui/race";
+import { errorShow } from "../util";
 import { inOngoingRace } from "./socketSubroutines";
 
 export const socketFunctionMap = new Map<

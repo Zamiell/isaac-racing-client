@@ -10,7 +10,7 @@ const globals = {
   autoUpdateStatus: null as string | null,
   /** The WebSocket connection (set in "websocket.ts") */
   conn: null as Connection | null,
-  currentScreen: "title-ajax" as Screen,
+  currentScreen: Screen.TITLE_AJAX,
   currentRaceID: -1,
   emoteList: [] as string[], // Filled in main.js
 

@@ -9,6 +9,7 @@ import {
   PBKDF2_KEYLEN,
 } from "../constants";
 import g from "../globals";
+import { Screen } from "../types/Screen";
 
 export function init(): void {
   initErrorModal();
@@ -88,7 +89,7 @@ function initPasswordModal() {
 
       $("#gui").fadeTo(FADE_TIME, 1);
 
-      g.currentScreen = "waiting-for-server";
+      g.currentScreen = Screen.WAITING_FOR_SERVER;
       g.conn.send("raceJoin", {
         id: raceID,
         password,

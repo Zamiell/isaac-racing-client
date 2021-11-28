@@ -1,6 +1,7 @@
-export type RaceStatus =
-  | "none"
-  | "open"
-  | "starting"
-  | "in progress"
-  | "finished";
+export enum RaceStatus {
+  NONE = "none",
+  OPEN = "open",
+  STARTING = "starting",
+  IN_PROGRESS = "in progress",
+  FINISHED = "finished",
+}

@@ -6,6 +6,11 @@ import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
+import * as modSocket from "../modSocket";
+import * as sounds from "../sounds";
+import { RacerStatus } from "../types/RacerStatus";
+import { RaceStatus } from "../types/RaceStatus";
+import { Screen } from "../types/Screen";
 import {
   capitalize,
   closeAllTooltips,
@@ -14,9 +19,7 @@ import {
   getRandomNumber,
   ordinalSuffixOf,
   pad,
-} from "../misc";
-import * as modSocket from "../modSocket";
-import * as sounds from "../sounds";
+} from "../util";
 
 const FIRST_GOLDEN_TRINKET_ID = 32769;
 
@@ -293,7 +296,7 @@ export function show(raceID: number): void {
   modSocket.sendAll();
 
   // Start the UI transition
-  g.currentScreen = "transition";
+  g.currentScreen = Screen.TRANSITION;
 
   // Show and hide some buttons in the header
   $("#header-profile").fadeOut(FADE_TIME);
@@ -325,7 +328,7 @@ export function show(raceID: number): void {
   // Show the race screen
   $("#lobby").fadeOut(FADE_TIME, () => {
     $("#race").fadeIn(FADE_TIME, () => {
-      g.currentScreen = "race";
+      g.currentScreen = Screen.RACE;
     });
 
     // Build the title
@@ -1036,9 +1039,9 @@ export function countdownTick(i: number): void {
     // This is to avoid bugs where things happen out of order
     g.modSocket.countdown = -1;
     modSocket.send("set", `countdown ${g.modSocket.countdown}`);
-    g.modSocket.status = "in progress";
+    g.modSocket.status = RaceStatus.IN_PROGRESS;
     modSocket.send("set", `status ${g.modSocket.status}`);
-    g.modSocket.myStatus = "racing";
+    g.modSocket.myStatus = RacerStatus.RACING;
     modSocket.send("set", `myStatus ${g.modSocket.myStatus}`);
     g.modSocket.place = 0;
     modSocket.send("set", `place ${g.modSocket.place}`);
@@ -1099,7 +1102,7 @@ function countdownReachedZero() {
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
 
-      racer.status = "racing";
+      racer.status = RacerStatus.RACING;
       racer.place = 0;
 
       racer.placeMid = race.racerList.length; // Set everyone to last place

@@ -25,7 +25,7 @@ export function getDefaultRacer(name: string): Racer {
   return {
     name,
     datetimeJoined: datetime,
-    status: "not ready",
+    status: RacerStatus.NOT_READY,
     floorNum: 1,
     stageType: 0,
     datetimeArrivedFloor: 0,

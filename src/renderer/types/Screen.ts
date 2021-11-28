@@ -1,16 +1,17 @@
-export type Screen =
-  | "title-ajax"
-  | "login"
-  | "login-ajax"
-  | "forgot"
-  | "forgot-ajax"
-  | "register"
-  | "register-ajax"
-  | "updating"
-  | "lobby"
-  | "race"
-  | "error"
-  | "warning"
-  | "waiting-for-server"
-  | "transition"
-  | "null";
+export enum Screen {
+  TITLE_AJAX = "title-ajax",
+  LOGIN = "login",
+  LOGIN_AJAX = "login-ajax",
+  FORGOT = "forgot",
+  FORGOT_AJAX = "forgot-ajax",
+  REGISTER = "register",
+  REGISTER_AJAX = "register-ajax",
+  UPDATING = "updating",
+  LOBBY = "lobby",
+  RACE = "race",
+  ERROR = "error",
+  WARNING = "warning",
+  WAITING_FOR_SERVER = "waiting-for-server",
+  TRANSITION = "transition",
+  NULL = "null",
+}

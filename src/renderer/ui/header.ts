@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
 import g from "../globals";
-import { errorShow } from "../misc";
+import { errorShow } from "../util";
 import * as lobbyScreen from "./lobby";
 import * as newRaceTooltip from "./newRaceTooltip";
 import * as settingsTooltip from "./settingsTooltip";

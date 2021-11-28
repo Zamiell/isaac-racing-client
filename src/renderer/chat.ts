@@ -5,7 +5,7 @@ import { parseIntSafe } from "../common/util";
 import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
 import g from "./globals";
-import { errorShow, escapeHTML, warningShow } from "./misc";
+import { errorShow, escapeHTML, warningShow } from "./util";
 
 const CHAT_INDENT_SIZE = "3.2em";
 

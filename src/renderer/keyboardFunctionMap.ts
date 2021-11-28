@@ -2,7 +2,7 @@ import * as electron from "electron";
 import { IS_DEV } from "./constants";
 import g from "./globals";
 import { textUpdated } from "./keyboardSubroutines";
-import { closeAllTooltips } from "./misc";
+import { closeAllTooltips } from "./util";
 
 export const keyboardFunctionMap = new Map<
   number,

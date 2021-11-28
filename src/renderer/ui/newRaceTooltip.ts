@@ -10,12 +10,13 @@ import {
   PBKDF2_KEYLEN,
 } from "../constants";
 import g from "../globals";
+import { Screen } from "../types/Screen";
 import {
   closeAllTooltips,
   errorShow,
   getRandomNumber,
   warningShow,
-} from "../misc";
+} from "../util";
 
 export function init(): void {
   $("#new-race-title-randomize").click(() => {
@@ -308,7 +309,7 @@ function submit(event: JQuery.SubmitEvent) {
     startingBuild,
     difficulty,
   };
-  g.currentScreen = "waiting-for-server";
+  g.currentScreen = Screen.WAITING_FOR_SERVER;
   g.conn.send("raceCreate", {
     name: title,
     password,

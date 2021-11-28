@@ -8,12 +8,6 @@ import g from "./globals";
 import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
 import * as steamWatcher from "./ipc/steamWatcher";
-import {
-  amSecondTestAccount,
-  capitalize,
-  errorShow,
-  warningShow,
-} from "./misc";
 import * as modSocket from "./modSocket";
 import * as sounds from "./sounds";
 import { ChatMessage } from "./types/ChatMessage";
@@ -23,10 +17,17 @@ import { RaceItem } from "./types/RaceItem";
 import { getDefaultRacer, Racer } from "./types/Racer";
 import { RacerStatus } from "./types/RacerStatus";
 import { RaceStatus } from "./types/RaceStatus";
+import { Screen } from "./types/Screen";
 import { User } from "./types/User";
 import * as lobbyScreen from "./ui/lobby";
 import * as raceScreen from "./ui/race";
 import * as registerScreen from "./ui/register";
+import {
+  amSecondTestAccount,
+  capitalize,
+  errorShow,
+  warningShow,
+} from "./util";
 
 export function connect(): void {
   log.info(
@@ -77,12 +78,12 @@ function initMiscHandlers(conn: Connection) {
 
     // Do the proper transition to the "File Checking" depending on where we logged in from
     if (g.currentScreen === "title-ajax") {
-      g.currentScreen = "transition";
+      g.currentScreen = Screen.TRANSITION;
       $("#title").fadeOut(FADE_TIME, () => {
         lobbyScreen.show();
       });
     } else if (g.currentScreen === "register-ajax") {
-      g.currentScreen = "transition";
+      g.currentScreen = Screen.TRANSITION;
       $("#register").fadeOut(FADE_TIME, () => {
         registerScreen.reset();
         lobbyScreen.show();
@@ -155,7 +156,7 @@ function initMiscCommandHandlers(conn: Connection) {
       g.stream.URL = g.stream.URLBeforeSubmit;
     }
     if (data.message === "That is not the correct password.") {
-      g.currentScreen = "lobby";
+      g.currentScreen = Screen.LOBBY;
     }
     warningShow(data.message);
   });

@@ -2,7 +2,7 @@ import * as electron from "electron";
 import log from "electron-log";
 import { unpackSocketMsg } from "../../common/util";
 import { IS_DEV } from "../constants";
-import { amSecondTestAccount } from "../misc";
+import { amSecondTestAccount } from "../util";
 import { socketFunctionMap } from "./socketFunctionMap";
 
 export function init(): void {

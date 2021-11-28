@@ -2,9 +2,10 @@ import BUILDS from "../../../static/data/builds.json";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import { capitalize, errorShow, escapeHTML, pad } from "../misc";
 import * as modSocket from "../modSocket";
 import { Race } from "../types/Race";
+import { Screen } from "../types/Screen";
+import { capitalize, errorShow, escapeHTML, pad } from "../util";
 import * as header from "./header";
 
 export function init(): void {
@@ -25,7 +26,7 @@ export function init(): void {
 
 // Called from the login screen or the register screen
 export function show(): void {
-  g.currentScreen = "transition";
+  g.currentScreen = Screen.TRANSITION;
 
   // Make sure that all of the forms are cleared out
   $("#login-username").val("");
@@ -49,7 +50,7 @@ export function show(): void {
   // Show the lobby
   $("#page-wrapper").removeClass("vertical-center");
   $("#lobby").fadeIn(FADE_TIME, () => {
-    g.currentScreen = "lobby";
+    g.currentScreen = Screen.LOBBY;
   });
 
   // Fix the indentation on lines that were drawn when the element was hidden
@@ -76,7 +77,7 @@ export function showFromRace(): void {
     );
     return;
   }
-  g.currentScreen = "transition";
+  g.currentScreen = Screen.TRANSITION;
   g.currentRaceID = -1;
 
   // Update the Racing+ Lua mod
@@ -99,7 +100,7 @@ export function showFromRace(): void {
   // Show the lobby
   $("#race").fadeOut(FADE_TIME, () => {
     $("#lobby").fadeIn(FADE_TIME, () => {
-      g.currentScreen = "lobby";
+      g.currentScreen = Screen.LOBBY;
     });
 
     // Fix the indentation on lines that were drawn when the element was hidden
@@ -235,7 +236,7 @@ function raceDraw2(race: Race) {
               passwordInput.focus();
             });
           } else {
-            g.currentScreen = "waiting-for-server";
+            g.currentScreen = Screen.WAITING_FOR_SERVER;
             if (g.conn === null) {
               throw new Error("The WebSocket connection was not initialized.");
             }

@@ -1,1 +1,4 @@
-export type RaceDifficulty = "normal" | "hard";
+export enum RaceDifficulty {
+  NORMAL = "normal",
+  HARD = "hard",
+}

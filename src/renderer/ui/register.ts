@@ -1,7 +1,8 @@
 import log from "electron-log";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
 import g from "../globals";
-import { findAjaxError } from "../misc";
+import { Screen } from "../types/Screen";
+import { findAjaxError } from "../util";
 import * as websocket from "../websocket";
 
 export function init(): void {
@@ -31,7 +32,7 @@ export function init(): void {
     }
 
     // Fade the form and show the AJAX circle
-    g.currentScreen = "register-ajax";
+    g.currentScreen = Screen.REGISTER_AJAX;
     if ($("#register-error").css("display") !== "none") {
       $("#register-error").fadeTo(FADE_TIME, 0.25);
     }
@@ -49,10 +50,10 @@ export function init(): void {
 }
 
 export function show(): void {
-  g.currentScreen = "transition";
+  g.currentScreen = Screen.TRANSITION;
   $("#title").fadeOut(FADE_TIME, () => {
     $("#register").fadeIn(FADE_TIME, () => {
-      g.currentScreen = "register";
+      g.currentScreen = Screen.REGISTER;
     });
     if (g.steam.screenName !== null) {
       $("#register-username").val(g.steam.screenName);
@@ -86,14 +87,14 @@ function register(username: string) {
 }
 
 export function fail(jqXHR: JQuery.jqXHR): void {
-  g.currentScreen = "transition";
+  g.currentScreen = Screen.TRANSITION;
   reset();
 
   // Fade in the error box
   const error = findAjaxError(jqXHR);
   $("#register-error").html(`<span lang="en">${error}</span>`);
   $("#register-error").fadeTo(FADE_TIME, 1, () => {
-    g.currentScreen = "register";
+    g.currentScreen = Screen.REGISTER;
   });
 }
 

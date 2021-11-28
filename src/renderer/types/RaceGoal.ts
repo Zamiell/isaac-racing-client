@@ -1,10 +1,11 @@
-export type RaceGoal =
-  | "Blue Baby"
-  | "The Lamb"
-  | "Mega Satan"
-  | "Hush"
-  | "Delirium"
-  | "Mother"
-  | "The Beast"
-  | "Boss Rush"
-  | "custom";
+export enum RaceGoal {
+  BLUE_BABY = "Blue Baby",
+  THE_LAMB = "The Lamb",
+  MEGA_SATAN = "Mega Satan",
+  HUSH = "Hush",
+  DELIRIUM = "Delirium",
+  MOTHER = "Mother",
+  THE_BEAST = "The Beast",
+  BOSS_RUSH = "Boss Rush",
+  CUSTOM = "custom",
+}

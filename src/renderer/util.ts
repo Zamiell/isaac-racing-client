@@ -2,6 +2,7 @@ import log from "electron-log";
 import settings from "../common/settings";
 import { FADE_TIME } from "./constants";
 import g from "./globals";
+import { Screen } from "./types/Screen";
 
 export function amSecondTestAccount(): boolean {
   return (
@@ -66,7 +67,7 @@ export function errorShow(message: string, customModalName?: string): void {
   if (g.currentScreen === "error") {
     return;
   }
-  g.currentScreen = "error";
+  g.currentScreen = Screen.ERROR;
 
   // Disconnect from the server, if connected
   if (g.conn !== null) {

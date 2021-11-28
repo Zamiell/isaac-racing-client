@@ -2,7 +2,8 @@ import * as electron from "electron";
 import log from "electron-log";
 import settings from "../../common/settings";
 import g from "../globals";
-import { errorShow } from "../misc";
+import { Screen } from "../types/Screen";
+import { errorShow } from "../util";
 import * as socket from "./socket";
 import * as steam from "./steam";
 
@@ -32,7 +33,7 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
 
   if (message.startsWith("error: ")) {
     // g.currentScreen is equal to "title-ajax" when this is called
-    g.currentScreen = "null";
+    g.currentScreen = Screen.NULL;
 
     const match = /error: (.+)/.exec(message);
     if (match === null) {

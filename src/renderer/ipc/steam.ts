@@ -3,7 +3,7 @@ import log from "electron-log";
 import { SteamMessage } from "../../common/types/SteamMessage";
 import g from "../globals";
 import { login } from "../login";
-import { errorShow } from "../misc";
+import { errorShow } from "../util";
 
 export function init(): void {
   electron.ipcRenderer.on("steam", IPCSteam);

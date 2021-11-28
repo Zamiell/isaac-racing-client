@@ -1,1 +1,6 @@
-export type RaceFormat = "unseeded" | "seeded" | "diversity" | "custom";
+export enum RaceFormat {
+  UNSEEDED = "unseeded",
+  SEEDED = "seeded",
+  DIVERSITY = "diversity",
+  CUSTOM = "custom",
+}

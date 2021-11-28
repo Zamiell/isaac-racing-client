@@ -3,7 +3,7 @@ import { parseIntSafe } from "../../common/util";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
 import * as localization from "../localization";
-import { closeAllTooltips } from "../misc";
+import { closeAllTooltips } from "../util";
 
 export function init(): void {
   $("#settings-volume-slider").change(function settingsVolumeSliderChange() {
