@@ -3,8 +3,7 @@ import settings from "../common/settings";
 import languageES from "./languages/es";
 import languageFR from "./languages/fr";
 
-// Constants
-export const VALID_LANGUAGES: Array<[string, string, string]> = [
+const VALID_LANGUAGES: Array<[string, string, string]> = [
   ["en", "english", "English"],
   ["fr", "french", "Français"],
   ["es", "spanish", "Español"],

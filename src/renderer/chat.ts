@@ -490,13 +490,13 @@ function fillEmotes(message: string): string {
   if (message.indexOf("&lt;3") !== -1) {
     const emoteTag =
       '<img class="chat-emote" src="img/emotes2/3.png" title="&lt;3" />';
-    const re = new RegExp("&lt;3", "g"); // "\b" is a word boundary in regex
+    const re = /&lt;3/g;
     message = message.replace(re, emoteTag); // eslint-disable-line no-param-reassign
   }
   if (message.indexOf(":thinking:") !== -1) {
     const emoteTag =
       '<img class="chat-emote" src="img/emotes2/thinking.svg" title=":thinking:" />';
-    const re = new RegExp(":thinking:", "g"); // "\b" is a word boundary in regex
+    const re = /:thinking:/g;
     message = message.replace(re, emoteTag); // eslint-disable-line no-param-reassign
   }
 

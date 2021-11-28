@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unused-modules */
-
 // Child process that checks to see if the user logs out of Steam
 
 import Registry from "winreg";

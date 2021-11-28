@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unused-modules */
-
 // Child process that initializes the Steamworks API and generates a login ticket
 
 import path from "path";

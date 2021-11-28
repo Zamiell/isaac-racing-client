@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unused-modules */
-
 // When the Racing+ client starts, we need to perform several checks:
 
 // 1) Racing+ mod integrity
@@ -391,8 +389,7 @@ function isProcessRunning(processName: string): [boolean, number] {
 
     const lineWithoutPrefix = line.slice(processName.length + 1);
 
-    // eslint-disable-next-line
-    const match = lineWithoutPrefix.match(/^\s*(\d+) /); // Cannot use the g flag here
+    const match = lineWithoutPrefix.match(/^\s*(\d+) /);
     if (match === null) {
       throw new Error(
         `Failed to parse the output of the "${command}" command.`,

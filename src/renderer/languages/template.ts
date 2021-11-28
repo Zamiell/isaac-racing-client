@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unused-modules */
-
 const languagePack = {
   token: {
     // Title screen
@@ -240,4 +238,5 @@ const languagePack = {
     "The username field is required.": "",
   },
 };
+// ts-prune-ignore-next
 export default languagePack;

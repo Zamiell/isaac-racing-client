@@ -17,7 +17,6 @@ import {
 } from "../misc";
 import * as modSocket from "../modSocket";
 import * as sounds from "../sounds";
-import User from "../types/User";
 
 const FIRST_GOLDEN_TRINKET_ID = 32769;
 
@@ -953,14 +952,6 @@ export function participantsSetStartingItem(i: number): void {
   }
 }
 
-export function markOnline(_user: User): void {
-  // This function is unimplemented
-}
-
-export function markOffline(): void {
-  // This function is unimplemented
-}
-
 export function startCountdown(): void {
   if (g.currentScreen === "transition") {
     // Come back when the current transition finishes
@@ -1125,7 +1116,7 @@ function countdownReachedZero() {
   }, FADE_TIME);
 }
 
-export function start(): void {
+function start() {
   // Don't do anything if we are not on the race screen
   // (it is okay to proceed here if we are on the transition screen since we want the race controls to be drawn before it fades in)
   if (g.currentScreen !== "race" && g.currentScreen !== "transition") {
@@ -1305,31 +1296,4 @@ export function checkReadyValid(): void {
   $("#race-ready-checkbox-label").css("cursor", "pointer");
   $("#race-ready-checkbox-container").tooltipster("close");
   $("#race-ready-checkbox-container").fadeTo(FADE_TIME, 1);
-}
-
-export function sortTableByPositions(): void {
-  const tbody = $("#race-participants-table-body");
-
-  const sortedRows = tbody
-    .find("tr")
-    .toArray()
-    .sort((a: HTMLTableRowElement, b: HTMLTableRowElement) => {
-      const pos1 = parseInt($("td:first", a).text(), 10);
-      const pos2 = parseInt($("td:first", b).text(), 10);
-
-      if (!Number.isNaN(pos1) && !Number.isNaN(pos2)) {
-        return pos1 > pos2 ? 1 : -1;
-      }
-
-      if (Number.isNaN(pos1) && Number.isNaN(pos2)) {
-        return 0;
-      }
-
-      if (Number.isNaN(pos1)) {
-        return 1;
-      }
-
-      return -1;
-    });
-  tbody.find("tr").appendTo(sortedRows);
 }

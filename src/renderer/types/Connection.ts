@@ -58,6 +58,9 @@ export default class Connection {
   }
 
   onMessage(evt: MessageEvent): void {
+    if (typeof evt.data !== "string") {
+      throw new Error("WebSocket received data that was not a string.");
+    }
     const [command, data] = unpack(evt.data);
     if (this.callbacks[command] !== undefined) {
       if (!SPAMMY_COMMANDS.includes(command)) {

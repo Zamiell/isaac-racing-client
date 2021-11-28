@@ -20,15 +20,19 @@ cd "$DIR"
 # we set max warnings to 0 so that warnings will fail in CI
 npx eslint --max-warnings 0 src
 
-# Step 2 - Use remark to check Markdown files for errors
-# We set to quiet to output only warnings and errors
-# We set to frail to exit with 1 on warnings (for CI)
-#npx remark --quiet --frail docs # TODO
-
-# Step 3 - Spell check every file using cspell
+# Step 2 - Spell check every file using cspell
 # We use no-progress and no-summary because we want to only output errors
 npx cspell --no-progress --no-summary "src/**/*.ts"
 npx cspell --no-progress --no-summary "docs/**/*.md"
 npx cspell --no-progress --no-summary "README.md"
+
+# Step 3 - Check for unused imports
+# The "--error" flag makes it return an error code of 1 if unused exports are found
+npx ts-prune --error
+
+# Step 4 - Use remark to check Markdown files for errors
+# We set to quiet to output only warnings and errors
+# We set to frail to exit with 1 on warnings (for CI)
+#npx remark --quiet --frail docs # TODO
 
 echo "Success!"

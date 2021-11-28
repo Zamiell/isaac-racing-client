@@ -1,5 +1,3 @@
-/* eslint-disable import/no-unused-modules */
-
 // Child process that runs a socket server
 // We forward along socket messages to the parent process,
 // which in turn sends them to the renderer process

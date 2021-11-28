@@ -222,9 +222,11 @@ function initChatCommandHandlers(conn: Connection) {
       }
       if (raceID === g.currentRaceID) {
         // Update the online/offline markers
+        /*
         for (let i = 0; i < data.users.length; i++) {
           raceScreen.markOnline(data.users[i]);
         }
+        */
       }
     }
   });
