@@ -569,6 +569,7 @@ function initRaceCommandHandlers(conn: Connection) {
     if (data.name === g.myUsername) {
       // If we joined this race
       raceScreen.show(data.id);
+      window.race = race;
     } else if (data.id === g.currentRaceID) {
       // We are in this race, so add this racer to the racerList with all default values (defaults)
       race.racerList.push(getDefaultRacer(data.name));
@@ -656,6 +657,7 @@ function initRaceCommandHandlers(conn: Connection) {
     if (data.name === g.myUsername) {
       // Show the lobby
       lobbyScreen.showFromRace();
+      window.race = null;
       return;
     }
 

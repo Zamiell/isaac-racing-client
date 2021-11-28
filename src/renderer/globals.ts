@@ -78,11 +78,6 @@ export default globals;
 
 // Also make the globals available to the window
 // (so that we can access them from the JavaScript console for debugging purposes)
-declare global {
-  interface Window {
-    g: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  }
-}
 if (window !== undefined) {
   window.g = globals;
 }

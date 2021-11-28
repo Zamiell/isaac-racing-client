@@ -34,24 +34,5 @@ module.exports = {
     // https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/imports.js
     // Unfortunately, this project has cyclical dependencies
     "import/no-cycle": "off",
-
-    // Documentation:
-    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unused-modules.md
-    // Not defined in parent configs
-    // This helps to find dead code that should be deleted
-    "import/no-unused-modules": [
-      "error",
-      {
-        missingExports: true,
-        unusedExports: true,
-        ignoreExports: [
-          "src/**/*.d.ts",
-          ".eslintrc.js",
-          "webpack.*.config.js",
-          "src/main/main.ts",
-          "src/renderer/main.ts",
-        ],
-      },
-    ],
   },
 };

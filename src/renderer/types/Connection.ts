@@ -76,6 +76,7 @@ export default class Connection {
     }
   }
 
+  // This must be "any" instead of "unknown"
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on(name: string, callback: (evt: any) => void): void {
     this.callbacks[name] = callback;
