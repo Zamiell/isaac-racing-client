@@ -1,18 +1,18 @@
 # Racing+ Version History and News
 
-### *v0.71.6 - November 19th, 2021
+### *v0.71.6* - November 19th, 2021
 
 - Fixed the bug where Eggies would not work properly with fast-clear. (Thanks Finalkids)
 
-### *v0.71.5 - November 19th, 2021
+### *v0.71.5* - November 19th, 2021
 
 - Fixed the bug with seeded death where Bethany would not revive properly. (Thanks olo70009)
 
-### *v0.71.4 - November 18th, 2021
+### *v0.71.4* - November 18th, 2021
 
 - The Racing+ mod now exposes the options.ini values that cannot normally be changed in-game (like mouse control) through a new menu in Mod Config Menu.
 
-### *v0.71.2 - November 17th, 2021
+### *v0.71.2* - November 17th, 2021
 
 - There is now a custom charge bar for Azazel's Rage.
 - Fixed the (vanilla) bug where the default HUD offset was set to 1.0 instead of 0.0. If you intentionally want to set your HUD offset to 1.0 for some reason, you will have to disable the bug fix through Mod Config Menu.
@@ -22,12 +22,12 @@
 - Fixed the bug where Dark Esau would be removed if you entered a Treasure Room. (Thanks Moucheron Quipet)
 - Fixed the bug where fast-clear could cause a boss item to spawn underneath a pit in a Great Gideon room. (Thanks mijus)
 
-### *v0.71.1 - November 17th, 2021
+### *v0.71.1* - November 17th, 2021
 
 - Fixed the bug where fast-clear was incorrectly working with Cohorts. (Thanks KiraKeepKool)
 - Fixed the bug where the graphics would get messed up in certain situations. (Thanks Sakk)
 
-### *v0.71.0 - November 17th, 2021
+### *v0.71.0* - November 17th, 2021
 
 - The mod is now updated with the files from vanilla patch v1.7.6 (including the room changes).
 
