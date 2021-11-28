@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { BUILDS } from "isaac-racing-common";
+import { BUILDS, ITEMS } from "isaac-racing-common";
 import { parseIntSafe } from "../../common/util";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
@@ -575,7 +575,8 @@ export function show(raceID: number): void {
             modifiedTrinketID += 2000;
           }
 
-          const itemEntry = g.itemList[modifiedTrinketID.toString()];
+          const key = modifiedTrinketID.toString() as keyof typeof ITEMS;
+          const itemEntry = ITEMS[key];
           if (itemEntry === undefined) {
             errorShow(
               `Trinket ${modifiedTrinketID} was not found in the items list.`,
@@ -585,8 +586,9 @@ export function show(raceID: number): void {
 
           buildTooltipContent += itemEntry.name;
         } else {
-          // Items 1-4 are passive and active items
-          const itemEntry = g.itemList[itemID];
+          // Items 1 through 4 are passive and active items
+          const key = itemID as keyof typeof ITEMS;
+          const itemEntry = ITEMS[key];
           if (itemEntry === undefined) {
             errorShow(`Item ${itemID} was not found in the items list.`);
             return;

@@ -16,7 +16,6 @@ import * as steam from "./ipc/steam";
 import * as steamWatcher from "./ipc/steamWatcher";
 import * as keyboard from "./keyboard";
 import * as localization from "./localization";
-import { Item } from "./types/Item";
 import * as devButtons from "./ui/devButtons";
 import * as header from "./ui/header";
 import * as lobbyScreen from "./ui/lobby";
@@ -89,11 +88,6 @@ function initData() {
   const wordListPath = path.join(DATA_PATH, "word-list.txt");
   const wordListString = file.read(wordListPath);
   g.wordList = wordListString.split("\n");
-
-  // Item list
-  const itemListPath = path.join(DATA_PATH, "items.json");
-  const itemListString = file.read(itemListPath);
-  g.itemList = JSON.parse(itemListString) as Record<string, Item>;
 
   // Emote list
   const emotePath = path.join(__dirname, "img", "emotes");

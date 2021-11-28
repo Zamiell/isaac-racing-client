@@ -1,5 +1,4 @@
 import { Connection } from "./types/Connection";
-import { Item } from "./types/Item";
 import { ModSocket } from "./types/ModSocket";
 import { Race } from "./types/Race";
 import { Room } from "./types/Room";
@@ -22,7 +21,6 @@ const globals = {
     runMatchesRuleset: false,
   },
 
-  itemList: {} as Record<string, Item>, // Filled in main.js
   lastPM: null as null | string,
   lastRaceTitle: "",
   lastFinishedTime: 0,
