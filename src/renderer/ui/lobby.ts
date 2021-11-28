@@ -1,4 +1,4 @@
-import BUILDS from "../../../static/data/builds.json";
+import { BUILDS } from "isaac-racing-common";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import g from "../globals";

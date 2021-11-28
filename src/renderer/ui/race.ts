@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import BUILDS from "../../../static/data/builds.json";
+import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "../../common/util";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";

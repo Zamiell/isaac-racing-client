@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import BUILDS from "../../../static/data/builds.json";
+import { BUILDS } from "isaac-racing-common";
 import CHARACTERS from "../../../static/data/characters.json";
 import settings from "../../common/settings";
 import { parseIntSafe } from "../../common/util";

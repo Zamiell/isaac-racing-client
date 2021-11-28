@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import BUILDS from "../../static/data/builds.json";
+import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "../common/util";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
