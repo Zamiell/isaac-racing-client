@@ -19,7 +19,7 @@
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.1",
     "electron-updater": "4.6.1",
-    "isaac-racing-common": "^1.0.3",
+    "isaac-racing-common": "^1.0.4",
     "klaw-sync": "^6.0.0",
     "linkifyjs": "*",
     "mkdirp": "^1.0.4",
