@@ -16,7 +16,7 @@ import * as websocket from "./websocket";
 
 const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 5;
 
-export default function login(): void {
+export function login(): void {
   log.info("Checking auto update status...");
 
   switch (g.autoUpdateStatus) {

@@ -21,7 +21,7 @@ import ps from "ps-node";
 import Registry, { RegistryItem } from "winreg";
 import * as file from "../../common/file";
 import { parseIntSafe } from "../../common/util";
-import isSandboxValid from "./isaacIsSandboxValid";
+import { isSandboxValid } from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
   LAUNCH_OPTION,

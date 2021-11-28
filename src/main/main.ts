@@ -7,11 +7,11 @@ import * as electron from "electron";
 import electronContextMenu from "electron-context-menu";
 import log from "electron-log";
 import pkg from "../../package.json";
-import initLogging from "../common/initLogging";
+import { initLogging } from "../common/initLogging";
 import * as settings from "../common/settings";
 import * as childProcesses from "./childProcesses";
 import * as ipc from "./ipc";
-import IS_DEV from "./isDev";
+import { IS_DEV } from "./isDev";
 import * as onReady from "./onReady";
 
 let window = null as null | electron.BrowserWindow;

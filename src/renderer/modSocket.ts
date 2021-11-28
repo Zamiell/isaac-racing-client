@@ -4,8 +4,8 @@ import { parseIntSafe } from "../common/util";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
 import { amSecondTestAccount } from "./misc";
-import ModSocket from "./types/ModSocket";
-import Race from "./types/Race";
+import { ModSocket } from "./types/ModSocket";
+import { Race } from "./types/Race";
 import { SocketCommandIn } from "./types/SocketCommand";
 
 export function send(command: SocketCommandIn, data = ""): void {

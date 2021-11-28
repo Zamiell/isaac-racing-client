@@ -4,11 +4,13 @@ import g from "./globals";
 import { textUpdated } from "./keyboardSubroutines";
 import { closeAllTooltips } from "./misc";
 
-const functionMap = new Map<number, (event: JQuery.KeyDownEvent) => void>();
-export default functionMap;
+export const keyboardFunctionMap = new Map<
+  number,
+  (event: JQuery.KeyDownEvent) => void
+>();
 
 // `
-functionMap.set(192, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(192, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "title-ajax" && IS_DEV) {
     event.preventDefault();
     $("#title-choose-steam").click();
@@ -16,7 +18,7 @@ functionMap.set(192, (event: JQuery.KeyDownEvent) => {
 });
 
 // 1
-functionMap.set(49, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(49, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "title-ajax" && IS_DEV) {
     event.preventDefault();
     $("#title-choose-1").click();
@@ -24,7 +26,7 @@ functionMap.set(49, (event: JQuery.KeyDownEvent) => {
 });
 
 // 2
-functionMap.set(50, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(50, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "title-ajax" && IS_DEV) {
     event.preventDefault();
     $("#title-choose-2").click();
@@ -32,7 +34,7 @@ functionMap.set(50, (event: JQuery.KeyDownEvent) => {
 });
 
 // 3
-functionMap.set(51, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(51, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "title-ajax" && IS_DEV) {
     event.preventDefault();
     $("#title-choose-3").click();
@@ -40,7 +42,7 @@ functionMap.set(51, (event: JQuery.KeyDownEvent) => {
 });
 
 // "r"
-functionMap.set(82, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(82, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "title-ajax" && IS_DEV) {
     event.preventDefault();
     $("#title-restart").click();
@@ -48,12 +50,12 @@ functionMap.set(82, (event: JQuery.KeyDownEvent) => {
 });
 
 // F12
-functionMap.set(123, (_event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(123, (_event: JQuery.KeyDownEvent) => {
   electron.ipcRenderer.send("asynchronous-message", "devTools");
 });
 
 // Tab
-functionMap.set(9, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
     return;
   }
@@ -174,12 +176,12 @@ function tabCycle(tabList: string[]) {
 }
 
 // Backspace
-functionMap.set(8, (_event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(8, (_event: JQuery.KeyDownEvent) => {
   textUpdated();
 });
 
 // Enter
-functionMap.set(13, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(13, (event: JQuery.KeyDownEvent) => {
   textUpdated();
 
   if (
@@ -192,12 +194,12 @@ functionMap.set(13, (event: JQuery.KeyDownEvent) => {
 });
 
 // Space
-functionMap.set(32, (_event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(32, (_event: JQuery.KeyDownEvent) => {
   textUpdated();
 });
 
 // Esc
-functionMap.set(27, (_event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(27, (_event: JQuery.KeyDownEvent) => {
   if (g.currentScreen === "lobby") {
     closeAllTooltips();
   } else if (g.currentScreen === "race") {
@@ -206,7 +208,7 @@ functionMap.set(27, (_event: JQuery.KeyDownEvent) => {
 });
 
 // Up arrow
-functionMap.set(38, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
     return;
   }
@@ -245,7 +247,7 @@ functionMap.set(38, (event: JQuery.KeyDownEvent) => {
 });
 
 // Down arrow
-functionMap.set(40, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
   if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
     return;
   }
@@ -285,7 +287,7 @@ functionMap.set(40, (event: JQuery.KeyDownEvent) => {
 });
 
 // e
-functionMap.set(69, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(69, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
     if (g.currentScreen === "lobby") {
       $("#header-new-race").click();
@@ -294,7 +296,7 @@ functionMap.set(69, (event: JQuery.KeyDownEvent) => {
 });
 
 // s
-functionMap.set(83, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(83, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
     if (g.currentScreen === "lobby") {
       $("#header-settings").click();
@@ -303,7 +305,7 @@ functionMap.set(83, (event: JQuery.KeyDownEvent) => {
 });
 
 // l
-functionMap.set(76, (event: JQuery.KeyDownEvent) => {
+keyboardFunctionMap.set(76, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
     if (g.currentScreen === "race") {
       $("#header-lobby").click();

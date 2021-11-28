@@ -1,0 +1,16 @@
+export type Screen =
+  | "title-ajax"
+  | "login"
+  | "login-ajax"
+  | "forgot"
+  | "forgot-ajax"
+  | "register"
+  | "register-ajax"
+  | "updating"
+  | "lobby"
+  | "race"
+  | "error"
+  | "warning"
+  | "waiting-for-server"
+  | "transition"
+  | "null";

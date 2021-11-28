@@ -1,25 +1,9 @@
-import Connection from "./types/Connection";
-import Item from "./types/Item";
-import ModSocket from "./types/ModSocket";
-import Race from "./types/Race";
-import Room from "./types/Room";
-
-type Screen =
-  | "title-ajax"
-  | "login"
-  | "login-ajax"
-  | "forgot"
-  | "forgot-ajax"
-  | "register"
-  | "register-ajax"
-  | "updating"
-  | "lobby"
-  | "race"
-  | "error"
-  | "warning"
-  | "waiting-for-server"
-  | "transition"
-  | "null";
+import { Connection } from "./types/Connection";
+import { Item } from "./types/Item";
+import { ModSocket } from "./types/ModSocket";
+import { Race } from "./types/Race";
+import { Room } from "./types/Room";
+import { Screen } from "./types/Screen";
 
 // The object that contains all of the global variables
 const globals = {

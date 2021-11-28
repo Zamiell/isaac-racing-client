@@ -1,2 +1,1 @@
-type RaceDifficulty = "normal" | "hard";
-export default RaceDifficulty;
+export type RaceDifficulty = "normal" | "hard";

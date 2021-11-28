@@ -1,4 +1,5 @@
-const languagePack = {
+// ts-prune-ignore-next
+export const languagePack = {
   token: {
     // Title screen
     "A racing mod for The Binding of Isaac: Repentance.": "",
@@ -238,5 +239,3 @@ const languagePack = {
     "The username field is required.": "",
   },
 };
-// ts-prune-ignore-next
-export default languagePack;

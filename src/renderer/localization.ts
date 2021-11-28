@@ -1,7 +1,7 @@
 import log from "electron-log";
 import settings from "../common/settings";
-import languageES from "./languages/es";
-import languageFR from "./languages/fr";
+import { languagePackES } from "./languages/es";
+import { languagePackFR } from "./languages/fr";
 
 const VALID_LANGUAGES: Array<[string, string, string]> = [
   ["en", "english", "English"],
@@ -15,8 +15,8 @@ export function init(): void {
   // Create a language switcher instance
   lang = new Lang();
 
-  Lang.prototype.pack.es = languageES;
-  Lang.prototype.pack.fr = languageFR;
+  Lang.prototype.pack.es = languagePackES;
+  Lang.prototype.pack.fr = languagePackFR;
 
   lang.init({
     defaultLang: "en",

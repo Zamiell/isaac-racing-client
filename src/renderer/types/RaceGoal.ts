@@ -1,4 +1,4 @@
-type RaceGoal =
+export type RaceGoal =
   | "Blue Baby"
   | "The Lamb"
   | "Mega Satan"
@@ -8,4 +8,3 @@ type RaceGoal =
   | "The Beast"
   | "Boss Rush"
   | "custom";
-export default RaceGoal;

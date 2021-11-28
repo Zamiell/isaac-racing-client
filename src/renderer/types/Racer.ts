@@ -1,8 +1,8 @@
-import RaceItem from "./RaceItem";
-import RacerStatus from "./RacerStatus";
+import { RaceItem } from "./RaceItem";
+import { RacerStatus } from "./RacerStatus";
 
 /** Matches "RacerMessage" in "racer.go". */
-export default interface Racer {
+export interface Racer {
   name: string;
   datetimeJoined: number;
   status: RacerStatus;

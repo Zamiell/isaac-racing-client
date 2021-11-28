@@ -13,7 +13,7 @@ const SANDBOX_PATH = path.join(
   "sandbox",
 );
 
-export default function isSandboxValid(gamePath: string): boolean {
+export function isSandboxValid(gamePath: string): boolean {
   const mainLuaValid = isMainLuaValid(gamePath);
   const sandboxLuaValid = isSandboxLuaValid(gamePath);
 

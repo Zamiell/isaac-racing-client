@@ -3,7 +3,7 @@ import log from "electron-log";
 import linkifyHtml from "linkifyjs/html";
 import { parseIntSafe } from "../common/util";
 import { FADE_TIME, IS_DEV } from "./constants";
-import debugFunction from "./debugFunction";
+import { debugFunction } from "./debugFunction";
 import g from "./globals";
 import { errorShow, escapeHTML, warningShow } from "./misc";
 

@@ -1,5 +1,5 @@
 // cspell:disable
-const discordEmotes = new Map([
+export const discordEmotes = new Map([
   ["<:4head:230151563807555585>", "4Head"],
   ["<:4heads:230151104359301120>", "4Heads"],
   ["<:babyrage:261015173689507841>", "BabyRage"],
@@ -48,4 +48,3 @@ const discordEmotes = new Map([
   ["<:wutface:230150802998689812>", "WutFace"],
   ["<:zreknarf:230148568650874881>", "ZreknarF"],
 ]);
-export default discordEmotes;

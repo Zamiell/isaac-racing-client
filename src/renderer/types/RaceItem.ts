@@ -1,4 +1,4 @@
-export default interface RaceItem {
+export interface RaceItem {
   id: number;
   floorNum: number;
   stageType: number;

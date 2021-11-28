@@ -1,6 +1,6 @@
 import log from "electron-log";
 
-export default function initLogging(): void {
+export function initLogging(): void {
   // The format is documented here:
   // https://github.com/megahertz/electron-log/blob/master/docs/format.md
   // Even though it looks like the level and text are squished together,

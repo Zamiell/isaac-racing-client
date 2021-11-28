@@ -3,7 +3,7 @@ import log from "electron-log";
 import { unpackSocketMsg } from "../../common/util";
 import { IS_DEV } from "../constants";
 import { amSecondTestAccount } from "../misc";
-import socketFunctions from "./socketFunctions";
+import { socketFunctionMap } from "./socketFunctionMap";
 
 export function init(): void {
   electron.ipcRenderer.on("socket", IPCSocket);
@@ -24,7 +24,7 @@ function IPCSocket(_event: electron.IpcRendererEvent, rawData: string) {
     log.info(`Renderer process received socket command: ${command} ${data}`);
   }
 
-  const socketFunction = socketFunctions.get(command);
+  const socketFunction = socketFunctionMap.get(command);
   if (socketFunction !== undefined) {
     socketFunction(data);
   } else {

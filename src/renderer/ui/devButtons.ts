@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
-import login from "../login";
+import { login } from "../login";
 
 export function init(): void {
   // Don't automatically log in with our Steam account

@@ -1,4 +1,4 @@
-export default interface SteamMessage {
+export interface SteamMessage {
   id: string;
   accountID: number;
   screenName: string;

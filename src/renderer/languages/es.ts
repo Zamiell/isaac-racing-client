@@ -1,6 +1,6 @@
 // cspell:disable
 
-const languagePack = {
+export const languagePackES = {
   token: {
     // Title screen
     "A racing mod for The Binding of Isaac: Repentance.":
@@ -267,4 +267,3 @@ const languagePack = {
       "El campo de nombre de usuario es obligatorio.",
   },
 };
-export default languagePack;

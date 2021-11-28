@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import keyboardFunctions from "./keyboardFunctions";
+import { keyboardFunctionMap } from "./keyboardFunctionMap";
 
 export function init(): void {
   $(document).keydown(keyDown);
@@ -11,7 +11,7 @@ export function init(): void {
 function keyDown(event: JQuery.KeyDownEvent) {
   // console.log(event.which); // Uncomment this to find out which number corresponds to the desired key
 
-  const keyboardFunction = keyboardFunctions.get(event.which);
+  const keyboardFunction = keyboardFunctionMap.get(event.which);
   if (keyboardFunction !== undefined) {
     keyboardFunction(event);
   }

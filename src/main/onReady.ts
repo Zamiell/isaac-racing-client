@@ -7,8 +7,8 @@ import * as file from "../common/file";
 import settings from "../common/settings";
 import { STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
-import IS_DEV from "./isDev";
-import launchIsaac from "./launchIsaac";
+import { IS_DEV } from "./isDev";
+import { launchIsaac } from "./launchIsaac";
 
 interface WindowSettings {
   width?: number;

@@ -1,11 +1,11 @@
-import RaceDifficulty from "./RaceDifficulty";
-import RaceFormat from "./RaceFormat";
-import RaceGoal from "./RaceGoal";
-import RacerStatus from "./RacerStatus";
-import RaceStatus from "./RaceStatus";
+import { RaceDifficulty } from "./RaceDifficulty";
+import { RaceFormat } from "./RaceFormat";
+import { RaceGoal } from "./RaceGoal";
+import { RacerStatus } from "./RacerStatus";
+import { RaceStatus } from "./RaceStatus";
 
 /** This must match the "RaceData" class on the mod. */
-export default class ModSocket {
+export class ModSocket {
   raceID = -1;
   status: RaceStatus = "none";
   myStatus: RacerStatus = "not ready";

@@ -8,35 +8,37 @@ import { SocketCommandOut } from "../types/SocketCommand";
 import * as raceScreen from "../ui/race";
 import { inOngoingRace } from "./socketSubroutines";
 
-const functionMap = new Map<SocketCommandOut, (data: string) => void>();
-export default functionMap;
+export const socketFunctionMap = new Map<
+  SocketCommandOut,
+  (data: string) => void
+>();
 
-functionMap.set("connected", (_data: string) => {
+socketFunctionMap.set("connected", (_data: string) => {
   g.gameState.modConnected = true;
   log.info(`Set modConnected to: ${g.gameState.modConnected}`);
   modSocket.sendAll();
   raceScreen.checkReadyValid();
 });
 
-functionMap.set("disconnected", (_data: string) => {
+socketFunctionMap.set("disconnected", (_data: string) => {
   g.gameState.modConnected = false;
   log.info(`Set modConnected to: ${g.gameState.modConnected}`);
   raceScreen.checkReadyValid();
 });
 
-functionMap.set("chat", (data: string) => {
+socketFunctionMap.set("chat", (data: string) => {
   chat.send("race", data);
 });
 
-functionMap.set("error", (data: string) => {
+socketFunctionMap.set("error", (data: string) => {
   log.error(data);
 });
 
-functionMap.set("exited", (_data: string) => {
+socketFunctionMap.set("exited", (_data: string) => {
   errorShow("The localhost socket server exited unexpectedly.");
 });
 
-functionMap.set("finish", (data: string) => {
+socketFunctionMap.set("finish", (data: string) => {
   if (!inOngoingRace()) {
     return;
   }
@@ -55,7 +57,7 @@ functionMap.set("finish", (data: string) => {
   }
 });
 
-functionMap.set("item", (data: string) => {
+socketFunctionMap.set("item", (data: string) => {
   if (!inOngoingRace()) {
     return;
   }
@@ -74,11 +76,11 @@ functionMap.set("item", (data: string) => {
   }
 });
 
-functionMap.set("info", (data: string) => {
+socketFunctionMap.set("info", (data: string) => {
   log.info(data);
 });
 
-functionMap.set("level", (data: string) => {
+socketFunctionMap.set("level", (data: string) => {
   if (!inOngoingRace()) {
     return;
   }
@@ -117,13 +119,13 @@ functionMap.set("level", (data: string) => {
   }
 });
 
-functionMap.set("mainMenu", (_data: string) => {
+socketFunctionMap.set("mainMenu", (_data: string) => {
   g.gameState.inGame = false;
   g.gameState.runMatchesRuleset = false;
   raceScreen.checkReadyValid();
 });
 
-functionMap.set("seed", (data: string) => {
+socketFunctionMap.set("seed", (data: string) => {
   g.gameState.inGame = true;
   raceScreen.checkReadyValid();
 
@@ -139,7 +141,7 @@ functionMap.set("seed", (data: string) => {
   }
 });
 
-functionMap.set("room", (data: string) => {
+socketFunctionMap.set("room", (data: string) => {
   if (!inOngoingRace()) {
     return;
   }
@@ -152,7 +154,7 @@ functionMap.set("room", (data: string) => {
   }
 });
 
-functionMap.set("runMatchesRuleset", (_data: string) => {
+socketFunctionMap.set("runMatchesRuleset", (_data: string) => {
   g.gameState.runMatchesRuleset = true;
   raceScreen.checkReadyValid();
 });

@@ -1,2 +1,1 @@
-type RaceFormat = "unseeded" | "seeded" | "diversity" | "custom";
-export default RaceFormat;
+export type RaceFormat = "unseeded" | "seeded" | "diversity" | "custom";

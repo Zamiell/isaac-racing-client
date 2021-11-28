@@ -1,4 +1,4 @@
-export default interface LocalConfigVDF {
+export interface LocalConfigVDF {
   UserLocalConfigStore: {
     Software: {
       // On my "localconfig.vdf", "Valve" is capitalized

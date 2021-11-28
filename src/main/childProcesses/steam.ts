@@ -2,9 +2,9 @@
 
 import path from "path";
 import * as file from "../../common/file";
-import SteamMessage from "../../common/types/SteamMessage";
+import { SteamMessage } from "../../common/types/SteamMessage";
 import { REBIRTH_STEAM_ID } from "../constants";
-import Greenworks, { SteamIDObject, TicketObject } from "../types/Greenworks";
+import { Greenworks, SteamIDObject, TicketObject } from "../types/Greenworks";
 import { childError, handleErrors, processExit } from "./subroutines";
 
 handleErrors();

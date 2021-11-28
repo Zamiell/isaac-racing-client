@@ -2,54 +2,68 @@ import * as electron from "electron";
 import { autoUpdater } from "electron-updater";
 import * as childProcesses from "./childProcesses";
 import { isaacFocus } from "./focus";
-import launchIsaac from "./launchIsaac";
+import { launchIsaac } from "./launchIsaac";
 
-const functionMap = new Map<
+export const ipcFunctionMap = new Map<
   string,
   (window: electron.BrowserWindow, arg2: string) => void
 >();
-export default functionMap;
 
-functionMap.set("close", (_window: electron.BrowserWindow, _arg2: string) => {
-  electron.app.quit();
-});
+ipcFunctionMap.set(
+  "close",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    electron.app.quit();
+  },
+);
 
-functionMap.set("devTools", (window: electron.BrowserWindow, _arg2: string) => {
-  window.webContents.openDevTools();
-});
+ipcFunctionMap.set(
+  "devTools",
+  (window: electron.BrowserWindow, _arg2: string) => {
+    window.webContents.openDevTools();
+  },
+);
 
-functionMap.set(
+ipcFunctionMap.set(
   "isaacFocus",
   (_window: electron.BrowserWindow, _arg2: string) => {
     isaacFocus();
   },
 );
 
-functionMap.set("minimize", (window: electron.BrowserWindow, _arg2: string) => {
-  window.minimize();
-});
+ipcFunctionMap.set(
+  "minimize",
+  (window: electron.BrowserWindow, _arg2: string) => {
+    window.minimize();
+  },
+);
 
-functionMap.set("maximize", (window: electron.BrowserWindow, _arg2: string) => {
-  if (window.isMaximized()) {
-    window.unmaximize();
-  } else {
-    window.maximize();
-  }
-});
+ipcFunctionMap.set(
+  "maximize",
+  (window: electron.BrowserWindow, _arg2: string) => {
+    if (window.isMaximized()) {
+      window.unmaximize();
+    } else {
+      window.maximize();
+    }
+  },
+);
 
-functionMap.set(
+ipcFunctionMap.set(
   "quitAndInstall",
   (_window: electron.BrowserWindow, _arg2: string) => {
     autoUpdater.quitAndInstall();
   },
 );
 
-functionMap.set("restart", (_window: electron.BrowserWindow, _arg2: string) => {
-  electron.app.relaunch();
-  electron.app.quit();
-});
+ipcFunctionMap.set(
+  "restart",
+  (_window: electron.BrowserWindow, _arg2: string) => {
+    electron.app.relaunch();
+    electron.app.quit();
+  },
+);
 
-functionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
+ipcFunctionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
   if (arg2 === "start") {
     // Initialize the socket server in a separate process
     childProcesses.start("socket", window);
@@ -60,21 +74,21 @@ functionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
   }
 });
 
-functionMap.set(
+ipcFunctionMap.set(
   "startIsaac",
   (_window: electron.BrowserWindow, _arg2: string) => {
     launchIsaac();
   },
 );
 
-functionMap.set("steam", (window: electron.BrowserWindow, _arg2: string) => {
+ipcFunctionMap.set("steam", (window: electron.BrowserWindow, _arg2: string) => {
   // Initialize the Greenworks API in a separate process because otherwise the game will refuse to
   // open if Racing+ is open
   // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
   childProcesses.start("steam", window);
 });
 
-functionMap.set(
+ipcFunctionMap.set(
   "steamExit",
   (_window: electron.BrowserWindow, _arg2: string) => {
     // The renderer has successfully authenticated and is now establishing a WebSocket connection,
@@ -83,7 +97,7 @@ functionMap.set(
   },
 );
 
-functionMap.set(
+ipcFunctionMap.set(
   "steamWatcher",
   (window: electron.BrowserWindow, arg2: string) => {
     // Start the Steam watcher in a separate process
@@ -94,7 +108,7 @@ functionMap.set(
   },
 );
 
-functionMap.set("isaac", (window: electron.BrowserWindow, arg2: string) => {
+ipcFunctionMap.set("isaac", (window: electron.BrowserWindow, arg2: string) => {
   // Start the Isaac checker in a separate process
   const isaacPath = arg2;
   childProcesses.start("isaac", window, isaacPath);

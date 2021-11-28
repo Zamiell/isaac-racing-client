@@ -1,9 +1,9 @@
-import RaceDifficulty from "./RaceDifficulty";
-import RaceFormat from "./RaceFormat";
-import RaceGoal from "./RaceGoal";
+import { RaceDifficulty } from "./RaceDifficulty";
+import { RaceFormat } from "./RaceFormat";
+import { RaceGoal } from "./RaceGoal";
 
 /** Matches "Ruleset" in "race.go". */
-export default interface Ruleset {
+export interface Ruleset {
   ranked: boolean;
   solo: boolean;
   format: RaceFormat;

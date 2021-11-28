@@ -1,2 +1,6 @@
-type RaceStatus = "none" | "open" | "starting" | "in progress" | "finished";
-export default RaceStatus;
+export type RaceStatus =
+  | "none"
+  | "open"
+  | "starting"
+  | "in progress"
+  | "finished";

@@ -2,8 +2,9 @@ import path from "path";
 import * as vdfParser from "vdf-parser";
 import * as file from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
-import LocalConfigVDF, {
+import {
   AppConfigVDF,
+  LocalConfigVDF,
   SteamLocalConfigVDF,
   ValveLocalConfigVDF,
 } from "../types/LocalConfigVDF";

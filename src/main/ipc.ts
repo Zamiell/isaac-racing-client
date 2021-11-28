@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import ipcFunctions from "./ipcFunctions";
+import { ipcFunctionMap } from "./ipcFunctionMap";
 
 export function onMessage(
   window: electron.BrowserWindow | null,
@@ -19,7 +19,7 @@ export function onMessage(
     return;
   }
 
-  const ipcFunction = ipcFunctions.get(arg1);
+  const ipcFunction = ipcFunctionMap.get(arg1);
   if (ipcFunction !== undefined) {
     ipcFunction(window, arg2);
   } else {

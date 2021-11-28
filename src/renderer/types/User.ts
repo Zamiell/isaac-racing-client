@@ -1,6 +1,6 @@
-import Racer from "./Racer";
+import { Racer } from "./Racer";
 
-export default interface User {
+export interface User {
   name: string;
   racerList: Map<string, Racer>;
 }

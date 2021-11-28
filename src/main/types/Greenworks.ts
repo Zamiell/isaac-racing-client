@@ -1,4 +1,4 @@
-export default interface Greenworks {
+export interface Greenworks {
   getAuthSessionTicket(
     successCallback: (ticket: TicketObject) => void,
     errorCallback: (err: Error) => void,

@@ -4,7 +4,7 @@ import { FADE_TIME } from "../constants";
 import g from "../globals";
 import { capitalize, errorShow, escapeHTML, pad } from "../misc";
 import * as modSocket from "../modSocket";
-import Race from "../types/Race";
+import { Race } from "../types/Race";
 import * as header from "./header";
 
 export function init(): void {
