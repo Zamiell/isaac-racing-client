@@ -5,7 +5,6 @@ import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";
 import g from "./globals";
-import * as isaac from "./ipc/isaac";
 import * as socket from "./ipc/socket";
 import * as steamWatcher from "./ipc/steamWatcher";
 import * as modSocket from "./modSocket";
@@ -72,9 +71,6 @@ function initMiscHandlers(conn: Connection) {
       });
       return;
     }
-
-    // Launch the process that will perform Isaac-related checks
-    isaac.start();
 
     // Do the proper transition to the "File Checking" depending on where we logged in from
     if (g.currentScreen === "title-ajax") {

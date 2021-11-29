@@ -27,7 +27,7 @@ import {
   LAUNCH_OPTION,
   setLaunchOption,
 } from "./isaacLaunchOptions";
-import * as racingPlusMod from "./isaacRacingPlusMod";
+import * as isaacRacingPlusMod from "./isaacRacingPlusMod";
 import { childError, handleErrors, processExit } from "./subroutines";
 
 const ISAAC_PROCESS_NAME = "isaac-ng.exe";
@@ -185,7 +185,7 @@ function checkModExists() {
   }
 
   process.send(`DEBUG - mods path is: ${modsPath}`);
-  const devModExists = racingPlusMod.devExists(modsPath);
+  const devModExists = isaacRacingPlusMod.devExists(modsPath);
   process.send(`DEBUG - devModExists: ${devModExists}`);
   if (devModExists) {
     // Skip checking mod integrity if we are in development
@@ -196,7 +196,7 @@ function checkModExists() {
     return;
   }
 
-  const modExists = racingPlusMod.exists(modsPath);
+  const modExists = isaacRacingPlusMod.exists(modsPath);
   if (!modExists) {
     // The mod not being found is an ordinary error;
     // the end-user probably has not yet subscribed to the mod on the Steam Workshop
@@ -215,7 +215,7 @@ async function checkModIntegrity(modsPath: string) {
   process.send("Checking to see if the Racing+ mod is corrupted...");
 
   // Mod checks are performed in a separate file
-  const modValid = await racingPlusMod.isValid(modsPath);
+  const modValid = await isaacRacingPlusMod.isValid(modsPath);
   if (modValid) {
     process.send("The mod perfectly matched!");
   } else {

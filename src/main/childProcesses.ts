@@ -111,6 +111,7 @@ export function start(
       throw new Error("Failed to receive the isaacPath argument.");
     }
     childProcess.send(isaacPath);
+    log.info(`Send the "isaac" child-process a path of: ${isaacPath}`);
   }
 }
 
