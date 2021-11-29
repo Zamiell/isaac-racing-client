@@ -1,4 +1,5 @@
 import log from "electron-log";
+import { BUILDS } from "isaac-racing-common";
 import settings from "../common/settings";
 import { FADE_TIME } from "./constants";
 import g from "./globals";
@@ -127,6 +128,27 @@ export function ordinalSuffixOf(i: number): string {
 // From: https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
 export function pad(value: number): string {
   return value > 9 ? value.toString() : `0${value}`;
+}
+
+export function setElementBackgroundImage(id: string, url: string): void {
+  $(`#${id}`).css("background-image", `url("${url}")`);
+}
+
+export function setElementBuildIcon(id: string, buildIndex: number): void {
+  const build = BUILDS[buildIndex];
+  if (build === undefined) {
+    throw new Error(`Failed to find the build at index: ${buildIndex}`);
+  }
+
+  const firstItemOfBuild = build[0];
+  if (firstItemOfBuild === undefined) {
+    throw new Error(
+      `Failed to get the first item of the build with index: ${buildIndex}`,
+    );
+  }
+
+  const url = `img/builds/${firstItemOfBuild.id}.png`;
+  setElementBackgroundImage(id, url);
 }
 
 export function warningShow(message: string): void {

@@ -19,6 +19,8 @@ import {
   getRandomNumber,
   ordinalSuffixOf,
   pad,
+  setElementBackgroundImage,
+  setElementBuildIcon,
 } from "../util";
 
 const FIRST_GOLDEN_TRINKET_ID = 32769;
@@ -382,7 +384,7 @@ export function show(raceID: number): void {
     const typeIconURL = `img/types/${ranked ? "ranked" : "unranked"}${
       solo ? "-solo" : ""
     }.png`;
-    $("#race-title-type-icon").css("background-image", `url("${typeIconURL}")`);
+    setElementBackgroundImage("race-title-type-icon", typeIconURL);
     let typeTooltipContent = "<strong>";
     if (solo) {
       typeTooltipContent += '<span lang="en">Solo</span> ';
@@ -404,9 +406,9 @@ export function show(raceID: number): void {
 
     // Column 3 - Format
     const { format } = race.ruleset;
-    $("#race-title-format-icon").css(
-      "background-image",
-      `url("img/formats/${format}.png")`,
+    setElementBackgroundImage(
+      "race-title-format-icon",
+      `img/formats/${format}.png`,
     );
     let formatTooltipContent = "<span>";
     if (format === "unseeded") {
@@ -442,10 +444,7 @@ export function show(raceID: number): void {
 
     // Column 5 - Goal
     const { goal } = race.ruleset;
-    $("#race-title-goal-icon").css(
-      "background-image",
-      `url("img/goals/${goal}.png")`,
-    );
+    setElementBackgroundImage("race-title-goal-icon", `img/goals/${goal}.png`);
     let goalTooltipContent = "";
     if (goal === "Blue Baby") {
       goalTooltipContent +=
@@ -518,15 +517,14 @@ export function show(raceID: number): void {
       $("#race-title-table-build").fadeIn(0);
       $("#race-title-build").fadeIn(0);
       const buildIndex = race.ruleset.startingBuild;
+
       const build = BUILDS[buildIndex];
       if (build === undefined) {
         throw new Error(`Failed to find the build at index: ${buildIndex}`);
       }
-      const firstItem = build[0];
-      $("#race-title-build-icon").css(
-        "background-image",
-        `url("img/builds/${firstItem.id}.png")`,
-      );
+
+      setElementBuildIcon("race-title-build-icon", buildIndex);
+
       let buildTooltipContent = "";
       for (const item of build) {
         buildTooltipContent += `${item.name} + `;
@@ -548,17 +546,17 @@ export function show(raceID: number): void {
       const items = race.ruleset.seed.split(",");
 
       // Show the graphic corresponding to this item on the race title table
-      $("#race-title-items-icon1").css(
-        "background-image",
-        `url("img/items/${items[1]}.png")`,
+      setElementBackgroundImage(
+        "race-title-items-icon1",
+        `img/items/${items[1]}.png`,
       );
-      $("#race-title-items-icon2").css(
-        "background-image",
-        `url("img/items/${items[2]}.png")`,
+      setElementBackgroundImage(
+        "race-title-items-icon2",
+        `img/items/${items[2]}.png`,
       );
-      $("#race-title-items-icon3").css(
-        "background-image",
-        `url("img/items/${items[3]}.png")`,
+      setElementBackgroundImage(
+        "race-title-items-icon3",
+        `img/items/${items[3]}.png`,
       );
 
       // Build the tooltip

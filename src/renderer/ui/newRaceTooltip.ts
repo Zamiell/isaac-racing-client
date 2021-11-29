@@ -15,6 +15,8 @@ import {
   closeAllTooltips,
   errorShow,
   getRandomNumber,
+  setElementBackgroundImage,
+  setElementBuildIcon,
   warningShow,
 } from "../util";
 
@@ -351,9 +353,9 @@ function newRaceSizeChange(_event: JQuery.ChangeEvent | null, fast = false) {
 function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
   // Change the displayed icon
   const newRanked = $("input[name=new-race-ranked]:checked").val();
-  $("#new-race-ranked-icon").css(
-    "background-image",
-    `url("img/ranked/${newRanked}.png")`,
+  setElementBackgroundImage(
+    "new-race-ranked-icon",
+    `img/ranked/${newRanked}.png`,
   );
 
   // Make the format border flash to signify that there are new options there
@@ -438,9 +440,9 @@ function newRacePasswordChange(
 function newRaceFormatChange(_event: JQuery.ChangeEvent | null, fast = false) {
   // Change the displayed icon
   const newFormat = $("#new-race-format").val();
-  $("#new-race-format-icon").css(
-    "background-image",
-    `url("img/formats/${newFormat}.png")`,
+  setElementBackgroundImage(
+    "new-race-format-icon",
+    `img/formats/${newFormat}.png`,
   );
 
   // Show or hide the starting build row
@@ -466,19 +468,16 @@ function newRaceFormatChange(_event: JQuery.ChangeEvent | null, fast = false) {
 function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
   // Change the displayed icon
   const newCharacter = $("#new-race-character").val();
-  $("#new-race-character-icon").css(
-    "background-image",
-    `url("img/characters/${newCharacter}.png")`,
+  setElementBackgroundImage(
+    "new-race-character-icon",
+    `img/characters/${newCharacter}.png`,
   );
 }
 
 function newRaceGoalChange(_event: JQuery.ChangeEvent | null) {
   // Change the displayed icon
   const newGoal = $("#new-race-goal").val();
-  $("#new-race-goal-icon").css(
-    "background-image",
-    `url("img/goals/${newGoal}.png")`,
-  );
+  setElementBackgroundImage("new-race-goal-icon", `img/goals/${newGoal}.png`);
 }
 
 function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
@@ -498,20 +497,12 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   }
 
   if (newBuild === 0) {
-    $("#new-race-starting-build-icon").css(
-      "background-image",
-      'url("img/builds/random.png")',
+    setElementBackgroundImage(
+      "new-race-starting-build-icon",
+      "img/builds/random.png",
     );
   } else {
-    const build = BUILDS[newBuild];
-    if (build === undefined) {
-      throw new Error(`Failed to find the build at index: ${newBuild}`);
-    }
-    const firstItemOfBuild = build[0];
-    $("#new-race-starting-build-icon").css(
-      "background-image",
-      `url("img/builds/${firstItemOfBuild.id}.png")`,
-    );
+    setElementBuildIcon("new-race-starting-build-icon", newBuild);
   }
 }
 
