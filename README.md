@@ -60,6 +60,6 @@ The location for the client settings file is: `C:\Users\[Username]\AppData\Local
 ## Dependency Notes
 
 - We cannot update to the latest version of `electron` due to a bug with it not sending the previously gotten cookie when establishing a websocket connection.
-- We cannot update to the latest version of `node-fetch` due to TypeScript not supporting ESM-only modules.
+- We cannot update to the latest version of `node-fetch` and `@types/node-fetch` due to TypeScript not supporting ESM-only modules.
 
 <br />
