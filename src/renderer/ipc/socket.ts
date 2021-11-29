@@ -1,7 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { unpackSocketMsg } from "../../common/util";
-import { IS_DEV } from "../constants";
 import { amSecondTestAccount } from "../util";
 import { socketFunctionMap } from "./socketFunctionMap";
 
@@ -11,7 +10,7 @@ export function init(): void {
 
 export function start(): void {
   // Send a message to the main process to start up the socket server
-  if (!amSecondTestAccount() && !IS_DEV) {
+  if (!amSecondTestAccount()) {
     electron.ipcRenderer.send("asynchronous-message", "socket", "start");
   }
 }

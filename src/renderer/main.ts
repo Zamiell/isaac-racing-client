@@ -66,7 +66,6 @@ $(() => {
 
     // Skip Isaac-related checks and automatically log in with account #1
     // $("#title-choose-1").click();
-    isaac.start();
   } else {
     $("#title-ajax-description").html(
       "Performing a scan on the Racing+ mod to ensure that it is not corrupted...",
