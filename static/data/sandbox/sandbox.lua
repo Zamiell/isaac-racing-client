@@ -13,7 +13,7 @@ local UNSAFE_IMPORTS = {
   "socket",
 }
 
--- Import the socket module for our own usage before we gimp the "require()" function
+-- Import the socket module for our own usage before we modify the "require()" function
 local socket = nil
 local ok, requiredSocket = pcall(require, "socket")
 if ok then
@@ -46,10 +46,26 @@ local function stringTrim(str)
   return result
 end
 
+-- From: https://stackoverflow.com/questions/1426954/split-string-in-lua
+local function stringSplit(inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+
+  local t = {}
+  for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+    table.insert(t, str)
+  end
+
+  return t
+end
+
 local function validatePath(path)
   path = stringTrim(path)
-  local finalPartOfPathWithPeriods = string.match(path, "%.(.*)") -- % is an regex escape in Lua
-  local finalPartOfPathWithSlashes = string.match(path, "/(.*)")
+  local splitWithPeriods = stringsplit(path, ".")
+  local finalPartOfPathWithPeriods = splitWithPeriods[#splitWithPeriods]
+  local splitWithSlashes = stringsplit(path, "/")
+  local finalPartOfPathWithSlashes = splitWithSlashes[#splitWithSlashes]
 
   return not (
     includes(UNSAFE_IMPORTS, path)
@@ -59,27 +75,27 @@ local function validatePath(path)
 end
 
 local function safeDofile(path)
-  if validatePath(path) then
-    return originalDofile(path)
+  if not validatePath(path) then
+    error("dofiling " .. path .. " is not allowed")
   end
 
-  error("dofiling " .. path .. " is not allowed")
+  return originalDofile(path)
 end
 
 local function safeInclude(path)
-  if validatePath(path) then
-    return originalInclude(path)
+  if not validatePath(path) then
+    error("including " .. path .. " is not allowed")
   end
 
-  error("including " .. path .. " is not allowed")
+  return originalInclude(path)
 end
 
 local function safeRequire(path)
-  if validatePath(path) then
-    return originalRequire(path)
+  if not validatePath(path) then
+    error("requiring " .. path .. " is not allowed")
   end
 
-  error("requiring " .. path .. " is not allowed")
+  return originalRequire(path)
 end
 
 --
