@@ -100,7 +100,6 @@ function sandbox.init()
   sandbox.removeDangerousGlobals()
   sandbox.removeDangerousPackageFields()
   sandbox.sanitizeRequireFunction()
-  sandbox.fixPrintFunction()
 end
 
 function sandbox.removeDangerousGlobals()
@@ -127,55 +126,6 @@ function sandbox.sanitizeRequireFunction()
   dofile = safeDofile
   include = safeInclude
   require = safeRequire
-end
-
-function sandbox.fixPrintFunction()
-  -- When "--luadebug" is enabled,
-  -- the "print()" function will no longer map to "Isaac.ConsoleOutput()"
-  -- Manually fix this
-  print = function(...) -- luacheck: ignore
-    local msg = sandbox.getPrintMsg(...)
-
-    -- First, write it to the log.txt
-    Isaac.DebugString(msg)
-
-    -- Second, write it to the console
-    -- (this needs to be terminated by a newline or else it won't display properly)
-    local msgWithNewline = msg .. "\n"
-    Isaac.ConsoleOutput(msgWithNewline)
-  end
-end
-
-function sandbox.getPrintMsg(...)
-  -- Base case
-  if ... == nil then
-    return tostring(nil)
-  end
-
-  local args = {...}
-  local msg = ""
-  for _, arg in ipairs(args) do
-    -- Separate multiple arguments with a space
-    -- (a tab character appears as a circle, which is unsightly)
-    if msg ~= "" then
-      msg = msg .. " "
-    end
-
-    local valueToPrint
-    local metatable = getmetatable(arg)
-    local isVector = metatable ~= nil and metatable.__type == "Vector"
-    if isVector then
-      -- Provide special formatting for Vectors
-      valueToPrint = "Vector(" .. tostring(arg.X) .. ", " .. tostring(arg.Y) .. ")"
-    else
-      -- By default, simply coerce the argument to a string, whatever it is
-      valueToPrint = tostring(arg)
-    end
-
-    msg = msg .. valueToPrint
-  end
-
-  return msg
 end
 
 --
