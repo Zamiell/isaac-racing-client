@@ -62,9 +62,9 @@ end
 
 local function validatePath(path)
   path = stringTrim(path)
-  local splitWithPeriods = stringsplit(path, ".")
+  local splitWithPeriods = stringSplit(path, ".")
   local finalPartOfPathWithPeriods = splitWithPeriods[#splitWithPeriods]
-  local splitWithSlashes = stringsplit(path, "/")
+  local splitWithSlashes = stringSplit(path, "/")
   local finalPartOfPathWithSlashes = splitWithSlashes[#splitWithSlashes]
 
   return not (
@@ -104,20 +104,6 @@ end
 
 local sandbox = {}
 
-function sandbox.init()
-  sandbox.init = nil
-  if socket == nil then
-    Isaac.DebugString(
-      "The sandbox could not initialize because the \"--luadebug\" flag was not enabled."
-    )
-    return
-  end
-
-  sandbox.removeDangerousGlobals()
-  sandbox.removeDangerousPackageFields()
-  sandbox.sanitizeRequireFunction()
-end
-
 function sandbox.removeDangerousGlobals()
   debug = nil -- luacheck: ignore
   dump = nil -- luacheck: ignore
@@ -147,6 +133,20 @@ end
 --
 -- Exports
 --
+
+function sandbox.init()
+  sandbox.init = nil
+  if socket == nil then
+    Isaac.DebugString(
+      "The sandbox could not initialize because the \"--luadebug\" flag was not enabled."
+    )
+    return
+  end
+
+  sandbox.removeDangerousGlobals()
+  sandbox.removeDangerousPackageFields()
+  sandbox.sanitizeRequireFunction()
+end
 
 function sandbox.isSocketInitialized()
   return socket ~= nil
@@ -212,17 +212,20 @@ function sandbox.connectLocalhost(port, useTCP)
 end
 
 function sandbox.traceback()
-  if originalDebug == nil then
-    Isaac.DebugString("traceback was called but the \"--luadebug\" flag was not enabled.")
-    return
+  local traceback = sandbox.getTraceback();
+  if traceback ~= "" then
+    Isaac.DebugString(tracebackMsg)
   end
-
-  local tracebackMsg = originalDebug.traceback()
-  Isaac.DebugString(tracebackMsg)
 end
 
--- Also make it a global variable
-sandboxTraceback = sandbox.traceback -- luacheck: ignore
+function sandbox.getTraceback()
+  if originalDebug == nil then
+    Isaac.DebugString("Error: getTraceback was called but the \"--luadebug\" flag was not enabled.")
+    return ""
+  end
+
+  return originalDebug.traceback()
+end
 
 function sandbox.getParentFunctionDescription(levels)
   if levels == nil then
@@ -244,7 +247,16 @@ function sandbox.getParentFunctionDescription(levels)
   return debugTable.name .. ":" .. tostring(debugTable.linedefined)
 end
 
--- Also make it a global variable
+-- Make some functions global variables
+sandboxTraceback = sandbox.traceback -- luacheck: ignore
+sandboxGetTraceback = sandbox.getTraceback -- luacheck: ignore
 getParentFunctionDescription = sandbox.getParentFunctionDescription -- luacheck: ignore
 
-return sandbox
+return {
+  init = sandbox.init,
+  isSocketInitialized = sandbox.isSocketInitialized,
+  connectLocalhost = sandbox.connectLocalhost,
+  traceback = sandbox.traceback,
+  getTraceback = sandbox.getTraceback,
+  getParentFunctionDescription = sandbox.getParentFunctionDescription,
+}
