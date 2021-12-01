@@ -1,5 +1,53 @@
 # Racing+ Version History and News
 
+### *v0.72.11* - November 30th, 2021
+
+- Fixed the bug where Mod Config Menu was not working properly. (Thanks elgirs)
+- Fixed the bug where item sprites would not display on screen.
+
+### *v0.72.10* - November 29th, 2021
+
+- Fixed the bug where in seeded races, Treasure Rooms would be open if they were connected to the starting room. (Thanks Gamonymous)
+- Fixed the icons for custom items on the death portrait. Thanks to Gamonymous for this.
+
+### *v0.72.9* - November 28th, 2021
+
+- On seeded races, Birthright is now removed from pools if you start as Cain. (Thanks thereisnofuture)
+- Fixed the bug where seeded floors would not work properly on characters that were not able to get red heart containers. (Thanks Gamonymous)
+- Fixed the bug where seeded floors would not work properly on characters that were not able to get soul hearts. (Thanks Gamonymous)
+
+### *v0.72.8* - November 28th, 2021
+
+- In seeded races, doors to Repentance floors will no longer spawn (unless the goal is Mother).
+- Fixed the bug where Donation Machines would appear if you finished or quit a seeded race. (Thanks Hispa)
+- Fixed the bug where 13 Luck, 15 Luck, and Sawblade were not awarded correctly. (Thanks Gamonymous)
+
+### *v0.72.7* - November 27th, 2021
+
+- Fixed the bug where players would start in incorrect positions when entering a Devil Room or an Angel Room. (Thanks Hispa)
+
+### *v0.72.6* - November 27th, 2021
+
+- Fixed the bug where Krampus drops would cost money on Tainted Keeper. (Thanks 3kch1)
+- Fixed the bug where Krampus would not register as a battle NPC. (Thanks 3kch1)
+
+### *v0.72.4* - November 26th, 2021
+
+- Fixed the bug where seeded death would not work properly with Tainted Forgotten. (Thanks Moucheron Quipet)
+- Fixed the bug where seeded death would not work properly with Tainted Jacob's ghost form. (Thanks Moucheron Quipet)
+- Fixed the bug where seeded death would cause two Dark Esau's to spawn when playing as Tainted Jacob under certain conditions.  (Thanks Moucheron Quipet)
+
+### *v0.72.0* - November 26th, 2021
+
+- Flip has been reimplemented. The item behind is now rendered at an offset that is easier to see.
+
+### *v0.71.9* - November 24th, 2021
+
+- Fixed the bug where fast-clear would not work with Cohorts under certain conditions. (Thanks 3kch1)
+- Fixed the bug where race placings were incorrect under certain conditions. (Thanks Gamonymous)
+- Fixed the bug where using Flip on characters other than Tainted Lazarus could cause errors under certain conditions. (Thanks Hispa)
+- Fixed the bug where Treasure Room placeholder items were not being removed under certain conditions. (Thanks Gamonymous)
+
 ### *v0.71.6* - November 19th, 2021
 
 - Fixed the bug where Eggies would not work properly with fast-clear. (Thanks Finalkids)
