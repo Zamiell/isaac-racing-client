@@ -285,10 +285,8 @@ function checkCloseIsaac() {
     checkCloseSteam();
   } else {
     // Don't automatically open Isaac for them, since that might be annoying
-    process.send(
-      "File system repair complete. (Isaac was not open.)",
-      processExit,
-    );
+    process.send("File system repair complete. (Isaac was not open.)");
+    process.send("isaacChecksComplete", processExit);
   }
 }
 
