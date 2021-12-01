@@ -130,6 +130,12 @@ function sandbox.sanitizeRequireFunction()
   require = safeRequire
 end
 
+function sandbox.setSomeSandboxFunctionsGlobal()
+  sandboxTraceback = sandbox.traceback -- luacheck: ignore
+  sandboxGetTraceback = sandbox.getTraceback -- luacheck: ignore
+  getParentFunctionDescription = sandbox.getParentFunctionDescription -- luacheck: ignore
+end
+
 --
 -- Exports
 --
@@ -146,6 +152,7 @@ function sandbox.init()
   sandbox.removeDangerousGlobals()
   sandbox.removeDangerousPackageFields()
   sandbox.sanitizeRequireFunction()
+  sandbox.setSomeSandboxFunctionsGlobal()
 end
 
 function sandbox.isSocketInitialized()
@@ -246,11 +253,6 @@ function sandbox.getParentFunctionDescription(levels)
 
   return debugTable.name .. ":" .. tostring(debugTable.linedefined)
 end
-
--- Make some functions global variables
-sandboxTraceback = sandbox.traceback -- luacheck: ignore
-sandboxGetTraceback = sandbox.getTraceback -- luacheck: ignore
-getParentFunctionDescription = sandbox.getParentFunctionDescription -- luacheck: ignore
 
 return {
   init = sandbox.init,
