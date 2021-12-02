@@ -1186,12 +1186,12 @@
 
 ### *v0.47.14* - January 11th, 2020
 
-- A new custom mechanic is added where freshly made trapdoors and crawlspaces are always open, regardless of whether the room is clear or not. (This effectively makes the shovel as powerful as it was before.)
+- A new custom mechanic is added where freshly made trapdoors and crawlspaces are always open, regardless of whether the room is clear or not. This effectively makes the shovel as powerful as it was before. (Thanks mgln)
 
 ### *v0.47.13* - January 9th, 2020
 
 - The Boss Rush will now display the current wave as streak text.
-- Trapdoors and crawlspaces will now be closed if the current room is not cleared. (This is how it works in Greed Mode. The old behavior is considered a bug in vanilla and is fixed in Repentance. Racing+ will now match the behavior of Greed Mode and Repentance.)
+- Trapdoors and crawlspaces will now be closed if the current room is not cleared.
 - Fixed the bug where having the Lost Cork would make the "controls" graphic appear incorrectly. (Thanks Gamonymous)
 - Fixed the bug where losing the Schoolbag with an active item inside the Schoolbag would make it disappear instead of dropping on the ground.
 
