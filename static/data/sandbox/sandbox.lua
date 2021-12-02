@@ -26,6 +26,8 @@ local originalDofile = dofile
 local originalInclude = include
 local originalRequire = require
 
+local initialized = false
+
 --
 -- Local functions
 --
@@ -141,7 +143,11 @@ end
 --
 
 function sandbox.init()
-  sandbox.init = nil
+  if initialized then
+    return
+  end
+  initialized = true
+
   if socket == nil then
     Isaac.DebugString(
       "The sandbox could not initialize because the \"--luadebug\" flag was not enabled."
