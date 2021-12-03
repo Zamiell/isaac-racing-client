@@ -359,6 +359,8 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
   );
 
   // Make the format border flash to signify that there are new options there
+  // (no longer needed since the format is hidden in solo ranked)
+  /*
   if (newRanked === "no" && !fast) {
     const oldColor = $("#new-race-format").css("border-color");
     $("#new-race-format").css("border-color", "green");
@@ -366,17 +368,19 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
       $("#new-race-format").css("border-color", oldColor);
     }, 350); // The CSS is set to 0.3 seconds, so we need some leeway
   }
+  */
 
   // Change the subsequent options accordingly
   const format = $("#new-race-format").val();
   if (newRanked === "no") {
     // Show the non-standard formats
-    $("#new-race-format-diversity").fadeIn(0);
-    $("#new-race-format-custom").fadeIn(0);
+    // $("#new-race-format-diversity").fadeIn(0);
+    // $("#new-race-format-custom").fadeIn(0);
 
-    // Show the character and goal drop-downs
+    // Show extra new race options
     setTimeout(
       () => {
+        $("#new-race-format-container").fadeIn(fast ? 0 : FADE_TIME);
         $("#new-race-character-container").fadeIn(fast ? 0 : FADE_TIME);
         $("#new-race-goal-container").fadeIn(fast ? 0 : FADE_TIME);
         if (format === "seeded") {
@@ -388,12 +392,15 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
     );
   } else if (newRanked === "yes") {
     // Hide the non-standard formats
-    $("#new-race-format-diversity").fadeOut(0);
-    $("#new-race-format-custom").fadeOut(0);
+    // $("#new-race-format-diversity").fadeOut(0);
+    // $("#new-race-format-custom").fadeOut(0);
 
-    // Hide the character, goal, and build drop-downs
+    // Hide extra new race options
+    $("#new-race-format-container").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-character-container").fadeOut(fast ? 0 : FADE_TIME);
-    $("#new-race-starting-build-container").fadeOut(fast ? 0 : FADE_TIME); // This is above the "goal" container below because it may already be hidden and would mess up the callback
+    // We hide the "starting-build" container before the "goal" container because it may already be
+    // hidden and would mess up the callback
+    $("#new-race-starting-build-container").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-goal-container").fadeOut(fast ? 0 : FADE_TIME, () => {
       $("#header-new-race").tooltipster("reposition"); // Redraw the tooltip
     });
