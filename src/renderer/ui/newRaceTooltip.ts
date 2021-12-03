@@ -17,7 +17,6 @@ import {
   getRandomNumber,
   setElementBackgroundImage,
   setElementBuildIcon,
-  warningShow,
 } from "../util";
 
 export function init(): void {
@@ -199,7 +198,7 @@ function submit(event: JQuery.SubmitEvent) {
     settings.set("newRaceRanked", rankedString);
   }
 
-  const format = $("#new-race-format").val();
+  let format = $("#new-race-format").val();
   if (format !== settings.get("newRaceFormat")) {
     settings.set("newRaceFormat", format);
   }
@@ -233,13 +232,6 @@ function submit(event: JQuery.SubmitEvent) {
     ranked = false;
   } else {
     errorShow('Expected either "yes" or "no" for the value of ranked.');
-    return false;
-  }
-
-  if (ranked && format === "seeded") {
-    warningShow(
-      "Solo ranked seeded races are currently disabled, as the leaderboards have not been programmed yet.",
-    );
     return false;
   }
 
@@ -292,6 +284,12 @@ function submit(event: JQuery.SubmitEvent) {
       PBKDF2_DIGEST,
     );
     password = passwordHash.toString("base64");
+  }
+
+  // Handle ranked solo specific settings
+  if (ranked && solo) {
+    format = "seeded";
+    startingBuild = 0;
   }
 
   // Close the tooltip (and all error tooltips, if present)
@@ -386,6 +384,7 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
         if (format === "seeded") {
           $("#new-race-starting-build-container").fadeIn(fast ? 0 : FADE_TIME);
         }
+        $("#new-race-difficulty-container").fadeIn(fast ? 0 : FADE_TIME);
         $("#header-new-race").tooltipster("reposition"); // Redraw the tooltip
       },
       fast ? 0 : FADE_TIME,
@@ -401,7 +400,8 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
     // We hide the "starting-build" container before the "goal" container because it may already be
     // hidden and would mess up the callback
     $("#new-race-starting-build-container").fadeOut(fast ? 0 : FADE_TIME);
-    $("#new-race-goal-container").fadeOut(fast ? 0 : FADE_TIME, () => {
+    $("#new-race-goal-container").fadeOut(fast ? 0 : FADE_TIME);
+    $("#new-race-difficulty-container").fadeOut(fast ? 0 : FADE_TIME, () => {
       $("#header-new-race").tooltipster("reposition"); // Redraw the tooltip
     });
 

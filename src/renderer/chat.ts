@@ -278,6 +278,8 @@ export function send(destination: string, originalMessage: string): void {
       id: g.currentRaceID,
       itemID: 560,
     });
+  } else if (message.startsWith("/rankedsoloreset")) {
+    g.conn.send("rankedSoloReset");
   } else {
     draw(room, "_error", "That is not a valid command.");
   }
