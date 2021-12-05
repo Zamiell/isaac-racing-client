@@ -184,9 +184,7 @@ function checkModExists() {
     throw new Error(`Failed to find the "mods" directory at: ${modsPath}`);
   }
 
-  process.send(`DEBUG - mods path is: ${modsPath}`);
   const devModExists = isaacRacingPlusMod.devExists(modsPath);
-  process.send(`DEBUG - devModExists: ${devModExists}`);
   if (devModExists) {
     // Skip checking mod integrity if we are in development
     process.send(
