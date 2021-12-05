@@ -2,22 +2,11 @@ import klawSync from "klaw-sync";
 import fetch from "node-fetch";
 import path from "path";
 import * as file from "../../common/file";
-import { IS_DEV } from "../isDev";
 
 // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
-const DEV_MOD_NAME = "racing-plus";
 const SHA1_HASHES_URL =
   "https://raw.githubusercontent.com/Zamiell/racing-plus/main/sha1.json";
-
-export function devExists(modsPath: string): boolean {
-  if (!IS_DEV) {
-    return false;
-  }
-
-  const racingPlusModDevPath = path.join(modsPath, DEV_MOD_NAME);
-  return file.exists(racingPlusModDevPath) && file.isDir(racingPlusModDevPath);
-}
 
 export function exists(modsPath: string): boolean {
   if (process.send === undefined) {

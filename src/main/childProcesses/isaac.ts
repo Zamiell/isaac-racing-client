@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+
 // When the Racing+ client starts, we need to perform several checks:
 
 // 1) Racing+ mod integrity
@@ -15,6 +17,13 @@
 // Since we are turning on --luadebug,
 // we provide a sandbox so that only certain functions can be called
 
+// First, initialize the error logging, because importing can cause errors
+// (This is why we have to disable "import/first" above)
+// eslint-disable-next-line import/order
+import { childError, processExit, handleErrors } from "./subroutines";
+// organize-imports-ignore
+handleErrors();
+
 import { execSync } from "child_process";
 import path from "path";
 import ps from "ps-node";
@@ -28,7 +37,6 @@ import {
   setLaunchOption,
 } from "./isaacLaunchOptions";
 import * as isaacRacingPlusMod from "./isaacRacingPlusMod";
-import { childError, handleErrors, processExit } from "./subroutines";
 
 const ISAAC_PROCESS_NAME = "isaac-ng.exe";
 const STEAM_PROCESS_NAME = "steam.exe";
@@ -38,8 +46,6 @@ let steamActiveUserID: number;
 let gamePath: string;
 let shouldRestartIsaac = false;
 let shouldRestartSteam = false;
-
-handleErrors();
 
 init();
 
@@ -182,16 +188,6 @@ function checkModExists() {
   const modsPath = path.join(gamePath, "mods");
   if (!file.exists(modsPath) || !file.isDir(modsPath)) {
     throw new Error(`Failed to find the "mods" directory at: ${modsPath}`);
-  }
-
-  const devModExists = isaacRacingPlusMod.devExists(modsPath);
-  if (devModExists) {
-    // Skip checking mod integrity if we are in development
-    process.send(
-      "File system validation passed. (Skipped mod checking since we are in development.)",
-    );
-    process.send("isaacChecksComplete", processExit);
-    return;
   }
 
   const modExists = isaacRacingPlusMod.exists(modsPath);
