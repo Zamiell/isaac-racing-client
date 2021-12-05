@@ -83,7 +83,7 @@ function checkCorruptOrMissingFiles(
       if (fileHash !== backupFileHash) {
         process.send(`File is corrupt: ${filePath}`);
         process.send(
-          `The hash of "${fileHash}" does not match the hash of "${backupFileHash}" from the "sha1.json" file.`,
+          `The hash of "${fileHash}" does not match the hash of "${backupFileHash}" for the file of "${filePath}" (when comparing using the "sha1.json" file from "${SHA1_HASHES_URL}").`,
         );
         modIsCorrupt = true;
       }
