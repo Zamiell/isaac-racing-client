@@ -210,10 +210,16 @@ export function send(destination: string, originalMessage: string): void {
   } else if (message === "/debug1") {
     // /debug1 - Debug command for the client
     debugFunction();
-  } else if (message === "/debug2") {
+  } else if (message.startsWith("/debug2")) {
     // /debug2 - Debug command for the server
+    const m = /^\/\w+ (.+)/.exec(message);
+    if (m !== null) {
+      [, chatArg1] = m;
+    }
     log.info("Sending debug command.");
-    g.conn.send("debug", {});
+    g.conn.send("debug", {
+      name: chatArg1,
+    });
   } else if (message === "/restart") {
     // /restart - Restart the client
     electron.ipcRenderer.send("asynchronous-message", "restart");

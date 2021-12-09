@@ -1,5 +1,57 @@
 # Racing+ Version History and News
 
+This file is not usually kept up to date. For the latest patch notes, check the #patch-notes channel in [the Discord server](https://isaacracing.net/info).
+
+### *v0.74.1* - December 5th, 2021
+
+- Fixed the bug where shop items would count as Devil-Deal-style items. (Thanks Monkeypot)
+
+### *v0.74.0* - December 4th, 2021
+
+- If you are playing a Season 3 Ranked Solo race, the server will now remind you to stream on Twitch or YouTube.
+- The free Devil Room item mechanic is reworked:
+  - Players are no longer granted a Your Soul trinket.
+  - Keeper & Tainted Keeper are no longer granted coins.
+  - Instead, all items that cost hearts will be made free until you take damage or take an item that costs hearts, whichever comes first.
+  - This applies to every room, not just Devil Rooms.
+- Fixed the bug where you could not take a trophy if you had a Glass Cannon under certain conditions. (Thanks Monkeypot)
+- Fixed the bug where Number Magnet did not prevent Krampus from appearing in a Devil Room. (Thanks ez_duke)
+- Fixed the bug where damage to child players (e.g. the Strawman Keeper) could count as damage for the purposes of the free Devil Room item mechanic.
+- Fixed the bug where Sawblade would not show up properly at the beginning of a race. (Thanks Gamonymous)
+
+### *v0.73.3* - December 4th, 2021
+
+- Fixed the bug where eternal hearts would not properly grant a heart container in seeded races under certain conditions. (Thanks thereisnofuture)
+
+### *v0.73.2* - December 4th, 2021
+
+- The multiplayer leaderboards have been reset. Rankings are now calculated using a starting date of May 21st, 2021.
+- The new rooms from Gehenna and Corpse have been integrated into Racing+.
+- Fixed the bug where you could not take a trophy if you had a Found Soul trinket that died. (Thanks Gamonymous)
+
+### *v0.73.1* - December 3rd, 2021
+
+- Fixed the bug with seeded where wisps and item wisps were not removed. (Thanks Adrayon)
+- Fixed the bug where Cohorts would not work properly with fast-clear (again). (Thanks Gamonymous)
+
+### *v0.73.0* - December 3rd, 2021
+
+- Racing+ Ranked Solo Season 3 has begun! This new season has you start with a rotating seeded item and The Compass
+- The first item that you will get is always Mom's Knife.
+- You can use the `/rankedsoloreset` command to delete all of your races and start from the beginning.
+- Some seeded starts have been changed:
+  - 20/20 --> 20/20 + The Inner Eye
+  - Incubus --> 2x Incubus
+  - Twisted Pair --> 2x Twisted Pair
+- Updated the mod to work with vanilla patch 1.7.7.
+- Fixed the bug where seeded death would not work properly with rotten hearts.
+- Fixed the bug where seeded death would not work properly with broken hearts.
+
+### *v0.72.12* - December 1st, 2021
+
+- Fixed the bug where the left hand place sprite would show if Mod Config Menu was open.
+- Fixed the bug where the end-of-race buttons would show if Mod Config Menu was open.
+
 ### *v0.72.11* - November 30th, 2021
 
 - Fixed the bug where Mod Config Menu was not working properly. (Thanks elgirs)
@@ -1228,7 +1280,7 @@ Mod changes:
 ### *v0.47.7* - November 30th, 2019
 
 - Deleted Ultra Greed's "Appear" animation.
-- The Lead Pencil charge bar no longer appears if you are Azazel. (Thanks NorBro86)
+- The Lead Pencil charge bar no longer appears if you are Azazel. (Thanks NorBro)
 - Fixed the (vanilla) bug where angels would not drop key pieces if another angel was alive.
 - Fixed the bug where the Glowing Hour Glass would not work correctly with the Schoolbag if you had the Butter! trinket. (Thanks mgln)
 - Fixed the bug where Teleport 2.0 would not work correctly if you had Cursed Eye. (Thanks Greg)
@@ -1238,7 +1290,7 @@ Mod changes:
 ### *v0.47.6* - November 28th, 2019
 
 - Isaac is now feeling festive. Happy Thanksgiving!
-- Fixed the bug where the end-of-speedrun trophies would spawn under certain conditions. (Thanks NorBro86)
+- Fixed the bug where the end-of-speedrun trophies would spawn under certain conditions. (Thanks NorBro)
 - Fixed the bug where extra invisible NPCs would be spawned upon clearing the Boss Rush.
 
 ### *v0.47.5* - November 27th, 2019
@@ -1257,19 +1309,19 @@ Mod changes:
 
 - The Lead Pencil charge bar will no longer show up on Lilith and Forgotten. (Thanks Pingouin23 & Fawkeyes)
 - The devil statue will be faded if there is an item pedestal hiding behind it. (Thanks mgln)
-- Fixed the bug where the boss item after Ultra Greed would show up for a frame. (Thanks NorBro86)
+- Fixed the bug where the boss item after Ultra Greed would show up for a frame. (Thanks NorBro)
 - Fixed the bug where the Lead Pencil charge bar would be wrong if you picked it up in the middle of a run. (Thanks Pingouin23)
 
 ### *v0.47.0* - November 24th, 2019
 
 - Lead Pencil now grants a charge bar similar to Maw of the Void.
 - Reduced the delay when jumping out of a hole on a new floor by 7 frames.
-- It is no longer possible to get Mega Maw or the Gate in the Boss Rush room that has rocks along the top wall. (Thanks NorBro86)
+- It is no longer possible to get Mega Maw or the Gate in the Boss Rush room that has rocks along the top wall. (Thanks NorBro)
 - Added Caves / Catacombs / Flooded Caves room #90 to the list of rooms for Spiked Chest replacement. (Thanks SlashSP)
 - Fixed the bug where you could push pedestals by swapping an active item over and over.
 - Fixed the bug where extra items spawned from a Diplopia were not properly seeded.
 - Fixed the bug where heaven doors would not appear in a Black Market. (Thanks Cyber_1)
-- Fixed the bug where killing a splitting enemy as the last boss in the Boss Rush would cause it to end early. (Thanks NorBro86)
+- Fixed the bug where killing a splitting enemy as the last boss in the Boss Rush would cause it to end early. (Thanks NorBro)
 - Fixed the bug where Victory Laps were not working properly. (Thanks Gamonymous)
 
 ### *v0.46.2* - November 9th, 2019
@@ -1297,7 +1349,7 @@ Mod changes:
 ### *v0.45.11* - October 31st, 2019
 
 - Fixed the bug where the Boss Rush would complete upon killing all the bosses instead of all the enemies. (Thanks mgln)
-- Fixed the bug where the Chub from the Matriarch was not slowed down in the Boss Rush. (Thanks NorBro86)
+- Fixed the bug where the Chub from the Matriarch was not slowed down in the Boss Rush. (Thanks NorBro)
 
 ### *v0.45.10* - October 26th, 2019
 
@@ -1519,7 +1571,7 @@ Mod changes:
 - Marbles will no longer put a trinket into your inventory.
 - Blank runes will now show the effect if you use the Vanilla Streak Text mod. (Thanks Gamonymous)
 - Added Depths / Necropolis / Dank Depths room #227 to the Forgotten softlock list. (Thanks Gamonymous)
-- Fixed the bug where you could take a Checkpoint when in ghost form. (Thanks NorBro86)
+- Fixed the bug where you could take a Checkpoint when in ghost form. (Thanks NorBro)
 - Fixed the bug where Troll Bombs, Mega Troll Bombs, and Sticky Nickels would get deleted in automatic inventory management. (Thanks Dea1h)
 
 ### *v0.37.9* - May 19th, 2019
@@ -1541,7 +1593,7 @@ Mod changes:
 
 ### *v0.37.4* - May 15th, 2019
 
-- Fixed the bug where fast-travel would cause Forgotten to die after using a Strength card under certain conditions. (Thanks NorBro86)
+- Fixed the bug where fast-travel would cause Forgotten to die after using a Strength card under certain conditions. (Thanks NorBro)
 
 ### *v0.37.3* - May 15th, 2019
 
@@ -1567,7 +1619,7 @@ Mod changes:
 - Enabled both doors in Curse Rooms #10, #18, and #19.
 - Added Caves / Catacombs / Flooded Caves room #754 to the Forgotten softlock list. (Thanks Gamonymous)
 - Added Catacombs room #224 to the Forgotten softlock list.
-- Fixed the bug where Sacred Heart would cause bombs to lose special abilities in season 6. (Thanks NorBro86)
+- Fixed the bug where Sacred Heart would cause bombs to lose special abilities in season 6. (Thanks NorBro)
 - Fixed the bug where Forgotten would not get soul hearts and black hearts upon seeded revival. (Thanks InvaderTim)
 - Fixed the bug where enemy creep would show as red creep on the first frame after spawning under certain circumstances.
 - Fixed the vanilla spelling of Maw of the Void, Spear of Destiny, and Crown of Light.
@@ -1580,7 +1632,7 @@ Mod changes:
 - Blank Runes will now display the streak text of the randomly chosen effect. (Thanks Dea1h)
 - Dead Sea Scrolls will now display the streak text of the randomly chosen effect.
 - The streak text will now always appear when you use a card.
-- Redesigned Gurglings room #5144 to workaround a bug with There's Options. (Thanks NorBro86)
+- Redesigned Gurglings room #5144 to workaround a bug with There's Options. (Thanks NorBro)
 - Fixed the bug where the automatic inventory insertion feature would not work correctly if you opened a chest at the same time as getting an item. (Thanks PassionDrama)
 - Fixed the bug where the automatic inventory insertion feature would not work correctly if you were in a shop.
 - Fixed the bug where the Quarter would not work properly with seeded revival. (Thanks InvaderTim)
@@ -1613,7 +1665,7 @@ Mod changes:
 - A clarification on the Guppy's Collar change in the previous patch: it is still possible for Guppy's Collar to revive the player if they currently have any other revival items. (Thanks Gamonymous)
 - Removed Womb / Scarred Womb room #865 (narrow room with triple Gaping Maws). (Thanks Dea1h)
 - The mod will now automatically reset the run if you are playing as Eden and happen to start with the vanilla Schoolbag (unless it is a seeded run).
-- In season 6, vetos will now be automatically reset if you enter the "Change Char Order" custom challenge. (Thanks NorBro86)
+- In season 6, vetos will now be automatically reset if you enter the "Change Char Order" custom challenge. (Thanks NorBro)
 - In season 6, the mod will now automatically reset the run if you are playing as Eden and happen to start with The Compass. (Thanks thereisnofuture)
 - Fixed the bug where vanilla races and custom races could not be finished.
 
@@ -1630,9 +1682,9 @@ Mod changes:
 - Removed Broken Ankh from the trinket pool for seeded races and season 6. (Thanks mgln)
 - If The Soul enters a trapdoor or beam of light, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).
 - If The Soul enters a room with Mom, Gurdy, or It Lives!, the game will now automatically switch to The Forgotten (to prevent bugs with teleporting the body).
-- Fixed the bug where The Soul would not switch back to the Forgotten if they died in a seeded race / season 6 speedrun. (Thanks NorBro86)
+- Fixed the bug where The Soul would not switch back to the Forgotten if they died in a seeded race / season 6 speedrun. (Thanks NorBro)
 - Fixed the bug where some rooms were incorrectly flipped. (Thanks thereisnofuture)
-- Fixed the bug where duplicate items could be started in season 6. (Thanks NorBro86)
+- Fixed the bug where duplicate items could be started in season 6. (Thanks NorBro)
 - Fixed the bug where the death timer was overlapping with the "S6" icon in season 6.
 
 ### *v0.34.4* - May 3rd, 2019
@@ -1679,7 +1731,7 @@ Mod changes:
 ### *v0.32.1* - April 24th, 2019
 
 - The color for Cage's gray creep is now also turned to green.
-- Fixed the bug where some specific kinds of creep would not turn to red. (Thanks NorBro86)
+- Fixed the bug where some specific kinds of creep would not turn to red. (Thanks NorBro)
 - Fixed the bug where if Lilith was given Incubus in a seeded revival, she would get an additional Incubus. (Thanks Gamonymous)
 
 ### *v0.32.0* - April 22nd, 2019
@@ -1733,7 +1785,7 @@ Mod changes:
 - Fixed the bug where the seeded death mechanic would get messed up if the player had the game paused. (Thanks Gamonymous & ReidMercury)
 - Fixed the bug where having Restock could spawn Restock Machines under certain conditions. (Thanks thereisnofuture & Dea1h)
 - Fixed the bug where Diplopia would not work on the photos after the Mom fight.
-- Fixed the bug where the photos after the Mom fight would spawn erroneously if The Bible was used with Broken Remote. (Thanks NorBro86)
+- Fixed the bug where the photos after the Mom fight would spawn erroneously if The Bible was used with Broken Remote. (Thanks NorBro)
 
 ### *v0.29.6* - December 29th, 2018
 
@@ -1815,7 +1867,7 @@ Mod changes:
 - Fixed the bug where bone hearts would be rearranged upon reaching a new floor when playing on a set seed.
 - Fixed the bug where bone hearts would not be filled upon reaching a new floor when playing on a set seed. (Thanks Moucheron Quipet)
 - Fixed the bug where the seeded swapping would use the seed from the origin floor instead of the destination floor.
-- Fixed the bug where items would disappear from multiple Spiked / Mimic Chests on The Chest / Dark Room. (Thanks NorBro86)
+- Fixed the bug where items would disappear from multiple Spiked / Mimic Chests on The Chest / Dark Room. (Thanks NorBro)
 - Deleted the code that prevents unavoidable damage from Spiked / Mimic Chests during the appearing animation, as the bug was fixed in the vanilla game.
 
 ### *v0.26.2* - November 15th, 2018
@@ -2139,8 +2191,8 @@ Mod changes:
 - Fixed the bug where you would get extra bone hearts if you revived in a seeded race and had Marrow, Divorce Papers, or Brittle Bones. (Thanks Moucheron Quipet and thisguyisbarry)
 - Fixed the bug where if you took a pedestal item as a seeded death ghost, you would not get any of your other items back.
 - Fixed the bug where Wall Creeps with negative coordinates could lead to unavoidable damage. (Thanks NotAnElk)
-- Fixed the bug where if Keeper used a Strength card while at 2 coin containers, he would lose a coin container upon leaving the room. (Thanks NorBro86)
-- Fixed the bug where a Host could spawn on top of a trapdoor in Double Trouble room #3762. (Thanks NorBro86)
+- Fixed the bug where if Keeper used a Strength card while at 2 coin containers, he would lose a coin container upon leaving the room. (Thanks NorBro)
+- Fixed the bug where a Host could spawn on top of a trapdoor in Double Trouble room #3762. (Thanks NorBro)
 - Fixed the bug where under certain specific situations, players would not die when they had no hearts remaining. (Thanks ceehe)
 - Fixed the bug where the "correct" path would not appear after defeating Hush under certain circumstances. (Thanks PassionDrama)
 - Fixed the bug where it was possible to take two "big 4" items in the "Change Char Order" custom challenge. (Thanks olo70009)
@@ -2338,7 +2390,7 @@ Mod Changes:
 - The mod will now show the total number of rooms entered below the seed when a run is completed. (Thanks Ou_J)
 - In R+7 Season 4, Chocolate Milk will now also start with Steven.
 - In R+7 Season 4, the Fire Mind build will now also start with The Wafer.
-- In R+7 Season 4, if you start with Judas' Shadow or The Wafer on the first character and enter a Sacrifice Room on Basement 1, the spikes will despawn. (Thanks Greg and NorBro86)
+- In R+7 Season 4, if you start with Judas' Shadow or The Wafer on the first character and enter a Sacrifice Room on Basement 1, the spikes will despawn. (Thanks Greg and NorBro)
 - In R+7 Season 4, if you enter a Curse Room on the first character, Demon Beggars will now be despawn in addition to pickups. (Thanks Dea1h)
 
 ### *v0.16.26* - April 8th, 2018
@@ -2421,7 +2473,7 @@ Client:
 
 - Eden will now be given the Sad Onion if they happen to start with the vanilla Schoolbag as the random passive item.
 - 5 Monstros will no longer spawn if you use We Need to Go Deeper! or Ehawaz on Womb 2 during races with a goal of "Everything". (Thanks Gamonymous)
-- Fixed the bug where if Eden starts with the Schoolbag, a pedestal will be created on the ground. (Thanks NorBro86)
+- Fixed the bug where if Eden starts with the Schoolbag, a pedestal will be created on the ground. (Thanks NorBro)
 
 ### *v0.15.3* - February 15th, 2018
 
@@ -2515,7 +2567,7 @@ Client:
 ### *v0.14.7* - November 24th, 2017
 
 - Adjusted Big Horn's "BigHoleOpen" animation length from 24 frames to 32 frames. (Thanks Krakenos)
-- Fixed the bug where having Dead Cat and Greed's Gullet on Keeper would result in an incorrect amount of coin containers under certain conditions. (Thanks NorBro86)
+- Fixed the bug where having Dead Cat and Greed's Gullet on Keeper would result in an incorrect amount of coin containers under certain conditions. (Thanks NorBro)
 
 ### *v0.14.6* - November 21st, 2017
 
@@ -2603,7 +2655,7 @@ Client:
 ### *v0.13.2* - November 4th, 2017
 
 - If you live in China, the client will now automatically use a proxy in Singapore to access the racing server.
-- You can no longer enter a trapdoor or crawlspace when the jump animation is playing. (Thanks NorBro86)
+- You can no longer enter a trapdoor or crawlspace when the jump animation is playing. (Thanks NorBro)
 - Fixed the bug where the Mom teleportation subversion did not work or teleported you to the wrong spot. (Thanks 910dan)
 
 ### *v0.13.1* - November 4th, 2017
@@ -2691,7 +2743,7 @@ Item tracker:
 
 ### *v0.12.5* - October 15th, 2017
 
-- The LiveSplit AutoSplitter should now work with the latest patch. (Thanks blcd, Sillypears, NorBro86, and Hyphenated)
+- The LiveSplit AutoSplitter should now work with the latest patch. (Thanks blcd, Sillypears, NorBro, and Hyphenated)
 - Fixed the bug where the mod would not work on the first race if you used save slot 2 or save slot 3. (Thanks 910dan)
 - Fixed the bug where the tenths digit of the timer was inaccurate under certain conditions. (Thanks TheMoonSage and PassionDrama)
 - Fixed the bug where you could not do R+9 / R+14 / R+7 races using the client. (Thanks Yama)
@@ -2707,7 +2759,7 @@ Item tracker:
 - The Booster Pack #4 items will now be included in diversity races.
 - The vanilla Schoolbag will now be removed from all pools when you have the Racing+ version of the Schoolbag. Until The Battery synergy is fixed in vanilla, it is better to use the Racing+ version.
 - Fixed the bug where you could not play hard mode runs in races with a custom format. (Thanks CrafterLynx)
-- Fixed the bug where extra enemies were not being killed upon killing Mom, Mom's Heart, or It Lives! (Thanks ReidMercury and NorBro86)
+- Fixed the bug where extra enemies were not being killed upon killing Mom, Mom's Heart, or It Lives! (Thanks ReidMercury and NorBro)
 - Fixed the bug where the Gurdy teleport was not being subverted in three flipped rooms in The Chest. (Thanks Cyber_1)
 - Fixed the bug where you would prematurely finish a race if your internet disconnected and you reconnected under certain conditions. (Thanks Molfried)
 
@@ -2728,14 +2780,14 @@ Item tracker:
 ### *v0.11.10* - September 30th, 2017
 
 - Integrated the [Trinket Outlines](http://steamcommunity.com/sharedfiles/filedetails/?id=1138554495) mod by [O_o](http://steamcommunity.com/profiles/76561197993627005/myworkshopfiles/?appid=250900) into Racing+, which is a sprite improvement mod.
-- Fixed the bug where the Lil' Haunt delay reduction wouldn't work if there was more than one Haunt in the room. (Thanks Gamonymous and NorBro86)
+- Fixed the bug where the Lil' Haunt delay reduction wouldn't work if there was more than one Haunt in the room. (Thanks Gamonymous and NorBro)
 - Fixed the bug where the game would lock up if you joined a race while in a custom challenge. (Thanks Thoday)
 - Fixed the bug where the game would softlock if you had Mom's Knife and died on Samael and respawned as another character. (Thanks Zazima)
 
 ### *v0.11.9* - September 27th, 2017
 
 - The annoying vanilla in-game timer and score text will no longer appear.
-- Fixed the (vanilla) unavoidable damage in Caves/Catacombs room with 2 Mushrooms and 8 Maggots. (Thanks Dea1h and NorBro86)
+- Fixed the (vanilla) unavoidable damage in Caves/Catacombs room with 2 Mushrooms and 8 Maggots. (Thanks Dea1h and NorBro)
 - Fixed the bug on "Everything" races where a trapdoor would appear about It Lives! under certain conditions. (Thanks Moucheron Quipet)
 - Fixed the bug on "Everything" races where the trophy would spawn prematurely on The Chest if you exited and entered the boss room. (Thanks gorthol and Molfried)
 
@@ -2894,13 +2946,13 @@ Client/Server:
 
 ### *v0.8.11* - July 29th, 2017
 
-- Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks NorBro86)
+- Fixed the bug where fast-clear was not working with Satan (for real this time.) (Thanks NorBro)
 
 ### *v0.8.10* - July 29th, 2017
 
-- The LiveSplit auto-splitter should now work again. (Thanks NorBro86, Sillypears and Hyphen-ated)
+- The LiveSplit auto-splitter should now work again. (Thanks NorBro, Sillypears and Hyphen-ated)
 - Fixed the bug where the client was crashing. (Thanks DiaTech, rerol, Shigan, and Drunkenshoe)
-- Fixed the bug where fast-clear was not working as Samael. (Thanks NorBro86 and thereisnofuture)
+- Fixed the bug where fast-clear was not working as Samael. (Thanks NorBro and thereisnofuture)
 
 ### *v0.8.8* - July 29th, 2017
 
@@ -2951,7 +3003,7 @@ Client/Server:
 - Reduced the damage penalty on Samael for Mom's Knife from 1.5 to 1.25.
 - Fixed the bug where the black champion Widow would open the doors prematurely under certain circumstances.
 - Fixed the bug where pickups could sometimes spawn on top of trapdoors and crawlspaces. (Thanks Cyber_1)
-- Fixed the bug where killing a Dukie would open the doors prematurely under certain conditions. (Thanks NorBro86)
+- Fixed the bug where killing a Dukie would open the doors prematurely under certain conditions. (Thanks NorBro)
 - Fixed the bug where if Eden started with Eden's Soul, it would incorrectly show as fully charged inside of the Schoolbag. (Thanks Birdie0)
 - Fixed the bug where the game softlocks if you enter a crawlspace inside of an Angel Room. (Thanks TheMoonSage)
 - Fixed the bug where the races with the "Unseeded (Beginner)" format would not show up correctly in the lobby.
@@ -3169,7 +3221,7 @@ Changes:
 
 ### *v0.5.20* - April 27th, 2017
 
-- Fixed the (vanilla) bug where the black Scolex champion had the wrong graphics. (Thanks NorBro86)
+- Fixed the (vanilla) bug where the black Scolex champion had the wrong graphics. (Thanks NorBro)
 - Fixed the bug where pickups would be duplicated if they appeared over trapdoors under certain conditions. (Thanks Cyber_1)
 - Fixed the bug where the Soul Jar was not working properly with Abaddon. (Thanks Cyber_1)
 - Fixed the bug with Book of Sin where it wouldn't work under certain conditions. (Thanks Thalen22)
