@@ -18,7 +18,7 @@ export function initDefaults(): void {
   if (settings.get("isaacPath") === undefined) {
     settings.set(
       "isaacPath",
-      "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\isaac.exe",
+      "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Binding of Isaac Rebirth\\isaac-ng.exe",
     );
   }
 

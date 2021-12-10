@@ -73,11 +73,13 @@ function onMessage(message: string) {
       "error: The message received for the isaacPath was not a string.",
       processExit,
     );
+    return;
   }
   process.send(`Using an Isaac path of: ${isaacPath}`);
 
   if (!file.exists(isaacPath) || !file.isFile(isaacPath)) {
     process.send("isaacNotFound", processExit);
+    return;
   }
 
   gamePath = path.dirname(isaacPath);
