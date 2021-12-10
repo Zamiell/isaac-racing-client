@@ -14,7 +14,7 @@
 
 ## Known Bugs with the Racing+ Mod (e.g. gameplay)
 
-Racing+ mod bugs are listed on a [separate page](mod/BUGS.md).
+Racing+ mod bugs are listed on a [separate page](https://github.com/Zamiell/racing-plus/blob/main/docs/bugs.md).
 
 <br />
 
