@@ -34,10 +34,10 @@ def main():
     args = parse_command_line_arguments()
 
     # Load environment variables
-    dotenv.load_dotenv(os.path.join(SCRIPT_DIR, ".env"))
+    dotenv.load_dotenv(os.path.join(REPOSITORY_DIR, ".env"))
     validate_environment_variables()
 
-    version = get_version(args)
+    version = get_incremented_version_from_package_json()
     write_version_to_package_json(version)
     ensure_localhost_false()
     git_commit(version)
@@ -52,53 +52,24 @@ def main():
 def parse_command_line_arguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "-i",
-        "--increment",
-        help="increment the version instead of using the latest version of the Racing+ mod",
-        action="store_true",
-    )
-
     return parser.parse_args()
 
 
 def validate_environment_variables():
-    if os.environ.get("GH_TOKEN") == "":
-        error('error: GH_TOKEN is blank in the ".env" file')
-
-    if os.environ.get("VPS_IP") == "":
-        error('error: VPS_IP is blank in the ".env" file')
-
-    if os.environ.get("VPS_USER") == "":
-        error('error: VPS_USER is blank in the ".env" file')
-
-    if os.environ.get("VPS_PASS") == "":
-        error('error: VPS_PASS is blank in the ".env" file')
-
-
-def get_version(args):
-    incremented_version = get_incremented_version_from_package_json()
-
-    if args.increment:
-        return incremented_version
-
-    # Get the latest version of the Racing+ mod on GitHub
-    with urllib.request.urlopen(VERSION_URL) as response:
-        racing_plus_mod_version = response.read().decode("utf-8").strip()
-
-    major1, minor1, patch1 = parse_semantic_version(incremented_version)
-    major2, minor2, patch2 = parse_semantic_version(racing_plus_mod_version)
-
-    # If the incremented version is ahead of the mod, then prefer the incremented version
-    if major1 > major2 or minor1 > minor2 or patch1 > patch2:
-        print(
-            "Choosing to use the incremented client version, since it is greater than the mod."
-        )
-        return incremented_version
-
-    # Otherwise, use the version of the mod
-    print("Choosing to match the version of the Racing+ mod.")
-    return racing_plus_mod_version
+    environment_variables_to_check = [
+        "GH_TOKEN",
+        "VPS_IP",
+        "VPS_USER",
+        "VPS_PASS",
+    ]
+    for environment_variable_name in environment_variables_to_check:
+        environment_variable = os.environ.get(environment_variable_name)
+        if environment_variable is None or environment_variable == "":
+            error(
+                'error: {} is missing or blank in the ".env" file'.format(
+                    environment_variable_name
+                )
+            )
 
 
 def get_incremented_version_from_package_json():
