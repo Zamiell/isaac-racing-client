@@ -7,6 +7,7 @@ import path from "path";
 import pkg from "../../package.json";
 import * as file from "../common/file";
 import { initLogging } from "../common/initLogging";
+import settings from "../common/settings";
 import * as automaticUpdate from "./automaticUpdate";
 import { IS_DEV } from "./constants";
 import g from "./globals";
@@ -66,6 +67,17 @@ $(() => {
 
     // Skip Isaac-related checks and automatically log in with account #1
     // $("#title-choose-1").click();
+  } else if (settings.get("dev") === true) {
+    // Skip Isaac/Steam-related checks
+
+    // Start the local socket server
+    socket.start();
+
+    // Start logging in via Steam
+    $("#title-ajax-description").html(
+      "Getting an authentication ticket from Steam...",
+    );
+    steam.start();
   } else {
     $("#title-ajax-description").html(
       "Performing a scan on the Racing+ mod to ensure that it is not corrupted...",
