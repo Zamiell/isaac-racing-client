@@ -65,6 +65,12 @@ function checkCorruptOrMissingFiles(
         continue;
       }
 
+      // Make an exception for the "metadata.xml" file
+      // (this file may have changed because it changes after uploading the mod to the workshop)
+      if (path.basename(filePath) === "metadata.xml") {
+        continue;
+      }
+
       const fileHash = file.getHash(filePath);
       if (fileHash !== backupFileHash) {
         process.send(`File is corrupt: ${filePath}`);
