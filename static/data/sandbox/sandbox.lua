@@ -28,6 +28,7 @@ end
 
 -- Make a copy of some globals
 local originalDebug = debug
+local originalOS = os
 local originalDofile = dofile
 local originalInclude = include
 local originalRequire = require
@@ -171,10 +172,6 @@ function sandbox.isSocketInitialized()
   return socket ~= nil
 end
 
-function sandbox.connectLocalhost(port, useTCP)
-  return sandbox.connect("127.0.0.1", port, useTCP) -- A string of "localhost" does not work
-end
-
 function sandbox.connect(hostname, port, useTCP)
   if hostname == nil then
     Isaac.DebugString(
@@ -248,6 +245,10 @@ function sandbox.connect(hostname, port, useTCP)
   return socketClient
 end
 
+function sandbox.connectLocalhost(port, useTCP)
+  return sandbox.connect("127.0.0.1", port, useTCP) -- A string of "localhost" does not work
+end
+
 function sandbox.traceback()
   local traceback = sandbox.getTraceback();
   if traceback ~= "" then
@@ -284,6 +285,10 @@ function sandbox.getParentFunctionDescription(levels)
   return debugTable.name .. ":" .. tostring(debugTable.linedefined)
 end
 
+function sandbox.getDate(format)
+  return os.date(format)
+end
+
 return {
   init = sandbox.init,
   isSocketInitialized = sandbox.isSocketInitialized,
@@ -292,4 +297,5 @@ return {
   traceback = sandbox.traceback,
   getTraceback = sandbox.getTraceback,
   getParentFunctionDescription = sandbox.getParentFunctionDescription,
+  getDate = sandbox.getDate,
 }
