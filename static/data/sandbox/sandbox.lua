@@ -286,7 +286,7 @@ function sandbox.getParentFunctionDescription(levels)
 end
 
 function sandbox.getDate(format)
-  return os.date(format)
+  return originalOS.date(format)
 end
 
 return {
