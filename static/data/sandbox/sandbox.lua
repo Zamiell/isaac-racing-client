@@ -2,7 +2,6 @@
 -- evil things
 
 -- Constants
-local LOCALHOST = "127.0.0.1" -- A string of "localhost" does not work
 local TIMEOUT_SECONDS = 0.001 -- 1 millisecond
 local UNSAFE_IMPORTS = {
   "debug",
@@ -11,6 +10,13 @@ local UNSAFE_IMPORTS = {
   "loadfile",
   "os",
   "socket",
+}
+local SAFE_HOSTNAMES = {
+  "127.0.0.1", -- The string of "localhost" does not work
+  "192.168.1.1",
+  "192.168.1.10",
+  "192.168.1.100",
+  "isaacracing.net",
 }
 
 -- Import the socket module for our own usage before we modify the "require()" function
@@ -166,9 +172,27 @@ function sandbox.isSocketInitialized()
 end
 
 function sandbox.connectLocalhost(port, useTCP)
+  return sandbox.connect("127.0.0.1", port, useTCP) -- A string of "localhost" does not work
+end
+
+function sandbox.connect(hostname, port, useTCP)
+  if hostname == nil then
+    Isaac.DebugString(
+      "Error: The sandbox \"connect()\" function requires a port as the first argument."
+    )
+    return nil
+  end
+
+  if not includes(SAFE_HOSTNAMES, hostname) then
+    Isaac.DebugString(
+      "Error: The hostname of \"" .. tostring(hostname) .. "\" is not allowed."
+    )
+    return nil
+  end
+
   if port == nil then
     Isaac.DebugString(
-      "Error: The \"connectLocalhost()\" function requires a port as the first argument."
+      "Error: The sandbox \"connect()\" function requires a port as the first argument."
     )
     return nil
   end
@@ -187,13 +211,13 @@ function sandbox.connectLocalhost(port, useTCP)
   if protocol == "TCP" then
     socketClient = socket.tcp()
     socketClient:settimeout(TIMEOUT_SECONDS)
-    local err, errMsg = socketClient:connect(LOCALHOST, port)
+    local err, errMsg = socketClient:connect(hostname, port)
     if err ~= 1 then
       if errMsg == "timeout" then
         Isaac.DebugString(protocol .. " socket server was not present on port: " .. tostring(port))
       else
         Isaac.DebugString(
-          "Error: Failed to connect via " .. protocol .. " for \"" .. LOCALHOST .. "\" "
+          "Error: Failed to connect via " .. protocol .. " for \"" .. hostname .. "\" "
           .. "on port " .. tostring(port) .. ": " .. errMsg
         )
       end
@@ -202,10 +226,10 @@ function sandbox.connectLocalhost(port, useTCP)
     end
   elseif protocol == "UDP" then
     socketClient = socket.udp()
-    local err, errMsg = socketClient:setpeername(LOCALHOST, port)
+    local err, errMsg = socketClient:setpeername(hostname, port)
     if err ~= 1 then
       Isaac.DebugString(
-        "Error: Failed to connect via " .. protocol .. " for \"" .. LOCALHOST .. "\" "
+        "Error: Failed to connect via " .. protocol .. " for \"" .. hostname .. "\" "
         .. "on port " .. tostring(port) .. ": " .. errMsg
       )
 
@@ -218,7 +242,7 @@ function sandbox.connectLocalhost(port, useTCP)
   Isaac.DebugString(
     "Connected via " .. protocol .. " "
     .. "on local address " .. tostring(localAddress) .. ":" .. tostring(localPort) .. " "
-    .. "and remote address " .. LOCALHOST .. ":" .. tostring(port) .. " "
+    .. "and remote address " .. hostname .. ":" .. tostring(port) .. " "
     .. "(on Isaac frame " .. tostring(isaacFrameCount) .. ")."
   )
   return socketClient
@@ -263,6 +287,7 @@ end
 return {
   init = sandbox.init,
   isSocketInitialized = sandbox.isSocketInitialized,
+  connect = sandbox.connect,
   connectLocalhost = sandbox.connectLocalhost,
   traceback = sandbox.traceback,
   getTraceback = sandbox.getTraceback,
