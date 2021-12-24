@@ -234,6 +234,11 @@ function sandbox.connect(hostname, port, useTCP)
     end
   end
 
+  -- End-users will check for new socket data on every PostRender frame
+  -- However, the remote socket might not necessarily have any new data for us
+  -- Thus, we set the timeout to 0 in order to prevent lag
+  socketClient:settimeout(0)
+
   local isaacFrameCount = Isaac.GetFrameCount()
   local localAddress, localPort = socketClient:getsockname()
   Isaac.DebugString(
