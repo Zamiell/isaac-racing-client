@@ -157,7 +157,7 @@ function sandbox.init()
 
   if socket == nil then
     Isaac.DebugString(
-      "The sandbox could not initialize because the \"--luadebug\" flag was not enabled."
+      "The sandbox could not initialize because the \"--luadebug\" flag is not enabled."
     )
     return
   end
@@ -173,9 +173,14 @@ function sandbox.isSocketInitialized()
 end
 
 function sandbox.connect(hostname, port, useTCP)
+  if socket == nil then
+    Isaac.DebugString("Error: connect was called but the \"--luadebug\" flag is not enabled.")
+    return nil
+  end
+
   if hostname == nil then
     Isaac.DebugString(
-      "Error: The sandbox \"connect()\" function requires a port as the first argument."
+      "Error: The sandbox connect function requires a port as the first argument."
     )
     return nil
   end
@@ -189,7 +194,7 @@ function sandbox.connect(hostname, port, useTCP)
 
   if port == nil then
     Isaac.DebugString(
-      "Error: The sandbox \"connect()\" function requires a port as the first argument."
+      "Error: The sandbox connect function requires a port as the first argument."
     )
     return nil
   end
@@ -197,11 +202,6 @@ function sandbox.connect(hostname, port, useTCP)
   local protocol = "UDP";
   if useTCP == true then
     protocol = "TCP"
-  end
-
-  if socket == nil then
-    Isaac.DebugString("Error: Failed to connect because the socket library is not initialized.")
-    return nil
   end
 
   local socketClient
@@ -263,7 +263,7 @@ end
 
 function sandbox.getTraceback()
   if originalDebug == nil then
-    Isaac.DebugString("Error: getTraceback was called but the \"--luadebug\" flag was not enabled.")
+    Isaac.DebugString("Error: getTraceback was called but the \"--luadebug\" flag is not enabled.")
     return ""
   end
 
@@ -291,7 +291,21 @@ function sandbox.getParentFunctionDescription(levels)
 end
 
 function sandbox.getDate(format)
+  if originalOS == nil then
+    Isaac.DebugString("Error: getDate was called but the \"--luadebug\" flag is not enabled.")
+    return "unknown"
+  end
+
   return originalOS.date(format)
+end
+
+function sandbox.getSocketTime()
+  if socket == nil then
+    Isaac.DebugString("Error: connect was called but the \"--luadebug\" flag is not enabled.")
+    return nil
+  end
+
+  return socket.gettime()
 end
 
 return {
@@ -303,4 +317,5 @@ return {
   getTraceback = sandbox.getTraceback,
   getParentFunctionDescription = sandbox.getParentFunctionDescription,
   getDate = sandbox.getDate,
+  getSocketTime = sandbox.getSocketTime,
 }
