@@ -167,6 +167,7 @@ export function sendAll(): void {
   send("set", `raceID ${g.modSocket.raceID}`);
   send("set", `status ${g.modSocket.status}`);
   send("set", `myStatus ${g.modSocket.myStatus}`);
+  send("set", `ranked ${g.modSocket.ranked}`);
   send("set", `solo ${g.modSocket.solo}`);
   send("set", `format ${g.modSocket.format}`);
   send("set", `difficulty ${g.modSocket.difficulty}`);
