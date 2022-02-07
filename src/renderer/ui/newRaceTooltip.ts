@@ -286,6 +286,11 @@ function submit(event: JQuery.SubmitEvent) {
     password = passwordHash.toString("base64");
   }
 
+  // Handle multiplayer specific settings
+  if (!solo) {
+    ranked = true;
+  }
+
   // Handle ranked solo specific settings
   if (ranked && solo) {
     format = "seeded";
