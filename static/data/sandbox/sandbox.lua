@@ -255,8 +255,8 @@ function sandbox.connectLocalhost(port, useTCP)
 end
 
 function sandbox.traceback()
-  local traceback = sandbox.getTraceback();
-  if traceback ~= "" then
+  local tracebackMsg = sandbox.getTraceback();
+  if tracebackMsg ~= nil and tracebackMsg ~= "" then
     Isaac.DebugString(tracebackMsg)
   end
 end
