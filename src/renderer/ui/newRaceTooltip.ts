@@ -70,7 +70,9 @@ export function init(): void {
   $("#new-race-build-randomize").click(() => {
     const oldBuildString = $("#new-race-starting-build").val();
     if (typeof oldBuildString !== "string") {
-      throw new Error("Failed to get the starting build.");
+      throw new Error(
+        'The value from the "new-race-starting-build" element was not a string.',
+      );
     }
     const oldBuild = parseIntSafe(oldBuildString);
     let randomBuild;
@@ -169,7 +171,9 @@ function submit(event: JQuery.SubmitEvent) {
 
   const titleValue = $("#new-race-title").val();
   if (typeof titleValue !== "string") {
-    throw new Error("Failed to get the value of the title element.");
+    throw new Error(
+      'The value from the "new-race-title" element was not a string.',
+    );
   }
   let title = titleValue.trim();
   if (title !== g.lastRaceTitle) {
@@ -178,7 +182,9 @@ function submit(event: JQuery.SubmitEvent) {
 
   const passwordValue = $("#new-race-password").val();
   if (typeof passwordValue !== "string") {
-    throw new Error("Failed to get the value of the password element.");
+    throw new Error(
+      'The value from the "new-race-password" element was not a string.',
+    );
   }
   let password = passwordValue.trim();
   if (password !== settings.get("newRacePassword")) {
@@ -192,7 +198,9 @@ function submit(event: JQuery.SubmitEvent) {
 
   const rankedString = $("input[name=new-race-ranked]:checked").val();
   if (typeof rankedString !== "string") {
-    throw new Error("Failed to get the value of the ranked element.");
+    throw new Error(
+      'The value from the "new-race-ranked" element was not a string.',
+    );
   }
   if (rankedString !== settings.get("newRaceRanked")) {
     settings.set("newRaceRanked", rankedString);
@@ -239,7 +247,9 @@ function submit(event: JQuery.SubmitEvent) {
   if (format === "seeded") {
     startingBuild = $("#new-race-starting-build").val();
     if (typeof startingBuild !== "string") {
-      throw new Error("Failed to get the value of the starting build element.");
+      throw new Error(
+        'The value from the "new-race-starting-build" element was not a string.',
+      );
     }
     if (startingBuild !== settings.get("newRaceBuild")) {
       settings.set("newRaceBuild", startingBuild);
@@ -251,7 +261,12 @@ function submit(event: JQuery.SubmitEvent) {
     startingBuild = -1;
   }
 
-  const difficulty = $("input[name=new-race-difficulty]:checked").val();
+  let difficulty = $("input[name=new-race-difficulty]:checked").val();
+  if (typeof difficulty !== "string") {
+    throw new Error(
+      'The value from the "new-race-difficulty" element was not a string.',
+    );
+  }
   if (difficulty !== settings.get("newRaceDifficulty")) {
     settings.set("newRaceDifficulty", difficulty);
   }
@@ -295,6 +310,7 @@ function submit(event: JQuery.SubmitEvent) {
   if (ranked && solo) {
     format = "seeded";
     startingBuild = 0;
+    difficulty = "normal";
   }
 
   // Close the tooltip (and all error tooltips, if present)
