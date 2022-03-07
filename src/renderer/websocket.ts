@@ -912,6 +912,7 @@ function initRaceCommandHandlers(conn: Connection) {
     floorNum: number;
     stageType: number;
     datetimeArrivedFloor: number;
+    timeBehindLeader: number;
   }
 
   conn.on("racerSetFloor", connRacerSetFloor);
