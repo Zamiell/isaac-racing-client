@@ -219,7 +219,7 @@ keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
 
   event.preventDefault();
 
-  let room;
+  let room: string;
   if (g.currentScreen === "lobby") {
     room = "lobby";
   } else if (g.currentScreen === "race") {
@@ -258,7 +258,7 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
 
   event.preventDefault();
 
-  let room;
+  let room: string;
   if (g.currentScreen === "lobby") {
     room = "lobby";
   } else if (g.currentScreen === "race") {

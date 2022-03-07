@@ -30,7 +30,7 @@ export function start(
     return;
   }
 
-  let childProcessPath;
+  let childProcessPath: string;
   if (IS_DEV) {
     childProcessPath = path.join(__dirname, "childProcesses", `${name}.js`);
   } else {

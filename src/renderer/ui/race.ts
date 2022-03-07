@@ -334,7 +334,7 @@ export function show(raceID: number): void {
     });
 
     // Build the title
-    let raceTitle;
+    let raceTitle: string;
     if (race.name === "-") {
       raceTitle = `Race ${g.currentRaceID}`;
     } else {
@@ -365,7 +365,7 @@ export function show(raceID: number): void {
     } while (($("#race-title").height() as number) > 45); // One line is 45 pixels high
 
     // Column 1 - Status
-    let circleClass;
+    let circleClass: string;
     if (race.status === "open") {
       circleClass = "open";
     } else if (race.status === "starting") {
@@ -374,6 +374,11 @@ export function show(raceID: number): void {
       circleClass = "in-progress";
     } else if (race.status === "finished") {
       circleClass = "finished";
+    } else {
+      errorShow(
+        "Unable to parse the race status.",
+      );
+      return;
     }
     let statusText = `<span class="circle lobby-current-races-${circleClass}"></span> &nbsp; `;
     statusText += `<span lang="en">${capitalize(race.status)}</span>`;
@@ -669,7 +674,7 @@ export function participantAdd(i: number): void {
     );
     return;
   }
-  let racerDiv;
+  let racerDiv: string;
   if (racer.name === g.myUsername) {
     racerDiv = `<tr id="race-participants-table-${racer.name}" class="race-participants-table-self-row">`;
   } else {
@@ -877,7 +882,7 @@ export function participantsSetFloor(i: number): void {
 
   // Update the floor column of the row
   const altFloor = stageType === 4 || stageType === 5;
-  let floorDiv;
+  let floorDiv: string;
   if (floorNum === 0) {
     floorDiv = "-";
   } else if (floorNum === 1) {

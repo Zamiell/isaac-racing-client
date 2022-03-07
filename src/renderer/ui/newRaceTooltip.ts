@@ -32,7 +32,7 @@ export function init(): void {
     const randomNumbers = [];
     const numWords = 2;
     for (let i = 0; i < numWords; i++) {
-      let randomNumber;
+      let randomNumber: number;
       do {
         randomNumber = getRandomNumber(0, g.wordList.length - 1);
       } while (randomNumbers.indexOf(randomNumber) !== -1);
@@ -58,7 +58,7 @@ export function init(): void {
 
   $("#new-race-character-randomize").click(() => {
     const char = $("#new-race-character").val();
-    let randomChar;
+    let randomChar: string;
     do {
       const randomCharNum = getRandomNumber(0, CHARACTERS.length - 1);
       randomChar = CHARACTERS[randomCharNum];
@@ -75,7 +75,7 @@ export function init(): void {
       );
     }
     const oldBuild = parseIntSafe(oldBuildString);
-    let randomBuild;
+    let randomBuild: number;
     do {
       // The build at index 0 is intentionally blank
       randomBuild = getRandomNumber(1, BUILDS.length - 1);
@@ -243,20 +243,20 @@ function submit(event: JQuery.SubmitEvent) {
     return false;
   }
 
-  let startingBuild;
+  let startingBuild: number;
   if (format === "seeded") {
-    startingBuild = $("#new-race-starting-build").val();
-    if (typeof startingBuild !== "string") {
+    const startingBuildVal = $("#new-race-starting-build").val();
+    if (typeof startingBuildVal !== "string") {
       throw new Error(
         'The value from the "new-race-starting-build" element was not a string.',
       );
     }
-    if (startingBuild !== settings.get("newRaceBuild")) {
-      settings.set("newRaceBuild", startingBuild);
+    if (startingBuildVal !== settings.get("newRaceBuild")) {
+      settings.set("newRaceBuild", startingBuildVal);
     }
 
     // The server expects this to be a number
-    startingBuild = parseIntSafe(startingBuild);
+    startingBuild = parseIntSafe(startingBuildVal);
   } else {
     startingBuild = -1;
   }

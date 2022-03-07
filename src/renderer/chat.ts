@@ -28,8 +28,8 @@ export function send(destination: string, originalMessage: string): void {
   // If this is a command
   let isCommand = false;
   let isPM = false;
-  let chatArg1;
-  let chatArg2;
+  let chatArg1: string | undefined;
+  let chatArg2: string | undefined;
   if (message.startsWith("/")) {
     isCommand = true;
 
@@ -153,7 +153,7 @@ export function send(destination: string, originalMessage: string): void {
   }
 
   // Get the room
-  let room;
+  let room: string;
   if (destination === "lobby") {
     room = "lobby";
   } else if (destination === "race") {
@@ -384,13 +384,14 @@ export function draw(
   chatLine += "</div>";
 
   // Find out whether this is going to "#race-chat-text" or "#lobby-chat-text"
-  let destination;
+  let destination: string;
   if (room === "lobby") {
     destination = "lobby";
   } else if (room.startsWith("_race_")) {
     destination = "race";
   } else {
     errorShow('Failed to parse the room in the "chat.draw" function.');
+    return;
   }
 
   const destinationElement = $(`#${destination}-chat-text`);

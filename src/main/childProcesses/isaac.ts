@@ -369,7 +369,7 @@ function isProcessRunning(processName: string): [boolean, number] {
   // The "process-list" module will not compile for some reason
   // So, just manually run the "tasklist" command and parse the output without using any module
   const command = "tasklist";
-  let output;
+  let output: string[];
   try {
     output = execSync(command).toString().split("\r\n");
   } catch (err) {

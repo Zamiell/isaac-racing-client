@@ -144,13 +144,16 @@ export function raceDraw(race: Race): void {
 
   // Column 2 - Status
   raceDiv += '<td class="lobby-current-races-status">';
-  let circleClass;
+  let circleClass: string;
   if (race.status === "open") {
     circleClass = "open";
   } else if (race.status === "starting") {
     circleClass = "starting";
   } else if (race.status === "in progress") {
     circleClass = "in-progress";
+  } else {
+    errorShow("Failed to parse the race status.");
+    return;
   }
   raceDiv += `<span id="lobby-current-races-${race.id}-status-circle" class="circle lobby-current-races-${circleClass}"></span>`;
   raceDiv += ` &nbsp; <span id="lobby-current-races-${

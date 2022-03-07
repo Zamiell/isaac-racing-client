@@ -235,7 +235,7 @@ function initChatCommandHandlers(conn: Connection) {
 
   conn.on("roomHistory", (data: RoomHistoryData) => {
     // Figure out what kind of chat room this is
-    let destination;
+    let destination: string;
     if (data.room === "lobby") {
       destination = "lobby";
     } else {
@@ -760,7 +760,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Update the "Status" column in the lobby
-    let circleClass;
+    let circleClass: string;
     if (data.status === "open") {
       circleClass = "open";
     } else if (data.status === "starting") {
@@ -772,11 +772,14 @@ function initRaceCommandHandlers(conn: Connection) {
     } else if (data.status === "finished") {
       g.raceList.delete(data.id);
       lobbyScreen.raceUndraw(data.id);
+      return;
     } else {
       errorShow(
         "Unable to parse the race status from the raceSetStatus command.",
       );
+      return;
     }
+
     $(`#lobby-current-races-${data.id}-status-circle`).removeClass();
     $(`#lobby-current-races-${data.id}-status-circle`).addClass(
       `circle lobby-current-races-${circleClass}`,
@@ -792,11 +795,6 @@ function initRaceCommandHandlers(conn: Connection) {
 
       // Start the callback for timers
       lobbyScreen.statusTimer(data.id);
-    }
-
-    // Remove the race if it is finished
-    if (data.status === "finished") {
-      g.raceList.delete(data.id);
     }
   }
 
