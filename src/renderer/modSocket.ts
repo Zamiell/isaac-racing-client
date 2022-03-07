@@ -181,6 +181,7 @@ export function sendAll(): void {
   send("set", `place ${g.modSocket.place}`);
   send("set", `numReady ${g.modSocket.numReady}`);
   send("set", `numEntrants ${g.modSocket.numEntrants}`);
+  send("set", `timeBehindLeader ${g.modSocket.timeBehindLeader}`);
 }
 
 export function reset(): void {

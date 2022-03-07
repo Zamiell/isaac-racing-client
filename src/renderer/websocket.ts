@@ -940,6 +940,7 @@ function initRaceCommandHandlers(conn: Connection) {
         racer.floorNum = data.floorNum;
         racer.stageType = data.stageType;
         racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
+        racer.timeBehindLeader = data.timeBehindLeader;
 
         const isAltStage = data.stageType === 4 || data.stageType === 5;
         if (data.floorNum === 1 && !isAltStage) {
@@ -956,6 +957,11 @@ function initRaceCommandHandlers(conn: Connection) {
         // Update the race screen
         if (g.currentScreen === "race") {
           raceScreen.participantsSetFloor(i);
+        }
+
+        if (racer.name === g.myUsername) {
+          g.modSocket.timeBehindLeader = racer.timeBehindLeader;
+          modSocket.sendAll();
         }
 
         break;

@@ -9,6 +9,7 @@ export interface Racer {
   floorNum: number;
   stageType: number;
   datetimeArrivedFloor: number;
+  timeBehindLeader: number;
   items: RaceItem[];
   startingItem: number;
   characterNum: number;
@@ -29,6 +30,7 @@ export function getDefaultRacer(name: string): Racer {
     floorNum: 1,
     stageType: 0,
     datetimeArrivedFloor: 0,
+    timeBehindLeader: 0,
     items: [],
     startingItem: 0,
     characterNum: 0,
