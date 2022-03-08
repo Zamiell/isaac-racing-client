@@ -910,7 +910,7 @@ function initRaceCommandHandlers(conn: Connection) {
     floorNum: number;
     stageType: number;
     datetimeArrivedFloor: number;
-    timeBehindLeader: number;
+    millisecondsBehindLeader: number;
   }
 
   conn.on("racerSetFloor", connRacerSetFloor);
@@ -940,7 +940,7 @@ function initRaceCommandHandlers(conn: Connection) {
         racer.floorNum = data.floorNum;
         racer.stageType = data.stageType;
         racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
-        racer.timeBehindLeader = data.timeBehindLeader;
+        racer.millisecondsBehindLeader = data.millisecondsBehindLeader;
 
         const isAltStage = data.stageType === 4 || data.stageType === 5;
         if (data.floorNum === 1 && !isAltStage) {
@@ -960,8 +960,8 @@ function initRaceCommandHandlers(conn: Connection) {
         }
 
         if (racer.name === g.myUsername) {
-          g.modSocket.timeBehindLeader = racer.timeBehindLeader;
-          modSocket.sendAll();
+          g.modSocket.millisecondsBehindLeader = racer.millisecondsBehindLeader;
+          modSocket.sendMillisecondsBehindLeader();
         }
 
         break;

@@ -42,5 +42,5 @@ export class ModSocket {
   /** The number of people in the race. */
   numEntrants = 1;
 
-  timeBehindLeader = 0;
+  millisecondsBehindLeader = 0;
 }
