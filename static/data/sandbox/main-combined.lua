@@ -984,10 +984,10 @@ function META:ThrowFriendlyDip(subtype, pos, target)
 	return Entity_Player_ThrowFriendlyDip(self, subtype, pos, target)
 end
 
--- void EntityPlayer:TriggerBookOfVirtues(CollectibleType Type = CollectibleType.COLLECTIBLE_NULL)
+-- void EntityPlayer:TriggerBookOfVirtues(CollectibleType Type = CollectibleType.COLLECTIBLE_NULL, int Charge = 0)
 local Entity_Player_TriggerBookOfVirtues = META0.TriggerBookOfVirtues
-function META:TriggerBookOfVirtues(id)
-	Entity_Player_TriggerBookOfVirtues(self, id or 0)
+function META:TriggerBookOfVirtues(id, charge)
+	Entity_Player_TriggerBookOfVirtues(self, id or 0, charge or 0)
 end
 
 -- void EntityPlayer:SetPocketActiveItem(CollectibleType Type, ActiveSlot Slot = ActiveSlot.SLOT_POCKET, boolean KeepInPools = false)
