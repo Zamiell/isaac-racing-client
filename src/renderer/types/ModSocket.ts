@@ -43,4 +43,5 @@ export class ModSocket {
   numEntrants = 1;
 
   millisecondsBehindLeader = 0;
+  millisecondsAheadOfNextRacer = 0;
 }

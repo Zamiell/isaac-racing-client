@@ -185,12 +185,20 @@ export function sendAll(): void {
     "set",
     `millisecondsBehindLeader ${g.modSocket.millisecondsBehindLeader}`,
   );
+  send(
+    "set",
+    `millisecondsAheadOfNextRacer ${g.modSocket.millisecondsAheadOfNextRacer}`,
+  );
 }
 
-export function sendMillisecondsBehindLeader(): void {
+export function sendMillisecondsBehindAndAhead(): void {
   send(
     "set",
     `millisecondsBehindLeader ${g.modSocket.millisecondsBehindLeader}`,
+  );
+  send(
+    "set",
+    `millisecondsAheadOfNextRacer ${g.modSocket.millisecondsAheadOfNextRacer}`,
   );
 }
 
