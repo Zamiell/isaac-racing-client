@@ -1,5 +1,7 @@
 # isaac-racing-client
 
+<!-- markdownlint-disable MD033 -->
+
 <br />
 
 ## Download & Additional Information
@@ -26,34 +28,34 @@ The location for the client settings file is: `C:\Users\[Username]\AppData\Local
 
 ## Run from Source (on Windows)
 
-* Install [node.js](https://nodejs.org/en/download/).
-* Install [Git](https://git-scm.com/download/win).
-* `git clone https://github.com/Zamiell/isaac-racing-client.git`
-* `cd isaac-racing-client`
-* `npm ci`
-* `./run.sh`
+- Install [node.js](https://nodejs.org/en/download/).
+- Install [Git](https://git-scm.com/download/win).
+- `git clone https://github.com/Zamiell/isaac-racing-client.git`
+- `cd isaac-racing-client`
+- `npm ci`
+- `./run.sh`
 
 <br />
 
 ## Run from Source (on Ubuntu 18.04)
 
-* Install [curl](https://curl.haxx.se/) and [Git](https://git-scm.com/):
-  * `sudo apt install curl git -y`
-* Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
-  * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
-  * Close and reopen Terminal.
-  * `nvm install node`
-* `git clone https://github.com/Zamiell/isaac-racing-client.git`
-* `cd isaac-racing-client`
-* `npm ci`
-* `./run.sh`
+- Install [curl](https://curl.haxx.se/) and [Git](https://git-scm.com/):
+  - `sudo apt install curl git -y`
+- Install [node.js](https://nodejs.org/en/) (using [nvm](https://github.com/creationix/nvm) to do this is recommended):
+  - `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash`
+  - Close and reopen Terminal.
+  - `nvm install node`
+- `git clone https://github.com/Zamiell/isaac-racing-client.git`
+- `cd isaac-racing-client`
+- `npm ci`
+- `./run.sh`
 
 <br />
 
 ## Build (on Windows)
 
-* Install Python 3.9.
-* `python.exe release.py`
+- Install Python 3.9.
+- `python.exe release.py`
 
 <br />
 

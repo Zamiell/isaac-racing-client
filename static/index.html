@@ -14,7 +14,10 @@
     <link rel="stylesheet" href="css/tooltipster.bundle.min.css" />
     <link rel="stylesheet" href="css/tooltipster-sideTip-shadow.min.css" />
     <link rel="stylesheet" href="css/fontawesome-all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css"
+    />
     <link rel="stylesheet" href="css/alpha.css" />
     <link rel="stylesheet" href="css/main.css" />
     <title>Racing+</title>
@@ -29,7 +32,7 @@
     <script src="js/jquery.min.js"></script>
 
     <!-- A jQuery plugin for seamless localization -->
-    <script src="js/jquery-lang.js" charset="utf-8"></script>
+    <script src="js/jquery-lang.js"></script>
 
     <!-- A popular library for creating tooltips -->
     <script src="js/tooltipster.bundle.min.js"></script>
@@ -43,12 +46,13 @@
     <!--
       End 3rd-party scripts
     -->
-    <script>if (window.module) module = window.module;</script>
+    <script>
+      if (window.module) module = window.module;
+    </script>
   </head>
 
   <body>
     <div id="page-wrapper" class="vertical-center">
-
       <header id="header-top" class="no-drag"></header>
 
       <!-- Header -->
@@ -58,7 +62,11 @@
           <ul>
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-profile" class="header-links no-drag" style="display: none;">
+              <a
+                id="header-profile"
+                class="header-links no-drag"
+                style="display: none"
+              >
                 <i class="fa fa-chart-area" aria-hidden="true"></i>
                 &nbsp;
                 <span lang="en">Profile</span>
@@ -66,7 +74,11 @@
             </li>
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-leaderboards" class="header-links no-drag" style="display: none;">
+              <a
+                id="header-leaderboards"
+                class="header-links no-drag"
+                style="display: none"
+              >
                 <i class="fa fa-trophy" aria-hidden="true"></i>
                 &nbsp;
                 <span lang="en">Leaderboards</span>
@@ -74,38 +86,68 @@
             </li>
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-help" class="header-links no-drag" style="display: none;">
+              <a
+                id="header-help"
+                class="header-links no-drag"
+                style="display: none"
+              >
                 <i class="fa fa-question" aria-hidden="true"></i>
                 &nbsp;
                 <span lang="en">Help</span>
               </a>
             </li>
-            <li><a></a></li> <!-- Just for spacing -->
+            <li><a></a></li>
+            <!-- Just for spacing -->
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-lobby" class="button no-drag" data-tooltip-content="#header-lobby-tooltip" style="display: none;">
-                <i class="fa fa-home header-button-icons" aria-hidden="true"></i>
+              <a
+                id="header-lobby"
+                class="button no-drag"
+                data-tooltip-content="#header-lobby-tooltip"
+                style="display: none"
+              >
+                <i
+                  class="fa fa-home header-button-icons"
+                  aria-hidden="true"
+                ></i>
                 <span lang="en">Lobby</span>
               </a>
             </li>
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-new-race" class="button no-drag" data-tooltip-content="#new-race-tooltip" style="display: none;">
-                <i class="fa fa-plus header-button-icons" aria-hidden="true"></i>
+              <a
+                id="header-new-race"
+                class="button no-drag"
+                data-tooltip-content="#new-race-tooltip"
+                style="display: none"
+              >
+                <i
+                  class="fa fa-plus header-button-icons"
+                  aria-hidden="true"
+                ></i>
                 <span lang="en">New Race</span>
               </a>
             </li>
             <li>
               <!-- Have to use "display: none;" here instead of the "hidden" class -->
-              <a id="header-settings" class="button no-drag" data-tooltip-content="#settings-tooltip" style="display: none;">
+              <a
+                id="header-settings"
+                class="button no-drag"
+                data-tooltip-content="#settings-tooltip"
+                style="display: none"
+              >
                 <i class="fa fa-cog header-button-icons" aria-hidden="true"></i>
                 <span lang="en">Settings</span>
               </a>
             </li>
-            <li><a></a></li> <!-- Just for spacing -->
+            <li><a></a></li>
+            <!-- Just for spacing -->
             <li>
               <a id="header-minimize" class="no-drag header-window-buttons">
-                <i id="header-minimize-icon" class="mdi mdi-window-minimize"></i>
+                <i
+                  id="header-minimize-icon"
+                  class="mdi mdi-window-minimize"
+                ></i>
               </a>
             </li>
             <li>
@@ -132,7 +174,9 @@
             </h2>
 
             <p id="title-subtitle">
-              <span lang="en">A racing mod for The Binding of Isaac: Repentance</span>
+              <span lang="en"
+                >A racing mod for The Binding of Isaac: Repentance</span
+              >
             </p>
             <h5 id="title-version">Unknown</h5>
 
@@ -151,15 +195,43 @@
               <br /><br />
               <ul class="actions special">
                 <br /><br /><br />
-                <li><a href="#" id="title-choose-steam" class="button small">Steam (`)</a></li>
-                <li><a href="#" id="title-restart" class="button small">Restart (R)</a></li>
+                <li>
+                  <a href="#" id="title-choose-steam" class="button small"
+                    >Steam (`)</a
+                  >
+                </li>
+                <li>
+                  <a href="#" id="title-restart" class="button small"
+                    >Restart (R)</a
+                  >
+                </li>
               </ul>
               <ul class="actions special">
-                <li><a href="#" id="title-choose-1" class="button small">Test 1 (1)</a></li>
-                <li><a href="#" id="title-choose-2" class="button small">Test 2 (2)</a></li>
-                <li><a href="#" id="title-choose-3" class="button small">Test 3 (3)</a></li>
-                <li><a href="#" id="title-choose-4" class="button small">Test 4</a></li>
-                <li><a href="#" id="title-choose-5" class="button small">Test 5</a></li>
+                <li>
+                  <a href="#" id="title-choose-1" class="button small"
+                    >Test 1 (1)</a
+                  >
+                </li>
+                <li>
+                  <a href="#" id="title-choose-2" class="button small"
+                    >Test 2 (2)</a
+                  >
+                </li>
+                <li>
+                  <a href="#" id="title-choose-3" class="button small"
+                    >Test 3 (3)</a
+                  >
+                </li>
+                <li>
+                  <a href="#" id="title-choose-4" class="button small"
+                    >Test 4</a
+                  >
+                </li>
+                <li>
+                  <a href="#" id="title-choose-5" class="button small"
+                    >Test 5</a
+                  >
+                </li>
               </ul>
               <!--
               <ul class="actions special">
@@ -173,9 +245,9 @@
               </ul>
               -->
             </div>
-
           </section>
-        </div><!-- title -->
+        </div>
+        <!-- title -->
 
         <!-- Register -->
         <div id="register" class="hidden">
@@ -191,21 +263,35 @@
 
             <p id="register-explanation1">
               <span lang="en">Choose your username.</span><br />
-              <span lang="en">This is what other players will see when you race them.</span><br />
-              <span lang="en">You won't be able to change this later.</span><br />
+              <span lang="en"
+                >This is what other players will see when you race them.</span
+              ><br />
+              <span lang="en">You won't be able to change this later.</span
+              ><br />
             </p>
 
-            <p id="register-explanation2" lang="en">Only use letters, numbers, and underscores.</p>
+            <p id="register-explanation2" lang="en">
+              Only use letters, numbers, and underscores.
+            </p>
 
             <div class="padding0p5"></div>
 
             <form id="register-form">
               <div class="row uniform 50%">
                 <div class="col-8">
-                  <input id="register-username" type="text" placeholder="Username" lang="en" />
+                  <input
+                    id="register-username"
+                    type="text"
+                    placeholder="Username"
+                    lang="en"
+                  />
                 </div>
                 <div class="col-4">
-                  <button id="register-submit-button" class="button small" type="submit">
+                  <button
+                    id="register-submit-button"
+                    class="button small"
+                    type="submit"
+                  >
                     <i class="fa fa-check" aria-hidden="true"></i>
                     &nbsp;
                     <span lang="en">Submit</span>
@@ -217,17 +303,23 @@
             <div class="padding2"></div>
 
             <ul id="register-languages" class="actions">
-              <li id="register-language-english" class="selected-language">English</li>
+              <li id="register-language-english" class="selected-language">
+                English
+              </li>
               <li>|</li>
-              <li id="register-language-french" class="unselected-language"><a>Français</a></li>
+              <li id="register-language-french" class="unselected-language">
+                <a>Français</a>
+              </li>
               <li>|</li>
-              <li id="register-language-spanish" class="unselected-language"><a>Español</a></li>
+              <li id="register-language-spanish" class="unselected-language">
+                <a>Español</a>
+              </li>
             </ul>
 
             <div class="padding2"></div>
-
           </section>
-        </div><!-- register -->
+        </div>
+        <!-- register -->
 
         <!-- Updating -->
         <div id="updating" class="updating hidden">
@@ -239,33 +331,54 @@
               </div>
             </div>
             <p>
-              <span lang="en">A new version of the client is being downloaded. The program will automatically restart once it is complete.</span>
+              <span lang="en"
+                >A new version of the client is being downloaded. The program
+                will automatically restart once it is complete.</span
+              >
               <br />
-              <span lang="en">The staff is working hard to continually fix bugs and add new features. Sorry for the inconvenience!</span>
+              <span lang="en"
+                >The staff is working hard to continually fix bugs and add new
+                features. Sorry for the inconvenience!</span
+              >
             </p>
           </section>
-        </div><!-- updating -->
+        </div>
+        <!-- updating -->
 
         <!-- Lobby -->
         <div id="lobby" class="hidden">
-
           <!-- top-half -->
           <div class="row half lobby-half top-half">
             <div class="col-12">
               <section id="lobby-current-races-box" class="box">
-                <div id="lobby-current-races-table-wrapper" class="table-wrapper vertical-center">
-                  <h3 id="lobby-current-races-table-no" lang="en">No current races.</h3>
+                <div
+                  id="lobby-current-races-table-wrapper"
+                  class="table-wrapper vertical-center"
+                >
+                  <h3 id="lobby-current-races-table-no" lang="en">
+                    No current races.
+                  </h3>
                   <table id="lobby-current-races-table" class="alt">
                     <thead>
-                      <th class="lobby-current-races-title"><span lang="en">Title</span></th>
-                      <th class="lobby-current-races-status"><span lang="en">Status</span></th>
-                      <th class="lobby-current-races-format"><span lang="en">Format</span></th>
-                      <th><span lang="en">Size</span></th><!-- Don't put the class on this element because it makes it look weird -->
-                      <th class="lobby-current-races-racers"><span lang="en">Entrants</span></th>
+                      <th class="lobby-current-races-title">
+                        <span lang="en">Title</span>
+                      </th>
+                      <th class="lobby-current-races-status">
+                        <span lang="en">Status</span>
+                      </th>
+                      <th class="lobby-current-races-format">
+                        <span lang="en">Format</span>
+                      </th>
+                      <th><span lang="en">Size</span></th>
+                      <!-- Don't put the class on this element because it makes it look weird -->
+                      <th class="lobby-current-races-racers">
+                        <span lang="en">Entrants</span>
+                      </th>
                     </thead>
                     <tbody id="lobby-current-races-table-body"></tbody>
                   </table>
-                  <div style="padding-bottom: 0.1em;"></div><!-- Otherwise the bottom border of the table gets cut off -->
+                  <div style="padding-bottom: 0.1em"></div>
+                  <!-- Otherwise the bottom border of the table gets cut off -->
                 </div>
               </section>
             </div>
@@ -280,26 +393,37 @@
               <section id="lobby-chat-box" class="box chat-box">
                 <div id="lobby-chat-text" class="chat-text selectable"></div>
                 <form id="lobby-chat-form">
-                  <input id="lobby-chat-box-input" type="text" placeholder="Chat" lang="en" />
+                  <input
+                    id="lobby-chat-box-input"
+                    type="text"
+                    placeholder="Chat"
+                    lang="en"
+                  />
                 </form>
               </section>
             </div>
             <div id="lobby-users-container" class="col-3">
               <section id="lobby-users-box" class="box">
-                <h4><span lang="en">Online Users</span> (<span id="lobby-users-online">0</span>)</span></h4>
-                <div id="lobby-users-users" class="users-users selectable"></div>
+                <h4>
+                  <span lang="en">Online Users</span> (<span
+                    id="lobby-users-online"
+                    >0</span
+                  >)
+                </h4>
+                <div
+                  id="lobby-users-users"
+                  class="users-users selectable"
+                ></div>
               </section>
             </div>
           </div>
-
-        </div><!-- lobby -->
+        </div>
+        <!-- lobby -->
 
         <!-- Race -->
         <div id="race" class="hidden">
-
           <div id="race-row" class="row">
             <div class="col-9">
-
               <!-- top-left -->
               <div class="row half-top lobby-half top-half">
                 <div class="col-12">
@@ -313,53 +437,84 @@
                           <th><span lang="en">Format</span></th>
                           <th><span lang="en">Character</span></th>
                           <th><span lang="en">Goal</span></th>
-                          <th id="race-title-table-build"><span lang="en">Build</span></th>
-                          <th id="race-title-table-items"><span lang="en">Items</span></th>
+                          <th id="race-title-table-build">
+                            <span lang="en">Build</span>
+                          </th>
+                          <th id="race-title-table-items">
+                            <span lang="en">Items</span>
+                          </th>
                         </thead>
                         <tbody>
                           <tr>
                             <td id="race-title-status"></td>
                             <td id="race-title-type">
                               <div class="race-title-icon-container">
-                                <span id="race-title-type-icon" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-type-icon"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                             </td>
                             <td id="race-title-format">
                               <div class="race-title-icon-container">
-                                <span id="race-title-format-icon" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-format-icon"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                             </td>
                             <td id="race-title-character"></td>
                             <td id="race-title-goal">
                               <div class="race-title-icon-container">
-                                <span id="race-title-goal-icon" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-goal-icon"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                             </td>
                             <td id="race-title-build">
                               <div class="race-title-icon-container">
-                                <span id="race-title-build-icon" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-build-icon"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                             </td>
                             <td id="race-title-items-blind" class="hidden">
                               <div class="race-title-icon-container1">
-                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                                <span
+                                  class="race-title-items-icon-blind race-title-icon"
+                                ></span>
                               </div>
                               <div class="race-title-icon-container2">
-                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                                <span
+                                  class="race-title-items-icon-blind race-title-icon"
+                                ></span>
                               </div>
                               <div class="race-title-icon-container3">
-                                <span class="race-title-items-icon-blind race-title-icon"></span>
+                                <span
+                                  class="race-title-items-icon-blind race-title-icon"
+                                ></span>
                               </div>
                             </td>
                             <td id="race-title-items" class="hidden">
                               <div class="race-title-icon-container1">
-                                <span id="race-title-items-icon1" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-items-icon1"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                               <div class="race-title-icon-container2">
-                                <span id="race-title-items-icon2" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-items-icon2"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                               <div class="race-title-icon-container3">
-                                <span id="race-title-items-icon3" class="race-title-icon"></span>
+                                <span
+                                  id="race-title-items-icon3"
+                                  class="race-title-icon"
+                                ></span>
                               </div>
                             </td>
                           </tr>
@@ -370,31 +525,39 @@
                     <div id="race-title-controls-container">
                       <span id="race-ready-checkbox-container">
                         <input id="race-ready-checkbox" type="checkbox" />
-                        <label id="race-ready-checkbox-label" for="race-ready-checkbox">
-                          <span id="race-ready-checkbox-text" lang="en">Ready</span>
+                        <label
+                          id="race-ready-checkbox-label"
+                          for="race-ready-checkbox"
+                        >
+                          <span id="race-ready-checkbox-text" lang="en"
+                            >Ready</span
+                          >
                         </label>
                       </span>
                       <h3 id="race-countdown" class="hidden"></h3>
                       <ul class="actions">
                         <li id="race-finish-button-container" class="hidden">
-                            <button id="race-finish-button" class="button small">
-                                <i class="fa fa-flag-checkered" aria-hidden="true"></i>
-                                &nbsp;
-                                <span lang="en">Finish Race</span>
-                            </button>
+                          <button id="race-finish-button" class="button small">
+                            <i
+                              class="fa fa-flag-checkered"
+                              aria-hidden="true"
+                            ></i>
+                            &nbsp;
+                            <span lang="en">Finish Race</span>
+                          </button>
                         </li>
                         <li id="race-quit-button-container" class="hidden">
-                            <button id="race-quit-button" class="button small">
-                                <i class="mdi mdi-skull"></i>
-                                &nbsp;
-                                <span lang="en">Quit Race</span>
-                            </button>
+                          <button id="race-quit-button" class="button small">
+                            <i class="mdi mdi-skull"></i>
+                            &nbsp;
+                            <span lang="en">Quit Race</span>
+                          </button>
                         </li>
                         <li id="race-controls-padding" class="hidden">
-                            <div class="hpadding1p5"></div>
+                          <div class="hpadding1p5"></div>
                         </li>
                         <li id="race-num-left-container" class="hidden">
-                            <h3 id="race-num-left"></h3>
+                          <h3 id="race-num-left"></h3>
                         </li>
                       </ul>
                     </div>
@@ -409,16 +572,53 @@
               <div class="row half-bottom lobby-half bottom-half">
                 <div class="col-12">
                   <section id="race-participants-box" class="box">
-                    <div id="race-participants-table-wrapper" class="table-wrapper vertical-center">
+                    <div
+                      id="race-participants-table-wrapper"
+                      class="table-wrapper vertical-center"
+                    >
                       <table id="race-participants-table" class="alt">
                         <thead>
-                          <th id="race-participants-table-place" class="hidden" lang="en">Place</th>
-                          <th id="race-participants-table-racer" lang="en">Racer</th>
-                          <th id="race-participants-table-status" lang="en">Status</th>
-                          <th id="race-participants-table-floor" class="hidden" lang="en">Floor</th>
-                          <th id="race-participants-table-item" class="hidden" lang="en">Items</th>
-                          <th id="race-participants-table-time" class="hidden" lang="en">Time</th>
-                          <th id="race-participants-table-offset" class="hidden" lang="en">Offset</th>
+                          <th
+                            id="race-participants-table-place"
+                            class="hidden"
+                            lang="en"
+                          >
+                            Place
+                          </th>
+                          <th id="race-participants-table-racer" lang="en">
+                            Racer
+                          </th>
+                          <th id="race-participants-table-status" lang="en">
+                            Status
+                          </th>
+                          <th
+                            id="race-participants-table-floor"
+                            class="hidden"
+                            lang="en"
+                          >
+                            Floor
+                          </th>
+                          <th
+                            id="race-participants-table-item"
+                            class="hidden"
+                            lang="en"
+                          >
+                            Items
+                          </th>
+                          <th
+                            id="race-participants-table-time"
+                            class="hidden"
+                            lang="en"
+                          >
+                            Time
+                          </th>
+                          <th
+                            id="race-participants-table-offset"
+                            class="hidden"
+                            lang="en"
+                          >
+                            Offset
+                          </th>
                         </thead>
                         <tbody id="race-participants-table-body"></tbody>
                       </table>
@@ -426,27 +626,33 @@
                   </section>
                 </div>
               </div>
-
             </div>
 
             <!-- right column -->
             <div class="col-3">
               <div id="race-chat-row" class="row">
-                <div class="col-12" style="padding-left: 0;">
+                <div class="col-12" style="padding-left: 0">
                   <section id="race-chat-box" class="box chat-box">
                     <div id="race-chat-text" class="chat-text selectable"></div>
                     <form id="race-chat-form">
-                      <input id="race-chat-box-input" type="text" placeholder="Chat" lang="en" />
+                      <input
+                        id="race-chat-box-input"
+                        type="text"
+                        placeholder="Chat"
+                        lang="en"
+                      />
                     </form>
-                  </select>
+                  </section>
                 </div>
               </div>
             </div>
           </div>
-
-        </div><!-- race -->
-
-    </div><!-- page-wrapper -->
+        </div>
+        <!-- race -->
+      </div>
+      <!-- gui -->
+    </div>
+    <!-- page-wrapper -->
 
     <!-- Error modal -->
     <div id="error-modal" class="modal hidden selectable">
@@ -455,11 +661,14 @@
         <p id="error-modal-description" lang="en"></p>
         <ul class="actions">
           <li>
-            <button id="error-modal-button" class="button small" lang="en">Exit and relaunch Racing+</button>
+            <button id="error-modal-button" class="button small" lang="en">
+              Exit and relaunch Racing+
+            </button>
           </li>
         </ul>
       </section>
-    </div><!-- error-modal -->
+    </div>
+    <!-- error-modal -->
 
     <!-- Warning modal -->
     <div id="warning-modal" class="modal hidden selectable">
@@ -468,11 +677,14 @@
         <p id="warning-modal-description" lang="en"></p>
         <ul class="actions">
           <li>
-            <button id="warning-modal-button" class="button small" lang="en">OK</button>
+            <button id="warning-modal-button" class="button small" lang="en">
+              OK
+            </button>
           </li>
         </ul>
       </section>
-    </div><!-- warning-modal -->
+    </div>
+    <!-- warning-modal -->
 
     <!-- Password modal -->
     <div id="password-modal" class="modal hidden selectable">
@@ -481,42 +693,84 @@
         <p lang="en">Please enter the race's password to join:</p>
         <div class="row uniform 50%">
           <div class="col-12">
-            <input id="password-input" type="password" placeholder="Race's Password" lang="en"/>
+            <input
+              id="password-input"
+              type="password"
+              placeholder="Race's Password"
+              lang="en"
+            />
           </div>
         </div>
         <div class="row uniform 50% margin-t-1">
           <div class="col-2">
-            <button id="password-modal-ok-button" class="button small block" lang="en">OK</button>
+            <button
+              id="password-modal-ok-button"
+              class="button small block"
+              lang="en"
+            >
+              OK
+            </button>
           </div>
           <div class="col-2">
-            <button id="password-modal-cancel-button" class="button small block alt" lang="en">Cancel</button>
+            <button
+              id="password-modal-cancel-button"
+              class="button small block alt"
+              lang="en"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </section>
-    </div><!-- password-modal -->
+    </div>
+    <!-- password-modal -->
 
     <!-- Isaac path modal -->
     <div id="isaac-path-modal" class="modal hidden">
       <section class="box">
         <h3><span lang="en">Isaac Path</span></h3>
         <p id="isaac-path-description-1">
-          <span lang="en">The Binding of Isaac: Repentance does not appear to be installed at the default location of</span>:
+          <span lang="en"
+            >The Binding of Isaac: Repentance does not appear to be installed at
+            the default location of</span
+          >:
           <br />
-          <code>C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac Rebirth\isaac-ng.exe</code>
+          <code
+            >C:\Program Files (x86)\Steam\steamapps\common\The Binding of Isaac
+            Rebirth\isaac-ng.exe</code
+          >
           <br />
-          Racing+ needs to know the location of the game executable in order to work properly.</span>
+          Racing+ needs to know the location of the game executable in order to
+          work properly.
         </p>
         <p id="isaac-path-description-2" class="hidden">
           <span lang="en">Please relaunch the program.</span>
         </p>
         <br />
-        <button id="isaac-path-find" class="button small" type="button" lang="en">Locate "isaac-ng.exe"</button>
-        <button id="isaac-path-exit" class="button small hidden" type="button" lang="en">Exit and relaunch Racing+</button>
+        <button
+          id="isaac-path-find"
+          class="button small"
+          type="button"
+          lang="en"
+        >
+          Locate "isaac-ng.exe"
+        </button>
+        <button
+          id="isaac-path-exit"
+          class="button small hidden"
+          type="button"
+          lang="en"
+        >
+          Exit and relaunch Racing+
+        </button>
       </section>
-  </div><!-- isaac-path-modal -->
+    </div>
+    <!-- isaac-path-modal -->
 
-  <!-- JavaScript pulls the contents of this div for automatic translation purposes -->
-  <div id="isaac-path-dialog-title" class="hidden" lang="en">Select your "isaac-ng.exe" file</div>
+    <!-- JavaScript pulls the contents of this div for automatic translation purposes -->
+    <div id="isaac-path-dialog-title" class="hidden" lang="en">
+      Select your "isaac-ng.exe" file
+    </div>
 
     <div id="tooltips" class="hidden">
       <div id="new-race-tooltip">
@@ -526,10 +780,20 @@
               <ul class="actions">
                 <li class="margin-t-1"><span lang="en">Title</span>:</li>
                 <li>
-                  <input id="new-race-title" type="text" placeholder="Race title (optional)" lang="en" data-tooltip-content="#new-race-title-error" />
+                  <input
+                    id="new-race-title"
+                    type="text"
+                    placeholder="Race title (optional)"
+                    lang="en"
+                    data-tooltip-content="#new-race-title-error"
+                  />
                 </li>
                 <li>
-                  <button id="new-race-title-randomize" class="button alt small" type="button">
+                  <button
+                    id="new-race-title-randomize"
+                    class="button alt small"
+                    type="button"
+                  >
                     <i class="fa fa-random" aria-hidden="true"></i>
                   </button>
                 </li>
@@ -542,22 +806,51 @@
               <p><span lang="en">Size</span>:</p>
             </div>
             <div class="col-2">
-              <span id="new-race-size-icon-solo" class="new-race-size-icon-container">
-                <i id="new-race-size-icon-solo-i" class="fa fa-user fa-2x" aria-hidden="true"></i>
+              <span
+                id="new-race-size-icon-solo"
+                class="new-race-size-icon-container"
+              >
+                <i
+                  id="new-race-size-icon-solo-i"
+                  class="fa fa-user fa-2x"
+                  aria-hidden="true"
+                ></i>
               </span>
-              <span id="new-race-size-icon-multiplayer" class="new-race-size-icon-container hidden">
-                <i id="new-race-size-icon-multiplayer-i" class="fa fa-users fa-2x" aria-hidden="true" style="color: blue;"></i>
+              <span
+                id="new-race-size-icon-multiplayer"
+                class="new-race-size-icon-container hidden"
+              >
+                <i
+                  id="new-race-size-icon-multiplayer-i"
+                  class="fa fa-users fa-2x"
+                  aria-hidden="true"
+                  style="color: blue"
+                ></i>
               </span>
             </div>
             <div class="col-3">
-              <input type="radio" id="new-race-size-solo" name="new-race-size" value="solo" checked></td>
-              <label for="new-race-size-solo" class="new-race-radio-label" >
+              <input
+                type="radio"
+                id="new-race-size-solo"
+                name="new-race-size"
+                value="solo"
+                checked
+              />
+              <label for="new-race-size-solo" class="new-race-radio-label">
                 <span class="new-race-radio-text" lang="en">Solo</span>
               </label>
             </div>
             <div class="col-3">
-              <input type="radio" id="new-race-size-multiplayer" name="new-race-size" value="multiplayer">
-              <label for="new-race-size-multiplayer" class="new-race-radio-label">
+              <input
+                type="radio"
+                id="new-race-size-multiplayer"
+                name="new-race-size"
+                value="multiplayer"
+              />
+              <label
+                for="new-race-size-multiplayer"
+                class="new-race-radio-label"
+              >
                 <span class="new-race-radio-text" lang="en">Multiplayer</span>
               </label>
             </div>
@@ -572,13 +865,24 @@
                 <span id="new-race-ranked-icon"></span>
               </div>
               <div class="col-3">
-                <input type="radio" id="new-race-ranked-no" name="new-race-ranked" value="no" checked></td>
-                <label for="new-race-ranked-no" class="new-race-radio-label" >
+                <input
+                  type="radio"
+                  id="new-race-ranked-no"
+                  name="new-race-ranked"
+                  value="no"
+                  checked
+                />
+                <label for="new-race-ranked-no" class="new-race-radio-label">
                   <span class="new-race-radio-text" lang="en">No</span>
                 </label>
               </div>
               <div class="col-3">
-                <input type="radio" id="new-race-ranked-yes" name="new-race-ranked" value="yes">
+                <input
+                  type="radio"
+                  id="new-race-ranked-yes"
+                  name="new-race-ranked"
+                  value="yes"
+                />
                 <label for="new-race-ranked-yes" class="new-race-radio-label">
                   <span class="new-race-radio-text" lang="en">Yes</span>
                 </label>
@@ -589,15 +893,26 @@
                 <p><span lang="en">Password</span>:</p>
               </div>
               <div class="col-2">
-                <span id="new-race-password-no-password-icon" class="new-race-size-icon-container">
+                <span
+                  id="new-race-password-no-password-icon"
+                  class="new-race-size-icon-container"
+                >
                   <i class="fa fa-unlock-alt fa-2x" aria-hidden="true"></i>
                 </span>
-                <span id="new-race-password-has-password-icon" class="new-race-size-icon-container hidden">
+                <span
+                  id="new-race-password-has-password-icon"
+                  class="new-race-size-icon-container hidden"
+                >
                   <i class="fa fa-lock fa-2x" aria-hidden="true"></i>
                 </span>
               </div>
               <div class="col-8">
-                <input id="new-race-password" type="password" placeholder="[none]" lang="en"/>
+                <input
+                  id="new-race-password"
+                  type="password"
+                  placeholder="[none]"
+                  lang="en"
+                />
               </div>
             </div>
           </div>
@@ -612,10 +927,20 @@
             <div class="col-8">
               <div class="select-wrapper">
                 <select id="new-race-format">
-                  <option value="unseeded" selected="selected" lang="en">Unseeded</option>
+                  <option value="unseeded" selected="selected" lang="en">
+                    Unseeded
+                  </option>
                   <option value="seeded" lang="en">Seeded</option>
-                  <option id="new-race-format-diversity" value="diversity" lang="en">Diversity</option>
-                  <option id="new-race-format-custom" value="custom" lang="en">Custom</option>
+                  <option
+                    id="new-race-format-diversity"
+                    value="diversity"
+                    lang="en"
+                  >
+                    Diversity
+                  </option>
+                  <option id="new-race-format-custom" value="custom" lang="en">
+                    Custom
+                  </option>
                 </select>
               </div>
             </div>
@@ -634,7 +959,11 @@
               </div>
             </div>
             <div class="col-1 new-race-randomize">
-              <button id="new-race-character-randomize" class="button alt small" type="button">
+              <button
+                id="new-race-character-randomize"
+                class="button alt small"
+                type="button"
+              >
                 <i class="fa fa-random" aria-hidden="true"></i>
               </button>
             </div>
@@ -650,7 +979,9 @@
             <div class="col-8 margin-t-1">
               <div class="select-wrapper">
                 <select id="new-race-goal">
-                  <option value="Blue Baby" selected="selected">Blue Baby (The Chest)</option>
+                  <option value="Blue Baby" selected="selected">
+                    Blue Baby (The Chest)
+                  </option>
                   <option value="The Lamb">The Lamb (Dark Room)</option>
                   <option value="Mega Satan">Mega Satan</option>
                   <option value="Hush">Hush</option>
@@ -664,7 +995,10 @@
             </div>
           </div>
 
-          <div id="new-race-starting-build-container" class="row uniform 50% hidden">
+          <div
+            id="new-race-starting-build-container"
+            class="row uniform 50% hidden"
+          >
             <div class="col-2 new-race-note">
               <p><span lang="en">Build</span>:</p>
             </div>
@@ -677,7 +1011,11 @@
               </div>
             </div>
             <div class="col-1 new-race-randomize">
-              <button id="new-race-build-randomize" class="button alt small" type="button">
+              <button
+                id="new-race-build-randomize"
+                class="button alt small"
+                type="button"
+              >
                 <i class="fa fa-random" aria-hidden="true"></i>
               </button>
             </div>
@@ -690,19 +1028,44 @@
               <p><span lang="en">Difficulty</span>:</p>
             </div>
             <div class="col-2">
-              <span id="new-race-difficulty-icon" class="new-race-size-icon-container">
-                <i id="new-race-difficulty-icon-i" class="fa fa-circle fa-2x" aria-hidden="true" style="color: green;"></i>
+              <span
+                id="new-race-difficulty-icon"
+                class="new-race-size-icon-container"
+              >
+                <i
+                  id="new-race-difficulty-icon-i"
+                  class="fa fa-circle fa-2x"
+                  aria-hidden="true"
+                  style="color: green"
+                ></i>
               </span>
             </div>
             <div class="col-3">
-              <input type="radio" id="new-race-difficulty-normal" name="new-race-difficulty" value="normal" checked></td>
-              <label for="new-race-difficulty-normal" class="new-race-radio-label" >
+              <input
+                type="radio"
+                id="new-race-difficulty-normal"
+                name="new-race-difficulty"
+                value="normal"
+                checked
+              />
+              <label
+                for="new-race-difficulty-normal"
+                class="new-race-radio-label"
+              >
                 <span class="new-race-radio-text" lang="en">Normal</span>
               </label>
             </div>
             <div class="col-3">
-              <input type="radio" id="new-race-difficulty-hard" name="new-race-difficulty" value="hard">
-              <label for="new-race-difficulty-hard" class="new-race-radio-label">
+              <input
+                type="radio"
+                id="new-race-difficulty-hard"
+                name="new-race-difficulty"
+                value="hard"
+              />
+              <label
+                for="new-race-difficulty-hard"
+                class="new-race-radio-label"
+              >
                 <span class="new-race-radio-text" lang="en">Hard</span>
               </label>
             </div>
@@ -711,15 +1074,22 @@
           <div class="row uniform">
             <div class="col-12 align-center">
               <button class="button big" type="submit">
-                <i id="new-race-submit-button-icon" class="fa fa-check" aria-hidden="true"></i>
+                <i
+                  id="new-race-submit-button-icon"
+                  class="fa fa-check"
+                  aria-hidden="true"
+                ></i>
                 <span lang="en">Create</span>
               </button>
             </div>
           </div>
         </form>
-      </div><!-- new-race-tooltip -->
+      </div>
+      <!-- new-race-tooltip -->
 
-      <div id="new-race-title-error" lang="en">There is already a race with that title.</div>
+      <div id="new-race-title-error" lang="en">
+        There is already a race with that title.
+      </div>
 
       <div id="settings-tooltip">
         <form id="settings-form">
@@ -763,11 +1133,22 @@
               <ul id="settings-volume" class="actions">
                 <li><span lang="en">Volume</span>:</li>
                 <li>
-                  <input id="settings-volume-slider" type="range" min="0" max="100" value="50" step="5" />
+                  <input
+                    id="settings-volume-slider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="50"
+                    step="5"
+                  />
                 </li>
                 <li id="settings-volume-slider-value"></li>
                 <li id="settings-test-button">
-                  <button id="settings-volume-test" class="button alt small" type="button">
+                  <button
+                    id="settings-volume-test"
+                    class="button alt small"
+                    type="button"
+                  >
                     <span lang="en">Test</span>
                   </button>
                 </li>
@@ -780,9 +1161,15 @@
           <div class="row uniform 50%">
             <div class="col-12">
               <ul class="actions">
-                <li class="margin-t-1"><span lang="en">Change stream URL</span>:</li>
+                <li class="margin-t-1">
+                  <span lang="en">Change stream URL</span>:
+                </li>
                 <li>
-                  <input id="settings-stream-url" type="text" data-tooltip-content="#settings-stream-url-error" />
+                  <input
+                    id="settings-stream-url"
+                    type="text"
+                    data-tooltip-content="#settings-stream-url-error"
+                  />
                 </li>
               </ul>
             </div>
@@ -791,16 +1178,33 @@
           <div class="row uniform 50%">
             <div class="col-12">
               <ul class="actions" id="settings-twitch-bot">
-                <li id="settings-enable-twitch-bot-checkbox-container" data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip">
-                  <input id="settings-enable-twitch-bot-checkbox" type="checkbox" />
-                  <label id="settings-enable-twitch-bot-checkbox-label" for="settings-enable-twitch-bot-checkbox">
-                    <span class="checkbox-text" lang="en">Enable Twitch chat bot</span>
+                <li
+                  id="settings-enable-twitch-bot-checkbox-container"
+                  data-tooltip-content="#settings-enable-twitch-bot-checkbox-tooltip"
+                >
+                  <input
+                    id="settings-enable-twitch-bot-checkbox"
+                    type="checkbox"
+                  />
+                  <label
+                    id="settings-enable-twitch-bot-checkbox-label"
+                    for="settings-enable-twitch-bot-checkbox"
+                  >
+                    <span class="checkbox-text" lang="en"
+                      >Enable Twitch chat bot</span
+                    >
                   </label>
                 </li>
                 <li>&nbsp; &nbsp; &nbsp; &nbsp;</li>
-                <li id="settings-twitch-bot-delay-label"><span lang="en">Delay (in seconds)</span>:</li>
+                <li id="settings-twitch-bot-delay-label">
+                  <span lang="en">Delay (in seconds)</span>:
+                </li>
                 <li>
-                  <input id="settings-twitch-bot-delay" type="text" data-tooltip-content="#settings-twitch-bot-delay-error" />
+                  <input
+                    id="settings-twitch-bot-delay"
+                    type="text"
+                    data-tooltip-content="#settings-twitch-bot-delay-error"
+                  />
                 </li>
               </ul>
             </div>
@@ -810,28 +1214,45 @@
             <div class="col-6">
               <ul class="actions">
                 <li>
-                  <button id="settings-save-button" class="button small" lang="en">Save</button>
+                  <button
+                    id="settings-save-button"
+                    class="button small"
+                    lang="en"
+                  >
+                    Save
+                  </button>
                 </li>
               </ul>
             </div>
           </div>
         </form>
-      </div><!-- settings-tooltip -->
+      </div>
+      <!-- settings-tooltip -->
 
-      <div id="settings-stream-url-error" lang="en">Your stream URL must begin with "https://www.twitch.tv/".</div>
+      <div id="settings-stream-url-error" lang="en">
+        Your stream URL must begin with "https://www.twitch.tv/".
+      </div>
       <div id="settings-enable-twitch-bot-checkbox-tooltip">
-        <span lang="en">Make the bot a moderator in your Twitch channel by typing</span>
+        <span lang="en"
+          >Make the bot a moderator in your Twitch channel by typing</span
+        >
         <code class="selectable">/mod IsaacRacingPlus</code>
         <span lang="en">in your Twitch chat.</span><br />
         (<span lang="en">It won't work unless it is a moderator.</span>)
       </div>
-      <div id="settings-twitch-bot-delay-error" lang="en">The stream delay must be between 0 and 60.</div>
+      <div id="settings-twitch-bot-delay-error" lang="en">
+        The stream delay must be between 0 and 60.
+      </div>
 
       <div id="user-click-tooltip">
         <div class="padding0p5"></div>
         <div class="row">
           <div class="col-12">
-            <button id="user-click-profile" class="button alt small fit" type="button">
+            <button
+              id="user-click-profile"
+              class="button alt small fit"
+              type="button"
+            >
               <i class="fa fa-area-chart" aria-hidden="true"></i>
               &nbsp;
               <span lang="en">Profile</span>
@@ -841,7 +1262,11 @@
         <div class="padding0p5"></div>
         <div class="row">
           <div class="col-12">
-            <button id="user-click-private-message" class="button alt small fit" type="button">
+            <button
+              id="user-click-private-message"
+              class="button alt small fit"
+              type="button"
+            >
               <i class="fa fa-comment-o" aria-hidden="true"></i>
               &nbsp;
               <span lang="en">Private Message</span>
@@ -849,13 +1274,15 @@
           </div>
         </div>
         <div class="padding0p5"></div>
-      </div><!-- user-click-tooltip -->
+      </div>
+      <!-- user-click-tooltip -->
 
       <div id="header-lobby-tooltip" lang="en">
         You must finish or quit the current race before returning to the lobby.
-      </div><!-- header-lobby-tooltip -->
-
-    </div><!-- tooltips -->
+      </div>
+      <!-- header-lobby-tooltip -->
+    </div>
+    <!-- tooltips -->
 
     <div id="preload" class="hidden">
       <!-- Images -->
