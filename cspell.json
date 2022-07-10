@@ -41,7 +41,6 @@
         "gsub",
         "hkcu",
         "HOSTNAMES",
-        "hpadding",
         "icns",
         "isaacracing",
         "kadda",
@@ -74,7 +73,6 @@
         "unmaximize",
         "unshutdown",
         "Voss",
-        "WASAPI",
-        "webfonts"
+        "WASAPI"
     ]
 }
