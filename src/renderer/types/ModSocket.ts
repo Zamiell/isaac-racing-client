@@ -42,5 +42,9 @@ export class ModSocket {
   /** The number of people in the race. */
   numEntrants = 1;
 
+  /** Used to display a message in the starting room of the floor. */
   millisecondsBehindLeader = 0;
+
+  /** Used to display a short message on demand from the client. */
+  message = "";
 }

@@ -3,8 +3,8 @@ import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "../common/util";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
+import { getMyStatus, getNumLeft, getNumReady } from "./race";
 import { ModSocket } from "./types/ModSocket";
-import { Race } from "./types/Race";
 import { SocketCommandIn } from "./types/SocketCommand";
 import { amSecondTestAccount } from "./util";
 
@@ -102,41 +102,6 @@ export function sendChat(room: string, username: string, msg: string): void {
   send("chat", JSON.stringify(chatMessage));
 }
 
-function getMyStatus(race: Race) {
-  for (const racer of race.racerList) {
-    if (racer.name === g.myUsername) {
-      return racer.status;
-    }
-  }
-
-  return null;
-}
-
-export function getNumReady(race: Race): number {
-  // Count how many people are ready
-  let numReady = 0;
-  for (let i = 0; i < race.racerList.length; i++) {
-    const racer = race.racerList[i];
-
-    if (racer.status === "ready") {
-      numReady += 1;
-    }
-  }
-
-  return numReady;
-}
-
-function getNumLeft(race: Race): number {
-  let numLeft = 0;
-  for (const racer of race.racerList) {
-    if (racer.status === "racing") {
-      numLeft += 1;
-    }
-  }
-
-  return numLeft;
-}
-
 export function sendAll(): void {
   // Start to compile the list of starting items
   const startingItems: number[] = [];
@@ -192,6 +157,10 @@ export function sendMillisecondsBehindLeader(): void {
     "set",
     `millisecondsBehindLeader ${g.modSocket.millisecondsBehindLeader}`,
   );
+}
+
+export function sendMessage(): void {
+  send("set", `message ${g.modSocket.message}`);
 }
 
 export function reset(): void {

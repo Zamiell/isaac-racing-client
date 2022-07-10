@@ -8,6 +8,7 @@ import g from "./globals";
 import * as socket from "./ipc/socket";
 import * as steamWatcher from "./ipc/steamWatcher";
 import * as modSocket from "./modSocket";
+import { getMyRacer, getNumReady } from "./race";
 import * as sounds from "./sounds";
 import { ChatMessage } from "./types/ChatMessage";
 import { Connection } from "./types/Connection";
@@ -576,7 +577,7 @@ function initRaceCommandHandlers(conn: Connection) {
       // Update the race screen
       raceScreen.participantAdd(race.racerList.length - 1);
 
-      g.modSocket.numReady = modSocket.getNumReady(race);
+      g.modSocket.numReady = getNumReady(race);
       modSocket.send("set", `numReady ${g.modSocket.numReady}`);
       g.modSocket.numEntrants = race.racerList.length;
       modSocket.send("set", `numEntrants ${g.modSocket.numEntrants}`);
@@ -679,7 +680,7 @@ function initRaceCommandHandlers(conn: Connection) {
       }
 
       // Update the mod
-      g.modSocket.numReady = modSocket.getNumReady(race);
+      g.modSocket.numReady = getNumReady(race);
       modSocket.send("set", `numReady ${g.modSocket.numReady}`);
       g.modSocket.numEntrants = race.racerList.length;
       modSocket.send("set", `numEntrants ${g.modSocket.numEntrants}`);
@@ -852,7 +853,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     if (race.status === "open") {
-      g.modSocket.numReady = modSocket.getNumReady(race);
+      g.modSocket.numReady = getNumReady(race);
       modSocket.send("set", `numReady ${g.modSocket.numReady}`);
     }
   }
@@ -932,6 +933,10 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
+    const myRacer = getMyRacer(race);
+    const weAreFirstPlace =
+      myRacer !== null && myRacer.placeMid === 1 && myRacer.floorNum > 1;
+
     // Find the player in the racerList
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
@@ -962,6 +967,17 @@ function initRaceCommandHandlers(conn: Connection) {
         if (racer.name === g.myUsername) {
           g.modSocket.millisecondsBehindLeader = racer.millisecondsBehindLeader;
           modSocket.sendMillisecondsBehindLeader();
+        }
+
+        if (
+          weAreFirstPlace &&
+          racer.placeMid === 2 &&
+          racer.floorNum === myRacer.floorNum
+        ) {
+          const seconds = Math.round(racer.millisecondsBehindLeader / 1000);
+          const suffix = seconds > 0 ? "s" : "";
+          g.modSocket.message = `${racer.name} arrived on this floor.[NEWLINE](Ahead by: ${seconds} second${suffix})`;
+          modSocket.sendMessage();
         }
 
         break;

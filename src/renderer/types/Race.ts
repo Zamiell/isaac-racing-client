@@ -13,6 +13,7 @@ export interface Race {
   datetimeCreated: number;
   datetimeStarted: number;
   racers: string[];
+
   /**
    * This is only sent by the server in the "racerList" command (not the "raceList" command).
    * We add it to the race object manually at that point.
