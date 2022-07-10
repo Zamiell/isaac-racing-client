@@ -2,6 +2,7 @@ import * as electron from "electron";
 import { IS_DEV } from "./constants";
 import g from "./globals";
 import { textUpdated } from "./keyboardSubroutines";
+import { Screen } from "./types/Screen";
 import { closeAllTooltips } from "./util";
 
 export const keyboardFunctionMap = new Map<
@@ -11,7 +12,7 @@ export const keyboardFunctionMap = new Map<
 
 // `
 keyboardFunctionMap.set(192, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "title-ajax" && IS_DEV) {
+  if (g.currentScreen === Screen.TITLE_AJAX && IS_DEV) {
     event.preventDefault();
     $("#title-choose-steam").click();
   }
@@ -19,7 +20,7 @@ keyboardFunctionMap.set(192, (event: JQuery.KeyDownEvent) => {
 
 // 1
 keyboardFunctionMap.set(49, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "title-ajax" && IS_DEV) {
+  if (g.currentScreen === Screen.TITLE_AJAX && IS_DEV) {
     event.preventDefault();
     $("#title-choose-1").click();
   }
@@ -27,7 +28,7 @@ keyboardFunctionMap.set(49, (event: JQuery.KeyDownEvent) => {
 
 // 2
 keyboardFunctionMap.set(50, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "title-ajax" && IS_DEV) {
+  if (g.currentScreen === Screen.TITLE_AJAX && IS_DEV) {
     event.preventDefault();
     $("#title-choose-2").click();
   }
@@ -35,7 +36,7 @@ keyboardFunctionMap.set(50, (event: JQuery.KeyDownEvent) => {
 
 // 3
 keyboardFunctionMap.set(51, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "title-ajax" && IS_DEV) {
+  if (g.currentScreen === Screen.TITLE_AJAX && IS_DEV) {
     event.preventDefault();
     $("#title-choose-3").click();
   }
@@ -43,7 +44,7 @@ keyboardFunctionMap.set(51, (event: JQuery.KeyDownEvent) => {
 
 // "r"
 keyboardFunctionMap.set(82, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "title-ajax" && IS_DEV) {
+  if (g.currentScreen === Screen.TITLE_AJAX && IS_DEV) {
     event.preventDefault();
     $("#title-restart").click();
   }
@@ -56,7 +57,7 @@ keyboardFunctionMap.set(123, (_event: JQuery.KeyDownEvent) => {
 
 // Tab
 keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
+  if (g.currentScreen !== Screen.LOBBY && g.currentScreen !== Screen.RACE) {
     return;
   }
 
@@ -68,7 +69,7 @@ keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
 
   let tabList: string[] = [];
 
-  // Add the current list of connected users
+  // Add the current list of connected users.
   const lobbyUsers = g.roomList.get("lobby");
   if (lobbyUsers === undefined) {
     throw new Error("Failed to get the lobby room.");
@@ -82,25 +83,27 @@ keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
   tabList.push(":thinking:"); // Also add some custom emotes to the tab completion list
   tabList.sort();
 
-  // Prioritize the more commonly used NotLikeThis over NootLikeThis
+  // Prioritize the more commonly used NotLikeThis over NootLikeThis.
   const notLikeThisIndex = tabList.indexOf("NotLikeThis");
   const nootLikeThisIndex = tabList.indexOf("NootLikeThis");
   tabList[notLikeThisIndex] = "NootLikeThis";
   tabList[nootLikeThisIndex] = "NotLikeThis";
 
-  // Prioritize the more commonly used Kappa over Kadda
+  // Prioritize the more commonly used Kappa over Kadda.
   const kappaIndex = tabList.indexOf("Kappa");
   const kaddaIndex = tabList.indexOf("Kadda");
   tabList[kaddaIndex] = "Kappa";
   tabList[kappaIndex] = "Kadda";
 
-  // Prioritize the more commonly used FrankerZ over all other Franker emotes
+  // Prioritize the more commonly used FrankerZ over all other Franker emotes.
   const frankerZIndex = tabList.indexOf("FrankerZ");
   const frankerBIndex = tabList.indexOf("FrankerB");
-  let tempEmote1 = tabList[frankerBIndex];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let tempEmote1 = tabList[frankerBIndex]!;
   tabList[frankerBIndex] = "FrankerZ";
   for (let i = frankerBIndex; i < frankerZIndex; i++) {
-    const tempEmote2 = tabList[i + 1];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const tempEmote2 = tabList[i + 1]!;
     tabList[i + 1] = tempEmote1;
     tempEmote1 = tempEmote2;
   }
@@ -113,7 +116,7 @@ keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
 });
 
 function firstTimePressingTab(tabList: string[]) {
-  // This is the first time we are pressing tab
+  // This is the first time we are pressing tab.
   const element = $(`#${g.currentScreen}-chat-box-input`);
   let message = element.val();
   if (typeof message !== "string") {
@@ -121,9 +124,11 @@ function firstTimePressingTab(tabList: string[]) {
   }
   message = message.trim();
   g.tabCompleteWordList = message.split(" ");
-  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1]!;
   for (let i = 0; i < tabList.length; i++) {
-    const tabWord = tabList[i];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const tabWord = tabList[i]!;
     const temp = tabWord.slice(0, messageEnd.length).toLowerCase();
     if (temp === messageEnd.toLowerCase()) {
       g.tabCompleteIndex = i;
@@ -145,15 +150,18 @@ function tabCycle(tabList: string[]) {
     return;
   }
 
-  // We have already pressed tab once and we need to cycle through the rest of the autocompletion words
+  // We have already pressed tab once and we need to cycle through the rest of the autocompletion
+  // words.
   let index = g.tabCompleteCounter + g.tabCompleteIndex;
-  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1]!;
   if (g.tabCompleteCounter >= tabList.length) {
     g.tabCompleteCounter = 0;
     $(`#${g.currentScreen}-chat-box-input`).val(messageEnd);
     index = g.tabCompleteCounter + g.tabCompleteIndex;
   }
-  const tempSlice = tabList[index].slice(0, messageEnd.length).toLowerCase();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const tempSlice = tabList[index]!.slice(0, messageEnd.length).toLowerCase();
   if (tempSlice === messageEnd.toLowerCase()) {
     g.tabCompleteCounter += 1;
     let newMessage = "";
@@ -185,7 +193,7 @@ keyboardFunctionMap.set(13, (event: JQuery.KeyDownEvent) => {
   textUpdated();
 
   if (
-    g.currentScreen === "lobby" &&
+    g.currentScreen === Screen.LOBBY &&
     $("#header-new-race").tooltipster("status").open
   ) {
     event.preventDefault();
@@ -200,16 +208,16 @@ keyboardFunctionMap.set(32, (_event: JQuery.KeyDownEvent) => {
 
 // Esc
 keyboardFunctionMap.set(27, (_event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen === "lobby") {
+  if (g.currentScreen === Screen.LOBBY) {
     closeAllTooltips();
-  } else if (g.currentScreen === "race") {
+  } else if (g.currentScreen === Screen.RACE) {
     $("#header-lobby").click();
   }
 });
 
 // Up arrow
 keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
+  if (g.currentScreen !== Screen.LOBBY && g.currentScreen !== Screen.RACE) {
     return;
   }
 
@@ -220,12 +228,10 @@ keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
   event.preventDefault();
 
   let room: string;
-  if (g.currentScreen === "lobby") {
+  if (g.currentScreen === Screen.LOBBY) {
     room = "lobby";
-  } else if (g.currentScreen === "race") {
-    room = `_race_${g.currentRaceID}`;
   } else {
-    throw new Error("Failed to get the room.");
+    room = `_race_${g.currentRaceID}`;
   }
 
   const storedRoom = g.roomList.get(room);
@@ -235,20 +241,21 @@ keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
 
   storedRoom.historyIndex += 1;
 
-  // Check to see if we have reached the end of the history list
+  // Check to see if we have reached the end of the history list.
   if (storedRoom.historyIndex > storedRoom.typedHistory.length - 1) {
     storedRoom.historyIndex -= 1;
     return;
   }
 
-  // Set the chat input box to what we last typed
-  const retrievedHistory = storedRoom.typedHistory[storedRoom.historyIndex];
+  // Set the chat input box to what we last typed.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const retrievedHistory = storedRoom.typedHistory[storedRoom.historyIndex]!;
   $(`#${g.currentScreen}-chat-box-input`).val(retrievedHistory);
 });
 
 // Down arrow
 keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
-  if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
+  if (g.currentScreen !== Screen.LOBBY && g.currentScreen !== Screen.RACE) {
     return;
   }
 
@@ -259,12 +266,10 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
   event.preventDefault();
 
   let room: string;
-  if (g.currentScreen === "lobby") {
+  if (g.currentScreen === Screen.LOBBY) {
     room = "lobby";
-  } else if (g.currentScreen === "race") {
-    room = `_race_${g.currentRaceID}`;
   } else {
-    throw new Error("Failed to get the room.");
+    room = `_race_${g.currentRaceID}`;
   }
 
   const storedRoom = g.roomList.get(room);
@@ -274,22 +279,23 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
 
   storedRoom.historyIndex -= 1;
 
-  // Check to see if we have reached the beginning of the history list
+  // Check to see if we have reached the beginning of the history list.
   if (storedRoom.historyIndex <= -2) {
-    // -2 instead of -1 here because we want down arrow to clear the chat
+    // -2 instead of -1 here because we want down arrow to clear the chat.
     storedRoom.historyIndex = -1;
     return;
   }
 
-  // Set the chat input box to what we last typed
-  const retrievedHistory = storedRoom.typedHistory[storedRoom.historyIndex];
+  // Set the chat input box to what we last typed.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const retrievedHistory = storedRoom.typedHistory[storedRoom.historyIndex]!;
   $(`#${g.currentScreen}-chat-box-input`).val(retrievedHistory);
 });
 
 // e
 keyboardFunctionMap.set(69, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
-    if (g.currentScreen === "lobby") {
+    if (g.currentScreen === Screen.LOBBY) {
       $("#header-new-race").click();
     }
   }
@@ -298,7 +304,7 @@ keyboardFunctionMap.set(69, (event: JQuery.KeyDownEvent) => {
 // s
 keyboardFunctionMap.set(83, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
-    if (g.currentScreen === "lobby") {
+    if (g.currentScreen === Screen.LOBBY) {
       $("#header-settings").click();
     }
   }
@@ -307,7 +313,7 @@ keyboardFunctionMap.set(83, (event: JQuery.KeyDownEvent) => {
 // l
 keyboardFunctionMap.set(76, (event: JQuery.KeyDownEvent) => {
   if (event.altKey) {
-    if (g.currentScreen === "race") {
+    if (g.currentScreen === Screen.RACE) {
       $("#header-lobby").click();
     }
   }

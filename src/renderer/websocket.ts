@@ -35,14 +35,14 @@ export function connect(): void {
     WEBSOCKET_URL,
   );
 
-  // We have successfully authenticated with the server, so we no longer need the Greenworks process open
+  // We have successfully authenticated with the server, so we no longer need the Greenworks process
+  // open.
   if (g.steam.accountID !== null && g.steam.accountID > 0) {
     electron.ipcRenderer.send("asynchronous-message", "steamExit");
   }
 
-  // Establish a WebSocket connection
-  // It will automatically use the cookie that we received earlier
-  // If the second argument is true, debugging is turned on
+  // Establish a WebSocket connection. It will automatically use the cookie that we received
+  // earlier. If the second argument is true, debugging is turned on.
   const conn = new Connection(WEBSOCKET_URL, IS_DEV);
   g.conn = conn;
 
@@ -51,7 +51,7 @@ export function connect(): void {
   initChatCommandHandlers(conn);
   initRaceCommandHandlers(conn);
 
-  // Start the Steam watcher process after a short delay
+  // Start the Steam watcher process after a short delay.
   setTimeout(() => {
     steamWatcher.start();
   }, 5000); // 5 seconds
@@ -65,7 +65,7 @@ function initMiscHandlers(conn: Connection) {
       room: "lobby",
     });
 
-    // If we are in development, skip Isaac checks and go directly to the lobby
+    // If we are in development, skip Isaac checks and go directly to the lobby.
     if (IS_DEV) {
       $("#title").fadeOut(FADE_TIME, () => {
         lobbyScreen.show();
@@ -73,20 +73,20 @@ function initMiscHandlers(conn: Connection) {
       return;
     }
 
-    // Do the proper transition to the "File Checking" depending on where we logged in from
-    if (g.currentScreen === "title-ajax") {
+    // Do the proper transition to the "File Checking" depending on where we logged in from.
+    if (g.currentScreen === Screen.TITLE_AJAX) {
       g.currentScreen = Screen.TRANSITION;
       $("#title").fadeOut(FADE_TIME, () => {
         lobbyScreen.show();
       });
-    } else if (g.currentScreen === "register-ajax") {
+    } else if (g.currentScreen === Screen.REGISTER_AJAX) {
       g.currentScreen = Screen.TRANSITION;
       $("#register").fadeOut(FADE_TIME, () => {
         registerScreen.reset();
         lobbyScreen.show();
       });
-    } else if (g.currentScreen === "error") {
-      // If we are showing an error screen already, then don't bother going to the lobby
+    } else if (g.currentScreen === Screen.ERROR) {
+      // If we are showing an error screen already, then don't bother going to the lobby.
     } else {
       errorShow(
         `Can't transition to the lobby from screen: ${g.currentScreen}`,
@@ -97,10 +97,12 @@ function initMiscHandlers(conn: Connection) {
   conn.on("close", () => {
     log.info("WebSocket connection closed.");
 
-    if (g.currentScreen === "error") {
-      // The client is programmed to close the connection when an error occurs, so if we are already on the error screen, then we don't have to do anything else
+    if (g.currentScreen === Screen.ERROR) {
+      // The client is programmed to close the connection when an error occurs, so if we are already
+      // on the error screen, then we don't have to do anything else.
     } else {
-      // The WebSocket connection dropped because of a bad network connection or similar issue, so show the error screen
+      // The WebSocket connection dropped because of a bad network connection or similar issue, so
+      // show the error screen.
       errorShow(
         "Disconnected from the server. Either your Internet is having problems or the server went down!",
       );
@@ -109,15 +111,15 @@ function initMiscHandlers(conn: Connection) {
 
   conn.on("socketError", (event) => {
     log.info("WebSocket error:", event);
-    if (g.currentScreen === "title-ajax") {
+    if (g.currentScreen === Screen.TITLE_AJAX) {
       const error =
         "Failed to connect to the WebSocket server. The server might be down!";
       errorShow(error);
-    } else if (g.currentScreen === "register-ajax") {
+    } else if (g.currentScreen === Screen.REGISTER_AJAX) {
       const error =
         "Failed to connect to the WebSocket server. The server might be down!";
       const jqXHR = {
-        // Emulate a jQuery error because that is what the "registerFail" function expects
+        // Emulate a jQuery error because that is what the "registerFail" function expects.
         responseText: error,
       };
       registerScreen.fail(jqXHR as JQuery.jqXHR);
@@ -133,8 +135,8 @@ function initMiscCommandHandlers(conn: Connection) {
     message: string;
   }
 
-  // Sent if the server rejects a command;
-  // we should completely reload the client since something may be out of sync
+  // Sent if the server rejects a command; we should completely reload the client since something
+  // may be out of sync.
   conn.on("error", (data: ErrorData) => {
     errorShow(data.message);
   });
@@ -143,8 +145,8 @@ function initMiscCommandHandlers(conn: Connection) {
     message: string;
   }
 
-  // Sent if the server rejects a command,
-  // but in a normal way that does not indicate that anything is out of sync
+  // Sent if the server rejects a command, but in a normal way that does not indicate that anything
+  // is out of sync.
   conn.on("warning", (data: WarningData) => {
     if (
       data.message ===
@@ -166,7 +168,7 @@ function initMiscCommandHandlers(conn: Connection) {
     twitchBotDelay: number;
   }
 
-  // Sent after a successful connection
+  // Sent after a successful connection.
   conn.on("settings", (data: SettingsData) => {
     g.myUserID = data.userID;
     g.myUsername = data.username;
@@ -175,9 +177,8 @@ function initMiscCommandHandlers(conn: Connection) {
     g.stream.twitchBotDelay = data.twitchBotDelay;
 
     if (IS_DEV && !amSecondTestAccount()) {
-      // Start the local socket server
-      // (this is normally started after Isaac-related checks are complete,
-      // but since we are in development, we won't be doing those)
+      // Start the local socket server (this is normally started after Isaac-related checks are
+      // complete, but since we are in development, we won't be doing those).
       socket.start();
     }
   });
@@ -190,7 +191,7 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomList", (data: RoomListData) => {
-    // We entered a new room, so keep track of all users in this room
+    // We entered a new room, so keep track of all users in this room.
     const room = {
       users: new Map(),
       numUsers: 0,
@@ -206,20 +207,21 @@ function initChatCommandHandlers(conn: Connection) {
     room.numUsers = data.users.length;
 
     if (data.room === "lobby") {
-      // Redraw the users list in the lobby
+      // Redraw the users list in the lobby.
       lobbyScreen.usersDraw();
     } else if (data.room.startsWith("_race_")) {
       const match = /_race_(\d+)/.exec(data.room);
       if (match === null) {
         throw new Error(`Failed to parse the room name: ${data.room}`);
       }
-      const raceIDString = match[1];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const raceIDString = match[1]!;
       const raceID = parseIntSafe(raceIDString);
       if (Number.isNaN(raceID)) {
         throw new Error(`Failed to parse the race ID: ${raceIDString}`);
       }
       if (raceID === g.currentRaceID) {
-        // Update the online/offline markers
+        // Update the online/offline markers.
         /*
         for (let i = 0; i < data.users.length; i++) {
           raceScreen.markOnline(data.users[i]);
@@ -235,7 +237,7 @@ function initChatCommandHandlers(conn: Connection) {
   }
 
   conn.on("roomHistory", (data: RoomHistoryData) => {
-    // Figure out what kind of chat room this is
+    // Figure out what kind of chat room this is.
     let destination: string;
     if (data.room === "lobby") {
       destination = "lobby";
@@ -243,10 +245,11 @@ function initChatCommandHandlers(conn: Connection) {
       destination = "race";
     }
 
-    // Empty the existing chat room, since there might still be some chat in there from a previous race or session
+    // Empty the existing chat room, since there might still be some chat in there from a previous
+    // race or session.
     $(`#${destination}-chat-text`).html("");
 
-    // Add all of the chat
+    // Add all of the chat.
     for (const chatMessage of data.history) {
       chat.draw(
         data.room,
@@ -268,19 +271,19 @@ function initChatCommandHandlers(conn: Connection) {
       throw new Error(`Failed to find room: ${data.room}`);
     }
 
-    // Keep track of the person who just joined
+    // Keep track of the person who just joined.
     room.users.set(data.user.name, data.user);
     room.numUsers += 1;
 
-    // Redraw the users list in the lobby
+    // Redraw the users list in the lobby.
     if (data.room === "lobby") {
       lobbyScreen.usersDraw();
     }
 
-    // Send a chat notification
+    // Send a chat notification.
     if (data.room === "lobby") {
       if (data.user.name.startsWith("TestAccount")) {
-        return; // Don't send notifications for test accounts connecting
+        return; // Don't send notifications for test accounts connecting.
       }
 
       const message = `${data.user.name} has connected.`;
@@ -307,12 +310,12 @@ function initChatCommandHandlers(conn: Connection) {
     room.users.delete(data.name);
     room.numUsers -= 1;
 
-    // Redraw the users list in the lobby
+    // Redraw the users list in the lobby.
     if (data.room === "lobby") {
       lobbyScreen.usersDraw();
     }
 
-    // Send a chat notification
+    // Send a chat notification.
     if (data.room === "lobby") {
       if (data.name.startsWith("TestAccount")) {
         return; // Don't send notifications for test accounts disconnecting
@@ -339,10 +342,10 @@ function initChatCommandHandlers(conn: Connection) {
       throw new Error(`Failed to find room: ${data.room}`);
     }
 
-    // Keep track of the person who just joined
+    // Keep track of the person who just joined.
     room.users.set(data.user.name, data.user);
 
-    // Redraw the users list in the lobby
+    // Redraw the users list in the lobby.
     if (data.room === "lobby") {
       lobbyScreen.usersDraw();
     }
@@ -373,21 +376,22 @@ function initChatCommandHandlers(conn: Connection) {
     message: string;
   }
 
-  // Used when someone types in the Discord server
+  // Used when someone types in the Discord server.
   conn.on("discordMessage", discordMessage);
   function discordMessage(data: DiscordMessageData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         discordMessage(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
 
-    // Convert discord style emotes to Racing+ style emotes
+    // Convert discord style emotes to Racing+ style emotes.
     const words = data.message.split(" ");
     for (let i = 0; i < words.length; i++) {
-      const word = words[i];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const word = words[i]!;
       const plainEnglishEmote = discordEmotes.get(word);
       if (plainEnglishEmote !== undefined) {
         words[i] = plainEnglishEmote;
@@ -395,7 +399,7 @@ function initChatCommandHandlers(conn: Connection) {
     }
     const newMessage = words.join(" ");
 
-    // Send it to the lobby
+    // Send it to the lobby.
     chat.draw("lobby", data.name, newMessage, null, true);
   }
 
@@ -403,18 +407,18 @@ function initChatCommandHandlers(conn: Connection) {
     message: string;
   }
 
-  // Used in the message of the day and other server broadcasts
+  // Used in the message of the day and other server broadcasts.
   conn.on("adminMessage", adminMessage);
   function adminMessage(data: AdminMessageData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         adminMessage(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
 
-    // Send it to the lobby
+    // Send it to the lobby.
     chat.draw("lobby", "!server", data.message);
 
     if (g.currentRaceID !== -1) {
@@ -424,31 +428,30 @@ function initChatCommandHandlers(conn: Connection) {
 }
 
 function initRaceCommandHandlers(conn: Connection) {
-  // On initial connection, we get a list of all of the races that are currently open or ongoing
+  // On initial connection, we get a list of all of the races that are currently open or ongoing.
   conn.on("raceList", (data: Race[]) => {
-    // Check for empty races
+    // Check for empty races.
     if (data.length === 0) {
       $("#lobby-current-races-table-body").html("");
       $("#lobby-current-races-table").fadeOut(0);
       $("#lobby-current-races-table-no").fadeIn(0);
     }
 
-    // Go through the list of races that were sent
+    // Go through the list of races that were sent.
     let mostCurrentRaceID = -1;
-    for (let i = 0; i < data.length; i++) {
-      // Keep track of what races are currently going
-      const race = data[i];
+    for (const race of data) {
+      // Keep track of what races are currently going.
       const raceID = race.id;
       g.raceList.set(raceID, race);
       race.racerList = [];
 
-      // Update the "Current races" area
+      // Update the "Current races" area.
       lobbyScreen.raceDraw(race);
 
-      // Start the callback for the lobby timer
+      // Start the callback for the lobby timer.
       lobbyScreen.statusTimer(raceID);
 
-      // Check to see if we are in any races
+      // Check to see if we are in any races.
       for (const racer of race.racers) {
         if (racer === g.myUsername) {
           mostCurrentRaceID = raceID;
@@ -458,7 +461,8 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     if (mostCurrentRaceID !== -1) {
-      // This is normally set at the top of the raceScreen.show function, but we need to set it now since we have to delay
+      // This is normally set at the top of the raceScreen.show function, but we need to set it now
+      // since we have to delay.
       g.currentRaceID = mostCurrentRaceID;
       setTimeout(() => {
         raceScreen.show(mostCurrentRaceID);
@@ -471,51 +475,51 @@ function initRaceCommandHandlers(conn: Connection) {
     racers: Racer[];
   }
 
-  // Sent when we create a race or reconnect in the middle of a race
+  // Sent when we create a race or reconnect in the middle of a race.
   conn.on("racerList", (data: RacerListData) => {
-    // Store the racer list
+    // Store the racer list.
     const race = g.raceList.get(data.id);
     if (race === undefined) {
       throw new Error(`Failed to find race: ${data.id}`);
     }
     race.racerList = data.racers;
 
-    // Build the table with the race participants on the race screen
+    // Build the table with the race participants on the race screen.
     $("#race-participants-table-body").html("");
     for (let i = 0; i < race.racerList.length; i++) {
       raceScreen.participantAdd(i);
     }
 
-    if (race.status === "in progress") {
-      // If the race is in progress, we are coming back after a disconnect
-      // Write this to the save.dat file so that it does not reset us in the middle of the run
+    if (race.status === RaceStatus.IN_PROGRESS) {
+      // If the race is in progress, we are coming back after a disconnect. Communicate this to the
+      // mod so that it does not reset us in the middle of the run.
       modSocket.send("set", `status ${race.status}`);
       log.info("Coming back after a disconnect.");
     }
 
-    // Now that we know the places of the racers,
-    // we can update the mod with some additional information
+    // Now that we know the places of the racers, we can update the mod with some additional
+    // information.
     modSocket.sendExtraValues();
   });
 
   conn.on("raceCreated", connRaceCreated);
   function connRaceCreated(data: Race) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRaceCreated(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
 
-    // Keep track of what races are currently going
+    // Keep track of what races are currently going.
     const race = data;
     g.raceList.set(race.id, race);
 
-    // Update the "Current races" area
+    // Update the "Current races" area.
     lobbyScreen.raceDraw(race);
 
-    // Send a chat notification if we did not create this race and this is not a solo race
+    // Send a chat notification if we did not create this race and this is not a solo race.
     if (race.captain !== g.myUsername && !race.ruleset.solo) {
       const message = `${data.captain} has started a new race.`;
       chat.draw("lobby", "!server", message);
@@ -524,15 +528,18 @@ function initRaceCommandHandlers(conn: Connection) {
       }
     }
 
-    // Play the "race created" sound effect if applicable
+    // Play the "race created" sound effect if applicable.
     let shouldPlaySound = false;
-    if (g.currentScreen === "lobby") {
+    if (g.currentScreen === Screen.LOBBY) {
       shouldPlaySound = true;
-    } else if (g.currentScreen === "race" && !g.raceList.has(g.currentRaceID)) {
+    } else if (
+      g.currentScreen === Screen.RACE &&
+      !g.raceList.has(g.currentRaceID)
+    ) {
       shouldPlaySound = true;
     }
     if (data.ruleset.solo || data.isPasswordProtected) {
-      // Don't play sounds for solo races or password-protected races
+      // Don't play sounds for solo races or password-protected races.
       shouldPlaySound = false;
     }
     if (shouldPlaySound) {
@@ -547,8 +554,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("raceJoined", connRaceJoined);
   function connRaceJoined(data: RaceJoinedData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRaceJoined(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -560,21 +567,21 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Keep track of the people in each race
+    // Keep track of the people in each race.
     race.racers.push(data.name);
 
-    // Update the row for this race in the lobby
+    // Update the row for this race in the lobby.
     lobbyScreen.raceUpdatePlayers(data.id);
 
     if (data.name === g.myUsername) {
-      // If we joined this race
+      // If we joined this race.
       raceScreen.show(data.id);
       window.race = race;
     } else if (data.id === g.currentRaceID) {
-      // We are in this race, so add this racer to the racerList with all default values (defaults)
+      // We are in this race, so add this racer to the racerList with all default values (defaults).
       race.racerList.push(getDefaultRacer(data.name));
 
-      // Update the race screen
+      // Update the race screen.
       raceScreen.participantAdd(race.racerList.length - 1);
 
       g.modSocket.numReady = getNumReady(race);
@@ -591,8 +598,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("raceLeft", connRaceLeft);
   function connRaceLeft(data: RaceLeftData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRaceLeft(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -604,13 +611,13 @@ function initRaceCommandHandlers(conn: Connection) {
       throw new Error(`Failed to find race: ${data.id}`);
     }
 
-    // Find out if we are in this race
+    // Find out if we are in this race.
     let inThisRace = false;
     if (race.racers.includes(g.myUsername)) {
       inThisRace = true;
     }
 
-    // Delete this person from the "racers" array
+    // Delete this person from the "racers" array.
     if (race.racers.includes(data.name)) {
       race.racers.splice(race.racers.indexOf(data.name), 1);
     } else {
@@ -620,11 +627,16 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // If we are in this race, we also need to delete this person them from the "racerList" array
+    // If we are in this race, we also need to delete this person them from the "racerList" array.
     if (inThisRace) {
       let foundRacer = false;
       for (let i = 0; i < race.racerList.length; i++) {
-        if (data.name === race.racerList[i].name) {
+        const racer = race.racerList[i];
+        if (racer === undefined) {
+          continue;
+        }
+
+        if (data.name === racer.name) {
           foundRacer = true;
           race.racerList.splice(i, 1);
           break;
@@ -638,22 +650,26 @@ function initRaceCommandHandlers(conn: Connection) {
       }
     }
 
-    // Update the "Current races" area on the lobby
+    // Update the "Current races" area on the lobby.
     if (race.racers.length === 0) {
-      // Delete the race since the last person in the race left
+      // Delete the race since the last person in the race left.
       g.raceList.delete(data.id);
       lobbyScreen.raceUndraw(data.id);
     } else {
-      // Check to see if this person was the captain, and if so, make the next person in line the captain
+      // Check to see if this person was the captain, and if so, make the next person in line the
+      // captain.
       if (race.captain === data.name) {
-        race.captain = race.racers[0];
+        const firstRacer = race.racers[0];
+        if (firstRacer !== undefined) {
+          race.captain = firstRacer;
+        }
       }
 
-      // Update the row for this race in the lobby
+      // Update the row for this race in the lobby.
       lobbyScreen.raceUpdatePlayers(data.id);
     }
 
-    // If we left the race
+    // If we left the race.
     if (data.name === g.myUsername) {
       // Show the lobby
       lobbyScreen.showFromRace();
@@ -661,22 +677,22 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // If this is the current race
+    // If this is the current race.
     if (data.id === g.currentRaceID) {
-      // Remove the row for this player
+      // Remove the row for this player.
       $(`#race-participants-table-${data.name}`).remove();
 
-      // Fix the bug where the "vertical-center" class causes things to be hidden if there is overflow
+      // Fix the bug where the "vertical-center" class causes things to be hidden if there is
+      // overflow.
       if (race.racerList.length > 6) {
-        // More than 6 races causes the overflow
+        // More than 6 races causes the overflow.
         $("#race-participants-table-wrapper").removeClass("vertical-center");
       } else {
         $("#race-participants-table-wrapper").addClass("vertical-center");
       }
 
-      if (race.status === "open") {
-        // Update the captain
-        // [not implemented]
+      if (race.status === RaceStatus.OPEN) {
+        // Update the captain. (Not implemented.)
       }
 
       // Update the mod
@@ -694,8 +710,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("raceSetStatus", connRaceSetStatus);
   function connRaceSetStatus(data: RaceSetStatusData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRaceSetStatus(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -710,35 +726,38 @@ function initRaceCommandHandlers(conn: Connection) {
     // Update the status
     race.status = data.status;
 
-    // Check to see if we are in this race
+    // Check to see if we are in this race.
     if (data.id === g.currentRaceID) {
-      // Update the status of the race in the Lua mod
-      // (we will update the status to "in progress" manually when the countdown reaches 0)
-      // (and we don't care if the race finishes because we will set the "save#.dat" file to
-      // defaults once we personally finish or quit the race)
-      if (data.status !== "in progress" && data.status !== "finished") {
+      // Update the status of the race in the Lua mod. (We will update the status to "in progress"
+      // manually when the countdown reaches 0.) We don't care if the race finishes because we will
+      // set the "save#.dat" file to defaults once we personally finish or quit the race.
+      if (
+        data.status !== RaceStatus.IN_PROGRESS &&
+        data.status !== RaceStatus.FINISHED
+      ) {
         g.modSocket.status = data.status;
         modSocket.send("set", `status ${g.modSocket.status}`);
       }
 
-      // Do different things depending on the status
-      if (data.status === "starting") {
-        // Update the status column in the race title
+      // Do different things depending on the status.
+      if (data.status === RaceStatus.STARTING) {
+        // Update the status column in the race title.
         $("#race-title-status").html(
           '<span class="circle lobby-current-races-starting"></span> &nbsp; <span lang="en">Starting</span>',
         );
 
         // Start the countdown
         raceScreen.startCountdown();
-      } else if (data.status === "in progress") {
-        // Do nothing; after the countdown is finished, the race controls will automatically fade in
-      } else if (data.status === "finished") {
-        // Update the status column in the race title
+      } else if (data.status === RaceStatus.IN_PROGRESS) {
+        // Do nothing; after the countdown is finished, the race controls will automatically fade
+        // in.
+      } else if (data.status === RaceStatus.FINISHED) {
+        // Update the status column in the race title.
         $("#race-title-status").html(
           '<span class="circle lobby-current-races-finished"></span> &nbsp; <span lang="en">Finished</span>',
         );
 
-        // Remove the race controls
+        // Remove the race controls.
         $("#race-quit-button-container").fadeOut(FADE_TIME);
         $("#race-controls-padding").fadeOut(FADE_TIME);
         $("#race-num-left-container").fadeOut(FADE_TIME, () => {
@@ -749,7 +768,7 @@ function initRaceCommandHandlers(conn: Connection) {
           $("#race-countdown").fadeIn(FADE_TIME);
         });
 
-        // Play the "race completed!" sound effect (for multiplayer races)
+        // Play the "race completed" sound effect (for multiplayer races).
         if (!race.ruleset.solo) {
           sounds.play("race-completed", 1300);
         }
@@ -760,17 +779,17 @@ function initRaceCommandHandlers(conn: Connection) {
       }
     }
 
-    // Update the "Status" column in the lobby
-    let circleClass: string;
-    if (data.status === "open") {
-      circleClass = "open";
-    } else if (data.status === "starting") {
-      circleClass = "starting";
+    // Update the "Status" column in the lobby.
+    let circleClass: RaceStatus;
+    if (data.status === RaceStatus.OPEN) {
+      circleClass = RaceStatus.OPEN;
+    } else if (data.status === RaceStatus.STARTING) {
+      circleClass = RaceStatus.STARTING;
       $(`#lobby-current-races-${data.id}`).removeClass("lobby-race-row-open");
       $(`#lobby-current-races-${data.id}`).unbind();
-    } else if (data.status === "in progress") {
-      circleClass = "in-progress";
-    } else if (data.status === "finished") {
+    } else if (data.status === RaceStatus.IN_PROGRESS) {
+      circleClass = RaceStatus.IN_PROGRESS;
+    } else if (data.status === RaceStatus.FINISHED) {
       g.raceList.delete(data.id);
       lobbyScreen.raceUndraw(data.id);
       return;
@@ -789,12 +808,12 @@ function initRaceCommandHandlers(conn: Connection) {
       `<span lang="en">${capitalize(data.status)}</span>`,
     );
 
-    if (data.status === "in progress") {
-      // Keep track of when the race starts
+    if (data.status === RaceStatus.IN_PROGRESS) {
+      // Keep track of when the race starts.
       const now = new Date().getTime();
       race.datetimeStarted = now;
 
-      // Start the callback for timers
+      // Start the callback for timers.
       lobbyScreen.statusTimer(data.id);
     }
   }
@@ -809,15 +828,15 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerSetStatus", connRacerSetStatus);
   function connRacerSetStatus(data: RacerSetStatusData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerSetStatus(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
 
-    // We don't care about racer updates for a race that is not showing on the current screen
+    // We don't care about racer updates for a race that is not showing on the current screen.
     if (data.id !== g.currentRaceID) {
       return;
     }
@@ -827,17 +846,21 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Find the player in the racerList
+    // Find the player in the racerList.
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
+      if (racer === undefined) {
+        continue;
+      }
+
       if (data.name === racer.name) {
-        // Update their status and place locally
+        // Update their status and place locally.
         racer.status = data.status;
         racer.place = data.place;
         racer.runTime = data.runTime;
 
-        // Update the race screen
-        if (g.currentScreen === "race") {
+        // Update the race screen.
+        if (g.currentScreen === Screen.RACE) {
           raceScreen.participantsSetStatus(i);
         }
 
@@ -852,7 +875,7 @@ function initRaceCommandHandlers(conn: Connection) {
       modSocket.send("set", `place ${g.modSocket.place}`);
     }
 
-    if (race.status === "open") {
+    if (race.status === RaceStatus.OPEN) {
       g.modSocket.numReady = getNumReady(race);
       modSocket.send("set", `numReady ${g.modSocket.numReady}`);
     }
@@ -865,15 +888,15 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("raceStart", connRaceStart);
   function connRaceStart(data: RaceStartData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRaceStart(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
       return;
     }
 
-    // Check to see if this message actually applies to the race that is showing on the screen
+    // Check to see if this message actually applies to the race that is showing on the screen.
     if (data.id !== g.currentRaceID) {
       errorShow(
         'Got a "raceStart" command for a race that is not the current race.',
@@ -885,19 +908,20 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Keep track of when the race starts
+    // Keep track of when the race starts.
     const now = new Date().getTime();
     const millisecondsToWait = data.secondsToWait * 1000;
     race.datetimeStarted = now + millisecondsToWait;
 
     // Schedule the countdown
     if (race.ruleset.solo) {
-      // Solo races start in 3 seconds, so schedule a countdown that starts with 3 immediately
+      // Solo races start in 3 seconds, so schedule a countdown that starts with 3 immediately.
       setTimeout(() => {
         raceScreen.countdownTick(3);
       }, 0);
     } else {
-      // Multiplayer races start in 10 seconds, so schedule a countdown that starts with 5 in 5 seconds
+      // Multiplayer races start in 10 seconds, so schedule a countdown that starts with 5 in 5
+      // seconds.
       const timeToStartCountdown = millisecondsToWait - 5000 - FADE_TIME;
       setTimeout(() => {
         raceScreen.countdownTick(5);
@@ -916,8 +940,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerSetFloor", connRacerSetFloor);
   function connRacerSetFloor(data: RacerSetFloorData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerSetFloor(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -937,11 +961,15 @@ function initRaceCommandHandlers(conn: Connection) {
     const weAreFirstPlace =
       myRacer !== null && myRacer.placeMid === 1 && myRacer.floorNum > 1;
 
-    // Find the player in the racerList
+    // Find the player in the racerList.
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
+      if (racer === undefined) {
+        continue;
+      }
+
       if (data.name === racer.name) {
-        // Update their place and floor locally
+        // Update their place and floor locally.
         racer.floorNum = data.floorNum;
         racer.stageType = data.stageType;
         racer.datetimeArrivedFloor = data.datetimeArrivedFloor;
@@ -949,18 +977,18 @@ function initRaceCommandHandlers(conn: Connection) {
 
         const isAltStage = data.stageType === 4 || data.stageType === 5;
         if (data.floorNum === 1 && !isAltStage) {
-          // Delete their items, since they reset
+          // Delete their items, since they reset.
           racer.items = [];
           racer.startingItem = 0;
 
-          // Update the race screen
-          if (g.currentScreen === "race") {
+          // Update the race screen.
+          if (g.currentScreen === Screen.RACE) {
             raceScreen.participantsSetStartingItem(i);
           }
         }
 
-        // Update the race screen
-        if (g.currentScreen === "race") {
+        // Update the race screen.
+        if (g.currentScreen === Screen.RACE) {
           raceScreen.participantsSetFloor(i);
         }
 
@@ -993,8 +1021,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerSetPlaceMid", connRacerSetPlaceMid);
   function connRacerSetPlaceMid(data: RacerSetPlaceMidData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerSetPlaceMid(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -1010,15 +1038,19 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Find the player in the racerList
+    // Find the player in the racerList.
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
+      if (racer === undefined) {
+        continue;
+      }
+
       if (data.name === racer.name) {
-        // Update their placeMid locally
+        // Update their placeMid locally.
         racer.placeMid = data.placeMid;
 
-        // Update the race screen
-        if (g.currentScreen === "race") {
+        // Update the race screen.
+        if (g.currentScreen === Screen.RACE) {
           raceScreen.participantsSetPlaceMid(i);
         }
 
@@ -1039,8 +1071,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerAddItem", connRacerAddItem);
   function connRacerAddItem(data: RacerAddItemData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerAddItem(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -1056,9 +1088,8 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Find the player in the racerList
-    for (let i = 0; i < race.racerList.length; i++) {
-      const racer = race.racerList[i];
+    // Find the player in the racerList.
+    for (const racer of race.racerList) {
       if (data.name === racer.name) {
         racer.items.push(data.item);
         break;
@@ -1074,8 +1105,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerSetStartingItem", connRacerSetStartingItem);
   function connRacerSetStartingItem(data: RacerSetStartingItemData) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerSetStartingItem(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -1091,14 +1122,18 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Find the player in the racerList
+    // Find the player in the racerList.
     for (let i = 0; i < race.racerList.length; i++) {
       const racer = race.racerList[i];
+      if (racer === undefined) {
+        continue;
+      }
+
       if (data.name === racer.name) {
         racer.startingItem = data.item.id;
 
-        // Update the race screen
-        if (g.currentScreen === "race") {
+        // Update the race screen.
+        if (g.currentScreen === Screen.RACE) {
           raceScreen.participantsSetStartingItem(i);
         }
 
@@ -1115,8 +1150,8 @@ function initRaceCommandHandlers(conn: Connection) {
 
   conn.on("racerCharacter", connRacerCharacter);
   function connRacerCharacter(data: RacerCharacter) {
-    if (g.currentScreen === "transition") {
-      // Come back when the current transition finishes
+    if (g.currentScreen === Screen.TRANSITION) {
+      // Come back when the current transition finishes.
       setTimeout(() => {
         connRacerCharacter(data);
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -1132,9 +1167,8 @@ function initRaceCommandHandlers(conn: Connection) {
       return;
     }
 
-    // Find the player in the racerList
-    for (let i = 0; i < race.racerList.length; i++) {
-      const racer = race.racerList[i];
+    // Find the player in the racerList.
+    for (const racer of race.racerList) {
       if (data.name === racer.name) {
         racer.characterNum = data.characterNum;
         break;

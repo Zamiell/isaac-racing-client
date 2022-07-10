@@ -20,7 +20,7 @@ export function init(): void {
 
 function initErrorModal() {
   $("#error-modal-button").click(() => {
-    if (g.currentScreen === "error") {
+    if (g.currentScreen === Screen.ERROR) {
       electron.ipcRenderer.send("asynchronous-message", "restart");
     }
   });
@@ -28,7 +28,7 @@ function initErrorModal() {
 
 function initWarningModal() {
   $("#warning-modal-button").click(() => {
-    // Hide the warning modal
+    // Hide the warning modal.
     $("#warning-modal").fadeOut(FADE_TIME, () => {
       $("#gui").fadeTo(FADE_TIME, 1);
     });
@@ -81,7 +81,7 @@ function initPasswordModal() {
     );
     const password = passwordHash.toString("base64");
 
-    // Hide the password modal
+    // Hide the password modal.
     $("#password-modal").fadeOut(FADE_TIME, () => {
       if (g.conn === null) {
         throw new Error("The WebSocket connection was not initialized.");
@@ -98,7 +98,7 @@ function initPasswordModal() {
   });
 
   $("#password-modal-cancel-button").click(() => {
-    // Hide the password modal
+    // Hide the password modal.
     $("#password-modal").fadeOut(FADE_TIME, () => {
       $("#gui").fadeTo(FADE_TIME, 1);
     });
@@ -124,6 +124,10 @@ function initIsaacPathModal() {
     }
 
     const isaacPath = dialogReturn[0];
+    if (isaacPath === undefined) {
+      return;
+    }
+
     log.info("Selected an Isaac path of:", isaacPath);
 
     const description1 = $("#isaac-path-description-1");

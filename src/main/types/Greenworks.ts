@@ -13,7 +13,7 @@ export interface Greenworks {
 
 export interface TicketObject {
   ticket: Buffer;
-  // The ticket object also contains other stuff that we don't care about
+  // The ticket object also contains other stuff that we don't care about.
 }
 
 export interface SteamIDObject {

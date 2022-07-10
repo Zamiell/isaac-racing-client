@@ -85,13 +85,14 @@ socketFunctionMap.set("level", (data: string) => {
     return;
   }
 
-  const match = /(\d+)-(\d+)-(\w+)/.exec(data); // This does not work with a global flag
+  const match = /(\d+)-(\d+)-(\w+)/.exec(data); // This does not work with a global flag.
   if (match === null) {
     errorShow(`Failed to parse the level: ${data}`);
     return;
   }
 
-  const floorNum = parseIntSafe(match[1]); // The server expects this to be an integer
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const floorNum = parseIntSafe(match[1]!); // The server expects this to be an integer.
   if (Number.isNaN(floorNum)) {
     errorShow(
       `Failed to parse the floor number of "${match[1]}" from "${data}".`,
@@ -99,7 +100,8 @@ socketFunctionMap.set("level", (data: string) => {
     return;
   }
 
-  const stageType = parseIntSafe(match[2]); // The server expects this to be an integer
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const stageType = parseIntSafe(match[2]!); // The server expects this to be an integer.
   if (Number.isNaN(stageType)) {
     errorShow(
       `Failed to parse the stage type of "${match[2]}" from "${data}".`,

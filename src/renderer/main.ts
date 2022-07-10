@@ -1,6 +1,6 @@
-// Racing+ Client
-// for The Binding of Isaac: Repentance
-// (renderer process)
+// ----------------------------------------------------------------------
+// Racing+ Client for The Binding of Isaac: Repentance (renderer process)
+// ----------------------------------------------------------------------
 
 import log from "electron-log";
 import path from "path";
@@ -65,15 +65,15 @@ $(() => {
   if (IS_DEV) {
     devButtons.init();
 
-    // Skip Isaac-related checks and automatically log in with account #1
-    // $("#title-choose-1").click();
+    // Skip Isaac-related checks and automatically log in with account #1.
+    /// $("#title-choose-1").click();
   } else if (settings.get("dev") === true) {
-    // Skip Isaac/Steam-related checks
+    // Skip Isaac/Steam-related checks.
 
-    // Start the local socket server
+    // Start the local socket server.
     socket.start();
 
-    // Start logging in via Steam
+    // Start logging in via Steam.
     $("#title-ajax-description").html(
       "Getting an authentication ticket from Steam...",
     );
@@ -105,7 +105,8 @@ function initData() {
   const emotePath = path.join(__dirname, "img", "emotes");
   g.emoteList = file.getDirList(emotePath);
   for (let i = 0; i < g.emoteList.length; i++) {
-    // Remove ".png" from each element of emoteList
-    g.emoteList[i] = g.emoteList[i].slice(0, -4); // ".png" is 4 characters long
+    // Remove ".png" from each element of emoteList.
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    g.emoteList[i] = g.emoteList[i]!.slice(0, -4); // ".png" is 4 characters long
   }
 }

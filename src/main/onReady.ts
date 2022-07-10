@@ -33,7 +33,7 @@ if (!file.exists(FAVICON_PATH)) {
 }
 
 export function createWindow(): electron.BrowserWindow {
-  // Figure out what the window size and position should be
+  // Figure out what the window size and position should be.
   const windowSettings: WindowSettings = settings.get(
     "window",
   ) as WindowSettings;
@@ -62,7 +62,7 @@ export function createWindow(): electron.BrowserWindow {
     y = windowSettings.y;
   }
 
-  // Create the browser window
+  // Create the browser window.
   const window = new electron.BrowserWindow({
     x,
     y,
@@ -72,25 +72,24 @@ export function createWindow(): electron.BrowserWindow {
     title: WINDOW_TITLE,
     frame: false,
     webPreferences: {
-      // Needed to use Node APIs inside of the renderer process
+      // Needed to use Node APIs inside of the renderer process:
       // https://stackoverflow.com/questions/44391448/electron-require-is-not-defined
       nodeIntegration: true,
       contextIsolation: false,
 
-      // Needed for @electron/remote to work
+      // Needed for @electron/remote to work:
       // https://github.com/electron/remote
       enableRemoteModule: true,
     },
   });
 
-  // Open the JavaScript console
+  // Open the JavaScript console.
   if (IS_DEV) {
     window.webContents.openDevTools();
   }
 
-  // Check if the window is off-screen
-  // (for example, this can happen if it was put on a second monitor which is currently
-  // disconnected)
+  // Check if the window is off-screen. (For example, this can happen if it was put on a second
+  // monitor which is currently disconnected.)
   if (x !== undefined && y !== undefined && !isInBounds(x, y)) {
     window.center();
   }
@@ -100,12 +99,12 @@ export function createWindow(): electron.BrowserWindow {
     electron.app.quit();
   });
 
-  // When the app is closed, save the window size and position for next time
+  // When the app is closed, save the window size and position for next time.
   window.on("close", () => {
     settings.set("window", window.getBounds());
   });
 
-  // Make external links (i.e. with target="_blank") open in a real browser
+  // Make external links (i.e. with target="_blank") open in a real browser:
   // https://stackoverflow.com/questions/32402327/how-can-i-force-external-links-from-browser-window-to-open-in-a-default-browser
   window.webContents.setWindowOpenHandler((details: HandlerDetails) => {
     electron.shell.openExternal(details.url).catch((err) => {
@@ -183,12 +182,12 @@ export function registerKeyboardHotkeys(window: electron.BrowserWindow): void {
 }
 
 export function autoUpdate(window: electron.BrowserWindow): void {
-  // Don't check for updates when running the program from source
+  // Don't check for updates when running the program from source.
   if (IS_DEV) {
     return;
   }
 
-  // Only check for updates on Windows
+  // Only check for updates on Windows.
   if (process.platform !== "win32") {
     return;
   }

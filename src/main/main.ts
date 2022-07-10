@@ -1,6 +1,6 @@
-// Racing+ Client
-// for The Binding of Isaac: Repentance
-// (main process)
+// ------------------------------------------------------------------
+// Racing+ Client for The Binding of Isaac: Repentance (main process)
+// ------------------------------------------------------------------
 
 import * as remote from "@electron/remote/main";
 import * as electron from "electron";
@@ -36,8 +36,7 @@ function printWelcomeMessage() {
 }
 
 function checkSecondInstance() {
-  // Don't allow multiple instances of the program to run
-  // (except for in development)
+  // Don't allow multiple instances of the program to run (except for in development)
   if (IS_DEV) {
     return;
   }
@@ -50,12 +49,12 @@ function checkSecondInstance() {
 }
 
 function initElectronHandlers() {
-  // Needed so that remote works in the renderer process
+  // Needed so that remote works in the renderer process:
   // https://github.com/electron/remote
   remote.initialize();
 
   // This method will be called when Electron has finished initialization and is ready to create
-  // browser windows
+  // browser windows.
   electron.app.on("ready", () => {
     window = onReady.createWindow();
     onReady.registerKeyboardHotkeys(window);
@@ -63,17 +62,17 @@ function initElectronHandlers() {
   });
 
   electron.app.on("will-quit", () => {
-    // Unregister the global keyboard hotkeys
+    // Unregister the global keyboard hotkeys.
     electron.globalShortcut.unregisterAll();
 
-    // Tell the child processes to exit
-    // (in Node, they will live forever even if the parent closes)
+    // Tell the child processes to exit. (In Node, they will live forever even if the parent
+    // closes.)
     childProcesses.exitAll();
   });
 
   electron.app.on("second-instance", () => {
-    // The end-user launched a second instance of the application
-    // They probably forgot that it was already open, so focus the window
+    // The end-user launched a second instance of the application. They probably forgot that it was
+    // already open, so focus the window.
     if (window !== null) {
       if (window.isMinimized()) {
         window.restore();
@@ -90,7 +89,7 @@ function initElectronHandlers() {
     },
   );
 
-  // By default, Electron does not come with a right-click context menu
-  // This library provides some sensible defaults
+  // By default, Electron does not come with a right-click context menu. This library provides some
+  // sensible defaults.
   electronContextMenu();
 }

@@ -1,7 +1,8 @@
 import g from "./globals";
+import { Screen } from "./types/Screen";
 
 export function textUpdated(): void {
-  if (g.currentScreen !== "lobby" && g.currentScreen !== "race") {
+  if (g.currentScreen !== Screen.LOBBY && g.currentScreen !== Screen.RACE) {
     return;
   }
 

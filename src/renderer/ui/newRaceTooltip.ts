@@ -21,38 +21,39 @@ import {
 
 export function init(): void {
   $("#new-race-title-randomize").click(() => {
-    // Don't randomize the race name if we are on a test account
+    // Don't randomize the race name if we are on a test account.
     const match = /TestAccount\d+/.exec(g.myUsername);
     if (match !== null) {
       $("#new-race-title").val("{ test race }");
       return;
     }
 
-    // Get some random words
-    const randomNumbers = [];
+    // Get some random words.
+    const randomNumbers: number[] = [];
     const numWords = 2;
     for (let i = 0; i < numWords; i++) {
       let randomNumber: number;
       do {
         randomNumber = getRandomNumber(0, g.wordList.length - 1);
-      } while (randomNumbers.indexOf(randomNumber) !== -1);
+      } while (randomNumbers.includes(randomNumber));
       randomNumbers.push(randomNumber);
     }
     let randomlyGeneratedName = "";
     for (let i = 0; i < numWords; i++) {
-      randomlyGeneratedName += `${g.wordList[randomNumbers[i]]} `;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      randomlyGeneratedName += `${g.wordList[randomNumbers[i]!]} `;
     }
 
-    // Chop off the trailing space
+    // Chop off the trailing space.
     randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
 
     // Set it
     $("#new-race-title").val(randomlyGeneratedName);
 
-    // Keep track of the last randomly generated name so that we know if they user changes it
+    // Keep track of the last randomly generated name so that we know if they user changes it.
     g.lastRaceTitle = randomlyGeneratedName;
 
-    // Mark that we should use randomly generated names from now on
+    // Mark that we should use randomly generated names from now on.
     settings.set("newRaceTitle", ""); // An empty string means to use the random name generator
   });
 
@@ -60,8 +61,9 @@ export function init(): void {
     const char = $("#new-race-character").val();
     let randomChar: string;
     do {
-      const randomCharNum = getRandomNumber(0, CHARACTERS.length - 1);
-      randomChar = CHARACTERS[randomCharNum];
+      const randomCharIndex = getRandomNumber(0, CHARACTERS.length - 1);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      randomChar = CHARACTERS[randomCharIndex]!;
     } while (randomChar === char);
     $("#new-race-character").val(randomChar);
     newRaceCharacterChange(null);
@@ -77,7 +79,7 @@ export function init(): void {
     const oldBuild = parseIntSafe(oldBuildString);
     let randomBuild: number;
     do {
-      // The build at index 0 is intentionally blank
+      // The build at index 0 is intentionally blank.
       randomBuild = getRandomNumber(1, BUILDS.length - 1);
     } while (randomBuild === oldBuild);
     $("#new-race-starting-build").val(randomBuild);
@@ -96,7 +98,7 @@ export function init(): void {
 
   $("#new-race-format").change(newRaceFormatChange);
 
-  // Add the options to the character dropdown
+  // Add the options to the character dropdown.
   for (const character of CHARACTERS) {
     const characterElement = $("<option></option>")
       .val(character)
@@ -111,23 +113,26 @@ export function init(): void {
 
   $("#new-race-goal").change(newRaceGoalChange);
 
-  // Add the options to the starting build dropdown
+  // Add the options to the starting build dropdown.
   for (let i = 0; i < BUILDS.length; i++) {
-    // The 0th element is an empty array
+    // The 0th element is an empty array.
     if (i === 0) {
       continue;
     }
 
     const build = BUILDS[i];
+    if (build === undefined) {
+      continue;
+    }
 
-    // Compile the build description string
+    // Compile the build description string.
     let description = "";
     for (const item of build) {
       description += `${item.name} + `;
     }
     description = description.slice(0, -3); // Chop off the trailing " + "
 
-    // Add the option for this build
+    // Add the option for this build.
     $("#new-race-starting-build").append(
       $("<option></option>").val(i).html(description),
     );
@@ -158,16 +163,16 @@ export function init(): void {
 }
 
 function submit(event: JQuery.SubmitEvent) {
-  // By default, the form will reload the page, so stop this from happening
+  // By default, the form will reload the page, so stop this from happening.
   event.preventDefault();
 
-  // Don't do anything if we are not on the right screen
-  if (g.currentScreen !== "lobby") {
+  // Don't do anything if we are not on the right screen.
+  if (g.currentScreen !== Screen.LOBBY) {
     return false;
   }
 
   // Get values from the form and update the stored defaults in the "settings.json" file if
-  // necessary
+  // necessary.
 
   const titleValue = $("#new-race-title").val();
   if (typeof titleValue !== "string") {
@@ -221,7 +226,7 @@ function submit(event: JQuery.SubmitEvent) {
     settings.set("newRaceGoal", goal);
   }
 
-  // The server expects "solo" and "ranked" as booleans
+  // The server expects "solo" and "ranked" as booleans.
 
   let solo: boolean;
   if (size === "solo") {
@@ -255,7 +260,7 @@ function submit(event: JQuery.SubmitEvent) {
       settings.set("newRaceBuild", startingBuildVal);
     }
 
-    // The server expects this to be a number
+    // The server expects this to be a number.
     startingBuild = parseIntSafe(startingBuildVal);
   } else {
     startingBuild = -1;
@@ -271,7 +276,7 @@ function submit(event: JQuery.SubmitEvent) {
     settings.set("newRaceDifficulty", difficulty);
   }
 
-  // Validate that they are not creating a race with the same title as an existing race
+  // Validate that they are not creating a race with the same title as an existing race.
   for (const race of g.raceList.values()) {
     if (race.name === title) {
       $("#new-race-title").tooltipster("open");
@@ -280,8 +285,7 @@ function submit(event: JQuery.SubmitEvent) {
   }
   $("#new-race-title").tooltipster("close");
 
-  // Truncate names longer than 100 characters
-  // (this is also enforced server-side)
+  // Truncate names longer than 100 characters (this is also enforced server-side).
   const maximumLength = 100;
   if (title.length > maximumLength) {
     title = title.substring(0, maximumLength);
@@ -301,19 +305,19 @@ function submit(event: JQuery.SubmitEvent) {
     password = passwordHash.toString("base64");
   }
 
-  // Handle multiplayer specific settings
+  // Handle multiplayer specific settings.
   if (!solo) {
     ranked = true;
   }
 
-  // Handle ranked solo specific settings
+  // Handle ranked solo specific settings.
   if (ranked && solo) {
     format = "seeded";
     startingBuild = 0;
     difficulty = "normal";
   }
 
-  // Close the tooltip (and all error tooltips, if present)
+  // Close the tooltip (and all error tooltips, if present).
   closeAllTooltips();
 
   if (g.conn === null) {
@@ -337,12 +341,12 @@ function submit(event: JQuery.SubmitEvent) {
     ruleset: rulesetObject,
   });
 
-  // Return false or else the form will submit and reload the page
+  // Return false or else the form will submit and reload the page.
   return false;
 }
 
 function newRaceSizeChange(_event: JQuery.ChangeEvent | null, fast = false) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newSize = $("input[name=new-race-size]:checked").val();
   if (newSize === "solo") {
     $("#new-race-size-icon-solo").fadeIn(fast ? 0 : FADE_TIME);
@@ -357,28 +361,28 @@ function newRaceSizeChange(_event: JQuery.ChangeEvent | null, fast = false) {
     $("#new-race-size-icon-multiplayer").fadeIn(fast ? 0 : FADE_TIME);
     $("#new-race-ranked-row").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-ranked-row-padding").fadeOut(fast ? 0 : FADE_TIME, () => {
-      // Unlike the fade in above, the fade out needs to complete before the tooltip is redrawn
+      // Unlike the fade in above, the fade out needs to complete before the tooltip is redrawn.
       $("#header-new-race").tooltipster("reposition"); // Redraw the tooltip
     });
     $("#new-race-password-row").fadeIn(fast ? 0 : FADE_TIME);
     $("#new-race-password-row-padding").fadeIn(fast ? 0 : FADE_TIME);
 
-    // Multiplayer races must be unranked
+    // Multiplayer races must be unranked.
     $("#new-race-ranked-no").prop("checked", true);
     newRaceRankedChange(null, true);
   }
 }
 
 function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newRanked = $("input[name=new-race-ranked]:checked").val();
   setElementBackgroundImage(
     "new-race-ranked-icon",
     `img/ranked/${newRanked}.png`,
   );
 
-  // Make the format border flash to signify that there are new options there
-  // (no longer needed since the format is hidden in solo ranked)
+  // Make the format border flash to signify that there are new options there. (This is no longer
+  // needed since the format is hidden in solo ranked.)
   /*
   if (newRanked === "no" && !fast) {
     const oldColor = $("#new-race-format").css("border-color");
@@ -389,14 +393,16 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
   }
   */
 
-  // Change the subsequent options accordingly
+  // Change the subsequent options accordingly.
   const format = $("#new-race-format").val();
   if (newRanked === "no") {
-    // Show the non-standard formats
-    // $("#new-race-format-diversity").fadeIn(0);
-    // $("#new-race-format-custom").fadeIn(0);
+    // Show the non-standard formats.
+    /*
+    $("#new-race-format-diversity").fadeIn(0);
+    $("#new-race-format-custom").fadeIn(0);
+    */
 
-    // Show extra new race options
+    // Show extra new race options.
     setTimeout(
       () => {
         $("#new-race-format-container").fadeIn(fast ? 0 : FADE_TIME);
@@ -411,28 +417,30 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
       fast ? 0 : FADE_TIME,
     );
   } else if (newRanked === "yes") {
-    // Hide the non-standard formats
-    // $("#new-race-format-diversity").fadeOut(0);
-    // $("#new-race-format-custom").fadeOut(0);
+    // Hide the non-standard formats.
+    /*
+    $("#new-race-format-diversity").fadeOut(0);
+    $("#new-race-format-custom").fadeOut(0);
+    */
 
-    // Hide extra new race options
+    // Hide extra new race options.
     $("#new-race-format-container").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-character-container").fadeOut(fast ? 0 : FADE_TIME);
     // We hide the "starting-build" container before the "goal" container because it may already be
-    // hidden and would mess up the callback
+    // hidden and would mess up the callback.
     $("#new-race-starting-build-container").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-goal-container").fadeOut(fast ? 0 : FADE_TIME);
     $("#new-race-difficulty-container").fadeOut(fast ? 0 : FADE_TIME, () => {
       $("#header-new-race").tooltipster("reposition"); // Redraw the tooltip
     });
 
-    // There are only unseeded and seeded formats in ranked races
+    // There are only unseeded and seeded formats in ranked races.
     if (format !== "unseeded" && format !== "seeded") {
       $("#new-race-format").val("unseeded");
       newRaceFormatChange(null, fast);
     }
 
-    // Set default values for the character, goal, and build drop-downs
+    // Set default values for the character, goal, and build drop-downs.
     const rankedCharacter = "Judas";
     if ($("#new-race-character").val() !== rankedCharacter) {
       $("#new-race-character").val(rankedCharacter);
@@ -456,7 +464,7 @@ function newRacePasswordChange(
   fast = false,
 ) {
   const password = $("#new-race-password").val();
-  if (password === null || password === "") {
+  if (password === undefined || password === "") {
     $("#new-race-password-no-password-icon").fadeIn(fast ? 0 : FADE_TIME);
     $("#new-race-password-has-password-icon").fadeOut(fast ? 0 : FADE_TIME);
   } else {
@@ -466,14 +474,14 @@ function newRacePasswordChange(
 }
 
 function newRaceFormatChange(_event: JQuery.ChangeEvent | null, fast = false) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newFormat = $("#new-race-format").val();
   setElementBackgroundImage(
     "new-race-format-icon",
     `img/formats/${newFormat}.png`,
   );
 
-  // Show or hide the starting build row
+  // Show or hide the starting build row.
   const ranked = $("input[name=new-race-ranked]:checked").val();
   if (newFormat === "seeded" && ranked === "no") {
     setTimeout(
@@ -494,7 +502,7 @@ function newRaceFormatChange(_event: JQuery.ChangeEvent | null, fast = false) {
 }
 
 function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newCharacter = $("#new-race-character").val();
   setElementBackgroundImage(
     "new-race-character-icon",
@@ -503,13 +511,13 @@ function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
 }
 
 function newRaceGoalChange(_event: JQuery.ChangeEvent | null) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newGoal = $("#new-race-goal").val();
   setElementBackgroundImage("new-race-goal-icon", `img/goals/${newGoal}.png`);
 }
 
 function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newBuildString = $("#new-race-starting-build").val();
   if (typeof newBuildString !== "string") {
     throw new Error(
@@ -535,7 +543,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
 }
 
 function newRaceDifficultyChange(_event: JQuery.ChangeEvent | null) {
-  // Change the displayed icon
+  // Change the displayed icon.
   const newDifficulty = $("input[name=new-race-difficulty]:checked").val();
   if (newDifficulty === "normal") {
     $("#new-race-difficulty-icon-i").css("color", "green");
@@ -544,9 +552,9 @@ function newRaceDifficultyChange(_event: JQuery.ChangeEvent | null) {
   }
 }
 
-// The "functionBefore" function for Tooltipster
+/** This is the "functionBefore" function for Tooltipster. */
 export function tooltipFunctionBefore(): boolean {
-  if (g.currentScreen !== "lobby") {
+  if (g.currentScreen !== Screen.LOBBY) {
     return false;
   }
 
@@ -554,22 +562,21 @@ export function tooltipFunctionBefore(): boolean {
   return true;
 }
 
-// The "functionReady" function for Tooltipster
+/** This is the "functionReady" function for Tooltipster. */
 export function tooltipFunctionReady(): void {
-  // Load the default settings from the settings.json file
-  // and hide or show some rows based on the race type and format
-  // (the first argument is "event", the second argument is "fast")
+  // Load the default settings from the settings.json file and hide or show some rows based on the
+  // race type and format. (The first argument is "event", the second argument is "fast".)
   const newRaceTitle = settings.get("newRaceTitle") as string;
   if (newRaceTitle === "") {
-    // Randomize the race title
+    // Randomize the race title.
     $("#new-race-title-randomize").click();
   } else {
     $("#new-race-title").val(newRaceTitle);
     g.lastRaceTitle = newRaceTitle;
   }
 
-  const newRacePassword = settings.get("newRacePassword") as string;
-  if (newRacePassword !== undefined && newRacePassword !== null) {
+  const newRacePassword = settings.get("newRacePassword");
+  if (typeof newRacePassword === "string") {
     $("#new-race-password").val(newRacePassword);
   }
   newRacePasswordChange(null, true);
@@ -591,17 +598,17 @@ export function tooltipFunctionReady(): void {
     true,
   );
   newRaceDifficultyChange(null);
-  // (the change functions have to be interspersed here,
-  // otherwise the format change would overwrite the character change)
+  // (The change functions have to be interspersed here, otherwise the format change would overwrite
+  // the character change.)
 
-  // Focus the race title box
-  // (we have to wait 1 millisecond because the above code that changes rows will wrest focus away)
+  // Focus the race title box. (We have to wait 1 millisecond because the above code that changes
+  // rows will wrest focus away.)
   setTimeout(() => {
     $("#new-race-title").focus();
   }, 1);
 
-  // Tooltips within tooltips seem to be buggy and can sometimes be uninitialized
-  // So, check for this every time the tooltip is opened and reinitialize them if necessary
+  // Tooltips within tooltips seem to be buggy and can sometimes be uninitialized. So, check for
+  // this every time the tooltip is opened and reinitialize them if necessary.
   if (!$("#new-race-title").hasClass("tooltipstered")) {
     $("#new-race-title").tooltipster({
       theme: "tooltipster-shadow",

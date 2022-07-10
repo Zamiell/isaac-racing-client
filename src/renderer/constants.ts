@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 import * as remote from "@electron/remote";
 
-// true for connecting to a test server on localhost, false for connecting to the specified domain
+// `true` for connecting to a test server on localhost, `false` for connecting to the specified
+// domain.
 const LOCALHOST = false;
 const SECURE = true; // "true" for HTTPS/WSS and "false" for HTTP/WS
 const DOMAIN = "isaacracing.net";

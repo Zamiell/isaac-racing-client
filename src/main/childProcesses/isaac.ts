@@ -3,22 +3,23 @@
 // When the Racing+ client starts, we need to perform several checks:
 
 // 1) Racing+ mod integrity
-// After the mod is updated on the Steam Workshop,
-// the game can fail to download it and/or integrate it, which seems to happen pretty commonly
-// We computed the SHA1 hash of every file during the build process and wrote it to "sha1.json";
-// compare all files in the mod directory to this JSON
+
+// After the mod is updated on the Steam Workshop, the game can fail to download it and/or integrate
+// it, which seems to happen pretty commonly. We computed the SHA1 hash of every file during the
+// build process and wrote it to "sha1.json". Compare all files in the mod directory to this JSON.
 
 // 2) "--luadebug" launch options for the game in Steam
-// This is required for the Racing+ mod to talk to the Racing+ client
-// However, it cannot be set until Steam is completely closed
-// (because it caches the value in memory)
+
+// This is required for the Racing+ mod to talk to the Racing+ client. However, it cannot be set
+// until Steam is completely closed (because it caches the value in memory).
 
 // 3) Sandbox Lua files in place
-// Since we are turning on --luadebug,
-// we provide a sandbox so that only certain functions can be called
 
-// First, initialize the error logging, because importing can cause errors
-// (This is why we have to disable "import/first" above)
+// Since we are turning on --luadebug, we provide a sandbox so that only certain functions can be
+// called.
+
+// First, initialize the error logging, because importing can cause errors. (This is why we have to
+// disable "import/first" above.)
 // eslint-disable-next-line import/order
 import { childError, processExit, handleErrors } from "./subroutines";
 // organize-imports-ignore
@@ -59,14 +60,14 @@ function onMessage(message: string) {
     throw new Error("process.send() does not exist.");
   }
 
-  // The child will stay alive even if the parent has closed,
-  // so we depend on the parent telling us when to die
+  // The child will stay alive even if the parent has closed, so we depend on the parent telling us
+  // when to die.
   if (message === "exit") {
     process.exit();
   }
 
   // Otherwise, we expect a message from the parent process telling us what the path to the Isaac
-  // executable is
+  // executable is.
   const isaacPath = message;
   if (typeof isaacPath !== "string") {
     process.send(
@@ -85,7 +86,7 @@ function onMessage(message: string) {
   gamePath = path.dirname(isaacPath);
   process.send(`Using a game path of: ${gamePath}`);
 
-  // Begin the process of getting the necessary information from the registry
+  // Begin the process of getting the necessary information from the registry.
   getSteamPath();
 }
 
@@ -96,8 +97,7 @@ function getSteamPath() {
 
   process.send("Checking for the Steam path...");
 
-  // Get the path of where the user has Steam installed to
-  // We can find this in the Windows registry
+  // Get the path of where the user has Steam installed to We can find this in the Windows registry.
   const steamKey = new Registry({
     hive: Registry.HKCU,
     key: "\\Software\\Valve\\Steam",
@@ -106,14 +106,14 @@ function getSteamPath() {
   steamKey.get("SteamPath", postGetSteamPath);
 }
 
-function postGetSteamPath(err: Error, item: RegistryItem) {
+function postGetSteamPath(err: Error | undefined | null, item: RegistryItem) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
 
   if (err !== undefined && err !== null) {
     throw new Error(
-      `Failed to read the Windows registry when trying to figure out what the Steam path is: ${err}`,
+      `Failed to read the Windows registry when trying to figure out what the Steam path is: ${err.message}`,
     );
   }
 
@@ -135,8 +135,7 @@ function getSteamActiveUser() {
 
   process.send("Checking for the Steam active user...");
 
-  // Get the Steam ID of the active user
-  // We can also find this in the Windows registry
+  // Get the Steam ID of the active user We can also find this in the Windows registry.
   const steamKey = new Registry({
     hive: Registry.HKCU,
     key: "\\Software\\Valve\\Steam\\ActiveProcess",
@@ -144,14 +143,17 @@ function getSteamActiveUser() {
   steamKey.get("ActiveUser", postGetSteamActiveUser);
 }
 
-function postGetSteamActiveUser(err: Error, item: RegistryItem) {
+function postGetSteamActiveUser(
+  err: Error | undefined | null,
+  item: RegistryItem,
+) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
 
   if (err !== undefined && err !== null) {
     throw new Error(
-      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
+      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err.message}`,
     );
   }
 
@@ -162,8 +164,8 @@ function postGetSteamActiveUser(err: Error, item: RegistryItem) {
     );
   }
 
-  // The active user is stored in the registry as a hexadecimal value,
-  // so we have to convert it to base 10
+  // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
+  // base 10.
   steamActiveUserID = parseInt(steamActiveUserIDString, 16);
   if (Number.isNaN(steamActiveUserID)) {
     throw new Error(
@@ -194,8 +196,8 @@ function checkModExists() {
 
   const modExists = isaacRacingPlusMod.exists(modsPath);
   if (!modExists) {
-    // The mod not being found is an ordinary error;
-    // the end-user probably has not yet subscribed to the mod on the Steam Workshop
+    // The mod not being found is an ordinary error. The end-user probably has not yet subscribed to
+    // the mod on the Steam Workshop.
     process.send("modNotFound", processExit);
     return;
   }
@@ -210,7 +212,7 @@ async function checkModIntegrity(modsPath: string) {
 
   process.send("Checking to see if the Racing+ mod is corrupted...");
 
-  // Mod checks are performed in a separate file
+  // Mod checks are performed in a separate file.
   const modValid = await isaacRacingPlusMod.isValid(modsPath);
   if (modValid) {
     process.send("The mod perfectly matched!");
@@ -229,7 +231,7 @@ function checkLaunchOption() {
 
   process.send(`Checking for the "${LAUNCH_OPTION}" launch option...`);
 
-  // Launch option checking is performed in a separate file
+  // Launch option checking is performed in a separate file.
   const launchOptionSet = hasLaunchOption(steamPath, steamActiveUserID);
   if (launchOptionSet) {
     process.send("The launch option is already set.");
@@ -249,7 +251,7 @@ function checkLuaSandbox() {
 
   process.send("Checking to see if the Lua sandbox is in place...");
 
-  // Sandbox checks are performed in a separate file
+  // Sandbox checks are performed in a separate file.
   const sandboxValid = isSandboxValid(gamePath);
   if (sandboxValid) {
     process.send("The sandbox is in place.");
@@ -280,7 +282,7 @@ function checkCloseIsaac() {
   } else if (shouldRestartSteam) {
     checkCloseSteam();
   } else {
-    // Don't automatically open Isaac for them, since that might be annoying
+    // Don't automatically open Isaac for them, since that might be annoying.
     process.send("File system repair complete. (Isaac was not open.)");
     process.send("isaacChecksComplete", processExit);
   }
@@ -300,8 +302,8 @@ function postKillIsaac(err?: Error) {
     throw new Error("process.send() does not exist.");
   }
 
-  if (err !== null) {
-    throw new Error(`Failed to close Isaac: ${err}`);
+  if (err !== undefined) {
+    throw new Error(`Failed to close Isaac: ${err.message}`);
   }
 
   process.send("Closed Isaac.");
@@ -311,7 +313,7 @@ function postKillIsaac(err?: Error) {
     return;
   }
 
-  // After a short delay, start Isaac again
+  // After a short delay, start Isaac again.
   setTimeout(() => {
     startIsaac();
   }, 1000); // 1 second
@@ -343,8 +345,8 @@ function postKillSteam() {
   setLaunchOption(steamPath, steamActiveUserID);
   process.send(`Set the launch option of "${LAUNCH_OPTION}".`);
 
-  // We don't have to manually start Steam, because we can instead just launch Isaac,
-  // which will in turn automatically start Steam for us
+  // We don't have to manually start Steam, because we can instead just launch Isaac, which will in
+  // turn automatically start Steam for us.
   startIsaac();
 }
 
@@ -354,7 +356,7 @@ function startIsaac() {
   }
 
   // We have to start Isaac from the main process because we don't have access to "electron.shell"
-  // from here
+  // from here.
   process.send("startIsaac");
   process.send("isaacChecksComplete", processExit);
 }
@@ -364,10 +366,9 @@ function isProcessRunning(processName: string): [boolean, number] {
     throw new Error("process.send() does not exist.");
   }
 
-  // The "tasklist" module has problems on different languages
-  // The "ps-node" module is very slow
-  // The "process-list" module will not compile for some reason
-  // So, just manually run the "tasklist" command and parse the output without using any module
+  // The "tasklist" module has problems on different languages. The "ps-node" module is very slow.
+  // The "process-list" module will not compile for some reason. So, just manually run the
+  // "tasklist" command and parse the output without using any module.
   const command = "tasklist";
   let output: string[];
   try {
@@ -390,7 +391,8 @@ function isProcessRunning(processName: string): [boolean, number] {
       );
     }
 
-    const pidString = match[1];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const pidString = match[1]!;
     const pid = parseIntSafe(pidString);
     if (Number.isNaN(pid)) {
       throw new Error(

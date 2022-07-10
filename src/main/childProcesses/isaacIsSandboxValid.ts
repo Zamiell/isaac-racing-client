@@ -34,7 +34,7 @@ function isMainLuaValid(gamePath: string) {
   const mainLuaDstFilename = "main.lua";
   const mainLuaDstPath = path.join(scriptsPath, mainLuaDstFilename);
   if (!file.exists(mainLuaDstPath)) {
-    // This file should always exist in the Binding of Isaac "scripts" directory
+    // This file should always exist in the Binding of Isaac "scripts" directory.
     throw new Error(
       `Failed to find your "${mainLuaDstFilename}" file at: ${mainLuaDstPath}`,
     );

@@ -15,8 +15,8 @@ export interface Race {
   racers: string[];
 
   /**
-   * This is only sent by the server in the "racerList" command (not the "raceList" command).
-   * We add it to the race object manually at that point.
+   * This is only sent by the server in the "racerList" command (not the "raceList" command). We add
+   * it to the race object manually at that point.
    */
   racerList: Racer[];
 }

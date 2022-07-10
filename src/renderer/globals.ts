@@ -4,10 +4,10 @@ import { Race } from "./types/Race";
 import { Room } from "./types/Room";
 import { Screen } from "./types/Screen";
 
-// The object that contains all of the global variables
+// The object that contains all of the global variables.
 const globals = {
   autoUpdateStatus: null as string | null,
-  /** The WebSocket connection (set in "websocket.ts") */
+  /** The WebSocket connection (set in "websocket.ts"). */
   conn: null as Connection | null,
   currentScreen: Screen.TITLE_AJAX,
   currentRaceID: -1,
@@ -58,8 +58,6 @@ const globals = {
 };
 export default globals;
 
-// Also make the globals available to the window
-// (so that we can access them from the JavaScript console for debugging purposes)
-if (window !== undefined) {
-  window.g = globals;
-}
+// Also make the globals available to the window (so that we can access them from the JavaScript
+// console for debugging purposes).
+window.g = globals;

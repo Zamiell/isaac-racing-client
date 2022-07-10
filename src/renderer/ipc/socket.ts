@@ -9,7 +9,7 @@ export function init(): void {
 }
 
 export function start(): void {
-  // Send a message to the main process to start up the socket server
+  // Send a message to the main process to start up the socket server.
   if (!amSecondTestAccount()) {
     electron.ipcRenderer.send("asynchronous-message", "socket", "start");
   }
@@ -18,7 +18,7 @@ export function start(): void {
 function IPCSocket(_event: electron.IpcRendererEvent, rawData: string) {
   const [command, data] = unpackSocketMsg(rawData);
 
-  // Don't log everything to reduce spam
+  // Don't log everything to reduce spam.
   if (command !== "level" && command !== "room" && command !== "item") {
     log.info(`Renderer process received socket command: ${command} ${data}`);
   }

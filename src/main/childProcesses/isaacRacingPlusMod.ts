@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import path from "path";
 import * as file from "../../common/file";
 
-// This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam
+// This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam.
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
 const SHA1_HASHES_URL =
   "https://raw.githubusercontent.com/Zamiell/racing-plus/main/sha1.json";
@@ -54,19 +54,18 @@ function checkCorruptOrMissingFiles(
 
   let modIsCorrupt = false;
 
-  // Each key of the JSON is the relative path to the file
+  // Each key of the JSON is the relative path to the file.
   for (const [relativePath, backupFileHash] of Object.entries(checksums)) {
     const filePath = path.join(modPath, relativePath);
 
     if (file.exists(filePath)) {
-      // Make an exception for the "sha1.json" file
-      // (this will not have a valid checksum)
+      // Make an exception for the "sha1.json" file. (This will not have a valid checksum.)
       if (path.basename(filePath) === "sha1.json") {
         continue;
       }
 
-      // Make an exception for the "metadata.xml" file
-      // (this file may have changed because it changes after uploading the mod to the workshop)
+      // Make an exception for the "metadata.xml" file. (This file may have changed because it
+      // changes after uploading the mod to the workshop.)
       if (path.basename(filePath) === "metadata.xml") {
         continue;
       }
@@ -97,7 +96,7 @@ function checkExtraneousFiles(
   }
 
   // To be thorough, also go through the mod directory and check to see if there are any extraneous
-  // files that are not on the hash list
+  // files that are not on the hash list.
   let modFiles: readonly klawSync.Item[];
   try {
     modFiles = klawSync(modPath);
@@ -110,22 +109,21 @@ function checkExtraneousFiles(
   let hasExtraneousFiles = false;
 
   for (const klawSyncItem of modFiles) {
-    // Get the relative path by chopping off the left side
-    // We add one to remove the trailing slash
+    // Get the relative path by chopping off the left side. We add one to remove the trailing slash.
     const modFile = klawSyncItem.path.substring(modPath.length + 1);
 
     if (!klawSyncItem.stats.isFile()) {
-      // Ignore directories; even extraneous directories shouldn't cause any harm
+      // Ignore directories; even extraneous directories shouldn't cause any harm.
       continue;
     } else if (
-      // This file may not match the one distributed through Steam
+      // This file may not match the one distributed through Steam.
       path.basename(modFile) === "metadata.xml" ||
       path.basename(modFile) === "disable.it" // They might have the mod disabled
     ) {
       continue;
     }
 
-    // Delete all files that are not found within the JSON hashes
+    // Delete all files that are not found within the JSON hashes.
     if (!Object.keys(checksums).includes(modFile)) {
       const filePath = path.join(modPath, modFile);
       process.send(`Extraneous file found: ${filePath}`);

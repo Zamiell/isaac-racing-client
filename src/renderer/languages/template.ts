@@ -33,7 +33,7 @@ export const languagePack = {
     "New Race": "",
     Settings: "",
 
-    // Lobby screen (current races table)
+    // Lobby screen (current races table).
     "No current races.": "",
     Title: "",
     Status: "", // Open, Starting, In Progress
@@ -43,22 +43,22 @@ export const languagePack = {
     Entrants: "",
     Race: "",
 
-    // The kinds of race "Status"
+    // The kinds of race "Status".
     Open: "",
     Starting: "",
     "In Progress": "",
 
-    // The kinds of race "Type"
+    // The kinds of race "Type".
     Unranked: "",
     Ranked: "",
 
-    // The kinds of race "Format"
+    // The kinds of race "Format".
     Unseeded: "",
     Seeded: "",
     Diversity: "",
     Custom: "",
 
-    // The kinds of race "Difficulty"
+    // The kinds of race "Difficulty".
     Difficulty: "",
     Normal: "",
     Hard: "",
@@ -68,13 +68,13 @@ export const languagePack = {
     "Online Users": "",
     "Private Message": "",
 
-    // Race screen (race table)
+    // Race screen (race table).
     Character: "",
     Goal: "",
     Seed: "",
     Build: "",
 
-    // Race screen (race controls)
+    // Race screen (race controls).
     Ready: "",
     "Race starting in 10 seconds!": "",
     Go: "",
@@ -83,7 +83,7 @@ export const languagePack = {
     left: "",
     "Race completed": "",
 
-    // Race screen (racer table)
+    // Race screen (racer table).
     Place: "",
     Racer: "",
     Floor: "",
@@ -91,7 +91,7 @@ export const languagePack = {
     Time: "",
     Offset: "",
 
-    // The kinds of racer "Status"
+    // The kinds of racer "Status".
     "Not Ready": "",
     Racing: "",
     Finished: "",
@@ -184,7 +184,7 @@ export const languagePack = {
     "Disconnected from the server. Either your Internet is having problems or the server went down!":
       "",
 
-    // Error messages (from the server)
+    // Error messages (from the server).
     "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.":
       "",
 
@@ -226,7 +226,7 @@ export const languagePack = {
     "and touch the trophy that falls down afterward.": "",
     "This race is password protected.": "",
 
-    // Race ready error messages
+    // Race ready error messages.
     "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.":
       "",
     "You have to start a run before you can mark yourself as ready.": "",

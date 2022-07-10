@@ -16,7 +16,7 @@ export function isaacFocus(): void {
   );
   execFile(pathToFocusIsaac, (err) => {
     if (err !== null) {
-      log.error(`Failed to focus Isaac: ${err}`);
+      log.error(`Failed to focus Isaac: ${err.message}`);
     }
   });
 }

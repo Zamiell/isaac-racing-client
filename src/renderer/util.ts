@@ -49,8 +49,8 @@ export function findAjaxError(jqXHR: JQuery.jqXHR): string {
 }
 
 export function errorShow(message: string, customModalName?: string): void {
-  // Come back in a second if we are still in a transition
-  if (g.currentScreen === "transition") {
+  // Come back in a second if we are still in a transition.
+  if (g.currentScreen === Screen.TRANSITION) {
     setTimeout(() => {
       errorShow(message, customModalName);
     }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -64,32 +64,32 @@ export function errorShow(message: string, customModalName?: string): void {
     log.error("Generic error.");
   }
 
-  // Don't do anything if we are already showing an error
-  if (g.currentScreen === "error") {
+  // Don't do anything if we are already showing an error.
+  if (g.currentScreen === Screen.ERROR) {
     return;
   }
   g.currentScreen = Screen.ERROR;
 
-  // Disconnect from the server, if connected
+  // Disconnect from the server, if connected.
   if (g.conn !== null) {
     g.conn.close();
   }
 
-  // Hide the links in the header
+  // Hide the links in the header.
   $("#header-profile").fadeOut(FADE_TIME);
   $("#header-leaderboards").fadeOut(FADE_TIME);
   $("#header-help").fadeOut(FADE_TIME);
 
-  // Hide the buttons in the header
+  // Hide the buttons in the header.
   $("#header-lobby").fadeOut(FADE_TIME);
   $("#header-new-race").fadeOut(FADE_TIME);
   $("#header-settings").fadeOut(FADE_TIME);
 
-  // Close all tooltips
+  // Close all tooltips.
   closeAllTooltips();
 
   $("#gui").fadeTo(FADE_TIME, 0.1, () => {
-    // Show the modal
+    // Show the modal.
     if (customModalName === undefined) {
       $("#error-modal").fadeIn(FADE_TIME);
       $("#error-modal-description").html(message);
@@ -152,8 +152,8 @@ export function setElementBuildIcon(id: string, buildIndex: number): void {
 }
 
 export function warningShow(message: string): void {
-  // Come back in a second if we are still in a transition
-  if (g.currentScreen === "transition") {
+  // Come back in a second if we are still in a transition.
+  if (g.currentScreen === Screen.TRANSITION) {
     setTimeout(() => {
       warningShow(message);
     }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -166,7 +166,7 @@ export function warningShow(message: string): void {
   // Close all tooltips
   closeAllTooltips();
 
-  // Show the warning modal
+  // Show the warning modal.
   $("#gui").fadeTo(FADE_TIME, 0.1, () => {
     $("#warning-modal").fadeIn(FADE_TIME);
     $("#warning-modal-description").html(message);

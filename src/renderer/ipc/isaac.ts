@@ -15,32 +15,35 @@ export function init(): void {
 }
 
 export function start(): void {
-  // This tells the main process to do Isaac-related checks
-  // (check to see if the Racing+ mod is corrupted, etc.)
+  // This tells the main process to do Isaac-related checks. (Check to see if the Racing+ mod is
+  // corrupted, etc.)
   const isaacPath = settings.get("isaacPath") as string;
   electron.ipcRenderer.send("asynchronous-message", "isaac", isaacPath);
 }
 
-// Monitor for notifications from the child process that does file checks and opens Isaac
+// Monitor for notifications from the child process that does file checks and opens Isaac.
 function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
   log.info(`Renderer process received Isaac child message: ${message}`);
 
-  // All messages should be strings
+  // All messages should be strings.
   if (typeof message !== "string") {
-    // This must be a debug message containing an object or array
+    // This must be a debug message containing an object or array.
     return;
   }
 
   if (message.startsWith("error: ")) {
-    // g.currentScreen is equal to "title-ajax" when this is called
+    // `g.currentScreen` is equal to `Screen.TITLE_AJAX` when this is called.
     g.currentScreen = Screen.NULL;
 
     const match = /error: (.+)/.exec(message);
     if (match === null) {
       throw new Error(`Failed to parse the error message: ${message}`);
     }
-    const error = match[1];
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const error = match[1]!;
     errorShow(error);
+
     return;
   }
 
@@ -70,10 +73,10 @@ function IPCIsaac(_event: electron.IpcRendererEvent, message: unknown) {
     }
 
     case "isaacChecksComplete": {
-      // Start the local socket server
+      // Start the local socket server.
       socket.start();
 
-      // Start logging in via Steam
+      // Start logging in via Steam.
       $("#title-ajax-description").html(
         "Getting an authentication ticket from Steam...",
       );

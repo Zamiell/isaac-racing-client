@@ -12,29 +12,29 @@ const VALID_LANGUAGES: Array<[string, string, string]> = [
 let lang: Lang | null = null;
 
 export function init(): void {
-  // Create a language switcher instance
+  // Create a language switcher instance.
   lang = new Lang();
 
-  Lang.prototype.pack.es = languagePackES;
-  Lang.prototype.pack.fr = languagePackFR;
+  Lang.prototype.pack["es"] = languagePackES;
+  Lang.prototype.pack["fr"] = languagePackFR;
 
   lang.init({
     defaultLang: "en",
   });
 
-  // If the user is using a non-default language, change all the text on the page
-  // (the above initialization is asynchronous, and we don't know when it will finish,
-  // so just wait a while before switching the language)
+  // If the user is using a non-default language, change all the text on the page. (The above
+  // initialization is asynchronous, and we don't know when it will finish, so just wait a while
+  // before switching the language.)
   setTimeout(() => {
-    // We still call this if the language is English so that the links get initialized correctly
+    // We still call this if the language is English so that the links get initialized correctly.
     const language = settings.get("language") as string;
     localize(language);
   }, 500);
 }
 
-// Define the function for the language changing links
+// Define the function for the language changing links.
 function setLocalize(this: HTMLElement) {
-  // Find the language code that goes with this link
+  // Find the language code that goes with this link.
   let matchingLanguageArray: [string, string, string] | undefined;
   for (const languageArray of VALID_LANGUAGES) {
     const match = /\w+-\w+-(\w+)/.exec(this.id);
@@ -58,19 +58,19 @@ export function localize(newLanguage: string): void {
   }
 
   // Validate function arguments
-  const validLanguageCodes = [];
+  const validLanguageCodes: string[] = [];
   for (const languageArray of VALID_LANGUAGES) {
     validLanguageCodes.push(languageArray[0]);
   }
-  if (validLanguageCodes.indexOf(newLanguage) === -1) {
+  if (!validLanguageCodes.includes(newLanguage)) {
     log.error(`Unsupported language: ${newLanguage}`);
     return;
   }
 
-  // Update the language setting on disk
+  // Update the language setting on disk.
   settings.set("language", newLanguage);
 
-  // Set the new language on the page
+  // Set the new language on the page.
   lang.change(newLanguage);
   for (const languageArray of VALID_LANGUAGES) {
     if (languageArray[0] === newLanguage) {

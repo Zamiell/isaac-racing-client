@@ -7,7 +7,7 @@ export function onMessage(
   arg1: string,
   arg2: string,
 ): void {
-  // Don't log socket messages, as it gets too spammy
+  // Don't log socket messages, as it gets too spammy.
   if (arg1 !== "socket") {
     log.info(
       `Main process received message from renderer process of type: ${arg1}`,

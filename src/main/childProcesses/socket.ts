@@ -1,7 +1,6 @@
-// Child process that runs a socket server
-// We forward along socket messages to the parent process,
-// which in turn sends them to the renderer process
-// All messages to the parent must be in the form of "commandName rest of the data"
+// Child process that runs a socket server. We forward along socket messages to the parent process,
+// which in turn sends them to the renderer process. All messages to the parent must be in the form
+// of "commandName rest of the data".
 
 import dgram from "dgram";
 import net from "net";
@@ -19,7 +18,7 @@ let lastUDPClientPort: number | null = null;
 init();
 
 function init() {
-  // We use a different error message here than in the other child processes
+  // We use a different error message here than in the other child processes.
   process.on("uncaughtException", onUncaughtException);
   process.on("message", onProcessMessage);
 
@@ -58,7 +57,7 @@ function initUDP() {
     lastUDPClientPort = info.port;
 
     // Forward messages from the mod --> the Isaac racing server
-    if (msg !== undefined && msg !== null && msg.length > 0) {
+    if (msg.length > 0) {
       UDPClient.send(msg, 0, msg.length, UDP_PORT, REMOTE_HOSTNAME);
     }
   });
@@ -72,12 +71,7 @@ function initUDP() {
 
   UDPClient.on("message", (msg: Buffer) => {
     // Forward messages from the Isaac racing server --> the mod
-    if (
-      msg !== undefined &&
-      msg !== null &&
-      msg.length > 0 &&
-      lastUDPClientPort !== null
-    ) {
+    if (msg.length > 0 && lastUDPClientPort !== null) {
       UDPServer.send(msg, 0, msg.length, lastUDPClientPort, LOCAL_HOSTNAME);
     }
   });
@@ -87,32 +81,26 @@ function onUncaughtException(err: Error) {
   const getStackTrace = () => {
     const obj = {};
     Error.captureStackTrace(obj, getStackTrace);
-    return (obj as Record<string, unknown>).stack;
+    return (obj as Record<string, unknown>)["stack"];
   };
 
   if (process.send !== undefined) {
-    // We forward all errors back to the parent process like in the other child processes
-    // But we use a prefix of "error" here instead of "error:"
-    process.send(`error ${err} ${getStackTrace()}`, processExit);
+    // We forward all errors back to the parent process like in the other child processes. But we
+    // use a prefix of "error" here instead of "error:".
+    process.send(`error ${err.message} ${getStackTrace()}`, processExit);
   }
 }
 
 function onProcessMessage(message: string) {
-  switch (message) {
-    case "exit": {
-      // The child will stay alive even if the parent has closed,
-      // so we depend on the parent telling us when to die
-      process.exit();
-      break;
-    }
+  // The child will stay alive even if the parent has closed, so we depend on the parent telling us
+  // when to die.
+  if (message === "exit") {
+    process.exit();
+  }
 
-    default: {
-      // Forward all messages from the main process to the Racing+ mod
-      for (const socket of TCPSockets) {
-        socket.write(message);
-      }
-      break;
-    }
+  // Forward all messages from the main process to the Racing+ mod.
+  for (const socket of TCPSockets) {
+    socket.write(message);
   }
 }
 
@@ -121,7 +109,7 @@ function TCPConnectionListener(TCPSocket: net.Socket) {
     throw new Error("process.send() does not exist.");
   }
 
-  // Keep track of the newly connected client
+  // Keep track of the newly connected client.
   TCPSockets.push(TCPSocket);
 
   const clientAddress = `${TCPSocket.remoteAddress}:${TCPSocket.remotePort}`;
@@ -156,13 +144,12 @@ function TCPSocketData(buffer: Buffer) {
     const command = unpackSocketMsg(trimmedLine)[0];
 
     // The client will send a ping on every frame as a means of checking whether or not the socket
-    // is closed
-    // These can be ignored
+    // is closed. These can be ignored.
     if (command === "ping") {
       return;
     }
 
-    // Forward all messages received from the client to the parent process
+    // Forward all messages received from the client to the parent process.
     process.send(trimmedLine);
   }
 }
@@ -172,7 +159,7 @@ function TCPSocketClose(socket: net.Socket, clientAddress: string) {
     throw new Error("process.send() does not exist.");
   }
 
-  // Remove it from our list of sockets
+  // Remove it from our list of sockets.
   const index = TCPSockets.indexOf(socket);
   if (index > -1) {
     TCPSockets.splice(index, 1);
@@ -193,6 +180,6 @@ function TCPSocketError(err: Error, clientAddress: string) {
   }
 
   process.send(
-    `error The TCP socket server got an error for client "${clientAddress}": ${err}`,
+    `error The TCP socket server got an error for client "${clientAddress}": ${err.message}`,
   );
 }

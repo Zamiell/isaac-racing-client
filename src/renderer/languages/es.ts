@@ -39,7 +39,7 @@ export const languagePackES = {
     "New Race": "Nueva carrera",
     Settings: "Opciones",
 
-    // Lobby screen (current races table)
+    // Lobby screen (current races table).
     "No current races.": "No hay carreras en curso",
     Title: "Nombre",
     Status: "Estado", // Open, Starting, In Progress
@@ -49,22 +49,22 @@ export const languagePackES = {
     Entrants: "Participantes",
     Race: "Carrera",
 
-    // The kinds of race "Status"
+    // The kinds of race "Status".
     Open: "Abierta",
     Starting: "Iniciando",
     "In Progress": "En curso",
 
-    // The kinds of race "Type"
+    // The kinds of race "Type".
     Unranked: "Casual",
     Ranked: "Igualada",
 
-    // The kinds of race "Format"
+    // The kinds of race "Format".
     Unseeded: "Unseeded",
     Seeded: "Seeded",
     Diversity: "Diversity",
     Custom: "Personalizada",
 
-    // The kinds of race "Difficulty"
+    // The kinds of race "Difficulty".
     Difficulty: "Dificultad",
     Normal: "Normal",
     Hard: "Difícil",
@@ -74,13 +74,13 @@ export const languagePackES = {
     "Online Users": "Usuarios en línea",
     "Private Message": "Mensaje privado",
 
-    // Race screen (race table)
+    // Race screen (race table).
     Character: "Personaje",
     Goal: "Meta",
     Seed: "Seed",
     Build: "Build",
 
-    // Race screen (race controls)
+    // Race screen (race controls).
     Ready: "Listo",
     "Race starting in 10 seconds!": "La carrera comenzará en 10 segundos",
     Go: "¡Ya!",
@@ -89,7 +89,7 @@ export const languagePackES = {
     left: "queda(n)",
     "Race completed": "Carrera completada",
 
-    // Race screen (racer table)
+    // Race screen (racer table).
     Place: "Posición",
     Racer: "Corredor",
     Floor: "Piso",
@@ -97,7 +97,7 @@ export const languagePackES = {
     Time: "Tiempo",
     Offset: "Offset",
 
-    // The kinds of racer "Status"
+    // The kinds of racer "Status".
     "Not Ready": "No listo",
     Racing: "Corriendo",
     Finished: "Terminado",
@@ -201,7 +201,7 @@ export const languagePackES = {
     "Disconnected from the server. Either your Internet is having problems or the server went down!":
       "Desconectado del servidor. ¡Puede que tu conexión esté teniendo problemas o el servidor haya caído!",
 
-    // Error messages (from the server)
+    // Error messages (from the server).
     "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.":
       "Alguien más tiene esa URL de retransmisión. Si eres el propietario por favor, contacta con un administrador.",
 
@@ -252,7 +252,7 @@ export const languagePackES = {
     "This race is password protected.":
       "Esta carrera está protegida por contraseña",
 
-    // Race ready error messages
+    // Race ready error messages.
     "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.":
       "Como esto es una carrera multijugador, debes esperar a que entre alguien más antes de empezar.",
     "You have to start a run before you can mark yourself as ready.":

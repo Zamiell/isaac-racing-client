@@ -39,7 +39,7 @@ export const languagePackFR = {
     "New Race": "Nouvelle Course",
     Settings: "Paramètres",
 
-    // Lobby screen (current races table)
+    // Lobby screen (current races table).
     "No current races.": "Pas de courses en cours.",
     Title: "Titre",
     Status: "Statut", // Open, Starting, In Progress
@@ -49,22 +49,22 @@ export const languagePackFR = {
     Entrants: "Participants",
     Race: "Course",
 
-    // The kinds of race "Status"
+    // The kinds of race "Status".
     Open: "Ouverte",
     Starting: "Départ",
     "In Progress": "En Cours",
 
-    // The kinds of race "Type"
+    // The kinds of race "Type".
     Unranked: "Non Classée",
     Ranked: "Classée",
 
-    // The kinds of race "Format"
+    // The kinds of race "Format".
     Unseeded: "Non Seeded",
     Seeded: "Seeded",
     Diversity: "Diversity",
     Custom: "Personnalisée",
 
-    // The kinds of race "Difficulty"
+    // The kinds of race "Difficulty".
     Difficulty: "Difficulté",
     Normal: "Normal",
     Hard: "Difficile",
@@ -74,13 +74,13 @@ export const languagePackFR = {
     "Online Users": "Utilisateurs en ligne",
     "Private Message": "Message privé",
 
-    // Race screen (race table)
+    // Race screen (race table).
     Character: "Personnage",
     Goal: "Objectif",
     Seed: "Seed",
     Build: "Build",
 
-    // Race screen (race controls)
+    // Race screen (race controls).
     Ready: "Prêt",
     "Race starting in 10 seconds!": "La course commence dans 10 secondes!",
     Go: "Partez",
@@ -89,7 +89,7 @@ export const languagePackFR = {
     left: "restant(s)",
     "Race completed": "Course terminée",
 
-    // Race screen (racer table)
+    // Race screen (racer table).
     Place: "Place",
     Racer: "Coureur",
     Floor: "Etage",
@@ -97,7 +97,7 @@ export const languagePackFR = {
     Time: "Temps",
     Offset: "Ecart",
 
-    // The kinds of racer "Status"
+    // The kinds of racer "Status".
     "Not Ready": "En Attente",
     Racing: "En Course",
     Finished: "Terminée",
@@ -204,7 +204,7 @@ export const languagePackFR = {
     "Disconnected from the server. Either your Internet is having problems or the server went down!":
       "Vous avez été déconnecté du serveur. Votre connection internet a des problèmes ou le serveur est actuellement hors-service !",
 
-    // Error messages (from the server)
+    // Error messages (from the server).
     "Someone else has already claimed that stream URL. If you are the real owner of this stream, please contact an administrator.":
       "Cette URL de stream est déjà utilisée par quelqu'un d'autre. Si vous êtes le véritable propriétaire de ce stream, veuillez contacter un administrateur.",
 
@@ -256,7 +256,7 @@ export const languagePackFR = {
     "This race is password protected.":
       "Un mot de passe est requis pour cette course.",
 
-    // Race ready error messages
+    // Race ready error messages.
     "Since this is a multiplayer race, you must wait for someone else to join before marking yourself as ready.":
       "Étant donné qu'il s'agit d'une course en multijoueur, vous devez attendre qu'un autre joueur rejoigne avant de vous marquer en tant que prêt.",
     "You have to start a run before you can mark yourself as ready.":

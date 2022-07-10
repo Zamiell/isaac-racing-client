@@ -19,12 +19,10 @@ export function getMyStatus(race: Race): RacerStatus | null {
 }
 
 export function getNumReady(race: Race): number {
-  // Count how many people are ready
+  // Count how many people are ready.
   let numReady = 0;
-  for (let i = 0; i < race.racerList.length; i++) {
-    const racer = race.racerList[i];
-
-    if (racer.status === "ready") {
+  for (const racer of race.racerList) {
+    if (racer.status === RacerStatus.READY) {
       numReady += 1;
     }
   }
@@ -35,7 +33,7 @@ export function getNumReady(race: Race): number {
 export function getNumLeft(race: Race): number {
   let numLeft = 0;
   for (const racer of race.racerList) {
-    if (racer.status === "racing") {
+    if (racer.status === RacerStatus.RACING) {
       numLeft += 1;
     }
   }

@@ -1,21 +1,21 @@
 import log from "electron-log";
 
+const SEPARATOR = " ";
+
 const SPAMMY_COMMANDS = [
   "roomHistory",
   "roomMessage",
   "privateMessage",
   "discordMessage",
   "adminMessage",
-  // "racerSetFloor",
-  // "racerSetPlaceMid"
-  // "racerAddItem",
-  // "racerSetStartingItem",
-  // "racerCharacter",
+  // - "racerSetFloor",
+  // - "racerSetPlaceMid",
+  // - "racerAddItem",
+  // - "racerSetStartingItem",
+  // - "racerCharacter",
 ];
 
-interface WebSocketCallbackCommands {
-  [command: string]: (data: unknown) => void;
-}
+type WebSocketCallbackCommands = Record<string, (data: unknown) => void>;
 
 type WebSocketCallbacks = WebSocketCallbackCommands & {
   open?: (evt: Event) => void;
@@ -24,10 +24,10 @@ type WebSocketCallbacks = WebSocketCallbackCommands & {
 };
 
 /**
- * Connection is a class that manages a WebSocket connection to the server.
- * On top of the WebSocket protocol, the client and the server communicate using a specific format
- * based on the protocol that the Golem WebSocket framework uses.
- * For more information, see "websocketMessage.go".
+ * Connection is a class that manages a WebSocket connection to the server. On top of the WebSocket
+ * protocol, the client and the server communicate using a specific format based on the protocol
+ * that the Golem WebSocket framework uses. For more information, see "websocketMessage.go".
+ *
  * Based on: https://github.com/trevex/golem_client/blob/master/golem.js
  */
 export class Connection {
@@ -61,16 +61,23 @@ export class Connection {
     if (typeof evt.data !== "string") {
       throw new Error("WebSocket received data that was not a string.");
     }
+
     const [command, data] = unpack(evt.data);
-    if (this.callbacks[command] !== undefined) {
-      if (!SPAMMY_COMMANDS.includes(command)) {
-        log.info(`WebSocket received: ${evt.data}`);
-      }
-      const dataObject = unmarshal(data);
-      this.callbacks[command](dataObject);
-    } else {
-      log.error(`Received WebSocket message with no callback: ${evt.data}`);
+    if (command === undefined || data === undefined) {
+      return;
     }
+
+    const callback = this.callbacks[command];
+    if (callback === undefined) {
+      log.error(`Received WebSocket message with no callback: ${evt.data}`);
+      return;
+    }
+
+    if (!SPAMMY_COMMANDS.includes(command)) {
+      log.info(`WebSocket received: ${evt.data}`);
+    }
+    const dataObject = unmarshal(data);
+    callback(dataObject);
   }
 
   onError(evt: Event): void {
@@ -79,7 +86,7 @@ export class Connection {
     }
   }
 
-  // This must be "any" instead of "unknown"
+  // This must be "any" instead of "unknown".
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on(name: string, callback: (evt: any) => void): void {
     this.callbacks[name] = callback;
@@ -100,7 +107,7 @@ export class Connection {
   send(command: string, data?: unknown): void {
     this.emit(command, data);
 
-    // Don't log some commands to reduce spam
+    // Don't log some commands to reduce spam.
     if (
       command !== "raceFloor" &&
       command !== "raceRoom" &&
@@ -115,11 +122,19 @@ export class Connection {
   }
 }
 
-const separator = " ";
-const unpack = (data: string) => {
-  const name = data.split(separator)[0];
+function unpack(data: string) {
+  const name = data.split(SEPARATOR)[0];
+  if (name === undefined) {
+    throw new Error('Failed to unpack data due to "name" being undefined.');
+  }
+
   return [name, data.substring(name.length + 1, data.length)];
-};
-const unmarshal = (data: string) => JSON.parse(data) as unknown;
-const marshalAndPack = (name: string, data: unknown) =>
-  name + separator + JSON.stringify(data);
+}
+
+function unmarshal(data: string) {
+  return JSON.parse(data) as unknown;
+}
+
+function marshalAndPack(name: string, data: unknown) {
+  return name + SEPARATOR + JSON.stringify(data);
+}

@@ -1,6 +1,9 @@
 import * as electron from "electron";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
 import g from "../globals";
+import { RacerStatus } from "../types/RacerStatus";
+import { RaceStatus } from "../types/RaceStatus";
+import { Screen } from "../types/Screen";
 import { errorShow } from "../util";
 import * as lobbyScreen from "./lobby";
 import * as newRaceTooltip from "./newRaceTooltip";
@@ -11,7 +14,7 @@ export function init(): void {
   initLobbyLinks();
   initLobbyHeaderButtons();
 
-  // Automatically hide the lobby links if the window is resized too far horizontally
+  // Automatically hide the lobby links if the window is resized too far horizontally.
   $(window).resize(checkHideLinks);
 }
 
@@ -58,22 +61,22 @@ function initLobbyHeaderButtons() {
       throw new Error("The WebSocket connection was not initialized.");
     }
 
-    // Check to make sure we are actually on the race screen
-    if (g.currentScreen !== "race") {
+    // Check to make sure we are actually on the race screen.
+    if (g.currentScreen !== Screen.RACE) {
       return;
     }
 
-    // Don't allow people to spam this
+    // Don't allow people to spam this.
     const now = new Date().getTime();
     if (now - g.spamTimer < 1000) {
       return;
     }
     g.spamTimer = now;
 
-    // Check to see if the race is over
+    // Check to see if the race is over.
     const race = g.raceList.get(g.currentRaceID);
     if (race === undefined) {
-      // The race is over, so we just need to leave the channel
+      // The race is over, so we just need to leave the channel.
       g.conn.send("roomLeave", {
         room: `_race_${g.currentRaceID}`,
       });
@@ -81,23 +84,25 @@ function initLobbyHeaderButtons() {
       return;
     }
 
-    // The race is not over, so check to see if it has started yet
-    if (race.status === "open") {
-      // The race has not started yet, so leave the race entirely
+    // The race is not over, so check to see if it has started yet.
+    if (race.status === RaceStatus.OPEN) {
+      // The race has not started yet, so leave the race entirely.
       g.conn.send("raceLeave", {
         id: g.currentRaceID,
       });
       return;
     }
 
-    // The race is not over, so check to see if it is in progress
-    if (race.status === "in progress") {
-      // Check to see if we are still racing
-      for (let i = 0; i < race.racerList.length; i++) {
-        const racer = race.racerList[i];
+    // The race is not over, so check to see if it is in progress.
+    if (race.status === RaceStatus.IN_PROGRESS) {
+      // Check to see if we are still racing.
+      for (const racer of race.racerList) {
         if (racer.name === g.myUsername) {
-          // We are racing, so check to see if we are allowed to go back to the lobby
-          if (racer.status === "finished" || racer.status === "quit") {
+          // We are racing, so check to see if we are allowed to go back to the lobby.
+          if (
+            racer.status === RacerStatus.FINISHED ||
+            racer.status === RacerStatus.QUIT
+          ) {
             g.conn.send("roomLeave", {
               room: `_race_${g.currentRaceID}`,
             });
@@ -113,37 +118,43 @@ function initLobbyHeaderButtons() {
     theme: "tooltipster-shadow",
     delay: 0,
     functionBefore: () => {
-      // Check to make sure we are actually on the race screen
-      if (g.currentScreen !== "race") {
+      // Check to make sure we are actually on the race screen.
+      if (g.currentScreen !== Screen.RACE) {
         return false;
       }
 
-      // Check to see if the race is still going
+      // Check to see if the race is still going.
       const race = g.raceList.get(g.currentRaceID);
       if (race === undefined) {
-        // The race is over
+        // The race is over.
         return false;
       }
 
-      // The race is not over, so check to see if it has started yet
-      if (race.status !== "starting" && race.status !== "in progress") {
-        // The race has not started yet
+      // The race is not over, so check to see if it has started yet.
+      if (
+        race.status !== RaceStatus.STARTING &&
+        race.status !== RaceStatus.IN_PROGRESS
+      ) {
+        // The race has not started yet.
         return false;
       }
 
-      // Check to see if we are still racing
-      for (let i = 0; i < race.racerList.length; i++) {
-        const racer = race.racerList[i];
+      // Check to see if we are still racing.
+      for (const racer of race.racerList) {
         if (racer.name === g.myUsername) {
-          // We are racing, so check to see if we have finished or quit
-          if (racer.status === "finished" || racer.status === "quit") {
+          // We are racing, so check to see if we have finished or quit.
+          if (
+            racer.status === RacerStatus.FINISHED ||
+            racer.status === RacerStatus.QUIT
+          ) {
             return false;
           }
+
           break;
         }
       }
 
-      // The race is either starting or in progress
+      // The race is either starting or in progress.
       return true;
     },
   });
@@ -158,7 +169,7 @@ function initLobbyHeaderButtons() {
     })
     .tooltipster("instance")
     .on("close", () => {
-      // Check if the tooltip is open
+      // Check if the tooltip is open.
       if (!$("#header-settings").tooltipster("status").open) {
         $("#gui").fadeTo(FADE_TIME, 1);
       }
@@ -191,7 +202,10 @@ export function checkHideLinks(): void {
     $("#header-profile").fadeOut(0);
     $("#header-leaderboards").fadeOut(0);
     $("#header-help").fadeOut(0);
-  } else if (g.currentScreen === "lobby" || g.currentScreen === "race") {
+  } else if (
+    g.currentScreen === Screen.LOBBY ||
+    g.currentScreen === Screen.RACE
+  ) {
     $("#header-profile").fadeIn(0);
     $("#header-leaderboards").fadeIn(0);
     $("#header-help").fadeIn(0);

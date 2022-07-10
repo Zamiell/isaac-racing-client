@@ -3,6 +3,7 @@ import { parseIntSafe } from "../../common/util";
 import { FADE_TIME } from "../constants";
 import g from "../globals";
 import * as localization from "../localization";
+import { Screen } from "../types/Screen";
 import { closeAllTooltips } from "../util";
 
 export function init(): void {
@@ -21,7 +22,7 @@ export function init(): void {
       throw new Error("Failed to parse the value of the volume element.");
     }
 
-    // Play the "Go" sound effect (but only the voice because it sounds better in this context)
+    // Play the "Go" sound effect (but only the voice because it sounds better in this context).
     const audio = new Audio("sounds/go-voice.mp3");
     audio.volume = volumeElementValue / 100;
     audio.play().catch((err) => {
@@ -39,11 +40,11 @@ export function init(): void {
     }
 
     if (
-      oldStreamURL.indexOf("twitch.tv/") === -1 &&
-      newStreamURL.indexOf("twitch.tv/") !== -1
+      !oldStreamURL.includes("twitch.tv/") &&
+      newStreamURL.includes("twitch.tv/")
     ) {
-      // There was no Twitch stream set before, but now there is
-      // So, reveal the "Enable Twitch chat bot" and uncheck it
+      // There was no Twitch stream set before, but now there is. So, reveal the "Enable Twitch chat
+      // bot" and uncheck it.
       $("#settings-enable-twitch-bot-checkbox-container").fadeTo(FADE_TIME, 1);
       $("#settings-enable-twitch-bot-checkbox").prop("disabled", false);
       $("#settings-enable-twitch-bot-checkbox-label").css("cursor", "pointer");
@@ -52,16 +53,15 @@ export function init(): void {
       $("#settings-twitch-bot-delay").fadeTo(FADE_TIME, 0.25);
       $("#settings-twitch-bot-delay").prop("disabled", true);
 
-      // Wait for the fading to finish
+      // Wait for the fading to finish.
       setTimeout(() => {
         settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
       }, FADE_TIME + 5); // 5 milliseconds of leeway
     } else if (
-      oldStreamURL.indexOf("twitch.tv/") !== -1 &&
-      newStreamURL.indexOf("twitch.tv/") === -1
+      oldStreamURL.includes("twitch.tv/") &&
+      !newStreamURL.includes("twitch.tv/")
     ) {
-      // There was a Twitch stream set before, but now there isn't
-      // So, disable the Twitch bot
+      // There was a Twitch stream set before, but now there isn't. So, disable the Twitch bot.
       $("#settings-enable-twitch-bot-checkbox-container").fadeTo(
         FADE_TIME,
         0.25,
@@ -73,7 +73,7 @@ export function init(): void {
       $("#settings-twitch-bot-delay").fadeTo(FADE_TIME, 0.25);
       $("#settings-twitch-bot-delay").prop("disabled", true);
 
-      // Wait for the fading to finish
+      // Wait for the fading to finish.
       setTimeout(() => {
         settingsStreamURLKeyup(); // Since the contents of the text box may have changed in the meantime, run the function again to be sure
       }, FADE_TIME + 5); // 5 milliseconds of leeway
@@ -88,11 +88,11 @@ export function init(): void {
       throw new Error("Failed to get the value of the stream URL.");
     }
 
-    // Check if the tooltip is open
+    // Check if the tooltip is open.
     if (
       !$("#settings-enable-twitch-bot-checkbox-container").tooltipster("status")
         .open &&
-      streamURL.indexOf("twitch.tv/") !== -1 &&
+      streamURL.includes("twitch.tv/") &&
       !$("#settings-enable-twitch-bot-checkbox").is(":checked")
     ) {
       $("#settings-enable-twitch-bot-checkbox-container").tooltipster("open");
@@ -118,11 +118,11 @@ export function init(): void {
 }
 
 function submit(event: JQuery.SubmitEvent) {
-  // By default, the form will reload the page, so stop this from happening
+  // By default, the form will reload the page, so stop this from happening.
   event.preventDefault();
 
-  // Don't do anything if we are not on the right screen
-  if (g.currentScreen !== "lobby") {
+  // Don't do anything if we are not on the right screen.
+  if (g.currentScreen !== Screen.LOBBY) {
     return false;
   }
 
@@ -150,23 +150,23 @@ function submit(event: JQuery.SubmitEvent) {
     throw new Error("Failed to get the value of the stream URL element.");
   }
   if (newStreamURL.startsWith("http://")) {
-    // Add HTTPS
+    // Add HTTPS.
     newStreamURL = newStreamURL.replace("http://", "https://");
   }
   if (newStreamURL.startsWith("https://twitch.tv/")) {
-    // Add the www
+    // Add the www.
     newStreamURL = newStreamURL.replace("twitch.tv", "www.twitch.tv");
   }
   if (newStreamURL.startsWith("twitch.tv/")) {
-    // Add the protocol and www
+    // Add the protocol and www.
     newStreamURL = `https://www.${newStreamURL}`;
   }
   if (newStreamURL.startsWith("www.twitch.tv/")) {
-    // Add the protocol
+    // Add the protocol.
     newStreamURL = `https://${newStreamURL}`;
   }
   if (newStreamURL.endsWith("/")) {
-    // Remove any trailing forward slashes
+    // Remove any trailing forward slashes.
     newStreamURL = newStreamURL.replace(/\/+$/, "");
   }
   $("#settings-stream-url").val(newStreamURL);
@@ -174,7 +174,7 @@ function submit(event: JQuery.SubmitEvent) {
     !newStreamURL.startsWith("https://www.twitch.tv/") &&
     newStreamURL !== ""
   ) {
-    // We tried to enter a non-valid stream URL
+    // We tried to enter a non-valid stream URL.
     $("#settings-stream-url").tooltipster("open");
     return false;
   }
@@ -193,28 +193,28 @@ function submit(event: JQuery.SubmitEvent) {
     throw new Error("Failed to get the value of the Twitch bot delay element.");
   }
   if (!/^\d+$/.test(twitchBotDelayString)) {
-    // We tried to enter a non-number Twitch bot delay
+    // We tried to enter a non-number Twitch bot delay.
     $("#settings-twitch-bot-delay").tooltipster("open");
     return false;
   }
   const newTwitchBotDelay = parseIntSafe(twitchBotDelayString);
   if (newTwitchBotDelay < 0 || newTwitchBotDelay > 60) {
-    // We tried to enter a delay out of the valid range
+    // We tried to enter a delay out of the valid range.
     $("#settings-twitch-bot-delay").tooltipster("open");
     return false;
   }
   $("#settings-twitch-bot-delay").tooltipster("close");
 
-  // Send new stream settings if something changed
+  // Send new stream settings if something changed.
   if (
     newStreamURL !== g.stream.URL ||
     newTwitchBotEnabled !== g.stream.twitchBotEnabled ||
     newTwitchBotDelay !== g.stream.twitchBotDelay
   ) {
-    // Back up the stream URL in case we get a error/warning back from the server
+    // Back up the stream URL in case we get a error/warning back from the server.
     g.stream.URLBeforeSubmit = g.stream.URL;
 
-    // Update the global copies of these settings
+    // Update the global copies of these settings.
     if (newStreamURL === "-") {
       g.stream.URL = "";
     } else {
@@ -227,7 +227,7 @@ function submit(event: JQuery.SubmitEvent) {
       throw new Error("The WebSocket connection was not initialized.");
     }
 
-    // Send them to the server
+    // Send them to the server.
     g.conn.send("profileSetStream", {
       name: newStreamURL,
       enabled: newTwitchBotEnabled,
@@ -235,16 +235,16 @@ function submit(event: JQuery.SubmitEvent) {
     });
   }
 
-  // Close the tooltip (and all error tooltips, if present)
+  // Close the tooltip (and all error tooltips, if present).
   closeAllTooltips();
 
-  // Return false or else the form will submit and reload the page
+  // Return false or else the form will submit and reload the page.
   return false;
 }
 
-// The "functionBefore" function for Tooltipster
+// The "functionBefore" function for Tooltipster.
 export function tooltipFunctionBefore(): boolean {
-  if (g.currentScreen !== "lobby") {
+  if (g.currentScreen !== Screen.LOBBY) {
     return false;
   }
 
@@ -252,10 +252,10 @@ export function tooltipFunctionBefore(): boolean {
   return true;
 }
 
-// The "functionReady" function for Tooltipster
+// The "functionReady" function for Tooltipster.
 export function tooltipFunctionReady(): void {
-  // Fill in all of the settings every time the tooltip is opened
-  // (this prevents the user having unsaved settings displayed, which is confusing)
+  // Fill in all of the settings every time the tooltip is opened. (This prevents the user having
+  // unsaved settings displayed, which is confusing.)
 
   // Username
   $("#settings-username").html(g.myUsername);
@@ -274,7 +274,7 @@ export function tooltipFunctionReady(): void {
   $("#settings-stream-url").val(g.stream.URL);
   g.stream.URLBeforeTyping = g.stream.URL;
 
-  // Partially fade all of the optional settings by default
+  // Partially fade all of the optional settings by default.
   $("#settings-enable-twitch-bot-checkbox-container").fadeTo(0, 0.25);
   $("#settings-enable-twitch-bot-checkbox").prop("checked", false);
   $("#settings-enable-twitch-bot-checkbox").prop("disabled", true);
@@ -286,13 +286,13 @@ export function tooltipFunctionReady(): void {
   // Twitch bot delay
   $("#settings-twitch-bot-delay").val(g.stream.twitchBotDelay);
 
-  // Show the checkbox they have a Twitch stream set
-  if (g.stream.URL.indexOf("twitch.tv/") !== -1) {
+  // Show the checkbox they have a Twitch stream set.
+  if (g.stream.URL.includes("twitch.tv/")) {
     $("#settings-enable-twitch-bot-checkbox-container").fadeTo(0, 1);
     $("#settings-enable-twitch-bot-checkbox").prop("disabled", false);
     $("#settings-enable-twitch-bot-checkbox-label").css("cursor", "pointer");
 
-    // Enable Twitch chat bot
+    // Enable Twitch chat bot.
     if (g.stream.twitchBotEnabled) {
       $("#settings-enable-twitch-bot-checkbox").prop("checked", true);
       $("#settings-twitch-bot-delay-label").fadeTo(0, 1);
@@ -301,8 +301,8 @@ export function tooltipFunctionReady(): void {
     }
   }
 
-  // Tooltips within tooltips seem to be buggy and can sometimes be uninitialized
-  // So, check for this every time the tooltip is opened and reinitialize them if necessary
+  // Tooltips within tooltips seem to be buggy and can sometimes be uninitialized. So, check for
+  // this every time the tooltip is opened and reinitialize them if necessary.
 
   if (!$("#settings-log-file-location").hasClass("tooltipstered")) {
     $("#settings-log-file-location").tooltipster({

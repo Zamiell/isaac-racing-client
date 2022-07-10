@@ -7,9 +7,10 @@ export function init(): void {
   electron.ipcRenderer.on("hotkey", IPCHotkey);
 }
 
-// Monitor for keystrokes inside of the browser window
+// Monitor for keystrokes inside of the browser window.
 function keyDown(event: JQuery.KeyDownEvent) {
-  // console.log(event.which); // Uncomment this to find out which number corresponds to the desired key
+  // Uncomment this to find out which number corresponds to the desired key.
+  /// console.log(event.which);
 
   const keyboardFunction = keyboardFunctionMap.get(event.which);
   if (keyboardFunction !== undefined) {
@@ -17,7 +18,7 @@ function keyDown(event: JQuery.KeyDownEvent) {
   }
 }
 
-// Monitor for global hotkeys (caught by electron.globalShortcut in the main process)
+// Monitor for global hotkeys (caught by electron.globalShortcut in the main process).
 const IPCHotkey = (_event: electron.IpcRendererEvent, message: string) => {
   log.info("Received hotkey message:", message);
 

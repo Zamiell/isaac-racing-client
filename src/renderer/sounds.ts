@@ -6,14 +6,14 @@ import g from "./globals";
 const audioElements = new Map<string, HTMLAudioElement>();
 
 export function play(soundFilename: string, lengthOfSound = -1): void {
-  // First check to see if sound is disabled
+  // First check to see if sound is disabled.
   const volume = settings.get("volume") as number;
   if (volume === 0) {
     return;
   }
 
   if (lengthOfSound !== -1) {
-    // For some sound effects, we only want one of them playing at once to prevent confusion
+    // For some sound effects, we only want one of them playing at once to prevent confusion.
     if (g.playingSound) {
       return; // Do nothing if we are already playing a sound
     }
@@ -43,9 +43,8 @@ function getAudioElement(soundFilename: string) {
   return audioElement;
 }
 
-// Preload some sounds
-// We do this at the beginning of a race so that the user is forced to interact with the document
-// first (otherwise, Chrome prevents audio from playing)
+// Preload some sounds. We do this at the beginning of a race so that the user is forced to interact
+// with the document first. (Otherwise, Chrome prevents audio from playing.)
 export function preload(): void {
   const soundFilenames = [
     "1",

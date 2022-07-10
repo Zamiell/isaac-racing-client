@@ -12,7 +12,7 @@ const IPCAutoUpdater = (_event: electron.IpcRendererEvent, message: string) => {
 
   switch (message) {
     case "error": {
-      // Do nothing special; we want the service to be usable if GitHub is down
+      // Do nothing special; we want the service to be usable if GitHub is down.
       break;
     }
 

@@ -5,6 +5,9 @@ import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
 import { getMyStatus, getNumLeft, getNumReady } from "./race";
 import { ModSocket } from "./types/ModSocket";
+import { RaceFormat } from "./types/RaceFormat";
+import { RacerStatus } from "./types/RacerStatus";
+import { RaceStatus } from "./types/RaceStatus";
 import { SocketCommandIn } from "./types/SocketCommand";
 import { amSecondTestAccount } from "./util";
 
@@ -26,7 +29,7 @@ function packSocketMsg(command: string, data: string) {
   return `${command}${separator}${data}\n`; // Socket messages must be terminated by a newline
 }
 
-// This sends an up-to-date myStatus, numReady, numEntrants, placeMid, and place to the mod
+// This sends an up-to-date myStatus, numReady, numEntrants, placeMid, and place to the mod.
 export function sendExtraValues(): void {
   const race = g.raceList.get(g.currentRaceID);
   if (race === undefined) {
@@ -39,34 +42,32 @@ export function sendExtraValues(): void {
     send("set", `myStatus ${g.modSocket.myStatus}`);
   }
 
-  if (race.status === "open" || race.status === "starting") {
+  if (race.status === RaceStatus.OPEN || race.status === RaceStatus.STARTING) {
     g.modSocket.numReady = getNumReady(race);
     send("set", `numReady ${g.modSocket.numReady}`);
-  } else if (race.status === "in progress") {
+  } else if (race.status === RaceStatus.IN_PROGRESS) {
     const numLeft = getNumLeft(race);
 
-    // Find our value of "placeMid"
+    // Find our value of "placeMid".
     let amRacing = false;
-    for (let i = 0; i < race.racerList.length; i++) {
-      const racer = race.racerList[i];
-
+    for (const racer of race.racerList) {
       if (racer.name === g.myUsername) {
         g.modSocket.placeMid = racer.placeMid;
         g.modSocket.place = racer.place;
 
-        if (racer.status === "racing") {
+        if (racer.status === RacerStatus.RACING) {
           amRacing = true;
         }
       }
     }
 
     if (numLeft === 1 && amRacing && race.racerList.length > 2) {
-      g.modSocket.placeMid = 9999; // This will show "last person left"
+      g.modSocket.placeMid = 9999; // This will show "last person left".
     }
 
     if (race.ruleset.solo) {
       // We don't want to send our final place for solo races to avoid showing the "1st place"
-      // graphic at the end of the race
+      // graphic at the end of the race.
       g.modSocket.place = 0;
     }
 
@@ -103,11 +104,11 @@ export function sendChat(room: string, username: string, msg: string): void {
 }
 
 export function sendAll(): void {
-  // Start to compile the list of starting items
+  // Start to compile the list of starting items.
   const startingItems: number[] = [];
 
-  // Diversity races store the starting items in the seed
-  if (g.modSocket.format === "diversity") {
+  // Diversity races store the starting items in the seed.
+  if (g.modSocket.format === RaceFormat.DIVERSITY) {
     const items = g.modSocket.seed.split(",");
     for (const itemString of items) {
       const itemID = parseIntSafe(itemString);
@@ -117,15 +118,23 @@ export function sendAll(): void {
     }
   }
 
-  // Seeded races store the starting items as the "startingBuild"
+  // Seeded races store the starting items as the "startingBuild".
   if (g.modSocket.startingBuild !== -1) {
-    for (const item of BUILDS[g.modSocket.startingBuild]) {
+    const build = BUILDS[g.modSocket.startingBuild];
+    if (build === undefined) {
+      throw new Error(
+        `Failed to get the build for starting build number: ${g.modSocket.startingBuild}`,
+      );
+    }
+
+    for (const item of build) {
       startingItems.push(item.id);
     }
   }
 
-  // This is necessary because the 5 diversity items are communicated through the seed
-  const seed = g.modSocket.format === "diversity" ? "-" : g.modSocket.seed;
+  // This is necessary because the 5 diversity items are communicated through the seed.
+  const seed =
+    g.modSocket.format === RaceFormat.DIVERSITY ? "-" : g.modSocket.seed;
 
   send("set", `userID ${g.myUserID}`);
   send("set", `username ${g.myUsername}`);
@@ -139,7 +148,7 @@ export function sendAll(): void {
   send("set", `character ${g.modSocket.character}`);
   send("set", `goal ${g.modSocket.goal}`);
   send("set", `seed ${seed}`);
-  // "startingBuild" is converted to "startingItems"
+  // "startingBuild" is converted to "startingItems".
   send("set", `startingItems ${JSON.stringify(startingItems)}`);
   send("set", `countdown ${g.modSocket.countdown}`);
   send("set", `placeMid ${g.modSocket.placeMid}`);

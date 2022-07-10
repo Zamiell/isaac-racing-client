@@ -1,4 +1,4 @@
-// Child process that checks to see if the user logs out of Steam
+// Child process that checks to see if the user logs out of Steam.
 
 import Registry from "winreg";
 import { handleErrors } from "./subroutines";
@@ -13,17 +13,17 @@ function init() {
 }
 
 function onMessage(message: number | string) {
-  // The child will stay alive even if the parent has closed,
-  // so we depend on the parent telling us when to die
+  // The child will stay alive even if the parent has closed, so we depend on the parent telling us
+  // when to die.
   if (message === "exit") {
     process.exit();
   }
 
-  // After we have spawned, the parent will communicate with us, telling us the ID of the Steam user
-  // If the message is a number, we can assume that it is the steam ID
+  // After we have spawned, the parent will communicate with us, telling us the ID of the Steam
+  // user. If the message is a number, we can assume that it is the steam ID.
   if (typeof message === "number") {
-    // This child process will not be spawned if the Steam ID is 0 or a negative number
-    // Thus, we can be sure that at this point, the Steam ID is a real, valid ID
+    // This child process will not be spawned if the Steam ID is 0 or a negative number. Thus, we
+    // can be sure that at this point, the Steam ID is a real, valid ID.
     const steamID = message;
 
     setInterval(() => {
@@ -44,18 +44,18 @@ function checkActiveUser(steamID: number) {
 }
 
 function postGetActiveUser(
-  err: Error,
+  err: Error | undefined | null,
   item: Registry.RegistryItem,
   steamID: number,
 ) {
   if (err !== undefined && err !== null) {
     throw new Error(
-      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err}`,
+      `Failed to read the Windows registry when trying to figure out what the active Steam user is: ${err.message}`,
     );
   }
 
-  // The active user is stored in the registry as a hexadecimal value,
-  // so we have to convert it to base 10
+  // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
+  // base 10.
   const registrySteamID = parseInt(item.value, 16);
 
   if (steamID !== registrySteamID) {

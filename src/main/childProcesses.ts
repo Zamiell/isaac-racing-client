@@ -5,7 +5,7 @@ import path from "path";
 import * as file from "../common/file";
 import { IS_DEV } from "./isDev";
 
-// Any new child processes also have to be added to the webpack config in "webpack.main.config.js"
+// Any new child processes also have to be added to the webpack config in "webpack.main.config.js".
 interface ChildProcesses {
   steam: ChildProcess | null;
   steamWatcher: ChildProcess | null;
@@ -26,7 +26,7 @@ export function start(
   isaacPath?: string,
 ): void {
   if (childProcesses[name] !== null) {
-    // We already started this process
+    // We already started this process.
     return;
   }
 
@@ -34,11 +34,11 @@ export function start(
   if (IS_DEV) {
     childProcessPath = path.join(__dirname, "childProcesses", `${name}.js`);
   } else {
-    // Forking inside of an ASAR archive is broken as of 2021
+    // Forking inside of an ASAR archive is broken as of 2021:
     // https://github.com/electron/electron/issues/16382
     // To work around this, we specify the child process to not packed inside of the ASAR archive by
-    // using the "asarUnpack" option in the "package.json" file
-    // This places the files in the following directory:
+    // using the "asarUnpack" option in the "package.json" file. This places the files in the
+    // following directory:
     // C:\Users\[Username]\AppData\Local\Programs\isaac-racing-client\resources\app.asar.unpacked\dist\main\childProcesses
     // Our current working directory at this point is:
     // C:\Users\[Username]\AppData\Local\Programs\isaac-racing-client\resources\app.asar\dist\main
@@ -66,16 +66,17 @@ export function start(
   log.info(`Started the "${name}" child process: ${childProcessPath}`);
 
   childProcess.on("message", (message) => {
-    // Don't print messages from the socket server to avoid spamming the log file
+    // Don't print messages from the socket server to avoid spamming the log file.
     if (name !== "socket") {
       log.info(
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         `Main process received message from the "${name}" child process: ${message}`,
       );
     }
 
-    // Pass the message to the renderer (browser) process
-    // (we need to check to see if the window has been destroyed in the case where we get a message
-    // from the child process after the window has already been destroyed)
+    // Pass the message to the renderer (browser) process. (We need to check to see if the window
+    // has been destroyed in the case where we get a message from the child process after the window
+    // has already been destroyed.)
     if (!window.isDestroyed()) {
       window.webContents.send(name, message);
     }
@@ -83,21 +84,21 @@ export function start(
 
   childProcess.on("error", (err) => {
     log.info(
-      `Main process received error from the "${name}" child process: ${err}`,
+      `Main process received error from the "${name}" child process: ${err.message}`,
     );
 
-    // Pass the error to the renderer (browser) process
-    // (we need to check to see if the window has been destroyed in the case where we get a message
-    // from the child process after the window has already been destroyed)
+    // Pass the error to the renderer (browser) process. (We need to check to see if the window has
+    // been destroyed in the case where we get a message from the child process after the window has
+    // already been destroyed.)
     if (!window.isDestroyed()) {
-      window.webContents.send(name, `error: ${err}`);
+      window.webContents.send(name, `error: ${err.message}`);
     }
   });
 
   childProcess.on("exit", () => {
-    // Pass the exit notification to the renderer (browser) process
-    // (we need to check to see if the window has been destroyed in the case where we get a message
-    // from the child process after the window has already been destroyed)
+    // Pass the exit notification to the renderer (browser) process. (We need to check to see if the
+    // window has been destroyed in the case where we get a message from the child process after the
+    // window has already been destroyed.)
     if (!window.isDestroyed()) {
       window.webContents.send(name, "exited");
     }
@@ -105,7 +106,7 @@ export function start(
 
   childProcesses[name] = childProcess;
 
-  // Handle child processes that need custom information fed to them
+  // Handle child processes that need custom information fed to them.
   if (name === "isaac") {
     if (isaacPath === undefined) {
       throw new Error("Failed to receive the isaacPath argument.");

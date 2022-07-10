@@ -20,7 +20,7 @@ export function hasLaunchOption(
 
   const launchOptions = rebirthEntry.LaunchOptions;
 
-  // It is possible for no launch options to be set
+  // It is possible for no launch options to be set.
   if (launchOptions === undefined) {
     return false;
   }
@@ -79,6 +79,7 @@ function getLocalConfigPath(steamPath: string, steamActiveUserID: number) {
 
 function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
   const userLocalConfigStore = localConfigVDF.UserLocalConfigStore;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (userLocalConfigStore === undefined) {
     throw new Error(
       'The "localconfig.vdf" file did not have a "UserLocalConfigStore" tag.',
@@ -86,16 +87,19 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
   }
 
   const software = userLocalConfigStore.Software;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (software === undefined) {
     throw new Error(
       'Failed to find the "Software" tag in the "localconfig.vdf" file.',
     );
   }
 
-  // On some platforms, "valve" is lowercase for some reason
+  // On some platforms, "valve" is lowercase for some reason.
   let valve: ValveLocalConfigVDF | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (software.Valve !== undefined) {
     valve = software.Valve;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (software.valve !== undefined) {
     valve = software.valve;
   }
@@ -106,10 +110,12 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     );
   }
 
-  // On some platforms, "steam" is lowercase for some reason
+  // On some platforms, "steam" is lowercase for some reason.
   let steam: SteamLocalConfigVDF | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (valve.Steam !== undefined) {
     steam = valve.Steam;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (valve.steam !== undefined) {
     steam = valve.steam;
   }
@@ -120,7 +126,7 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     );
   }
 
-  // On some platforms, "apps" is lowercase for some reason
+  // On some platforms, "apps" is lowercase for some reason.
   let apps: Record<string, AppConfigVDF> | undefined;
   if (steam.Apps !== undefined) {
     apps = steam.Apps;

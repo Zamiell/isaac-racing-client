@@ -65,7 +65,7 @@ ipcFunctionMap.set(
 
 ipcFunctionMap.set("socket", (window: electron.BrowserWindow, arg2: string) => {
   if (arg2 === "start") {
-    // Initialize the socket server in a separate process
+    // Initialize the socket server in a separate process.
     childProcesses.start("socket", window);
   } else {
     // Send the command from the renderer process to the child process
@@ -83,8 +83,7 @@ ipcFunctionMap.set(
 
 ipcFunctionMap.set("steam", (window: electron.BrowserWindow, _arg2: string) => {
   // Initialize the Greenworks API in a separate process because otherwise the game will refuse to
-  // open if Racing+ is open
-  // (Greenworks uses the same AppID as Isaac, so Steam gets confused)
+  // open if Racing+ is open. (Greenworks uses the same AppID as Isaac, so Steam gets confused.)
   childProcesses.start("steam", window);
 });
 
@@ -92,7 +91,7 @@ ipcFunctionMap.set(
   "steamExit",
   (_window: electron.BrowserWindow, _arg2: string) => {
     // The renderer has successfully authenticated and is now establishing a WebSocket connection,
-    // so we can kill the Greenworks process
+    // so we can kill the Greenworks process.
     childProcesses.exit("steam");
   },
 );
@@ -100,16 +99,16 @@ ipcFunctionMap.set(
 ipcFunctionMap.set(
   "steamWatcher",
   (window: electron.BrowserWindow, arg2: string) => {
-    // Start the Steam watcher in a separate process
+    // Start the Steam watcher in a separate process.
     childProcesses.start("steamWatcher", window);
 
-    // Feed the child the ID of the Steam user
+    // Feed the child the ID of the Steam user.
     childProcesses.send("steamWatcher", arg2);
   },
 );
 
 ipcFunctionMap.set("isaac", (window: electron.BrowserWindow, arg2: string) => {
-  // Start the Isaac checker in a separate process
+  // Start the Isaac checker in a separate process.
   const isaacPath = arg2;
   childProcesses.start("isaac", window, isaacPath);
 });

@@ -10,21 +10,22 @@ export function init(): void {
 }
 
 export function start(): void {
-  // This tells the main process to start the child process that will initialize Greenworks
-  // That process will get our Steam ID, Steam screen name, and authentication ticket
+  // This tells the main process to start the child process that will initialize Greenworks. That
+  // process will get our Steam ID, Steam screen name, and authentication ticket.
   electron.ipcRenderer.send("asynchronous-message", "steam");
 }
 
-// Monitor for notifications from the child process that is getting the data from Greenworks
+// Monitor for notifications from the child process that is getting the data from Greenworks.
 function IPCSteam(
   _event: electron.IpcRendererEvent,
   message: string | SteamMessage,
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   log.info(`Renderer process received Steam child message: ${message}`);
 
   if (typeof message !== "string") {
     // If the message is not a string, assume that it is an object containing the Steam-related
-    // information from Greenworks
+    // information from Greenworks.
     const steamMessage = message;
 
     g.steam.id = steamMessage.id;
@@ -47,11 +48,12 @@ function IPCSteam(
       "Failed to communicate with Steam. Please open or restart Steam and relaunch Racing+.",
     );
   } else if (message.startsWith("error: ")) {
-    // This is some other uncommon error
+    // This is some other uncommon error.
     const match = /error: (.+)/.exec(message);
     let error: string;
     if (match !== null) {
-      error = match[1];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      error = match[1]!;
     } else {
       error =
         "Failed to parse an error message from the Greenworks child process.";
