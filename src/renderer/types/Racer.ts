@@ -10,7 +10,6 @@ export interface Racer {
   stageType: number;
   datetimeArrivedFloor: number;
   millisecondsBehindLeader: number;
-  millisecondsAheadOfNextRacer: number;
   items: RaceItem[];
   startingItem: number;
   characterNum: number;
@@ -32,7 +31,6 @@ export function getDefaultRacer(name: string): Racer {
     stageType: 0,
     datetimeArrivedFloor: 0,
     millisecondsBehindLeader: 0,
-    millisecondsAheadOfNextRacer: 0,
     items: [],
     startingItem: 0,
     characterNum: 0,
