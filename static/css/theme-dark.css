@@ -1,6 +1,6 @@
 /* main.css overrides */
 
-/* Dark mode is made by using a small 50% transparent black box as the background image */
+/* Dark mode is made by using a small 50% transparent black box as the background image. */
 :root {
     --main-bg-img: url('../img/blackBackground.png');
 }

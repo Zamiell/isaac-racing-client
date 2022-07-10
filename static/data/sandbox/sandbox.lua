@@ -56,13 +56,13 @@ local function stringTrim(str)
 end
 
 -- From: https://stackoverflow.com/questions/1426954/split-string-in-lua
-local function stringSplit(inputstr, sep)
+local function stringSplit(inputStr, sep)
   if sep == nil then
     sep = "%s"
   end
 
   local t = {}
-  for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+  for str in string.gmatch(inputStr, "([^" .. sep .. "]+)") do
     table.insert(t, str)
   end
 
