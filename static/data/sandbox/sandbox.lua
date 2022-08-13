@@ -1,8 +1,9 @@
--- Racing+ enables --luadebug, so it also provides this sandbox to prevent other mods from doing
--- evil things
+-- Racing+ enables "--luadebug", so it also provides this sandbox to prevent other mods from doing
+-- evil things.
 
 -- Constants
-local TIMEOUT_SECONDS = 0.001 -- 1 millisecond
+local TIMEOUT_SECONDS_LOCAL = 0.001 -- 1 millisecond
+local TIMEOUT_SECONDS_REMOTE = 1
 local UNSAFE_IMPORTS = {
   "debug",
   "dump",
@@ -114,17 +115,17 @@ end
 local sandbox = {}
 
 function sandbox.removeDangerousGlobals()
-  debug = nil -- luacheck: ignore
-  dump = nil -- luacheck: ignore
-  io = nil -- luacheck: ignore
-  loadfile = nil -- luacheck: ignore
-  os = nil -- luacheck: ignore
+  debug = nil ---@diagnostic disable-line
+  dump = nil ---@diagnostic disable-line
+  io = nil ---@diagnostic disable-line
+  loadfile = nil ---@diagnostic disable-line
+  os = nil ---@diagnostic disable-line
 end
 
 function sandbox.removeDangerousPackageFields()
   -- Setting the entire package variable to nil will make Isaac crash on load,
   -- so we have to be more granular with what we remove
-  package.loadlib = nil  -- luacheck: ignore
+  package.loadlib = nil
 end
 
 function sandbox.sanitizeRequireFunction()
@@ -135,14 +136,14 @@ function sandbox.sanitizeRequireFunction()
 
   -- Prevent requiring some of the standard library
   dofile = safeDofile
-  include = safeInclude
+  include = safeInclude ---@diagnostic disable-line
   require = safeRequire
 end
 
 function sandbox.setSomeSandboxFunctionsGlobal()
-  sandboxTraceback = sandbox.traceback -- luacheck: ignore
-  sandboxGetTraceback = sandbox.getTraceback -- luacheck: ignore
-  getParentFunctionDescription = sandbox.getParentFunctionDescription -- luacheck: ignore
+  sandboxTraceback = sandbox.traceback ---@diagnostic disable-line
+  sandboxGetTraceback = sandbox.getTraceback ---@diagnostic disable-line
+  getParentFunctionDescription = sandbox.getParentFunctionDescription ---@diagnostic disable-line
 end
 
 --
@@ -207,7 +208,13 @@ function sandbox.connect(hostname, port, useTCP)
   local socketClient
   if protocol == "TCP" then
     socketClient = socket.tcp()
-    socketClient:settimeout(TIMEOUT_SECONDS)
+
+    local timeoutSeconds = TIMEOUT_SECONDS_REMOTE
+    if hostname == "127.0.0.1" then
+      timeoutSeconds = TIMEOUT_SECONDS_LOCAL
+    end
+    socketClient:settimeout(timeoutSeconds)
+
     local err, errMsg = socketClient:connect(hostname, port)
     if err ~= 1 then
       if errMsg == "timeout" then

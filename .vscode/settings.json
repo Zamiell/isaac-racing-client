@@ -24,14 +24,8 @@
   "search.exclude": {
     "**/*.png": true,
     "**/*.wav": true,
-    "dist/**/*.ts": true,
-    "dist/**/*.js": true,
-    "dist/**/*.json": true,
-    "dist/**/*.lua": true,
-    "node_modules/**/*.ts": true,
-    "node_modules/**/*.js": true,
-    "node_modules/**/*.json": true,
-    "node_modules/**/*.lua": true,
+    "**/dist/": true,
+    "**/node_modules/": true,
   },
 
   // -----------------------
@@ -80,4 +74,10 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
+
+  // ---
+  // Lua
+  // ---
+
+  "Lua.diagnostics.globals": ["Isaac"],
 }
