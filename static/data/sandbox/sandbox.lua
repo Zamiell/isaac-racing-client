@@ -13,21 +13,21 @@ local UNSAFE_IMPORTS = {
   "socket",
 }
 local SAFE_HOSTNAMES = {
-  "127.0.0.1", -- The string of "localhost" does not work
+  "127.0.0.1", -- The string of "localhost" does not work.
   "192.168.1.1",
   "192.168.1.10",
   "192.168.1.100",
   "isaacracing.net",
 }
 
--- Import the socket module for our own usage before we modify the "require()" function
+-- Import the socket module for our own usage before we modify the "require()" function.
 local socket = nil
 local ok, requiredSocket = pcall(require, "socket")
 if ok then
   socket = requiredSocket
 end
 
--- Make a copy of some globals
+-- Make a copy of some globals.
 local originalDebug = debug
 local originalOS = os
 local originalDofile = dofile
@@ -123,27 +123,29 @@ function sandbox.removeDangerousGlobals()
 end
 
 function sandbox.removeDangerousPackageFields()
-  -- Setting the entire package variable to nil will make Isaac crash on load,
-  -- so we have to be more granular with what we remove
+  -- Setting the entire package variable to nil will make Isaac crash on load, so we have to be more
+  -- granular with what we remove.
   package.loadlib = nil
 end
 
 function sandbox.sanitizeRequireFunction()
-  -- We can sanitize the "require()" function by removing searcher functions
+  -- We can sanitize the "require()" function by removing searcher functions:
   -- https://www.lua.org/manual/5.3/manual.html#pdf-package.searchers
   package.searchers[3] = nil -- Remove the loader function that is intended for C libraries
   package.searchers[4] = nil -- Remove the loader function that is the all-in-one loader
 
-  -- Prevent requiring some of the standard library
+  -- Prevent requiring some of the standard library.
   dofile = safeDofile
   include = safeInclude ---@diagnostic disable-line
   require = safeRequire
 end
 
 function sandbox.setSomeSandboxFunctionsGlobal()
-  sandboxTraceback = sandbox.traceback ---@diagnostic disable-line
-  sandboxGetTraceback = sandbox.getTraceback ---@diagnostic disable-line
-  getParentFunctionDescription = sandbox.getParentFunctionDescription ---@diagnostic disable-line
+  SandboxGetDate = sandbox.getDate ---@diagnostic disable-line
+  SandboxGetParentFunctionDescription = sandbox.getParentFunctionDescription ---@diagnostic disable-line
+  SandboxGetTime = sandbox.getTime ---@diagnostic disable-line
+  SandboxGetTraceback = sandbox.getTraceback ---@diagnostic disable-line
+  SandboxTraceback = sandbox.traceback ---@diagnostic disable-line
 end
 
 --
@@ -241,9 +243,9 @@ function sandbox.connect(hostname, port, useTCP)
     end
   end
 
-  -- End-users will check for new socket data on every PostRender frame
-  -- However, the remote socket might not necessarily have any new data for us
-  -- Thus, we set the timeout to 0 in order to prevent lag
+  -- End-users will check for new socket data on every PostRender frame. However, the remote socket
+  -- might not necessarily have any new data for us. Thus, we set the timeout to 0 in order to
+  -- prevent lag.
   socketClient:settimeout(0)
 
   local isaacFrameCount = Isaac.GetFrameCount()
@@ -258,7 +260,7 @@ function sandbox.connect(hostname, port, useTCP)
 end
 
 function sandbox.connectLocalhost(port, useTCP)
-  return sandbox.connect("127.0.0.1", port, useTCP) -- A string of "localhost" does not work
+  return sandbox.connect("127.0.0.1", port, useTCP) -- A string of "localhost" does not work.
 end
 
 function sandbox.traceback()
@@ -306,9 +308,9 @@ function sandbox.getDate(format)
   return originalOS.date(format)
 end
 
-function sandbox.getSocketTime()
+function sandbox.getTime()
   if socket == nil then
-    Isaac.DebugString("Error: connect was called but the \"--luadebug\" flag is not enabled.")
+    Isaac.DebugString("Error: getTime was called but the \"--luadebug\" flag is not enabled.")
     return nil
   end
 
@@ -316,13 +318,13 @@ function sandbox.getSocketTime()
 end
 
 return {
-  init = sandbox.init,
-  isSocketInitialized = sandbox.isSocketInitialized,
   connect = sandbox.connect,
   connectLocalhost = sandbox.connectLocalhost,
-  traceback = sandbox.traceback,
-  getTraceback = sandbox.getTraceback,
-  getParentFunctionDescription = sandbox.getParentFunctionDescription,
   getDate = sandbox.getDate,
-  getSocketTime = sandbox.getSocketTime,
+  getParentFunctionDescription = sandbox.getParentFunctionDescription,
+  getTime = sandbox.getTime,
+  getTraceback = sandbox.getTraceback,
+  init = sandbox.init,
+  isSocketInitialized = sandbox.isSocketInitialized,
+  traceback = sandbox.traceback,
 }

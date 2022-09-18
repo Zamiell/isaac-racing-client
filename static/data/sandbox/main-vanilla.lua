@@ -1,3 +1,5 @@
+---@diagnostic disable: duplicate-set-field
+
 function RegisterMod(modname, apiversion)
   local mod = {
     Name = modname,
