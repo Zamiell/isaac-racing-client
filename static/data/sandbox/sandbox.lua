@@ -18,6 +18,7 @@ local SAFE_HOSTNAMES = {
   "192.168.1.10",
   "192.168.1.100",
   "isaacracing.net",
+  "beta.memento.ma",
 }
 
 -- Import the socket module for our own usage before we modify the "require()" function.
@@ -317,10 +318,20 @@ function sandbox.getTime()
   return socket.gettime()
 end
 
+function sandbox.getUnixTime()
+  if originalOS == nil then
+    Isaac.DebugString("Error: getUnixTime was called but the \"--luadebug\" flag is not enabled.")
+    return "unknown"
+  end
+
+  return originalOS.time()
+end
+
 return {
   connect = sandbox.connect,
   connectLocalhost = sandbox.connectLocalhost,
   getDate = sandbox.getDate,
+  getUnixTime = sandbox.getUnixTime,
   getParentFunctionDescription = sandbox.getParentFunctionDescription,
   getTime = sandbox.getTime,
   getTraceback = sandbox.getTraceback,
