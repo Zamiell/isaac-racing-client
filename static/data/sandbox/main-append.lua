@@ -1,1 +1,2 @@
-local sandbox = require("sandbox"); sandbox.init()
+local sandbox = require("sandbox")
+sandbox.init()
