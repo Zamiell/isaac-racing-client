@@ -22,7 +22,7 @@
     "isaac-racing-common": "^1.0.8",
     "klaw-sync": "^6.0.0",
     "linkify-html": "^4.1.0",
-    "linkifyjs": "*",
+    "linkifyjs": "^4.1.0",
     "mkdirp": "^1.0.4",
     "node-fetch": "2.6.6",
     "ps-node": "^0.1.6",
