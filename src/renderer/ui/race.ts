@@ -1219,7 +1219,7 @@ function start() {
         alreadyFinished = true;
       }
       if (racer.status === RacerStatus.RACING) {
-        numLeft += 1;
+        numLeft++;
       }
     }
 

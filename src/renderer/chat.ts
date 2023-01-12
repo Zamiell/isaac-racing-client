@@ -338,7 +338,7 @@ export function draw(
   }
 
   // Keep track of how many lines of chat have been spoken in this room.
-  storedRoom.chatLine += 1;
+  storedRoom.chatLine++;
 
   // Sanitize the input
   message = escapeHTML(message); // eslint-disable-line no-param-reassign

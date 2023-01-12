@@ -403,7 +403,7 @@ function raceDrawCheckForOverflow(raceID: number, target: string) {
   let counter = 0; // It is possible to get stuck in the bottom while loop
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   while (element[0]!.scrollWidth > element.innerWidth()!) {
-    counter += 1;
+    counter++;
     if (counter >= 1000) {
       // Something is weird and the page is not rendering properly.
       break;

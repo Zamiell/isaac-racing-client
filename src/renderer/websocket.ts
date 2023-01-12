@@ -273,7 +273,7 @@ function initChatCommandHandlers(conn: Connection) {
 
     // Keep track of the person who just joined.
     room.users.set(data.user.name, data.user);
-    room.numUsers += 1;
+    room.numUsers++;
 
     // Redraw the users list in the lobby.
     if (data.room === "lobby") {
@@ -308,7 +308,7 @@ function initChatCommandHandlers(conn: Connection) {
     }
 
     room.users.delete(data.name);
-    room.numUsers -= 1;
+    room.numUsers--;
 
     // Redraw the users list in the lobby.
     if (data.room === "lobby") {

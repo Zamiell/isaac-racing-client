@@ -23,7 +23,7 @@ export function getNumReady(race: Race): number {
   let numReady = 0;
   for (const racer of race.racerList) {
     if (racer.status === RacerStatus.READY) {
-      numReady += 1;
+      numReady++;
     }
   }
 
@@ -34,7 +34,7 @@ export function getNumLeft(race: Race): number {
   let numLeft = 0;
   for (const racer of race.racerList) {
     if (racer.status === RacerStatus.RACING) {
-      numLeft += 1;
+      numLeft++;
     }
   }
 

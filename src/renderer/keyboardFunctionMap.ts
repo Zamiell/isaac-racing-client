@@ -132,7 +132,7 @@ function firstTimePressingTab(tabList: string[]) {
     const temp = tabWord.slice(0, messageEnd.length).toLowerCase();
     if (temp === messageEnd.toLowerCase()) {
       g.tabCompleteIndex = i;
-      g.tabCompleteCounter += 1;
+      g.tabCompleteCounter++;
       let newMessage = "";
       for (let j = 0; j < g.tabCompleteWordList.length - 1; j++) {
         newMessage += g.tabCompleteWordList[j];
@@ -163,7 +163,7 @@ function tabCycle(tabList: string[]) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const tempSlice = tabList[index]!.slice(0, messageEnd.length).toLowerCase();
   if (tempSlice === messageEnd.toLowerCase()) {
-    g.tabCompleteCounter += 1;
+    g.tabCompleteCounter++;
     let newMessage = "";
     for (let i = 0; i < g.tabCompleteWordList.length - 1; i++) {
       newMessage += g.tabCompleteWordList[i];
@@ -239,11 +239,11 @@ keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
     throw new Error(`Failed to get the room: ${room}`);
   }
 
-  storedRoom.historyIndex += 1;
+  storedRoom.historyIndex++;
 
   // Check to see if we have reached the end of the history list.
   if (storedRoom.historyIndex > storedRoom.typedHistory.length - 1) {
-    storedRoom.historyIndex -= 1;
+    storedRoom.historyIndex--;
     return;
   }
 
@@ -277,7 +277,7 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
     throw new Error(`Failed to get the room: ${room}`);
   }
 
-  storedRoom.historyIndex -= 1;
+  storedRoom.historyIndex--;
 
   // Check to see if we have reached the beginning of the history list.
   if (storedRoom.historyIndex <= -2) {
