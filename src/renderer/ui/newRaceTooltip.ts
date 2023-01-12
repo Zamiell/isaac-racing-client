@@ -514,7 +514,10 @@ function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
 function newRaceGoalChange(_event: JQuery.ChangeEvent | null) {
   // Change the displayed icon.
   const newGoal = $("#new-race-goal").val();
-  setElementBackgroundImage("new-race-goal-icon", `img/goals/${newGoal}.png`);
+  setElementBackgroundImage(
+    "new-race-goal-icon",
+    `${IMG_URL_PREFIX}/goals/${newGoal}.png`,
+  );
 }
 
 function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {

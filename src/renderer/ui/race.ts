@@ -465,7 +465,10 @@ export function show(raceID: number): void {
 
     // Column 5 - Goal.
     const { goal } = race.ruleset;
-    setElementBackgroundImage("race-title-goal-icon", `img/goals/${goal}.png`);
+    setElementBackgroundImage(
+      "race-title-goal-icon",
+      `${IMG_URL_PREFIX}/goals/${goal}.png`,
+    );
     let goalTooltipContent = "";
 
     switch (goal) {
