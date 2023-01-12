@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import linkifyHtml from "linkifyjs/html";
+import linkifyHtml from "linkify-html";
 import { parseIntSafe } from "../common/util";
 import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
