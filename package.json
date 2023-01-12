@@ -20,6 +20,7 @@
     "electron-store": "^8.1.0",
     "electron-updater": "4.6.5",
     "isaac-racing-common": "^1.0.8",
+    "isaacscript-common-ts": "^1.1.0",
     "klaw-sync": "^6.0.0",
     "linkify-html": "^4.1.0",
     "linkifyjs": "^4.1.0",

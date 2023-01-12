@@ -4,7 +4,7 @@
 
 import dgram from "dgram";
 import net from "net";
-import { unpackSocketMsg } from "../../common/util";
+import { unpackSocketMsg } from "../../common/socket";
 import { processExit } from "./subroutines";
 
 const LOCAL_HOSTNAME = "127.0.0.1";

@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { BUILDS } from "isaac-racing-common";
 import CHARACTERS from "../../../static/data/characters.json";
 import settings from "../../common/settings";
-import { parseIntSafe } from "../../common/util";
+import { parseIntSafe } from "../../common/socket";
 import {
   FADE_TIME,
   IMG_URL_PREFIX,

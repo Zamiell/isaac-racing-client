@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { unpackSocketMsg } from "../../common/util";
+import { unpackSocketMsg } from "../../common/socket";
 import { amSecondTestAccount } from "../util";
 import { socketFunctionMap } from "./socketFunctionMap";
 
