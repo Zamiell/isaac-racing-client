@@ -507,7 +507,7 @@ function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
   const newCharacter = $("#new-race-character").val();
   setElementBackgroundImage(
     "new-race-character-icon",
-    `img/characters/${newCharacter}.png`,
+    `${IMG_URL_PREFIX}/characters/${newCharacter}.png`,
   );
 }
 
