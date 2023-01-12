@@ -117,8 +117,7 @@ export function getRandomNumber(min: number, max: number): number {
  */
 export function iRange(start: number, end?: number, increment = 1): number[] {
   if (end === undefined) {
-    end = start; // eslint-disable-line no-param-reassign
-    start = 0; // eslint-disable-line no-param-reassign
+    return iRange(0, start);
   }
 
   const array: number[] = [];
