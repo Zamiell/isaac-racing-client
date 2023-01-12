@@ -20,6 +20,7 @@ import {
   errorShow,
   escapeHTML,
   getRandomNumber,
+  iRange,
   ordinalSuffixOf,
   pad,
   setElementBackgroundImage,
@@ -595,18 +596,12 @@ export function show(raceID: number): void {
       const items = race.ruleset.seed.split(",");
 
       // Show the graphic corresponding to this item on the race title table.
-      setElementBackgroundImage(
-        "race-title-items-icon1",
-        `img/items/${items[1]}.png`,
-      );
-      setElementBackgroundImage(
-        "race-title-items-icon2",
-        `img/items/${items[2]}.png`,
-      );
-      setElementBackgroundImage(
-        "race-title-items-icon3",
-        `img/items/${items[3]}.png`,
-      );
+      for (const i of iRange(1, 3)) {
+        setElementBackgroundImage(
+          `race-title-items-icon${i}`,
+          `https://isaacracing.net/public/img/items/${items[i]}.png`,
+        );
+      }
 
       // Build the tooltip
       let buildTooltipContent = "";
@@ -1009,7 +1004,7 @@ export function participantsSetStartingItem(i: number): void {
   } else {
     const html = `
       <div class="race-participants-table-starting-item-icon-container">
-        <span class="race-participants-table-starting-item-icon" style="background-image: url(img/items/${startingItem}.png);"></span>
+        <span class="race-participants-table-starting-item-icon" style="background-image: url(https://isaacracing.net/public/img/items/${startingItem}.png);"></span>
       </div>
     `;
     $(`#race-participants-table-${name}-item`).html(html);

@@ -26,28 +26,6 @@ export function closeAllTooltips(): void {
   });
 }
 
-// From: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
-export function escapeHTML(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-export function findAjaxError(jqXHR: JQuery.jqXHR): string {
-  if (jqXHR.readyState === 0) {
-    return "A network error occurred. The server might be down!";
-  }
-
-  if (jqXHR.responseText === "") {
-    return "An unknown error occurred.";
-  }
-
-  return jqXHR.responseText;
-}
-
 export function errorShow(message: string, customModalName?: string): void {
   // Come back in a second if we are still in a transition.
   if (g.currentScreen === Screen.TRANSITION) {
@@ -99,8 +77,56 @@ export function errorShow(message: string, customModalName?: string): void {
   });
 }
 
+// From: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
+export function escapeHTML(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+export function findAjaxError(jqXHR: JQuery.jqXHR): string {
+  if (jqXHR.readyState === 0) {
+    return "A network error occurred. The server might be down!";
+  }
+
+  if (jqXHR.responseText === "") {
+    return "An unknown error occurred.";
+  }
+
+  return jqXHR.responseText;
+}
+
 export function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ * Helper function to return an array of integers with the specified range, inclusive on both ends.
+ * (The "i" stands for inclusive.)
+ *
+ * - For example, `iRange(1, 3)` will return `[1, 2, 3]`.
+ * - For example, `iRange(2)` will return `[0, 1, 2]`.
+ *
+ * @param start The integer to start at.
+ * @param end Optional. The integer to end at. If not specified, then the start will be 0 and the
+ *            first argument will be the end.
+ * @param increment Optional. The increment to use. Default is 1.
+ */
+export function iRange(start: number, end?: number, increment = 1): number[] {
+  if (end === undefined) {
+    end = start; // eslint-disable-line no-param-reassign
+    start = 0; // eslint-disable-line no-param-reassign
+  }
+
+  const array: number[] = [];
+  for (let i = start; i <= end; i += increment) {
+    array.push(i);
+  }
+
+  return array;
 }
 
 // From: https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number
