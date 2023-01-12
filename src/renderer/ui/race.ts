@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { BUILDS, ITEMS } from "isaac-racing-common";
-import { parseIntSafe } from "isaacscript-common-ts";
+import { iRange, parseIntSafe } from "isaacscript-common-ts";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { FADE_TIME, IMG_URL_PREFIX } from "../constants";
@@ -20,7 +20,6 @@ import {
   errorShow,
   escapeHTML,
   getRandomNumber,
-  iRange,
   ordinalSuffixOf,
   pad,
   setElementBackgroundImage,
