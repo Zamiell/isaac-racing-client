@@ -5,6 +5,7 @@ import settings from "../../common/settings";
 import { parseIntSafe } from "../../common/util";
 import {
   FADE_TIME,
+  IMG_URL_PREFIX,
   PBKDF2_DIGEST,
   PBKDF2_ITERATIONS,
   PBKDF2_KEYLEN,
@@ -535,7 +536,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   if (newBuild === 0) {
     setElementBackgroundImage(
       "new-race-starting-build-icon",
-      "img/builds/random.png",
+      `${IMG_URL_PREFIX}/builds/random.png`,
     );
   } else {
     setElementBuildIcon("new-race-starting-build-icon", newBuild);

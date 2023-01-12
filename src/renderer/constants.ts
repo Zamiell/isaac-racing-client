@@ -20,3 +20,4 @@ export const WEBSITE_URL = `http${PROTOCOL_SUFFIX}://${
 export const WEBSOCKET_URL = `ws${PROTOCOL_SUFFIX}://${
   LOCALHOST ? "localhost" : DOMAIN
 }/ws`;
+export const IMG_URL_PREFIX = `${WEBSITE_URL}/public/img`;

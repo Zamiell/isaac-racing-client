@@ -4,7 +4,7 @@ import { BUILDS, ITEMS } from "isaac-racing-common";
 import { parseIntSafe } from "../../common/util";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
-import { FADE_TIME } from "../constants";
+import { FADE_TIME, IMG_URL_PREFIX } from "../constants";
 import g from "../globals";
 import * as modSocket from "../modSocket";
 import { getMyRacer, getNumLeft } from "../race";
@@ -599,7 +599,7 @@ export function show(raceID: number): void {
       for (const i of iRange(1, 3)) {
         setElementBackgroundImage(
           `race-title-items-icon${i}`,
-          `https://isaacracing.net/public/img/items/${items[i]}.png`,
+          `${IMG_URL_PREFIX}/items/${items[i]}.png`,
         );
       }
 
@@ -1004,7 +1004,7 @@ export function participantsSetStartingItem(i: number): void {
   } else {
     const html = `
       <div class="race-participants-table-starting-item-icon-container">
-        <span class="race-participants-table-starting-item-icon" style="background-image: url(https://isaacracing.net/public/img/items/${startingItem}.png);"></span>
+        <span class="race-participants-table-starting-item-icon" style="background-image: url(${IMG_URL_PREFIX}/items/${startingItem}.png);"></span>
       </div>
     `;
     $(`#race-participants-table-${name}-item`).html(html);

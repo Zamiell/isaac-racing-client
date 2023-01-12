@@ -1202,6 +1202,7 @@ input[type=range] {
 }
 
 .race-title-items-icon-blind {
+  /* We have to hard code the server URL here because we cannot use variables inside of a CSS file */
   background-image: url("https://isaacracing.net/public/img/items/questionmark.png");
 }
 

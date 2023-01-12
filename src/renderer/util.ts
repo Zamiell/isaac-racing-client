@@ -1,7 +1,7 @@
 import log from "electron-log";
 import { BUILDS } from "isaac-racing-common";
 import settings from "../common/settings";
-import { FADE_TIME } from "./constants";
+import { FADE_TIME, IMG_URL_PREFIX } from "./constants";
 import g from "./globals";
 import { Screen } from "./types/Screen";
 
@@ -173,7 +173,7 @@ export function setElementBuildIcon(id: string, buildIndex: number): void {
     );
   }
 
-  const url = `img/builds/${firstItemOfBuild.id}.png`;
+  const url = `${IMG_URL_PREFIX}/builds/${firstItemOfBuild.id}.png`;
   setElementBackgroundImage(id, url);
 }
 
