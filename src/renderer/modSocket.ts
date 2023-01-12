@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import { BUILDS } from "isaac-racing-common";
-import { parseIntSafe } from "../common/socket";
+import { parseIntSafe } from "isaacscript-common-ts";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import g from "./globals";
 import { getMyStatus, getNumLeft, getNumReady } from "./race";

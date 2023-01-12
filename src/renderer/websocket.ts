@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { parseIntSafe } from "../common/socket";
+import { parseIntSafe } from "isaacscript-common-ts";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";

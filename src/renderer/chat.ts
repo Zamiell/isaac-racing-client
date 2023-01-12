@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
+import { parseIntSafe } from "isaacscript-common-ts";
 import linkifyHtml from "linkify-html";
-import { parseIntSafe } from "../common/socket";
 import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
 import g from "./globals";

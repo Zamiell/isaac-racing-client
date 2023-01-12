@@ -1,5 +1,5 @@
 import log from "electron-log";
-import { parseIntSafe } from "../../common/socket";
+import { parseIntSafe } from "isaacscript-common-ts";
 import * as chat from "../chat";
 import g from "../globals";
 import * as modSocket from "../modSocket";

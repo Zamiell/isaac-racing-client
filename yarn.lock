@@ -3074,10 +3074,10 @@ isaac-racing-common@^1.0.8:
   resolved "https://registry.yarnpkg.com/isaac-racing-common/-/isaac-racing-common-1.0.8.tgz#4d74f0789fa9195d2760703f37c8af2065b47eda"
   integrity sha512-4+cknGN8opslGqO7a54PMGLD664Flj+aFDVs7uF53SIeyoMYM4ek/Pbiq3I70p4+w70cMmnqdmiujk70EuC5AA==
 
-isaacscript-common-ts@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/isaacscript-common-ts/-/isaacscript-common-ts-1.1.0.tgz#622522989fc230df51d61fa6021341000c112f7d"
-  integrity sha512-RDXv3KclOIOiH8Hqg9T9bizxrhVsBF4Vjcpgi3/DN27VZPUgokJqrm+JcdJ4jEBXBUrVSicl3v1/WUCiVCSDEg==
+isaacscript-common-ts@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/isaacscript-common-ts/-/isaacscript-common-ts-1.2.2.tgz#a8adcb1cf8742f23e48645d6ddca6f1030d86ae3"
+  integrity sha512-5xv5hncTV7M9wE0mfqWZrMO7WMv8qmMMkqmuGAWdAtLDhJ/qbUy0O0L66ddSwB0/Csa7ip7vb29rscKht58+Jg==
 
 isaacscript-lint@^4.3.0:
   version "4.3.0"

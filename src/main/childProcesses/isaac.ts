@@ -29,8 +29,8 @@ import { execSync } from "child_process";
 import path from "path";
 import ps from "ps-node";
 import Registry, { RegistryItem } from "winreg";
+import { parseIntSafe } from "isaacscript-common-ts";
 import * as file from "../../common/file";
-import { parseIntSafe } from "../../common/socket";
 import { isSandboxValid } from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
