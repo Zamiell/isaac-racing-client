@@ -10,6 +10,10 @@
 
   "files.associations": {
     ".env*": "shellscript", // e.g. ".env.example" is the same as ".env".
+    // @template-customization-start
+    "*.anm2": "xml", // anm2 files are just XML files
+    "*.dat": "json", // Nearly all mods save JSON to the "save#.dat" file
+    // @template-customization-end
   },
 
   // We want to always use "lf" to be consistent with all platforms.
