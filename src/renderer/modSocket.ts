@@ -9,7 +9,7 @@ import { RaceFormat } from "./types/RaceFormat";
 import { RacerStatus } from "./types/RacerStatus";
 import { RaceStatus } from "./types/RaceStatus";
 import { SocketCommandIn } from "./types/SocketCommand";
-import { amSecondTestAccount } from "./util";
+import { amSecondTestAccount } from "./utils";
 
 export function send(command: SocketCommandIn, data = ""): void {
   if (amSecondTestAccount()) {

@@ -1,6 +1,6 @@
-import path from "path";
+import path from "node:path";
 import * as simpleVDF from "simple-vdf";
-import * as file from "../../common/file";
+import { fileExists, readFile, writeFile } from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
 import {
   AppConfigVDF,
@@ -44,18 +44,18 @@ export function setLaunchOption(
   }
 
   const localConfigPath = getLocalConfigPath(steamPath, steamActiveUserID);
-  file.write(localConfigPath, localConfigString);
+  writeFile(localConfigPath, localConfigString);
 }
 
 function getLocalConfigVDF(steamPath: string, steamActiveUserID: number) {
   const localConfigPath = getLocalConfigPath(steamPath, steamActiveUserID);
-  if (!file.exists(localConfigPath)) {
+  if (!fileExists(localConfigPath)) {
     throw new Error(
       `Failed to find the "localconfig.vdf" file at: ${localConfigPath}`,
     );
   }
 
-  const localConfigString = file.read(localConfigPath);
+  const localConfigString = readFile(localConfigPath);
 
   let localConfigVDF: LocalConfigVDF;
   try {

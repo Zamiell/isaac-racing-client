@@ -9,8 +9,7 @@
   "editor.tabSize": 2,
 
   "files.associations": {
-    "*.anm2": "xml", // anm2 files are just XML files
-    "*.dat": "json", // Nearly all mods save JSON to the "save#.dat" file
+    ".env*": "shellscript", // e.g. ".env.example" is the same as ".env".
   },
 
   // We want to always use "lf" to be consistent with all platforms.
@@ -20,21 +19,32 @@
   "files.trimTrailingWhitespace": true,
 
   // Configure glob patterns for excluding files and folders in full text searches and quick open.
-  // (File extensions must be specified or the glob won't work properly.)
   "search.exclude": {
+    "**/*.mp3": true,
     "**/*.png": true,
     "**/*.wav": true,
     "**/dist/": true,
     "**/node_modules/": true,
   },
 
-  // -----------------------
-  // JavaScript / TypeScript
-  // -----------------------
+  // ------------------
+  // Extension settings
+  // ------------------
+
+  // Use Prettier to format "cspell.json".
+  "cSpell.autoFormatConfigFile": true,
+
+  // -----------------
+  // Language settings
+  // -----------------
 
   // By default, VSCode will not automatically fill-in function arguments.
   "javascript.suggest.completeFunctionCalls": true,
   "typescript.suggest.completeFunctionCalls": true,
+
+  // By default, VSCode will prefer non-relative paths for deeply nested files.
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
 
   // Automatically run the formatter when certain files are saved.
   "[javascript]": {
@@ -44,6 +54,18 @@
     "editor.tabSize": 2,
   },
   "[typescript]": {
+    "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+  "[javascriptreact]": {
+    "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+  "[typescriptreact]": {
     "editor.codeActionsOnSave": ["source.fixAll.eslint"],
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
@@ -64,20 +86,38 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
-  "[xml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-  },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+  "[postcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+  "[prisma]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+  },
+
+  // @template-customization-start
 
   // ---
   // Lua
   // ---
 
   "Lua.diagnostics.globals": ["Isaac"],
+
+  // @template-customization-end
 }

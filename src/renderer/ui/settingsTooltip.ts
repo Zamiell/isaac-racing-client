@@ -4,7 +4,7 @@ import { FADE_TIME } from "../constants";
 import g from "../globals";
 import * as localization from "../localization";
 import { Screen } from "../types/Screen";
-import { closeAllTooltips } from "../util";
+import { closeAllTooltips } from "../utils";
 
 export function init(): void {
   $("#settings-volume-slider").change(function settingsVolumeSliderChange() {

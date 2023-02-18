@@ -12,7 +12,7 @@ import { FADE_TIME, IS_DEV, WEBSITE_URL } from "./constants";
 import g from "./globals";
 import { Screen } from "./types/Screen";
 import * as registerScreen from "./ui/register";
-import { errorShow, findAjaxError } from "./util";
+import { errorShow, findAjaxError } from "./utils";
 import * as websocket from "./websocket";
 
 const SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE = 5;

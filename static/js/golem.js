@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
    Copyright 2013 Niklas Voss
 
@@ -14,7 +16,7 @@
    limitations under the License.
 */
 
-// We need access to the globals here so that we can use the logger
+// We need access to the globals here so that we can use the logger.
 const globals = nodeRequire("./js/globals");
 
 const separator = " ";

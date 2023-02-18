@@ -2,8 +2,8 @@ import * as electron from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
 import { HandlerDetails } from "electron/main";
-import path from "path";
-import * as file from "../common/file";
+import path from "node:path";
+import { fileExists } from "../common/file";
 import settings from "../common/settings";
 import { STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
@@ -24,11 +24,11 @@ const WINDOW_TITLE = "Racing+";
 const INDEX_HTML_PATH = path.join(STATIC_PATH, "index.html");
 const FAVICON_PATH = path.join(STATIC_PATH, "img", "favicon.png");
 
-if (!file.exists(INDEX_HTML_PATH)) {
+if (!fileExists(INDEX_HTML_PATH)) {
   throw new Error(`The index path of "${INDEX_HTML_PATH}" does not exist.`);
 }
 
-if (!file.exists(FAVICON_PATH)) {
+if (!fileExists(FAVICON_PATH)) {
   throw new Error(`The favicon path of "${FAVICON_PATH}" does not exist.`);
 }
 

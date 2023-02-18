@@ -5,6 +5,8 @@
     "esbenp.prettier-vscode", // The TypeScript formatter
     "dbaeumer.vscode-eslint", // The TypeScript linter
     "streetsidesoftware.code-spell-checker", // A spell-checker extension based on CSpell
+    // @template-customization-start
     "sumneko.lua", // The Lua language server
+    // @template-customization-end
   ],
 }

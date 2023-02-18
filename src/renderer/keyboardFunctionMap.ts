@@ -3,7 +3,7 @@ import { IS_DEV } from "./constants";
 import g from "./globals";
 import { textUpdated } from "./keyboardSubroutines";
 import { Screen } from "./types/Screen";
-import { closeAllTooltips } from "./util";
+import { closeAllTooltips } from "./utils";
 
 export const keyboardFunctionMap = new Map<
   number,

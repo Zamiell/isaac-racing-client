@@ -1,5 +1,5 @@
 import log from "electron-log";
-import path from "path";
+import path from "node:path";
 import settings from "../common/settings";
 import g from "./globals";
 

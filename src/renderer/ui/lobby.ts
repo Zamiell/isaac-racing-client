@@ -7,7 +7,7 @@ import { Race } from "../types/Race";
 import { RaceFormat } from "../types/RaceFormat";
 import { RaceStatus } from "../types/RaceStatus";
 import { Screen } from "../types/Screen";
-import { capitalize, errorShow, escapeHTML, pad } from "../util";
+import { capitalize, errorShow, escapeHTML, pad } from "../utils";
 import * as header from "./header";
 
 export function init(): void {

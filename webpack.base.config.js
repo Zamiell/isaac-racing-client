@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+// It is possible for the webpack configuration to be written in TypeScript, but this will not work
+// with the full range of options in "tsconfig.json". Keep the config file written in JavaScript for
+// simplicity.
 
-// It is possible for the webpack configuration to be written in TypeScript,
-// but this will not work with the full range of options in "tsconfig.json"
-// Keep the config file written in JavaScript for simplicity
-
-const path = require("path");
+const path = require("node:path");
 
 function getBaseConfig(electronType) {
   return {
@@ -34,14 +32,14 @@ function getBaseConfig(electronType) {
       filename: "main.js",
     },
 
-    // .js is needed for libraries (Electron itself, etc.)
-    // .json is needed to import JSON files in the "data" directory
+    // - .js is needed for libraries (Electron itself, etc.).
+    // - .json is needed to import JSON files in the "data" directory.
     resolve: {
       extensions: [".js", ".ts", ".json"],
     },
 
-    // Enable source maps for debugging purposes
-    // (this will show the line number of the real file in the browser console)
+    // Enable source maps for debugging purposes. (This will show the line number of the real file
+    // in the browser console.)
     devtool: "source-map",
   };
 }

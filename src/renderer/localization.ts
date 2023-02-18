@@ -3,11 +3,11 @@ import settings from "../common/settings";
 import { languagePackES } from "./languages/es";
 import { languagePackFR } from "./languages/fr";
 
-const VALID_LANGUAGES: Array<[string, string, string]> = [
+const VALID_LANGUAGES = [
   ["en", "english", "English"],
   ["fr", "french", "Français"],
   ["es", "spanish", "Español"],
-];
+] as const;
 
 let lang: Lang | null = null;
 
@@ -41,7 +41,7 @@ function setLocalize(this: HTMLElement) {
     if (match !== null) {
       const thisLanguage = match[1];
       if (thisLanguage === languageArray[1]) {
-        matchingLanguageArray = languageArray;
+        matchingLanguageArray = [...languageArray];
         break;
       }
     }

@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import g from "../globals";
-import { errorShow } from "../util";
+import { errorShow } from "../utils";
 
 export function init(): void {
   electron.ipcRenderer.on("steamWatcher", IPCSteamWatcher);

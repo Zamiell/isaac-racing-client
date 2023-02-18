@@ -24,7 +24,7 @@ import {
   pad,
   setElementBackgroundImage,
   setElementBuildIcon,
-} from "../util";
+} from "../utils";
 
 const FIRST_GOLDEN_TRINKET_ID = 32769;
 

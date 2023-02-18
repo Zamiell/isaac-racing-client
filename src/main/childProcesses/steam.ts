@@ -1,7 +1,7 @@
 // Child process that initializes the Steamworks API and generates a login ticket.
 
-import path from "path";
-import * as file from "../../common/file";
+import path from "node:path";
+import { fileExists, isFile, writeFile } from "../../common/file";
 import { SteamMessage } from "../../common/types/SteamMessage";
 import { REBIRTH_STEAM_ID } from "../constants";
 import { Greenworks, SteamIDObject, TicketObject } from "../types/Greenworks";
@@ -35,7 +35,7 @@ function greenworksInit() {
   // C:\Repositories\isaac-racing-client\steam_appid.txt (in development) 570660 is the Steam app ID
   // for The Binding of Isaac: Rebirth
   const steamAppIDPath = "steam_appid.txt";
-  file.write(steamAppIDPath, REBIRTH_STEAM_ID.toString());
+  writeFile(steamAppIDPath, REBIRTH_STEAM_ID.toString());
 
   // In order for the Greenworks library to work, we have to exempt it from being packed inside of
   // the ASAR archive via the "asarUnpack" property of the "package.json" file. The library is
@@ -54,7 +54,7 @@ function greenworksInit() {
   ];
   const greenworksPath = path.join(__dirname, ...greenworksPathComponents);
 
-  if (!file.exists(greenworksPath) || !file.isFile(greenworksPath)) {
+  if (!fileExists(greenworksPath) || !isFile(greenworksPath)) {
     throw new Error(
       `Failed to find the Greenworks library at: ${greenworksPath}`,
     );

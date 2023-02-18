@@ -1,8 +1,8 @@
-import { ChildProcess, fork } from "child_process";
 import * as electron from "electron";
 import log from "electron-log";
-import path from "path";
-import * as file from "../common/file";
+import { ChildProcess, fork } from "node:child_process";
+import path from "node:path";
+import { fileExists, isFile } from "../common/file";
 import { IS_DEV } from "./isDev";
 
 // Any new child processes also have to be added to the webpack config in "webpack.main.config.js".
@@ -55,7 +55,7 @@ export function start(
     );
   }
 
-  if (!file.exists(childProcessPath) || !file.isFile(childProcessPath)) {
+  if (!fileExists(childProcessPath) || !isFile(childProcessPath)) {
     log.error(
       `Failed to find the file for the child process of "${name}": ${childProcessPath}`,
     );

@@ -27,7 +27,7 @@ import {
   capitalize,
   errorShow,
   warningShow,
-} from "./util";
+} from "./utils";
 
 export function connect(): void {
   log.info(

@@ -1,7 +1,7 @@
 import klawSync from "klaw-sync";
 import fetch from "node-fetch";
-import path from "path";
-import * as file from "../../common/file";
+import path from "node:path";
+import { deleteFile, fileExists, getFileHash, isDir } from "../../common/file";
 
 // This is the name of the folder for the Racing+ Lua mod after it is downloaded through Steam.
 const STEAM_WORKSHOP_MOD_NAME = "racing+_857628390";
@@ -14,7 +14,7 @@ export function exists(modsPath: string): boolean {
   }
 
   const racingPlusModPath = path.join(modsPath, STEAM_WORKSHOP_MOD_NAME);
-  if (file.exists(racingPlusModPath) && file.isDir(racingPlusModPath)) {
+  if (fileExists(racingPlusModPath) && isDir(racingPlusModPath)) {
     return true;
   }
 
@@ -58,7 +58,7 @@ function checkCorruptOrMissingFiles(
   for (const [relativePath, backupFileHash] of Object.entries(checksums)) {
     const filePath = path.join(modPath, relativePath);
 
-    if (file.exists(filePath)) {
+    if (fileExists(filePath)) {
       // Make an exception for the "sha1.json" file. (This will not have a valid checksum.)
       if (path.basename(filePath) === "sha1.json") {
         continue;
@@ -70,7 +70,7 @@ function checkCorruptOrMissingFiles(
         continue;
       }
 
-      const fileHash = file.getHash(filePath);
+      const fileHash = getFileHash(filePath);
       if (fileHash !== backupFileHash) {
         process.send(`File is corrupt: ${filePath}`);
         process.send(
@@ -128,7 +128,7 @@ function checkExtraneousFiles(
       const filePath = path.join(modPath, modFile);
       process.send(`Extraneous file found: ${filePath}`);
       hasExtraneousFiles = true;
-      file.deleteFile(filePath);
+      deleteFile(filePath);
     }
   }
 

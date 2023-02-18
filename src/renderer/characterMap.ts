@@ -1,4 +1,6 @@
-export const CHARACTER_MAP = new Map([
+import { ReadonlyMap } from "isaacscript-common-ts";
+
+export const CHARACTER_MAP = new ReadonlyMap([
   ["Isaac", 0],
   ["Magdalene", 1],
   ["Cain", 2],

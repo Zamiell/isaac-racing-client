@@ -1,26 +1,27 @@
-// The configuration file for TypeScript
+// The configuration file for TypeScript.
 {
-  // We extend the standard IsaacScript config
-  // https://github.com/IsaacScript/isaacscript-tsconfig/blob/main/tsconfig.node.json
+  // We extend the standard IsaacScript config:
+  // https://github.com/IsaacScript/isaacscript/blob/main/packages/isaacscript-tsconfig/tsconfig.node.json
   "extends": "isaacscript-tsconfig/tsconfig.node.json",
 
   // https://www.typescriptlang.org/docs/handbook/compiler-options.html
   "compilerOptions": {
-    // By default, DOM types are not recognized by TypeScript because this is a Node project
+    "outDir": "./dist",
+
+    // @template-customization-start
+
+    // By default, DOM types are not recognized by TypeScript because this is a Node project.
     // Manually include them so that we can compile both the main JavaScript and the renderer
-    // JavaScript with a single tsconfig.json
+    // JavaScript with a single "tsconfig.json".
     "lib": ["DOM"],
 
-    // We need to import the "package.json" file to see what version we are running
-    // By default, this is false
+    // We need to import the "package.json" file to see what version we are running.
+    // By default, this is false.
     "resolveJsonModule": true,
 
-    // "outDir" specifies the output directory
-    // By default, it will put the compiled ".js" next to the respective ".ts" file,
-    // which will clutter the "src" directory
-    "outDir": "./dist",
+    // @template-customization-end
   },
 
-  // A list of the TypeScript files to compile
+  // A list of the TypeScript files to compile.
   "include": ["./src/**/*.ts"],
 }

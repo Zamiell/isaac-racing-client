@@ -1,42 +1,44 @@
 #!/bin/bash
 
-set -e # Exit on any errors
+set -euo pipefail # Exit on errors and undefined variables.
 
-# Get the directory of this script
+# Get the directory of this script:
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# The latest version of some ESLint plugins require Node.js v16
-NODE_VERSION=$(node --version | cut -c 2-3)
-if (($NODE_VERSION < 16)); then
-  echo "error: requires Node.js version 16"
-  exit 1
-fi
+SECONDS=0
 
 cd "$DIR"
 
-# Step 1 - Use Prettier to check formatting.
-npx prettier --check .
+# Use Prettier to check formatting.
+# "--loglevel warn" makes it only output errors.
+npx prettier --loglevel warn --check .
 
-# Step 2 - Use ESLint to lint the TypeScript
-# Since all ESLint errors are set to warnings, we set max warnings to 0 so that warnings will fail
-# in CI.
-npx eslint --max-warnings 0 src
+# Use ESLint to lint the TypeScript.
+# "--max-warnings 0" makes warnings fail in CI, since we set all ESLint errors to warnings.
+npx eslint --max-warnings 0 .
 
-# Step 3 - Spell check every file using CSpell.
-# We use no-progress and no-summary because we want to only output errors.
-npx cspell --no-progress --no-summary
-
-# Step 3 - Check for unused imports.
-# The "--error" flag makes it return an error code of 1 if unused exports are found.
+# Check for unused exports.
+# "--error" makes it return an error code of 1 if unused exports are found.
 npx ts-prune --error
 
-# Step 4 - Check for orphaned words.
-bash "$DIR/check-orphaned-words.sh"
+# Spell check every file using CSpell.
+# "--no-progress" and "--no-summary" make it only output errors.
+npx cspell --no-progress --no-summary .
 
-# Step 5 - Use remark to check Markdown files for errors
+# Check for unused CSpell words.
+npx cspell-check-unused-words
+
+# @template-customization-start
+
+# Use remark to check Markdown files for errors
 # We set to quiet to output only warnings and errors
 # We set to frail to exit with 1 on warnings (for CI)
 #npx remark --quiet --frail docs # TODO
 
-echo "Success!"
+# Check for base file updates.
+npx isaacscript check-ts --ignore "build.sh,cspell.json,publish.sh,run.sh"
+
+# @template-customization-end
+
+echo "Successfully linted in $SECONDS seconds."

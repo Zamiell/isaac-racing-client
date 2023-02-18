@@ -3,9 +3,9 @@
 // ----------------------------------------------------------------------
 
 import log from "electron-log";
-import path from "path";
+import path from "node:path";
 import pkg from "../../package.json";
-import * as file from "../common/file";
+import { getDirList, readFile } from "../common/file";
 import { initLogging } from "../common/initLogging";
 import settings from "../common/settings";
 import * as automaticUpdate from "./automaticUpdate";
@@ -98,12 +98,12 @@ function printWelcomeMessage() {
 function initData() {
   // Word list
   const wordListPath = path.join(DATA_PATH, "word-list.txt");
-  const wordListString = file.read(wordListPath);
+  const wordListString = readFile(wordListPath);
   g.wordList = wordListString.split("\n");
 
   // Emote list
   const emotePath = path.join(__dirname, "img", "emotes");
-  g.emoteList = file.getDirList(emotePath);
+  g.emoteList = getDirList(emotePath);
   for (let i = 0; i < g.emoteList.length; i++) {
     // Remove ".png" from each element of emoteList.
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

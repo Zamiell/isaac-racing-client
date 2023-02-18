@@ -1,6 +1,6 @@
-import { execFile } from "child_process";
 import log from "electron-log";
-import path from "path";
+import { execFile } from "node:child_process";
+import path from "node:path";
 import { STATIC_PATH } from "./constants";
 
 export function isaacFocus(): void {

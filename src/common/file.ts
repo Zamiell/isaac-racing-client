@@ -1,7 +1,7 @@
-import crypto from "crypto";
-import fs from "fs";
+import crypto from "node:crypto";
+import fs from "node:fs";
 
-export function copy(filePathSrc: string, filePathDst: string): void {
+export function copyFile(filePathSrc: string, filePathDst: string): void {
   try {
     fs.copyFileSync(filePathSrc, filePathDst);
   } catch (err) {
@@ -19,7 +19,7 @@ export function deleteFile(filePath: string): void {
   }
 }
 
-export function exists(filePath: string): boolean {
+export function fileExists(filePath: string): boolean {
   let pathExists: boolean;
   try {
     pathExists = fs.existsSync(filePath);
@@ -54,7 +54,7 @@ function getFileStats(filePath: string): fs.Stats {
   return fileStats;
 }
 
-export function getHash(filePath: string): string {
+export function getFileHash(filePath: string): string {
   let hash: string;
   try {
     const fileBuffer = fs.readFileSync(filePath);
@@ -80,7 +80,7 @@ export function isFile(filePath: string): boolean {
   return fileStats.isFile();
 }
 
-export function read(filePath: string): string {
+export function readFile(filePath: string): string {
   let fileContents: string;
   try {
     fileContents = fs.readFileSync(filePath, "utf8");
@@ -91,7 +91,7 @@ export function read(filePath: string): string {
   return fileContents;
 }
 
-export function write(filePath: string, data: string): void {
+export function writeFile(filePath: string, data: string): void {
   try {
     fs.writeFileSync(filePath, data);
   } catch (err) {

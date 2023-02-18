@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
-const path = require("path");
+const path = require("node:path");
 const getBaseConfig = require("./webpack.base.config");
 
 const ELECTRON_TYPE = "main";
@@ -9,9 +7,9 @@ const CHILD_PROCESSES_PATH = path.join(BASE_PATH, "childProcesses");
 
 const webpackConfig = getBaseConfig(ELECTRON_TYPE);
 
-// Normally, webpack will bundle everything into a single JavaScript file
-// Since we use subprocesses, we need to be able to invoke specific JavaScript files
-// Thus, we use a name driven configuration
+// Normally, webpack will bundle everything into a single JavaScript file. Since we use
+// subprocesses, we need to be able to invoke specific JavaScript files. Thus, we use a name driven
+// configuration:
 // https://stackoverflow.com/questions/40096470/get-webpack-not-to-bundle-files
 webpackConfig.entry = {
   main: {
@@ -45,8 +43,8 @@ webpackConfig.output = {
   sourceMapFilename: "[file].js.map",
 };
 
-// By default, "__dirname" will resolve to "/" in the main process,
-// so we use this hack to restore it to what it is supposed to be
+// By default, "__dirname" will resolve to "/" in the main process, so we use this hack to restore
+// it to what it is supposed to be:
 // https://github.com/webpack/webpack/issues/1599
 webpackConfig.node = {
   __dirname: false,

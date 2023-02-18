@@ -2,7 +2,8 @@ import log from "electron-log";
 
 const SEPARATOR = " ";
 
-const SPAMMY_COMMANDS = [
+// eslint-disable-next-line isaacscript/require-capital-const-assertions
+const SPAMMY_COMMANDS: readonly string[] = [
   "roomHistory",
   "roomMessage",
   "privateMessage",

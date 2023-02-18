@@ -5,7 +5,7 @@ import g from "../globals";
 import * as modSocket from "../modSocket";
 import { SocketCommandOut } from "../types/SocketCommand";
 import * as raceScreen from "../ui/race";
-import { errorShow } from "../util";
+import { errorShow } from "../utils";
 import { inOngoingRace } from "./socketSubroutines";
 
 export const socketFunctionMap = new Map<

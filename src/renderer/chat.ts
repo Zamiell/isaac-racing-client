@@ -6,7 +6,7 @@ import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
 import g from "./globals";
 import { Screen } from "./types/Screen";
-import { errorShow, escapeHTML, warningShow } from "./util";
+import { errorShow, escapeHTML, warningShow } from "./utils";
 
 const CHAT_INDENT_SIZE = "3.2em";
 

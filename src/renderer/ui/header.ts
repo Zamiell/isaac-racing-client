@@ -4,7 +4,7 @@ import g from "../globals";
 import { RacerStatus } from "../types/RacerStatus";
 import { RaceStatus } from "../types/RaceStatus";
 import { Screen } from "../types/Screen";
-import { errorShow } from "../util";
+import { errorShow } from "../utils";
 import * as lobbyScreen from "./lobby";
 import * as newRaceTooltip from "./newRaceTooltip";
 import * as settingsTooltip from "./settingsTooltip";

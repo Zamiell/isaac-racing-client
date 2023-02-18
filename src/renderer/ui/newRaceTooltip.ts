@@ -1,6 +1,6 @@
-import crypto from "crypto";
 import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "isaacscript-common-ts";
+import crypto from "node:crypto";
 import CHARACTERS from "../../../static/data/characters.json";
 import settings from "../../common/settings";
 import {
@@ -18,7 +18,7 @@ import {
   getRandomNumber,
   setElementBackgroundImage,
   setElementBuildIcon,
-} from "../util";
+} from "../utils";
 
 export function init(): void {
   $("#new-race-title-randomize").click(() => {

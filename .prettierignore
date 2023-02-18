@@ -1,8 +1,12 @@
-# Ignore compiled output.
+# Compiled output
 dist
 
-# The VSCode CSpell plugin causes the file to become unformatted whenever a new word is added.
-cspell.json
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# @template-customization-start
 
 # Images
 *.svg
@@ -13,3 +17,5 @@ cspell.json
 # JS libraries
 *.min.js
 jquery-lang.js
+
+# @template-customization-end

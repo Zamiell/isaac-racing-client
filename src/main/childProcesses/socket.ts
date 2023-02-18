@@ -2,8 +2,8 @@
 // which in turn sends them to the renderer process. All messages to the parent must be in the form
 // of "commandName rest of the data".
 
-import dgram from "dgram";
-import net from "net";
+import dgram from "node:dgram";
+import net from "node:net";
 import { unpackSocketMsg } from "../../common/socket";
 import { processExit } from "./subroutines";
 
@@ -12,7 +12,7 @@ const REMOTE_HOSTNAME = "isaacracing.net";
 const TCP_PORT = 9112; // Arbitrarily chosen to not conflict with common IANA ports
 const UDP_PORT = 9113; // The same port applies to both the localhost server and the remote server
 
-const TCPSockets: net.Socket[] = [];
+const tcpSockets: net.Socket[] = [];
 let lastUDPClientPort: number | null = null;
 
 init();
@@ -99,7 +99,7 @@ function onProcessMessage(message: string) {
   }
 
   // Forward all messages from the main process to the Racing+ mod.
-  for (const socket of TCPSockets) {
+  for (const socket of tcpSockets) {
     socket.write(message);
   }
 }
@@ -110,11 +110,11 @@ function TCPConnectionListener(TCPSocket: net.Socket) {
   }
 
   // Keep track of the newly connected client.
-  TCPSockets.push(TCPSocket);
+  tcpSockets.push(TCPSocket);
 
   const clientAddress = `${TCPSocket.remoteAddress}:${TCPSocket.remotePort}`;
   process.send(
-    `info Client "${clientAddress}" has connected to the socket server. (${TCPSockets.length} total clients)`,
+    `info Client "${clientAddress}" has connected to the socket server. (${tcpSockets.length} total clients)`,
   );
   process.send("connected");
 
@@ -160,16 +160,16 @@ function TCPSocketClose(socket: net.Socket, clientAddress: string) {
   }
 
   // Remove it from our list of sockets.
-  const index = TCPSockets.indexOf(socket);
+  const index = tcpSockets.indexOf(socket);
   if (index > -1) {
-    TCPSockets.splice(index, 1);
+    tcpSockets.splice(index, 1);
   }
 
   process.send(
-    `info Client "${clientAddress} has disconnected from the socket server. (${TCPSockets.length} total clients)`,
+    `info Client "${clientAddress} has disconnected from the socket server. (${tcpSockets.length} total clients)`,
   );
 
-  if (TCPSockets.length === 0) {
+  if (tcpSockets.length === 0) {
     process.send("disconnected");
   }
 }

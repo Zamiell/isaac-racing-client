@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { unpackSocketMsg } from "../../common/socket";
-import { amSecondTestAccount } from "../util";
+import { amSecondTestAccount } from "../utils";
 import { socketFunctionMap } from "./socketFunctionMap";
 
 export function init(): void {

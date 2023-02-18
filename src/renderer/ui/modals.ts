@@ -1,6 +1,6 @@
-import crypto from "crypto";
 import * as electron from "electron";
 import log from "electron-log";
+import crypto from "node:crypto";
 import settings from "../../common/settings";
 import {
   FADE_TIME,

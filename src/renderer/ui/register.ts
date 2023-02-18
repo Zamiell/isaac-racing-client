@@ -2,7 +2,7 @@ import log from "electron-log";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
 import g from "../globals";
 import { Screen } from "../types/Screen";
-import { findAjaxError } from "../util";
+import { findAjaxError } from "../utils";
 import * as websocket from "../websocket";
 
 export function init(): void {

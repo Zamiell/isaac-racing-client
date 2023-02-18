@@ -3,7 +3,7 @@ import log from "electron-log";
 import settings from "../../common/settings";
 import g from "../globals";
 import { Screen } from "../types/Screen";
-import { errorShow } from "../util";
+import { errorShow } from "../utils";
 import * as socket from "./socket";
 import * as steam from "./steam";
 
