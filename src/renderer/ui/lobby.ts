@@ -11,7 +11,6 @@ import { capitalize, errorShow, escapeHTML, pad } from "../utils";
 import * as header from "./header";
 
 export function init(): void {
-  // eslint-disable-next-line deprecation/deprecation
   $("#lobby-chat-form").submit((event) => {
     // By default, the form will reload the page, so stop this from happening.
     event.preventDefault();
@@ -69,7 +68,6 @@ export function show(): void {
   $("#lobby-chat-text").scrollTop(bottomPixel);
 
   // Focus the chat input.
-  // eslint-disable-next-line deprecation/deprecation
   $("#lobby-chat-box-input").focus();
 }
 
@@ -122,7 +120,6 @@ export function showFromRace(): void {
     $("#lobby-chat-text").scrollTop(bottomPixel);
 
     // Focus the chat input.
-    // eslint-disable-next-line deprecation/deprecation
     $("#lobby-chat-box-input").focus();
   });
 }
@@ -233,7 +230,6 @@ function raceDraw2(race: Race) {
 
     // Make the row clickable.
     if (race.status === RaceStatus.OPEN && !race.ruleset.solo) {
-      // eslint-disable-next-line deprecation/deprecation
       $(`#lobby-current-races-${race.id}`).click(() => {
         if (g.currentScreen === Screen.LOBBY) {
           if (race.isPasswordProtected) {
@@ -244,7 +240,6 @@ function raceDraw2(race: Race) {
               passwordInput.data("raceID", race.id);
               passwordInput.data("raceTitle", race.name);
               $("#password-modal").fadeIn(FADE_TIME);
-              // eslint-disable-next-line deprecation/deprecation
               passwordInput.focus();
             });
           } else {
