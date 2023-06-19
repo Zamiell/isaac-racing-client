@@ -1,5 +1,7 @@
 """ This is the script that publishes a new version of the client to GitHub. """
 
+# pylint: disable=line-too-long, missing-function-docstring, wrong-import-position
+
 import sys
 
 if sys.version_info < (3, 0):
@@ -7,12 +9,10 @@ if sys.version_info < (3, 0):
     sys.exit(1)
 
 # Standard imports
-import argparse
 import json
 import os
 import re
 import subprocess
-import urllib.request
 
 # Non-standard imports
 import dotenv
@@ -31,8 +31,6 @@ VERSION_URL = (
 def main():
     os.chdir(REPOSITORY_DIR)
 
-    args = parse_command_line_arguments()
-
     # Load environment variables
     dotenv.load_dotenv(os.path.join(REPOSITORY_DIR, ".env"))
     validate_environment_variables()
@@ -46,13 +44,7 @@ def main():
     build_and_publish_electron(version)
     set_latest_client_version_on_server(version)
 
-    print("Released version {} successfully.".format(version))
-
-
-def parse_command_line_arguments():
-    parser = argparse.ArgumentParser()
-
-    return parser.parse_args()
+    print(f"Released version {version} successfully.")
 
 
 def validate_environment_variables():
@@ -66,26 +58,24 @@ def validate_environment_variables():
         environment_variable = os.environ.get(environment_variable_name)
         if environment_variable is None or environment_variable == "":
             error(
-                'error: {} is missing or blank in the ".env" file'.format(
-                    environment_variable_name
-                )
+                f'error: {environment_variable_name} is missing or blank in the ".env" file'
             )
 
 
 def get_incremented_version_from_package_json():
-    with open("package.json") as package_json:
+    with open("package.json", encoding="utf8") as package_json:
         data = json.load(package_json)
     existing_version = data["version"]
 
     major, minor, patch = parse_semantic_version(existing_version)
     incremented_patch = patch + 1
 
-    return "{}.{}.{}".format(str(major), str(minor), str(incremented_patch))
+    return f"{major}.{minor}.{incremented_patch}"
 
 
 def write_version_to_package_json(version: str):
     match_regex = r'  "version": "\d+.\d+\.\d+",'
-    replace = '  "version": "{}",'.format(version)
+    replace = f'  "version": "{version}",'
     find_and_replace_in_file(match_regex, replace, "package.json")
 
 
@@ -153,7 +143,7 @@ def build_and_publish_electron(version: str):
 def set_latest_client_version_on_server(version: str):
     latest_client_version_file = "latest_client_version.txt"
 
-    with open(latest_client_version_file, "w") as version_file:
+    with open(latest_client_version_file, "w", encoding="utf8") as version_file:
         print(version, file=version_file)
 
     transport = paramiko.Transport((os.environ.get("VPS_IP"), 22))
@@ -169,7 +159,7 @@ def set_latest_client_version_on_server(version: str):
 def parse_semantic_version(version: str):
     match = re.search(r"(\d+)\.(\d+)\.(\d+)", version)
     if not match:
-        error("Failed to parse the version: {}".format(version))
+        error(f"Failed to parse the version: {version}")
 
     major_version = int(match.group(1))
     minor_version = int(match.group(2))
@@ -180,7 +170,7 @@ def parse_semantic_version(version: str):
 
 # From: http://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file-using-python
 def find_and_replace_in_file(match_regex: str, replace: str, file_path: str):
-    with open(file_path, "r") as file_handle:
+    with open(file_path, "r", encoding="utf8") as file_handle:
         file_data = file_handle.read()
 
     new_file = ""
@@ -191,7 +181,7 @@ def find_and_replace_in_file(match_regex: str, replace: str, file_path: str):
         else:
             new_file += line + "\n"
 
-    with open(file_path, "w", newline="\n") as file:
+    with open(file_path, "w", newline="\n", encoding="utf8") as file:
         file.write(new_file)
 
 

@@ -123,5 +123,14 @@
 
   "Lua.diagnostics.globals": ["Isaac"],
 
+  // ------
+  // Python
+  // ------
+
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+  },
+  "python.formatting.provider": "none",
+
   // @template-customization-end
 }
