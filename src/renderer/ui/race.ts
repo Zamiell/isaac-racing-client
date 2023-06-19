@@ -11,8 +11,8 @@ import { getMyRacer, getNumLeft } from "../race";
 import * as sounds from "../sounds";
 import { RaceFormat } from "../types/RaceFormat";
 import { RaceGoal } from "../types/RaceGoal";
-import { RacerStatus } from "../types/RacerStatus";
 import { RaceStatus } from "../types/RaceStatus";
+import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";
 import {
   capitalize,
@@ -576,13 +576,7 @@ export function show(raceID: number): void {
       }
 
       setElementBuildIcon("race-title-build-icon", buildIndex);
-
-      let buildTooltipContent = "";
-      for (const item of build) {
-        buildTooltipContent += `${item.name} + `;
-      }
-      buildTooltipContent = buildTooltipContent.slice(0, -3); // Chop off the trailing " + "
-      $("#race-title-build").tooltipster("content", buildTooltipContent);
+      $("#race-title-build").tooltipster("content", build.name);
     } else {
       $("#race-title-table-build").fadeOut(0);
       $("#race-title-build").fadeOut(0);

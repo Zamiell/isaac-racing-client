@@ -116,36 +116,29 @@ export function init(): void {
 
   // Add the options to the starting build dropdown.
   for (let i = 0; i < BUILDS.length; i++) {
-    // The 0th element is an empty array.
-    if (i === 0) {
-      continue;
-    }
-
     const build = BUILDS[i];
     if (build === undefined) {
       continue;
     }
 
-    // Compile the build description string.
-    let description = "";
-    for (const item of build) {
-      description += `${item.name} + `;
-    }
-    description = description.slice(0, -3); // Chop off the trailing " + "
-
     // Add the option for this build.
     $("#new-race-starting-build").append(
-      $("<option></option>").val(i).html(description),
+      $("<option></option>").val(i).html(build.name),
     );
 
-    interface BuildItem {
-      id: string;
-      name: string;
-      spacing?: boolean;
+    const lastItem = build.collectibles.at(-1);
+    if (lastItem === undefined) {
+      throw new Error(
+        `Failed to get the final collectible for build: ${build.name}`,
+      );
     }
 
-    const lastItem = build[build.length - 1] as unknown as BuildItem;
-    if (lastItem.spacing === true) {
+    const nextBuild = BUILDS[i + 1];
+    if (nextBuild === undefined) {
+      continue;
+    }
+
+    if (build.category !== nextBuild.category) {
       const spacing = new Option("─────────────────────────");
       spacing.disabled = true;
       $("#new-race-starting-build").append($(spacing));

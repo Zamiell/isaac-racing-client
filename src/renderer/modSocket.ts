@@ -127,8 +127,8 @@ export function sendAll(): void {
       );
     }
 
-    for (const item of build) {
-      startingItems.push(item.id);
+    for (const collectible of build.collectibles) {
+      startingItems.push(collectible.id);
     }
   }
 

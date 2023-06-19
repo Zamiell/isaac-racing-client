@@ -140,14 +140,14 @@ export function setElementBuildIcon(id: string, buildIndex: number): void {
     throw new Error(`Failed to find the build at index: ${buildIndex}`);
   }
 
-  const firstItemOfBuild = build[0];
-  if (firstItemOfBuild === undefined) {
+  const firstCollectible = build.collectibles[0];
+  if (firstCollectible === undefined) {
     throw new Error(
-      `Failed to get the first item of the build with index: ${buildIndex}`,
+      `Failed to get the first collectible of build: ${build.name}`,
     );
   }
 
-  const url = `${IMG_URL_PREFIX}/builds/${firstItemOfBuild.id}.png`;
+  const url = `${IMG_URL_PREFIX}/builds/${firstCollectible.id}.png`;
   setElementBackgroundImage(id, url);
 }
 

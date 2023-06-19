@@ -44,6 +44,9 @@ module.exports = {
      */
     "n/file-extension-in-import": "off",
 
+    // We use old JQuery methods.
+    "deprecation/deprecation": "off",
+
     // @template-customization-end
   },
 };
