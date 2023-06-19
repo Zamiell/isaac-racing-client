@@ -1,8 +1,8 @@
 import * as electron from "electron";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
 import g from "../globals";
-import { RacerStatus } from "../types/RacerStatus";
 import { RaceStatus } from "../types/RaceStatus";
+import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";
 import { errorShow } from "../utils";
 import * as lobbyScreen from "./lobby";

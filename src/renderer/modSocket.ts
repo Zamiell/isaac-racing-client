@@ -6,8 +6,8 @@ import g from "./globals";
 import { getMyStatus, getNumLeft, getNumReady } from "./race";
 import { ModSocket } from "./types/ModSocket";
 import { RaceFormat } from "./types/RaceFormat";
-import { RacerStatus } from "./types/RacerStatus";
 import { RaceStatus } from "./types/RaceStatus";
+import { RacerStatus } from "./types/RacerStatus";
 import { SocketCommandIn } from "./types/SocketCommand";
 import { amSecondTestAccount } from "./utils";
 
