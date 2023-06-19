@@ -18,6 +18,7 @@
     "*.svg",
     "*.wav",
     ".git/**",
+    ".yarn/**",
     "alpha.css",
     "alpha-old.css",
     "dist/**",

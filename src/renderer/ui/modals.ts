@@ -108,7 +108,7 @@ function initPasswordModal() {
 function initIsaacPathModal() {
   $("#isaac-path-find").click(() => {
     const titleText = $("#isaac-path-dialog-title").html();
-    const dialogReturn = electron.remote.dialog.showOpenDialogSync({
+    const dialogReturn = electron.dialog.showOpenDialogSync({
       title: titleText,
       filters: [
         {

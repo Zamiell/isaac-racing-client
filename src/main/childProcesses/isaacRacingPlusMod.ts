@@ -1,5 +1,4 @@
 import klawSync from "klaw-sync";
-import fetch from "node-fetch";
 import path from "node:path";
 import { deleteFile, fileExists, getFileHash, isDir } from "../../common/file";
 

@@ -141,7 +141,7 @@ export function login(): void {
   request.fail(loginFail); // eslint-disable-line
 }
 
-function loginSuccess(rawData: string) {
+function loginSuccess(rawData: string, _status: string, _jqXHR: JQuery.jqXHR) {
   const data = rawData.trim();
 
   if (data === "Accepted") {

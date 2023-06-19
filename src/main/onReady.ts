@@ -1,3 +1,4 @@
+import * as remote from "@electron/remote/main";
 import * as electron from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
@@ -76,10 +77,6 @@ export function createWindow(): electron.BrowserWindow {
       // https://stackoverflow.com/questions/44391448/electron-require-is-not-defined
       nodeIntegration: true,
       contextIsolation: false,
-
-      // Needed for @electron/remote to work:
-      // https://github.com/electron/remote
-      enableRemoteModule: true,
     },
   });
 
@@ -113,6 +110,10 @@ export function createWindow(): electron.BrowserWindow {
 
     return { action: "deny" };
   });
+
+  // Enable "@electron/remote".
+  // https://github.com/electron/remote
+  remote.enable(window.webContents);
 
   return window;
 }

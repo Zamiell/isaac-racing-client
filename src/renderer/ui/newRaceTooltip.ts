@@ -1,5 +1,5 @@
 import { BUILDS } from "isaac-racing-common";
-import { parseIntSafe } from "isaacscript-common-ts";
+import { getRandomArrayIndex, parseIntSafe } from "isaacscript-common-ts";
 import crypto from "node:crypto";
 import CHARACTERS from "../../../static/data/characters.json";
 import { settings } from "../../common/settings";
@@ -9,6 +9,7 @@ import {
   PBKDF2_DIGEST,
   PBKDF2_ITERATIONS,
   PBKDF2_KEYLEN,
+  RANDOM_BUILD,
 } from "../constants";
 import { g } from "../globals";
 import { Screen } from "../types/Screen";
@@ -133,19 +134,17 @@ export function init(): void {
       );
     }
 
+    // Insert spacing in between each build category. We also want spacing between the last build
+    // and the "Random" selection.
     const nextBuild = BUILDS[i + 1];
-    if (nextBuild === undefined) {
-      continue;
-    }
-
-    if (build.category !== nextBuild.category) {
+    if (nextBuild === undefined || build.category !== nextBuild.category) {
       const spacing = new Option("─────────────────────────");
       spacing.disabled = true;
       $("#new-race-starting-build").append($(spacing));
     }
   }
   $("#new-race-starting-build").append(
-    $('<option lang="en"></option>').val("0").html("Random"),
+    $('<option lang="en"></option>').val(RANDOM_BUILD).html("Random"),
   );
 
   $("#new-race-starting-build").change(newRaceStartingBuildChange);
@@ -256,6 +255,14 @@ function submit(event: JQuery.SubmitEvent) {
 
     // The server expects this to be a number.
     startingBuild = parseIntSafe(startingBuildVal);
+
+    // If we selected "Random" for the build, we must select a random build before sending it to the
+    // server.
+    console.log("GETTING HERE, startingBuild:", startingBuild);
+    if (startingBuild === RANDOM_BUILD) {
+      startingBuild = getRandomArrayIndex(BUILDS);
+      console.log("GETTING HERE!, startingBuild:", startingBuild);
+    }
   } else {
     startingBuild = -1;
   }
@@ -529,7 +536,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
     );
   }
 
-  if (newBuild === 0) {
+  if (newBuild === RANDOM_BUILD) {
     setElementBackgroundImage(
       "new-race-starting-build-icon",
       `${IMG_URL_PREFIX}/builds/random.png`,

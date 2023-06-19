@@ -135,19 +135,26 @@ export function setElementBackgroundImage(id: string, url: string): void {
 }
 
 export function setElementBuildIcon(id: string, buildIndex: number): void {
-  const build = BUILDS[buildIndex];
-  if (build === undefined) {
-    throw new Error(`Failed to find the build at index: ${buildIndex}`);
+  let fileNamePrefix: string;
+  if (buildIndex === -1) {
+    fileNamePrefix = "random";
+  } else {
+    const build = BUILDS[buildIndex];
+    if (build === undefined) {
+      throw new Error(`Failed to find the build at index: ${buildIndex}`);
+    }
+
+    const firstCollectible = build.collectibles[0];
+    if (firstCollectible === undefined) {
+      throw new Error(
+        `Failed to get the first collectible of build: ${build.name}`,
+      );
+    }
+
+    fileNamePrefix = firstCollectible.id.toString();
   }
 
-  const firstCollectible = build.collectibles[0];
-  if (firstCollectible === undefined) {
-    throw new Error(
-      `Failed to get the first collectible of build: ${build.name}`,
-    );
-  }
-
-  const url = `${IMG_URL_PREFIX}/builds/${firstCollectible.id}.png`;
+  const url = `${IMG_URL_PREFIX}/builds/${fileNamePrefix}.png`;
   setElementBackgroundImage(id, url);
 }
 
