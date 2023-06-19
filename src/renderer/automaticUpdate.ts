@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import g from "./globals";
+import { g } from "./globals";
 
 export function init(): void {
   electron.ipcRenderer.on("autoUpdater", IPCAutoUpdater);

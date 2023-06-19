@@ -4,8 +4,8 @@ import { Race } from "./types/Race";
 import { Room } from "./types/Room";
 import { Screen } from "./types/Screen";
 
-// The object that contains all of the global variables.
-const globals = {
+/** The object that contains all of the global variables. */
+export const g = {
   autoUpdateStatus: null as string | null,
   /** The WebSocket connection (set in "websocket.ts"). */
   conn: null as Connection | null,
@@ -56,8 +56,7 @@ const globals = {
   timeLaunched: new Date().getTime(),
   wordList: [] as string[], // Filled in main.js
 };
-export default globals;
 
-// Also make the globals available to the window (so that we can access them from the JavaScript
+// We also make the globals available to the window (so that we can access them from the JavaScript
 // console for debugging purposes).
-window.g = globals;
+window.g = g;

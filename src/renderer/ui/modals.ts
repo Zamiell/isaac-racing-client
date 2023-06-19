@@ -1,14 +1,14 @@
 import * as electron from "electron";
 import log from "electron-log";
 import crypto from "node:crypto";
-import settings from "../../common/settings";
+import { settings } from "../../common/settings";
 import {
   FADE_TIME,
   PBKDF2_DIGEST,
   PBKDF2_ITERATIONS,
   PBKDF2_KEYLEN,
 } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import { Screen } from "../types/Screen";
 
 export function init(): void {

@@ -1,4 +1,4 @@
-import g from "./globals";
+import { g } from "./globals";
 import { Race } from "./types/Race";
 import { Racer } from "./types/Racer";
 import { RacerStatus } from "./types/RacerStatus";

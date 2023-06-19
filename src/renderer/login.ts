@@ -9,7 +9,7 @@ import * as electron from "electron";
 import log from "electron-log";
 import pkg from "../../package.json";
 import { FADE_TIME, IS_DEV, WEBSITE_URL } from "./constants";
-import g from "./globals";
+import { g } from "./globals";
 import { Screen } from "./types/Screen";
 import * as registerScreen from "./ui/register";
 import { errorShow, findAjaxError } from "./utils";

@@ -1,7 +1,7 @@
 import { BUILDS } from "isaac-racing-common";
 import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import * as modSocket from "../modSocket";
 import { Race } from "../types/Race";
 import { RaceFormat } from "../types/RaceFormat";

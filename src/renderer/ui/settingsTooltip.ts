@@ -1,7 +1,7 @@
 import { parseIntSafe } from "isaacscript-common-ts";
-import settings from "../../common/settings";
+import { settings } from "../../common/settings";
 import { FADE_TIME } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import * as localization from "../localization";
 import { Screen } from "../types/Screen";
 import { closeAllTooltips } from "../utils";

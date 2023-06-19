@@ -1,4 +1,4 @@
-import g from "./globals";
+import { g } from "./globals";
 import { Screen } from "./types/Screen";
 
 export function textUpdated(): void {

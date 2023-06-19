@@ -1,4 +1,4 @@
-import g from "../globals";
+import { g } from "../globals";
 import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";
 

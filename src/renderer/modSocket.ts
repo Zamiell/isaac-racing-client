@@ -2,7 +2,7 @@ import * as electron from "electron";
 import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "isaacscript-common-ts";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
-import g from "./globals";
+import { g } from "./globals";
 import { getMyStatus, getNumLeft, getNumReady } from "./race";
 import { ModSocket } from "./types/ModSocket";
 import { RaceFormat } from "./types/RaceFormat";

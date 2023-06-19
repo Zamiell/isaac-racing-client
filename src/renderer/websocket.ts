@@ -4,7 +4,7 @@ import { parseIntSafe } from "isaacscript-common-ts";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";
-import g from "./globals";
+import { g } from "./globals";
 import * as socket from "./ipc/socket";
 import * as steamWatcher from "./ipc/steamWatcher";
 import * as modSocket from "./modSocket";

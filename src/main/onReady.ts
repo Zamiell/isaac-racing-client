@@ -4,7 +4,7 @@ import { autoUpdater } from "electron-updater";
 import { HandlerDetails } from "electron/main";
 import path from "node:path";
 import { fileExists } from "../common/file";
-import settings from "../common/settings";
+import { settings } from "../common/settings";
 import { STATIC_PATH } from "./constants";
 import { isaacFocus } from "./focus";
 import { IS_DEV } from "./isDev";

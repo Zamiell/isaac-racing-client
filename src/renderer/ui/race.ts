@@ -5,7 +5,7 @@ import { iRange, parseIntSafe } from "isaacscript-common-ts";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { FADE_TIME, IMG_URL_PREFIX } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import * as modSocket from "../modSocket";
 import { getMyRacer, getNumLeft } from "../race";
 import * as sounds from "../sounds";
@@ -1315,7 +1315,7 @@ export function checkReadyValid(): void {
   }
 
   // Due to lag, we might get here before the racerList is defined, so check for that.
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   if (race.racerList === undefined) {
     return;
   }

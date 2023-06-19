@@ -7,8 +7,7 @@
 
 import Store from "electron-store";
 
-const settings = new Store();
-export default settings;
+export const settings = new Store();
 
 export function initDefaults(): void {
   if (settings.get("window") === undefined) {

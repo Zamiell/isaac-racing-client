@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { SteamMessage } from "../../common/types/SteamMessage";
-import g from "../globals";
+import { g } from "../globals";
 import { login } from "../login";
 import { errorShow } from "../utils";
 

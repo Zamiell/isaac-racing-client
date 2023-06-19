@@ -2,7 +2,7 @@ import { BUILDS } from "isaac-racing-common";
 import { parseIntSafe } from "isaacscript-common-ts";
 import crypto from "node:crypto";
 import CHARACTERS from "../../../static/data/characters.json";
-import settings from "../../common/settings";
+import { settings } from "../../common/settings";
 import {
   FADE_TIME,
   IMG_URL_PREFIX,
@@ -10,7 +10,7 @@ import {
   PBKDF2_ITERATIONS,
   PBKDF2_KEYLEN,
 } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import { Screen } from "../types/Screen";
 import {
   closeAllTooltips,

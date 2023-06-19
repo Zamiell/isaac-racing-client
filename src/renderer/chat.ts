@@ -4,7 +4,7 @@ import { parseIntSafe } from "isaacscript-common-ts";
 import linkifyHtml from "linkify-html";
 import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
-import g from "./globals";
+import { g } from "./globals";
 import { Screen } from "./types/Screen";
 import { errorShow, escapeHTML, warningShow } from "./utils";
 

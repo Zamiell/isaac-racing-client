@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import { FADE_TIME } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import { login } from "../login";
 import { Screen } from "../types/Screen";
 

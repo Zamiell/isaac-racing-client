@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import { FADE_TIME, WEBSITE_URL } from "../constants";
-import g from "../globals";
+import { g } from "../globals";
 import { RaceStatus } from "../types/RaceStatus";
 import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";

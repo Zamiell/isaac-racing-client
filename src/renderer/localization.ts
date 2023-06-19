@@ -1,5 +1,5 @@
 import log from "electron-log";
-import settings from "../common/settings";
+import { settings } from "../common/settings";
 import { languagePackES } from "./languages/es";
 import { languagePackFR } from "./languages/fr";
 

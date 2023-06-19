@@ -1,7 +1,7 @@
 import log from "electron-log";
 import path from "node:path";
-import settings from "../common/settings";
-import g from "./globals";
+import { settings } from "../common/settings";
+import { g } from "./globals";
 
 const audioElements = new Map<string, HTMLAudioElement>();
 
