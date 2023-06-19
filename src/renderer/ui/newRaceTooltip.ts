@@ -241,7 +241,7 @@ function submit(event: JQuery.SubmitEvent) {
     return false;
   }
 
-  let startingBuild: number;
+  let startingBuildIndex: number;
   if (format === "seeded") {
     const startingBuildVal = $("#new-race-starting-build").val();
     if (typeof startingBuildVal !== "string") {
@@ -254,15 +254,15 @@ function submit(event: JQuery.SubmitEvent) {
     }
 
     // The server expects this to be a number.
-    startingBuild = parseIntSafe(startingBuildVal);
+    startingBuildIndex = parseIntSafe(startingBuildVal);
 
     // If we selected "Random" for the build, we must select a random build before sending it to the
     // server.
-    if (startingBuild === RANDOM_BUILD) {
-      startingBuild = getRandomArrayIndex(BUILDS);
+    if (startingBuildIndex === RANDOM_BUILD) {
+      startingBuildIndex = getRandomArrayIndex(BUILDS);
     }
   } else {
-    startingBuild = -1;
+    startingBuildIndex = -1;
   }
 
   let difficulty = $("input[name=new-race-difficulty]:checked").val();
@@ -312,7 +312,7 @@ function submit(event: JQuery.SubmitEvent) {
   // Handle ranked solo specific settings.
   if (ranked && solo) {
     format = "seeded";
-    startingBuild = -1;
+    startingBuildIndex = -1;
     difficulty = "normal";
   }
 
@@ -330,7 +330,7 @@ function submit(event: JQuery.SubmitEvent) {
     format,
     character,
     goal,
-    startingBuild,
+    startingBuildIndex,
     difficulty,
   };
   g.currentScreen = Screen.WAITING_FOR_SERVER;
