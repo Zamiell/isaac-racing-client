@@ -22,7 +22,7 @@ export class ModSocket {
   seed = "-";
 
   /** Converted to "startingItems" later on. */
-  startingBuild = -1;
+  startingBuildIndex = -1;
 
   /** This corresponds to the graphic to draw on the screen. */
   countdown = -1;

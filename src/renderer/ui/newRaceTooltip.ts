@@ -314,7 +314,7 @@ function submit(event: JQuery.SubmitEvent) {
   // Handle ranked solo specific settings.
   if (ranked && solo) {
     format = "seeded";
-    startingBuild = 0;
+    startingBuild = -1;
     difficulty = "normal";
   }
 

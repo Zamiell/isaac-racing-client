@@ -290,7 +290,7 @@ export function show(raceID: number): void {
   g.modSocket.character = character;
   g.modSocket.goal = race.ruleset.goal;
   g.modSocket.seed = race.ruleset.seed;
-  g.modSocket.startingBuild = race.ruleset.startingBuild;
+  g.modSocket.startingBuildIndex = race.ruleset.startingBuildIndex;
   g.modSocket.countdown = -1;
   // The real values for the rest will be sent once we receive the "racerList" command from the
   // server.
@@ -568,7 +568,7 @@ export function show(raceID: number): void {
     if (race.ruleset.format === RaceFormat.SEEDED) {
       $("#race-title-table-build").fadeIn(0);
       $("#race-title-build").fadeIn(0);
-      const buildIndex = race.ruleset.startingBuild;
+      const buildIndex = race.ruleset.startingBuildIndex;
 
       const build = BUILDS[buildIndex];
       if (build === undefined) {

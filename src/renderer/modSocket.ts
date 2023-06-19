@@ -118,12 +118,12 @@ export function sendAll(): void {
     }
   }
 
-  // Seeded races store the starting items as the "startingBuild".
-  if (g.modSocket.startingBuild !== -1) {
-    const build = BUILDS[g.modSocket.startingBuild];
+  // Seeded races store the starting items as the "startingBuildIndex".
+  if (g.modSocket.startingBuildIndex !== -1) {
+    const build = BUILDS[g.modSocket.startingBuildIndex];
     if (build === undefined) {
       throw new Error(
-        `Failed to get the build for starting build number: ${g.modSocket.startingBuild}`,
+        `Failed to get the build for starting build index of: ${g.modSocket.startingBuildIndex}`,
       );
     }
 
@@ -148,7 +148,7 @@ export function sendAll(): void {
   send("set", `character ${g.modSocket.character}`);
   send("set", `goal ${g.modSocket.goal}`);
   send("set", `seed ${seed}`);
-  // "startingBuild" is converted to "startingItems".
+  // "startingBuildIndex" is converted to "startingItems".
   send("set", `startingItems ${JSON.stringify(startingItems)}`);
   send("set", `countdown ${g.modSocket.countdown}`);
   send("set", `placeMid ${g.modSocket.placeMid}`);

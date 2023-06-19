@@ -11,7 +11,7 @@ export interface Ruleset {
   character: string;
   characterRandom: boolean;
   goal: RaceGoal;
-  startingBuild: number;
+  startingBuildIndex: number;
   startingBuildRandom: boolean;
   startingItems: number[];
   seed: string;

@@ -333,12 +333,14 @@ function raceDraw2(race: Race) {
     content += `<li class="lobby-current-races-format-li"><strong><span lang="en">Goal</span>:</strong> ${goal}</li>`;
 
     if (format === RaceFormat.SEEDED) {
-      const { startingBuild } = race.ruleset;
+      const { startingBuildIndex } = race.ruleset;
       content +=
         '<li class="lobby-current-races-format-li"><strong><span lang="en">Starting Build</span>:</strong> ';
-      const build = BUILDS[startingBuild];
+      const build = BUILDS[startingBuildIndex];
       if (build === undefined) {
-        throw new Error(`Failed to find starting build: ${startingBuild}`);
+        throw new Error(
+          `Failed to find the starting build with an index of: ${startingBuildIndex}`,
+        );
       }
       for (const item of build) {
         content += `${item.name} + `;
