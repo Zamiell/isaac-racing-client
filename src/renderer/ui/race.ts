@@ -1315,7 +1315,7 @@ export function checkReadyValid(): void {
   }
 
   // Due to lag, we might get here before the racerList is defined, so check for that.
-
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (race.racerList === undefined) {
     return;
   }

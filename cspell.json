@@ -30,6 +30,7 @@
     "mod/resources/rooms/**",
     "package-lock.json",
     "pnpm-lock.yaml",
+    "word-list.txt",
     "yarn.lock"
   ],
   "words": [
