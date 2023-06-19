@@ -49,6 +49,10 @@ const config = {
     // We use old JQuery methods.
     "deprecation/deprecation": "off",
 
+    // Electron is imported by supposed to be in "devDependencies".
+    "import/no-extraneous-dependencies": "off",
+    "n/no-unpublished-import": "off",
+
     // @template-customization-end
   },
 };
