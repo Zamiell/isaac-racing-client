@@ -4,6 +4,7 @@
 
 import log from "electron-log";
 import path from "node:path";
+import sourceMapSupport from "source-map-support";
 import pkg from "../../package.json";
 import { getDirList, readFile } from "../common/file";
 import { initLogging } from "../common/initLogging";
@@ -28,6 +29,7 @@ import * as settingsTooltip from "./ui/settingsTooltip";
 
 const DATA_PATH = path.join(__dirname, "data");
 
+sourceMapSupport.install();
 initLogging();
 
 $(() => {

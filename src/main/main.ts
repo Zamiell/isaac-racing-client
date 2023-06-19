@@ -6,6 +6,7 @@ import * as remote from "@electron/remote/main";
 import * as electron from "electron";
 import electronContextMenu from "electron-context-menu";
 import log from "electron-log";
+import sourceMapSupport from "source-map-support";
 import pkg from "../../package.json";
 import { initLogging } from "../common/initLogging";
 import * as settings from "../common/settings";
@@ -19,6 +20,7 @@ let window = null as null | electron.BrowserWindow;
 main();
 
 function main() {
+  sourceMapSupport.install();
   initLogging();
   printWelcomeMessage();
   checkSecondInstance();
