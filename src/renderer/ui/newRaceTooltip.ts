@@ -258,10 +258,8 @@ function submit(event: JQuery.SubmitEvent) {
 
     // If we selected "Random" for the build, we must select a random build before sending it to the
     // server.
-    console.log("GETTING HERE, startingBuild:", startingBuild);
     if (startingBuild === RANDOM_BUILD) {
       startingBuild = getRandomArrayIndex(BUILDS);
-      console.log("GETTING HERE!, startingBuild:", startingBuild);
     }
   } else {
     startingBuild = -1;

@@ -1,7 +1,7 @@
 import log from "electron-log";
 import { BUILDS } from "isaac-racing-common";
 import { settings } from "../common/settings";
-import { FADE_TIME, IMG_URL_PREFIX } from "./constants";
+import { FADE_TIME, IMG_URL_PREFIX, RANDOM_BUILD } from "./constants";
 import { g } from "./globals";
 import { Screen } from "./types/Screen";
 
@@ -136,7 +136,7 @@ export function setElementBackgroundImage(id: string, url: string): void {
 
 export function setElementBuildIcon(id: string, buildIndex: number): void {
   let fileNamePrefix: string;
-  if (buildIndex === -1) {
+  if (buildIndex === RANDOM_BUILD) {
     fileNamePrefix = "random";
   } else {
     const build = BUILDS[buildIndex];
