@@ -1,5 +1,9 @@
 import { BUILDS } from "isaac-racing-common";
-import { getRandomArrayIndex, parseIntSafe } from "isaacscript-common-ts";
+import {
+  getRandomArrayElement,
+  getRandomArrayIndex,
+  parseIntSafe,
+} from "isaacscript-common-ts";
 import crypto from "node:crypto";
 import CHARACTERS from "../../../static/data/characters.json";
 import { settings } from "../../common/settings";
@@ -108,7 +112,7 @@ export function init(): void {
     $("#new-race-character").append(characterElement);
   }
   $("#new-race-character").append(
-    $('<option lang="en"></option>').val("random").html("Random"),
+    $('<option lang="en"></option>').val("Random").html("Random"),
   );
 
   $("#new-race-character").change(newRaceCharacterChange);
@@ -209,9 +213,16 @@ function submit(event: JQuery.SubmitEvent) {
     settings.set("newRaceFormat", format);
   }
 
-  const character = $("#new-race-character").val();
+  let character = $("#new-race-character").val();
   if (character !== settings.get("newRaceCharacter")) {
     settings.set("newRaceCharacter", character);
+  }
+
+  // If we selected "Random" for the character, we must select a random character before sending it
+  // to the server.
+  if (character === "Random") {
+    const exceptions = format === "seeded" ? ["Tainted Lazarus"] : [];
+    character = getRandomArrayElement(CHARACTERS, exceptions);
   }
 
   const goal = $("#new-race-goal").val();

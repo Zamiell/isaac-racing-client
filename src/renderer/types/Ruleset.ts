@@ -9,10 +9,8 @@ export interface Ruleset {
   format: RaceFormat;
   /** The full character name, e.g. "Judas" */
   character: string;
-  characterRandom: boolean;
   goal: RaceGoal;
   startingBuildIndex: number;
-  startingBuildRandom: boolean;
   startingItems: number[];
   seed: string;
   difficulty: RaceDifficulty;
