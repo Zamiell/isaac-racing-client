@@ -1,5 +1,5 @@
--- Racing+ enables "--luadebug", so it also provides this sandbox to prevent other mods from doing
--- evil things.
+-- Racing+ enables the `--luadebug` flag, so it also provides this sandbox to prevent other mods
+-- from doing evil things.
 
 -- Constants
 local TIMEOUT_SECONDS_LOCAL = 0.001 -- 1 millisecond
@@ -21,7 +21,7 @@ local SAFE_HOSTNAMES = {
   "beta.memento.ma",
 }
 
--- Import the socket module for our own usage before we modify the "require()" function.
+-- Import the socket module for our own usage before we modify the `require` function.
 local socket = nil
 local ok, requiredSocket = pcall(require, "socket")
 if ok then
@@ -249,9 +249,9 @@ function sandbox.connect(hostname, port, useTCP)
     end
   end
 
-  -- End-users will check for new socket data on every PostRender frame. However, the remote socket
-  -- might not necessarily have any new data for us. Thus, we set the timeout to 0 in order to
-  -- prevent lag.
+  -- End-users will check for new socket data on every `POST_RENDER` frame. However, the remote
+  -- socket might not necessarily have any new data for us. Thus, we set the timeout to 0 in order
+  -- to prevent lag.
   socketClient:settimeout(0)
 
   local isaacFrameCount = Isaac.GetFrameCount()
