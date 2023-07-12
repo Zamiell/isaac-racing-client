@@ -34,6 +34,11 @@ local originalOS = os
 local originalDofile = dofile
 local originalInclude = include
 local originalRequire = require
+local originalIpairs = ipairs
+local originalStringGsub = string.gsub
+local originalStringGmatch = string.gmatch
+local originalTableInsert = table.insert
+local originalError = error
 
 local initialized = false
 
@@ -42,7 +47,7 @@ local initialized = false
 --
 
 local function includes(array, value)
-  for _, element in ipairs(array) do
+  for _, element in originalIpairs(array) do
     if element == value then
       return true
     end
@@ -53,7 +58,7 @@ end
 
 -- From TypeScriptToLua
 local function stringTrim(str)
-  local result = string.gsub(str, "^[%s ﻿]*(.-)[%s ﻿]*$", "%1")
+  local result = originalStringGsub(str, "^[%s ﻿]*(.-)[%s ﻿]*$", "%1")
   return result
 end
 
@@ -64,8 +69,8 @@ local function stringSplit(inputStr, sep)
   end
 
   local t = {}
-  for str in string.gmatch(inputStr, "([^" .. sep .. "]+)") do
-    table.insert(t, str)
+  for str in originalStringGmatch(inputStr, "([^" .. sep .. "]+)") do
+    originalTableInsert(t, str)
   end
 
   return t
@@ -87,7 +92,7 @@ end
 
 local function safeDofile(path)
   if not validatePath(path) then
-    error("dofiling " .. path .. " is not allowed")
+    originalError("dofiling " .. path .. " is not allowed")
   end
 
   return originalDofile(path)
@@ -95,7 +100,7 @@ end
 
 local function safeInclude(path)
   if not validatePath(path) then
-    error("including " .. path .. " is not allowed")
+    originalError("including " .. path .. " is not allowed")
   end
 
   return originalInclude(path)
@@ -103,7 +108,7 @@ end
 
 local function safeRequire(path)
   if not validatePath(path) then
-    error("requiring " .. path .. " is not allowed")
+    originalError("requiring " .. path .. " is not allowed")
   end
 
   return originalRequire(path)
