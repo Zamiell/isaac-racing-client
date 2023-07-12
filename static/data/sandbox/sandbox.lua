@@ -95,7 +95,7 @@ local function safeDofile(path)
     originalError("dofiling " .. path .. " is not allowed")
   end
 
-  return originalDofile(path)
+  return originalDofile(path) ---@diagnostic disable-line: need-check-nil
 end
 
 local function safeInclude(path)
