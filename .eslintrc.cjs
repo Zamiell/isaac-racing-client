@@ -46,11 +46,16 @@ const config = {
     // This project uses null.
     "unicorn/no-null": "off",
 
-    // TEMP: new rules
-    "prefer-destructuring": "off",
+    // This project uses legacy methods for event listening.
     "unicorn/prefer-add-event-listener": "off",
+
+    // This rule throws too many false positives.
+    "prefer-destructuring": "off",
+
+    // Electron does not support ESM yet.
     "unicorn/prefer-module": "off",
-    "unicorn/prefer-string-slice": "off",
+
+    // This rule throws too many false positives.
     "unicorn/prefer-ternary": "off",
 
     // @template-customization-end

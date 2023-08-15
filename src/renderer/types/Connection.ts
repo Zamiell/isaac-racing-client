@@ -129,6 +129,7 @@ function unpack(data: string) {
     throw new Error('Failed to unpack data due to "name" being undefined.');
   }
 
+  // eslint-disable-next-line unicorn/prefer-string-slice
   return [name, data.substring(name.length + 1, data.length)];
 }
 
