@@ -29,18 +29,19 @@ const IPCHotkey = (_event: electron.IpcRendererEvent, message: string) => {
 
       break;
     }
+
     case "finish": {
       // Alt + f
       $("#race-finish-button").click();
 
       break;
     }
+
     case "quit": {
       // Alt + q
       $("#race-quit-button").click();
 
       break;
     }
-    // No default
   }
 };
