@@ -24,40 +24,30 @@ const config = {
     // Insert changed or disabled rules here, if necessary.
 
     // @template-customization-start
-    /**
-     * Documentation:
-     * https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-cycle.md
-     *
-     * Defined at:
-     * https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/imports.js
-     *
-     * This project has cyclical dependencies.
-     */
-    "import/no-cycle": "off",
-
-    /**
-     * Documentation:
-     * https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/file-extension-in-import.md
-     *
-     * Defined in "base.js".
-     *
-     * Electron does not support ESM yet.
-     */
-    "n/file-extension-in-import": "off",
 
     // We use old JQuery methods.
     "deprecation/deprecation": "off",
 
+    // This project has cyclical dependencies.
+    "import/no-cycle": "off",
+
     // Electron is supposed to be in "devDependencies".
     "import/no-extraneous-dependencies": "off",
+
+    // This project uses IsaacScript-style enum members so that it can be consistent with the mod.
+    "isaacscript/consistent-enum-values": "off",
+
+    // Electron does not support ESM yet.
+    "n/file-extension-in-import": "off",
+
+    // Electron is supposed to be in "devDependencies".
     "n/no-unpublished-import": "off",
+
+    // This project uses null.
+    "unicorn/no-null": "off",
 
     // TEMP: new rules
     "prefer-destructuring": "off",
-    "@typescript-eslint/no-empty-function": "off",
-    "isaacscript/consistent-enum-values": "off",
-    "unicorn/consistent-function-scoping": "off",
-    "unicorn/no-null": "off",
     "unicorn/prefer-add-event-listener": "off",
     "unicorn/prefer-module": "off",
     "unicorn/prefer-string-slice": "off",

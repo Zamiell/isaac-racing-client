@@ -1207,5 +1207,5 @@ function initRaceCommandHandlers(conn: Connection) {
   }
 
   conn.on("achievement", connAchievement);
-  function connAchievement(_data: unknown) {}
+  function connAchievement(_data: unknown) {} // eslint-disable-line
 }
