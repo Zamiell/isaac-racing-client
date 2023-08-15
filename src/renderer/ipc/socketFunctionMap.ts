@@ -1,9 +1,9 @@
 import log from "electron-log";
-import { parseIntSafe } from "isaacscript-common-ts";
+import { parseIntSafe } from "../../common/isaacScriptCommonTS";
 import * as chat from "../chat";
 import { g } from "../globals";
 import * as modSocket from "../modSocket";
-import { SocketCommandOut } from "../types/SocketCommand";
+import type { SocketCommandOut } from "../types/SocketCommand";
 import * as raceScreen from "../ui/race";
 import { errorShow } from "../utils";
 import { inOngoingRace } from "./socketSubroutines";

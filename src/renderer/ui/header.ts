@@ -50,8 +50,8 @@ function initLobbyLinks() {
 }
 
 function openExternalURL(url: string) {
-  electron.shell.openExternal(url).catch((err) => {
-    errorShow(`Failed to open the URL of "${url}": ${err}`);
+  electron.shell.openExternal(url).catch((error) => {
+    errorShow(`Failed to open the URL of "${url}": ${error}`);
   });
 }
 
@@ -67,7 +67,7 @@ function initLobbyHeaderButtons() {
     }
 
     // Don't allow people to spam this.
-    const now = new Date().getTime();
+    const now = Date.now();
     if (now - g.spamTimer < 1000) {
       return;
     }

@@ -1,12 +1,13 @@
-import { Connection } from "./types/Connection";
+import type { Connection } from "./types/Connection";
 import { ModSocket } from "./types/ModSocket";
-import { Race } from "./types/Race";
-import { Room } from "./types/Room";
+import type { Race } from "./types/Race";
+import type { Room } from "./types/Room";
 import { Screen } from "./types/Screen";
 
 /** The object that contains all of the global variables. */
 export const g = {
   autoUpdateStatus: null as string | null,
+
   /** The WebSocket connection (set in "websocket.ts"). */
   conn: null as Connection | null,
   currentScreen: Screen.TITLE_AJAX,
@@ -15,8 +16,10 @@ export const g = {
 
   gameState: {
     modConnected: false,
+
     /** The mod will tell us if we are in the menu or in a run. */
     inGame: false,
+
     /** The mod will tell us if the current run matches the race ruleset. */
     runMatchesRuleset: false,
   },
@@ -32,7 +35,7 @@ export const g = {
   playingSound: false,
   roomList: new Map<string, Room>(),
   raceList: new Map<number, Race>(),
-  spamTimer: new Date().getTime(),
+  spamTimer: Date.now(),
 
   // Filled in steam.js
   steam: {
@@ -53,7 +56,7 @@ export const g = {
   tabCompleteCounter: 0,
   tabCompleteIndex: 0,
   tabCompleteWordList: null as string[] | null,
-  timeLaunched: new Date().getTime(),
+  timeLaunched: Date.now(),
   wordList: [] as string[], // Filled in main.js
 };
 

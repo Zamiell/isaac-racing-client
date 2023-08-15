@@ -1,14 +1,14 @@
 export interface Greenworks {
-  getAuthSessionTicket(
+  getAuthSessionTicket: (
     successCallback: (ticket: TicketObject) => void,
     errorCallback: (err: Error) => void,
-  ): void;
-  getCloudQuota(
+  ) => void;
+  getCloudQuota: (
     successCallback: (totalBytes: number, availableBytes: number) => void,
     errorCallback: (err: Error) => void,
-  ): void;
-  getSteamId(): SteamIDObject;
-  init(): unknown;
+  ) => void;
+  getSteamId: () => SteamIDObject;
+  init: () => unknown;
 }
 
 export interface TicketObject {

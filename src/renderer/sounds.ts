@@ -26,8 +26,8 @@ export function play(soundFilename: string, lengthOfSound = -1): void {
 
   const audioElement = getAudioElement(soundFilename);
   audioElement.volume = volume;
-  audioElement.play().catch((err) => {
-    log.info(`Failed to play "${soundFilename}": ${err}`);
+  audioElement.play().catch((error) => {
+    log.info(`Failed to play "${soundFilename}": ${error}`);
   });
 }
 

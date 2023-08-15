@@ -1,11 +1,10 @@
-import { BUILDS } from "isaac-racing-common";
+import { BUILDS, CHARACTERS } from "isaac-racing-common";
+import crypto from "node:crypto";
 import {
   getRandomArrayElement,
   getRandomArrayIndex,
   parseIntSafe,
-} from "isaacscript-common-ts";
-import crypto from "node:crypto";
-import CHARACTERS from "../../../static/data/characters.json";
+} from "../../common/isaacScriptCommonTS";
 import { settings } from "../../common/settings";
 import {
   FADE_TIME,
@@ -78,7 +77,7 @@ export function init(): void {
   $("#new-race-build-randomize").click(() => {
     const oldBuildString = $("#new-race-starting-build").val();
     if (typeof oldBuildString !== "string") {
-      throw new Error(
+      throw new TypeError(
         'The value from the "new-race-starting-build" element was not a string.',
       );
     }
@@ -173,7 +172,7 @@ function submit(event: JQuery.SubmitEvent) {
 
   const titleValue = $("#new-race-title").val();
   if (typeof titleValue !== "string") {
-    throw new Error(
+    throw new TypeError(
       'The value from the "new-race-title" element was not a string.',
     );
   }
@@ -184,7 +183,7 @@ function submit(event: JQuery.SubmitEvent) {
 
   const passwordValue = $("#new-race-password").val();
   if (typeof passwordValue !== "string") {
-    throw new Error(
+    throw new TypeError(
       'The value from the "new-race-password" element was not a string.',
     );
   }
@@ -200,7 +199,7 @@ function submit(event: JQuery.SubmitEvent) {
 
   const rankedString = $("input[name=new-race-ranked]:checked").val();
   if (typeof rankedString !== "string") {
-    throw new Error(
+    throw new TypeError(
       'The value from the "new-race-ranked" element was not a string.',
     );
   }
@@ -256,7 +255,7 @@ function submit(event: JQuery.SubmitEvent) {
   if (format === "seeded") {
     const startingBuildVal = $("#new-race-starting-build").val();
     if (typeof startingBuildVal !== "string") {
-      throw new Error(
+      throw new TypeError(
         'The value from the "new-race-starting-build" element was not a string.',
       );
     }
@@ -278,7 +277,7 @@ function submit(event: JQuery.SubmitEvent) {
 
   let difficulty = $("input[name=new-race-difficulty]:checked").val();
   if (typeof difficulty !== "string") {
-    throw new Error(
+    throw new TypeError(
       'The value from the "new-race-difficulty" element was not a string.',
     );
   }
@@ -298,7 +297,7 @@ function submit(event: JQuery.SubmitEvent) {
   // Truncate names longer than 100 characters (this is also enforced server-side).
   const maximumLength = 100;
   if (title.length > maximumLength) {
-    title = title.substring(0, maximumLength);
+    title = title.slice(0, Math.max(0, maximumLength));
   }
 
   // Setup password
@@ -533,14 +532,14 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   // Change the displayed icon.
   const newBuildString = $("#new-race-starting-build").val();
   if (typeof newBuildString !== "string") {
-    throw new Error(
+    throw new TypeError(
       'The value of the "new-race-starting-build" element was not a string.',
     );
   }
 
   const newBuild = parseIntSafe(newBuildString);
   if (Number.isNaN(newBuild)) {
-    throw new Error(
+    throw new TypeError(
       `Failed to convert the build of "${newBuildString}" to a number.`,
     );
   }

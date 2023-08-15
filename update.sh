@@ -10,6 +10,13 @@ cd "$DIR"
 
 PACKAGE_JSON="$DIR/package.json"
 OLD_HASH=$(md5sum "$PACKAGE_JSON")
+if [[ -f "$DIR/yarn.lock" ]]; then
+  yarn set version latest
+fi
+# @template-customization-start
+# Old versions:
+# - electron - Stuck on v23.3.7 because the Greenworks automated build website is broken.
+# @template-customization-end
 npx npm-check-updates --upgrade --packageFile "$PACKAGE_JSON" --filterVersion "^*"
 NEW_HASH=$(md5sum "$PACKAGE_JSON")
 if [[ "$OLD_HASH" != "$NEW_HASH" ]]; then

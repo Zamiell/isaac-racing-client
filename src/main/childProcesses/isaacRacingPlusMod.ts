@@ -99,9 +99,9 @@ function checkExtraneousFiles(
   let modFiles: readonly klawSync.Item[];
   try {
     modFiles = klawSync(modPath);
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Failed to enumerate the files in the "${modPath}" directory: ${err}`,
+      `Failed to enumerate the files in the "${modPath}" directory: ${error}`,
     );
   }
 
@@ -109,7 +109,7 @@ function checkExtraneousFiles(
 
   for (const klawSyncItem of modFiles) {
     // Get the relative path by chopping off the left side. We add one to remove the trailing slash.
-    const modFile = klawSyncItem.path.substring(modPath.length + 1);
+    const modFile = klawSyncItem.path.slice(Math.max(0, modPath.length + 1));
 
     if (!klawSyncItem.stats.isFile()) {
       // Ignore directories; even extraneous directories shouldn't cause any harm.

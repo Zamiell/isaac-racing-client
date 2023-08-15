@@ -2,7 +2,7 @@ import path from "node:path";
 import * as simpleVDF from "simple-vdf";
 import { fileExists, readFile, writeFile } from "../../common/file";
 import { REBIRTH_STEAM_ID } from "../constants";
-import {
+import type {
   AppConfigVDF,
   LocalConfigVDF,
   SteamLocalConfigVDF,
@@ -39,8 +39,8 @@ export function setLaunchOption(
   let localConfigString: string;
   try {
     localConfigString = simpleVDF.stringify(localConfigVDF);
-  } catch (err) {
-    throw new Error(`Failed to stringify the Steam local config: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to stringify the Steam local config: ${error}`);
   }
 
   const localConfigPath = getLocalConfigPath(steamPath, steamActiveUserID);
@@ -60,8 +60,8 @@ function getLocalConfigVDF(steamPath: string, steamActiveUserID: number) {
   let localConfigVDF: LocalConfigVDF;
   try {
     localConfigVDF = simpleVDF.parse(localConfigString) as LocalConfigVDF;
-  } catch (err) {
-    throw new Error(`Failed to parse the "${localConfigPath}" file: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to parse the "${localConfigPath}" file: ${error}`);
   }
 
   return localConfigVDF;

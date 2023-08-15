@@ -2,7 +2,7 @@ import * as remote from "@electron/remote/main";
 import * as electron from "electron";
 import log from "electron-log";
 import { autoUpdater } from "electron-updater";
-import { HandlerDetails } from "electron/main";
+import type { HandlerDetails } from "electron/main";
 import path from "node:path";
 import { fileExists } from "../common/file";
 import { settings } from "../common/settings";
@@ -46,12 +46,7 @@ export function createWindow(): electron.BrowserWindow {
     width = windowSettings.width;
   }
 
-  let height: number;
-  if (windowSettings.height === undefined) {
-    height = DEFAULT_HEIGHT;
-  } else {
-    height = windowSettings.height;
-  }
+  const height = windowSettings.height ?? DEFAULT_HEIGHT;
 
   let x: number | undefined;
   if (windowSettings.x !== undefined) {
@@ -91,8 +86,8 @@ export function createWindow(): electron.BrowserWindow {
     window.center();
   }
 
-  window.loadFile(INDEX_HTML_PATH).catch((err) => {
-    log.error(`Failed to load the "${INDEX_HTML_PATH}" file: ${err}`);
+  window.loadFile(INDEX_HTML_PATH).catch((error) => {
+    log.error(`Failed to load the "${INDEX_HTML_PATH}" file: ${error}`);
     electron.app.quit();
   });
 
@@ -104,8 +99,8 @@ export function createWindow(): electron.BrowserWindow {
   // Make external links (i.e. with target="_blank") open in a real browser:
   // https://stackoverflow.com/questions/32402327/how-can-i-force-external-links-from-browser-window-to-open-in-a-default-browser
   window.webContents.setWindowOpenHandler((details: HandlerDetails) => {
-    electron.shell.openExternal(details.url).catch((err) => {
-      log.error(`Failed open external URL: ${err}`);
+    electron.shell.openExternal(details.url).catch((error) => {
+      log.error(`Failed open external URL: ${error}`);
     });
 
     return { action: "deny" };
@@ -215,7 +210,7 @@ export function autoUpdate(window: electron.BrowserWindow): void {
   });
 
   log.info("Checking for updates...");
-  autoUpdater.checkForUpdates().catch((err) => {
-    log.error(`Failed to check for updates: ${err}`);
+  autoUpdater.checkForUpdates().catch((error) => {
+    log.error(`Failed to check for updates: ${error}`);
   });
 }

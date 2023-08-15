@@ -56,7 +56,7 @@ function postGetActiveUser(
 
   // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
   // base 10.
-  const registrySteamID = parseInt(item.value, 16);
+  const registrySteamID = Number.parseInt(item.value, 16);
 
   if (steamID !== registrySteamID) {
     throw new Error("It appears that you have logged out of Steam.");

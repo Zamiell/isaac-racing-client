@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { SteamMessage } from "../../common/types/SteamMessage";
+import type { SteamMessage } from "../../common/types/SteamMessage";
 import { g } from "../globals";
 import { login } from "../login";
 import { errorShow } from "../utils";
@@ -51,12 +51,12 @@ function IPCSteam(
     // This is some other uncommon error.
     const match = /error: (.+)/.exec(message);
     let error: string;
-    if (match !== null) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      error = match[1]!;
-    } else {
+    if (match === null) {
       error =
         "Failed to parse an error message from the Greenworks child process.";
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      error = match[1]!;
     }
     errorShow(error);
   }

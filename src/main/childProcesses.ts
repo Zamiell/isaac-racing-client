@@ -1,6 +1,7 @@
-import * as electron from "electron";
+import type * as electron from "electron";
 import log from "electron-log";
-import { ChildProcess, fork } from "node:child_process";
+import type { ChildProcess } from "node:child_process";
+import { fork } from "node:child_process";
 import path from "node:path";
 import { fileExists, isFile } from "../common/file";
 import { IS_DEV } from "./isDev";

@@ -9,10 +9,9 @@ const config = {
     "eslint-config-isaacscript/base",
   ],
 
-  // The ".prettierrc.cjs" file is ignored by default, so we have to un-ignore it. Additionally, we
-  // don't bother linting the compiled output.
+  // Don't bother linting the compiled output.
   // @template-ignore-next-line
-  ignorePatterns: ["!.prettierrc.cjs", "**/dist/**", "*.min.js"],
+  ignorePatterns: ["**/dist/**", "*.min.js"],
 
   parserOptions: {
     // ESLint needs to know about the project's TypeScript settings in order for TypeScript-specific
@@ -49,9 +48,20 @@ const config = {
     // We use old JQuery methods.
     "deprecation/deprecation": "off",
 
-    // Electron is imported by supposed to be in "devDependencies".
+    // Electron is supposed to be in "devDependencies".
     "import/no-extraneous-dependencies": "off",
     "n/no-unpublished-import": "off",
+
+    // TEMP: new rules
+    "prefer-destructuring": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "isaacscript/consistent-enum-values": "off",
+    "unicorn/consistent-function-scoping": "off",
+    "unicorn/no-null": "off",
+    "unicorn/prefer-add-event-listener": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/prefer-string-slice": "off",
+    "unicorn/prefer-ternary": "off",
 
     // @template-customization-end
   },

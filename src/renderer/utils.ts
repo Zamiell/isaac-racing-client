@@ -13,7 +13,7 @@ export function amSecondTestAccount(): boolean {
 
 // From: https://stackoverflow.com/questions/2332811/capitalize-words-in-string
 export function capitalize(str: string): string {
-  return str.replace(/(?:^|\s)\S/g, (a) => a.toUpperCase());
+  return str.replaceAll(/(?:^|\s)\S/g, (a) => a.toUpperCase());
 }
 
 // From: https://stackoverflow.com/questions/27709489/jquery-tooltipster-plugin-hide-all-tips
@@ -80,11 +80,11 @@ export function errorShow(message: string, customModalName?: string): void {
 // From: https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
 export function escapeHTML(unsafe: string): string {
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 export function findAjaxError(jqXHR: JQuery.jqXHR): string {

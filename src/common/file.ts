@@ -4,9 +4,9 @@ import fs from "node:fs";
 export function copyFile(filePathSrc: string, filePathDst: string): void {
   try {
     fs.copyFileSync(filePathSrc, filePathDst);
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Failed to copy "${filePathSrc}" to "${filePathDst}": ${err}`,
+      `Failed to copy "${filePathSrc}" to "${filePathDst}": ${error}`,
     );
   }
 }
@@ -14,8 +14,8 @@ export function copyFile(filePathSrc: string, filePathDst: string): void {
 export function deleteFile(filePath: string): void {
   try {
     fs.unlinkSync(filePath);
-  } catch (err) {
-    throw new Error(`Failed to delete "${filePath}": ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to delete "${filePath}": ${error}`);
   }
 }
 
@@ -23,8 +23,8 @@ export function fileExists(filePath: string): boolean {
   let pathExists: boolean;
   try {
     pathExists = fs.existsSync(filePath);
-  } catch (err) {
-    throw new Error(`Failed to check to see if "${filePath}" exists: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to check to see if "${filePath}" exists: ${error}`);
   }
 
   return pathExists;
@@ -34,9 +34,9 @@ export function getDirList(dirPath: string): string[] {
   let fileList: string[];
   try {
     fileList = fs.readdirSync(dirPath);
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Failed to get the files in the "${dirPath}" directory: ${err}`,
+      `Failed to get the files in the "${dirPath}" directory: ${error}`,
     );
   }
 
@@ -47,8 +47,8 @@ function getFileStats(filePath: string): fs.Stats {
   let fileStats: fs.Stats;
   try {
     fileStats = fs.lstatSync(filePath);
-  } catch (err) {
-    throw new Error(`Failed to get the file stats for "${filePath}": ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to get the file stats for "${filePath}": ${error}`);
   }
 
   return fileStats;
@@ -61,9 +61,9 @@ export function getFileHash(filePath: string): string {
     const hashSum = crypto.createHash("sha1");
     hashSum.update(fileBuffer);
     hash = hashSum.digest("hex");
-  } catch (err) {
+  } catch (error) {
     throw new Error(
-      `Failed to create a hash for the "${filePath}" file: ${err}`,
+      `Failed to create a hash for the "${filePath}" file: ${error}`,
     );
   }
 
@@ -84,8 +84,8 @@ export function readFile(filePath: string): string {
   let fileContents: string;
   try {
     fileContents = fs.readFileSync(filePath, "utf8");
-  } catch (err) {
-    throw new Error(`Failed to read the "${filePath}" file: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to read the "${filePath}" file: ${error}`);
   }
 
   return fileContents;
@@ -94,7 +94,7 @@ export function readFile(filePath: string): string {
 export function writeFile(filePath: string, data: string): void {
   try {
     fs.writeFileSync(filePath, data);
-  } catch (err) {
-    throw new Error(`Failed to write to the "${filePath}" file: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to write to the "${filePath}" file: ${error}`);
   }
 }

@@ -27,6 +27,7 @@
     "**/*.mp3": true,
     "**/*.png": true,
     "**/*.wav": true,
+    "**/.yarn/": true,
     "**/dist/": true,
     "**/node_modules/": true,
   },
@@ -110,10 +111,6 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
   },
-  "[prisma]": {
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-  },
 
   // @template-customization-start
 
@@ -129,8 +126,9 @@
 
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
   },
-  "python.formatting.provider": "none",
 
   // @template-customization-end
 }

@@ -27,7 +27,7 @@ function init() {
 }
 
 function initTCP() {
-  const TCPServer = net.createServer(TCPConnectionListener);
+  const TCPServer = net.createServer(tcpConnectionListener);
 
   TCPServer.on("error", (err: Error) => {
     throw err;
@@ -104,7 +104,7 @@ function onProcessMessage(message: string) {
   }
 }
 
-function TCPConnectionListener(TCPSocket: net.Socket) {
+function tcpConnectionListener(TCPSocket: net.Socket) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -118,18 +118,18 @@ function TCPConnectionListener(TCPSocket: net.Socket) {
   );
   process.send("connected");
 
-  TCPSocket.on("data", TCPSocketData);
+  TCPSocket.on("data", tcpSocketData);
 
   TCPSocket.on("close", () => {
-    TCPSocketClose(TCPSocket, clientAddress);
+    tcpSocketClose(TCPSocket, clientAddress);
   });
 
   TCPSocket.on("error", (err) => {
-    TCPSocketError(err, clientAddress);
+    tcpSocketError(err, clientAddress);
   });
 }
 
-function TCPSocketData(buffer: Buffer) {
+function tcpSocketData(buffer: Buffer) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -154,7 +154,7 @@ function TCPSocketData(buffer: Buffer) {
   }
 }
 
-function TCPSocketClose(socket: net.Socket, clientAddress: string) {
+function tcpSocketClose(socket: net.Socket, clientAddress: string) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -174,7 +174,7 @@ function TCPSocketClose(socket: net.Socket, clientAddress: string) {
   }
 }
 
-function TCPSocketError(err: Error, clientAddress: string) {
+function tcpSocketError(err: Error, clientAddress: string) {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }

@@ -1,4 +1,4 @@
-import { RaceItem } from "./RaceItem";
+import type { RaceItem } from "./RaceItem";
 import { RacerStatus } from "./RacerStatus";
 
 /** Matches "RacerMessage" in "racer.go". */
@@ -21,7 +21,7 @@ export interface Racer {
 }
 
 export function getDefaultRacer(name: string): Racer {
-  const datetime = new Date().getTime();
+  const datetime = Date.now();
 
   return {
     name,

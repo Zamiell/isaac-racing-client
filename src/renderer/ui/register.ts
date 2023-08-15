@@ -16,11 +16,9 @@ export function init(): void {
     }
 
     // Validate username/password/email
-    const usernameElement = document.getElementById(
-      "register-username",
-    ) as HTMLInputElement | null;
-    if (usernameElement === null) {
-      throw new Error("Failed to get the username element.");
+    const usernameElement = document.querySelector("#register-username");
+    if (!(usernameElement instanceof HTMLInputElement)) {
+      throw new TypeError("Failed to get element: #register-username");
     }
     const username = usernameElement.value.trim();
     if (username === "") {

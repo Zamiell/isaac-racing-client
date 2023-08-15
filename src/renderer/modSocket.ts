@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import { BUILDS } from "isaac-racing-common";
-import { parseIntSafe } from "isaacscript-common-ts";
+import { parseIntSafe } from "../common/isaacScriptCommonTS";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import { g } from "./globals";
 import { getMyStatus, getNumLeft, getNumReady } from "./race";
@@ -8,7 +8,7 @@ import { ModSocket } from "./types/ModSocket";
 import { RaceFormat } from "./types/RaceFormat";
 import { RaceStatus } from "./types/RaceStatus";
 import { RacerStatus } from "./types/RacerStatus";
-import { SocketCommandIn } from "./types/SocketCommand";
+import type { SocketCommandIn } from "./types/SocketCommand";
 import { amSecondTestAccount } from "./utils";
 
 export function send(command: SocketCommandIn, data = ""): void {

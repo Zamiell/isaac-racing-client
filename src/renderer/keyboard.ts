@@ -22,14 +22,25 @@ function keyDown(event: JQuery.KeyDownEvent) {
 const IPCHotkey = (_event: electron.IpcRendererEvent, message: string) => {
   log.info("Received hotkey message:", message);
 
-  if (message === "ready") {
-    // Alt + r
-    $("#race-ready-checkbox").click();
-  } else if (message === "finish") {
-    // Alt + f
-    $("#race-finish-button").click();
-  } else if (message === "quit") {
-    // Alt + q
-    $("#race-quit-button").click();
+  switch (message) {
+    case "ready": {
+      // Alt + r
+      $("#race-ready-checkbox").click();
+
+      break;
+    }
+    case "finish": {
+      // Alt + f
+      $("#race-finish-button").click();
+
+      break;
+    }
+    case "quit": {
+      // Alt + q
+      $("#race-quit-button").click();
+
+      break;
+    }
+    // No default
   }
 };

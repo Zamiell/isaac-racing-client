@@ -21,7 +21,6 @@
 // First, initialize the error logging, because importing can cause errors. (This is why we have to
 // disable "import/first" above.)
 
-// eslint-disable-next-line import/order
 import { childError, processExit, handleErrors } from "./subroutines";
 // organize-imports-ignore
 handleErrors();
@@ -29,8 +28,8 @@ handleErrors();
 import { execSync } from "node:child_process";
 import path from "node:path";
 import ps from "ps-node";
-import Registry, { RegistryItem } from "winreg";
-import { parseIntSafe } from "isaacscript-common-ts";
+import type { RegistryItem } from "winreg";
+import Registry from "winreg";
 import { isSandboxValid } from "./isaacIsSandboxValid";
 import {
   hasLaunchOption,
@@ -39,6 +38,7 @@ import {
 } from "./isaacLaunchOptions";
 import * as isaacRacingPlusMod from "./isaacRacingPlusMod";
 import { fileExists, isDir, isFile } from "../../common/file";
+import { parseIntSafe } from "../../common/isaacScriptCommonTS";
 
 const ISAAC_PROCESS_NAME = "isaac-ng.exe";
 const STEAM_PROCESS_NAME = "steam.exe";
@@ -167,9 +167,9 @@ function postGetSteamActiveUser(
 
   // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
   // base 10.
-  steamActiveUserID = parseInt(steamActiveUserIDString, 16);
+  steamActiveUserID = Number.parseInt(steamActiveUserIDString, 16);
   if (Number.isNaN(steamActiveUserID)) {
-    throw new Error(
+    throw new TypeError(
       `Failed to parse the Steam ID from the Windows registry: ${steamActiveUserIDString}`,
     );
   }
@@ -374,8 +374,8 @@ function isProcessRunning(processName: string): [boolean, number] {
   let output: string[];
   try {
     output = execSync(command).toString().split("\r\n");
-  } catch (err) {
-    throw new Error(`Failed to execute the "${command}" command: ${err}`);
+  } catch (error) {
+    throw new Error(`Failed to execute the "${command}" command: ${error}`);
   }
 
   for (const line of output) {
@@ -396,7 +396,7 @@ function isProcessRunning(processName: string): [boolean, number] {
     const pidString = match[1]!;
     const pid = parseIntSafe(pidString);
     if (Number.isNaN(pid)) {
-      throw new Error(
+      throw new TypeError(
         `Failed to convert "${pid}" to a number from the "${command}" command.`,
       );
     }

@@ -51,7 +51,7 @@ function initPasswordModal() {
 
     const plainTextPassword = passwordInputElement.val();
     if (typeof plainTextPassword !== "string") {
-      throw new Error("Failed to get the value of the password element.");
+      throw new TypeError("Failed to get the value of the password element.");
     }
 
     if (plainTextPassword === "") {
@@ -60,14 +60,14 @@ function initPasswordModal() {
 
     const raceID = passwordInputElement.data("raceID") as number;
     if (typeof raceID !== "number") {
-      throw new Error(
+      throw new TypeError(
         "Failed to get the value of the race ID from the password element.",
       );
     }
 
     const raceTitle = passwordInputElement.data("raceTitle") as string;
     if (typeof raceTitle !== "string") {
-      throw new Error(
+      throw new TypeError(
         "Failed to get the value of the race title from the password element.",
       );
     }
@@ -135,7 +135,7 @@ function initIsaacPathModal() {
     const button1 = $("#isaac-path-find");
     const button2 = $("#isaac-path-exit");
 
-    if (/[\\/]isaac-ng.exe$/.exec(isaacPath) === null) {
+    if (/[/\\]isaac-ng.exe$/.exec(isaacPath) === null) {
       description1.html(
         '<span lang="en">You must select a file that has a name of "isaac-ng.exe".</span>',
       );

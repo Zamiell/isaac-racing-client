@@ -79,7 +79,7 @@ keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
   }
 
   // Add emotes
-  tabList = tabList.concat(g.emoteList);
+  tabList = [...tabList, ...g.emoteList];
   tabList.push(":thinking:"); // Also add some custom emotes to the tab completion list
   tabList.sort();
 
@@ -125,10 +125,8 @@ function firstTimePressingTab(tabList: string[]) {
   message = message.trim();
   g.tabCompleteWordList = message.split(" ");
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1]!;
-  for (let i = 0; i < tabList.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tabWord = tabList[i]!;
+  const messageEnd = g.tabCompleteWordList.at(-1)!;
+  for (const [i, tabWord] of tabList.entries()) {
     const temp = tabWord.slice(0, messageEnd.length).toLowerCase();
     if (temp === messageEnd.toLowerCase()) {
       g.tabCompleteIndex = i;
@@ -154,7 +152,7 @@ function tabCycle(tabList: string[]) {
   // words.
   let index = g.tabCompleteCounter + g.tabCompleteIndex;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const messageEnd = g.tabCompleteWordList[g.tabCompleteWordList.length - 1]!;
+  const messageEnd = g.tabCompleteWordList.at(-1)!;
   if (g.tabCompleteCounter >= tabList.length) {
     g.tabCompleteCounter = 0;
     $(`#${g.currentScreen}-chat-box-input`).val(messageEnd);
@@ -227,12 +225,8 @@ keyboardFunctionMap.set(38, (event: JQuery.KeyDownEvent) => {
 
   event.preventDefault();
 
-  let room: string;
-  if (g.currentScreen === Screen.LOBBY) {
-    room = "lobby";
-  } else {
-    room = `_race_${g.currentRaceID}`;
-  }
+  const room =
+    g.currentScreen === Screen.LOBBY ? "lobby" : `_race_${g.currentRaceID}`;
 
   const storedRoom = g.roomList.get(room);
   if (storedRoom === undefined) {
@@ -265,12 +259,8 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
 
   event.preventDefault();
 
-  let room: string;
-  if (g.currentScreen === Screen.LOBBY) {
-    room = "lobby";
-  } else {
-    room = `_race_${g.currentRaceID}`;
-  }
+  const room =
+    g.currentScreen === Screen.LOBBY ? "lobby" : `_race_${g.currentRaceID}`;
 
   const storedRoom = g.roomList.get(room);
   if (storedRoom === undefined) {
@@ -294,27 +284,21 @@ keyboardFunctionMap.set(40, (event: JQuery.KeyDownEvent) => {
 
 // e
 keyboardFunctionMap.set(69, (event: JQuery.KeyDownEvent) => {
-  if (event.altKey) {
-    if (g.currentScreen === Screen.LOBBY) {
-      $("#header-new-race").click();
-    }
+  if (event.altKey && g.currentScreen === Screen.LOBBY) {
+    $("#header-new-race").click();
   }
 });
 
 // s
 keyboardFunctionMap.set(83, (event: JQuery.KeyDownEvent) => {
-  if (event.altKey) {
-    if (g.currentScreen === Screen.LOBBY) {
-      $("#header-settings").click();
-    }
+  if (event.altKey && g.currentScreen === Screen.LOBBY) {
+    $("#header-settings").click();
   }
 });
 
 // l
 keyboardFunctionMap.set(76, (event: JQuery.KeyDownEvent) => {
-  if (event.altKey) {
-    if (g.currentScreen === Screen.RACE) {
-      $("#header-lobby").click();
-    }
+  if (event.altKey && g.currentScreen === Screen.RACE) {
+    $("#header-lobby").click();
   }
 });

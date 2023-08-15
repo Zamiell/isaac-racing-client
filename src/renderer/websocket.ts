@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { parseIntSafe } from "isaacscript-common-ts";
+import { parseIntSafe } from "../common/isaacScriptCommonTS";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";
@@ -10,15 +10,16 @@ import * as steamWatcher from "./ipc/steamWatcher";
 import * as modSocket from "./modSocket";
 import { getMyRacer, getNumReady } from "./race";
 import * as sounds from "./sounds";
-import { ChatMessage } from "./types/ChatMessage";
+import type { ChatMessage } from "./types/ChatMessage";
 import { Connection } from "./types/Connection";
-import { Race } from "./types/Race";
-import { RaceItem } from "./types/RaceItem";
+import type { Race } from "./types/Race";
+import type { RaceItem } from "./types/RaceItem";
 import { RaceStatus } from "./types/RaceStatus";
-import { Racer, getDefaultRacer } from "./types/Racer";
-import { RacerStatus } from "./types/RacerStatus";
+import type { Racer } from "./types/Racer";
+import { getDefaultRacer } from "./types/Racer";
+import type { RacerStatus } from "./types/RacerStatus";
 import { Screen } from "./types/Screen";
-import { User } from "./types/User";
+import type { User } from "./types/User";
 import * as lobbyScreen from "./ui/lobby";
 import * as raceScreen from "./ui/race";
 import * as registerScreen from "./ui/register";
@@ -74,23 +75,34 @@ function initMiscHandlers(conn: Connection) {
     }
 
     // Do the proper transition to the "File Checking" depending on where we logged in from.
-    if (g.currentScreen === Screen.TITLE_AJAX) {
-      g.currentScreen = Screen.TRANSITION;
-      $("#title").fadeOut(FADE_TIME, () => {
-        lobbyScreen.show();
-      });
-    } else if (g.currentScreen === Screen.REGISTER_AJAX) {
-      g.currentScreen = Screen.TRANSITION;
-      $("#register").fadeOut(FADE_TIME, () => {
-        registerScreen.reset();
-        lobbyScreen.show();
-      });
-    } else if (g.currentScreen === Screen.ERROR) {
-      // If we are showing an error screen already, then don't bother going to the lobby.
-    } else {
-      errorShow(
-        `Can't transition to the lobby from screen: ${g.currentScreen}`,
-      );
+    switch (g.currentScreen) {
+      case Screen.TITLE_AJAX: {
+        g.currentScreen = Screen.TRANSITION;
+        $("#title").fadeOut(FADE_TIME, () => {
+          lobbyScreen.show();
+        });
+
+        break;
+      }
+      case Screen.REGISTER_AJAX: {
+        g.currentScreen = Screen.TRANSITION;
+        $("#register").fadeOut(FADE_TIME, () => {
+          registerScreen.reset();
+          lobbyScreen.show();
+        });
+
+        break;
+      }
+      case Screen.ERROR: {
+        // If we are showing an error screen already, then don't bother going to the lobby.
+
+        break;
+      }
+      default: {
+        errorShow(
+          `Can't transition to the lobby from screen: ${g.currentScreen}`,
+        );
+      }
     }
   });
 
@@ -218,7 +230,7 @@ function initChatCommandHandlers(conn: Connection) {
       const raceIDString = match[1]!;
       const raceID = parseIntSafe(raceIDString);
       if (Number.isNaN(raceID)) {
-        throw new Error(`Failed to parse the race ID: ${raceIDString}`);
+        throw new TypeError(`Failed to parse the race ID: ${raceIDString}`);
       }
       if (raceID === g.currentRaceID) {
         // Update the online/offline markers.
@@ -238,12 +250,7 @@ function initChatCommandHandlers(conn: Connection) {
 
   conn.on("roomHistory", (data: RoomHistoryData) => {
     // Figure out what kind of chat room this is.
-    let destination: string;
-    if (data.room === "lobby") {
-      destination = "lobby";
-    } else {
-      destination = "race";
-    }
+    const destination = data.room === "lobby" ? "lobby" : "race";
 
     // Empty the existing chat room, since there might still be some chat in there from a previous
     // race or session.
@@ -740,64 +747,87 @@ function initRaceCommandHandlers(conn: Connection) {
       }
 
       // Do different things depending on the status.
-      if (data.status === RaceStatus.STARTING) {
-        // Update the status column in the race title.
-        $("#race-title-status").html(
-          '<span class="circle lobby-current-races-starting"></span> &nbsp; <span lang="en">Starting</span>',
-        );
+      switch (data.status) {
+        case RaceStatus.STARTING: {
+          // Update the status column in the race title.
+          $("#race-title-status").html(
+            '<span class="circle lobby-current-races-starting"></span> &nbsp; <span lang="en">Starting</span>',
+          );
 
-        // Start the countdown
-        raceScreen.startCountdown();
-      } else if (data.status === RaceStatus.IN_PROGRESS) {
-        // Do nothing; after the countdown is finished, the race controls will automatically fade
-        // in.
-      } else if (data.status === RaceStatus.FINISHED) {
-        // Update the status column in the race title.
-        $("#race-title-status").html(
-          '<span class="circle lobby-current-races-finished"></span> &nbsp; <span lang="en">Finished</span>',
-        );
+          // Start the countdown
+          raceScreen.startCountdown();
 
-        // Remove the race controls.
-        $("#race-quit-button-container").fadeOut(FADE_TIME);
-        $("#race-controls-padding").fadeOut(FADE_TIME);
-        $("#race-num-left-container").fadeOut(FADE_TIME, () => {
-          $("#race-countdown").css("font-size", "1.75em");
-          $("#race-countdown").css("bottom", "0.25em");
-          $("#race-countdown").css("color", "#e89980");
-          $("#race-countdown").html('<span lang="en">Race completed</span>!');
-          $("#race-countdown").fadeIn(FADE_TIME);
-        });
-
-        // Play the "race completed" sound effect (for multiplayer races).
-        if (!race.ruleset.solo) {
-          sounds.play("race-completed", 1300);
+          break;
         }
-      } else {
-        errorShow(
-          `Failed to parse the status of race #${data.id}: ${data.status}`,
-        );
+        case RaceStatus.IN_PROGRESS: {
+          // Do nothing; after the countdown is finished, the race controls will automatically fade
+          // in.
+
+          break;
+        }
+        case RaceStatus.FINISHED: {
+          // Update the status column in the race title.
+          $("#race-title-status").html(
+            '<span class="circle lobby-current-races-finished"></span> &nbsp; <span lang="en">Finished</span>',
+          );
+
+          // Remove the race controls.
+          $("#race-quit-button-container").fadeOut(FADE_TIME);
+          $("#race-controls-padding").fadeOut(FADE_TIME);
+          $("#race-num-left-container").fadeOut(FADE_TIME, () => {
+            $("#race-countdown").css("font-size", "1.75em");
+            $("#race-countdown").css("bottom", "0.25em");
+            $("#race-countdown").css("color", "#e89980");
+            $("#race-countdown").html('<span lang="en">Race completed</span>!');
+            $("#race-countdown").fadeIn(FADE_TIME);
+          });
+
+          // Play the "race completed" sound effect (for multiplayer races).
+          if (!race.ruleset.solo) {
+            sounds.play("race-completed", 1300);
+          }
+
+          break;
+        }
+        default: {
+          errorShow(
+            `Failed to parse the status of race #${data.id}: ${data.status}`,
+          );
+        }
       }
     }
 
     // Update the "Status" column in the lobby.
     let circleClass: RaceStatus;
-    if (data.status === RaceStatus.OPEN) {
-      circleClass = RaceStatus.OPEN;
-    } else if (data.status === RaceStatus.STARTING) {
-      circleClass = RaceStatus.STARTING;
-      $(`#lobby-current-races-${data.id}`).removeClass("lobby-race-row-open");
-      $(`#lobby-current-races-${data.id}`).unbind();
-    } else if (data.status === RaceStatus.IN_PROGRESS) {
-      circleClass = RaceStatus.IN_PROGRESS;
-    } else if (data.status === RaceStatus.FINISHED) {
-      g.raceList.delete(data.id);
-      lobbyScreen.raceUndraw(data.id);
-      return;
-    } else {
-      errorShow(
-        "Unable to parse the race status from the raceSetStatus command.",
-      );
-      return;
+    switch (data.status) {
+      case RaceStatus.OPEN: {
+        circleClass = RaceStatus.OPEN;
+
+        break;
+      }
+      case RaceStatus.STARTING: {
+        circleClass = RaceStatus.STARTING;
+        $(`#lobby-current-races-${data.id}`).removeClass("lobby-race-row-open");
+        $(`#lobby-current-races-${data.id}`).unbind();
+
+        break;
+      }
+      case RaceStatus.IN_PROGRESS: {
+        circleClass = RaceStatus.IN_PROGRESS;
+
+        break;
+      }
+      case RaceStatus.FINISHED: {
+        g.raceList.delete(data.id);
+        lobbyScreen.raceUndraw(data.id);
+        return;
+      }
+      default: {
+        errorShow(
+          "Unable to parse the race status from the raceSetStatus command.",
+        );
+        return;
+      }
     }
 
     $(`#lobby-current-races-${data.id}-status-circle`).removeClass();
@@ -810,7 +840,7 @@ function initRaceCommandHandlers(conn: Connection) {
 
     if (data.status === RaceStatus.IN_PROGRESS) {
       // Keep track of when the race starts.
-      const now = new Date().getTime();
+      const now = Date.now();
       race.datetimeStarted = now;
 
       // Start the callback for timers.
@@ -909,7 +939,7 @@ function initRaceCommandHandlers(conn: Connection) {
     }
 
     // Keep track of when the race starts.
-    const now = new Date().getTime();
+    const now = Date.now();
     const millisecondsToWait = data.secondsToWait * 1000;
     race.datetimeStarted = now + millisecondsToWait;
 

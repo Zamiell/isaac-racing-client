@@ -3,7 +3,7 @@ import * as chat from "../chat";
 import { FADE_TIME } from "../constants";
 import { g } from "../globals";
 import * as modSocket from "../modSocket";
-import { Race } from "../types/Race";
+import type { Race } from "../types/Race";
 import { RaceFormat } from "../types/RaceFormat";
 import { RaceStatus } from "../types/RaceStatus";
 import { Screen } from "../types/Screen";
@@ -16,13 +16,12 @@ export function init(): void {
     event.preventDefault();
 
     // Validate input and send the chat.
-    const element = document.getElementById(
-      "lobby-chat-box-input",
-    ) as HTMLInputElement | null;
-    if (element !== null) {
-      const message = element.value;
-      chat.send("lobby", message);
+    const element = document.querySelector("#lobby-chat-box-input");
+    if (!(element instanceof HTMLInputElement)) {
+      throw new TypeError('Failed to get element: "#lobby-chat-box-input"');
     }
+    const message = element.value;
+    chat.send("lobby", message);
   });
 }
 
@@ -139,11 +138,10 @@ export function raceDraw(race: Race): void {
     raceDiv += '<i class="fa fa-lock"></i>&nbsp;';
   }
 
-  if (race.name === "-") {
-    raceDiv += `<span lang="en">Race</span> ${race.id}`;
-  } else {
-    raceDiv += escapeHTML(race.name);
-  }
+  raceDiv +=
+    race.name === "-"
+      ? `<span lang="en">Race</span> ${race.id}`
+      : escapeHTML(race.name);
   raceDiv += "</td>";
 
   // Column 2 - Status.
@@ -210,13 +208,13 @@ export function raceDraw(race: Race): void {
 
   // Add it and fade it in.
   $("#lobby-current-races-table-body").append(raceDiv);
-  if ($("#lobby-current-races-table-no").css("display") !== "none") {
+  if ($("#lobby-current-races-table-no").css("display") === "none") {
+    raceDraw2(race);
+  } else {
     $("#lobby-current-races-table-no").fadeOut(FADE_TIME, () => {
       $("#lobby-current-races-table").fadeIn(0);
       raceDraw2(race);
     });
-  } else {
-    raceDraw2(race);
   }
 }
 
@@ -265,11 +263,9 @@ function raceDraw2(race: Race) {
       content += '<span lang="en">This is a single-player race.</span>';
     } else {
       content += '<span lang="en">Multiplayer</span><br />';
-      if (race.isPasswordProtected) {
-        content += '<span lang="en">This race is password protected.</span>';
-      } else {
-        content += '<span lang="en">Anyone can join this race.</span>';
-      }
+      content += race.isPasswordProtected
+        ? '<span lang="en">This race is password protected.</span>'
+        : '<span lang="en">Anyone can join this race.</span>';
     }
     content += "</li>";
 
@@ -378,11 +374,8 @@ export function raceUpdatePlayers(raceID: number): void {
   // Draw the new racer list.
   let racers = "";
   for (const racer of race.racers) {
-    if (racer === race.captain) {
-      racers += `<strong>${racer}</strong>, `;
-    } else {
-      racers += `${racer}, `;
-    }
+    racers +=
+      racer === race.captain ? `<strong>${racer}</strong>, ` : `${racer}, `;
   }
   racers = racers.slice(0, -2); // Chop off the trailing comma and space
   $(`#lobby-current-races-${raceID}-racers`).html(racers);
@@ -517,7 +510,7 @@ export function statusTimer(raceID: number): void {
   }
 
   // Get the elapsed time in the race and set it to the div.
-  const now = new Date().getTime();
+  const now = Date.now();
   const raceMilliseconds = now - race.datetimeStarted;
   const raceTotalSeconds = Math.round(raceMilliseconds / 1000);
   const raceMinutes = Math.floor(raceTotalSeconds / 60);

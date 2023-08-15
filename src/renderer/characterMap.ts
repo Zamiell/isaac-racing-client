@@ -1,5 +1,9 @@
-import { ReadonlyMap } from "isaacscript-common-ts";
+import { ReadonlyMap } from "../common/isaacScriptCommonTS";
 
+/**
+ * This is different from the `CHARACTERS` array from `isaac-racing-common`. This contains all
+ * characters, while the former contains only characters that can be raced.
+ */
 export const CHARACTER_MAP = new ReadonlyMap([
   ["Isaac", 0],
   ["Magdalene", 1],

@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { parseIntSafe } from "isaacscript-common-ts";
 import linkifyHtml from "linkify-html";
+import { parseIntSafe } from "../common/isaacScriptCommonTS";
 import { FADE_TIME, IS_DEV } from "./constants";
 import { debugFunction } from "./debugFunction";
 import { g } from "./globals";
@@ -84,36 +84,33 @@ export function send(destination: string, originalMessage: string): void {
     } else if (/^\/notice\b/.exec(message) !== null) {
       // Validate that there is an attached message.
       const m = /^\/\w+ (.+)/.exec(message);
-      if (m !== null) {
-        [, chatArg1] = m;
-      } else {
+      if (m === null) {
         warningShow(
           '<span lang="en">The format of a notice is</span>: <code>/notice Hey guys!</code>',
         );
         return;
       }
+      [, chatArg1] = m;
     } else if (/^\/ban\b/.exec(message) !== null) {
       // Validate that ban commands have a recipient and a reason.
       const m = /^\/ban (.+?) (.+)/.exec(message);
-      if (m !== null) {
-        [, chatArg1, chatArg2] = m; // recipient, reason
-      } else {
+      if (m === null) {
         warningShow(
           '<span lang="en">The format of a ban is</span>: <code>/ban Krak being too Polish</code>',
         );
         return;
       }
+      [, chatArg1, chatArg2] = m; // recipient, reason
     } else if (/^\/unban\b/.exec(message) !== null) {
       // Validate that unban commands have a recipient.
       const m = /^\/unban (.+)/.exec(message);
-      if (m !== null) {
-        [, chatArg1] = m;
-      } else {
+      if (m === null) {
         warningShow(
           '<span lang="en">The format of an unban is</span>: <code>/unban Krak</code>',
         );
         return;
       }
+      [, chatArg1] = m;
     } else if (/^\/r\b/.exec(message) !== null) {
       // Check if the user is replying to a message.
       isPM = true;
@@ -125,24 +122,22 @@ export function send(destination: string, originalMessage: string): void {
       }
 
       const m = /^\/r (.+)/.exec(message);
-      if (m !== null) {
-        chatArg1 = g.lastPM;
-        [, chatArg2] = m;
-      } else {
+      if (m === null) {
         warningShow("The format of a reply is: <code>/r [message]</code>");
         return;
       }
+      chatArg1 = g.lastPM;
+      [, chatArg2] = m;
     } else if (/^\/floor\b/.exec(message) !== null) {
       // Validate that unban commands have a recipient.
       const m = /^\/floor (\d+) (\d+)/.exec(message);
-      if (m !== null) {
-        [, chatArg1, chatArg2] = m; // stage, stage type
-      } else {
+      if (m === null) {
         warningShow(
           '<span lang="en">The format of a floor command is</span>: <code>/floor [stage] [stageType]</code>',
         );
         return;
       }
+      [, chatArg1, chatArg2] = m; // stage, stage type
     }
   }
 
@@ -151,7 +146,7 @@ export function send(destination: string, originalMessage: string): void {
 
   // Truncate messages longer than 150 characters (this is also enforced server-side).
   if (message.length > 150) {
-    message = message.substring(0, 150);
+    message = message.slice(0, 150);
   }
 
   // Get the room
@@ -222,74 +217,101 @@ export function send(destination: string, originalMessage: string): void {
     g.conn.send("debug", {
       name: chatArg1,
     });
-  } else if (message === "/restart") {
-    // /restart - Restart the client.
-    electron.ipcRenderer.send("asynchronous-message", "restart");
-  } else if (message === "/finish") {
-    // /finish - Debug finish.
-    if (IS_DEV) {
-      g.conn.send("raceFinish", {
-        id: g.currentRaceID,
-      });
-    }
-  } else if (message === "/ready") {
-    if (IS_DEV) {
-      g.conn.send("raceReady", {
-        id: g.currentRaceID,
-      });
-    }
-  } else if (message === "/unready") {
-    if (IS_DEV) {
-      g.conn.send("raceUnready", {
-        id: g.currentRaceID,
-      });
-    }
-  } else if (message === "/shutdown") {
-    // We want to automatically restart the server by default.
-    g.conn.send("adminShutdown", {
-      comment: "restart",
-    });
-  } else if (message === "/shutdown2") {
-    // This will not automatically restart the server.
-    g.conn.send("adminShutdown", {});
-  } else if (message === "/unshutdown") {
-    g.conn.send("adminUnshutdown", {});
-  } else if (message.startsWith("/notice ")) {
-    g.conn.send("adminMessage", {
-      message: chatArg1,
-    });
-  } else if (message.startsWith("/ban ")) {
-    g.conn.send("adminBan", {
-      name: chatArg1,
-      comment: chatArg2,
-    });
-  } else if (message.startsWith("/unban ")) {
-    g.conn.send("adminUnban", {
-      name: chatArg1,
-    });
-  } else if (message.startsWith("/floor ")) {
-    if (chatArg1 === undefined) {
-      throw new Error("Failed to parse chatArg1.");
-    }
-
-    if (chatArg2 === undefined) {
-      throw new Error("Failed to parse chatArg2.");
-    }
-
-    g.conn.send("raceFloor", {
-      id: g.currentRaceID,
-      floorNum: parseIntSafe(chatArg1),
-      stageType: parseIntSafe(chatArg2),
-    });
-  } else if (message.startsWith("/checkpoint")) {
-    g.conn.send("raceItem", {
-      id: g.currentRaceID,
-      itemID: 560,
-    });
-  } else if (message.startsWith("/rankedsoloreset")) {
-    g.conn.send("rankedSoloReset");
   } else {
-    draw(room, "_error", "That is not a valid command.");
+    switch (message) {
+      case "/restart": {
+        // /restart - Restart the client.
+        electron.ipcRenderer.send("asynchronous-message", "restart");
+
+        break;
+      }
+      case "/finish": {
+        // /finish - Debug finish.
+        if (IS_DEV) {
+          g.conn.send("raceFinish", {
+            id: g.currentRaceID,
+          });
+        }
+
+        break;
+      }
+      case "/ready": {
+        if (IS_DEV) {
+          g.conn.send("raceReady", {
+            id: g.currentRaceID,
+          });
+        }
+
+        break;
+      }
+      case "/unready": {
+        if (IS_DEV) {
+          g.conn.send("raceUnready", {
+            id: g.currentRaceID,
+          });
+        }
+
+        break;
+      }
+      case "/shutdown": {
+        // We want to automatically restart the server by default.
+        g.conn.send("adminShutdown", {
+          comment: "restart",
+        });
+
+        break;
+      }
+      case "/shutdown2": {
+        // This will not automatically restart the server.
+        g.conn.send("adminShutdown", {});
+
+        break;
+      }
+      case "/unshutdown": {
+        g.conn.send("adminUnshutdown", {});
+
+        break;
+      }
+      default: {
+        if (message.startsWith("/notice ")) {
+          g.conn.send("adminMessage", {
+            message: chatArg1,
+          });
+        } else if (message.startsWith("/ban ")) {
+          g.conn.send("adminBan", {
+            name: chatArg1,
+            comment: chatArg2,
+          });
+        } else if (message.startsWith("/unban ")) {
+          g.conn.send("adminUnban", {
+            name: chatArg1,
+          });
+        } else if (message.startsWith("/floor ")) {
+          if (chatArg1 === undefined) {
+            throw new Error("Failed to parse chatArg1.");
+          }
+
+          if (chatArg2 === undefined) {
+            throw new Error("Failed to parse chatArg2.");
+          }
+
+          g.conn.send("raceFloor", {
+            id: g.currentRaceID,
+            floorNum: parseIntSafe(chatArg1),
+            stageType: parseIntSafe(chatArg2),
+          });
+        } else if (message.startsWith("/checkpoint")) {
+          g.conn.send("raceItem", {
+            id: g.currentRaceID,
+            itemID: 560,
+          });
+        } else if (message.startsWith("/rankedsoloreset")) {
+          g.conn.send("rankedSoloReset");
+        } else {
+          draw(room, "_error", "That is not a valid command.");
+        }
+      }
+    }
   }
 }
 
@@ -378,11 +400,10 @@ export function draw(
   }
   chatLine += "</span>";
 
-  if (name === "!server") {
-    chatLine += `<span class="chat-server">${message}</span>`;
-  } else {
-    chatLine += message;
-  }
+  chatLine +=
+    name === "!server"
+      ? `<span class="chat-server">${message}</span>`
+      : message;
   chatLine += "</div>";
 
   // Find out whether this is going to "#race-chat-text" or "#lobby-chat-text".
@@ -506,13 +527,13 @@ function fillEmotes(message: string): string {
     const emoteTag =
       '<img class="chat-emote" src="img/emotes2/3.png" title="&lt;3" />';
     const re = /&lt;3/g;
-    message = message.replace(re, emoteTag); // eslint-disable-line no-param-reassign
+    message = message.replaceAll(re, emoteTag); // eslint-disable-line no-param-reassign
   }
   if (message.includes(":thinking:")) {
     const emoteTag =
       '<img class="chat-emote" src="img/emotes2/thinking.svg" title=":thinking:" />';
     const re = /:thinking:/g;
-    message = message.replace(re, emoteTag); // eslint-disable-line no-param-reassign
+    message = message.replaceAll(re, emoteTag); // eslint-disable-line no-param-reassign
   }
 
   return message;

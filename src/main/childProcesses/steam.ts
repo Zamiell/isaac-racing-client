@@ -2,9 +2,13 @@
 
 import path from "node:path";
 import { fileExists, isFile, writeFile } from "../../common/file";
-import { SteamMessage } from "../../common/types/SteamMessage";
+import type { SteamMessage } from "../../common/types/SteamMessage";
 import { REBIRTH_STEAM_ID } from "../constants";
-import { Greenworks, SteamIDObject, TicketObject } from "../types/Greenworks";
+import type {
+  Greenworks,
+  SteamIDObject,
+  TicketObject,
+} from "../types/Greenworks";
 import { childError, handleErrors, processExit } from "./subroutines";
 
 handleErrors();

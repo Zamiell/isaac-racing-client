@@ -1,9 +1,9 @@
 import log from "electron-log";
+import { ReadonlySet } from "../../common/isaacScriptCommonTS";
 
 const SEPARATOR = " ";
 
-// eslint-disable-next-line isaacscript/require-capital-const-assertions
-const SPAMMY_COMMANDS: readonly string[] = [
+const SPAMMY_COMMANDS = new ReadonlySet([
   "roomHistory",
   "roomMessage",
   "privateMessage",
@@ -14,7 +14,7 @@ const SPAMMY_COMMANDS: readonly string[] = [
   // - "racerAddItem",
   // - "racerSetStartingItem",
   // - "racerCharacter",
-];
+]);
 
 type WebSocketCallbackCommands = Record<string, (data: unknown) => void>;
 
@@ -40,8 +40,8 @@ export class Connection {
     this.ws = new WebSocket(addr);
     this.debug = debug;
 
-    this.ws.onclose = this.onClose.bind(this);
-    this.ws.onopen = this.onOpen.bind(this);
+    this.ws.addEventListener("close", this.onClose.bind(this));
+    this.ws.addEventListener("open", this.onOpen.bind(this));
     this.ws.onmessage = this.onMessage.bind(this);
     this.ws.onerror = this.onError.bind(this);
   }
@@ -60,7 +60,7 @@ export class Connection {
 
   onMessage(evt: MessageEvent): void {
     if (typeof evt.data !== "string") {
-      throw new Error("WebSocket received data that was not a string.");
+      throw new TypeError("WebSocket received data that was not a string.");
     }
 
     const [command, data] = unpack(evt.data);
@@ -74,7 +74,7 @@ export class Connection {
       return;
     }
 
-    if (!SPAMMY_COMMANDS.includes(command)) {
+    if (!SPAMMY_COMMANDS.has(command)) {
       log.info(`WebSocket received: ${evt.data}`);
     }
     const dataObject = unmarshal(data);

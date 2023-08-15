@@ -28,7 +28,7 @@ export function login(): void {
         // The client has not yet begun to check for an update, so stall. However, sometimes this
         // can be permanently null in production. (Maybe after an automatic update?) Allow them to
         // proceed after a while.
-        const now = new Date().getTime();
+        const now = Date.now();
         if (
           now - g.timeLaunched <
           SECONDS_TO_STALL_FOR_AUTOMATIC_UPDATE * 1000

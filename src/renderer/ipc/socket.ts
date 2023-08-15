@@ -24,9 +24,9 @@ function IPCSocket(_event: electron.IpcRendererEvent, rawData: string) {
   }
 
   const socketFunction = socketFunctionMap.get(command);
-  if (socketFunction !== undefined) {
-    socketFunction(data);
-  } else {
+  if (socketFunction === undefined) {
     log.error(`Received an unknown socket command: ${command}`);
+  } else {
+    socketFunction(data);
   }
 }

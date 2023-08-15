@@ -1,7 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { BUILDS, ITEMS } from "isaac-racing-common";
-import { iRange, parseIntSafe } from "isaacscript-common-ts";
+import { parseIntSafe } from "../../common/isaacScriptCommonTS";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { FADE_TIME, IMG_URL_PREFIX } from "../constants";
@@ -12,6 +12,7 @@ import * as sounds from "../sounds";
 import { RaceFormat } from "../types/RaceFormat";
 import { RaceGoal } from "../types/RaceGoal";
 import { RaceStatus } from "../types/RaceStatus";
+import type { Racer } from "../types/Racer";
 import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";
 import {
@@ -26,7 +27,7 @@ import {
   setElementBuildIcon,
 } from "../utils";
 
-const FIRST_GOLDEN_TRINKET_ID = 32769;
+const FIRST_GOLDEN_TRINKET_ID = 32_769;
 
 export function init(): void {
   $("#race-title").tooltipster({
@@ -102,7 +103,7 @@ export function init(): void {
     }
 
     // Don't allow people to spam this.
-    const now = new Date().getTime();
+    const now = Date.now();
     if (now - g.spamTimer < 1000) {
       // Undo what they did.
       if ($("#race-ready-checkbox").is(":checked")) {
@@ -157,7 +158,7 @@ export function init(): void {
     }
 
     // Don't allow people to spam this.
-    const now = new Date().getTime();
+    const now = Date.now();
     if (now - g.spamTimer < 1000) {
       return;
     }
@@ -210,7 +211,7 @@ export function init(): void {
     }
 
     // Don't allow people to spam this.
-    const now = new Date().getTime();
+    const now = Date.now();
     if (now - g.spamTimer < 1000) {
       return;
     }
@@ -230,13 +231,12 @@ export function init(): void {
     event.preventDefault();
 
     // Validate input and send the chat.
-    const element = document.getElementById(
-      "race-chat-box-input",
-    ) as HTMLInputElement | null;
-    if (element !== null) {
-      const message = element.value;
-      chat.send("race", message);
+    const element = document.querySelector("#race-chat-box-input");
+    if (!(element instanceof HTMLInputElement)) {
+      throw new TypeError('Failed to get element: "#race-chat-box-input"');
     }
+    const message = element.value;
+    chat.send("race", message);
   });
 }
 
@@ -345,7 +345,7 @@ export function show(raceID: number): void {
     }
     if (raceTitle.length > 60) {
       // Truncate the title
-      raceTitle = `${raceTitle.substring(0, 70)}...`;
+      raceTitle = `${raceTitle.slice(0, 70)}...`;
 
       // Enable the tooltip
       const content = race.name; // This does not need to be escaped because tooltipster displays HTML as plain text
@@ -592,7 +592,7 @@ export function show(raceID: number): void {
       const items = race.ruleset.seed.split(",");
 
       // Show the graphic corresponding to this item on the race title table.
-      for (const i of iRange(1, 3)) {
+      for (const i of [1, 2, 3]) {
         setElementBackgroundImage(
           `race-title-items-icon${i}`,
           `${IMG_URL_PREFIX}/items/${items[i]}.png`,
@@ -601,12 +601,7 @@ export function show(raceID: number): void {
 
       // Build the tooltip
       let buildTooltipContent = "";
-      for (let i = 0; i < items.length; i++) {
-        const itemID = items[i];
-        if (itemID === undefined) {
-          continue;
-        }
-
+      for (const [i, itemID] of items.entries()) {
         if (i === 4) {
           // Item 5 is a trinket.
           let modifiedTrinketID = parseIntSafe(itemID);
@@ -715,11 +710,10 @@ export function participantAdd(i: number): void {
     return;
   }
   let racerDiv: string;
-  if (racer.name === g.myUsername) {
-    racerDiv = `<tr id="race-participants-table-${racer.name}" class="race-participants-table-self-row">`;
-  } else {
-    racerDiv = `<tr id="race-participants-table-${racer.name}">`;
-  }
+  racerDiv =
+    racer.name === g.myUsername
+      ? `<tr id="race-participants-table-${racer.name}" class="race-participants-table-self-row">`
+      : `<tr id="race-participants-table-${racer.name}">`;
 
   // The racer's place
   racerDiv += `<td id="race-participants-table-${racer.name}-place" class="hidden">`;
@@ -808,22 +802,7 @@ export function participantsSetStatus(i: number, initial = false): void {
   }
 
   // Update the status column of the row.
-  let statusDiv = "";
-  if (racer.status === RacerStatus.READY) {
-    statusDiv +=
-      '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-  } else if (racer.status === RacerStatus.NOT_READY) {
-    statusDiv +=
-      '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
-  } else if (racer.status === RacerStatus.RACING) {
-    statusDiv +=
-      '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
-  } else if (racer.status === RacerStatus.QUIT) {
-    statusDiv += '<i class="mdi mdi-skull"></i> &nbsp; ';
-  } else if (racer.status === RacerStatus.FINISHED) {
-    statusDiv +=
-      '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
-  }
+  let statusDiv = getRacerStatusDiv(racer);
   statusDiv += `<span lang="en">${capitalize(racer.status)}</span>`;
   $(`#race-participants-table-${racer.name}-status`).html(statusDiv);
 
@@ -840,13 +819,12 @@ export function participantsSetStatus(i: number, initial = false): void {
   const numLeft = getNumLeft(race);
   $("#race-num-left").html(`${numLeft} left`);
   if (
-    racer.status === RacerStatus.FINISHED ||
-    racer.status === RacerStatus.QUIT ||
-    racer.status === RacerStatus.DISQUALIFIED
+    (racer.status === RacerStatus.FINISHED ||
+      racer.status === RacerStatus.QUIT ||
+      racer.status === RacerStatus.DISQUALIFIED) &&
+    !initial
   ) {
-    if (!initial) {
-      log.info("There are", numLeft, "people left in race:", g.currentRaceID);
-    }
+    log.info("There are", numLeft, "people left in race:", g.currentRaceID);
   }
 
   // If someone finished, set their time to their actual final time as reported by the server
@@ -909,6 +887,34 @@ export function participantsSetStatus(i: number, initial = false): void {
   }
 }
 
+function getRacerStatusDiv(racer: Racer) {
+  switch (racer.status) {
+    case RacerStatus.READY: {
+      return '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
+    }
+
+    case RacerStatus.NOT_READY: {
+      return '<i class="fa fa-times" aria-hidden="true" style="color: red;"></i> &nbsp; ';
+    }
+
+    case RacerStatus.RACING: {
+      return '<i class="mdi mdi-chevron-double-right" style="color: orange;"></i> &nbsp; ';
+    }
+
+    case RacerStatus.QUIT: {
+      return '<i class="mdi mdi-skull"></i> &nbsp; ';
+    }
+
+    case RacerStatus.FINISHED: {
+      return '<i class="fa fa-check" aria-hidden="true" style="color: green;"></i> &nbsp; ';
+    }
+
+    case RacerStatus.DISQUALIFIED: {
+      return '<i class="mdi mdi-skull"></i> &nbsp; ';
+    }
+  }
+}
+
 export function participantsSetFloor(i: number): void {
   const race = g.raceList.get(g.currentRaceID);
   if (race === undefined) {
@@ -924,43 +930,90 @@ export function participantsSetFloor(i: number): void {
   // Update the floor column of the row.
   const altFloor = stageType === 4 || stageType === 5;
   let floorDiv: string;
-  if (floorNum === 0) {
-    floorDiv = "-";
-  } else if (floorNum === 1) {
-    floorDiv = altFloor ? "Do1" : "B1";
-  } else if (floorNum === 2) {
-    floorDiv = altFloor ? "Do2" : "B2";
-  } else if (floorNum === 3) {
-    floorDiv = altFloor ? "Mi1" : "C1";
-  } else if (floorNum === 4) {
-    floorDiv = altFloor ? "Mi2" : "C2";
-  } else if (floorNum === 5) {
-    floorDiv = altFloor ? "Ma1" : "D1";
-  } else if (floorNum === 6) {
-    floorDiv = altFloor ? "Ma2" : "D2";
-  } else if (floorNum === 7) {
-    floorDiv = altFloor ? "Co1" : "W1";
-  } else if (floorNum === 8) {
-    floorDiv = altFloor ? "Co2" : "W2";
-  } else if (floorNum === 9) {
-    floorDiv = "BW";
-  } else if (floorNum === 10 && stageType === 0) {
-    floorDiv = "Sheol"; // 10-0 is Sheol
-  } else if (floorNum === 10 && stageType === 1) {
-    floorDiv = "Cath"; // 10-1 is Cathedral
-  } else if (floorNum === 11 && stageType === 0) {
-    floorDiv = "DR"; // 11-0 is Dark Room
-  } else if (floorNum === 11 && stageType === 1) {
-    floorDiv = "Chest";
-  } else if (floorNum === 12) {
-    floorDiv = "Void";
-  } else if (floorNum === 13) {
-    floorDiv = "Home";
-  } else if (floorNum === 14) {
-    floorDiv = "MS"; // For Mega Satan
-  } else {
-    errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
-    return;
+  switch (floorNum) {
+    case 0: {
+      floorDiv = "-";
+
+      break;
+    }
+    case 1: {
+      floorDiv = altFloor ? "Do1" : "B1";
+
+      break;
+    }
+    case 2: {
+      floorDiv = altFloor ? "Do2" : "B2";
+
+      break;
+    }
+    case 3: {
+      floorDiv = altFloor ? "Mi1" : "C1";
+
+      break;
+    }
+    case 4: {
+      floorDiv = altFloor ? "Mi2" : "C2";
+
+      break;
+    }
+    case 5: {
+      floorDiv = altFloor ? "Ma1" : "D1";
+
+      break;
+    }
+    case 6: {
+      floorDiv = altFloor ? "Ma2" : "D2";
+
+      break;
+    }
+    case 7: {
+      floorDiv = altFloor ? "Co1" : "W1";
+
+      break;
+    }
+    case 8: {
+      floorDiv = altFloor ? "Co2" : "W2";
+
+      break;
+    }
+    case 9: {
+      floorDiv = "BW";
+
+      break;
+    }
+    default: {
+      if (floorNum === 10 && stageType === 0) {
+        floorDiv = "Sheol"; // 10-0 is Sheol
+      } else if (floorNum === 10 && stageType === 1) {
+        floorDiv = "Cath"; // 10-1 is Cathedral
+      } else if (floorNum === 11 && stageType === 0) {
+        floorDiv = "DR"; // 11-0 is Dark Room
+      } else if (floorNum === 11 && stageType === 1) {
+        floorDiv = "Chest";
+      } else {
+        switch (floorNum) {
+          case 12: {
+            floorDiv = "Void";
+
+            break;
+          }
+          case 13: {
+            floorDiv = "Home";
+
+            break;
+          }
+          case 14: {
+            floorDiv = "MS"; // For Mega Satan
+
+            break;
+          }
+          default: {
+            errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
+            return;
+          }
+        }
+      }
+    }
   }
 
   $(`#race-participants-table-${name}-floor`).html(floorDiv);
@@ -1273,7 +1326,7 @@ function raceTimerTick() {
   }
 
   // Get the elapsed time in the race.
-  const now = new Date().getTime();
+  const now = Date.now();
   const raceMilliseconds = now - race.datetimeStarted;
   const raceTotalSeconds = Math.floor(raceMilliseconds / 1000);
   const raceMinutes = Math.floor(raceTotalSeconds / 60);

@@ -1,4 +1,4 @@
-import { parseIntSafe } from "isaacscript-common-ts";
+import { parseIntSafe } from "../../common/isaacScriptCommonTS";
 import { settings } from "../../common/settings";
 import { FADE_TIME } from "../constants";
 import { g } from "../globals";
@@ -15,18 +15,18 @@ export function init(): void {
     const volumeElement = $("#settings-volume-slider");
     const volumeElementValueString = volumeElement.val();
     if (typeof volumeElementValueString !== "string") {
-      throw new Error("Failed to get the value of the volume element.");
+      throw new TypeError("Failed to get the value of the volume element.");
     }
     const volumeElementValue = parseIntSafe(volumeElementValueString);
     if (Number.isNaN(volumeElementValue)) {
-      throw new Error("Failed to parse the value of the volume element.");
+      throw new TypeError("Failed to parse the value of the volume element.");
     }
 
     // Play the "Go" sound effect (but only the voice because it sounds better in this context).
     const audio = new Audio("sounds/go-voice.mp3");
     audio.volume = volumeElementValue / 100;
-    audio.play().catch((err) => {
-      throw new Error(`Failed to play the sound effect: ${err}`);
+    audio.play().catch((error) => {
+      throw new Error(`Failed to play the sound effect: ${error}`);
     });
   });
 
@@ -36,7 +36,9 @@ export function init(): void {
     const newStreamURLElement = $("#settings-stream-url");
     const newStreamURL = newStreamURLElement.val();
     if (typeof newStreamURL !== "string") {
-      throw new Error("Failed to get the value of the new stream URL element.");
+      throw new TypeError(
+        "Failed to get the value of the new stream URL element.",
+      );
     }
 
     if (
@@ -85,7 +87,7 @@ export function init(): void {
   $("#settings-enable-twitch-bot-checkbox-container").on("mouseover", () => {
     const streamURL = $("#settings-stream-url").val();
     if (typeof streamURL !== "string") {
-      throw new Error("Failed to get the value of the stream URL.");
+      throw new TypeError("Failed to get the value of the stream URL.");
     }
 
     // Check if the tooltip is open.
@@ -129,25 +131,25 @@ function submit(event: JQuery.SubmitEvent) {
   // Language
   const language = $("#settings-language").val();
   if (typeof language !== "string") {
-    throw new Error("Failed to get the value of the language element.");
+    throw new TypeError("Failed to get the value of the language element.");
   }
   localization.localize(language);
 
   // Volume
   const volumeString = $("#settings-volume-slider").val();
   if (typeof volumeString !== "string") {
-    throw new Error("Failed to get the value of the volume element.");
+    throw new TypeError("Failed to get the value of the volume element.");
   }
   const volume = parseIntSafe(volumeString);
   if (Number.isNaN(volume)) {
-    throw new Error("Failed to parse the value of the volume element.");
+    throw new TypeError("Failed to parse the value of the volume element.");
   }
   settings.set("volume", volume / 100);
 
   // Stream URL
   let newStreamURL = $("#settings-stream-url").val();
   if (typeof newStreamURL !== "string") {
-    throw new Error("Failed to get the value of the stream URL element.");
+    throw new TypeError("Failed to get the value of the stream URL element.");
   }
   if (newStreamURL.startsWith("http://")) {
     // Add HTTPS.
@@ -190,7 +192,9 @@ function submit(event: JQuery.SubmitEvent) {
   // Twitch bot delay
   const twitchBotDelayString = $("#settings-twitch-bot-delay").val();
   if (typeof twitchBotDelayString !== "string") {
-    throw new Error("Failed to get the value of the Twitch bot delay element.");
+    throw new TypeError(
+      "Failed to get the value of the Twitch bot delay element.",
+    );
   }
   if (!/^\d+$/.test(twitchBotDelayString)) {
     // We tried to enter a non-number Twitch bot delay.
@@ -215,11 +219,7 @@ function submit(event: JQuery.SubmitEvent) {
     g.stream.URLBeforeSubmit = g.stream.URL;
 
     // Update the global copies of these settings.
-    if (newStreamURL === "-") {
-      g.stream.URL = "";
-    } else {
-      g.stream.URL = newStreamURL;
-    }
+    g.stream.URL = newStreamURL === "-" ? "" : newStreamURL;
     g.stream.twitchBotEnabled = newTwitchBotEnabled;
     g.stream.twitchBotDelay = newTwitchBotDelay;
 
@@ -332,7 +332,7 @@ export function tooltipFunctionReady(): void {
       triggerClose: {
         mouseleave: true,
       },
-      zIndex: 10000000 /* The default is 9999999, so it just has to be bigger than that so that it appears on top of the settings tooltip */,
+      zIndex: 10_000_000 /* The default is 9999999, so it just has to be bigger than that so that it appears on top of the settings tooltip */,
       interactive: true,
     });
   }

@@ -1,6 +1,6 @@
 import { g } from "./globals";
-import { Race } from "./types/Race";
-import { Racer } from "./types/Racer";
+import type { Race } from "./types/Race";
+import type { Racer } from "./types/Racer";
 import { RacerStatus } from "./types/RacerStatus";
 
 export function getMyRacer(race: Race): Racer | null {

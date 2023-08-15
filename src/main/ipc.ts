@@ -1,4 +1,4 @@
-import * as electron from "electron";
+import type * as electron from "electron";
 import log from "electron-log";
 import { ipcFunctionMap } from "./ipcFunctionMap";
 
@@ -20,9 +20,9 @@ export function onMessage(
   }
 
   const ipcFunction = ipcFunctionMap.get(arg1);
-  if (ipcFunction !== undefined) {
-    ipcFunction(window, arg2);
-  } else {
+  if (ipcFunction === undefined) {
     log.error(`Unknown message type: ${arg1}`);
+  } else {
+    ipcFunction(window, arg2);
   }
 }

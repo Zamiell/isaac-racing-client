@@ -1,6 +1,6 @@
-import { Racer } from "./Racer";
-import { RaceStatus } from "./RaceStatus";
-import { Ruleset } from "./Ruleset";
+import type { Racer } from "./Racer";
+import type { RaceStatus } from "./RaceStatus";
+import type { Ruleset } from "./Ruleset";
 
 /** Matches "RaceCreatedMessage" in "websocketDataTypes.go". */
 export interface Race {
