@@ -43,8 +43,8 @@ socketFunctionMap.set("finish", (data: string) => {
     return;
   }
 
-  const time = parseIntSafe(data); // The server expects this to be an integer
-  if (Number.isNaN(time)) {
+  const time = parseIntSafe(data); // The server expects this to be an integer.
+  if (time === undefined) {
     errorShow(`Failed to parse the time: ${data}`);
     return;
   }
@@ -63,7 +63,7 @@ socketFunctionMap.set("item", (data: string) => {
   }
 
   const itemID = parseIntSafe(data); // The server expects this to be an integer
-  if (Number.isNaN(itemID)) {
+  if (itemID === undefined) {
     errorShow(`Failed to parse the item: ${data}`);
     return;
   }
@@ -93,7 +93,7 @@ socketFunctionMap.set("level", (data: string) => {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const floorNum = parseIntSafe(match[1]!); // The server expects this to be an integer.
-  if (Number.isNaN(floorNum)) {
+  if (floorNum === undefined) {
     errorShow(
       `Failed to parse the floor number of "${match[1]}" from "${data}".`,
     );
@@ -102,7 +102,7 @@ socketFunctionMap.set("level", (data: string) => {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const stageType = parseIntSafe(match[2]!); // The server expects this to be an integer.
-  if (Number.isNaN(stageType)) {
+  if (stageType === undefined) {
     errorShow(
       `Failed to parse the stage type of "${match[2]}" from "${data}".`,
     );

@@ -605,6 +605,12 @@ export function show(raceID: number): void {
         if (i === 4) {
           // Item 5 is a trinket.
           let modifiedTrinketID = parseIntSafe(itemID);
+          if (modifiedTrinketID === undefined) {
+            throw new Error(
+              `Failed to parse the trinket ID: ${modifiedTrinketID}`,
+            );
+          }
+
           if (modifiedTrinketID < FIRST_GOLDEN_TRINKET_ID) {
             // Trinkets are represented in the "items.json" file as items with IDs past 2000 (but
             // golden trinkets retain their vanilla ID).

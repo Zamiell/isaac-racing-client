@@ -167,8 +167,8 @@ function postGetSteamActiveUser(
 
   // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
   // base 10.
-  steamActiveUserID = Number.parseInt(steamActiveUserIDString, 16);
-  if (Number.isNaN(steamActiveUserID)) {
+  steamActiveUserID = parseIntSafe(steamActiveUserIDString, 16) ?? -1;
+  if (steamActiveUserID < 0) {
     throw new TypeError(
       `Failed to parse the Steam ID from the Windows registry: ${steamActiveUserIDString}`,
     );
@@ -395,8 +395,8 @@ function isProcessRunning(processName: string): [boolean, number] {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const pidString = match[1]!;
     const pid = parseIntSafe(pidString);
-    if (Number.isNaN(pid)) {
-      throw new TypeError(
+    if (pid === undefined) {
+      throw new Error(
         `Failed to convert "${pid}" to a number from the "${command}" command.`,
       );
     }

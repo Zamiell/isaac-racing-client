@@ -229,7 +229,7 @@ function initChatCommandHandlers(conn: Connection) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const raceIDString = match[1]!;
       const raceID = parseIntSafe(raceIDString);
-      if (Number.isNaN(raceID)) {
+      if (raceID === undefined) {
         throw new TypeError(`Failed to parse the race ID: ${raceIDString}`);
       }
       if (raceID === g.currentRaceID) {

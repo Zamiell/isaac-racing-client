@@ -264,7 +264,12 @@ function submit(event: JQuery.SubmitEvent) {
     }
 
     // The server expects this to be a number.
-    startingBuildIndex = parseIntSafe(startingBuildVal);
+    startingBuildIndex = parseIntSafe(startingBuildVal) ?? -1;
+    if (startingBuildIndex === -1) {
+      throw new Error(
+        `Failed to parse the starting build value of: ${startingBuildVal}`,
+      );
+    }
 
     // If we selected "Random" for the build, we must select a random build before sending it to the
     // server.
@@ -538,7 +543,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   }
 
   const newBuild = parseIntSafe(newBuildString);
-  if (Number.isNaN(newBuild)) {
+  if (newBuild === undefined) {
     throw new TypeError(
       `Failed to convert the build of "${newBuildString}" to a number.`,
     );

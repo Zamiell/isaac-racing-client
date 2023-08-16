@@ -112,9 +112,10 @@ export function sendAll(): void {
     const items = g.modSocket.seed.split(",");
     for (const itemString of items) {
       const itemID = parseIntSafe(itemString);
-      if (!Number.isNaN(itemID)) {
-        startingItems.push(itemID);
+      if (itemID === undefined) {
+        throw new Error(`Failed to parse the diversity item: ${itemString}`);
       }
+      startingItems.push(itemID);
     }
   }
 

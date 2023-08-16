@@ -18,7 +18,7 @@ export function init(): void {
       throw new TypeError("Failed to get the value of the volume element.");
     }
     const volumeElementValue = parseIntSafe(volumeElementValueString);
-    if (Number.isNaN(volumeElementValue)) {
+    if (volumeElementValue === undefined) {
       throw new TypeError("Failed to parse the value of the volume element.");
     }
 
@@ -141,7 +141,7 @@ function submit(event: JQuery.SubmitEvent) {
     throw new TypeError("Failed to get the value of the volume element.");
   }
   const volume = parseIntSafe(volumeString);
-  if (Number.isNaN(volume)) {
+  if (volume === undefined) {
     throw new TypeError("Failed to parse the value of the volume element.");
   }
   settings.set("volume", volume / 100);
@@ -201,7 +201,14 @@ function submit(event: JQuery.SubmitEvent) {
     $("#settings-twitch-bot-delay").tooltipster("open");
     return false;
   }
+
   const newTwitchBotDelay = parseIntSafe(twitchBotDelayString);
+  if (newTwitchBotDelay === undefined) {
+    throw new Error(
+      `Failed to parse the new twitch bot delay: ${twitchBotDelayString}`,
+    );
+  }
+
   if (newTwitchBotDelay < 0 || newTwitchBotDelay > 60) {
     // We tried to enter a delay out of the valid range.
     $("#settings-twitch-bot-delay").tooltipster("open");

@@ -22,6 +22,8 @@ interface ReadonlySetConstructor {
 /** An alias for the `Set` constructor that returns a read-only set. */
 export const ReadonlySet = Set as ReadonlySetConstructor;
 
+const INTEGER_REGEX = /^-?\d+$/;
+
 /**
  * Shallow copies and removes the specified element(s) from the array. Returns the copied array. If
  * the specified element(s) are not found in the array, it will simply return a shallow copy of the
@@ -136,32 +138,30 @@ function getRandomInt(
 }
 
 /**
- * This is a more reliable version of `Number.parseInt`. By default, `Number.parseInt('1a')` will
- * return "1", which is unexpected. This returns either an integer or `Number.NaN`.
+ * This is a more reliable version of `Number.parseInt`:
+ *
+ * - `undefined` is returned instead of `Number.NaN`, which is helpful in conjunction with
+ *   TypeScript type narrowing patterns.
+ * - Strings that are a mixture of numbers and letters will result in undefined instead of the part
+ *   of the string that is the number. (e.g. "1a" --> undefined instead of "1a" --> 1)
+ * - Non-strings will result in undefined instead of being coerced to a number.
+ *
+ * @param string A string to convert to an integer.
+ * @param radix Optional. A value between 2 and 36 that specifies the base of the number in
+ *              `string`. Default is 10 (which corresponds to a normal decimal number).
  */
-export function parseIntSafe(input: string): number {
-  if (typeof input !== "string") {
-    return Number.NaN;
+export function parseIntSafe(string: string, radix = 10): number | undefined {
+  if (typeof string !== "string") {
+    return undefined;
   }
 
-  // Remove all leading and trailing whitespace.
-  let trimmedInput = input.trim();
+  const trimmedString = string.trim();
 
-  const isNegativeNumber = trimmedInput.startsWith("-");
-  if (isNegativeNumber) {
-    // Remove the leading minus sign before we match the regular expression.
-    trimmedInput = trimmedInput.slice(1);
+  // If the string does not entirely consist of numbers, return undefined.
+  if (INTEGER_REGEX.exec(trimmedString) === null) {
+    return undefined;
   }
 
-  if (/^\d+$/.exec(trimmedInput) === null) {
-    // "\d" matches any digit (same as "[0-9]").
-    return Number.NaN;
-  }
-
-  if (isNegativeNumber) {
-    // Add the leading minus sign back.
-    trimmedInput = `-${trimmedInput}`;
-  }
-
-  return Number.parseInt(trimmedInput, 10);
+  const number = Number.parseInt(trimmedString, radix);
+  return Number.isNaN(number) ? undefined : number;
 }
