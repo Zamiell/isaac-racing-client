@@ -166,9 +166,9 @@ function postGetSteamActiveUser(
   }
 
   // The active user is stored in the registry as a hexadecimal value, so we have to convert it to
-  // base 10.
-  steamActiveUserID = parseIntSafe(steamActiveUserIDString, 16) ?? -1;
-  if (steamActiveUserID < 0) {
+  // base 10. (We can't use `parseIntSafe` because we need to use a radix of 16.)
+  steamActiveUserID = Number.parseInt(steamActiveUserIDString, 16);
+  if (Number.isNaN(steamActiveUserID) || steamActiveUserID < 0) {
     throw new TypeError(
       `Failed to parse the Steam ID from the Windows registry: ${steamActiveUserIDString}`,
     );
