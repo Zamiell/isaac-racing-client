@@ -16,7 +16,7 @@ This is the client software for Racing+, a Binding of Isaac: Repentance racing p
 
 The client is written with [Electron](http://electron.atom.io/) and uses WebSockets to communicate with the server. The pretty elements are courtesy of [HTML5 UP](https://html5up.net/).
 
-You may also be interested in [the Lua mod](https://github.com/Zamiell/isaac-racing-client/tree/master/mod) or [the server repository](https://github.com/Zamiell/isaac-racing-server).
+You may also be interested in [the Lua mod](https://github.com/Zamiell/racing-plus) or [the Golang server](https://github.com/Zamiell/isaac-racing-server).
 
 <br />
 
