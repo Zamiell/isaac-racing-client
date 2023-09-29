@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
 import * as remote from "@electron/remote";
+import isaacRacingCommon from "isaac-racing-common";
+
+export const { BUILDS, ITEMS, CHARACTERS } = isaacRacingCommon;
 
 export const IS_DEV = !remote.app.isPackaged;
 

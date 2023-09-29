@@ -5465,7 +5465,7 @@ __metadata:
     electron-log: ^4.4.8
     electron-store: ^8.1.0
     electron-updater: ^6.1.4
-    isaac-racing-common: ^1.0.12
+    isaac-racing-common: ^1.0.13
     isaacscript: ^3.11.1
     isaacscript-lint: ^5.11.0
     isaacscript-spell: ^1.4.0
@@ -5485,10 +5485,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"isaac-racing-common@npm:^1.0.12":
-  version: 1.0.12
-  resolution: "isaac-racing-common@npm:1.0.12"
-  checksum: b3049f5dc484ae7eaf22cd2381e7919d71fe8ecff6f2e961384cd4ef43b37b601ff56637163392a14162f41404233d330a9f32ef169776448994581753cafd89
+"isaac-racing-common@npm:^1.0.13":
+  version: 1.0.13
+  resolution: "isaac-racing-common@npm:1.0.13"
+  checksum: 1a4e7f566eba4840cb7366cac5fd0005f1cc536f291156c15ae7117dfd5e3864d67b1b4e1ab33e7cdfa57c3c3b6cdc39070e470460b82b2ac2a56aeac4b81771
   languageName: node
   linkType: hard
 

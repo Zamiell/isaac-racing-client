@@ -1,4 +1,3 @@
-import { BUILDS, CHARACTERS } from "isaac-racing-common";
 import crypto from "node:crypto";
 import {
   getRandomArrayElement,
@@ -7,6 +6,8 @@ import {
 } from "../../common/isaacScriptCommonTS";
 import { settings } from "../../common/settings";
 import {
+  BUILDS,
+  CHARACTERS,
   FADE_TIME,
   IMG_URL_PREFIX,
   PBKDF2_DIGEST,

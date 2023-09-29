@@ -19,6 +19,9 @@
     // By default, this is false.
     "resolveJsonModule": true,
 
+    // Needed for "isaac-racing-common".
+    "allowSyntheticDefaultImports": true,
+
     // @template-customization-end
   },
 

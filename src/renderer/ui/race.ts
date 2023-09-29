@@ -1,10 +1,9 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { BUILDS, ITEMS } from "isaac-racing-common";
 import { parseIntSafe } from "../../common/isaacScriptCommonTS";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
-import { FADE_TIME, IMG_URL_PREFIX } from "../constants";
+import { BUILDS, FADE_TIME, IMG_URL_PREFIX, ITEMS } from "../constants";
 import { g } from "../globals";
 import * as modSocket from "../modSocket";
 import { getMyRacer, getNumLeft } from "../race";
@@ -619,6 +618,7 @@ export function show(raceID: number): void {
 
           const key = modifiedTrinketID.toString() as keyof typeof ITEMS;
           const itemEntry = ITEMS[key];
+
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (itemEntry === undefined) {
             errorShow(
@@ -632,6 +632,7 @@ export function show(raceID: number): void {
           // Items 1 through 4 are passive and active items.
           const key = itemID as keyof typeof ITEMS;
           const itemEntry = ITEMS[key];
+
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (itemEntry === undefined) {
             errorShow(`Collectible ${itemID} was not found in the items list.`);
