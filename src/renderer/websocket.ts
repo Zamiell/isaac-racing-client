@@ -84,6 +84,7 @@ function initMiscHandlers(conn: Connection) {
 
         break;
       }
+
       case Screen.REGISTER_AJAX: {
         g.currentScreen = Screen.TRANSITION;
         $("#register").fadeOut(FADE_TIME, () => {
@@ -93,15 +94,18 @@ function initMiscHandlers(conn: Connection) {
 
         break;
       }
+
       case Screen.ERROR: {
         // If we are showing an error screen already, then don't bother going to the lobby.
 
         break;
       }
+
       default: {
         errorShow(
           `Can't transition to the lobby from screen: ${g.currentScreen}`,
         );
+        break;
       }
     }
   });
@@ -759,12 +763,14 @@ function initRaceCommandHandlers(conn: Connection) {
 
           break;
         }
+
         case RaceStatus.IN_PROGRESS: {
           // Do nothing; after the countdown is finished, the race controls will automatically fade
           // in.
 
           break;
         }
+
         case RaceStatus.FINISHED: {
           // Update the status column in the race title.
           $("#race-title-status").html(
@@ -789,10 +795,12 @@ function initRaceCommandHandlers(conn: Connection) {
 
           break;
         }
+
         default: {
           errorShow(
             `Failed to parse the status of race #${data.id}: ${data.status}`,
           );
+          break;
         }
       }
     }
@@ -805,6 +813,7 @@ function initRaceCommandHandlers(conn: Connection) {
 
         break;
       }
+
       case RaceStatus.STARTING: {
         circleClass = RaceStatus.STARTING;
         $(`#lobby-current-races-${data.id}`).removeClass("lobby-race-row-open");
@@ -812,16 +821,19 @@ function initRaceCommandHandlers(conn: Connection) {
 
         break;
       }
+
       case RaceStatus.IN_PROGRESS: {
         circleClass = RaceStatus.IN_PROGRESS;
 
         break;
       }
+
       case RaceStatus.FINISHED: {
         g.raceList.delete(data.id);
         lobbyScreen.raceUndraw(data.id);
         return;
       }
+
       default: {
         errorShow(
           "Unable to parse the race status from the raceSetStatus command.",
