@@ -225,6 +225,7 @@ export function send(destination: string, originalMessage: string): void {
 
         break;
       }
+
       case "/finish": {
         // /finish - Debug finish.
         if (IS_DEV) {
@@ -235,6 +236,7 @@ export function send(destination: string, originalMessage: string): void {
 
         break;
       }
+
       case "/ready": {
         if (IS_DEV) {
           g.conn.send("raceReady", {
@@ -244,6 +246,7 @@ export function send(destination: string, originalMessage: string): void {
 
         break;
       }
+
       case "/unready": {
         if (IS_DEV) {
           g.conn.send("raceUnready", {
@@ -253,6 +256,7 @@ export function send(destination: string, originalMessage: string): void {
 
         break;
       }
+
       case "/shutdown": {
         // We want to automatically restart the server by default.
         g.conn.send("adminShutdown", {
@@ -261,17 +265,20 @@ export function send(destination: string, originalMessage: string): void {
 
         break;
       }
+
       case "/shutdown2": {
         // This will not automatically restart the server.
         g.conn.send("adminShutdown", {});
 
         break;
       }
+
       case "/unshutdown": {
         g.conn.send("adminUnshutdown", {});
 
         break;
       }
+
       default: {
         if (message.startsWith("/notice ")) {
           g.conn.send("adminMessage", {
@@ -310,6 +317,8 @@ export function send(destination: string, originalMessage: string): void {
         } else {
           draw(room, "_error", "That is not a valid command.");
         }
+
+        break;
       }
     }
   }

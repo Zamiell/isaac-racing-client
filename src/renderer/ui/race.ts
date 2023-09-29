@@ -942,51 +942,61 @@ export function participantsSetFloor(i: number): void {
 
       break;
     }
+
     case 1: {
       floorDiv = altFloor ? "Do1" : "B1";
 
       break;
     }
+
     case 2: {
       floorDiv = altFloor ? "Do2" : "B2";
 
       break;
     }
+
     case 3: {
       floorDiv = altFloor ? "Mi1" : "C1";
 
       break;
     }
+
     case 4: {
       floorDiv = altFloor ? "Mi2" : "C2";
 
       break;
     }
+
     case 5: {
       floorDiv = altFloor ? "Ma1" : "D1";
 
       break;
     }
+
     case 6: {
       floorDiv = altFloor ? "Ma2" : "D2";
 
       break;
     }
+
     case 7: {
       floorDiv = altFloor ? "Co1" : "W1";
 
       break;
     }
+
     case 8: {
       floorDiv = altFloor ? "Co2" : "W2";
 
       break;
     }
+
     case 9: {
       floorDiv = "BW";
 
       break;
     }
+
     default: {
       if (floorNum === 10 && stageType === 0) {
         floorDiv = "Sheol"; // 10-0 is Sheol
@@ -1003,22 +1013,27 @@ export function participantsSetFloor(i: number): void {
 
             break;
           }
+
           case 13: {
             floorDiv = "Home";
 
             break;
           }
+
           case 14: {
             floorDiv = "MS"; // For Mega Satan
 
             break;
           }
+
           default: {
             errorShow(`The floor for "${name}" is unrecognized: ${floorNum}`);
             return;
           }
         }
       }
+
+      break;
     }
   }
 

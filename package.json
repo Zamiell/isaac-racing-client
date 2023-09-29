@@ -14,13 +14,13 @@
   "author": "Racing+",
   "main": "dist/main/main.js",
   "dependencies": {
-    "@electron/remote": "^2.0.10",
-    "@types/source-map-support": "^0.5.6",
+    "@electron/remote": "^2.0.11",
+    "@types/source-map-support": "^0.5.8",
     "electron-context-menu": "^3.6.1",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",
-    "electron-updater": "^6.1.1",
-    "isaac-racing-common": "^1.0.11",
+    "electron-updater": "^6.1.4",
+    "isaac-racing-common": "^1.0.12",
     "klaw-sync": "^6.0.0",
     "linkify-html": "^4.1.1",
     "linkifyjs": "^4.1.1",
@@ -31,21 +31,21 @@
     "winreg": "^1.2.4"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.16",
-    "@types/klaw-sync": "^6.0.1",
+    "@types/jquery": "^3.5.20",
+    "@types/klaw-sync": "^6.0.2",
     "@types/mkdirp": "^1.0.2",
-    "@types/node": "^20.5.0",
+    "@types/node": "^20.7.2",
     "@types/ps-node": "^0.1.1",
-    "@types/tooltipster": "^0.0.32",
-    "@types/winreg": "^1.2.32",
+    "@types/tooltipster": "^0.0.33",
+    "@types/winreg": "^1.2.33",
     "electron": "23.3.7",
-    "electron-builder": "^24.6.3",
-    "isaacscript": "^3.7.2",
-    "isaacscript-lint": "^5.2.3",
-    "isaacscript-spell": "^1.2.41",
+    "electron-builder": "^24.6.4",
+    "isaacscript": "^3.11.1",
+    "isaacscript-lint": "^5.11.0",
+    "isaacscript-spell": "^1.4.0",
     "isaacscript-tsconfig": "^4.0.0",
     "ts-loader": "^9.4.4",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
@@ -67,5 +67,5 @@
     ]
   },
   "productName": "Racing+",
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.3"
 }

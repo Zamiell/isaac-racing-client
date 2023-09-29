@@ -76,12 +76,13 @@ function register(username: string) {
     type: "POST",
     data,
   });
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises, isaacscript/require-variadic-function-argument
   request.done(() => {
     // We successfully got a cookie; attempt to establish a WebSocket connection.
     websocket.connect();
   });
-  request.fail(fail); // eslint-disable-line @typescript-eslint/no-floating-promises
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises, isaacscript/require-variadic-function-argument
+  request.fail(fail);
 }
 
 export function fail(jqXHR: JQuery.jqXHR): void {
