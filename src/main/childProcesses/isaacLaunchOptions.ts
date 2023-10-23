@@ -101,6 +101,7 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     valve = software.Valve;
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (software.valve !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     valve = software.valve;
   }
 
@@ -117,6 +118,7 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
     steam = valve.Steam;
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (valve.steam !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     steam = valve.steam;
   }
 
@@ -131,6 +133,7 @@ function getRebirthLocalConfigVDFEntry(localConfigVDF: LocalConfigVDF) {
   if (steam.Apps !== undefined) {
     apps = steam.Apps;
   } else if (steam.apps !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     apps = steam.apps;
   }
 
