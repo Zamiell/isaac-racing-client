@@ -43,6 +43,7 @@ export function createWindow(): electron.BrowserWindow {
   if (windowSettings.width === undefined) {
     width = IS_DEV ? DEFAULT_WIDTH_DEV : DEFAULT_WIDTH;
   } else {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     width = windowSettings.width;
   }
 
@@ -50,11 +51,13 @@ export function createWindow(): electron.BrowserWindow {
 
   let x: number | undefined;
   if (windowSettings.x !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     x = windowSettings.x;
   }
 
   let y: number | undefined;
   if (windowSettings.y !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring
     y = windowSettings.y;
   }
 
