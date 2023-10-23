@@ -111,9 +111,6 @@ export function init(): void {
       .html(character);
     $("#new-race-character").append(characterElement);
   }
-  $("#new-race-character").append(
-    $('<option lang="en"></option>').val("Random").html("Random"),
-  );
 
   $("#new-race-character").change(newRaceCharacterChange);
 
@@ -147,9 +144,6 @@ export function init(): void {
       $("#new-race-starting-build").append($(spacing));
     }
   }
-  $("#new-race-starting-build").append(
-    $('<option lang="en"></option>').val(RANDOM_BUILD).html("Random"),
-  );
 
   $("#new-race-starting-build").change(newRaceStartingBuildChange);
 
