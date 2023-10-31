@@ -1531,12 +1531,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.8.7":
-  version: 20.8.7
-  resolution: "@types/node@npm:20.8.7"
+"@types/node@npm:^20.8.10":
+  version: 20.8.10
+  resolution: "@types/node@npm:20.8.10"
   dependencies:
-    undici-types: "npm:~5.25.1"
-  checksum: a347ac7e6a9748ffff018ca01142ba625e774cb0b53785abb58b16a5a8468cc9b7656686dbe4c39c2f3fc477439994ee8aeae9b80ced86f320598bafaf83f802
+    undici-types: "npm:~5.26.4"
+  checksum: 8930039077c8ad74de74c724909412bea8110c3f8892bcef8dda3e9629073bed65632ee755f94b252bcdae8ca71cf83e89a4a440a105e2b1b7c9797b43483049
   languageName: node
   linkType: hard
 
@@ -3715,10 +3715,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-log@npm:^4.4.8":
-  version: 4.4.8
-  resolution: "electron-log@npm:4.4.8"
-  checksum: 9416e1d04395e93b6bfdd9db3815d81b39286e53aa58e21817021ae7dd5a7f03ff5878ad9edcaa2be3e1d0a2d966f785880e10f197abc2a68b8cb7f5719529e5
+"electron-log@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "electron-log@npm:5.0.0"
+  checksum: 23b14119a5753be24880e7466ee80ae1386f9df4123ed59bc8f4426a814c728875b07de13bf0729cba7202888fcd6230375e2b5302cee0d0c5f25584d9db3334
   languageName: node
   linkType: hard
 
@@ -4553,12 +4553,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"figlet@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "figlet@npm:1.6.0"
+"figlet@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "figlet@npm:1.7.0"
   bin:
     figlet: bin/index.js
-  checksum: ffc17bb3eedc9d39e5d1eee31378cd3bdd25a86a345db261328ed20b59530162a9e7f448ba6a166d67098d12cc68933395153147ec139b4e305a87f99f707eba
+  checksum: 1baeed096fa90f5802022c4d36c24ebd59331f77f00f9b3de68b13f42f7ab210b327f4935fd194fc29575120e91aa95a2f43d63c2760f3e374a4f8348070c784
   languageName: node
   linkType: hard
 
@@ -5741,7 +5741,7 @@ __metadata:
     "@types/jquery": "npm:^3.5.25"
     "@types/klaw-sync": "npm:^6.0.3"
     "@types/mkdirp": "npm:^1.0.2"
-    "@types/node": "npm:^20.8.7"
+    "@types/node": "npm:^20.8.10"
     "@types/ps-node": "npm:^0.1.2"
     "@types/source-map-support": "npm:^0.5.9"
     "@types/tooltipster": "npm:^0.0.34"
@@ -5749,11 +5749,11 @@ __metadata:
     electron: "npm:23.3.7"
     electron-builder: "npm:^24.6.4"
     electron-context-menu: "npm:^3.6.1"
-    electron-log: "npm:^4.4.8"
+    electron-log: "npm:^5.0.0"
     electron-store: "npm:^8.1.0"
     electron-updater: "npm:^6.1.4"
     isaac-racing-common: "npm:^1.0.13"
-    isaacscript: "npm:^3.15.2"
+    isaacscript: "npm:^3.16.0"
     isaacscript-lint: "npm:^6.2.0"
     isaacscript-spell: "npm:^1.6.0"
     isaacscript-tsconfig: "npm:^4.1.1"
@@ -5835,14 +5835,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isaacscript@npm:^3.15.2":
-  version: 3.15.2
-  resolution: "isaacscript@npm:3.15.2"
+"isaacscript@npm:^3.16.0":
+  version: 3.16.0
+  resolution: "isaacscript@npm:3.16.0"
   dependencies:
     ajv: "npm:^8.12.0"
     chalk: "npm:4.1.2"
     command-exists: "npm:^1.2.9"
-    figlet: "npm:^1.6.0"
+    figlet: "npm:^1.7.0"
     jsonc-parser: "npm:^3.2.0"
     klaw-sync: "npm:^6.0.0"
     moment: "npm:^2.29.4"
@@ -5859,7 +5859,7 @@ __metadata:
     typescript: ">= 5.0.0"
   bin:
     isaacscript: src/main.js
-  checksum: 430a92341b6ca0bc1967ed0af5118a1afb47ed3944ca2107bc9592c52f679132baccda1d960bb82e16a3e9b6982bd667020ba928447a808840dbb0aea179512e
+  checksum: ff1c7db8c822b18616b9c8d20d2ee59d954b7d17bdf79952d44f395f8adcf945d600a7aefac506a23fd6c509b3f6b5667cd03f14dd15d059ce60abca4c5219c7
   languageName: node
   linkType: hard
 
@@ -9151,10 +9151,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~5.25.1":
-  version: 5.25.3
-  resolution: "undici-types@npm:5.25.3"
-  checksum: 9a57f2dd6fecb2d0f7d9b86aa6f417609a0ffc73247a95aa25c078cf36cbbfe6c164b63b8dace7ad01126e6510f284c185b69c78356bb1d6b279f195acffcaf4
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 0097779d94bc0fd26f0418b3a05472410408877279141ded2bd449167be1aed7ea5b76f756562cb3586a07f251b90799bab22d9019ceba49c037c76445f7cddd
   languageName: node
   linkType: hard
 
