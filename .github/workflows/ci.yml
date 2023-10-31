@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies (if the cached directory was not found)
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Test to see if the project compiles
         run: bash build.sh
