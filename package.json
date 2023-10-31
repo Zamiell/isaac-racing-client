@@ -12,7 +12,7 @@
   },
   "license": "GPL-3.0",
   "author": "Racing+",
-  "main": "dist/main/main.js",
+  "main": "./dist/main/main.js",
   "dependencies": {
     "@electron/remote": "^2.0.12",
     "@types/source-map-support": "^0.5.9",
