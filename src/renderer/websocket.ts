@@ -1,6 +1,6 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { parseIntSafe } from "../common/isaacScriptCommonTS";
+import { capitalizeFirstLetter, parseIntSafe } from "isaacscript-common-ts";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";
@@ -23,12 +23,7 @@ import type { User } from "./types/User";
 import * as lobbyScreen from "./ui/lobby";
 import * as raceScreen from "./ui/race";
 import * as registerScreen from "./ui/register";
-import {
-  amSecondTestAccount,
-  capitalize,
-  errorShow,
-  warningShow,
-} from "./utils";
+import { amSecondTestAccount, errorShow, warningShow } from "./utils";
 
 export function connect(): void {
   log.info(
@@ -440,7 +435,7 @@ function initChatCommandHandlers(conn: Connection) {
 
 function initRaceCommandHandlers(conn: Connection) {
   // On initial connection, we get a list of all of the races that are currently open or ongoing.
-  conn.on("raceList", (data: Race[]) => {
+  conn.on("raceList", (data: readonly Race[]) => {
     // Check for empty races.
     if (data.length === 0) {
       $("#lobby-current-races-table-body").html("");
@@ -847,7 +842,7 @@ function initRaceCommandHandlers(conn: Connection) {
       `circle lobby-current-races-${circleClass}`,
     );
     $(`#lobby-current-races-${data.id}-status`).html(
-      `<span lang="en">${capitalize(data.status)}</span>`,
+      `<span lang="en">${capitalizeFirstLetter(data.status)}</span>`,
     );
 
     if (data.status === RaceStatus.IN_PROGRESS) {

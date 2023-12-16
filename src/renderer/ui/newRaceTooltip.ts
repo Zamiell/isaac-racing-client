@@ -1,9 +1,11 @@
-import crypto from "node:crypto";
 import {
   getRandomArrayElement,
   getRandomArrayIndex,
+  getRandomInt,
   parseIntSafe,
-} from "../../common/isaacScriptCommonTS";
+  repeat,
+} from "isaacscript-common-ts";
+import crypto from "node:crypto";
 import { settings } from "../../common/settings";
 import {
   BUILDS,
@@ -20,7 +22,6 @@ import { Screen } from "../types/Screen";
 import {
   closeAllTooltips,
   errorShow,
-  getRandomNumber,
   setElementBackgroundImage,
   setElementBuildIcon,
 } from "../utils";
@@ -35,23 +36,18 @@ export function init(): void {
     }
 
     // Get some random words.
-    const randomNumbers: number[] = [];
+    const randomIndexes: number[] = [];
     const numWords = 2;
-    for (let i = 0; i < numWords; i++) {
-      let randomNumber: number;
-      do {
-        randomNumber = getRandomNumber(0, g.wordList.length - 1);
-      } while (randomNumbers.includes(randomNumber));
-      randomNumbers.push(randomNumber);
-    }
-    let randomlyGeneratedName = "";
-    for (let i = 0; i < numWords; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      randomlyGeneratedName += `${g.wordList[randomNumbers[i]!]} `;
-    }
+    repeat(numWords, () => {
+      const randomArrayIndex = getRandomArrayIndex(g.wordList, randomIndexes);
+      randomIndexes.push(randomArrayIndex);
+    });
 
-    // Chop off the trailing space.
-    randomlyGeneratedName = randomlyGeneratedName.slice(0, -1);
+    const randomWords = randomIndexes.map(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (randomIndex) => g.wordList[randomIndex]!,
+    );
+    const randomlyGeneratedName = randomWords.join(" ");
 
     // Set it
     $("#new-race-title").val(randomlyGeneratedName);
@@ -67,7 +63,7 @@ export function init(): void {
     const char = $("#new-race-character").val();
     let randomChar: string;
     do {
-      const randomCharIndex = getRandomNumber(0, CHARACTERS.length - 1);
+      const randomCharIndex = getRandomInt(0, CHARACTERS.length - 1);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       randomChar = CHARACTERS[randomCharIndex]!;
     } while (randomChar === char);
@@ -86,7 +82,7 @@ export function init(): void {
     let randomBuild: number;
     do {
       // The build at index 0 is intentionally blank.
-      randomBuild = getRandomNumber(1, BUILDS.length - 1);
+      randomBuild = getRandomInt(1, BUILDS.length - 1);
     } while (randomBuild === oldBuild);
     $("#new-race-starting-build").val(randomBuild);
     newRaceStartingBuildChange(null);

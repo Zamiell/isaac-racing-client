@@ -115,7 +115,7 @@ keyboardFunctionMap.set(9, (event: JQuery.KeyDownEvent) => {
   }
 });
 
-function firstTimePressingTab(tabList: string[]) {
+function firstTimePressingTab(tabList: readonly string[]) {
   // This is the first time we are pressing tab.
   const element = $(`#${g.currentScreen}-chat-box-input`);
   let message = element.val();
@@ -143,7 +143,7 @@ function firstTimePressingTab(tabList: string[]) {
   }
 }
 
-function tabCycle(tabList: string[]) {
+function tabCycle(tabList: readonly string[]) {
   if (g.tabCompleteWordList === null) {
     return;
   }

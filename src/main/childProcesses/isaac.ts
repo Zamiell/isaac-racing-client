@@ -38,7 +38,7 @@ import {
 } from "./isaacLaunchOptions";
 import * as isaacRacingPlusMod from "./isaacRacingPlusMod";
 import { fileExists, isDir, isFile } from "../../common/file";
-import { parseIntSafe } from "../../common/isaacScriptCommonTS";
+import { parseIntSafe } from "isaacscript-common-ts";
 
 const ISAAC_PROCESS_NAME = "isaac-ng.exe";
 const STEAM_PROCESS_NAME = "steam.exe";

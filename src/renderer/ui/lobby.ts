@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from "isaacscript-common-ts";
 import * as chat from "../chat";
 import { BUILDS, FADE_TIME } from "../constants";
 import { g } from "../globals";
@@ -6,7 +7,7 @@ import type { Race } from "../types/Race";
 import { RaceFormat } from "../types/RaceFormat";
 import { RaceStatus } from "../types/RaceStatus";
 import { Screen } from "../types/Screen";
-import { capitalize, errorShow, escapeHTML, pad } from "../utils";
+import { errorShow, escapeHTML, pad } from "../utils";
 import * as header from "./header";
 
 export function init(): void {
@@ -159,7 +160,9 @@ export function raceDraw(race: Race): void {
   raceDiv += `<span id="lobby-current-races-${race.id}-status-circle" class="circle lobby-current-races-${circleClass}"></span>`;
   raceDiv += ` &nbsp; <span id="lobby-current-races-${
     race.id
-  }-status"><span lang="en">${capitalize(race.status)}</span></span>`;
+  }-status"><span lang="en">${capitalizeFirstLetter(
+    race.status,
+  )}</span></span>`;
   raceDiv += "</td>";
 
   // Column 3 - Format.

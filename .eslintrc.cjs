@@ -5,12 +5,11 @@
 const config = {
   extends: [
     // The linter base is the shared IsaacScript config:
-    // https://github.com/IsaacScript/isaacscript/blob/main/packages/eslint-config-isaacscript/configs/base.js
+    // https://github.com/IsaacScript/isaacscript/blob/main/packages/eslint-config-isaacscript/base.js
     "eslint-config-isaacscript/base",
   ],
 
-  // Don't bother linting the compiled output.
-  // @template-ignore-next-line
+  // Don't bother linting compiled output.
   ignorePatterns: ["**/dist/**", "*.min.js"],
 
   parserOptions: {

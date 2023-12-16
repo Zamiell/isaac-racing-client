@@ -1,5 +1,5 @@
 import * as electron from "electron";
-import { parseIntSafe } from "../common/isaacScriptCommonTS";
+import { parseIntSafe } from "isaacscript-common-ts";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import { BUILDS } from "./constants";
 import { g } from "./globals";

@@ -1,4 +1,4 @@
-import { parseIntSafe } from "../../common/isaacScriptCommonTS";
+import { parseIntSafe } from "isaacscript-common-ts";
 import { settings } from "../../common/settings";
 import { FADE_TIME } from "../constants";
 import { g } from "../globals";

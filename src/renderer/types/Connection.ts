@@ -1,5 +1,5 @@
 import log from "electron-log";
-import { ReadonlySet } from "../../common/isaacScriptCommonTS";
+import { ReadonlySet } from "isaacscript-common-ts";
 
 const SEPARATOR = " ";
 
@@ -123,7 +123,7 @@ export class Connection {
   }
 }
 
-function unpack(data: string) {
+function unpack(data: string): readonly string[] {
   const name = data.split(SEPARATOR)[0];
   if (name === undefined) {
     throw new Error('Failed to unpack data due to "name" being undefined.');
@@ -133,10 +133,10 @@ function unpack(data: string) {
   return [name, data.substring(name.length + 1, data.length)];
 }
 
-function unmarshal(data: string) {
+function unmarshal(data: string): unknown {
   return JSON.parse(data) as unknown;
 }
 
-function marshalAndPack(name: string, data: unknown) {
+function marshalAndPack(name: string, data: unknown): string {
   return name + SEPARATOR + JSON.stringify(data);
 }

@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------
 
 import log from "electron-log";
+import { trimSuffix } from "isaacscript-common-ts";
 import path from "node:path";
 import sourceMapSupport from "source-map-support";
 import pkg from "../../package.json";
@@ -105,10 +106,6 @@ function initData() {
 
   // Emote list
   const emotePath = path.join(__dirname, "img", "emotes");
-  g.emoteList = getDirList(emotePath);
-  for (let i = 0; i < g.emoteList.length; i++) {
-    // Remove ".png" from each element of emoteList.
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    g.emoteList[i] = g.emoteList[i]!.slice(0, -4); // ".png" is 4 characters long
-  }
+  const emoteFileNames = getDirList(emotePath);
+  g.emoteList = emoteFileNames.map((fileName) => trimSuffix(fileName, ".png"));
 }

@@ -1,3 +1,4 @@
+import type { ReadonlyRecord } from "isaacscript-common-ts";
 import klawSync from "klaw-sync";
 import path from "node:path";
 import { deleteFile, fileExists, getFileHash, isDir } from "../../common/file";
@@ -36,7 +37,7 @@ export async function isValid(modsPath: string): Promise<boolean> {
   return true;
 }
 
-async function getModChecksums() {
+async function getModChecksums(): Promise<Record<string, string>> {
   const response = await fetch(SHA1_HASHES_URL);
   const checksums = (await response.json()) as Record<string, string>;
 
@@ -45,8 +46,8 @@ async function getModChecksums() {
 
 function checkCorruptOrMissingFiles(
   modPath: string,
-  checksums: Record<string, string>,
-) {
+  checksums: ReadonlyRecord<string, string>,
+): boolean {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }
@@ -88,8 +89,8 @@ function checkCorruptOrMissingFiles(
 
 function checkExtraneousFiles(
   modPath: string,
-  checksums: Record<string, string>,
-) {
+  checksums: ReadonlyRecord<string, string>,
+): boolean {
   if (process.send === undefined) {
     throw new Error("process.send() does not exist.");
   }

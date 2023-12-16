@@ -10,11 +10,6 @@ export function amSecondTestAccount(): boolean {
   );
 }
 
-// From: https://stackoverflow.com/questions/2332811/capitalize-words-in-string
-export function capitalize(str: string): string {
-  return str.replaceAll(/(?:^|\s)\S/g, (a) => a.toUpperCase());
-}
-
 // From: https://stackoverflow.com/questions/27709489/jquery-tooltipster-plugin-hide-all-tips
 export function closeAllTooltips(): void {
   const instances = $.tooltipster.instances();
@@ -96,10 +91,6 @@ export function findAjaxError(jqXHR: JQuery.jqXHR): string {
   }
 
   return jqXHR.responseText;
-}
-
-export function getRandomNumber(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // From: https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number

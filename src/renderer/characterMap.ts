@@ -1,4 +1,4 @@
-import { ReadonlyMap } from "../common/isaacScriptCommonTS";
+import { ReadonlyMap } from "isaacscript-common-ts";
 
 /**
  * This is different from the `CHARACTERS` array from `isaac-racing-common`. This contains all

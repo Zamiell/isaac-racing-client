@@ -12,7 +12,7 @@ export const g = {
   conn: null as Connection | null,
   currentScreen: Screen.TITLE_AJAX,
   currentRaceID: -1,
-  emoteList: [] as string[], // Filled in main.js
+  emoteList: [] as readonly string[], // Filled in main.js
 
   gameState: {
     modConnected: false,

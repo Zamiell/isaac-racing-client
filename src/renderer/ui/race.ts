@@ -1,6 +1,10 @@
 import * as electron from "electron";
 import log from "electron-log";
-import { parseIntSafe } from "../../common/isaacScriptCommonTS";
+import {
+  capitalizeFirstLetter,
+  getRandomInt,
+  parseIntSafe,
+} from "isaacscript-common-ts";
 import { CHARACTER_MAP } from "../characterMap";
 import * as chat from "../chat";
 import { BUILDS, FADE_TIME, IMG_URL_PREFIX, ITEMS } from "../constants";
@@ -15,11 +19,9 @@ import type { Racer } from "../types/Racer";
 import { RacerStatus } from "../types/RacerStatus";
 import { Screen } from "../types/Screen";
 import {
-  capitalize,
   closeAllTooltips,
   errorShow,
   escapeHTML,
-  getRandomNumber,
   ordinalSuffixOf,
   pad,
   setElementBackgroundImage,
@@ -381,7 +383,9 @@ export function show(raceID: number): void {
       return;
     }
     let statusText = `<span class="circle lobby-current-races-${circleClass}"></span> &nbsp; `;
-    statusText += `<span lang="en">${capitalize(race.status)}</span>`;
+    statusText += `<span lang="en">${capitalizeFirstLetter(
+      race.status,
+    )}</span>`;
     $("#race-title-status").html(statusText);
 
     // Column 2 - Ranked.
@@ -810,7 +814,7 @@ export function participantsSetStatus(i: number, initial = false): void {
 
   // Update the status column of the row.
   let statusDiv = getRacerStatusDiv(racer);
-  statusDiv += `<span lang="en">${capitalize(racer.status)}</span>`;
+  statusDiv += `<span lang="en">${capitalizeFirstLetter(racer.status)}</span>`;
   $(`#race-participants-table-${racer.name}-status`).html(statusDiv);
 
   // Update the place column of the row.
@@ -855,8 +859,8 @@ export function participantsSetStatus(i: number, initial = false): void {
     if (racer.runTime - g.lastFinishedTime <= 3000) {
       // They finished within 3 seconds of the last player that finished Play the special "NO DUDE"
       // sound effect.
-      const randNum = getRandomNumber(1, 8);
-      sounds.play(`no/no${randNum}`);
+      const randomInt = getRandomInt(1, 8);
+      sounds.play(`no/no${randomInt}`);
     } else {
       // Play the sound effect that matches their place.
       sounds.play(`place/${racer.place}`, 1800);

@@ -1,3 +1,6 @@
+// These functions are different than the ones in `isaacscript-common-node` because they throw
+// normal errors instead of fatal errors.
+
 import crypto from "node:crypto";
 import fs from "node:fs";
 
@@ -30,7 +33,7 @@ export function fileExists(filePath: string): boolean {
   return pathExists;
 }
 
-export function getDirList(dirPath: string): string[] {
+export function getDirList(dirPath: string): readonly string[] {
   let fileList: string[];
   try {
     fileList = fs.readdirSync(dirPath);
