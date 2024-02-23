@@ -43,5 +43,9 @@ const IPCHotkey = (_event: electron.IpcRendererEvent, message: string) => {
 
       break;
     }
+
+    default: {
+      break;
+    }
   }
 };
